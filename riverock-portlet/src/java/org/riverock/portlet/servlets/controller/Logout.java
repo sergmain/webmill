@@ -98,6 +98,8 @@ import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.PortletTools;
 
+import org.riverock.portlet.main.Constants;
+
 
 
 public class Logout extends HttpServlet
@@ -246,7 +248,7 @@ public class Logout extends HttpServlet
 
 
 
-            response.sendRedirect( response.encodeURL( ctxInstance.ctx() ) );
+            response.sendRedirect( ctxInstance.url(Constants.CTX_TYPE_INDEX, null) );
 
             return;
 

@@ -56,6 +56,8 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+import java.util.Locale;
+
 
 
 import org.riverock.webmill.portal.menu.MenuItemInterface;
@@ -93,6 +95,34 @@ public class MenuItem implements MenuItemInterface
     private List catalogItems = new ArrayList(0);  // Vector of MenuItem
 
     private String url = null;
+
+
+
+    public String toString()
+
+    {
+
+        String st;
+
+        try
+
+        {
+
+            st = str.getString(Locale.ENGLISH);
+
+        }
+
+        catch (java.io.UnsupportedEncodingException e)
+
+        {
+
+            st = "error";
+
+        }
+
+        return "[id:"+id+", id_top:"+id_top+" type:"+type+", portletId:"+id_portlet+", template:"+nameTemplate+", str:"+st+", url:"+url+"]";
+
+    }
 
 
 

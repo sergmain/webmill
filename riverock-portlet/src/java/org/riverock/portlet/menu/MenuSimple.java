@@ -1096,23 +1096,11 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
             {
 
-                log.debug("item - "+ item);
+                log.debug("item - "+ item.toString());
 
-                if (item != null)
+                log.debug("id_current_item - "+ id_current_item);
 
-                {
 
-                    log.debug("item.type - "+ item.getType());
-
-                    log.debug("item.id_portlet - "+ item.getIdPortlet());
-
-                    log.debug("item.id - "+ item.getId() );
-
-                    log.debug("item.id_top - "+ item.getIdTop());
-
-                    log.debug("id_current_item - "+ id_current_item);
-
-                }
 
                 if (desc_current != null)
 
@@ -1140,11 +1128,11 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            if (item.getType() != null && item.getType().equals( typePortlet ) )
+            if (item.getType()!=null && item.getType().equals( typePortlet ) )
 
             {
 
-                if (desc_current != null )
+                if (id_current_item!=null && desc_current != null )
 
                 {
 
@@ -1160,7 +1148,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-                    if ( namePortletIdTemp == null || item.getIdPortlet()==id_current_item)
+                    if ( namePortletIdTemp == null || id_current_item.equals(item.getIdPortlet()) )
 
                         m.setIsCurrent( new Integer(1) );
 
@@ -1352,7 +1340,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
             if (log.isDebugEnabled())
 
-                log.debug("Size of result vector - "+vv.size()    );
+                log.debug("Size of result list - "+vv.size()    );
 
 
 

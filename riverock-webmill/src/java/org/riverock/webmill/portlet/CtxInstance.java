@@ -142,6 +142,8 @@ import org.riverock.webmill.schema.types.HiddenParamType;
 
 import org.riverock.webmill.utils.ServletUtils;
 
+import org.riverock.interfaces.schema.javax.portlet.PortletType;
+
 
 
 public class CtxInstance {
@@ -374,7 +376,7 @@ public class CtxInstance {
 
         this.parameters = parameters;
 
-        addGlobalParameters(parameters);
+        addGlobalParameters(this.parameters);
 
 
 
@@ -425,6 +427,16 @@ public class CtxInstance {
             map.put(Constants.NAME_TEMPLATE_CONTEXT_PARAM, nameTemplate);
 
 
+
+        if (namePortletId!=null && portletId!=null)
+
+        {
+
+            if (map.get(namePortletId)==null)
+
+                map.put(namePortletId, portletId);
+
+        }
 
     }
 
@@ -822,7 +834,43 @@ public class CtxInstance {
 
         nameTemplate = ctxTemplate;
 
+
+
+        PortletType portlet = PortletManager.getPortletDescription( defaultPortletType );
+
+        if (portlet==null)
+
+            return;
+
+
+
+        namePortletId =
+
+            PortletTools.getStringParam(
+
+                portlet, PortletTools.name_portlet_id
+
+            );
+
+
+
+        if (namePortletId==null)
+
+            return;
+
+
+
+        portletId = ctx.getIdContext();
+
     }
+
+    private String namePortletId = null;
+
+    private Long portletId = null;
+
+
+
+
 
 
 
@@ -1421,6 +1469,26 @@ public class CtxInstance {
     {
 
         return stringManager;
+
+    }
+
+
+
+    public String getNamePortletId()
+
+    {
+
+        return namePortletId;
+
+    }
+
+
+
+    public Long getPortletId()
+
+    {
+
+        return portletId;
 
     }
 
