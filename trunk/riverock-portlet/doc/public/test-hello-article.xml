@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<Article xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\js-portlet\doc\public\jsmithy-portlet-article-data.xsd">
+
+	<ArticlePara>Как создать простейший портлет</ArticlePara>
+
+	<ArticlePara>Данная статья описывает как создать простейший портлет Hello. Для создания используется база Oracle</ArticlePara>
+
+	<ArticlePara>Создадим таблицу TEST_HELLO</ArticlePara>
+
+	<PreText>create table MILLENNIUM.TEST_HELLO
+
+    (ID_HELLO                      number,
+
+    ID_SITE_SUPPORT_LANGUAGE       number,
+
+    HELLO_TEXT                     varchar2(100),
+
+    HELLO_CODE                     varchar2(50)  
+
+    )
+
+/
+
+</PreText>
+
+	<ArticlePara>Создадим sequence</ArticlePara>
+
+	<PreText>CREATE SEQUENCE MILLENNIUM.SEQ_TEST_HELLO
+
+ START WITH  1
+
+ INCREMENT BY  1
+
+ MINVALUE  1
+
+ MAXVALUE  9999999999
+
+ NOCACHE 
+
+/</PreText>
+
+	<ArticlePara>Зарегестрируем новый портлет. Для этого создадим новый файл test_hello.xml и запишем его в директорий WEB-INF/mill/portlet.</ArticlePara>
+
+	<PreText>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+&lt;portlet-app version="webmill portlet 3.0" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+
+\sandbox\js-portlet\src-schema\xsd\portlet.xsd"&gt;
+
+	&lt;portlet&gt;
+
+		&lt;portlet-name&gt;test.hello&lt;/portlet-name&gt;
+
+		&lt;portlet-class&gt;TestHello&lt;/portlet-class&gt;
+
+		&lt;init-param&gt;
+
+			&lt;name&gt;type-portlet&lt;/name&gt;
+
+			&lt;value&gt;view&lt;/value&gt;
+
+		&lt;/init-param&gt;
+
+		&lt;init-param&gt;
+
+			&lt;name&gt;is-url&lt;/name&gt;
+
+			&lt;value&gt;false&lt;/value&gt;
+
+		&lt;/init-param&gt;
+
+		&lt;init-param&gt;
+
+			&lt;name&gt;name-portlet-id&lt;/name&gt;
+
+			&lt;value&gt;test.id_hello&lt;/value&gt;
+
+		&lt;/init-param&gt;
+
+		&lt;init-param&gt;
+
+			&lt;name&gt;name-portlet-code-string&lt;/name&gt;
+
+			&lt;value&gt;test.hello_code&lt;/value&gt;
+
+		&lt;/init-param&gt;
+
+		&lt;init-param&gt;
+
+			&lt;name&gt;is-get-instance&lt;/name&gt;
+
+			&lt;value&gt;true&lt;/value&gt;
+
+		&lt;/init-param&gt;
+
+		&lt;init-param&gt;
+
+			&lt;name&gt;class-name-get-list&lt;/name&gt;
+
+			&lt;value&gt;TestHello&lt;/value&gt;
+
+		&lt;/init-param&gt;
+
+		&lt;supports&gt;
+
+			&lt;mime-type&gt;text/html&lt;/mime-type&gt;
+
+		&lt;/supports&gt;
+
+		&lt;portlet-info&gt;
+
+			&lt;title&gt;Test Hello portlet&lt;/title&gt;
+
+		&lt;/portlet-info&gt;
+
+	&lt;/portlet&gt;
+
+&lt;/portlet-app&gt;
+
+</PreText>
+
+	<ArticlePara>Создадим класс TestHello. Этот класс реализует следущие интерфейсы - Portlet, PortletResultObject, PortletGetList</ArticlePara>
+
+	<ArticlePara>Portlet - основной интерфейс через который ContextNavigator утравляет портлетами. �?спользуется на этапе создания портлета</ArticlePara>
+
+	<ArticlePara>PortletResultObject - �?спользуется на этапе рендеринга портлета</ArticlePara>
+
+	<ArticlePara>PortletGetList - используется для создания меню. Возвращает список доступных портлетов</ArticlePara>
+
+	<ArticlePara>Зарегестрируем новый тип портлета</ArticlePara>
+
+	<PreText>insert into SITE_CTX_TYPE
+
+(ID_SITE_CTX_TYPE, TYPE)
+
+select SEQ_SITE_CTX_TYPE.nextval, 'test.hello' from dual
+
+/
+
+</PreText>
+
+	<ArticlePara>Создадим описатель для мембер раздела. С помощью него мы сможет быстро занести новые значения для нашего портлета. Новый описатель запишем в файл test-hello.xml в директорий WEB-INF/mill/xml</ArticlePara>
+
+	<Link href="/aaa">Мембер описатель</Link>
+
+	<ArticlePara>Код java класса:</ArticlePara>
+
+	<PreText>/**
+
+ * Author: mill
+
+ * Date: Jan 10, 2003
+
+ * Time: 9:41:20 AM
+
+ *
+
+ * $Id$
+
+ */
+
+
+
+import java.sql.PreparedStatement;
+
+import java.sql.ResultSet;
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+
+
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.common.tools.StringTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.main.CacheFactory;
+
+import org.riverock.portlet.member.ClassQueryItem;
+
+import org.riverock.webmill.config.WebmillConfig;
+
+import org.riverock.webmill.portlet.Portlet;
+
+import org.riverock.webmill.portlet.PortletGetList;
+
+import org.riverock.webmill.portlet.PortletParameter;
+
+import org.riverock.webmill.portlet.PortletResultObject;
+
+
+
+import org.apache.log4j.Logger;
+
+
+
+public class TestHello implements Portlet, PortletResultObject, PortletGetList
+
+{
+
+    private static Logger log = Logger.getLogger( TestHello.class );
+
+
+
+    private static CacheFactory cache = new CacheFactory( TestHello.class.getName() );
+
+
+
+    public String hello = "";
+
+    public Long id = null;
+
+    public String helloCode = "";
+
+    public PortletParameter param = null;
+
+    public Long idSupportLanguage = null;
+
+
+
+    protected void finalize() throws Throwable
+
+    {
+
+        helloCode = null;
+
+        param = null;
+
+
+
+        super.finalize();
+
+    }
+
+
+
+    public void setParameter(PortletParameter param_)
+
+    {
+
+        this.param = param_;
+
+    }
+
+
+
+    public PortletResultObject getInstance(DatabaseAdapter db__) throws Exception
+
+    {
+
+        return null;
+
+    }
+
+
+
+    public byte[] getXml(String name)
+
+        throws Exception
+
+    {
+
+        if(log.isDebugEnabled())
+
+            log.debug("TestHello. method is 'Xml'");
+
+
+
+        return getXml();
+
+    }
+
+
+
+    public byte[] getXml()
+
+        throws Exception
+
+    {
+
+        if(log.isDebugEnabled())
+
+            log.debug("TestHEllo. method is 'Xml'");
+
+
+
+        String xml = "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;\n"+
+
+                "&lt;TestHello&gt;&lt;Hello&gt;"+ hello + "&lt;/Hello&gt;&lt;/TestHello&gt;";
+
+
+
+        if (log.isDebugEnabled())
+
+            log.debug( "TestHEllo. getXml - "+xml );
+
+
+
+        return xml.getBytes( WebmillConfig.getHtmlCharset() );
+
+    }
+
+
+
+    public boolean isXml(){ return true; }
+
+    public boolean isHtml(){ return false; }
+
+
+
+    public TestHello(){}
+
+
+
+    public PortletResultObject getInstance(DatabaseAdapter db__, long id__)
+
+            throws Exception
+
+    {
+
+        return getInstance(db__, new Long(id__) );
+
+    }
+
+
+
+    public PortletResultObject getInstance(DatabaseAdapter db__, Long id__)
+
+            throws Exception
+
+    {
+
+        try
+
+        {
+
+            PortletResultObject portletObject = (PortletResultObject) cache.getInstanceNew(db__, id__);
+
+            ((Portlet)portletObject).setParameter( this.param );
+
+            return portletObject;
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            log.error("Error get instance of TestHello", e);
+
+            throw e;
+
+        }
+
+    }
+
+
+
+    static String sql_ = null;
+
+    static
+
+    {
+
+        sql_ =
+
+            "select a.ID_HELLO " +
+
+            "from   TESTHELLO a " +
+
+            "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.HELLO_CODE=?";
+
+
+
+        try
+
+        {
+
+            org.riverock.sql.cache.SqlStatement.registerSql( sql_, new TestHello().getClass() );
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            log.error("Exception in registerSql, sql\n"+sql_, e);
+
+        }
+
+        catch(Error e)
+
+        {
+
+            log.error("Error in registerSql, sql\n"+sql_, e);
+
+        }
+
+    }
+
+
+
+    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String articleCode_)
+
+            throws Exception
+
+    {
+
+        if (log.isDebugEnabled())
+
+            log.debug("#10.01.01 " + articleCode_);
+
+
+
+        Long idSupportLanguageCurrent = param.getJspPage().p.getIdSupportLanguage(param.getJspPage().currentLocale);
+
+
+
+        PreparedStatement ps = null;
+
+        ResultSet rs = null;
+
+        try
+
+        {
+
+            ps = db__.prepareStatement(sql_);
+
+            RsetTools.setLong(ps, 1, idSupportLanguageCurrent );
+
+            ps.setString(2, articleCode_);
+
+
+
+            rs = ps.executeQuery();
+
+            if (rs.next())
+
+            {
+
+                if (log.isDebugEnabled())
+
+                    log.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_HELLO"));
+
+
+
+                return getInstance(db__, RsetTools.getLong(rs, "ID_HELLO"));
+
+            }
+
+
+
+            if (log.isDebugEnabled())
+
+                log.debug("#10.01.05 ");
+
+
+
+            // return dummy Article
+
+            return getInstance(db__, -1);
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            log.error("Exception in TestHello.getInstanceByCode()", e);
+
+            throw e;
+
+        }
+
+        catch(Error e)
+
+        {
+
+            log.error("Error in TestHello.getInstanceByCode()", e);
+
+            throw e;
+
+        }
+
+        finally
+
+        {
+
+            DatabaseManager.close(rs, ps);
+
+            rs = null;
+
+            ps = null;
+
+        }
+
+    }
+
+
+
+    static String sql1_ = null;
+
+    static
+
+    {
+
+        sql1_ =
+
+            "select * from TEST_HELLO where ID_HELLO=?";
+
+
+
+        try
+
+        {
+
+            org.riverock.sql.cache.SqlStatement.registerSql( sql1_, new TestHello().getClass() );
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            log.error("Exception in registerSql, sql\n"+sql1_, e);
+
+        }
+
+        catch(Error e)
+
+        {
+
+            log.error("Error in registerSql, sql\n"+sql1_, e);
+
+        }
+
+    }
+
+
+
+    public TestHello(DatabaseAdapter db_, Long id_)
+
+            throws Exception
+
+    {
+
+        PreparedStatement ps = null;
+
+        ResultSet rs = null;
+
+        id = id_;
+
+        try
+
+        {
+
+            ps = db_.prepareStatement(sql1_);
+
+            RsetTools.setLong(ps, 1, id);
+
+
+
+            rs = ps.executeQuery();
+
+            if (rs.next())
+
+            {
+
+                hello = RsetTools.getString(rs, "HELLO_TEXT");
+
+                helloCode = RsetTools.getString(rs, "HELLO_CODE");
+
+                idSupportLanguage = RsetTools.getLong(rs, "ID_SITE_SUPPORT_LANGUAGE");
+
+            }
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            log.error("Exception in TestHello(..", e);
+
+            throw e;
+
+        }
+
+        catch(Error e)
+
+        {
+
+            log.error("Error in TestHello(..", e);
+
+            throw e;
+
+        }
+
+        finally
+
+        {
+
+            DatabaseManager.close(rs, ps);
+
+            rs = null;
+
+            ps = null;
+
+        }
+
+
+
+    }
+
+
+
+    public byte[] getPlainHTML()
+
+    {
+
+        return null;
+
+    }
+
+
+
+    static String sql3_ = null;
+
+    static
+
+    {
+
+        sql3_ =
+
+            "SELECT b.ID_HELLO, b.HELLO_TEXT, b.HELLO_CODE "+
+
+            "FROM   site_ctx_lang_catalog a, TEST_HELLO b "+
+
+            "where  a.ID_SITE_CTX_LANG_CATALOG=? and "+
+
+            "a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE";
+
+
+
+        try
+
+        {
+
+            org.riverock.sql.cache.SqlStatement.registerSql( sql3_, new TestHello().getClass() );
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            log.error("Exception in registerSql, sql\n"+sql3_, e);
+
+        }
+
+        catch(Error e)
+
+        {
+
+            log.error("Error in registerSql, sql\n"+sql3_, e);
+
+        }
+
+    }
+
+
+
+    public List getList( Long idSiteCtxLangCatalog, Long idContext)
+
+    {
+
+        if (log.isDebugEnabled())
+
+            log.debug("Get list of TextHello. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
+
+
+
+        PreparedStatement ps = null;
+
+        ResultSet rs = null;
+
+        DatabaseAdapter db_ = null;
+
+
+
+        List v = new ArrayList();
+
+        try
+
+        {
+
+            db_ = DatabaseAdapter.getInstance( false );
+
+            ps = db_.prepareStatement( sql3_ );
+
+
+
+            RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );
+
+
+
+            rs = ps.executeQuery();
+
+            while (rs.next())
+
+            {
+
+                Long id = RsetTools.getLong(rs, "ID_HELLO");
+
+                String name = ""+id + ", "+
+
+                        RsetTools.getString(rs, "HELLO_CODE")+ ", "+
+
+                        RsetTools.getString(rs, "HELLO_TEXT");
+
+
+
+                ClassQueryItem item =
+
+                        new ClassQueryItem(id, StringTools.truncateString(name, 60) );
+
+
+
+                if (item.index.equals(idContext) )
+
+                    item.isSelected = true;
+
+
+
+                v.add( item );
+
+            }
+
+            return v;
+
+
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            log.error("Exception Get list of TestHello. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e);
+
+            return null;
+
+        }
+
+        catch(Error e)
+
+        {
+
+            log.error("Error Get list of TestHello. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e);
+
+            return null;
+
+        }
+
+        finally
+
+        {
+
+            DatabaseManager.close(db_, rs, ps);
+
+            rs = null;
+
+            ps = null;
+
+            db_ = null;
+
+        }
+
+    }
+
+}
+
+</PreText>
+
+</Article>
+

@@ -1,0 +1,84 @@
+$Id$
+
+
+
+
+
+- changed XSD schema mill-gen-schema. 
+
+
+
+
+
+- changed XSD schema mill-config.xsd, as result need remove not longer 
+
+supperted elements from WebMill config file and configure required element Auth. see docs on website
+
+Name of root element changed from MillEngineConfig to WebmillConfig,
+
+Elements CustomMemberDir, CustomApplicationDir, CustomDataDefinitionDir, 
+
+CustomPortletDir moved to element CustomDirs (see mill-config.xsd schema)
+
+- changed XSD schema mill-appl-server.xsd
+
+
+
+- changed XSD schema mill-gen-schema.xsd 
+
+  1. in complex class 'SchemaGenAuthAccessType'
+
+     removed attr's 'modCode' and 'applCode'. It must be replaced with 'roleName' attribute
+
+  2. Added element <Database/>/<FactoryMethod/>
+
+     in simple case add those code
+
+	<Database>
+
+		<FactoryMethod>com.jsmithy.db.DBconnect</FactoryMethod>
+
+	</Database>
+
+
+
+
+
+
+
+- public boolean getRight(String arm_, String m_, String r_, boolean l1_) in AuthSession removed
+
+  it must be replased with isUserInRole(String roleName) method
+
+
+
+- methos public byte[] processRequest( ResourceRequestType applReq, AuthSession authSession ) throws Exception;
+
+in ApplicationInterface chenged to public byte[] processRequest( ResourceRequestType applReq ) throws Exception;
+
+
+
+- removed method public void MainUserInfo.set(ResultSet rs)
+
+
+
+- removed constructor MainUserInfo(ResultSet rs)
+
+
+
+- After create object of AuthSession, userInfo not initialized while user not authenticated
+
+
+
+- method AuthSession.getLoginStatusSite( DBconnect, String serverName) changed to 
+
+  AuthSession.getLoginStatusSite( String serverName ) and renamed to 
+
+  AuthSession.checkAccess( String serverName )
+
+
+
+
+
+
+

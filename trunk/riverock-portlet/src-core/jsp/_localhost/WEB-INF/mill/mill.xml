@@ -1,0 +1,328 @@
+<?xml version="1.0"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<!-- $Id$ -->
+
+<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="\sandbox\webmill\src\xsd\mill-config.xsd">
+
+	<MillTempDir>c:\opt1\mill\temp</MillTempDir>
+
+	<DTS>
+
+		<TimeZoneName>Asia/Irkutsk</TimeZoneName>
+
+	</DTS>
+
+	<!-- Charset used for get correct request parameters -->
+
+	<ServerCharset>8859_1</ServerCharset>
+
+	<!--ServerCharset>Cp1251</ServerCharset-->
+
+	<HtmlCharset>UTF-8</HtmlCharset>
+
+	<MainLanguage>en_US</MainLanguage>
+
+	<MailHost>localhost</MailHost>
+
+	<IsSafePage>false</IsSafePage>
+
+	<MillEngineKey path="d:\keys\mill\keystore.ks" password="111" alias="222"/>
+
+	<DefaultConnectionName>ORACLE</DefaultConnectionName>
+
+	<DatabaseConnection name="SAPDB">
+
+		<Username>test</Username>
+
+		<Password>test</Password>
+
+		<ConnectString>jdbc:sapdb://me/tst</ConnectString>
+
+		<ConnectionClass>org.riverock.db.SAPconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>true</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="MSSQL-JTDS">
+
+		<Username>qqq</Username>
+
+		<Password>www</Password>
+
+		<ConnectString>jdbc:jtds:sqlserver://ME/MILLENNIUM</ConnectString>
+
+		<ConnectionClass>org.riverock.db.MSSQL_JTDS_connect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>true</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="HSQLDB">
+
+		<Username>sa</Username>
+
+		<Password/>
+
+		<ConnectString>jdbc:hsqldb:hsql://localhost</ConnectString>
+
+		<ConnectionClass>org.riverock.db.HSQLconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>true</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="SAPDB_DBA">
+
+		<Username>dba</Username>
+
+		<Password>dba</Password>
+
+		<ConnectString>jdbc:sapdb://me/tst</ConnectString>
+
+		<ConnectionClass>org.riverock.db.SAPconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>true</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="ORACLE">
+
+		<Username>millennium</Username>
+
+		<Password>qqq</Password>
+
+		<ConnectString>jdbc:oracle:thin:@localhost:1521:MILL</ConnectString>
+
+		<ConnectionClass>org.riverock.db.ORAconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>false</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="ORACLE_HOME">
+
+		<Username>millennium</Username>
+
+		<Password>qqq</Password>
+
+		<ConnectString>jdbc:oracle:thin:@oracle:1521:MILL</ConnectString>
+
+		<ConnectionClass>org.riverock.db.ORAconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>false</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="ORACLE_AAA">
+
+		<Username>aaa</Username>
+
+		<Password>qqq</Password>
+
+		<ConnectString>jdbc:oracle:thin:@me.askmore:1521:MILL</ConnectString>
+
+		<ConnectionClass>org.riverock.db.ORAconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>true</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="ORACLE_NEW_MILL">
+
+		<Username>new_mill</Username>
+
+		<Password>oraclemillpass</Password>
+
+		<ConnectString>jdbc:oracle:thin:@oracle:1521:MAIN</ConnectString>
+
+		<ConnectionClass>org.riverock.db.ORAconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>true</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="MYSQL">
+
+		<Username>sa</Username>
+
+		<Password/>
+
+		<ConnectString>jdbc:mysql:///test?useUnicode=true&amp;characterEncoding=Cp1251</ConnectString>
+
+		<ConnectionClass>org.riverock.db.MYSQLconnect</ConnectionClass>
+
+		<DatabaseCharset>UTF-8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>false</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<DatabaseConnection name="IBM-DB2">
+
+		<Username/>
+
+		<Password/>
+
+		<ConnectString>jdbc:db2:webmill</ConnectString>
+
+		<ConnectionClass>org.riverock.db.IBMDB2connect</ConnectionClass>
+
+		<DatabaseCharset>UTF-8</DatabaseCharset>
+
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+		<IsAutoCommit>false</IsAutoCommit>
+
+	</DatabaseConnection>
+
+	<Auth>
+
+		<AuthProvider isUse="true">
+
+			<ProviderName>Internal Webmill auth provider</ProviderName>
+
+			<ProviderClass>org.riverock.a3.InternalAuthProvider</ProviderClass>
+
+		</AuthProvider>
+
+		<AuthProvider isUse="true">
+
+			<ProviderName>ActiveDirectory auth provider based on LDAP</ProviderName>
+
+			<ProviderClass>org.riverock.a3.LDAPAuthProvider</ProviderClass>
+
+			<ProviderParameters>
+
+				<ParametersList>
+
+					<Parameter name="provider-url" value="ldap://me.askmore/DC=askmore"/>
+
+				</ParametersList>
+
+			</ProviderParameters>
+
+		</AuthProvider>
+
+		<AuthProvider isUse="false">
+
+			<ProviderName>Config file auth provider</ProviderName>
+
+			<ProviderClass>org.riverock.a3.ConfigFileAuthProvider</ProviderClass>
+
+			<ProviderParameters>
+
+				<ParametersList>
+
+					<Parameter name="username" value="aaa"/>
+
+					<Parameter name="password" value="sss"/>
+
+					<Parameter name="role" value="webmill.guest"/>
+
+				</ParametersList>
+
+				<ParametersList>
+
+					<Parameter name="username" value="qqq"/>
+
+					<Parameter name="password" value="www"/>
+
+					<Parameter name="role" value="webmill.root"/>
+
+				</ParametersList>
+
+			</ProviderParameters>
+
+		</AuthProvider>
+
+	</Auth>
+
+</WebmillConfig>
+

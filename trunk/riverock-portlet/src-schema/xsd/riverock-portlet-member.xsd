@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<xs:schema xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:annotation>
+
+		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+
+	</xs:annotation>
+
+	<xs:annotation>
+
+		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
+
+	</xs:annotation>
+
+	<xs:import namespace="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" schemaLocation="portlet.xsd"/>
+
+	<xs:element name="MemberArea">
+
+		<xs:annotation>
+
+			<xs:documentation xml:lang="ru">Root элемент</xs:documentation>
+
+			<xs:documentation xml:lang="en">Root element</xs:documentation>
+
+		</xs:annotation>
+
+		<xs:complexType>
+
+			<xs:sequence>
+
+				<xs:element name="Module" type="ModuleType" minOccurs="0" maxOccurs="unbounded">
+
+					<xs:annotation>
+
+						<xs:documentation>Класс модуль</xs:documentation>
+
+					</xs:annotation>
+
+				</xs:element>
+
+			</xs:sequence>
+
+		</xs:complexType>
+
+	</xs:element>
+
+	<xs:complexType name="ModuleType">
+
+		<xs:sequence>
+
+			<xs:element name="RelateClass" type="RelateClassType" minOccurs="0" maxOccurs="unbounded"/>
+
+			<xs:element name="SelfLookup" type="SelfLookupType" minOccurs="0"/>
+
+			<xs:element name="Content" type="ContentType" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="name" type="xs:string" use="required"/>
+
+		<xs:attribute name="authApplication" type="xs:string" use="required"/>
+
+		<xs:attribute name="authModule" type="xs:string" use="required"/>
+
+		<xs:attribute name="isDelete" type="xs:boolean" use="required"/>
+
+		<xs:attribute name="type">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="lookup"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+		<xs:attribute name="lookupPK" type="xs:string"/>
+
+		<xs:attribute name="maxRecord" type="xs:int"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="ContentType">
+
+		<xs:sequence>
+
+			<xs:element name="security-role-ref" type="portlet:security-role-refType" maxOccurs="unbounded"/>
+
+			<xs:element name="Title" type="MultiLangStringType"/>
+
+			<xs:element name="QueryArea" type="QueryAreaType"/>
+
+			<xs:element name="ActionButtonName" type="MultiLangStringType" minOccurs="0"/>
+
+			<xs:element name="TargetAreaName" type="MultiLangStringType" minOccurs="0"/>
+
+			<xs:element name="TargetModule" type="TargetModuleType" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="action" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="index"/>
+
+					<xs:enumeration value="insert"/>
+
+					<xs:enumeration value="change"/>
+
+					<xs:enumeration value="delete"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+		<xs:attribute name="authAccess" use="optional">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="D"/>
+
+					<xs:enumeration value="I"/>
+
+					<xs:enumeration value="S"/>
+
+					<xs:enumeration value="U"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+		<xs:attribute name="authRole" type="xs:string" use="optional"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="RelateClassType">
+
+		<xs:attribute name="isFullReinitCache" type="xs:boolean" use="required"/>
+
+		<xs:attribute name="className" type="xs:string" use="required"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="SelfLookupType">
+
+		<xs:sequence>
+
+			<xs:element name="CurrentField" type="SelfLookupFieldType"/>
+
+			<xs:element name="TopField" type="SelfLookupFieldType"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="QueryAreaType">
+
+		<xs:sequence>
+
+			<xs:element name="Restrict" type="RestrictType" minOccurs="0"/>
+
+			<xs:element name="PrimaryKey" type="xs:string"/>
+
+			<xs:element name="PrimaryKeyType">
+
+				<xs:simpleType>
+
+					<xs:restriction base="xs:string">
+
+						<xs:enumeration value="number"/>
+
+						<xs:enumeration value="string"/>
+
+						<xs:enumeration value="date"/>
+
+					</xs:restriction>
+
+				</xs:simpleType>
+
+			</xs:element>
+
+			<xs:element name="PrimaryKeyMask" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="MainRefTable" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="Fields" maxOccurs="unbounded">
+
+				<xs:complexType>
+
+					<xs:complexContent>
+
+						<xs:extension base="FieldsType"/>
+
+					</xs:complexContent>
+
+				</xs:complexType>
+
+			</xs:element>
+
+			<xs:element name="Table" type="TableType" maxOccurs="unbounded"/>
+
+			<xs:element name="Where" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="Order" type="SortOrderType" minOccurs="0" maxOccurs="unbounded"/>
+
+			<xs:element name="sqlCache" type="SqlCacheType" minOccurs="0"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="FieldsType">
+
+		<xs:sequence>
+
+			<xs:element name="NameColumn" type="MultiLangStringType" minOccurs="0"/>
+
+			<xs:element name="QueryArea" type="QueryAreaType" minOccurs="0"/>
+
+			<xs:element name="ClassQuery" type="ClassQueryType" minOccurs="0"/>
+
+			<xs:element name="Validator" type="FieldValidatorType" minOccurs="0"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="isPk" type="xs:boolean"/>
+
+		<xs:attribute name="refTable" type="xs:string"/>
+
+		<xs:attribute name="name" type="xs:string" use="required"/>
+
+		<xs:attribute name="dbType" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="DATE"/>
+
+					<xs:enumeration value="NUMBER"/>
+
+					<xs:enumeration value="VARCHAR"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+		<xs:attribute name="isShow" type="xs:boolean" use="required"/>
+
+		<xs:attribute name="isSelect" type="xs:boolean"/>
+
+		<xs:attribute name="isCustom" type="xs:boolean" use="prohibited"/>
+
+		<xs:attribute name="jspType" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="text"/>
+
+					<xs:enumeration value="bigtext"/>
+
+					<xs:enumeration value="bigtext_lob"/>
+
+					<xs:enumeration value="date_text"/>
+
+					<xs:enumeration value="float_text"/>
+
+					<xs:enumeration value="double_text"/>
+
+					<xs:enumeration value="lookup"/>
+
+					<xs:enumeration value="text_area"/>
+
+					<xs:enumeration value="yesno_switch"/>
+
+					<xs:enumeration value="checkbox_switch"/>
+
+					<xs:enumeration value="int_text"/>
+
+					<xs:enumeration value="lookupClass"/>
+
+					<xs:enumeration value="yes_1_no_n"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+		<xs:attribute name="mask" type="xs:string"/>
+
+		<xs:attribute name="length" type="xs:int" default="5"/>
+
+		<xs:attribute name="isEdit" type="xs:boolean" default="true"/>
+
+		<xs:attribute name="isNotNull" type="xs:boolean" default="false"/>
+
+		<xs:attribute name="defValue" type="xs:string"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="ClassQueryType">
+
+		<xs:sequence>
+
+			<xs:element name="Parameters" minOccurs="0" maxOccurs="unbounded">
+
+				<xs:complexType>
+
+					<xs:complexContent>
+
+						<xs:extension base="ClassQueryParameterType"/>
+
+					</xs:complexContent>
+
+				</xs:complexType>
+
+			</xs:element>
+
+		</xs:sequence>
+
+		<xs:attribute name="nameClass" type="xs:string" use="required"/>
+
+		<xs:attribute name="nameOptionName" type="xs:string" use="required"/>
+
+		<xs:attribute name="xmlRoot" type="xs:string" use="required"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="SelfLookupFieldType">
+
+		<xs:attribute name="refTable" type="xs:string" use="required"/>
+
+		<xs:attribute name="name" type="xs:string" use="required"/>
+
+		<xs:attribute name="dbType" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="DATE"/>
+
+					<xs:enumeration value="VARCHAR"/>
+
+					<xs:enumeration value="NUMBER"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:complexType name="MultiLangStringType">
+
+		<xs:sequence>
+
+			<xs:element name="StringData" type="xs:string"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="isUseProperties" type="xs:boolean" use="required"/>
+
+		<xs:attribute name="storage" type="xs:string"/>
+
+		<xs:attribute name="isInit" type="xs:boolean"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="RestrictType">
+
+		<xs:attribute name="type" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="firm"/>
+
+					<xs:enumeration value="site"/>
+
+					<xs:enumeration value="user"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:complexType name="SortOrderType">
+
+		<xs:attribute name="field" type="xs:string" use="required"/>
+
+		<xs:attribute name="direction">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="ASC"/>
+
+					<xs:enumeration value="DESC"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:complexType name="TableType">
+
+		<xs:attribute name="table" type="xs:string" use="required"/>
+
+		<xs:attribute name="ref" type="xs:string"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="TargetModuleLookupType">
+
+		<xs:attribute name="type" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="index"/>
+
+					<xs:enumeration value="insert"/>
+
+					<xs:enumeration value="change"/>
+
+					<xs:enumeration value="delete"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:complexType name="TargetModuleType">
+
+		<xs:sequence>
+
+			<xs:element name="TargetModuleName" type="MultiLangStringType"/>
+
+			<xs:element name="TargetModuleLookup" type="TargetModuleLookupType" minOccurs="0" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="action" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="index"/>
+
+					<xs:enumeration value="insert"/>
+
+					<xs:enumeration value="change"/>
+
+					<xs:enumeration value="delete"/>
+
+					<xs:enumeration value="lookup"/>
+
+					<xs:enumeration value="self"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+		<xs:attribute name="module" type="xs:string"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="ClassQueryParameterType">
+
+		<xs:attribute name="method" type="xs:string" use="required"/>
+
+		<xs:attribute name="field" type="xs:string" use="required"/>
+
+		<xs:attribute name="type" use="required">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="java.lang.Long"/>
+
+					<xs:enumeration value="java.lang.String"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:complexType name="FieldValidatorType">
+
+		<xs:attribute name="type">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="xml"/>
+
+					<xs:enumeration value="xslt"/>
+
+					<xs:enumeration value="bind_dynamic"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:element name="SqlCache" type="SqlCacheType"/>
+
+	<xs:complexType name="SqlCacheType">
+
+		<xs:sequence>
+
+			<xs:element name="Sql" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="CheckSql" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="CheckParam" type="SqlCheckParameterType" minOccurs="0" maxOccurs="unbounded"/>
+
+			<xs:element name="From" type="SqlFromType" minOccurs="0" maxOccurs="unbounded"/>
+
+			<xs:element name="Where" type="SqlWhereType" minOccurs="0" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="isInit" type="xs:boolean"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="SqlCheckParameterType">
+
+		<xs:sequence>
+
+			<xs:element name="Parameter" type="xs:string"/>
+
+			<xs:element name="ParameterType">
+
+				<xs:simpleType>
+
+					<xs:restriction base="xs:string">
+
+						<xs:enumeration value="number"/>
+
+						<xs:enumeration value="string"/>
+
+						<xs:enumeration value="date"/>
+
+					</xs:restriction>
+
+				</xs:simpleType>
+
+			</xs:element>
+
+		</xs:sequence>
+
+		<xs:attribute name="type">
+
+			<xs:simpleType>
+
+				<xs:restriction base="xs:string">
+
+					<xs:enumeration value="http_request"/>
+
+					<xs:enumeration value="restrict_site"/>
+
+					<xs:enumeration value="restrict_firm"/>
+
+					<xs:enumeration value="restrict_user"/>
+
+				</xs:restriction>
+
+			</xs:simpleType>
+
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:complexType name="SqlFromType">
+
+		<xs:sequence>
+
+			<xs:element name="Table" type="xs:string"/>
+
+			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="SqlWhereType">
+
+		<xs:sequence>
+
+			<xs:element name="Left" type="SqlWhereColumnType"/>
+
+			<xs:element name="Right" type="SqlWhereColumnType"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="SqlWhereColumnType">
+
+		<xs:sequence>
+
+			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="Column" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="TypeField" minOccurs="0">
+
+				<xs:simpleType>
+
+					<xs:restriction base="xs:string">
+
+						<xs:enumeration value="field"/>
+
+						<xs:enumeration value="data"/>
+
+						<xs:enumeration value="parameter"/>
+
+					</xs:restriction>
+
+				</xs:simpleType>
+
+			</xs:element>
+
+			<xs:element name="Value" type="xs:string" minOccurs="0"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="RelateClassListType">
+
+		<xs:sequence>
+
+			<xs:element name="RelateClass" type="RelateClassType" minOccurs="0" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+</xs:schema>
+
