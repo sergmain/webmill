@@ -80,7 +80,7 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <!-- runtime library -->
 
@@ -158,9 +158,7 @@
 
     <!-- riverock runtime library -->
 
-    <property name="jsmithy-common.lib" value="jsmithy-common-1.2.0.jar"/>
-
-    <property name="jsmithy-sql-parser.lib" value="jsmithy-sql-parser-1.1.6.jar"/>
+    <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
 
 
 
@@ -182,7 +180,7 @@
 
     <path id="classpath-base">
 
-        <pathelement location="${lib.dir}/${jsmithy-common.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
 
         <pathelement location="${lib.dir}/${log4j.lib}"/>
 
@@ -292,19 +290,15 @@
 
             basedir="${build.dest}"
 
-            includes="com/**"
+            includes="org/**"
 
             excludes="
-
-            org/riverock/sql/parser/test/**,
-
-            org/riverock/schema/test/**,
 
             **/*.txt,**/*.bat,**/*.xml,**/*.sh,**/*.jav,${manifest-file-name}"
 
             manifest="${build.dest}/${manifest-file-name}"/>
 
-        <copy file="${build.dir}/${main.lib}" todir="../js-lib/lib"/>
+        <copy file="${build.dir}/${main.lib}" todir="../riverock-lib/lib"/>
 
     </target>
 
