@@ -88,21 +88,13 @@
 
 
 
-    <property name="portlet.lib" value="portlet-1.0.jar"/>
-
-    <property name="secure.lib" value="bcprov-jdk14-122.jar"/>
-
-
-
     <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>
 
 <!--    <property name="castor.lib" value="castor-0.9.4.3-xml.jar"/>-->
 
 
 
-    <property name="xerces.lib" value="xercesImpl-2.6.0.jar"/>
-
-    <property name="xml-api.lib" value="xmlParserAPIs-2.6.0.jar"/>
+    <property file="../riverock.properties"/>
 
 
 
@@ -296,6 +288,8 @@
 
     </target>
 
+
+
     <target name="gen_all_db_schema">
 
         <antcall target="gen_db_schema"/>
@@ -304,7 +298,9 @@
 
     </target>
 
-    <target name="gen_config_schema" depends="prepare">
+
+
+    <target name="gen_config_schema">
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/config/"/>
 
@@ -316,7 +312,9 @@
 
     </target>
 
-    <target name="gen_transfer_file_schema" depends="prepare">
+
+
+    <target name="gen_transfer_file_schema">
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/transfer/"/>
 
@@ -452,7 +450,7 @@
 
 -->
 
-    <target name="gen_db_structure_schema" depends="prepare">
+    <target name="gen_db_structure_schema" >
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/db/structure"/>
 
@@ -464,7 +462,9 @@
 
     </target>
 
-    <target name="gen_db_schema" depends="prepare">
+
+
+    <target name="gen_db_schema">
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/db"/>
 
@@ -475,6 +475,8 @@
         <antcall target="gen_schema"/>
 
     </target>
+
+
 
     <target name="gen_schema">
 
@@ -529,150 +531,6 @@
         </java>
 
     </target>
-
-
-
-<!--    <target name="del_core_files" depends="init">-->
-
-<!--        <delete includeEmptyDirs="false" failonerror="false">-->
-
-<!--            <fileset dir="${src.java.dir}/mill/main/core">-->
-
-<!--                <include name="*.java"/>-->
-
-<!--                <exclude name="**/CVS/**"/>-->
-
-<!--            </fileset>-->
-
-<!--        </delete>-->
-
-<!--    </target>-->
-
-
-
-    <target name="compile_all_schema">
-
-        <antcall target="compile"/>
-
-    </target>
-
-    <!-- Initialization target                                               -->
-
-    <target name="init">
-
-
-
-        <!-- developer.lib.dir is the developer snapshot directory.           -->
-
-        <!-- If it is not set, it defaults to build.dir, and "build install"  -->
-
-        <!-- will not do anything.                                            -->
-
-<!--        <property name="developer.lib.dir" value="${build.dir}"/>-->
-
-        <!-- developer.bin.dir is the developer snapshot directory.           -->
-
-        <!-- If it is not set, it defaults to argo.bin.dir, and               -->
-
-        <!-- "build install"  will not do anything.                           -->
-
-        <!--
-
-        <available classname="javax.servlet.Servlet" classpath="${classpath}" property="has.servlet"/>
-
-        -->
-
-<!--        <property name="javadoc.use" value="true"/>-->
-
-        <!-- General javadocs probably should not show private -->
-
-<!--        <property name="javadoc.private" value="false"/>-->
-
-<!--        <property name="javadoc.splitindex" value="true"/>-->
-
-<!--        <property name="javadoc.author" value="false"/>-->
-
-<!--        <property name="xerces.javadoc.link" value="http://xml.apache.org/xerces-j/apiDocs"/>-->
-
-<!--        <property name="log4j.javadoc.link" value="e:\opt2\jakarta-log4j-1.2.6/docs/api"/>-->
-
-<!--        <property name="jdk.javadoc.link" value="http://java.sun.com/products/jdk/1.2/docs/api"/>-->
-
-    </target>
-
-    <!-- Note this file can only make Ant display values set in the file correctly, -->
-
-    <!-- but external values in the environment or properties file will be operational.  -->
-
-    <!-- Help on usage                                                       -->
-
-    <target name="usage" depends="init">
-
-        <echo message=""/>
-
-        <echo message=""/>
-
-        <echo message="${Name} Build file"/>
-
-        <echo message="-------------------------------------------------------------"/>
-
-        <echo message=""/>
-
-        <echo message=" available targets are:"/>
-
-        <echo message=""/>
-
-        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-
-        <echo message="   package      --> generates the ${Name}.jar file"/>
-
-        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-
-        <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-
-        <echo message="   distclean    --> cleans up the distribution directory, ${dist.dir}"/>
-
-        <echo message="   usage        --> show this message (default)"/>
-
-        <echo message=""/>
-
-        <echo message=" See the comments inside the build.xml file for more details."/>
-
-        <echo message="-------------------------------------------------------------"/>
-
-        <echo message=""/>
-
-        <echo message=""/>
-
-    </target>
-
-    <!-- Prepares the build directory                                        -->
-
-    <target name="prepare">
-
-        <mkdir dir="${build.dir}"/>
-
-        <mkdir dir="${build.dest}"/>
-
-        <mkdir dir="${build.tests}"/>
-
-    </target>
-
-    <!-- Checks for necessary libraries and correct versions of libraries    -->
-
-    <!--
-
-    <target name="check.servlet" depends="prepare" unless="has.servlet">
-
-        <fail message="servlet library does not appear to be in the classpath."/>
-
-    </target>
-
-    -->
-
-    <!-- Compiles the source directory                                       -->
-
-    <!-- <target name="compile" depends="prepare"> -->
 
 
 

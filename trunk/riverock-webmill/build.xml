@@ -120,11 +120,13 @@
 
 
 
+    <property file="../riverock.properties"/>
+
+
+
     <property name="portlet.lib" value="portlet-1.0.jar"/>
 
     <property name="secure.lib"  value="bcprov-jdk14-117.jar"/>
-
-    <property name="servlet.lib" value="servlet-2.3.jar"/>
 
 
 
@@ -142,17 +144,7 @@ castor-current.lib for work of engine
 
 
 
-    <property name="xerces.lib" value="xercesImpl-2.6.0.jar"/>
 
-    <property name="xml-api.lib" value="xmlParserAPIs-2.6.0.jar"/>
-
-    <property name="xalan.lib" value="xalan-2.4.1.jar"/>
-
-
-
-    <property name="junit.lib" value="junit-3.8.1.jar"/>
-
-    <property name="log4j.lib" value="log4j-1.2.7.jar"/>
 
     <property name="bcel.lib" value="BCEL.jar"/>
 
@@ -406,7 +398,9 @@ castor-current.lib for work of engine
 
 
 
-        <copy file="${build.dir}\${mill.lib}" todir="C:\opt2\_www\mill\WEB-INF\lib"/>
+        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
+
+        <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
 
         <antcall target="start.apache"/>
 

@@ -124,11 +124,11 @@ import org.riverock.webmill.portal.menu.MenuItemInterface;
 
 import org.riverock.webmill.portal.menu.MenuLanguageInterface;
 
-import org.riverock.webmill.portal.impl.RenderRequestImpl;
+import org.riverock.webmill.portlet.wrapper.RenderRequestImpl;
 
-import org.riverock.webmill.portal.impl.RenderResponseImpl;
+import org.riverock.webmill.portlet.wrapper.RenderResponseImpl;
 
-import org.riverock.webmill.portal.impl.PortletURLImpl;
+import org.riverock.webmill.portlet.wrapper.PortletURLImpl;
 
 import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
 
@@ -401,6 +401,12 @@ public class CtxInstance {
         );
 
 
+
+        if (log.isDebugEnabled())
+
+            log.debug("nameLocaleBunble: "+nameLocaleBunble);
+
+        
 
         this.nameLocaleBundle = nameLocaleBunble;
 
@@ -906,13 +912,33 @@ public class CtxInstance {
 
         // If not found name of template or type of context, processing as index_page
 
+
+
         if ( ctxType==null || ctxTemplate==null )
 
         {
 
             defaultPortletType = Constants.CTX_TYPE_INDEX;
 
-            nameTemplate = portalInfo.getMenu(realLocale.toString()).getIndexTemplate();
+            if ( log.isDebugEnabled() )
+
+                log.debug( "realLocale: "+realLocale );
+
+
+
+            MenuLanguageInterface menu = portalInfo.getMenu(realLocale.toString());
+
+            if (menu==null)
+
+                log.error( "menu is null, locale: "+realLocale.toString() );
+
+            else
+
+                log.debug( "menu: "+menu );
+
+
+
+            nameTemplate = menu.getIndexTemplate();
 
             return;
 

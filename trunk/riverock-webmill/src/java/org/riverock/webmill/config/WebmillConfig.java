@@ -210,19 +210,13 @@ public class WebmillConfig
 
                 if (File.separatorChar == '\\')
 
-                {
-
-                    dir.replace('/', '\\');
-
-                }
+                    dir = dir.replace('/', '\\');
 
                 else
 
-                {
+                    dir = dir.replace('\\', '/');
 
-                    dir.replace('\\', '/');
 
-                }
 
                 if (!dir.endsWith(File.separator))
 
@@ -304,19 +298,13 @@ public class WebmillConfig
 
             if (File.separatorChar == '\\')
 
-            {
-
-                dir.replace('/', '\\');
-
-            }
+                dir = dir.replace('/', '\\');
 
             else
 
-            {
+                dir = dir.replace('\\', '/');
 
-                dir.replace('\\', '/');
 
-            }
 
             if (!dir.endsWith(File.separator))
 

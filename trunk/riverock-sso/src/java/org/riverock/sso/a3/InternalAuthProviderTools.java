@@ -88,6 +88,12 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.common.tools.ServletTools;
 
+import org.riverock.sso.utils.AuthHelper;
+
+import org.riverock.sso.schema.core.AuthUserItemType;
+
+import org.riverock.sso.core.GetAuthUserItem;
+
 
 
 import org.apache.log4j.Logger;
@@ -118,23 +124,61 @@ public class InternalAuthProviderTools
 
         {
 
-            ps = db_.prepareStatement(
+            switch (db_.getFamaly())
 
-                "select null " +
+            {
 
-                "from AUTH_USER a, MAIN_USER_INFO b, V$_READ_LIST_FIRM z1 " +
+                case DatabaseManager.MYSQL_FAMALY:
 
-                "where a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
+                    AuthUserItemType auth = GetAuthUserItem.getInstance(db_, id_auth_user_owner).item;
 
-                "b.ID_FIRM = z1.ID_FIRM and z1.ID_AUTH_USER=? "
+                    if (auth==null)
 
-            );
+                        return false;
 
 
 
-            RsetTools.setLong(ps, 1, id_auth_user_check);
+                    ps = db_.prepareStatement(
 
-            RsetTools.setLong(ps, 2, id_auth_user_owner);
+                        "select null " +
+
+                        "from AUTH_USER a, MAIN_USER_INFO b " +
+
+                        "where a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
+
+                        "b.ID_FIRM  in ("+AuthHelper.getGrantedFirmId(db_, auth.getUserLogin())+") "
+
+                    );
+
+
+
+                    RsetTools.setLong(ps, 1, id_auth_user_check);
+
+                    break;
+
+                default:
+
+                    ps = db_.prepareStatement(
+
+                        "select null " +
+
+                        "from AUTH_USER a, MAIN_USER_INFO b, V$_READ_LIST_FIRM z1 " +
+
+                        "where a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
+
+                        "b.ID_FIRM = z1.ID_FIRM and z1.ID_AUTH_USER=? "
+
+                    );
+
+
+
+                    RsetTools.setLong(ps, 1, id_auth_user_check);
+
+                    RsetTools.setLong(ps, 2, id_auth_user_owner);
+
+                    break;
+
+            }
 
             rs = ps.executeQuery();
 
@@ -158,49 +202,11 @@ public class InternalAuthProviderTools
 
         {
 
-            if (rs != null)
+            DatabaseManager.close( rs, ps );
 
-            {
+            rs = null;
 
-                try
-
-                {
-
-                    rs.close();
-
-                    rs = null;
-
-                }
-
-                catch (Exception e01)
-
-                {
-
-                }
-
-            }
-
-            if (ps != null)
-
-            {
-
-                try
-
-                {
-
-                    ps.close();
-
-                    ps = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
+            ps = null;
 
         }
 
@@ -390,49 +396,11 @@ public class InternalAuthProviderTools
 
         {
 
-            if (rs != null)
+            DatabaseManager.close( rs, ps );
 
-            {
+            rs = null;
 
-                try
-
-                {
-
-                    rs.close();
-
-                    rs = null;
-
-                }
-
-                catch (Exception e01)
-
-                {
-
-                }
-
-            }
-
-            if (ps != null)
-
-            {
-
-                try
-
-                {
-
-                    ps.close();
-
-                    ps = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
+            ps = null;
 
         }
 
@@ -1340,49 +1308,11 @@ public class InternalAuthProviderTools
 
         {
 
-            if (rs != null)
+            DatabaseManager.close( rs, ps );
 
-            {
+            rs = null;
 
-                try
-
-                {
-
-                    rs.close();
-
-                    rs = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
-
-            if (ps != null)
-
-            {
-
-                try
-
-                {
-
-                    ps.close();
-
-                    ps = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
+            ps = null;
 
         }
 
@@ -1440,49 +1370,11 @@ public class InternalAuthProviderTools
 
         {
 
-            if (rs != null)
+            DatabaseManager.close( rs, ps );
 
-            {
+            rs = null;
 
-                try
-
-                {
-
-                    rs.close();
-
-                    rs = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
-
-            if (ps != null)
-
-            {
-
-                try
-
-                {
-
-                    ps.close();
-
-                    ps = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
+            ps = null;
 
         }
 
@@ -1540,49 +1432,11 @@ public class InternalAuthProviderTools
 
         {
 
-            if (rs != null)
+            DatabaseManager.close( rs, ps );
 
-            {
+            rs = null;
 
-                try
-
-                {
-
-                    rs.close();
-
-                    rs = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
-
-            if (ps != null)
-
-            {
-
-                try
-
-                {
-
-                    ps.close();
-
-                    ps = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
+            ps = null;
 
         }
 
@@ -1640,49 +1494,11 @@ public class InternalAuthProviderTools
 
         {
 
-            if (rs != null)
+            DatabaseManager.close( rs, ps );
 
-            {
+            rs = null;
 
-                try
-
-                {
-
-                    rs.close();
-
-                    rs = null;
-
-                }
-
-                catch (Exception e01)
-
-                {
-
-                }
-
-            }
-
-            if (ps != null)
-
-            {
-
-                try
-
-                {
-
-                    ps.close();
-
-                    ps = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
+            ps = null;
 
         }
 
@@ -1738,49 +1554,11 @@ public class InternalAuthProviderTools
 
         {
 
-            if (rs != null)
+            DatabaseManager.close(rs, ps);
 
-            {
+            rs = null;
 
-                try
-
-                {
-
-                    rs.close();
-
-                    rs = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
-
-            if (ps != null)
-
-            {
-
-                try
-
-                {
-
-                    ps.close();
-
-                    ps = null;
-
-                }
-
-                catch (Exception e02)
-
-                {
-
-                }
-
-            }
+            ps = null;
 
         }
 
@@ -1816,17 +1594,43 @@ public class InternalAuthProviderTools
 
         {
 
-            ps = db_.prepareStatement(
+            switch (db_.getFamaly())
 
-                "select ID_FIRM from v$_read_list_firm where USER_LOGIN=? and ID_FIRM=?"
+            {
 
-            );
+                case DatabaseManager.MYSQL_FAMALY:
+
+                    ps = db_.prepareStatement(
+
+                        "select ID_FIRM from main_list_firm " +
+
+                        "where ID_FIRM in ("+AuthHelper.getGrantedFirmId(db_, userLogin)+") and ID_FIRM=?"
+
+                    );
+
+                    ps.setObject(1, firmId);
+
+                    break;
+
+                default:
+
+                    ps = db_.prepareStatement(
+
+                        "select ID_FIRM from v$_read_list_firm where USER_LOGIN=? and ID_FIRM=?"
+
+                    );
 
 
 
-            ps.setString(1, userLogin);
+                    ps.setString(1, userLogin);
 
-            ps.setObject(2, firmId);
+                    ps.setObject(2, firmId);
+
+                    break;
+
+            }
+
+
 
 
 
@@ -1896,19 +1700,43 @@ public class InternalAuthProviderTools
 
         {
 
-            ps = db_.prepareStatement(
+            switch (db_.getFamaly())
 
-                "select ID_SERVICE from v$_read_list_service where USER_LOGIN=? and ID_SERVICE=?"
+            {
 
-            );
+                case DatabaseManager.MYSQL_FAMALY:
+
+                    ps = db_.prepareStatement(
+
+                        "select ID_SERVICE from main_list_service " +
+
+                        "where ID_SERVICE in ("+AuthHelper.getGrantedServiceId(db_, userLogin)+") and ID_SERVICE=?"
+
+                    );
+
+                    ps.setObject(1, serviceId);
+
+                    break;
+
+                default:
+
+                    ps = db_.prepareStatement(
+
+                        "select ID_SERVICE from v$_read_list_service where USER_LOGIN=? and ID_SERVICE=?"
+
+                    );
 
 
 
-            ps.setString(1, userLogin);
+                    ps.setString(1, userLogin);
 
-            ps.setObject(2, serviceId);
+                    ps.setObject(2, serviceId);
 
 
+
+                    break;
+
+            }
 
             rs = ps.executeQuery();
 
@@ -1976,19 +1804,43 @@ public class InternalAuthProviderTools
 
         {
 
-            ps = db_.prepareStatement(
+            switch (db_.getFamaly())
 
-                "select ID_ROAD from v$_read_list_road where USER_LOGIN = ? and ID_ROAD=?"
+            {
 
-            );
+                case DatabaseManager.MYSQL_FAMALY:
+
+                    ps = db_.prepareStatement(
+
+                        "select ID_ROAD from main_list_road " +
+
+                        "where ID_ROAD in ("+AuthHelper.getGrantedRoadId(db_, userLogin)+") and ID_ROAD=?"
+
+                    );
+
+                    ps.setObject(1, roadId);
+
+                    break;
+
+                default:
+
+                    ps = db_.prepareStatement(
+
+                        "select ID_ROAD from v$_read_list_road where USER_LOGIN = ? and ID_ROAD=?"
+
+                    );
 
 
 
-            ps.setString(1, userLogin);
+                    ps.setString(1, userLogin);
 
-            ps.setObject(2, roadId);
+                    ps.setObject(2, roadId);
 
 
+
+                    break;
+
+            }
 
             rs = ps.executeQuery();
 

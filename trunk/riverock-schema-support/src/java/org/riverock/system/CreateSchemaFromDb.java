@@ -4012,7 +4012,7 @@ public class CreateSchemaFromDb
 
             (config.getIsUseObjectWrapper()
 
-            ?"             ps.setLong(1, item.get"+StringTools.capitalizeString(column.getColumnName())+"().longValue() );\n"
+            ?"             ps.setObject(1, item.get"+StringTools.capitalizeString(column.getColumnName())+"() );\n"
 
             :"             ps.setLong(1, item.get"+StringTools.capitalizeString(column.getColumnName())+"() );\n"
 
@@ -5120,43 +5120,37 @@ public class CreateSchemaFromDb
 
             "\n"+
 
-            "     public "+className+"(){}\n"+
+            "    public "+className+"(){}\n"+
 
             "\n"+
 
-            "     public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            "    public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
 
             putExceptionDefinition()+
 
-            "     {\n"+
+            "    {\n"+
 
-            "         return new Long(process(db_, item));\n"+
+            "        return new Long(process(db_, item));\n"+
 
-            "     }\n"+
+            "    }\n"+
 
             "\n"+
 
-            "     public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            "    public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
 
             putExceptionDefinition()+
 
-            "     {\n"+
+            "    {\n"+
 
-            "\n";
+            "        String sql_ =\n"+
 
-
-
-        s +=
-
-            "         String sql_ =\n"+
-
-            "             \"insert into "+table.getName()+"\"+\n" +
+            "            \"insert into "+table.getName()+"\"+\n" +
 
             buildInsertFieldList(table, 13)+
 
-            "             \"values\"+\n" +
+            "            \"values\"+\n" +
 
-            "             \"(";
+            "            \"(";
 
 
 
@@ -5188,23 +5182,35 @@ public class CreateSchemaFromDb
 
         }
 
-        s += ")\";\n";
-
-
-
         s +=
+
+            ")\";\n" +
+
+            "\n" +
+
+            "        return process(db_, item, sql_);\n" +
+
+            "    }\n" +
 
             "\n"+
 
-            "         PreparedStatement ps = null;\n"+
+            "    public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item, String sql_)\n"+
 
-            "         ResultSet rs = null;\n"+
+            putExceptionDefinition()+
 
-            "         try\n"+
+            "    {\n"+
 
-            "         {\n"+
+            "\n"+
 
-            "             ps = db_.prepareStatement(sql_);\n"+
+            "        PreparedStatement ps = null;\n"+
+
+            "        ResultSet rs = null;\n"+
+
+            "        try\n"+
+
+            "        {\n"+
+
+            "            ps = db_.prepareStatement(sql_);\n"+
 
             "\n";
 
@@ -5528,7 +5534,7 @@ public class CreateSchemaFromDb
 
                     "             if (item.get"+capitalizeName+" != null )\n"+
 
-                    "                 ps.setLong("+i+", item.get"+capitalizeName+".longValue() );\n" +
+                    "                 ps.setObject("+i+", item.get"+capitalizeName+" );\n" +
 
                     "             else\n" +
 
@@ -5544,7 +5550,7 @@ public class CreateSchemaFromDb
 
                 return
 
-                    "             ps.setLong("+i+", item.get"+capitalizeName+".longValue() );\n";
+                    "             ps.setObject("+i+", item.get"+capitalizeName+" );\n";
 
             else
 

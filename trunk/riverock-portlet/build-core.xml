@@ -1,482 +1,238 @@
 <?xml version="1.0" encoding="windows-1251"?>
-
 <!--
-
 /*
-
  * org.riverock.portlet - Portlet Library
-
  * 
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  * 
-
  * Riverock - The Open-source Java Development Community
-
  * http://www.riverock.org
-
  * 
-
  * 
-
  * This program is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
 -->
-
 <!--$Id$-->
-
 <project name="portlet core library" default="gen_core" basedir=".">
-
     <!-- Global initialization                                               -->
-
     <property name="java.target" value="1.4"/>
-
     <property name="java.class.target" value="1.4"/>
 
-
-
     <property name="lib.dir" value="../riverock-lib/lib"/>
-
     <property name="local-lib.dir" value="lib"/>
 
-
-
     <!-- runtime library -->
-
     <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
-
     <property name="riverock-generic.lib" value="riverock-generic-4.0.3.jar"/>
-
     <property name="riverock-cache.lib" value="riveroc-cache-1.0.1.jar"/>
-
     <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
-
     <property name="riverock-schema-support.lib" value="riverock-schema-support-4.0.3.jar"/>
 
-
-
     <property name="castor.lib" value="castor-0.9.4.3-xml.jar"/>
-
 <!--    <property name="castor.lib" value="castor-0.9.5.2-xml-snapshot.jar"/>-->
-
 <!--    <property name="castor.lib" value="castor-0.9.5.3-xml.jar"/>-->
 
-
-
-    <property name="xerces.lib" value="xercesImpl-2.6.0.jar"/>
-
-    <property name="xml-api.lib" value="xmlParserAPIs-2.6.0.jar"/>
-
-
-
-    <property name="log4j.lib" value="log4j-1.2.7.jar"/>
-
-
+    <property file="../riverock.properties"/>
 
     <property name="doc.dir" value="doc"/>
-
     <property name="src.dir" value="src-core"/>
-
     <property name="tomcat.dir" value="tomcat"/>
 
-
-
     <property name="src.java.dir" value="${src.dir}/java"/>
-
     <property name="src.java.mill-schema.dir" value="${src.java.dir}\com"/>
-
     <property name="src.jsp.dir" value="${src.dir}/jsp"/>
-
     <property name="src.xsd.dir" value="${src.dir}/xsd"/>
 
-
-
     <path id="classpath-1.4">
-
         <pathelement location="${lib.dir}/1.4/ojdbc14.jar"/>
-
     </path>
-
     <path id="classpath-1.3">
-
         <pathelement location="${lib.dir}/1.3/classes12.zip"/>
-
 <!--
-
         <pathelement location="${lib.dir}/1.3/xalan.jar"/>
-
         <pathelement location="${lib.dir}/1.3/xercesImpl.jar"/>
-
         <pathelement location="${lib.dir}/1.3/xml-apis.jar"/>
 
-
-
         <pathelement location="${lib.dir}/xml-commons-1.1.1.jar"/>
-
 -->
-
         <pathelement location="${lib.dir}/jce1_2_1.jar"/>
-
     </path>
-
-
 
     <path id="classpath-base">
-
         <pathelement location="${lib.dir}/${xerces.lib}"/>
-
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
-
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-
         <pathelement location="${lib.dir}/${castor.lib}"/>
 
-
-
         <path refid="classpath-${java.target}"/>
-
     </path>
-
-
 
     <path id="classpath-v3">
-
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
-
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
-
         <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
-
         <pathelement location="${lib.dir}/${riverock-schema-support.lib}" />
-
         <path refid="classpath-base"/>
-
     </path>
 
-
-
     <property name="packages" value="org.riverock.*"/>
-
     <property name="build.dir" value="build"/>
-
     <property name="build.src.java" value="${src.java.dir}"/>
-
     <property name="build.src.jsp" value="${src.jsp.dir}"/>
-
     <property name="build.dest" value="${build.dir}/classes"/>
-
     <property name="dist.dir" value="${build.dir}/dist"/>
-
     <property name="docs.dir" value="${build.dir}/javadocs"/>
 
-
-
     <property name="debug" value="on"/>
-
     <property name="optimize" value="off"/>
-
     <property name="deprecation" value="on"/>
 
-
-
     <target name="create-schema-from-db" depends="clean-dynamic-part">
-
         <antcall target="del_core_files"/>
-
         <java
-
             fork="true"
-
             dir="${src.dir}/jsp/_localhost/WEB-INF"
-
             failonerror="true"
-
             classname="org.riverock.system.CreateSchemaFromDb">
-
             <arg value="../../../xml/gen-core-schema.xml"/>
-
             <arg value="../../../xsd/webmill-schema.xsd"/>
-
             <classpath refid="classpath-v3"/>
-
         </java>
-
     </target>
-
-
 
     <target name="gen_core">
-
         <antcall target="create-schema-from-db"/>
-
         <copy file="${src.xsd.dir}/riverock-portlet-schema-core.xsd" todir="src-schema/xsd"/>
-
 <!--        <antcall target="gen-core-schema"/>-->
-
     </target>
-
-
 
     <target name="clean-dynamic-part">
-
         <delete dir="${src.java.mill-schema.dir}" failonerror="false" includeemptydirs="true"/>
-
         <delete file="${src.xsd.dir}/riverock-portlet-core.xsd" failonerror="false"/>
-
     </target>
-
-
 
     <target name="clean">
-
         <delete failonerror="false">
-
             <fileset dir="${build.dir}">
-
                 <include name="**"/>
-
                 <include name="*.jar"/>
-
                 <include name="*.tar"/>
-
                 <include name="*.gz"/>
-
             </fileset>
-
         </delete>
-
         <delete dir="${docs.dir}" failonerror="false"/>
-
         <delete dir="${build.dir}/src/" failonerror="false"/>
-
         <delete dir="${build.dir}/classes/" failonerror="false"/>
-
         <delete dir="${build.dir}/bin/" failonerror="false"/>
-
         <delete dir="${build.dir}/tomcat/" failonerror="false"/>
-
         <delete dir="${build.dir}/ext/" failonerror="false"/>
-
         <delete dir="${build.dir}" failonerror="false"/>
 
-
-
     </target>
-
-
 
     <target name="gen-core-schema" depends="prepare">
-
         <property name="schema-dir" value="${src.java.dir}/org/riverock/portlet/schema/core/"/>
-
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-schema-core.xsd"/>
-
         <property name="schema-package-java" value="org.riverock.portlet.schema.core"/>
-
         <antcall target="gen_schema"/>
-
         <copy file="${schema-file}" todir="src-schema/xsd"/>
-
     </target>
-
-
 
     <target name="gen_schema" >
-
         <antcall target="clean"/>
-
         <delete includeEmptyDirs="true" failonerror="false">
-
             <fileset dir="${schema-dir}">
-
                 <include name="**/*.java"/>
-
                 <exclude name="**/CVS"/>
-
             </fileset>
-
         </delete>
-
         <echo message="XSD - ${schema-file}"/>
-
         <java fork="true" classname="org.exolab.castor.builder.SourceGenerator">
-
             <arg value="-i"/>
-
             <arg value="${schema-file}"/>
-
             <arg value="-package"/>
-
             <arg value="${schema-package-java}"/>
-
             <arg value="-dest"/>
-
             <arg value="${src.java.dir}"/>
-
             <arg value="-types"/>
-
             <arg value="j2"/>
-
             <arg value="-f"/>
-
             <classpath>
-
                 <pathelement location="${local-lib.dir}/castor"/>
-
                 <path refid="classpath-v3"/>
-
             </classpath>
-
         </java>
-
     </target>
-
-
 
     <target name="del_core_files">
-
         <delete includeEmptyDirs="false" failonerror="false">
-
             <fileset dir="${src.java.dir}/org/riverock/portlet/core">
-
                 <include name="**/*.java"/>
-
                 <exclude name="**/CVS"/>
-
             </fileset>
-
         </delete>
-
     </target>
-
-
 
     <!-- Initialization target                                               -->
-
     <!-- Note this file can only make Ant display values set in the file correctly, -->
-
     <!-- but external values in the environment or properties file will be operational.  -->
-
     <!-- Help on usage                                                       -->
-
     <target name="usage">
-
         <echo message=""/>
-
         <echo message=""/>
-
         <echo message="-------------------------------------------------------------"/>
-
         <echo message=""/>
-
         <echo message=" available targets are:"/>
-
         <echo message=""/>
-
         <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-
         <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-
         <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-
         <echo message="   distclean    --> cleans up the distribution directory, ${dist.dir}"/>
-
         <echo message="   usage        --> show this message (default)"/>
-
         <echo message=""/>
-
         <echo message=" See the comments inside the build.xml file for more details."/>
-
         <echo message="-------------------------------------------------------------"/>
-
         <echo message=""/>
-
         <echo message=""/>
-
     </target>
-
     <!-- Prepares the build directory                                        -->
-
     <target name="prepare">
-
         <!--
-
         <echo message="Preparing the build directories"/>
-
         -->
-
         <mkdir dir="${build.dir}"/>
-
         <mkdir dir="${build.dest}"/>
-
     </target>
-
     <!-- Checks for necessary libraries and correct versions of libraries    -->
-
     <!-- Compiles the source directory                                       -->
-
     <!-- <target name="compile" depends="prepare"> -->
-
     <target name="docs" depends="prepare">
-
         <echo message="Build javadoc"/>
-
         <!-- create directories -->
-
         <mkdir dir="${docs.dir}"/>
-
         <javadoc
-
             sourcepath="${build.src.java}"
-
             destdir="${docs.dir}"
-
             verbose="true"
-
             defaultexcludes="true"
-
             packagenames="org/riverock/db/*, org/riverock/tools/*, org/riverock/startup/*"
-
             excludepackagenames="org/riverock/price/*"
-
             >
-
             <classpath refid="classpath-v3"/>
-
         </javadoc>
-
     </target>
-
 </project>
-

@@ -68,9 +68,9 @@
 
 	<SecurityKeyStorage path="d:\keys\mill\keystore.ks" password="111" alias="222"/>
 
-	<!--    <DefaultConnectionName>ORACLE_TEST</DefaultConnectionName>-->
+	    <DefaultConnectionName>ORACLE_CIH</DefaultConnectionName>
 
-	<DefaultConnectionName>ORACLE</DefaultConnectionName>
+<!--	<DefaultConnectionName>MYSQL</DefaultConnectionName>-->
 
 	<DatabaseConnection name="ORACLE_ZEON">
 
@@ -89,6 +89,44 @@
 		<IsAutoCommit>false</IsAutoCommit>
 
 	</DatabaseConnection>
+
+    <DatabaseConnection name="ORACLE_CNT">
+
+        <Username>cih</Username>
+
+        <Password>1</Password>
+
+        <ConnectString>jdbc:oracle:thin:@cnt.lo:1521:CNT2</ConnectString>
+
+        <ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
+
+        <DatabaseCharset>UTF8</DatabaseCharset>
+
+        <IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+        <IsAutoCommit>false</IsAutoCommit>
+
+        <DataSourceType>DRIVER</DataSourceType>
+
+    </DatabaseConnection>
+
+    <DatabaseConnection name="ORACLE_CIH">
+
+        <Username>cih</Username>
+
+        <Password>qqq</Password>
+
+        <ConnectString>jdbc:oracle:thin:@smaslyukov:1521:MILL</ConnectString>
+
+        <ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
+
+        <DatabaseCharset>UTF8</DatabaseCharset>
+
+        <IsConvertDatabaseString>false</IsConvertDatabaseString>
+
+        <IsAutoCommit>false</IsAutoCommit>
+
+    </DatabaseConnection>
 
 	<DatabaseConnection name="ORACLE_TEST">
 
@@ -330,7 +368,7 @@
 
 		<Password/>
 
-		<ConnectString>jdbc:mysql://me.askmore/test?useUnicode=true&amp;characterEncoding=Cp1251</ConnectString>
+		<ConnectString>jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=Cp1251</ConnectString>
 
 		<ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>
 

@@ -296,6 +296,54 @@
 
 
 
+    <target name="start.apache">
+
+        <property name="null.prop" value=""/>
+
+        <exec executable="net" outputproperty="null.prop">
+
+            <arg line=" start 'Apache Tomcat'"/>
+
+        </exec>
+
+    </target>
+
+
+
+    <target name="stop.apache">
+
+        <property name="null.prop" value=""/>
+
+        <exec executable="net" outputproperty="null.prop">
+
+            <arg line=" stop 'Apache Tomcat'"/>
+
+        </exec>
+
+    </target>
+
+
+
+    <target name="run_tomcat_with_new jar" depends="init">
+
+        <antcall target="stop.apache"/>
+
+        <antcall target="jar"/>
+
+
+
+        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
+
+        <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+
+        <antcall target="start.apache"/>
+
+    </target>
+
+
+
+
+
     <target name="jar" depends="jar_without_copy">
 
 
