@@ -164,7 +164,7 @@ public class DbStructureImport
 
                 File.separatorChar+"data" +
 
-                File.separatorChar+"webmill-def-v2.xml";
+                File.separatorChar+"webmill-def-v2-1.xml";
 
             System.out.println("Unmarshal data from file "+fileName);
 
