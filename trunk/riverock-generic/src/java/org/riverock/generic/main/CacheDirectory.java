@@ -328,6 +328,16 @@ public class CacheDirectory
 
 
 
+    public CacheDirectory(File dir, FileFilter filter)
+
+        throws FileNotFoundException, ConfigException
+
+    {
+
+        this(dir, filter, 1000 * 10);
+
+    }
+
 
 
     public CacheDirectory(String dirName, FileFilter filter, long delayPeriod_)
@@ -336,23 +346,23 @@ public class CacheDirectory
 
     {
 
-//        URL url = new URL("a");
+        this(new File(dirName), filter, delayPeriod_);
 
-//        URI uri = new URI("a");
-
-//
-
-//        uri.
+    }
 
 
 
+    public CacheDirectory(File dir, FileFilter filter, long delayPeriod_)
 
+        throws FileNotFoundException, ConfigException
 
-        if (dirName == null)
+    {
+
+        if (dir == null)
 
         {
 
-            log.warn("Call CacheDirectory constructor with dirName==null");
+            log.warn("Call CacheDirectory constructor with dir==null");
 
             return;
 
@@ -360,7 +370,7 @@ public class CacheDirectory
 
         fileFilter = filter;
 
-        currentDir = new File(dirName);
+        currentDir = dir;
 
         if (currentDir == null)
 
@@ -384,7 +394,19 @@ public class CacheDirectory
 
             log.warn(errorString);
 
-//            return;
+            throw new FileNotFoundException( errorString );
+
+        }
+
+
+
+        if (!currentDir.isDirectory())
+
+        {
+
+            String errorString = "Path '" + currentDir + "' is not directory";
+
+            log.warn(errorString);
 
             throw new FileNotFoundException( errorString );
 

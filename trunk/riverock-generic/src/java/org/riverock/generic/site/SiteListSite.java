@@ -64,6 +64,8 @@ import java.sql.ResultSet;
 
 import java.util.HashMap;
 
+import java.util.Iterator;
+
 
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -92,7 +94,29 @@ public class SiteListSite
 
     {
 
-        return (Long)hashListSite.get(serverName);
+        Long siteId = (Long)hashListSite.get(serverName);
+
+        if (siteId==null)
+
+        {
+
+            log.warn("site with serverName '"+serverName+"' not found");
+
+            log.warn( "Dump map with current serverNames" );
+
+            for ( Iterator it = hashListSite.keySet().iterator(); it.hasNext(); )
+
+            {
+
+                Object s = it.next();
+
+                log.warn( "Param in map - "+s.toString()+", value - "+ hashListSite.get(s) );
+
+            }
+
+        }
+
+        return siteId;
 
     }
 

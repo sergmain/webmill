@@ -248,15 +248,23 @@ public class DataDefinitionManager
 
         {
 
+            File dir = new File(PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_DEFINITION_DIR);
+
+            if (!dir.exists())
+
+            {
+
+                log.warn("Directory '"+dir+"' not exists");
+
+                return;
+
+            }
+
+
+
             if (mainDir==null)
 
-
-
-                mainDir = new CacheDirectory(
-
-                    PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_DEFINITION_DIR,
-
-                    definitionFilter);
+                mainDir = new CacheDirectory(dir, definitionFilter);
 
 
 
