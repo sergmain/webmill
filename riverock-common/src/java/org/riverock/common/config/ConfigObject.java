@@ -76,6 +76,8 @@ import org.exolab.castor.xml.Unmarshaller;
 
 import org.xml.sax.InputSource;
 
+import org.riverock.common.tools.StringTools;
+
 
 
 public class ConfigObject
@@ -133,6 +135,16 @@ public class ConfigObject
                 InitialContext ic = new InitialContext();
 
                 config.nameConfigFile = (String)ic.lookup("java:comp/env/" + nameJndiCtx);
+
+                if (File.separatorChar=='\\')
+
+                    config.nameConfigFile.replace( '/', '\\');
+
+                else
+
+                    config.nameConfigFile.replace( '\\', '/');
+
+
 
                 configFile = new File( config.nameConfigFile );
 
@@ -255,6 +267,8 @@ public class ConfigObject
         return config;
 
     }
+
+
 
 }
 
