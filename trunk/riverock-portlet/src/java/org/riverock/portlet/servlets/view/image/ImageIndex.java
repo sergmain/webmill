@@ -106,6 +106,8 @@ import org.riverock.common.tools.ServletTools;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
@@ -164,7 +166,7 @@ public class ImageIndex extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -188,17 +190,15 @@ public class ImageIndex extends HttpServlet
 
                 DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-                InitPage jspPage = new InitPage(db_, request, response,
+                InitPage jspPage = new InitPage(db_, request,
 
-                        "mill.locale._price_list",
-
-                        Constants.NAME_LANG_PARAM, null, null
+                                                "mill.locale._price_list"
 
                 );
 
 
 
-                String index_page = CtxURL.url(request, response, jspPage.cross, "mill.image.index");
+                String index_page = CtxURL.url(request, response, jspPage, "mill.image.index");
 
 
 
@@ -218,7 +218,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.image.desc") + '&' +
+                            CtxURL.url(request, response, jspPage, "mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -238,7 +238,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.image.select_url") + '&' +
+                            CtxURL.url(request, response, jspPage, "mill.image.select_url") + '&' +
 
                             "id_main=" + id_main_
 
@@ -424,7 +424,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.image.desc") + '&' +
+                            CtxURL.url(request, response, jspPage, "mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -444,7 +444,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.image.select_url") + '&' +
+                            CtxURL.url(request, response, jspPage, "mill.image.select_url") + '&' +
 
                             "id_main=" + id_main_
 
@@ -464,7 +464,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.image.list") + '&' +
+                            CtxURL.url(request, response, jspPage, "mill.image.list") + '&' +
 
                             "id_main=" + id_main_
 

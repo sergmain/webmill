@@ -76,6 +76,8 @@ import org.riverock.webmill.main.Constants;
 
 import org.riverock.webmill.config.WebmillConfig;
 
+import org.riverock.webmill.utils.ServletUtils;
+
 import org.riverock.common.config.ConfigException;
 
 import org.riverock.common.config.PropertiesProvider;
@@ -737,6 +739,106 @@ public class PortletManager
             throw e;
 
         }
+
+    }
+
+
+
+    public static PortletType getPortlet( CtxInstance ctxInstance)
+
+    {
+
+        try
+
+        {
+
+            if ( ctxInstance.request==null )
+
+            {
+
+                log.warn( "call PortletTools.getPortlet(HttpServletRequest request) with null request" );
+
+                return null;
+
+            }
+
+            String typePortlet = (String)ctxInstance.session.getAttribute( Constants.NAME_PORTLET_PARAM );
+
+            if ( ( typePortlet==null || typePortlet.length()==0 ) )
+
+            {
+
+
+
+                if ( ctxInstance.request.getAttribute( Constants.NAME_PORTLET_PARAM )==null )
+
+                    return null;
+
+
+
+                String type__ = ServletUtils.getString( ctxInstance.request, Constants.NAME_PORTLET_PARAM );
+
+
+
+                if ( log.isDebugEnabled() )
+
+                    log.debug( "Session attribute not initialized. Get from parameter jsp:param. "+type__ );
+
+
+
+                typePortlet = type__;
+
+            }
+
+
+
+            if ( log.isDebugEnabled() )
+
+                log.debug( "type of portlet - "+typePortlet );
+
+
+
+
+
+            PortletType desc = getPortletDescription( typePortlet );
+
+
+
+            if ( log.isDebugEnabled() )
+
+            {
+
+                log.debug( "portlet description - "+typePortlet );
+
+                if ( desc!=null )
+
+                    log.debug( "portlet name ID - "+
+
+                        PortletTools.getStringParam(
+
+                            desc, PortletTools.name_portlet_id
+
+                        )
+
+                    );
+
+            }
+
+
+
+            return desc;
+
+        }
+
+        catch (Exception e)
+
+        {
+
+            log.error( "Error getPortlet()", e );
+
+        }
+
+        return null;
 
     }
 

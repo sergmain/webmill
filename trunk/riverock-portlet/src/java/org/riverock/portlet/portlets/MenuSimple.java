@@ -1198,7 +1198,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
                 response.encodeURL(CtxURL.ctx() + '?' +
 
-                jspPage.addURL +
+                                   jspPage.getAsURL() +
 
                 Constants.NAME_TYPE_CONTEXT_PARAM
 

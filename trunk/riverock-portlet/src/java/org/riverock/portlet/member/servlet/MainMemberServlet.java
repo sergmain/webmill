@@ -100,6 +100,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.utils.ServletUtils;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.portlet.main.Constants;
 
 import org.riverock.common.tools.RsetTools;
@@ -150,7 +152,7 @@ public class MainMemberServlet extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 

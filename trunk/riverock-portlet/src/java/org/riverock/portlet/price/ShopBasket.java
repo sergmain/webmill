@@ -136,7 +136,7 @@ public class ShopBasket
 
                     param.getResponse(),
 
-                    param.getJspPage().cross,
+                    param.getJspPage(),
 
                     "mill.invoice"
 

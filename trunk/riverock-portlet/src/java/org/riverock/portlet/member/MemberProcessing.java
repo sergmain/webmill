@@ -4504,7 +4504,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     Constants.MEMBER_MODULE_PARAM + "=" + mod.getName() + "&" +
 
-                    Constants.MEMBER_ACTION_PARAM + "=insert&" + jspPage.addURL +
+                    Constants.MEMBER_ACTION_PARAM + "=insert&" + jspPage.getAsURL() +
 
                     addLookupURL(true);
 
@@ -4684,7 +4684,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             addLookupURL(true) +
 
-                            jspPage.cross.getAsURL() +
+                            jspPage.getAsURL() +
 
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
 
@@ -4712,7 +4712,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             addLookupURL(true) +
 
-                            jspPage.cross.getAsURL() +
+                            jspPage.getAsURL() +
 
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
 
@@ -4828,7 +4828,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         addLookupURL(true, true) +
 
-                        jspPage.cross.getAsURL() +
+                        jspPage.getAsURL() +
 
                         mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + '=' + pkID + "';\">\n";
 
@@ -4934,7 +4934,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            jspPage.cross.getAsForm() +
+            jspPage.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5060,7 +5060,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            jspPage.cross.getAsForm() +
+            jspPage.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5174,7 +5174,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            jspPage.cross.getAsForm() +
+            jspPage.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5230,7 +5230,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
 
-            jspPage.cross.getAsURL() +
+            jspPage.getAsURL() +
 
             addLookupURL(true);
 
@@ -5328,7 +5328,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
 
-                        jspPage.cross.getAsURL();
+                        jspPage.getAsURL();
 
 
 
@@ -7880,7 +7880,7 @@ Constants.MEMBER_ACTION_PARAM+"=index&"+
 
 addLookupURL( true, true )+
 
-jspPage.cross.getAsURL()+
+jspPage.getAsURL1()+
 
 mod.getName()+'.'+content.getQueryArea().getPrimaryKey()+"="+idPK;
 
@@ -7958,11 +7958,11 @@ throw new MemberForvardException();
 
 
 
-        jspPage = new InitPage(db_, request, response,
+        jspPage = new InitPage(db_, request,
 
-                null,
+                               null
 
-            Constants.NAME_LANG_PARAM, null, null);
+        );
 
 
 

@@ -110,6 +110,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.tools.Client;
 
 import org.riverock.common.tools.ExceptionTools;
@@ -170,7 +172,7 @@ public class BindAdd extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -178,7 +180,7 @@ public class BindAdd extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -196,15 +198,15 @@ public class BindAdd extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_USER",
+                                            "mill.locale.AUTH_USER"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.auth.bind");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.bind");
 
 
 
@@ -220,7 +222,7 @@ public class BindAdd extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage.cross, "mill.auth.commit_add_bind")
+                    CtxURL.url(request, response, jspPage, "mill.auth.commit_add_bind")
 
 
 

@@ -110,6 +110,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 
@@ -168,7 +170,7 @@ public class RegisterUserController extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -178,23 +180,23 @@ public class RegisterUserController extends HttpServlet
 
             InitPage jspPage = new InitPage(DatabaseAdapter.getInstance(false),
 
-                request, response,
+                request,
 
-                    "mill.locale._price_list",
+                "mill.locale._price_list"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
             String index_page = response.encodeURL(CtxURL.ctx()) + '?' +
 
-                jspPage.cross.getAsURL();
+                jspPage.getAsURL();
 
 
 
             String redirectURL = response.encodeURL(CtxURL.ctx() )+ '?' +
 
-                jspPage.cross.getAsURL()+
+                jspPage.getAsURL()+
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM +'='+
 
@@ -522,7 +524,7 @@ public class RegisterUserController extends HttpServlet
 
                             {
 
-                                String args2[] = {username, response.encodeURL("register.jsp?") + jspPage.addURL};
+                                String args2[] = {username, response.encodeURL("register.jsp?") + jspPage.getAsURL()};
 
                                 out.write(jspPage.sCustom.getStr("reg.login_exists", args2));
 
@@ -668,7 +670,7 @@ Locale loc)
 
             );
 
-            out.write(jspPage.cross.getAsForm());
+            out.write(jspPage.getAsForm());
 
             out.write( ServletTools.getHiddenItem(Constants.NAME_REGISTER_ACTION_PARAM, "reg_exists") );
 
@@ -744,7 +746,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(jspPage.cross.getAsForm());
+            out.write(jspPage.getAsForm());
 
             out.write("\r\n");
 
@@ -802,7 +804,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(jspPage.cross.getAsForm());
+            out.write(jspPage.getAsForm());
 
             out.write("\n");
 

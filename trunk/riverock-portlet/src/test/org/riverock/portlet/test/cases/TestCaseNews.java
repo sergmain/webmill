@@ -784,7 +784,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
                     testAbstract.response.encodeURL( CtxURL.ctx()) + '?' +
 
-                    testAbstract.jspPage.addURL + Constants.NAME_ID_NEWS_PARAM + '=' +
+                    testAbstract.jspPage.getAsURL() + Constants.NAME_ID_NEWS_PARAM + '=' +
 
                     newsItem.getNewsItemId() + '&' +
 
@@ -932,11 +932,11 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
 
 
-        testAbstract.jspPage = new InitPage(testAbstract.db_, testAbstract.request, testAbstract.response,
+        testAbstract.jspPage = new InitPage(testAbstract.db_, testAbstract.request,
 
-                null,
+                                            null
 
-                Constants.NAME_LANG_PARAM, null, null);
+        );
 
     }
 
@@ -1348,7 +1348,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
                     testAbstract.response.encodeURL( CtxURL.ctx()) + '?' +
 
-                    testAbstract.jspPage.addURL + Constants.NAME_ID_NEWS_PARAM + '=' +
+                    testAbstract.jspPage.getAsURL() + Constants.NAME_ID_NEWS_PARAM + '=' +
 
                     newsItem.getNewsItemId() + '&' +
 

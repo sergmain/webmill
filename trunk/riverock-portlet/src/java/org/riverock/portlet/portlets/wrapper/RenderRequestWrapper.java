@@ -102,8 +102,6 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
-
 import org.riverock.webmill.schema.site.TemplateItemType;
 
 import org.riverock.webmill.schema.site.SiteTemplateParameterType;
@@ -158,9 +156,9 @@ public class RenderRequestWrapper implements RenderRequest
 
         this.response = ctxInstance.response ;
 
-        this.jspPage = ctxInstance.jspPage ;
+        this.jspPage = ctxInstance.page ;
 
-        this.ctxType = ctxInstance.type;
+        this.ctxType = ctxInstance.page.getType();
 
 
 
@@ -170,11 +168,11 @@ public class RenderRequestWrapper implements RenderRequest
 
         if (localePackage_ != null)
 
-            this.sm = StringManager.getManager(localePackage_, ctxInstance.jspPage.currentLocale);
+            this.sm = StringManager.getManager(localePackage_, ctxInstance.page.currentLocale);
 
         else
 
-            this.sm = ctxInstance.jspPage.sCustom;
+            this.sm = ctxInstance.page.sCustom;
 
 
 

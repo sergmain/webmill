@@ -144,7 +144,7 @@ public class JobItem implements PortletParameterSetter
 
         return param.getResponse().encodeURL( CtxURL.ctx() ) + '?' +
 
-            param.getJspPage().addURL + Constants.NAME_ID_JOB_PARAM + '=' +
+            param.getJspPage().getAsURL() + Constants.NAME_ID_JOB_PARAM + '=' +
 
             idPosition + '&'+
 

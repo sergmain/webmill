@@ -96,6 +96,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.portlet.price.BasketShopSession;
 
 import org.riverock.portlet.b2b.processing.Menatep;
@@ -174,7 +176,7 @@ public class ShopMenatepBasket extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 

@@ -116,6 +116,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -174,7 +176,7 @@ public class RightChange extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -182,7 +184,7 @@ public class RightChange extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -198,15 +200,15 @@ public class RightChange extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_RELATE_RIGHT_ARM",
+                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.auth.right");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.right");
 
 
 
@@ -286,7 +288,7 @@ public class RightChange extends HttpServlet
 
                     out.write(
 
-                        CtxURL.url(request, response, jspPage.cross, "mill.auth.commit_ch_right")
+                        CtxURL.url(request, response, jspPage, "mill.auth.commit_ch_right")
 
 
 

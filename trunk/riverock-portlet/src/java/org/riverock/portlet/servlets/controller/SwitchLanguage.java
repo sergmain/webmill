@@ -106,6 +106,8 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.portlet.main.Constants;
 
 
@@ -232,7 +234,7 @@ public class SwitchLanguage extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 

@@ -410,7 +410,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         sortItemUrl = param.getResponse().encodeURL(CtxURL.ctx()) + '?' +
 
-            param.getJspPage().addURL + Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
+            param.getJspPage().getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
 
             shopParam.currencyURL + '&' +
 

@@ -110,6 +110,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
@@ -170,7 +172,7 @@ public class RightIndex extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -190,11 +192,11 @@ public class RightIndex extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_RELATE_RIGHT_ARM",
+                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
@@ -290,7 +292,7 @@ public class RightIndex extends HttpServlet
 
     String url= CtxURL.ctx() + '?' +
 
-            cross.getAsURL()+
+            cross.getAsURL1()+
 
             Constants.NAME_TEMPLATE_CONTEXT_PARAM +'='+
 
@@ -324,7 +326,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage.cross, "mill.auth.add_right")
+                    CtxURL.url(request, response, jspPage, "mill.auth.add_right")
 
 
 
@@ -560,7 +562,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.auth.ch_right") + '&'
+                            CtxURL.url(request, response, jspPage, "mill.auth.ch_right") + '&'
 
 
 
@@ -582,7 +584,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.auth.del_right") + '&'
+                            CtxURL.url(request, response, jspPage, "mill.auth.del_right") + '&'
 
 
 
@@ -622,7 +624,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage.cross, "mill.auth.add_right")
+                    CtxURL.url(request, response, jspPage, "mill.auth.add_right")
 
 
 

@@ -80,9 +80,17 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
+
+
 public class ShopLogic extends HttpServlet
 
 {
+
+    private static Logger log = Logger.getLogger(ShopLogic.class);
+
+
 
     public ShopLogic()
 
@@ -120,7 +128,7 @@ public class ShopLogic extends HttpServlet
 
     {
 
-        throw new ServletException("'mill.shop_logic' servlet is deprecated. Use instead portlet 'mill.order_logic'");
+        log.error("'mill.shop_logic' servlet is deprecated. Use instead portlet 'mill.order_logic'");
 
     }
 

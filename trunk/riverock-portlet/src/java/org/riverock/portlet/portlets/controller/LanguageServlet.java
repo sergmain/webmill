@@ -226,11 +226,11 @@ public class LanguageServlet extends HttpServlet
 
             {
 
-                jspPage = new InitPage(db_, request, response,
+                jspPage = new InitPage(db_, request,
 
-                    "mill.locale.site_hamradio",
+                                       "mill.locale.site_hamradio"
 
-                    Constants.NAME_LANG_PARAM, null, null);
+                );
 
             }
 

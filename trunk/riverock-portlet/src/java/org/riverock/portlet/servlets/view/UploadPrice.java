@@ -162,11 +162,11 @@ public class UploadPrice extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                    "mill.locale.auth",
+                                            "mill.locale.auth"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
@@ -184,7 +184,7 @@ public class UploadPrice extends HttpServlet
 
             {
 
-                String param = jspPage.cross.getAsURL() +
+                String param = jspPage.getAsURL() +
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' +
 

@@ -288,11 +288,11 @@ public class TestCaseSiteAbstract
 
 
 
-        jspPage = new InitPage(db_, request, response,
+        jspPage = new InitPage(db_, request,
 
-                null,
+                               null
 
-                Constants.NAME_LANG_PARAM, null, null);
+        );
 
 
 

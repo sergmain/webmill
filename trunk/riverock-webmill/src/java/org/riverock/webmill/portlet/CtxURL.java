@@ -2,19 +2,19 @@
 
  * org.riverock.webmill -- Portal framework implementation
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -58,15 +58,11 @@ import javax.servlet.http.HttpServletRequest;
 
 
 
-import org.apache.log4j.Logger;
-
-
-
 import org.riverock.webmill.main.Constants;
 
-import org.riverock.webmill.tools.CrossPageParamInterface;
-
 import org.riverock.webmill.utils.ServletUtils;
+
+import org.riverock.webmill.port.InitPage;
 
 import org.riverock.common.tools.ServletTools;
 
@@ -78,7 +74,7 @@ import org.riverock.generic.config.GenericConfig;
 
 /**
 
- * 
+ *
 
  * $Author$
 
@@ -93,10 +89,6 @@ import org.riverock.generic.config.GenericConfig;
 public class CtxURL
 
 {
-
-    private static Logger cat = Logger.getLogger( "org.riverock.webmill.portlet.CtxURL" );
-
-
 
     public CtxURL()
 
@@ -122,23 +114,23 @@ public class CtxURL
 
 
 
-    public static String urlAsForm(HttpServletRequest request, HttpServletResponse response,
+    public static String urlAsForm(
 
-                             CrossPageParamInterface cross,
+        String nameTemplate,
 
-                             String portlet
+        InitPage page,
 
-                             )
+        String portlet
 
-        throws ConfigException
+        )
 
     {
 
         return
 
-            cross.getAsForm()+
+            page.getAsForm()+
 
-            ServletTools.getHiddenItem(Constants.NAME_TEMPLATE_CONTEXT_PARAM, ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM))+
+            ServletTools.getHiddenItem(Constants.NAME_TEMPLATE_CONTEXT_PARAM, nameTemplate)+
 
             ServletTools.getHiddenItem(Constants.NAME_TYPE_CONTEXT_PARAM, portlet);
 
@@ -148,7 +140,7 @@ public class CtxURL
 
     public static String url(HttpServletRequest request, HttpServletResponse response,
 
-                             CrossPageParamInterface cross,
+                             InitPage page,
 
                              String portlet
 
@@ -160,7 +152,7 @@ public class CtxURL
 
         return response.encodeURL( CtxURL.ctx()  ) + '?' +
 
-                cross.getAsURL()+
+            page.getAsURL()+
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM    +'='+
 

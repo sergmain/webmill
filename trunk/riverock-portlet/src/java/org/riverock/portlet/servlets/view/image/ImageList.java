@@ -106,6 +106,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
@@ -160,7 +162,7 @@ public class ImageList extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -184,15 +186,15 @@ public class ImageList extends HttpServlet
 
                 DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-                InitPage jspPage = new InitPage(db_, request, response,
+                InitPage jspPage = new InitPage(db_, request,
 
-                        "mill.locale._price_list",
+                                                "mill.locale._price_list"
 
-                        Constants.NAME_LANG_PARAM, null, null);
+                );
 
 
 
-                String index_page = CtxURL.url(request, response, jspPage.cross, "mill.image.index");
+                String index_page = CtxURL.url(request, response, jspPage, "mill.image.index");
 
 
 
@@ -342,7 +344,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.image.change_desc") + '&' +
+                                    CtxURL.url(request, response, jspPage, "mill.image.change_desc") + '&' +
 
                                     "id=" + id_
 
@@ -400,7 +402,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage.cross, "mill.image.list") + '&' +
+                                CtxURL.url(request, response, jspPage, "mill.image.list") + '&' +
 
                                 "id_main=" + id_main_ + "&pageNum=" + (pageNum - 1)
 
@@ -436,7 +438,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage.cross, "mill.image.list") + '&' +
+                                CtxURL.url(request, response, jspPage, "mill.image.list") + '&' +
 
                                 "id_main=" + id_main_ + "&pageNum=" + (pageNum + 1)
 
@@ -484,7 +486,7 @@ public class ImageList extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.image.desc") + '&' +
+                            CtxURL.url(request, response, jspPage, "mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -508,7 +510,7 @@ public class ImageList extends HttpServlet
 
                     out.write("?");
 
-                    out.write(jspPage.addURL);
+                    out.write(jspPage.getAsURL());
 
                     out.write("id_main=");
 
@@ -516,7 +518,7 @@ public class ImageList extends HttpServlet
 
 /*
 
-CtxURL.url( request, response, jspPage.cross, "mill.image.desc") + '&' +
+CtxURL.url( request, response, jspPage, "mill.image.desc") + '&' +
 
 "id_main="+ id_main_
 

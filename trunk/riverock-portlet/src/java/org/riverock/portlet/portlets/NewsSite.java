@@ -326,7 +326,7 @@ public class NewsSite implements Portlet, PortletGetList
 
                     param.getResponse().encodeURL( CtxURL.ctx()) + '?' +
 
-                    param.getJspPage().addURL + Constants.NAME_ID_NEWS_PARAM + '=' +
+                    param.getJspPage().getAsURL() + Constants.NAME_ID_NEWS_PARAM + '=' +
 
                     item.getNewsItemId() + '&' +
 

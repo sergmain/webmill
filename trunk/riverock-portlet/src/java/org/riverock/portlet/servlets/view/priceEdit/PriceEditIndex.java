@@ -106,6 +106,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
@@ -160,7 +162,7 @@ public class PriceEditIndex extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -172,7 +174,7 @@ public class PriceEditIndex extends HttpServlet
 
             {
 
-                InitPage.setContentType(response, "utf-8");
+                ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -188,13 +190,11 @@ public class PriceEditIndex extends HttpServlet
 
 
 
-                InitPage  jspPage =  new InitPage(db_, request, response,
+                InitPage  jspPage =  new InitPage(db_, request,
 
-                        null,
+                                                  null
 
-                        Constants.NAME_LANG_PARAM,
-
-                        null, null);
+                );
 
 
 
@@ -290,7 +290,7 @@ public class PriceEditIndex extends HttpServlet
 
 
 
-                                CtxURL.url( request, response, jspPage.cross, "mill.price.shop")+'&'+
+                                CtxURL.url( request, response, jspPage, "mill.price.shop")+'&'+
 
                                 Constants.NAME_ID_SHOP_PARAM + '=' +id_arm
 

@@ -88,13 +88,11 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.port.PortalInfo;
 
+import org.riverock.webmill.port.InitPage;
+
 import org.riverock.webmill.main.Constants;
 
 import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.tools.CrossPageParam;
-
-import org.riverock.webmill.tools.CrossPageParamInterface;
 
 
 
@@ -142,21 +140,13 @@ public class AuthCheckSession
 
 
 
-            CrossPageParamInterface cross = null;
-
             db_ = DatabaseAdapter.getInstance(false);
 
-            PortalInfo p = PortalInfo.getInstance(db_, request.getServerName());
-
-            cross = new CrossPageParam(
-
-                request, Constants.NAME_LANG_PARAM, p.defaultLocale, null, null
-
-            );
+            InitPage page = new InitPage(db_, request,"mill.locale.site_hamradio");
 
 
 
-            String redir = CtxURL.url(request, response, cross, Constants.CTX_TYPE_LOGIN_CHECK);
+            String redir = CtxURL.url(request, response, page, Constants.CTX_TYPE_LOGIN_CHECK);
 
 
 

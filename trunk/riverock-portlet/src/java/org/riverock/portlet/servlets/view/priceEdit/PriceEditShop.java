@@ -104,6 +104,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 import org.riverock.portlet.portlets.ShopPageParam;
@@ -168,7 +170,7 @@ public class PriceEditShop extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -192,11 +194,11 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                InitPage jspPage = new InitPage(db_, request, response,
+                InitPage jspPage = new InitPage(db_, request,
 
-                        "mill.locale._price_list",
+                                                "mill.locale._price_list"
 
-                        Constants.NAME_LANG_PARAM, null, null);
+                );
 
 
 
@@ -236,7 +238,7 @@ public class PriceEditShop extends HttpServlet
 
                         response.sendRedirect(
 
-                                CtxURL.url(request, response, jspPage.cross, "mill.price.index")
+                                CtxURL.url(request, response, jspPage, "mill.price.index")
 
                         );
 
@@ -402,7 +404,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.price.index")
+                                    CtxURL.url(request, response, jspPage, "mill.price.index")
 
 
 
@@ -438,7 +440,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                        CtxURL.url(request, response, jspPage.cross, "mill.price.shop") + '&' +
+                                        CtxURL.url(request, response, jspPage, "mill.price.shop") + '&' +
 
                                         "i=" + item.id_group_current + '&' +
 
@@ -524,7 +526,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.price.shop") + '&' +
+                                    CtxURL.url(request, response, jspPage, "mill.price.shop") + '&' +
 
                                     "i=" + itemGroup.id_group + '&' +
 
@@ -574,7 +576,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage.cross, "mill.price.shop")
+                                CtxURL.url(request, response, jspPage, "mill.price.shop")
 
 
 
@@ -660,7 +662,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.price.description") + '&' +
+                                    CtxURL.url(request, response, jspPage, "mill.price.description") + '&' +
 
                                     "id_item=" + item.idPK
 
@@ -756,7 +758,7 @@ public class PriceEditShop extends HttpServlet
 
                         out.write("\">\n");
 
-                        out.write(jspPage.cross.getAsForm());
+                        out.write(jspPage.getAsForm());
 
                         out.write("<input type=\"submit\" value=\"Изменить\">\n");
 

@@ -92,6 +92,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 import org.riverock.common.tools.ExceptionTools;
@@ -170,7 +172,7 @@ public class LoginCheck extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -180,11 +182,11 @@ public class LoginCheck extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance( false );
 
-            InitPage jspPage =  new InitPage(db_, request, response,
+            InitPage jspPage =  new InitPage(db_, request,
 
-                    "mill.locale.auth",
+                                             "mill.locale.auth"
 
-                    Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
@@ -214,7 +216,7 @@ public class LoginCheck extends HttpServlet
 
             if(log.isDebugEnabled())
 
-                log.debug("URL #1: "+ServletUtils.getString(request, Constants.NAME_TOURL_PARAM  , "ctx?"+jspPage.addURL));
+                log.debug("URL #1: "+ServletUtils.getString(request, Constants.NAME_TOURL_PARAM  , "ctx?"+jspPage.getAsURL()));
 
 
 
@@ -224,7 +226,7 @@ public class LoginCheck extends HttpServlet
 
                 session.setAttribute( Constants.AUTH_SESSION, auth_);
 
-                String url = ServletUtils.getString(request, Constants.NAME_TOURL_PARAM  , "ctx?"+jspPage.addURL);
+                String url = ServletUtils.getString(request, Constants.NAME_TOURL_PARAM  , "ctx?"+jspPage.getAsURL());
 
 
 
@@ -286,7 +288,7 @@ public class LoginCheck extends HttpServlet
 
 
 
-            String redirUrl= CtxURL.url( request, response, jspPage.cross, Constants.CTX_TYPE_LOGIN );
+            String redirUrl= CtxURL.url( request, response, jspPage, Constants.CTX_TYPE_LOGIN );
 
 
 

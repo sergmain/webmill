@@ -100,6 +100,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -164,7 +166,7 @@ public class FirmAddCommit extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -196,15 +198,15 @@ public class FirmAddCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance(true);
 
-                    InitPage jspPage = new InitPage(dbDyn, request, response,
+                    InitPage jspPage = new InitPage(dbDyn, request,
 
-                            "mill.locale.MAIN_LIST_FIRM",
+                                                    "mill.locale.MAIN_LIST_FIRM"
 
-                            Constants.NAME_LANG_PARAM, null, null);
+                    );
 
 
 
-                    index_page = CtxURL.url(request, response, jspPage.cross, "mill.firm.index");
+                    index_page = CtxURL.url(request, response, jspPage, "mill.firm.index");
 
 
 

@@ -102,6 +102,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 import org.riverock.common.tools.ExceptionTools;
@@ -168,7 +170,7 @@ public class PriceEditDescription extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -208,15 +210,15 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                    jspPage = new InitPage(dbDyn, request, response,
+                    jspPage = new InitPage(dbDyn, request,
 
-                            "mill.locale._price_list",
+                                           "mill.locale._price_list"
 
-                            Constants.NAME_LANG_PARAM, null, null);
+                    );
 
 
 
-                    String index_page = CtxURL.url(request, response, jspPage.cross, "mill.price.index");
+                    String index_page = CtxURL.url(request, response, jspPage, "mill.price.index");
 
 
 
@@ -612,7 +614,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage.cross, "mill.price.description")
+                                CtxURL.url(request, response, jspPage, "mill.price.description")
 
 
 
@@ -706,7 +708,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage.cross, "mill.price.image")
+                                CtxURL.url(request, response, jspPage, "mill.price.image")
 
 
 

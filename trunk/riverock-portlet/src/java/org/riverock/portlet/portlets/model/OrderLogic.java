@@ -572,11 +572,11 @@ public class OrderLogic extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance(true);
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                                            null,
+                                            null
 
-                                            Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
@@ -746,7 +746,7 @@ public class OrderLogic extends HttpServlet
 
                             out.print("Login '" + username + "' already exist<br>");
 
-                            out.print("Continue <a href=\"" + response.encodeURL("reg.jsp") + "?" + jspPage.addURL + "url=" + url + "\">here</a>");
+                            out.print("Continue <a href=\"" + response.encodeURL("reg.jsp") + "?" + jspPage.getAsURL() + "url=" + url + "\">here</a>");
 
                             return true;
 

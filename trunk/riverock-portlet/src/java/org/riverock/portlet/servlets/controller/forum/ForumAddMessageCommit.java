@@ -104,6 +104,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 import org.riverock.common.tools.ExceptionTools;
@@ -182,7 +184,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -190,7 +192,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -202,17 +204,11 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                    "mill.locale.forum",
+                                            "mill.locale.forum"
 
-                    Constants.NAME_LANG_PARAM +
-
-                    Constants.NAME_YEAR_PARAM +
-
-                    Constants.NAME_MONTH_PARAM,
-
-                    null, null);
+            );
 
 
 
@@ -330,7 +326,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
             String url = (
 
-                    CtxURL.ctx() + '?' + jspPage.cross.getAsURL() +
+                    CtxURL.ctx() + '?' + jspPage.getAsURL() +
 
                     Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum + '&' +
 

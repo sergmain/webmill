@@ -106,6 +106,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.ServletTools;
@@ -160,7 +162,7 @@ public class RightChangeCommit extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -192,15 +194,15 @@ public class RightChangeCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage jspPage =  new InitPage(dbDyn, request, response,
+                    InitPage jspPage =  new InitPage(dbDyn, request,
 
-                            "mill.locale.AUTH_RELATE_RIGHT_ARM",
+                                                     "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-                            Constants.NAME_LANG_PARAM, null, null);
+                    );
 
 
 
-                    index_page = CtxURL.url( request, response, jspPage.cross, "mill.auth.right");
+                    index_page = CtxURL.url( request, response, jspPage, "mill.auth.right");
 
 
 

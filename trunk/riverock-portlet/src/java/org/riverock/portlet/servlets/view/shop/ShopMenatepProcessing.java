@@ -90,6 +90,8 @@ import org.apache.log4j.Logger;
 
 import org.riverock.webmill.port.InitPage;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.StringTools;
@@ -144,7 +146,7 @@ public class ShopMenatepProcessing extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
