@@ -33,6 +33,7 @@
 package org.riverock.generic.system;
 
 import java.io.FileInputStream;
+import java.io.File;
 import java.sql.SQLException;
 
 import org.riverock.generic.config.GenericConfig;
@@ -57,6 +58,8 @@ public class DbStructureImport
         StartupApplication.init();
         String fileName =
             GenericConfig.getGenericDebugDir()+ "webmill-schema.xml";
+
+        fileName = "mill"+File.separatorChar+"data-definition"+File.separatorChar+"data"+File.separatorChar+"webmill-def-v2.xml";
 
         DbStructureImport.importStructure(fileName, true);
     }

@@ -1,12 +1,12 @@
 /*
  * org.riverock.generic -- Database connectivity classes
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -23,20 +23,30 @@
  *
  */
 
-package org.riverock.generic.startup;
+/**
+ * User: serg_main
+ * Date: 26.01.2004
+ * Time: 20:45:56
+ * @author Serge Maslyukov
+ * $Id$
+ */
 
-public class StartupException extends Exception
-{
+package org.riverock.generic.exception;
 
-    public StartupException()
+/**
+ */
+public class FileManagerException extends Exception {
+    public FileManagerException()
     {
         super();
     }
 
-    public StartupException(String s)
+    public FileManagerException(String s)
     {
         super(s);
     }
 
+    public FileManagerException(String s, Throwable cause){
+        super(s, cause);
+    }
 }
-

@@ -1,278 +1,139 @@
 /*
-
  * org.riverock.generic -- Database connectivity classes
-
  * 
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  * 
-
  * Riverock -- The Open-source Java Development Community
-
  * http://www.riverock.org
-
  * 
-
  * 
-
  * This library is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU Lesser General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2.1 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * Lesser General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU Lesser General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
-
 
 /**
-
  * User: Admin
-
  * Date: May 20, 2003
-
  * Time: 9:49:58 PM
-
  *
-
  * $Id$
-
  */
-
 package org.riverock.generic.db.definition;
 
-
-
 import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.generic.schema.db.CustomSequenceType;
-
 import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
-
 import org.apache.log4j.Logger;
-
-
 
 import java.sql.PreparedStatement;
 
-
-
 public class AddRecordToList implements DefinitionProcessingInterface
-
 {
-
     private static Logger log = Logger.getLogger( "org.riverock.generic.db.definition.AddRecordToList" );
-
-
 
     public AddRecordToList(){}
 
-
-
     public void processAction(DatabaseAdapter db_, DataDefinitionActionDataListType parameters)
-
         throws Exception
-
     {
-
         PreparedStatement ps = null;
-
         try
-
         {
-
             if (log.isDebugEnabled())
-
                 log.debug( "db connect - "+db_.getClass().getName() );
 
-
-
             String seqName = DefinitionService.getString(parameters, "sequence_name", null);
-
             if (seqName==null)
-
             {
-
                 String errorString = "Name of sequnce not found";
-
                 log.error( errorString );
-
                 throw new Exception(errorString );
-
             }
-
-
 
             String tableName = DefinitionService.getString(parameters, "name_table", null);
-
             if (tableName==null)
-
             {
-
                 String errorString = "Name of table not found";
-
                 log.error( errorString );
-
                 throw new Exception(errorString );
-
             }
-
-
 
             String columnName = DefinitionService.getString(parameters, "name_pk_field", null);
-
             if (columnName==null)
-
             {
-
                 String errorString = "Name of column not found";
-
                 log.error( errorString );
-
                 throw new Exception(errorString );
-
             }
-
-
 
             CustomSequenceType seqSite = new CustomSequenceType();
-
             seqSite.setSequenceName(seqName);
-
             seqSite.setTableName( tableName);
-
             seqSite.setColumnName( columnName );
-
             long seqValue = db_.getSequenceNextValue( seqSite );
 
-
-
             String valueColumnName = DefinitionService.getString(parameters, "name_value_field", null);
-
             if (columnName==null)
-
             {
-
                 String errorString = "Name of valueColumnName not found";
-
                 log.error( errorString );
-
                 throw new Exception(errorString );
-
             }
-
-
 
             String insertValue = DefinitionService.getString(parameters, "insert_value", null);
-
             if (columnName==null)
-
             {
-
                 String errorString = "Name of insertValue not found";
-
                 log.error( errorString );
-
                 throw new Exception(errorString );
-
             }
-
-
 
             String sql =
-
                 "insert into "+tableName+" " +
-
                 "("+columnName+","+valueColumnName+")" +
-
                 "values" +
-
                 "(?,?)";
 
-
-
             if (log.isDebugEnabled())
-
             {
-
                 log.debug(sql);
-
                 log.debug("pk "+seqValue);
-
                 log.debug("value "+insertValue);
-
             }
 
-
-
             ps = db_.prepareStatement( sql );
-
             ps.setLong(1, seqValue );
-
             ps.setString(2, insertValue );
-
-
 
             ps.executeUpdate();
 
-
-
             db_.commit();
-
         }
-
         catch(Exception e)
-
         {
-
             try {
-
                 db_.rollback();
-
             }
-
             catch(Exception e1){}
-
             log.error("Error insert value", e);
-
             throw e;
-
         }
-
         finally
-
         {
-
             org.riverock.generic.db.DatabaseManager.close(ps);
-
             ps = null;
-
         }
-
     }
-
 }
-
