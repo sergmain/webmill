@@ -184,15 +184,11 @@ public class SwitchLanguage extends HttpServlet
 
         {
 
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
 
             rs = null;
 
             ps = null;
-
-
-
-            DatabaseAdapter.close( db_ );
 
             db_ = null;
 
@@ -247,6 +243,22 @@ public class SwitchLanguage extends HttpServlet
             PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
+
+            if ( log.isDebugEnabled() )
+
+            {
+
+                for ( Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements(); )
+
+                {
+
+                    String s = (String)e.nextElement();
+
+                    log.debug( "PortletRequest attr - "+s+", value - "+PortletTools.getString( ctxInstance.getPortletRequest(), s ) );
+
+                }
+
+            }
 
             Long id_lang = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_LANGUAGE);
 

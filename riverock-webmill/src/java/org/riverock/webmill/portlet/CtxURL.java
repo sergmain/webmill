@@ -52,21 +52,9 @@ package org.riverock.webmill.portlet;
 
 
 
-import javax.servlet.http.HttpServletResponse;
-
-import javax.portlet.PortletRequest;
-
-
+import org.riverock.generic.config.GenericConfig;
 
 import org.riverock.webmill.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.config.ConfigException;
-
-import org.riverock.generic.config.GenericConfig;
 
 
 
@@ -143,53 +131,5 @@ public class CtxURL
     }
 
 
-
-    public static String urlAsForm(
-
-        String nameTemplate,
-
-        InitPage page,
-
-        String portlet
-
-        )
-
-    {
-
-        return
-
-            page.getAsForm()+
-
-            ServletTools.getHiddenItem(Constants.NAME_TEMPLATE_CONTEXT_PARAM, nameTemplate)+
-
-            ServletTools.getHiddenItem(Constants.NAME_TYPE_CONTEXT_PARAM, portlet);
-
-    }
-
-
-
-    public static String url(PortletRequest request, HttpServletResponse response,
-
-                             InitPage page,
-
-                             String portlet
-
-                             )
-
-        throws ConfigException
-
-    {
-
-        return response.encodeURL( CtxURL.ctx()  ) + '?' +
-
-            page.getAsURL()+
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM    +'='+
-
-                PortletTools.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM)    +'&'+
-
-                Constants.NAME_TYPE_CONTEXT_PARAM    + '=' + portlet;
-
-    }
 
 }

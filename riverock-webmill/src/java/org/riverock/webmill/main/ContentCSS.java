@@ -138,71 +138,13 @@ public class ContentCSS
 
 
 
-/*
-
-    public static String putLinkCSS(String serverName)
-
-            throws Exception
+    public void reinit()
 
     {
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
-        PortalInfo p = PortalInfo.getInstance(db_, serverName );
-
-
-
-        String s =
-
-                "<link rel=\"stylesheet\" href=\"" + Constants.URI_CSS_PAGE + "\">\n" +
-
-                "<!--\n" +
-
-                "CSS is dynamic: " + p.getIsCssDynamic + "\n";
-
-
-
-        if (p.getIsCssDynamic)
-
-        {
-
-            ContentCSS css = ContentCSS.getInstance(db_, p.idSite);
-
-            if (css != null)
-
-            {
-
-                if (css.datePost == null)
-
-                    s += "Current dynamic CSS not found\n";
-
-                else
-
-                {
-
-                    s += "date post: " +
-
-                            DateTools.getStringDate(css.datePost,
-
-                                    "dd-MM-yyyy HH:mm:ss", Locale.ENGLISH) + "\n";
-
-                }
-
-            }
-
-            else
-
-                s += "Dynamic CSS is null\n";
-
-        }
-
-
-
-        return s + "-->\n";
+        cache.reinit();
 
     }
-
-*/
 
 
 
@@ -213,10 +155,6 @@ public class ContentCSS
     {
 
         return (ContentCSS) cache.getInstanceNew(db__, new Long(id__) );
-
-
-
-        // return getInstance( db__, id__.longValue());
 
     }
 

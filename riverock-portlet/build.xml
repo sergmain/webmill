@@ -106,7 +106,7 @@
 
     <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
 
-    <property name="riverock-webmill.lib"    value="riverock-webmill-5.0.0.jar"/>
+    <property name="riverock-webmill.lib"    value="riverock-webmill-5.0.1.jar"/>
 
 
 
@@ -328,7 +328,7 @@
 
         <echo message="start encode jar" level="debug" />
 
-<!--        <copy file="${build.dir}\${mill.lib}" todir="../riverock-webmill/lib"/>-->
+        <copy file="${build.dir}/${mill.lib}" todir="../riverock-lib/lib"/>
 
     </target>
 

@@ -106,35 +106,51 @@ public class MakeWebmillStructure
 
     {
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, nameConnection);
+        DatabaseAdapter db_ = null;
 
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+        try
 
+        {
 
+            db_ = DatabaseAdapter.getInstance(false, nameConnection);
 
-        String encoding = "UTF-8";
-
-        String nameFile = nameOutputFiel;
-
-        String outputSchemaFile = WebmillConfig.getWebmillDebugDir()+nameFile;
-
-        System.out.println("Marshal data to file " + outputSchemaFile);
+            DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 
 
 
-        FileOutputStream fos = new FileOutputStream( outputSchemaFile );
+            String encoding = "UTF-8";
 
-        Marshaller marsh = new Marshaller(new OutputStreamWriter(fos, encoding));
+            String nameFile = nameOutputFiel;
 
-        marsh.setMarshalAsDocument( true );
+            String outputSchemaFile = WebmillConfig.getWebmillDebugDir()+nameFile;
 
-        marsh.setEncoding( encoding );
-
-        marsh.marshal( schema );
+            System.out.println("Marshal data to file " + outputSchemaFile);
 
 
 
-        return schema;
+            FileOutputStream fos = new FileOutputStream( outputSchemaFile );
+
+            Marshaller marsh = new Marshaller(new OutputStreamWriter(fos, encoding));
+
+            marsh.setMarshalAsDocument( true );
+
+            marsh.setEncoding( encoding );
+
+            marsh.marshal( schema );
+
+
+
+            return schema;
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+        }
 
     }
 

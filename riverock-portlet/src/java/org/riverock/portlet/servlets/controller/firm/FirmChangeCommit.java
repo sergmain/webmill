@@ -206,7 +206,7 @@ public class FirmChangeCommit extends HttpServlet
 
 
 
-                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
+                    index_page = ctxInstance.url("mill.firm.index");
 
 
 

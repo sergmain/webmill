@@ -308,19 +308,11 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            String url = (
-
-                    CtxURL.ctx() + '?' + ctxInstance.page.getAsURL() +
+            String url = ctxInstance.url(Constants.CTX_TYPE_FORUM)+'&'+
 
                     Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum + '&' +
 
-                    Constants.NAME_ID_MESSAGE_FORUM_PARAM + '=' + id + '&' +
-
-                    Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
-
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate()
-
-                    );
+                    Constants.NAME_ID_MESSAGE_FORUM_PARAM + '=' + id;
 
 
 

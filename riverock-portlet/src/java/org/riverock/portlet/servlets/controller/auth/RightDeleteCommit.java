@@ -200,7 +200,7 @@ public class RightDeleteCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
+                    index_page = ctxInstance.url("mill.auth.right");
 
 
 

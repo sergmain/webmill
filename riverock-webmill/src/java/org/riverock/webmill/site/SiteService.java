@@ -68,35 +68,11 @@ package org.riverock.webmill.site;
 
 
 
-import java.sql.PreparedStatement;
-
-import java.sql.ResultSet;
-
-
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.webmill.core.*;
 
-import org.riverock.webmill.port.PortalInfo;
-
 import org.riverock.webmill.schema.core.*;
-
-import org.riverock.webmill.schema.extend.SiteExtendCtxLangCatalogListType;
-
-import org.riverock.webmill.schema.extend.SiteExtendCtxLangCatalogType;
-
-import org.riverock.webmill.schema.extend.SiteExtendItemType;
-
-import org.riverock.webmill.schema.extend.SiteExtendLanguageListType;
-
-import org.riverock.webmill.schema.extend.SiteExtendLanguageType;
-
-import org.riverock.webmill.schema.extend.SiteExtendNewsGroupListType;
-
-import org.riverock.webmill.schema.extend.SiteExtendNewsGroupType;
-
-import org.riverock.common.tools.RsetTools;
 
 
 
@@ -426,9 +402,27 @@ public class SiteService
 
     {
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+        DatabaseAdapter db_ = null;
 
-        return getExtendData(db_, host);
+        try
+
+        {
+
+            db_ = DatabaseAdapter.getInstance( false );
+
+            return getExtendData(db_, host);
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 
@@ -442,9 +436,9 @@ public class SiteService
 
         PortalInfo p = PortalInfo.getInstance(db_, host);
 
-        long idSite = p.sites.getIdSite();
+        Long idSite = p.sites.getIdSite();
 
-        if (idSite==-1)
+        if (idSite==null)
 
         {
 

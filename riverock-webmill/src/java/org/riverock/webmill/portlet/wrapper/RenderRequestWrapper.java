@@ -140,7 +140,7 @@ public class RenderRequestWrapper implements RenderRequest
 
         this.parameters = parameters;
 
-        this.session = new PortletSessionWrapper(request.getSession());
+        this.session = new PortletSessionWrapper(request.getSession(true));
 
         this.request = request;
 

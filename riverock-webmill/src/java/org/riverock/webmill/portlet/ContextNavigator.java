@@ -960,7 +960,7 @@ public class ContextNavigator extends HttpServlet
 
                         "<SiteTemplate language=\""+
 
-                          ctxInstance.page.getCurrentLocale()+"\" type=\""+ctxInstance.getDefaultPortletType()+"\">" ).getBytes()
+                          ctxInstance.getPortletRequest().getLocale()+"\" type=\""+ctxInstance.getDefaultPortletType()+"\">" ).getBytes()
 
                     );
 
@@ -1160,9 +1160,9 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            portalRequestInstance.template = ctxInstance.page.p.templates.getTemplate(
+            portalRequestInstance.template = ctxInstance.page.p.getTemplates().getTemplate(
 
-                ctxInstance.getNameTemplate(), ctxInstance.page.getCurrentLocale().toString()
+                ctxInstance.getNameTemplate(), ctxInstance.getPortletRequest().getLocale().toString()
 
             );
 
@@ -1172,7 +1172,7 @@ public class ContextNavigator extends HttpServlet
 
             {
 
-                String errorString = "Template for "+ctxInstance.getNameTemplate()+", locale "+ctxInstance.page.getCurrentLocale().toString()+", not found";
+                String errorString = "Template for "+ctxInstance.getNameTemplate()+", locale "+ctxInstance.getPortletRequest().getLocale().toString()+", not found";
 
                 log.warn( errorString );
 
@@ -1424,13 +1424,13 @@ public class ContextNavigator extends HttpServlet
 
             if ( log.isDebugEnabled() )
 
-                log.debug( "Locale request - "+ctxInstance.page.getCurrentLocale().toString() );
+                log.debug( "Locale request - "+ctxInstance.getPortletRequest().getLocale().toString() );
 
 
 
             // prepare Xsl objects
 
-            if ( ctxInstance.page.p.xsltList==null )
+            if ( ctxInstance.page.p.getXsltList()==null )
 
             {
 
@@ -1450,7 +1450,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            portalRequestInstance.xslt = ctxInstance.page.p.xsltList.getXslt( ctxInstance.page.getCurrentLocale().toString() );
+            portalRequestInstance.xslt = ctxInstance.page.p.getXsltList().getXslt( ctxInstance.getPortletRequest().getLocale().toString() );
 
 
 
@@ -1458,7 +1458,7 @@ public class ContextNavigator extends HttpServlet
 
             {
 
-                String errorString = "Index XSLT for locale "+ctxInstance.page.getCurrentLocale()+" not defined.";
+                String errorString = "Index XSLT for locale "+ctxInstance.getPortletRequest().getLocale()+" not defined.";
 
                 log.error( errorString );
 
@@ -1860,17 +1860,9 @@ public class ContextNavigator extends HttpServlet
 
                     InitPage page = new InitPage( portalRequestInstance.db, request_ );
 
-                    ctxInstance = new CtxInstance(request_,response_, page);
+                    ctxInstance = new CtxInstance(request_,response_, page, portalRequestInstance.db);
 
 
-
-                    ctxInstance.initTypeContext(
-
-                        ctxInstance.page.p.getIdSupportLanguage(ctxInstance.page.getCurrentLocale()), portalRequestInstance.db, request_
-
-                    );
-
-                    ctxInstance.setDefaultPortletDescription( PortletDescription.getInstance( ctxInstance.getDefaultPortletType() ) );
 
                 }
 
@@ -1948,9 +1940,45 @@ public class ContextNavigator extends HttpServlet
 
 
 
+                        Map map = PortletTools.getParameters(ctxInstance.getRequest());
+
+                        Map tempMap = null;
+
+                        if (ctxInstance.getDefaultPortletDescription()!=null)
+
+                        {
+
+                            tempMap = getGlobalParameter( ctxInstance.getDefaultPortletDescription().getPortletConfig(), ctxInstance.getCtx());
+
+                            map.putAll( tempMap );
+
+
+
+                            if (log.isDebugEnabled())
+
+                            {
+
+                                log.debug( "Print param from map" );
+
+                                for ( Iterator it = tempMap.keySet().iterator(); it.hasNext(); )
+
+                                {
+
+                                    Object s = it.next();
+
+                                    log.debug( "Param in map - "+s.toString()+", value - "+ tempMap.get(s) );
+
+                                }
+
+                            }
+
+                        }
+
+
+
                         ctxInstance.setParameters(
 
-                            PortletTools.getParameters(ctxInstance.getRequest()),
+                            map,
 
                             PortletTools.getStringParam(portlet, PortletTools.locale_name_package)
 
