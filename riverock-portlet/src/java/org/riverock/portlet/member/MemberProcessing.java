@@ -78,6 +78,7 @@ import org.riverock.webmill.portlet.PortletTools;
 import org.riverock.webmill.schema.core.SiteTemplateItemType;
 import org.riverock.webmill.schema.site.SiteTemplate;
 import org.riverock.webmill.site.SiteTemplateService;
+import org.riverock.webmill.site.SiteUtils;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.utils.AuthHelper;
 import org.xml.sax.InputSource;
@@ -497,13 +498,10 @@ public class MemberProcessing
 
         String sql_ = "select " + pkID;
 
-        for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++)
-        {
+        for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++) {
             FieldsType ff = content.getQueryArea().getFields(k);
             if (Boolean.TRUE.equals(ff.getIsShow()) || Boolean.TRUE.equals(ff.getIsSelect()) )
-            {
                 sql_ += ',' + prepareTableAlias(ff.getRefTable()) + '.' + ff.getName();
-            }
         }
 
         String fromSQL = "";
@@ -629,29 +627,62 @@ public class MemberProcessing
         if (content.getQueryArea().getRestrict() != null &&
             content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
         {
-            fromSQL += ", SITE_VIRTUAL_HOST " + prepareTableAlias(aliasSiteRestrict) + ' ';
-
             if (whereSQL.length() > 0)
                 whereSQL += " and ";
-            whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
-                ".ID_SITE=" + prepareTableAlias(aliasSiteRestrict) +
-                ".ID_SITE and " + prepareTableAlias(aliasSiteRestrict) + ".NAME_VIRTUAL_HOST = lower(?) ";
+
+            switch (db_.getFamaly()){
+                case DatabaseManager.MYSQL_FAMALY:
+                    String idSite = SiteUtils.getGrantedSiteId(db_, portletRequest.getServerName());
+                    whereSQL +=
+                        prepareTableAlias(content.getQueryArea().getMainRefTable()) +
+                        ".ID_SITE in ("+idSite+") ";
+
+                    break;
+                default:
+                    fromSQL += ", SITE_VIRTUAL_HOST " + prepareTableAlias(aliasSiteRestrict) + ' ';
+
+                    whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
+                        ".ID_SITE=" + prepareTableAlias(aliasSiteRestrict) +
+                        ".ID_SITE and " + prepareTableAlias(aliasSiteRestrict) + ".NAME_VIRTUAL_HOST = lower(?) ";
+                    break;
+            }
         }
 
         if (content.getQueryArea().getRestrict() != null &&
             content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
         {
-            fromSQL += ", auth_user " + prepareTableAlias(aliasUserRestrict) + ' ';
-
             if (whereSQL.length() > 0)
                 whereSQL += " and ";
-            whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
-                ".id_user=" + prepareTableAlias(aliasUserRestrict) +
-                ".id_user and " + prepareTableAlias(aliasUserRestrict) + ".user_login=? ";
+
+            switch (db_.getFamaly())
+            {
+                case DatabaseManager.MYSQL_FAMALY:
+                    String idUser = AuthHelper.getGrantedUserId(db_, portletRequest.getRemoteUser());
+                    whereSQL +=
+                        prepareTableAlias(content.getQueryArea().getMainRefTable()) +
+                        ".ID_USER in ("+idUser+") ";
+                    break;
+
+                default:
+                    whereSQL +=
+                        prepareTableAlias(content.getQueryArea().getMainRefTable()) +
+                        ".ID_USER in " +
+                        " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        '.' + "ID_USER " +
+                        "  from AUTH_USER " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        ".USER_LOGIN=?) ";
+                    break;
+            }
+//            fromSQL += ", auth_user " + prepareTableAlias(aliasUserRestrict) + ' ';
+//            whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
+//                ".id_user=" + prepareTableAlias(aliasUserRestrict) +
+//                ".id_user and " + prepareTableAlias(aliasUserRestrict) + ".user_login=? ";
         }
 
         if (whereSQL.length() > 0)
             whereSQL += " and ";
+
         whereSQL += pkID + "=? ";
 
         if (! Boolean.TRUE.equals(mod.getIsDelete()) )
@@ -694,7 +725,6 @@ public class MemberProcessing
                 String modName = st.nextToken();
 
                 ModuleType module = ModuleManager.getModule(modName);
-//                ContentType cnt = module.getContent("index");
                 ContentType cnt = MemberServiceClass.getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
@@ -833,7 +863,6 @@ public class MemberProcessing
 
                             sc.where += prevAlias + prevPK + "=" + prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
                                 '.' + prevPK;
-
                         }
 
                         if (lookupSc.where.length() > 0)
@@ -849,31 +878,26 @@ public class MemberProcessing
                     }
                 }
             }
-
         }
 
-        if (prevPK != null)
-        {
+        if (prevPK != null) {
             if (sc.where.length() != 0)
                 sc.where += " and ";
 
             sc.where += prevAlias + prevPK + "=" + prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                 '.' + prevPK;
-
         }
 
         lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, db_, portletRequest.getRemoteUser(), portletRequest.getServerName());
 
-        if (sc.from.length() != 0)
-        {
+        if (sc.from.length() != 0) {
             if (lookupSc.from.length() != 0)
                 lookupSc.from += ',';
 
             lookupSc.from += sc.from;
         }
 
-        if (sc.where.length() != 0)
-        {
+        if (sc.where.length() != 0) {
             if (lookupSc.where.length() != 0)
                 sc.where += " and ";
 
@@ -917,10 +941,6 @@ public class MemberProcessing
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
                     //prepare lookup PK
-//log.debug("#3.001.01 "+PortletTools.getLong(req,
-//			modName+'.'+cnt.getQueryArea().getPrimaryKey()));
-
-
                     if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
                     {
                         RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
@@ -997,15 +1017,10 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
                     }
                 }
             }
-
         }
 
-//	lookupSc = buildSelectClause( content, mod );
-
-        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
-        {
-            switch (db_.getFamaly())
-            {
+        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE) {
+            switch (db_.getFamaly()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -1014,10 +1029,8 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
             }
         }
 
-        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
-        {
-            switch (db_.getFamaly())
-            {
+        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE) {
+            switch (db_.getFamaly()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -1026,20 +1039,20 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
             }
         }
 
-        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
-        {
-//log.debug("#3.001.15 "+portletRequest.getRemoteUser() );
-            ps.setString(numParam++, portletRequest.getRemoteUser());
+        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE) {
+            switch (db_.getFamaly()) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    break;
+                default:
+                    ps.setString(numParam++, portletRequest.getRemoteUser());
+                    break;
+            }
         }
 
-//log.debug("#3.001.13.1 "+numParam);
-
-        if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null & mod.getSelfLookup().getTopField() != null)
-        {
+        if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null & mod.getSelfLookup().getTopField() != null) {
             RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
                 mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) ) );
         }
-
     }
 
     public void bindSelectForUpdate(PreparedStatement ps)
@@ -1062,12 +1075,6 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
                     //prepare lookup PK
-//log.debug("#3.001.01 "+PortletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
-
-//		    RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
-//			modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
-
-//                    String primaryKeyValue = null;
                     if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
                     {
                         if (log.isDebugEnabled())
@@ -1125,8 +1132,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
                             default:
-                                if (log.isDebugEnabled())
-                                    log.debug(" 5 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName());
+                                if (log.isDebugEnabled()) log.debug(" 5 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName());
                                 ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
                                 break;
                         }
@@ -1139,26 +1145,19 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
                             default:
-                                if (log.isDebugEnabled())
-                                    log.debug(" 6 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
+                                if (log.isDebugEnabled()) log.debug(" 6 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
                                 ps.setString(numParam++, portletRequest.getRemoteUser());
                                 break;
                         }
                     }
                 }
             }
-
         }
 
-//log.debug("#3.001.15 "+numParam);
+        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE) {
+            if (log.isDebugEnabled()) log.debug(" 7 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
 
-        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
-        {
-            if (log.isDebugEnabled())
-                log.debug(" 7 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
-
-            switch (db_.getFamaly())
-            {
+            switch (db_.getFamaly()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -1167,13 +1166,10 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             }
         }
 
-        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
-        {
-            if (log.isDebugEnabled())
-                log.debug(" 8 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName());
+        if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE) {
+            if (log.isDebugEnabled()) log.debug(" 8 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName());
 
-            switch (db_.getFamaly())
-            {
+            switch (db_.getFamaly()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -1184,8 +1180,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
         {
-            if (log.isDebugEnabled())
-                log.debug(" 9 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
+            if (log.isDebugEnabled()) log.debug(" 9 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
 
             switch (db_.getFamaly())
             {
@@ -1196,7 +1191,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                     break;
             }
         }
-
 
         if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
         {
@@ -1281,11 +1275,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
                     //prepare lookup PK
-//log.debug("#3.001.01 "+PortletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
-
-//		    RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
-//			modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
-
                     if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
                     {
                         RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
@@ -1310,7 +1299,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 */
                     else
                         throw new Exception("Wrong type of primary key");
-
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
@@ -1395,15 +1383,10 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
     }
 
     public Object bindInsert( DatabaseAdapter dbDyn, PreparedStatement ps )
-        throws Exception
-    {
-
+        throws Exception {
         Object returnID = null;
 
-        if (log.isDebugEnabled())
-            log.debug("#99.01.00 sequence -  " + "seq_" +
-                content.getQueryArea().getTable(0).getTable()
-            );
+        if (log.isDebugEnabled()) log.debug("#99.01.00 sequence -  "+"seq_"+content.getQueryArea().getTable(0).getTable());
 
         // create sequence for PK
         CustomSequenceType seq = new CustomSequenceType();
@@ -1414,8 +1397,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         int numParam = 1;
 
-        if (log.isDebugEnabled())
-            log.debug("#99.01.01 value of PK " + pkID);
+        if (log.isDebugEnabled()) log.debug("#99.01.01 value of PK " + pkID);
 
         // bind PK
         switch (content.getQueryArea().getPrimaryKeyType().getType())
@@ -1463,10 +1445,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++)
         {
             FieldsType ff = content.getQueryArea().getFields(k);
-            if (Boolean.TRUE.equals(ff.getIsShow()) && (ff.getJspType().getType() != FieldsTypeJspTypeType.BIGTEXT_TYPE))
-            {
-                if (log.isDebugEnabled())
-                    log.debug("#4.05.01 bind "+ff.getJspType().toString()+" param #" + numParam + " " + PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+            if (Boolean.TRUE.equals(ff.getIsShow()) && (ff.getJspType().getType() != FieldsTypeJspTypeType.BIGTEXT_TYPE)) {
+                if (log.isDebugEnabled()) log.debug("#4.05.01 bind "+ff.getJspType().toString()+" param #" + numParam + " " + PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
 
                 String stringParam =
                     PortletTools.getString(
@@ -1701,7 +1681,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         }
     }
 
-
     public void bindDelete(PreparedStatement ps)
         throws Exception
     {
@@ -1821,9 +1800,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                         mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
                             if (dateToParse.length()==0)
-                            {
                                 ps.setNull( numParam++, Types.DATE );
-                            }
                             else
                             {
                                 java.util.Date updateDate =
@@ -1905,32 +1882,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             RsetTools.setLong(ps, numParam++,
                 PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) )
             );
-
-/*
-if ( cnt.getQueryArea().getPrimaryKeyType().getDefaultPortletType()== PrimaryKeyTypeType.NUMBER_TYPE))
-{
-RsetTools.setLong(ps, numParam++,
-PortletTools.getLong(req, mod.getName()+'.'+mod.getSelfLookup().getTopField().getName(), 0));
-}
-else if ( cnt.getQueryArea().getPrimaryKeyType().getDefaultPortletType()== PrimaryKeyTypeType.STRING_TYPE))
-{
-ps.setString(numParam++,
-PortletTools.getString(req, mod.getName()+'.'+mod.getSelfLookup().getTopField().getName()));
-}
-
-else if ( content.getQueryArea().getPrimaryKeyType().equals("date"))
-{
-if (content.getQueryArea().getPrimaryKeyMask()==null ||
-content.getQueryArea().getPrimaryKeyMask().trim().length()==0)
-throw new Exception("date mask for primary key not specified");
-
-primaryKeyValue = RsetTools.getStringDate(rs, content.getQueryArea().getPrimaryKey(),
-content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
-}
-else
-throw new Exception("Wrong type of primary key");
-*/
-
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE) {
@@ -1984,19 +1935,15 @@ throw new Exception("Wrong type of primary key");
         if (st.hasMoreTokens())
         {
             if (asURL)
-            {
-                s += Constants.MEMBER_FROM_PARAM + "=" + from;
-            }
+                s += Constants.MEMBER_FROM_PARAM + '=' + from;
             else
-            {
                 s += buildHiddenForm(Constants.MEMBER_FROM_PARAM, from);
-            }
         }
 
         if (isCurrFrom && asURL)
         {
             if (s.length() == 0)
-                s += Constants.MEMBER_FROM_PARAM + "=" + mod.getName();
+                s += Constants.MEMBER_FROM_PARAM + '=' + mod.getName();
             else
                 s += ',' + mod.getName();
         }
@@ -2035,13 +1982,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                     throw new Exception("Wrong type of primary key");
 
                 if (asURL)
-                {
-                    s += modName + '.' + cnt.getQueryArea().getPrimaryKey() + "=" + pkValue + "&";
-                }
+                    s += modName + '.' + cnt.getQueryArea().getPrimaryKey() + '=' + pkValue + '&';
                 else
-                {
                     s += buildHiddenForm(modName + '.' + cnt.getQueryArea().getPrimaryKey(), pkValue);
-                }
             }
         }
 
@@ -2091,9 +2034,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 // log.debug("#1.003.007 strCheck: "+strCheck);
 
                 if (idx != idxCheck && str.equalsIgnoreCase(strCheck))
-                {
                     return "Recursive call not allowed.";
-                }
+
                 idxCheck++;
             }
             idx++;
@@ -2120,7 +2062,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 String s = "<a href=\"" +
                     thisURI +
-                    Constants.MEMBER_MODULE_PARAM + "=" + mod.getName() + "&" +
+                    Constants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
                     Constants.MEMBER_ACTION_PARAM + "=insert&" + ctxInstance.getAsURL() +
                     addLookupURL(true);
 
@@ -2492,31 +2434,25 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         throws Exception
     {
 
-//log.debug("From param: "+fromParam);
-
         if (fromParam == null || fromParam.length() == 0)
-            return ""; //buildIndexURL();
-        else
-        {
-            StringTokenizer st = new StringTokenizer(fromParam, ",");
-            String nameModule = st.nextToken();
-            ContentType tempCnt = ModuleManager.getContent(nameModule, ContentTypeActionType.INDEX_TYPE);
+            return "";
+
+        StringTokenizer st = new StringTokenizer(fromParam, ",");
+        String nameModule = st.nextToken();
+        ContentType tempCnt = ModuleManager.getContent(nameModule, ContentTypeActionType.INDEX_TYPE);
 
 //log.debug("#12.003.2");
 
-            for (int i = 0; tempCnt != null && i < tempCnt.getTargetModuleCount(); i++)
-            {
-                TargetModuleType ta = tempCnt.getTargetModule(i);
-                if (ta.getAction().getType() == TargetModuleTypeActionType.INDEX_TYPE)
-                {
-                    String tempStr = thisURI +
-                        Constants.MEMBER_MODULE_PARAM + '=' + nameModule + '&' +
-                        Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
-                        ctxInstance.getAsURL();
+        for (int i=0; tempCnt!=null && i<tempCnt.getTargetModuleCount(); i++){
+            TargetModuleType ta = tempCnt.getTargetModule(i);
+            if (ta.getAction().getType() == TargetModuleTypeActionType.INDEX_TYPE){
+                String tempStr = thisURI +
+                    Constants.MEMBER_MODULE_PARAM + '=' + nameModule + '&' +
+                    Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
+                    ctxInstance.getAsURL();
 
-                    return "<a href=\"" + tempStr + "\">" +
-                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "</a>";
-                }
+                return "<a href=\"" + tempStr + "\">" +
+                    MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "</a>";
             }
         }
 
@@ -2586,24 +2522,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                         ".ID_FIRM and " + aliasFirmRestrict + ".user_login = ? ";
                     break;
             }
-/*
-            fromSQL += ", v$_read_list_firm " + aliasFirmRestrict + ' ';
-
-            if (whereSQL == null || whereSQL.length() == 0)
-                whereSQL += " where ";
-            else
-                whereSQL += " and ";
-
-            whereSQL += qa.getMainRefTable() +
-                ".ID_FIRM=" + aliasFirmRestrict +
-                ".ID_FIRM and " + aliasFirmRestrict + ".user_login = ? ";
-*/
-
         }
 
-        if (qa.getRestrict() != null &&
-            qa.getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
-        {
+        if (qa.getRestrict()!=null && qa.getRestrict().getType().getType()==RestrictTypeTypeType.SITE_TYPE) {
             fromSQL += ", SITE_VIRTUAL_HOST " + aliasSiteRestrict + ' ';
             if ("".equals(whereSQL))
                 whereSQL += " where ";
@@ -2618,7 +2539,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         if (qa.getRestrict() != null &&
             qa.getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
         {
-            throw new Exception("Not tested block #44.12");
+            throw new Exception("Not implemented block #44.12");
         }
 
         isAppend = false;
@@ -2628,9 +2549,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         {
             SortOrderType order = qa.getOrder(k);
             if (!isAppend)
-            {
                 isAppend = true;
-            }
             else
                 orderSQL += ',';
 
@@ -2689,14 +2608,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         String whereSQL = " where " +
             (qa.getMainRefTable() != null ? qa.getMainRefTable() + '.' : "") +
             qa.getPrimaryKey() + "=? ";
-
-//	if ( qa.isRestrict( "firm" ) )
-//	{
-//	    fromSQL += ", v$_read_list_firm "+aliasFirmRestrict+' ';
-//	    whereSQL += " and "+content.getQueryArea().getMainRefTable()+
-//			".ID_FIRM="+aliasFirmRestrict+
-//			".ID_FIRM and "+aliasFirmRestrict+".user_login = ? ";
-//	}
 
         String orderSQL = "";
 
@@ -2876,20 +2787,16 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 else
                 {
                     if (id_ != null && v_val.equals(id_))
-                    {
                         r = v_str.replace('\"', '\'');
-                    }
                 }
 
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Error buildSelectList.\n" + sql_, e);
             throw e;
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
@@ -2915,7 +2822,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         String sql_ = getRsetSelectSQL(qa);
 
-        log.debug("sql: "+ sql_+"\nid: "+id_ );
+        if (log.isDebugEnabled()) log.debug("sql: "+ sql_+"\nid: "+id_ );
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -2940,11 +2847,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             isComma = true;
                         else
                             v_str += ',';
-
-//                        if (ff.getJspType().getDefaultPortletType() == FieldsTypeJspTypeType.DATE_TEXT_TYPE)
-//                            v_str += getDateTextCell(rs, ff, "");
-//                        else
-//                            v_str += RsetTools.getString(rs, MemberServiceClass.getRealName(ff));
 
                         Object sTemp = null;
                         switch (ff.getJspType().getType())
@@ -3109,18 +3011,12 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             return v_str;
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Error execute getRsetBigtextValue()\n"+sql_, e);
             throw e;
         }
-        finally
-        {
-
-            if (log.isDebugEnabled())
-                log.debug("#12.007 " + v_str.length() + " " + maxLength);
-
-
+        finally {
+            if (log.isDebugEnabled())log.debug("#12.007 " + v_str.length() + " " + maxLength);
             DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
@@ -3233,32 +3129,20 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
     {
         QueryAreaType qa = content.getQueryArea();
 
-//        if(log.isDebugEnabled())
-//            log.debug("#33.01.01 " + qa.getFieldsCount());
-
         String s_ = "<table border=\"1\">\n";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             ps = db_.prepareStatement(sql_);
-
-//            if(log.isDebugEnabled())
-//                log.debug("#5.001 "+PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey()) );
 
             bindSelectForUpdate(ps);
 
             rs = ps.executeQuery();
-            if (rs.next())
-            {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("#33.01.01 " + qa.getFieldsCount());
-                }
+            if (rs.next()) {
+                if (log.isDebugEnabled()) log.debug("#33.01.01 " + qa.getFieldsCount());
 
-                for (int k = 0; k < qa.getFieldsCount(); k++)
-                {
+                for (int k = 0; k < qa.getFieldsCount(); k++) {
                     FieldsType ff = qa.getFields(k);
                     if (Boolean.TRUE.equals(ff.getIsShow()))
                     {
@@ -3266,14 +3150,12 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             (Boolean.TRUE.equals(ff.getIsNotNull()) ? "<span style=\"color:red\">*</span>" : "");
 
                         if (ff.getNameColumn() != null)
-                        {
                             s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.getPortletRequest().getLocale());
-                        }
+
                         s_ += "</td>\n<td width=\"5%\">&nbsp;</td>\n";
                         s_ += "<td>\n";
 
-                        switch (ff.getJspType().getType())
-                        {
+                        switch (ff.getJspType().getType()) {
                             case FieldsTypeJspTypeType.LOOKUP_TYPE:
                                 s_ += buildSelectList(ff.getQueryArea(),
                                     RsetTools.getLong(rs, MemberServiceClass.getRealName(ff)),
@@ -3416,6 +3298,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         }
         catch (Exception e)
         {
+            log.error("sql: "+sql_);
             log.error("Error processing buildUpdateHTMLTable.", e);
 
             s_ = "Exeception: " + e.toString() + "\n<br>" +
