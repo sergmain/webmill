@@ -2375,6 +2375,11 @@ public class CreateSchemaFromDb
         for (int i=0; i<table.getFieldsCount(); i++)
         {
             DbFieldType field = table.getFields(i);
+
+            // skip oracle column type ROWID (1111)
+            if (field.getJavaType().intValue()==1111)
+                continue;
+
             if (!field.getName().equals(column.getColumnName()))
             {
                 if (isNotFirst)
@@ -2404,6 +2409,10 @@ public class CreateSchemaFromDb
         for (int i1=0; i1<table.getFieldsCount(); i1++)
         {
             DbFieldType field = table.getFields(i1);
+
+            // skip oracle column type ROWID (1111)
+            if (field.getJavaType().intValue()==1111)
+                continue;
 
             // PK field not bind
             if (field.getName().equals(column.getColumnName()))
@@ -2626,6 +2635,11 @@ public class CreateSchemaFromDb
         for (int i=0; i<table.getFieldsCount(); i++)
         {
             DbFieldType field = table.getFields(i);
+
+            // skip oracle column type ROWID (1111)
+            if (field.getJavaType().intValue()==1111)
+                continue;
+
             if (isFirst)
                 isFirst = false;
             else
@@ -2985,8 +2999,8 @@ public class CreateSchemaFromDb
     }
 
     private static String buildInsertFieldList(DbTableType table, int indentSize)
-        throws Exception
-    {
+        throws Exception {
+        
         if (table==null)
             throw new Exception("Table object is null");
 
@@ -2996,22 +3010,24 @@ public class CreateSchemaFromDb
         String list = StringTools.addString("\"(",' ', indentSize, true);
         boolean isNotFirst = false;
         int size = 0;
-        for (int i=0; i<table.getFieldsCount(); i++)
-        {
+        for (int i=0; i<table.getFieldsCount(); i++){
             DbFieldType field = table.getFields(i);
-            if (isNotFirst)
-            {
+
+            // skip oracle column type ROWID (1111)
+            if (field.getJavaType().intValue()==1111)
+                continue;
+
+            if (isNotFirst){
                 list += ", ";
-                if (size>50)
-                {
+                if (size>50){
                     list += (StringTools.addString("\"+\n",' ', indentSize, false)+"\"");
                     size = 0;
                 }
             }
-            else
-            {
+            else{
                 isNotFirst = true;
             }
+
             list += field.getName();
             size += field.getName().length();
         }
