@@ -50,7 +50,8 @@ import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
-import org.riverock.portlet.portlets.NewsBlock;
+import org.riverock.portlet.news.NewsBlock;
+import org.riverock.portlet.news.NewsBlock;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.MainTools;
@@ -418,7 +419,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 //        testAbstract.session.setAttribute(Constants.PORTLET_CODE_SESSION, NEWS_GROUP_CODE);
 
         PortletResultObject obj =
-            PortletTools.getPortletObject(desc, portletParameter, testAbstract.db_, ctxInstance.getPortletRequest());
+            PortletTools.getPortletObject(desc, portletParameter, testAbstract.db_, renderRequest);
 
         assertFalse("Portlet item '"+codePortlet+"' not found", obj==null);
 
@@ -498,7 +499,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 //        PortletClassGetListType portletClassList = new PortletClassGetListType();
 
                 PortletResultObject obj =
-                    PortletTools.getPortletObject(desc, portletParameter, testAbstract.db_, ctxInstance.getPortletRequest());
+                    PortletTools.getPortletObject(desc, portletParameter, testAbstract.db_, renderRequest);
 
                 assertFalse("Portlet item mill.news with id - "+item.getNewsItemId()+" not found",
                     obj==null);
@@ -687,7 +688,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             );
 
         PortletResultObject obj =
-            PortletTools.getPortletObject(desc, portletParameter, testAbstract.db_, ctxInstance.getPortletRequest());
+            PortletTools.getPortletObject(desc, portletParameter, testAbstract.db_, renderRequest);
 
         assertFalse("Portlet item '"+codePortlet+"' not found", obj==null);
 

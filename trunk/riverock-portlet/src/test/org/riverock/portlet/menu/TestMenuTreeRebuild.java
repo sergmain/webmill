@@ -25,10 +25,10 @@
 package org.riverock.portlet.menu;
 
 import junit.framework.TestCase;
-import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.collections.TreeUtils;
 import org.riverock.common.collections.TreeItemInterface;
+import org.riverock.common.collections.TreeUtils;
+import org.riverock.webmill.portal.menu.MenuItem;
+import org.riverock.interfaces.common.TreeItemInterface;
 
 import java.util.LinkedList;
 import java.util.List;
