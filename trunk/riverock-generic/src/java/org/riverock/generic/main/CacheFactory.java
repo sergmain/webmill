@@ -72,7 +72,7 @@ public class CacheFactory
         try {
             Long idLong = id__;
             p[0] = org.riverock.generic.db.DatabaseAdapter.class;
-            p[1] = idLong.getClass();
+            p[1] = Long.class;
 
             if (log.isDebugEnabled())
             {

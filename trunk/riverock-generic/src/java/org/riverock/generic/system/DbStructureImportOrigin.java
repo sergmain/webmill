@@ -24,33 +24,44 @@
  */
 
 /**
- * User: Admin
- * Date: Mar 3, 2003
- * Time: 6:43:34 PM
+ * Author: mill
+ * Date: Nov 28, 2002
+ * Time: 3:10:19 PM
  *
  * $Id$
  */
-package org.riverock.generic.test.db;
+package org.riverock.generic.system;
 
-import junit.framework.TestCase;
+import java.io.File;
+import java.io.FileInputStream;
+import java.sql.SQLException;
+
+import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.startup.StartupApplication;
 
-public class TestDatabaseAdapter
-{
-    public static void main(String s[])
-        throws Exception
-    {
-        org.riverock.generic.startup.StartupApplication.init();
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
 
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
-        DbSchemaType schemaOracle = DatabaseManager.getDbStructure(dbOra );
+/**
+ * Заливаем данные из XML файла в БД
+ */
+public class DbStructureImportOrigin{
 
+    public static void main(String args[]) throws Exception{
 
+        StartupApplication.init();
+        String fileName =
+            PropertiesProvider.getConfigPath()+
+            File.separatorChar+"data-definition" +
+            File.separatorChar+"data" +
+            File.separatorChar+"webmill-def-v2.xml";
+
+        DbStructureImport.importStructure(fileName, true);
     }
 }
