@@ -64,13 +64,7 @@
 
 
 
-
-
-    <property name="Name" value="riverock-generic"/>
-
-
-
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <property name="local-lib.dir" value="lib"/>
 
@@ -258,71 +252,9 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/cache/schema/config/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/riverock.org-cache-config.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-cache-config.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.cache.schema.config"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-
-
-    <target name="gen_core-extend_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/extend/"/>
-
-        <property name="schema-file" value="${src.dir}/xsd/mill-core-extend.xsd"/>
-
-        <property name="schema-package-java" value="org.riverock.schema.extend"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_test_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/test/"/>
-
-        <property name="schema-file" value="${src.dir}/xsd/test/mill-test-schema.xsd"/>
-
-        <property name="schema-package-java" value="org.riverock.schema.test"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_test_with_2_sequnce" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/test/test_2_sequence"/>
-
-        <property name="schema-file" value="${src.dir}/xsd/test/test_with_2_sequnce.xsd"/>
-
-        <property name="schema-package-java" value="org.riverock.schema.test.test_2_sequence"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_test_import_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/testimport\"/>
-
-        <property name="schema-file" value="${src.dir}/xsd/test/prr_complex_only.xsd "/>
-
-        <property name="schema-package-java" value="org.riverock.schema.testimport"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_test_import_core_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/testimport/core"/>
-
-        <property name="schema-file" value="${src.dir}/xsd/test/prr-core.xsd "/>
-
-        <property name="schema-package-java" value="org.riverock.schema.testimport.core"/>
 
         <antcall target="gen_schema"/>
 
@@ -396,8 +328,6 @@
 
         <echo message=""/>
 
-        <echo message="${Name} Build file"/>
-
         <echo message="-------------------------------------------------------------"/>
 
         <echo message=""/>
@@ -406,17 +336,7 @@
 
         <echo message=""/>
 
-        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-
-        <echo message="   package      --> generates the ${Name}.jar file"/>
-
-        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-
         <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-
-        <echo message="   distclean    --> cleans up the distribution directory, ${dist.dir}"/>
-
-        <echo message="   usage        --> show this message (default)"/>
 
         <echo message=""/>
 
@@ -442,17 +362,7 @@
 
     </target>
 
-    <!-- Checks for necessary libraries and correct versions of libraries    -->
 
-    <!--
-
-    <target name="check.servlet" depends="prepare" unless="has.servlet">
-
-        <fail message="servlet library does not appear to be in the classpath."/>
-
-    </target>
-
-    -->
 
 </project>
 
