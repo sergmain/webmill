@@ -198,7 +198,7 @@ Sealed: true
 
             basedir="${build.dest}"
 
-            includes="com/**"
+            includes="org/**"
 
             excludes="
 
@@ -212,7 +212,7 @@ Sealed: true
 
 
 
-        <copy file="${build.dir}/${main.lib}" todir="../js-lib/lib"/>
+        <copy file="${build.dir}/${main.lib}" todir="../riverock-lib/lib"/>
 
 
 
@@ -314,7 +314,7 @@ Sealed: true
 
 
 
-        <property name="lib.dir" value="../js-lib/lib"/>
+        <property name="lib.dir" value="../riverock-lib/lib"/>
 
         <!-- runtime library -->
 
