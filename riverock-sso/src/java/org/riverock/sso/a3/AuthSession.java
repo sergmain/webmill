@@ -58,7 +58,11 @@ package org.riverock.sso.a3;
 
 
 
-import java.util.Vector;
+import java.util.List;
+
+import java.util.ArrayList;
+
+import java.io.Serializable;
 
 
 
@@ -78,7 +82,7 @@ import org.apache.log4j.Logger;
 
 
 
-public class AuthSession extends AuthSessionType
+public class AuthSession extends AuthSessionType implements Serializable
 
 {
 
@@ -86,7 +90,7 @@ public class AuthSession extends AuthSessionType
 
 
 
-    private static Vector authProviderList = null;
+    private static List authProviderList = null;
 
     private AuthProviderInterface activeProvider = null;
 
@@ -96,57 +100,13 @@ public class AuthSession extends AuthSessionType
 
 
 
-    protected void finalize() throws Throwable
-
-    {
-
-        setUserLogin(null);
-
-        setUserPassword(null);
-
-        setUserInfo(null);
-
-        setSessionId(null);
-
-
-
-        super.finalize();
-
-    }
-
-
-
-    public AuthSession()
-
-    {
-
-    }
-
-
-
     private static Object syncObj = new Object();
 
-    public AuthSession(String l_, String p_)
+    public static List getAuthProviderList()
 
         throws AuthException
 
     {
-
-        setUserLogin(l_);
-
-        setUserPassword(p_);
-
-        if (log.isDebugEnabled())
-
-        {
-
-            log.debug("userLogin param " + l_);
-
-            log.debug("userLogin object " + p_);
-
-        }
-
-
 
         if (authProviderList==null)
 
@@ -194,7 +154,7 @@ public class AuthSession extends AuthSessionType
 
 
 
-                    authProviderList = new Vector();
+                    authProviderList = new ArrayList();
 
                     if ( auth!=null )
 
@@ -260,6 +220,58 @@ public class AuthSession extends AuthSessionType
 
         }
 
+        return authProviderList;
+
+    }
+
+
+
+    protected void finalize() throws Throwable
+
+    {
+
+        setUserLogin(null);
+
+        setUserPassword(null);
+
+        setUserInfo(null);
+
+        setSessionId(null);
+
+
+
+        super.finalize();
+
+    }
+
+
+
+    public AuthSession()
+
+    {
+
+    }
+
+
+
+    public AuthSession(String l_, String p_)
+
+    {
+
+        setUserLogin(l_);
+
+        setUserPassword(p_);
+
+        if (log.isDebugEnabled())
+
+        {
+
+            log.debug("userLogin param " + l_);
+
+            log.debug("userLogin object " + p_);
+
+        }
+
     }
 
 
@@ -282,11 +294,11 @@ public class AuthSession extends AuthSessionType
 
         boolean status = false;
 
-        for (int i=0; i<authProviderList.size(); i++)
+        for (int i=0; i<getAuthProviderList().size(); i++)
 
         {
 
-            AuthProviderInterface provider = (AuthProviderInterface)authProviderList.elementAt(i);
+            AuthProviderInterface provider = (AuthProviderInterface)getAuthProviderList().get(i);
 
             if (log.isInfoEnabled())
 

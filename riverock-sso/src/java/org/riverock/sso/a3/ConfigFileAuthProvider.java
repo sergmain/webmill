@@ -66,13 +66,17 @@ package org.riverock.sso.a3;
 
 
 
+import java.io.Serializable;
+
+
+
 import org.riverock.sso.schema.config.AuthProviderParametersListType;
 
 
 
 
 
-public class ConfigFileAuthProvider implements AuthProviderInterface
+public class ConfigFileAuthProvider implements AuthProviderInterface, Serializable
 
 {
 
