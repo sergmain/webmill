@@ -92,17 +92,17 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
 
 
     <!-- riverock runtime library -->
 
-    <property name="jsmithy-common.lib"     value="jsmithy-common-1.2.0.jar"/>
+    <property name="riverock-common.lib"     value="riverock-common-1.2.0.jar"/>
 
-    <property name="jsmithy-cache.lib"      value="jsmithy-cache-1.1.0.jar"/>
+    <property name="riverock-cache.lib"      value="riverock-cache-1.1.0.jar"/>
 
-    <property name="jsmithy-sql-parser.lib" value="jsmithy-sql-parser-1.1.6.jar"/>
+    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
 
 
 
@@ -218,11 +218,11 @@
 
         <pathelement location="${lib.dir}/${junit.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-common.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-cache.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
 
