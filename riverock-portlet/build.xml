@@ -98,6 +98,8 @@
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${common-codec.lib}"/>
+        <pathelement location="${lib.dir}/${common-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
@@ -135,9 +137,31 @@
         <antcall target="jar"/>
 
         <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
+
+        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
+        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-sql-parser.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="${webinf.jsp.dir}/web.xml" todir="${webmill.context}/WEB-INF"/>
         <copy file="${webinf.jsp.dir}/mill/portlet/portlet.xml" todir="${webmill.context}/WEB-INF/mill/portlet"/>
+
+        <property name="webmill.context" value="C:\opt2\_www\_test\mill"/>
+        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
+
+        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
+        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-common.lib}"  todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-sql-parser.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="${webinf.jsp.dir}/web.xml" todir="${webmill.context}/WEB-INF"/>
+        <copy file="${webinf.jsp.dir}/mill/portlet/portlet.xml" todir="${webmill.context}/WEB-INF/mill/portlet"/>
+
         <antcall target="start.apache"/>
     </target>
 
