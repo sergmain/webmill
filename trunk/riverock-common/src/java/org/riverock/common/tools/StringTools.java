@@ -50,7 +50,7 @@
 
 /**
 
- * Набор методов для работы со строками.
+ * Public tools for work with strings.
 
  *
 
@@ -166,9 +166,9 @@ public class StringTools
 
     /**
 
-     * Построение Locale из строки. Реализация в 1.4 кривая
+     * Build Locale from string. jdk1.4 have bug
 
-     * @param string строка для построения лосали
+     * @param string with locale
 
      * @return java.util.Locale
 
@@ -712,13 +712,13 @@ public class StringTools
 
     /**
 
-     * Заменяет один фрагмент строки другим во всей строке.
+     * Replace substring.
 
-     * @param str_ - String. Строка в которой производится замена
+     * @param str_ - String. Source string
 
-     * @param search_ - String. Подстрока для поиска
+     * @param search_ - String which will be searching
 
-     * @param ins - String. Подстрока для замены.
+     * @param ins - String for replace.
 
      * @return - String. Результирующая строка. Если один из параметров равен null, возвращается null
 
