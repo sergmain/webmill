@@ -376,7 +376,7 @@ public class MemberFile extends CacheFile
 
         {
 
-            String errorString = "Error processing member file";
+            String errorString = "Error processing member file "+getFile();
 
             log.error( errorString, e);
 

@@ -124,7 +124,7 @@ public class CurrencyStdDateChangeClassQuery extends BaseClassQuery
 
         if (cat.isDebugEnabled())
 
-            cat.debug("idCurrency - "+idCurrency.longValue());
+            cat.debug("idCurrency - "+idCurrency);
 
     }
 

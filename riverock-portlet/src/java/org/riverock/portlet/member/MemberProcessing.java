@@ -776,9 +776,11 @@ public class MemberProcessing
 
                 s_ = getRsetSelectValue(ff.getQueryArea(),
 
-                    "" + RsetTools.getLong(rs, MemberServiceClass.getRealName(ff))
+                    RsetTools.getLong(rs, MemberServiceClass.getRealName(ff))
 
                 );
+
+
 
                 break;
 
@@ -786,7 +788,7 @@ public class MemberProcessing
 
             case FieldsTypeJspTypeType.LOOKUPCLASS_TYPE:
 
-                s_ += getSelectListFromClass(rs, content.getQueryArea() , ff, isEdit);
+                s_ = getSelectListFromClass(rs, content.getQueryArea() , ff, isEdit);
 
 //                log.error("LookupClass field can't request directly from getCellValue()");
 
@@ -6060,17 +6062,23 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
      */
 
-    private String getRsetSelectValue(QueryAreaType qa, String id_)
+    private String getRsetSelectValue(QueryAreaType qa, Object id_)
 
         throws Exception
 
     {
 
+        if (id_==null)
+
+            return null;
+
+
+
         String sql_ = getRsetSelectSQL(qa);
 
 
 
-//log.debug( sql_ );
+        log.debug("sql: "+ sql_+"\nid: "+id_ );
 
 
 
@@ -6086,7 +6094,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             ps = db_.prepareStatement(sql_);
 
-            ps.setString(1, id_);
+            ps.setObject(1, id_);
 
 
 
@@ -6134,6 +6142,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
+                        Object sTemp = null;
+
                         switch (ff.getJspType().getType())
 
                         {
@@ -6142,7 +6152,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             case FieldsTypeJspTypeType.TEXT_AREA_TYPE:
 
-                                v_str += RsetTools.getString(rs, MemberServiceClass.getRealName(ff), "");
+                                sTemp = RsetTools.getString(rs, MemberServiceClass.getRealName(ff), "");
+
+                                if (sTemp!=null)
+
+                                    v_str += (""+sTemp);
 
                                 break;
 
@@ -6152,7 +6166,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             case FieldsTypeJspTypeType.DOUBLE_TEXT_TYPE:
 
-                                v_str += "" + RsetTools.getDouble(rs, MemberServiceClass.getRealName(ff));
+                                sTemp = RsetTools.getDouble(rs, MemberServiceClass.getRealName(ff));
+
+                                if (sTemp!=null)
+
+                                    v_str += (""+sTemp);
 
                                 break;
 
@@ -6160,7 +6178,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             case FieldsTypeJspTypeType.INT_TEXT_TYPE:
 
-                                v_str += "" + RsetTools.getLong(rs, MemberServiceClass.getRealName(ff));
+                                sTemp = RsetTools.getLong(rs, MemberServiceClass.getRealName(ff));
+
+                                if (sTemp!=null)
+
+                                    v_str += (""+sTemp);
 
                                 break;
 
@@ -6196,11 +6218,19 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             case FieldsTypeJspTypeType.LOOKUP_TYPE:
 
-                                v_str += getRsetSelectValue(ff.getQueryArea(),
+                                sTemp = getRsetSelectValue(
 
-                                    "" + RsetTools.getLong(rs, MemberServiceClass.getRealName(ff))
+                                    ff.getQueryArea(),
+
+                                    RsetTools.getLong(rs, MemberServiceClass.getRealName(ff))
 
                                 );
+
+                                if (sTemp!=null)
+
+                                    v_str += (""+sTemp);
+
+
 
                                 break;
 
@@ -6884,7 +6914,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                         editVal = RsetTools.getString(rs,
 
-                                            MemberServiceClass.getRealName(ff));
+                                            MemberServiceClass.getRealName(ff), "");
 
                                 }
 
@@ -7196,61 +7226,45 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-//            switch(param.getType().getType())
+            if ( "java.lang.Long".equals( param.getType().toString() ) )
 
-//            {
+            {
 
-//                case ClassQueryParameterTypeTypeType.JAVA_LANG_LONG_TYPE:
+                Long longValue = RsetTools.getLong(rs, MemberServiceClass.getRealName(mainField));
 
-                    if ( "java.lang.Long".equals( param.getType().toString() ) )
+                Object[] args = { longValue };
 
-                    {
+                objArgs = args;
 
-                        Long longValue = RsetTools.getLong(rs, MemberServiceClass.getRealName(mainField));
+            }
 
-                        Object[] args = { longValue };
+            else if ( "java.lang.String".equals( param.getType().toString() ) )
 
-                        objArgs = args;
+            {
 
-                    }
+                String stringValue = RsetTools.getString(rs, MemberServiceClass.getRealName(mainField));
 
-//                    break;
+                Object[] args = { stringValue };
 
-//                case ClassQueryParameterTypeTypeType.JAVA_LANG_STRING_TYPE:
+                objArgs = args;
 
-                    else if ( "java.lang.String".equals( param.getType().toString() ) )
+            }
 
-                    {
+            else
 
-                        String stringValue = RsetTools.getString(rs, MemberServiceClass.getRealName(mainField));
+            {
 
-                        Object[] args = { stringValue };
+                log.error("Type of field '"+param.getType()+"' not processed. Need update code.");
 
-                        objArgs = args;
+                throw new Exception("Type of field '"+param.getType()+"' not processed. Need update code.");
 
-                    }
-
-//                    break;
-
-//                default:
-
-                    else
-
-                    {
-
-                        log.error("Type of field '"+param.getType()+"' not processed. Need update code.");
-
-                        throw new Exception("Type of field '"+param.getType()+"' not processed. Need update code.");
-
-                    }
-
-//            }
+            }
 
 
 
             if (log.isDebugEnabled())
 
-                log.debug("invoke "+method.toString());
+                log.debug("invoke "+method.toString()+" with parameter "+objArgs);
 
 
 
@@ -7402,7 +7416,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-                        String editVal = "&nbsp;";
+                        String editVal = null;
 
 
 
@@ -7412,7 +7426,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             editVal = getRsetSelectValue(ff.getQueryArea(),
 
-                                "" + RsetTools.getLong(rs, MemberServiceClass.getRealName(ff))
+                                RsetTools.getLong(rs, MemberServiceClass.getRealName(ff))
 
                             );
 
@@ -7440,6 +7454,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
+                            Object obj = null;
+
                             switch (ff.getJspType().getType())
 
                             {
@@ -7448,9 +7464,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                 case FieldsTypeJspTypeType.DOUBLE_TEXT_TYPE:
 
-                                    editVal = "" + RsetTools.getDouble(rs,
+                                    obj = RsetTools.getDouble(rs, MemberServiceClass.getRealName(ff));
 
-                                        MemberServiceClass.getRealName(ff));
+                                    if (obj!=null)
+
+                                        editVal = obj.toString();
 
                                     break;
 
@@ -7458,9 +7476,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                 case FieldsTypeJspTypeType.INT_TEXT_TYPE:
 
-                                    editVal = "" + RsetTools.getLong(rs,
+                                    obj = RsetTools.getLong(rs, MemberServiceClass.getRealName(ff));
 
-                                        MemberServiceClass.getRealName(ff));
+                                    if (obj!=null)
+
+                                        editVal = obj.toString();
 
                                     break;
 
@@ -7499,6 +7519,10 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
                                     editVal = getDateTextCell(rs, ff, "");
+
+                                    if (obj!=null)
+
+                                        editVal = obj.toString();
 
                                     break;
 

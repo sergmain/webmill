@@ -112,7 +112,7 @@ public class ContextDataClassQuery extends BaseClassQuery
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.member.ContextDataClassQuery" );
+    private static Logger log = Logger.getLogger( "org.riverock.portlet.member.ContextDataClassQuery" );
 
 
 
@@ -144,7 +144,7 @@ public class ContextDataClassQuery extends BaseClassQuery
 
         if (log.isDebugEnabled())
 
-            log.debug("idSiteCtxLangCatalog - "+idSiteCtxLangCatalog.longValue());
+            log.debug("idSiteCtxLangCatalog - "+idSiteCtxLangCatalog);
 
     }
 
@@ -160,7 +160,7 @@ public class ContextDataClassQuery extends BaseClassQuery
 
         if (log.isDebugEnabled())
 
-            log.debug("idSiteCtxType - "+idSiteCtxType.longValue());
+            log.debug("idSiteCtxType - "+idSiteCtxType);
 
     }
 
@@ -176,7 +176,7 @@ public class ContextDataClassQuery extends BaseClassQuery
 
         if (log.isDebugEnabled())
 
-            log.debug("idContext - "+idContext.longValue());
+            log.debug("idContext - "+idContext);
 
     }
 
