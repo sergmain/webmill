@@ -56,6 +56,8 @@ import java.util.ArrayList;
 
 import java.util.List;
 
+import java.util.Locale;
+
 
 
 import org.riverock.generic.port.LocalizedString;
@@ -119,6 +121,34 @@ public class MenuItem implements MenuItemInterface
 
 
         super.finalize();
+
+    }
+
+
+
+    public String toString()
+
+    {
+
+        String st;
+
+        try
+
+        {
+
+            st = str.getString(Locale.ENGLISH);
+
+        }
+
+        catch (java.io.UnsupportedEncodingException e)
+
+        {
+
+            st = "error";
+
+        }
+
+        return "[id:"+id+", template:"+nameTemplate+", str:"+st+", url:"+url+"]";
 
     }
 

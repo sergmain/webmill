@@ -284,6 +284,22 @@ public class InitPage
 
             log.warn("Menu for locale "+currentLocale.toString()+" not found");
 
+            log.warn("Dump menu");
+
+            for (int i = 0; i < sc.getMenuLanguageCount(); i++)
+
+            {
+
+                MenuLanguageInterface tempCat = sc.getMenuLanguage(i);
+
+                log.warn("MenuLanguage: "+tempCat.getLocaleStr()+", lang "+tempCat.getLang());
+
+
+
+            }
+
+
+
         }
 
 

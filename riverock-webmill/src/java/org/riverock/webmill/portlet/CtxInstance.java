@@ -70,6 +70,8 @@ import java.util.HashMap;
 
 import java.util.Map;
 
+import java.util.List;
+
 
 
 import javax.portlet.PortletRequest;
@@ -103,6 +105,10 @@ import org.riverock.webmill.main.Constants;
 import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portal.PortalConstants;
+
+import org.riverock.webmill.portal.menu.MenuInterface;
+
+import org.riverock.webmill.portal.menu.MenuItemInterface;
 
 import org.riverock.webmill.portlet.wrapper.RenderRequestWrapper;
 
@@ -519,6 +525,40 @@ public class CtxInstance {
             String errorString = "Template for page with type 'mill.index' not found";
 
             log.error( errorString );
+
+            log.error("Dump all menu for "+page.getCurrentLocale()+" locale");
+
+            try
+
+            {
+
+                for (int i=0; i<page.menuLanguage.getMenuCount(); i++)
+
+                {
+
+                    MenuInterface catalog = page.menuLanguage.getMenu(i);
+
+                    for (int k=0; k<catalog.getMenuItemCount(); k++)
+
+                    {
+
+                        MenuItemInterface menuItem = catalog.getMenuItem(k);
+
+                        log.error("Menu item: "+menuItem.toString());
+
+                    }
+
+                }
+
+            }
+
+            catch (Exception e)
+
+            {
+
+                log.error("Exception in dumping menu", e);
+
+            }
 
             throw new Exception(errorString);
 
