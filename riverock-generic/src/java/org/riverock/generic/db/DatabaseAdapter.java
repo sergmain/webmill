@@ -739,7 +739,8 @@ public abstract class DatabaseAdapter
                                 case Types.DECIMAL:
                                 case Types.DOUBLE:
                                 case Types.NUMERIC:
-                                    if ( fieldData.getDecimalDigit().intValue()==0 )
+                                    if ( fieldData.getDecimalDigit()==null ||
+                                        fieldData.getDecimalDigit().intValue()==0 )
                                     {
                                         if (isDebug)
                                             System.out.println("Types.NUMERIC as Types.INTEGER param #"+(k+1)+", " +

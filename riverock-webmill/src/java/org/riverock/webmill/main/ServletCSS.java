@@ -40,7 +40,6 @@ import org.apache.log4j.Logger;
 import org.riverock.webmill.port.PortalInfo;
 import org.riverock.webmill.utils.ServletUtils;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.tools.ServletTools;
 import org.riverock.common.tools.StringTools;
 
 /**

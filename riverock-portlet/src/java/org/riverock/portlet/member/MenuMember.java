@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletSession;
+import javax.portlet.PortletException;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
@@ -49,8 +50,6 @@ import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
-import org.riverock.portlet.member.SiteTemplateMember;
-import org.riverock.portlet.portlets.PortletException;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthTools;
 
@@ -88,7 +87,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
     CtxInstance ctxInstance = null;
 
     public PortletResultObject getInstance(DatabaseAdapter db_)
-        throws Exception
+        throws PortletException
     {
         PreparedStatement ps = null;
         ResultSet rset = null;
@@ -132,10 +131,11 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
                 }
             }
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            log.error("Error get list of member application", e);
-            throw e;
+            String es = "Error get list of member application";
+            log.error(es, e);
+            throw new PortletException(es, e);
         }
         finally
         {
@@ -146,12 +146,12 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
         return this;
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db__, Long id) throws Exception
+    public PortletResultObject getInstance(DatabaseAdapter db__, Long id) throws PortletException
     {
         return getInstance( db__ );
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws Exception
+    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException
     {
         return getInstance( db__ );
     }
@@ -357,7 +357,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
                     if (param != null)
                     {
                         log.debug("PortletParam  response - " + param.getResponse());
-                        log.debug("PortletParam  param.response.encodeURL( ctxInstance.ctx()  ) -  " + param.getResponse().encodeURL( ctxInstance.ctx()  ));
+                        log.debug("PortletParam  param.response.encodeURL( ctxInstance.ctx()  ) -  " + param.getResponse().encodeURL( CtxInstance.ctx()  ));
                         log.debug("PortletParam  getMemberTemplate - " + getMemberTemplate() );
                         log.debug("PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
 

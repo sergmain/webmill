@@ -7,24 +7,23 @@ package org.riverock.portlet.exception;
  * $Id$
  */
 public class MemberException extends Exception{
-    public MemberException()
-    {
+    public MemberException(){
         super();
     }
 
-    public MemberException(String s)
-    {
+    public MemberException(String s){
         super(s);
     }
 
-    public String toString()
-    {
+    public MemberException(String s, Throwable cause){
+        super(s, cause);
+    }
+
+    public String toString(){
         return super.toString();
     }
 
-    public String getMessage()
-    {
+    public String getMessage(){
         return super.getMessage();
     }
-
 }

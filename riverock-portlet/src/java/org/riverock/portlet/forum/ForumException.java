@@ -25,28 +25,26 @@
 
 package org.riverock.portlet.forum;
 
-public class ForumException extends Exception
-{
+public class ForumException extends Exception{
 
-    public ForumException()
-    {
+    public ForumException(){
         super();
     }
 
-    public ForumException(String s)
-    {
+    public ForumException(String s){
         super(s);
     }
 
-    public String toString()
-    {
+    public ForumException(String s, Throwable cause){
+        super(s, cause);
+    }
+
+    public String toString(){
         return super.toString();
     }
 
-    public String getMessage()
-    {
+    public String getMessage(){
         return super.getMessage();
     }
-
 }
 

@@ -60,8 +60,10 @@ abstract public class Forum
     public String forumURI = "";
     public int month = 0;
     public int year = 0;
+    public Long currYear = new Long(GregorianCalendar.getInstance().get(Calendar.YEAR));
     public Long id_forum = null;
     public Long id = null;
+
     public static final String SEQ_FORUM_THREADS = "SEQ_MAIN_FORUM_THREADS";
     public static final String SEQ_FORUM_MESSAGE = "SEQ_MAIN_FORUM_MESSAGE";
     public static final String FORUM_THREADS_TABLE = "MAIN_FORUM_THREADS";
@@ -146,10 +148,10 @@ abstract public class Forum
             if (rs.next())
                 retValue = RsetTools.getLong(rs, "id_thread");
         }
-        catch (Exception e)
-        {
-            log.error("exception", e);
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getIdThread()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
         finally
         {
@@ -167,9 +169,7 @@ abstract public class Forum
     }
 
 
-    public String getThreads(String nameTemplate)
-        throws ForumException
-    {
+    public String getThreads(String nameTemplate)throws ForumException {
         String sql_ = "";
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -249,7 +249,7 @@ abstract public class Forum
                         );
                         break;
                     default:
-                        sql_ =
+                        sql_ +=
                             "select distinct z.ID_THREAD " +
                             "from " + FORUM_THREADS_TABLE + " z " +
                             "where   z.ID_FORUM = ? and " +
@@ -279,12 +279,14 @@ abstract public class Forum
                     0, new Long(0));
             }
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            log.error(e);
             log.error("this.class: "+this.getClass().getName());
             log.error("sql: "+sql_);
-            throw new ForumException(e.toString());
+
+            String es = "Error in getThreads(String nameTemplate)";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
         finally
         {
@@ -296,16 +298,13 @@ abstract public class Forum
         return s;
     }
 
-    public Integer getFirstMonthInYear()
-        throws ForumException
-    {
+    public Integer getFirstMonthInYear()throws ForumException{
         String sql_ = "";
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         DatabaseAdapter db_ = null;
-        try
-        {
+        try{
             db_ = DatabaseAdapter.getInstance(false);
             switch(db_.getFamaly()){
                 case DatabaseManager.MYSQL_FAMALY:
@@ -327,18 +326,17 @@ abstract public class Forum
             ps.setLong(2, year);
 
             rs = ps.executeQuery();
-            if (rs.next())
-            {
+            if (rs.next()){
                 Object obj = rs.getObject("month");
                 return (obj == null ? null : new Integer(rs.getInt("month")));
             }
         }
-        catch (Exception e)
-        {
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getFirstMonthInYear()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
-        finally
-        {
+        finally{
             DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
@@ -348,9 +346,7 @@ abstract public class Forum
         return null;
     }
 
-    public String getListYears()
-        throws ForumException
-    {
+    public String getListYears()throws ForumException{
         DatabaseAdapter db_ = null;
         String s = "";
         try
@@ -364,7 +360,7 @@ abstract public class Forum
                         "from " + FORUM_THREADS_TABLE + " where id_forum = ? ",
                         new Object[]{id_forum}
                     );
-                    Long currYear = new Long(GregorianCalendar.getInstance().get(Calendar.YEAR));
+
                     if (listYear.indexOf(currYear)==-1)
                         listYear.add(currYear);
                     break;
@@ -398,22 +394,19 @@ abstract public class Forum
                         "\">" + yearValue + "</a>&nbsp;");
             }
         }
-        catch (Exception e)
-        {
-            log.error("exception",e);
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getListYears()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
-        finally
-        {
+        finally{
             DatabaseManager.close(db_);
             db_ = null;
         }
         return s;
     }
 
-    public String getListMonths()
-        throws ForumException
-    {
+    public String getListMonths()throws ForumException{
         String s = "";
         DatabaseAdapter db_ = null;
         try
@@ -453,6 +446,12 @@ abstract public class Forum
             }
             Collections.sort(listMonth);
 
+            int effectiveMonth = 0;
+            if (listMonth.indexOf(new Long(month))==-1 && listMonth.size()>0)
+                effectiveMonth=((Long)listMonth.get(0)).intValue();
+            else
+                effectiveMonth = month;
+
             for (int i=0; i<listMonth.size(); i++) {
                 Long monthLong = (Long)listMonth.get(i);
                 int monthValue = monthLong.intValue();
@@ -471,7 +470,8 @@ abstract public class Forum
                     "MMMM",
                     portletRequest.getLocale());
 
-                if (month == monthValue)
+
+                if (monthValue==effectiveMonth)
                     s += ("<b>" + monthString + "</b>&nbsp;");
                 else
                     s += ("<a href=\"" + CtxInstance.ctx() + '?' +
@@ -483,15 +483,13 @@ abstract public class Forum
                         Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
                         "\">" + monthString + "</a>&nbsp;");
             }
-
         }
-        catch (Exception e)
-        {
-            log.error("exception", e);
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getListMonths()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
-        finally
-        {
+        finally{
             DatabaseManager.close(db_);
             db_ = null;
         }
@@ -499,11 +497,8 @@ abstract public class Forum
     }
 
 
-    public List getMessagesInThread()
-        throws ForumException
-    {
-        if (id==null)
-            return null;
+    public List getMessagesInThread()throws ForumException{
+        if (id==null) return null;
 
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -527,9 +522,10 @@ abstract public class Forum
             while (rs.next())
                 v.add(getForumMessage(db_, RsetTools.getLong(rs, "id")) );
         }
-        catch (Exception e)
-        {
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getMessagesInThread()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
         finally
         {
@@ -542,9 +538,7 @@ abstract public class Forum
     }
 
 
-    public String getStartMessages(String nameTemplate)
-        throws ForumException
-    {
+    public String getStartMessages(String nameTemplate)throws ForumException{
         PreparedStatement ps = null;
         ResultSet rs = null;
         String s = "";
@@ -645,10 +639,10 @@ abstract public class Forum
             }
             s += "</table>";
         }
-        catch (Exception e)
-        {
-            log.error("exception: ", e);
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getStartMessages()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
         finally
         {
@@ -666,12 +660,13 @@ abstract public class Forum
     {
         if (id==null)
             return null;
-
-        try {
+        try{
             return getForumMessage(DatabaseAdapter.getInstance(false), id);
         }
-        catch(Exception e) {
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getCurrentMessage()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
     }
 
@@ -698,10 +693,12 @@ abstract public class Forum
 
             return TreeUtils.rebuildTree(list);
         }
-        catch(Exception e) {
+        catch (Throwable e){
             log.error("Forum.getMessages(), sql: "+sql_);
-            log.error("Forum.getMessages() ", e);
-            throw new ForumException(e.toString());
+
+            String es = "Error in getMessages()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
         finally {
             DatabaseManager.close(rs, ps);
@@ -756,9 +753,10 @@ abstract public class Forum
 
             }
         }
-        catch(Exception e) {
-            log.error("Forum.getMessages() ", e);
-            throw new ForumException(e.toString());
+        catch (Throwable e){
+            String es = "Error in getMessages()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
         finally {}
         return r_;
@@ -816,17 +814,18 @@ abstract public class Forum
 
             dbDyn.commit();
         }
-        catch (Exception e)
-        {
+        catch (Throwable e){
             try
             {
                 dbDyn.rollback();
             }
             catch(Exception ee){}
-            throw new ForumException(e.toString());
+
+            String es = "Error in addMessage()";
+            log.error(es, e);
+            throw new ForumException(es, e);
         }
-        finally
-        {
+        finally{
             DatabaseManager.close(dbDyn, st);
             st = null;
             dbDyn = null;
