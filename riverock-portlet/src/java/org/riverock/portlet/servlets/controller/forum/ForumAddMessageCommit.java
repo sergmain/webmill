@@ -92,6 +92,8 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.generic.schema.db.CustomSequenceType;
+
 import org.riverock.portlet.forum.Forum;
 
 import org.riverock.portlet.forum.SimpleForum;
@@ -118,7 +120,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 {
 
-    private static Logger log = Logger.getLogger("org.riverock.servlets.controller.forum.ForumAddMessageCommit");
+    private static Logger log = Logger.getLogger("org.riverock.portlet.servlets.controller.forum.ForumAddMessageCommit");
 
 
 
@@ -143,6 +145,26 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
         doGet(request, response);
+
+    }
+
+
+
+    private static CustomSequenceType getNewThreadIdSequence()
+
+    {
+
+        CustomSequenceType seq = new CustomSequenceType();
+
+        seq.setSequenceName( Forum.SEQ_FORUM_THREADS );
+
+        seq.setTableName( Forum.FORUM_THREADS_TABLE );
+
+        seq.setColumnName( "ID_THREAD" );
+
+
+
+        return seq;
 
     }
 
@@ -236,7 +258,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
                     id_main = new Long(0);
 
-                    id_thread = new Long(db_.getSequenceNextValue(forum.getSequence()) );
+                    id_thread = new Long(db_.getSequenceNextValue(getNewThreadIdSequence()) );
 
                 }
 
@@ -252,7 +274,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
                     id_main = new Long(0);
 
-                    id_thread = new Long(db_.getSequenceNextValue(forum.getSequence()));
+                    id_thread = new Long(db_.getSequenceNextValue(getNewThreadIdSequence()));
 
                 }
 

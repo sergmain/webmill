@@ -128,37 +128,21 @@ abstract public class Forum
 
     public Long id = null;
 
-//    public boolean isJustEntered = true;
-
     public InitPage jspPage = null;
 
+    public static final String SEQ_FORUM_THREADS = "SEQ_MAIN_FORUM_THREADS";
 
+    public static final String SEQ_FORUM_MESSAGE = "SEQ_MAIN_FORUM_MESSAGE";
 
-    abstract public String getNameTable();
-
-
-
-    abstract public String getNameIdSequence();
-
-
-
-    abstract public CustomSequenceType getSequence();
+    public static final String FORUM_THREADS_TABLE = "MAIN_FORUM_THREADS";
 
 
 
-    abstract public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__)
-
-        throws ForumException;
+    abstract public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__) throws ForumException;
 
 
 
-
-
-    public Forum()
-
-    {
-
-    }
+    public Forum(){}
 
 
 
@@ -171,18 +155,6 @@ abstract public class Forum
         throws ForumException
 
     {
-
-//        isJustEntered = (
-
-//            request.getParameter(
-
-//                Constants.NAME_ID_MESSAGE_FORUM_PARAM
-
-//            ) == null
-
-//            );
-
-
 
         id = ServletTools.getLong(request, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
 
@@ -334,7 +306,7 @@ cat.debug("#10.00.EMAIL "+email);
 
 
 
-        String sql_ = "select id_thread from " + getNameTable() + " where id=?";
+        String sql_ = "select id_thread from " + FORUM_THREADS_TABLE + " where id=?";
 
 
 
@@ -448,15 +420,27 @@ cat.debug("#10.00.EMAIL "+email);
 
                 sql_ =
 
-                    "select distinct ID_THREAD " +
+                    "select a.ID_THREAD " +
 
-                    "from " + getNameTable() + " " +
+                    "from "  + FORUM_THREADS_TABLE + " a, " +
 
-                    "where   id = ? and  " +
+                    "( " +
 
-                    "to_number(to_char(DATE_POST, 'yyyy')) = ? and " +
+                    "select distinct z.ID_THREAD " +
 
-                    "to_number(to_char(DATE_POST, 'mm')) = ? ";
+                    "from " + FORUM_THREADS_TABLE + " z " +
+
+                    "where   z.ID = ? and  " +
+
+                    "to_number(to_char(z.DATE_POST, 'yyyy')) = ? and " +
+
+                    "to_number(to_char(z.DATE_POST, 'mm')) = ? " +
+
+                    ") b " +
+
+                    "where a.ID_THREAD=b.ID_THREAD " +
+
+                    "order by a.DATE_POST DESC ";
 
 
 
@@ -476,15 +460,27 @@ cat.debug("#10.00.EMAIL "+email);
 
                 sql_ =
 
-                    "select  distinct ID_THREAD " +
+                    "select a.ID_THREAD " +
 
-                    "from " + getNameTable() + " " +
+                    "from " + FORUM_THREADS_TABLE + " a, " +
+
+                    "( " +
+
+                    "select distinct z.ID_THREAD " +
+
+                    "from " + FORUM_THREADS_TABLE + " z " +
 
                     "where   ID_FORUM = ? and " +
 
                     "to_number(to_char(DATE_POST, 'yyyy')) = ? and " +
 
-                    "to_number(to_char(DATE_POST, 'mm')) = ? ";
+                    "to_number(to_char(DATE_POST, 'mm')) = ? " +
+
+                    ") b " +
+
+                    "where a.ID_THREAD=b.ID_THREAD " +
+
+                    "order by a.DATE_POST DESC ";
 
 
 
@@ -582,7 +578,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 "select max(to_number(to_char(date_post,'mm'))) month " +
 
-                "from " + getNameTable() + " " +
+                "from " + FORUM_THREADS_TABLE + " " +
 
                 "where id_forum=? and to_char(date_post,'yyyy')=?";
 
@@ -670,7 +666,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 "from ( select distinct to_char(date_post,'yyyy') year " +
 
-                "        from " + getNameTable() + " where id_forum = ? " +
+                "        from " + FORUM_THREADS_TABLE + " where id_forum = ? " +
 
                 "        union " +
 
@@ -784,7 +780,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 "        select distinct trunc(date_post,'dd') month " +
 
-                "        from " + getNameTable() + " " +
+                "        from " + FORUM_THREADS_TABLE + " " +
 
                 "        where   id_forum = ? and to_char(date_post,'yyyy')=to_char(?) " +
 
@@ -906,7 +902,7 @@ cat.debug("#10.00.EMAIL "+email);
 
             "select  a.id " +
 
-            "from " + getNameTable() + " a, " + getNameTable() + " b " +
+            "from " + FORUM_THREADS_TABLE + " a, " + FORUM_THREADS_TABLE + " b " +
 
             "where b.id=? and a.id_thread=b.id_thread " +
 
@@ -978,17 +974,17 @@ cat.debug("#10.00.EMAIL "+email);
 
     {
 
-
-
         String sql_ =
 
-            "select * " +
+            "select a.*, (select count(*) COUNT_MESSAGES from " + FORUM_THREADS_TABLE + " z " +
 
-            "from " + getNameTable() + " " +
+            "where z.ID_THREAD=a.ID_THREAD) COUNT_MESSAGES " +
 
-            "where id_main=0 and id_forum=? " +
+            "from " + FORUM_THREADS_TABLE + " a " +
 
-            "order by date_post asc";
+            "where a.ID_MAIN=0 and a.id_forum=? " +
+
+            "order by a.DATE_POST DESC";
 
 
 
@@ -1018,6 +1014,56 @@ cat.debug("#10.00.EMAIL "+email);
 
 
 
+
+
+            s +=
+
+                "<STYLE>" +
+
+                "<!--" +
+
+                "/* titles for the topics: could specify viewed link colour too */ "+
+
+                ".topictitle		  { font-weight: bold; font-size: 11px; color:#000000; } "+
+
+                "a.topictitle:link    { text-decoration: none; color : #000000; } "+
+
+                "a.topictitle:visited { text-decoration: none; color : #000000; } "+
+
+                "a.topictitle:hover	  { text-decoration: NONE; color : #3D4743; } "+
+
+                "/* Location, number of posts, post date etc */ "+
+
+                ".postdetails		{ font-size : 10px; color : #000000; } "+
+
+                "th.thHead,th.thSides,th.thTop,th.thLeft,th.thRight,th.thBottom,th.thCornerL,th.thCornerR { " +
+
+                "    font-weight: bold; font-size: 11px; color:#000000; " +
+
+                "height: 28px; } " +
+
+                "-->" +
+
+                "</style>"+
+
+                "<table border=\"1\">\n" +
+
+                "<tr>"+
+
+                "<th align=\"center\" height=\"25\" class=\"thCornerL\" nowrap=\"nowrap\">&nbsp;Темы&nbsp;</th>"+
+
+                "<th width=\"50\" align=\"center\" class=\"thTop\" nowrap=\"nowrap\">&nbsp;Ответов&nbsp;</th>"+
+
+                "<th width=\"100\" align=\"center\" class=\"thTop\" nowrap=\"nowrap\">&nbsp;Автор&nbsp;</th>"+
+
+//                "<th width=\"50\" align=\"center\" class=\"thTop\" nowrap=\"nowrap\">&nbsp;Просмотров&nbsp;</th>"+
+
+                "<th align=\"center\" class=\"thCornerR\" nowrap=\"nowrap\">&nbsp;Последнее сообщение&nbsp;</th>"+
+
+                "</tr>"+
+
+                "<tr><td>";
+
             while (rs.next())
 
             {
@@ -1030,7 +1076,11 @@ cat.debug("#10.00.EMAIL "+email);
 
                 s += (
 
-                    "<a href=\"" + CtxURL.ctx() + '?' +
+                    "<tr><td>" +
+
+                    "<span class=\"topictitle\">" +
+
+                    "<a class=\"topictitle\" href=\"" + CtxURL.ctx() + '?' +
 
                     Constants.NAME_LANG_PARAM + '=' + jspPage.currentLocale.toString() + '&' +
 
@@ -1052,39 +1102,23 @@ cat.debug("#10.00.EMAIL "+email);
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + nameTemplate +
 
-                    "\">" +
+                    "\">" + RsetTools.getString(rs, "header", "___") + "</a>" +
 
-                    "<b>" + RsetTools.getString(rs, "header", "___") + "<b> " +
+                    "</span>" +
 
-                    RsetTools.getString(rs, "fio") + "</b></b></a>" +
+                    "</td>" +
 
-                    "&nbsp;" + dat + "<br>"
+                    "<td align=\"center\" valign=\"middle\" class=\"postdetails\">" + RsetTools.getInt(rs, "COUNT_MESSAGES") + "</td>" +
+
+                    "<td align=\"center\" valign=\"middle\" class=\"postdetails\">" + RsetTools.getString(rs, "fio") + "</td>"+
+
+                    "<td align=\"center\" valign=\"middle\" class=\"postdetails\">&nbsp;</td></tr>\n"
 
                     );
 
-/*
-
-                        "<a href=\"" + forumURI + "?" + webPage.addURL +
-
-                        Constants.NAME_ID_FORUM_PARAM + "=" + id_forum + "&" +
-
-                        Constants.NAME_ID_MESSAGE_FORUM_PARAM + "=" +
-
-                        RsetTools.getLong(rs, "id") + "\">" +
-
-                        "<b>" + RsetTools.getString(rs, "header", "___") + "<b> " +
-
-                        RsetTools.getString(rs, "fio") + "</b></b></a>" +
-
-                        "&nbsp;" +
-
-                        RsetTools.getStringDate(rs, "date_post", "dd-MM-yyyy HH:mm:ss", "unknown", webPage.currentLocale) +
-
-                        "<br>"
-
-*/
-
             }
+
+            s += "</table>";
 
         }
 
@@ -1186,7 +1220,7 @@ cat.debug("#10.00.EMAIL "+email);
 
             "        date_post " +
 
-            "from " + getNameTable() + " " +
+            "from " + FORUM_THREADS_TABLE + " " +
 
             "where   id_thread=? and level = ? and id_main=? " +
 
@@ -1406,9 +1440,9 @@ cat.debug("#10.00.EMAIL "+email);
 
             CustomSequenceType seq = new CustomSequenceType();
 
-            seq.setSequenceName(getNameIdSequence());
+            seq.setSequenceName(SEQ_FORUM_MESSAGE);
 
-            seq.setTableName(getNameTable());
+            seq.setTableName(FORUM_THREADS_TABLE);
 
             seq.setColumnName("ID");
 
@@ -1420,7 +1454,7 @@ cat.debug("#10.00.EMAIL "+email);
 
             st = dbDyn.prepareStatement(
 
-                "insert into " + getNameTable() + " " +
+                "insert into " + FORUM_THREADS_TABLE + " " +
 
                 "(ID, id_main, id_forum, id_thread, date_post, header, fio, email, ip) " +
 

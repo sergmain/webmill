@@ -98,7 +98,7 @@ public class LanguagePerSite implements PortletGetList
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.member.context.LanguagePerSite");
+    private static Logger cat = Logger.getLogger("org.riverock.portlet.member.context.LanguagePerSite");
 
 
 

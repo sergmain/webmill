@@ -66,46 +66,6 @@ public class SimpleForum extends Forum
 
 
 
-    public String getNameTable()
-
-    {
-
-        return "MAIN_FORUM_THREADS";
-
-    }
-
-
-
-    public String getNameIdSequence()
-
-    {
-
-        return "SEQ_MAIN_FORUM_THREADS";
-
-    }
-
-
-
-    public CustomSequenceType getSequence()
-
-    {
-
-        CustomSequenceType seq = new CustomSequenceType();
-
-        seq.setSequenceName( getNameIdSequence() );
-
-        seq.setTableName( getNameTable() );
-
-        seq.setColumnName( "ID_THREAD" );
-
-
-
-        return seq;
-
-    }
-
-
-
     public SimpleForum(javax.servlet.http.HttpServletRequest request,
 
                        javax.servlet.http.HttpServletResponse response,
@@ -135,8 +95,6 @@ public class SimpleForum extends Forum
             throws ForumException
 
     {
-
-//cat.debug("ID #1.001: "+id__);
 
         try
 
