@@ -36,8 +36,8 @@ package org.riverock.portlet.price;
 import java.io.FileWriter;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.generic.site.SiteListSite;
 import org.riverock.portlet.core.GetCashCurrencyWithIdSiteList;
 import org.riverock.portlet.schema.core.CashCurrencyItemType;
 import org.riverock.portlet.schema.core.CashCurrencyListType;
@@ -71,9 +71,15 @@ public class CurrencyList
     }
 
     public static CurrencyList getInstance(DatabaseAdapter db__, Long id__)
-        throws Exception
+        throws PriceException
     {
-        return (CurrencyList) cache.getInstanceNew(db__, id__);
+        try {
+            return (CurrencyList) cache.getInstanceNew(db__, id__);
+        } catch (Throwable e) {
+            String es = "Error in getInstance(DatabaseAdapter db__, Long id__)";
+            log.error(es, e);
+            throw new PriceException(es, e);
+        }
     }
 
     private static void fillRealCurrencyData( CustomCurrencyType currency )

@@ -37,7 +37,6 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import org.riverock.common.config.PropertiesProvider;
-import org.riverock.common.config.JsmithyNamespases;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
@@ -61,7 +60,8 @@ public class DbStructureExport
         throws Exception
     {
         StartupApplication.init();
-        export(GenericConfig.getGenericDebugDir()+"webmill-schema.xml", false);
+        System.out.println("GenericConfig.getGenericDebugDir() = " + GenericConfig.getGenericDebugDir());
+        export(GenericConfig.getGenericDebugDir()+"webmill-schema.xml", true);
     }
 
     public static void export(String fileName, boolean isData)

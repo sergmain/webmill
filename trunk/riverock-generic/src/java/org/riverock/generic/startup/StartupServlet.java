@@ -54,7 +54,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 public final class StartupServlet extends HttpServlet
 {
-    private static Logger cat = Logger.getLogger("org.riverock.generic.startup.StartupServlet");
+    private static Logger log = Logger.getLogger(StartupServlet.class);
 
     private static boolean checkClass(String name)
     {
@@ -62,19 +62,19 @@ public final class StartupServlet extends HttpServlet
         {
             if (Class.forName(name) != null)
             {
-                cat.info("class " + name + " present");
+                log.info("class " + name + " present");
                 System.out.println("class " + name + " present");
                 return true;
             }
             else
             {
-                cat.fatal("class " + name + " NOT present");
+                log.fatal("class " + name + " NOT present");
                 System.out.println("class " + name + " NOT present");
             }
         }
         catch (Exception e)
         {
-            cat.fatal("Exception create class " + name + " -  " + e.getMessage());
+            log.fatal("Exception create class " + name + " -  " + e.getMessage());
             System.out.println("Exception create class " + name + " -  " + e.getMessage());
         }
         return false;
@@ -227,14 +227,14 @@ public final class StartupServlet extends HttpServlet
             System.out.println("info javax.servlet.context.tempdir - " + testFile);
         }
 /*
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
         {
             Object testObj = config.getServletContext().getAttribute("javax.servlet.context.tempdir");
-            cat.debug("Object tempdir - "+testObj);
+            log.debug("Object tempdir - "+testObj);
             if (testObj instanceof java.io.File)
             {
                 File testFile = (File)config.getServletContext().getAttribute("javax.servlet.context.tempdir");
-                cat.debug("tempdir - "+testFile.getName());
+                log.debug("tempdir - "+testFile.getName());
             }
         }
 */
@@ -253,43 +253,43 @@ public final class StartupServlet extends HttpServlet
             "WEB-INF" + File.separatorChar + "mill"
         );
 
-        cat.info("Application path: " + PropertiesProvider.getApplicationPath() );
+        log.info("Application path: " + PropertiesProvider.getApplicationPath() );
         System.out.println("info Application path: " + PropertiesProvider.getApplicationPath() );
 
-        cat.info("getServletContextName - " + config.getServletContext().getServletContextName());
+        log.info("getServletContextName - " + config.getServletContext().getServletContextName());
         System.out.println("info getServletContextName - " + config.getServletContext().getServletContextName());
 
-        cat.info("servletConfig - " + config.getServletContext().getServletContextName());
+        log.info("servletConfig - " + config.getServletContext().getServletContextName());
         System.out.println("info servletConfig - " + config.getServletContext());
 
         String realPath = context.getRealPath("/");
 
         realPath = replacePattern(realPath, File.separator + "." + File.separator, File.separator);
-        cat.info("realPath - " + realPath);
+        log.info("realPath - " + realPath);
         System.out.println("info realPath - " + realPath);
 
         File dir = new File(realPath);
-        cat.info("dir - " + dir.getName());
+        log.info("dir - " + dir.getName());
         System.out.println("info dir - " + dir.getName());
 
         GenericConfig.contextName = "/" + dir.getName();
 
-        cat.info("ServletContextName - " + GenericConfig.contextName);
+        log.info("ServletContextName - " + GenericConfig.contextName);
         System.out.println("info ServletContextName - " + GenericConfig.contextName);
 
         Provider provider = Security.getProvider("BC");
         if (provider != null)
         {
-            cat.info("Security provider  present. " + provider.getInfo());
+            log.info("Security provider  present. " + provider.getInfo());
             System.out.println("info Security provider  present. " + provider.getInfo());
         }
         else
         {
-            cat.warn("'Bouncycastle' security provider not present. Check for class");
+            log.warn("'Bouncycastle' security provider not present. Check for class");
 
             if (!checkClass("org.bouncycastle.jce.provider.BouncyCastleProvider"))
             {
-                cat.error("Security provider BouncyCastle not present");
+                log.error("Security provider BouncyCastle not present");
                 System.out.println("fatal Security provider BouncyCastle not present");
             }
         }

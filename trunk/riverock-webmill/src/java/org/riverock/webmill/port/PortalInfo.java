@@ -28,24 +28,26 @@
  */
 package org.riverock.webmill.port;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.MainTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.site.SiteListSite;
+import org.riverock.generic.exception.GenericException;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.core.GetSiteListSiteItem;
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
+import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.menu.MenuLanguageInterface;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.schema.core.SiteListSiteItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.site.SiteTemplateList;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class PortalInfo
 {
@@ -64,7 +66,6 @@ public class PortalInfo
     private static Logger log = Logger.getLogger( PortalInfo.class );
 
     public SiteListSiteItemType sites = new SiteListSiteItemType();
-    private String serverName = null;
 
     private Locale defaultLocale = null;
 
@@ -139,7 +140,7 @@ public class PortalInfo
     private static Object syncObject = new Object();
 
     public synchronized static PortalInfo getInstance(DatabaseAdapter db_, String serverName)
-        throws Exception
+        throws PortalException
     {
         if (log.isDebugEnabled())
         {
@@ -148,75 +149,93 @@ public class PortalInfo
                 ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
             );
         }
+
+        Long id=null;
+        try {
+            id = SiteListSite.getIdSite(serverName);
+        } catch (GenericException e) {
+            throw new PortalException("Error get siteId for serverName '"+serverName+"'", e);
+        }
+        if (log.isDebugEnabled()) log.debug("ServerName:"+serverName+", siteId: "+id);
+
         synchronized(syncObject)
         {
-            PortalInfo p = (PortalInfo)portatInfoMap.get(serverName);
+
+            PortalInfo p=null;
+            if (id!=null)
+                p = (PortalInfo)portatInfoMap.get(id);
+
             if ((System.currentTimeMillis()-lastReadData)>LENGTH_TIME_PERIOD || p==null){
                 log.debug("#15.01.03 reinit cached value ");
 
-                p = new PortalInfo(db_, serverName);
-                portatInfoMap.put(serverName, p);
+                p = new PortalInfo(db_, id);
+                portatInfoMap.put(id, p);
             }
             lastReadData = System.currentTimeMillis();
             return p;
         }
     }
 
-    private PortalInfo(DatabaseAdapter db_, String serverName_)
-        throws Exception
+    private PortalInfo(DatabaseAdapter db_, Long siteId) throws PortalException
     {
-        this.setServerName(serverName_);
-        this.siteId = SiteListSite.getIdSite(serverName_);
-
-        sites = GetSiteListSiteItem.getInstance( db_, siteId ).item;
-
-        if (sites.getDefLanguage()==null)
-            sites.setDefLanguage("");
-
-        if (sites.getDefLanguage()!= null && sites.getDefLanguage().length()>0 &&
-            sites.getDefCountry() != null && sites.getDefCountry().length()>0 )
-        {
-
-            defaultLocale = new Locale(
-                sites.getDefLanguage(),
-                sites.getDefCountry(),
-                sites.getDefVariant()==null?"":sites.getDefVariant()
-            );
-
-            if (log.isDebugEnabled())
-                log.debug("Main language 1.1: " + getDefaultLocale().toString());
-
-        }
-        else
-        {
-            defaultLocale = MainTools.getLocale(WebmillConfig.getMainLanguage());
-            if (log.isDebugEnabled())
-            {
-                log.debug("Language InitParam.getMainLanguage(): " + WebmillConfig.getMainLanguage());
-                log.debug("Language locale: " + getDefaultLocale().toString());
-            }
-        }
-
+        this.siteId = siteId;
         long mills = 0; // System.currentTimeMillis();
+        try {
+            sites = GetSiteListSiteItem.getInstance( db_, siteId ).item;
 
-        if (log.isInfoEnabled())
-            mills = System.currentTimeMillis();
+            if (sites.getDefLanguage()==null)
+                sites.setDefLanguage("");
 
-        xsltList = PortalXsltList.getInstance(db_, siteId);
-        if (log.isInfoEnabled())
-            log.info("Init xsltList for " + (System.currentTimeMillis() - mills) + " milliseconds");
+            if (sites.getDefLanguage()!= null && sites.getDefLanguage().length()>0 &&
+                sites.getDefCountry() != null && sites.getDefCountry().length()>0 )
+            {
 
-        if (log.isInfoEnabled())
-            mills = System.currentTimeMillis();
-        templates = SiteTemplateList.getInstance(db_, siteId);
+                defaultLocale = new Locale(
+                    sites.getDefLanguage(),
+                    sites.getDefCountry(),
+                    sites.getDefVariant()==null?"":sites.getDefVariant()
+                );
 
-        if (log.isInfoEnabled())
-            log.info("Init templates for "+ (System.currentTimeMillis() - mills) + " milliseconds");
+                if (log.isDebugEnabled())
+                    log.debug("Main language 1.1: " + getDefaultLocale().toString());
 
-        if (log.isInfoEnabled())
-            mills = System.currentTimeMillis();
+            }
+            else
+            {
+                defaultLocale = MainTools.getLocale(WebmillConfig.getMainLanguage());
+                if (log.isDebugEnabled())
+                {
+                    log.debug("Language InitParam.getMainLanguage(): " + WebmillConfig.getMainLanguage());
+                    log.debug("Language locale: " + getDefaultLocale().toString());
+                }
+            }
 
-        supportLanguage = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
+            mills = 0;
+
+            if (log.isInfoEnabled())
+                mills = System.currentTimeMillis();
+
+            xsltList = PortalXsltList.getInstance(db_, siteId);
+            if (log.isInfoEnabled())
+                log.info("Init xsltList for " + (System.currentTimeMillis() - mills) + " milliseconds");
+
+            if (log.isInfoEnabled())
+                mills = System.currentTimeMillis();
+            templates = SiteTemplateList.getInstance(db_, siteId);
+
+            if (log.isInfoEnabled())
+                log.info("Init templates for "+ (System.currentTimeMillis() - mills) + " milliseconds");
+
+            if (log.isInfoEnabled())
+                mills = System.currentTimeMillis();
+
+            supportLanguage = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
+
+        } catch (Throwable e) {
+            String es = "Error in PortalInfo(DatabaseAdapter db_, Long siteId)";
+            log.error(es, e);
+            throw new PortalException(es, e);
+        }
         if (log.isInfoEnabled())
             log.info("init currency list for "+(System.currentTimeMillis()-mills)+" milliseconds");
 
@@ -232,26 +251,18 @@ public class PortalInfo
 
     public void reinit()
     {
+        synchronized(syncObject){
+            portatInfoMap.clear();
+        }
         lastReadData = 0;
     }
 
     public void terminate(java.lang.Long id_)
     {
+        synchronized(syncObject){
+            portatInfoMap.clear();
+        }
         lastReadData = 0;
-    }
-
-    /**
-     * @deprecated
-     * @return
-     */
-    public String getServerName()
-    {
-        return serverName;
-    }
-
-    public void setServerName(String serverName)
-    {
-        this.serverName = serverName;
     }
 
     public Long getSiteId()
@@ -266,7 +277,7 @@ public class PortalInfo
 
     public PortalXsltList getXsltList()
     {
-        return xsltList;
+        return this.xsltList;
     }
 
     public SiteTemplateList getTemplates()
@@ -274,17 +285,13 @@ public class PortalInfo
         return templates;
     }
 
-    private void initMenu(DatabaseAdapter db_)
-        throws Exception
-    {
-        if (log.isDebugEnabled())
-            log.debug("start get menu for site "+siteId);
+    private void initMenu(DatabaseAdapter db_) throws PortalException {
+        if (log.isDebugEnabled()) log.debug("start get menu for site "+siteId);
 
         // Build menu
         SiteMenu sc = SiteMenu.getInstance(db_, siteId);
         languageMenuMap = new HashMap(sc.getMenuLanguageCount());
-        for (int i = 0; i < sc.getMenuLanguageCount(); i++)
-        {
+        for (int i = 0; i < sc.getMenuLanguageCount(); i++){
             MenuLanguageInterface tempCat = sc.getMenuLanguage(i);
             languageMenuMap.put(tempCat.getLocaleStr(), tempCat);
         }

@@ -38,11 +38,11 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.PortletException;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 import org.riverock.portlet.schema.portlet.menu.MenuSimpleType;
-import org.riverock.portlet.portlets.PortletException;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.config.ConfigException;
 import org.riverock.generic.tools.XmlTools;
@@ -115,13 +115,13 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
     }
 
     public PortletResultObject getInstance( DatabaseAdapter db_ , Long id)
-        throws Exception
+        throws PortletException
     {
         return getInstance( db_ );
     }
 
     public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_)
-        throws Exception
+        throws PortletException
     {
         try
         {
@@ -148,7 +148,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
     }
 
     public PortletResultObject getInstance( DatabaseAdapter db_ )
-        throws Exception
+        throws PortletException
     {
         try
         {

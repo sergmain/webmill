@@ -359,7 +359,7 @@ public class CreateSchemaFromDb
                 "        catch("+exception+" exc)\n"+
                 "        {\n"+
                 "            throw new "+config.getPersistenceExceptionName().getPersistenceExceptionName()+
-                "( exc.getMessage() );\n"+
+                "( exc.getMessage(), exc );\n"+
                 "        }\n";
         }
 
@@ -430,7 +430,7 @@ public class CreateSchemaFromDb
                 throw new IllegalArgumentException("Not defined PersistebceExceptionName");
             s +=
                 "            throw new "+config.getPersistenceExceptionName().getPersistenceExceptionName()+
-                "( e.getMessage() );\n";
+                "( e.getMessage(), e );\n";
         }
         else
             s +=
@@ -615,7 +615,7 @@ public class CreateSchemaFromDb
                 throw new IllegalArgumentException("Not defined PersistebceExceptionName");
             s +=
                 "            throw new "+config.getPersistenceExceptionName().getPersistenceExceptionName()+
-                "( e.getMessage() );\n";
+                "( e.getMessage(), e );\n";
         }
         else
             s +=
@@ -1846,7 +1846,7 @@ public class CreateSchemaFromDb
                     throw new IllegalArgumentException("Not defined PersistebceExceptionName");
                 s +=
                     "            throw new "+config.getPersistenceExceptionName().getPersistenceExceptionName()+
-                    "( e.getMessage() );\n";
+                    "( e.getMessage(), e );\n";
             }
             else
                 s +=
@@ -2171,7 +2171,7 @@ public class CreateSchemaFromDb
                 throw new IllegalArgumentException("Not defined PersistebceExceptionName");
             s +=
                 "            throw new "+config.getPersistenceExceptionName().getPersistenceExceptionName()+
-                "( e.getMessage() );\n";
+                "( e.getMessage(), e );\n";
         }
         else
             s +=
