@@ -181,6 +181,9 @@ castor-current.lib for work of engine
 
         <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
         <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+
+        <property name="webmill-test.context" value="C:\opt2\_www\_test\mill"/>
+        <copy file="${build.dir}/${mill.lib}" todir="${webmill-test.context}/WEB-INF/lib"/>
         <antcall target="start.apache"/>
     </target>
 
