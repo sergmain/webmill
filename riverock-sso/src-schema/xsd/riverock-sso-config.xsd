@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+/*
+ * org.riverock.sso - Single Sign On implementation
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:annotation>
+		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>jSmithy Single Sign On config file schema</xs:documentation>
+	</xs:annotation>
+	<xs:element name="SsoConfig" type="SsoConfigType"/>
+	<xs:complexType name="SsoConfigType">
+		<xs:sequence>
+			<xs:element name="SsoTempDir" type="xs:string" default="\\tmp"/>
+			<xs:element name="SsoDebugDir" type="xs:string" default="c:\\opt1" minOccurs="0"/>
+			<xs:element name="Auth" type="AuthType"/>
+		</xs:sequence>
+		<xs:attribute name="isDebugDirInit" type="xs:boolean" default="false"/>
+		<xs:attribute name="isTempDirInit" type="xs:boolean" default="false"/>
+	</xs:complexType>
+	<xs:complexType name="MainUserInfoType">
+		<xs:sequence>
+			<xs:element name="FirstName" type="xs:string"/>
+			<xs:element name="MiddleName" type="xs:string"/>
+			<xs:element name="LastName" type="xs:string"/>
+			<xs:element name="DateStartWork" type="xs:dateTime"/>
+			<xs:element name="DateFire" type="xs:dateTime"/>
+			<xs:element name="Address" type="xs:string"/>
+			<xs:element name="Telephone" type="xs:string"/>
+			<xs:element name="DateBindProff" type="xs:dateTime"/>
+			<xs:element name="HomeTelephone" type="xs:string"/>
+			<xs:element name="Email" type="xs:string"/>
+			<xs:element name="Discount" type="xs:double"/>
+		</xs:sequence>
+		<xs:attribute name="idUser" type="xs:long"/>
+		<xs:attribute name="idFirm" type="xs:long"/>
+	</xs:complexType>
+	<xs:complexType name="AuthType">
+		<xs:sequence>
+			<xs:element name="AuthProvider" type="AuthProviderType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="AuthProvider" type="AuthProviderType"/>
+	<xs:complexType name="AuthProviderType">
+		<xs:sequence>
+			<xs:element name="ProviderName" type="xs:string"/>
+			<xs:element name="ProviderClass" type="xs:string"/>
+			<xs:element name="ProviderParameters" type="AuthProviderParametersListType" minOccurs="0"/>
+			<xs:element name="ProviderComment" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="isUse" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="AuthProviderParametersListType">
+		<xs:sequence>
+			<xs:element name="ParametersList" type="AuthProviderParametersType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AuthProviderParametersType">
+		<xs:sequence>
+			<xs:element name="Parameter" type="ParameterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParameterType">
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="value" type="xs:string"/>
+	</xs:complexType>
+</xs:schema>
