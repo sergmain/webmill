@@ -380,20 +380,17 @@ public class MemberCommitServlet extends HttpServlet
 
                             Object idCurrRec = null;
 
-                            if (log.isDebugEnabled())
-                                log.debug("PrimaryKeyType " + mp.content.getQueryArea().getPrimaryKeyType());
+                            if (log.isDebugEnabled()) log.debug("PrimaryKeyType " + mp.content.getQueryArea().getPrimaryKeyType());
 
                             switch (mp.content.getQueryArea().getPrimaryKeyType().getType())
                             {
                                 case PrimaryKeyTypeType.NUMBER_TYPE:
-                                    if (log.isDebugEnabled())
-                                        log.debug("PrimaryKeyType - 'number'");
+                                    log.debug("PrimaryKeyType - 'number'");
 
                                     idCurrRec = PortletTools.getLong(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                                     break;
                                 case PrimaryKeyTypeType.STRING_TYPE:
-                                    if (log.isDebugEnabled())
-                                        log.debug("PrimaryKeyType - 'string'");
+                                    log.debug("PrimaryKeyType - 'string'");
 
                                     idCurrRec = PortletTools.getString(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                                     break;
@@ -414,31 +411,26 @@ public class MemberCommitServlet extends HttpServlet
                                         mp.content.getQueryArea().getPrimaryKeyType());
                             }
 
-                            if (log.isDebugEnabled())
-                                log.debug("mp.isSimpleField(): "+mp.isSimpleField());
+                            if (log.isDebugEnabled()) log.debug("mp.isSimpleField(): "+mp.isSimpleField());
 
                             if (mp.isSimpleField())
                             {
-                                if (log.isDebugEnabled())
-                                    log.debug("start build SQL");
+                                log.debug("start build SQL");
 
                                 sql_ = MemberServiceClass.buildUpdateSQL(mp.content, mp.fromParam, mp.mod, dbDyn, true, ctxInstance.getPortletRequest());
 
-                                if (log.isDebugEnabled())
-                                    log.debug("SQL:"+sql_);
+                                if (log.isDebugEnabled()) log.debug("SQL:"+sql_);
 
                                 ps = dbDyn.prepareStatement(sql_);
                                 mp.bindUpdate( dbDyn, ps, idCurrRec, true);
 
                                 i1 = ps.executeUpdate();
 
-                                if (log.isDebugEnabled())
-                                    log.debug("Number of updated record - " + i1);
+                                if (log.isDebugEnabled()) log.debug("Number of updated record - " + i1);
 
                             }
 
-                            if (log.isDebugEnabled())
-                                log.debug("prepare big text");
+                            log.debug("prepare big text");
 
                             mp.prepareBigtextData(dbDyn, idCurrRec, true);
 
@@ -446,15 +438,13 @@ public class MemberCommitServlet extends HttpServlet
                                 PrimaryKeyTypeType.NUMBER_TYPE)
                                 throw new Exception("PK of 'Bigtext' table must be a 'number' type");
 
-                            if (log.isDebugEnabled())
-                                log.debug("start sync cache data");
+                            log.debug("start sync cache data");
 
                             for (int i = 0; i < mp.mod.getRelateClassCount(); i++)
                             {
                                 RelateClassType rc = mp.mod.getRelateClass(i);
 
-                                if (log.isDebugEnabled())
-                                    log.debug("#7.003.002 terminate class " + rc.getClassName() + ", id_rec "+idCurrRec);
+                                if (log.isDebugEnabled()) log.debug("#7.003.002 terminate class " + rc.getClassName() + ", id_rec "+idCurrRec);
 
                                 if (mp.content.getQueryArea().getPrimaryKeyType().getType() ==
                                     PrimaryKeyTypeType.NUMBER_TYPE)
@@ -464,52 +454,31 @@ public class MemberCommitServlet extends HttpServlet
                                 else
                                     throw new Exception("Change. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());
                             }
-                            if (log.isDebugEnabled())
-                                log.debug("do commit");
+                            log.debug("do commit");
 
                             dbDyn.commit();
                             redirURL = mp.getIndexURL();
 
-                            if (log.isDebugEnabled())
-                                log.debug("redirect url: "+redirURL );
+                            if (log.isDebugEnabled()) log.debug("redirect url: "+redirURL );
 
                             response.sendRedirect(redirURL);
                             return;
 
                         case ContentTypeActionType.DELETE_TYPE:
 
-                            if (log.isDebugEnabled())
-                                log.debug("Commit delete page<br>");
+                            log.debug("Commit delete page<br>");
 
-                            sql_ = MemberServiceClass.buildDeleteSQL(mp.content, mp.mod, mp.fromParam, dbDyn, ctxInstance.getPortletRequest());
+                            Object idRec = null;
 
-                            if (log.isDebugEnabled())
-                                log.debug("SQL: "+sql_+"<br>\n");
-
-                            ps = dbDyn.prepareStatement(sql_);
-
-                            mp.bindDelete(ps);
-                            i1 = ps.executeUpdate();
-
-                            if (log.isDebugEnabled())
-                                log.debug("Number of deleted record - " + i1);
-
-                            for (int i = 0; i < mp.mod.getRelateClassCount(); i++)
-                            {
-                                Long idRec = null;
-
-//                    if ( mp.content.getQueryArea().getPrimaryKeyType().equals("number"))
-                                if (mp.content.getQueryArea().getPrimaryKeyType().getType() ==
-                                    PrimaryKeyTypeType.NUMBER_TYPE)
-                                {
-                                    idRec = PortletTools.getLong(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
-                                }
+                            if (mp.content.getQueryArea().getPrimaryKeyType().getType() ==
+                                PrimaryKeyTypeType.NUMBER_TYPE) {
+                                idRec = PortletTools.getLong(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                            }
+                            else if ( mp.content.getQueryArea().getPrimaryKeyType().getType() ==
+                                PrimaryKeyTypeType.STRING_TYPE) {
+                                idRec = PortletTools.getString(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                            }
 /*
-else if ( content.getQueryArea().getPrimaryKeyType().equals("string"))
-{
-idRec = ServletTools.getString(req, mod.nameModule+'.'+content.getQueryArea().primaryKey );
-}
-
 else if ( content.getQueryArea().getPrimaryKeyType().equals("date"))
 {
 if (content.getQueryArea().primaryKeyMask==null ||
@@ -520,23 +489,39 @@ primaryKeyValue = RsetTools.getStringDate(rs, content.getQueryArea().primaryKey,
 content.getQueryArea().primaryKeyMask, "error", Locale.ENGLISH);
 }
 */
-                                else
-                                    throw new Exception("Delete. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());
+                            else
+                                throw new Exception("Delete. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());
 
+                            // delete data from slave table for MySQL,
+                            // 'cos mysql not support DELETE CASCADE reference integrity
+                            // Todo switch from getFamaly() to metadata to
+                            // Todo decide support or not DELETE CASCADE
+                            if (dbDyn.getFamaly()==DatabaseManager.MYSQL_FAMALY)
+                                mp.deleteBigtextData(dbDyn, idRec);
 
-                                RelateClassType rc = mp.mod.getRelateClass(i);
+                            sql_ = MemberServiceClass.buildDeleteSQL(mp.content, mp.mod, mp.fromParam, dbDyn, ctxInstance.getPortletRequest());
 
-                                if (log.isDebugEnabled())
-                                    log.debug("#7.003.001 terminate class " + rc.getClassName() + ", id_rec " + idRec.longValue());
+                            if (log.isDebugEnabled()) log.debug("SQL: "+sql_+"<br>\n");
 
-                                CacheFactory.terminate(rc.getClassName(), idRec, Boolean.TRUE.equals(rc.getIsFullReinitCache()) );
+                            ps = dbDyn.prepareStatement(sql_);
+
+                            mp.bindDelete(ps);
+                            i1 = ps.executeUpdate();
+
+                            if (log.isDebugEnabled()) log.debug("Number of deleted record - " + i1);
+
+                            if (idRec!=null && (idRec instanceof Long)) {
+                                for (int i = 0; i < mp.mod.getRelateClassCount(); i++){
+                                    RelateClassType rc = mp.mod.getRelateClass(i);
+                                    if (log.isDebugEnabled()) log.debug("#7.003.001 terminate class " + rc.getClassName() + ", id_rec " + idRec.toString());
+                                    CacheFactory.terminate(rc.getClassName(), (Long)idRec, Boolean.TRUE.equals(rc.getIsFullReinitCache()) );
+                                }
                             }
 
                             dbDyn.commit();
                             redirURL = mp.getIndexURL();
 
-                            if (log.isDebugEnabled())
-                                log.debug( redirURL );
+                            log.debug( redirURL );
 
                             response.sendRedirect(redirURL);
                             return;
