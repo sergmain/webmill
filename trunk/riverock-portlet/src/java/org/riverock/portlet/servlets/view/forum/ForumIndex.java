@@ -72,11 +72,13 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
-import org.riverock.portlet.forum.ForumConfig;
-
 import org.riverock.portlet.forum.SimpleForum;
 
 import org.riverock.portlet.main.Constants;
+
+import org.riverock.portlet.schema.core.MainForumItemType;
+
+import org.riverock.portlet.core.GetMainForumItem;
 
 import org.riverock.webmill.port.InitPage;
 
@@ -196,7 +198,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            ForumConfig forumCfg =  ForumConfig.getInstance(db_, forum.id_forum);
+            MainForumItemType forumCfg = GetMainForumItem.getInstance(db_, forum.id_forum).item;
 
 
 
@@ -204,7 +206,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            if (forumCfg.isAllThread)
+            if (Boolean.TRUE.equals(forumCfg.getIsAllThread()) )
 
                 forumType = "/mill.forum_plain";
 

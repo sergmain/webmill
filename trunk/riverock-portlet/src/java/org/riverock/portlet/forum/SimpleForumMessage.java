@@ -126,7 +126,7 @@ public class SimpleForumMessage extends ForumMessage
 
                 "select  a.* " +
 
-                "from " + (new SimpleForum()).getNameTable() + " a " +
+                "from " + Forum.FORUM_THREADS_TABLE + " a " +
 
                 "where   a.id = ? ";
 

@@ -392,7 +392,7 @@ public class ForumPlain extends HttpServlet
 
                 out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"12\" width=\"100%\"><tr><td>");
 
-                out.write("<!-- is here -->");
+                out.write("<!-- is here -->\n");
 
                 out.write(forum.getStartMessages(nameTemplate));
 
