@@ -96,6 +96,8 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
 
+import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
+
 import org.riverock.generic.exception.DatabaseException;
 
 import org.riverock.portlet.main.Constants;
@@ -1418,15 +1420,17 @@ cat.debug("#10.00.EMAIL "+email);
 
 
 
+
+
             st = dbDyn.prepareStatement(
 
                 "insert into " + getNameTable() + " " +
 
-                "(ID, id_main, id_forum, id_thread, date_post, header, fio, email, text, ip) " +
+                "(ID, id_main, id_forum, id_thread, date_post, header, fio, email, ip) " +
 
                 "values " +
 
-                "(?, ?, ?, ?, "+dbDyn.getNameDateBind()+", ?, ?, ?, ?, ?) "
+                "(?, ?, ?, ?, "+dbDyn.getNameDateBind()+", ?, ?, ?, ?) "
 
             );
 
@@ -1440,27 +1444,57 @@ cat.debug("#10.00.EMAIL "+email);
 
             dbDyn.bindDate(st, 5, DateTools.getCurrentTime());
 
-//            st.setTimestamp(5, DateTools.getCurrentTime());
-
-            st.setString(6, ServletUtils.getString(request, "h") );
+            st.setString(6, ServletUtils.getString(request, "h") ); // header
 
             st.setString(7, ServletUtils.getString(request, "n") ); // name
 
             st.setString(8, ServletUtils.getString(request, "e") ); // email
 
-            st.setString(9, ServletUtils.getString(request, "b") );
-
-            st.setString(10, request.getRemoteAddr());
+            st.setString(9, request.getRemoteAddr());
 
 
 
             st.executeUpdate();
+
+
+
+            DatabaseManager.insertBigText(
+
+                dbDyn,
+
+                currentId, "ID",
+
+                PrimaryKeyTypeTypeType.NUMBER,
+
+                "MAIN_FORUM_TEXT", "ID_MAIN_FORUM_TEXT",
+
+                "MESSAGE_TEXT",
+
+                ServletUtils.getString(request, "b"),
+
+                false
+
+            );
+
+
+
+            dbDyn.commit();
 
         }
 
         catch (Exception e)
 
         {
+
+            try
+
+            {
+
+                dbDyn.rollback();
+
+            }
+
+            catch(Exception ee){}
 
             throw new ForumException(e.toString());
 
