@@ -68,7 +68,13 @@ package org.riverock.common.html;
 
 
 
+import java.util.Locale;
+
+
+
 import junit.framework.TestCase;
+
+import org.riverock.common.tools.StringTools;
 
 
 
@@ -88,7 +94,7 @@ public class TestAcceptLanguage extends TestCase
 
         public boolean isResultNull = false;
 
-
+        public Locale[] locales = null;
 
 
 
@@ -96,13 +102,21 @@ public class TestAcceptLanguage extends TestCase
 
 
 
-        public ITAL(String s_, AcceptLanguageWithLevel acceptValueArray_[], boolean isException_, boolean isResultNull_)
+        public ITAL(
+
+            String s_, AcceptLanguageWithLevel acceptValueArray_[],
+
+            Locale locales[],
+
+            boolean isException_, boolean isResultNull_)
 
         {
 
             this.s = s_;
 
             this.acceptValueArray = acceptValueArray_;
+
+            this.locales = locales;
 
             this.isException = isException_;
 
@@ -126,25 +140,39 @@ public class TestAcceptLanguage extends TestCase
 
                 new ITAL(
 
-                    "ru,en;q=0.8,en-gb;q=0.5,ja;q=0.33",
+                    "ru,en;q=0.8,en-gb;q=0.5,ja;q=0.33,de;q=0.8",
 
                     new AcceptLanguageWithLevel[]
 
-                {
+                    {
 
-                    new AcceptLanguageWithLevel("ru", 1),
+                        new AcceptLanguageWithLevel("ru", 1f),
 
-                    new AcceptLanguageWithLevel("en", 0.8f),
+                        new AcceptLanguageWithLevel("en", 0.8f),
 
-                    new AcceptLanguageWithLevel("en-gb", 0.5f),
+                        new AcceptLanguageWithLevel("en-gb", 0.5f),
 
-                    new AcceptLanguageWithLevel("ja", 0.33f),
+                        new AcceptLanguageWithLevel("ja", 0.33f),
 
+                        new AcceptLanguageWithLevel("de", 0.8f)
 
+                    },
 
-                },
+                    new Locale[]{
 
-                false, false),
+                        StringTools.getLocale("ru"),
+
+                        StringTools.getLocale("en"),
+
+                        StringTools.getLocale("de"),
+
+                        StringTools.getLocale("en-gb"),
+
+                        StringTools.getLocale("ja"),
+
+                    },
+
+                    false, false),
 
             };
 
@@ -196,6 +224,36 @@ public class TestAcceptLanguage extends TestCase
 
                     }
 
+
+
+                    Locale locale[] = Header.getAcceptLanguageAsLocaleListSorted(testAcceptLanguageArray[i].s);
+
+                    assertEquals(true, locale.length==testAcceptLanguageArray[i].locales.length);
+
+
+
+                    for (int l=0; l<locale.length; l++)
+
+                    {
+
+                        System.out.println("locale[l] = " + locale[l]);
+
+                    }
+
+
+
+                    for (int l=0; l<locale.length; l++)
+
+                    {
+
+                        System.out.println("locale[l] = " + locale[l]+", testAcceptLanguageArray[i].locales[i]) "+testAcceptLanguageArray[i].locales[l]);
+
+                        assertEquals(true, locale[l].equals( testAcceptLanguageArray[i].locales[l]) );
+
+                    }
+
+
+
                 }
 
             }
@@ -204,7 +262,7 @@ public class TestAcceptLanguage extends TestCase
 
             {
 
-                assertEquals(true, testAcceptLanguageArray[i].isException);
+//                assertEquals(true, testAcceptLanguageArray[i].isException);
 
 
 

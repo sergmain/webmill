@@ -66,6 +66,10 @@ import java.util.ArrayList;
 
 import java.util.StringTokenizer;
 
+import java.util.List;
+
+import java.util.Locale;
+
 
 
 import javax.servlet.ServletRequest;
@@ -116,7 +120,7 @@ public class Header
 
     {
 
-        ArrayList v = getAcceptLanguageAsList(accept);
+        List v = getAcceptLanguageAsList(accept);
 
         AcceptLanguageWithLevel[] array = new AcceptLanguageWithLevel[v.size()];
 
@@ -136,7 +140,7 @@ public class Header
 
 
 
-    public static ArrayList getAcceptLanguageAsList(ServletRequest request)
+    public static List getAcceptLanguageAsList(ServletRequest request)
 
     {
 
@@ -152,17 +156,179 @@ public class Header
 
 
 
-    public static ArrayList getAcceptLanguageAsList(String accept)
+    public static Locale[] getAcceptLanguageAsLocaleListSorted(ServletRequest request)
 
     {
 
+        if ( request==null || !(request instanceof HttpServletRequest))
+
+            return new Locale[]{};
+
+
+
+        return getAcceptLanguageAsLocaleListSorted(getAcceptLanguage(request));
+
+    }
+
+
+
+    public static Locale[] getAcceptLanguageAsLocaleListSorted(String headerLocale)
+
+    {
+
+        if ( headerLocale==null)
+
+            return new Locale[]{};
+
+
+
+        List list = getAcceptLanguageAsList( headerLocale );
+
+
+
+        System.out.println("list = " + list.size());
+
+        for (int i=0; i<list.size(); i++)
+
+            System.out.println("elem = " + list.get(i)+", " + list.get(i).getClass().getName());
+
+
+
+        Object array[] = list.toArray();
+
+        if (array.length==0)
+
+            return new Locale[]{};
+
+
+
+        int max;
+
+        int min;
+
+        AcceptLanguageWithLevel t = null;
+
+/*
+
+        for (int i=array.length-1; i>0; i--)
+
+        {
+
+            max = i;
+
+            for (int j=i-1; j>=0; j--)
+
+            {
+
+                if (((AcceptLanguageWithLevel)array[j]).level>((AcceptLanguageWithLevel)array[max]).level)
+
+                    max=j;
+
+
+
+                t = (AcceptLanguageWithLevel)array[max];
+
+                array[max]=array[i];
+
+                array[i]=t;
+
+            }
+
+        }
+
+*/
+
+        for (int i=0; i<array.length-1; i++)
+
+        {
+
+            min = i;
+
+            for (int j=i+1; j<array.length; j++)
+
+            {
+
+                if (((AcceptLanguageWithLevel)array[j]).level>((AcceptLanguageWithLevel)array[min]).level)
+
+                    min=j;
+
+
+
+                t = (AcceptLanguageWithLevel)array[min];
+
+                array[min]=array[i];
+
+                array[i]=t;
+
+            }
+
+        }
+
+/*
+
+procedure selection;
+
+var
+
+i, j, min, t : integer;
+
+begin
+
+    for i:=1 to N-1 do
+
+    begin
+
+        min := i;
+
+        for j:=i+1 to N do
+
+            if a[j]<a[min] then
+
+min := j;
+
+        t := a[min];
+
+a[min] :=a[i];
+
+a[i] := t;
+
+    end;
+
+end;
+
+*/
+
+
+
+        Locale[] temp = new Locale[array.length];
+
+        for (int i=0; i<array.length; i++)
+
+        {
+
+            temp[i]=((AcceptLanguageWithLevel)array[i]).locale;
+
+        }
+
+
+
+        return temp;
+
+    }
+
+
+
+    public static List getAcceptLanguageAsList(String accept)
+
+    {
+
+        List v = new ArrayList();
+
+
+
         if (accept==null)
 
-            return null;
-
-
-
-        ArrayList v = new ArrayList();
+            return v;
 
 
 
