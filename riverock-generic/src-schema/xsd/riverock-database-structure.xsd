@@ -52,7 +52,7 @@
 
 -->
 
-<xs:schema targetNamespace="http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mill-db-stuct="http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd">
+<xs:schema targetNamespace="http://generic.riverock.org/xsd/riverock-database-structure.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:riverock-db-stuct="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
 
 	<xs:annotation>
 
@@ -70,25 +70,25 @@
 
 		<xs:sequence>
 
-			<xs:element name="Schema" type="mill-db-stuct:DbSchemaType"/>
+			<xs:element name="Schema" type="riverock-db-stuct:DbSchemaType"/>
 
 		</xs:sequence>
 
 	</xs:complexType>
 
-	<xs:element name="SchemaElement" type="mill-db-stuct:DbSchemaType"/>
+	<xs:element name="SchemaElement" type="riverock-db-stuct:DbSchemaType"/>
 
 	<xs:complexType name="DbSchemaType">
 
 		<xs:sequence>
 
-			<xs:element name="Tables" type="mill-db-stuct:DbTableType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Tables" type="riverock-db-stuct:DbTableType" minOccurs="0" maxOccurs="unbounded"/>
 
-			<xs:element name="Views" type="mill-db-stuct:DbViewType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Views" type="riverock-db-stuct:DbViewType" minOccurs="0" maxOccurs="unbounded"/>
 
-			<xs:element name="Sequences" type="mill-db-stuct:DbSequenceType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequences" type="riverock-db-stuct:DbSequenceType" minOccurs="0" maxOccurs="unbounded"/>
 
-			<xs:element name="BigTextTable" type="mill-db-stuct:DbBigTextTableType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="BigTextTable" type="riverock-db-stuct:DbBigTextTableType" minOccurs="0" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
@@ -110,7 +110,7 @@
 
 		<xs:complexContent>
 
-			<xs:extension base="mill-db-stuct:DbAbstractTableType">
+			<xs:extension base="riverock-db-stuct:DbAbstractTableType">
 
 				<xs:sequence>
 
@@ -128,7 +128,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="View" type="mill-db-stuct:DbViewType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="View" type="riverock-db-stuct:DbViewType" minOccurs="0" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
@@ -138,17 +138,17 @@
 
 		<xs:complexContent>
 
-			<xs:extension base="mill-db-stuct:DbAbstractTableType">
+			<xs:extension base="riverock-db-stuct:DbAbstractTableType">
 
 				<xs:sequence>
 
-					<xs:element name="PrimaryKey" type="mill-db-stuct:DbPrimaryKeyType" minOccurs="0"/>
+					<xs:element name="PrimaryKey" type="riverock-db-stuct:DbPrimaryKeyType" minOccurs="0"/>
 
-					<xs:element name="Fields" type="mill-db-stuct:DbFieldType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="Fields" type="riverock-db-stuct:DbFieldType" minOccurs="0" maxOccurs="unbounded"/>
 
-					<xs:element name="ImportedKeys" type="mill-db-stuct:DbImportedPKColumnType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="ImportedKeys" type="riverock-db-stuct:DbImportedPKColumnType" minOccurs="0" maxOccurs="unbounded"/>
 
-					<xs:element name="Data" type="mill-db-stuct:DbDataTableType" minOccurs="0"/>
+					<xs:element name="Data" type="riverock-db-stuct:DbDataTableType" minOccurs="0"/>
 
 				</xs:sequence>
 
@@ -194,7 +194,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="Sequences" type="mill-db-stuct:DbSequenceType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sequences" type="riverock-db-stuct:DbSequenceType" minOccurs="0" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
@@ -258,7 +258,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="columns" type="mill-db-stuct:DbPrimaryKeyColumnType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="columns" type="riverock-db-stuct:DbPrimaryKeyColumnType" minOccurs="0" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
@@ -284,11 +284,11 @@
 
 		<xs:sequence>
 
-			<xs:element name="UpdateRule" type="mill-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
+			<xs:element name="UpdateRule" type="riverock-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
 
-			<xs:element name="DeleteRule" type="mill-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
+			<xs:element name="DeleteRule" type="riverock-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
 
-			<xs:element name="Deferrability" type="mill-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
+			<xs:element name="Deferrability" type="riverock-db-stuct:DbKeyActionRuleType" minOccurs="0"/>
 
 		</xs:sequence>
 
@@ -316,7 +316,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="Keys" type="mill-db-stuct:DbImportedPKColumnType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Keys" type="riverock-db-stuct:DbImportedPKColumnType" minOccurs="0" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
@@ -334,7 +334,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="Tables" type="mill-db-stuct:DbDataTableType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Tables" type="riverock-db-stuct:DbDataTableType" minOccurs="0" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
@@ -344,7 +344,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="Records" type="mill-db-stuct:DbDataRecordType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Records" type="riverock-db-stuct:DbDataRecordType" minOccurs="0" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
@@ -354,7 +354,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="FieldsData" type="mill-db-stuct:DbDataFieldDataType" maxOccurs="unbounded"/>
+			<xs:element name="FieldsData" type="riverock-db-stuct:DbDataFieldDataType" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 

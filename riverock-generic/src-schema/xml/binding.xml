@@ -58,59 +58,11 @@ E:\sandbox\webmill\src\xsd\castor-binding.xsd" defaultBindingType="type">
 
 	<package>
 
-		<name>org.riverock.generic.schema.a3</name>
-
-		<namespace>http://webmill.askmore.info/mill/xsd/mill-auth.xsd</namespace>
-
-	</package>
-
-<!--
-
-	<package>
-
-		<name>org.riverock.schema.generic.core</name>
-
-		<namespace>http://webmill.askmore.info/mill/xsd/mill-core.xsd</namespace>
-
-	</package>
-
--->
-
-	<package>
-
 		<name>org.riverock.generic.schema.db.structure</name>
 
-		<namespace>http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd</namespace>
+		<namespace>http://generic.riverock.org/xsd/riverock-database-structure.xsd</namespace>
 
 	</package>
-
-	<package>
-
-		<name>org.riverock.generic.schema.testimport.core</name>
-
-		<namespace>http://prr.esrr.mps/xsd/prr-core.xsd</namespace>
-
-	</package>
-
-	<package>
-
-		<name>org.riverock.generic.schema.testimport</name>
-
-		<namespace>http://prr.esrr.mps/xsd/prr-complex.xsd</namespace>
-
-	</package>
-
-<!--
-
-	<package>
-
-		<name>org.riverock.schema.javax.portlet</name>
-
-		<namespace>http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd</namespace>
-
-	</package>
-
--->
 
 </riverock:binding>
 
