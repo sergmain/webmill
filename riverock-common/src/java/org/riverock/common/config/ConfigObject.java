@@ -67,16 +67,17 @@ public class ConfigObject
                 InitialContext ic = new InitialContext();
                 config.nameConfigFile = (String)ic.lookup("java:comp/env/" + nameJndiCtx);
                 if (File.separatorChar=='\\')
-                    config.nameConfigFile.replace( '/', '\\');
+                    config.nameConfigFile = config.nameConfigFile.replace( '/', '\\');
                 else
-                    config.nameConfigFile.replace( '\\', '/');
+                    config.nameConfigFile = config.nameConfigFile.replace( '\\', '/');
 
                 configFile = new File( config.nameConfigFile );
             }
             catch (NamingException e)
             {
-                log.error("Error get value from JDNI context", e);
-                throw new ConfigException( e.toString(), e );
+                String es = "Error get value from JDNI context";
+                log.error(es, e);
+                throw new ConfigException( es, e );
             }
         }
         else
@@ -125,8 +126,9 @@ public class ConfigObject
             config.configObject = Unmarshaller.unmarshal(configClass, inSrc);
         }
         catch (Throwable e) {
-            log.fatal("Error while unmarshalling config file ", e);
-            throw new ConfigException( e.toString(), e );
+            String es = "Error while unmarshalling config file ";
+            log.fatal(es, e);
+            throw new ConfigException( es, e );
         }
 
         return config;
