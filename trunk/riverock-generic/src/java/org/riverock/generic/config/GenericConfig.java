@@ -32,13 +32,10 @@ import java.io.File;
 import java.util.Hashtable;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
+import java.util.List;
 
 import org.riverock.generic.main.Constants;
-import org.riverock.generic.schema.config.CustomDirsType;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.schema.config.DateTimeSavingType;
-import org.riverock.generic.schema.config.DateTimeSavingTypeSequence;
-import org.riverock.generic.schema.config.GenericConfigType;
+import org.riverock.generic.schema.config.*;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.common.config.ConfigException;
 
@@ -71,14 +68,11 @@ public class GenericConfig
     }
 
     private static Object syncReadConfig = new Object();
-    private static void readConfig()
-        throws ConfigException
-    {
-        if (isConfigProcessed)
-            return;
+    private static void readConfig()throws ConfigException{
 
-        synchronized (syncReadConfig)
-        {
+        if (isConfigProcessed) return;
+
+        synchronized (syncReadConfig){
             if (isConfigProcessed)
                 return;
 
@@ -86,8 +80,7 @@ public class GenericConfig
                 Constants.JNDI_GENERIC_CONFIG_FILE , configPrefix+"-generic.xml", GenericConfigType.class
             );
 
-            if (log.isDebugEnabled())
-                log.debug("#15.006");
+            if (log.isDebugEnabled()) log.debug("#15.006");
 
             if (dbConfig != null)
             {
@@ -113,25 +106,17 @@ public class GenericConfig
 //-----------------------------------------------------
 
     private static Object syncTZ = new Object();
-    public static TimeZone getTZ()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("GenericConfig.getTZ() #1");
+    public static TimeZone getTZ()throws ConfigException{
 
-        if (!isConfigProcessed)
-            readConfig();
+        if (log.isDebugEnabled())log.debug("GenericConfig.getTZ() #1");
+        if (!isConfigProcessed)readConfig();
+        if (currentTimeZone!=null)return currentTimeZone;
 
-        if (currentTimeZone!=null)
-            return currentTimeZone;
+        if (log.isDebugEnabled())log.debug("GenericConfig.getTZ() #3 Set new TimeZone");
 
-        if (log.isDebugEnabled())
-            log.debug("GenericConfig.getTZ() #3 Set new TimeZone");
+        synchronized(syncTZ){
 
-        synchronized(syncTZ)
-        {
-            if (currentTimeZone!=null)
-                return currentTimeZone;
+            if (currentTimeZone!=null)return currentTimeZone;
 
             DateTimeSavingType dts = getConfig().getDTS();
             if (dts.getDateTimeSavingTypeSequence2()!= null )
@@ -184,22 +169,14 @@ public class GenericConfig
     }
 
     private static Object syncTempDir = new Object();
-    public static String getGenericTempDir()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.937");
+    public static String getGenericTempDir()throws ConfigException{
 
-        if (!isConfigProcessed)
-            readConfig();
+        if (log.isDebugEnabled())log.debug("#15.937");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled())log.debug("#15.938");
 
-        if (log.isDebugEnabled())
-            log.debug("#15.938");
-
-        synchronized(syncTempDir)
-        {
-            if (Boolean.FALSE.equals( getConfig().getIsTempDirInit() ) )
-            {
+        synchronized(syncTempDir){
+            if (Boolean.FALSE.equals( getConfig().getIsTempDirInit() ) ){
                 String dir = getConfig().getGenericTempDir();
                 if (File.separatorChar=='\\')
                     dir = dir.replace( '/', '\\');
@@ -215,6 +192,11 @@ public class GenericConfig
                     log.error("Specified temp directory '"+dir+"' not exists. Set to default java input/output temp directory");
                     dir = System.getProperty("java.io.tmpdir");
                 }
+                if ( !dirTest.canWrite() )
+                {
+                    log.error("Specified temp directory '"+dir+"' not writable. Set to default java input/output temp directory");
+                    dir = System.getProperty("java.io.tmpdir");
+                }
                 getConfig().setGenericTempDir( dir );
                 getConfig().setIsTempDirInit( Boolean.TRUE );
             }
@@ -223,23 +205,16 @@ public class GenericConfig
     }
 
     private static Object syncDebug = new Object();
-    public static String getGenericDebugDir()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.937.1");
+    public static String getGenericDebugDir()throws ConfigException{
 
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.938.1");
+        if (log.isDebugEnabled())log.debug("#15.937.1");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled())log.debug("#15.938.1");
 
         if (getConfig().getIsDebugDirInit().booleanValue() )
             return getConfig().getGenericDebugDir();
 
-        if (log.isDebugEnabled())
-            log.debug("#15.938.2");
+        if (log.isDebugEnabled())log.debug("#15.938.2");
 
         synchronized(syncDebug)
         {
@@ -247,109 +222,115 @@ public class GenericConfig
                 return getConfig().getGenericDebugDir();
 
             String dir = getConfig().getGenericDebugDir();
-            if (dir==null)
-                dir = System.getProperty("java.io.tmpdir");
-            else
-            {
+            if (dir!=null){
+
                 if (File.separatorChar=='\\')
-                {
-                    dir.replace( '/', '\\');
-                }
+                    dir = dir.replace( '/', '\\');
                 else
-                {
-                    dir.replace( '\\', '/');
-                }
+                    dir = dir.replace( '\\', '/');
+
                 if (!dir.endsWith( File.separator ))
                     dir += File.separator;
 
                 File dirTest = new File(dir);
-                if ( !dirTest.exists() )
-                {
+                if ( !dirTest.exists() ){
                     log.warn("Specified debug directory '"+dir+"' not exists. Set to default java input/output temp directory");
                     dir = System.getProperty("java.io.tmpdir");
                 }
+
+                if ( !dirTest.canWrite() ){
+                    log.warn("Specified debug directory '"+dir+"' not writable. Set to default java input/output temp directory");
+                    dir = System.getProperty("java.io.tmpdir");
+                }
             }
+            else
+                dir = System.getProperty("java.io.tmpdir");
+
             getConfig().setGenericDebugDir( dir );
             getConfig().setIsDebugDirInit( Boolean.TRUE );
 
-            if (log.isDebugEnabled())
-                log.debug("#15.938.3");
+            if (log.isDebugEnabled())log.debug("#15.938.3");
 
             return getConfig().getGenericDebugDir();
         }
     }
 
-    public static DatabaseConnectionType getDatabaseConnection(String connectionName)
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.909");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.910");
+    public static DatabaseConnectionType getDatabaseConnection(String connectionName)throws ConfigException{
+        if (log.isDebugEnabled())log.debug("#15.909");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled())log.debug("#15.910");
 
         return (DatabaseConnectionType)dbConfig.get( connectionName );
     }
 
+    public static String getDBconnectClassName(String connectionName) throws ConfigException{
 
-    public static String getDBconnectClassName(String connectionName)
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.911");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.912");
+        if (log.isDebugEnabled())log.debug("#15.911");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled())log.debug("#15.912");
 
         return getDatabaseConnection(connectionName).getConnectionClass();
     }
 
-    public static String getDefaultConnectionName()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.951");
+    public static String getDefaultConnectionName() throws ConfigException {
 
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.952");
+        if (log.isDebugEnabled())log.debug("#15.951");
+        if (!isConfigProcessed) readConfig();
+        if (log.isDebugEnabled()) log.debug("#15.952");
 
         return getConfig().getDefaultConnectionName();
     }
-    public static String getMailSMTPHost()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.927");
 
-        if (!isConfigProcessed)
-            readConfig();
+    public static PropertyType[] getProperty() throws ConfigException {
 
-        if (log.isDebugEnabled())
-            log.debug("#15.928");
+        if (log.isDebugEnabled()) log.debug("#16.951");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled()) log.debug("#16.952");
+
+        return getConfig().getProperty();
+    }
+
+    public static List getPropertyList() throws ConfigException {
+
+        if (log.isDebugEnabled()) log.debug("#16.961");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled()) log.debug("#16.962");
+
+        return getConfig().getPropertyAsReference();
+    }
+
+    public static int getPropertyCount() throws ConfigException {
+
+        if (log.isDebugEnabled()) log.debug("#16.971");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled()) log.debug("#16.972");
+
+        return getConfig().getPropertyCount();
+    }
+
+    public static PropertyType getProperty(int idx) throws ConfigException {
+
+        if (log.isDebugEnabled()) log.debug("#16.981");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled()) log.debug("#16.982");
+
+        return getConfig().getProperty(idx);
+    }
+
+    public static String getMailSMTPHost() throws ConfigException{
+
+        if (log.isDebugEnabled())log.debug("#15.927");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled())log.debug("#15.928");
 
         return getConfig().getMailHost();
     }
 
-    public static String getCustomDefinitionDir()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#16.910");
+    public static String getCustomDefinitionDir()throws ConfigException{
 
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#16.911");
+        if (log.isDebugEnabled())log.debug("#16.910");
+        if (!isConfigProcessed)readConfig();
+        if (log.isDebugEnabled())log.debug("#16.911");
 
         CustomDirsType dirs = getConfig().getCustomDirs();
         if (dirs==null)
@@ -357,5 +338,4 @@ public class GenericConfig
 
         return dirs.getCustomDataDefinitionDir();
     }
-
 }

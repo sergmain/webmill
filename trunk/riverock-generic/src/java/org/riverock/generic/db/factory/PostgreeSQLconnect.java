@@ -685,7 +685,13 @@ DEFERRABLE INITIALLY DEFERRED
         if (( length=instream.read(buffer)) != -1 )
         {
             flag = true;
-            ret = new String( buffer , 0, length, dc.getDatabaseCharset() );
+            String dbCharset = dc.getDatabaseCharset();
+            if (dbCharset==null) {
+                log.warn("DatabaseCharset element not defined. We will use 'utf8' charset instead");
+                dbCharset="utf8";
+            }
+
+            ret = new String( buffer , 0, length,  dbCharset);
 
             if (log.isDebugEnabled())
                 log.debug("text from stream\n"+ret);

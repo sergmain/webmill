@@ -40,8 +40,8 @@
 			<xs:element name="Password" type="xs:string"/>
 			<xs:element name="ConnectString" type="xs:string"/>
 			<xs:element name="ConnectionClass" type="xs:string"/>
-			<xs:element name="DatabaseCharset" type="xs:string"/>
-			<xs:element name="IsConvertDatabaseString" type="xs:boolean" default="false"/>
+			<xs:element name="DatabaseCharset" type="xs:string" minOccurs="0"/>
+			<xs:element name="IsConvertDatabaseString" type="xs:boolean" default="false" minOccurs="0"/>
 			<xs:element name="IsAutoCommit" type="xs:boolean" default="false"/>
 			<xs:element name="DataSourceType" default="NONE" minOccurs="0">
 				<xs:simpleType>
@@ -53,6 +53,7 @@
 				</xs:simpleType>
 			</xs:element>
 			<xs:element name="DataSourceName" type="xs:string" minOccurs="0"/>
+			<xs:element name="IsSupportCache" type="xs:boolean" default="true" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 	</xs:complexType>
@@ -60,6 +61,7 @@
 		<xs:sequence>
 			<xs:element name="GenericTempDir" type="xs:string" default="\\temp"/>
 			<xs:element name="GenericDebugDir" type="xs:string" minOccurs="0"/>
+			<xs:element name="Property" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="DTS" type="DateTimeSavingType" minOccurs="0"/>
 			<xs:element name="MailHost" type="xs:string" minOccurs="0"/>
 			<xs:element name="CustomDirs" type="CustomDirsType" minOccurs="0"/>
@@ -177,5 +179,11 @@ See the description for the special cases of this parameter.
 		<xs:attribute name="path" type="xs:string" use="required"/>
 		<xs:attribute name="password" type="xs:string" use="required"/>
 		<xs:attribute name="alias" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="PropertyType">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string"/>
+			<xs:element name="Value" type="xs:string"/>
+		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
