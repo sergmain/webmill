@@ -1,0 +1,729 @@
+/*
+
+ * org.riverock.common -- Supporting classes, interfaces, and utilities
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock -- The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This library is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU Lesser General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2.1 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * Lesser General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU Lesser General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+
+
+package org.riverock.common.tools;
+
+
+
+import org.apache.log4j.Logger;
+
+
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
+
+import javax.servlet.http.HttpSession;
+
+import java.lang.reflect.Method;
+
+import java.util.Enumeration;
+
+
+
+/**
+
+ * Класс ServletTools прденазначен для работы c HttpXxx классами и др.
+
+ *
+
+ * $Id$
+
+ */
+
+public class ServletTools
+
+{
+
+    private static Logger log = Logger.getLogger( "org.riverock.tools.ServletTools"   );
+
+
+
+
+
+    public static void cleanSession(HttpSession session)
+
+        throws Exception
+
+    {
+
+        if (session==null)
+
+            return;
+
+
+
+// удаляем из сесси все объекты
+
+        int countLoop = 3;
+
+        for (int i=0; i<countLoop; i++)
+
+        {
+
+            try
+
+            {
+
+                for (Enumeration e = session.getAttributeNames();
+
+                     e.hasMoreElements();
+
+                     e = session.getAttributeNames()
+
+                    )
+
+                {
+
+                    String name = (java.lang.String) e.nextElement() ;
+
+
+
+                    if(log.isDebugEnabled())
+
+                        log.debug("Attribute: "+name);
+
+
+
+                    session.removeAttribute( name );
+
+                }
+
+            }
+
+            catch( java.util.ConcurrentModificationException e)
+
+            {
+
+                if (i==countLoop-1)
+
+                    throw e;
+
+            }
+
+        }
+
+    }
+
+
+
+    public static String getHiddenItem(String name, String value)
+
+    {
+
+        return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value+ "\">\n");
+
+    }
+
+
+
+    public static String getHiddenItem(String name, int value)
+
+    {
+
+        return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value+ "\">\n");
+
+    }
+
+
+
+    public static String getHiddenItem(String name, Integer value)
+
+    {
+
+        return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value!=null?value.longValue():0) + "\">\n");
+
+    }
+
+
+
+    public static String getHiddenItem(String name, long value)
+
+    {
+
+        return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value+ "\">\n");
+
+    }
+
+
+
+    public static String getHiddenItem(String name, Long value)
+
+    {
+
+        return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value!=null?value.longValue():0) + "\">\n");
+
+    }
+
+
+
+    public static void immediateRemoveAttribute(HttpSession session,
+
+                                                String attr)
+
+    {
+
+        Object obj = session.getAttribute(attr);
+
+        try
+
+        {
+
+            if (log.isDebugEnabled())
+
+                log.debug("#12.12.001 search method 'clearObject'");
+
+
+
+            Class cl = obj.getClass();
+
+            Method m = cl.getMethod("clearObject", null);
+
+
+
+            if (log.isDebugEnabled())
+
+                log.debug("#12.12.002 invoke method 'clearObject'");
+
+
+
+            if (m != null)
+
+                m.invoke(obj, null);
+
+
+
+            if (log.isDebugEnabled())
+
+                log.debug("#12.12.003 complete invoke method 'clearObject'");
+
+        }
+
+        catch (Exception e)
+
+        {
+
+            if (log.isInfoEnabled())
+
+                log.info("#12.12.003  method 'clearObject' not found. Error " + e.toString());
+
+        }
+
+
+
+        session.removeAttribute(attr);
+
+        obj = null;
+
+    }
+
+
+
+    /**
+
+     * Если при вызове текущего URL переменная не инициализирована, то перенаправление на
+
+     * страницу index.jsp
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * HttpServletResponse response	- обычно это response из окружения JSP<br>
+
+     * String f - имя переменной для проверки<br>
+
+     * </blockquote>
+
+     */
+
+    public static boolean isNotInit(HttpServletRequest request, HttpServletResponse response, String f)
+
+    {
+
+        return isNotInit(request, response, f, "index.jsp");
+
+    }
+
+
+
+    /**
+
+     * Если при вызове текущего URL переменная не инициализирована, то перенаправление на
+
+     * страницу index.jsp
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * HttpServletResponse response	- обычно это response из окружения JSP<br>
+
+     * String f - имя переменной для проверки<br>
+
+     * String defURL - URL для перенаправления, если переменная отсутствует
+
+     * </blockquote>
+
+     */
+
+    public static boolean isNotInit(HttpServletRequest request, HttpServletResponse response, String f, String defURL)
+
+    {
+
+
+
+        if (request.getParameter(f) == null)
+
+        {
+
+            try
+
+            {
+
+                response.sendRedirect(defURL);
+
+            }
+
+            catch (Exception e)
+
+            {
+
+            }
+
+
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
+
+
+    /**
+
+     * Возвращает текстовое значение переменной. Если переменная не инициализирована, возвращает пустую строку
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * String def  - строка по умолчанию<br>
+
+     * </blockquote>
+
+     */
+
+    public static String getString(
+
+        HttpServletRequest request, String f, String def, String fromCharset, String toCharset)
+
+    {
+
+        String s_ = def;
+
+        if (request.getParameter(f) != null)
+
+        {
+
+            try
+
+            {
+
+                s_ = StringTools.convertString( request.getParameter(f), fromCharset, toCharset);
+
+            }
+
+            catch (Exception e)
+
+            {
+
+            }
+
+        }
+
+        return s_;
+
+    }
+
+
+
+
+
+    /**
+
+     * Возвращает int значение переменной. Если переменная не инициализирована, возвращает 0
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * </blockquote>
+
+     */
+
+    public static Integer getInt(HttpServletRequest request, String f)
+
+    {
+
+        return getInt(request, f, null);
+
+    }
+
+
+
+    /**
+
+     * Возвращает int значение переменной. Если переменная не инициализирована, возвращает 0
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * int def - значение по молчанию<br>
+
+     * </blockquote>
+
+     */
+
+    public static Integer getInt(HttpServletRequest request, String f, Integer def)
+
+    {
+
+        Integer i_ = def;
+
+        if (request.getParameter(f) != null)
+
+        {
+
+            try
+
+            {
+
+                String s_ = request.getParameter(f);
+
+                i_ = new Integer(s_);
+
+            }
+
+            catch (Exception exc)
+
+            {
+
+                // not rethrow exception 'cos this method return def value in this case
+
+                log.warn("Exception in getInt(), def value will be return", exc);
+
+            }
+
+        }
+
+        return i_;
+
+    }
+
+
+
+    /**
+
+     * Возвращает long значение переменной. Если переменная не инициализирована, возвращает 0
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * </blockquote>
+
+     */
+
+    public static Long getLong(HttpServletRequest request, String f)
+
+    {
+
+        return getLong(request, f, null);
+
+    }
+
+
+
+    /**
+
+     * Возвращает long значение переменной. Если переменная не инициализирована, возвращает 0
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * long def - значение по молчанию
+
+     * </blockquote>
+
+     */
+
+    public static Long getLong(HttpServletRequest request, String f, Long def)
+
+    {
+
+        Long i_ = def;
+
+        if (request.getParameter(f) != null)
+
+        {
+
+            try
+
+            {
+
+                String s_ = request.getParameter(f);
+
+                i_ = new Long(s_);
+
+            }
+
+            catch (Exception exc)
+
+            {
+
+                // not rethrow exception 'cos this method return def value in this case
+
+                log.warn("Exception in getLong(), def value will be return", exc);
+
+            }
+
+        }
+
+        return i_;
+
+    }
+
+
+
+    /**
+
+     * Возвращает float значение переменной. Если переменная не инициализирована, возвращает 0
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * </blockquote>
+
+     */
+
+    public static Float getFloat(HttpServletRequest request, String f)
+
+    {
+
+        return getFloat(request, f, null);
+
+    }
+
+
+
+    /**
+
+     * Возвращает float значение переменной. Если переменная не инициализирована, возвращает 0
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * float def - значение по умолчанию
+
+     * </blockquote>
+
+     */
+
+    public static Float getFloat(HttpServletRequest request, String f, Float def)
+
+    {
+
+        Float i_ = def;
+
+        if (request.getParameter(f) != null)
+
+        {
+
+            try
+
+            {
+
+                String s_ = request.getParameter(f);
+
+                s_ = s_.replace(',', '.');
+
+
+
+                i_ = new Float(s_);
+
+            }
+
+            catch (Exception exc)
+
+            {
+
+                // not rethrow exception 'cos this method return def value in this case
+
+                log.warn("Exception in getFloat(), def value will be return", exc);
+
+            }
+
+        }
+
+        return i_;
+
+    }
+
+
+
+    public static Double getDouble(HttpServletRequest request, String f)
+
+    {
+
+        return getDouble(request, f, null);
+
+    }
+
+
+
+    /**
+
+     * Возвращает double значение переменной. Если переменная не инициализирована, возвращает 0
+
+     * Параметры:
+
+     * <blockquote>
+
+     * HttpServletRequest request	- обычно это request из окружения JSP<br>
+
+     * String f - имя переменной для получения значения<br>
+
+     * double def - значение по умолчанию
+
+     * </blockquote>
+
+     */
+
+    public static Double getDouble(HttpServletRequest request, String f, Double def)
+
+    {
+
+        Double i_ = def;
+
+        if (request.getParameter(f) != null)
+
+        {
+
+            try
+
+            {
+
+                String s_ = request.getParameter(f);
+
+                s_ = s_.replace(',', '.');
+
+
+
+                i_ = new Double(s_);
+
+            }
+
+            catch (Exception exc)
+
+            {
+
+                // not rethrow exception 'cos this method return def value in this case
+
+                log.warn("Exception in getDouble(), def value will be return", exc);
+
+            }
+
+        }
+
+        return i_;
+
+    }
+
+}
