@@ -1424,7 +1424,7 @@ public class DatabaseManager
 
      * @param dbDyn
 
-     * @param idRec
+     * @param idRec value of PK in main table
 
      * @param pkName
 
@@ -2244,7 +2244,7 @@ public class DatabaseManager
 
 
 
-    protected static DbKeyActionRuleType decodeUpdateRule(ResultSet rs)
+    public static DbKeyActionRuleType decodeUpdateRule(ResultSet rs)
 
     {
 
@@ -2336,7 +2336,7 @@ public class DatabaseManager
 
 
 
-    protected static DbKeyActionRuleType decodeDeleteRule(ResultSet rs)
+    public static DbKeyActionRuleType decodeDeleteRule(ResultSet rs)
 
     {
 
@@ -2428,7 +2428,7 @@ public class DatabaseManager
 
 
 
-    protected static DbKeyActionRuleType decodeDeferrabilityRule(ResultSet rs)
+    public static DbKeyActionRuleType decodeDeferrabilityRule(ResultSet rs)
 
     {
 
