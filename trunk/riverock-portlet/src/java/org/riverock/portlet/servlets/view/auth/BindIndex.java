@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -96,6 +96,10 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 
 import org.riverock.portlet.tools.HtmlTools;
@@ -118,7 +122,7 @@ public class BindIndex extends HttpServlet
 
 {
 
-    private static Logger cat = Logger.getLogger(BindIndex.class);
+    private static Logger log = Logger.getLogger(BindIndex.class);
 
 
 
@@ -136,9 +140,9 @@ public class BindIndex extends HttpServlet
 
     {
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug("method is POST");
+            log.debug("method is POST");
 
 
 
@@ -158,6 +162,12 @@ public class BindIndex extends HttpServlet
 
         DatabaseAdapter db_ = null;
 
+        PreparedStatement ps = null;
+
+        ResultSet rs = null;
+
+
+
         try
 
         {
@@ -166,7 +176,7 @@ public class BindIndex extends HttpServlet
 
             CtxInstance ctxInstance =
 
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+                (CtxInstance) request_.getSession().getAttribute(org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION);
 
 
 
@@ -178,9 +188,9 @@ public class BindIndex extends HttpServlet
 
 
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession) ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) )
+            if (auth_ == null || !auth_.isUserInRole("webmill.auth_bind"))
 
             {
 
@@ -192,7 +202,29 @@ public class BindIndex extends HttpServlet
 
 
 
-            AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
+            AuthInfo authInfo = InternalAuthProvider.getAuthInfo(auth_);
+
+
+
+
+
+            // Todo. After implement this portlet as 'real' portlet, not servlet,
+
+            // remove following code, and switch to 'ctxInstance.sCustom' field
+
+            // start from
+
+            StringManager sCustom = null;
+
+            String nameLocaleBundle = null;
+
+            nameLocaleBundle = "mill.locale.AUTH_USER";
+
+            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
+
+                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+
+            // end
 
 
 
@@ -206,67 +238,67 @@ public class BindIndex extends HttpServlet
 
             String sql_ =
 
-            "select a.id_auth_user, a.id_user, a.user_login, " +
+                "select a.id_auth_user, a.id_user, a.user_login, " +
 
-"                a.is_service, a.is_road, a.is_use_current_firm, a.is_root, a.id_road, " +
+                "                a.is_service, a.is_road, a.is_use_current_firm, a.is_root, a.id_road, " +
 
-"                a.id_service, " +
+                "                a.id_service, " +
 
-"             b.LAST_NAME, b.FIRST_NAME, b.MIDDLE_NAME, " +
+                "             b.LAST_NAME, b.FIRST_NAME, b.MIDDLE_NAME, " +
 
-"             c.id_firm, c.short_name " +
+                "             c.id_firm, c.short_name " +
 
-" " +
+                " " +
 
-"            from    auth_user a, main_user_info b, main_list_firm c " +
+                "            from    auth_user a, main_user_info b, main_list_firm c " +
 
-"            where   a.id_user = b.id_user and " +
+                "            where   a.id_user = b.id_user and " +
 
-"                    a.id_firm = c.id_firm and " +
+                "                    a.id_firm = c.id_firm and " +
 
-"                    b.ID_FIRM in " +
+                "                    b.ID_FIRM in " +
 
-"                    ( " +
+                "                    ( " +
 
-"            select  a01.id_firm " +
+                "            select  a01.id_firm " +
 
-"            from    auth_user a01 " +
+                "            from    auth_user a01 " +
 
-"            where   a01.is_use_current_firm = 1 " +
+                "            where   a01.is_use_current_firm = 1 " +
 
-"             and a01.user_login = ? " +
+                "             and a01.user_login = ? " +
 
-"            union " +
+                "            union " +
 
-"            select  d02.id_firm " +
+                "            select  d02.id_firm " +
 
-"            from    auth_user a02, main_relate_service_firm d02 " +
+                "            from    auth_user a02, main_relate_service_firm d02 " +
 
-"          where   a02.is_service = 1 and a02.id_service = d02.id_service " +
+                "          where   a02.is_service = 1 and a02.id_service = d02.id_service " +
 
-"             and a02.user_login = ? " +
+                "             and a02.user_login = ? " +
 
-"            union " +
+                "            union " +
 
-"            select  e03.id_firm " +
+                "            select  e03.id_firm " +
 
-"            from    auth_user a03, main_relate_road_service d03, main_relate_service_firm e03 " +
+                "            from    auth_user a03, main_relate_road_service d03, main_relate_service_firm e03 " +
 
-"            where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service " +
+                "            where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service " +
 
-"             and a03.user_login = ? " +
+                "             and a03.user_login = ? " +
 
-"            union " +
+                "            union " +
 
-"            select  b04.id_firm " +
+                "            select  b04.id_firm " +
 
-"            from    auth_user a04, main_list_firm b04 " +
+                "            from    auth_user a04, main_list_firm b04 " +
 
-"            where   a04.is_root = 1 and a04.user_login = ? " +
+                "            where   a04.is_root = 1 and a04.user_login = ? " +
 
-"            ) " +
+                "            ) " +
 
-"            order by c.id_firm asc, c.short_name asc, b.LAST_NAME asc, b.FIRST_NAME asc, b.MIDDLE_NAME asc ";
+                "            order by c.id_firm asc, c.short_name asc, b.LAST_NAME asc, b.FIRST_NAME asc, b.MIDDLE_NAME asc ";
 
 
 
@@ -278,207 +310,197 @@ public class BindIndex extends HttpServlet
 
 
 
-            PreparedStatement ps = null;
+            ps = db_.prepareStatement(sql_);
 
-            ResultSet rs = null;
+            ps.setString(1, auth_.getUserLogin());
 
+            ps.setString(2, auth_.getUserLogin());
 
+            ps.setString(3, auth_.getUserLogin());
 
-            try
+            ps.setString(4, auth_.getUserLogin());
 
-            {
-
-                    ps = db_.prepareStatement(sql_);
-
-                    ps.setString(1, auth_.getUserLogin());
-
-                    ps.setString(2, auth_.getUserLogin());
-
-                    ps.setString(3, auth_.getUserLogin());
-
-                    ps.setString(4, auth_.getUserLogin());
-
-                    rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
 
 
-                    out.write("\r\n");
+            out.write("\r\n");
 
-                    out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\">\r\n");
+            out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\">\r\n");
 
-                    out.write("<tr>\r\n");
+            out.write("<tr>\r\n");
 
-                    out.write("<td valign=\"top\">\r\n        ");
+            out.write("<td valign=\"top\">\r\n        ");
 
 
 
 
 
-                    out.write("\r\n");
+            out.write("\r\n");
 
-                    out.write("<b>");
+            out.write("<b>");
 
-                    out.write(ctxInstance.sCustom.getStr("index.jsp.title"));
+            out.write(sCustom.getStr("index.jsp.title"));
 
-                    out.write("</b>\r\n");
+            out.write("</b>\r\n");
 
-                    out.write("<p>");
+            out.write("<p>");
 
-                    out.write("<a href=\"");
+            out.write("<a href=\"");
 
-                    out.write(
-
-
-
-                        ctxInstance.url("mill.auth.add_bind")
+            out.write(
 
 
 
-                    );
+                ctxInstance.url("mill.auth.add_bind")
 
-                    out.write("\">");
 
-                    out.write(ctxInstance.getStringManager().getStr("button.add"));
 
-                    out.write("</a>");
+            );
 
-                    out.write("</p>\r\n");
+            out.write("\">");
 
-                    out.write("<table border=\"0\" class=\"l\">\r\n");
+            out.write(ctxInstance.getStringManager().getStr("button.add"));
 
-                    out.write("<tr>\r\n");
+            out.write("</a>");
 
-                    out.write("<th class=\"memberArea\">");
+            out.write("</p>\r\n");
 
-                    out.write(ctxInstance.sCustom.getStr("index.jsp.name_firm"));
+            out.write("<table border=\"0\" class=\"l\">\r\n");
 
-                    out.write("</th>\r\n");
+            out.write("<tr>\r\n");
 
-                    out.write("<th class=\"memberArea\">");
+            out.write("<th class=\"memberArea\">");
 
-                    out.write(ctxInstance.sCustom.getStr("index.jsp.fio"));
+            out.write(sCustom.getStr("index.jsp.name_firm"));
 
-                    out.write("</th>\r\n");
+            out.write("</th>\r\n");
+
+            out.write("<th class=\"memberArea\">");
+
+            out.write(sCustom.getStr("index.jsp.fio"));
+
+            out.write("</th>\r\n");
 
 
 
 //                    out.write("<th class=\"memberArea\">");
 
-//                    out.write(ctxInstance.sCustom.getStr("index.jsp.code_proff"));
+//                    out.write(sCustom.getStr("index.jsp.code_proff"));
 
 //                    out.write("</th>\r\n");
 
 
 
-                    out.write("<th class=\"memberArea\">");
+            out.write("<th class=\"memberArea\">");
 
-                    out.write(ctxInstance.sCustom.getStr("index.jsp.user_login"));
+            out.write(sCustom.getStr("index.jsp.user_login"));
 
-                    out.write("</th>\r\n            ");
+            out.write("</th>\r\n            ");
 
 
 
-                    if (authInfo.isUseCurrentFirm == 1)
+            if (authInfo.isUseCurrentFirm == 1)
 
-                    {
+            {
 
-                        out.write("\r\n");
+                out.write("\r\n");
 
-                        out.write("<th class=\"memberArea\" width=\"5%\">");
+                out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                        out.write(ctxInstance.sCustom.getStr("index.jsp.is_use_current_firm"));
+                out.write(sCustom.getStr("index.jsp.is_use_current_firm"));
 
-                        out.write("</th>\r\n                ");
+                out.write("</th>\r\n                ");
 
 
 
-                    }
+            }
 
-                    out.write("\r\n            ");
+            out.write("\r\n            ");
 
 
 
-                    if (authInfo.isService == 1)
+            if (authInfo.isService == 1)
 
-                    {
+            {
 
-                        out.write("\r\n");
+                out.write("\r\n");
 
-                        out.write("<th class=\"memberArea\" width=\"5%\">");
+                out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                        out.write(ctxInstance.sCustom.getStr("index.jsp.is_service"));
+                out.write(sCustom.getStr("index.jsp.is_service"));
 
-                        out.write("</th>\r\n                ");
+                out.write("</th>\r\n                ");
 
 
 
-                    }
+            }
 
-                    out.write("\r\n            ");
+            out.write("\r\n            ");
 
 
 
-                    if (authInfo.isRoad == 1)
+            if (authInfo.isRoad == 1)
 
-                    {
+            {
 
-                        out.write("\r\n");
+                out.write("\r\n");
 
-                        out.write("<th class=\"memberArea\" width=\"5%\">");
+                out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                        out.write(ctxInstance.sCustom.getStr("index.jsp.is_road"));
+                out.write(sCustom.getStr("index.jsp.is_road"));
 
-                        out.write("</th>\r\n                ");
+                out.write("</th>\r\n                ");
 
 
 
-                    }
+            }
 
-                    out.write("\r\n");
+            out.write("\r\n");
 
-                    out.write("<th class=\"memberArea\">");
+            out.write("<th class=\"memberArea\">");
 
-                    out.write(ctxInstance.sCustom.getStr("index.jsp.action"));
+            out.write(sCustom.getStr("index.jsp.action"));
 
-                    out.write("</th>\r\n");
+            out.write("</th>\r\n");
 
-                    out.write("</tr>");
+            out.write("</tr>");
 
 
 
 
 
-                    while (rs.next())
+            while (rs.next())
 
-                    {
+            {
 
 
 
-                        out.write(
+                out.write(
 
-                            "<tr>\r\n"+
+                    "<tr>\r\n" +
 
-                            "<td class=\"memberArea\">"+
+                    "<td class=\"memberArea\">" +
 
-                            RsetTools.getLong(rs, "ID_FIRM")+", "+
+                    RsetTools.getLong(rs, "ID_FIRM") + ", " +
 
-                            RsetTools.getString(rs, "short_name", "&nbsp;")+
+                    RsetTools.getString(rs, "short_name", "&nbsp;") +
 
-                            "</td>\r\n"+
+                    "</td>\r\n" +
 
 
 
-                            "<td class=\"memberArea\">"+
+                    "<td class=\"memberArea\">" +
 
-                            RsetTools.getString(rs, "LAST_NAME", "&nbsp;")+" "+
+                    RsetTools.getString(rs, "LAST_NAME", "&nbsp;") + " " +
 
-                            RsetTools.getString(rs, "FIRST_NAME", "&nbsp;")+" "+
+                    RsetTools.getString(rs, "FIRST_NAME", "&nbsp;") + " " +
 
-                            RsetTools.getString(rs, "MIDDLE_NAME", "&nbsp;")+
+                    RsetTools.getString(rs, "MIDDLE_NAME", "&nbsp;") +
 
-                            "</td>\r\n"
+                    "</td>\r\n"
 
-                        );
+                );
 
 
 
@@ -490,215 +512,153 @@ public class BindIndex extends HttpServlet
 
 
 
-                        out.write("<td class=\"memberArea\">");
+                out.write("<td class=\"memberArea\">");
 
-                        out.write(RsetTools.getString(rs, "user_login", "&nbsp;"));
+                out.write(RsetTools.getString(rs, "user_login", "&nbsp;"));
 
-                        out.write("</td>\r\n                ");
+                out.write("</td>\r\n                ");
 
 
 
-                        if (authInfo.isUseCurrentFirm == 1)
-
-                        {
-
-                            out.write("\r\n");
-
-                            out.write("<td class=\"memberArea\">");
-
-                            out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, ctxInstance.getPortletRequest().getLocale()));
-
-                            out.write("</td>\r\n                    ");
-
-
-
-                        }
-
-
-
-                        if (authInfo.isService == 1)
-
-                        {
-
-                            out.write("\r\n");
-
-                            out.write("<td class=\"memberArea\">");
-
-                            out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.getPortletRequest().getLocale()));
-
-                            out.write("</td>\r\n                    ");
-
-
-
-                        }
-
-
-
-                        if (authInfo.isRoad == 1)
-
-                        {
-
-                            out.write("\r\n");
-
-                            out.write("<td class=\"memberArea\">");
-
-                            out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.getPortletRequest().getLocale()));
-
-                            out.write("</td>\r\n                    ");
-
-
-
-                        }
-
-
-
-                        out.write("<td class=\"memberAreaAction\">");
-
-
-
-
-
-                        Long id_auth_user = RsetTools.getLong(rs, "id_auth_user");
-
-
-
-                        out.write("<input type=\"button\" value=\"");
-
-                        out.write(ctxInstance.getStringManager().getStr("button.change"));
-
-                        out.write("\" onclick=\"location.href='");
-
-                        out.write(
-
-
-
-                            ctxInstance.url("mill.auth.ch_bind") + '&'
-
-
-
-                        );
-
-                        out.write("id_auth_user=");
-
-                        out.write("" + id_auth_user);
-
-                        out.write("';\">\r\n");
-
-                        out.write("<input type=\"button\" value=\"");
-
-                        out.write(ctxInstance.getStringManager().getStr("button.delete"));
-
-                        out.write("\" onclick=\"location.href='");
-
-                        out.write(
-
-
-
-                            ctxInstance.url("mill.auth.del_bind") + '&'
-
-
-
-                        );
-
-                        out.write("id_auth_user=");
-
-                        out.write("" + id_auth_user);
-
-                        out.write("';\">\r\n");
-
-                        out.write("</td>\r\n");
-
-                        out.write("</tr>");
-
-
-
-
-
-                    }
-
-
-
-                    out.write("</table>\r\n");
-
-                    out.write("<p>");
-
-                    out.write("<a href=\"");
-
-                    out.write(response.encodeURL("add_bind.jsp"));
-
-                    out.write("?");
-
-                    out.write(ctxInstance.getAsURL());
-
-                    out.write("\">");
-
-                    out.write(ctxInstance.getStringManager().getStr("button.add"));
-
-                    out.write("</a>");
-
-                    out.write("</p>");
-
-
-
-            }
-
-            catch (Exception e)
-
-            {
-
-                out.write(e.toString());
-
-            }
-
-            finally
-
-            {
-
-                if (rs != null)
+                if (authInfo.isUseCurrentFirm == 1)
 
                 {
 
-                    try
+                    out.write("\r\n");
 
-                    {
+                    out.write("<td class=\"memberArea\">");
 
-                        rs.close();
+                    out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, ctxInstance.getPortletRequest().getLocale()));
 
-                        rs = null;
+                    out.write("</td>\r\n                    ");
 
-                    }
 
-                    catch (Exception e01)
-
-                    {
-
-                    }
 
                 }
 
-                if (ps != null)
+
+
+                if (authInfo.isService == 1)
 
                 {
 
-                    try
+                    out.write("\r\n");
 
-                    {
+                    out.write("<td class=\"memberArea\">");
 
-                        ps.close();
+                    out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.getPortletRequest().getLocale()));
 
-                        ps = null;
+                    out.write("</td>\r\n                    ");
 
-                    }
 
-                    catch (Exception e02)
-
-                    {
-
-                    }
 
                 }
 
+
+
+                if (authInfo.isRoad == 1)
+
+                {
+
+                    out.write("\r\n");
+
+                    out.write("<td class=\"memberArea\">");
+
+                    out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.getPortletRequest().getLocale()));
+
+                    out.write("</td>\r\n                    ");
+
+
+
+                }
+
+
+
+                out.write("<td class=\"memberAreaAction\">");
+
+
+
+
+
+                Long id_auth_user = RsetTools.getLong(rs, "id_auth_user");
+
+
+
+                out.write("<input type=\"button\" value=\"");
+
+                out.write(ctxInstance.getStringManager().getStr("button.change"));
+
+                out.write("\" onclick=\"location.href='");
+
+                out.write(
+
+
+
+                    ctxInstance.url("mill.auth.ch_bind") + '&'
+
+
+
+                );
+
+                out.write("id_auth_user=");
+
+                out.write("" + id_auth_user);
+
+                out.write("';\">\r\n");
+
+                out.write("<input type=\"button\" value=\"");
+
+                out.write(ctxInstance.getStringManager().getStr("button.delete"));
+
+                out.write("\" onclick=\"location.href='");
+
+                out.write(
+
+
+
+                    ctxInstance.url("mill.auth.del_bind") + '&'
+
+
+
+                );
+
+                out.write("id_auth_user=");
+
+                out.write("" + id_auth_user);
+
+                out.write("';\">\r\n");
+
+                out.write("</td>\r\n");
+
+                out.write("</tr>");
+
+
+
+
+
             }
+
+
+
+            out.write("</table>\r\n");
+
+            out.write("<p>");
+
+            out.write("<a href=\"");
+
+            out.write(response.encodeURL("add_bind.jsp"));
+
+            out.write("?");
+
+            out.write(ctxInstance.getAsURL());
+
+            out.write("\">");
+
+            out.write(ctxInstance.getStringManager().getStr("button.add"));
+
+            out.write("</a>");
+
+            out.write("</p>");
 
 
 
@@ -748,7 +708,7 @@ public class BindIndex extends HttpServlet
 
         {
 
-            cat.error(e);
+            log.error("Exception in BindIndex", e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
 
@@ -758,7 +718,11 @@ public class BindIndex extends HttpServlet
 
         {
 
-            DatabaseAdapter.close(db_);
+            DatabaseManager.close(db_, rs, ps);
+
+            rs = null;
+
+            ps = null;
 
             db_ = null;
 

@@ -98,6 +98,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 
 import org.riverock.portlet.tools.HtmlTools;
@@ -204,11 +206,23 @@ public class RightChange extends HttpServlet
 
 
 
-//            InitPage jspPage = new InitPage(db_, request,
+            // Todo. After implement this portlet as 'real' portlet, not servlet,
 
-//                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
+            // remove following code, and switch to 'ctxInstance.sCustom' field
 
-//            );
+            // start from
+
+            StringManager sCustom = null;
+
+            String nameLocaleBundle = null;
+
+            nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
+
+            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
+
+                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+
+            // end
 
 
 
@@ -322,7 +336,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.id_access_group"));
+                    out.write(sCustom.getStr("ch_right.jsp.id_access_group"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -344,7 +358,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.id_object_arm"));
+                    out.write(sCustom.getStr("ch_right.jsp.id_object_arm"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -490,7 +504,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_s"));
+                    out.write(sCustom.getStr("ch_right.jsp.code_right_s"));
 
                     out.write("</td>\r\n            ");
 
@@ -512,7 +526,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_u"));
+                    out.write(sCustom.getStr("ch_right.jsp.code_right_u"));
 
                     out.write("</td>\n");
 
@@ -534,7 +548,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_i"));
+                    out.write(sCustom.getStr("ch_right.jsp.code_right_i"));
 
                     out.write("</td>\r\n            ");
 
@@ -556,7 +570,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_d"));
+                    out.write(sCustom.getStr("ch_right.jsp.code_right_d"));
 
                     out.write("</td>\r\n            ");
 
@@ -578,7 +592,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_a"));
+                    out.write(sCustom.getStr("ch_right.jsp.code_right_a"));
 
                     out.write("</td>\r\n            ");
 
@@ -600,7 +614,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.is_road"));
+                    out.write(sCustom.getStr("ch_right.jsp.is_road"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -622,7 +636,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.is_service"));
+                    out.write(sCustom.getStr("ch_right.jsp.is_service"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -644,7 +658,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.is_firm"));
+                    out.write(sCustom.getStr("ch_right.jsp.is_firm"));
 
                     out.write("</td>\r\n\t\t");
 

@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.webmill.portlet.wrapper;
+package org.riverock.webmill.portal.impl;
 
 
 
@@ -84,7 +84,7 @@ import javax.portlet.WindowStateException;
 
 
 
-public class ActionResponseWrapper implements ActionResponse
+public class ActionResponseImpl implements ActionResponse
 
 {
 

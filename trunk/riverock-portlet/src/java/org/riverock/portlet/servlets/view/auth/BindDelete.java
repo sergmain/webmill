@@ -90,6 +90,8 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 
 import org.riverock.portlet.tools.HtmlTools;
@@ -198,11 +200,25 @@ public class BindDelete extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance(false);
 
-//            InitPage jspPage = new InitPage(db_, request,
 
-//                                            "mill.locale.AUTH_USER"
 
-//            );
+            // Todo. After implement this portlet as 'real' portlet, not servlet,
+
+            // remove following code, and switch to 'ctxInstance.sCustom' field
+
+            // start from
+
+            StringManager sCustom = null;
+
+            String nameLocaleBundle = null;
+
+            nameLocaleBundle = "mill.locale.AUTH_USER";
+
+            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
+
+                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+
+            // end
 
 
 
@@ -246,7 +262,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("\r\n");
 
-                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.confirm"));
+                out.write(sCustom.getStr("del_bind.jsp.confirm"));
 
                 out.write("\r\n");
 
@@ -290,7 +306,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write("<%=ctxInstance.sCustom.getStr(\"del_bind.jsp.name_firm\")%\\>");
+                out.write("<%=sCustom.getStr(\"del_bind.jsp.name_firm\")%\\>");
 
                 out.write("</td>\r\n");
 
@@ -306,7 +322,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.user_login"));
+                out.write(sCustom.getStr("del_bind.jsp.user_login"));
 
                 out.write("</td>\r\n");
 
@@ -324,7 +340,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.is_service"));
+                out.write(sCustom.getStr("del_bind.jsp.is_service"));
 
                 out.write("</td>\r\n");
 
@@ -342,7 +358,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.is_road"));
+                out.write(sCustom.getStr("del_bind.jsp.is_road"));
 
                 out.write("</td>\r\n");
 
@@ -360,7 +376,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.is_use_current_firm"));
+                out.write(sCustom.getStr("del_bind.jsp.is_use_current_firm"));
 
                 out.write("</td>\r\n");
 

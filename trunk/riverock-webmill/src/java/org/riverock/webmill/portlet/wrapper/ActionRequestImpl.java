@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.webmill.portlet.wrapper;
+package org.riverock.webmill.portal.impl;
 
 
 
@@ -98,7 +98,7 @@ import javax.portlet.WindowState;
 
 
 
-public class ActionRequestWrapper implements ActionRequest
+public class ActionRequestImpl implements ActionRequest
 
 {
 

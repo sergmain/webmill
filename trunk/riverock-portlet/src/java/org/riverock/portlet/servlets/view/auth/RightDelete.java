@@ -98,6 +98,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.portlet.portlets.WebmillErrorPage;
@@ -199,6 +201,28 @@ public class RightDelete extends HttpServlet
 
 
             db_ = DatabaseAdapter.getInstance(false);
+
+
+
+            // Todo. After implement this portlet as 'real' portlet, not servlet,
+
+            // remove following code, and switch to 'ctxInstance.sCustom' field
+
+            // start from
+
+            StringManager sCustom = null;
+
+            String nameLocaleBundle = null;
+
+            nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
+
+            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
+
+                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+
+            // end
+
+
 
 
 
@@ -306,7 +330,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("\r\n");
 
-                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.confirm"));
+                        out.write(sCustom.getStr("del_right.jsp.confirm"));
 
                         out.write("\r\n");
 
@@ -348,7 +372,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.id_access_group"));
+                        out.write(sCustom.getStr("del_right.jsp.id_access_group"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -366,7 +390,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.id_object_arm"));
+                        out.write(sCustom.getStr("del_right.jsp.id_object_arm"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -408,7 +432,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.code_right"));
+                        out.write(sCustom.getStr("del_right.jsp.code_right"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -426,7 +450,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.is_road"));
+                        out.write(sCustom.getStr("del_right.jsp.is_road"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -444,7 +468,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.is_service"));
+                        out.write(sCustom.getStr("del_right.jsp.is_service"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -462,7 +486,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.is_firm"));
+                        out.write(sCustom.getStr("del_right.jsp.is_firm"));
 
                         out.write("</td>\r\n\t\t");
 

@@ -1084,13 +1084,17 @@ content.getQueryArea().primaryKeyMask, "error", Locale.ENGLISH);
 
                     log.error("Error while processing this page", e1);
 
-                    out.println("Error while processing this page:<br>" +
+                    if (dbDyn.testExceptionIndexUniqueKey(e1))
 
-                        sql_ + "<br>" +
+                        out.println("You input value already exists in DB. Try again with other value");
 
-                        ExceptionTools.getStackTrace(e1, mp.linesInException, "<br>")
+                    else
 
-                    );
+                        out.println("Error while processing this page:<br>" + sql_ + "<br>" +
+
+                                    ExceptionTools.getStackTrace(e1, mp.linesInException, "<br>")
+
+                        );
 
                     return;
 

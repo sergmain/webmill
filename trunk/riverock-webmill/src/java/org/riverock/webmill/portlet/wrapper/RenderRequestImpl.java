@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.webmill.portlet.wrapper;
+package org.riverock.webmill.portal.impl;
 
 
 
@@ -86,11 +86,11 @@ import org.riverock.sso.a3.AuthSession;
 
 
 
-public class RenderRequestWrapper implements RenderRequest
+public class RenderRequestImpl implements RenderRequest
 
 {
 
-    private static Logger log = Logger.getLogger(RenderRequestWrapper.class);
+    private static Logger log = Logger.getLogger(RenderRequestImpl.class);
 
     // global parameters for page
 
@@ -118,11 +118,11 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-    public RenderRequestWrapper(){}
+    public RenderRequestImpl(){}
 
 
 
-    public RenderRequestWrapper(
+    public RenderRequestImpl(
 
         Map parameters,
 
@@ -140,7 +140,7 @@ public class RenderRequestWrapper implements RenderRequest
 
         this.parameters = parameters;
 
-        this.session = new PortletSessionWrapper(request.getSession(true));
+        this.session = new PortletSessionImpl(request.getSession(true));
 
         this.request = request;
 

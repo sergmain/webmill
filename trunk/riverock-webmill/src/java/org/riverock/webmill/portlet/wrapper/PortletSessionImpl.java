@@ -14,7 +14,7 @@
 
 
 
-package org.riverock.webmill.portlet.wrapper;
+package org.riverock.webmill.portal.impl;
 
 
 
@@ -34,17 +34,17 @@ import org.apache.log4j.Logger;
 
 
 
-public class PortletSessionWrapper implements PortletSession
+public class PortletSessionImpl implements PortletSession
 
 {
 
-    private static Logger log = Logger.getLogger( PortletSessionWrapper.class );
+    private static Logger log = Logger.getLogger( PortletSessionImpl.class );
 
 
 
     private HttpSession session = null;
 
-    public PortletSessionWrapper(HttpSession session)
+    public PortletSessionImpl(HttpSession session)
 
     {
 

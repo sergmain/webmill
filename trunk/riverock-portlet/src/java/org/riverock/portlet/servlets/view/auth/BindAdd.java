@@ -100,6 +100,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 
 import org.riverock.sso.a3.AuthInfo;
@@ -196,6 +198,26 @@ public class BindAdd extends HttpServlet
 
 
 
+            // Todo. After implement this portlet as 'real' portlet, not servlet,
+
+            // remove following code, and switch to 'ctxInstance.sCustom' field
+
+            // start from
+
+            StringManager sCustom = null;
+
+            String nameLocaleBundle = null;
+
+            nameLocaleBundle = "mill.locale.AUTH_USER";
+
+            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
+
+                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+
+            // end
+
+
+
             AuthInfo authInfoUser = InternalAuthProvider.getAuthInfo( auth_ );
 
 
@@ -230,7 +252,7 @@ public class BindAdd extends HttpServlet
 
                 out.write("<th colspan=\"2\">");
 
-                out.write(ctxInstance.sCustom.getStr("add_bind.jsp.new_rec"));
+                out.write(sCustom.getStr("add_bind.jsp.new_rec"));
 
                 out.write("</th>\r\n");
 
@@ -240,7 +262,7 @@ public class BindAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("add_bind.jsp.fio"));
+                out.write(sCustom.getStr("add_bind.jsp.fio"));
 
                 out.write("</td>\r\n");
 
@@ -370,7 +392,7 @@ public class BindAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("add_bind.jsp.user_login"));
+                out.write(sCustom.getStr("add_bind.jsp.user_login"));
 
                 out.write("</td>\r\n");
 
@@ -386,7 +408,7 @@ public class BindAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("add_bind.jsp.password"));
+                out.write(sCustom.getStr("add_bind.jsp.password"));
 
                 out.write("</td>\r\n");
 
@@ -402,7 +424,7 @@ public class BindAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("add_bind.jsp.password_check"));
+                out.write(sCustom.getStr("add_bind.jsp.password_check"));
 
                 out.write("</td>\r\n");
 
@@ -418,7 +440,7 @@ public class BindAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("add_bind.jsp.is_use_current_firm"));
+                out.write(sCustom.getStr("add_bind.jsp.is_use_current_firm"));
 
                 out.write("</td>\r\n");
 
@@ -448,7 +470,7 @@ public class BindAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\">");
 
-                out.write(ctxInstance.sCustom.getStr("add_bind.jsp.list_firm"));
+                out.write(sCustom.getStr("add_bind.jsp.list_firm"));
 
                 out.write("</td>\r\n");
 
@@ -492,7 +514,7 @@ public class BindAdd extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("add_bind.jsp.is_service"));
+                    out.write(sCustom.getStr("add_bind.jsp.is_service"));
 
                     out.write("</td>\r\n");
 
@@ -522,7 +544,7 @@ public class BindAdd extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("add_bind.jsp.id_service"));
+                    out.write(sCustom.getStr("add_bind.jsp.id_service"));
 
                     out.write("</td>\r\n");
 
@@ -572,7 +594,7 @@ public class BindAdd extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("add_bind.jsp.is_road"));
+                    out.write(sCustom.getStr("add_bind.jsp.is_road"));
 
                     out.write("</td>\r\n");
 
@@ -602,7 +624,7 @@ public class BindAdd extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("add_bind.jsp.id_road"));
+                    out.write(sCustom.getStr("add_bind.jsp.id_road"));
 
                     out.write("</td>\r\n");
 
