@@ -29,17 +29,18 @@
 package org.riverock.common.collections;
 
 import org.apache.log4j.Logger;
+import org.riverock.interfaces.common.TreeItemInterface;
 
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 
-public class TreeUtils {
+public final class TreeUtils {
 
-    private static Logger log = Logger.getLogger(TreeUtils.class);
+    private final static Logger log = Logger.getLogger( TreeUtils.class );
 
-    public static LinkedList rebuildTree(LinkedList source) {
+    public static LinkedList rebuildTree( final LinkedList source) {
                              
         LinkedList menuItem = (LinkedList)source.clone();
         LinkedList result = null;
@@ -100,7 +101,7 @@ public class TreeUtils {
         return menuItem;
     }
 
-    private static boolean putList(List target, LinkedList data, Long id) {
+    private static boolean putList( final List target, final LinkedList data, final Long id) {
 
         if (target==null || id==null)
             return false;
