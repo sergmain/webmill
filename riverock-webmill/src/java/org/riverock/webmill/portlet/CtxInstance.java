@@ -254,6 +254,8 @@ public class CtxInstance {
         {
             if (request.getServletPath().startsWith(Constants.PAGEID_SERVLET_NAME) )
             {
+                log.debug("Start process as /pageid");
+
                 String path = request.getPathInfo();
                 if (path==null || path.equals("/"))
                 {
@@ -272,6 +274,7 @@ public class CtxInstance {
             }
             else if (request.getServletPath().startsWith(Constants.PAGE_SERVLET_NAME) )
             {
+                log.debug("Start process as page, format request: /<CONTEXT>/page/<PAGE_NAME>/<LOCALE>/...");
                 // format request: /<CONTEXT>/page/<PAGE_NAME>/<LOCALE>/...
                 String path = request.getPathInfo();
                 if (path==null || path.equals("/"))
@@ -316,7 +319,10 @@ public class CtxInstance {
                     return;
                 }
                 else
+                {
+                    log.debug("Start process as /ctx");
                     initFromContext(db, ctxId, request);
+                }
             }
             else
                 internalInitTypeContext(request);
@@ -449,12 +455,16 @@ public class CtxInstance {
 
         if ( log.isDebugEnabled() )
         {
-            log.debug( "getTypeContext(). TEMPLATE: "+ctxTemplate );
-            log.debug( "getTypeContext(). type context: "+ctxType );
+            log.debug( "internalInitTypeContext(). TEMPLATE: "+ctxTemplate );
+            log.debug( "internalInitTypeContext(). type context: "+ctxType );
+            log.debug( "internalInitTypeContext(). tempLocale.toString(): "+tempLocale.toString());
         }
 
         this.realLocale = StringTools.getLocale( ServletUtils.getString(request, Constants.NAME_LANG_PARAM, tempLocale.toString()) );
         // If not found name of template or type of context, processing as index_page
+
+        if ( log.isDebugEnabled() )
+            log.debug( "internalInitTypeContext(). realLocale: "+realLocale.toString() );
 
         if ( ctxType==null || ctxTemplate==null )
         {
@@ -713,35 +723,70 @@ public class CtxInstance {
         boolean hasCountry = (accept.getCountry()!=null && accept.getCountry().trim().length()>0);
 
         if (log.isDebugEnabled())
-            log.debug("hasVariant - "+hasVariant + ", hasCountry - "+hasCountry);
+            log.debug("accept locale: "+accept.toString()+", hasVariant - "+hasVariant + ", hasCountry - "+hasCountry);
 
+        SiteSupportLanguageItemType result = null;
+        Locale rl = null;
+        SiteSupportLanguageItemType resultTemp = null;
+        Locale rlTemp = null;
         for (int i=0; i<supportLanguageList.getSiteSupportLanguageCount(); i++)
         {
             SiteSupportLanguageItemType sl = supportLanguageList.getSiteSupportLanguage(i);
 
-            if (log.isDebugEnabled())
-                log.debug("SiteSupportLanguageItemType.getNameCustomLanguage - "+sl.getCustomLanguage());
-
             Locale cl = StringTools.getLocale( sl.getCustomLanguage() );
 
             if (log.isDebugEnabled())
-                log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale - "+cl);
+                log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale - "+cl.toString());
 
-            if (!hasVariant && !hasCountry && accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
+            if (accept.toString().equalsIgnoreCase(cl.toString()))
                 return sl;
 
-            if (!hasVariant &&
-                accept.getCountry().equalsIgnoreCase(cl.getCountry()) &&
-                accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
-                return sl;
+            boolean hasCountryTemp = (cl.getCountry()!=null && cl.getCountry().trim().length()>0);
 
-            if (accept.getVariant().equalsIgnoreCase(cl.getVariant()) &&
-                accept.getCountry().equalsIgnoreCase(cl.getCountry()) &&
-                accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
-                return sl;
+            if (hasCountry && hasCountryTemp)
+            {
+                if (accept.getCountry().equalsIgnoreCase(cl.getCountry()) &&
+                    accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
+                {
+                    if (log.isDebugEnabled()) log.debug("new resultTemp locale is: "+cl.toString());
+                    resultTemp = sl;
+                    rlTemp = cl;
+                }
+            }
+            else if (accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
+            {
+                if (log.isDebugEnabled()) log.debug("new resultTemp locale is: "+cl.toString());
+                resultTemp = sl;
+                rlTemp = cl;
+            }
+
+            if (result==null)
+            {
+                result = resultTemp;
+                rl = cl;
+                if (log.isDebugEnabled()) log.debug("#1, new result locale is: "+cl.toString());
+            }
+            else
+            {
+                boolean hasVariantResult = (rl.getVariant()!=null && rl.getVariant().trim().length()>0);
+                boolean hasCountryResult = (rl.getCountry()!=null && rl.getCountry().trim().length()>0);
+                boolean hasVariantResultTemp = (rlTemp.getVariant()!=null && rlTemp.getVariant().trim().length()>0);
+                boolean hasCountryResultTemp = (rlTemp.getCountry()!=null && rlTemp.getCountry().trim().length()>0);
+                if (hasVariantResult && !hasVariantResultTemp) {
+                    result = resultTemp;
+                    rl = cl;
+                    if (log.isDebugEnabled()) log.debug("#2, new result locale is: "+cl.toString());
+                }
+                else if (hasCountryResult && !hasCountryResultTemp) {
+                    result = resultTemp;
+                    rl = cl;
+                    if (log.isDebugEnabled()) log.debug("#3, new result locale is: "+cl.toString());
+                }
+            }
         }
 
-        return null;
+        if (log.isDebugEnabled()) log.debug("Result SiteSupportLanguageItemType.getCustomLanguage is: "+result.getCustomLanguage());
+        return result;
     }
 
     public StringManager getStringManager()
