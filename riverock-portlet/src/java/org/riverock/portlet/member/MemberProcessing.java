@@ -535,7 +535,7 @@ public class MemberProcessing
                 ContentType cnt = MemberServiceClass.getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, portletRequest, db_);
+                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, portletRequest.getRemoteUser(), portletRequest.getServerName());
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -698,7 +698,7 @@ public class MemberProcessing
                 ContentType cnt = MemberServiceClass.getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, portletRequest, db_);
+                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, portletRequest.getRemoteUser(), portletRequest.getServerName());
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -749,7 +749,7 @@ public class MemberProcessing
 
         }
 
-        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, portletRequest, db_);
+        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, db_, portletRequest.getRemoteUser(), portletRequest.getServerName());
 
         if (sc.from.length() != 0)
         {
@@ -811,7 +811,7 @@ public class MemberProcessing
                 ContentType cnt = MemberServiceClass.getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, portletRequest, db_);
+                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, portletRequest.getRemoteUser(), portletRequest.getServerName());
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -862,7 +862,7 @@ public class MemberProcessing
 
         }
 
-        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, portletRequest, db_);
+        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, db_, portletRequest.getRemoteUser(), portletRequest.getServerName());
 
         if (sc.from.length() != 0)
         {

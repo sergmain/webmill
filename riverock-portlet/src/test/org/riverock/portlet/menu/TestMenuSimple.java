@@ -23,30 +23,30 @@
  *
  */
 
-package org.riverock.portlet.forum;
+/**
+ *
+ * $Author$
+ *
+ * $Id$
+ *
+ */
+package org.riverock.portlet.menu;
 
-import javax.portlet.PortletRequest;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.riverock.portlet.menu.MenuSimple;
 
-import org.riverock.generic.db.DatabaseAdapter;
+public class  TestMenuSimple extends TestCase
 
-
-public class SimpleForum extends Forum
 {
-
-    public SimpleForum(PortletRequest request, javax.servlet.http.HttpServletResponse response)
-            throws ForumException
+    public static void testDecodeLevel()
     {
-        super(request);
+        Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel("hkfjsdhfksdj"));
+        Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel(null));
+        Assert.assertEquals(MenuSimple.EQUAL_LEVEL, MenuSimple.decodeLevel("equal"));
+        Assert.assertEquals(MenuSimple.GREAT_OR_EQUAL_LEVEL, MenuSimple.decodeLevel("great_or_equal"));
+        Assert.assertEquals(MenuSimple.GREAT_THAN_LEVEL, MenuSimple.decodeLevel("great"));
+        Assert.assertEquals(MenuSimple.LESS_OR_EQUAL_LEVEL, MenuSimple.decodeLevel("less_or_equal"));
+        Assert.assertEquals(MenuSimple.LESS_THAN_LEVEL, MenuSimple.decodeLevel("less"));
     }
-
-    public SimpleForum()
-    {
-    }
-
-    public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__)
-            throws ForumException
-    {
-        return ForumMessage.getInstance(db__, id__);
-    }
-
 }

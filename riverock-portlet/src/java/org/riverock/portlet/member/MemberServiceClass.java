@@ -169,9 +169,7 @@ public class MemberServiceClass
         return null;
     }
 
-    public static String buildInsertSQL(
-        ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn,
-        PortletRequest portletRequest)
+    public static String buildInsertSQL(ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn, String remoteUser, String serverName)
         throws Exception
     {
 
@@ -211,7 +209,7 @@ public class MemberServiceClass
 
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    SqlClause lookupSc = buildSelectClause(content1, cnt, module, portletRequest, dbDyn);
+                    SqlClause lookupSc = buildSelectClause(content1, cnt, module, dbDyn, remoteUser, serverName);
                     // из lookupSc берем только from (таблицы) и where(условия)
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
@@ -567,7 +565,7 @@ public class MemberServiceClass
         return false;
     }
 
-    public static SqlClause buildSelectClause(ContentType contentMain, ContentType cnt, ModuleType module, PortletRequest portletRequest, DatabaseAdapter db_)
+    public static SqlClause buildSelectClause(ContentType contentMain, ContentType cnt, ModuleType module, DatabaseAdapter db_, String remoteUser, String serverName)
         throws SQLException, MemberException
     {
         SqlClause sc = new SqlClause();
@@ -665,7 +663,7 @@ public class MemberServiceClass
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(db_, portletRequest.getRemoteUser());
+                    String idList = AuthHelper.getGrantedFirmId(db_, remoteUser);
 
                     sc.where +=
                         MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
@@ -737,7 +735,7 @@ public class MemberServiceClass
 
                     String idSite = null;
                     try {
-                        idSite = SiteUtils.getGrantedSiteId(db_, portletRequest.getServerName());
+                        idSite = SiteUtils.getGrantedSiteId(db_, serverName);
                     } catch (PortalException e) {
                         log.error("Exception get siteId list");
                         throw new MemberException(e.getMessage());
@@ -1059,7 +1057,7 @@ public class MemberServiceClass
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = buildSelectClause(content, cnt, module, request, dbDyn);
+                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, request.getRemoteUser(), request.getServerName());
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -1355,7 +1353,7 @@ public class MemberServiceClass
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = buildSelectClause(content, cnt, module, portletRequest, dbDyn);
+                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, portletRequest.getRemoteUser(), portletRequest.getServerName());
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {

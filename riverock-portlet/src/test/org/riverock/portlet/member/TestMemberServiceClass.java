@@ -46,7 +46,6 @@ import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbFieldType;
 import org.riverock.generic.schema.db.structure.DbViewType;
-import org.riverock.generic.db.DBconnect;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.startup.StartupApplication;
@@ -70,6 +69,9 @@ import org.riverock.sql.parser.Parser;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.MainTools;
+import org.riverock.webmill.portlet.wrapper.RenderRequestImpl;
+
+import javax.portlet.PortletRequest;
 
 public class TestMemberServiceClass extends TestCase
 {
@@ -134,7 +136,7 @@ public class TestMemberServiceClass extends TestCase
 
                         String sql =
                             MemberServiceClass.buildInsertSQL(
-                                content,null,mod,db_
+                                content,null,mod,db_, "remote-user", "server-name"
                             );
                         Throwable th = null;
                         Parser parser = null;
@@ -453,7 +455,7 @@ public class TestMemberServiceClass extends TestCase
                         Exception ee = null;
                         try
                         {
-                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_);
+                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "remote-user", "server-name");
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -494,8 +496,9 @@ public class TestMemberServiceClass extends TestCase
                         Exception ee = null;
                         try
                         {
-                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
-                            String sql = MemberServiceClass.buildUpdateSQL(content, null, mod, db_, true, req);
+//                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
+                            PortletRequest portletRequest = new RenderRequestImpl();
+                            String sql = MemberServiceClass.buildUpdateSQL(content, null, mod, db_, true, portletRequest);
                             Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -532,7 +535,8 @@ public class TestMemberServiceClass extends TestCase
                         Exception ee = null;
                         try
                         {
-                            String sql = MemberServiceClass.buildDeleteSQL(content, mod, null, dbDyn);
+                            PortletRequest portletRequest = new RenderRequestImpl();
+                            String sql = MemberServiceClass.buildDeleteSQL(content, mod, null, db_, portletRequest);
                             Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
