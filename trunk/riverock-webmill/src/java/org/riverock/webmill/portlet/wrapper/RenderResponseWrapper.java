@@ -80,8 +80,6 @@ import javax.portlet.PortletURL;
 
 import javax.portlet.RenderResponse;
 
-import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -98,17 +96,7 @@ public class RenderResponseWrapper implements RenderResponse
 
     // global parameters for page
 
-    private HttpServletRequest request = null;
-
     private HttpServletResponse response = null;
-
-    private String ctxType = null;
-
-
-
-    // parameters for current portlet
-
-    private StringManager sm  = null;
 
 
 
@@ -116,13 +104,11 @@ public class RenderResponseWrapper implements RenderResponse
 
 
 
-    public RenderResponseWrapper(CtxInstance ctxInstance)
+    public RenderResponseWrapper(HttpServletResponse response)
 
     {
 
-        this.response = ctxInstance.response ;
-
-        this.ctxType = ctxInstance.getDefaultPortletType();
+        this.response = response;
 
     }
 

@@ -90,13 +90,13 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
@@ -160,6 +160,8 @@ public class BindChange extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -178,11 +180,17 @@ public class BindChange extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -190,7 +198,7 @@ public class BindChange extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance(false);
 
 //            InitPage jspPage = new InitPage(db_, request,
 
@@ -201,12 +209,6 @@ public class BindChange extends HttpServlet
 
 
             String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
-
-
-
-//            if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
-
-//                return;
 
 
 
@@ -242,7 +244,7 @@ public class BindChange extends HttpServlet
 
 
 
-            if (auth_.isUserInRole("webmill.auth_bind") && isRigthRelate)
+            if (isRigthRelate)
 
             {
 
@@ -368,7 +370,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<select name=\"is_use_current_firm\" size=\"1\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, true, ctxInstance.page.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, true, ctxInstance.getPortletRequest().getLocale()));
 
                 out.write("\r\n");
 
@@ -428,7 +430,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<select name=\"is_service\" size=\"1\">\r\n");
 
-                    out.write(HtmlTools.printYesNo(authInfoUser.isService, true, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(authInfoUser.isService, true, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("\r\n");
 
@@ -494,7 +496,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<select name=\"is_road\" size=\"1\">\r\n");
 
-                    out.write(HtmlTools.printYesNo(authInfoUser.isRoad, true, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(authInfoUser.isRoad, true, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("\r\n");
 
@@ -594,7 +596,15 @@ public class BindChange extends HttpServlet
 
         }
 
+        finally
 
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

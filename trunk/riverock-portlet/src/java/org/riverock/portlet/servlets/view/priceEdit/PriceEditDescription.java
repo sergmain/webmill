@@ -102,9 +102,9 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.portlets.WebmillErrorPage;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -162,6 +162,10 @@ public class PriceEditDescription extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter dbDyn = null;
+
+        PreparedStatement st = null;
+
         try
 
         {
@@ -180,17 +184,17 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-            try
+                AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            {
+                if ( auth_==null )
 
+                {
 
-
-                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
-
-                if (auth_ == null)
+                    WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                     return;
+
+                }
 
 
 
@@ -198,15 +202,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                DatabaseAdapter dbDyn = DatabaseAdapter.getInstance(true);
-
-                PreparedStatement st = null;
-
-
-
-                try
-
-                {
+                dbDyn = DatabaseAdapter.getInstance(true);
 
 
 
@@ -730,40 +726,6 @@ public class PriceEditDescription extends HttpServlet
 
                     } // auth_
 
-                }
-
-                finally
-
-                {
-
-                    DatabaseManager.close(st);
-
-                    st = null;
-
-
-
-                    DatabaseAdapter.close(dbDyn);
-
-                    dbDyn = null;
-
-                }
-
-
-
-            }
-
-            catch (Exception e)
-
-            {
-
-                log.error(e);
-
-                out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
-
-            }
-
-
-
 
 
         }
@@ -775,6 +737,22 @@ public class PriceEditDescription extends HttpServlet
             log.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseManager.close(st);
+
+            st = null;
+
+
+
+            DatabaseAdapter.close(dbDyn);
+
+            dbDyn = null;
 
         }
 

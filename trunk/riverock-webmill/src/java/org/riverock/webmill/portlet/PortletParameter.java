@@ -150,7 +150,7 @@ public class PortletParameter
 
 //        this.request = ctxInstance.req ;
 
-        this.response = ctxInstance.response ;
+        this.response = ctxInstance.getResponse() ;
 
         this.page = ctxInstance.page ;
 
@@ -166,7 +166,7 @@ public class PortletParameter
 
         if (localePackage_ != null)
 
-            this.sm = StringManager.getManager(localePackage_, ctxInstance.page.currentLocale);
+            this.sm = StringManager.getManager(localePackage_, portletRequest.getLocale() );
 
         else
 

@@ -194,7 +194,7 @@ public class LoginCheck extends HttpServlet
 
             PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
-            AuthSession auth_ = (AuthSession)session.getAttribute( Constants.AUTH_SESSION );
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
 
 

@@ -104,7 +104,7 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
 {
 
-    private static Logger cat = Logger.getLogger(JobBlock.class);
+    private static Logger log = Logger.getLogger(JobBlock.class);
 
 
 
@@ -256,9 +256,9 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
             {
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_JOB_POSITION"));
+                    log.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_JOB_POSITION"));
 
 
 
@@ -276,9 +276,9 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
             }
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
-                cat.debug("#10.01.05 ");
+                log.debug("#10.01.05 ");
 
 
 
@@ -288,7 +288,7 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
         {
 
-            cat.error("Error get job block ", e);
+            log.error("Error get job block ", e);
 
             throw new PortletException(e.toString());
 
@@ -398,7 +398,7 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
 
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
         {
 
@@ -406,17 +406,31 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
             {
 
-                XmlTools.writeToFile(block, WebmillConfig.getWebmillDebugDir()+"test-job-block.xml", "utf-8", rootElement);
+                try
 
-                byte bDebug[] = XmlTools.getXml( block, rootElement );
+                {
 
-                String sDebug = new String(bDebug);
+                    XmlTools.writeToFile(block, WebmillConfig.getWebmillDebugDir()+"test-job-block.xml", "utf-8", rootElement);
+
+                    byte bDebug[] = XmlTools.getXml( block, rootElement );
+
+                    String sDebug = new String(bDebug);
 
 
 
-                MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-1.xml", sDebug.getBytes());
+                    MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-1.xml", sDebug.getBytes());
 
-                MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-2.xml", sDebug.getBytes("utf-8"));
+                    MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-2.xml", sDebug.getBytes("utf-8"));
+
+                }
+
+                catch (Throwable exception)
+
+                {
+
+                    log.error("Exception in ", exception);
+
+                }
 
             }
 

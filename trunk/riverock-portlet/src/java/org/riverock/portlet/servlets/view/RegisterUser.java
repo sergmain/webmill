@@ -298,7 +298,7 @@ public class RegisterUser extends HttpServlet
 
 
 
-                AuthSession auth_ = (AuthSession) sess.getAttribute(Constants.AUTH_SESSION);
+                AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
                 if ((auth_ != null) && (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName())))
 

@@ -74,21 +74,47 @@ import java.util.*;
 
 import javax.portlet.*;
 
+import javax.servlet.http.HttpServletRequest;
+
+
+
+import org.apache.log4j.Logger;
+
+import org.riverock.sso.a3.AuthException;
+
+import org.riverock.sso.a3.AuthSession;
+
 
 
 public class RenderRequestWrapper implements RenderRequest
 
 {
 
+    private static Logger log = Logger.getLogger(RenderRequestWrapper.class);
+
     // global parameters for page
 
 
+
+    private HttpServletRequest request = null;
 
     // parameters for current portlet
 
     private Map parameters = null;
 
     private PortletSession session = null;
+
+    private AuthSession auth = null;
+
+
+
+    // Locale of this request
+
+    private Locale locale = null;
+
+
+
+    private Locale preferredLocale[] = null;
 
 
 
@@ -100,7 +126,13 @@ public class RenderRequestWrapper implements RenderRequest
 
         Map parameters,
 
-        PortletSession session
+        HttpServletRequest request,
+
+        AuthSession auth,
+
+        Locale locale,
+
+        Locale preferredLocale[]
 
         )
 
@@ -108,7 +140,15 @@ public class RenderRequestWrapper implements RenderRequest
 
         this.parameters = parameters;
 
-        this.session = session;
+        this.session = new PortletSessionWrapper(request.getSession());
+
+        this.request = request;
+
+        this.auth = auth;
+
+        this.locale = locale;
+
+        this.preferredLocale = preferredLocale;
 
     }
 
@@ -248,7 +288,13 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        if (auth==null)
+
+            return null;
+
+
+
+        return auth.getUserLogin();
 
     }
 
@@ -258,7 +304,13 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        if (auth==null)
+
+            return null;
+
+
+
+        return auth;
 
     }
 
@@ -267,6 +319,36 @@ public class RenderRequestWrapper implements RenderRequest
     public boolean isUserInRole( String role )
 
     {
+
+        if (request.getServerName()==null || auth==null)
+
+            return false;
+
+
+
+        try
+
+        {
+
+            boolean status = auth.checkAccess( request.getServerName() );
+
+            if (!status)
+
+                return false;
+
+
+
+            return auth.isUserInRole(role);
+
+        }
+
+        catch (AuthException authException)
+
+        {
+
+            log.error("Exception in isUserInRole(), role - "+role, authException);
+
+        }
 
         return false;
 
@@ -278,7 +360,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return request.getAttribute(key);
 
     }
 
@@ -288,7 +370,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return request.getAttributeNames();
 
     }
 
@@ -334,7 +416,7 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-        return new Vector(parameters.keySet()).elements();
+        return Collections.enumeration(parameters.keySet());
 
     }
 
@@ -392,7 +474,11 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        throw new IllegalStateException("Not implemented");
+        Map map = new HashMap();
+
+        map.putAll(parameters);
+
+        return map;
 
     }
 
@@ -402,15 +488,17 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return false;
+        return request.isSecure();
 
     }
 
 
 
-    public void setAttribute( String key, Object o )
+    public void setAttribute( String key, Object obj )
 
     {
+
+        request.setAttribute(key, obj);
 
     }
 
@@ -420,6 +508,8 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
+        request.removeAttribute(key);
+
     }
 
 
@@ -428,7 +518,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return request.getRequestedSessionId();
 
     }
 
@@ -438,7 +528,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return false;
+        return request.isRequestedSessionIdValid();
 
     }
 
@@ -468,7 +558,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return locale;
 
     }
 
@@ -478,7 +568,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return Collections.enumeration( Arrays.asList(preferredLocale) );
 
     }
 
@@ -488,7 +578,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return request.getScheme();
 
     }
 
@@ -498,7 +588,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return request.getServerName();
 
     }
 
@@ -508,7 +598,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return 0;
+        return request.getServerPort();
 
     }
 

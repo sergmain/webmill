@@ -98,11 +98,11 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -176,11 +176,17 @@ public class FirmChange extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
             if ( auth_==null )
 
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
+
                 return;
+
+            }
 
 
 
@@ -770,7 +776,7 @@ public class FirmChange extends HttpServlet
 
               out.write("<select name=\"is_work\" size=\"1\">\r\n\t\t");
 
-              out.write(HtmlTools.printYesNo(rs, "is_work", true, ctxInstance.page.currentLocale)
+              out.write(HtmlTools.printYesNo(rs, "is_work", true, ctxInstance.getPortletRequest().getLocale())
 
         );
 
@@ -814,7 +820,7 @@ public class FirmChange extends HttpServlet
 
               out.write("<select name=\"is_need_recvizit\" size=\"1\">\r\n\t\t");
 
-              out.write(HtmlTools.printYesNo(rs, "is_need_recvizit", true, ctxInstance.page.currentLocale));
+              out.write(HtmlTools.printYesNo(rs, "is_need_recvizit", true, ctxInstance.getPortletRequest().getLocale()));
 
               out.write("\r\n");
 
@@ -836,7 +842,7 @@ public class FirmChange extends HttpServlet
 
               out.write("<select name=\"is_need_person\" size=\"1\">\r\n\t\t");
 
-              out.write(HtmlTools.printYesNo(rs, "is_need_person", true, ctxInstance.page.currentLocale));
+              out.write(HtmlTools.printYesNo(rs, "is_need_person", true, ctxInstance.getPortletRequest().getLocale()));
 
               out.write("\r\n");
 
@@ -878,7 +884,7 @@ public class FirmChange extends HttpServlet
 
               out.write("<select name=\"is_search\" size=\"1\">\r\n\t\t");
 
-              out.write(HtmlTools.printYesNo(rs, "is_search", true, ctxInstance.page.currentLocale));
+              out.write(HtmlTools.printYesNo(rs, "is_search", true, ctxInstance.getPortletRequest().getLocale()));
 
               out.write("\r\n");
 

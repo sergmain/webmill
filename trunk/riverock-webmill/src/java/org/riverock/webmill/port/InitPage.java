@@ -90,17 +90,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.tools.StringManager;
 
-import org.riverock.webmill.core.GetSiteCtxCatalogItem;
-
-import org.riverock.webmill.core.GetSiteCtxLangCatalogItem;
-
-import org.riverock.webmill.core.GetSiteCtxTypeItem;
-
-import org.riverock.webmill.core.GetSiteSupportLanguageItem;
-
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
-
-import org.riverock.webmill.core.GetSiteTemplateItem;
 
 import org.riverock.webmill.main.Constants;
 
@@ -109,10 +99,6 @@ import org.riverock.webmill.portal.menu.MenuLanguage;
 import org.riverock.webmill.portal.menu.MenuLanguageInterface;
 
 import org.riverock.webmill.portal.menu.SiteMenu;
-
-import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
-
-import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 
@@ -136,7 +122,9 @@ public class InitPage
 
     public PortalInfo p = null;
 
-    public Locale currentLocale = null;
+    private Locale currentLocale = null;
+
+    private Locale[] preferredLocale = null;
 
     public StringManager sMain = null;
 
@@ -220,9 +208,9 @@ public class InitPage
 
 
 
+        preferredLocale = Header.getAcceptLanguageAsLocaleListSorted( request );
 
-
-        Locale tempLocale = getPrefferedLocale(db_, request);
+        Locale tempLocale = getPreferredLocale(db_, request);
 
 
 
@@ -304,7 +292,7 @@ public class InitPage
 
 
 
-    private Locale getPrefferedLocale(DatabaseAdapter db_, HttpServletRequest request)
+    private Locale getPreferredLocale(DatabaseAdapter db_, HttpServletRequest request)
 
         throws Exception
 
@@ -683,6 +671,26 @@ public class InitPage
                 );
 
 
+
+    }
+
+
+
+    public Locale getCurrentLocale()
+
+    {
+
+        return currentLocale;
+
+    }
+
+
+
+    public Locale[] getPreferredLocale()
+
+    {
+
+        return preferredLocale;
 
     }
 

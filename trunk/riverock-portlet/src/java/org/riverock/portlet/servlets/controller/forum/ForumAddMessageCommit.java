@@ -176,6 +176,8 @@ public class ForumAddMessageCommit extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -183,10 +185,6 @@ public class ForumAddMessageCommit extends HttpServlet
             CtxInstance ctxInstance =
 
                 (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-
-
-
-            ContextNavigator.setContentType(response);
 
 
 
@@ -198,19 +196,11 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            Forum.setCookie(ctxInstance.getPortletRequest(), response);
+            Forum.setCookie(ctxInstance.getCookies(), ctxInstance.getPortletRequest(), response);
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
-
-
-//            InitPage jspPage = new InitPage(db_, request,
-
-//                                            "mill.locale.forum"
-
-//            );
+            db_ = DatabaseAdapter.getInstance(false);
 
 
 
@@ -236,7 +226,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-// Add forum message
+            // Add forum message
 
             boolean isAdd = PortletTools.getString(ctxInstance.getPortletRequest(), "action").equals("add");
 
@@ -349,6 +339,16 @@ public class ForumAddMessageCommit extends HttpServlet
             log.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

@@ -174,7 +174,9 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    private SitePortletDataType processPortlet( TemplateItemType templateItem, CtxInstance ctxInstance, String portletType)
+    private SitePortletDataType processPortlet(
+
+        TemplateItemType templateItem, CtxInstance ctxInstance, String portletType, PortalRequestInstance portalRequestInstance)
 
         throws Exception
 
@@ -232,7 +234,7 @@ public class ContextNavigator extends HttpServlet
 
                 portletParameter,
 
-                ctxInstance.db,
+                portalRequestInstance.db,
 
                 ctxInstance.getPortletRequest()
 
@@ -448,21 +450,21 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    private void processTemplateItem( CtxInstance ctxInstance )
+    private void processTemplateItem( CtxInstance ctxInstance, PortalRequestInstance portalRequestInstance )
 
         throws Exception
 
     {
 
-        ctxInstance.portlets = new ArrayList( ctxInstance.template.getSiteTemplateItemCount() );
+        portalRequestInstance.portlets = new ArrayList( portalRequestInstance.template.getSiteTemplateItemCount() );
 
 
 
-        for ( int i = 0; i<ctxInstance.template.getSiteTemplateItemCount(); i++ )
+        for ( int i = 0; i<portalRequestInstance.template.getSiteTemplateItemCount(); i++ )
 
         {
 
-            TemplateItemType item = ctxInstance.template.getSiteTemplateItem( i );
+            TemplateItemType item = portalRequestInstance.template.getSiteTemplateItem( i );
 
 
 
@@ -518,7 +520,39 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            ctxInstance.session.setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
+            try
+
+            {
+
+                ctxInstance.getPortletRequest().getPortletSession().setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
+
+            }
+
+            catch(NullPointerException e)
+
+            {
+
+                log.error("ctxInstance - "+ctxInstance);
+
+                if (ctxInstance!=null)
+
+                {
+
+                    log.error("ctxInstance.getPortletRequest() - "+ctxInstance.getPortletRequest());
+
+                    if (ctxInstance.getPortletRequest()!=null)
+
+                    {
+
+                        log.error("ctxInstance.getPortletRequest().getPortletSession() - "+ctxInstance.getPortletRequest().getPortletSession());
+
+                    }
+
+                }
+
+                throw e;
+
+            }
 
 
 
@@ -546,7 +580,7 @@ public class ContextNavigator extends HttpServlet
 
                         ctxInstance.setParameters(new HashMap(), null);
 
-                        data = processPortlet( item, ctxInstance, item.getValue());
+                        data = processPortlet( item, ctxInstance, item.getValue(), portalRequestInstance);
 
 
 
@@ -602,7 +636,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        map = PortletTools.getParameters(ctxInstance.req);
+                        map = PortletTools.getParameters(ctxInstance.getRequest());
 
                         map.putAll( getGlobalParameter(portlet, ctxInstance.getCtx()) );
 
@@ -622,7 +656,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                            data = processPortlet( item, ctxInstance, ctxInstance.getDefaultPortletType() );
+                            data = processPortlet( item, ctxInstance, ctxInstance.getDefaultPortletType(), portalRequestInstance );
 
                         }
 
@@ -640,7 +674,7 @@ public class ContextNavigator extends HttpServlet
 
                             ServletUtils.include(
 
-                                ctxInstance.req, ctxInstance.response,
+                                ctxInstance.getRequest(), ctxInstance.getResponse(),
 
                                 getGlobalParameter(portlet, ctxInstance.getCtx()), portlet.getPortletClass(),
 
@@ -744,7 +778,7 @@ public class ContextNavigator extends HttpServlet
 
                             log.error( errorString );
 
-                            ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                            portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
 
 
@@ -772,7 +806,7 @@ public class ContextNavigator extends HttpServlet
 
                             ServletUtils.include(
 
-                                ctxInstance.req, ctxInstance.response,
+                                ctxInstance.getRequest(), ctxInstance.getResponse(),
 
                                 null,
 
@@ -832,9 +866,9 @@ public class ContextNavigator extends HttpServlet
 
             }
 
-            ctxInstance.session.removeAttribute( Constants.PORTLET_REQUEST_SESSION );
+            ctxInstance.getPortletRequest().getPortletSession().removeAttribute( Constants.PORTLET_REQUEST_SESSION );
 
-            ctxInstance.portlets.add( data );
+            portalRequestInstance.portlets.add( data );
 
         }
 
@@ -844,7 +878,7 @@ public class ContextNavigator extends HttpServlet
 
     private static Object syncCtxDebug = new Object();
 
-    private void processPortletData(CtxInstance ctxInstance)
+    private void processPortletData(CtxInstance ctxInstance, PortalRequestInstance portalRequestInstance)
 
         throws Exception
 
@@ -854,11 +888,11 @@ public class ContextNavigator extends HttpServlet
 
         ByteArrayOutputStream xml = null;
 
-        for ( int i = 0; i<ctxInstance.portlets.size(); i++ )
+        for ( int i = 0; i<portalRequestInstance.portlets.size(); i++ )
 
         {
 
-            SitePortletDataType item = (SitePortletDataType)ctxInstance.portlets.get( i );
+            SitePortletDataType item = (SitePortletDataType)portalRequestInstance.portlets.get( i );
 
 
 
@@ -876,7 +910,7 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    processTransforming( xml, ctxInstance );
+                    processTransforming( xml, portalRequestInstance );
 
                     xml = null;
 
@@ -900,7 +934,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                ctxInstance.byteArrayOutputStream.write( item.getData() );
+                portalRequestInstance.byteArrayOutputStream.write( item.getData() );
 
             }
 
@@ -926,7 +960,7 @@ public class ContextNavigator extends HttpServlet
 
                         "<SiteTemplate language=\""+
 
-                        ctxInstance.page.currentLocale+"\" type=\""+ctxInstance.getDefaultPortletType()+"\">" ).getBytes()
+                          ctxInstance.page.getCurrentLocale()+"\" type=\""+ctxInstance.getDefaultPortletType()+"\">" ).getBytes()
 
                     );
 
@@ -950,9 +984,9 @@ public class ContextNavigator extends HttpServlet
 
                     log.debug(
 
-                        "#1.4 "+( i+1>=ctxInstance.portlets.size() ||
+                        "#1.4 "+( i+1>=portalRequestInstance.portlets.size() ||
 
-                        !Boolean.TRUE.equals(( (SitePortletDataType)ctxInstance.portlets.get( i+1 ) ).getIsXml())
+                        !Boolean.TRUE.equals(( (SitePortletDataType)portalRequestInstance.portlets.get( i+1 ) ).getIsXml())
 
                         )
 
@@ -962,15 +996,15 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                if ( i+1>=ctxInstance.portlets.size() ||
+                if ( i+1>=portalRequestInstance.portlets.size() ||
 
-                    !Boolean.TRUE.equals(( (SitePortletDataType)ctxInstance.portlets.get( i+1 ) ).getIsXml())
+                    !Boolean.TRUE.equals(( (SitePortletDataType)portalRequestInstance.portlets.get( i+1 ) ).getIsXml())
 
                 )
 
                 {
 
-                    processTransforming( xml, ctxInstance );
+                    processTransforming( xml, portalRequestInstance );
 
                     xml = null;
 
@@ -984,51 +1018,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-//    private static Object syncTransform = new Object();
-
-/*
-
-    private void processTransforming( ByteArrayOutputStream xml, CtxInstance ctxInstance )
-
-        throws IOException, TransformerException
-
-    {
-
-        xml.write( "</SiteTemplate>".getBytes() );
-
-
-
-        if ( log.isDebugEnabled() )
-
-            log.debug( "string to transforming\n"+xml );
-
-
-
-        xml.flush();
-
-        xml.close();
-
-
-
-        ByteArrayInputStream stream = new ByteArrayInputStream( xml.toByteArray() );
-
-        Source xmlSource = new StreamSource( stream );
-
-
-
-        synchronized(syncTransform)
-
-        {
-
-            ctxInstance.transformer.transform( xmlSource, new StreamResult( ctxInstance.byteArrayOutputStream ) );
-
-        }
-
-    }
-
-*/
-
-    private void processTransforming( ByteArrayOutputStream xml, CtxInstance ctxInstance )
+    private void processTransforming( ByteArrayOutputStream xml, PortalRequestInstance portalRequestInstance )
 
         throws Exception
 
@@ -1060,7 +1050,7 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            ctxInstance.xslt.getTransformer().transform( xmlSource, new StreamResult( ctxInstance.byteArrayOutputStream ) );
+            portalRequestInstance.xslt.getTransformer().transform( xmlSource, new StreamResult( portalRequestInstance.byteArrayOutputStream ) );
 
         }
 
@@ -1108,7 +1098,7 @@ public class ContextNavigator extends HttpServlet
 
             {
 
-                ctxInstance.xslt.reinitTransformer();
+                portalRequestInstance.xslt.reinitTransformer();
 
             }
 
@@ -1132,7 +1122,7 @@ public class ContextNavigator extends HttpServlet
 
             }
 
-            ctxInstance.xslt.getTransformer().transform( xmlSource, new StreamResult( ctxInstance.byteArrayOutputStream ) );
+            portalRequestInstance.xslt.getTransformer().transform( xmlSource, new StreamResult( portalRequestInstance.byteArrayOutputStream ) );
 
         }
 
@@ -1150,7 +1140,7 @@ public class ContextNavigator extends HttpServlet
 
      */
 
-    private void processPage( CtxInstance ctxInstance )
+    private void processPage( CtxInstance ctxInstance, PortalRequestInstance portalRequestInstance )
 
     {
 
@@ -1170,15 +1160,15 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            ctxInstance.template = ctxInstance.page.p.templates.getTemplate(
+            portalRequestInstance.template = ctxInstance.page.p.templates.getTemplate(
 
-                ctxInstance.getNameTemplate(), ctxInstance.page.currentLocale.toString()
+                ctxInstance.getNameTemplate(), ctxInstance.page.getCurrentLocale().toString()
 
             );
 
 
 
-            if ( ctxInstance.template==null )
+            if ( portalRequestInstance.template==null )
 
             {
 
@@ -1186,7 +1176,7 @@ public class ContextNavigator extends HttpServlet
 
                 log.warn( errorString );
 
-                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                 return;
 
@@ -1202,11 +1192,11 @@ public class ContextNavigator extends HttpServlet
 
             // run all 'models' portlet
 
-            for ( int i = 0; i<ctxInstance.template.getSiteTemplateItemCount(); i++ )
+            for ( int i = 0; i<portalRequestInstance.template.getSiteTemplateItemCount(); i++ )
 
             {
 
-                TemplateItemType item = ctxInstance.template.getSiteTemplateItem( i );
+                TemplateItemType item = portalRequestInstance.template.getSiteTemplateItem( i );
 
 
 
@@ -1294,7 +1284,7 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            Map map = PortletTools.getParameters(ctxInstance.req);
+                            Map map = PortletTools.getParameters(ctxInstance.getRequest());
 
                             Map tempMap = null;
 
@@ -1338,7 +1328,7 @@ public class ContextNavigator extends HttpServlet
 
                             );
 
-                            ctxInstance.session.setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
+                            ctxInstance.getPortletRequest().getPortletSession().setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
 
 
 
@@ -1380,7 +1370,7 @@ public class ContextNavigator extends HttpServlet
 
                                     String errorString = "Portlet "+ctxInstance.getDefaultPortletType()+" refered to file "+testFile+" is broken";
 
-                                    ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                                    portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                                     log.error( errorString );
 
@@ -1396,7 +1386,7 @@ public class ContextNavigator extends HttpServlet
 
                                 ServletUtils.include(
 
-                                    ctxInstance.req, ctxInstance.response,
+                                    ctxInstance.getRequest(), ctxInstance.getResponse(),
 
                                     tempMap,
 
@@ -1404,7 +1394,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                            ctxInstance.session.removeAttribute( Constants.PORTLET_REQUEST_SESSION );
+                            ctxInstance.getPortletRequest().getPortletSession().removeAttribute( Constants.PORTLET_REQUEST_SESSION );
 
                         }
 
@@ -1428,13 +1418,13 @@ public class ContextNavigator extends HttpServlet
 
             // output copyright
 
-            ctxInstance.byteArrayOutputStream.write( copyright.getBytes() );
+            portalRequestInstance.byteArrayOutputStream.write( copyright.getBytes() );
 
 
 
             if ( log.isDebugEnabled() )
 
-                log.debug( "Locale request - "+ctxInstance.page.currentLocale.toString() );
+                log.debug( "Locale request - "+ctxInstance.page.getCurrentLocale().toString() );
 
 
 
@@ -1452,7 +1442,7 @@ public class ContextNavigator extends HttpServlet
 
                 log.error( errorString );
 
-                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                 return;
 
@@ -1460,19 +1450,19 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            ctxInstance.xslt = ctxInstance.page.p.xsltList.getXslt( ctxInstance.page.currentLocale.toString() );
+            portalRequestInstance.xslt = ctxInstance.page.p.xsltList.getXslt( ctxInstance.page.getCurrentLocale().toString() );
 
 
 
-            if ( ctxInstance.xslt==null )
+            if ( portalRequestInstance.xslt==null )
 
             {
 
-                String errorString = "Index XSLT for locale "+ctxInstance.page.currentLocale+" not defined.";
+                String errorString = "Index XSLT for locale "+ctxInstance.page.getCurrentLocale()+" not defined.";
 
                 log.error( errorString );
 
-                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                 return;
 
@@ -1480,7 +1470,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            processTemplateItem( ctxInstance );
+            processTemplateItem( ctxInstance, portalRequestInstance );
 
 
 
@@ -1492,7 +1482,7 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    if (ctxInstance.portlets!=null)
+                    if (portalRequestInstance.portlets!=null)
 
                     {
 
@@ -1500,7 +1490,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        tmp.setPortlet( (ArrayList)ctxInstance.portlets );
+                        tmp.setPortlet( (ArrayList)portalRequestInstance.portlets );
 
 
 
@@ -1534,7 +1524,7 @@ public class ContextNavigator extends HttpServlet
 
             }
 
-            processPortletData( ctxInstance );
+            processPortletData( ctxInstance, portalRequestInstance );
 
 
 
@@ -1558,7 +1548,7 @@ public class ContextNavigator extends HttpServlet
 
                     ExceptionTools.getStackTrace( e, 15, "<BR>" );
 
-                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
             }
 
@@ -1574,7 +1564,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    private void processIndexPage( CtxInstance ctxInstance)
+    private void processIndexPage( CtxInstance ctxInstance, PortalRequestInstance portalRequestInstance)
 
     {
 
@@ -1582,7 +1572,7 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            processPage( ctxInstance );
+            processPage( ctxInstance, portalRequestInstance );
 
 
 
@@ -1602,7 +1592,7 @@ public class ContextNavigator extends HttpServlet
 
                     ExceptionTools.getStackTrace( e, 15, "<BR>" );
 
-                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
             }
 
@@ -1648,7 +1638,11 @@ public class ContextNavigator extends HttpServlet
 
         boolean isAnotherLoop = true;
 
-        CtxInstance ctxInstance = new CtxInstance();
+        PortalRequestInstance portalRequestInstance = new PortalRequestInstance();
+
+
+
+        CtxInstance ctxInstance = null;
 
 
 
@@ -1662,7 +1656,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            ctxInstance.counter = counterNDC;
+            portalRequestInstance.counter = counterNDC;
 
             ++counterNDC;
 
@@ -1674,13 +1668,13 @@ public class ContextNavigator extends HttpServlet
 
                 log.debug("counterNDC #2 "+counterNDC);
 
-                log.debug("counter #3 "+ctxInstance.counter);
+                log.debug("counter #3 "+portalRequestInstance.counter);
 
             }
 
 
 
-            NDC.push( ""+ctxInstance.counter );
+            NDC.push( ""+portalRequestInstance.counter );
 
 
 
@@ -1690,7 +1684,7 @@ public class ContextNavigator extends HttpServlet
 
                 log.debug("counterNDC #4 "+counterNDC);
 
-                log.debug("counter #5 "+ctxInstance.counter);
+                log.debug("counter #5 "+portalRequestInstance.counter);
 
             }
 
@@ -1704,7 +1698,7 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            log.debug("counter #6 "+ctxInstance.counter);
+            log.debug("counter #6 "+portalRequestInstance.counter);
 
             log.debug("this "+this);
 
@@ -1786,15 +1780,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                ctxInstance.session = request_.getSession( true );
-
-                ctxInstance.req = request_;
-
-                ctxInstance.response = response_;
-
-
-
-                ctxInstance.byteArrayOutputStream = new ByteArrayOutputStream( 10000 );
+                portalRequestInstance.byteArrayOutputStream = new ByteArrayOutputStream( 10000 );
 
 
 
@@ -1806,7 +1792,7 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    ctxInstance.db = DatabaseAdapter.getInstance( false );
+                    portalRequestInstance.db = DatabaseAdapter.getInstance( false );
 
                 }
 
@@ -1822,7 +1808,7 @@ public class ContextNavigator extends HttpServlet
 
                         ExceptionTools.getStackTrace( e, 30 );
 
-                    ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                    portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                     break;
 
@@ -1834,9 +1820,9 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    log.debug( "Request URL - "+ctxInstance.req.getRequestURL() );
+                    log.debug( "Request URL - "+request_.getRequestURL() );
 
-                    log.debug( "Request query string - "+ctxInstance.req.getQueryString() );
+                    log.debug( "Request query string - "+request_.getQueryString() );
 
 
 
@@ -1866,15 +1852,23 @@ public class ContextNavigator extends HttpServlet
 
                     {
 
-                        log.info( "start create InitPage object " );
+                        log.info( "start init ContextData " );
 
                         jspPageMills = System.currentTimeMillis();
 
                     }
 
-                    ctxInstance.page = new InitPage( ctxInstance.db, ctxInstance.req );
+                    InitPage page = new InitPage( portalRequestInstance.db, request_ );
 
-                    ctxInstance.initTypeContext(request_);
+                    ctxInstance = new CtxInstance(request_,response_, page);
+
+
+
+                    ctxInstance.initTypeContext(
+
+                        ctxInstance.page.p.getIdSupportLanguage(ctxInstance.page.getCurrentLocale()), portalRequestInstance.db, request_
+
+                    );
 
                     ctxInstance.setDefaultPortletDescription( PortletDescription.getInstance( ctxInstance.getDefaultPortletType() ) );
 
@@ -1884,15 +1878,15 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    log.error( "Error create InitPage ", e );
+                    log.error( "Error init ContextData ", e );
 
 
 
-                    String errorString = "Error create object InitPage<br>"+
+                    String errorString = "Error init ContextData<br>"+
 
                         ExceptionTools.getStackTrace( e, 30, "<BR>" );
 
-                    ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                    portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                     break;
 
@@ -1906,7 +1900,7 @@ public class ContextNavigator extends HttpServlet
 
                     {
 
-                        log.info( "Create InitPage object for  "
+                        log.info( "init ContextData for  "
 
                             +( System.currentTimeMillis()-jspPageMills )+" milliseconds" );
 
@@ -1934,7 +1928,7 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    processIndexPage( ctxInstance );
+                    processIndexPage( ctxInstance, portalRequestInstance );
 
                     break;
 
@@ -1956,13 +1950,13 @@ public class ContextNavigator extends HttpServlet
 
                         ctxInstance.setParameters(
 
-                            PortletTools.getParameters(ctxInstance.req),
+                            PortletTools.getParameters(ctxInstance.getRequest()),
 
                             PortletTools.getStringParam(portlet, PortletTools.locale_name_package)
 
                         );
 
-                        ctxInstance.session.setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
+                        ctxInstance.getPortletRequest().getPortletSession().setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
 
 
 
@@ -1976,7 +1970,7 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            RequestDispatcher dispatcher = ctxInstance.req.getRequestDispatcher( portlet.getPortletClass() );
+                            RequestDispatcher dispatcher = ctxInstance.getRequest().getRequestDispatcher( portlet.getPortletClass() );
 
                             if ( log.isDebugEnabled() )
 
@@ -1992,13 +1986,13 @@ public class ContextNavigator extends HttpServlet
 
                                 log.error( errorString );
 
-                                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                                portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                             }
 
                             else
 
-                                dispatcher.forward( ctxInstance.req, ctxInstance.response );
+                                dispatcher.forward( ctxInstance.getRequest(), ctxInstance.getResponse() );
 
                         }
 
@@ -2006,7 +2000,7 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            ctxInstance.byteArrayOutputStream.write(
+                            portalRequestInstance.byteArrayOutputStream.write(
 
                                 "Error forward to 'controller' portlet. Portlet path is null".getBytes()
 
@@ -2014,7 +2008,7 @@ public class ContextNavigator extends HttpServlet
 
                         }
 
-                        ctxInstance.session.removeAttribute( Constants.PORTLET_REQUEST_SESSION );
+                        ctxInstance.getPortletRequest().getPortletSession().removeAttribute( Constants.PORTLET_REQUEST_SESSION );
 
                         break;
 
@@ -2028,7 +2022,7 @@ public class ContextNavigator extends HttpServlet
 
                         log.error( errorString );
 
-                        ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                        portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                         break;
 
@@ -2044,7 +2038,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        processPage( ctxInstance );
+                        processPage( ctxInstance, portalRequestInstance );
 
                         break;
 
@@ -2062,7 +2056,7 @@ public class ContextNavigator extends HttpServlet
 
                         log.error( errorString );
 
-                        ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                        portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                         break;
 
@@ -2106,9 +2100,9 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    log.error( "CN debug. Request URL - "+ctxInstance.req.getRequestURL() );
+                    log.error( "CN debug. Request URL - "+ctxInstance.getRequest().getRequestURL() );
 
-                    log.error( "CN debug. Request query string - "+ctxInstance.req.getQueryString() );
+                    log.error( "CN debug. Request query string - "+ctxInstance.getRequest().getQueryString() );
 
 
 
@@ -2144,7 +2138,7 @@ public class ContextNavigator extends HttpServlet
 
                     ExceptionTools.getStackTrace( e, 30, "<br>");
 
-                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
                 break;
 
@@ -2158,7 +2152,7 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    String timeString = "\n<!-- NDC #"+ctxInstance.counter+", page with portlets processed for "+( System.currentTimeMillis()-ctxInstance.startMills )+" milliseconds -->";
+                    String timeString = "\n<!-- NDC #"+portalRequestInstance.counter+", page with portlets processed for "+( System.currentTimeMillis()-portalRequestInstance.startMills )+" milliseconds -->";
 
 
 
@@ -2168,7 +2162,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                    if ( ctxInstance.byteArrayOutputStream==null )
+                    if ( portalRequestInstance.byteArrayOutputStream==null )
 
                     {
 
@@ -2182,7 +2176,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                    ctxInstance.byteArrayOutputStream.write( timeString.getBytes() );
+                    portalRequestInstance.byteArrayOutputStream.write( timeString.getBytes() );
 
 
 
@@ -2202,15 +2196,15 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                    ctxInstance.byteArrayOutputStream.flush();
+                    portalRequestInstance.byteArrayOutputStream.flush();
 
-                    ctxInstance.byteArrayOutputStream.close();
+                    portalRequestInstance.byteArrayOutputStream.close();
 
-                    response_.setContentLength( ctxInstance.byteArrayOutputStream.size() );
+                    response_.setContentLength( portalRequestInstance.byteArrayOutputStream.size() );
 
                     out.write(
 
-                        new String( ctxInstance.byteArrayOutputStream.toByteArray(), WebmillConfig.getHtmlCharset() )
+                        new String( portalRequestInstance.byteArrayOutputStream.toByteArray(), WebmillConfig.getHtmlCharset() )
 
                     );
 
@@ -2222,11 +2216,11 @@ public class ContextNavigator extends HttpServlet
 
                     out = null;
 
-                    ctxInstance.byteArrayOutputStream = null;
+                    portalRequestInstance.byteArrayOutputStream = null;
 
-                    DatabaseAdapter.close( ctxInstance.db );
+                    DatabaseAdapter.close( portalRequestInstance.db );
 
-                    ctxInstance.db = null;
+                    portalRequestInstance.db = null;
 
 
 

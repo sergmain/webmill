@@ -100,6 +100,8 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.portlet.tools.HtmlTools;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthSession;
@@ -182,11 +184,17 @@ public class RightDelete extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -424,7 +432,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"left\">\r\n\t\t");
 
-                        out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.page.currentLocale));
+                        out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.getPortletRequest().getLocale()));
 
                         out.write("\r\n\t\t");
 
@@ -442,7 +450,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"left\">\r\n\t\t");
 
-                        out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.page.currentLocale));
+                        out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.getPortletRequest().getLocale()));
 
                         out.write("\r\n\t\t");
 
@@ -460,7 +468,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"left\">\r\n\t\t");
 
-                        out.write(HtmlTools.printYesNo(rs, "is_firm", false, ctxInstance.page.currentLocale));
+                        out.write(HtmlTools.printYesNo(rs, "is_firm", false, ctxInstance.getPortletRequest().getLocale()));
 
                         out.write("\r\n\t\t");
 

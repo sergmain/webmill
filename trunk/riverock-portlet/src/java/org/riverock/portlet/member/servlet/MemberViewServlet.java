@@ -102,10 +102,6 @@ import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 
 import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
@@ -168,13 +164,15 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-            AuthSession auth_ = null;
+            if (!ctxInstance.getPortletRequest().isUserInRole("webmill.member"))
 
-            if ((auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/")) == null)
+            {
+
+                out.println("Access denied, you have not right 'webmill.member'");
 
                 return;
 
-
+            }
 
 
 
@@ -190,7 +188,7 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-            MemberProcessing mp = new MemberProcessing(ctxInstance, response, auth_);
+            MemberProcessing mp = new MemberProcessing(ctxInstance, response);
 
 
 
@@ -352,7 +350,7 @@ public class MemberViewServlet extends HttpServlet
 
             {
 
-                out.println("<h4>" + MemberServiceClass.getString(mp.content.getTitle(), mp.getCtxInstance().page.currentLocale) + "</h4>");
+                out.println("<h4>" + MemberServiceClass.getString(mp.content.getTitle(), mp.getCtxInstance().getPortletRequest().getLocale()) + "</h4>");
 
 
 
@@ -378,7 +376,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                    out.println(
 
-//                                        MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
+//                                        MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
 
 //                                        "<br>"
 
@@ -452,7 +450,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                out.println(
 
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
 
 //                                    "<br>"
 
@@ -472,7 +470,7 @@ public class MemberViewServlet extends HttpServlet
 
                                         mp.content.getActionButtonName(),
 
-                                        mp.getCtxInstance().page.currentLocale,
+                                        mp.getCtxInstance().getPortletRequest().getLocale(),
 
                                         "Add"
 
@@ -504,7 +502,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                out.println(
 
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
 
 //                                    "<br>"
 
@@ -548,7 +546,7 @@ public class MemberViewServlet extends HttpServlet
 
                                         mp.content.getActionButtonName(),
 
-                                        mp.getCtxInstance().page.currentLocale,
+                                        mp.getCtxInstance().getPortletRequest().getLocale(),
 
                                         "Change"
 
@@ -580,7 +578,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                out.println(
 
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
 
 //                                    "<br>"
 
@@ -610,7 +608,7 @@ public class MemberViewServlet extends HttpServlet
 
                                         mp.content.getActionButtonName(),
 
-                                        mp.getCtxInstance().page.currentLocale,
+                                        mp.getCtxInstance().getPortletRequest().getLocale(),
 
                                         "Delete"
 

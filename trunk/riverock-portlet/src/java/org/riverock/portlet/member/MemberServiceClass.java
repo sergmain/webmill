@@ -72,7 +72,21 @@ import java.util.StringTokenizer;
 
 
 
+import javax.portlet.PortletRequest;
+
+
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.StringTools;
+
 import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.tools.StringManager;
+
+import org.riverock.generic.tools.XmlTools;
+
+import org.riverock.interfaces.schema.javax.portlet.SecurityRoleRefType;
 
 import org.riverock.portlet.schema.member.*;
 
@@ -90,29 +104,9 @@ import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 
 import org.riverock.portlet.schema.member.types.TypeFieldType;
 
-import org.riverock.interfaces.schema.javax.portlet.SecurityRoleRefType;
-
-import org.riverock.generic.tools.XmlTools;
-
-import org.riverock.generic.tools.StringManager;
-
-import org.riverock.common.tools.StringTools;
-
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthException;
-
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.portlet.PortletTools;
-
-
-
-import org.apache.log4j.Logger;
-
-
-
-import javax.portlet.PortletRequest;
 
 
 
@@ -1900,11 +1894,11 @@ public class MemberServiceClass
 
 
 
-    public static boolean checkRole( AuthSession auth_, ContentType content_ ) throws AuthException
+    public static boolean checkRole( PortletRequest request, ContentType content_ )
 
     {
 
-        if (content_==null || auth_==null)
+        if (content_==null || request==null)
 
             return false;
 
@@ -1916,7 +1910,7 @@ public class MemberServiceClass
 
              SecurityRoleRefType role = content_.getSecurityRoleRef(i);
 
-            if (auth_.isUserInRole( role.getRoleName()) )
+            if (request.isUserInRole( role.getRoleName()) )
 
                 return true;
 

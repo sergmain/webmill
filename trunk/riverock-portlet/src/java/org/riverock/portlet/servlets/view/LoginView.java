@@ -66,10 +66,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
-import javax.portlet.PortletSession;
-
 
 
 import org.apache.log4j.Logger;
@@ -78,13 +74,9 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.ServletTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.portlet.main.Constants;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -178,9 +170,7 @@ public class LoginView extends HttpServlet
 
 
 
-            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
-
-            AuthSession auth_ = (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
 
 

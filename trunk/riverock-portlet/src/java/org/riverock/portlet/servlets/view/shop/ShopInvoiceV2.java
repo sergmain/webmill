@@ -258,7 +258,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-            AuthSession authSession = (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
+            AuthSession authSession = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
 
 

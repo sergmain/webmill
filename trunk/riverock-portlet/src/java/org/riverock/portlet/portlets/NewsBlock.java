@@ -160,7 +160,7 @@ public class NewsBlock implements PortletResultObject
 
                         x += "<tr><td class=\"newsdate\" valign=\"top\">";
 
-                        x += DateTools.getStringDate(curr_date, "dd.MM.yyyy", param.ctxInstance.page.currentLocale);
+                        x += DateTools.getStringDate(curr_date, "dd.MM.yyyy", param.ctxInstance.getPortletRequest().getLocale());
 
                         x += "</td><td>&nbsp;</td></tr>";
 
@@ -172,7 +172,7 @@ public class NewsBlock implements PortletResultObject
 
                     x += "<tr><td class=\"newstime\" valign=\"top\">";
 
-                    x += DateTools.getStringDate(item_news.date, "HH:mm", param.ctxInstance.page.currentLocale);
+                    x += DateTools.getStringDate(item_news.date, "HH:mm", param.ctxInstance.getPortletRequest().getLocale());
 
                     x += "</td><td width=\"100%\" class=\"newstitle\"><h6> ";
 

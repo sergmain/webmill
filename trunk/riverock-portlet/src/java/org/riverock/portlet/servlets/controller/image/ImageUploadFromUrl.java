@@ -124,6 +124,8 @@ import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.PortletTools;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 
 
 public class ImageUploadFromUrl extends HttpServlet
@@ -192,11 +194,17 @@ public class ImageUploadFromUrl extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null || !auth_.isUserInRole( "webmill.upload_image" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -299,8 +307,6 @@ public class ImageUploadFromUrl extends HttpServlet
 
 
 
-
-                if (auth_.isUserInRole("webmill.upload_image"))
 
                 {
 

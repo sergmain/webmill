@@ -92,6 +92,8 @@ import javax.xml.transform.TransformerFactory;
 
 import javax.xml.transform.stream.StreamSource;
 
+import javax.portlet.PortletRequest;
+
 
 
 import org.apache.log4j.Logger;
@@ -144,8 +146,6 @@ import org.riverock.portlet.schema.member.types.TypeFieldType;
 
 import org.riverock.portlet.tools.HtmlTools;
 
-import org.riverock.sso.a3.AuthSession;
-
 import org.riverock.webmill.core.GetSiteTemplateItem;
 
 import org.riverock.webmill.port.InitPage;
@@ -161,6 +161,8 @@ import org.riverock.webmill.schema.core.SiteTemplateItemType;
 import org.riverock.webmill.schema.site.SiteTemplate;
 
 import org.riverock.webmill.site.SiteTemplateService;
+
+import org.riverock.sso.a3.AuthSession;
 
 import org.xml.sax.InputSource;
 
@@ -179,8 +181,6 @@ public class MemberProcessing
     public ModuleType mod = null;
 
     public ContentType content = null;
-
-    private AuthSession auth = null;
 
     private InitPage jspPage = null;
 
@@ -202,6 +202,8 @@ public class MemberProcessing
 
     private CtxInstance ctxInstance = null;
 
+    private PortletRequest portletRequest = null;
+
 
 
     public final static String aliasFirmRestrict = "z1243";
@@ -222,6 +224,10 @@ public class MemberProcessing
 
     private String commitURI = null;
 
+    private Long firmId = null;
+
+    private Long userId = null;
+
 
 
     protected void finalize() throws Throwable
@@ -232,7 +238,7 @@ public class MemberProcessing
 
         content = null;
 
-        auth = null;
+        portletRequest = null;
 
         jspPage = null;
 
@@ -530,7 +536,7 @@ public class MemberProcessing
 
 
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                         break;
 
@@ -538,7 +544,7 @@ public class MemberProcessing
 
                     case SqlCheckParameterTypeTypeType.RESTRICT_USER_TYPE:
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                         break;
 
@@ -696,7 +702,7 @@ public class MemberProcessing
 
                 (ff.getMask() == null || ff.getMask().trim().length() == 0 ? "dd.MM.yyyy" : ff.getMask()),
 
-                defValue, ctxInstance.page.currentLocale);
+                defValue, ctxInstance.getPortletRequest().getLocale());
 
     }
 
@@ -762,7 +768,7 @@ public class MemberProcessing
 
             case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
 
-                s_ = HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, ctxInstance.page.currentLocale);
+                s_ = HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, ctxInstance.getPortletRequest().getLocale());
 
                 break;
 
@@ -2054,9 +2060,9 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
                     {
 
-//log.debug("#3.001.04 "+auth.getUserLogin() );
+//log.debug("#3.001.04 "+portletRequest.getRemoteUser() );
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -2082,9 +2088,9 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
                     {
 
-//log.debug("#3.001.09 "+auth.getUserLogin());
+//log.debug("#3.001.09 "+portletRequest.getRemoteUser());
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -2108,9 +2114,9 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
         {
 
-//log.debug("#3.001.11 "+auth.getUserLogin() );
+//log.debug("#3.001.11 "+portletRequest.getRemoteUser() );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -2140,9 +2146,9 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
         {
 
-//log.debug("#3.001.15 "+auth.getUserLogin() );
+//log.debug("#3.001.15 "+portletRequest.getRemoteUser() );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -2304,13 +2310,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         if (log.isDebugEnabled())
 
-                            log.debug(" 4 Bind param #"+numParam+" " + auth.getUserLogin()
+                            log.debug(" 4 Bind param #"+numParam+" " + portletRequest.getRemoteUser()
 
                             );
 
 
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -2340,13 +2346,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         if (log.isDebugEnabled())
 
-                            log.debug(" 6 Bind param #"+numParam+" " + auth.getUserLogin()
+                            log.debug(" 6 Bind param #"+numParam+" " + portletRequest.getRemoteUser()
 
                             );
 
 
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -2374,13 +2380,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             if (log.isDebugEnabled())
 
-                log.debug(" 7 Bind param #"+numParam+" " + auth.getUserLogin()
+                log.debug(" 7 Bind param #"+numParam+" " + portletRequest.getRemoteUser()
 
                 );
 
 
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -2410,13 +2416,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             if (log.isDebugEnabled())
 
-                log.debug(" 9 Bind param #"+numParam+" " + auth.getUserLogin()
+                log.debug(" 9 Bind param #"+numParam+" " + portletRequest.getRemoteUser()
 
                 );
 
 
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -2686,9 +2692,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.04 "+auth.getUserLogin() );
+//log.debug("#3.001.04 "+portletRequest.getRemoteUser() );
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -2714,9 +2720,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.09 "+auth.getUserLogin() );
+//log.debug("#3.001.09 "+portletRequest.getRemoteUser() );
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -2738,9 +2744,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.11 "+auth.getUserLogin() );
+//log.debug("#3.001.11 "+portletRequest.getRemoteUser() );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -2766,9 +2772,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.15 "+auth.getUserLogin() );
+//log.debug("#3.001.15 "+portletRequest.getRemoteUser() );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -2780,7 +2786,7 @@ int numParam = 1;
 
 if ( qa.isRestrict( "firm" ) ) {
 
-ps.setString(numParam++, auth.getUserLogin() );
+ps.setString(numParam++, portletRequest.getRemoteUser() );
 
 }
 
@@ -2792,7 +2798,7 @@ ps.setString(numParam++, ctxInstance.page.p.getServerName() );
 
 if ( qa.isRestrict( "user" ) ) {
 
-ps.setString(numParam++, auth.getUserLogin() );
+ps.setString(numParam++, portletRequest.getRemoteUser() );
 
 }
 
@@ -3208,13 +3214,11 @@ ps.setString(numParam++, auth.getUserLogin() );
 
             if (log.isDebugEnabled())
 
-                log.debug("#4.09.07 bind long param #" + numParam + ' ' +
-
-                        auth.getUserInfo().getIdFirm());
+                log.debug("#4.09.07 bind long param #" + numParam + ' ' + firmId);
 
 
 
-            RsetTools.setLong(ps, numParam++, auth.getUserInfo().getIdFirm() );
+            RsetTools.setLong(ps, numParam++, firmId );
 
         }
 
@@ -3260,15 +3264,11 @@ ps.setString(numParam++, auth.getUserLogin() );
 
             if (log.isDebugEnabled())
 
-                log.debug("#4.09.09  bind long param #" + numParam + " " +
-
-                        auth.getUserInfo().getIdUser()
-
-                );
+                log.debug("#4.09.09  bind long param #" + numParam + " " + userId);
 
 
 
-            RsetTools.setLong(ps, numParam++, auth.getUserInfo().getIdUser() );
+            RsetTools.setLong(ps, numParam++, userId );
 
         }
 
@@ -3512,9 +3512,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.04 "+auth.getUserLogin() );
+//log.debug("#3.001.04 "+portletRequest.getRemoteUser() );
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -3540,9 +3540,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.09 "+auth.getUserLogin() );
+//log.debug("#3.001.09 "+portletRequest.getRemoteUser() );
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -3644,9 +3644,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.11 "+auth.getUserLogin() );
+//log.debug("#3.001.11 "+portletRequest.getRemoteUser() );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -3672,9 +3672,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.15 "+auth.getUserLogin() );
+//log.debug("#3.001.15 "+portletRequest.getRemoteUser() );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -3966,9 +3966,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.04 firm "+auth.getUserLogin() );
+//log.debug("#3.001.04 firm "+portletRequest.getRemoteUser() );
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -3994,9 +3994,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.09 firm "+auth.getUserLogin() );
+//log.debug("#3.001.09 firm "+portletRequest.getRemoteUser() );
 
-                        ps.setString(numParam++, auth.getUserLogin());
+                        ps.setString(numParam++, portletRequest.getRemoteUser());
 
                     }
 
@@ -4146,9 +4146,9 @@ throw new Exception("Wrong type of primary key");
 
         {
 
-//log.debug("#3.001.11 "+auth.getUserLogin()+' '+numParam );
+//log.debug("#3.001.11 "+portletRequest.getRemoteUser()+' '+numParam );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -4178,9 +4178,9 @@ throw new Exception("Wrong type of primary key");
 
         {
 
-//log.debug("#3.001.15 "+auth.getUserLogin()+' '+numParam );
+//log.debug("#3.001.15 "+portletRequest.getRemoteUser()+' '+numParam );
 
-            ps.setString(numParam++, auth.getUserLogin());
+            ps.setString(numParam++, portletRequest.getRemoteUser());
 
         }
 
@@ -4548,7 +4548,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-                return s + "\">" + MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "</a>";
+                return s + "\">" + MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "</a>";
 
             }
 
@@ -4678,7 +4678,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         s += "<input type=\"button\" value=\"" +
 
-                            MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
+                            MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "\" onclick=\"location.href='" +
 
                             thisURI +
 
@@ -4706,7 +4706,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         s += "<input type=\"button\" value=\"" +
 
-                            MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
+                            MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "\" onclick=\"location.href='" +
 
                             thisURI +
 
@@ -4744,7 +4744,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         // Todo !!! need remove ref to ctxInstance.req
 
-                        param = ctxInstance.req.getQueryString();
+                        param = ctxInstance.getRequest().getQueryString();
 
 //log.debug("#5.01.01 "+param);
 
@@ -4812,7 +4812,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     s += "<input type=\"button\" value=\"" +
 
-                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
+                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "\" onclick=\"location.href='" +
 
                         thisURI +
 
@@ -4824,7 +4824,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     s += "<input type=\"button\" value=\"" +
 
-                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
+                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "\" onclick=\"location.href='" +
 
                         thisURI +
 
@@ -5252,7 +5252,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 return "<a href=\"" + getIndexURL() + "\">" +
 
-                    MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "</a>";
+                    MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "</a>";
 
             }
 
@@ -5322,7 +5322,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     return "<a href=\"" + tempStr + "\">" +
 
-                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "</a>";
+                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.getPortletRequest().getLocale()) + "</a>";
 
                 }
 
@@ -5792,7 +5792,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 qa.getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
 
-                ps.setString(numParam++, auth.getUserLogin());
+                ps.setString(numParam++, portletRequest.getRemoteUser());
 
 
 
@@ -6178,7 +6178,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
 
-                                v_str += HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, ctxInstance.page.currentLocale);
+                                v_str += HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, ctxInstance.getPortletRequest().getLocale());
 
                                 break;
 
@@ -6520,7 +6520,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 {
 
-                    s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
+                    s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.getPortletRequest().getLocale());
 
                 }
 
@@ -6614,7 +6614,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                 ("1".equals(ff.getDefValue()) ? 1 : 0),
 
-                                true, ctxInstance.page.currentLocale
+                                true, ctxInstance.getPortletRequest().getLocale()
 
                             ) +
 
@@ -6762,7 +6762,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         {
 
-                            s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
+                            s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.getPortletRequest().getLocale());
 
                         }
 
@@ -6852,7 +6852,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                             HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff),
 
-                                                true, ctxInstance.page.currentLocale
+                                                true, ctxInstance.getPortletRequest().getLocale()
 
                                             ) +
 
@@ -7370,7 +7370,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         {
 
-                            s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
+                            s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.getPortletRequest().getLocale());
 
                         }
 
@@ -7500,7 +7500,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                     editVal = HtmlTools.printYesNo(rs,
 
-                                        MemberServiceClass.getRealName(ff), false, ctxInstance.page.currentLocale);
+                                        MemberServiceClass.getRealName(ff), false, ctxInstance.getPortletRequest().getLocale());
 
                                     break;
 
@@ -7612,7 +7612,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 {
 
-                    s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
+                    s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.getPortletRequest().getLocale());
 
                 }
 
@@ -7630,7 +7630,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             s_ += "<th class=\"memberArea\">\n" +
 
-                MemberServiceClass.getString(content.getTargetAreaName(), ctxInstance.page.currentLocale) + "</th>\n";
+                MemberServiceClass.getString(content.getTargetAreaName(), ctxInstance.getPortletRequest().getLocale()) + "</th>\n";
 
 
 
@@ -7898,9 +7898,9 @@ throw new MemberForvardException();
 
         CtxInstance ctxInstance,
 
-        HttpServletResponse response,
+        HttpServletResponse response
 
-        org.riverock.sso.a3.AuthSession auth_)
+        )
 
         throws Exception
 
@@ -7908,7 +7908,31 @@ throw new MemberForvardException();
 
         this.ctxInstance = ctxInstance;
 
-        auth = auth_;
+        if (ctxInstance== null)
+
+            throw new Exception("CtxInstance must not null");
+
+
+
+        this.portletRequest = ctxInstance.getPortletRequest();
+
+        if (ctxInstance== null)
+
+            throw new Exception("portletRequest must not null");
+
+
+
+        AuthSession auth = (AuthSession)portletRequest.getUserPrincipal();
+
+        if (auth==null)
+
+            throw new Exception("UserPrincipal not initialized");
+
+
+
+        this.firmId = auth.getUserInfo().getIdFirm();
+
+        this.userId = auth.getUserInfo().getIdUser();
 
 
 
@@ -7916,7 +7940,7 @@ throw new MemberForvardException();
 
 
 
-        fromParam = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_FROM_PARAM, "").trim();
+        fromParam = PortletTools.getString(portletRequest, Constants.MEMBER_FROM_PARAM, "").trim();
 
         try
 
@@ -7924,7 +7948,7 @@ throw new MemberForvardException();
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            String moduleName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_MODULE_PARAM);
+            String moduleName = PortletTools.getString(portletRequest, Constants.MEMBER_MODULE_PARAM);
 
             if (log.isDebugEnabled())
 
@@ -7932,13 +7956,13 @@ throw new MemberForvardException();
 
                 log.debug("moduleName: - "+moduleName);
 
-                for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
+                for (Enumeration e = portletRequest.getParameterNames(); e.hasMoreElements();)
 
                 {
 
                     String s = (String) e.nextElement();
 
-                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(ctxInstance.getPortletRequest(), s).toString() );
+                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(portletRequest, s).toString() );
 
                 }
 
@@ -8022,25 +8046,25 @@ throw new MemberForvardException();
 
     {
 
-        isMainAccess = MemberServiceClass.checkRole( auth, content );
+        isMainAccess = MemberServiceClass.checkRole( portletRequest, content );
 
 
 
         isIndexAccess =
 
-            MemberServiceClass.checkRole( auth, MemberServiceClass.getContent( mod, ContentTypeActionType.INDEX_TYPE) );
+            MemberServiceClass.checkRole( portletRequest, MemberServiceClass.getContent( mod, ContentTypeActionType.INDEX_TYPE) );
 
         isInsertAccess =
 
-            MemberServiceClass.checkRole( auth, MemberServiceClass.getContent( mod, ContentTypeActionType.INSERT_TYPE) );
+            MemberServiceClass.checkRole( portletRequest, MemberServiceClass.getContent( mod, ContentTypeActionType.INSERT_TYPE) );
 
         isChangeAccess =
 
-            MemberServiceClass.checkRole( auth, MemberServiceClass.getContent( mod, ContentTypeActionType.CHANGE_TYPE) );
+            MemberServiceClass.checkRole( portletRequest, MemberServiceClass.getContent( mod, ContentTypeActionType.CHANGE_TYPE) );
 
         isDeleteAccess =
 
-            MemberServiceClass.checkRole( auth, MemberServiceClass.getContent( mod, ContentTypeActionType.DELETE_TYPE) );
+            MemberServiceClass.checkRole( portletRequest, MemberServiceClass.getContent( mod, ContentTypeActionType.DELETE_TYPE) );
 
     }
 
@@ -8054,7 +8078,7 @@ throw new MemberForvardException();
 
     {
 
-        String sql_ = MemberServiceClass.buildUpdateSQL(content, fromParam, mod, dbDyn, false, ctxInstance.getPortletRequest());
+        String sql_ = MemberServiceClass.buildUpdateSQL(content, fromParam, mod, dbDyn, false, portletRequest);
 
 
 
@@ -8134,7 +8158,7 @@ throw new MemberForvardException();
 
                     case FieldValidatorTypeTypeType.XML_TYPE:
 
-                        data = PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                        data = PortletTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
 
 
@@ -8174,7 +8198,7 @@ throw new MemberForvardException();
 
                     case  FieldValidatorTypeTypeType.XSLT_TYPE:
 
-                        data = PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                        data = PortletTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
                         try
 
@@ -8210,9 +8234,9 @@ throw new MemberForvardException();
 
                     case  FieldValidatorTypeTypeType.BIND_DYNAMIC_TYPE:
 
-                        Long idTemplate = PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + "ID_SITE_TEMPLATE");
+                        Long idTemplate = PortletTools.getLong(portletRequest, mod.getName() + '.' + "ID_SITE_TEMPLATE");
 
-                        Long idCtxCatalog = PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + "ID_SITE_CTX_CATALOG");
+                        Long idCtxCatalog = PortletTools.getLong(portletRequest, mod.getName() + '.' + "ID_SITE_CTX_CATALOG");
 
                         if (log.isDebugEnabled())
 

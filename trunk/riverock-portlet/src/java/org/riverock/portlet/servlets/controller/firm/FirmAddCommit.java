@@ -98,9 +98,9 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.portlets.WebmillErrorPage;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -174,11 +174,17 @@ public class FirmAddCommit extends HttpServlet
 
             out = response.getWriter();
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null || !auth_.isUserInRole( "webmill.firm_insert" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right", "/", "continue");
 
                 return;
+
+            }
 
 
 

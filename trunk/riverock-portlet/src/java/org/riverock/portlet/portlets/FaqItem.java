@@ -160,7 +160,7 @@ public class FaqItem implements PortletGetList
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.ctxInstance.page.currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.ctxInstance.getPortletRequest().getLocale());
 
     }
 
@@ -170,7 +170,7 @@ public class FaqItem implements PortletGetList
 
     {
 
-        return DateTools.getStringDate(datePost, "HH:mm", param.ctxInstance.page.currentLocale);
+        return DateTools.getStringDate(datePost, "HH:mm", param.ctxInstance.getPortletRequest().getLocale());
 
     }
 

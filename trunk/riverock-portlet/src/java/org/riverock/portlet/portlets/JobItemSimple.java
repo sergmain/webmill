@@ -174,7 +174,7 @@ public class JobItemSimple implements Portlet, PortletResultObject, PortletParam
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPage().currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPortletRequest().getLocale());
 
     }
 
@@ -184,7 +184,7 @@ public class JobItemSimple implements Portlet, PortletResultObject, PortletParam
 
     {
 
-        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", param.getPage().currentLocale);
+        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", param.getPortletRequest().getLocale());
 
     }
 

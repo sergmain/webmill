@@ -118,10 +118,6 @@ import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 
 import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
 
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
-
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.portlet.ContextNavigator;
@@ -194,15 +190,7 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-            AuthSession auth_ = null;
-
-            if ((auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/")) == null)
-
-                return;
-
-
-
-            MemberProcessing mp = new MemberProcessing(ctxInstance, response, auth_);
+            MemberProcessing mp = new MemberProcessing( ctxInstance, response );
 
 
 
@@ -342,7 +330,7 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-            if (!MemberServiceClass.checkRole( auth_, mp.content ) )
+            if (!MemberServiceClass.checkRole( ctxInstance.getPortletRequest(), mp.content ) )
 
             {
 

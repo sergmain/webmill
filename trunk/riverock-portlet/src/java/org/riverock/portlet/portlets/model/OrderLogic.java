@@ -136,8 +136,6 @@ import org.riverock.portlet.schema.price.ShopOrderType;
 
 import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.sso.a3.AuthTools;
-
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.port.PortalInfo;
@@ -402,21 +400,21 @@ public class OrderLogic extends HttpServlet
 
                     order.addShopOrdertList(shopOrder);
 
-                    initAuthSession(dbDyn, order, AuthTools.getAuthSession(ctxInstance.getPortletRequest()));
+                    initAuthSession(dbDyn, order, (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal());
 
                 }
 
 
 
-// если заказ создан ранее и юзер прошел авторизацию,
+                // если заказ создан ранее и юзер прошел авторизацию,
 
-// помещаем авторизационные данные в заказ
+                // помещаем авторизационные данные в заказ
 
                 if ((order != null) && (order.getAuthSession() == null))
 
                 {
 
-                    AuthSession authSession = (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
+                    AuthSession authSession = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
                     if ((authSession != null) && (authSession.checkAccess(ctxInstance.page.p.getServerName())))
 
@@ -542,364 +540,6 @@ public class OrderLogic extends HttpServlet
 
 
 
-/*
-
-    public static boolean registerSession(
-
-        HttpServletRequest request, HttpServletResponse response,
-
-        JspWriter out)
-
-    {
-
-        DatabaseAdapter db_ = null;
-
-        try
-
-        {
-
-
-
-            db_ = DatabaseAdapter.getInstance(true);
-
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            null
-
-            );
-
-
-
-            String url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), "url", CtxURL.ctx());
-
-
-
-            String url = StringTools.rewriteURL(url_redir);
-
-
-
-            url_redir = response.encodeURL(url_redir);
-
-
-
-            url_redir = StringTools.replaceString(url_redir, "%3F", "?");
-
-
-
-            String action = PortletTools.getString(ctxInstance.getPortletRequest(), "action");
-
-
-
-            String username = PortletTools.getString(ctxInstance.getPortletRequest(), "username").trim();
-
-            String password1 = PortletTools.getString(ctxInstance.getPortletRequest(), "password1").trim();
-
-            String password2 = PortletTools.getString(ctxInstance.getPortletRequest(), "password2").trim();
-
-
-
-            String first_name = PortletTools.getString(ctxInstance.getPortletRequest(), "first_name");
-
-            String last_name = PortletTools.getString(ctxInstance.getPortletRequest(), "last_name");
-
-
-
-            String email = PortletTools.getString(ctxInstance.getPortletRequest(), "email");
-
-            String address = PortletTools.getString(ctxInstance.getPortletRequest(), "address");
-
-            String phone = PortletTools.getString(ctxInstance.getPortletRequest(), "phone");
-
-
-
-
-
-            PortletSession sess = ctxInstance.getPortletRequest().getPortletSession(true);
-
-            OrderType order = (OrderType) sess.getAttribute(Constants.ORDER_SESSION);
-
-
-
-            if (order == null)
-
-            {
-
-                response.sendRedirect(response.encodeURL(CtxURL.ctx()));
-
-                return true;
-
-            }
-
-
-
-            AuthSession auth_ = (AuthSession) sess.getAttribute(Constants.AUTH_SESSION);
-
-            if ((auth_ != null) && (auth_.checkAccess(ctxInstance.getPortletRequest().getServerName())))
-
-            {
-
-                response.sendRedirect(url_redir);
-
-                return true;
-
-            }
-
-
-
-            if (action.equals("reg_new"))
-
-            {
-
-
-
-                if ((username != null) && (password1 != null) &&
-
-                    (password1.equals(password2)) &&
-
-                    (!username.equals("")) &&
-
-                    (!password1.equals(""))
-
-                )
-
-                {
-
-                    boolean commit_status = db_.conn.getAutoCommit();
-
-                    db_.conn.setAutoCommit(false);
-
-                    Long id_user = InternalAuthProviderTools.addNewUser(db_,
-
-                                                                        first_name, last_name, "", ctxInstance.page.p.sites.getIdFirm(),
-
-                                                                        email, address, phone);
-
-
-
-                    Long id_auth_user;
-
-                    try
-
-                    {
-
-                        id_auth_user = InternalAuthProviderTools.addUserAuth(
-
-                            db_, id_user,
-
-                            ctxInstance.page.p.sites.getIdFirm(), null, null, username, password1,
-
-                            true, false, false
-
-                        );
-
-
-
-                    }
-
-                    catch (AuthException e)
-
-                    {
-
-                        db_.rollback();
-
-                        if (db_.testExceptionIndexUniqueKey(e, "USER_LOGIN_AU_UK"))
-
-                        {
-
-                            db_.conn.setAutoCommit(commit_status);
-
-                            out.print("Login '" + username + "' already exist<br>");
-
-                            out.print("Continue <a href=\"" + response.encodeURL("reg.jsp") + "?" + ctxInstance.page.getAsURL() + "url=" + url + "\">here</a>");
-
-                            return true;
-
-                        }
-
-                        else
-
-                        {
-
-                            out.print(e.toString());
-
-                            return true;
-
-                        }
-
-                    }
-
-
-
-                    InternalAuthProviderTools.bindUserRole(db_, id_auth_user, "SHOP_BUYER");
-
-
-
-                    db_.commit();
-
-                    db_.conn.setAutoCommit(commit_status);
-
-
-
-                    auth_ = new AuthSession(username, password1);
-
-
-
-                    MailMessage.sendMessage(
-
-                        "You succesfully registered.\n" +
-
-                        "Use your username and password for process invoice:\n" +
-
-                        "\n" +
-
-                        "\n" +
-
-                        "Username: " + username + "\n" +
-
-                        "Password: " + password1 + "\n",
-
-                        email,
-
-                        ctxInstance.page.p.sites.getAdminEmail(),
-
-                        "Confirm registration",
-
-                        GenericConfig.getMailSMTPHost()
-
-                    );
-
-
-
-                    if (auth_.checkAccess(ctxInstance.getPortletRequest().getServerName()))
-
-                    {
-
-                        sess.setAttribute(Constants.AUTH_SESSION, auth_);
-
-                        response.sendRedirect(url_redir);
-
-                        return true;
-
-                    }
-
-                }
-
-
-
-            }
-
-            else if (action.equals("reg_exists"))
-
-            {
-
-                if ((auth_ == null) ||
-
-                    (!auth_.checkAccess(ctxInstance.getPortletRequest().getServerName()))
-
-                )
-
-
-
-                {
-
-                    if ((username != null) && (password1 != null))
-
-                    {
-
-                        auth_ = new AuthSession(username, password1);
-
-                        if (auth_.checkAccess(ctxInstance.getPortletRequest().getServerName()))
-
-                        {
-
-                            sess.setAttribute(Constants.AUTH_SESSION, auth_);
-
-                            response.sendRedirect(url_redir);
-
-                            return true;
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-            else if (action.equals("send_pass"))
-
-            {
-
-            }
-
-
-
-        }
-
-        catch (Exception e1)
-
-        {
-
-            try
-
-            {
-
-                log.error("", e1);
-
-                out.println(e1.toString() + "<br>");
-
-            }
-
-            catch (Exception e11)
-
-            {
-
-            }
-
-        }
-
-        finally
-
-        {
-
-            DatabaseManager.close(db_);
-
-            db_ = null;
-
-        }
-
-        return false;
-
-    }
-
-*/
-
-
-
-/*
-
-    public BasketShopSession(DatabaseAdapter db_, long id_shop_, AuthSession auth_session)
-
-        throws Exception
-
-    {
-
-        v = new Vector();
-
-        id_shop = id_shop_;
-
-        id_order = db_.getSequenceNextValue("seq_order");
-
-
-
-        initAuthSession(auth_session);
-
-
-
-    }
-
-*/
-
     public static void initAuthSession(DatabaseAdapter dbDyn, OrderType order, AuthSession authSession)
 
         throws Exception
@@ -954,10 +594,6 @@ public class OrderLogic extends HttpServlet
 
             {
 
-//                AuthInfo authInfo = InternalAuthProvider.getAuthInfo( authSession );
-
-//                RsetTools.setLong(ps, 3, authInfo.userID );
-
                 RsetTools.setLong(ps, 3, authSession.getUserInfo().getIdUser());
 
             }
@@ -988,19 +624,9 @@ public class OrderLogic extends HttpServlet
 
             if (authSession != null && authSession.getUserInfo() != null)
 
-            {
-
                 log.error("authSession.getUserInfo().getIdUser() " + authSession.getUserInfo().getIdUser());
 
-//                AuthInfo authInfo = InternalAuthProvider.getAuthInfo( authSession );
 
-//                log.error("authInfo "+authInfo);
-
-//                if (authInfo!=null)
-
-//                    log.error("authInfo.authUserID "+authInfo.authUserID);
-
-            }
 
             log.error("Error init AuthSession", e1);
 

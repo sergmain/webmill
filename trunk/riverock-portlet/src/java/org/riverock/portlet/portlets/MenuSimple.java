@@ -84,8 +84,6 @@ import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 
 import org.riverock.portlet.schema.portlet.menu.MenuSimpleType;
 
-import org.riverock.portlet.main.Constants;
-
 import org.riverock.common.tools.MainTools;
 
 import org.riverock.common.config.ConfigException;
@@ -1174,7 +1172,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
             {
 
-                m.setModuleName( item.getStr().getString(page.currentLocale) );
+                m.setModuleName( item.getStr().getString( param.getPortletRequest().getLocale() ) );
 
             }
 
@@ -1192,11 +1190,13 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
             // set menu URL
 
-            m.setModuleUrl(
+            if (item.getUrl()==null)
 
-                response.encodeURL(CtxURL.page() + '/' + item.getId())
+                m.setModuleUrl(response.encodeURL(CtxURL.pageid() + '/' + item.getId()));
 
-            );
+            else
+
+                m.setModuleUrl(response.encodeURL(CtxURL.page() + '/' + item.getUrl()));
 
 /*
 
@@ -1568,7 +1568,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
                  res.encodeURL( CtxURL.ctx()+'?'+jspPage.addURL+Constants.NAME_ID_CONTEXT_PARAM+'='+ci.id )+
 
-                 "\">"+ ci.str.getString( ctxInstance.page.currentLocale )+"</a></td></tr>";
+                 "\">"+ ci.str.getString( ctxInstance.getPortletRequest().getLocale() )+"</a></td></tr>";
 
 
 

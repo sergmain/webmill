@@ -278,7 +278,7 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPage().currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPortletRequest().getLocale());
 
     }
 
@@ -288,7 +288,7 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
 
     {
 
-        return DateTools.getStringDate(datePost, "HH:mm", param.getPage().currentLocale);
+        return DateTools.getStringDate(datePost, "HH:mm", param.getPortletRequest().getLocale());
 
     }
 
@@ -498,7 +498,7 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
 
 
 
-        Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPage().currentLocale);
+        Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPortletRequest().getLocale());
 
 
 

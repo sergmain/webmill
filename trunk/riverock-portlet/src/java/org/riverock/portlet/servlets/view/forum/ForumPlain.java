@@ -78,8 +78,6 @@ import java.util.List;
 
 
 
-import javax.portlet.RenderRequest;
-
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -111,6 +109,8 @@ import org.riverock.webmill.portlet.CtxInstance;
 import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.PortletTools;
+
+import org.riverock.webmill.utils.ServletUtils;
 
 
 
@@ -294,7 +294,7 @@ public class ForumPlain extends HttpServlet
 
                         out.write("<b>" + ctxInstance.sCustom.getStr("str.date") + ':' + "</b>&nbsp;" +
 
-                                DateTools.getStringDate(message.datePost, "dd-MMMM-yyyy HH:mm:ss", ctxInstance.page.currentLocale) + "<BR>"
+                                DateTools.getStringDate(message.datePost, "dd-MMMM-yyyy HH:mm:ss", ctxInstance.getPortletRequest().getLocale()) + "<BR>"
 
                         );
 
@@ -362,7 +362,7 @@ public class ForumPlain extends HttpServlet
 
 
 
-                PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, "/mill.forum_add_message", out);
+                ServletUtils.include(request_, response, null, "/mill.forum_add_message", out);
 
 
 
@@ -382,7 +382,7 @@ public class ForumPlain extends HttpServlet
 
 
 
-                PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, "/mill.forum_add_message", out);
+                ServletUtils.include(request_, response, null, "/mill.forum_add_message", out);
 
 
 

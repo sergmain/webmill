@@ -154,7 +154,7 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            AuthSession auth_ = AuthTools.getAuthSession(param.getPortletRequest());
+            AuthSession auth_ = (AuthSession)param.getPortletRequest().getUserPrincipal();
 
 
 

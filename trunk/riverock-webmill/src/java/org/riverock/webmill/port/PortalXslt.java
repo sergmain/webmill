@@ -116,6 +116,16 @@ public class PortalXslt
 
 
 
+    public void reinit()
+
+    {
+
+        cache.reinit();
+
+    }
+
+
+
     protected void finalize() throws Throwable
 
     {
