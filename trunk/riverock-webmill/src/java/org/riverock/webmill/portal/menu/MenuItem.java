@@ -148,7 +148,7 @@ public class MenuItem implements MenuItemInterface
 
         }
 
-        return "[id:"+id+", template:"+nameTemplate+", str:"+st+", url:"+url+"]";
+        return "[id:"+id+", id_top:"+id_top+" type:"+type+", portletId:"+id_portlet+", template:"+nameTemplate+", str:"+st+", url:"+url+"]";
 
     }
 
