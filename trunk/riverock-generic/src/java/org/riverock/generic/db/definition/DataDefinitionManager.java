@@ -22,15 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.generic.db.definition;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 
 import org.apache.log4j.Logger;
 
@@ -42,9 +37,11 @@ import org.riverock.generic.config.GenericConfig;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.PropertiesProvider;
 
-public class DataDefinitionManager
-{
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.definition.DataDefinitionManager" );
+/**
+ * $Id$
+ */
+public final class DataDefinitionManager {
+    private final static Logger log = Logger.getLogger( DataDefinitionManager.class );
 
     private static FileFilter definitionFilter = new ExtensionFileFilter(".xml");
 
@@ -177,7 +174,7 @@ public class DataDefinitionManager
                     String customDefinitionDir = getCustomDir();
                     if (customDefinitionDir!=null && customDefinitionDir.length()!=0)
                     {
-                        try
+//                        try
                         {
                             userDir = new CacheDirectory(
                                 customDefinitionDir,
@@ -185,11 +182,11 @@ public class DataDefinitionManager
                                 1000*30 // сканировать директорий каждые 30 секунд
                             );
                         }
-                        catch( FileNotFoundException e )
-                        {
-                            isUserDirectoryExists = false;
-                            return;
-                        }
+//                        catch( FileNotFoundException e )
+//                        {
+//                            isUserDirectoryExists = false;
+//                            return;
+//                        }
                     }
                     else
                         return;
@@ -235,55 +232,4 @@ public class DataDefinitionManager
             throw e;
         }
     }
-
-/*
-    public static DataDefinitionType getApplModule( String definitionName_ )
-            throws Exception
-    {
-        init();
-
-        for (int k=0; k < mainDefinitionFile.length; k++)
-        {
-                if (mainDefinitionFile[k]==null)
-                continue;
-
-            DataDefinitionFile mf = mainDefinitionFile[k];
-            DataDefinitionType mod = mf.getDataDefinition(definitionName_);
-            if (mod != null)
-            {
-                if (log.isDebugEnabled())
-                    log.debug("Definition '" + definitionName_ + "' is found");
-
-                return mod;
-            }
-        }
-
-        if (log.isDebugEnabled())
-            log.debug("Definition '" + definitionName_ + "' in main directory not found");
-
-        if (userDefinitionFile!=null)
-        {
-            for (int k=0; k < userDefinitionFile.length; k++)
-            {
-                if (userDefinitionFile[k]==null)
-                continue;
-
-                DataDefinitionFile mf = userDefinitionFile[k];
-                DataDefinitionType desc = mf.getDataDefinition( definitionName_ );
-                if (desc != null)
-                {
-                    if (log.isDebugEnabled())
-                        log.debug("Definition '" + definitionName_ + "' is found in custom directory");
-
-                    return desc;
-                }
-            }
-        }
-
-        if (log.isDebugEnabled())
-            log.debug("Definition '" + definitionName_ + "' not found");
-
-        return null;
-    }
-*/
 }

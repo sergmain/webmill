@@ -29,7 +29,6 @@
 package org.riverock.generic.startup;
 
 import java.io.File;
-import java.net.URL;
 import java.security.Provider;
 import java.security.Security;
 
@@ -43,7 +42,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import org.riverock.generic.main.Constants;
-import org.riverock.generic.tools.XmlTools;
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.common.config.ConfigService;
@@ -54,7 +52,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 public final class StartupServlet extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(StartupServlet.class);
+    private final static Logger log = Logger.getLogger(StartupServlet.class);
 
     private static boolean checkClass(String name)
     {
@@ -169,11 +167,9 @@ public final class StartupServlet extends HttpServlet
         }
     }
 
-    private synchronized static void initLogging()
-    {
+    private synchronized static void initLogging() {
         String logPath = null;
-        try
-        {
+        try {
             InitialContext ic = new InitialContext();
             logPath = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_PATH);
             if (File.separatorChar=='\\')
@@ -186,16 +182,14 @@ public final class StartupServlet extends HttpServlet
             System.out.println("logPath - " + logPath);
 
         }
-        catch (NamingException e)
-        {
+        catch (NamingException e) {
             System.out.println("Error get millLogPath object" + e.toString());
             e.printStackTrace(System.out);
             return;
         }
 
         String logConfigFile = null;
-        try
-        {
+        try {
             InitialContext ic = new InitialContext();
             logConfigFile = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_CONFIG_FILE); // mill/LogConfigFile");
             if (File.separatorChar=='\\')
@@ -205,8 +199,7 @@ public final class StartupServlet extends HttpServlet
 
             System.out.println("millLogConfigFile - " + logConfigFile);
         }
-        catch (NamingException e)
-        {
+        catch (NamingException e) {
             System.out.println("Error get millLogConfigFile object");
             e.printStackTrace(System.out);
             return;
@@ -214,16 +207,14 @@ public final class StartupServlet extends HttpServlet
         PropertyConfigurator.configure(logConfigFile);
     }
 
-    public void init(ServletConfig config) throws ServletException
-    {
+    public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
 //        test();
         Object testObj = config.getServletContext().getAttribute("javax.servlet.context.tempdir");
         System.out.println("info Object tempdir - " + testObj);
-        if (testObj instanceof java.io.File)
-        {
-            File testFile = (File) config.getServletContext().getAttribute("javax.servlet.context.tempdir");
+        if (testObj!=null && testObj instanceof java.io.File) {
+            File testFile = (File)testObj;
             System.out.println("info javax.servlet.context.tempdir - " + testFile);
         }
 /*
@@ -256,11 +247,11 @@ public final class StartupServlet extends HttpServlet
         log.info("Application path: " + PropertiesProvider.getApplicationPath() );
         System.out.println("info Application path: " + PropertiesProvider.getApplicationPath() );
 
-        log.info("getServletContextName - " + config.getServletContext().getServletContextName());
-        System.out.println("info getServletContextName - " + config.getServletContext().getServletContextName());
+        log.info("getServletContextName - " + config.getServletContext().getServletContextName() );
+        System.out.println("info getServletContextName - " + config.getServletContext().getServletContextName() );
 
-        log.info("servletConfig - " + config.getServletContext().getServletContextName());
-        System.out.println("info servletConfig - " + config.getServletContext());
+        log.info("servletConfig - " + config.getServletContext().getServletContextName() );
+        System.out.println("info servletConfig - " + config.getServletContext() );
 
         String realPath = context.getRealPath("/");
 
@@ -272,64 +263,55 @@ public final class StartupServlet extends HttpServlet
         log.info("dir - " + dir.getName());
         System.out.println("info dir - " + dir.getName());
 
-        GenericConfig.contextName = "/" + dir.getName();
+        GenericConfig.setContextName( "/" + dir.getName() );
 
-        log.info("ServletContextName - " + GenericConfig.contextName);
-        System.out.println("info ServletContextName - " + GenericConfig.contextName);
+        log.info("ServletContextName - " + GenericConfig.getContextName());
+        System.out.println("info ServletContextName - " + GenericConfig.getContextName());
 
-        Provider provider = Security.getProvider("BC");
-        if (provider != null)
-        {
-            log.info("Security provider  present. " + provider.getInfo());
-            System.out.println("info Security provider  present. " + provider.getInfo());
+        Provider provider = Security.getProvider( "BC" );
+        if (provider != null) {
+            log.info( "Security provider  present. " + provider.getInfo() );
+            System.out.println( "info Security provider  present. " + provider.getInfo() );
         }
-        else
-        {
+        else {
             log.warn("'Bouncycastle' security provider not present. Check for class");
 
-            if (!checkClass("org.bouncycastle.jce.provider.BouncyCastleProvider"))
-            {
+            if (!checkClass("org.bouncycastle.jce.provider.BouncyCastleProvider")) {
                 log.error("Security provider BouncyCastle not present");
                 System.out.println("fatal Security provider BouncyCastle not present");
             }
         }
 
-        try
-        {
+        try {
             System.out.println("info Xalan version - " + org.apache.xalan.Version.getVersion());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.out.println("Error get version of xalan " + e.getMessage());
         }
-        try
-        {
+        try {
             System.out.println("info Xerces version - " + org.apache.xerces.impl.Version.getVersion());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.out.println("Error get version of xerces " + e.getMessage());
         }
-        try
-        {
+        try {
             System.out.println("info Castor version - " + org.exolab.castor.util.Version.getBuildVersion());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             System.out.println("Error get version of Castor " + e.getMessage());
         }
 
         initLogging();
 
         // init time zone
-        try
-        {
+        try {
             ConfigService.initLocale();
             GenericConfig.getTZ();
         }
-        catch(ConfigException exc)
-        {
-            throw new ServletException( exc.toString() );
+        catch(ConfigException exc) {
+            String es = "Error init time zone";
+            log.error( es, exc );
+            throw new ServletException( es, exc );
         }
     }
 }

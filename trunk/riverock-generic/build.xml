@@ -136,7 +136,6 @@
 
         <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
         <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
 
         <antcall target="start.apache"/>
     </target>
@@ -290,6 +289,10 @@ Sealed: true
 
     <target name="jar_without_copy" depends="compile">
         <antcall target="make_manifest_file"/>
+        <property name="locale-path" value="/org/riverock/generic/tools/servlet"/>
+        <copy todir="${build.dest}${locale-path}">
+            <fileset dir="${src.java.dir}${locale-path}"/>
+        </copy>
         <jar jarfile="${build.dir}/${mill.lib}"
             basedir="${build.dest}"
             includes="org/riverock/**"

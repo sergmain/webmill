@@ -194,6 +194,10 @@ public class MYSQLconnect extends DatabaseAdapter
                     sql += " LONGVARBINARY";
                     break;
 
+                case 1111:
+                    sql += " TEXT";
+                    break;
+
                 default:
                     field.setJavaStringType( "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() );
                     System.out.println( "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() );

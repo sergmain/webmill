@@ -32,7 +32,7 @@ package org.riverock.generic.tools;
  * $RCSfile$
  *
  */
-public class SimpleStringTokenizer extends org.riverock.common.tools.SimpleStringTokenizer
+public final class SimpleStringTokenizer extends org.riverock.common.tools.SimpleStringTokenizer
 {
     public SimpleStringTokenizer()
     {

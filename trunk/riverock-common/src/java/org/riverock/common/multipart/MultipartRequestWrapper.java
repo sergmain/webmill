@@ -51,12 +51,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Category;
-
-public class MultipartRequestWrapper extends Hashtable
-    implements HttpServletRequest
-{
-    private static Category cat = Category.getInstance("org.riverock.multipart.MultipartRequestWrapper");
+public class MultipartRequestWrapper extends Hashtable implements HttpServletRequest {
 
     /** the standard identifying header of
      *  a multipart request */
@@ -83,13 +78,10 @@ public class MultipartRequestWrapper extends Hashtable
     /** we advise you do not use this! 'empty' constructor to make it
      *  easier to sub-class. As this constructor does not pass a
      *  request to wrap, it isn't, on it's own, going to work.  */
-    public MultipartRequestWrapper()
-        throws IllegalArgumentException, IOException, UploadException
-    {
+    public MultipartRequestWrapper() throws UploadException {
         throw new UploadException("do not use the no-args variant of the " +
             getClass().getName() + " constructor");
     }
-
 
     public MultipartRequestWrapper(HttpServletRequest req,
                                      boolean saveUploadedFilesToDisk,
@@ -1344,4 +1336,19 @@ public class MultipartRequestWrapper extends Hashtable
     }
 
 
+    public int getRemotePort() {
+        return request.getRemotePort();
+    }
+
+    public String getLocalName() {
+        return request.getLocalName();
+    }
+
+    public String getLocalAddr() {
+        return request.getLocalAddr();
+    }
+
+    public int getLocalPort() {
+        return request.getLocalPort();
+    }
 }

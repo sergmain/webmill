@@ -35,7 +35,7 @@ import java.util.TimeZone;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.common.config.ConfigException;
 
-public class CurrentTimeZone
+public final class CurrentTimeZone
 {
     public static TimeZone getTZ()
         throws ConfigException

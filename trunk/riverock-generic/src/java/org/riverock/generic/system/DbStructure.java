@@ -23,6 +23,24 @@
  *
  */
 
+package org.riverock.generic.system;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.sql.SQLException;
+
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.schema.db.structure.DbViewType;
+
+import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
+
 /**
  * Author: mill
  * Date: Nov 28, 2002
@@ -30,24 +48,6 @@
  *
  * $Id$
  */
-package org.riverock.generic.system;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbViewType;
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.sql.SQLException;
-
 public class DbStructure
 {
 //    private static Logger cat = Logger.getLogger("org.riverock.system.DbStructure");

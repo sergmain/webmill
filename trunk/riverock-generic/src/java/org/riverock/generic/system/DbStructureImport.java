@@ -61,6 +61,8 @@ public class DbStructureImport
 
         fileName = "mill"+File.separatorChar+"data-definition"+File.separatorChar+"data"+File.separatorChar+"webmill-def-v2.xml";
 
+        fileName = "c:\\5\\webmill-schema.xml";
+
         DbStructureImport.importStructure(fileName, true);
     }
 

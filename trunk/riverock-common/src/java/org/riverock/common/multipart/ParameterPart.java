@@ -55,6 +55,10 @@ public class ParameterPart implements AbstractPart
         return PARAMETER_TYPE;
     }
 
+    public long getLength() {
+        return parameter.length();
+    }
+
     public InputStream getInputStream()
         throws MultipartRequestException
     {

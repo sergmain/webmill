@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.List;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -21,9 +21,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.riverock.common.tools.MainTools;
 
 
-public class HttpServletRequestWrapperInclude
-    extends HttpServletRequestWrapper
-{
+public final class HttpServletRequestWrapperInclude extends HttpServletRequestWrapper {
     Map param = null;
     public HttpServletRequestWrapperInclude(HttpServletRequest request, Map param)
     {
@@ -46,7 +44,7 @@ public class HttpServletRequestWrapperInclude
                     return obj.toString();
             }
         }
-        return null;
+        return s;
     }
 
     public Map getParameterMap()
@@ -67,10 +65,8 @@ public class HttpServletRequestWrapperInclude
         return map;
     }
 
-    public Enumeration getParameterNames()
-    {
-        Vector v = new Vector( getParameterMap().keySet() );
-        return v.elements();
+    public Enumeration getParameterNames() {
+        return Collections.enumeration( getParameterMap().keySet() );
     }
 
     public String[] getParameterValues(String name)

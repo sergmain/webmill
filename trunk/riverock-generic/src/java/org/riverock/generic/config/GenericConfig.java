@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.generic.config;
 
 import java.io.File;
@@ -41,24 +37,27 @@ import org.riverock.common.config.ConfigException;
 
 import org.apache.log4j.Logger;
 
-public class GenericConfig
-{
-    private static Logger log = Logger.getLogger( GenericConfig.class );
+/**
+ * $Id$
+ */
+public final class GenericConfig {
+    private final static Logger log = Logger.getLogger( GenericConfig.class );
 
-    public static String contextName = "";
-//
+    private static String contextName = "";
+    //
     private static ConfigObject configObject = null;
     private static Hashtable dbConfig = null;
     private static TimeZone currentTimeZone = null;
 
     private static boolean isConfigProcessed = false;
     private static String configPrefix = "jsmithy";
+    private static String defaultConnectionName = null;
 
     public static String getConfigPrefix() {
         return configPrefix;
     }
 
-    public static void setConfigPrefix(String configPrefix) {
+    public static void setConfigPrefix( final String configPrefix ) {
         GenericConfig.configPrefix = configPrefix;
     }
 
@@ -106,7 +105,7 @@ public class GenericConfig
 //-----------------------------------------------------
 
     private static Object syncTZ = new Object();
-    public static TimeZone getTZ()throws ConfigException{
+    public static TimeZone getTZ() throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("GenericConfig.getTZ() #1");
         if (!isConfigProcessed)readConfig();
@@ -204,7 +203,7 @@ public class GenericConfig
         }
     }
 
-    private static Object syncDebug = new Object();
+    private static Object syncDebugDir = new Object();
     public static String getGenericDebugDir()throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.937.1");
@@ -216,7 +215,7 @@ public class GenericConfig
 
         if (log.isDebugEnabled())log.debug("#15.938.2");
 
-        synchronized(syncDebug)
+        synchronized(syncDebugDir)
         {
             if (getConfig().getIsDebugDirInit().booleanValue())
                 return getConfig().getGenericDebugDir();
@@ -255,15 +254,19 @@ public class GenericConfig
         }
     }
 
-    public static DatabaseConnectionType getDatabaseConnection(String connectionName)throws ConfigException{
-        if (log.isDebugEnabled())log.debug("#15.909");
-        if (!isConfigProcessed)readConfig();
-        if (log.isDebugEnabled())log.debug("#15.910");
+    public static DatabaseConnectionType getDatabaseConnection( final String connectionName )
+        throws ConfigException{
+
+        if (log.isDebugEnabled()) log.debug("#15.909");
+
+        if (!isConfigProcessed) readConfig();
+
+        if (log.isDebugEnabled()) log.debug("#15.910");
 
         return (DatabaseConnectionType)dbConfig.get( connectionName );
     }
 
-    public static String getDBconnectClassName(String connectionName) throws ConfigException{
+    public static String getDBconnectClassName( final String connectionName ) throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.911");
         if (!isConfigProcessed)readConfig();
@@ -272,7 +275,15 @@ public class GenericConfig
         return getDatabaseConnection(connectionName).getConnectionClass();
     }
 
+    public static void setDefaultConnectionName( final String defaultConnectionName_) {
+        defaultConnectionName = defaultConnectionName_;
+    }
+
     public static String getDefaultConnectionName() throws ConfigException {
+
+        // if defaultConnectionName is overrided, then return new value(not from config)
+        if (defaultConnectionName!=null)
+            return defaultConnectionName;
 
         if (log.isDebugEnabled())log.debug("#15.951");
         if (!isConfigProcessed) readConfig();
@@ -308,7 +319,7 @@ public class GenericConfig
         return getConfig().getPropertyCount();
     }
 
-    public static PropertyType getProperty(int idx) throws ConfigException {
+    public static PropertyType getProperty( final int idx ) throws ConfigException {
 
         if (log.isDebugEnabled()) log.debug("#16.981");
         if (!isConfigProcessed)readConfig();
@@ -337,5 +348,16 @@ public class GenericConfig
             return null;
 
         return dirs.getCustomDataDefinitionDir();
+    }
+
+    public static String getContextName() {
+        return contextName;
+    }
+
+    public static void setContextName( String contextName_ ) {
+        if (log.isInfoEnabled()) {
+            log.info( "Set new application context to " + contextName_);
+        }
+        contextName = contextName_;
     }
 }

@@ -23,14 +23,6 @@
  *
  */
 
-/**
- * Author: mill
- * Date: Feb 19, 2003
- * Time: 9:04:25 AM
- *
- * $Id$
- */
-
 package org.riverock.generic.tools.servlet;
 
 import java.util.Enumeration;
@@ -48,14 +40,17 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.ServletInputStream;
 import javax.servlet.RequestDispatcher;
 
-import org.apache.log4j.Logger;
+/**
+ * Author: mill
+ * Date: Feb 19, 2003
+ * Time: 9:04:25 AM
+ * <p/>
+ * $Id$
+ */
 
-public class HttpServletRequestApplWrapper implements HttpServletRequest
-{
-    private static Logger cat = Logger.getLogger("org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper");
+public class HttpServletRequestApplWrapper implements HttpServletRequest {
 
-    public HttpServletRequestApplWrapper()
-    {
+    public HttpServletRequestApplWrapper() {
     }
 
     private String serverName = null;
@@ -69,321 +64,259 @@ public class HttpServletRequestApplWrapper implements HttpServletRequest
     private String method = null;
     private Hashtable parameterNames = new Hashtable();
 
-    public String getParameter(String s)
-    {
+    public String getParameter( String s ) {
         return (String)parameterNames.get( s );
     }
 
-    public void setParameter(String key, String obj)
-    {
-        parameterNames.put(key, obj );
+    public void setParameter( String key, String obj ) {
+        parameterNames.put( key, obj );
     }
-    public Enumeration getParameterNames()
-    {
+
+    public Enumeration getParameterNames() {
         return parameterNames.keys();
     }
 
-    public String[] getParameterValues(String s)
-    {
+    public String[] getParameterValues( String s ) {
         return new String[0];
     }
 
 
-    public String getPathInfo()
-    {
+    public String getPathInfo() {
         return null;
     }
 
-    public String getPathTranslated()
-    {
+    public String getPathTranslated() {
         return null;
     }
 
-    public String getContextPath()
-    {
+    public String getContextPath() {
         return null;
     }
 
-    public String getQueryString()
-    {
+    public String getQueryString() {
         return null;
     }
 
-    public String getRemoteUser()
-    {
+    public String getRemoteUser() {
         return null;
     }
 
-    public boolean isUserInRole(String s)
-    {
+    public boolean isUserInRole( String s ) {
         return false;
     }
 
-    public Principal getUserPrincipal()
-    {
+    public Principal getUserPrincipal() {
         return null;
     }
 
-    public String getRequestedSessionId()
-    {
+    public String getRequestedSessionId() {
         return null;
     }
 
-    public String getRequestURI()
-    {
+    public String getRequestURI() {
         return null;
     }
 
-    public StringBuffer getRequestURL()
-    {
+    public StringBuffer getRequestURL() {
         return null;
     }
 
-    public String getServletPath()
-    {
+    public String getServletPath() {
         return null;
     }
 
-    public HttpSession getSession(boolean b)
-    {
+    public HttpSession getSession( boolean b ) {
         return session;
     }
 
-    public HttpSession getSession()
-    {
+    public HttpSession getSession() {
         return session;
     }
 
-    public boolean isRequestedSessionIdValid()
-    {
+    public boolean isRequestedSessionIdValid() {
         return false;
     }
 
-    public boolean isRequestedSessionIdFromCookie()
-    {
+    public boolean isRequestedSessionIdFromCookie() {
         return false;
     }
 
-    public boolean isRequestedSessionIdFromURL()
-    {
+    public boolean isRequestedSessionIdFromURL() {
         return false;
     }
 
     /**
      * @deprecated
      */
-    public boolean isRequestedSessionIdFromUrl()
-    {
+    public boolean isRequestedSessionIdFromUrl() {
         return false;
     }
 
-    public Object getAttribute(String s)
-    {
+    public Object getAttribute( String s ) {
         return null;
     }
 
-    public Enumeration getAttributeNames()
-    {
+    public Enumeration getAttributeNames() {
         return null;
     }
 
-    public String getCharacterEncoding()
-    {
+    public String getCharacterEncoding() {
         return null;
     }
 
-    public void setCharacterEncoding(String s) throws UnsupportedEncodingException
-    {
+    public void setCharacterEncoding( String s ) throws UnsupportedEncodingException {
     }
 
-    public int getContentLength()
-    {
+    public int getContentLength() {
         return 0;
     }
 
-    public String getContentType()
-    {
+    public String getContentType() {
         return null;
     }
 
-    public ServletInputStream getInputStream() throws IOException
-    {
+    public ServletInputStream getInputStream() throws IOException {
         return null;
     }
 
-    public Map getParameterMap()
-    {
+    public Map getParameterMap() {
         return null;
     }
 
-    public String getProtocol()
-    {
+    public String getProtocol() {
         return null;
     }
 
-    public String getScheme()
-    {
+    public String getScheme() {
         return null;
     }
 
-    public String getServerName()
-    {
+    public String getServerName() {
         return serverName;
     }
 
-    public int getServerPort()
-    {
+    public int getServerPort() {
         return 0;
     }
 
-    public BufferedReader getReader() throws IOException
-    {
+    public BufferedReader getReader() throws IOException {
         return null;
     }
 
-    public String getRemoteAddr()
-    {
+    public String getRemoteAddr() {
         return null;
     }
 
-    public String getRemoteHost()
-    {
+    public String getRemoteHost() {
         return null;
     }
 
-    public void setAttribute(String s, Object o)
-    {
+    public void setAttribute( String s, Object o ) {
     }
 
-    public void removeAttribute(String s)
-    {
+    public void removeAttribute( String s ) {
     }
 
-    public Locale getLocale()
-    {
+    public Locale getLocale() {
         return null;
     }
 
-    public Enumeration getLocales()
-    {
+    public Enumeration getLocales() {
         return null;
     }
 
-    public boolean isSecure()
-    {
+    public boolean isSecure() {
         return false;
     }
 
-    public RequestDispatcher getRequestDispatcher(String s)
-    {
+    public RequestDispatcher getRequestDispatcher( String s ) {
         return null;
     }
 
     /**
      * @deprecated
      */
-    public String getRealPath(String s)
-    {
+    public String getRealPath( String s ) {
         return null;
     }
 
-    public String getAuthType()
-    {
+    public String getAuthType() {
         return authType;
     }
 
-    public void setAuthType(String authType)
-    {
+    public void setAuthType( String authType ) {
         this.authType = authType;
     }
 
-    public Cookie[] getCookies()
-    {
+    public Cookie[] getCookies() {
         return cookies;
     }
 
-    public long getDateHeader(String s)
-    {
+    public long getDateHeader( String s ) {
         return 0;
     }
 
-    public String getHeader(String s)
-    {
+    public String getHeader( String s ) {
         return null;
     }
 
-    public Enumeration getHeaders(String s)
-    {
+    public Enumeration getHeaders( String s ) {
         return null;
     }
 
-    public void setCookies(Cookie[] cookies)
-    {
+    public void setCookies( Cookie[] cookies ) {
         this.cookies = cookies;
     }
 
-    public long getDateHeader()
-    {
+    public long getDateHeader() {
         return dateHeader;
     }
 
-    public void setDateHeader(long dateHeader)
-    {
+    public void setDateHeader( long dateHeader ) {
         this.dateHeader = dateHeader;
     }
 
-    public String getHeader()
-    {
+    public String getHeader() {
         return header;
     }
 
-    public void setHeader(String header)
-    {
+    public void setHeader( String header ) {
         this.header = header;
     }
 
-    public Enumeration getHeaders()
-    {
+    public Enumeration getHeaders() {
         return headers;
     }
 
-    public void setHeaders(Enumeration headers)
-    {
+    public void setHeaders( Enumeration headers ) {
         this.headers = headers;
     }
 
-    public Enumeration getHeaderNames()
-    {
+    public Enumeration getHeaderNames() {
         return headerNames;
     }
 
-    public int getIntHeader(String s)
-    {
+    public int getIntHeader( String s ) {
         return 0;
     }
 
-    public void setHeaderNames(Enumeration headerNames)
-    {
+    public void setHeaderNames( Enumeration headerNames ) {
         this.headerNames = headerNames;
     }
 
-    public int getIntHeader()
-    {
+    public int getIntHeader() {
         return intHeader;
     }
 
-    public void setIntHeader(int intHeader)
-    {
+    public void setIntHeader( int intHeader ) {
         this.intHeader = intHeader;
     }
 
-    public String getMethod()
-    {
+    public String getMethod() {
         return method;
     }
 
-    public void setMethod(String method)
-    {
+    public void setMethod( String method ) {
         this.method = method;
     }
 
@@ -392,16 +325,53 @@ public class HttpServletRequestApplWrapper implements HttpServletRequest
 //        this.parameterNames = parameterNames;
 //    }
 
-    HttpSession  session = null;
+    HttpSession session = null;
 
-    public void setSession( HttpSession session_)
-    {
+    public void setSession( HttpSession session_ ) {
         this.session = session_;
     }
 
-    public void setServerName(String serverName)
-    {
+    public void setServerName( String serverName ) {
         this.serverName = serverName;
     }
 
+    int remotePort;
+
+    public void setRemotePort( int port ) {
+        this.remotePort = port;
+    }
+
+    public int getRemotePort() {
+        return remotePort;
+    }
+
+    private String localName = null;
+
+    public void setLocalName( String localName ) {
+        this.localName = localName;
+    }
+
+    public String getLocalName() {
+        return localName;
+    }
+
+    private String localAddr = null;
+
+    public void setLocalAddr( String localAddr ) {
+        this.localAddr = localAddr;
+    }
+
+    public String getLocalAddr() {
+        return localAddr;
+    }
+
+    int localPort;
+
+    public void setLocalPort( int port ) {
+        this.localPort = port;
+    }
+
+    public int getLocalPort() {
+        return localPort;
+    }
 }

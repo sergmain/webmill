@@ -41,9 +41,7 @@ import java.io.File;
 /** An enhancement to File that supports several
  *  additional fields concerning uploaded files.
  */
-public class UploadedFile extends File
-{
-    private static Category cat = Category.getInstance("org.riverock.multipart.UploadedFile");
+public final class UploadedFile extends File {
 
     protected String clientPathname = null;
     protected String contentType = null;
@@ -51,9 +49,11 @@ public class UploadedFile extends File
     public String originFullName = null;
     public String originName = null;
 
-    protected UploadedFile(String pathname)
-    {
-        super(pathname);
+    private long length = 0;
+
+    protected UploadedFile(String pathname) {
+        super( pathname );
+        length = this.length();
     }
 
     /**
@@ -96,4 +96,7 @@ public class UploadedFile extends File
     }
 
 
+    public long getLength() {
+        return length;
+    }
 }

@@ -39,8 +39,15 @@ import javax.servlet.ServletException;
  */
 public class UploadException extends ServletException
 {
-    public UploadException(String msg)
-    {
-        super(msg);
+    public UploadException() {
+        super();
+    }
+
+    public UploadException(String s) {
+        super(s);
+    }
+
+    public UploadException(String s, Throwable cause){
+        super(s, cause);
     }
 }

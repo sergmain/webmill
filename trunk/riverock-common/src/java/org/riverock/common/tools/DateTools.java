@@ -23,11 +23,6 @@
  *
  */
 
-/**
- *
- * $Id$
- *
- */
 package org.riverock.common.tools;
 
 import java.sql.Timestamp;
@@ -37,17 +32,20 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+/**
+ *
+ * $Id$
+ *
+ */
 public final class DateTools
 {
 
-    public static java.sql.Timestamp getCurrentTime()
-    {
+    public static java.sql.Timestamp getCurrentTime() {
         return new Timestamp(System.currentTimeMillis());
     }
 
     public static java.util.Date getDateWithMask( final String date, final String mask )
-        throws java.text.ParseException
-    {
+        throws java.text.ParseException {
         if (date == null || mask == null)
             return null;
 
@@ -56,8 +54,7 @@ public final class DateTools
         return dFormat.parse(date);
     }
 
-    public static String getStringDate( final java.util.Date date, final String mask, final Locale loc, final TimeZone tz)
-    {
+    public static String getStringDate( final java.util.Date date, final String mask, final Locale loc, final TimeZone tz) {
         if (date == null) return null;
 
         SimpleDateFormat df = new SimpleDateFormat(mask, loc);
