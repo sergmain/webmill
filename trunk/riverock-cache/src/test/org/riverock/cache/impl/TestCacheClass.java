@@ -64,15 +64,13 @@
 
 
 
-package org.riverock.test.cache;
+package org.riverock.cache.impl;
 
 
 
 import junit.framework.Assert;
 
 import junit.framework.TestCase;
-
-import org.riverock.generic.db.DBconnect;
 
 import org.riverock.main.core.InsertSiteVirtualHostItem;
 
@@ -91,6 +89,8 @@ import org.riverock.schema.price.CustomCurrencyItemType;
 import org.riverock.test.cases.TestCaseInterface;
 
 import org.riverock.test.cases.TestCaseSiteAbstract;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 
 
@@ -140,7 +140,7 @@ public class TestCacheClass extends TestCase implements TestCaseInterface
 
             }
 
-            DBconnect.close( testAbstract.db_);
+            DatabaseAdapter.close( testAbstract.db_);
 
             testAbstract.db_ = null;
 

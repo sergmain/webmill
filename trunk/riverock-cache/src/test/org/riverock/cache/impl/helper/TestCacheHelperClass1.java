@@ -48,7 +48,7 @@
 
 
 
-package org.riverock.test.cache.helper;
+package org.riverock.cache.impl.helper;
 
 
 

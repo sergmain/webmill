@@ -70,9 +70,9 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.common.tools.StringTools;
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.common.tools.DateTools;
 
@@ -104,11 +104,11 @@ import java.util.ArrayList;
 
 
 
-public class MSSQL_JTDS_connect extends DBconnect
+public class MSSQL_JTDS_connect extends DatabaseAdapter
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.MSSQL_JTDS_connect" );
+    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.MSSQL_JTDS_connect" );
 
 
 

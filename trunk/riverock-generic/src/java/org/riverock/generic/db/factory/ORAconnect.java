@@ -66,17 +66,25 @@ package org.riverock.generic.db.factory;
 
 import org.riverock.common.tools.RsetTools;
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.generic.db.DatabaseAdapter;
+
 import org.riverock.generic.schema.config.DatabaseConnectionType;
+
+import org.riverock.generic.schema.config.types.DataSourceTypeType;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
 
 import org.riverock.generic.schema.db.structure.*;
 
+import org.riverock.generic.exception.DatabaseException;
+
 import oracle.jdbc.driver.OracleResultSet;
+
+import oracle.jdbc.pool.OracleConnectionPoolDataSource;
+
+import oracle.jdbc.pool.OracleConnectionCacheImpl;
 
 import oracle.sql.BLOB;
 
@@ -96,7 +104,7 @@ import java.util.ArrayList;
 
 
 
-public class ORAconnect extends DBconnect
+public class ORAconnect extends DatabaseAdapter
 
 {
 
@@ -1932,37 +1940,21 @@ DEFERRABLE INITIALLY DEFERRED
 
 
 
-
-
-    public void nop()
-
-    {
-
-//        int i = 0;
-
-    }
-
-
+    private static Object syncObject = new Object();
 
     /**
 
-Этот метод создает коннект к серверу с указанным объектом типа DatabaseConnection.<br>
+     * Get new connection to DB
 
+     * @param dc_ DatabaseConnectionType
 
-
-Параметры:
-
-<blockquote>
-
-cd - объект типа DatabaseConnection<br>
-
-</blockquote>
+     * @throws DatabaseException
 
      */
 
     protected void init(DatabaseConnectionType dc_)
 
-            throws SQLException, ClassNotFoundException
+        throws DatabaseException
 
     {
 
@@ -1970,53 +1962,163 @@ cd - объект типа DatabaseConnection<br>
 
 
 
-        if (dc == null)
+        try {
 
-        {
+            if (dc == null)
 
-            log.fatal("DatabaseConnection not initialized");
+            {
 
-            throw new SQLException("#21.001 DatabaseConnection not initialized.");
+                log.fatal("DatabaseConnection not initialized");
+
+                throw new DatabaseException("#21.001 DatabaseConnection not initialized.");
+
+            }
+
+
+
+            if (!isDriverLoaded)
+
+            {
+
+                synchronized(syncObject)
+
+                {
+
+                    if (!isDriverLoaded)
+
+                    {
+
+                        switch (dc.getDataSourceType().getType())
+
+                        {
+
+                            case DataSourceTypeType.DRIVER_TYPE:
+
+                                OracleConnectionPoolDataSource pool = new OracleConnectionPoolDataSource();
+
+                                pool.setURL(dc.getConnectString());
+
+                                pool.setUser(dc.getUsername());
+
+                                pool.setPassword(dc.getPassword());
+
+                                // Initialize the Connection Cache
+
+                                dataSource = new OracleConnectionCacheImpl(pool);
+
+
+
+                                // Set Max Limit for the Cache
+
+                                ((OracleConnectionCacheImpl)dataSource).setMaxLimit(5);
+
+
+
+                                // Set Min Limit for the Cache
+
+                                ((OracleConnectionCacheImpl)dataSource).setMinLimit(1);
+
+
+
+                                // Set Caching Scheme as DYNAMIC_SCHEME
+
+                                // Caching Schema means that once the connection active size becomes 5,
+
+                                // the next request for Connection will be served by creating a new pooled
+
+                                // connection instance and close the connection automatically when it is
+
+                                // no longer in use.
+
+                                ((OracleConnectionCacheImpl)dataSource).setCacheScheme(OracleConnectionCacheImpl.DYNAMIC_SCHEME);
+
+
+
+                                break;
+
+                            case DataSourceTypeType.JNDI_TYPE:
+
+                                throw new DatabaseException("not implemented");
+
+//                                break;
+
+
+
+                            case DataSourceTypeType.NONE_TYPE:
+
+                                Class cl_ = Class.forName("oracle.jdbc.driver.OracleDriver");
+
+                                break;
+
+                        }
+
+                        isDriverLoaded = true;
+
+
+
+                    }
+
+                }
+
+            }
+
+
+
+            if (log.isDebugEnabled())
+
+            {
+
+                log.debug("ConnectString - "+dc.getConnectString());
+
+                log.debug("username - "+dc.getUsername());
+
+                log.debug("password - "+dc.getPassword());
+
+                log.debug("isAutoCommit - "+dc.getIsAutoCommit());
+
+            }
+
+
+
+            switch (dc.getDataSourceType().getType())
+
+            {
+
+                case DataSourceTypeType.DRIVER_TYPE:
+
+                    conn = dataSource.getConnection();
+
+                    break;
+
+                case DataSourceTypeType.JNDI_TYPE:
+
+                    throw new DatabaseException("not implemented");
+
+//                    break;
+
+
+
+                case DataSourceTypeType.NONE_TYPE:
+
+                    conn = DriverManager.getConnection(dc.getConnectString(), dc.getUsername(), dc.getPassword());
+
+                    break;
+
+            }
+
+
+
+
+
+            conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
+
+        } catch (Exception e) {
+
+            log.error("Expeption create new Connection", e);
+
+            throw new DatabaseException(e.toString());
 
         }
-
-
-
-        if (!isDriverLoaded)
-
-        {
-
-            Class cl_ = Class.forName("oracle.jdbc.driver.OracleDriver");
-
-            isDriverLoaded = true;
-
-        }
-
-
-
-        if (log.isDebugEnabled())
-
-        {
-
-            log.debug("ConnectString - "+dc.getConnectString());
-
-            log.debug("username - "+dc.getUsername());
-
-            log.debug("password - "+dc.getPassword());
-
-            log.debug("isAutoCommit - "+dc.getIsAutoCommit());
-
-        }
-
-
-
-        conn = DriverManager.getConnection
-
-                (dc.getConnectString(), dc.getUsername(), dc.getPassword());
-
-
-
-        conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
 
     }
 

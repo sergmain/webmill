@@ -798,17 +798,15 @@ public class CreateSchemaFromDb
 
 
 
-
-
-
-
     private static String getEndOfClass(
 
         String className, String classNameItem,
 
         String debugTable,
 
-        DbTableType table, String accessAction, boolean isAddParam, boolean isCloseRsPs)
+        DbTableType table, String accessAction,
+
+        boolean isAddParam, boolean isCloseRsPs, boolean isFillBean)
 
         throws Exception
 
@@ -1061,6 +1059,12 @@ public class CreateSchemaFromDb
 
 
             }
+
+
+
+        if (isFillBean)
+
+            s += getBeanFiller(classNameItem, table);
 
 
 
@@ -1730,7 +1734,7 @@ public class CreateSchemaFromDb
 
                 "test-"+table.getName().toLowerCase()+"-list.xml",
 
-                table, "S", true, true);
+                table, "S", true, true, false);
 
 
 
@@ -2002,7 +2006,7 @@ public class CreateSchemaFromDb
 
             "test-"+table.getName().toLowerCase()+"-list.xml",
 
-            table, "S", false, true);
+            table, "S", false, true, false);
 
 
 
@@ -2288,15 +2292,51 @@ public class CreateSchemaFromDb
 
             "            {\n"+
 
-            (config.getIsUseObjectWrapper()
+            "                item = fillBean(rs);\n" +
 
-            ?"                 this.item = new "+classNameItem+"();\n"
+            "                isFound = true;\n"+
 
-            :""
+            "            }\n"+
 
-            )+
+            "\n"+
 
-            "                 this.isFound = true;\n"+
+            getEndOfClass(className, classNameItem,
+
+            "test-"+table.getName().toLowerCase()+"-item.xml",
+
+            table, "S", true, true, true);
+
+
+
+//        String d = config.getJavaPackagePath()+(packageClass.replace('.', '\\'))+'\\';
+
+//        File file = new File(d);
+
+//        file.mkdirs();
+
+//        MainTools.writeToFile( d+className+".java", s.getBytes());
+
+        writeClass(className, s1);
+
+
+
+    }
+
+
+
+    private static String getBeanFiller(String classNameItem, DbTableType table)
+
+    {
+
+        String s1 =
+
+            "    public static "+classNameItem+" fillBean(ResultSet rs)\n"+
+
+            "        throws java.sql.SQLException\n"+
+
+            "    {\n"+
+
+            "        "+classNameItem+" item = new "+classNameItem+"();\n"+
 
             "\n";
 
@@ -2316,89 +2356,83 @@ public class CreateSchemaFromDb
 
                 s += getBooleanField(i, field);
 
-//                    "                 item.set"+StringTools.capitalizeString(field.getName())+"(\n"+
-
-//                    "                     rs.getInt( \""+field.getName()+"\")==1?true:false\n"+
-
-//                    "                 );\n";
-
             }
 
             else
 
-            if (isKeyField( field ))
-
-            {
-
-                s += getLongField(i, field);
-
-            }
-
-            else
-
-            {
-
-                switch ( field.getJavaType().intValue() )
+                if (isKeyField( field ))
 
                 {
 
+                    s += getLongField(i, field);
+
+                }
+
+                else
+
+                {
+
+                    switch ( field.getJavaType().intValue() )
+
+                    {
 
 
-                    case Types.DECIMAL:
 
-                        if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                        case Types.DECIMAL:
 
-                        {
+                            if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+
+                            {
+
+                                if (field.getSize().intValue()<7)
+
+                                    s +=  getIntField(i, field);
+
+                                else
+
+                                    s += getLongField(i, field);
+
+                            }
+
+                            else
+
+                                s += getDoubleField(i, field);
+
+
+
+                            break;
+
+
+
+                        case Types.INTEGER:
 
                             if (field.getSize().intValue()<7)
 
-                                s +=  getIntField(i, field);
+                                s += getIntField(i, field);
 
                             else
 
                                 s += getLongField(i, field);
 
-                        }
+                            break;
 
-                        else
+
+
+                        case Types.DOUBLE:
 
                             s += getDoubleField(i, field);
 
-
-
-                        break;
-
-
-
-                    case Types.INTEGER:
-
-                        if (field.getSize().intValue()<7)
-
-                            s += getIntField(i, field);
-
-                        else
-
-                            s += getLongField(i, field);
-
-                        break;
+                            break;
 
 
 
-                    case Types.DOUBLE:
+                        case Types.VARCHAR:
 
-                        s += getDoubleField(i, field);
+                        case Types.LONGVARCHAR:
 
-                        break;
+                        case Types.LONGVARBINARY:
 
-
-
-                    case Types.VARCHAR:
-
-                    case Types.LONGVARCHAR:
-
-                    case Types.LONGVARBINARY:
-
-                        s += getStringField( field );
+                            s += getStringField( field );
 
 //                            "                 String tempString"+i+" = rs.getString( \""+field.getName()+"\" );\n"+
 
@@ -2406,15 +2440,15 @@ public class CreateSchemaFromDb
 
 //                            "                     item.set"+StringTools.capitalizeString(field.getName())+"(tempString"+i+");\n";
 
-                        break;
+                            break;
 
 
 
-                    case Types.DATE:
+                        case Types.DATE:
 
-                    case Types.TIMESTAMP:
+                        case Types.TIMESTAMP:
 
-                        s += getTimestampField(field);
+                            s += getTimestampField(field);
 
 //                            "                 java.sql.Timestamp tempTimestamp"+i+" = rs.getTimestamp( \""+field.getName()+"\" );\n"+
 
@@ -2422,19 +2456,19 @@ public class CreateSchemaFromDb
 
 //                            "                     item.set"+StringTools.capitalizeString(field.getName())+"(tempTimestamp"+i+");\n";
 
-                        break;
+                            break;
 
 
 
-                    default:
+                        default:
 
-                        field.setJavaStringType( "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() );
+                            field.setJavaStringType( "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() );
 
-                        System.out.println( "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() );
+                            System.out.println( "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() );
+
+                    }
 
                 }
-
-            }
 
 
 
@@ -2442,29 +2476,15 @@ public class CreateSchemaFromDb
 
 
 
-        s = s1 + declareVars + s +
+        return
 
-            "            }\n"+
+            s1 + declareVars + s+
 
-            getEndOfClass(className, classNameItem,
+            "        return item;\n"+
 
-            "test-"+table.getName().toLowerCase()+"-item.xml",
+            "    }\n"+
 
-            table, "S", true, true);
-
-
-
-//        String d = config.getJavaPackagePath()+(packageClass.replace('.', '\\'))+'\\';
-
-//        File file = new File(d);
-
-//        file.mkdirs();
-
-//        MainTools.writeToFile( d+className+".java", s.getBytes());
-
-        writeClass(className, s);
-
-
+            "\n";
 
     }
 
@@ -6632,9 +6652,9 @@ public class CreateSchemaFromDb
 
 /*
 
-// Todo закоментарино т.к. не до конца понятно,
+// Todo commented
 
-// Todo должен ли возвращаться фектори класс как null, или нет
+// Todo need investigation - what return null or empty bean
 
                     (config.getIsUseCache()
 
@@ -6734,7 +6754,7 @@ public class CreateSchemaFromDb
 
                     "test-"+table.getName().toLowerCase()+"-list.xml",
 
-                    table, "S", true, false);
+                    table, "S", true, false, false);
 
 
 

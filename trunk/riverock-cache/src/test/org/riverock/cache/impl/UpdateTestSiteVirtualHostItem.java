@@ -48,7 +48,7 @@
 
 
 
-package org.riverock.test.cache;
+package org.riverock.cache.impl;
 
 
 
@@ -76,8 +76,6 @@ import org.riverock.as.ApplicationInterface;
 
 import org.riverock.as.server.ApplicationTools;
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.schema.appl_server.ResourceRequestParameterType;
 
 import org.riverock.schema.appl_server.ResourceRequestType;
@@ -89,6 +87,8 @@ import org.riverock.generic.startup.InitParam;
 import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.tools.XmlTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 
 
@@ -104,7 +104,7 @@ public class UpdateTestSiteVirtualHostItem implements ApplicationInterface
 
 
 
-     public static Long processData(DBconnect db_, SiteVirtualHostItemType item)
+     public static Long processData(DatabaseAdapter db_, SiteVirtualHostItemType item)
 
          throws Exception
 
@@ -254,7 +254,7 @@ public class UpdateTestSiteVirtualHostItem implements ApplicationInterface
 
 
 
-          Long resultItem = UpdateTestSiteVirtualHostItem.processData( DBconnect.getInstance( false ), item );
+          Long resultItem = UpdateTestSiteVirtualHostItem.processData( DatabaseAdapter.getInstance( false ), item );
 
           return XmlTools.getXml(resultItem, "CountProcessedRecords");
 
@@ -280,7 +280,7 @@ public class UpdateTestSiteVirtualHostItem implements ApplicationInterface
 
 
 
-       Long resultItem = UpdateTestSiteVirtualHostItem.processData( DBconnect.getInstance( false ), data );
+       Long resultItem = UpdateTestSiteVirtualHostItem.processData( DatabaseAdapter.getInstance( false ), data );
 
 
 

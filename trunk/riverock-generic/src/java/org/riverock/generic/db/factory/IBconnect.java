@@ -70,9 +70,9 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.common.tools.StringTools;
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.common.tools.DateTools;
 
@@ -104,11 +104,11 @@ import java.util.ArrayList;
 
 
 
-public class IBconnect extends DBconnect
+public class IBconnect extends DatabaseAdapter
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.IBconnect" );
+    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.IBconnect" );
 
 
 

@@ -48,7 +48,7 @@
 
 
 
-package org.riverock.test.cache;
+package org.riverock.cache.impl;
 
 
 
@@ -66,8 +66,6 @@ import org.riverock.as.ApplicationInterface;
 
 import org.riverock.as.server.ApplicationTools;
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.main.CacheItemV2;
 
 import org.riverock.schema.appl_server.ResourceRequestParameterType;
@@ -81,6 +79,8 @@ import org.riverock.generic.startup.InitParam;
 import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.tools.XmlTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 
 
@@ -142,7 +142,7 @@ public class GetTestVirtualHostItem extends CacheItemV2 implements ApplicationIn
 
 
 
-     public static GetTestVirtualHostItem getInstance(DBconnect db__, Long id__)
+     public static GetTestVirtualHostItem getInstance(DatabaseAdapter db__, Long id__)
 
          throws Exception
 
@@ -154,7 +154,7 @@ public class GetTestVirtualHostItem extends CacheItemV2 implements ApplicationIn
 
 
 
-     public static GetTestVirtualHostItem getInstance(DBconnect db__, long id__)
+     public static GetTestVirtualHostItem getInstance(DatabaseAdapter db__, long id__)
 
          throws Exception
 
@@ -166,7 +166,7 @@ public class GetTestVirtualHostItem extends CacheItemV2 implements ApplicationIn
 
 
 
-     public SiteVirtualHostItemType getData(DBconnect db_, long id)
+     public SiteVirtualHostItemType getData(DatabaseAdapter db_, long id)
 
          throws Exception
 
@@ -228,7 +228,7 @@ public class GetTestVirtualHostItem extends CacheItemV2 implements ApplicationIn
 
 
 
-     public GetTestVirtualHostItem(DBconnect db_, long id)
+     public GetTestVirtualHostItem(DatabaseAdapter db_, long id)
 
          throws Exception
 
@@ -280,7 +280,7 @@ public class GetTestVirtualHostItem extends CacheItemV2 implements ApplicationIn
 
 
 
-     public GetTestVirtualHostItem(DBconnect db_, Long id)
+     public GetTestVirtualHostItem(DatabaseAdapter db_, Long id)
 
          throws Exception
 
@@ -428,7 +428,7 @@ public class GetTestVirtualHostItem extends CacheItemV2 implements ApplicationIn
 
 
 
-         SiteVirtualHostItemType resultItem = GetTestVirtualHostItem.getInstance( DBconnect.getInstance( false ), id ).item;
+         SiteVirtualHostItemType resultItem = GetTestVirtualHostItem.getInstance( DatabaseAdapter.getInstance( false ), id ).item;
 
          return XmlTools.getXml(resultItem, "SiteVirtualHostItemType");
 
@@ -448,7 +448,7 @@ public class GetTestVirtualHostItem extends CacheItemV2 implements ApplicationIn
 
        long id = 1;
 
-       SiteVirtualHostItemType resultItem = GetTestVirtualHostItem.getInstance( DBconnect.getInstance( false ), id ).item;
+       SiteVirtualHostItemType resultItem = GetTestVirtualHostItem.getInstance( DatabaseAdapter.getInstance( false ), id ).item;
 
 
 

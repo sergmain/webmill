@@ -70,9 +70,9 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.common.tools.StringTools;
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 
@@ -92,11 +92,11 @@ import java.util.ArrayList;
 
 
 
-public class MYSQLconnect extends DBconnect
+public class MYSQLconnect extends DatabaseAdapter
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.MYSQLconnect" );
+    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.MYSQLconnect" );
 
 
 
