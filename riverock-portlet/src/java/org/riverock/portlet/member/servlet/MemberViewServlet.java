@@ -264,7 +264,7 @@ public class MemberViewServlet extends HttpServlet
 
             if (log.isDebugEnabled())
 
-                log.debug("mod.getType() - " + mp.mod.getType());
+                log.debug("mod.getDefaultPortletType() - " + mp.mod.getType());
 
 
 

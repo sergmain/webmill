@@ -702,7 +702,7 @@ public class TestCaseMember extends TestCase
 
 
 
-//                    if (content.getAction().getType()==ContentTypeActionType.INSERT_TYPE)
+//                    if (content.getAction().getDefaultPortletType()==ContentTypeActionType.INSERT_TYPE)
 
 //                        continue;
 
@@ -1408,9 +1408,9 @@ public class TestCaseMember extends TestCase
 
 /*
 
-                                if (field.getDbType().getType()==FieldsTypeDbTypeType.NUMBER_TYPE &&
+                                if (field.getDbType().getDefaultPortletType()==FieldsTypeDbTypeType.NUMBER_TYPE &&
 
-                                    field.getJspType().getType()==FieldsTypeJspTypeType.TEXT_TYPE)
+                                    field.getJspType().getDefaultPortletType()==FieldsTypeJspTypeType.TEXT_TYPE)
 
                                 {
 
@@ -1442,7 +1442,7 @@ public class TestCaseMember extends TestCase
 
 /*
 
-                                if (field.getJspType().getType()==FieldsTypeJspTypeType.LOOKUP_TYPE &&
+                                if (field.getJspType().getDefaultPortletType()==FieldsTypeJspTypeType.LOOKUP_TYPE &&
 
                                     field.getQueryArea()==null)
 
@@ -1458,7 +1458,7 @@ public class TestCaseMember extends TestCase
 
                                 }
 
-                                if (field.getJspType().getType()==FieldsTypeJspTypeType.LOOKUPCLASS_TYPE&&
+                                if (field.getJspType().getDefaultPortletType()==FieldsTypeJspTypeType.LOOKUPCLASS_TYPE&&
 
                                     field.getClassQuery()==null)
 
@@ -1964,7 +1964,7 @@ TargetModuleType target = null;
 
             TargetModuleType check = content.getTargetModule(i);
 
-            if (check.getAction().getType()==TargetModuleTypeActionType.LOOKUP_TYPE)
+            if (check.getAction().getDefaultPortletType()==TargetModuleTypeActionType.LOOKUP_TYPE)
 
             {
 

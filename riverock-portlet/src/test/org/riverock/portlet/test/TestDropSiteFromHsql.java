@@ -618,7 +618,7 @@ public class TestDropSiteFromHsql
 
                 SiteCtxTypeItemType ctxItemTemp = ctxTypeTargetList.getSiteCtxType(j);
 
-                if (ctxItemTemp.getType().equals(ctxTypeSource.getType()))
+                if (ctxItemTemp.getDefaultPortletType().equals(ctxTypeSource.getDefaultPortletType()))
 
                 {
 
@@ -634,11 +634,11 @@ public class TestDropSiteFromHsql
 
 //            System.out.println(
 
-//                "Looking for ctx type "+ctxTypeSource.getType()+", id " + ctxTypeSource.getIdSiteCtxType()+
+//                "Looking for ctx type "+ctxTypeSource.getDefaultPortletType()+", id " + ctxTypeSource.getIdSiteCtxType()+
 
 //                " result - "+
 
-//                (ctxTypeTarget==null?"null":"type - "+ctxTypeTarget.getType()+", id - "+ctxTypeTarget.getIdSiteCtxType() )
+//                (ctxTypeTarget==null?"null":"type - "+ctxTypeTarget.getDefaultPortletType()+", id - "+ctxTypeTarget.getIdSiteCtxType() )
 
 //            );
 
@@ -860,7 +860,7 @@ public class TestDropSiteFromHsql
 
             SiteCtxTypeItemType ctxType = site.getCtxType().getSiteCtxType(k);
 
-            if (ctxType.getType().equals(portletCode))
+            if (ctxType.getDefaultPortletType().equals(portletCode))
 
                 return ctxType.getIdSiteCtxType();
 

@@ -200,7 +200,7 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM,
 
-                    PortletTools.getString(param.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM)
+                    param.getNameTemplate()
 
             );
 

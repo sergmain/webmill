@@ -124,7 +124,9 @@ public class TempUpdateMainListNews
 
                 Long id = RsetTools.getLong(rs, "ID_NEWS");
 
+                if (id==null)
 
+                    throw new Exception("ID_NEWS can not be null");
 
 
 
@@ -154,7 +156,7 @@ public class TempUpdateMainListNews
 
                     ps1 = db_.prepareStatement(sql_temp_);
 
-                    // Todo add NPE check
+
 
                     ps1.setLong(1, id.longValue()  );
 

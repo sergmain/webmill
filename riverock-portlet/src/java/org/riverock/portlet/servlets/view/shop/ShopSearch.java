@@ -850,9 +850,9 @@ public class ShopSearch extends HttpServlet
 
 
 
-                // Todo это просто заглушка, сейчас не работает.
+                // Todo this is simple stub, current not work
 
-                // Todo т.к. сиквенс просто использовался чтобы получить уникальное имя файла
+                // Todo because sequence was used to simple getting of next id of file
 
                 CustomSequenceType seq = new CustomSequenceType();
 

@@ -66,11 +66,31 @@ import java.lang.reflect.Constructor;
 
 import java.lang.reflect.Method;
 
-import java.util.*;
+import java.util.ArrayList;
+
+import java.util.Enumeration;
+
+import java.util.HashMap;
+
+import java.util.Iterator;
+
+import java.util.List;
+
+import java.util.Map;
+
+import java.util.Set;
 
 
 
-import javax.portlet.*;
+import javax.portlet.PortletContext;
+
+import javax.portlet.PortletRequest;
+
+import javax.portlet.PortletRequestDispatcher;
+
+import javax.portlet.PortletSession;
+
+import javax.portlet.RenderRequest;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -82,7 +102,15 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 
-import org.riverock.common.multipart.*;
+import org.riverock.common.multipart.AbstractPart;
+
+import org.riverock.common.multipart.MultipartHandler;
+
+import org.riverock.common.multipart.MultipartRequestException;
+
+import org.riverock.common.multipart.MultipartRequestWrapper;
+
+import org.riverock.common.multipart.UploadException;
 
 import org.riverock.common.tools.StringTools;
 
@@ -304,8 +332,6 @@ public class PortletTools
 
         DatabaseAdapter adapter,
 
-        Long portletId,
-
         PortletRequest portletRequest
 
         )
@@ -366,7 +392,7 @@ public class PortletTools
 
             PortletResultObject portletObject = null;
 
-            // если нужно получить объект портлета без указания его кода
+            // create portlet without portlet code
 
             if (codePortlet == null || codePortlet.length() == 0)
 
@@ -380,43 +406,33 @@ public class PortletTools
 
                 Long id = null;
 
-                if (portletId == null)
+                String namePortletId = getStringParam(desc, name_portlet_id);
+
+                if (namePortletId != null && namePortletId.length() != 0)
 
                 {
 
-                    String namePortletId = getStringParam(desc, name_portlet_id);
+                    if (log.isDebugEnabled())
 
-                    if (namePortletId != null && namePortletId.length() != 0)
-
-                    {
-
-                        if (log.isDebugEnabled())
-
-                            log.debug("Get ID from request");
+                        log.debug("Get ID from request");
 
 
 
-                        id = getIdPortlet(namePortletId, portletRequest);
+                    id = getIdPortlet(namePortletId, portletRequest);
 
 
 
-                        if (log.isDebugEnabled())
+                    if (log.isDebugEnabled())
 
-                            log.debug("ID from request - " + id);
+                        log.debug("ID from request - " + id);
 
 
 
-                        if (id == null)
+                    if (id == null)
 
-                            return null;
-
-                    }
+                        return null;
 
                 }
-
-                else
-
-                    id = portletId;
 
 
 
@@ -1013,5 +1029,7 @@ public class PortletTools
         }
 
     }
+
+
 
 }

@@ -814,13 +814,13 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
         CtxInstance ctxInstance = new CtxInstance();
 
-        ctxInstance.request = testAbstract.request;
+//        ctxInstance.request = testAbstract.request;
 
         ctxInstance.response = testAbstract.response;
 
-        ctxInstance.jspPage = testAbstract.jspPage;
+        ctxInstance.page = testAbstract.jspPage;
 
-        ctxInstance.type = "mill.news_block";
+        ctxInstance.setType( "mill.news_block" );
 
 
 

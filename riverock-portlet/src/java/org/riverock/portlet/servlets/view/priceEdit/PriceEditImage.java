@@ -226,7 +226,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                shopParam.nameTemplate = ctxInstance.getPortletRequest().getParameter(Constants.NAME_TEMPLATE_CONTEXT_PARAM);
+                shopParam.nameTemplate = ctxInstance.getNameTemplate();
 
                 shopParam.setServerName(ctxInstance.getPortletRequest().getServerName());
 

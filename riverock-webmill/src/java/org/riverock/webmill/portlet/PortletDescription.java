@@ -18,6 +18,8 @@ package org.riverock.webmill.portlet;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.interfaces.schema.javax.portlet.PortletType;
 
 import org.riverock.interfaces.schema.portlet.types.PortletDescriptionTypeTypePortletType;
@@ -29,6 +31,10 @@ import org.riverock.interfaces.schema.portlet.types.PortletDescriptionTypeTypePo
 public class PortletDescription
 
 {
+
+    private static Logger log = Logger.getLogger(PortletDescription.class);
+
+
 
     private PortletType portletConfig = null;
 
@@ -50,11 +56,23 @@ public class PortletDescription
 
     {
 
+        if (log.isDebugEnabled())
+
+            log.debug("get description for portlet type - "+type);
+
+
+
         PortletDescription desc = new PortletDescription();
 
 
 
-        desc.setPortletConfig(PortletManager.getPortletDescription( type ));
+        desc.portletConfig = PortletManager.getPortletDescription( type );
+
+
+
+        if (log.isDebugEnabled())
+
+            log.debug("portletConfig - "+desc.portletConfig);
 
 
 

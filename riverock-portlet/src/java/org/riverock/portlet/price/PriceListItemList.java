@@ -404,18 +404,6 @@ public class PriceListItemList
 
                             try {
 
-                                XmlTools.writeToFile(item, WebmillConfig.getWebmillDebugDir()+"schema-currency-item.xml");
-
-                            }catch(Exception e)
-
-                            {
-
-                                log.error("Exception write item to file", e);
-
-                            }
-
-                            try {
-
                                 XmlTools.writeToFile(targetCurrency, WebmillConfig.getWebmillDebugDir()+"schema-currency-default.xml");
 
                             }catch(Exception e)
@@ -504,13 +492,39 @@ public class PriceListItemList
 
                     item.addHiddenParam(getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP));
 
-                    item.addHiddenParam(getHidden(Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam.nameTemplate));
+                    item.addHiddenParam(getHidden(Constants.NAME_TEMPLATE_CONTEXT_PARAM, param.getNameTemplate() ));
 
                     item.addHiddenParam(getHidden(Constants.NAME_SHOP_SORT_BY, shopParam.sortBy));
 
                     item.addHiddenParam(getHidden(Constants.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
 
                 }
+
+                if (log.isDebugEnabled())
+
+                {
+
+                    synchronized(syncObj)
+
+                    {
+
+                        try {
+
+                            XmlTools.writeToFile(item, WebmillConfig.getWebmillDebugDir()+"schema-currency-item.xml");
+
+                        }catch(Exception e)
+
+                        {
+
+                            log.error("Exception write item to file", e);
+
+                        }
+
+                    }
+
+                }
+
+
 
 
 

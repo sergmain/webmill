@@ -576,6 +576,12 @@ public class PortletManager
 
     {
 
+        if (portletName==null)
+
+            return null;
+
+
+
         try {
 
         init();
@@ -742,6 +748,8 @@ public class PortletManager
 
 
 
+/*
+
     public static PortletType getPortlet( CtxInstance ctxInstance)
 
     {
@@ -760,33 +768,43 @@ public class PortletManager
 
             }
 
-            String typePortlet = (String)ctxInstance.session.getAttribute( Constants.NAME_PORTLET_PARAM );
-
-            if ( ( typePortlet==null || typePortlet.length()==0 ) )
-
-            {
 
 
+            String typePortlet = null;
 
-                if ( ctxInstance.req.getAttribute( Constants.NAME_PORTLET_PARAM )==null )
+//            typePortlet = (String)ctxInstance.session.getAttribute( Constants.NAME_PORTLET_PARAM );
+
+//            if ( ( typePortlet==null || typePortlet.length()==0 ) )
+
+//            {
+
+
+
+                if ( ctxInstance.getPortletRequest().getParameter( Constants.NAME_TYPE_CONTEXT_PARAM )==null )
+
+                {
+
+                    log.error("portlet type not determinited");
 
                     return null;
 
+                }
 
 
-                String type__ = PortletTools.getString( ctxInstance.getPortletRequest(), Constants.NAME_PORTLET_PARAM );
+
+                String type__ = PortletTools.getString( ctxInstance.getPortletRequest(), Constants.NAME_TYPE_CONTEXT_PARAM );
 
 
 
                 if ( log.isDebugEnabled() )
 
-                    log.debug( "Session attribute not initialized. Get from parameter jsp:param. "+type__ );
+                    log.debug( "Session attribute not initialized. Get from parameter . "+type__ );
 
 
 
                 typePortlet = type__;
 
-            }
+//            }
 
 
 
@@ -839,5 +857,7 @@ public class PortletManager
         return null;
 
     }
+
+*/
 
 }

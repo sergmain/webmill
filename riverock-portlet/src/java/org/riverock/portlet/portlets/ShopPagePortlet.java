@@ -140,7 +140,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 {
 
-    private static Logger cat = Logger.getLogger(ShopPagePortlet.class);
+    private static Logger log = Logger.getLogger(ShopPagePortlet.class);
 
 
 
@@ -196,7 +196,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
     {
 
-        if ( cat.isDebugEnabled() )
+        if ( log.isDebugEnabled() )
 
         {
 
@@ -204,7 +204,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
             {
 
-                cat.debug( "Unmarshal ShopPagePortlet object" );
+                log.debug( "Unmarshal ShopPagePortlet object" );
 
                 FileWriter w = new FileWriter( WebmillConfig.getWebmillDebugDir()+"portlet-shop.xml" );
 
@@ -294,9 +294,9 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         {
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
-                cat.debug("Shop session not initialized");
+                log.debug("Shop session not initialized");
 
 
 
@@ -348,7 +348,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         shopParam.id_group = PortletTools.getLong( param.getPortletRequest(), Constants.NAME_ID_GROUP_SHOP, new Long(0) );
 
-        shopParam.nameTemplate = param.getPage().getNameTemplate();
+        shopParam.nameTemplate = param.getNameTemplate();
 
         shopParam.setServerName( param.getPage().p.getServerName());
 
@@ -382,7 +382,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         {
 
-                cat.warn("Precision not defined. Use default - 2 digit.");
+                log.warn("Precision not defined. Use default - 2 digit.");
 
         }
 
@@ -466,7 +466,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         {
 
-            cat.error("shop template not defined");
+            log.error("shop template not defined");
 
             throw new Exception("shop template not defined");
 
@@ -584,9 +584,9 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
     {
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug("Get list of Shop. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
+            log.debug("Get list of Shop. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
 
 
 
@@ -668,7 +668,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         {
 
-            cat.error("Get list of Shop. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e);
+            log.error("Get list of Shop. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog, e);
 
             return null;
 

@@ -72,6 +72,8 @@ import java.io.Writer;
 
 import java.io.IOException;
 
+import java.util.Map;
+
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,6 +87,8 @@ import javax.servlet.RequestDispatcher;
 
 
 import org.riverock.generic.tools.servlet.ServletResponseWrapperInclude;
+
+import org.riverock.generic.tools.servlet.HttpServletRequestWrapperInclude;
 
 import org.riverock.webmill.config.WebmillConfig;
 
@@ -104,11 +108,15 @@ public class ServletUtils
 
 
 
-    public static void include(HttpServletRequest request, HttpServletResponse response,
+    public static void include(
 
-                               String path, Writer out_
+        HttpServletRequest request, HttpServletResponse response,
 
-                               )
+        Map parameters,
+
+        String path, Writer out_
+
+        )
 
         throws IOException, ServletException
 
@@ -120,7 +128,9 @@ public class ServletUtils
 
 
 
-        rd.include(request,
+        rd.include(
+
+            new HttpServletRequestWrapperInclude(request,parameters),
 
             new ServletResponseWrapperInclude(response, out_)
 

@@ -198,12 +198,6 @@ public class ForumPlain extends HttpServlet
 
             SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response, ctxInstance.page);
 
-//            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
-
-
-
-//            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
-
             String nameTemplate = ctxInstance.getNameTemplate();
 
 
