@@ -154,9 +154,9 @@ abstract public class Forum
 
         id = PortletTools.getLong(portletRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
 
-//Todo need change
 
-        id_forum = jspPage.getPortletId();
+
+        id_forum = PortletTools.getLong(portletRequest, Constants.NAME_ID_FORUM_PARAM);
 
         year = PortletTools.getInt(
 

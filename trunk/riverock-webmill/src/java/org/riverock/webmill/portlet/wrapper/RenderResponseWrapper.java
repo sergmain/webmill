@@ -72,8 +72,6 @@ import java.io.OutputStream;
 
 import java.io.PrintWriter;
 
-import java.util.ArrayList;
-
 import java.util.Locale;
 
 
@@ -124,7 +122,7 @@ public class RenderResponseWrapper implements RenderResponse
 
         this.response = ctxInstance.response ;
 
-        this.ctxType = ctxInstance.getType();
+        this.ctxType = ctxInstance.getDefaultPortletType();
 
     }
 

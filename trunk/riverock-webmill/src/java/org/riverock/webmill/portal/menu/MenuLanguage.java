@@ -292,60 +292,6 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-/*
-
-    static String sql_ = null;
-
-    static
-
-    {
-
-        sql_ =
-
-            "select a.ID_SITE_CTX_LANG_CATALOG , a.CATALOG_CODE , a.IS_DEFAULT " +
-
-            "from SITE_CTX_LANG_CATALOG  a  " +
-
-            "where a.ID_SITE_SUPPORT_LANGUAGE=?   "+
-
-            "order by a.IS_DEFAULT desc";
-
-
-
-        try
-
-        {
-
-            MenuLanguage objTarget = new MenuLanguage();
-
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, objTarget.getClass() );
-
-            objTarget = null;
-
-        }
-
-        catch(Exception e)
-
-        {
-
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-
-        }
-
-        catch(Error e)
-
-        {
-
-            log.error("Error in registerSql, sql\n"+sql_, e);
-
-        }
-
-    }
-
-*/
-
-
-
     public MenuLanguage(DatabaseAdapter db_, SiteSupportLanguageItemType item_)
 
         throws Exception

@@ -226,7 +226,7 @@ public class LoginView extends HttpServlet
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM,
 
-                    PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM)
+                    ctxInstance.getNameTemplate()
 
             )
 

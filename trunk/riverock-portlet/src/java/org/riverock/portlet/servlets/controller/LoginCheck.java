@@ -204,9 +204,9 @@ public class LoginCheck extends HttpServlet
 
                 auth_ = new AuthSession(
 
-                        request_.getParameter(Constants.NAME_USERNAME_PARAM ),
+                        ctxInstance.getPortletRequest().getParameter(Constants.NAME_USERNAME_PARAM ),
 
-                        request_.getParameter(Constants.NAME_PASSWORD_PARAM )
+                        ctxInstance.getPortletRequest().getParameter(Constants.NAME_PASSWORD_PARAM )
 
                 );
 

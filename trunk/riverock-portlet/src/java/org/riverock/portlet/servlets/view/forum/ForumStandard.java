@@ -194,11 +194,7 @@ public class ForumStandard extends HttpServlet
 
 //            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
 
-            String nameTemplate = ctxInstance.getPortletRequest().getParameter(
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM
-
-            );
+            String nameTemplate = ctxInstance.getNameTemplate();
 
 
 

@@ -1190,11 +1190,15 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-//            m.setModuleUrl(
+            // set menu URL
 
-//                response.encodeURL(CtxURL.page() + '/' + item.getId())
+            m.setModuleUrl(
 
-//            );
+                response.encodeURL(CtxURL.page() + '/' + item.getId())
+
+            );
+
+/*
 
             m.setModuleUrl(
 
@@ -1249,6 +1253,12 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
                 }
 
             }
+
+*/
+
+
+
+            //////
 
 
 

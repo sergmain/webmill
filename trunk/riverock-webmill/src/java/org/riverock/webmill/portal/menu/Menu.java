@@ -382,52 +382,6 @@ public class Menu implements MenuInterface
 
 
 
-//    private boolean checkShopContext(Vector v)
-
-//    {
-
-//        if (v == null)
-
-//            return false;
-
-//
-
-//        for (int j = 0; j < v.size(); j++)
-
-//        {
-
-//            MenuItem ctxItem =
-
-//                (MenuItem) v.elementAt(j);
-
-//
-
-//            if (Constants.CTX_TYPE_SHOP.equals(ctxItem.type))
-
-//                return true;
-
-//
-
-//            if (checkShopContext(ctxItem.catalogItems))
-
-//                return true;
-
-//        }
-
-//        return false;
-
-//    }
-
-
-
-//    public boolean checkShopContext()
-
-//    {
-
-//        return checkShopContext(menuItem);
-
-//    }
-
 
 
     public static boolean checkCurrentTread(List items, MenuItemInterface find)
@@ -465,16 +419,6 @@ public class Menu implements MenuInterface
         return false;
 
     }
-
-
-
-//    public boolean isCheckThread(MenuItem find)
-
-//    {
-
-//        return checkCurrentTread(menuItem, find);
-
-//    }
 
 
 

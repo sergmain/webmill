@@ -76,7 +76,9 @@ import org.apache.log4j.Logger;
 
 
 
-import java.util.Vector;
+import java.util.List;
+
+import java.util.ArrayList;
 
 
 
@@ -126,7 +128,7 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-    private Vector menu = new Vector();  // vector of Menu
+    private List menu = new ArrayList();  // list of Menu
 
     private SiteSupportLanguageItemType item = null;
 
@@ -172,13 +174,13 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-        return (Menu)menu.elementAt(index);
+        return (Menu)menu.get(index);
 
     }
 
 
 
-// ¬озвращает ссылку на MenuItem указывающий на index page
+    // Return ref to MenuItem with 'index_page'
 
     public String getIndexTemplate()
 
@@ -200,7 +202,7 @@ public class MenuLanguage implements MenuLanguageInterface
 
         {
 
-            Menu catalog = (Menu) menu.elementAt(i);
+            Menu catalog = (Menu) menu.get(i);
 
             String indexTemplate = catalog.getIndexTemplate();
 
@@ -224,7 +226,7 @@ public class MenuLanguage implements MenuLanguageInterface
 
         {
 
-            Menu catalog = (Menu) menu.elementAt(i);
+            Menu catalog = (Menu) menu.get(i);
 
             if (catalog.getIsDefault())
 
@@ -252,7 +254,7 @@ public class MenuLanguage implements MenuLanguageInterface
 
         {
 
-            Menu catalog = (Menu) menu.elementAt(i);
+            Menu catalog = (Menu) menu.get(i);
 
             if (code.equals( catalog.getCatalogCode()) )
 
@@ -290,67 +292,7 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-/*
-
-    static String sql_ = null;
-
-    static
-
-    {
-
-        sql_ =
-
-            "select a.ID_SITE_CTX_LANG_CATALOG , a.CATALOG_CODE , a.IS_DEFAULT " +
-
-            "from SITE_CTX_LANG_CATALOG  a  " +
-
-            "where a.ID_SITE_SUPPORT_LANGUAGE=?   "+
-
-            "order by a.IS_DEFAULT desc";
-
-
-
-        try
-
-        {
-
-            MenuLanguage objTarget = new MenuLanguage();
-
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, objTarget.getClass() );
-
-            objTarget = null;
-
-        }
-
-        catch(Exception e)
-
-        {
-
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-
-        }
-
-        catch(Error e)
-
-        {
-
-            log.error("Error in registerSql, sql\n"+sql_, e);
-
-        }
-
-    }
-
-*/
-
-
-
     public MenuLanguage(DatabaseAdapter db_, SiteSupportLanguageItemType item_)
-
-//        long idSiteSupportLanguage_,
-
-//        String locale_,            CUSTOM_LANGUAGE
-
-//            String lang_)          NAME_CUSTOM_LANGUAGE
 
         throws Exception
 
@@ -382,10 +324,6 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-//        PreparedStatement ps = null;
-
-//        ResultSet rs = null;
-
         try
 
         {
@@ -400,18 +338,6 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-//            ps = db_.prepareStatement(sql_);
-
-//            RsetTools.setLong(ps, 1, item_.getIdSiteSupportLanguage());
-
-//
-
-//            rs = ps.executeQuery();
-
-
-
-//            while (rs.next())
-
             for (int i=0; i<list.getSiteCtxLangCatalogCount(); i++)
 
             {
@@ -420,15 +346,9 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-//                long id = RsetTools.getLong(rs, "ID_SITE_CTX_LANG_CATALOG");
-
-//                String code = RsetTools.getString(rs, "CATALOG_CODE");
-
                 MenuInterface catalog = new Menu(db_, ic );
 
 
-
-//                catalog.isDefault = (RsetTools.getInt(rs, "IS_DEFAULT")==1?true:false);
 
                 menu.add(catalog);
 
@@ -455,18 +375,6 @@ public class MenuLanguage implements MenuLanguageInterface
             throw e;
 
         }
-
-//        finally
-
-//        {
-
-//            DatabaseManager.close(rs, ps);
-
-//            rs = null;
-
-//            ps = null;
-
-//        }
 
     }
 

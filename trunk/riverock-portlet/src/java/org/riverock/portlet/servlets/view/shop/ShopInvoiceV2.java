@@ -232,7 +232,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
             String indexPageForm = CtxURL.urlAsForm(
 
-                PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM), ctxInstance.page, "mill.invoice"
+                ctxInstance.getNameTemplate(), ctxInstance.page, "mill.invoice"
 
             );
 
@@ -1100,9 +1100,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     "<form method=\"POST\" action=\"" + CtxURL.ctx() + "\">\n"+
 
-                    CtxURL.urlAsForm(PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM), ctxInstance.page, "mill.register")+
-
-
+                    CtxURL.urlAsForm(ctxInstance.getNameTemplate(), ctxInstance.page, "mill.register")+
 
                     addForm+
 

@@ -286,18 +286,6 @@ public class ForumAddMessage extends HttpServlet
 
 
 
-
-
-//            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
-
-            String nameTemplate = ctxInstance.getPortletRequest().getParameter(
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM
-
-            );
-
-
-
             out.write("\r\n");
 
             out.write("<form action=\"");
@@ -326,7 +314,7 @@ public class ForumAddMessage extends HttpServlet
 
                     ServletTools.getHiddenItem(Constants.NAME_TEMPLATE_CONTEXT_PARAM,
 
-                            nameTemplate
+                            ctxInstance.getNameTemplate()
 
                     )+
 

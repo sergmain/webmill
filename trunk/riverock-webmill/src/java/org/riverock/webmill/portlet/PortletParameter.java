@@ -102,6 +102,10 @@ public class PortletParameter
 
 
 
+    private String nameTemplate = null;
+
+
+
     // parameters for current portlet
 
     private StringManager sm  = null;
@@ -150,11 +154,11 @@ public class PortletParameter
 
         this.page = ctxInstance.page ;
 
-        this.ctxType = ctxInstance.getType();
+        this.ctxType = ctxInstance.getDefaultPortletType();
 
         this.portletRequest = ctxInstance.getPortletRequest();
 
-
+        this.nameTemplate = ctxInstance.getNameTemplate();
 
 
 
@@ -253,6 +257,16 @@ public class PortletParameter
     {
 
         return portletRequest;
+
+    }
+
+
+
+    public String getNameTemplate()
+
+    {
+
+        return nameTemplate;
 
     }
 

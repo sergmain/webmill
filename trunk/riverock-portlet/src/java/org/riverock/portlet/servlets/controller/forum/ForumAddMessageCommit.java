@@ -318,12 +318,6 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            String nameTemplate = ctxInstance.getPortletRequest().getParameter(
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM
-
-            );
-
             String url = (
 
                     CtxURL.ctx() + '?' + ctxInstance.page.getAsURL() +
@@ -334,7 +328,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
                     Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
 
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + nameTemplate
+                    Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate()
 
                     );
 

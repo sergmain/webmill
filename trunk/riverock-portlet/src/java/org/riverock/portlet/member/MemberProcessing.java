@@ -182,9 +182,9 @@ public class MemberProcessing
 
     private AuthSession auth = null;
 
-    public InitPage jspPage = null;
+    private InitPage jspPage = null;
 
-    public DatabaseAdapter db_ = null;
+    private DatabaseAdapter db_ = null;
 
 
 
@@ -241,6 +241,8 @@ public class MemberProcessing
         thisURI = null;
 
         commitURI = null;
+
+        DatabaseAdapter.close(db_);
 
         db_ = null;
 
@@ -2832,7 +2834,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
         seq.setColumnName( content.getQueryArea().getPrimaryKey() );
 
-        Long pkID = new Long(db_.getSequenceNextValue( seq ));
+        Long pkID = new Long(dbDyn.getSequenceNextValue( seq ));
 
 
 
@@ -4086,7 +4088,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 /*
 
-if ( cnt.getQueryArea().getPrimaryKeyType().getType()== PrimaryKeyTypeType.NUMBER_TYPE))
+if ( cnt.getQueryArea().getPrimaryKeyType().getDefaultPortletType()== PrimaryKeyTypeType.NUMBER_TYPE))
 
 {
 
@@ -4096,7 +4098,7 @@ PortletTools.getLong(req, mod.getName()+'.'+mod.getSelfLookup().getTopField().ge
 
 }
 
-else if ( cnt.getQueryArea().getPrimaryKeyType().getType()== PrimaryKeyTypeType.STRING_TYPE))
+else if ( cnt.getQueryArea().getPrimaryKeyType().getDefaultPortletType()== PrimaryKeyTypeType.STRING_TYPE))
 
 {
 
@@ -4936,25 +4938,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_ACTION_PARAM, ContentTypeActionType.INSERT.toString()) +
 
-//                buildHiddenForm(Constants.MEMBER_ACTION_PARAM, "insert") +
-
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
             ctxInstance.page.getAsForm() +
 
             addLookupURL(false) +
-
-
-
-// xxx I dont known what is this? :))
-
-//		buildHiddenForm(mod.getName()+'.'+content.getQueryArea().getPrimaryKey(),
-
-//			""+PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey() )
-
-//		)+
-
-
 
             s;
 
@@ -5306,8 +5294,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             ContentType tempCnt = ModuleManager.getContent(nameModule, ContentTypeActionType.INDEX_TYPE);
 
-//            "index");
-
 
 
 //log.debug("#12.003.2");
@@ -5322,15 +5308,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 if (ta.getAction().getType() == TargetModuleTypeActionType.INDEX_TYPE)
 
-//                if ( ta.action != null && "index".equals(ta.action))
-
                 {
 
                     String tempStr = thisURI +
 
                         Constants.MEMBER_MODULE_PARAM + '=' + nameModule + '&' +
-
-//                            Constants.MEMBER_ACTION_PARAM + '=' + "index&" +
 
                         Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
 
@@ -5426,15 +5408,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             log.debug("#2.001.004 " + whereSQL + ' ' + qa.getWhere());
 
-//            log.debug("#2.003.001 " + qa.getRestrict().getType() );
+//            log.debug("#2.003.001 " + qa.getRestrict().getDefaultPortletType() );
 
             log.debug("#2.003.003 " + qa);
 
         }
 
 
-
-//        if (qa.isRestrict("firm"))
 
         if (qa.getRestrict() != null &&
 
@@ -5466,7 +5446,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         }
 
-//        if (qa.isRestrict("site"))
+
 
         if (qa.getRestrict() != null &&
 
@@ -5494,7 +5474,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         }
 
-//        if (qa.isRestrict("user"))
+
 
         if (qa.getRestrict() != null &&
 
@@ -5576,7 +5556,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         String sql_ = "select ";
 
-// берем имя все полей для запроса
+
+
+        // process list of fiels in QueryArea
 
         for (int k = 0; k < qa.getFieldsCount(); k++)
 
@@ -5602,7 +5584,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         String fromSQL = "";
 
-// берем имя таблиц для запроса
+
+
+        // process list of tables
 
         for (int k = 0; k < qa.getTableCount(); k++)
 
@@ -5632,15 +5616,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-// помещаем в запрос выборку по первичному ключу
+        // put 'where' clause with primary key in query
 
         String whereSQL = " where " +
 
             (qa.getMainRefTable() != null ? qa.getMainRefTable() + '.' : "") +
 
             qa.getPrimaryKey() + "=? ";
-
-
 
 
 
@@ -5792,8 +5774,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
         PreparedStatement ps = null;
 
         ResultSet rs = null;
@@ -5808,8 +5788,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-//            if (qa.isRestrict("firm"))
-
             if (qa.getRestrict() != null &&
 
                 qa.getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
@@ -5818,8 +5796,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-//            if (qa.isRestrict("site"))
-
             if (qa.getRestrict() != null &&
 
                 qa.getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
@@ -5827,8 +5803,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
 
-
-//            if (qa.isRestrict("user"))
 
             if (qa.getRestrict() != null &&
 
@@ -6056,7 +6030,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
     /**
 
-     * Возвращает строку содержащую значения полей из списка
+     * return string with value of fields from list
 
      * @param qa
 
@@ -6087,8 +6061,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         log.debug("sql: "+ sql_+"\nid: "+id_ );
 
 
-
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
         PreparedStatement ps = null;
 
@@ -6138,7 +6110,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-//                        if (ff.getJspType().getType() == FieldsTypeJspTypeType.DATE_TEXT_TYPE)
+//                        if (ff.getJspType().getDefaultPortletType() == FieldsTypeJspTypeType.DATE_TEXT_TYPE)
 
 //                            v_str += getDateTextCell(rs, ff, "");
 
@@ -6392,8 +6364,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
         PreparedStatement ps = null;
 
         ResultSet rs = null;
@@ -6568,10 +6538,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         s_ += getSelectListFromClass(null, qa, ff, true);
 
-//                        s_ += buildSelectList(ff.getQueryArea(),
-
-//                                mod.getName() + '.' + MemberServiceClass.getRealName( ff ), true);
-
                         break;
 
 
@@ -6726,17 +6692,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         QueryAreaType qa = content.getQueryArea();
 
-/*
 
-        if(log.isDebugEnabled())
 
-        {
+//        if(log.isDebugEnabled())
 
-            log.debug("#33.01.01 " + qa.getFieldsCount());
+//            log.debug("#33.01.01 " + qa.getFieldsCount());
 
-        }
 
-*/
 
         String s_ = "<table border=\"1\">\n";
 
@@ -6749,8 +6711,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         try
 
         {
-
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
             ps = db_.prepareStatement(sql_);
 
@@ -7374,8 +7334,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
             ps = db_.prepareStatement(sql_);
 
 
@@ -7684,13 +7642,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         ResultSet rs = null;
 
-        DatabaseAdapter db_ = null;
-
         try
 
         {
-
-            db_ = DatabaseAdapter.getInstance(false);
 
             ps = db_.prepareStatement(sql_);
 
@@ -7926,13 +7880,11 @@ throw new MemberForvardException();
 
         {
 
-            DatabaseManager.close(db_, rs, ps);
+            DatabaseManager.close(rs, ps);
 
             rs = null;
 
             ps = null;
-
-            db_ = null;
 
         }
 
@@ -7960,10 +7912,6 @@ throw new MemberForvardException();
 
 
 
-        db_ = ctxInstance.db;
-
-
-
         jspPage = ctxInstance.page;
 
 
@@ -7973,6 +7921,8 @@ throw new MemberForvardException();
         try
 
         {
+
+            db_ = DatabaseAdapter.getInstance(false);
 
             String moduleName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_MODULE_PARAM);
 
@@ -8032,10 +7982,6 @@ throw new MemberForvardException();
 
 
 
-        String templateName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM);
-
-
-
         thisURI = response.encodeURL(CtxURL.ctx())
 
             + '?' +
@@ -8046,7 +7992,7 @@ throw new MemberForvardException();
 
 //            Constants.MEMBER_NAME_MOD_PARAM     + '=' + moduleCode + '&' +
 
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + templateName + '&';
+            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() + '&';
 
 
 
@@ -8062,7 +8008,7 @@ throw new MemberForvardException();
 
 //            Constants.MEMBER_NAME_MOD_PARAM     + '=' + moduleCode + '&' +
 
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + templateName + '&';
+            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() + '&';
 
 
 
@@ -8340,7 +8286,7 @@ throw new MemberForvardException();
 
                         {
 
-                            DatabaseManager.close(db_, rs, ps);
+                            DatabaseManager.close(rs, ps);
 
                             rs = null;
 

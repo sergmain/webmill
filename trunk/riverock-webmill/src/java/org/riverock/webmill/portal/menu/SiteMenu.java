@@ -82,7 +82,7 @@ import org.apache.log4j.Logger;
 
 /**
 
- * Возвращает меню для всех поддерживаемых языков конкретного сайта
+ * return menu for all supported languages for this site
 
  */
 

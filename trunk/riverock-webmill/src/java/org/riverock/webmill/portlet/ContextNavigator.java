@@ -106,6 +106,8 @@ import org.riverock.webmill.schema.site.TemplateItemType;
 
 import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
 
+import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
+
 import org.riverock.interfaces.schema.javax.portlet.PortletType;
 
 import org.riverock.interfaces.schema.portlet.types.PortletDescriptionTypeTypePortletType;
@@ -140,7 +142,7 @@ public class ContextNavigator extends HttpServlet
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.portlet.ContextNavigator" );
+    private static Logger log = Logger.getLogger( "org.riverock.webmill.portlet.ContextNavigator" );
 
 
 
@@ -172,7 +174,9 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    private SitePortletDataType processPortlet( TemplateItemType templateItem, CtxInstance ctxInstance, Long portletId)
+    private SitePortletDataType processPortlet( TemplateItemType templateItem, CtxInstance ctxInstance, String portletType)
+
+        throws Exception
 
     {
 
@@ -180,7 +184,9 @@ public class ContextNavigator extends HttpServlet
 
 
 
-        PortletType portlet = PortletManager.getPortlet( ctxInstance );
+//        PortletType portlet = PortletManager.getPortlet( ctxInstance );
+
+        PortletType portlet = PortletManager.getPortletDescription( portletType );
 
         if ( portlet==null )
 
@@ -228,13 +234,11 @@ public class ContextNavigator extends HttpServlet
 
                 ctxInstance.db,
 
-                portletId,
-
                 ctxInstance.getPortletRequest()
 
             );
 
-            ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
+//            ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
 
 
 
@@ -450,10 +454,6 @@ public class ContextNavigator extends HttpServlet
 
     {
 
-        StringWriter writer = new StringWriter();
-
-
-
         ctxInstance.portlets = new ArrayList( ctxInstance.template.getSiteTemplateItemCount() );
 
 
@@ -518,29 +518,13 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            log.warn("portlet type: "+ctxInstance.page.getType());
-
-            PortletType d = null;
-
-            if (ctxInstance.page.getPortletDescription()!=null)
-
-            {
-
-                d = ctxInstance.page.getPortletDescription().getPortletConfig();
-
-            }
-
-            ctxInstance.setParameters(
-
-                PortletTools.getParameters(ctxInstance.req),
-
-                PortletTools.getStringParam(d, PortletTools.locale_name_package)
-
-            );
-
             ctxInstance.session.setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
 
 
+
+            Boolean isUrlTemp = null;
+
+            Map map = null;
 
             try
 
@@ -560,19 +544,11 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
-
-                        ctxInstance.session.setAttribute( Constants.NAME_PORTLET_PARAM, item.getValue() );
-
-
-
                         ctxInstance.setParameters(new HashMap(), null);
 
-                        data = processPortlet( item, ctxInstance, null);
+                        data = processPortlet( item, ctxInstance, item.getValue());
 
 
-
-                        ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
 
                         break;
 
@@ -580,11 +556,11 @@ public class ContextNavigator extends HttpServlet
 
                     case TemplateItemTypeTypeType.DYNAMIC_TYPE:
 
-                        if ( Constants.CTX_TYPE_INDEX.equals( ctxInstance.getType() ) )
+                        if ( Constants.CTX_TYPE_INDEX.equals( ctxInstance.getDefaultPortletType() ) )
 
                         {
 
-                            String errorString = "Context type is 'index_page'. Template can not contain 'dynamic' type of portlet.";
+                            String errorString = "Context type is 'index_page'. Template must not containts 'index_page' portlet.";
 
                             log.error( errorString );
 
@@ -594,131 +570,85 @@ public class ContextNavigator extends HttpServlet
 
                             data.setIsXml( Boolean.FALSE );
 
+                            break;
+
+                        }
+
+
+
+                        PortletType portlet = PortletManager.getPortletDescription( ctxInstance.getDefaultPortletType() );
+
+                        if ( portlet==null )
+
+                        {
+
+                            String errorString = "Description of portlet '"+ctxInstance.getDefaultPortletType()+"' not found. Fix portlet.xml file";
+
+                            log.error( errorString );
+
+                            data.setData( errorString.getBytes() );
+
+                            data.setIsError( Boolean.TRUE );
+
+                            data.setIsXml( Boolean.FALSE );
+
+                            break;
+
+                        }
+
+
+
+                        isUrlTemp = PortletTools.getBooleanParam(portlet, PortletTools.is_url);
+
+
+
+                        map = PortletTools.getParameters(ctxInstance.req);
+
+                        map.putAll( getGlobalParameter(portlet, ctxInstance.getCtx()) );
+
+                        ctxInstance.setParameters(
+
+                            map, PortletTools.getStringParam(portlet, PortletTools.locale_name_package)
+
+                        );
+
+                        if ( Boolean.FALSE.equals(isUrlTemp) )
+
+                        {
+
+                            if ( log.isDebugEnabled() )
+
+                                log.debug( "process dynamic content. portlet !=null && !portlet.isUrl" );
+
+
+
+                            data = processPortlet( item, ctxInstance, ctxInstance.getDefaultPortletType() );
+
                         }
 
                         else
 
                         {
 
-                            if ( ctxInstance.page.isDynamic() )
+                            if ( log.isDebugEnabled() )
 
-                            {
+                                log.debug( "process dynamic content. include "+portlet.getPortletClass()+", isUrl - "+isUrlTemp );
 
-                                if ( log.isDebugEnabled() )
 
-                                    log.debug( "process dynamic content - "+ctxInstance.page.isDynamic() );
 
+                            StringWriter writer = new StringWriter();
 
+                            ServletUtils.include(
 
-                                PortletType portlet = ctxInstance.page.getPortletDescription().getPortletConfig();
+                                ctxInstance.req, ctxInstance.response,
 
-                                Boolean isUrlTemp =
+                                getGlobalParameter(portlet, ctxInstance.getCtx()), portlet.getPortletClass(),
 
-                                    PortletTools.getBooleanParam(
+                                writer
 
-                                        portlet, PortletTools.is_url
+                            );
 
-                                    );
-
-
-
-                                if ( portlet!=null && isUrlTemp!=null && !isUrlTemp.booleanValue() )
-
-                                {
-
-                                    if ( log.isDebugEnabled() )
-
-                                        log.debug( "process dynamic content. portlet !=null && !portlet.isUrl" );
-
-
-
-                                    ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
-
-                                    ctxInstance.session.setAttribute( Constants.NAME_PORTLET_PARAM, ctxInstance.getType() );
-
-
-
-                                    data = processPortlet( item, ctxInstance, ctxInstance.page.getPortletId() );
-
-
-
-                                    ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
-
-                                }
-
-                                else if ( portlet!=null && isUrlTemp!=null && isUrlTemp.booleanValue() )
-
-                                {
-
-                                    if ( log.isDebugEnabled() )
-
-                                        log.debug( "process dynamic content. include "+portlet.getPortletClass()+", isUrl - "+isUrlTemp );
-
-
-
-                                    boolean flag = true;
-
-                                    // check file present
-
-
-
-                                    //Todo This code need fix
-
-/*
-
-                                    if ( !Boolean.TRUE.equals(isUrlTemp) )
-
-                                    {
-
-                                        String nameFile = WebmillParam.millApplPath+portlet.getPortletClass();
-
-                                        if ( nameFile.indexOf( '?' )!=-1 )
-
-                                            nameFile = nameFile.substring( 0, nameFile.indexOf( '?' ) );
-
-
-
-                                        File testFile = new File( nameFile );
-
-                                        if ( !testFile.exists() )
-
-                                        {
-
-                                            String errorString = "Portlet "+dynamicType+" refered to file "+portlet.getPortletClass()+" is broken";
-
-                                            ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
-
-                                            log.error( errorString );
-
-
-
-                                            data.setData( errorString.getBytes() );
-
-                                            data.setIsError( true );
-
-                                            data.setIsXml( Boolean.FALSE );
-
-
-
-                                            flag = false;
-
-                                        }
-
-                                        testFile = null;
-
-                                    }
-
-*/
-
-
-
-                                    if ( flag )
-
-                                    {
-
-                                        ServletUtils.include( ctxInstance.req, ctxInstance.response, portlet.getPortletClass(), writer );
-
-                                        String s = writer.toString();
+                            String s = writer.toString();
 
 /*
 
@@ -772,45 +702,15 @@ public class ContextNavigator extends HttpServlet
 
 */
 
-                                        data.setData( s.getBytes( WebmillConfig.getHtmlCharset() ) );
+                            data.setData( s.getBytes( WebmillConfig.getHtmlCharset() ) );
 
-                                        data.setIsError( Boolean.FALSE );
+                            data.setIsError( Boolean.FALSE );
 
-                                        data.setIsXml( Boolean.FALSE );
-
-                                    }
-
-                                }
-
-                                else
-
-                                {
-
-                                    if ( log.isDebugEnabled() )
-
-                                        log.debug( "process dynamic content as static file not permit - file not found" );
-
-                                }
-
-                            }
-
-                            else
-
-                            {
-
-                                String errorString = "Unknown error. dynamicType is null.";
-
-                                log.error( errorString );
-
-                                data.setData( errorString.getBytes() );
-
-                                data.setIsError( Boolean.TRUE );
-
-                                data.setIsXml( Boolean.FALSE );
-
-                            }
+                            data.setIsXml( Boolean.FALSE );
 
                         }
+
+
 
                         break;
 
@@ -818,67 +718,49 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        Boolean isUrlTemp =
-
-                            PortletTools.getBooleanParam(
-
-                                ctxInstance.page.getPortletDescription().getPortletConfig(),
-
-                                PortletTools.is_url
-
-                            );
-
-
-
                         if ( log.isDebugEnabled() )
 
-                            log.debug( "process  included file - "+item.getValue()+", isUrl - "+isUrlTemp );
+                            log.debug( "include file - "+item.getValue());
 
 
 
                         boolean flag = true;
 
-                        if ( isUrlTemp!=null && !isUrlTemp.booleanValue())
+                        String nameFile = PropertiesProvider.getApplicationPath()+item.getValue();
+
+                        if ( nameFile.indexOf( '?' )!=-1 )
+
+                            nameFile = nameFile.substring( 0, nameFile.indexOf( '?' ) );
+
+
+
+                        File testFile = new File( nameFile );
+
+                        if ( !testFile.exists() )
 
                         {
 
-                            String nameFile = PropertiesProvider.getApplicationPath()+item.getValue();
+                            String errorString = "Portlet "+ctxInstance.getDefaultPortletType()+" refered to file "+testFile+" is broken";
 
-                            if ( nameFile.indexOf( '?' )!=-1 )
+                            log.error( errorString );
 
-                                nameFile = nameFile.substring( 0, nameFile.indexOf( '?' ) );
-
-
-
-                            File testFile = new File( nameFile );
-
-                            if ( !testFile.exists() )
-
-                            {
-
-                                String errorString = "Portlet "+ctxInstance.getType()+" refered to file "+testFile+" is broken";
-
-                                log.error( errorString );
-
-                                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                            ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
 
 
-                                data.setData( errorString.getBytes() );
+                            data.setData( errorString.getBytes() );
 
-                                data.setIsError( Boolean.TRUE );
+                            data.setIsError( Boolean.TRUE );
 
-                                data.setIsXml( Boolean.FALSE );
+                            data.setIsXml( Boolean.FALSE );
 
 
 
-                                flag = false;
-
-                            }
-
-                            testFile = null;
+                            flag = false;
 
                         }
+
+                        testFile = null;
 
 
 
@@ -886,9 +768,17 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            ServletUtils.include( ctxInstance.req, ctxInstance.response, item.getValue(), writer );
+                            StringWriter writer = new StringWriter();
 
+                            ServletUtils.include(
 
+                                ctxInstance.req, ctxInstance.response,
+
+                                null,
+
+                                item.getValue(), writer
+
+                            );
 
                             data.setData( writer.toString().getBytes() );
 
@@ -1036,7 +926,7 @@ public class ContextNavigator extends HttpServlet
 
                         "<SiteTemplate language=\""+
 
-                        ctxInstance.page.currentLocale+"\" type=\""+ctxInstance.getType()+"\">" ).getBytes()
+                        ctxInstance.page.currentLocale+"\" type=\""+ctxInstance.getDefaultPortletType()+"\">" ).getBytes()
 
                     );
 
@@ -1268,7 +1158,7 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            log.debug( "Dynamic content  type - "+ctxInstance.getType() );
+            log.debug( "Dynamic content  type - "+ctxInstance.getDefaultPortletType() );
 
             log.debug( "name template - "+ctxInstance.getNameTemplate() );
 
@@ -1330,7 +1220,7 @@ public class ContextNavigator extends HttpServlet
 
                     {
 
-                        log.debug( "item.getType() - "+item.getType() );
+                        log.debug( "item.getDefaultPortletType() - "+item.getType() );
 
                     }
 
@@ -1404,9 +1294,45 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
+                            Map map = PortletTools.getParameters(ctxInstance.req);
+
+                            Map tempMap = null;
+
+                            if (ctxInstance.getDefaultPortletDescription()!=null)
+
+                            {
+
+                                tempMap = getGlobalParameter( ctxInstance.getDefaultPortletDescription().getPortletConfig(), ctxInstance.getCtx());
+
+                                map.putAll( tempMap );
+
+
+
+                                if (log.isDebugEnabled())
+
+                                {
+
+                                    log.debug( "Print param from map" );
+
+                                    for ( Iterator it = tempMap.keySet().iterator(); it.hasNext(); )
+
+                                    {
+
+                                        Object s = it.next();
+
+                                        log.debug( "Param in map - "+s.toString()+", value - "+ tempMap.get(s) );
+
+                                    }
+
+                                }
+
+                            }
+
+
+
                             ctxInstance.setParameters(
 
-                                PortletTools.getParameters(ctxInstance.req),
+                                map,
 
                                 PortletTools.getStringParam(d, PortletTools.locale_name_package)
 
@@ -1434,7 +1360,7 @@ public class ContextNavigator extends HttpServlet
 
                             boolean flag = true;
 
-                            if ( isUrlTemp!=null && !isUrlTemp.booleanValue() )
+                            if ( Boolean.FALSE.equals(isUrlTemp) )
 
                             {
 
@@ -1452,7 +1378,7 @@ public class ContextNavigator extends HttpServlet
 
                                 {
 
-                                    String errorString = "Portlet "+ctxInstance.getType()+" refered to file "+testFile+" is broken";
+                                    String errorString = "Portlet "+ctxInstance.getDefaultPortletType()+" refered to file "+testFile+" is broken";
 
                                     ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
 
@@ -1464,9 +1390,17 @@ public class ContextNavigator extends HttpServlet
 
 
 
+
+
                             if ( flag )
 
-                                ServletUtils.include( ctxInstance.req, ctxInstance.response, d.getPortletClass(), new StringWriter() );
+                                ServletUtils.include(
+
+                                    ctxInstance.req, ctxInstance.response,
+
+                                    tempMap,
+
+                                    d.getPortletClass(), new StringWriter() );
 
 
 
@@ -1492,7 +1426,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-
+            // output copyright
 
             ctxInstance.byteArrayOutputStream.write( copyright.getBytes() );
 
@@ -1612,7 +1546,7 @@ public class ContextNavigator extends HttpServlet
 
             log.error( "Error build page.<br>Name template - "+ctxInstance.getNameTemplate()+
 
-                "<br>"+"Dynamic type - "+ctxInstance.getType(), e );
+                "<br>"+"Dynamic type - "+ctxInstance.getDefaultPortletType(), e );
 
             try
 
@@ -1620,7 +1554,7 @@ public class ContextNavigator extends HttpServlet
 
                 String errorString = "Error build page.<br>Name template - "+ctxInstance.getNameTemplate()+
 
-                    "<br>"+"Dynamic type - "+ctxInstance.getType()+"<br>"+
+                    "<br>"+"Dynamic type - "+ctxInstance.getDefaultPortletType()+"<br>"+
 
                     ExceptionTools.getStackTrace( e, 15, "<BR>" );
 
@@ -1940,6 +1874,10 @@ public class ContextNavigator extends HttpServlet
 
                     ctxInstance.page = new InitPage( ctxInstance.db, ctxInstance.req );
 
+                    ctxInstance.initTypeContext(request_);
+
+                    ctxInstance.setDefaultPortletDescription( PortletDescription.getInstance( ctxInstance.getDefaultPortletType() ) );
+
                 }
 
                 catch (Exception e)
@@ -1980,17 +1918,19 @@ public class ContextNavigator extends HttpServlet
 
                 if ( log.isDebugEnabled() )
 
-                    log.debug( "type "+ctxInstance.getType()+
+                    log.debug( "type "+ctxInstance.getDefaultPortletType()+
 
-                        " type is '"+Constants.CTX_TYPE_INDEX+"' - "+Constants.CTX_TYPE_INDEX.equals( ctxInstance.getType() ) );
+                        " type is '"+Constants.CTX_TYPE_INDEX+"' - "+Constants.CTX_TYPE_INDEX.equals( ctxInstance.getDefaultPortletType() ) );
 
 
 
-                // if menu item with requested type of context not found or requested 'index'.
+                // if menu item with requested type of context not found or requested 'index',
 
                 // going to index page
 
-                if ( ctxInstance.page.getPortletDescription()==null || Constants.CTX_TYPE_INDEX.equals( ctxInstance.getType() ) )
+                if ( ctxInstance.getDefaultPortletDescription()==null ||
+
+                    Constants.CTX_TYPE_INDEX.equals( ctxInstance.getDefaultPortletType() ) )
 
                 {
 
@@ -2002,15 +1942,15 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                switch (ctxInstance.page.getPortletDescription().getPortletType().getType())
+                PortletType portlet = ctxInstance.getDefaultPortletDescription().getPortletConfig();
+
+
+
+                switch (ctxInstance.getDefaultPortletDescription().getPortletType().getType())
 
                 {
 
                     case PortletDescriptionTypeTypePortletType.CONTROLLER_TYPE:
-
-
-
-                        PortletType portlet = ctxInstance.page.getPortletDescription().getPortletConfig();
 
 
 
@@ -2036,7 +1976,7 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            RequestDispatcher dispatcher = ctxInstance.req.getRequestDispatcher( ctxInstance.page.getPortletDescription().getPortletConfig().getPortletClass() );
+                            RequestDispatcher dispatcher = ctxInstance.req.getRequestDispatcher( portlet.getPortletClass() );
 
                             if ( log.isDebugEnabled() )
 
@@ -2048,7 +1988,7 @@ public class ContextNavigator extends HttpServlet
 
                             {
 
-                                String errorString = "Error get dispatcher for path "+ctxInstance.page.getPortletDescription().getPortletConfig().getPortletClass();
+                                String errorString = "Error get dispatcher for path "+portlet.getPortletClass();
 
                                 log.error( errorString );
 
@@ -2096,23 +2036,13 @@ public class ContextNavigator extends HttpServlet
 
                     case PortletDescriptionTypeTypePortletType.VIEW_TYPE:
 
+
+
                         if ( log.isDebugEnabled() )
 
-                        {
+                            log.debug( "namePortlet ID - "+PortletTools.getStringParam(portlet, PortletTools.name_portlet_id));
 
-                            log.debug( "Portlet desc - "+ctxInstance.page.getPortletDescription() );
 
-                            log.debug( "namePortlet ID - "+
-
-                                PortletTools.getStringParam(
-
-                                    ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.name_portlet_id
-
-                                )
-
-                            );
-
-                        }
 
                         processPage( ctxInstance );
 
@@ -2126,7 +2056,7 @@ public class ContextNavigator extends HttpServlet
 
                             PortletTools.getStringParam(
 
-                                ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.type_portlet
+                                portlet, PortletTools.type_portlet
 
                             );
 
@@ -2148,15 +2078,15 @@ public class ContextNavigator extends HttpServlet
 
                 log.error( "Error processing page with ContextNavigator", e );
 
-                log.error( "CN debug. desc "+ctxInstance.page.getPortletDescription() );
+                log.error( "CN debug. desc "+ctxInstance.getDefaultPortletDescription() );
 
-                if ( ctxInstance.page.getPortletDescription()!=null )
+                if ( ctxInstance.getDefaultPortletDescription()!=null )
 
                 {
 
                     String typePortletTemp = PortletTools.getStringParam(
 
-                            ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.type_portlet
+                            ctxInstance.getDefaultPortletDescription().getPortletConfig(), PortletTools.type_portlet
 
                         );
 
@@ -2166,11 +2096,11 @@ public class ContextNavigator extends HttpServlet
 
                     if ( typePortletTemp!=null )
 
-                        log.error( "CN debug. desc.getTypePortlet().getType() "+typePortletTemp );
+                        log.error( "CN debug. desc.getTypePortlet().getDefaultPortletType() "+typePortletTemp );
 
                 }
 
-                log.error( "CN debug. type "+ctxInstance.getType() );
+                log.error( "CN debug. type "+ctxInstance.getDefaultPortletType() );
 
                 if ( log.isDebugEnabled() )
 
@@ -2397,5 +2327,71 @@ public class ContextNavigator extends HttpServlet
         setContentType(response, WebmillConfig.getHtmlCharset());
 
     }
+
+
+
+    Map getGlobalParameter(PortletType portlet, SiteCtxCatalogItemType ctx)
+
+    {
+
+        Map map = new HashMap();
+
+        if (portlet==null || ctx==null || ctx.getIdContext()==null)
+
+        {
+
+            if (log.isDebugEnabled())
+
+            {
+
+                log.debug("portlet: "+portlet+", ctx: "+ctx);
+
+                if (ctx!=null)
+
+                    log.debug("ctx.getIdContext(): "+ctx.getIdContext());
+
+            }
+
+            return map;
+
+        }
+
+
+
+        String key = PortletTools.getStringParam(portlet, PortletTools.name_portlet_id);
+
+        if (log.isDebugEnabled())
+
+            log.debug("key: "+key);
+
+
+
+        if (key!=null)
+
+        {
+
+
+
+        if (log.isDebugEnabled())
+
+            log.debug("Put in map, key: "+key+", value: "+ctx.getIdContext());
+
+
+
+
+
+        if (map.get(key)==null)
+
+            map.put(key, ctx.getIdContext());
+
+
+
+        }
+
+        return map;
+
+    }
+
+
 
 }
