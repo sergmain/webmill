@@ -208,7 +208,7 @@ public class BindChange extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
+            String index_page = ctxInstance.url("mill.auth.bind");
 
 
 
@@ -258,7 +258,7 @@ public class BindChange extends HttpServlet
 
 
 
-                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_ch_bind")
+                    ctxInstance.url("mill.auth.commit_ch_bind")
 
 
 

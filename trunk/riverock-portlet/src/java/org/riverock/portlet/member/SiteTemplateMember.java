@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.portlet.site;
+package org.riverock.portlet.member;
 
 
 
@@ -111,6 +111,16 @@ public class SiteTemplateMember
 
 
     public HashMap memberTemplate = new HashMap();
+
+
+
+    public void reinit()
+
+    {
+
+        cache.reinit();
+
+    }
 
 
 

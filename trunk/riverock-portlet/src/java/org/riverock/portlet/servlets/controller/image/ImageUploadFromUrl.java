@@ -110,9 +110,11 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 
 import org.riverock.generic.utils.DateUtils;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.main.Constants;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
+import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.webmill.main.UploadFileException;
 
@@ -120,11 +122,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
-
-import org.riverock.portlet.portlets.WebmillErrorPage;
 
 
 
@@ -228,7 +226,7 @@ public class ImageUploadFromUrl extends HttpServlet
 
 
 
-//                String indexPage = CtxURL.url(ctxInstance.getPortletRequest()_, response, ctxInstance.page, "mill.image.index");
+//                String indexPage = ctxInstance.url(ctxInstance.getPortletRequest()_, response, ctxInstance.page, "mill.image.index");
 
 
 
@@ -450,9 +448,9 @@ public class ImageUploadFromUrl extends HttpServlet
 
                             "<br>" +
 
-                            "<p><a href=\"" + CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index") + "\">Загрузить данные повторно</a></p><br>" +
+                            "<p><a href=\"" + ctxInstance.url("mill.image.index") + "\">Загрузить данные повторно</a></p><br>" +
 
-                            "<p><a href=\"" + response.encodeURL(CtxURL.ctx()) + '?' + ctxInstance.page.getAsURL() + "\">На главную страницу</a></p>"
+                            "<p><a href=\"" + ctxInstance.url(Constants.CTX_TYPE_INDEX) + "\">На главную страницу</a></p>"
 
                     );
 

@@ -98,7 +98,7 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.member.ArticlePlainTemplateClassQuery");
+    private static Logger log = Logger.getLogger("org.riverock.portlet.member.ArticlePlainTemplateClassQuery");
 
 
 
@@ -112,8 +112,6 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
     /**
 
-     * Возвращает текущее значение для отображения на веб-странице
-
      * @return String
 
      */
@@ -122,23 +120,13 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
     {
 
-//        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
-
-//        PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.getServerName() );
-
-//        StringManager sm = StringManager.getManager("mill.locale.main", p.defaultLocale);
-
-//        String value = sm.getStr("yesno.yes");
-
-
-
         String value = ctxInstance.page.sMain.getStr("yesno.yes");
 
 
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug( "ArticlePlainTemplateClassQuery value - " + value );
+            log.debug( "ArticlePlainTemplateClassQuery value - " + value );
 
 
 
@@ -162,9 +150,9 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
     {
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug( "ArticlePlainTemplateClassQuery get select");
+            log.debug( "ArticlePlainTemplateClassQuery get select");
 
 
 
@@ -196,9 +184,9 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
 
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
-                cat.debug( "ArticlePlainTemplateClassQuery get select. size of vector - "+v.size());
+                log.debug( "ArticlePlainTemplateClassQuery get select. size of vector - "+v.size());
 
 
 

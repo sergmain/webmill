@@ -68,37 +68,31 @@ import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 
-import java.util.List;
-
 import java.util.ArrayList;
 
-
-
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.config.ConfigException;
 
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.portlet.schema.portlet.shop.PricePositionType;
-
-import org.riverock.portlet.schema.portlet.shop.PositionItemType;
+import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.portlets.ShopPageParam;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.schema.portlet.shop.PositionItemType;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.portlet.schema.portlet.shop.PricePositionType;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -110,11 +104,7 @@ public class PriceListPosition
 
 
 
-    public static PricePositionType getInstance(DatabaseAdapter db_, HttpServletResponse response,
-
-        InitPage page,
-
-        ShopPageParam shopParam_)
+    public static PricePositionType getInstance(DatabaseAdapter db_, CtxInstance ctxInstance, ShopPageParam shopParam_)
 
         throws PriceException
 
@@ -133,8 +123,6 @@ public class PriceListPosition
         if (shopParam_.id_group==null)
 
             return null;
-
-
 
 
 
@@ -192,17 +180,13 @@ public class PriceListPosition
 
 
 
-                    String url = response.encodeURL(CtxURL.ctx()) + '?' +
+                    String url = ctxInstance.url(Constants.CTX_TYPE_SHOP, shopParam_.nameTemplate) + '&' +
 
-                        page.getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + id_curr + '&' +
+                        Constants.NAME_ID_GROUP_SHOP + '=' + id_curr + '&' +
 
                         shopParam_.currencyURL + '&' +
 
-                        Constants.NAME_ID_SHOP_PARAM + '=' + shopParam_.id_shop + '&' +
-
-                        Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_SHOP + '&' +
-
-                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + shopParam_.nameTemplate;
+                        Constants.NAME_ID_SHOP_PARAM + '=' + shopParam_.id_shop;
 
 
 
@@ -348,27 +332,33 @@ public class PriceListPosition
 
 
 
-        position.setTopLevelUrl(
+        try
 
-            response.encodeURL(
+        {
 
-                CtxURL.ctx()
+            position.setTopLevelUrl(
 
-            ) + "?" +
+                ctxInstance.url( Constants.CTX_TYPE_SHOP, shopParam_.nameTemplate ) + '&' +
 
-            page.getAsURL() + Constants.NAME_ID_GROUP_SHOP
+                Constants.NAME_ID_GROUP_SHOP + "=0&" +
 
-            + "=0&" +
+                shopParam_.currencyURL + '&' +
 
-            shopParam_.currencyURL + '&' +
+                Constants.NAME_ID_SHOP_PARAM + '=' + shopParam_.id_shop
 
-            Constants.NAME_ID_SHOP_PARAM + '=' + shopParam_.id_shop + '&' +
+            );
 
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_SHOP + '&' +
+        }
 
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + shopParam_.nameTemplate
+        catch (ConfigException configException)
 
-        );
+        {
+
+            log.error("Exception in ", configException);
+
+            throw new PriceException(configException.toString());
+
+        }
 
 
 

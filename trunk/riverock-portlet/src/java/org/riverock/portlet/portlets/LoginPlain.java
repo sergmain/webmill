@@ -70,6 +70,10 @@ import java.util.List;
 
 
 
+import javax.portlet.PortletSession;
+
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ServletTools;
@@ -82,9 +86,9 @@ import org.riverock.portlet.main.Constants;
 
 import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.sso.a3.AuthTools;
-
 import org.riverock.webmill.config.WebmillConfig;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
@@ -190,11 +194,17 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
+            PortletSession session = param.getPortletRequest().getPortletSession();
+
+            CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             out += "<form method=\"POST\" action=\"" + CtxURL.ctx() + "\" >\n";
 
 
 
-            out += param.getPage().getAsForm();
+            out += ctxInstance.getAsForm();
 
             out += ServletTools.getHiddenItem(
 
@@ -224,7 +234,7 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
             {
 
-                srcURL = CtxURL.url(param.getPortletRequest(), param.getResponse(), param.getPage(), Constants.CTX_TYPE_LOGIN  );
+                srcURL = ctxInstance.url( Constants.CTX_TYPE_LOGIN );
 
             }
 

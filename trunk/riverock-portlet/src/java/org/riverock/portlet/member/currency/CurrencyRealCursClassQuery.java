@@ -132,27 +132,45 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
 
     {
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+        DatabaseAdapter db_ = null;
+
+        try
+
+        {
+
+            db_ = DatabaseAdapter.getInstance( false );
 
 
 
-        CustomCurrencyItemType item =
+            CustomCurrencyItemType item =
 
-            CurrencyService.getCurrencyItem(
+                CurrencyService.getCurrencyItem(
 
-                CurrencyManager.getInstance(db_, ctxInstance.page.p.sites.getIdSite()).getCurrencyList() , idCurrency
+                    CurrencyManager.getInstance(db_, ctxInstance.page.p.sites.getIdSite()).getCurrencyList() , idCurrency
 
-            );
-
-
-
-        if (item==null)
-
-            return "";
+                );
 
 
 
-        return ""+item.getRealCurs();
+            if (item==null)
+
+                return "";
+
+
+
+            return ""+item.getRealCurs();
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

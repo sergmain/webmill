@@ -92,7 +92,7 @@ import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 
 import org.riverock.portlet.schema.price.CustomCurrencyType;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -124,7 +124,7 @@ public class PriceCurrency
 
         ShopPageParam shopParam_,
 
-        InitPage page,
+        CtxInstance ctxInstance,
 
         String switchCurrencyUrl_
 
@@ -178,7 +178,7 @@ public class PriceCurrency
 
 
 
-        List listHidden = page.getAsList();
+        List listHidden = ctxInstance.getAsList();
 
         ArrayList rl = new ArrayList();
 
@@ -230,7 +230,7 @@ public class PriceCurrency
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            list = CurrencyManager.getInstance(db_, page.p.sites.getIdSite()).getCurrencyList();
+            list = CurrencyManager.getInstance(db_, ctxInstance.page.p.sites.getIdSite()).getCurrencyList();
 
         }
 

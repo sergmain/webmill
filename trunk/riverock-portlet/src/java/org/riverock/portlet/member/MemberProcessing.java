@@ -4510,7 +4510,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     Constants.MEMBER_MODULE_PARAM + "=" + mod.getName() + "&" +
 
-                    Constants.MEMBER_ACTION_PARAM + "=insert&" + ctxInstance.page.getAsURL() +
+                    Constants.MEMBER_ACTION_PARAM + "=insert&" + ctxInstance.getAsURL() +
 
                     addLookupURL(true);
 
@@ -4690,7 +4690,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             addLookupURL(true) +
 
-                            ctxInstance.page.getAsURL() +
+                            ctxInstance.getAsURL() +
 
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
 
@@ -4718,7 +4718,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             addLookupURL(true) +
 
-                            ctxInstance.page.getAsURL() +
+                            ctxInstance.getAsURL() +
 
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
 
@@ -4836,7 +4836,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         addLookupURL(true, true) +
 
-                        ctxInstance.page.getAsURL() +
+                        ctxInstance.getAsURL() +
 
                         mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + '=' + pkID + "';\">\n";
 
@@ -4940,7 +4940,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            ctxInstance.page.getAsForm() +
+            ctxInstance.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5054,7 +5054,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            ctxInstance.page.getAsForm() +
+            ctxInstance.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5168,7 +5168,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            ctxInstance.page.getAsForm() +
+            ctxInstance.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5224,7 +5224,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
 
-            ctxInstance.page.getAsURL() +
+            ctxInstance.getAsURL() +
 
             addLookupURL(true);
 
@@ -5316,7 +5316,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
 
-                        ctxInstance.page.getAsURL();
+                        ctxInstance.getAsURL();
 
 
 
@@ -5852,7 +5852,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             throw new Exception("Error get Calendar for field "+qa.getPrimaryKey());
 
-                        v_val = DateTools.getStringDate(cal, qa.getPrimaryKeyMask(), ctxInstance.page.p.defaultLocale );
+                        v_val = DateTools.getStringDate(cal, qa.getPrimaryKeyMask(), ctxInstance.getPortletRequest().getLocale() );
 
                         break;
 
@@ -8006,33 +8006,9 @@ throw new MemberForvardException();
 
 
 
-        thisURI = response.encodeURL(CtxURL.ctx())
+        thisURI = ctxInstance.url(Constants.CTX_TYPE_MEMBER_VIEW ,ctxInstance.getNameTemplate()) + '&';
 
-            + '?' +
-
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_MEMBER_VIEW + '&' +
-
-//            Constants.MEMBER_NAME_APPL_PARAM    + '=' + applicationCode + '&'+
-
-//            Constants.MEMBER_NAME_MOD_PARAM     + '=' + moduleCode + '&' +
-
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() + '&';
-
-
-
-        commitURI = response.encodeURL(CtxURL.ctx())
-
-            + '?' +
-
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_MEMBER_COMMIT
-
-            + '&' +
-
-//            Constants.MEMBER_NAME_APPL_PARAM    + '=' + applicationCode + '&'+
-
-//            Constants.MEMBER_NAME_MOD_PARAM     + '=' + moduleCode + '&' +
-
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() + '&';
+        commitURI = ctxInstance.url(Constants.CTX_TYPE_MEMBER_COMMIT ,ctxInstance.getNameTemplate()) + '&';
 
 
 

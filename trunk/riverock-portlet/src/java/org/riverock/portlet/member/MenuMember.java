@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.member;
 
 
 
@@ -71,6 +71,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.util.List;
+
+import java.util.Locale;
+
+
+
+import javax.portlet.PortletSession;
 
 
 
@@ -92,6 +98,10 @@ import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
 
+import org.riverock.portlet.member.SiteTemplateMember;
+
+import org.riverock.portlet.portlets.PortletException;
+
 import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthTools;
@@ -105,6 +115,10 @@ import org.riverock.webmill.portlet.PortletGetList;
 import org.riverock.webmill.portlet.PortletParameter;
 
 import org.riverock.webmill.portlet.PortletResultObject;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.schema.site.SiteTemplate;
 
 
 
@@ -154,6 +168,12 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
 
 
+    SiteTemplateMember memberTemplates = null;
+
+    CtxInstance ctxInstance = null;
+
+
+
     public PortletResultObject getInstance(DatabaseAdapter db_)
 
         throws Exception
@@ -177,6 +197,16 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
             if (authInfo == null)
 
                 return this;
+
+
+
+            memberTemplates = SiteTemplateMember.getInstance(db_, param.getPage().p.getSiteId());
+
+
+
+            PortletSession session = param.getPortletRequest().getPortletSession();
+
+            ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
 
 
@@ -259,96 +289,6 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
         return this;
 
     }
-
-
-
-    private void setModuleUrl()
-
-        throws Exception
-
-    {
-
-/*
-
-        try
-
-        {
-
-        if (log.isDebugEnabled())
-
-        {
-
-            log.debug("PortletParam - " + param);
-
-            if (param != null)
-
-            {
-
-                log.debug("PortletParam  response - " + param.response);
-
-                log.debug("PortletParam  param.response.encodeURL( CtxURL.ctx()  ) -  " + param.response.encodeURL( CtxURL.ctx()  ));
-
-                log.debug("PortletParam  getMemberTemplate - " + param.ctxInstance.page.p.getMemberTemplate() );
-
-                log.debug("PortletParam  nameTemplate - " + param.ctxInstance.page.p.getMemberTemplate().getNameTemplate() );
-
-
-
-                log.debug("Module url - "+
-
-                    param.response.encodeURL( CtxURL.ctx()  ) + '?'+
-
-                    Constants.NAME_TYPE_CONTEXT_PARAM    +'='+ Constants .CTX_TYPE_MEMBER   + '&'+
-
-                    Constants.MEMBER_NAME_APPL_PARAM    +'='+ applicationCode + '&' +
-
-                    Constants.MEMBER_NAME_MOD_PARAM+"="+ moduleCode + '&' +
-
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.ctxInstance.page.p.getMemberTemplate().getNameTemplate()
-
-                );
-
-            }
-
-        }
-
-
-
-        return param.response.encodeURL( CtxURL.ctx()  ) + '?'+
-
-            Constants.NAME_TYPE_CONTEXT_PARAM    +'='+ Constants .CTX_TYPE_MEMBER   + '&'+
-
-//            Constants.NAME_TYPE_CONTEXT_PARAM    +'='+ Constants .CTX_TYPE_MEMBER_CONTROLLER   + '&'+
-
-//            Constants.NAME_TYPE_CONTEXT_PARAM    +'='+ Constants .CTX_TYPE_MEMBER_VIEW    + '&'+
-
-
-
-            Constants.MEMBER_NAME_APPL_PARAM    +'='+ applicationCode + '&' +
-
-            Constants.MEMBER_NAME_MOD_PARAM+"="+ moduleCode + '&' +
-
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.ctxInstance.page.p.getMemberTemplate().getNameTemplate();
-
-
-
-        }
-
-        catch(Exception e)
-
-        {
-
-            log.error("Error getModuleUrl ", e);
-
-            throw e;
-
-        }
-
-*/
-
-    }
-
-
 
 
 
@@ -536,15 +476,15 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
 
 
-    private MenuMemberApplicationType getApplication(AuthInfo authInfo, ResultSet rs, DatabaseAdapter db_)
+//    private MenuMemberApplicationType getApplication(AuthInfo authInfo, ResultSet rs, DatabaseAdapter db_)
 
-        throws PortletException
+//        throws PortletException
 
-    {
+//    {
 
-        return getApplication(authInfo, rs, 0, db_);
+//        return getApplication(authInfo, rs, 0, db_);
 
-    }
+//    }
 
 
 
@@ -688,6 +628,8 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
             {
 
+
+
                 if (log.isDebugEnabled())
 
                 {
@@ -702,25 +644,19 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                         log.debug("PortletParam  param.response.encodeURL( CtxURL.ctx()  ) -  " + param.getResponse().encodeURL( CtxURL.ctx()  ));
 
-                        log.debug("PortletParam  getMemberTemplate - " + param.getPage().p.getMemberTemplate() );
+                        log.debug("PortletParam  getMemberTemplate - " + getMemberTemplate() );
 
-                        log.debug("PortletParam  nameTemplate - " + param.getPage().p.getMemberTemplate().getNameTemplate() );
+                        log.debug("PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
 
 
 
-                        log.debug("Module url - "+
+                        log.debug(
 
-                            param.getResponse().encodeURL( CtxURL.ctx()  ) + '?'+
-
-                                  param.getPage().getAsURL()+
-
-                            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants .CTX_TYPE_MEMBER   + '&'+
+                            "Module url - "+ ctxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate() ) + '&' +
 
                             Constants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
 
-                            Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() + '&' +
-
-                            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + param.getPage().p.getMemberTemplate().getNameTemplate()
+                            Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
 
                         );
 
@@ -732,17 +668,11 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                 mod.setModuleUrl(
 
-                    param.getResponse().encodeURL( CtxURL.ctx()  ) + '?'+
-
-                    param.getPage().getAsURL()+
-
-                    Constants.NAME_TYPE_CONTEXT_PARAM    +'='+ Constants .CTX_TYPE_MEMBER   + '&'+
+                    ctxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate() ) + '&' +
 
                     Constants.MEMBER_NAME_APPL_PARAM  + '=' + applicationCode_ + '&' +
 
-                    Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() + '&' +
-
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.getPage().p.getMemberTemplate().getNameTemplate()
+                    Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
 
                 );
 
@@ -775,6 +705,56 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
             throw e;
 
         }
+
+    }
+
+
+
+    private SiteTemplate getMemberTemplate()
+
+    {
+
+        SiteTemplate st = null;
+
+
+
+        if (log.isDebugEnabled())
+
+            log.debug("Looking template for locale " + ctxInstance.getPortletRequest().getLocale().toString());
+
+
+
+        st = getMemberTemplate(ctxInstance.getPortletRequest().getLocale());
+
+        if (st != null)
+
+            return st;
+
+
+
+        if (log.isInfoEnabled())
+
+            log.info("memberTemplate for Locale " + ctxInstance.getPortletRequest().getLocale().toString() + " not initialized");
+
+
+
+        return new SiteTemplate();
+
+    }
+
+
+
+    public SiteTemplate getMemberTemplate(Locale locale)
+
+    {
+
+        if (memberTemplates==null || memberTemplates.memberTemplate == null)
+
+            return null;
+
+
+
+        return (SiteTemplate) memberTemplates.memberTemplate.get(locale.toString());
 
     }
 

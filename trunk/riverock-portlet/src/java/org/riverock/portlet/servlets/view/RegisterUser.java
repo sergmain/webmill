@@ -182,9 +182,7 @@ public class RegisterUser extends HttpServlet
 
 
 
-            String index_page = response.encodeURL(CtxURL.ctx()) + '?' +
-
-                ctxInstance.page.getAsURL();
+            String index_page = ctxInstance.url(Constants.CTX_TYPE_INDEX);
 
 
 
@@ -502,7 +500,7 @@ public class RegisterUser extends HttpServlet
 
                             {
 
-                                String args2[] = {username, response.encodeURL("register.jsp?") + ctxInstance.page.getAsURL()};
+                                String args2[] = {username, response.encodeURL("register.jsp?") + ctxInstance.getAsURL()};
 
                                 out.write(ctxInstance.sCustom.getStr("reg.login_exists", args2));
 
@@ -648,7 +646,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(ctxInstance.page.getAsForm());
+            out.write(ctxInstance.getAsForm());
 
             out.write( ServletTools.getHiddenItem(Constants.NAME_REGISTER_ACTION_PARAM, "reg_exists") );
 
@@ -724,7 +722,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(ctxInstance.page.getAsForm());
+            out.write(ctxInstance.getAsForm());
 
             out.write("\r\n");
 
@@ -782,7 +780,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(ctxInstance.page.getAsForm());
+            out.write(ctxInstance.getAsForm());
 
             out.write("\n");
 

@@ -108,8 +108,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
 
 
@@ -194,7 +192,7 @@ public class FirmChange extends HttpServlet
 
 
 
-            String index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
+            String index_page = ctxInstance.url("mill.firm.index");
 
 
 
@@ -258,7 +256,7 @@ public class FirmChange extends HttpServlet
 
 
 
-                        CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.commit_ch_firm")
+                        ctxInstance.url("mill.firm.commit_ch_firm")
 
 
 

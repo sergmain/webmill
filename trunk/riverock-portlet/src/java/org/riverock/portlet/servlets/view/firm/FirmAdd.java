@@ -176,7 +176,7 @@ public class FirmAdd extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
+            String index_page = ctxInstance.url("mill.firm.index");
 
 
 
@@ -194,7 +194,7 @@ public class FirmAdd extends HttpServlet
 
 
 
-                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.commit_add_firm")
+                        ctxInstance.url("mill.firm.commit_add_firm")
 
 
 

@@ -198,6 +198,8 @@ public class ShopInvoiceV2 extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -210,7 +212,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
             ContextNavigator.setContentType(response);
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance(false);
 
 
 
@@ -226,13 +228,13 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.index");
+            String index_page = ctxInstance.url("mill.index");
 
-            String invoice_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.invoice");
+            String invoice_page = ctxInstance.url("mill.invoice");
 
-            String indexPageForm = CtxURL.urlAsForm(
+            String indexPageForm = ctxInstance.urlAsForm(
 
-                ctxInstance.getNameTemplate(), ctxInstance.page, "mill.invoice"
+                ctxInstance.getNameTemplate(), "mill.invoice"
 
             );
 
@@ -1006,7 +1008,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 String shopUrl = "<a href=\"" +
 
-                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_SHOP) + '&' +
+                    ctxInstance.url(Constants.CTX_TYPE_SHOP) + '&' +
 
                     addUrl + "\">";
 
@@ -1074,7 +1076,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.register") + '&' +
+                        ctxInstance.url("mill.register") + '&' +
 
                         Constants.NAME_TOURL_PARAM + '=' + backURL
 
@@ -1100,7 +1102,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     "<form method=\"POST\" action=\"" + CtxURL.ctx() + "\">\n"+
 
-                    CtxURL.urlAsForm(ctxInstance.getNameTemplate(), ctxInstance.page, "mill.register")+
+                    ctxInstance.urlAsForm(ctxInstance.getNameTemplate(), "mill.register")+
 
                     addForm+
 
@@ -1158,7 +1160,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
             out.write("<a href=\"" +
 
-                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_SHOP) + '&' +
+                ctxInstance.url(Constants.CTX_TYPE_SHOP) + '&' +
 
                 addUrl + "\">");
 
@@ -1469,6 +1471,16 @@ public class ShopInvoiceV2 extends HttpServlet
             log.error("Error procesing invoice", e);
 
             out.write(ExceptionTools.getStackTrace(e, 100, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

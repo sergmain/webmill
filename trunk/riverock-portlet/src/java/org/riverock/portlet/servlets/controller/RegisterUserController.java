@@ -194,21 +194,11 @@ public class RegisterUserController extends HttpServlet
 
             String index_page = response.encodeURL(CtxURL.ctx()) + '?' +
 
-                ctxInstance.page.getAsURL();
+                ctxInstance.getAsURL();
 
 
 
-            String redirectURL = response.encodeURL(CtxURL.ctx() )+ '?' +
-
-                ctxInstance.page.getAsURL()+
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM +'='+
-
-                ctxInstance.getNameTemplate() +'&'+
-
-                Constants.NAME_TYPE_CONTEXT_PARAM + '=' +
-
-                Constants.CTX_TYPE_REGISTER;
+            String redirectURL = ctxInstance.url(Constants.CTX_TYPE_REGISTER);
 
 
 
@@ -528,7 +518,7 @@ public class RegisterUserController extends HttpServlet
 
                             {
 
-                                String args2[] = {username, response.encodeURL("register.jsp?") + ctxInstance.page.getAsURL()};
+                                String args2[] = {username, response.encodeURL("register.jsp?") + ctxInstance.getAsURL()};
 
                                 out.write(ctxInstance.sCustom.getStr("reg.login_exists", args2));
 
@@ -674,7 +664,7 @@ Locale loc)
 
             );
 
-            out.write(ctxInstance.page.getAsForm());
+            out.write(ctxInstance.getAsForm());
 
             out.write( ServletTools.getHiddenItem(Constants.NAME_REGISTER_ACTION_PARAM, "reg_exists") );
 
@@ -750,7 +740,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(ctxInstance.page.getAsForm());
+            out.write(ctxInstance.getAsForm());
 
             out.write("\r\n");
 
@@ -808,7 +798,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(ctxInstance.page.getAsForm());
+            out.write(ctxInstance.getAsForm());
 
             out.write("\n");
 

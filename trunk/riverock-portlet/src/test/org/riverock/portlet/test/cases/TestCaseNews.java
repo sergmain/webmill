@@ -782,15 +782,9 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
                 newsItem.setUrlToFullNewsItem(
 
-                    testAbstract.response.encodeURL( CtxURL.ctx()) + '?' +
+                    ctxInstance.url( Constants .CTX_TYPE_NEWS ) + '&' +
 
-                    testAbstract.jspPage.getAsURL() + Constants.NAME_ID_NEWS_PARAM + '=' +
-
-                    newsItem.getNewsItemId() + '&' +
-
-                    Constants.NAME_TYPE_CONTEXT_PARAM  + '='+
-
-                    Constants.CTX_TYPE_NEWS
+                    Constants.NAME_ID_NEWS_PARAM + '=' + newsItem.getNewsItemId() + '&'
 
                 );
 

@@ -204,7 +204,7 @@ public class BindAdd extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
+            String index_page = ctxInstance.url("mill.auth.bind");
 
 
 
@@ -218,7 +218,7 @@ public class BindAdd extends HttpServlet
 
 
 
-                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_add_bind")
+                    ctxInstance.url("mill.auth.commit_add_bind")
 
 
 

@@ -232,7 +232,7 @@ public class ImageDescription extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.step_file")
+                            ctxInstance.url("mill.image.step_file")
 
 
 

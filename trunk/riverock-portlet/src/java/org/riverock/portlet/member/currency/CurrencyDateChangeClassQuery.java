@@ -140,27 +140,45 @@ public class CurrencyDateChangeClassQuery extends BaseClassQuery
 
     {
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+        DatabaseAdapter db_ = null;
 
-        PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
+        try
 
+        {
 
+            db_ = DatabaseAdapter.getInstance( false );
 
-        CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , idCurrency );
-
-
-
-        if (item==null || item.getCurrentCurs()==null)
-
-            return "";
+            PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
 
 
 
-        return ""+DateUtils.getStringDate(
+            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , idCurrency );
 
-                item.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH
 
-        );
+
+            if (item==null || item.getCurrentCurs()==null)
+
+                return "";
+
+
+
+            return ""+DateUtils.getStringDate(
+
+                    item.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH
+
+            );
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

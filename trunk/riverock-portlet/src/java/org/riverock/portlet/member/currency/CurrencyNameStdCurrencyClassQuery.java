@@ -138,25 +138,43 @@ public class CurrencyNameStdCurrencyClassQuery extends BaseClassQuery
 
     {
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+        DatabaseAdapter db_ = null;
 
-        PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
+        try
 
+        {
 
+            db_ = DatabaseAdapter.getInstance( false );
 
-        CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , idCurrency );
-
-        StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , item.getIdStandardCurrency() );
-
-
-
-        if (stdItem == null)
-
-            return "";
+            PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
 
 
 
-        return ""+stdItem.getCurrencyCode();
+            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , idCurrency );
+
+            StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , item.getIdStandardCurrency() );
+
+
+
+            if (stdItem == null)
+
+                return "";
+
+
+
+            return ""+stdItem.getCurrencyCode();
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

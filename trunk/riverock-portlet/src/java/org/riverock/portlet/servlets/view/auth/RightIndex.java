@@ -112,8 +112,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 
 
 public class RightIndex extends HttpServlet
@@ -280,27 +278,9 @@ public class RightIndex extends HttpServlet
 
 
 
-/*
-
-    String url= CtxURL.ctx() + '?' +
-
-            cross.getAsURL1()+
-
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM +'='+
-
-            PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM) +'&'+
-
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' ;
-
-*/
-
             if (auth_.isUserInRole("webmill.auth_right"))
 
             {
-
-
-
-
 
                 out.write("\r\n");
 
@@ -318,7 +298,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.add_right")
+                    ctxInstance.url("mill.auth.add_right")
 
 
 
@@ -554,7 +534,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.ch_right") + '&'
+                            ctxInstance.url("mill.auth.ch_right") + '&'
 
 
 
@@ -576,7 +556,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.del_right") + '&'
+                            ctxInstance.url("mill.auth.del_right") + '&'
 
 
 
@@ -616,7 +596,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.add_right")
+                    ctxInstance.url("mill.auth.add_right")
 
 
 

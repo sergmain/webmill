@@ -210,7 +210,7 @@ public class LoginView extends HttpServlet
 
 
 
-            out.write(ctxInstance.page.getAsForm());
+            out.write(ctxInstance.getAsForm());
 
             out.write(ServletTools.getHiddenItem(
 

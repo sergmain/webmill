@@ -286,7 +286,7 @@ public class PriceEditIndex extends HttpServlet
 
 
 
-                                CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop")+'&'+
+                                ctxInstance.url("mill.price.shop")+'&'+
 
                                 Constants.NAME_ID_SHOP_PARAM + '=' +id_arm
 

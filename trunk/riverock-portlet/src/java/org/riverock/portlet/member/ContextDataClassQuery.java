@@ -198,11 +198,13 @@ public class ContextDataClassQuery extends BaseClassQuery
 
         ResultSet rs = null;
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+        DatabaseAdapter db_ = null;
 
 
 
         try {
+
+            db_ = DatabaseAdapter.getInstance( false );
 
             ps = db_.prepareStatement(
 
@@ -232,11 +234,13 @@ public class ContextDataClassQuery extends BaseClassQuery
 
         {
 
-            org.riverock.generic.db.DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
 
             rs = null;
 
             ps = null;
+
+            db_ = null;
 
         }
 

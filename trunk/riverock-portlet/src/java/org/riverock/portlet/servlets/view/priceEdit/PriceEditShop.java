@@ -242,7 +242,7 @@ public class PriceEditShop extends HttpServlet
 
                         response.sendRedirect(
 
-                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index")
+                                ctxInstance.url("mill.price.index")
 
                         );
 
@@ -408,7 +408,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index")
+                                    ctxInstance.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index")
 
 
 
@@ -444,7 +444,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop") + '&' +
+                                        ctxInstance.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop") + '&' +
 
                                         "i=" + item.id_group_current + '&' +
 
@@ -530,7 +530,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop") + '&' +
+                                    ctxInstance.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop") + '&' +
 
                                     "i=" + itemGroup.id_group + '&' +
 
@@ -580,7 +580,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop")
+                                ctxInstance.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop")
 
 
 
@@ -666,7 +666,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description") + '&' +
+                                    ctxInstance.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description") + '&' +
 
                                     "id_item=" + item.idPK
 
@@ -762,7 +762,7 @@ public class PriceEditShop extends HttpServlet
 
                         out.write("\">\n");
 
-                        out.write(ctxInstance.page.getAsForm());
+                        out.write(ctxInstance.getAsForm());
 
                         out.write("<input type=\"submit\" value=\"Изменить\">\n");
 

@@ -196,7 +196,7 @@ public class ImageUpload extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance( true );
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index" );
+            String index_page = ctxInstance.url("mill.image.index" );
 
 
 

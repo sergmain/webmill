@@ -198,7 +198,7 @@ public class ImageList extends HttpServlet
 
 
 
-                String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index");
+                String index_page = ctxInstance.url("mill.image.index");
 
 
 
@@ -348,7 +348,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.change_desc") + '&' +
+                                    ctxInstance.url("mill.image.change_desc") + '&' +
 
                                     "id=" + id_
 
@@ -406,7 +406,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.list") + '&' +
+                                ctxInstance.url("mill.image.list") + '&' +
 
                                 "id_main=" + id_main_ + "&pageNum=" + (pageNum - 1)
 
@@ -442,7 +442,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.list") + '&' +
+                                ctxInstance.url("mill.image.list") + '&' +
 
                                 "id_main=" + id_main_ + "&pageNum=" + (pageNum + 1)
 
@@ -490,7 +490,7 @@ public class ImageList extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.desc") + '&' +
+                            ctxInstance.url("mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -514,7 +514,7 @@ public class ImageList extends HttpServlet
 
                     out.write("?");
 
-                    out.write(ctxInstance.page.getAsURL());
+                    out.write(ctxInstance.getAsURL());
 
                     out.write("id_main=");
 
