@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
@@ -383,9 +382,6 @@ public class MemberProcessing
         throws Exception
     {
 
-
-//log.debug("#12.000 jspType is "+ff.jspType );
-
         String s_ = "";
         switch (ff.getJspType().getType())
         {
@@ -396,11 +392,13 @@ public class MemberProcessing
 
             case FieldsTypeJspTypeType.FLOAT_TEXT_TYPE:
             case FieldsTypeJspTypeType.DOUBLE_TEXT_TYPE:
-                s_ = "" + RsetTools.getDouble(rs, MemberServiceClass.getRealName(ff));
+                Double doubleValue = RsetTools.getDouble(rs, MemberServiceClass.getRealName(ff));
+                s_ = doubleValue==null?"":doubleValue.toString();
                 break;
 
             case FieldsTypeJspTypeType.INT_TEXT_TYPE:
-                s_ = "" + RsetTools.getLong(rs, MemberServiceClass.getRealName(ff));
+                Long longValue = RsetTools.getLong(rs, MemberServiceClass.getRealName(ff));
+                s_ = longValue==null?"":longValue.toString();
                 break;
 
             case FieldsTypeJspTypeType.DATE_TEXT_TYPE:
@@ -426,12 +424,9 @@ public class MemberProcessing
 
             case FieldsTypeJspTypeType.LOOKUPCLASS_TYPE:
                 s_ = getSelectListFromClass(rs, content.getQueryArea() , ff, isEdit);
-//                log.error("LookupClass field can't request directly from getCellValue()");
-//                throw new Exception("LookupClass field can't request directly from getCellValue()");
                 break;
 
             case FieldsTypeJspTypeType.BIGTEXT_TYPE:
-//log.debug("#12.001 processing bigtext field "+RsetTools.getLong(rs, content.getQueryArea().getPrimaryKey()) );
 
                 String primaryKeyValue = null;
                 int primaryKeyType = content.getQueryArea().getPrimaryKeyType().getType();
@@ -975,18 +970,30 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-                        if (log.isDebugEnabled())
-                            log.debug("#3.001.07 "+ctxInstance.getPortletRequest().getServerName());
-
-                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.07 "+ctxInstance.getPortletRequest().getServerName());
+                                ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
+                                break;
+                        }
                     }
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-                        if (log.isDebugEnabled())
-                            log.debug("#3.001.09 "+portletRequest.getRemoteUser());
-
-                        ps.setString(numParam++, portletRequest.getRemoteUser());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.09 "+portletRequest.getRemoteUser());
+                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                break;
+                        }
                     }
                 }
             }
@@ -1099,36 +1106,49 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
-                        if (log.isDebugEnabled())
-                            log.debug(" 4 Bind param #"+numParam+" " + portletRequest.getRemoteUser()
-                            );
-
-                        ps.setString(numParam++, portletRequest.getRemoteUser());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug(" 4 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
+                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                break;
+                        }
                     }
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-                        if (log.isDebugEnabled())
-                            log.debug(" 5 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName()
-                            );
-
-                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug(" 5 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName());
+                                ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
+                                break;
+                        }
                     }
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-                        if (log.isDebugEnabled())
-                            log.debug(" 6 Bind param #"+numParam+" " + portletRequest.getRemoteUser()
-                            );
-
-                        ps.setString(numParam++, portletRequest.getRemoteUser());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug(" 6 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
+                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                break;
+                        }
                     }
                 }
             }
 
         }
-
-//	lookupSc = buildSelectClause( content, mod );
 
 //log.debug("#3.001.15 "+numParam);
 
@@ -1178,11 +1198,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         }
 
 
-//	RsetTools.setLong(ps, numParam++,
-//		PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey())
-//	);
-
-//        String primaryKeyValue = null;
         if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
         {
             if (log.isDebugEnabled())
@@ -1227,15 +1242,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         if (content == null || content.getQueryArea() == null)
             throw new Exception("content or QueryAreaType is null.");
 
-//        SqlClause lookupSc = null;
-
         int numParam = 1;
-/*
-RsetTools.setLong(ps, numParam++,
-PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey())
-);
-
-*/
 
         if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
         {
@@ -1270,7 +1277,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             {
                 String modName = st.nextToken();
 
-//                ContentType cnt = ModuleManager.getContent(modName, "index");
                 ContentType cnt = ModuleManager.getContent(modName, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
@@ -1308,26 +1314,48 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
-//log.debug("#3.001.04 "+portletRequest.getRemoteUser() );
-                        ps.setString(numParam++, portletRequest.getRemoteUser());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.04 "+portletRequest.getRemoteUser() );
+                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                break;
+                        }
                     }
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-//log.debug("#3.001.07 "+ctxInstance.getPortletRequest().getServerName());
-                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.07 "+ctxInstance.getPortletRequest().getServerName());
+                                ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
+                                break;
+                        }
                     }
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-//log.debug("#3.001.09 "+portletRequest.getRemoteUser() );
-                        ps.setString(numParam++, portletRequest.getRemoteUser());
+                        switch (db_.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.09 "+portletRequest.getRemoteUser() );
+                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                break;
+                        }
                     }
                 }
             }
         }
-
-//	lookupSc = buildSelectClause( content, mod );
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
         {
@@ -1667,7 +1695,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             case DatabaseManager.MYSQL_FAMALY:
                 break;
             default:
-                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, ctxInstance.getPortletRequest());
+                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, ctxInstance.getPortletRequest(), db_);
                 break;
         }
 
@@ -1762,7 +1790,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                         case FieldsTypeJspTypeType.TEXT_TYPE:
                         case FieldsTypeJspTypeType.TEXT_AREA_TYPE:
 
-                            ps.setString(numParam++,
+                            RsetTools.setString(ps, numParam++,
                                     PortletTools.getString(ctxInstance.getPortletRequest(),
                                             mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
                             break;
@@ -1786,10 +1814,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             break;
 
                         case FieldsTypeJspTypeType.INT_TEXT_TYPE:
-
-                            ps.setLong(numParam++,
-                                    PortletTools.getLong(ctxInstance.getPortletRequest(),
-                                            mod.getName() + '.' + MemberServiceClass.getRealName(ff)).longValue());
+                            RsetTools.setLong(
+                                ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
+                                    mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
                             break;
 
                         case FieldsTypeJspTypeType.FLOAT_TEXT_TYPE:
@@ -1801,13 +1828,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                 log.debug("#3.005.02 " + PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
                             }
 
-                            ps.setDouble(numParam++,
+                            RsetTools.setDouble(ps, numParam++,
                                     PortletTools.getDouble(ctxInstance.getPortletRequest(),
-                                            mod.getName() + '.' + MemberServiceClass.getRealName(ff)).doubleValue());
+                                            mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
                             break;
 
                         default:
-                            ps.setString(numParam++,
+                            RsetTools.setString(ps, numParam++,
                                     PortletTools.getString(ctxInstance.getPortletRequest(),
                                             mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
                     }
@@ -1820,7 +1847,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             case DatabaseManager.MYSQL_FAMALY:
                 break;
             default:
-                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, ctxInstance.getPortletRequest());
+                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, ctxInstance.getPortletRequest(), dbDyn);
                 break;
         }
 
@@ -3247,13 +3274,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                 {
                                     case FieldsTypeJspTypeType.FLOAT_TEXT_TYPE:
                                     case FieldsTypeJspTypeType.DOUBLE_TEXT_TYPE:
-                                        editVal = "" + RsetTools.getDouble(rs,
-                                            MemberServiceClass.getRealName(ff));
+                                        Double doubleValue = RsetTools.getDouble(rs, MemberServiceClass.getRealName(ff));
+                                        editVal = doubleValue==null?"":doubleValue.toString();
                                         break;
 
                                     case FieldsTypeJspTypeType.INT_TEXT_TYPE:
-                                        editVal = "" + RsetTools.getLong(rs,
-                                            MemberServiceClass.getRealName(ff));
+                                        Long longValue = RsetTools.getLong(rs,MemberServiceClass.getRealName(ff));
+                                        editVal = longValue==null?"":longValue.toString();
                                         break;
 
                                     case FieldsTypeJspTypeType.DATE_TEXT_TYPE:

@@ -1268,7 +1268,7 @@ public class MemberServiceClass
             case DatabaseManager.MYSQL_FAMALY:
                 try {
                     ps = adapter.prepareStatement(sql);
-                    bindSubQueryParam(ps, 1, fromParam, portletRequest);
+                    bindSubQueryParam(ps, 1, fromParam, portletRequest, adapter);
                     rs = ps.executeQuery();
 
                     String r = "";
@@ -1523,7 +1523,7 @@ public class MemberServiceClass
         return sql_ + (where_ != null && where_.trim().length()>0? (" where " + where_): "" );
     }
 
-    public static int bindSubQueryParam(PreparedStatement ps, int numParam, String fromParam, PortletRequest portletRequest)
+    public static int bindSubQueryParam(PreparedStatement ps, int numParam, String fromParam, PortletRequest portletRequest, DatabaseAdapter dbDyn)
         throws Exception {
 
         if (fromParam.length() > 0) {
@@ -1538,12 +1538,6 @@ public class MemberServiceClass
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
                     //prepare lookup PK
-//log.debug("#3.001.03 "+modName+'.'+cnt.getQueryArea().getPrimaryKey()+" "+
-//		PortletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
-
-//		    RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
-//			modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
-
                     if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
                     {
                         RsetTools.setLong(ps, numParam++, PortletTools.getLong(portletRequest,
@@ -1572,20 +1566,44 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
-//log.debug("#3.001.04 firm "+portletRequest.getRemoteUser() );
-                        ps.setString(numParam++, portletRequest.getRemoteUser());
+                        switch (dbDyn.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.04 firm "+portletRequest.getRemoteUser() );
+                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                break;
+                        }
                     }
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-//log.debug("#3.001.07 site "+ctxInstance.getPortletRequest().getServerName());
-                        ps.setString(numParam++, portletRequest.getServerName());
+                        switch (dbDyn.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.07 site "+portletRequest.getServerName());
+                                ps.setString(numParam++, portletRequest.getServerName());
+                                break;
+                        }
                     }
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-//log.debug("#3.001.09 firm "+portletRequest.getRemoteUser() );
-                        ps.setString(numParam++, portletRequest.getRemoteUser());
+                        switch (dbDyn.getFamaly())
+                        {
+                            case DatabaseManager.MYSQL_FAMALY:
+                                break;
+                            default:
+                                if (log.isDebugEnabled())
+                                    log.debug("#3.001.09 firm "+portletRequest.getRemoteUser() );
+                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                break;
+                        }
                     }
                 }
             }

@@ -56,7 +56,7 @@ import org.riverock.webmill.portlet.PortletTools;
 
 public class MemberViewServlet extends HttpServlet
 {
-    private static Logger log = Logger.getLogger("org.riverock.portlet.member.servlet.MemberViewServlet");
+    private static Logger log = Logger.getLogger(MemberViewServlet.class);
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException
