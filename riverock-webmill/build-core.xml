@@ -54,7 +54,7 @@
 
 <!--$Id$-->
 
-<project name="Webmill webmill core library" default="gen_core" basedir=".">
+<project name="Riverock webmill core library" default="gen_core" basedir=".">
 
 
 
@@ -64,7 +64,7 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <property name="local-lib.dir" value="lib"/>
 
@@ -72,17 +72,15 @@
 
     <!-- runtime library -->
 
-    <property name="jsmithy-common.lib" value="jsmithy-common-1.2.0.jar"/>
+    <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
 
-    <property name="jsmithy-generic.lib" value="jsmithy-generic-4.0.0.jar"/>
+    <property name="riverock-generic.lib" value="riverock-generic-4.0.3.jar"/>
 
-    <property name="jsmithy-cache.lib" value="jsmithy-cache-1.0.1.jar"/>
+    <property name="riverock-cache.lib" value="riveroc-cache-1.0.1.jar"/>
 
-    <property name="jsmithy-webmill.lib" value="jsmithy-webmill-4.0.1.jar"/>
+    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
 
-    <property name="jsmithy-sql-parser.lib" value="jsmithy-sql-parser-1.1.6.jar"/>
-
-    <property name="jsmithy-schema-support.lib" value="jsmithy-schema-support-4.0.2.jar"/>
+    <property name="riverock-schema-support.lib" value="riverock-schema-support-4.0.2.jar"/>
 
 
 
@@ -176,17 +174,15 @@
 
     <path id="classpath-v3">
 
-        <pathelement location="${lib.dir}/${jsmithy-common.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-generic.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-cache.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-webmill.lib}"/>
-
-        <pathelement location="${lib.dir}/${jsmithy-schema-support.lib}" />
+        <pathelement location="${lib.dir}/${riverock-schema-support.lib}" />
 
         <path refid="classpath-base"/>
 
@@ -323,20 +319,6 @@
         <delete dir="${build.dir}" failonerror="false"/>
 
 
-
-    </target>
-
-
-
-    <target name="gen_schema-gen-config" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/gen/"/>
-
-        <property name="schema-file" value="${src.dir}/xsd/riverock-gen-schema.xsd"/>
-
-        <property name="schema-package-java" value="org.riverock.webmill.schema.gen"/>
-
-        <antcall target="gen_schema"/>
 
     </target>
 

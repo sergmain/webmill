@@ -88,7 +88,7 @@
 
 
 
-    <property name="Name" value="jsmithy-webmill"/>
+    <property name="Name" value="riverock-webmill"/>
 
     <property name="mill.lib" value="${Name}-${release-version}.jar"/>
 
@@ -98,23 +98,25 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
 
 
     <!-- jSmithy runtime library -->
 
-    <property name="jsmithy-interfaces.lib"     value="jsmithy-interfaces-1.0.2.jar"/>
+    <property name="riverock-interfaces.lib" value="riverock-interfaces-1.0.3.jar"/>
 
-    <property name="jsmithy-common.lib"     value="jsmithy-common-1.2.0.jar"/>
+    <property name="riverock-common.lib"     value="riverock-common-1.2.1.jar"/>
 
-    <property name="jsmithy-generic.lib"     value="jsmithy-generic-4.0.2.jar"/>
+    <property name="riverock-generic.lib"    value="riverock-generic-4.0.3.jar"/>
 
-    <property name="jsmithy-cache.lib"      value="jsmithy-cache-1.1.0.jar"/>
+    <property name="riverock-cache.lib"      value="riverock-cache-1.0.1.jar"/>
 
-    <property name="jsmithy-sso.lib"      value="jsmithy-sso-4.0.4.jar"/>
+    <property name="riverock-sso.lib"        value="riverock-sso-4.0.4.jar"/>
 
-    <property name="jsmithy-sql-parser.lib" value="jsmithy-sql-parser-1.1.6.jar"/>
+    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
+
+
 
 
 
@@ -252,17 +254,17 @@ castor-current.lib for work of engine
 
         <pathelement location="${lib.dir}/${junit.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-interfaces.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-common.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-generic.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-sso.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-cache.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
 
@@ -305,8 +307,6 @@ castor-current.lib for work of engine
     <property name="packages" value="org.riverock.*"/>
 
     <property name="build.dir" value="build"/>
-
-<!--        <property name="build.dir" value="v:\webmill\build"/>-->
 
     <property name="build.dest" value="${build.dir}/classes"/>
 
@@ -434,7 +434,7 @@ castor-current.lib for work of engine
 
         <delete file="${encode.dir}/${mill.lib.encoded}"/>
 
-        <copy file="${build.dir}/${mill.lib}" todir="../js-lib/lib"/>
+        <copy file="${build.dir}/${mill.lib}" todir="../riverock-lib/lib"/>
 
     </target>
 
@@ -1534,7 +1534,7 @@ Sealed: true
 
     <target name="replace_properties">
 
-        <property name="path-to-ctx" value="com/jsmithy/webmill/portlet"/>
+        <property name="path-to-ctx" value="org/riverock/webmill/portlet"/>
 
         <copy file="${src.java.dir}/${path-to-ctx}/ContextNavigator.java"
 
@@ -1764,7 +1764,7 @@ Sealed: true
 
             basedir="${build.dest}"
 
-            includes="com/jsmithy/**"
+            includes="org/riverock/**"
 
             excludes="*.txt,*.bat,*.xml,*.sh,*.jav,${manifest-file-name},com/jsmithy/schema/**"
 

@@ -188,7 +188,7 @@ Sealed: true
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/test/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/riverock-test-schema.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-test-schema.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.schema.test"/>
 
@@ -200,7 +200,7 @@ Sealed: true
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/sql/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/riverock-sql-parser.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-sql-parser.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.schema.sql"/>
 
@@ -280,7 +280,7 @@ Sealed: true
 
             basedir="${build.dest}"
 
-            includes="com/**"
+            includes="org/**"
 
             excludes="
 
@@ -292,7 +292,7 @@ Sealed: true
 
             manifest="${build.dest}/${manifest-file-name}"/>
 
-        <copy file="${build.dir}/${main.lib}" todir="../js-lib/lib"/>
+        <copy file="${build.dir}/${main.lib}" todir="../riverock-lib/lib"/>
 
     </target>
 
@@ -420,7 +420,7 @@ Sealed: true
 
 
 
-        <property name="lib.dir" value="../js-lib/lib"/>
+        <property name="lib.dir" value="../riverock-lib/lib"/>
 
         <property name="local-lib.dir" value="lib"/>
 

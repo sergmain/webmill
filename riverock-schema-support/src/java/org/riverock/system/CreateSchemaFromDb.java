@@ -628,9 +628,9 @@ public class CreateSchemaFromDb
 
 /*
 
-// Todo закоментарино т.к. не до конца понятно,
+// Todo commented
 
-// Todo должен ли возвращаться фектори класс как null, или нет
+// Todo need investigation - what return null or empty bean
 
             if (config.getIsUseObjectWrapper())
 
@@ -678,11 +678,25 @@ public class CreateSchemaFromDb
 
                 throw new IllegalArgumentException("Not defined PersistebceExceptionName");
 
+
+
+            String exception = null;
+
+            if (config.getIsUseCache())
+
+                exception = "Exception";
+
+            else
+
+                exception = config.getPersistenceExceptionName().getPersistenceExceptionName();
+
+
+
             s +=
 
                 "        }\n"+
 
-                "        catch("+config.getPersistenceExceptionName().getPersistenceExceptionName()+" exc)\n"+
+                "        catch("+exception+" exc)\n"+
 
                 "        {\n"+
 

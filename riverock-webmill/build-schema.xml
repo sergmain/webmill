@@ -68,7 +68,7 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <property name="local-lib.dir" value="lib"/>
 
@@ -206,7 +206,7 @@
 
         <delete includeEmptyDirs="false" failonerror="false">
 
-            <fileset dir="${src.java.dir}/com/jsmithy/webmill/schema/">
+            <fileset dir="${src.java.dir}/org/riverock/webmill/schema/">
 
                 <include name="**/*.java"/>
 
@@ -232,47 +232,13 @@
 
         <antcall target="gen_config_schema"/>
 
-<!--        <antcall target="gen_castor_schema"/>-->
-
         <antcall target="gen_appl-server_schema"/>
 
         <antcall target="gen_types_schema"/>
 
         <antcall target="gen_core-extend_schema"/>
 
-        <antcall target="gen_portlet_shop_schema"/>
-
-<!--        <antcall target="gen_java_auth_schema"/>-->
-
-<!--        <antcall target="gen_test_schema"/>-->
-
-<!--        <antcall target="gen_test_import_schema"/>-->
-
-<!--        <antcall target="gen_test_import_core_schema"/>-->
-
-    </target>
-
-    <target name="gen_config_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}/com/jsmithy/webmill/schema/config/"/>
-
-        <property name="schema-file" value="${src.dir}\xsd\jsmithy-webmill-config.xsd"/>
-
-        <property name="schema-package-java" value="org.riverock.webmill.schema.config"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_javax_portlet_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}\com/jsmithy/webmill/schema\javax\portlet"/>
-
-        <property name="schema-file" value="${src.dir}\xsd\portlet.xsd"/>
-
-        <property name="schema-package-java" value="org.riverock.webmill.schema.javax.portlet"/>
-
-        <antcall target="gen_schema"/>
+<!--        <antcall target="gen_portlet_shop_schema"/>-->
 
     </target>
 
@@ -286,11 +252,35 @@
 
 
 
+    <target name="gen_config_schema" depends="prepare">
+
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/config/"/>
+
+        <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-config.xsd"/>
+
+        <property name="schema-package-java" value="org.riverock.webmill.schema.config"/>
+
+        <antcall target="gen_schema"/>
+
+    </target>
+
+    <target name="gen_javax_portlet_schema" depends="prepare">
+
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema\javax\portlet"/>
+
+        <property name="schema-file" value="${src.xsd.dir}/portlet.xsd"/>
+
+        <property name="schema-package-java" value="org.riverock.webmill.schema.javax.portlet"/>
+
+        <antcall target="gen_schema"/>
+
+    </target>
+
     <target name="gen_site_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}/com/jsmithy/webmill/schema/site/"/>
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/site/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/jsmithy-webmill-site.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-site.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.webmill.schema.site"/>
 
@@ -298,11 +288,13 @@
 
     </target>
 
+<!--
+
     <target name="gen_portlet_shop_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}/com/jsmithy/webmill/schema/portlet/shop/"/>
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/portlet/shop/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/jsmithy-portlet-shop.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-shop.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.webmill.schema.portlet.shop"/>
 
@@ -310,11 +302,13 @@
 
     </target>
 
+-->
+
     <target name="gen_tomcat_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}\com/jsmithy/webmill/schema\tomcat\"/>
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema\tomcat\"/>
 
-        <property name="schema-file" value="${src.dir}\xsd\mill-tomcat.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-tomcat.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.webmill.schema.tomcat4"/>
 
@@ -322,23 +316,11 @@
 
     </target>
 
-<!--    <target name="gen_castor_schema" depends="prepare">-->
-
-<!--        <property name="schema-dir" value="${src.java.dir}\com/jsmithy/webmill/schema\castor\"/>-->
-
-<!--        <property name="schema-file" value="${src.dir}\xsd\mill-castor-mapping.xsd"/>-->
-
-<!--        <property name="schema-package-java" value="org.riverock.schema.castor"/>-->
-
-<!--        <antcall target="gen_schema"/>-->
-
-<!--    </target>-->
-
     <target name="gen_appl-server_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}/com/jsmithy/webmill/schema/appl_server/"/>
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/appl_server/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/jsmithy-webmill-appl-server.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-appl-server.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.webmill.schema.appl_server"/>
 
@@ -348,9 +330,9 @@
 
     <target name="gen_types_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}/com/jsmithy/webmill/schema/types/"/>
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/types/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/jsmithy-webmill-types.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-types.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.webmill.schema.types"/>
 
@@ -360,9 +342,9 @@
 
     <target name="gen_core-extend_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}/com/jsmithy/webmill/schema/extend/"/>
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/extend/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/mill-core-extend.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-core-extend.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.webmill.schema.extend"/>
 
@@ -372,47 +354,11 @@
 
     <target name="gen_test_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}\com/jsmithy/webmill/schema\test\"/>
+        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema\test\"/>
 
-        <property name="schema-file" value="${src.dir}\xsd\test\mill-test-schema.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-test-schema.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.webmill.schema.test"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_test_with_2_sequnce" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}\com/jsmithy/webmill/schema\test\test_2_sequence"/>
-
-        <property name="schema-file" value="${src.dir}\xsd\test\test_with_2_sequnce.xsd"/>
-
-        <property name="schema-package-java" value="org.riverock.webmill.schema.test.test_2_sequence"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_test_import_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}\com/jsmithy/webmill/schema\testimport\"/>
-
-        <property name="schema-file" value="${src.dir}\xsd\test\prr_complex_only.xsd "/>
-
-        <property name="schema-package-java" value="org.riverock.webmill.schema.testimport"/>
-
-        <antcall target="gen_schema"/>
-
-    </target>
-
-    <target name="gen_test_import_core_schema" depends="prepare">
-
-        <property name="schema-dir" value="${src.java.dir}\com/jsmithy/webmill/schema\testimport\core"/>
-
-        <property name="schema-file" value="${src.dir}\xsd\test\prr-core.xsd "/>
-
-        <property name="schema-package-java" value="org.riverock.webmill.schema.testimport.core"/>
 
         <antcall target="gen_schema"/>
 

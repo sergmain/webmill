@@ -88,27 +88,25 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
 
 
     <!-- riverock runtime library -->
 
-    <property name="jsmithy-interfaces.lib"     value="jsmithy-interfaces-1.0.2.jar"/>
+    <property name="riverock-interfaces.lib" value="riverock-interfaces-1.0.3.jar"/>
 
-    <property name="jsmithy-common.lib"     value="jsmithy-common-1.2.0.jar"/>
+    <property name="riverock-common.lib"     value="riverock-common-1.2.1.jar"/>
 
-    <property name="jsmithy-generic.lib"     value="jsmithy-generic-4.0.2.jar"/>
+    <property name="riverock-generic.lib"    value="riverock-generic-4.0.3.jar"/>
 
-    <property name="jsmithy-cache.lib"      value="jsmithy-cache-1.1.0.jar"/>
+    <property name="riverock-cache.lib"      value="riverock-cache-1.0.1.jar"/>
 
-    <property name="jsmithy-sso.lib"      value="jsmithy-sso-4.0.4.jar"/>
+    <property name="riverock-sso.lib"        value="riverock-sso-4.0.4.jar"/>
 
-    <property name="jsmithy-sql-parser.lib" value="jsmithy-sql-parser-1.1.6.jar"/>
+    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
 
-    <property name="jsmithy-webmill.lib" value="jsmithy-webmill-4.0.2.jar"/>
-
-
+    <property name="riverock-webmill.lib"    value="riverock-webmill-4.0.2.jar"/>
 
 
 
@@ -134,7 +132,7 @@
 
 
 
-    <property name="junit.lib" value="junit.jar"/>
+    <property name="junit.lib" value="junit-3.8.1.jar"/>
 
     <property name="log4j.lib" value="log4j-1.2.7.jar"/>
 
@@ -202,19 +200,19 @@
 
     <path id="classpath-base">
 
-        <pathelement location="${lib.dir}/${jsmithy-common.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-cache.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-generic.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-interfaces.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-sso.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
 
-        <pathelement location="${lib.dir}/${jsmithy-webmill.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>
 
 
 
@@ -330,7 +328,7 @@
 
         <echo message="start encode jar" level="debug" />
 
-<!--        <copy file="${build.dir}\${mill.lib}" todir="../js-webmill/lib"/>-->
+<!--        <copy file="${build.dir}\${mill.lib}" todir="../riverock-webmill/lib"/>-->
 
     </target>
 

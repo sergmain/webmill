@@ -96,7 +96,9 @@ import org.riverock.common.tools.StringTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
-import org.riverock.generic.mail.MailMessage;
+import org.riverock.generic.config.GenericConfig;
+
+import org.riverock.common.mail.MailMessage;
 
 import org.riverock.portlet.main.Constants;
 
@@ -582,7 +584,9 @@ public class RegisterUserController extends HttpServlet
 
                             jspPage.p.sites.getAdminEmail(),
 
-                            "Confirm registration"
+                            "Confirm registration",
+
+                            GenericConfig.getMailSMTPHost()
 
                         );
 

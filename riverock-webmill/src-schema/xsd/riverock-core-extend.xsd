@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.webmill - Portal framework implementation
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+
+<xs:schema xmlns:webmill-core="http://webmill.riverock.org/xsd/riverock-webmill-core.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="http://webmill.riverock.org/xsd/riverock-webmill-core.xsd" schemaLocation="riverock-webmill-core.xsd"/>
+	<xs:element name="SiteItem" type="SiteExtendItemType"/>
+	<xs:complexType name="SiteExtendItemType">
+		<xs:complexContent>
+			<xs:extension base="webmill-core:SiteListSiteItemType">
+				<xs:sequence>
+					<xs:element name="VirtualHost" type="webmill-core:SiteVirtualHostListType"/>
+					<xs:element name="Css" type="webmill-core:SiteContentCssListType"/>
+					<xs:element name="SiteLanguage" type="SiteExtendLanguageListType"/>
+					<xs:element name="CtxType" type="webmill-core:SiteCtxTypeListType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SIteExtendListType">
+		<xs:sequence>
+			<xs:element name="ListSite" type="SiteExtendItemType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SiteExtendLanguageType">
+		<xs:complexContent>
+			<xs:extension base="webmill-core:SiteSupportLanguageItemType">
+				<xs:sequence>
+					<xs:element name="Context" type="SiteExtendCtxLangCatalogListType"/>
+					<xs:element name="NewsGroup" type="SiteExtendNewsGroupListType"/>
+					<xs:element name="Xslt" type="webmill-core:SiteXsltListType"/>
+					<xs:element name="Template" type="webmill-core:SiteTemplateListType"/>
+					<xs:element name="MemberTemplate" type="webmill-core:SiteTemplateMemberItemType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SiteExtendLanguageListType">
+		<xs:sequence>
+			<xs:element name="Item" type="SiteExtendLanguageType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SiteExtendCtxLangCatalogType">
+		<xs:complexContent>
+			<xs:extension base="webmill-core:SiteCtxLangCatalogItemType">
+				<xs:sequence>
+					<xs:element name="ContextList" type="webmill-core:SiteCtxCatalogListType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SiteExtendCtxLangCatalogListType">
+		<xs:sequence>
+			<xs:element name="Item" type="SiteExtendCtxLangCatalogType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SiteExtendNewsGroupType">
+		<xs:complexContent>
+			<xs:extension base="webmill-core:MainListNewsItemType">
+				<xs:sequence>
+					<xs:element name="NewsItem" type="webmill-core:MainNewsListType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SiteExtendNewsGroupListType">
+		<xs:sequence>
+			<xs:element name="Group" type="SiteExtendNewsGroupType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SiteExtendCtxTypeListType">
+		<xs:sequence>
+			<xs:element name="CtxType" type="webmill-core:SiteCtxTypeItemType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -68,7 +68,7 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <property name="local-lib.dir" value="lib"/>
 
@@ -232,7 +232,7 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/sso/schema/config/"/>
 
-        <property name="schema-file" value="${src.dir}\xsd\riverock-sso-config.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-sso-config.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.sso.schema.config"/>
 
@@ -244,7 +244,7 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/sso/schema/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/riverock-sso.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-sso.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.sso.schema"/>
 

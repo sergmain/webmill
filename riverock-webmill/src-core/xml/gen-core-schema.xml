@@ -56,21 +56,7 @@
 
 	<JavaPackageXmlSchema>org.riverock.webmill.schema.core</JavaPackageXmlSchema>
 
-<!--
-
-	<XmlSchemaFile>c:\sandbox\js-webmill\src-core\xsd\riverock-webmill-core.xsd</XmlSchemaFile>
-
--->
-
 	<XmlSchemaFile>..\..\..\xsd\riverock-webmill-core.xsd</XmlSchemaFile>
-
-
-
-<!--
-
-	<JavaPackagePath>c:\sandbox\js-webmill\src-core\java\</JavaPackagePath>
-
--->
 
 	<JavaPackagePath>..\..\..\java\</JavaPackagePath>
 

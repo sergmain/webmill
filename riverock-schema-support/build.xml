@@ -84,7 +84,7 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <!-- runtime library -->
 
@@ -134,9 +134,9 @@
 
     <path id="classpath-base">
 
-        <pathelement location="${lib.dir}/jsmithy-common-1.2.0.jar"/>
+        <pathelement location="${lib.dir}/riverock-common-1.2.1.jar"/>
 
-        <pathelement location="${lib.dir}/jsmithy-generic-4.0.0.jar"/>
+        <pathelement location="${lib.dir}/riverock-generic-4.0.3.jar"/>
 
         <pathelement location="${lib.dir}/${castor.lib}"/>
 
@@ -214,7 +214,7 @@
 
         <antcall target="jar_without_copy"/>
 
-        <copy file="${build.dir}\${main.lib}" todir="../js-lib/lib"/>
+        <copy file="${build.dir}\${main.lib}" todir="../riverock-lib/lib"/>
 
     </target>
 
@@ -252,7 +252,7 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/gen/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/riverock-gen-schema.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-gen-schema.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.schema.gen"/>
 
@@ -422,7 +422,15 @@ Sealed: true
 
         <antcall target="make_manifest_file"/>
 
-        <jar jarfile="${build.dir}/${main.lib}" basedir="${build.dest}" includes="org/riverock/**" excludes="*.txt,*.bat,*.xml,*.sh,*.jav,${manifest-file-name}" manifest="${build.dest}/${manifest-file-name}"/>
+        <jar jarfile="${build.dir}/${main.lib}"
+
+            basedir="${build.dest}"
+
+            includes="org/riverock/**"
+
+            excludes="*.txt,*.bat,*.xml,*.sh,*.jav,${manifest-file-name}"
+
+            manifest="${build.dest}/${manifest-file-name}"/>
 
     </target>
 

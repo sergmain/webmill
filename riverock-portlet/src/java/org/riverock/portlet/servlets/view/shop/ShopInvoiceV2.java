@@ -112,7 +112,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.tools.XmlTools;
 
-import org.riverock.generic.mail.MailMessage;
+import org.riverock.generic.config.GenericConfig;
+
+import org.riverock.common.mail.MailMessage;
 
 import org.riverock.portlet.main.Constants;
 
@@ -966,7 +968,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     jspPage.p.sites.getOrderEmail(),
 
-                    "Your order N" + order.getIdOrder()
+                    "Your order N" + order.getIdOrder(),
+
+                            GenericConfig.getMailSMTPHost()
 
                 );
 
@@ -986,7 +990,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         jspPage.p.sites.getOrderEmail(),
 
-                        "Order N" + order.getIdOrder()
+                        "Order N" + order.getIdOrder(),
+
+                        GenericConfig.getMailSMTPHost()
 
                     );
 

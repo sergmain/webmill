@@ -56,23 +56,9 @@
 
 	<JavaPackageXmlSchema>org.riverock.portlet.schema.core</JavaPackageXmlSchema>
 
-<!--
-
-	<XmlSchemaFile>c:\sandbox\js-portlet\src-core\xsd\riverock-portlet-schema-core.xsd</XmlSchemaFile>
-
--->
-
 	<XmlSchemaFile>..\..\..\xsd\riverock-portlet-schema-core.xsd</XmlSchemaFile>
 
-<!--
-
-	<JavaPackagePath>c:\sandbox\js-portlet\src-core\java\</JavaPackagePath>
-
--->
-
 	<JavaPackagePath>..\..\..\java\</JavaPackagePath>
-
-
 
 	<DbSchema>MILLENNIUM</DbSchema>
 
