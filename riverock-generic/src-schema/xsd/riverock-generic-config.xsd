@@ -1,338 +1,169 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
-
 /*
-
  * org.riverock.generic - Database connectivity classes
-
  * 
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  * 
-
  * Riverock - The Open-source Java Development Community
-
  * http://www.riverock.org
-
  * 
-
  * 
-
  * This library is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU Lesser General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2.1 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * Lesser General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU Lesser General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
 -->
-
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
 	<xs:annotation>
-
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
-
 	</xs:annotation>
-
 	<xs:annotation>
-
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
-
 	</xs:annotation>
-
 	<xs:element name="WebmillConfig" type="GenericConfigType"/>
-
 	<xs:complexType name="DatabaseConnectionType">
-
 		<xs:sequence>
-
 			<xs:element name="Username" type="xs:string"/>
-
 			<xs:element name="Password" type="xs:string"/>
-
 			<xs:element name="ConnectString" type="xs:string"/>
-
 			<xs:element name="ConnectionClass" type="xs:string"/>
-
 			<xs:element name="DatabaseCharset" type="xs:string"/>
-
 			<xs:element name="IsConvertDatabaseString" type="xs:boolean" default="false"/>
-
 			<xs:element name="IsAutoCommit" type="xs:boolean" default="false"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="name" type="xs:string" use="required"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="GenericConfigType">
-
 		<xs:sequence>
-
 			<xs:element name="GenericTempDir" type="xs:string" default="\\tmp"/>
-
 			<xs:element name="GenericDebugDir" type="xs:string" default="c:\\opt1" minOccurs="0"/>
-
 			<xs:element name="DTS" type="DateTimeSavingType" minOccurs="0"/>
-
 			<xs:element name="MailHost" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="CustomDirs" type="CustomDirsType" minOccurs="0"/>
-
 			<xs:element name="SecurityKeyStorage" type="SecurityKeyStorageType" minOccurs="0"/>
-
 			<xs:element name="DefaultConnectionName" type="xs:string" default="ORACLE"/>
-
 			<xs:element name="DatabaseConnection" type="DatabaseConnectionType" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="isDebugDirInit" type="xs:boolean" default="false"/>
-
 		<xs:attribute name="isTempDirInit" type="xs:boolean" default="false"/>
-
 	</xs:complexType>
-
 	<xs:element name="DateTimeSaving" type="DateTimeSavingType"/>
-
 	<xs:complexType name="DateTimeSavingType">
-
 		<xs:annotation>
-
 			<xs:documentation>SimpleTimeZone is a concrete subclass of TimeZone that represents a time zone for use with a Gregorian calendar. The class holds an offset from GMT, called raw offset, and start and end rules for a daylight saving time schedule. Since it only holds single values for each, it cannot handle historical changes in the offset from GMT and the daylight saving schedule, except that the setStartYear method can specify the year when the daylight saving time schedule starts in effect. 
-
-
 
 To construct a SimpleTimeZone with a daylight saving time schedule, the schedule can be described with a set of rules, start-rule and end-rule. A day when daylight saving time starts or ends is specified by a combination of month, day-of-month, and day-of-week values. The month value is represented by a Calendar MONTH field value, such as Calendar.MARCH. The day-of-week value is represented by a Calendar DAY_OF_WEEK value, such as SUNDAY. The meanings of value combinations are as follows. 
 
-
-
 Exact day of month
-
 To specify an exact day of month, set the month and day-of-month to an exact value, and day-of-week to zero. For example, to specify March 1, set the month to MARCH, day-of-month to 1, and day-of-week to 0. 
-
 Day of week on or after day of month
-
 To specify a day of week on or after an exact day of month, set the month to an exact month value, day-of-month to the day on or after which the rule is applied, and day-of-week to a DAY_OF_WEEK field value. For example, to specify the second Sunday of April, set month to APRIL, day-of-month to 8, and day-of-week to SUNDAY. 
-
 Day of week on or before day of month
-
 To specify a day of the week on or before an exact day of the month, set day-of-month and day-of-week to a negative value. For example, to specify the last Wednesday on or before the 21st of March, set month to MARCH, day-of-month is -21 and day-of-week is -WEDNESDAY. 
-
 Last day-of-week of month
-
 To specify, the last day-of-week of the month, set day-of-week to a DAY_OF_WEEK value and day-of-month to -1. For example, to specify the last Sunday of October, set month to OCTOBER, day-of-week to SUNDAY and day-of-month to -1. 
-
 The time of the day at which daylight saving time starts or ends is specified by a millisecond value within the day. There are three kinds of modes to specify the time: WALL_TIME, STANDARD_TIME and UTC_TIME. For example, if daylight saving time ends at 2:00 am in the wall clock time, it can be specified by 7200000 milliseconds in the WALL_TIME mode. In this case, the wall clock time for an end-rule means the same thing as the daylight time. 
-
 The following are examples of parameters for constructing time zone objects. 
 
 
-
-
-
       // Base GMT offset: -8:00
-
       // DST starts:      at 2:00am in standard time
-
       //                  on the first Sunday in April
-
       // DST ends:        at 2:00am in daylight time
-
       //                  on the last Sunday in October
-
       // Save:            1 hour
-
       SimpleTimeZone(-28800000,
-
                      "America/Los_Angeles",
-
                      Calendar.APRIL, 1, -Calendar.SUNDAY,
-
                      7200000,
-
                      Calendar.OCTOBER, -1, Calendar.SUNDAY,
-
                      7200000,
-
                      3600000)
-
-
 
       // Base GMT offset: +1:00
-
       // DST starts:      at 1:00am in UTC time
-
       //                  on the last Sunday in March
-
       // DST ends:        at 1:00am in UTC time
-
       //                  on the last Sunday in October
-
       // Save:            1 hour
-
       SimpleTimeZone(3600000,
-
                      "Europe/Paris",
-
                      Calendar.MARCH, -1, Calendar.SUNDAY,
-
                      3600000, SimpleTimeZone.UTC_TIME,
-
                      Calendar.OCTOBER, -1, Calendar.SUNDAY,
-
                      3600000, SimpleTimeZone.UTC_TIME,
-
                      3600000)
-
  These parameter rules are also applicable to the set rule methods, such as setStartRule. </xs:documentation>
-
 		</xs:annotation>
-
 		<xs:choice>
-
 			<xs:sequence>
-
 				<xs:element name="RawOffset" type="xs:int">
-
 					<xs:annotation>
-
 						<xs:documentation>rawOffset - The base time zone offset in milliseconds to GMT</xs:documentation>
-
 					</xs:annotation>
-
 				</xs:element>
-
 				<xs:element name="Id" type="xs:string">
-
 					<xs:annotation>
-
 						<xs:documentation>ID - The time zone name that is given to this instance.</xs:documentation>
-
 					</xs:annotation>
-
 				</xs:element>
-
 				<xs:element name="Start" type="DateTimeSavingAttrType"/>
-
 				<xs:element name="End" type="DateTimeSavingAttrType"/>
-
 			</xs:sequence>
-
 			<xs:sequence>
-
 				<xs:element name="TimeZoneName" type="xs:string">
-
 					<xs:annotation>
-
 						<xs:documentation>I.e. 'Europe/Paris', 'Europe/Moscow', 'Europe/Berlin'</xs:documentation>
-
 					</xs:annotation>
-
 				</xs:element>
-
 			</xs:sequence>
-
 		</xs:choice>
-
 	</xs:complexType>
-
 	<xs:complexType name="DateTimeSavingAttrType">
-
 		<xs:attribute name="month" type="xs:int" use="required">
-
 			<xs:annotation>
-
 				<xs:documentation>startMonth - The daylight saving time starting month. (0-based. e.g., 0 for January, 1 for February).</xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 		<xs:attribute name="day" type="xs:int" use="required">
-
 			<xs:annotation>
-
 				<xs:documentation>startDay - The day of the month on which the daylight saving time starts. 1 - SUNDAY, 2 - MONDAY, ..., 7 - SATURDAY
-
 See the description for the special cases of this parameter.
-
 </xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 		<xs:attribute name="dayOfWeek" type="xs:int" use="required">
-
 			<xs:annotation>
-
 				<xs:documentation>startDayOfWeek - The daylight saving time starting day-of-week.
-
 1 - SUNDAY, 2 - MONDAY, ..., 7 - SATURDAY</xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 		<xs:attribute name="time" type="xs:int" use="required">
-
 			<xs:annotation>
-
 				<xs:documentation>startTime - The daylight saving time starting time in local wall clock time (in milliseconds within the day), which is local standard time in this case</xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 	</xs:complexType>
-
 	<xs:complexType name="CustomDirsType">
-
 		<xs:all minOccurs="0">
-
 			<xs:element name="CustomDataDefinitionDir" type="xs:string" minOccurs="0"/>
-
 		</xs:all>
-
 	</xs:complexType>
-
 	<xs:complexType name="SecurityKeyStorageType">
-
 		<xs:attribute name="path" type="xs:string" use="required"/>
-
 		<xs:attribute name="password" type="xs:string" use="required"/>
-
 		<xs:attribute name="alias" type="xs:string" use="required"/>
-
 	</xs:complexType>
-
 </xs:schema>
-
