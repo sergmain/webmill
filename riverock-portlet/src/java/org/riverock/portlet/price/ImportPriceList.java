@@ -104,11 +104,13 @@ public class ImportPriceList
 
 
 
-    public static void process(File file, Long id_site)
+    public static void process(File file, Long id_site, DatabaseAdapter db)
 
             throws PriceException
 
     {
+
+
 
         try
 
@@ -118,7 +120,7 @@ public class ImportPriceList
 
             PricesType prices = (PricesType) Unmarshaller.unmarshal(PricesType.class, inSrc);
 
-            process(prices, id_site);
+            process(prices, id_site, db);
 
         }
 
@@ -134,15 +136,13 @@ public class ImportPriceList
 
 
 
-    public static void process(PricesType prices, Long id_site)
+    public static void process(PricesType prices, Long id_site, DatabaseAdapter dbDyn)
 
             throws PriceException
 
     {
 
         PreparedStatement ps = null;
-
-        DatabaseAdapter dbDyn = null;
 
 
 
@@ -155,8 +155,6 @@ public class ImportPriceList
         try
 
         {
-
-            dbDyn = DatabaseAdapter.getInstance(true);
 
 
 
@@ -488,11 +486,9 @@ public class ImportPriceList
 
         {
 
-            DatabaseManager.close( dbDyn, ps );
+            DatabaseManager.close( ps );
 
             ps = null;
-
-            dbDyn = null;
 
         }
 

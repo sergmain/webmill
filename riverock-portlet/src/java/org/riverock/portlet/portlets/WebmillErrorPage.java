@@ -82,7 +82,7 @@ public class WebmillErrorPage
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.portlet.WebmillErrorPage" );
+    private static Logger log = Logger.getLogger( "org.riverock.portlet.portlets.WebmillErrorPage" );
 
 
 

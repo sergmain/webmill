@@ -70,11 +70,9 @@ import java.util.List;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
-
-
 import org.riverock.portlet.member.MemberQueryParameter;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -90,7 +88,7 @@ public abstract class BaseClassQuery
 
  */
 
-    public abstract String getCurrentValue(HttpServletRequest request) throws Exception;
+    public abstract String getCurrentValue(CtxInstance ctxInstance) throws Exception;
 
 
 
@@ -102,7 +100,7 @@ public abstract class BaseClassQuery
 
  */
 
-    public abstract List getSelectList(HttpServletRequest request) throws Exception;
+    public abstract List getSelectList(CtxInstance ctxInstance) throws Exception;
 
 
 

@@ -310,7 +310,7 @@ public class FaqGroup implements PortletGetList
 
             RsetTools.setLong(ps, 1, idSite);
 
-            ps.setString(2, param.jspPage.currentLocale.toString());
+            ps.setString(2, param.ctxInstance.page.currentLocale.toString());
 
             ps.setString(3, faqCode_);
 

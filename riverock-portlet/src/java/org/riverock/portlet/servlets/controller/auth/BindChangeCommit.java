@@ -88,15 +88,13 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -108,17 +106,13 @@ import org.riverock.sso.a3.InternalAuthProvider;
 
 import org.riverock.sso.a3.InternalAuthProviderTools;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -156,7 +150,7 @@ public class BindChangeCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -176,6 +170,10 @@ public class BindChangeCommit extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
 
 
             ContextNavigator.setContentType(response);
@@ -186,7 +184,7 @@ public class BindChangeCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -212,23 +210,29 @@ public class BindChangeCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage  jspPage =  new InitPage(dbDyn, request,
+//                    InitPage  jspPage =  new InitPage(dbDyn, request,
 
-                                                      "mill.locale.AUTH_USER"
+//                                                      "mill.locale.AUTH_USER"
 
-                    );
-
-
-
-                    index_page = CtxURL.url( request, response, jspPage, "mill.auth.bind");
+//                    );
 
 
 
-                    if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
+                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
 
-                        return;
 
-                    Long id_auth_user = ServletTools.getLong(request, "id_auth_user");
+
+//                    if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
+
+//                        return;
+
+//
+
+                    Long id_auth_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_auth_user");
+
+                    if (id_auth_user==null)
+
+                        throw new IllegalArgumentException("id_auth_user not initialized");
 
 
 
@@ -290,11 +294,29 @@ public class BindChangeCommit extends HttpServlet
 
 
 
-                        idFirm = InternalAuthProviderTools.initIdFirm(dbDyn, request, authInfo.userLogin);
+                        idFirm = InternalAuthProviderTools.initIdFirm(
 
-                        idService = InternalAuthProviderTools.initIdService(dbDyn, request, authInfo.userLogin);
+                            dbDyn,
 
-                        idRoad = InternalAuthProviderTools.initIdRoad(dbDyn, request, authInfo.userLogin);
+                            PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.firmIdParam),
+
+                            authInfo.userLogin);
+
+                        idService = InternalAuthProviderTools.initIdService(
+
+                            dbDyn,
+
+                            PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.serviceIdParam),
+
+                            authInfo.userLogin);
+
+                        idRoad = InternalAuthProviderTools.initIdRoad(
+
+                            dbDyn,
+
+                            PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.roadIdParam),
+
+                            authInfo.userLogin);
 
 
 
@@ -310,15 +332,15 @@ public class BindChangeCommit extends HttpServlet
 
 
 
-                            cat.debug("user_login "+ ServletUtils.getString(request, "user_login"));
+                            cat.debug("user_login "+ PortletTools.getString(ctxInstance.getPortletRequest(), "user_login"));
 
-                            cat.debug("user_password "+ ServletUtils.getString(request, "user_password"));
+                            cat.debug("user_password "+ PortletTools.getString(ctxInstance.getPortletRequest(), "user_password"));
 
 
 
                             cat.debug("is_service "+ (authInfo.isService==1?
 
-                                    ServletTools.getInt(request, "is_service", new Integer(0)).intValue():
+                                    PortletTools.getInt(ctxInstance.getPortletRequest(), "is_service", new Integer(0)).intValue():
 
                                     0
 
@@ -328,7 +350,7 @@ public class BindChangeCommit extends HttpServlet
 
                             cat.debug("is_road "+ (authInfo.isRoad==1?
 
-                                    ServletTools.getInt(request, "is_road", new Integer(0)).intValue():
+                                    PortletTools.getInt(ctxInstance.getPortletRequest(), "is_road", new Integer(0)).intValue():
 
                                     0
 
@@ -338,7 +360,7 @@ public class BindChangeCommit extends HttpServlet
 
                             cat.debug("is_use_current_firm "+ (authInfo.isUseCurrentFirm==1?
 
-                                    ServletTools.getInt(request, "is_use_current_firm", new Integer(0)).intValue():
+                                    PortletTools.getInt(ctxInstance.getPortletRequest(), "is_use_current_firm", new Integer(0)).intValue():
 
                                     0
 
@@ -356,15 +378,15 @@ public class BindChangeCommit extends HttpServlet
 
 
 
-                        ps.setString(1, ServletUtils.getString(request, "user_login"));
+                        ps.setString(1, PortletTools.getString(ctxInstance.getPortletRequest(), "user_login"));
 
-                        ps.setString(2, ServletUtils.getString(request, "user_password"));
+                        ps.setString(2, PortletTools.getString(ctxInstance.getPortletRequest(), "user_password"));
 
 
 
                         RsetTools.setInt(ps,3, (authInfo.isService==1?
 
-                                ServletTools.getInt(request, "is_service"):
+                                PortletTools.getInt(ctxInstance.getPortletRequest(), "is_service"):
 
                                 null
 
@@ -374,7 +396,7 @@ public class BindChangeCommit extends HttpServlet
 
                         RsetTools.setInt(ps, 4, (authInfo.isRoad==1?
 
-                                ServletTools.getInt(request, "is_road"):
+                                PortletTools.getInt(ctxInstance.getPortletRequest(), "is_road"):
 
                                 null
 
@@ -384,7 +406,7 @@ public class BindChangeCommit extends HttpServlet
 
                         RsetTools.setInt(ps, 5, (authInfo.isUseCurrentFirm==1?
 
-                                ServletTools.getInt(request, "is_use_current_firm"):
+                                PortletTools.getInt(ctxInstance.getPortletRequest(), "is_use_current_firm"):
 
                                 null
 

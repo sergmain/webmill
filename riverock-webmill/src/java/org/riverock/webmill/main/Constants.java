@@ -124,6 +124,8 @@ public class Constants
 
     public final static String URI_CTX_MANAGER = "/ctx";
 
+    public final static String PAGE_SERVLET_NAME = "/page";
+
 
 
     public static final String NAME_TOURL_PARAM     = "mill.tourl";
@@ -135,6 +137,8 @@ public class Constants
 
 
     public final static String PAGE_TITLE_SESSION = "MILL.PAGE_TITLE_SESSION";
+
+    public final static String PORTLET_REQUEST_SESSION   = "MILL.PARAMETER_SESSION";
 
 
 

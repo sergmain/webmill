@@ -76,6 +76,10 @@ import java.util.Calendar;
 
 
 
+import javax.portlet.PortletSession;
+
+import javax.portlet.RenderRequest;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -84,9 +88,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
 
 
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 
@@ -94,27 +98,19 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.StringTools;
 
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.portlet.forum.ForumMessage;
 
 import org.riverock.portlet.forum.SimpleForum;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -152,7 +148,7 @@ public class ForumStandard extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -164,7 +160,9 @@ public class ForumStandard extends HttpServlet
 
         {
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
 
 
@@ -180,33 +178,23 @@ public class ForumStandard extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(DatabaseAdapter.getInstance(false),
+            Integer year = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
 
-                    request,
-
-                    "mill.locale.forum"
-
-            );
+            Integer month = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
 
 
 
-            Integer year = ServletTools.getInt(request, Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
-
-            Integer month = ServletTools.getInt(request, Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
+            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response, ctxInstance.page);
 
 
 
-            SimpleForum forum = new SimpleForum(request, response, jspPage);
-
-
-
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
 //            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
 
-            String nameTemplate = request.getParameter(
+            String nameTemplate = ctxInstance.getPortletRequest().getParameter(
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM
 
@@ -250,7 +238,7 @@ public class ForumStandard extends HttpServlet
 
             else
 
-                forum.jspPage = jspPage;
+                forum.page = ctxInstance.page;
 
 
 
@@ -312,7 +300,7 @@ public class ForumStandard extends HttpServlet
 
 
 
-                    ServletUtils.include(request, response, "/mill.forum_add_message", out );
+                    PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, "/mill.forum_add_message", out );
 
 
 
@@ -332,19 +320,19 @@ public class ForumStandard extends HttpServlet
 
                     out.write("<b>");
 
-                    out.write(jspPage.sCustom.getStr("str.date"));
+                    out.write(ctxInstance.sCustom.getStr("str.date"));
 
                     out.write(":");
 
                     out.write("</b>&nbsp;");
 
-                    out.write(DateTools.getStringDate(message.datePost, "dd-MMMM-yyyy HH:mm:ss", jspPage.currentLocale));
+                    out.write(DateTools.getStringDate(message.datePost, "dd-MMMM-yyyy HH:mm:ss", ctxInstance.page.currentLocale));
 
                     out.write("<BR>\r\n");
 
                     out.write("<b>");
 
-                    out.write(jspPage.sCustom.getStr("str.from_who"));
+                    out.write(ctxInstance.sCustom.getStr("str.from_who"));
 
                     out.write(":");
 
@@ -368,7 +356,7 @@ public class ForumStandard extends HttpServlet
 
                     out.write("<b>");
 
-                    out.write(jspPage.sCustom.getStr("str.header"));
+                    out.write(ctxInstance.sCustom.getStr("str.header"));
 
                     out.write(":");
 
@@ -430,7 +418,7 @@ public class ForumStandard extends HttpServlet
 
             String url = ("<a href=\"" +
 
-                    CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_FORUM) + '&' +
+                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_FORUM) + '&' +
 
                     Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
 
@@ -438,7 +426,7 @@ public class ForumStandard extends HttpServlet
 
 
 
-            out.write(url + jspPage.sCustom.getStr("str.top_forum") + "</a>");
+            out.write(url + ctxInstance.sCustom.getStr("str.top_forum") + "</a>");
 
 
 
@@ -460,7 +448,7 @@ public class ForumStandard extends HttpServlet
 
                 out.write("<table border=\"0\"><tr><td>");
 
-                ServletUtils.include(request, response, "/mill.forum_add_message", out);
+                PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, "/mill.forum_add_message", out);
 
                 out.write("</td></tr></table>");
 

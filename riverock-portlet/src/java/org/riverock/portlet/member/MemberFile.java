@@ -160,7 +160,7 @@ public class MemberFile extends CacheFile
 
     {
 
-        if (memberHash == null)
+        if (memberHash==null || nameModule_==null)
 
             return null;
 
@@ -175,8 +175,6 @@ public class MemberFile extends CacheFile
         if ( isUseCache() )
 
             return (ModuleType)memberHash.get(nameModule_);
-
-//            return MemberServiceClass.getModule(ma, nameModule_);
 
 
 
@@ -224,8 +222,6 @@ public class MemberFile extends CacheFile
 
                 return (ModuleType)memberHash.get(nameModule_);
 
-//                return MemberServiceClass.getModule(ma, nameModule_);
-
             }
 
         }
@@ -249,8 +245,6 @@ public class MemberFile extends CacheFile
 
 
         return (ModuleType)memberHash.get(nameModule_);
-
-//        return MemberServiceClass.getModule(ma, nameModule_);
 
     }
 

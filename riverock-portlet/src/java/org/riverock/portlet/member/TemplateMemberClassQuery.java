@@ -72,12 +72,6 @@ import java.util.List;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
-
-
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.webmill.core.GetSiteTemplateItem;
@@ -87,6 +81,10 @@ import org.riverock.webmill.core.GetSiteTemplateWithIdSiteSupportLanguageList;
 import org.riverock.webmill.schema.core.SiteTemplateItemType;
 
 import org.riverock.webmill.schema.core.SiteTemplateListType;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -140,7 +138,7 @@ public class TemplateMemberClassQuery extends BaseClassQuery
 
      */
 
-    public String getCurrentValue(HttpServletRequest request)
+    public String getCurrentValue(CtxInstance ctxInstance)
 
         throws Exception
 
@@ -198,7 +196,7 @@ public class TemplateMemberClassQuery extends BaseClassQuery
 
      */
 
-    public List getSelectList(HttpServletRequest request)
+    public List getSelectList(CtxInstance ctxInstance)
 
         throws Exception
 
@@ -220,7 +218,7 @@ public class TemplateMemberClassQuery extends BaseClassQuery
 
 //        SiteTemplateDescListType list = templateList.templateList;
 
-            Long id = ServletTools.getLong(request, nameModule+'.'+nameField);
+            Long id = PortletTools.getLong(ctxInstance.getPortletRequest(), nameModule+'.'+nameField);
 
             SiteTemplateListType templateList = GetSiteTemplateWithIdSiteSupportLanguageList.getInstance(db_, id).item;
 
@@ -230,7 +228,7 @@ public class TemplateMemberClassQuery extends BaseClassQuery
 
             {
 
-                log.debug("parameter "+nameModule+'.'+nameField+" is "+request.getParameter(nameModule+'.'+nameField));
+                log.debug("parameter "+nameModule+'.'+nameField+" is "+ctxInstance.getPortletRequest().getParameter(nameModule+'.'+nameField));
 
                 log.debug("id "+id);
 
@@ -270,7 +268,7 @@ public class TemplateMemberClassQuery extends BaseClassQuery
 
             if (log.isDebugEnabled())
 
-                log.debug("idTemplate "+desc.getIdTemplateLanguage()+" is "+request.getParameter(nameModule+'.'+nameField));
+                log.debug("idTemplate "+desc.getIdTemplateLanguage()+" is "+ctxInstance.getPortletRequest().getParameter(nameModule+'.'+nameField));
 
 
 

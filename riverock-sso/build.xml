@@ -242,6 +242,8 @@
 
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
 
+        <pathelement location="${lib.dir}/${portlet.lib}"/>
+
 
 
         <path refid="classpath-${java.target}"/>

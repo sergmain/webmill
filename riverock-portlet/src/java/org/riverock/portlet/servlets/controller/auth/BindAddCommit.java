@@ -88,17 +88,15 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
-
-import org.riverock.portlet.main.Constants;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -110,17 +108,13 @@ import org.riverock.sso.a3.InternalAuthProvider;
 
 import org.riverock.sso.a3.InternalAuthProviderTools;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -160,7 +154,7 @@ public class BindAddCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -182,6 +176,12 @@ public class BindAddCommit extends HttpServlet
 
 
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response, "utf-8");
 
 
@@ -190,7 +190,7 @@ public class BindAddCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -214,25 +214,29 @@ public class BindAddCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage jspPage =  new InitPage(dbDyn, request,
+//                    InitPage jspPage =  new InitPage(dbDyn, request,
 
-                                                     "mill.locale.AUTH_USER"
+//                                                     "mill.locale.AUTH_USER"
 
-                    );
-
-
-
-                    index_page = CtxURL.url( request, response, jspPage, "mill.auth.bind");
+//                    );
 
 
 
-                    if (ServletTools.isNotInit(request, response, "id_user", index_page))
-
-                        return;
+                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
 
 
 
-                    Long id_user = ServletTools.getLong(request, "id_user");
+//                    if (ServletTools.isNotInit(request, response, "id_user", index_page))
+
+//                        return;
+
+//
+
+                    Long id_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_user");
+
+                    if (id_user==null)
+
+                        throw new IllegalArgumentException("id_user not initialized");
 
 
 
@@ -300,11 +304,29 @@ public class BindAddCommit extends HttpServlet
 
 
 
-                    idFirm = InternalAuthProviderTools.initIdFirm(dbDyn, request, authInfo.userLogin);
+                    idFirm = InternalAuthProviderTools.initIdFirm(
 
-                    idService = InternalAuthProviderTools.initIdService(dbDyn, request, authInfo.userLogin);
+                        dbDyn,
 
-                    idRoad = InternalAuthProviderTools.initIdRoad(dbDyn, request, authInfo.userLogin);
+                        PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.firmIdParam),
+
+                        authInfo.userLogin);
+
+                    idService = InternalAuthProviderTools.initIdService(
+
+                        dbDyn,
+
+                        PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.serviceIdParam),
+
+                        authInfo.userLogin);
+
+                    idRoad = InternalAuthProviderTools.initIdRoad(
+
+                        dbDyn,
+
+                        PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.roadIdParam),
+
+                        authInfo.userLogin);
 
 
 
@@ -358,15 +380,15 @@ public class BindAddCommit extends HttpServlet
 
                     RsetTools.setLong(ps, 5, id_user );
 
-                    ps.setString(6, ServletUtils.getString(request, "user_login"));
+                    ps.setString(6, PortletTools.getString(ctxInstance.getPortletRequest(), "user_login"));
 
-                    ps.setString(7, ServletUtils.getString(request, "user_password"));
+                    ps.setString(7, PortletTools.getString(ctxInstance.getPortletRequest(), "user_password"));
 
 
 
                     RsetTools.setInt(ps, 8, (authInfo.isUseCurrentFirm==1?
 
-                            ServletTools.getInt(request, "is_use_current_firm"):
+                            PortletTools.getInt(ctxInstance.getPortletRequest(), "is_use_current_firm"):
 
                             null
 
@@ -376,7 +398,7 @@ public class BindAddCommit extends HttpServlet
 
                     RsetTools.setInt(ps, 9, (authInfo.isService==1?
 
-                            ServletTools.getInt(request, "is_service"):
+                            PortletTools.getInt(ctxInstance.getPortletRequest(), "is_service"):
 
                             null
 
@@ -386,37 +408,13 @@ public class BindAddCommit extends HttpServlet
 
                     RsetTools.setInt(ps, 10, (authInfo.isRoad==1?
 
-                            ServletTools.getInt(request, "is_road"):
+                            PortletTools.getInt(ctxInstance.getPortletRequest(), "is_road"):
 
                             null
 
                             )
 
                     );
-
-/*
-
-                    ps.setString(8, auth_.getUserLogin());
-
-
-
-                    ps.setString(9, auth_.getUserLogin());
-
-                    RsetTools.setLong(ps, 10, ServletTools.getLong(request, "idFirm"));
-
-
-
-                    ps.setString(11, auth_.getUserLogin());
-
-                    RsetTools.setLong(ps, 12, ServletTools.getLong(request, "id_service"));
-
-
-
-                    ps.setString(13, auth_.getUserLogin());
-
-                    RsetTools.setLong(ps, 14, ServletTools.getLong(request, "id_road"));
-
-*/
 
                     int i1 = ps.executeUpdate();
 

@@ -74,6 +74,8 @@ import java.io.Writer;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -82,9 +84,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
 
 
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 
@@ -98,13 +100,9 @@ import org.riverock.portlet.price.PriceSpecialItems;
 
 import org.riverock.portlet.price.Shop;
 
-import org.riverock.webmill.port.InitPage;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -144,7 +142,7 @@ public class ShopSpecial extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -155,6 +153,12 @@ public class ShopSpecial extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -176,15 +180,7 @@ public class ShopSpecial extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.locale.site_hamradio"
-
-            );
-
-
-
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
@@ -236,7 +232,7 @@ public class ShopSpecial extends HttpServlet
 
 //                      PriceList.getSpecialItems(db_, shop, currencyID,
 
-//                              request.getServerName() );
+//                              ctxInstance.getPortletRequest().getServerName() );
 
 
 

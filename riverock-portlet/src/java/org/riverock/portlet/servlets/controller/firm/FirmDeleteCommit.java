@@ -76,39 +76,35 @@ import java.sql.PreparedStatement;
 
 
 
+import javax.servlet.ServletException;
+
 import javax.servlet.http.HttpServlet;
 
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.ServletException;
-
 
 
 import org.apache.log4j.Logger;
 
-
-
-import org.riverock.webmill.port.InitPage;
-
 import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -146,7 +142,7 @@ public class FirmDeleteCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -158,6 +154,12 @@ public class FirmDeleteCommit extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
 
 
             ContextNavigator.setContentType(response, "utf-8");
@@ -168,7 +170,7 @@ public class FirmDeleteCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -192,23 +194,27 @@ public class FirmDeleteCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage  jspPage =  new InitPage(dbDyn, request,
+//                    InitPage  jspPage =  new InitPage(dbDyn, request,
 
-                                                      "mill.locale.MAIN_LIST_FIRM"
+//                                                      "mill.locale.MAIN_LIST_FIRM"
 
-                    );
-
-
-
-                    index_page = CtxURL.url( request, response, jspPage, "mill.firm.index");
+//                    );
 
 
 
-                    if (ServletTools.isNotInit(request, response, "id_firm", index_page))
+                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
 
-                        return;
 
-                    Long id_firm = ServletTools.getLong(request, "id_firm");
+
+//                    if (ServletTools.isNotInit(request, response, "id_firm", index_page))
+
+//                        return;
+
+                    Long id_firm = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_firm");
+
+                    if (id_firm==null)
+
+                        throw new IllegalArgumentException("id_firm not initialized");
 
 
 

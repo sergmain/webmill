@@ -68,10 +68,6 @@ package org.riverock.portlet.servlets.view.image;
 
 
 
-import org.apache.log4j.Logger;
-
-
-
 import java.io.IOException;
 
 import java.io.Writer;
@@ -82,41 +78,37 @@ import java.sql.ResultSet;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
 
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 
 import org.apache.log4j.Logger;
 
-
-
-import org.riverock.webmill.port.InitPage;
-
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.sso.a3.AuthSession;
+
+import org.riverock.sso.a3.AuthTools;
+
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -124,7 +116,7 @@ public class ImageIndex extends HttpServlet
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.servlets.view.image.ImageIndex");
+    private static Logger cat = Logger.getLogger("org.riverock.portlet.servlets.view.image.ImageIndex");
 
 
 
@@ -154,7 +146,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -165,6 +157,12 @@ public class ImageIndex extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -180,7 +178,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                AuthSession auth_ = AuthTools.check(request, response, "/");
+                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
                 if (auth_ == null)
 
@@ -190,15 +188,9 @@ public class ImageIndex extends HttpServlet
 
                 DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-                InitPage jspPage = new InitPage(db_, request,
-
-                                                "mill.locale._price_list"
-
-                );
 
 
-
-                String index_page = CtxURL.url(request, response, jspPage, "mill.image.index");
+                String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index");
 
 
 
@@ -206,7 +198,7 @@ public class ImageIndex extends HttpServlet
 
                 {
 
-                    Long id_main_ = ServletTools.getLong(request, "id_main");
+                    Long id_main_ = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_main");
 
 
 
@@ -218,7 +210,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.image.desc") + '&' +
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -238,7 +230,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.image.select_url") + '&' +
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.select_url") + '&' +
 
                             "id_main=" + id_main_
 
@@ -272,7 +264,7 @@ public class ImageIndex extends HttpServlet
 
                     RsetTools.setLong(ps, 1, id_main_);
 
-                    ps.setString(2, request.getServerName());
+                    ps.setString(2, ctxInstance.getPortletRequest().getServerName());
 
                     ResultSet rs = ps.executeQuery();
 
@@ -308,7 +300,7 @@ public class ImageIndex extends HttpServlet
 
                         out.write("\">\r\n                ");
 
-                        out.write(jspPage.sCustom.getStr("price.top_level"));
+                        out.write(ctxInstance.sCustom.getStr("price.top_level"));
 
                         out.write("</a>\r\n");
 
@@ -424,7 +416,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.image.desc") + '&' +
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -444,7 +436,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.image.select_url") + '&' +
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.select_url") + '&' +
 
                             "id_main=" + id_main_
 
@@ -464,7 +456,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.image.list") + '&' +
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.list") + '&' +
 
                             "id_main=" + id_main_
 

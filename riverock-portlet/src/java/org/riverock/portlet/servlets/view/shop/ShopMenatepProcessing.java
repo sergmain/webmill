@@ -76,25 +76,23 @@ import java.io.Writer;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpServlet;
 
 
 
 import org.apache.log4j.Logger;
 
-
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.ContextNavigator;
-
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.StringTools;
+
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -134,7 +132,7 @@ public class ShopMenatepProcessing extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -145,6 +143,12 @@ public class ShopMenatepProcessing extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -162,7 +166,7 @@ public class ShopMenatepProcessing extends HttpServlet
 
                     StringTools.replaceStringArray(
 
-                            "http://" + request.getServerName() + response.encodeURL("/basket.jsp"),
+                            "http://" + ctxInstance.getPortletRequest().getServerName() + response.encodeURL("/basket.jsp"),
 
                             new String[][]{{"=", "%3D"}, {"&", "%26"}}
 

@@ -66,9 +66,7 @@ import org.riverock.portlet.member.ClassQueryItem;
 
 import org.riverock.portlet.member.MemberQueryParameter;
 
-
-
-import javax.servlet.http.HttpServletRequest;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -162,7 +160,7 @@ public class TestOption extends BaseClassQuery
 
 
 
-    public String getCurrentValue(HttpServletRequest request)
+    public String getCurrentValue(CtxInstance ctxInstance)
 
     {
 
@@ -172,7 +170,7 @@ public class TestOption extends BaseClassQuery
 
 
 
-    public List getSelectList(HttpServletRequest request)
+    public List getSelectList(CtxInstance ctxInstance)
 
     {
 

@@ -74,21 +74,21 @@ import java.io.Writer;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
+
+import javax.servlet.http.HttpServlet;
 
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
-import javax.servlet.http.HttpServlet;
-
 
 
 import org.apache.log4j.Logger;
 
-
+import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -100,17 +100,13 @@ import org.riverock.portlet.forum.SimpleForum;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -172,7 +168,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -183,6 +179,12 @@ public class ForumAddMessageCommit extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -196,7 +198,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            Forum.setCookie(request, response);
+            Forum.setCookie(ctxInstance.getPortletRequest(), response);
 
 
 
@@ -204,15 +206,15 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
+//            InitPage jspPage = new InitPage(db_, request,
 
-                                            "mill.locale.forum"
+//                                            "mill.locale.forum"
 
-            );
+//            );
 
 
 
-            SimpleForum forum = new SimpleForum(request, response, jspPage);
+            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response, ctxInstance.page);
 
 
 
@@ -228,7 +230,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            Long id = ServletTools.getLong(request,
+            Long id = PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                     Constants.NAME_ID_MESSAGE_FORUM_PARAM);
 
@@ -236,7 +238,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 // Add forum message
 
-            boolean isAdd = ServletUtils.getString(request, "action").equals("add");
+            boolean isAdd = PortletTools.getString(ctxInstance.getPortletRequest(), "action").equals("add");
 
             if (isAdd)
 
@@ -244,7 +246,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-                Long id_main = ServletTools.getLong(request, Constants.NAME_ID_MAIN_FORUM_PARAM);
+                Long id_main = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_MAIN_FORUM_PARAM);
 
                 Long id_thread = null;
 
@@ -276,7 +278,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-                id = forum.addMessage(request, id_thread, id_main);
+                id = forum.addMessage(ctxInstance, id_thread, id_main);
 
 
 
@@ -288,17 +290,17 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-//                forum_email = ServletUtils.getString(request, "e");
+//                forum_email = PortletTools.getString(ctxInstance.getPortletRequest(), "e");
 
-//                forum_name = ServletUtils.getString(request, "n");
+//                forum_name = PortletTools.getString(ctxInstance.getPortletRequest(), "n");
 
             }
 
-            String subject = ServletUtils.getString(request, "nameForumSubject_", "");
+            String subject = PortletTools.getString(ctxInstance.getPortletRequest(), "nameForumSubject_", "");
 
 
 
-            HttpSession session = request.getSession(true);
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession(true);
 
             subject = (String) session.getAttribute(Constants.FORUM_SUBJECT_SESSION);
 
@@ -316,9 +318,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-//            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
-
-            String nameTemplate = request.getParameter(
+            String nameTemplate = ctxInstance.getPortletRequest().getParameter(
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM
 
@@ -326,7 +326,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
             String url = (
 
-                    CtxURL.ctx() + '?' + jspPage.getAsURL() +
+                    CtxURL.ctx() + '?' + ctxInstance.page.getAsURL() +
 
                     Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum + '&' +
 

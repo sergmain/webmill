@@ -70,8 +70,6 @@ import java.util.Locale;
 
 
 
-import javax.servlet.ServletRequest;
-
 import javax.servlet.http.Cookie;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,7 +90,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.tools.StringManager;
 
-import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
+import org.riverock.webmill.core.*;
 
 import org.riverock.webmill.main.Constants;
 
@@ -102,9 +100,7 @@ import org.riverock.webmill.portal.menu.MenuLanguageInterface;
 
 import org.riverock.webmill.portal.menu.SiteMenu;
 
-import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
-
-import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
+import org.riverock.webmill.schema.core.*;
 
 import org.riverock.webmill.schema.types.HiddenParamType;
 
@@ -132,8 +128,6 @@ public class InitPage
 
     public StringManager sMain = null;
 
-    public StringManager sCustom = null;
-
     public String title = "&nbsp;";
 
 
@@ -141,6 +135,24 @@ public class InitPage
     private String type = null;
 
     private String nameTemplate = null;
+
+    private Long portletId = null;
+
+    private boolean isRequestedFromPage = false;
+
+
+
+    private boolean isDynamic = false;
+
+
+
+    public Long getPortletId()
+
+    {
+
+        return portletId;
+
+    }
 
 
 
@@ -184,8 +196,6 @@ public class InitPage
 
         sMain = null;
 
-        sCustom = null;
-
         title = null;
 
 
@@ -196,39 +206,11 @@ public class InitPage
 
 
 
-    public InitPage(DatabaseAdapter db_, HttpServletRequest request,
+    public InitPage(DatabaseAdapter db_, HttpServletRequest request)
 
-        String nameLocales
-
-        )
-
-
-
-            throws Exception
+        throws Exception
 
     {
-
-        initTypeContext(request);
-
-        portletDescription = PortletDescription.getInstance( type );
-
-
-
-        if ( log.isDebugEnabled() )
-
-        {
-
-            log.debug( "Portlet description "+getPortletDescription() );
-
-            if ( getPortletDescription()==null )
-
-                log.debug( "PortletDescription for type "+type+" not found" );
-
-        }
-
-
-
-
 
         long jspPagePortletInfo = 0;
 
@@ -282,6 +264,8 @@ public class InitPage
 
 
 
+
+
         Locale tempLocale = getPrefferedLocale(db_, request);
 
 
@@ -309,10 +293,6 @@ public class InitPage
 
 
         sMain = StringManager.getManager("mill.locale.main", currentLocale);
-
-        if ((nameLocales != null) && (nameLocales.trim().length() != 0))
-
-            sCustom = StringManager.getManager(nameLocales, currentLocale);
 
 
 
@@ -376,7 +356,99 @@ public class InitPage
 
 
 
+        initTypeContext(request, db_, p);
+
+
+
+        if ( nameTemplate==null )
+
+            nameTemplate = menuLanguage.getIndexTemplate();
+
+
+
+        if ( nameTemplate==null )
+
+        {
+
+            String errorString = "Template for page with type 'mill.index' not found";
+
+            log.error( errorString );
+
+            throw new Exception(errorString);
+
+        }
+
+
+
+
+
+        portletDescription = PortletDescription.getInstance( type );
+
+        if (!isRequestedFromPage)
+
+//            initPortletId( request );
+
+
+
+        if ( log.isDebugEnabled() )
+
+        {
+
+            log.debug( "Portlet description "+getPortletDescription() );
+
+            if ( getPortletDescription()==null )
+
+                log.debug( "PortletDescription for type "+type+" not found" );
+
+        }
+
+
+
+
+
+
+
     }
+
+/*
+
+    private void initPortletId(HttpServletRequest request)
+
+    {
+
+        if (portletDescription==null)
+
+            return;
+
+
+
+        String namePortletId = PortletTools.getStringParam( portletDescription.getPortletConfig(), PortletTools.name_portlet_id);
+
+        if ( namePortletId!= null && namePortletId.length()!=0)
+
+        {
+
+            if (log.isDebugEnabled())
+
+                log.debug("Get ID from request");
+
+
+
+            portletId = PortletTools.getIdPortlet(namePortletId, request);
+
+
+
+            if (log.isDebugEnabled())
+
+                log.debug("portletId from request - "+portletId);
+
+
+
+        }
+
+    }
+
+*/
 
 
 
@@ -388,7 +460,9 @@ public class InitPage
 
      */
 
-    private void initTypeContext(ServletRequest request)
+    private void initTypeContext(HttpServletRequest request, DatabaseAdapter db_, PortalInfo p)
+
+    throws Exception
 
     {
 
@@ -396,47 +470,105 @@ public class InitPage
 
         {
 
-            String ctxType = request.getParameter( Constants.NAME_TYPE_CONTEXT_PARAM );
-
-
-
-            String ctxTemplate =
-
-                request.getParameter( Constants.NAME_TEMPLATE_CONTEXT_PARAM );
-
-
-
-            if ( log.isDebugEnabled() )
+            if (request.getServletPath().startsWith(Constants.PAGE_SERVLET_NAME) )
 
             {
 
-                log.debug( "getTypeContext(). TEMPLATE: "+ctxTemplate );
+                String path = request.getPathInfo();
 
-                log.debug( "getTypeContext(). type context: "+ctxType );
+                if (path==null || path.equals("/"))
+
+                {
+
+                    // init as 'index' page
+
+                    internalInitTypeContext(request);
+
+                    return;
+
+                }
+
+                int idx = path.indexOf('/', 1);
+
+                Long ctxId = null;
+
+                if (idx==-1)
+
+                    ctxId = new Long(path.substring(1));
+
+                else
+
+                    ctxId = new Long(path.substring(1, idx));
+
+
+
+                SiteCtxCatalogItemType ctx = GetSiteCtxCatalogItem.getInstance(db_, ctxId).item;
+
+                if (ctx==null)
+
+                {
+
+                    log.error("Context with id "+ctxId+" not found. process as 'index' page");
+
+                    internalInitTypeContext(request);
+
+                    return;
+
+                }
+
+
+
+                SiteCtxLangCatalogItemType langMenu = GetSiteCtxLangCatalogItem.getInstance(db_, ctx.getIdSiteCtxLangCatalog()).item;
+
+                if (langMenu==null)
+
+                {
+
+                    log.error("Lang Catalog with id "+ctx.getIdSiteCtxLangCatalog()+" not found. process as 'index' page");
+
+                    internalInitTypeContext(request);
+
+                    return;
+
+                }
+
+
+
+                SiteSupportLanguageItemType siteLang = GetSiteSupportLanguageItem.getInstance(db_, langMenu.getIdSiteSupportLanguage()).item;
+
+                if (siteLang==null)
+
+                {
+
+                    log.error("Site language with id "+langMenu.getIdSiteSupportLanguage()+" not found. process as 'index' page");
+
+                    internalInitTypeContext(request);
+
+                    return;
+
+                }
+
+                if (!p.getSiteId().equals(siteLang.getIdSite()))
+
+                {
+
+                    log.error("Requested context with id "+ctxId+" is from others site. Process as 'index' page");
+
+                    internalInitTypeContext(request);
+
+                    return;
+
+                }
+
+                isRequestedFromPage = true;
+
+                internalInitPageCtx(db_, ctx);
 
             }
 
+            else
 
-
-            // If not found name of template or type of context, processing as index_page
-
-            if ( ctxType==null || ctxTemplate==null )
-
-            {
-
-                type = Constants.CTX_TYPE_INDEX;
-
-                nameTemplate = null;
-
-                return;
-
-            }
-
-
-
-            type = ctxType;
-
-            nameTemplate = ctxTemplate;
+                internalInitTypeContext(request);
 
         }
 
@@ -462,9 +594,117 @@ public class InitPage
 
 
 
+
+
+    private void internalInitPageCtx(DatabaseAdapter db_, SiteCtxCatalogItemType ctx)
+
+        throws Exception
+
+    {
+
+        String ctxType = GetSiteCtxTypeItem.getInstance(db_, ctx.getIdSiteCtxType()).item.getType();
+
+        String ctxTemplate = GetSiteTemplateItem.getInstance(db_, ctx.getIdSiteTemplate()).item.getNameSiteTemplate();
+
+
+
+        if ( log.isDebugEnabled() )
+
+        {
+
+            log.debug( "getTypeContext(). TEMPLATE: "+ctxTemplate );
+
+            log.debug( "getTypeContext(). type context: "+ctxType );
+
+        }
+
+
+
+        // If not found name of template or type of context, processing as index_page
+
+        if ( ctxType==null || ctxTemplate==null )
+
+        {
+
+            type = Constants.CTX_TYPE_INDEX;
+
+            nameTemplate = null;
+
+            return;
+
+        }
+
+
+
+        type = ctxType;
+
+        nameTemplate = ctxTemplate;
+
+        portletId = ctx.getIdContext();
+
+        isDynamic = true;
+
+    }
+
+
+
+    private void internalInitTypeContext(HttpServletRequest request)
+
+    throws Exception
+
+    {
+
+        String ctxType = request.getParameter( Constants.NAME_TYPE_CONTEXT_PARAM );
+
+
+
+        String ctxTemplate =
+
+            request.getParameter( Constants.NAME_TEMPLATE_CONTEXT_PARAM );
+
+
+
+        if ( log.isDebugEnabled() )
+
+        {
+
+            log.debug( "getTypeContext(). TEMPLATE: "+ctxTemplate );
+
+            log.debug( "getTypeContext(). type context: "+ctxType );
+
+        }
+
+
+
+        // If not found name of template or type of context, processing as index_page
+
+        if ( ctxType==null || ctxTemplate==null )
+
+        {
+
+            type = Constants.CTX_TYPE_INDEX;
+
+            nameTemplate = menuLanguage.getIndexTemplate();
+
+            return;
+
+        }
+
+
+
+        type = ctxType;
+
+        nameTemplate = ctxTemplate;
+
+        isDynamic = true;
+
+    }
+
+
+
     private Locale getPrefferedLocale(DatabaseAdapter db_, HttpServletRequest request)
 
-            throws Exception
+        throws Exception
 
     {
 
@@ -851,6 +1091,16 @@ public class InitPage
     {
 
         return portletDescription;
+
+    }
+
+
+
+    public boolean isDynamic()
+
+    {
+
+        return isDynamic;
 
     }
 

@@ -76,9 +76,11 @@ import java.sql.SQLException;
 
 
 
-import javax.servlet.http.HttpSession;
+import javax.portlet.PortletSession;
 
 
+
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 
@@ -115,10 +117,6 @@ import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.PortletParameter;
-
-
-
-import org.apache.log4j.Logger;
 
 
 
@@ -256,7 +254,7 @@ public class PriceListItemList
 
 
 
-            HttpSession session = param.getRequest().getSession();
+            PortletSession session = param.getPortletRequest().getPortletSession();
 
             OrderType order = (OrderType) session.getAttribute(Constants.ORDER_SESSION);
 
@@ -318,7 +316,7 @@ public class PriceListItemList
 
                     (CurrencyItem) CurrencyService.getCurrencyItemByCode(
 
-                        CurrencyManager.getInstance(db_, param.getJspPage().p.sites.getIdSite()).getCurrencyList(), currencyCode
+                        CurrencyManager.getInstance(db_, param.getPage().p.sites.getIdSite()).getCurrencyList(), currencyCode
 
                     );
 
@@ -332,7 +330,7 @@ public class PriceListItemList
 
                 currencyItem.fillRealCurrencyData(
 
-                    CurrencyManager.getInstance(db_, param.getJspPage().p.sites.getIdSite()).getCurrencyList().getStandardCurrencyList()
+                    CurrencyManager.getInstance(db_, param.getPage().p.sites.getIdSite()).getCurrencyList().getStandardCurrencyList()
 
                 );
 
@@ -376,7 +374,7 @@ public class PriceListItemList
 
                     CustomCurrencyItemType targetCurrency =
 
-                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, param.getJspPage().p.sites.getIdSite()).getCurrencyList(), shopParam.id_currency);
+                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, param.getPage().p.sites.getIdSite()).getCurrencyList(), shopParam.id_currency);
 
 
 

@@ -84,35 +84,33 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-import org.riverock.portlet.member.MemberForvardException;
+import org.apache.log4j.Logger;
 
-import org.riverock.portlet.member.ModuleManager;
+import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.portlet.main.Constants;
+
+import org.riverock.portlet.member.MemberForvardException;
 
 import org.riverock.portlet.member.MemberProcessing;
 
 import org.riverock.portlet.member.MemberServiceClass;
 
-import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
+import org.riverock.portlet.member.ModuleManager;
 
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
+
+import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.utils.ServletUtils;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxInstance;
 
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -120,7 +118,7 @@ public class MemberViewServlet extends HttpServlet
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.member.servlet.MemberViewServlet");
+    private static Logger log = Logger.getLogger("org.riverock.portlet.member.servlet.MemberViewServlet");
 
 
 
@@ -130,9 +128,9 @@ public class MemberViewServlet extends HttpServlet
 
     {
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug( "method is POST");
+            log.debug( "method is POST");
 
 
 
@@ -142,7 +140,7 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -156,6 +154,12 @@ public class MemberViewServlet extends HttpServlet
 
 
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             out = response.getWriter();
 
 
@@ -166,7 +170,7 @@ public class MemberViewServlet extends HttpServlet
 
             AuthSession auth_ = null;
 
-            if ((auth_ = AuthTools.check(request, response, "/")) == null)
+            if ((auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/")) == null)
 
                 return;
 
@@ -174,45 +178,41 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
             {
 
-                cat.debug("Total of MemberFile  - " + ModuleManager.getCountFile());
+                log.debug("Total of MemberFile  - " + ModuleManager.getCountFile());
 
-                cat.debug("Total of Module - " + ModuleManager.getCountModule());
+                log.debug("Total of Module - " + ModuleManager.getCountModule());
 
             }
 
 
 
-            MemberProcessing mp = new MemberProcessing(request, response, auth_);
+            MemberProcessing mp = new MemberProcessing(ctxInstance, response, auth_);
 
 
 
-            if (cat.isDebugEnabled())
-
-                cat.debug("MemberProcessing - " + mp);
-
-
-
-            if (cat.isDebugEnabled())
-
-                cat.debug("Request URL - " + request.getRequestURL());
-
-
-
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
             {
 
-                for (Enumeration e = request.getParameterNames(); e.hasMoreElements();)
+                log.debug("MemberProcessing - " + mp);
+
+                log.debug("Request URL - " + request_.getRequestURL());
+
+                log.debug("Request getQueryString() - " + request_.getQueryString());
+
+
+
+                for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
 
                 {
 
                     String s = (String) e.nextElement();
 
-                    cat.debug("Request attr - " + s + ", value - " + ServletUtils.getString(request, s));
+                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(ctxInstance.getPortletRequest(), s));
 
                 }
 
@@ -224,23 +224,23 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-            String moduleName = ServletUtils.getString(request, Constants.MEMBER_MODULE_PARAM);
+            String moduleName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_MODULE_PARAM);
 
-            String actionName = ServletUtils.getString(request, Constants.MEMBER_ACTION_PARAM);
+            String actionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_ACTION_PARAM);
 
-            String subActionName = ServletUtils.getString(request, Constants.MEMBER_SUBACTION_PARAM).trim();
+            String subActionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_SUBACTION_PARAM, "").trim();
 
 
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
             {
 
-                cat.debug("Point #2.1 module '" + moduleName + "'");
+                log.debug("Point #2.1 module '" + moduleName + "'");
 
-                cat.debug("Point #2.2 action '" + actionName + "'");
+                log.debug("Point #2.2 action '" + actionName + "'");
 
-                cat.debug("Point #2.3 subAction '" + subActionName + "'");
+                log.debug("Point #2.3 subAction '" + subActionName + "'");
 
             }
 
@@ -262,13 +262,13 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
-                cat.debug("mod.getType() - " + mp.mod.getType());
+                log.debug("mod.getType() - " + mp.mod.getType());
 
 
 
-// Check was module is lookup and can not calling directly from menu.
+            // Check was module is lookup and can not calling directly from menu.
 
             if (mp.mod.getType() != null &&
 
@@ -290,15 +290,15 @@ public class MemberViewServlet extends HttpServlet
 
             int actionType = ContentTypeActionType.valueOf(actionName).getType();
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
             {
 
-                cat.debug("action name " + actionName);
+                log.debug("action name " + actionName);
 
-                cat.debug("ContentTypeActionType " + ContentTypeActionType.valueOf(actionName).toString());
+                log.debug("ContentTypeActionType " + ContentTypeActionType.valueOf(actionName).toString());
 
-                cat.debug("action type " + actionType);
+                log.debug("action type " + actionType);
 
             }
 
@@ -308,9 +308,9 @@ public class MemberViewServlet extends HttpServlet
 
             {
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("Module: '" + moduleName + "', action '" + actionName + "', not found");
+                    log.debug("Module: '" + moduleName + "', action '" + actionName + "', not found");
 
 
 
@@ -326,17 +326,13 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-//            if (!auth_.getRight(mp.mod.getAuthApplication(), mp.mod.getAuthModule(), mp.content.getAuthAccess().toString()))
-
-
-
             if (!mp.isMainAccess)
 
             {
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("Access to module '"+moduleName+"' denied");
+                    log.debug("Access to module '"+moduleName+"' denied");
 
 
 
@@ -356,7 +352,7 @@ public class MemberViewServlet extends HttpServlet
 
             {
 
-                out.println("<h4>" + MemberServiceClass.getString(mp.content.getTitle(), mp.jspPage.currentLocale) + "</h4>");
+                out.println("<h4>" + MemberServiceClass.getString(mp.content.getTitle(), mp.getCtxInstance().page.currentLocale) + "</h4>");
 
 
 
@@ -382,7 +378,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                    out.println(
 
-//                                        MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.jspPage.currentLocale)+
+//                                        MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
 
 //                                        "<br>"
 
@@ -392,9 +388,9 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-                                    if (cat.isDebugEnabled())
+                                    if (log.isDebugEnabled())
 
-                                        cat.debug("index SQL\n" + sql_);
+                                        log.debug("index SQL\n" + sql_);
 
 
 
@@ -422,7 +418,7 @@ public class MemberViewServlet extends HttpServlet
 
                                     {
 
-                                        cat.debug("#7.01.01 forvard to lookup module ");
+                                        log.debug("#7.01.01 forvard to lookup module ");
 
                                         return;
 
@@ -456,7 +452,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                out.println(
 
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.jspPage.currentLocale)+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
 
 //                                    "<br>"
 
@@ -476,7 +472,7 @@ public class MemberViewServlet extends HttpServlet
 
                                         mp.content.getActionButtonName(),
 
-                                        mp.jspPage.currentLocale,
+                                        mp.getCtxInstance().page.currentLocale,
 
                                         "Add"
 
@@ -508,7 +504,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                out.println(
 
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.jspPage.currentLocale)+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
 
 //                                    "<br>"
 
@@ -522,15 +518,15 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-                                if (cat.isDebugEnabled())
+                                if (log.isDebugEnabled())
 
-                                    cat.debug("SQL " + sql_);
+                                    log.debug("SQL " + sql_);
 
 
 
-                                if (cat.isDebugEnabled())
+                                if (log.isDebugEnabled())
 
-                                    cat.debug("buildIndexURL");
+                                    log.debug("buildIndexURL");
 
 
 
@@ -538,9 +534,9 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-                                if (cat.isDebugEnabled())
+                                if (log.isDebugEnabled())
 
-                                    cat.debug("buildUpdateHTMLTable");
+                                    log.debug("buildUpdateHTMLTable");
 
 
 
@@ -552,7 +548,7 @@ public class MemberViewServlet extends HttpServlet
 
                                         mp.content.getActionButtonName(),
 
-                                        mp.jspPage.currentLocale,
+                                        mp.getCtxInstance().page.currentLocale,
 
                                         "Change"
 
@@ -584,7 +580,7 @@ public class MemberViewServlet extends HttpServlet
 
 //                                out.println(
 
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.jspPage.currentLocale)+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.page.currentLocale)+
 
 //                                    "<br>"
 
@@ -598,9 +594,9 @@ public class MemberViewServlet extends HttpServlet
 
 
 
-                                if (cat.isDebugEnabled())
+                                if (log.isDebugEnabled())
 
-                                    cat.debug("SQL " + sql_);
+                                    log.debug("SQL " + sql_);
 
 
 
@@ -614,7 +610,7 @@ public class MemberViewServlet extends HttpServlet
 
                                         mp.content.getActionButtonName(),
 
-                                        mp.jspPage.currentLocale,
+                                        mp.getCtxInstance().page.currentLocale,
 
                                         "Delete"
 
@@ -640,7 +636,7 @@ public class MemberViewServlet extends HttpServlet
 
                         default:
 
-                            cat.error("Unknonw action - '" + actionType + "'");
+                            log.error("Unknonw action - '" + actionType + "'");
 
                     }
 
@@ -650,7 +646,7 @@ public class MemberViewServlet extends HttpServlet
 
                 {
 
-                    cat.error("Exception while processing this page", e01);
+                    log.error("Exception while processing this page", e01);
 
                     out.println("Exception while processing this page:<br>" +
 
@@ -666,7 +662,7 @@ public class MemberViewServlet extends HttpServlet
 
                 {
 
-                    cat.error("Error while processing this page", e01);
+                    log.error("Error while processing this page", e01);
 
                     out.println("Error while processing this page:<br>" +
 
@@ -688,11 +684,9 @@ public class MemberViewServlet extends HttpServlet
 
         {
 
-            cat.error("General processing error ", e);
+            log.error("General processing error ", e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
-
-//        throw e;
 
         }
 

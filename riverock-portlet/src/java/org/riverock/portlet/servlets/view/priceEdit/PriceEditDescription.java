@@ -76,6 +76,8 @@ import java.sql.PreparedStatement;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -84,13 +86,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
 
 
+import org.apache.log4j.Logger;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.common.tools.StringTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -98,25 +102,17 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.StringTools;
-
-import org.riverock.common.tools.RsetTools;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -158,7 +154,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -169,6 +165,12 @@ public class PriceEditDescription extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -184,7 +186,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                AuthSession auth_ = AuthTools.check(request, response, "/");
+                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
                 if (auth_ == null)
 
@@ -192,15 +194,13 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                HttpSession session = request.getSession();
+                PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
                 DatabaseAdapter dbDyn = DatabaseAdapter.getInstance(true);
 
                 PreparedStatement st = null;
-
-                InitPage jspPage = null;
 
 
 
@@ -210,25 +210,17 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                    jspPage = new InitPage(dbDyn, request,
-
-                                           "mill.locale._price_list"
-
-                    );
-
-
-
-                    String index_page = CtxURL.url(request, response, jspPage, "mill.price.index");
+                    String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index");
 
 
 
                     Long id_shop = null;
 
-                    if (request.getParameter(Constants.NAME_ID_SHOP_PARAM) != null)
+                    if (ctxInstance.getPortletRequest().getParameter(Constants.NAME_ID_SHOP_PARAM) != null)
 
                     {
 
-                        id_shop = ServletTools.getLong(request, Constants.NAME_ID_SHOP_PARAM);
+                        id_shop = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_SHOP_PARAM);
 
                     }
 
@@ -266,15 +258,15 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                        if (ServletTools.isNotInit(request, response, "id_item", index_page))
+                        Long id_item = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_item");
 
-                            return;
+                        if (id_item==null)
 
-                        Long id_item = ServletTools.getLong(request, "id_item");
+                            throw new IllegalArgumentException("id_item not initialized");
 
 
 
-                        if (ServletUtils.getString(request, "action").equals("update"))
+                        if (PortletTools.getString(ctxInstance.getPortletRequest(), "action").equals("update"))
 
                         {
 
@@ -360,7 +352,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                                byte[] b = StringTools.getBytesUTF(ServletUtils.getString(request, "n"));
+                                byte[] b = StringTools.getBytesUTF(PortletTools.getString(ctxInstance.getPortletRequest(), "n"));
 
                                 st = dbDyn.prepareStatement(sql_);
 
@@ -438,15 +430,15 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                        if (ServletUtils.getString(request, "action").equals("new_image") &&
+                        if (PortletTools.getString(ctxInstance.getPortletRequest(), "action").equals("new_image") &&
 
-                                request.getParameter("id_image") != null
+                                ctxInstance.getPortletRequest().getParameter("id_image") != null
 
                         )
 
                         {
 
-                            Long id_image = ServletTools.getLong(request, "id_image");
+                            Long id_image = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_image");
 
                             dbDyn.conn.setAutoCommit(false);
 
@@ -592,13 +584,13 @@ public class PriceEditDescription extends HttpServlet
 
                                 new PriceListItemExtend(dbDyn, id_shop,
 
-                                        request.getServerName(), id_item);
+                                        ctxInstance.getPortletRequest().getServerName(), id_item);
 
 
 
                         out.write("\r\n                ");
 
-                        out.write(request.getServerName());
+                        out.write(ctxInstance.getPortletRequest().getServerName());
 
                         out.write("\r\nНаименование: ");
 
@@ -614,7 +606,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage, "mill.price.description")
+                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description")
 
 
 
@@ -708,7 +700,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage, "mill.price.image")
+                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image")
 
 
 

@@ -84,13 +84,11 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.tools.HtmlTools;
 
@@ -104,15 +102,13 @@ import org.riverock.sso.a3.InternalAuthProvider;
 
 import org.riverock.sso.a3.InternalAuthProviderTools;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -152,7 +148,7 @@ public class BindDelete extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -166,7 +162,9 @@ public class BindDelete extends HttpServlet
 
 
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
 
 
@@ -178,7 +176,7 @@ public class BindDelete extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -192,23 +190,27 @@ public class BindDelete extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage jspPage = new InitPage(db_, request,
+//            InitPage jspPage = new InitPage(db_, request,
 
-                                            "mill.locale.AUTH_USER"
+//                                            "mill.locale.AUTH_USER"
 
-            );
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.bind");
+//            );
 
 
 
-            if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
 
-                return;
 
-            Long id_auth_user = ServletTools.getLong(request, "id_auth_user");
+
+//            if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
+
+//                return;
+
+            Long id_auth_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_auth_user");
+
+            if (id_auth_user==null)
+
+                throw new IllegalArgumentException("id_auth_user not initialized");
 
 
 
@@ -246,7 +248,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("\r\n");
 
-                out.write(jspPage.sCustom.getStr("del_bind.jsp.confirm"));
+                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.confirm"));
 
                 out.write("\r\n");
 
@@ -258,7 +260,7 @@ public class BindDelete extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage, "mill.auth.commit_del_bind")
+                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_del_bind")
 
 
 
@@ -274,11 +276,11 @@ public class BindDelete extends HttpServlet
 
                 out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-                out.write(jspPage.sMain.getStr("button.delete"));
+                out.write(ctxInstance.page.sMain.getStr("button.delete"));
 
                 out.write("\">\r\n");
 
-                out.write(jspPage.getAsForm());
+                out.write(ctxInstance.page.getAsForm());
 
                 out.write("\r\n");
 
@@ -290,7 +292,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write("<%=jspPage.sCustom.getStr(\"del_bind.jsp.name_firm\")%\\>");
+                out.write("<%=ctxInstance.sCustom.getStr(\"del_bind.jsp.name_firm\")%\\>");
 
                 out.write("</td>\r\n");
 
@@ -306,7 +308,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("del_bind.jsp.user_login"));
+                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.user_login"));
 
                 out.write("</td>\r\n");
 
@@ -324,13 +326,13 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("del_bind.jsp.is_service"));
+                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.is_service"));
 
                 out.write("</td>\r\n");
 
                 out.write("<td align=\"left\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isService, false, jspPage.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isService, false, ctxInstance.page.currentLocale));
 
                 out.write("\r\n");
 
@@ -342,13 +344,13 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("del_bind.jsp.is_road"));
+                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.is_road"));
 
                 out.write("</td>\r\n");
 
                 out.write("<td align=\"left\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isRoad, false, jspPage.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isRoad, false, ctxInstance.page.currentLocale));
 
                 out.write("\r\n");
 
@@ -360,13 +362,13 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("del_bind.jsp.is_use_current_firm"));
+                out.write(ctxInstance.sCustom.getStr("del_bind.jsp.is_use_current_firm"));
 
                 out.write("</td>\r\n");
 
                 out.write("<td align=\"left\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, false, jspPage.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, false, ctxInstance.page.currentLocale));
 
                 out.write("\r\n");
 
@@ -396,7 +398,7 @@ public class BindDelete extends HttpServlet
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
 
             out.write("</a>");
 

@@ -62,11 +62,13 @@ import java.io.IOException;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.http.HttpSession;
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.portlet.PortletRequest;
 
 
 
@@ -222,15 +224,35 @@ public class AuthTools
 
 
 
+    public static AuthSession check(PortletRequest request, HttpServletResponse response, String defURL)
+
+        throws AuthException
+
+    {
+
+        return check(getAuthSession(request), response, defURL, request.getServerName());
+
+    }
+
+
+
     public static AuthSession check(HttpServletRequest request, HttpServletResponse response, String defURL)
 
         throws AuthException
 
     {
 
-        AuthSession authSession = getAuthSession(request);
+        return check(getAuthSession(request), response, defURL, request.getServerName());
+
+    }
 
 
+
+    public static AuthSession check(AuthSession authSession, HttpServletResponse response, String defURL, String serverName)
+
+        throws AuthException
+
+    {
 
         if (log.isDebugEnabled())
 
@@ -250,7 +272,7 @@ public class AuthTools
 
             // не в оригиральном объекте, а в клоне.
 
-            //отследить какие объекты генерируют это исключение
+            // отследить какие объекты генерируют это исключение
 
             long currentTimeMills = System.currentTimeMillis();
 
@@ -324,7 +346,7 @@ public class AuthTools
 
         {
 
-            if (!authSession.checkAccess( request.getServerName()))
+            if (!authSession.checkAccess( serverName ))
 
             {
 
@@ -358,7 +380,7 @@ public class AuthTools
 
 
 
-    public static AuthInfo getAuthInfo(HttpServletRequest request)
+    public static AuthInfo getAuthInfo(PortletRequest request)
 
         throws AuthException
 
@@ -383,6 +405,16 @@ public class AuthTools
     {
 
         return (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
+
+    }
+
+
+
+    public static AuthSession getAuthSession(PortletRequest request)
+
+    {
+
+        return (AuthSession) request.getPortletSession(true).getAttribute(Constants.AUTH_SESSION);
 
     }
 

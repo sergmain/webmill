@@ -68,35 +68,19 @@ package org.riverock.webmill.portal;
 
 
 
-import java.util.Enumeration;
-
-
-
-import javax.servlet.http.HttpServletRequest;
+import javax.portlet.PortletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
 
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
-
-import org.riverock.webmill.port.PortalInfo;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.main.Constants;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-
-
-import org.apache.log4j.Logger;
 
 
 
@@ -108,7 +92,7 @@ public class AuthCheckSession
 
 
 
-    public static AuthSession check(HttpServletRequest request, HttpServletResponse response)
+    public static AuthSession check(PortletRequest request, HttpServletResponse response)
 
         throws Exception
 
@@ -124,23 +108,15 @@ public class AuthCheckSession
 
 
 
-            if (log.isDebugEnabled() && request!=null)
+//            if (log.isDebugEnabled() && request!=null)
 
-            {
-
-                log.debug("check rights. request method " + request.getMethod());
-
-
-
-//                HttpSession session = request.getSession();
-
-//                log.debug("type ctx 1 - " + session.getAttribute(Constants.TYPE_CTX_SESSION));
-
-            }
+//                log.debug("check rights. request method " + request.getMethod());
 
 
 
             db_ = DatabaseAdapter.getInstance(false);
+
+/*
 
             InitPage page = new InitPage(db_, request,"mill.locale.site_hamradio");
 
@@ -208,21 +184,15 @@ public class AuthCheckSession
 
                 if (log.isDebugEnabled())
 
-                {
-
                     log.debug("check rights.  redir: " + redir);
-
-//                    HttpSession session = request.getSession();
-
-//                    log.debug("type ctx 2 - " + session.getAttribute(Constants.TYPE_CTX_SESSION));
-
-                }
 
 
 
             }
 
-            return AuthTools.check(request, response, redir);
+*/
+
+            return AuthTools.check(request, response, "/");
 
         }
 

@@ -228,7 +228,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
         {
 
-//            long idSite = SiteListSite.getIdSite( param.request.getServerName() );
+//            long idSite = SiteListSite.getIdSite( param.ctxInstance.getPortletRequest().getServerName() );
 
 
 
@@ -238,7 +238,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
             RsetTools.setLong(ps, 1,
 
-                param.getJspPage().p.getIdSupportLanguage(param.getJspPage().currentLocale)
+                param.getPage().p.getIdSupportLanguage(param.getPage().currentLocale)
 
             );
 
@@ -246,7 +246,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
 //            RsetTools.setLong(ps, 1, idSite);
 
-//            ps.setString(2, param.jspPage.currentLocale.toString());
+//            ps.setString(2, param.ctxInstance.page.currentLocale.toString());
 
 
 
@@ -372,13 +372,13 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
                 item_.setFaqItemDate(
 
-                    DateTools.getStringDate( fi.datePost, "dd.MMM.yyyy", param.getJspPage().currentLocale)
+                    DateTools.getStringDate( fi.datePost, "dd.MMM.yyyy", param.getPage().currentLocale)
 
                 );
 
                 item_.setFaqItemTime(
 
-                    DateTools.getStringDate( fi.datePost, "HH:mm", param.getJspPage().currentLocale)
+                    DateTools.getStringDate( fi.datePost, "HH:mm", param.getPage().currentLocale)
 
                 );
 

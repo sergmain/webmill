@@ -58,6 +58,8 @@ import java.io.Writer;
 
 
 
+import javax.servlet.ServletException;
+
 import javax.servlet.http.HttpServlet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,15 +68,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.http.HttpSession;
 
-import javax.servlet.ServletException;
+import javax.portlet.PortletSession;
 
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
-
-import org.riverock.webmill.port.InitPage;
+import org.riverock.common.tools.ServletTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -82,17 +84,15 @@ import org.riverock.portlet.main.Constants;
 
 import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.StringTools;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -144,7 +144,7 @@ public class LoginView extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -155,6 +155,12 @@ public class LoginView extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
 
 
@@ -172,17 +178,7 @@ public class LoginView extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.locale.auth"
-
-            );
-
-
-
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
             AuthSession auth_ = (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
 
@@ -194,9 +190,9 @@ public class LoginView extends HttpServlet
 
                 auth_ = new AuthSession(
 
-                        request.getParameter(Constants.NAME_USERNAME_PARAM),
+                        ctxInstance.getPortletRequest().getParameter(Constants.NAME_USERNAME_PARAM),
 
-                        request.getParameter(Constants.NAME_PASSWORD_PARAM)
+                        ctxInstance.getPortletRequest().getParameter(Constants.NAME_PASSWORD_PARAM)
 
                 );
 
@@ -204,13 +200,13 @@ public class LoginView extends HttpServlet
 
 
 
-            if (auth_.checkAccess( request.getServerName()))
+            if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
 
             {
 
                 if (cat.isDebugEnabled())
 
-                    cat.debug("user " + auth_.getUserLogin() + "is  valid for " + request.getServerName() + " site");
+                    cat.debug("user " + auth_.getUserLogin() + "is  valid for " + ctxInstance.getPortletRequest().getServerName() + " site");
 
 
 
@@ -224,13 +220,13 @@ public class LoginView extends HttpServlet
 
 
 
-            out.write(jspPage.getAsForm());
+            out.write(ctxInstance.page.getAsForm());
 
             out.write(ServletTools.getHiddenItem(
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM,
 
-                    ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM)
+                    PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM)
 
             )
 
@@ -250,15 +246,13 @@ public class LoginView extends HttpServlet
 
             String srcURL = null;
 
-            if (request.getParameter(Constants.NAME_TOURL_PARAM) != null)
-
-                srcURL = ServletUtils.getString(request, Constants.NAME_TOURL_PARAM);
-
-            else
+            if (ctxInstance.getPortletRequest().getParameter(Constants.NAME_TOURL_PARAM) != null)
 
             {
 
-                srcURL = CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_LOGIN);
+                srcURL = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM);
+
+                out.write( ServletTools.getHiddenItem(Constants.NAME_TOURL_PARAM, srcURL) );
 
             }
 
@@ -266,29 +260,7 @@ public class LoginView extends HttpServlet
 
             if (cat.isDebugEnabled())
 
-                cat.debug("toUTL - " + srcURL);
-
-
-
-            srcURL = StringTools.replaceString(srcURL, "%3D", "=");
-
-            srcURL = StringTools.replaceString(srcURL, "%26", "&");
-
-
-
-            if (cat.isDebugEnabled())
-
-                cat.debug("encoded toUTL - " + srcURL);
-
-
-
-            out.write(ServletTools.getHiddenItem(Constants.NAME_TOURL_PARAM, srcURL));
-
-
-
-            if (cat.isDebugEnabled())
-
-                cat.debug("Header string - " + jspPage.sCustom.getStr("auth.check.header"));
+                cat.debug("Header string - " + ctxInstance.sCustom.getStr("auth.check.header"));
 
 
 
@@ -296,15 +268,15 @@ public class LoginView extends HttpServlet
 
             out.write("<table border = \"1\" cellspacing = \"0\" cellpadding = \"2\" align = \"center\" width = \"100%\">"+
 
-                    "<tr><th class=\"formworks\">"+ jspPage.sCustom.getStr("auth.check.header") + "</th></tr>" +
+                    "<tr><th class=\"formworks\">"+ ctxInstance.sCustom.getStr("auth.check.header") + "</th></tr>" +
 
-                    "<tr><td class=\"formworks\"><input type = \"text\" name = \""+ Constants.NAME_USERNAME_PARAM + "\">&nbsp;"+ jspPage.sCustom.getStr("auth.check.login") + "&nbsp;</td></tr>"+
+                    "<tr><td class=\"formworks\"><input type = \"text\" name = \""+ Constants.NAME_USERNAME_PARAM + "\">&nbsp;"+ ctxInstance.sCustom.getStr("auth.check.login") + "&nbsp;</td></tr>"+
 
-                    "<tr><td class=\"formworks\"><input type = \"password\" name=\""+ Constants.NAME_PASSWORD_PARAM +"\" value = \"\" >&nbsp;"+ jspPage.sCustom.getStr("auth.check.password") +"</td></tr>"+
+                    "<tr><td class=\"formworks\"><input type = \"password\" name=\""+ Constants.NAME_PASSWORD_PARAM +"\" value = \"\" >&nbsp;"+ ctxInstance.sCustom.getStr("auth.check.password") +"</td></tr>"+
 
                     "<tr><td class=\"formworks\" align=\"center\"><input type=\"submit\" name=\"button\" value=\""+
 
-                    jspPage.sCustom.getStr("auth.check.register") +"\"></td></tr>"+
+                    ctxInstance.sCustom.getStr("auth.check.register") +"\"></td></tr>"+
 
             "</table>"+
 

@@ -90,7 +90,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -100,23 +106,13 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.generic.db.DatabaseManager;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.tools.Client;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.tools.Client;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.RsetTools;
+import org.riverock.webmill.portlet.CtxURL;
 
 
 
@@ -154,7 +150,7 @@ public class RightAdd extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -168,7 +164,11 @@ public class RightAdd extends HttpServlet
 
         {
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
 
 
@@ -180,7 +180,7 @@ public class RightAdd extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -192,15 +192,7 @@ public class RightAdd extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
-
-            );
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.right");
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
 
 
 
@@ -240,7 +232,7 @@ public class RightAdd extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage, "mill.auth.commit_add_right")
+                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_add_right")
 
 
 
@@ -254,7 +246,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<th colspan=\"2\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.new_rec"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.new_rec"));
 
                 out.write("</th>\r\n");
 
@@ -264,7 +256,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.id_access_group"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.id_access_group"));
 
                 out.write("</td>\r\n\t");
 
@@ -286,7 +278,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.id_object_arm"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.id_object_arm"));
 
                 out.write("</td>\n");
 
@@ -420,7 +412,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.is_road"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.is_road"));
 
                 out.write("</td>\r\n\t");
 
@@ -430,13 +422,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\" selected>");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -450,7 +442,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.is_service"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.is_service"));
 
                 out.write("</td>\r\n\t");
 
@@ -460,13 +452,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\" selected>");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -480,7 +472,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.is_firm"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.is_firm"));
 
                 out.write("</td>\r\n\t");
 
@@ -490,13 +482,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\" selected>");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -510,7 +502,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.code_right_s"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.code_right_s"));
 
                 out.write("</td>\r\n\t");
 
@@ -520,13 +512,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -540,7 +532,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.code_right_i"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.code_right_i"));
 
                 out.write("</td>\r\n\t");
 
@@ -550,13 +542,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -570,7 +562,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.code_right_u"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.code_right_u"));
 
                 out.write("</td>\r\n\t");
 
@@ -580,13 +572,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -600,7 +592,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.code_right_d"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.code_right_d"));
 
                 out.write("</td>\r\n\t");
 
@@ -610,13 +602,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -630,7 +622,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_right.jsp.code_right_a"));
+                out.write(ctxInstance.sCustom.getStr("add_right.jsp.code_right_a"));
 
                 out.write("</td>\r\n\t");
 
@@ -640,13 +632,13 @@ public class RightAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n\t");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n\t");
 
@@ -668,7 +660,7 @@ public class RightAdd extends HttpServlet
 
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
 
-                out.write(jspPage.sMain.getStr("button.add"));
+                out.write(ctxInstance.page.sMain.getStr("button.add"));
 
                 out.write("\">\r\n");
 
@@ -686,7 +678,7 @@ public class RightAdd extends HttpServlet
 
 
 
-// <p><a href="%= index_page %">%=jspPage.sMain.getStr("page.main.3")></a></p>
+// <p><a href="%= index_page %">%=ctxInstance.page.sMain.getStr("page.main.3")></a></p>
 
 
 
@@ -708,7 +700,7 @@ public class RightAdd extends HttpServlet
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
 
             out.write("</a>");
 

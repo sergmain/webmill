@@ -78,17 +78,23 @@ import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpServlet;
 
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.schema.db.CustomSequenceType;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -98,23 +104,13 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -152,7 +148,7 @@ public class RightAddCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -163,6 +159,12 @@ public class RightAddCommit extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -176,7 +178,7 @@ public class RightAddCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -204,15 +206,15 @@ public class RightAddCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage jspPage =  new InitPage(dbDyn, request,
+//                    InitPage jspPage =  new InitPage(dbDyn, request,
 
-                                                     "mill.locale.AUTH_RELATE_RIGHT_ARM"
+//                                                     "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-                    );
+//                    );
 
 
 
-                    rightUrl = CtxURL.url( request, response, jspPage, "mill.auth.right");
+                    rightUrl = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
 
 
 
@@ -272,15 +274,15 @@ public class RightAddCommit extends HttpServlet
 
                     String right =
 
-                            (Boolean.TRUE.equals(ServletTools.getInt(request, "rs"))?"S":"")+
+                            (Boolean.TRUE.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "rs"))?"S":"")+
 
-                            (Boolean.TRUE.equals(ServletTools.getInt(request, "ri"))?"I":"")+
+                            (Boolean.TRUE.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "ri"))?"I":"")+
 
-                            (Boolean.TRUE.equals(ServletTools.getInt(request, "rd"))?"D":"")+
+                            (Boolean.TRUE.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "rd"))?"D":"")+
 
-                            (Boolean.TRUE.equals(ServletTools.getInt(request, "ru"))?"U":"")+
+                            (Boolean.TRUE.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "ru"))?"U":"")+
 
-                            (Boolean.TRUE.equals(ServletTools.getInt(request, "ra"))?"A":"");
+                            (Boolean.TRUE.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "ra"))?"A":"");
 
 
 
@@ -288,9 +290,9 @@ public class RightAddCommit extends HttpServlet
 
                     RsetTools.setLong(ps, 1, id);
 
-                    RsetTools.setLong(ps, 2, ServletTools.getLong(request, "id_access_group"));
+                    RsetTools.setLong(ps, 2, PortletTools.getLong(ctxInstance.getPortletRequest(), "id_access_group"));
 
-                    RsetTools.setLong(ps, 3, ServletTools.getLong(request, "id_object_arm"));
+                    RsetTools.setLong(ps, 3, PortletTools.getLong(ctxInstance.getPortletRequest(), "id_object_arm"));
 
 
 
@@ -298,11 +300,11 @@ public class RightAddCommit extends HttpServlet
 
 
 
-                    RsetTools.setLong(ps, 5, ServletTools.getLong(request, "is_road"));
+                    RsetTools.setLong(ps, 5, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_road"));
 
-                    RsetTools.setLong(ps, 6, ServletTools.getLong(request, "is_service"));
+                    RsetTools.setLong(ps, 6, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_service"));
 
-                    RsetTools.setLong(ps, 7, ServletTools.getLong(request, "is_firm"));
+                    RsetTools.setLong(ps, 7, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_firm"));
 
 
 

@@ -112,7 +112,7 @@ public class PriceListPosition
 
     public static PricePositionType getInstance(DatabaseAdapter db_, HttpServletResponse response,
 
-        InitPage jspPage,
+        InitPage page,
 
         ShopPageParam shopParam_)
 
@@ -194,7 +194,7 @@ public class PriceListPosition
 
                     String url = response.encodeURL(CtxURL.ctx()) + '?' +
 
-                        jspPage.getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + id_curr + '&' +
+                        page.getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + id_curr + '&' +
 
                         shopParam_.currencyURL + '&' +
 
@@ -356,7 +356,7 @@ public class PriceListPosition
 
             ) + "?" +
 
-            jspPage.getAsURL() + Constants.NAME_ID_GROUP_SHOP
+            page.getAsURL() + Constants.NAME_ID_GROUP_SHOP
 
             + "=0&" +
 

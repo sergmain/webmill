@@ -74,29 +74,35 @@ import java.io.Writer;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+
+import javax.servlet.http.HttpServlet;
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 
 import org.apache.log4j.Logger;
 
-
-
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.portlet.ContextNavigator;
-
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.ServletTools;
+
+import org.riverock.portlet.main.Constants;
+
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -136,7 +142,7 @@ public class ForumAddMessage extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -147,6 +153,12 @@ public class ForumAddMessage extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -166,16 +178,6 @@ public class ForumAddMessage extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(DatabaseAdapter.getInstance(false),
-
-                    request,
-
-                    "mill.locale.forum"
-
-            );
-
-
-
             String forum_name = "";
 
             String forum_email = "";
@@ -188,7 +190,7 @@ public class ForumAddMessage extends HttpServlet
 
 
 
-            Cookie[] cookies = request.getCookies();
+            Cookie[] cookies = ctxInstance.getCookies();
 
             if (cookies != null)
 
@@ -264,7 +266,7 @@ public class ForumAddMessage extends HttpServlet
 
 
 
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
             String subject = (String) session.getAttribute(Constants.FORUM_SUBJECT_SESSION);
 
@@ -288,7 +290,7 @@ public class ForumAddMessage extends HttpServlet
 
 //            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
 
-            String nameTemplate = request.getParameter(
+            String nameTemplate = ctxInstance.getPortletRequest().getParameter(
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM
 
@@ -308,11 +310,11 @@ public class ForumAddMessage extends HttpServlet
 
             out.write(
 
-                    jspPage.getAsForm()+
+                    ctxInstance.page.getAsForm()+
 
                     ServletTools.getHiddenItem(Constants.NAME_ID_FORUM_PARAM,
 
-                            "" + ServletTools.getLong(request, Constants.NAME_ID_FORUM_PARAM)
+                            "" + PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_FORUM_PARAM)
 
                     )+
 
@@ -330,7 +332,7 @@ public class ForumAddMessage extends HttpServlet
 
                     ServletTools.getHiddenItem(Constants.NAME_ID_MAIN_FORUM_PARAM,
 
-                            "" + ServletTools.getLong(request, Constants.NAME_ID_MESSAGE_FORUM_PARAM)
+                            "" + PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_MESSAGE_FORUM_PARAM)
 
                     )+
 
@@ -348,7 +350,7 @@ public class ForumAddMessage extends HttpServlet
 
             out.write("<td align=\"right\">");
 
-            out.write(jspPage.sCustom.getStr("str.name"));
+            out.write(ctxInstance.sCustom.getStr("str.name"));
 
             out.write(":&nbsp;");
 
@@ -388,7 +390,7 @@ public class ForumAddMessage extends HttpServlet
 
             out.write("<td align=\"right\">");
 
-            out.write(jspPage.sCustom.getStr("str.header"));
+            out.write(ctxInstance.sCustom.getStr("str.header"));
 
             out.write(":&nbsp;");
 
@@ -410,7 +412,7 @@ public class ForumAddMessage extends HttpServlet
 
             out.write("<td colspan=\"2\">");
 
-            out.write(jspPage.sCustom.getStr("str.message"));
+            out.write(ctxInstance.sCustom.getStr("str.message"));
 
             out.write(":");
 
@@ -430,7 +432,7 @@ public class ForumAddMessage extends HttpServlet
 
             out.write("<input type=\"submit\" value=\"");
 
-            out.write(jspPage.sCustom.getStr("str.add"));
+            out.write(ctxInstance.sCustom.getStr("str.add"));
 
             out.write("\">");
 

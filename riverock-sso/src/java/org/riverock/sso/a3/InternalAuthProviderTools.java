@@ -2,19 +2,19 @@
 
  * org.riverock.sso -- Single Sign On implementation
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -1788,7 +1788,21 @@ public class InternalAuthProviderTools
 
 
 
+    public static final String firmIdParam = "id_firm";
+
     public static Long initIdFirm(DatabaseAdapter db_, HttpServletRequest request, String userLogin)
+
+        throws Exception
+
+    {
+
+        return initIdFirm(db_, ServletTools.getLong(request, firmIdParam), userLogin);
+
+    }
+
+
+
+    public static Long initIdFirm(DatabaseAdapter db_, Long firmId, String userLogin)
 
         throws Exception
 
@@ -1812,7 +1826,7 @@ public class InternalAuthProviderTools
 
             ps.setString(1, userLogin);
 
-            ps.setObject(2, ServletTools.getLong(request, "id_firm"));
+            ps.setObject(2, firmId);
 
 
 
@@ -1854,7 +1868,21 @@ public class InternalAuthProviderTools
 
 
 
+    public static final String serviceIdParam = "id_service";
+
     public static Long initIdService(DatabaseAdapter db_, HttpServletRequest request, String userLogin)
+
+        throws Exception
+
+    {
+
+        return initIdService(db_, ServletTools.getLong(request, serviceIdParam), userLogin);
+
+    }
+
+
+
+    public static Long initIdService(DatabaseAdapter db_, Long serviceId, String userLogin)
 
         throws Exception
 
@@ -1878,7 +1906,7 @@ public class InternalAuthProviderTools
 
             ps.setString(1, userLogin);
 
-            ps.setObject(2, ServletTools.getLong(request, "id_service"));
+            ps.setObject(2, serviceId);
 
 
 
@@ -1920,7 +1948,21 @@ public class InternalAuthProviderTools
 
 
 
+    public static final String roadIdParam = "id_road";
+
     public static Long initIdRoad(DatabaseAdapter db_, HttpServletRequest request, String userLogin)
+
+        throws Exception
+
+    {
+
+        return initIdRoad(db_, ServletTools.getLong(request, roadIdParam), userLogin);
+
+    }
+
+
+
+    public static Long initIdRoad(DatabaseAdapter db_, Long roadId, String userLogin)
 
         throws Exception
 
@@ -1944,7 +1986,7 @@ public class InternalAuthProviderTools
 
             ps.setString(1, userLogin);
 
-            ps.setObject(2, ServletTools.getLong(request, "id_road"));
+            ps.setObject(2, roadId);
 
 
 

@@ -64,37 +64,35 @@ package org.riverock.portlet.price;
 
 
 
+import java.io.UnsupportedEncodingException;
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+
+
+import org.apache.log4j.Logger;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.portlet.main.Constants;
+
+import org.riverock.portlet.portlets.ShopPageParam;
+
 import org.riverock.portlet.schema.portlet.shop.CurrencyItemType;
 
 import org.riverock.portlet.schema.portlet.shop.CurrencyListType;
 
 import org.riverock.portlet.schema.portlet.shop.HiddenParamType;
 
-import org.riverock.portlet.schema.price.CustomCurrencyType;
-
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 
-import org.riverock.portlet.portlets.ShopPageParam;
-
-import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.schema.price.CustomCurrencyType;
 
 import org.riverock.webmill.port.InitPage;
-
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.generic.db.DatabaseManager;
-
-
-
-import org.apache.log4j.Logger;
-
-
-
-import java.io.UnsupportedEncodingException;
-
-import java.util.ArrayList;
-
-import java.util.List;
 
 
 
@@ -126,7 +124,7 @@ public class PriceCurrency
 
         ShopPageParam shopParam_,
 
-        InitPage jspPage,
+        InitPage page,
 
         String switchCurrencyUrl_
 
@@ -180,7 +178,7 @@ public class PriceCurrency
 
 
 
-        List listHidden = jspPage.getAsList();
+        List listHidden = page.getAsList();
 
         ArrayList rl = new ArrayList();
 
@@ -232,7 +230,7 @@ public class PriceCurrency
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            list = CurrencyManager.getInstance(db_, jspPage.p.sites.getIdSite()).getCurrencyList();
+            list = CurrencyManager.getInstance(db_, page.p.sites.getIdSite()).getCurrencyList();
 
         }
 

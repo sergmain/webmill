@@ -2,19 +2,19 @@
 
  * org.riverock.common -- Supporting classes, interfaces, and utilities
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This library is free software; you can redistribute it and/or
 
@@ -50,11 +50,9 @@
 
 /**
 
- * Author: mill
+ * 2003. Copyright (c) jSmithy. http:// multipart.jSmithy.com
 
- * Date: Mar 17, 2003
-
- * Time: 9:22:59 AM
+ * 2001-2003. Copyright (c) Simon Brooke. http://www.weft.co.uk/library/maybeupload/
 
  *
 
@@ -68,35 +66,53 @@ package org.riverock.common.multipart;
 
 
 
-import java.io.InputStream;
+import java.lang.*;
+
+import java.io.IOException;
 
 
 
-public interface AbstractPart
+public class MultipartRequestException extends Exception
 
 {
 
-    public final static int PARAMETER_TYPE = 1;
+    public MultipartRequestException()
 
-    public final static int FILE_TYPE = 2;
+    {
 
+        super();
 
-
-    public final static int FILE_ON_DISK_TYPE = 2;
-
-    public final static int FILE_IN_MEMORY_TYPE = 3;
+    }
 
 
 
-    public int getSubType();
+    public MultipartRequestException(String s)
 
-    public int getType();
+    {
 
-    public String getStringValue() throws MultipartRequestException;
+        super(s);
+
+    }
 
 
 
-    public InputStream getInputStream() throws MultipartRequestException;
+    public String toString()
+
+    {
+
+        return super.toString();
+
+    }
+
+
+
+    public String getMessage()
+
+    {
+
+        return super.getMessage();
+
+    }
 
 
 

@@ -74,6 +74,12 @@ import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 
+import java.util.Enumeration;
+
+import java.util.Map;
+
+import java.util.HashMap;
+
 
 
 import javax.servlet.RequestDispatcher;
@@ -90,23 +96,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.common.tools.ServletTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.portlet.main.Constants;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -114,7 +120,7 @@ public class MainMemberServlet extends HttpServlet
 
 {
 
-    private static Logger log = Logger.getLogger("org.riverock.member.servlet.MainMemberServlet");
+    private static Logger log = Logger.getLogger("org.riverock.portlet.member.servlet.MainMemberServlet");
 
 
 
@@ -136,7 +142,7 @@ public class MainMemberServlet extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -148,6 +154,12 @@ public class MainMemberServlet extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             out = response.getWriter();
 
 
@@ -156,85 +168,9 @@ public class MainMemberServlet extends HttpServlet
 
 
 
-/*
+            String applicationCode = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_NAME_APPL_PARAM);
 
-// если оба параметра равны нул, то это значит, что надо просто показать пустую страницу
-
-// отформатированную с мембер шаблоном.
-
-if (request.getParameter(Constants.MEMBER_NAME_APPL_PARAM) == null &&
-
-request.getParameter(Constants.MEMBER_NAME_MOD_PARAM )==null)
-
-{
-
-if (cat.isDebugEnabled())
-
-cat.debug("request start member page");
-
-
-
-AuthSession authSession = AuthSession.getAuthSession(request);
-
-
-
-if (cat.isDebugEnabled())
-
-cat.debug("AUTH_SESSION - " + authSession);
-
-
-
-if (authSession == null)
-
-{
-
-//                ServletContext context = request.getServletContext();
-
-//            RequestDispatcher dispatcher = context.getRequestDispatcher(item.value);
-
-RequestDispatcher dispatcher = application.getRequestDispatcher(
-
-"/share/view/login.jsp");
-
-
-
-if (cat.isDebugEnabled())
-
-cat.debug("RequestDispatcher - " + dispatcher);
-
-
-
-if (dispatcher == null)
-
-{
-
-if (cat.isDebugEnabled())
-
-cat.debug("RequestDispatcher is null");
-
-
-
-break;
-
-}
-
-dispatcher.include(request, response);
-
-
-
-}
-
-return;
-
-}
-
-*/
-
-
-
-            String applicationCode = ServletUtils.getString(request, Constants.MEMBER_NAME_APPL_PARAM);
-
-            String moduleCode = ServletUtils.getString(request, Constants.MEMBER_NAME_MOD_PARAM);
+            String moduleCode = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_NAME_MOD_PARAM);
 
 
 
@@ -288,13 +224,35 @@ return;
 
                     int isNew = RsetTools.getInt( rs, "IS_NEW" , new Integer(0)).intValue();
 
-                    String fullUrl =
+                    String fullUrl = null;
 
-                        (isNew==1)?
+                    Map parameterMap = null;
 
-                        "/member_view?"+url.substring( url.indexOf('?')+1):
+                    if  (isNew==1)
 
-                        url+'?';
+                    {
+
+                        fullUrl = "/member_view?"+
+
+                            url.substring( url.indexOf('?')+1)+ '&'+
+
+                            Constants.NAME_TEMPLATE_CONTEXT_PARAM+ '=' + ctxInstance.getNameTemplate();
+
+
+
+                        parameterMap = ServletTools.getParameterMap(fullUrl);
+
+                    }
+
+                    else
+
+                    {
+
+                        fullUrl = url+'?';
+
+                        parameterMap = new HashMap();
+
+                    }
 
 
 
@@ -332,11 +290,21 @@ return;
 
 
 
-                    RequestDispatcher dispatcher = request.getRequestDispatcher(fullUrl);
+                    RequestDispatcher dispatcher = request_.getRequestDispatcher(fullUrl);
+
+
 
                     if (log.isDebugEnabled())
 
+                    {
+
                         log.debug("RequestDispatcher - " + dispatcher);
+
+                        log.debug("ServletRequest - " + request_);
+
+                        log.debug("Method is 'include'. Url - " + fullUrl);
+
+                    }
 
 
 
@@ -354,21 +322,41 @@ return;
 
                     }
 
+                    else
 
+                    {
 
-                    if (log.isDebugEnabled())
-
-                        log.debug("Method is 'include'. Url - " + fullUrl);
-
-
+                        ctxInstance.setParameters(parameterMap, ctxInstance.getNameLocaleBundle() );
 
 
 
-                    dispatcher.include(request, response);
+                        request_.getSession().setAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION, ctxInstance );
 
-//                    }
+                        if (log.isDebugEnabled())
 
+                        {
 
+                            log.debug("ctx session - "+ctxInstance.session);
+
+                            log.debug("portlet request session - "+ctxInstance.getPortletRequest().getPortletSession() );
+
+                            log.debug("req.getSession(true) session - "+ctxInstance.req.getSession(true));
+
+                            for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
+
+                            {
+
+                                String s = (String) e.nextElement();
+
+                                log.debug("Request attr - " + s + ", value - " + PortletTools.getString(ctxInstance.getPortletRequest(), s));
+
+                            }
+
+                        }
+
+                        dispatcher.include(request_, response);
+
+                    }
 
                     return;
 

@@ -70,8 +70,6 @@ package org.riverock.cache.config;
 
 import java.io.File;
 
-import java.util.Hashtable;
-
 import java.util.HashMap;
 
 

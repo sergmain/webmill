@@ -56,9 +56,9 @@ import java.util.List;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
+
+import javax.portlet.PortletRequest;
 
 
 
@@ -92,11 +92,11 @@ public class PortletParameter
 
     // global parameters for page
 
-    private HttpServletRequest request = null;
+//    private HttpServletRequest request = null;
 
     private HttpServletResponse response = null;
 
-    private InitPage jspPage = null;
+    private InitPage page = null;
 
     private String ctxType = null;
 
@@ -108,7 +108,9 @@ public class PortletParameter
 
     private String portletCode = null;
 
-    private List parameters = null;
+    private List templateParameters = null;
+
+    private PortletRequest portletRequest = null;;
 
 
 
@@ -142,13 +144,15 @@ public class PortletParameter
 
     {
 
-        this.request = ctxInstance.request ;
+//        this.request = ctxInstance.req ;
 
         this.response = ctxInstance.response ;
 
-        this.jspPage = ctxInstance.page ;
+        this.page = ctxInstance.page ;
 
         this.ctxType = ctxInstance.getType();
+
+        this.portletRequest = ctxInstance.getPortletRequest();
 
 
 
@@ -162,7 +166,7 @@ public class PortletParameter
 
         else
 
-            this.sm = ctxInstance.page.sCustom;
+            this.sm = ctxInstance.sCustom;
 
 
 
@@ -172,7 +176,7 @@ public class PortletParameter
 
             List parameters_ = templateItem.getParameterAsReference();
 
-            this.parameters = null;
+            this.templateParameters = null;
 
             if (templateItem!=null && parameters_.size()!=0 &&
 
@@ -180,7 +184,7 @@ public class PortletParameter
 
             )
 
-                this.parameters = parameters_;
+                this.templateParameters = parameters_;
 
         }
 
@@ -188,11 +192,11 @@ public class PortletParameter
 
 
 
-    public HttpServletRequest getRequest() {
+//    public HttpServletRequest getRequest() {
 
-        return request;
+//        return request;
 
-    }
+//    }
 
 
 
@@ -204,9 +208,9 @@ public class PortletParameter
 
 
 
-    public InitPage getJspPage() {
+    public InitPage getPage() {
 
-        return jspPage;
+        return page;
 
     }
 
@@ -236,9 +240,19 @@ public class PortletParameter
 
 
 
-    public List getParameters() {
+    public List getTemplateParameters() {
 
-        return parameters;
+        return templateParameters;
+
+    }
+
+
+
+    public PortletRequest getPortletRequest()
+
+    {
+
+        return portletRequest;
 
     }
 

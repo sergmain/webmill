@@ -48,7 +48,7 @@
 
 
 
-package org.riverock.main;
+package org.riverock.portlet.main;
 
 
 

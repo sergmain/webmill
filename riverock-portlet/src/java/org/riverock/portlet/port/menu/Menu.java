@@ -100,15 +100,7 @@ public class Menu implements MenuInterface
 
     private SiteCtxLangCatalogItemType item;
 
-//    public final static String DEFAULT_MENU_CODE = "DEFAULT";
-
-//    private boolean isDefault = false;
-
-
-
-//    public MenuItem[] ctxArray = new MenuItem[0];    // это плоская модель меню - как в базе
-
-    private List menuItem = new ArrayList(2);           // здесь находится дерево меню
+    private List menuItem = new ArrayList(2);           // contains tree of menu
 
 
 
@@ -252,10 +244,6 @@ public class Menu implements MenuInterface
 
         }
 
-//        ctxArray = null;
-
-
-
         super.finalize();
 
     }
@@ -302,39 +290,15 @@ public class Menu implements MenuInterface
 
 
 
-// Возвращает объект MenuItem с индексом id_ctx
+    /**
 
-//    public MenuItem getCatalogItem(long id_ctx)
+     *
 
-//    {
+     * @param v
 
-//        if (log.isDebugEnabled())
+     * @return template for 'index' page
 
-//            log.debug("Menu size - " + ctxArray.length);
-
-//
-
-//        for (int j = 0; j < ctxArray.length; j++)
-
-//        {
-
-//            MenuItem ci = ctxArray[j];
-
-//            if (ci.id == id_ctx)
-
-//                return ci;
-
-//        }
-
-//
-
-//        return null;
-
-//    }
-
-
-
-// Возвращает ссылку на MenuItem указывающий на index page
+     */
 
     private String getIndexTemplate(List v)
 
@@ -386,54 +350,6 @@ public class Menu implements MenuInterface
 
 
 
-//    private boolean checkShopContext(Vector v)
-
-//    {
-
-//        if (v == null)
-
-//            return false;
-
-//
-
-//        for (int j = 0; j < v.size(); j++)
-
-//        {
-
-//            MenuItem ctxItem =
-
-//                (MenuItem) v.elementAt(j);
-
-//
-
-//            if (Constants.CTX_TYPE_SHOP.equals(ctxItem.type))
-
-//                return true;
-
-//
-
-//            if (checkShopContext(ctxItem.catalogItems))
-
-//                return true;
-
-//        }
-
-//        return false;
-
-//    }
-
-
-
-//    public boolean checkShopContext()
-
-//    {
-
-//        return checkShopContext(menuItem);
-
-//    }
-
-
-
     public static boolean checkCurrentTread(List items, MenuItemInterface find)
 
     {
@@ -469,16 +385,6 @@ public class Menu implements MenuInterface
         return false;
 
     }
-
-
-
-//    public boolean isCheckThread(MenuItem find)
-
-//    {
-
-//        return checkCurrentTread(menuItem, find);
-
-//    }
 
 
 
@@ -657,22 +563,6 @@ public class Menu implements MenuInterface
     private void rebuildCatalog()
 
     {
-
-//        Object obj[] = menuItem.toArray();
-
-//        ctxArray = new MenuItem[obj.length];
-
-//        for (int i = 0; i < obj.length; i++)
-
-//        {
-
-//            ctxArray[i] = (MenuItem) obj[i];
-
-//        }
-
-//        obj = null;
-
-
 
         ArrayList result = null;
 

@@ -84,13 +84,11 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.tools.HtmlTools;
 
@@ -108,15 +106,13 @@ import org.riverock.sso.main.MainUserInfo;
 
 import org.riverock.tools.Client;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -156,7 +152,7 @@ public class BindChange extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -170,7 +166,9 @@ public class BindChange extends HttpServlet
 
 
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
 
 
@@ -180,7 +178,7 @@ public class BindChange extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -194,25 +192,29 @@ public class BindChange extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage jspPage = new InitPage(db_, request,
+//            InitPage jspPage = new InitPage(db_, request,
 
-                                            "mill.locale.AUTH_USER"
+//                                            "mill.locale.AUTH_USER"
 
-            );
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.bind");
+//            );
 
 
 
-            if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
-
-                return;
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
 
 
 
-            Long id_auth_user = ServletTools.getLong(request, "id_auth_user");
+//            if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
+
+//                return;
+
+
+
+            Long id_auth_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_auth_user");
+
+            if (id_auth_user==null)
+
+                throw new IllegalArgumentException("id_auth_user not initialized");
 
 
 
@@ -254,7 +256,7 @@ public class BindChange extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage, "mill.auth.commit_ch_bind")
+                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_ch_bind")
 
 
 
@@ -264,7 +266,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<input type=\"submit\" value=\"");
 
-                out.write(jspPage.sMain.getStr("button.change"));
+                out.write(ctxInstance.page.sMain.getStr("button.change"));
 
                 out.write("\">\r\n");
 
@@ -280,7 +282,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"20%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("ch_bind.jsp.fio"));
+                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.fio"));
 
                 out.write("</td>\r\n");
 
@@ -298,7 +300,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("ch_bind.jsp.user_login"));
+                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.user_login"));
 
                 out.write("</td>\r\n");
 
@@ -318,7 +320,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("ch_bind.jsp.user_password"));
+                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.user_password"));
 
                 out.write("</td>\r\n");
 
@@ -338,7 +340,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("ch_bind.jsp.user_password_check"));
+                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.user_password_check"));
 
                 out.write("</td>\r\n");
 
@@ -358,7 +360,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("ch_bind.jsp.is_use_current_firm"));
+                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.is_use_current_firm"));
 
                 out.write("</td>\r\n");
 
@@ -366,7 +368,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<select name=\"is_use_current_firm\" size=\"1\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, true, jspPage.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, true, ctxInstance.page.currentLocale));
 
                 out.write("\r\n");
 
@@ -376,7 +378,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"20%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("ch_bind.jsp.list_firm"));
+                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.list_firm"));
 
                 out.write("</td>\r\n");
 
@@ -418,7 +420,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_bind.jsp.is_service"));
+                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.is_service"));
 
                     out.write("</td>\r\n");
 
@@ -426,7 +428,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<select name=\"is_service\" size=\"1\">\r\n");
 
-                    out.write(HtmlTools.printYesNo(authInfoUser.isService, true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(authInfoUser.isService, true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n");
 
@@ -436,7 +438,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_bind.jsp.id_service"));
+                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.id_service"));
 
                     out.write("</td>\r\n");
 
@@ -484,7 +486,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_bind.jsp.is_road"));
+                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.is_road"));
 
                     out.write("</td>\r\n");
 
@@ -492,7 +494,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<select name=\"is_road\" size=\"1\">\r\n");
 
-                    out.write(HtmlTools.printYesNo(authInfoUser.isRoad, true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(authInfoUser.isRoad, true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n");
 
@@ -502,7 +504,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_bind.jsp.id_road"));
+                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.id_road"));
 
                     out.write("</td>\r\n");
 
@@ -542,7 +544,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-                out.write(jspPage.sMain.getStr("button.change"));
+                out.write(ctxInstance.page.sMain.getStr("button.change"));
 
                 out.write("\">\r\n");
 
@@ -566,7 +568,7 @@ public class BindChange extends HttpServlet
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
 
             out.write("</a>");
 

@@ -104,6 +104,8 @@ import org.riverock.webmill.portlet.PortletParameter;
 
 import org.riverock.webmill.config.WebmillConfig;
 
+import org.riverock.cache.impl.CacheException;
+
 
 
 import org.apache.log4j.Logger;
@@ -141,6 +143,28 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
     public PortletParameter param = null;
 
     public Long idSupportLanguage = null;
+
+
+
+    public void reinit()
+
+    {
+
+        cache.reinit();
+
+    }
+
+
+
+    public synchronized void terminate(Long id)
+
+        throws CacheException
+
+    {
+
+        cache.terminate(id);
+
+    }
 
 
 
@@ -272,7 +296,7 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPage().currentLocale);
 
     }
 
@@ -282,7 +306,7 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
 
     {
 
-        return DateTools.getStringDate(datePost, "HH:mm", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(datePost, "HH:mm", param.getPage().currentLocale);
 
     }
 
@@ -452,7 +476,7 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
 
         {
 
-            Long idSupportLanguageCurrent = param.getJspPage().p.getIdSupportLanguage(param.getJspPage().currentLocale);
+            Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPage().currentLocale);
 
 
 

@@ -68,6 +68,8 @@ import java.io.Writer;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -76,35 +78,25 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
-
-
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.generic.db.DatabaseManager;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.StringTools;
-
 
 
 import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.ExceptionTools;
+
+import org.riverock.common.tools.StringTools;
+
+import org.riverock.portlet.main.Constants;
+
+import org.riverock.sso.a3.AuthSession;
+
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -156,7 +148,7 @@ public class LoginCheck extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -164,11 +156,15 @@ public class LoginCheck extends HttpServlet
 
         Writer out = null;
 
-        DatabaseAdapter db_ = null;
-
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
 
 
@@ -180,19 +176,23 @@ public class LoginCheck extends HttpServlet
 
 
 
-            db_ = DatabaseAdapter.getInstance( false );
+//            InitPage jspPage =  new InitPage(db_, request,
 
-            InitPage jspPage =  new InitPage(db_, request,
+//                                             "mill.locale.auth"
 
-                                             "mill.locale.auth"
-
-            );
+//            );
 
 
 
-// AuthSession просто создает объект без проверки прав доступа.
+            log.warn("ctxInstance: "+ctxInstance);
 
-            HttpSession session = request.getSession();
+            if (ctxInstance!=null)
+
+                log.warn("ctxInstance.getPortletRequest(): "+ctxInstance.getPortletRequest());
+
+
+
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
             AuthSession auth_ = (AuthSession)session.getAttribute( Constants.AUTH_SESSION );
 
@@ -204,9 +204,9 @@ public class LoginCheck extends HttpServlet
 
                 auth_ = new AuthSession(
 
-                        request.getParameter(Constants.NAME_USERNAME_PARAM ),
+                        request_.getParameter(Constants.NAME_USERNAME_PARAM ),
 
-                        request.getParameter(Constants.NAME_PASSWORD_PARAM )
+                        request_.getParameter(Constants.NAME_PASSWORD_PARAM )
 
                 );
 
@@ -216,17 +216,17 @@ public class LoginCheck extends HttpServlet
 
             if(log.isDebugEnabled())
 
-                log.debug("URL #1: "+ServletUtils.getString(request, Constants.NAME_TOURL_PARAM  , "ctx?"+jspPage.getAsURL()));
+                log.debug("URL #1: "+PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM  , "ctx?"+ctxInstance.page.getAsURL()));
 
 
 
-            if (auth_.checkAccess( request.getServerName() ))
+            if (auth_.checkAccess( ctxInstance.page.p.getServerName() ))
 
             {
 
                 session.setAttribute( Constants.AUTH_SESSION, auth_);
 
-                String url = ServletUtils.getString(request, Constants.NAME_TOURL_PARAM  , "ctx?"+jspPage.getAsURL());
+                String url = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM  , "ctx?"+ctxInstance.page.getAsURL());
 
 
 
@@ -254,11 +254,11 @@ public class LoginCheck extends HttpServlet
 
 
 
-// ёзер не правильно ввел авторизационные данные
+            // User not corrected input authorization data
 
-// удал€ем из сесси все объекты
+            // remove all objects from session
 
-            ServletTools.cleanSession(session);
+            PortletTools.cleanSession(session);
 
 
 
@@ -288,17 +288,17 @@ public class LoginCheck extends HttpServlet
 
 
 
-            String redirUrl= CtxURL.url( request, response, jspPage, Constants.CTX_TYPE_LOGIN );
+            String redirUrl= CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_LOGIN );
 
 
 
             String srcUrl = null;
 
-            if (request.getParameter(Constants.NAME_TOURL_PARAM  )!= null)
+            if (ctxInstance.getPortletRequest().getParameter(Constants.NAME_TOURL_PARAM  )!= null)
 
             {
 
-                srcUrl = ServletUtils.getString(request, Constants.NAME_TOURL_PARAM  );
+                srcUrl = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM  );
 
 
 
@@ -340,19 +340,9 @@ public class LoginCheck extends HttpServlet
 
         {
 
-            log.error(e);
+            log.error("LOginCheck exception: ", e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
-
-        }
-
-        finally
-
-        {
-
-            DatabaseManager.close( db_ );
-
-            db_ = null;
 
         }
 

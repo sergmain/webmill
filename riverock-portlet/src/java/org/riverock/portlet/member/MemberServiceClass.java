@@ -96,8 +96,6 @@ import org.riverock.generic.tools.XmlTools;
 
 import org.riverock.generic.tools.StringManager;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.common.tools.StringTools;
 
 import org.riverock.sso.a3.AuthSession;
@@ -106,13 +104,15 @@ import org.riverock.sso.a3.AuthException;
 
 import org.riverock.webmill.config.WebmillConfig;
 
+import org.riverock.webmill.portlet.PortletTools;
+
 
 
 import org.apache.log4j.Logger;
 
 
 
-import javax.servlet.http.HttpServletRequest;
+import javax.portlet.PortletRequest;
 
 
 
@@ -1928,7 +1928,7 @@ public class MemberServiceClass
 
 
 
-    public static String buildUpdateSQL(ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn, boolean isUsePrimaryKey, HttpServletRequest request)
+    public static String buildUpdateSQL(ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn, boolean isUsePrimaryKey, PortletRequest request)
 
         throws Exception
 
@@ -2388,7 +2388,7 @@ return mod.selectSQL;
 
 
 
-    public static boolean hasYesNoField(HttpServletRequest req1, ModuleType mod1, ContentType content1)
+    public static boolean hasYesNoField(PortletRequest req, ModuleType mod1, ContentType content1)
 
     {
 
@@ -2402,7 +2402,7 @@ return mod.selectSQL;
 
             if (ff.getJspType().getType() == FieldsTypeJspTypeType.YES_1_NO_N_TYPE &&
 
-                    new Integer(1).equals(ServletTools.getInt(req1, mod1.getName() + '.' + getRealName(ff)))
+                    new Integer(1).equals(PortletTools.getInt(req, mod1.getName() + '.' + getRealName(ff)))
 
             )
 
@@ -2412,7 +2412,7 @@ return mod.selectSQL;
 
                     log.debug("yes1-noN field - "+mod1.getName() + '.' + getRealName(ff)+
 
-                            " value - "+ServletTools.getInt(req1, mod1.getName() + '.' + getRealName(ff)));
+                            " value - "+PortletTools.getInt(req, mod1.getName() + '.' + getRealName(ff)));
 
 
 

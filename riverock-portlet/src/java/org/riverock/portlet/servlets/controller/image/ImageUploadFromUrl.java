@@ -94,13 +94,13 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.config.PropertiesProvider;
 
 import org.riverock.common.tools.MainTools;
 
 import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
 
 import org.riverock.common.tools.StringTools;
 
@@ -110,25 +110,19 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 
 import org.riverock.generic.utils.DateUtils;
 
-import org.riverock.portlet.main.Constants;
-
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.main.UploadFileException;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -166,7 +160,7 @@ public class ImageUploadFromUrl extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -177,6 +171,12 @@ public class ImageUploadFromUrl extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -192,7 +192,7 @@ public class ImageUploadFromUrl extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -212,29 +212,35 @@ public class ImageUploadFromUrl extends HttpServlet
 
                 dbDyn = DatabaseAdapter.getInstance(true);
 
-                InitPage jspPage = new InitPage(dbDyn, request,
+//                InitPage jspPage = new InitPage(dbDyn, request,
 
-                                                "mill.locale._price_list"
+//                                                "mill.locale._price_list"
 
-                );
+//                );
 
 
 
-                String indexPage = CtxURL.url(request, response, jspPage, "mill.image.index");
+//                String indexPage = CtxURL.url(ctxInstance.getPortletRequest()_, response, ctxInstance.page, "mill.image.index");
 
 
 
                 if(cat.isDebugEnabled())
 
-                    cat.debug("urlString - " + request.getParameter("url_download"));
+                    cat.debug("urlString - " + ctxInstance.getPortletRequest().getParameter("url_download"));
 
 
 
-                if (ServletTools.isNotInit(request, response, "url_download", indexPage))
+//                if (ServletTools.isNotInit(request, response, "url_download", indexPage))
 
-                    return;
+//                    return;
 
-                String urlString = request.getParameter("url_download").trim();
+                String urlString = ctxInstance.getPortletRequest().getParameter("url_download").trim();
+
+                    if (urlString==null)
+
+                        throw new IllegalArgumentException("id_firm not initialized");
+
+
 
 
 
@@ -268,23 +274,27 @@ public class ImageUploadFromUrl extends HttpServlet
 
                 if(cat.isDebugEnabled())
 
-                    cat.debug("id_main - "+ServletTools.getLong(request, "id_main"));
+                    cat.debug("id_main - "+PortletTools.getLong(ctxInstance.getPortletRequest(), "id_main"));
 
 
 
-                if (ServletTools.isNotInit(request, response, "id_main", indexPage))
+//                if (ServletTools.isNotInit(request, response, "id_main", indexPage))
 
-                    return;
-
-
-
-                Long id_main = ServletTools.getLong(request, "id_main");
+//                    return;
 
 
 
+                Long id_main = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_main");
+
+                if (ctxInstance.page==null)
+
+                    throw new IllegalArgumentException("id_firm not initialized");
 
 
-                String desc = ServletUtils.getString(request, "d");
+
+
+
+                String desc = PortletTools.getString(ctxInstance.getPortletRequest(), "d");
 
 
 
@@ -434,9 +444,9 @@ public class ImageUploadFromUrl extends HttpServlet
 
                             "<br>" +
 
-                            "<p><a href=\"" + CtxURL.url(request, response, jspPage, "mill.image.index") + "\">Загрузить данные повторно</a></p><br>" +
+                            "<p><a href=\"" + CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index") + "\">Загрузить данные повторно</a></p><br>" +
 
-                            "<p><a href=\"" + response.encodeURL(CtxURL.ctx()) + '?' + jspPage.getAsURL() + "\">На главную страницу</a></p>"
+                            "<p><a href=\"" + response.encodeURL(CtxURL.ctx()) + '?' + ctxInstance.page.getAsURL() + "\">На главную страницу</a></p>"
 
                     );
 

@@ -88,7 +88,7 @@ public class PortletList
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.PortletList" );
+    private static Logger cat = Logger.getLogger("org.riverock.portlet.portlets.PortletList" );
 
 
 

@@ -80,6 +80,8 @@ import java.util.List;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -88,15 +90,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
 
 
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -120,15 +120,13 @@ import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -168,7 +166,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -180,6 +178,12 @@ public class PriceEditImage extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
@@ -187,6 +191,8 @@ public class PriceEditImage extends HttpServlet
             out = response.getWriter();
 
 
+
+            DatabaseAdapter db_ = null;
 
             try
 
@@ -196,7 +202,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                AuthSession auth_ = AuthTools.check(request, response, "/");
+                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
                 if (auth_ == null)
 
@@ -204,21 +210,15 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
-                InitPage jspPage = new InitPage(db_, request,
-
-                                                "mill.locale._price_list"
-
-                );
+                db_ = DatabaseAdapter.getInstance(false);
 
 
 
-                String index_page = CtxURL.url(request, response, jspPage, "mill.price.index");
+                String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index");
 
 
 
-                HttpSession session = request.getSession();
+                PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
@@ -226,17 +226,17 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                shopParam.nameTemplate = request.getParameter(Constants.NAME_TEMPLATE_CONTEXT_PARAM);
+                shopParam.nameTemplate = ctxInstance.getPortletRequest().getParameter(Constants.NAME_TEMPLATE_CONTEXT_PARAM);
 
-                shopParam.setServerName(request.getServerName());
+                shopParam.setServerName(ctxInstance.getPortletRequest().getServerName());
 
 
 
-                if (request.getParameter(Constants.NAME_ID_SHOP_PARAM) != null)
+                if (ctxInstance.getPortletRequest().getParameter(Constants.NAME_ID_SHOP_PARAM) != null)
 
                 {
 
-                    shopParam.id_shop = ServletTools.getLong(request, Constants.NAME_ID_SHOP_PARAM);
+                    shopParam.id_shop = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_SHOP_PARAM);
 
                 }
 
@@ -274,19 +274,19 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                    shopParam.id_group = ServletTools.getLong(request, "id_main");
+                    shopParam.id_group = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_main");
 
-                    Long id_item = ServletTools.getLong(request, "id_item");
+                    Long id_item = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_item");
 
-                    long pageNum = ServletTools.getInt(request, "pageNum", new Integer(0)).intValue();
+                    long pageNum = PortletTools.getInt(ctxInstance.getPortletRequest(), "pageNum", new Integer(0)).intValue();
 
-                    long countImage = ServletTools.getInt(request, "countImage", new Integer(itemsPerPage)).intValue();
+                    long countImage = PortletTools.getInt(ctxInstance.getPortletRequest(), "countImage", new Integer(itemsPerPage)).intValue();
 
 
 
                     PricePositionType pos = PriceListPosition.getInstance(db_, response,
 
-                            jspPage, shopParam);
+                            ctxInstance.page, shopParam);
 
 
 
@@ -318,7 +318,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
 
                                     "id_item=" + id_item
 
@@ -358,7 +358,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                        CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
+                                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
 
                                         "i=" + item.getIdGroupCurrent()
 
@@ -410,7 +410,7 @@ public class PriceEditImage extends HttpServlet
 
 // print group from price-list
 
-//                    Vector items = PriceList.getPriceList(db_, shopParam.id_shop, 0, shopParam.id_group, request.getServerName(), true);
+//                    Vector items = PriceList.getPriceList(db_, shopParam.id_shop, 0, shopParam.id_group, ctxInstance.getPortletRequest().getServerName(), true);
 
 
 
@@ -442,7 +442,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
 
                                     "id_main=" + itemGroup.id_group + "&id_item=" + id_item
 
@@ -518,7 +518,7 @@ public class PriceEditImage extends HttpServlet
 
                         out.write("\">\r\n            ");
 
-                        out.write(jspPage.sCustom.getStr("price.top_level"));
+                        out.write(ctxInstance.sCustom.getStr("price.top_level"));
 
                         out.write("</a>\r\n");
 
@@ -612,7 +612,7 @@ public class PriceEditImage extends HttpServlet
 
                                 out.write("<a href=\"");
 
-                                out.write(response.encodeURL("change_desc.jsp") + "?" + jspPage.getAsURL());
+                                out.write(response.encodeURL("change_desc.jsp") + "?" + ctxInstance.page.getAsURL());
 
                                 out.write("id=");
 
@@ -632,7 +632,7 @@ public class PriceEditImage extends HttpServlet
 
                                 out.write(
 
-                                        CtxURL.url(request, response, jspPage, "mill.price.description") + '&' +
+                                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description") + '&' +
 
                                         "id_item=" + id_item +
 
@@ -692,7 +692,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
 
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum - 1) +
 
@@ -734,7 +734,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
 
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum + 1) +
 
@@ -855,6 +855,16 @@ public class PriceEditImage extends HttpServlet
                 log.error(e);
 
                 out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+            }
+
+            finally
+
+            {
+
+                DatabaseAdapter.close(db_);
+
+                db_ = null;
 
             }
 

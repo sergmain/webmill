@@ -88,17 +88,31 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.http.HttpSession;
 
+import javax.portlet.PortletSession;
 
 
-import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.sso.a3.AuthTools;
+import org.apache.log4j.Logger;
+
+import org.riverock.common.config.PropertiesProvider;
+
+import org.riverock.common.tools.ExceptionTools;
+
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.common.tools.StringTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.generic.schema.db.CustomSequenceType;
+
+import org.riverock.sso.a3.AuthSession;
+
+import org.riverock.sso.a3.AuthTools;
+
+import org.riverock.sso.schema.MainUserInfoType;
 
 import org.riverock.webmill.main.UploadFile;
 
@@ -108,23 +122,7 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.sso.schema.MainUserInfoType;
-
-import org.riverock.generic.schema.db.CustomSequenceType;
-
-
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.StringTools;
-
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.config.PropertiesProvider;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -162,7 +160,7 @@ public class ImageUpload extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -176,7 +174,13 @@ public class ImageUpload extends HttpServlet
 
         {
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -192,15 +196,7 @@ public class ImageUpload extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance( true );
 
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.locale._price_list"
-
-            );
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage, "mill.image.index" );
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index" );
 
 
 
@@ -216,7 +212,7 @@ public class ImageUpload extends HttpServlet
 
 
 
-                HttpSession sess = request.getSession(true);
+                PortletSession sess = ctxInstance.getPortletRequest().getPortletSession(true);
 
                 if ((sess.getAttribute("MILL.IMAGE.ID_MAIN") == null) ||
 
@@ -288,11 +284,15 @@ public class ImageUpload extends HttpServlet
 
                 {
 
-                    newFileName =
+                    // Todo need fix
 
-                            UploadFile.save(request, 1024 * 128, fileName, true,
+                    if (true) throw new UploadFileException("Todo need fix");
 
-                                    supportExtension);
+//                    newFileName =
+
+//                            UploadFile.save(request, 1024 * 128, fileName, true,
+
+//                                    supportExtension);
 
                 }
 

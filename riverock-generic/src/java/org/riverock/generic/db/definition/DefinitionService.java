@@ -96,7 +96,7 @@ import java.util.Enumeration;
 
 import java.util.Hashtable;
 
-import java.util.Vector;
+import java.util.List;
 
 
 
@@ -123,6 +123,10 @@ public final class DefinitionService
     public synchronized static void registerRelateDefinitionDown( String definitionMain,  String definitionTarget )
 
     {
+
+        MainTools.putKey(definitionRelateHash, definitionMain, definitionTarget);
+
+/*
 
         Object obj = definitionRelateHash.get( definitionMain );
 
@@ -157,6 +161,8 @@ public final class DefinitionService
             definitionRelateHash.put( definitionMain, v );
 
         }
+
+*/
 
     }
 
@@ -1614,13 +1620,13 @@ public final class DefinitionService
 
             }
 
-            else if (obj instanceof Vector)
+            else if (obj instanceof List)
 
             {
 
-                Vector v = (Vector)obj;
+                List v = (List)obj;
 
-                walkVector( v, key );
+                walkList( v, key );
 
             }
 
@@ -1642,7 +1648,7 @@ public final class DefinitionService
 
 
 
-    private synchronized static void walkVector( Vector v, String key )
+    private synchronized static void walkList( List v, String key )
 
         throws Exception
 
@@ -1652,7 +1658,7 @@ public final class DefinitionService
 
         {
 
-            Object obj = v.elementAt(i);
+            Object obj = v.get(i);
 
             if (obj instanceof String)
 
@@ -1664,11 +1670,11 @@ public final class DefinitionService
 
             }
 
-            else if (obj instanceof Vector)
+            else if (obj instanceof List)
 
             {
 
-                walkVector( (Vector)obj, key );
+                walkList( (List)obj, key );
 
             }
 

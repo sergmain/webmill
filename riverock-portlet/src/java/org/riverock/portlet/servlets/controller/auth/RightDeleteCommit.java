@@ -78,17 +78,21 @@ import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpServlet;
 
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -98,21 +102,13 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.RsetTools;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -150,7 +146,7 @@ public class RightDeleteCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -162,6 +158,12 @@ public class RightDeleteCommit extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
@@ -170,7 +172,7 @@ public class RightDeleteCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -194,15 +196,7 @@ public class RightDeleteCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage jspPage =  new InitPage(dbDyn, request,
-
-                                                     "mill.locale.AUTH_RELATE_RIGHT_ARM"
-
-                    );
-
-
-
-                    index_page = CtxURL.url( request, response, jspPage, "mill.auth.right");
+                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
 
 
 
@@ -220,11 +214,11 @@ public class RightDeleteCommit extends HttpServlet
 
 
 
-                    if (ServletTools.isNotInit(request, response, "id_relate_right", index_page ))
+                    Long id_relate_right = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_relate_right");
 
-                        return;
+                    if (id_relate_right==null)
 
-                    Long id_relate_right = ServletTools.getLong(request, "id_relate_right");
+                    throw new IllegalArgumentException("id_relate_right not initialized");
 
 
 

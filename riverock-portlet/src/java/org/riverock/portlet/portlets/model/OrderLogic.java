@@ -80,6 +80,8 @@ import java.util.ArrayList;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -88,37 +90,31 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
-import javax.servlet.jsp.JspWriter;
 
 
+import org.apache.log4j.Logger;
+
+import org.exolab.castor.xml.Marshaller;
 
 import org.riverock.common.tools.DateTools;
 
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.StringTools;
+import org.riverock.common.tools.NumberTools;
 
 import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.NumberTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.common.mail.MailMessage;
-
 import org.riverock.generic.schema.db.CustomSequenceType;
-
-import org.riverock.generic.config.GenericConfig;
 
 import org.riverock.portlet.core.GetPriceListItem;
 
 import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.price.CurrencyItem;
+
+import org.riverock.portlet.price.CurrencyManager;
 
 import org.riverock.portlet.price.CurrencyPrecisionList;
 
@@ -128,9 +124,9 @@ import org.riverock.portlet.price.PriceException;
 
 import org.riverock.portlet.price.Shop;
 
-import org.riverock.portlet.price.CurrencyManager;
-
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
+
+import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 
 import org.riverock.portlet.schema.price.OrderItemType;
 
@@ -138,33 +134,17 @@ import org.riverock.portlet.schema.price.OrderType;
 
 import org.riverock.portlet.schema.price.ShopOrderType;
 
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-
-import org.riverock.sso.a3.AuthException;
-
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.sso.a3.InternalAuthProviderTools;
-
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.port.PortalInfo;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.PortletTools;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-import org.riverock.webmill.config.WebmillConfig;
-
-
-
-import org.apache.log4j.Logger;
-
-import org.exolab.castor.xml.Marshaller;
 
 
 
@@ -224,15 +204,21 @@ public class OrderLogic extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             dbDyn = DatabaseAdapter.getInstance(true);
 
 
 
-            HttpSession session = request_.getSession(true);
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession(true);
 
 
 
-            Long idShop = PortletTools.getIdPortlet(Constants.NAME_ID_SHOP_PARAM, request_);
+            Long idShop = PortletTools.getIdPortlet(Constants.NAME_ID_SHOP_PARAM, ctxInstance.getPortletRequest());
 
 
 
@@ -254,7 +240,7 @@ public class OrderLogic extends HttpServlet
 
 
 
-// получаем из сессии текущий магазин
+            // получаем из сессии текущий магазин
 
             Shop tempShop = (Shop) session.getAttribute(Constants.CURRENT_SHOP);
 
@@ -296,13 +282,15 @@ public class OrderLogic extends HttpServlet
 
             }
 
-// если в сессии есть текущий магазин и
+            // если в сессии есть текущий магазин и
 
-// код вызванного магазина совпадает с кодом мкгаза в сессии, юзаем его (тот, который в сессии)
+            // код вызванного магазина совпадает с кодом мкгаза в сессии,
+
+            // юзаем его (тот, который в сессии)
 
             else if (tempShop != null &&
 
-                (idShop == null || tempShop.id_shop.equals(idShop)))
+                (idShop == null || idShop.equals(tempShop.id_shop)))
 
             {
 
@@ -402,7 +390,7 @@ public class OrderLogic extends HttpServlet
 
                     order = new OrderType();
 
-                    order.setServerName(request_.getServerName());
+                    order.setServerName(ctxInstance.page.p.getServerName());
 
 
 
@@ -414,7 +402,7 @@ public class OrderLogic extends HttpServlet
 
                     order.addShopOrdertList(shopOrder);
 
-                    initAuthSession(dbDyn, order, AuthTools.getAuthSession(request_));
+                    initAuthSession(dbDyn, order, AuthTools.getAuthSession(ctxInstance.getPortletRequest()));
 
                 }
 
@@ -430,7 +418,7 @@ public class OrderLogic extends HttpServlet
 
                     AuthSession authSession = (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
 
-                    if ((authSession != null) && (authSession.checkAccess(request_.getServerName())))
+                    if ((authSession != null) && (authSession.checkAccess(ctxInstance.page.p.getServerName())))
 
                     {
 
@@ -448,9 +436,9 @@ public class OrderLogic extends HttpServlet
 
 
 
-                Long id_item = ServletTools.getLong(request_, Constants.NAME_ADD_ID_ITEM);
+                Long id_item = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ADD_ID_ITEM);
 
-                int count = ServletTools.getInt(request_, Constants.NAME_COUNT_ADD_ITEM_SHOP, new Integer(0)).intValue();
+                int count = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_COUNT_ADD_ITEM_SHOP, new Integer(0)).intValue();
 
 
 
@@ -518,7 +506,7 @@ public class OrderLogic extends HttpServlet
 
 
 
-            log.error("Error processing ShopLogic", e);
+            log.error("Error processing OrderLogic", e);
 
             throw new ServletException(e);
 
@@ -554,6 +542,8 @@ public class OrderLogic extends HttpServlet
 
 
 
+/*
+
     public static boolean registerSession(
 
         HttpServletRequest request, HttpServletResponse response,
@@ -580,27 +570,7 @@ public class OrderLogic extends HttpServlet
 
 
 
-
-
-
-
-//	String url_redir = ServletUtils.getString(request, "url", "/");
-
-//	String url 	= tools.replaceString(url_redir, "?", "%3F");
-
-//	url_redir 	= tools.replaceString(url_redir, "%3F", "?");
-
-//---
-
-
-
-            String url_redir = ServletUtils.getString(request, "url", CtxURL.ctx());
-
-
-
-//	String url 	= tools.replaceString(url_redir, "?", "%3F");
-
-//	url		= tools.replaceString(url, "=", "%3D");
+            String url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), "url", CtxURL.ctx());
 
 
 
@@ -616,35 +586,35 @@ public class OrderLogic extends HttpServlet
 
 
 
-            String action = ServletUtils.getString(request, "action");
+            String action = PortletTools.getString(ctxInstance.getPortletRequest(), "action");
 
 
 
-            String username = ServletUtils.getString(request, "username").trim();
+            String username = PortletTools.getString(ctxInstance.getPortletRequest(), "username").trim();
 
-            String password1 = ServletUtils.getString(request, "password1").trim();
+            String password1 = PortletTools.getString(ctxInstance.getPortletRequest(), "password1").trim();
 
-            String password2 = ServletUtils.getString(request, "password2").trim();
-
-
-
-            String first_name = ServletUtils.getString(request, "first_name");
-
-            String last_name = ServletUtils.getString(request, "last_name");
+            String password2 = PortletTools.getString(ctxInstance.getPortletRequest(), "password2").trim();
 
 
 
-            String email = ServletUtils.getString(request, "email");
+            String first_name = PortletTools.getString(ctxInstance.getPortletRequest(), "first_name");
 
-            String address = ServletUtils.getString(request, "address");
-
-            String phone = ServletUtils.getString(request, "phone");
+            String last_name = PortletTools.getString(ctxInstance.getPortletRequest(), "last_name");
 
 
 
+            String email = PortletTools.getString(ctxInstance.getPortletRequest(), "email");
+
+            String address = PortletTools.getString(ctxInstance.getPortletRequest(), "address");
+
+            String phone = PortletTools.getString(ctxInstance.getPortletRequest(), "phone");
 
 
-            HttpSession sess = request.getSession(true);
+
+
+
+            PortletSession sess = ctxInstance.getPortletRequest().getPortletSession(true);
 
             OrderType order = (OrderType) sess.getAttribute(Constants.ORDER_SESSION);
 
@@ -662,15 +632,9 @@ public class OrderLogic extends HttpServlet
 
 
 
-//out.println(p.idFirm);
-
-//if(true) return;
-
-
-
             AuthSession auth_ = (AuthSession) sess.getAttribute(Constants.AUTH_SESSION);
 
-            if ((auth_ != null) && (auth_.checkAccess(request.getServerName())))
+            if ((auth_ != null) && (auth_.checkAccess(ctxInstance.getPortletRequest().getServerName())))
 
             {
 
@@ -706,7 +670,7 @@ public class OrderLogic extends HttpServlet
 
                     Long id_user = InternalAuthProviderTools.addNewUser(db_,
 
-                                                                        first_name, last_name, "", jspPage.p.sites.getIdFirm(),
+                                                                        first_name, last_name, "", ctxInstance.page.p.sites.getIdFirm(),
 
                                                                         email, address, phone);
 
@@ -722,7 +686,7 @@ public class OrderLogic extends HttpServlet
 
                             db_, id_user,
 
-                            jspPage.p.sites.getIdFirm(), null, null, username, password1,
+                            ctxInstance.page.p.sites.getIdFirm(), null, null, username, password1,
 
                             true, false, false
 
@@ -746,7 +710,7 @@ public class OrderLogic extends HttpServlet
 
                             out.print("Login '" + username + "' already exist<br>");
 
-                            out.print("Continue <a href=\"" + response.encodeURL("reg.jsp") + "?" + jspPage.getAsURL() + "url=" + url + "\">here</a>");
+                            out.print("Continue <a href=\"" + response.encodeURL("reg.jsp") + "?" + ctxInstance.page.getAsURL() + "url=" + url + "\">here</a>");
 
                             return true;
 
@@ -796,7 +760,7 @@ public class OrderLogic extends HttpServlet
 
                         email,
 
-                        jspPage.p.sites.getAdminEmail(),
+                        ctxInstance.page.p.sites.getAdminEmail(),
 
                         "Confirm registration",
 
@@ -806,15 +770,13 @@ public class OrderLogic extends HttpServlet
 
 
 
-                    if (auth_.checkAccess(request.getServerName()))
+                    if (auth_.checkAccess(ctxInstance.getPortletRequest().getServerName()))
 
                     {
 
                         sess.setAttribute(Constants.AUTH_SESSION, auth_);
 
                         response.sendRedirect(url_redir);
-
-//out.print("url: "+url_redir);
 
                         return true;
 
@@ -832,7 +794,7 @@ public class OrderLogic extends HttpServlet
 
                 if ((auth_ == null) ||
 
-                    (!auth_.checkAccess(request.getServerName()))
+                    (!auth_.checkAccess(ctxInstance.getPortletRequest().getServerName()))
 
                 )
 
@@ -846,7 +808,7 @@ public class OrderLogic extends HttpServlet
 
                         auth_ = new AuthSession(username, password1);
 
-                        if (auth_.checkAccess(request.getServerName()))
+                        if (auth_.checkAccess(ctxInstance.getPortletRequest().getServerName()))
 
                         {
 
@@ -867,24 +829,6 @@ public class OrderLogic extends HttpServlet
             else if (action.equals("send_pass"))
 
             {
-
-/*
-
-public static void sendMessage(
-
-String message,
-
-String email_to,
-
-String subj,
-
-Locale loc)
-
-
-
-return true;
-
-*/
 
             }
 
@@ -927,6 +871,8 @@ return true;
         return false;
 
     }
+
+*/
 
 
 

@@ -54,13 +54,11 @@ package org.riverock.webmill.portlet;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.portlet.PortletRequest;
 
 
 
 import org.riverock.webmill.main.Constants;
-
-import org.riverock.webmill.utils.ServletUtils;
 
 import org.riverock.webmill.port.InitPage;
 
@@ -114,6 +112,22 @@ public class CtxURL
 
 
 
+    public static String page()
+
+    {
+
+        if (GenericConfig.contextName  == null)
+
+            return Constants.PAGE_SERVLET_NAME ;
+
+
+
+        return GenericConfig.contextName + Constants.PAGE_SERVLET_NAME ;
+
+    }
+
+
+
     public static String urlAsForm(
 
         String nameTemplate,
@@ -138,7 +152,7 @@ public class CtxURL
 
 
 
-    public static String url(HttpServletRequest request, HttpServletResponse response,
+    public static String url(PortletRequest request, HttpServletResponse response,
 
                              InitPage page,
 
@@ -156,7 +170,7 @@ public class CtxURL
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM    +'='+
 
-                ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM)    +'&'+
+                PortletTools.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM)    +'&'+
 
                 Constants.NAME_TYPE_CONTEXT_PARAM    + '=' + portlet;
 

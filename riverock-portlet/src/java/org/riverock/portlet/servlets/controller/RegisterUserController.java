@@ -90,15 +90,17 @@ import javax.servlet.http.HttpSession;
 
 
 
+import org.apache.log4j.Logger;
+
+import org.riverock.common.mail.MailMessage;
+
 import org.riverock.common.tools.ServletTools;
 
 import org.riverock.common.tools.StringTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.generic.config.GenericConfig;
 
-import org.riverock.common.mail.MailMessage;
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.portlet.main.Constants;
 
@@ -106,17 +108,13 @@ import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.InternalAuthProviderTools;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -154,7 +152,7 @@ public class RegisterUserController extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -168,6 +166,12 @@ public class RegisterUserController extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             db_ = DatabaseAdapter.getInstance(false);
 
             ContextNavigator.setContentType(response);
@@ -178,29 +182,29 @@ public class RegisterUserController extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(DatabaseAdapter.getInstance(false),
+//            InitPage jspPage = new InitPage(DatabaseAdapter.getInstance(false),
 
-                request,
+//                request,
 
-                "mill.locale._price_list"
+//                "mill.locale._price_list"
 
-            );
+//            );
 
 
 
             String index_page = response.encodeURL(CtxURL.ctx()) + '?' +
 
-                jspPage.getAsURL();
+                ctxInstance.page.getAsURL();
 
 
 
             String redirectURL = response.encodeURL(CtxURL.ctx() )+ '?' +
 
-                jspPage.getAsURL()+
+                ctxInstance.page.getAsURL()+
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM +'='+
 
-                ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM) +'&'+
+                PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM) +'&'+
 
                 Constants.NAME_TYPE_CONTEXT_PARAM + '=' +
 
@@ -210,7 +214,7 @@ public class RegisterUserController extends HttpServlet
 
             if (cat.isDebugEnabled())
 
-                cat.debug("getIsRegisterAllowed " + jspPage.p.sites.getIsRegisterAllowed());
+                cat.debug("getIsRegisterAllowed " + ctxInstance.page.p.sites.getIsRegisterAllowed());
 
 
 
@@ -220,7 +224,7 @@ public class RegisterUserController extends HttpServlet
 
 // URL used in <a href=>
 
-            String url_redir = ServletUtils.getString(request, Constants.NAME_TOURL_PARAM, index_page);
+            String url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM, index_page);
 
 
 
@@ -234,7 +238,7 @@ public class RegisterUserController extends HttpServlet
 
 
 
-            String action = ServletUtils.getString(request, Constants.NAME_REGISTER_ACTION_PARAM);
+            String action = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_REGISTER_ACTION_PARAM);
 
 
 
@@ -248,7 +252,7 @@ public class RegisterUserController extends HttpServlet
 
             {
 
-//                url_redir = ServletUtils.getString(request, Constants.NAME_TOURL_PARAM, index_page);
+//                url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM, index_page);
 
 
 
@@ -290,43 +294,43 @@ public class RegisterUserController extends HttpServlet
 
 
 
-                String username = ServletUtils.getString(request, "username");
+                String username = PortletTools.getString(ctxInstance.getPortletRequest(), "username");
 
 
 
-                String password1 = ServletUtils.getString(request, "password1");
+                String password1 = PortletTools.getString(ctxInstance.getPortletRequest(), "password1");
 
-                String password2 = ServletUtils.getString(request, "password2");
-
-
-
-                String first_name = ServletUtils.getString(request, "first_name");
-
-                String last_name = ServletUtils.getString(request, "last_name");
+                String password2 = PortletTools.getString(ctxInstance.getPortletRequest(), "password2");
 
 
 
-                String email = ServletUtils.getString(request, "email");
+                String first_name = PortletTools.getString(ctxInstance.getPortletRequest(), "first_name");
 
-                String addr = ServletUtils.getString(request, "addr");
-
-                String phone = ServletUtils.getString(request, "phone");
+                String last_name = PortletTools.getString(ctxInstance.getPortletRequest(), "last_name");
 
 
 
-                HttpSession sess = request.getSession(true);
+                String email = PortletTools.getString(ctxInstance.getPortletRequest(), "email");
+
+                String addr = PortletTools.getString(ctxInstance.getPortletRequest(), "addr");
+
+                String phone = PortletTools.getString(ctxInstance.getPortletRequest(), "phone");
+
+
+
+                HttpSession sess = request_.getSession(true);
 
 
 
                 AuthSession auth_ = (AuthSession) sess.getAttribute(Constants.AUTH_SESSION);
 
-                if ((auth_ != null) && (auth_.checkAccess( request.getServerName())))
+                if ((auth_ != null) && (auth_.checkAccess( ctxInstance.page.p.getServerName())))
 
                 {
 
 //                    String args1[] = {index_page};
 
-//                    out.write(jspPage.sCustom.getStr("reg.already_login", args1));
+//                    out.write(ctxInstance.sCustom.getStr("reg.already_login", args1));
 
 //                    args1 = null;
 
@@ -354,7 +358,7 @@ public class RegisterUserController extends HttpServlet
 
                         if (auth_!=null)
 
-                            cat.debug("checkAccess "+ auth_.checkAccess( request.getServerName()) );
+                            cat.debug("checkAccess "+ auth_.checkAccess( ctxInstance.page.p.getServerName()) );
 
                     }
 
@@ -362,7 +366,7 @@ public class RegisterUserController extends HttpServlet
 
                     if ((auth_ == null) ||
 
-                        (!auth_.checkAccess( request.getServerName()))
+                        (!auth_.checkAccess( ctxInstance.page.p.getServerName()))
 
                     )
 
@@ -398,13 +402,13 @@ public class RegisterUserController extends HttpServlet
 
                                 if (auth_!=null)
 
-                                    cat.debug("new checkAccess "+ auth_.checkAccess( request.getServerName()) );
+                                    cat.debug("new checkAccess "+ auth_.checkAccess( ctxInstance.page.p.getServerName()) );
 
                             }
 
 
 
-                            if (auth_.checkAccess( request.getServerName()))
+                            if (auth_.checkAccess( ctxInstance.page.p.getServerName()))
 
                             {
 
@@ -414,7 +418,7 @@ public class RegisterUserController extends HttpServlet
 
                                 String args5[] = {url_redir};
 
-                                out.write(jspPage.sCustom.getStr("reg.reg_complete", args5));
+                                out.write(ctxInstance.sCustom.getStr("reg.reg_complete", args5));
 
 
 
@@ -464,7 +468,7 @@ public class RegisterUserController extends HttpServlet
 
                             Long id_user = InternalAuthProviderTools.addNewUser(dbDyn,
 
-                                first_name, last_name, "", jspPage.p.sites.getIdFirm(),
+                                first_name, last_name, "", ctxInstance.page.p.sites.getIdFirm(),
 
                                 mailAddr.toString(), addr, phone);
 
@@ -472,7 +476,7 @@ public class RegisterUserController extends HttpServlet
 
                             if (cat.isDebugEnabled())
 
-                                cat.debug("#1.0006 " + jspPage.p.sites.getIdFirm());
+                                cat.debug("#1.0006 " + ctxInstance.page.p.sites.getIdFirm());
 
 
 
@@ -480,7 +484,7 @@ public class RegisterUserController extends HttpServlet
 
                             id_auth_user = InternalAuthProviderTools.addUserAuth(dbDyn, id_user,
 
-                                jspPage.p.sites.getIdFirm(), null, null, username, password1,
+                                ctxInstance.page.p.sites.getIdFirm(), null, null, username, password1,
 
                                 true, false, false);
 
@@ -524,9 +528,9 @@ public class RegisterUserController extends HttpServlet
 
                             {
 
-                                String args2[] = {username, response.encodeURL("register.jsp?") + jspPage.getAsURL()};
+                                String args2[] = {username, response.encodeURL("register.jsp?") + ctxInstance.page.getAsURL()};
 
-                                out.write(jspPage.sCustom.getStr("reg.login_exists", args2));
+                                out.write(ctxInstance.sCustom.getStr("reg.login_exists", args2));
 
 
 
@@ -570,21 +574,21 @@ public class RegisterUserController extends HttpServlet
 
                         if (cat.isDebugEnabled())
 
-                            cat.debug("Admin mail: " + jspPage.p.sites.getAdminEmail());
+                            cat.debug("Admin mail: " + ctxInstance.page.p.sites.getAdminEmail());
 
 
 
-                        String args3[] = {username, password1, request.getServerName()};
+                        String args3[] = {username, password1, ctxInstance.page.p.getServerName()};
 
 
 
                         MailMessage.sendMessage(
 
-                            jspPage.sCustom.getStr("reg.mail_body", args3) + "\n\nregister from IP " + request.getRemoteAddr(),
+                            ctxInstance.sCustom.getStr("reg.mail_body", args3) + "\n\nregister from IP ", // + ctxInstance.page.p.getRemoteAddr(),
 
                             email,
 
-                            jspPage.p.sites.getAdminEmail(),
+                            ctxInstance.page.p.sites.getAdminEmail(),
 
                             "Confirm registration",
 
@@ -594,7 +598,7 @@ public class RegisterUserController extends HttpServlet
 
                         args3 = null;
 
-                        if (auth_.checkAccess( request.getServerName()))
+                        if (auth_.checkAccess( ctxInstance.page.p.getServerName()))
 
                         {
 
@@ -604,7 +608,7 @@ public class RegisterUserController extends HttpServlet
 
                             String args4[] = {url_redir};
 
-                            out.write(jspPage.sCustom.getStr("reg.reg_complete", args4));
+                            out.write(ctxInstance.sCustom.getStr("reg.reg_complete", args4));
 
 
 
@@ -652,13 +656,13 @@ Locale loc)
 
 
 
-            if (!Boolean.TRUE.equals(jspPage.p.sites.getIsRegisterAllowed()) )
+            if (!Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsRegisterAllowed()) )
 
                 return;
 
 
 
-            out.write(jspPage.sCustom.getStr("reg.you_memeber"));
+            out.write(ctxInstance.sCustom.getStr("reg.you_memeber"));
 
             out.write("\n");
 
@@ -670,7 +674,7 @@ Locale loc)
 
             );
 
-            out.write(jspPage.getAsForm());
+            out.write(ctxInstance.page.getAsForm());
 
             out.write( ServletTools.getHiddenItem(Constants.NAME_REGISTER_ACTION_PARAM, "reg_exists") );
 
@@ -684,7 +688,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.member_login"));
+            out.write(ctxInstance.sCustom.getStr("reg.member_login"));
 
             out.write(":");
 
@@ -700,7 +704,7 @@ Locale loc)
 
             out.write("<input type=\"submit\" value=\"");
 
-            out.write(jspPage.sCustom.getStr("reg.register"));
+            out.write(ctxInstance.sCustom.getStr("reg.register"));
 
             out.write("\">\n");
 
@@ -710,7 +714,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.member_password"));
+            out.write(ctxInstance.sCustom.getStr("reg.member_password"));
 
             out.write(":");
 
@@ -734,7 +738,7 @@ Locale loc)
 
             out.write("<br>\n\n");
 
-            out.write(jspPage.sCustom.getStr("reg.forgot_password"));
+            out.write(ctxInstance.sCustom.getStr("reg.forgot_password"));
 
             out.write("\r\n");
 
@@ -746,7 +750,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(jspPage.getAsForm());
+            out.write(ctxInstance.page.getAsForm());
 
             out.write("\r\n");
 
@@ -762,7 +766,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.member_email"));
+            out.write(ctxInstance.sCustom.getStr("reg.member_email"));
 
             out.write(":");
 
@@ -782,7 +786,7 @@ Locale loc)
 
             out.write("<input type=\"submit\" value=\"");
 
-            out.write(jspPage.sCustom.getStr("reg.send_password"));
+            out.write(ctxInstance.sCustom.getStr("reg.send_password"));
 
             out.write("\">\n");
 
@@ -794,7 +798,7 @@ Locale loc)
 
             out.write("<br>\n\n");
 
-            out.write(jspPage.sCustom.getStr("reg.need_register"));
+            out.write(ctxInstance.sCustom.getStr("reg.need_register"));
 
             out.write("<table>\n");
 
@@ -804,7 +808,7 @@ Locale loc)
 
             out.write("\">\n");
 
-            out.write(jspPage.getAsForm());
+            out.write(ctxInstance.page.getAsForm());
 
             out.write("\n");
 
@@ -820,7 +824,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.login"));
+            out.write(ctxInstance.sCustom.getStr("reg.login"));
 
             out.write(":");
 
@@ -838,7 +842,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.password"));
+            out.write(ctxInstance.sCustom.getStr("reg.password"));
 
             out.write(":");
 
@@ -856,7 +860,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.password_repeat"));
+            out.write(ctxInstance.sCustom.getStr("reg.password_repeat"));
 
             out.write(":");
 
@@ -874,7 +878,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.first_name"));
+            out.write(ctxInstance.sCustom.getStr("reg.first_name"));
 
             out.write(":");
 
@@ -892,7 +896,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.last_name"));
+            out.write(ctxInstance.sCustom.getStr("reg.last_name"));
 
             out.write("</td>\n");
 
@@ -908,7 +912,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.telephone"));
+            out.write(ctxInstance.sCustom.getStr("reg.telephone"));
 
             out.write("</td>\n");
 
@@ -924,7 +928,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.address"));
+            out.write(ctxInstance.sCustom.getStr("reg.address"));
 
             out.write("</td>\n");
 
@@ -940,7 +944,7 @@ Locale loc)
 
             out.write("<td>");
 
-            out.write(jspPage.sCustom.getStr("reg.email"));
+            out.write(ctxInstance.sCustom.getStr("reg.email"));
 
             out.write("</td>\n");
 
@@ -958,7 +962,7 @@ Locale loc)
 
             out.write("<input type=\"submit\" value=\"");
 
-            out.write(jspPage.sCustom.getStr("reg.register"));
+            out.write(ctxInstance.sCustom.getStr("reg.register"));
 
             out.write("\">");
 

@@ -52,9 +52,11 @@ package org.riverock.portlet.forum;
 
 
 
-import org.riverock.generic.db.DatabaseAdapter;
+import javax.portlet.PortletRequest;
 
-import org.riverock.generic.schema.db.CustomSequenceType;
+
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.webmill.port.InitPage;
 
@@ -66,7 +68,7 @@ public class SimpleForum extends Forum
 
 
 
-    public SimpleForum(javax.servlet.http.HttpServletRequest request,
+    public SimpleForum(PortletRequest request,
 
                        javax.servlet.http.HttpServletResponse response,
 

@@ -66,6 +66,8 @@ import java.lang.reflect.Method;
 
 import org.riverock.cache.impl.SimpleCacheFactory;
 
+import org.riverock.cache.impl.CacheException;
+
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.exception.GenericException;
@@ -86,7 +88,7 @@ public class CacheFactory
 
 
 
-    private final static float CACHE_INCREASE_PERCENT = 30;
+//    private final static float CACHE_INCREASE_PERCENT = 30;
 
     protected static Integer CountClassInCache = new Integer(20);
 
@@ -113,6 +115,18 @@ public class CacheFactory
     {
 
         cache.reinit();
+
+    }
+
+
+
+    public synchronized void terminate(Long id)
+
+        throws CacheException
+
+    {
+
+        cache.terminate(id);
 
     }
 

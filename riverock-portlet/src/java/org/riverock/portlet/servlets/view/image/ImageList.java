@@ -80,39 +80,35 @@ import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpServlet;
 
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
-
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.RsetTools;
+import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.common.tools.ServletTools;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -150,7 +146,7 @@ public class ImageList extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -162,7 +158,13 @@ public class ImageList extends HttpServlet
 
         {
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
+           ContextNavigator.setContentType(response);
 
 
 
@@ -176,7 +178,7 @@ public class ImageList extends HttpServlet
 
             {
 
-                AuthSession auth_ = AuthTools.check(request, response, "/");
+                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
                 if (auth_ == null)
 
@@ -186,15 +188,9 @@ public class ImageList extends HttpServlet
 
                 DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-                InitPage jspPage = new InitPage(db_, request,
-
-                                                "mill.locale._price_list"
-
-                );
 
 
-
-                String index_page = CtxURL.url(request, response, jspPage, "mill.image.index");
+                String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index");
 
 
 
@@ -204,11 +200,11 @@ public class ImageList extends HttpServlet
 
 
 
-                    Long id_main_ = ServletTools.getLong(request, "id_main");
+                    Long id_main_ = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_main");
 
-                    long pageNum = ServletTools.getInt(request, "pageNum", new Integer(0)).intValue();
+                    long pageNum = PortletTools.getInt(ctxInstance.getPortletRequest(), "pageNum", new Integer(0)).intValue();
 
-                    long countImage = ServletTools.getInt(request, "countImage", new Integer(10)).intValue();
+                    long countImage = PortletTools.getInt(ctxInstance.getPortletRequest(), "countImage", new Integer(10)).intValue();
 
 
 
@@ -256,7 +252,7 @@ public class ImageList extends HttpServlet
 
                         out.write("\">\r\n   ");
 
-                        out.write(jspPage.sCustom.getStr("price.top_level"));
+                        out.write(ctxInstance.sCustom.getStr("price.top_level"));
 
                         out.write("</a>\r\n");
 
@@ -344,7 +340,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.image.change_desc") + '&' +
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.change_desc") + '&' +
 
                                     "id=" + id_
 
@@ -402,7 +398,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage, "mill.image.list") + '&' +
+                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.list") + '&' +
 
                                 "id_main=" + id_main_ + "&pageNum=" + (pageNum - 1)
 
@@ -438,7 +434,7 @@ public class ImageList extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage, "mill.image.list") + '&' +
+                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.list") + '&' +
 
                                 "id_main=" + id_main_ + "&pageNum=" + (pageNum + 1)
 
@@ -486,7 +482,7 @@ public class ImageList extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.image.desc") + '&' +
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -510,23 +506,11 @@ public class ImageList extends HttpServlet
 
                     out.write("?");
 
-                    out.write(jspPage.getAsURL());
+                    out.write(ctxInstance.page.getAsURL());
 
                     out.write("id_main=");
 
-                    out.write("" + id_main_
-
-/*
-
-CtxURL.url( request, response, jspPage, "mill.image.desc") + '&' +
-
-"id_main="+ id_main_
-
-*/
-
-
-
-                    );
+                    out.write("" + id_main_);
 
                     out.write("\">Browse folder with image");
 

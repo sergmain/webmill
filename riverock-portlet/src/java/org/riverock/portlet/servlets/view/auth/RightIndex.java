@@ -90,7 +90,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -100,23 +108,11 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.generic.db.DatabaseManager;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.portlet.tools.HtmlTools;
+import org.riverock.webmill.portlet.CtxURL;
 
 
 
@@ -154,7 +150,7 @@ public class RightIndex extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -172,6 +168,12 @@ public class RightIndex extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
@@ -180,7 +182,7 @@ public class RightIndex extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -192,33 +194,17 @@ public class RightIndex extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
+//            InitPage jspPage = new InitPage(db_, request,
 
-                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
+//                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-            );
+//            );
 
 
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
 
             boolean isRootLevel = (authInfo.isRoot == 1);
-
-
-
-//            String v_str =
-
-//                    "select b.FULL_NAME_MODULE NAME_ARM_MODULE, c.NAME_ACCESS_GROUP, " +
-
-//                    "a.CODE_RIGHT, a.ID_RELATE_RIGHT, a.ID_ACCESS_GROUP, " +
-
-//                    "a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM "+
-
-//                    "from AUTH_RELATE_RIGHT_ARM a, V_AUTH_MODULE_FULL b, AUTH_ACCESS_GROUP c "+
-
-//                    "where a.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and " +
-
-//                    "a.ID_OBJECT_ARM=b.ID_OBJECT_ARM ";
 
 
 
@@ -296,7 +282,7 @@ public class RightIndex extends HttpServlet
 
             Constants.NAME_TEMPLATE_CONTEXT_PARAM +'='+
 
-            ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM) +'&'+
+            PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM) +'&'+
 
             Constants.NAME_TYPE_CONTEXT_PARAM + '=' ;
 
@@ -314,7 +300,7 @@ public class RightIndex extends HttpServlet
 
                 out.write("<b>");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.title"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.title"));
 
                 out.write("</b>\r\n");
 
@@ -326,7 +312,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage, "mill.auth.add_right")
+                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.add_right")
 
 
 
@@ -334,7 +320,7 @@ public class RightIndex extends HttpServlet
 
                 out.write("\">");
 
-                out.write(jspPage.sMain.getStr("button.add"));
+                out.write(ctxInstance.page.sMain.getStr("button.add"));
 
                 out.write("</a>");
 
@@ -346,61 +332,61 @@ public class RightIndex extends HttpServlet
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.id_access_group"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.id_access_group"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.id_object_arm"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.id_object_arm"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.code_right_s"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_s"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.code_right_u"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_u"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.code_right_i"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_i"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.code_right_d"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_d"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.code_right_a"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_a"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.is_road"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.is_road"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.is_service"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.is_service"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                out.write(jspPage.sCustom.getStr("index.jsp.is_firm"));
+                out.write(ctxInstance.sCustom.getStr("index.jsp.is_firm"));
 
                 out.write("</th>\r\n        ");
 
@@ -414,7 +400,7 @@ public class RightIndex extends HttpServlet
 
                     out.write("<th class=\"memberArea\">");
 
-                    out.write(jspPage.sCustom.getStr("index.jsp.action"));
+                    out.write(ctxInstance.sCustom.getStr("index.jsp.action"));
 
                     out.write("</th>\r\n            ");
 
@@ -490,31 +476,31 @@ public class RightIndex extends HttpServlet
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(S1, false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(S1, false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(U1, false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(U1, false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(I1, false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(I1, false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(D1, false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(D1, false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(A1, false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(A1, false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n");
 
@@ -524,19 +510,19 @@ public class RightIndex extends HttpServlet
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(rs, "is_road", false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(rs, "is_service", false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(rs, "is_firm", false, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "is_firm", false, ctxInstance.page.currentLocale));
 
                     out.write("</td>\r\n            ");
 
@@ -554,7 +540,7 @@ public class RightIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(jspPage.sMain.getStr("button.change"));
+                        out.write(ctxInstance.page.sMain.getStr("button.change"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -562,7 +548,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.auth.ch_right") + '&'
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.ch_right") + '&'
 
 
 
@@ -576,7 +562,7 @@ public class RightIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(jspPage.sMain.getStr("button.delete"));
+                        out.write(ctxInstance.page.sMain.getStr("button.delete"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -584,7 +570,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.auth.del_right") + '&'
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.del_right") + '&'
 
 
 
@@ -624,7 +610,7 @@ public class RightIndex extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage, "mill.auth.add_right")
+                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.add_right")
 
 
 
@@ -632,7 +618,7 @@ public class RightIndex extends HttpServlet
 
                 out.write("\">");
 
-                out.write(jspPage.sMain.getStr("button.add"));
+                out.write(ctxInstance.page.sMain.getStr("button.add"));
 
                 out.write("</a>");
 
@@ -646,7 +632,7 @@ public class RightIndex extends HttpServlet
 
             {
 
-                out.write(jspPage.sMain.getStr("access_denied"));
+                out.write(ctxInstance.page.sMain.getStr("access_denied"));
 
             }
 

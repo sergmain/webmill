@@ -144,7 +144,7 @@ public class JobItem implements PortletParameterSetter
 
         return param.getResponse().encodeURL( CtxURL.ctx() ) + '?' +
 
-            param.getJspPage().getAsURL() + Constants.NAME_ID_JOB_PARAM + '=' +
+            param.getPage().getAsURL() + Constants.NAME_ID_JOB_PARAM + '=' +
 
             idPosition + '&'+
 
@@ -160,7 +160,7 @@ public class JobItem implements PortletParameterSetter
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPage().currentLocale);
 
     }
 
@@ -170,7 +170,7 @@ public class JobItem implements PortletParameterSetter
 
     {
 
-        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", param.getPage().currentLocale);
 
     }
 

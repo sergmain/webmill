@@ -82,10 +82,6 @@ import java.util.ArrayList;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
-
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
@@ -101,6 +97,8 @@ import org.riverock.webmill.portlet.PortletManager;
 import org.riverock.webmill.portlet.PortletTools;
 
 import org.riverock.webmill.portlet.PortletGetList;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -190,7 +188,7 @@ public class ContextDataClassQuery extends BaseClassQuery
 
      */
 
-    public String getCurrentValue(HttpServletRequest request)
+    public String getCurrentValue(CtxInstance ctxInstance)
 
         throws Exception
 
@@ -258,7 +256,7 @@ public class ContextDataClassQuery extends BaseClassQuery
 
      */
 
-    public List getSelectList(HttpServletRequest request)
+    public List getSelectList(CtxInstance ctxInstance)
 
         throws Exception
 
