@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.portlet.wrapper;
+package org.riverock.portlet.portlets.wrapper;
 
 
 
