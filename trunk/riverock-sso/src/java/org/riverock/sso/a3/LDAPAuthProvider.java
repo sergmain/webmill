@@ -68,6 +68,8 @@ package org.riverock.sso.a3;
 
 import java.util.Hashtable;
 
+import java.io.Serializable;
+
 
 
 import javax.naming.Context;
@@ -96,7 +98,7 @@ import org.apache.log4j.Logger;
 
 
 
-public class LDAPAuthProvider implements AuthProviderInterface
+public class LDAPAuthProvider implements AuthProviderInterface, Serializable
 
 {
 

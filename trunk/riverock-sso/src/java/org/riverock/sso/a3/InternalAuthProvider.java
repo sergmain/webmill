@@ -70,6 +70,8 @@ import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 
+import java.io.Serializable;
+
 
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -88,7 +90,7 @@ import org.apache.log4j.Logger;
 
 
 
-public class InternalAuthProvider implements AuthProviderInterface
+public class InternalAuthProvider implements AuthProviderInterface, Serializable
 
 {
 
