@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -82,14 +83,15 @@ public class BindDelete extends HttpServlet
         try
         {
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             out = response.getWriter();
 
             ContextNavigator.setContentType(response);
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( BindIndex.AUTH_BIND_ROLE ) )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/"+CtxInstance.ctx(), "continue");
@@ -107,12 +109,12 @@ public class BindDelete extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.locale.AUTH_USER";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end where
 
-            String index_page = ctxInstance.url("mill.auth.bind");
+            String index_page = CtxInstance.url("mill.auth.bind");
 
-            Long id_auth_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_auth_user");
+            Long id_auth_user = PortletTools.getLong(renderRequest, "id_auth_user");
             if (id_auth_user==null)
                 throw new IllegalArgumentException("id_auth_user not initialized");
 
@@ -136,7 +138,7 @@ public class BindDelete extends HttpServlet
                 out.write("<FORM ACTION=\"");
                 out.write(
 
-                    ctxInstance.url("mill.auth.commit_del_bind")
+                    CtxInstance.url("mill.auth.commit_del_bind")
 
                 );
                 out.write("\" METHOD=\"POST\">\r\n");
@@ -144,9 +146,9 @@ public class BindDelete extends HttpServlet
                 out.write("" + id_auth_user);
                 out.write("\">\r\n");
                 out.write("<INPUT TYPE=\"submit\" VALUE=\"");
-                out.write(ctxInstance.getStringManager().getStr("button.delete"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.delete"));
                 out.write("\">\n");
-                out.write(ctxInstance.getAsForm());
+//                out.write(ctxInstance.getAsForm());
                 out.write("\n");
                 out.write("</FORM>\n");
                 out.write("<TABLE  border=\"1\" width=\"100%\" class=\"l\">\n");
@@ -172,7 +174,7 @@ public class BindDelete extends HttpServlet
                 out.write(sCustom.getStr("del_bind.jsp.is_service"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
-                out.write(HtmlTools.printYesNo(authInfoUser.isService, false, ctxInstance.getPortletRequest().getLocale()));
+                out.write(HtmlTools.printYesNo(authInfoUser.isService, false, renderRequest.getLocale()));
                 out.write("\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
@@ -181,7 +183,7 @@ public class BindDelete extends HttpServlet
                 out.write(sCustom.getStr("del_bind.jsp.is_road"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
-                out.write(HtmlTools.printYesNo(authInfoUser.isRoad, false, ctxInstance.getPortletRequest().getLocale()));
+                out.write(HtmlTools.printYesNo(authInfoUser.isRoad, false, renderRequest.getLocale()));
                 out.write("\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
@@ -190,7 +192,7 @@ public class BindDelete extends HttpServlet
                 out.write(sCustom.getStr("del_bind.jsp.is_use_current_firm"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
-                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, false, ctxInstance.getPortletRequest().getLocale()));
+                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, false, renderRequest.getLocale()));
                 out.write("\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
@@ -205,7 +207,7 @@ public class BindDelete extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
 

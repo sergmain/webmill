@@ -26,7 +26,7 @@
 /**
  * $Id$
  */
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.news;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -33,6 +33,8 @@ import java.sql.ResultSet;
 import java.util.*;
 
 import javax.portlet.PortletRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.RenderRequest;
 import javax.servlet.http.Cookie;
 
 import org.apache.log4j.Logger;
@@ -52,10 +54,11 @@ import org.riverock.portlet.core.GetMainForumThreadsItem;
 import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portal.PortalConstants;
 
-abstract public class Forum
+public class ForumInstance
 {
-    private static Logger log = Logger.getLogger(Forum.class);
+    private static Logger log = Logger.getLogger(ForumInstance.class);
 
     public String forumURI = "";
     public int month = 0;
@@ -67,22 +70,27 @@ abstract public class Forum
     public static final String SEQ_FORUM_THREADS = "SEQ_MAIN_FORUM_THREADS";
     public static final String SEQ_FORUM_MESSAGE = "SEQ_MAIN_FORUM_MESSAGE";
     public static final String FORUM_THREADS_TABLE = "MAIN_FORUM_THREADS";
-    private PortletRequest portletRequest = null;
-    private CtxInstance ctxInstance = null;
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
 
-    abstract public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__) throws ForumException;
-
-    public Forum(){}
-
-    public Forum(PortletRequest portletRequest)
+    public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__)
+            throws ForumException
     {
-        this.portletRequest = portletRequest;
-        this.ctxInstance = (CtxInstance)portletRequest.getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-        this.id = PortletTools.getLong(portletRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
+        return ForumMessage.getInstance(db__, id__);
+    }
 
-        this.id_forum = PortletTools.getLong(portletRequest, Constants.NAME_ID_FORUM_PARAM);
+    public ForumInstance(){}
+
+    public ForumInstance(RenderRequest renderRequest, RenderResponse renderResponse)
+    {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
+//        this.ctxInstance = (CtxInstance)renderRequest.getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+        this.id = PortletTools.getLong(renderRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
+
+        this.id_forum = PortletTools.getLong(renderRequest, Constants.NAME_ID_FORUM_PARAM);
         this.year = PortletTools.getInt(
-            portletRequest, Constants.NAME_YEAR_PARAM,
+            renderRequest, Constants.NAME_YEAR_PARAM,
             new Integer(Calendar.getInstance().get(Calendar.YEAR))
         ).intValue();
     }
@@ -169,7 +177,7 @@ abstract public class Forum
     }
 
 
-    public String getThreads(String nameTemplate)throws ForumException {
+    public String getThreads()throws ForumException {
         String sql_ = "";
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -386,11 +394,11 @@ abstract public class Forum
                     s += ("<b>" + yearValue + "</b>&nbsp;");
                 else
                     s += ("<a href=\"" + CtxInstance.ctx() + '?' +
-                        Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                         Constants.NAME_YEAR_PARAM + '=' + yearValue + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                         Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
-                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
+//                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
                         "\">" + yearValue + "</a>&nbsp;");
             }
         }
@@ -461,26 +469,26 @@ abstract public class Forum
                         DateUtils.getStringDate(
                             DateTools.getDateWithMask(monthLong.toString(), "MM"),
                             "MMMM",
-                            portletRequest.getLocale()
+                            renderRequest.getLocale()
                         )
                     );
 
                 String monthString = DateUtils.getStringDate(
                     DateTools.getDateWithMask(monthLong.toString(), "MM"),
                     "MMMM",
-                    portletRequest.getLocale());
+                    renderRequest.getLocale());
 
 
                 if (monthValue==effectiveMonth)
                     s += ("<b>" + monthString + "</b>&nbsp;");
                 else
                     s += ("<a href=\"" + CtxInstance.ctx() + '?' +
-                        Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                         Constants.NAME_YEAR_PARAM + '=' + year + '&' +
                         Constants.NAME_MONTH_PARAM + '=' + monthValue + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                         Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
-                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
+//                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
                         "\">" + monthString + "</a>&nbsp;");
             }
         }
@@ -538,7 +546,7 @@ abstract public class Forum
     }
 
 
-    public String getStartMessages(String nameTemplate)throws ForumException{
+    public String getStartMessages() throws ForumException{
         PreparedStatement ps = null;
         ResultSet rs = null;
         String s = "";
@@ -619,7 +627,7 @@ abstract public class Forum
                     "<tr><td>" +
                     "<span class=\"topictitle\">" +
                     "<a class=\"topictitle\" href=\"" + CtxInstance.ctx() + '?' +
-                    Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
+                    Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                     Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                     Constants.NAME_ID_MESSAGE_FORUM_PARAM + '=' +
                     RsetTools.getLong(rs, "ID") + '&' +
@@ -628,7 +636,7 @@ abstract public class Forum
                     Constants.NAME_MONTH_PARAM + '=' + (cal.get(Calendar.MONTH) + 1) + '&' +
 
                     Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + nameTemplate +
+//                    Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + nameTemplate +
                     "\">" + RsetTools.getString(rs, "header", "___") + "</a>" +
                     "</span>" +
                     "</td>" +
@@ -694,7 +702,7 @@ abstract public class Forum
             return TreeUtils.rebuildTree(list);
         }
         catch (Throwable e){
-            log.error("Forum.getMessages(), sql: "+sql_);
+            log.error("ForumInstance.getMessages(), sql: "+sql_);
 
             String es = "Error in getMessages()";
             log.error(es, e);
@@ -726,18 +734,18 @@ abstract public class Forum
 
                 Long idValue = message.getId();
                 Calendar cal = message.getDatePost();
-                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", portletRequest.getLocale());
+                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", renderRequest.getLocale());
 
                 r_ += "<b>";
                 if (!message.getId().equals(currentMessageId)) {
                     r_ += ("<a href=\"" + CtxInstance.ctx() + '?' +
-                        Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                         Constants.NAME_ID_MESSAGE_FORUM_PARAM + '='+ message.getId() + '&' +
                         Constants.NAME_YEAR_PARAM + '=' + cal.get(Calendar.YEAR) + '&' +
                         Constants.NAME_MONTH_PARAM + '=' + (cal.get(Calendar.MONTH) + 1) + '&' +
                         Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
-                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
+//                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
                         "\">");
                 }
 
@@ -765,16 +773,15 @@ abstract public class Forum
     /**
      * @return id of added message
      */
-    public Long addMessage(CtxInstance ctxInstance, Long id_thread__, Long id_main__)
-        throws ForumException
-    {
+    public Long addMessage(Long id_thread__, Long id_main__)
+        throws ForumException {
 
+        PortletRequest portletRequest = renderRequest;
         PreparedStatement st = null;
         Long currentId = null;
 
         DatabaseAdapter dbDyn = null;
-        try
-        {
+        try {
             dbDyn = DatabaseAdapter.getInstance(true);
 
             CustomSequenceType seq = new CustomSequenceType();
@@ -784,48 +791,44 @@ abstract public class Forum
             currentId = new Long(dbDyn.getSequenceNextValue(seq));
 
 
-            st = dbDyn.prepareStatement(
-                "insert into " + FORUM_THREADS_TABLE + " " +
+            st = dbDyn.prepareStatement("insert into " + FORUM_THREADS_TABLE + " " +
                 "(ID, id_main, id_forum, id_thread, date_post, header, fio, email, ip) " +
                 "values " +
-                "(?, ?, ?, ?, "+dbDyn.getNameDateBind()+", ?, ?, ?, ?) "
-            );
+                "(?, ?, ?, ?, " + dbDyn.getNameDateBind() + ", ?, ?, ?, ?) ");
             RsetTools.setLong(st, 1, currentId);
             RsetTools.setLong(st, 2, id_main__);
             RsetTools.setLong(st, 3, id_forum);
             RsetTools.setLong(st, 4, id_thread__);
             dbDyn.bindDate(st, 5, DateTools.getCurrentTime());
-            st.setString(6, PortletTools.getString(ctxInstance.getPortletRequest(), "h") ); // header
-            st.setString(7, PortletTools.getString(ctxInstance.getPortletRequest(), "n") ); // name
-            st.setString(8, PortletTools.getString(ctxInstance.getPortletRequest(), "e") ); // email
-            st.setString(9, ctxInstance.getRemoteAddr());
+            st.setString(6, PortletTools.getString(portletRequest, "h")); // header
+            st.setString(7, PortletTools.getString(portletRequest, "n")); // name
+            st.setString(8, PortletTools.getString(portletRequest, "e")); // email
+            st.setString(9, (String)portletRequest.getAttribute( PortalConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE ) );
 
             st.executeUpdate();
 
-            DatabaseManager.insertBigText(
-                dbDyn,
+            DatabaseManager.insertBigText(dbDyn,
                 currentId, "ID",
                 PrimaryKeyTypeTypeType.NUMBER,
                 "MAIN_FORUM_TEXT", "ID_MAIN_FORUM_TEXT",
                 "MESSAGE_TEXT",
-                PortletTools.getString(ctxInstance.getPortletRequest(), "b"),
-                false
-            );
+                PortletTools.getString(portletRequest, "b"),
+                false);
 
             dbDyn.commit();
         }
-        catch (Throwable e){
-            try
-            {
+        catch (Throwable e) {
+            try {
                 dbDyn.rollback();
             }
-            catch(Exception ee){}
+            catch (Exception ee) {
+            }
 
             String es = "Error in addMessage()";
             log.error(es, e);
             throw new ForumException(es, e);
         }
-        finally{
+        finally {
             DatabaseManager.close(dbDyn, st);
             st = null;
             dbDyn = null;

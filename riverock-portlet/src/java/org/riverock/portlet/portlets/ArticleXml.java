@@ -35,87 +35,102 @@ package org.riverock.portlet.portlets;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.ArrayList;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.main.CacheFactory;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
+
+import org.riverock.cache.impl.CacheException;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.portlet.Portlet;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.PortletParameter;
-import org.riverock.webmill.portlet.CtxInstance;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.portlet.schema.core.SiteCtxArticleItemType;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.main.CacheFactory;
 import org.riverock.portlet.core.GetSiteCtxArticleItem;
 import org.riverock.portlet.member.ClassQueryItem;
-import org.riverock.cache.impl.CacheException;
+import org.riverock.portlet.schema.core.SiteCtxArticleItemType;
+import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.webmill.port.PortalInfo;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.portlet.PortletGetList;
+import org.riverock.webmill.portlet.PortletResultObject;
+import org.riverock.webmill.portlet.PortletResultContent;
 
 import org.apache.log4j.Logger;
 
-import javax.portlet.PortletException;
-
-public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
+public final class ArticleXml implements PortletResultObject, PortletGetList, PortletResultContent
 {
-    private static Logger log = Logger.getLogger( ArticleXml.class );
+    private final static Logger log = Logger.getLogger( ArticleXml.class );
 
-    private static CacheFactory cache = new CacheFactory( ArticleXml.class.getName() );
+    private static final CacheFactory cache = new CacheFactory( ArticleXml.class.getName() );
+    private static final String DEFAULT_ROOT_NAME = "Article";
 
-    public Calendar datePost = null;
-    public String nameArticle = "";
-    public String text = "";
-    public Long id = null;
-    public boolean isTranslateCR = false;
-    public boolean isPlainHTML = false;
-    public boolean isSimpleTextBlock = false;
-    public String articleCode = "";
-    public PortletParameter param = null;
-    public Long idSupportLanguage = null;
+    private Calendar datePost = null;
+    private String dateText = null;
+    private String timeText = null;
 
-    public void reinit()
-    {
+    private String nameArticle = "";
+    private String text = "";
+    private Long id = null;
+
+    private RenderRequest renderRequest = null;
+//    private RenderResponse renderResponse = null;
+
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        if(log.isDebugEnabled())
+            log.debug("renderRequest: "+renderRequest);
+
+        this.renderRequest = renderRequest;
+//        this.renderResponse = renderResponse;
+    }
+
+    public void reinit() {
         cache.reinit();
     }
 
-    public synchronized void terminate(Long id)
-        throws CacheException
-    {
+    public synchronized void terminate(Long id) throws CacheException {
         cache.terminate(id);
     }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         datePost = null;
+        dateText = null;
+        timeText = null;
         nameArticle = null;
         text = null;
-        articleCode = null;
-        param = null;
 
         super.finalize();
     }
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
-    }
+//    public PortletResultContent getInstance(DatabaseAdapter db__) throws PortletException {
+//        return null;
+//    }
 
-    public PortletResultObject getInstance(DatabaseAdapter db__) throws PortletException
-    {
-        return null;
-    }
+    public byte[] getXml(String rootName) throws Exception {
+        if(log.isDebugEnabled()) {
+            log.debug( "ArticleXml. method is 'Xml'. Root: "+rootName );
+            log.debug( "Article date: " + datePost );
+            log.debug( "renderRequest: " + renderRequest );
+        }
+        dateText = DateTools.getStringDate( datePost, "dd.MMM.yyyy", renderRequest.getLocale() );
+        timeText = DateTools.getStringDate( datePost, "HH:mm", renderRequest.getLocale() );
 
-    public byte[] getXml(String name)
-        throws Exception
-    {
-        if(log.isDebugEnabled())
-            log.debug("ArticleXml. method is 'Xml'");
+        String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"+
+            "<"+rootName+"><ArticleDate>"+ dateText + "</ArticleDate>"+
+            "<ArticleTime>"+ timeText+ "</ArticleTime>"+
+            "<ArticleName>"+ nameArticle + "</ArticleName>"+
+            "<ArticleText>"+ text + "</ArticleText></"+
+            (rootName==null?DEFAULT_ROOT_NAME:rootName)+">";
 
-        return getXml();
+        if (log.isDebugEnabled())
+            log.debug( "ArticleXml. getXml - "+xml );
+
+        return xml.getBytes( WebmillConfig.getHtmlCharset() );
     }
 
     public byte[] getXml()
@@ -124,100 +139,28 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
         if(log.isDebugEnabled())
             log.debug("ArticleXml. method is 'Xml'");
 
-        String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"+
-                "<Article><ArticleDate>"+ getArticleDate() + "</ArticleDate>"+
-                "<ArticleTime>"+ getArticleTime()+ "</ArticleTime>"+
-                "<ArticleName>"+ getArticleName()+ "</ArticleName>"+
-                "<ArticleText>"+ getArticleText()+"</ArticleText></Article>";
-
-        if (log.isDebugEnabled())
-            log.debug( "ArticleXml. getXml - "+xml );
-
-        return xml.getBytes( WebmillConfig.getHtmlCharset() );
+        return getXml(DEFAULT_ROOT_NAME);
     }
 
-    public boolean isXml(){ return true; }
-    public boolean isHtml(){ return false; }
-
-    public String getArticleDate()
-    {
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPortletRequest().getLocale());
+    public byte[] getPlainHTML() {
+        return null;
     }
 
-    public String getArticleTime()
-    {
-        return DateTools.getStringDate(datePost, "HH:mm", param.getPortletRequest().getLocale());
+    public ArticleXml() {
     }
 
-    public String getArticleName()
-    {
-        return nameArticle;
-    }
-
-    public String getArticleText()
-    {
-        if(log.isDebugEnabled())
-            log.debug("ArticleXml text - "+text);
-
-        String s = text;
-
-        if ( isTranslateCR )
-        {
-            s = StringTools.prepareToParsingSimple( s );
-
-            if (log.isDebugEnabled() )
-                log.debug("isTranslateCR - "+isTranslateCR);
-        }
-
-        if ( isSimpleTextBlock )
-        {
-            if (log.isDebugEnabled() )
-                log.debug("isSimpleTextBlock - "+isSimpleTextBlock);
-
-            s = StringTools.toOrigin(s );
-        }
-
-        if(log.isDebugEnabled())
-            log.debug("ArticleXml. result text - "+s);
-
-        return s;
-    }
-
-    public int maxCountItems()
-    {
-        return 50;
-    };
-    public long maxTimePeriod()
-    {
-        return 1000000;
-    };
-
-    public String getNameClass()
-    {
-        return ArticleXml.class.getName();
-    };
-
-    public ArticleXml()
-    {
-    }
-
-    public PortletResultObject getInstance(DatabaseAdapter db__, long id__)
-            throws Exception
-    {
+    public PortletResultContent getInstance(DatabaseAdapter db__, long id__) throws Exception {
         return getInstance(db__, new Long(id__) );
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db__, Long id__)
+    public PortletResultContent getInstance(DatabaseAdapter db__, Long id__)
             throws PortletException
     {
-        try
-        {
-            PortletResultObject portletObject = (PortletResultObject) cache.getInstanceNew(db__, id__);
-            ((Portlet)portletObject).setParameter( this.param );
+        try {
+            PortletResultContent portletObject = (PortletResultContent) cache.getInstanceNew(db__, id__);
             return portletObject;
         }
-        catch(Throwable e)
-        {
+        catch(Throwable e) {
             String es = "Error get instance of ArticleXml";
             log.error(es, e);
             throw new PortletException(es, e);
@@ -225,63 +168,41 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
     }
 
     static String sql_ = null;
-    static
-    {
+    static {
         sql_ =
             "select a.ID_SITE_CTX_ARTICLE " +
             "from SITE_CTX_ARTICLE a " +
             "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.ARTICLE_CODE=? and a.IS_DELETED=0";
 
-        try
-        {
+        try {
             org.riverock.sql.cache.SqlStatement.registerSql( sql_, new ArticleXml().getClass() );
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Exception in registerSql, sql\n"+sql_, e);
         }
-        catch(Error e)
-        {
+        catch(Error e) {
             log.error("Error in registerSql, sql\n"+sql_, e);
         }
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String articleCode_)
-            throws PortletException
+    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String articleCode_)
+        throws PortletException
     {
         if (log.isDebugEnabled())
             log.debug("#10.01.01 " + articleCode_);
 
-        CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-        Long idSupportLanguageCurrent = ctxInstance.getPortalInfo().getIdSupportLanguage(param.getPortletRequest().getLocale());
-
-        //Todo Need optimize
-//        for (int i = 0; i < dummy.maxCountItems(); i++)
-//        {
-//
-//            if (cache[i] != null &&
-//                ((ArticleXml) cache[i]).articleCode.equals(articleCode_) &&
-//                ((ArticleXml) cache[i]).idSupportLanguage == idSupportLanguageCurrent
-//                )
-//            {
-//                if (log.isDebugEnabled())
-//                    log.debug("#10.01.03");
-//
-//                return (ArticleXml) cache[i];
-//            }
-//        }
+        PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+        Long idSupportLanguageCurrent = portalInfo.getIdSupportLanguage( renderRequest.getLocale() );
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             ps = db__.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, idSupportLanguageCurrent );
             ps.setString(2, articleCode_);
 
             rs = ps.executeQuery();
-            if (rs.next())
-            {
+            if (rs.next()) {
                 if (log.isDebugEnabled())
                     log.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE"));
 
@@ -294,14 +215,12 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
             // return dummy Article
             return getInstance(db__, -1);
         }
-        catch(Throwable e)
-        {
+        catch(Throwable e) {
             String es = "Exception in ArticleXml.getInstanceByCode()";
             log.error(es, e);
             throw new PortletException(es, e);
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
@@ -309,72 +228,32 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
     }
 
     static String sql1_ = null;
-    static
-    {
+    static {
         sql1_ =
             "select * from SITE_CTX_ARTICLE where ID_SITE_CTX_ARTICLE=? and IS_DELETED=0";
 
-        try
-        {
+        try {
             org.riverock.sql.cache.SqlStatement.registerSql( sql1_, new ArticleXml().getClass() );
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Exception in registerSql, sql\n"+sql1_, e);
         }
-        catch(Error e)
-        {
+        catch(Error e) {
             log.error("Error in registerSql, sql\n"+sql1_, e);
         }
     }
 
-    public ArticleXml(DatabaseAdapter db_, Long id_)
-            throws Exception
-    {
+    public ArticleXml(DatabaseAdapter db_, Long id_) throws Exception {
         SiteCtxArticleItemType article = GetSiteCtxArticleItem.getInstance(db_, id_).item;
 
         if (article==null || Boolean.TRUE.equals( article.getIsDeleted()) )
             return;
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        id = id_;
-        try
-        {
-            ps = db_.prepareStatement(sql1_);
-            RsetTools.setLong(ps, 1, id);
-
-            rs = ps.executeQuery();
-            if (rs.next())
-            {
-                datePost = RsetTools.getCalendar(rs, "DATE_POST");
-                nameArticle = RsetTools.getString(rs, "NAME_ARTICLE");
-                isTranslateCR = Boolean.TRUE.equals(RsetTools.getInt(rs, "IS_TRANSLATE_CR"));
-                isPlainHTML = Boolean.TRUE.equals(RsetTools.getInt(rs, "IS_PLAIN_HTML") );
-                isSimpleTextBlock = Boolean.TRUE.equals(RsetTools.getInt(rs, "IS_SIMPLE_TEXT") );
-                articleCode = RsetTools.getString(rs, "ARTICLE_CODE");
-                idSupportLanguage = RsetTools.getLong(rs, "ID_SITE_SUPPORT_LANGUAGE");
-
-                initTextField();
-            }
-        }
-        catch(Exception e)
-        {
-            log.error("Exception in ArticleXml(..", e);
-            throw e;
-        }
-        catch(Error e)
-        {
-            log.error("Error in ArticleXml(..", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-
+        this.id = id_;
+        datePost = Calendar.getInstance();
+        datePost.setTimeInMillis( article.getDatePost().getTime() );
+        nameArticle = article.getNameArticle();
+        initTextField();
     }
 
     static String sql2_ = null;
@@ -386,54 +265,46 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
             "where ID_SITE_CTX_ARTICLE = ? " +
             "order by ID_SITE_CTX_ARTICLE_DATA ASC";
 
-        try
-        {
+        try {
             org.riverock.sql.cache.SqlStatement.registerSql( sql2_, new ArticleXml().getClass() );
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Exception in registerSql, sql\n"+sql2_, e);
         }
-        catch(Error e)
-        {
+        catch(Error e) {
             log.error("Error in registerSql, sql\n"+sql2_, e);
         }
     }
 
-    public void initTextField()
-            throws Exception
-    {
+    private void initTextField() throws PortletException {
         if (id == null)
             return;
 
         DatabaseAdapter db_ = null;
         PreparedStatement ps = null;
         ResultSet rset = null;
-        try
-        {
+        try {
             db_ = DatabaseAdapter.getInstance(false);
             ps = db_.prepareStatement( sql2_ );
 
             RsetTools.setLong(ps, 1, id);
             rset = ps.executeQuery();
             text = "";
-            while (rset.next())
-            {
+            while (rset.next()){
                 text += RsetTools.getString(rset, "ARTICLE_DATA");
             }
         }
-        catch(Exception e)
-        {
-            log.error("Exception in ArticleXml.initTextField", e);
-            throw e;
+        catch(Exception e) {
+            String es = "Exception in ArticleXml.initTextField";
+            log.error(es, e);
+            throw new PortletException(es, e);
         }
-        catch(Error e)
-        {
-            log.error("Error in ArticleXml.initTextField", e);
-            throw e;
+        catch(Error e) {
+            String es = "Error in ArticleXml.initTextField";
+            log.error(es, e);
+            throw new PortletException(es, e);
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(db_, rset, ps);
             rset = null;
             ps = null;
@@ -441,14 +312,8 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
         }
     }
 
-    public byte[] getPlainHTML()
-    {
-        return null;
-    }
-
     static String sql3_ = null;
-    static
-    {
+    static {
         sql3_ =
             "SELECT b.ID_SITE_CTX_ARTICLE, b.NAME_ARTICLE, b.ARTICLE_CODE "+
             "FROM site_ctx_lang_catalog a, site_ctx_article b "+
@@ -456,22 +321,18 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
             "a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
             "b.IS_PLAIN_HTML=0";
 
-        try
-        {
+        try {
             org.riverock.sql.cache.SqlStatement.registerSql( sql3_, new ArticleXml().getClass() );
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Exception in registerSql, sql\n"+sql3_, e);
         }
-        catch(Error e)
-        {
+        catch(Error e) {
             log.error("Error in registerSql, sql\n"+sql3_, e);
         }
     }
 
-    public List getList( Long idSiteCtxLangCatalog, Long idContext)
-    {
+    public List getList( final Long idSiteCtxLangCatalog, final Long idContext) {
         if (log.isDebugEnabled())
             log.debug("Get list of ArticleXml. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
 

@@ -41,6 +41,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -79,13 +80,14 @@ public class FirmChangeCommit extends HttpServlet
         try
         {
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             ContextNavigator.setContentType(response, "utf-8");
 
             out = response.getWriter();
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( "webmill.firm_update" ) )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right", "/", "continue");
@@ -101,9 +103,9 @@ public class FirmChangeCommit extends HttpServlet
                 {
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    index_page = ctxInstance.url("mill.firm.index");
+                    index_page = CtxInstance.url("mill.firm.index");
 
-                    Long id_firm = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_firm");
+                    Long id_firm = PortletTools.getLong(renderRequest, "id_firm");
                     if (id_firm==null)
                         throw new IllegalArgumentException("id_firm not initialized");
 
@@ -133,7 +135,7 @@ public class FirmChangeCommit extends HttpServlet
                     switch (dbDyn.getFamaly())
                     {
                         case DatabaseManager.MYSQL_FAMALY:
-                            String idList = AuthHelper.getGrantedFirmId(dbDyn, ctxInstance.getPortletRequest().getRemoteUser());
+                            String idList = AuthHelper.getGrantedFirmId(dbDyn, renderRequest.getRemoteUser());
 
                             sql += " ("+idList+") ";
 
@@ -146,23 +148,23 @@ public class FirmChangeCommit extends HttpServlet
 
                     ps = dbDyn.prepareStatement(sql);
                    int num=1;
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "full_name"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_name"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "address"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "telefon_buh"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "telefon_chief"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "chief"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "buh"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "fax"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "email"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "icq"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_client_info"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "url"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_info"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_work"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_need_recvizit"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_need_person"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_search"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "full_name"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "short_name"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "address"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "telefon_buh"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "telefon_chief"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "chief"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "buh"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "fax"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "email"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "icq"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "short_client_info"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "url"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "short_info"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_work"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_need_recvizit"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_need_person"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_search"));
                     RsetTools.setLong(ps, num++, id_firm);
                     switch (dbDyn.getFamaly())
                     {

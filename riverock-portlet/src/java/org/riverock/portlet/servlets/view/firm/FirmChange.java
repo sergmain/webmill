@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -83,14 +84,15 @@ public class FirmChange extends HttpServlet
         ResultSet rs = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             ContextNavigator.setContentType(response);
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
@@ -107,12 +109,12 @@ public class FirmChange extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.firm.index";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end where
 
-            String index_page = ctxInstance.url("mill.firm.index");
+            String index_page = CtxInstance.url("mill.firm.index");
 
-            Long id_firm = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_firm");
+            Long id_firm = PortletTools.getLong(renderRequest, "id_firm");
             if (id_firm==null)
                 throw new IllegalArgumentException("id_firm not initialized");
 
@@ -127,7 +129,7 @@ public class FirmChange extends HttpServlet
                 switch (db_.getFamaly())
                 {
                     case DatabaseManager.MYSQL_FAMALY:
-                        String idList = AuthHelper.getGrantedFirmId(db_, ctxInstance.getPortletRequest().getRemoteUser());
+                        String idList = AuthHelper.getGrantedFirmId(db_, renderRequest.getRemoteUser());
 
                         v_str += " ("+idList+") ";
 
@@ -159,12 +161,12 @@ public class FirmChange extends HttpServlet
               out.write("<FORM ACTION=\"");
               out.write(
 
-                        ctxInstance.url("mill.firm.commit_ch_firm")
+                        CtxInstance.url("mill.firm.commit_ch_firm")
 
         );
               out.write("\" METHOD=\"POST\">\r\n");
               out.write("<input type=\"submit\" value=\"");
-              out.write(ctxInstance.getStringManager().getStr("button.change"));
+              out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
               out.write("\">\r\n");
               out.write("<INPUT TYPE=\"hidden\" NAME=\"id_firm\" VALUE=\"");
               out.write(""+ id_firm );
@@ -309,7 +311,7 @@ public class FirmChange extends HttpServlet
               out.write("</td>\r\n");
               out.write("<td align=\"left\">\r\n");
               out.write("<select name=\"is_work\" size=\"1\">\r\n\t\t");
-              out.write(HtmlTools.printYesNo(rs, "is_work", true, ctxInstance.getPortletRequest().getLocale()));
+              out.write(HtmlTools.printYesNo(rs, "is_work", true, renderRequest.getLocale()));
               out.write("\r\n");
               out.write("</select>\r\n");
               out.write("</td>\r\n");
@@ -320,7 +322,7 @@ public class FirmChange extends HttpServlet
               out.write("</td>\r\n");
               out.write("<td align=\"left\">\r\n");
               out.write("<select name=\"is_need_recvizit\" size=\"1\">\r\n\t\t");
-              out.write(HtmlTools.printYesNo(rs, "is_need_recvizit", true, ctxInstance.getPortletRequest().getLocale()));
+              out.write(HtmlTools.printYesNo(rs, "is_need_recvizit", true, renderRequest.getLocale()));
               out.write("\r\n");
               out.write("</select>\r\n");
               out.write("</td>\r\n");
@@ -331,7 +333,7 @@ public class FirmChange extends HttpServlet
               out.write("</td>\r\n");
               out.write("<td align=\"left\">\r\n");
               out.write("<select name=\"is_need_person\" size=\"1\">\r\n\t\t");
-              out.write(HtmlTools.printYesNo(rs, "is_need_person", true, ctxInstance.getPortletRequest().getLocale()));
+              out.write(HtmlTools.printYesNo(rs, "is_need_person", true, renderRequest.getLocale()));
               out.write("\r\n");
               out.write("</select>\r\n");
               out.write("</td>\r\n");
@@ -342,7 +344,7 @@ public class FirmChange extends HttpServlet
               out.write("</td>\r\n");
               out.write("<td align=\"left\">\r\n");
               out.write("<select name=\"is_search\" size=\"1\">\r\n\t\t");
-              out.write(HtmlTools.printYesNo(rs, "is_search", true, ctxInstance.getPortletRequest().getLocale()));
+              out.write(HtmlTools.printYesNo(rs, "is_search", true, renderRequest.getLocale()));
               out.write("\r\n");
               out.write("</select>\r\n");
               out.write("</td>\r\n");
@@ -350,7 +352,7 @@ public class FirmChange extends HttpServlet
               out.write("</TABLE>\r\n");
               out.write("<BR>\r\n");
               out.write("<INPUT TYPE=\"submit\" VALUE=\"");
-              out.write(ctxInstance.getStringManager().getStr("button.change"));
+              out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
               out.write("\">\r\n");
               out.write("</FORM>\r\n");
               out.write("<BR>\r\n");
@@ -371,7 +373,7 @@ public class FirmChange extends HttpServlet
               out.write("<a href=\"");
               out.write( index_page );
               out.write("\">");
-              out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+              out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
               out.write("</a>");
               out.write("</p>\r\n");
 

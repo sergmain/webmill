@@ -40,6 +40,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -51,12 +53,11 @@ import org.riverock.portlet.member.ModuleManager;
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.CtxInstance;
 import org.riverock.webmill.portlet.PortletTools;
 
-public class MemberViewServlet extends HttpServlet
+public final class MemberViewServlet extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(MemberViewServlet.class);
+    private final static Logger log = Logger.getLogger(MemberViewServlet.class);
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException
@@ -74,16 +75,18 @@ public class MemberViewServlet extends HttpServlet
         try
         {
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
+            RenderResponse renderResponse = null;
 
             out = response.getWriter();
 
             ContextNavigator.setContentType(response, "utf-8");
 
-            if (!ctxInstance.getPortletRequest().isUserInRole("webmill.member"))
+            if (!renderRequest.isUserInRole("webmill.member"))
             {
-                out.println("Access denied, you have not right 'webmill.member'");
+                out.println("Access denied, you have not right to execute 'webmill.member' portlet");
                 return;
             }
 
@@ -93,7 +96,7 @@ public class MemberViewServlet extends HttpServlet
                 log.debug("Total of Module - " + ModuleManager.getCountModule());
             }
 
-            MemberProcessing mp = new MemberProcessing(ctxInstance);
+            MemberProcessing mp = new MemberProcessing( renderRequest, renderResponse );
 
             if (log.isDebugEnabled())
             {
@@ -101,18 +104,18 @@ public class MemberViewServlet extends HttpServlet
                 log.debug("Request URL - " + request_.getRequestURL());
                 log.debug("Request getQueryString() - " + request_.getQueryString());
 
-                for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
+                for (Enumeration e = renderRequest.getParameterNames(); e.hasMoreElements();)
                 {
                     String s = (String) e.nextElement();
-                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(ctxInstance.getPortletRequest(), s));
+                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(renderRequest, s));
                 }
             }
 
 ///////////////
 
-            String moduleName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_MODULE_PARAM);
-            String actionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_ACTION_PARAM);
-            String subActionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_SUBACTION_PARAM, "").trim();
+            String moduleName = PortletTools.getString(renderRequest, Constants.MEMBER_MODULE_PARAM);
+            String actionName = PortletTools.getString(renderRequest, Constants.MEMBER_ACTION_PARAM);
+            String subActionName = PortletTools.getString(renderRequest, Constants.MEMBER_SUBACTION_PARAM, "").trim();
 
             if (log.isDebugEnabled())
             {
@@ -135,7 +138,7 @@ public class MemberViewServlet extends HttpServlet
             // Check was module is lookup and can not calling directly from menu.
             if (mp.mod.getType() != null &&
                 mp.mod.getType().getType() == ModuleTypeTypeType.LOOKUP_TYPE &&
-                (mp.fromParam == null || mp.fromParam.length() == 0)
+                (mp.getFromParam() == null || mp.getFromParam().length() == 0)
             )
             {
                 out.println("Point #4.4. Module " + moduleName + " is lookup module<br>");
@@ -174,7 +177,7 @@ public class MemberViewServlet extends HttpServlet
 
             if (!"commit".equalsIgnoreCase(subActionName))
             {
-                out.println("<h4>" + MemberServiceClass.getString(mp.content.getTitle(), mp.getCtxInstance().getPortletRequest().getLocale()) + "</h4>");
+                out.println("<h4>" + MemberServiceClass.getString(mp.content.getTitle(), renderRequest.getLocale()) + "</h4>");
 
                 try
                 {
@@ -187,7 +190,7 @@ public class MemberViewServlet extends HttpServlet
                                 if (recStr == null)
                                 {
 //                                    out.println(
-//                                        MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
+//                                        MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.renderRequest.getLocale())+
 //                                        "<br>"
 //                                    );
                                     sql_ = mp.buildSelectSQL();
@@ -224,7 +227,7 @@ public class MemberViewServlet extends HttpServlet
                             if (mp.isInsertAccess)
                             {
 //                                out.println(
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.renderRequest.getLocale())+
 //                                    "<br>"
 //                                );
                                 out.println(mp.buildAddCommitForm() + "<br>");
@@ -234,7 +237,7 @@ public class MemberViewServlet extends HttpServlet
                                 out.println("<input type=\"submit\" class=\"par\" value=\"" +
                                     MemberServiceClass.getString(
                                         mp.content.getActionButtonName(),
-                                        mp.getCtxInstance().getPortletRequest().getLocale(),
+                                        renderRequest.getLocale(),
                                         "Add"
                                     ) +
                                     "\">\n" +
@@ -250,7 +253,7 @@ public class MemberViewServlet extends HttpServlet
                             if (mp.isChangeAccess)
                             {
 //                                out.println(
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.renderRequest.getLocale())+
 //                                    "<br>"
 //                                );
                                 out.println(mp.buildUpdateCommitForm() + "<br>");
@@ -272,7 +275,7 @@ public class MemberViewServlet extends HttpServlet
                                 out.println("<input type=\"submit\" class=\"par\" value=\"" +
                                     MemberServiceClass.getString(
                                         mp.content.getActionButtonName(),
-                                        mp.getCtxInstance().getPortletRequest().getLocale(),
+                                        renderRequest.getLocale(),
                                         "Change"
                                     ) +
                                     "\">\n" +
@@ -288,7 +291,7 @@ public class MemberViewServlet extends HttpServlet
                             if (mp.isDeleteAccess)
                             {
 //                                out.println(
-//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.ctxInstance.getPortletRequest().getLocale())+
+//                                    MemberServiceClass.getString(mp.content.getTargetAreaName(), mp.renderRequest.getLocale())+
 //                                    "<br>"
 //                                );
                                 out.println(mp.buildDeleteCommitForm() + "<br>");
@@ -303,7 +306,7 @@ public class MemberViewServlet extends HttpServlet
                                 out.println("<input type=\"submit\" class=\"par\" value=\"" +
                                     MemberServiceClass.getString(
                                         mp.content.getActionButtonName(),
-                                        mp.getCtxInstance().getPortletRequest().getLocale(),
+                                        renderRequest.getLocale(),
                                         "Delete"
                                     ) +
                                     "\">\n" +

@@ -40,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -73,15 +74,16 @@ public class FirmAdd extends HttpServlet
         Writer out = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
 
             ContextNavigator.setContentType(response);
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
@@ -96,10 +98,10 @@ public class FirmAdd extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.firm.index";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end where
 
-            String index_page = ctxInstance.url("mill.firm.index");
+            String index_page = CtxInstance.url("mill.firm.index");
 
             if (auth_.isUserInRole("webmill.firm_insert"))
             {
@@ -108,7 +110,7 @@ public class FirmAdd extends HttpServlet
                 out.write("<form method=\"POST\" action=\"");
                 out.write(
 
-                        ctxInstance.url("mill.firm.commit_add_firm")
+                        CtxInstance.url("mill.firm.commit_add_firm")
 
                 );
                 out.write("\">\r\n");
@@ -233,10 +235,10 @@ public class FirmAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_work\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\" selected>");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
@@ -248,10 +250,10 @@ public class FirmAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_need_recvizit\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
@@ -263,10 +265,10 @@ public class FirmAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_need_person\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
@@ -286,10 +288,10 @@ public class FirmAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_search\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
@@ -297,7 +299,7 @@ public class FirmAdd extends HttpServlet
                 out.write("</table>\r\n");
                 out.write("<br>\r\n");
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
-                out.write(ctxInstance.getStringManager().getStr("button.add"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
                 out.write("\">\r\n");
                 out.write("</form>\r\n");
 
@@ -308,7 +310,7 @@ public class FirmAdd extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
 

@@ -42,6 +42,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -60,13 +62,11 @@ import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.CtxInstance;
 import org.riverock.webmill.portlet.PortletTools;
 
-public class MemberCommitServlet extends HttpServlet
-{
+public final class MemberCommitServlet extends HttpServlet {
 
-    private static Logger log = Logger.getLogger("org.riverock.member.servlet.MemberCommitServlet");
+    private final static Logger log = Logger.getLogger(MemberCommitServlet.class);
 
     // sync object for output debug to file
     private static Object syncFile = new Object();
@@ -91,16 +91,19 @@ public class MemberCommitServlet extends HttpServlet
 
             ContextNavigator.setContentType(response, "utf-8");
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
-            MemberProcessing mp = new MemberProcessing( ctxInstance);
+            RenderRequest renderRequest = null;
+            RenderResponse renderResponse = null;
+
+            MemberProcessing mp = new MemberProcessing( renderRequest, renderResponse );
 
 ///////////////
 
-            String moduleName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_MODULE_PARAM);
-            String actionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_ACTION_PARAM);
-            String subActionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_SUBACTION_PARAM).trim();
+            String moduleName = PortletTools.getString(renderRequest, Constants.MEMBER_MODULE_PARAM);
+            String actionName = PortletTools.getString(renderRequest, Constants.MEMBER_ACTION_PARAM);
+            String subActionName = PortletTools.getString(renderRequest, Constants.MEMBER_SUBACTION_PARAM).trim();
 
             if (log.isDebugEnabled())
             {
@@ -108,10 +111,10 @@ public class MemberCommitServlet extends HttpServlet
                 log.debug("Total of Module - " + ModuleManager.getCountModule());
 
                 log.debug("Request URL - " + request_.getRequestURL());
-                for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
+                for (Enumeration e = renderRequest.getParameterNames(); e.hasMoreElements();)
                 {
                     String s = (String) e.nextElement();
-                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(ctxInstance.getPortletRequest(), s));
+                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(renderRequest, s));
                 }
 
                 log.debug("Point #2.1 module '" + moduleName + "'");
@@ -129,7 +132,7 @@ public class MemberCommitServlet extends HttpServlet
 // Check was module is lookup and can not calling directly from menu.
             if (mp.mod.getType() != null &&
                 mp.mod.getType().getType() == ModuleTypeTypeType.LOOKUP_TYPE &&
-                (mp.fromParam == null || mp.fromParam.length() == 0)
+                (mp.getFromParam() == null || mp.getFromParam().length() == 0)
             )
             {
                 out.println("Point #4.4. Module " + moduleName + " is lookup module<br>");
@@ -164,7 +167,7 @@ public class MemberCommitServlet extends HttpServlet
             }
 
 
-            if (!MemberServiceClass.checkRole( ctxInstance.getPortletRequest(), mp.content ) )
+            if (!MemberServiceClass.checkRole( renderRequest, mp.content ) )
             {
                 out.println("Access denied");
                 return;
@@ -234,7 +237,7 @@ public class MemberCommitServlet extends HttpServlet
                             if (log.isDebugEnabled())
                                 log.debug("Start looking for field with type "+FieldsTypeJspTypeType.YES_1_NO_N.toString());
 
-                            if (MemberServiceClass.hasYesNoField(ctxInstance.getPortletRequest(), mp.mod, mp.content))
+                            if (MemberServiceClass.hasYesNoField(renderRequest, mp.mod, mp.content))
                             {
                                 if (log.isDebugEnabled())
                                     log.debug("Found field with type "+FieldsTypeJspTypeType.YES_1_NO_N.toString());
@@ -247,7 +250,7 @@ public class MemberCommitServlet extends HttpServlet
                                     log.debug("Field with type "+FieldsTypeJspTypeType.YES_1_NO_N.toString()+" not found");
                             }
 
-                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.fromParam, mp.mod, dbDyn, ctxInstance.getPortletRequest().getRemoteUser(), ctxInstance.getPortletRequest().getServerName());
+                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.getFromParam(), mp.mod, dbDyn, renderRequest.getRemoteUser(), renderRequest.getServerName());
 
                             if (log.isDebugEnabled())
                             {
@@ -370,7 +373,7 @@ public class MemberCommitServlet extends HttpServlet
 
                                 return;
                             }
-                            if (MemberServiceClass.hasYesNoField(ctxInstance.getPortletRequest(), mp.mod, mp.content))
+                            if (MemberServiceClass.hasYesNoField(renderRequest, mp.mod, mp.content))
                             {
                                 if (log.isDebugEnabled())
                                     log.debug("Found field with type "+FieldsTypeJspTypeType.YES_1_NO_N);
@@ -387,12 +390,12 @@ public class MemberCommitServlet extends HttpServlet
                                 case PrimaryKeyTypeType.NUMBER_TYPE:
                                     log.debug("PrimaryKeyType - 'number'");
 
-                                    idCurrRec = PortletTools.getLong(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idCurrRec = PortletTools.getLong(renderRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                                     break;
                                 case PrimaryKeyTypeType.STRING_TYPE:
                                     log.debug("PrimaryKeyType - 'string'");
 
-                                    idCurrRec = PortletTools.getString(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idCurrRec = PortletTools.getString(renderRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                                     break;
 /*
                         case PrimaryKeyTypeType.DATE_TYPE :
@@ -417,7 +420,7 @@ public class MemberCommitServlet extends HttpServlet
                             {
                                 log.debug("start build SQL");
 
-                                sql_ = MemberServiceClass.buildUpdateSQL(mp.content, mp.fromParam, mp.mod, dbDyn, true, ctxInstance.getPortletRequest());
+                                sql_ = MemberServiceClass.buildUpdateSQL(mp.content, mp.getFromParam(), mp.mod, dbDyn, true, renderRequest);
 
                                 if (log.isDebugEnabled()) log.debug("SQL:"+sql_);
 
@@ -472,11 +475,11 @@ public class MemberCommitServlet extends HttpServlet
 
                             if (mp.content.getQueryArea().getPrimaryKeyType().getType() ==
                                 PrimaryKeyTypeType.NUMBER_TYPE) {
-                                idRec = PortletTools.getLong(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                idRec = PortletTools.getLong(renderRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                             }
                             else if ( mp.content.getQueryArea().getPrimaryKeyType().getType() ==
                                 PrimaryKeyTypeType.STRING_TYPE) {
-                                idRec = PortletTools.getString(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                idRec = PortletTools.getString(renderRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                             }
 /*
 else if ( content.getQueryArea().getPrimaryKeyType().equals("date"))
@@ -499,7 +502,7 @@ content.getQueryArea().primaryKeyMask, "error", Locale.ENGLISH);
                             if (dbDyn.getFamaly()==DatabaseManager.MYSQL_FAMALY)
                                 mp.deleteBigtextData(dbDyn, idRec);
 
-                            sql_ = MemberServiceClass.buildDeleteSQL(mp.content, mp.mod, mp.fromParam, dbDyn, ctxInstance.getPortletRequest());
+                            sql_ = MemberServiceClass.buildDeleteSQL(mp.content, mp.mod, mp.getFromParam(), dbDyn, renderRequest);
 
                             if (log.isDebugEnabled()) log.debug("SQL: "+sql_+"<br>\n");
 

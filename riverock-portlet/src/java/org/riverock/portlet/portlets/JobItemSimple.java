@@ -32,8 +32,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
 
 import org.apache.log4j.Logger;
 
@@ -44,59 +48,50 @@ import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.portlet.Portlet;
 import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletParameter;
+import org.riverock.webmill.portlet.PortletResultContent;
 
-public class JobItemSimple implements Portlet, PortletResultObject, PortletParameterSetter
-{
-    private static Logger log = Logger.getLogger("org.riverock.portlet.portlets.JobItemSimple");
+public final class JobItemSimple implements PortletResultObject, PortletResultContent {
+    private final static Logger log = Logger.getLogger( JobItemSimple.class );
 
-    public PortletParameter param = null;
-//    private JobItemType  item = new JobItemType();
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
+    private ResourceBundle bundle = null;
 
-    protected void finalize() throws Throwable
-    {
-        param = null;
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
+        this.bundle = bundle;
+    }
 
+    protected void finalize() throws Throwable {
         super.finalize();
     }
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
-    }
-
-    public PortletResultObject getInstance(DatabaseAdapter db__) throws PortletException{
+    public PortletResultContent getInstance(DatabaseAdapter db__) throws PortletException {
         return null;
     }
 
-    public boolean isXml()
-    {
+    public boolean isXml() {
         return true;
     }
 
-    public boolean isHtml()
-    {
+    public boolean isHtml() {
         return false;
     }
 
-    public JobItemSimple()
-    {
+    public JobItemSimple() {
     }
 
-    public String getJobDatePost()
-    {
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPortletRequest().getLocale());
+    private String getJobDatePost() throws Exception {
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", renderRequest.getLocale());
     }
 
-    public String getJobDateEnd()
-    {
-        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", param.getPortletRequest().getLocale());
+    public String getJobDateEnd() throws Exception {
+        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", renderRequest.getLocale());
     }
 
-    public String getTextJob()
-    {
+    public String getTextJob() {
         return
                 StringTools.replaceStringArray(
                         textJob,
@@ -241,8 +236,7 @@ public class JobItemSimple implements Portlet, PortletResultObject, PortletParam
 //Проффесиональные навыки:
     public String textJob = "";
 
-
-    public PortletResultObject getInstance(DatabaseAdapter db_, Long id_) throws PortletException{
+    public PortletResultContent getInstance(DatabaseAdapter db_, Long id_) throws PortletException{
         if (log.isDebugEnabled()) log.debug("Create job item");
 
         this.idPosition = id_;
@@ -325,7 +319,7 @@ public class JobItemSimple implements Portlet, PortletResultObject, PortletParam
         }
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_)
+    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_)
         throws PortletException {
         return null;
     }

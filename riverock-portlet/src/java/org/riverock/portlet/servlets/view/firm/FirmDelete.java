@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -83,14 +84,15 @@ public class FirmDelete extends HttpServlet
         PreparedStatement ps = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             ContextNavigator.setContentType(response);
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
@@ -107,14 +109,14 @@ public class FirmDelete extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.firm.index";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end where
 
-            String index_page = ctxInstance.url("mill.firm.index");
+            String index_page = CtxInstance.url("mill.firm.index");
 
 //            if (ServletTools.isNotInit(request, response, "id_firm", index_page))
 //                return;
-            Long id_firm = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_firm");
+            Long id_firm = PortletTools.getLong(renderRequest, "id_firm");
             if (id_firm==null)
                 throw new IllegalArgumentException("id_relate_right not initialized");
 
@@ -129,7 +131,7 @@ public class FirmDelete extends HttpServlet
                 switch (db_.getFamaly())
                 {
                     case DatabaseManager.MYSQL_FAMALY:
-                        String idList = AuthHelper.getGrantedFirmId(db_, ctxInstance.getPortletRequest().getRemoteUser());
+                        String idList = AuthHelper.getGrantedFirmId(db_, renderRequest.getRemoteUser());
 
                         v_str += " ("+idList+") ";
 
@@ -160,15 +162,15 @@ public class FirmDelete extends HttpServlet
               out.write(sCustom.getStr("del_firm.jsp.confirm"));
               out.write("\r\n");
               out.write("<BR>\r\n");
-              out.write("<FORM ACTION=\""+ctxInstance.url("mill.firm.commit_del_firm") );
+              out.write("<FORM ACTION=\""+CtxInstance.url("mill.firm.commit_del_firm") );
               out.write("\" METHOD=\"POST\">\r\n");
               out.write("<INPUT TYPE=\"hidden\" NAME=\"id_firm\" VALUE=\"");
               out.write(""+ RsetTools.getLong(rs, "ID_FIRM"));
               out.write("\">\r\n");
               out.write("<INPUT TYPE=\"submit\" VALUE=\"");
-              out.write(ctxInstance.getStringManager().getStr("button.delete"));
+              out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.delete"));
               out.write("\">\r\n");
-              out.write( ctxInstance.getAsForm() );
+//              out.write( ctxInstance.getAsForm() );
               out.write("\r\n");
               out.write("</FORM>\r\n");
               out.write("<TABLE  border=\"1\" width=\"100%\" class=\"l\">\r\n");
@@ -281,7 +283,7 @@ public class FirmDelete extends HttpServlet
               out.write(sCustom.getStr("del_firm.jsp.is_work"));
               out.write("</td>\r\n");
               out.write("<td align=\"left\">");
-              out.write( HtmlTools.printYesNo(rs, "is_work", false, ctxInstance.getPortletRequest().getLocale() ) );
+              out.write( HtmlTools.printYesNo(rs, "is_work", false, renderRequest.getLocale() ) );
               out.write("</td>\r\n");
               out.write("</tr>\r\n");
               out.write("<tr>\r\n");
@@ -289,7 +291,7 @@ public class FirmDelete extends HttpServlet
               out.write(sCustom.getStr("del_firm.jsp.is_need_recvizit"));
               out.write("</td>\r\n");
               out.write("<td align=\"left\">");
-              out.write( HtmlTools.printYesNo(rs, "is_need_recvizit", false, ctxInstance.getPortletRequest().getLocale() ) );
+              out.write( HtmlTools.printYesNo(rs, "is_need_recvizit", false, renderRequest.getLocale() ) );
               out.write("</td>\r\n");
               out.write("</tr>\r\n");
               out.write("<tr>\r\n");
@@ -297,7 +299,7 @@ public class FirmDelete extends HttpServlet
               out.write(sCustom.getStr("del_firm.jsp.is_need_person"));
               out.write("</td>\r\n");
               out.write("<td align=\"left\">");
-              out.write( HtmlTools.printYesNo(rs, "is_need_person", false, ctxInstance.getPortletRequest().getLocale() ) );
+              out.write( HtmlTools.printYesNo(rs, "is_need_person", false, renderRequest.getLocale() ) );
               out.write("</td>\r\n");
               out.write("</tr>\r\n");
               out.write("<tr>\r\n");
@@ -305,7 +307,7 @@ public class FirmDelete extends HttpServlet
               out.write(sCustom.getStr("del_firm.jsp.is_search"));
               out.write("</td>\r\n");
               out.write("<td align=\"left\">");
-              out.write( HtmlTools.printYesNo(rs, "is_search", false, ctxInstance.getPortletRequest().getLocale() ) );
+              out.write( HtmlTools.printYesNo(rs, "is_search", false, renderRequest.getLocale() ) );
               out.write("</td>\r\n");
               out.write("</tr>\r\n");
               out.write("</TABLE>\r\n");
@@ -318,7 +320,7 @@ public class FirmDelete extends HttpServlet
               out.write("<a href=\"");
               out.write( index_page );
               out.write("\">");
-              out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+              out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
               out.write("</a>");
               out.write("</p>\r\n");
 

@@ -33,8 +33,13 @@
 package org.riverock.portlet.portlets;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
+
 import org.riverock.common.tools.ServletTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -42,79 +47,73 @@ import org.riverock.portlet.main.Constants;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.portlet.CtxInstance;
-
-import org.riverock.webmill.portlet.Portlet;
 import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.PortletParameter;
 import org.riverock.webmill.portlet.PortletResultObject;
 import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.PortletResultContent;
 
-import javax.portlet.PortletException;
+import org.apache.log4j.Logger;
 
-public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
-{
-    private static Logger log = Logger.getLogger(LoginPlain.class);
+public final class LoginPlain implements PortletResultObject, PortletGetList, PortletResultContent {
+    private final static Logger log = Logger.getLogger( LoginPlain.class );
 
     public String out = "";
-    public PortletParameter param = null;
 
-    protected void finalize() throws Throwable
-    {
-        param = null;
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
+    private ResourceBundle bundle = null;
+    private PortletConfig portletConfig = null;
 
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
+        this.portletConfig = portletConfig;
+    }
+
+    protected void finalize() throws Throwable {
         super.finalize();
     }
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
-    }
-
-    public PortletResultObject getInstance(DatabaseAdapter db__) throws PortletException
-    {
-        try
-        {
-
+    public PortletResultContent getInstance(DatabaseAdapter db__) throws PortletException {
+        try {
             if (log.isDebugEnabled())
                 log.debug("Process input auth data");
 
-            AuthSession auth_ = (AuthSession)param.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
-            if (auth_ == null)
-            {
+            if (auth_ == null) {
                 auth_ = new AuthSession(
-                        param.getPortletRequest().getParameter(Constants.NAME_USERNAME_PARAM),
-                        param.getPortletRequest().getParameter(Constants.NAME_PASSWORD_PARAM)
+                    renderRequest.getParameter(Constants.NAME_USERNAME_PARAM),
+                    renderRequest.getParameter(Constants.NAME_PASSWORD_PARAM)
                 );
             }
 
-            CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-            if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
-            {
+//            CtxInstance ctxInstance = (CtxInstance)portletRequest.getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            if ( auth_.checkAccess( renderRequest.getServerName()) ) {
                 if (log.isDebugEnabled())
-                    log.debug("user " + auth_.getUserLogin() + "is  valid for " + ctxInstance.getPortletRequest().getServerName() + " site");
+                    log.debug("user " + auth_.getUserLogin() + "is  valid for " + renderRequest.getServerName() + " site");
 
                 return this;
             }
 
             out += "<form method=\"POST\" action=\"" + CtxInstance.ctx() + "\" >\n";
 
-            out += ctxInstance.getAsForm();
-            out += ServletTools.getHiddenItem(
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM,
-                    param.getNameTemplate()
-            );
+//            out += ctxInstance.getAsForm();
+//            out += ServletTools.getHiddenItem(
+//                    Constants.NAME_TEMPLATE_CONTEXT_PARAM,
+//                    param.getNameTemplate()
+//            );
             out += ServletTools.getHiddenItem(
                     Constants.NAME_TYPE_CONTEXT_PARAM,
                     Constants.CTX_TYPE_LOGIN_CHECK
             );
 
             String srcURL = null;
-            if (param.getPortletRequest().getParameter(Constants.NAME_TOURL_PARAM) != null)
-                srcURL = PortletTools.getString(param.getPortletRequest(), Constants.NAME_TOURL_PARAM);
-            else
-            {
-                srcURL = ctxInstance.url( Constants.CTX_TYPE_LOGIN );
+            if (renderRequest.getParameter(Constants.NAME_TOURL_PARAM) != null) {
+                srcURL = PortletTools.getString(renderRequest, Constants.NAME_TOURL_PARAM);
+            }
+            else {
+                srcURL = CtxInstance.url( Constants.CTX_TYPE_LOGIN );
             }
 
             if (log.isDebugEnabled())
@@ -129,15 +128,14 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
             out += ServletTools.getHiddenItem(Constants.NAME_TOURL_PARAM, srcURL);
 
             if (log.isDebugEnabled())
-                log.debug("Header string - " + param.getSm().getStr("auth.check.header"));
-
+                log.debug("Header string - " + CtxInstance.getStr( renderRequest.getLocale(), "auth.check.header", portletConfig ));
 
             out += ("<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"100%\">\n"+
-                    "<tr><th class=\"formworks\">"+ param.getSm().getStr("auth.check.header") + "</th></tr>\n" +
-                    "<tr><td class=\"formworks\"><input type = \"text\" name = \""+ Constants.NAME_USERNAME_PARAM + "\">&nbsp;"+ param.getSm().getStr("auth.check.login") + "&nbsp;</td></tr>\n"+
-                    "<tr><td class=\"formworks\"><input type = \"password\" name=\""+ Constants.NAME_PASSWORD_PARAM +"\" value = \"\" >&nbsp;"+ param.getSm().getStr("auth.check.password") +"</td></tr>\n"+
+                    "<tr><th class=\"formworks\">"+ CtxInstance.getStr( renderRequest.getLocale(), "auth.check.header", portletConfig ) + "</th></tr>\n" +
+                    "<tr><td class=\"formworks\"><input type = \"text\" name = \""+ Constants.NAME_USERNAME_PARAM + "\">&nbsp;"+ CtxInstance.getStr( renderRequest.getLocale(), "auth.check.login", portletConfig ) + "&nbsp;</td></tr>\n"+
+                    "<tr><td class=\"formworks\"><input type = \"password\" name=\""+ Constants.NAME_PASSWORD_PARAM +"\" value = \"\" >&nbsp;"+ CtxInstance.getStr( renderRequest.getLocale(), "auth.check.password", portletConfig ) +"</td></tr>\n"+
                     "<tr><td class=\"formworks\" align=\"center\"><input type=\"submit\" name=\"button\" value=\""+
-                    param.getSm().getStr("auth.check.register") +"\"></td></tr>\n"+
+                    CtxInstance.getStr( renderRequest.getLocale(), "auth.check.register", portletConfig ) +"\"></td></tr>\n"+
             "</table>\n"+
             "</form>\n");
         }
@@ -174,13 +172,13 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
     public LoginPlain(){}
 
-    public PortletResultObject getInstance(DatabaseAdapter db__, Long id__)
+    public PortletResultContent getInstance(DatabaseAdapter db__, Long id__)
             throws PortletException
     {
         return getInstance(db__);
     }
 
-    public PortletResultObject getInstanceByCode( DatabaseAdapter db__, String portletCode_ ) throws PortletException
+    public PortletResultContent getInstanceByCode( DatabaseAdapter db__, String portletCode_ ) throws PortletException
     {
         return null;
     }

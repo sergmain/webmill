@@ -31,65 +31,62 @@
  * $Id$
  */
 
-package org.riverock.portlet.servlets.view.forum;
+package org.riverock.portlet.forum;
 
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.Portlet;
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.portlet.core.GetMainForumItem;
-import org.riverock.portlet.forum.SimpleForum;
 import org.riverock.portlet.schema.core.MainForumItemType;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.CtxInstance;
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portlet.PortletTools;
+
+import org.apache.log4j.Logger;
 
 
-public class ForumIndex extends HttpServlet
-{
-    private static Logger log = Logger.getLogger("org.riverock.portlet.servlets.view.forum.ForumIndex");
+public class ForumPortlet implements Portlet {
 
-    public ForumIndex()
-    {
+    private static Logger log = Logger.getLogger( ForumPortlet.class );
+
+    public ForumPortlet(){}
+
+    private PortletConfig portletConfig = null;
+    public void init(PortletConfig portletConfig) throws PortletException {
+        this.portletConfig = portletConfig;
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
-    {
-        if (log.isDebugEnabled())
-            log.debug("method is POST");
-
-        doGet(request, response);
+    public void destroy() {
     }
 
-    public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    }
+
+    public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException
     {
         Writer out = null;
         DatabaseAdapter db_ = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            out = renderResponse.getWriter();
 
-            out = response.getWriter();
-
-            ContextNavigator.setContentType(response, "utf-8");
+//            ContextNavigator.setContentType(renderResponse, "utf-8");
 
             db_ = DatabaseAdapter.getInstance( false );
 
-            SimpleForum forum = new SimpleForum( ctxInstance.getPortletRequest(), response );
+            ForumInstance forum = new ForumInstance( renderRequest, renderResponse );
 
             if (forum.id_forum == null)
             {
-                out.write("Forum's ID not defined.");
+                out.write("ForumPortlet's ID not defined.");
                 return;
             }
 
@@ -104,19 +101,19 @@ public class ForumIndex extends HttpServlet
 
             out.write("\n<!-- forum: "+forumType+" -->\n");
 
-//            PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, forumType, out);
-            ServletUtils.include(request_, response, null, forumType, out);
+            PortletTools.include(
+                portletConfig.getPortletContext(),
+                renderRequest, renderResponse, forumType, out
+            );
+//            ServletUtils.include(request_, response, null, forumType, out);
         }
-        catch (Exception e)
-        {
+        catch (Exception e){
             log.error(e);
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
         }
-        finally
-        {
+        finally{
             DatabaseAdapter.close(db_);
             db_ = null;
         }
-
     }
 }

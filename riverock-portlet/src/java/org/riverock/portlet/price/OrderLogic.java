@@ -31,22 +31,17 @@
  * $Id$
  */
 
-package org.riverock.portlet.portlets.model;
+package org.riverock.portlet.price;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.ArrayList;
 
 import javax.portlet.PortletSession;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletException;
 
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
@@ -55,12 +50,6 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.portlet.core.GetPriceListItem;
 import org.riverock.portlet.main.Constants;
-import org.riverock.portlet.price.CurrencyItem;
-import org.riverock.portlet.price.CurrencyManager;
-import org.riverock.portlet.price.CurrencyPrecisionList;
-import org.riverock.portlet.price.CurrencyService;
-import org.riverock.portlet.price.PriceException;
-import org.riverock.portlet.price.Shop;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.OrderItemType;
@@ -69,45 +58,27 @@ import org.riverock.portlet.schema.price.ShopOrderType;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portlet.CtxInstance;
 import org.riverock.webmill.portlet.PortletTools;
 
-public class OrderLogic extends HttpServlet
+import org.apache.log4j.Logger;
+import org.exolab.castor.xml.Marshaller;
+
+public class OrderLogic
 {
     private static Logger log = Logger.getLogger(OrderLogic.class);
 
-    public OrderLogic()
-    {
+    public OrderLogic() {
     }
 
-    protected void finalize() throws Throwable
-    {
-        super.finalize();
-    }
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException
-    {
-        if (log.isDebugEnabled())
-            log.debug("method is POST");
-
-        doGet(request, response);
-    }
-
-    public void doGet(HttpServletRequest request_, HttpServletResponse response_)
-        throws IOException, ServletException
-    {
+    public static void process( RenderRequest renderRequest ) throws PortletException {
         DatabaseAdapter dbDyn = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-
             dbDyn = DatabaseAdapter.getInstance(true);
 
-            PortletSession session = ctxInstance.getPortletRequest().getPortletSession(true);
+            PortletSession session = renderRequest.getPortletSession(true);
 
-            Long idShop = PortletTools.getIdPortlet(Constants.NAME_ID_SHOP_PARAM, ctxInstance.getPortletRequest());
+            Long idShop = PortletTools.getIdPortlet(Constants.NAME_ID_SHOP_PARAM, renderRequest);
 
 
             if (log.isDebugEnabled())
@@ -193,21 +164,21 @@ public class OrderLogic extends HttpServlet
                         log.debug("Create new order");
 
                     order = new OrderType();
-                    order.setServerName(ctxInstance.getPortletRequest().getServerName());
+                    order.setServerName(renderRequest.getServerName());
 
                     ShopOrderType shopOrder = new ShopOrderType();
                     shopOrder.setIdShop(shop.id_shop);
 
                     order.addShopOrdertList(shopOrder);
-                    initAuthSession(dbDyn, order, (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal());
+                    initAuthSession(dbDyn, order, (AuthSession)renderRequest.getUserPrincipal());
                 }
 
                 // если заказ создан ранее и юзер прошел авторизацию,
                 // помещаем авторизационные данные в заказ
                 if ((order != null) && (order.getAuthSession() == null))
                 {
-                    AuthSession authSession = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
-                    if ((authSession != null) && (authSession.checkAccess(ctxInstance.getPortletRequest().getServerName())))
+                    AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
+                    if ((authSession != null) && (authSession.checkAccess(renderRequest.getServerName())))
                     {
                         if (log.isDebugEnabled())
                             log.debug("updateAuthSession");
@@ -216,8 +187,8 @@ public class OrderLogic extends HttpServlet
                     }
                 }
 
-                Long id_item = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ADD_ID_ITEM);
-                int count = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_COUNT_ADD_ITEM_SHOP, new Integer(0)).intValue();
+                Long id_item = PortletTools.getLong(renderRequest, Constants.NAME_ADD_ID_ITEM);
+                int count = PortletTools.getInt(renderRequest, Constants.NAME_COUNT_ADD_ITEM_SHOP, new Integer(0)).intValue();
 
 // если при вызове было указано какое либо количество определенного наименования,
 // то помещаем это наименование в заказ
@@ -252,7 +223,7 @@ public class OrderLogic extends HttpServlet
             }
 
             log.error("Error processing OrderLogic", e);
-            throw new ServletException(e);
+            throw new PortletException(e);
         }
         finally
         {
@@ -987,9 +958,9 @@ public class OrderLogic extends HttpServlet
                 PortalInfo p = PortalInfo.getInstance(db_, serverName);
                 CurrencyItem currencyItem =
                     (CurrencyItem) CurrencyService.getCurrencyItemByCode(
-                        CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList(), item.getCurrency()
+                        CurrencyManager.getInstance(db_, p.getSites().getIdSite()).getCurrencyList(), item.getCurrency()
                     );
-                currencyItem.fillRealCurrencyData(CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList().getStandardCurrencyList());
+                currencyItem.fillRealCurrencyData(CurrencyManager.getInstance(db_, p.getSites().getIdSite()).getCurrencyList().getStandardCurrencyList());
 
                 item.setCurrencyItem(currencyItem);
 
@@ -1050,7 +1021,7 @@ public class OrderLogic extends HttpServlet
                             precisionValue = precision.getPrecision().intValue();
 
                         CustomCurrencyItemType defaultCurrency =
-                            CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList(), shop.idOrderCurrency);
+                            CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, p.getSites().getIdSite()).getCurrencyList(), shop.idOrderCurrency);
 
                         item.setResultCurrency(defaultCurrency);
 

@@ -41,6 +41,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -77,8 +78,9 @@ public class FirmAddCommit extends HttpServlet
     {
         Writer out = null;
 
-        CtxInstance ctxInstance =
-            (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//        CtxInstance ctxInstance =
+//            (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+        RenderRequest renderRequest = null;
 
         try
         {
@@ -86,7 +88,7 @@ public class FirmAddCommit extends HttpServlet
             ContextNavigator.setContentType(response, "utf-8");
 
             out = response.getWriter();
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( "webmill.firm_insert" ) )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right", "/", "continue");
@@ -103,7 +105,7 @@ public class FirmAddCommit extends HttpServlet
                 {
                     dbDyn = DatabaseAdapter.getInstance(true);
 
-                    index_page = ctxInstance.url("mill.firm.index");
+                    index_page = CtxInstance.url("mill.firm.index");
 
                     CustomSequenceType seq = new CustomSequenceType();
                     seq.setSequenceName("seq_MAIN_LIST_FIRM");
@@ -163,23 +165,23 @@ public class FirmAddCommit extends HttpServlet
 
                     int num=1;
                     RsetTools.setLong(ps, num++, sequenceValue);
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "full_name"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_name"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "address"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "telefon_buh"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "telefon_chief"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "chief"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "buh"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "fax"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "email"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "icq"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_client_info"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "url"));
-                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_info"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_work"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_need_recvizit"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_need_person"));
-                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_search"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "full_name"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "short_name"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "address"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "telefon_buh"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "telefon_chief"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "chief"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "buh"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "fax"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "email"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "icq"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "short_client_info"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "url"));
+                    ps.setString(num++, PortletTools.getString(renderRequest, "short_info"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_work"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_need_recvizit"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_need_person"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(renderRequest, "is_search"));
                     ps.setString(num++, auth_.getUserLogin());
 
                     int i1 = ps.executeUpdate();

@@ -23,9 +23,11 @@
  *
  */
 
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.price;
 
-import org.riverock.generic.tools.StringManager;
+import java.util.Map;
+import java.util.HashMap;
+
 import org.riverock.generic.site.SiteListSite;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
@@ -37,18 +39,15 @@ import org.riverock.portlet.schema.price.CurrencyPrecisionType;
  * $Id$
  *
  */
-public class ShopPageParam
-{
-//    private static Logger cat = Logger.getLogger("org.riverock.portlet.ShopPageParam" );
-
+public class ShopPageParam {
     public Long id_shop = null;
     public Long id_group = null;
-    public String nameTemplate = null;
+//    public String nameTemplate = null;
     private String serverName = null;
     public Long idSite = null;
     public Long id_currency;
-    public String currencyURL = null;
-    public StringManager sm = null;
+    public Map currencyURL = new HashMap();
+//    public StringManager sm = null;
     public boolean  isProcessInvoice =  false;
 
     public CurrencyPrecisionType precision = null;
@@ -56,19 +55,22 @@ public class ShopPageParam
     public String sortBy = null;
     public int sortDirect = 0;
 
-    protected void finalize() throws Throwable
-    {
-        nameTemplate = null;
-        setServerName(null);
+    protected void finalize() throws Throwable {
+        id_shop = null;
+        id_group = null;
+//        nameTemplate = null;
+        serverName = null;
+        if (currencyURL!=null){
+            currencyURL.clear();
+        }
         currencyURL = null;
         precision = null;
-        sm  = null;
+//        sm  = null;
 
         super.finalize();
     }
 
-    public ShopPageParam()
-    {
+    public ShopPageParam() {
     }
 
     public void setServerName( String serverName_ )
@@ -78,8 +80,7 @@ public class ShopPageParam
         this.idSite = SiteListSite.getIdSite( this.serverName );
     }
 
-    public String getServerName()
-    {
+    public String getServerName() {
         return serverName;
     }
 }

@@ -47,18 +47,17 @@ import javax.portlet.PortletException;
  * $Id$
  */
 public class MenuMemberApplication
-//    implements PortletGetList
 {
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.MenuMemberApplication" );
+    private static Logger cat = Logger.getLogger( MenuMemberApplication.class );
 
     /**
-     название приложения
+     * название приложения
      */
     public String applicationName = "";
 
     public String applicationCode = null;
     /**
-     url доступа к приложениям
+     * url доступа к приложениям
      */
 //    public String url = "";
     /**
@@ -71,42 +70,19 @@ public class MenuMemberApplication
     public Vector subMenu = new Vector(0);
     public Long applicationID;
 
-//    public PortletParameter param = null;
-
     protected void finalize() throws Throwable
     {
         applicationName = null;
         applicationCode = null;
-//        url = null;
 
-        if (subMenu != null)
-        {
+        if (subMenu != null) {
             subMenu.clear();
             subMenu = null;
         }
 
-//        param = null;
-
         super.finalize();
     }
 
-/*
-    public void setParameter(PortletParameter param_)
-    {
-        if(cat.isDebugEnabled())
-            cat.debug("Portlet parametr is "+param_);
-
-        this.param = param_;
-        if (subMenu != null)
-        {
-            for (int i = 0; i < subMenu.size(); i++)
-            {
-                Portlet obj = (Portlet) subMenu.elementAt(i);
-                obj.setParameter(param_);
-            }
-        }
-    }
-*/
     public boolean isXml(){ return false; }
     public boolean isHtml(){ return false; }
 

@@ -30,42 +30,46 @@
  * $Id$
  *
  */
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.news;
 
 import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
 import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.portlet.Portlet;
 import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.PortletParameter;
 import org.riverock.webmill.portlet.PortletResultObject;
 import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.PortletResultContent;
 
 import org.apache.log4j.Logger;
 
-import javax.portlet.PortletException;
-
-public class NewsItemSimple implements Portlet, PortletResultObject, PortletGetList
-{
-    private static Logger log = Logger.getLogger( NewsItemSimple.class );
+public final class NewsItemSimple implements PortletResultObject, PortletGetList, PortletResultContent {
+    private final static Logger log = Logger.getLogger( NewsItemSimple.class );
 
     private NewsItemSimpleType newsItem = new NewsItemSimpleType();
     private NewsItem item = null;
-    private PortletParameter param = null;
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
+    private ResourceBundle bundle = null;
+
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
+        this.bundle = bundle;
     }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         item = null;
-//        newsItem = null;
-
+        newsItem = null;
         super.finalize();
     }
 
@@ -73,12 +77,12 @@ public class NewsItemSimple implements Portlet, PortletResultObject, PortletGetL
     {
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db_)
+    public PortletResultContent getInstance(DatabaseAdapter db_)
 //        , HttpServletRequest request, HttpServletResponse response,
 //                     InitPage ctxInstance.page, String localePackage)
             throws PortletException
     {
-        Long id__ = PortletTools.getLong( param.getPortletRequest(), Constants.NAME_ID_NEWS_PARAM);
+        Long id__ = PortletTools.getLong( renderRequest, Constants.NAME_ID_NEWS_PARAM);
         try
         {
             item = NewsItem.getInstance(db_, id__);
@@ -97,13 +101,11 @@ public class NewsItemSimple implements Portlet, PortletResultObject, PortletGetL
         return this;
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db__, Long id) throws PortletException
-    {
+    public PortletResultContent getInstance( DatabaseAdapter db__, Long id ) throws PortletException {
         return getInstance( db__ );
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException
-    {
+    public PortletResultContent getInstanceByCode( DatabaseAdapter db__, String portletCode_ ) throws PortletException {
         return getInstance( db__ );
     }
 

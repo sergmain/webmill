@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -50,7 +51,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.sso.a3.AuthTools;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.a3.InternalAuthProviderTools;
 import org.riverock.webmill.portlet.ContextNavigator;
@@ -88,14 +88,15 @@ public class BindAddCommit extends HttpServlet
         try
         {
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             ContextNavigator.setContentType(response, "utf-8");
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) )
             {
                 WebmillErrorPage.process(out, null, "You have not right to bind right", "/"+CtxInstance.ctx(), "continue");
@@ -108,9 +109,9 @@ public class BindAddCommit extends HttpServlet
                 PreparedStatement ps = null;
                 try{
                     dbDyn = DatabaseAdapter.getInstance( true );
-                    index_page = ctxInstance.url("mill.auth.bind");
+                    index_page = CtxInstance.url("mill.auth.bind");
 
-                    Long id_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_user");
+                    Long id_user = PortletTools.getLong(renderRequest, "id_user");
                     if (id_user==null)
                         throw new IllegalArgumentException("id_user not initialized");
 
@@ -148,15 +149,15 @@ public class BindAddCommit extends HttpServlet
 
                     idFirm = InternalAuthProviderTools.initIdFirm(
                         dbDyn,
-                        PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.firmIdParam),
+                        PortletTools.getLong(renderRequest, InternalAuthProviderTools.firmIdParam),
                         authInfo.userLogin);
                     idService = InternalAuthProviderTools.initIdService(
                         dbDyn,
-                        PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.serviceIdParam),
+                        PortletTools.getLong(renderRequest, InternalAuthProviderTools.serviceIdParam),
                         authInfo.userLogin);
                     idRoad = InternalAuthProviderTools.initIdRoad(
                         dbDyn,
-                        PortletTools.getLong(ctxInstance.getPortletRequest(), InternalAuthProviderTools.roadIdParam),
+                        PortletTools.getLong(renderRequest, InternalAuthProviderTools.roadIdParam),
                         authInfo.userLogin);
 
                     if (cat.isDebugEnabled())
@@ -184,21 +185,21 @@ public class BindAddCommit extends HttpServlet
 
 
                     RsetTools.setLong(ps, 5, id_user );
-                    ps.setString(6, PortletTools.getString(ctxInstance.getPortletRequest(), "user_login"));
-                    ps.setString(7, PortletTools.getString(ctxInstance.getPortletRequest(), "user_password"));
+                    ps.setString(6, PortletTools.getString(renderRequest, "user_login"));
+                    ps.setString(7, PortletTools.getString(renderRequest, "user_password"));
 
                     RsetTools.setInt(ps, 8, (authInfo.isUseCurrentFirm==1?
-                            PortletTools.getInt(ctxInstance.getPortletRequest(), "is_use_current_firm"):
+                            PortletTools.getInt(renderRequest, "is_use_current_firm"):
                             null
                             )
                     );
                     RsetTools.setInt(ps, 9, (authInfo.isService==1?
-                            PortletTools.getInt(ctxInstance.getPortletRequest(), "is_service"):
+                            PortletTools.getInt(renderRequest, "is_service"):
                             null
                             )
                     );
                     RsetTools.setInt(ps, 10, (authInfo.isRoad==1?
-                            PortletTools.getInt(ctxInstance.getPortletRequest(), "is_road"):
+                            PortletTools.getInt(renderRequest, "is_road"):
                             null
                             )
                     );

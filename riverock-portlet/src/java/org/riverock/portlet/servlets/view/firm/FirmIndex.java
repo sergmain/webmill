@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -56,9 +57,9 @@ import org.riverock.sso.utils.AuthHelper;
 import org.riverock.webmill.portlet.ContextNavigator;
 import org.riverock.webmill.portlet.CtxInstance;
 
-public class FirmIndex extends HttpServlet
+public final class FirmIndex extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(FirmIndex.class);
+    private final static Logger log = Logger.getLogger(FirmIndex.class);
 
     public FirmIndex()
     {
@@ -83,14 +84,15 @@ public class FirmIndex extends HttpServlet
         try
         {
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             ContextNavigator.setContentType(response);
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
@@ -105,12 +107,12 @@ public class FirmIndex extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.firm.index";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end where
 
             db_ = DatabaseAdapter.getInstance( false );
 
-            String index_page = ctxInstance.url("mill.firm.index");
+            String index_page = CtxInstance.url("mill.firm.index");
 
             String v_str =
                 "select ID_FIRM, full_name, short_name,\n"+
@@ -122,7 +124,7 @@ public class FirmIndex extends HttpServlet
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(db_, ctxInstance.getPortletRequest().getRemoteUser());
+                    String idList = AuthHelper.getGrantedFirmId(db_, renderRequest.getRemoteUser());
 
                     v_str += " ("+idList+") ";
 
@@ -137,17 +139,7 @@ public class FirmIndex extends HttpServlet
             if (log.isDebugEnabled())
                 log.debug(v_str);
 
-            if( auth_.isUserInRole("webmill.firm_select") )
-            {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("ctxInstance: "+ ctxInstance);
-                    if (ctxInstance!=null)
-                    {
-                        log.debug("ctxInstance.getStringManager: "+ ctxInstance.getStringManager());
-                        log.debug("ctxInstance.nameLocaleBunble: "+ ctxInstance.getNameLocaleBundle());
-                    }
-                }
+            if ( auth_.isUserInRole("webmill.firm_select") ) {
 
                  out.write(
                          "<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"770\">"+
@@ -155,8 +147,8 @@ public class FirmIndex extends HttpServlet
                          "<td>"+
                          "<b>" + sCustom.getStr("index.jsp.title")+ "</b><br>"+
                          "<p><a href=\""+
-                         ctxInstance.url("mill.firm.add_firm")+
-                         "\">"+ctxInstance.getStringManager().getStr("button.add")+"</a></p>"+
+                         CtxInstance.url("mill.firm.add_firm")+
+                         "\">"+CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.add")+"</a></p>"+
                          "<table width=\"100%\" border=\"1\" class=\"l\">"+
                          "<tr>"+
                          "<th class=\"memberArea\" width=\"4%\">"+sCustom.getStr("index.jsp.full_name")+"</td>"+
@@ -192,20 +184,20 @@ public class FirmIndex extends HttpServlet
                                 "<td class=\"memberArea\">"+ RsetTools.getString(rs, "address", "&nbsp;") +"</td>"+
                                 "<td class=\"memberArea\">"+ RsetTools.getString(rs, "chief", "&nbsp;") +"</td>"+
                                 "<td class=\"memberArea\">"+ RsetTools.getString(rs, "short_info", "&nbsp;") +"</td>"+
-                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_work", false, ctxInstance.getPortletRequest().getLocale() ) +"</td>"+
-                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_search", false, ctxInstance.getPortletRequest().getLocale() ) +"</td>"+
+                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_work", false, renderRequest.getLocale() ) +"</td>"+
+                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_search", false, renderRequest.getLocale() ) +"</td>"+
                                 "<td class=\"memberAreaAction\">"
                         );
 
                         Long id_firm = RsetTools.getLong(rs, "ID_FIRM");
 
                         out.write(
-                                "<input type=\"button\" value=\""+ctxInstance.getStringManager().getStr("button.change")+"\" onclick=\"location.href='"+
-                                ctxInstance.url("mill.firm.ch_firm") + '&'+
+                                "<input type=\"button\" value=\""+CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.change")+"\" onclick=\"location.href='"+
+                                CtxInstance.url("mill.firm.ch_firm") + '&'+
                                 "id_firm="+id_firm +
                                 "';\">"+
-                                "<input type=\"button\" value=\""+ctxInstance.getStringManager().getStr("button.delete")+"\" onclick=\"location.href='"+
-                                ctxInstance.url("mill.firm.del_firm") + '&'+
+                                "<input type=\"button\" value=\""+CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.delete")+"\" onclick=\"location.href='"+
+                                CtxInstance.url("mill.firm.del_firm") + '&'+
                                 "id_firm="+id_firm+
                                 "';\">"+
                                 "</td>"+
@@ -217,13 +209,13 @@ public class FirmIndex extends HttpServlet
                             "</table>"+
                             "<p><a href=\""+
 
-                            ctxInstance.url("mill.firm.add_firm")+
+                            CtxInstance.url("mill.firm.add_firm")+
 
-                            "\">"+ctxInstance.getStringManager().getStr("button.add")+"</a></p>"
+                            "\">"+CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.add")+"</a></p>"
                     );
 
                 out.write(
-                        "<p><a href=\""+ index_page +"\">"+ctxInstance.getStringManager().getStr("page.main.3")+"</a></p>"+
+                        "<p><a href=\""+ index_page +"\">"+CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3")+"</a></p>"+
                         "</td>"+
                         "</tr>"+
                         "</table>"

@@ -31,13 +31,15 @@
  * $Id$
  */
 
-package org.riverock.portlet.servlets.view.forum;
+package org.riverock.portlet.forum;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Calendar;
 
 import javax.portlet.PortletSession;
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,17 +49,15 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.portlet.forum.ForumMessage;
-import org.riverock.portlet.forum.SimpleForum;
 import org.riverock.portlet.main.Constants;
 import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.CtxInstance;
 import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.CtxInstance;
 import org.riverock.webmill.utils.ServletUtils;
 
-public class ForumStandard extends HttpServlet
+public final class ForumStandard extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(ForumStandard.class);
+    private final static Logger log = Logger.getLogger(ForumStandard.class);
 
     public ForumStandard()
     {
@@ -78,8 +78,10 @@ public class ForumStandard extends HttpServlet
         Writer out = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
+            PortletConfig portletConfig = null;
 
             out = response.getWriter();
 
@@ -87,15 +89,19 @@ public class ForumStandard extends HttpServlet
 
             out.write("<!-- begin standart forum -->\n");
 
-            Integer year = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
-            Integer month = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
+            Integer year = PortletTools.getInt(renderRequest, Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
+            Integer month = PortletTools.getInt(renderRequest, Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
 
-            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response );
+            ForumInstance forum = null;
 
-            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
+            if (true) throw new Exception("not imnplemented");
+            // TODO uncomment and fix
+//            forum = new ForumInstance(renderRequest, response);
+
+            PortletSession session = renderRequest.getPortletSession();
 
 //            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
-            String nameTemplate = ctxInstance.getNameTemplate();
+//            String nameTemplate = ctxInstance.getNameTemplate();
 
             if (log.isDebugEnabled())
             {
@@ -150,13 +156,13 @@ public class ForumStandard extends HttpServlet
                     out.write("<tr>");
                     out.write("<td>\r\n");
                     out.write("<b>");
-                    out.write(ctxInstance.sCustom.getStr("str.date"));
+                    out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.date", portletConfig ));
                     out.write(":");
                     out.write("</b>&nbsp;");
-                    out.write(DateTools.getStringDate(message.getDatePost(), "dd-MMMM-yyyy HH:mm:ss", ctxInstance.getPortletRequest().getLocale()));
+                    out.write(DateTools.getStringDate(message.getDatePost(), "dd-MMMM-yyyy HH:mm:ss", renderRequest.getLocale()));
                     out.write("<BR>\r\n");
                     out.write("<b>");
-                    out.write(ctxInstance.sCustom.getStr("str.from_who"));
+                    out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.from_who", portletConfig ));
                     out.write(":");
                     out.write("</b>&nbsp;");
                     out.write("<a href=\"mailto:");
@@ -168,7 +174,7 @@ public class ForumStandard extends HttpServlet
                     out.write("</a>");
                     out.write("<BR>\r\n");
                     out.write("<b>");
-                    out.write(ctxInstance.sCustom.getStr("str.header"));
+                    out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.header", portletConfig ));
                     out.write(":");
                     out.write("</b>&nbsp;");
                     out.write(StringTools.toPlainHTML(message.getHeader()));
@@ -190,7 +196,7 @@ public class ForumStandard extends HttpServlet
             out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"12\" width=\"100%\">");
             out.write("<tr>");
             out.write("<td>\r\n");
-            out.write(forum.getThreads(nameTemplate));
+            out.write(forum.getThreads());
             out.write("\r\n");
             out.write("</td>");
             out.write("</tr>");
@@ -199,11 +205,12 @@ public class ForumStandard extends HttpServlet
 
 
             String url = ("<a href=\"" +
-                    ctxInstance.url(Constants.CTX_TYPE_FORUM) + '&' +
-                    Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
-                    "\">");
+                CtxInstance.url(
+                    Constants.CTX_TYPE_FORUM) + '&' +
+                Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
+                "\">");
 
-            out.write(url + ctxInstance.sCustom.getStr("str.top_forum") + "</a>");
+            out.write(url + CtxInstance.getStr( renderRequest.getLocale(), "str.top_forum", portletConfig ) + "</a>");
 
             out.write("\r\n");
             out.write("</td>");

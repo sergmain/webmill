@@ -35,13 +35,18 @@ package org.riverock.portlet.member;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
-import javax.portlet.PortletSession;
 import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
 
-import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -52,56 +57,70 @@ import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthTools;
-
-import org.riverock.webmill.portlet.Portlet;
-import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.PortletParameter;
-import org.riverock.webmill.portlet.PortletResultObject;
+import org.riverock.webmill.port.PortalInfo;
+import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portlet.CtxInstance;
+import org.riverock.webmill.portlet.PortletGetList;
+import org.riverock.webmill.portlet.PortletResultObject;
+import org.riverock.webmill.portlet.PortletResultContent;
 import org.riverock.webmill.schema.site.SiteTemplate;
 
-public class MenuMember implements Portlet, PortletResultObject, PortletGetList
+import org.apache.log4j.Logger;
+
+public final class MenuMember implements PortletResultObject, PortletGetList, PortletResultContent
 {
-    private static Logger log = Logger.getLogger(MenuMember.class );
+    private final static Logger log = Logger.getLogger( MenuMember.class );
 
     private MenuMemberType menu = new MenuMemberType();
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
+    private ResourceBundle bundle = null;
 
-    private PortletParameter param = null;
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
+        this.bundle = bundle;
+    }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
+        menu = null;
+//        param = null;
+        renderRequest = null;
         super.finalize();
     }
 
     public MenuMember(){}
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
-    }
-
     public boolean isXml(){ return true; }
     public boolean isHtml(){ return false; }
 
     SiteTemplateMember memberTemplates = null;
-    CtxInstance ctxInstance = null;
+//    CtxInstance ctxInstance = null;
 
-    public PortletResultObject getInstance(DatabaseAdapter db_)
+    public PortletResultContent getInstance(DatabaseAdapter db_)
         throws PortletException
     {
         PreparedStatement ps = null;
         ResultSet rset = null;
 
+        log.debug("Start getInstance()");
+
         try
         {
-            AuthInfo authInfo = AuthTools.getAuthInfo( param.getPortletRequest() );
+            AuthInfo authInfo = AuthTools.getAuthInfo( renderRequest );
+
+            if (log.isDebugEnabled())
+                log.debug("authInfo: "+authInfo);
 
             if (authInfo == null)
                 return this;
 
-            PortletSession session = param.getPortletRequest().getPortletSession();
-            ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-            memberTemplates = SiteTemplateMember.getInstance(db_, ctxInstance.getPortalInfo().getSiteId());
+//            PortletSession session = param.getPortletRequest().getPortletSession();
+//            ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+            RenderRequest renderRequest = null;
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            memberTemplates = SiteTemplateMember.getInstance(db_, portalInfo.getSiteId());
 
 
             String sql_ =
@@ -121,15 +140,17 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
             rset = ps.executeQuery();
             int recordNumber = 0;
-            while (rset.next())
-            {
-                MenuMemberApplicationType appl =
-                    getApplication(authInfo, rset, recordNumber++, db_);
+            ArrayList list = new ArrayList();
+            while (rset.next()){
+                MenuMemberApplicationType appl = getApplication(authInfo, rset, recordNumber++, db_);
                 if (appl != null)
-                {
-                    menu.addMenuMemberApplication( appl );
-                }
+                    list.add(appl);
             }
+            Collections.sort(list, new MenuMemberApplicationComparator());
+            menu.setMenuMemberApplicationAsReference(list);
+
+            if (log.isDebugEnabled())
+                log.debug("recordNumber: "+recordNumber);
         }
         catch (Throwable e)
         {
@@ -146,12 +167,12 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
         return this;
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db__, Long id) throws PortletException
+    public PortletResultContent getInstance(DatabaseAdapter db__, Long id) throws PortletException
     {
         return getInstance( db__ );
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException
+    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException
     {
         return getInstance( db__ );
     }
@@ -235,8 +256,8 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
         ") z " +
         "where  z.user_login=? and " +
         "       a.id_object_arm = z.id_object_arm and " +
-        "       z.id_arm=? and a.url is not null " +
-        "order by ORDER_FIELD ASC";
+        "       z.id_arm=? and a.url is not null ";
+//        "order by ORDER_FIELD ASC";
 
     String sql_mysql =
         "select distinct f.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.url, a1.order_field, a1.is_new "+
@@ -247,15 +268,9 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
         "select distinct f01.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.url, a1.order_field, a1.is_new "+
         "from    AUTH_OBJECT_ARM a1, auth_user a01, auth_object_arm d01,  auth_arm f01 "+
         "where   a01.is_root=1 and d01.id_arm = f01.id_arm and a01.user_login=? and a1.id_object_arm = d01.id_object_arm and "+
-        "       f01.id_arm=? and a1.url is not null "+
-        "order by ORDER_FIELD ASC ";
+        "       f01.id_arm=? and a1.url is not null ";
+//        "order by ORDER_FIELD ASC ";
 
-
-//    private MenuMemberApplicationType getApplication(AuthInfo authInfo, ResultSet rs, DatabaseAdapter db_)
-//        throws PortletException
-//    {
-//        return getApplication(authInfo, rs, 0, db_);
-//    }
 
     private MenuMemberApplicationType getApplication(AuthInfo authInfo, ResultSet rs, int recordNumber_, DatabaseAdapter db_)
             throws PortletException
@@ -281,6 +296,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
             rset = ps.executeQuery();
             int moduleRecordNumber = 0;
+            ArrayList list = new ArrayList();
             while (rset.next())
             {
                 MenuMemberModuleType mod = getModule(rset, appl.getApplicationCode() );
@@ -288,9 +304,11 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
                 {
                     mod.setModuleRecordNumber( new Integer(moduleRecordNumber++) );
                     mod.setApplRecordNumber( appl.getApplicationRecordNumber() );
-                    appl.addMenuMemberModule( mod );
+                    list.add(mod);
                 }
             }
+            Collections.sort(list, new MenuMemberModuleComparator());
+            appl.setMenuMemberModuleAsReference(list);
             return appl;
         }
         catch (Exception e1)
@@ -351,26 +369,19 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
             try
             {
 
-                if (log.isDebugEnabled())
-                {
-                    log.debug("PortletParam - " + param);
-                    if (param != null)
-                    {
-                        log.debug("PortletParam  response - " + param.getResponse());
-                        log.debug("PortletParam  param.response.encodeURL( ctxInstance.ctx()  ) -  " + param.getResponse().encodeURL( CtxInstance.ctx()  ));
-                        log.debug("PortletParam  getMemberTemplate - " + getMemberTemplate() );
-                        log.debug("PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
+                if (log.isDebugEnabled()) {
+                    log.debug("PortletParam  getMemberTemplate - " + getMemberTemplate() );
+                    log.debug("PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
 
-                        log.debug(
-                            "Module url - "+ ctxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate() ) + '&' +
-                            Constants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
-                            Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
-                        );
-                    }
+                    log.debug(
+                        "Module url - "+ CtxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate(), renderResponse ) + '&' +
+                        Constants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
+                        Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
+                    );
                 }
 
                 mod.setModuleUrl(
-                    ctxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate() ) + '&' +
+                    CtxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate(), renderResponse ) + '&' +
                     Constants.MEMBER_NAME_APPL_PARAM  + '=' + applicationCode_ + '&' +
                     Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
                 );
@@ -396,14 +407,14 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
         SiteTemplate st = null;
 
         if (log.isDebugEnabled())
-            log.debug("Looking template for locale " + ctxInstance.getPortletRequest().getLocale().toString());
+            log.debug("Looking template for locale " + renderRequest.getLocale().toString());
 
-        st = getMemberTemplate(ctxInstance.getPortletRequest().getLocale());
+        st = getMemberTemplate(renderRequest.getLocale());
         if (st != null)
             return st;
 
         if (log.isInfoEnabled())
-            log.info("memberTemplate for Locale " + ctxInstance.getPortletRequest().getLocale().toString() + " not initialized");
+            log.info("memberTemplate for Locale " + renderRequest.getLocale().toString() + " not initialized");
 
         return new SiteTemplate();
     }
@@ -414,5 +425,58 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
             return null;
 
         return (SiteTemplate) memberTemplates.memberTemplate.get(locale.toString());
+    }
+
+    private class MenuMemberApplicationComparator implements Comparator {
+        public int compare(Object o1, Object o2) {
+
+            if (o1==null && o2==null)
+                return 0;
+            if (o1==null)
+                return 1;
+            if (o2==null)
+                return -1;
+
+            if (((MenuMemberApplicationType)o1).getOrderField()==null &&
+                    ((MenuMemberApplicationType)o2).getOrderField()==null)
+                return 0;
+
+            if (((MenuMemberApplicationType)o1).getOrderField()!=null &&
+                    ((MenuMemberApplicationType)o2).getOrderField()==null)
+                return -1;
+
+            if (((MenuMemberApplicationType)o1).getOrderField()==null &&
+                    ((MenuMemberApplicationType)o2).getOrderField()!=null)
+                return 1;
+
+            if (((MenuMemberApplicationType)o1).getOrderField().equals(((MenuMemberApplicationType)o2).getOrderField()))
+                return ((MenuMemberApplicationType)o1).getApplicationName().compareTo(((MenuMemberApplicationType)o2).getApplicationName());
+            else
+                return ((MenuMemberApplicationType)o1).getOrderField().compareTo(((MenuMemberApplicationType)o2).getOrderField());
+        }
+    }
+
+    private class MenuMemberModuleComparator implements Comparator {
+        public int compare(Object o1, Object o2) {
+
+            if (o1==null && o2==null)
+                return 0;
+            if (o1==null)
+                return 1;
+            if (o2==null)
+                return -1;
+
+            if (((MenuMemberModuleType)o1).getOrderField()==null &&
+                    ((MenuMemberModuleType)o2).getOrderField()==null)
+                return 0;
+
+            if (((MenuMemberModuleType)o1).getOrderField()==null)
+                return 1;
+
+            if (((MenuMemberModuleType)o2).getOrderField()==null)
+                return -1;
+
+            return ((MenuMemberModuleType)o1).getOrderField().compareTo(((MenuMemberModuleType)o2).getOrderField());
+        }
     }
 }

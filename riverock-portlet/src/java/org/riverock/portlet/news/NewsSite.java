@@ -28,65 +28,70 @@
  * $Id$
  *
  */
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.news;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-import org.apache.log4j.Logger;
+import javax.portlet.PortletException;
+import javax.portlet.PortletRequest;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.generic.exception.GenericException;
+import org.riverock.generic.site.SiteListSite;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.portlet.schema.portlet.news_block.NewsSiteType;
 import org.riverock.webmill.portlet.CtxInstance;
-import org.riverock.webmill.portlet.Portlet;
 import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.PortletParameter;
 import org.riverock.webmill.portlet.PortletResultObject;
+import org.riverock.webmill.portlet.PortletResultContent;
 
-import javax.portlet.PortletException;
+import org.apache.log4j.Logger;
 
-public class NewsSite implements Portlet, PortletGetList
+public final class NewsSite implements PortletGetList, PortletResultObject
 {
-    private static Logger log = Logger.getLogger( NewsSite.class );
+    private final static Logger log = Logger.getLogger( NewsSite.class );
 
     private static Map newsMap = new HashMap();
 
     private Long siteId=null;
-    private PortletParameter param = null;
 
-    protected void finalize() throws Throwable
-    {
-        param = null;
-        super.finalize();
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
+    private PortletConfig portletConfig = null;
+
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
+        this.portletConfig = portletConfig;
     }
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
+    protected void finalize() throws Throwable {
+        siteId = null;
+        super.finalize();
     }
 
     public NewsSite(){}
 
-    public void reinit()
-    {
+    public void reinit() {
         synchronized(syncObject){
             newsMap.clear();
         }
         lastReadData = 0;
     }
 
-    public void terminate(java.lang.Long id_)
-    {
+    public void terminate( Long id_ ) {
         synchronized(syncObject){
             newsMap.clear();
         }
@@ -97,14 +102,14 @@ public class NewsSite implements Portlet, PortletGetList
     private final static long LENGTH_TIME_PERIOD = 10000;
     private static Object syncObject = new Object();
 
-    private NewsSiteType checkInit(DatabaseAdapter db_, CtxInstance ctxInstance) throws PortletException{
+    private NewsSiteType checkInit(DatabaseAdapter db_, PortletRequest portletRequest) throws PortletException{
 
         try {
-            siteId = SiteListSite.getIdSite( ctxInstance.getPortletRequest().getServerName() );
+            siteId = SiteListSite.getIdSite( portletRequest.getServerName() );
         } catch (GenericException e) {
-            throw new PortletException("Error get siteId for serverName '"+ctxInstance.getPortletRequest().getServerName()+"'", e);
+            throw new PortletException("Error get siteId for serverName '"+portletRequest.getServerName()+"'", e);
         }
-        if (log.isDebugEnabled()) log.debug("serverName '"+ctxInstance.getPortletRequest().getServerName()+"', siteId: "+siteId);
+        if (log.isDebugEnabled()) log.debug("serverName: '"+portletRequest.getServerName()+"', siteId: "+siteId+", newsMap: "+newsMap);
 
 
         NewsSiteType news = null;
@@ -126,18 +131,18 @@ public class NewsSite implements Portlet, PortletGetList
         return news;
     }
 
-    private void initNewsItem(NewsBlockType newsBlock, CtxInstance ctxInstance)
-        throws PortletException {
+    private void initNewsItem( NewsBlockType newsBlock ) throws PortletException {
+
         if (newsBlock == null)
             return;
 
         String str = null;
         try
         {
-            if (ctxInstance.getStringManager().checkKey("main.next-news"))
-                str = ctxInstance.getStringManager().getStr("main.next-news");
+            if (CtxInstance.getStringManager( renderRequest.getLocale() ).checkKey("main.next-news"))
+                str = CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("main.next-news");
             else
-                str = ctxInstance.getStringManager().getStr("main.next");
+                str = CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("main.next");
 
         }
         catch (Exception e)
@@ -157,7 +162,7 @@ public class NewsSite implements Portlet, PortletGetList
                     item.setToFullItem( str );
 
                     item.setUrlToFullNewsItem(
-                        ctxInstance.url(Constants.CTX_TYPE_NEWS, null) + '&' +
+                        CtxInstance.url(Constants.CTX_TYPE_NEWS, null, renderResponse ) + '&' +
                         Constants.NAME_ID_NEWS_PARAM + '=' + item.getNewsItemId()
                     );
                 }
@@ -237,13 +242,11 @@ public class NewsSite implements Portlet, PortletGetList
                 NewsBlockType nb = null;
                 if (log.isDebugEnabled()) log.debug("Start check lang of news group.");
 
-                for (int i=0; i<newsSite.getNewsBlockCount(); i++)
-                {
+                for (int i=0; i<newsSite.getNewsBlockCount(); i++) {
                     nb = newsSite.getNewsBlock(i);
                     if (log.isDebugEnabled()) log.debug("Check lang of news group. idLanguage " + nb.getIdSiteLanguage() );
 
-                    if ( nb.getIdSiteLanguage() == idSiteLanguage )
-                    {
+                    if ( nb.getIdSiteLanguage() == idSiteLanguage ) {
                         isLangExists = true;
                         break;
                     }
@@ -290,20 +293,22 @@ public class NewsSite implements Portlet, PortletGetList
         }
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db__, Long id) throws PortletException {
+    public PortletResultContent getInstance(DatabaseAdapter db__, Long id) throws PortletException {
         if (log.isDebugEnabled()) log.debug("getInstance(DatabaseAdapter db__, Long id)");
         return getInstance(db__);
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db_) throws PortletException {
-        CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+    public PortletResultContent getInstance(DatabaseAdapter db_) throws PortletException {
+
+//        CtxInstance ctxInstance = (CtxInstance)portletRequest.getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
         if (log.isDebugEnabled())
         {
             log.debug("getInstance(DatabaseAdapter db__)");
-            log.debug("param.ctxInstance.getPortletRequest().getLocale().toString() - " + param.getPortletRequest().getLocale().toString());
+            log.debug("param.renderRequest.getLocale().toString() - " + renderRequest.getLocale().toString());
         }
 
-        NewsSiteType newsSite = checkInit( db_, ctxInstance);
+        NewsSiteType newsSite = checkInit( db_, renderRequest);
 
         if (log.isDebugEnabled()) log.debug("newsSite.newsBlockCount() - " + newsSite.getNewsBlockCount());
 
@@ -314,9 +319,9 @@ public class NewsSite implements Portlet, PortletGetList
 
             if (log.isDebugEnabled()) log.debug("NewsBlockType.getCodeLanguage() - " + nb.getCodeLanguage());
 
-            if (nb.getCodeLanguage().equals( param.getPortletRequest().getLocale().toString() ))
+            if (nb.getCodeLanguage().equals( renderRequest.getLocale().toString() ))
             {
-                initNewsItem( nb, ctxInstance );
+                initNewsItem( nb );
                 for (int j=0; j<nb.getNewsGroupCount(); j++)
                 {
                     NewsGroupType newsGroupType = nb.getNewsGroup(j);
@@ -331,22 +336,22 @@ public class NewsSite implements Portlet, PortletGetList
         return new NewsBlock(newsBlock);
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db_, String portletCode_)
-            throws PortletException {
+    public PortletResultContent getInstanceByCode(DatabaseAdapter db_, String portletCode_)
+        throws PortletException {
 
-        CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-        if (log.isDebugEnabled())
-        {
+//        CtxInstance ctxInstance = (CtxInstance)portletRequest.getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+        if (log.isDebugEnabled()) {
             log.debug("getInstanceByCode(DatabaseAdapter db__, String portletCode_)");
             log.debug("code - " + portletCode_);
-            log.debug("param.ctxInstance.getPortletRequest().getLocale().toString() - " + param.getPortletRequest().getLocale().toString());
+            log.debug("param.renderRequest.getLocale().toString() - " + renderRequest.getLocale().toString());
         }
 
         NewsBlockType newsBlock = new NewsBlockType();
         if ( portletCode_!=null)
         {
             log.debug("Start checkInit()");
-            NewsSiteType newsSite = checkInit( db_, ctxInstance);
+            NewsSiteType newsSite = checkInit( db_, renderRequest);
 
             if (log.isDebugEnabled()) log.debug("newsSite.newsBlockCount() - " + newsSite.getNewsBlockCount());
 
@@ -356,7 +361,7 @@ public class NewsSite implements Portlet, PortletGetList
 
                 if (log.isDebugEnabled()) log.debug("NewsBlockType.getCodeLanguage() - " + nb.getCodeLanguage());
 
-                if (nb.getCodeLanguage().equals( param.getPortletRequest().getLocale().toString() ))
+                if (nb.getCodeLanguage().equals( renderRequest.getLocale().toString() ))
                 {
 
                     if (log.isDebugEnabled()) log.debug("nb.getNewsGroupCount() - " + nb.getNewsGroupCount());
@@ -377,7 +382,7 @@ public class NewsSite implements Portlet, PortletGetList
             }
         }
 
-        initNewsItem( newsBlock, ctxInstance );
+        initNewsItem( newsBlock );
         return new NewsBlock(newsBlock);
     }
 

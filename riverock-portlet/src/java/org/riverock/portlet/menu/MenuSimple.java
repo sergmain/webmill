@@ -33,38 +33,40 @@
 package org.riverock.portlet.menu;
 
 import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
+import java.util.ResourceBundle;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
 
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.tools.MainTools;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.exception.FileManagerException;
+import org.riverock.generic.tools.XmlTools;
+import org.riverock.interfaces.portlet.menu.MenuInterface;
+import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.schema.javax.portlet.PortletType;
 import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 import org.riverock.portlet.schema.portlet.menu.MenuSimpleType;
-import org.riverock.common.tools.MainTools;
-import org.riverock.common.config.ConfigException;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletParameter;
-import org.riverock.webmill.portlet.Portlet;
-import org.riverock.webmill.portlet.PortletManager;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.PortletGetList;
-
-import org.riverock.webmill.portlet.CtxInstance;
 import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.portal.menu.MenuInterface;
-import org.riverock.webmill.portal.menu.MenuItemInterface;
-
-import org.riverock.interfaces.schema.javax.portlet.PortletType;
+import org.riverock.webmill.port.PortalInfo;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.portlet.CtxInstance;
+import org.riverock.webmill.portlet.PortletGetList;
+import org.riverock.webmill.portlet.PortletManager;
+import org.riverock.webmill.portlet.PortletResultObject;
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.PortletResultContent;
 
 import org.apache.log4j.Logger;
 
-public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
-{
-    private static Logger log = Logger.getLogger(MenuSimple.class);
+public final class MenuSimple implements PortletResultObject, PortletGetList, PortletResultContent {
+    private final static Logger log = Logger.getLogger( MenuSimple.class );
 
     public final static int UNKNOWN_LEVEL = 0;
     public final static int EQUAL_LEVEL = 1;
@@ -74,140 +76,111 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
     public final static int GREAT_OR_EQUAL_LEVEL = 5;
 
 
-    private static Object syncDebug = new Object();
-
 //    public String name = null;
     private Long id = null;
     Long getId() {return id;} // for tests
 
     public MenuSimpleType menuSimple = new MenuSimpleType();
 
-    public PortletParameter param = null;
-    private CtxInstance ctxInstance = null;
     private MenuModuleType currentMenuModule = null;
 
-    private boolean isCurrentIsFound = false;  // used, when type of portlet is unknown. i.e. mill.index
+    private boolean isCurrentIsFound = false;
 
-    protected void finalize() throws Throwable
-    {
-        param = null;
-        ctxInstance = null;
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
+    private ResourceBundle bundle = null;
+
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
+        this.bundle = bundle;
+    }
+
+    protected void finalize() throws Throwable {
         super.finalize();
     }
 
-    public MenuSimple()
-    {
+    public MenuSimple() {
     }
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
-    }
-
-    public boolean isXml()
-    {
-        return true;
-    }
-
-    public boolean isHtml()
-    {
-        return true;
-    }
-
-    public PortletResultObject getInstance( DatabaseAdapter db_ , Long id)
-        throws PortletException
-    {
+    public PortletResultContent getInstance( DatabaseAdapter db_ , Long id)
+        throws PortletException {
         return getInstance( db_ );
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_)
+    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_)
         throws PortletException
     {
-        try
-        {
-            ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-            String typePortlet = param.getCtxType();
+        try {
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            MenuInterface catalog =
+                portalInfo.getMenu(
+                    renderRequest.getLocale().toString()
+                ).getCatalogByCode( portletCode_ );
+
+
+            String typePortlet =
+                (String)renderRequest.getAttribute(PortalConstants.PORTAL_DEFAULT_PORTLET_TYPE_ATTRIBUTE);
 
             if (log.isDebugEnabled())
-                log.debug("Portlet code - " + portletCode_+", ctxType "+param.getCtxType());
-
-            MenuInterface catalog =
-                ctxInstance.getPortalInfo().getMenu(
-                    ctxInstance.getPortletRequest().getLocale().toString()
-                ).getCatalogByCode( portletCode_ );
+                log.debug("Portlet code - " + portletCode_+", ctxType "+typePortlet);
 
             processInstance( catalog, typePortlet );
 
             return this;
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Error create MenuSimple object", e);
         }
         return null;
     }
 
-    public PortletResultObject getInstance( DatabaseAdapter db_ )
+    public PortletResultContent getInstance( DatabaseAdapter db_ )
         throws PortletException
     {
-        try
-        {
-            ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-            String typePortlet = param.getCtxType();
-
-            if (log.isDebugEnabled())
-                log.debug("Portlet type - " + typePortlet);
-
-            MenuInterface menu = ctxInstance.getPortalInfo().getMenu(
-                ctxInstance.getPortletRequest().getLocale().toString()
+        try {
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            MenuInterface menu = portalInfo.getMenu(
+                renderRequest.getLocale().toString()
             ).getDefault();
 
             if (menu!=null)
             {
+                String typePortlet =
+                    (String)renderRequest.getAttribute(PortalConstants.PORTAL_DEFAULT_PORTLET_TYPE_ATTRIBUTE);
+
+                if (log.isDebugEnabled())
+                    log.debug("Portlet type - " + typePortlet);
+
                 processInstance( menu, typePortlet );
                 return this;
             }
 
             return null;
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Error create MenuSimple object", e);
         }
         return null;
     }
 
     private void processInstance( MenuInterface menu,  String typePortlet)
-        throws Exception
+        throws PortletException, FileManagerException
     {
-        try
-        {
-            PortletType desc = searchPortletDescription(typePortlet);
-            initMenuSimple(menu, desc, typePortlet);
-
-        }
-        catch(Exception e) {
-            log.error("Exception #1 in processInstance()", e);
-            throw e;
-        }
-        catch(Error e) {
-            log.error("Error #1 in processInstance()", e);
-            throw e;
-        }
-
+        PortletType desc = searchPortletDescription(typePortlet);
+        initMenuSimple(menu, desc);
         processPortletParameters();
-
     }
 
-    void initMenuSimple(MenuInterface menu, PortletType desc, String typePortlet)
-            throws Exception
+    void initMenuSimple(MenuInterface menu, PortletType desc)
+            throws PortletException
     {
         if (menu != null)
         {
             ListIterator it = menu.getMenuItem().listIterator();
             while (it.hasNext()) {
                 MenuItemInterface ci = (MenuItemInterface)it.next();
-                MenuModuleType tempMenu = getMenuModule(ci, param.getResponse(), 1, id, desc, typePortlet);
+                MenuModuleType tempMenu = getMenuModule(ci, 1, id, desc);
                 menuSimple.addMenuModule(tempMenu);
             }
         }
@@ -220,7 +193,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
     }
 
     PortletType searchPortletDescription(String typePortlet)
-            throws Exception
+        throws FileManagerException
     {
         if (log.isDebugEnabled())
             log.debug("#typePortlet - " + typePortlet);
@@ -249,21 +222,26 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
                 if (log.isDebugEnabled())
                     log.debug("namePortletId - " + namePortletId);
 
-                id = PortletTools.getLong( param.getPortletRequest(), namePortletId);
+                // id is used only in test cases
+                id = PortletTools.getLong( renderRequest, namePortletId);
             }
         }
         return desc;
     }
 
     private void processPortletParameters() throws PortletException {
+
+        List templateParameters =
+            (List)renderRequest.getAttribute( PortalConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE );
+
         if (log.isDebugEnabled())
-            log.debug("param.getParameters() - " + param.getTemplateParameters());
+            log.debug("param.getParameters(): " + templateParameters);
 
         try {
-            String levelTemp = PortletTools.getString(param.getTemplateParameters(), "level", null);
+            String levelTemp = PortletTools.getString(templateParameters, "level", null);
             if (levelTemp==null)
                 return;
-            String compareTemp = PortletTools.getString(param.getTemplateParameters(), "type_level", null);
+            String compareTemp = PortletTools.getString(templateParameters, "type_level", null);
             if (compareTemp==null)
                 return;
 
@@ -283,11 +261,11 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
         }
         catch(Exception e) {
             log.error("Exception #2 in processInstance()", e);
-            throw new PortletException("Exception parse level of menu, level - levelTemp. "+e.getMessage() );
+            throw new PortletException("Exception parse level of menu, level - levelTemp. ", e);
         }
         catch(Error e) {
             log.error("Error #2 in processInstance()", e);
-            throw new PortletException("Error parse level of menu, level - levelTemp. "+e.getMessage() );
+            throw new PortletException("Error parse level of menu, level - levelTemp. ", e);
         }
     }
 
@@ -517,13 +495,8 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
     }
 
     MenuModuleType getMenuModule(
-        MenuItemInterface item,
-        HttpServletResponse response,
-        int level,
-        Long id_current_item,
-        PortletType desc_current,
-        String typePortlet)
-    throws Exception
+        MenuItemInterface item, int level, Long id_current_item, PortletType desc_current)
+    throws PortletException
     {
 
         try
@@ -538,13 +511,11 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
             m.setIsCurrentThread( new Integer(0) );
             m.setIsCurrent( new Integer(0) );
 
-            if (log.isDebugEnabled())
-            {
+            if (log.isDebugEnabled()){
                 log.debug("item - "+ item.toString());
                 log.debug("id_current_item - "+ id_current_item);
 
-                if (desc_current != null)
-                {
+                if (desc_current != null){
                     log.debug("desc_current.portlet - "+ desc_current.getPortletName().getContent());
                     log.debug("desc_current.namePortletID - "+
                         PortletTools.getStringParam(
@@ -556,10 +527,8 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
                     log.debug("desc_current is null" );
             }
 
-            if (item.getType()!=null && item.getType().equals( typePortlet ) )
-            {
-                if (id_current_item!=null && desc_current != null )
-                {
+            if (item.getType()!=null && item.getType().equals( desc_current.getPortletName() ) ){
+                if (id_current_item!=null && desc_current != null ){
                     String namePortletIdTemp =
                             PortletTools.getStringParam(
                                     desc_current,
@@ -570,8 +539,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
                         m.setIsCurrent( new Integer(1) );
                 }
                 else
-                    if (!isCurrentIsFound)
-                    {
+                    if (!isCurrentIsFound){
                         isCurrentIsFound = true;
                         m.setIsCurrent( new Integer(1) );
                     }
@@ -580,57 +548,43 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
             if (log.isDebugEnabled())
                 log.debug("isCurrent - "+ m.getIsCurrent() );
 
-            try
-            {
-                m.setModuleName( item.getStr().getString( param.getPortletRequest().getLocale() ) );
+            try{
+                m.setModuleName( item.getStr().getString( renderRequest.getLocale() ) );
             }
-            catch (Exception e)
-            {
+            catch (Exception e){
                 log.warn("Error get localized message", e);
                 m.setModuleName( "error" );
             }
 
-            // set menu URL
-            if (item.getUrl()==null)
-                m.setModuleUrl(
-                    response.encodeURL(CtxInstance.pageid() + '/' + item.getId()+'/'+ctxInstance.getPortletRequest().getLocale().toString())
-                );
-            else
-                m.setModuleUrl(response.encodeURL(CtxInstance.page() + '/' + item.getUrl()+'/'+ctxInstance.getPortletRequest().getLocale().toString()));
-/*
-            m.setModuleUrl(
-                response.encodeURL(ctxInstance.ctx() + '?' +
-                                   page.getAsURL() +
-                Constants.NAME_TYPE_CONTEXT_PARAM
-                + '='+
-                item.getType()+'&'+
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM
-                + '='+ item.getNameTemplate()
-                )
-            );
+            if (item.getUrlResource()!=null && item.getUrlResource().length()>0){
+                if (log.isDebugEnabled()) log.debug("UrlResource: "+item.getUrlResource());
 
-            PortletType desc = PortletManager.getPortletDescription( item.getType() );
-            if ( desc != null )
-            {
-                String nameId =
-                    PortletTools.getStringParam(
-                        desc, PortletTools.name_portlet_id
-                    );
-                if (nameId != null)
-                {
-                    m.setModuleUrl(
-                        m.getModuleUrl()+'&'+
-                        nameId + '='+
-                        item.getIdPortlet()
-                    );
-                }
+                // format request: /<CONTEXT>/url/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page/<URL_TO_PAGE>
+                // URL_TO_PAGE: [/CONTEXT_NAME]/page-url (page-url is html, jsp or other page)
+
+                m.setModuleUrl(
+                    renderResponse.encodeURL(
+                        CtxInstance.urlPage() + '/' + renderRequest.getLocale().toString()+','+
+                    item.getType() + ',' +
+                    item.getNameTemplate() + "/page" + (item.getUrlResource().startsWith("/")?"":"/") +
+                    item.getUrlResource()
+                    )
+                );
+
             }
-*/
+            else {
+                // set menu URL
+                if (item.getUrl()==null)
+                    m.setModuleUrl(
+                        renderResponse.encodeURL(CtxInstance.pageid()+'/'+renderRequest.getLocale().toString() + '/' + item.getId())
+                    );
+                else
+                    m.setModuleUrl(renderResponse.encodeURL(CtxInstance.page()+'/'+renderRequest.getLocale().toString() + '/' + item.getUrl()));
+            }
 
             //////
 
-            if (new Integer(1).equals(m.getIsCurrent()) )
-            {
+            if (new Integer(1).equals(m.getIsCurrent()) ){
                 currentMenuModule = m;
                 m.setIsCurrentThread( new Integer(1) );
             }
@@ -640,13 +594,11 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
             ArrayList vv = new ArrayList(item.getCatalogItems().size());
             boolean isCurrentThread = false;
-            for (int j = 0; j < item.getCatalogItems().size(); j++)
-            {
+            for (int j = 0; j < item.getCatalogItems().size(); j++){
                 MenuItemInterface ci = (MenuItemInterface) item.getCatalogItems().get(j);
 
                 MenuModuleType menuModule = getMenuModule(
-                    ci, response, level + 1, id_current_item,
-                    desc_current, typePortlet
+                    ci, level + 1, id_current_item, desc_current
                 );
 
                 if (new Integer(1).equals(menuModule.getIsCurrent()) ||
@@ -668,44 +620,39 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
         }
         catch(Exception e)
         {
-            log.error("Error getMenuModule()", e);
-            throw e;
+            String es = "Error getMenuModule()";
+            log.error(es, e);
+            throw new PortletException(es, e);
         }
     }
 
-    public byte[] getPlainHTML()
-    {
+    public byte[] getPlainHTML(){
         return getMenuModule( menuSimple.getMenuModuleAsReference() ).getBytes();
     }
 
-    public byte[] getXml(String rootElement) throws Exception
-    {
+    private static Object syncDebug = new Object();
+    public byte[] getXml(String rootElement) throws Exception {
         if (log.isDebugEnabled())
             log.debug("start get XmlByte array");
 
         MenuSimpleType menu = menuSimple;
 
         byte b[] = null;
-        try
-        {
+        try {
             b = XmlTools.getXml( menu, rootElement );
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("menu name id "+id);
             log.error("menu name "+menu.getMenuName());
-            for (int k=0; k<menu.getMenuModuleCount(); k++)
-            {
+            for (int k=0; k<menu.getMenuModuleCount(); k++){
                 MenuModuleType item = menu.getMenuModule(k);
                 log.error("menu item #"+k+" getModuleName() "+item.getModuleName());
                 log.error("menu item #"+k+" getModuleUrl() "+item.getModuleUrl());
             }
-            try
-            {
+            try{
                 log.error("info Xerces version - " + org.apache.xerces.impl.Version.getVersion() );
             }
-            catch(Exception e2)
-            {
+            catch(Exception e2){
                 log.error("Error get version of xerces "+e.getMessage());
             }
             throw e;
@@ -714,12 +661,10 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
         if (log.isDebugEnabled())
             log.debug("end get XmlByte array. length of array - " + b.length);
 
-        if ( log.isDebugEnabled() )
-        {
+        if ( log.isDebugEnabled() ){
             log.debug("Start output test data to file");
             String testFile = WebmillConfig.getWebmillDebugDir()+"menu-simple-url.xml";
-            synchronized(syncDebug)
-            {
+            synchronized(syncDebug){
                 MainTools.writeToFile(testFile, b);
             }
             log.debug("end output data");
@@ -728,21 +673,17 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
         return b;
     }
 
-    public byte[] getXml()
-        throws Exception
-    {
+    public byte[] getXml() throws Exception {
         return getXml( "MenuSimple" );
     }
 
-    private String getMenuModule(List v)
-    {
+    private String getMenuModule(List v) {
         if (v==null || v.size()==0)
             return "";
 
         String s = "";
         s += ("<table cellpadding=\"0\" cellspacing=\"0\" widht=\"100%\" border=\"0\">");
-        for (int i = 0; i < v.size(); i++)
-        {
+        for (int i = 0; i < v.size(); i++){
             MenuModuleType item = (MenuModuleType)v.get(i);
 
 
@@ -759,8 +700,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
         return s;
     }
 
-    public List getList(Long idSiteCtxLangCatalog, Long idContext)
-    {
+    public List getList(Long idSiteCtxLangCatalog, Long idContext){
         return null;
     }
 
@@ -782,7 +722,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
                  "<tr><td class=\"menuData\" nowrap>"+
                  "<a href=\""+
                  res.encodeURL( ctxInstance.ctx()+'?'+jspPage.addURL+Constants.NAME_ID_CONTEXT_PARAM+'='+ci.id )+
-                 "\">"+ ci.str.getString( ctxInstance.getPortletRequest().getLocale() )+"</a></td></tr>";
+                 "\">"+ ci.str.getString( renderRequest.getLocale() )+"</a></td></tr>";
 
              s += checkSubMenuHTML( ci, catItem );
          }

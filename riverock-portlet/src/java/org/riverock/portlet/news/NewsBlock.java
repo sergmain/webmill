@@ -28,22 +28,39 @@
  * $Id$
  *
  */
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.news;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
 
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.portlet.PortletResultObject;
+import org.riverock.webmill.portlet.PortletResultContent;
 
 import org.apache.log4j.Logger;
 
-public class NewsBlock implements PortletResultObject
-{
-    private static Logger log = Logger.getLogger(NewsBlock.class);
+public final class NewsBlock implements PortletResultContent {
+    private final static Logger log = Logger.getLogger( NewsBlock.class );
 
     private NewsBlockType newsBlockType = null;
+//    private RenderRequest renderRequest = null;
+//    private RenderResponse renderResponse = null;
+//    private PortletConfig portletConfig = null;
+//    private ResourceBundle resourceBundle = null;
+
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+//        this.renderRequest = renderRequest;
+//        this.renderResponse = renderResponse;
+//        this.portletConfig = portletConfig;
+//        this.resourceBundle = this.portletConfig.getResourceBundle( renderRequest.getLocale() );
+    }
 
     public NewsBlock(NewsBlockType newsBlockType){
         this.newsBlockType = newsBlockType;
+    }
+
+    public NewsBlock(){
     }
 
     protected void finalize() throws Throwable
@@ -51,9 +68,15 @@ public class NewsBlock implements PortletResultObject
         super.finalize();
     }
 
-    public boolean isXml(){ return true; }
-    public boolean isHtml(){ return false; }
-
+//    public PortletResultContent getInstance( DatabaseAdapter db_, Long id ) throws PortletException {
+//        return new NewsBlock();
+//    }
+//
+//    public PortletResultContent getInstanceByCode( DatabaseAdapter db__, String portletCode_ ) throws PortletException {
+//        return new NewsBlock();
+//        return null;
+//    }
+//
     public byte[] getPlainHTML()
     {
         return null;
@@ -81,13 +104,13 @@ public class NewsBlock implements PortletResultObject
                     if (isFirst)
                     {
                         x += "<tr><td class=\"newsdate\" valign=\"top\">";
-                        x += DateTools.getStringDate(curr_date, "dd.MM.yyyy", param.ctxInstance.getPortletRequest().getLocale());
+                        x += DateTools.getStringDate(curr_date, "dd.MM.yyyy", param.renderRequest.getLocale());
                         x += "</td><td>&nbsp;</td></tr>";
 
                         isFirst = false;
                     }
                     x += "<tr><td class=\"newstime\" valign=\"top\">";
-                    x += DateTools.getStringDate(item_news.date, "HH:mm", param.ctxInstance.getPortletRequest().getLocale());
+                    x += DateTools.getStringDate(item_news.date, "HH:mm", param.renderRequest.getLocale());
                     x += "</td><td width=\"100%\" class=\"newstitle\"><h6> ";
                     x += item_news.header;
                     x += "</h6><p>";
@@ -105,7 +128,7 @@ public class NewsBlock implements PortletResultObject
 
                     try
                     {
-                        x += param.ctxInstance.sCustom.getStr("main.next");
+                        x += param.CtxInstance.getStr("main.next");
                     }
                     catch (Exception e)
                     {
