@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -82,14 +83,15 @@ public class RightAdd extends HttpServlet
         DatabaseAdapter db_ = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             out = response.getWriter();
 
             ContextNavigator.setContentType(response);
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
@@ -105,10 +107,10 @@ public class RightAdd extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end
 
-            String index_page = ctxInstance.url("mill.auth.right");
+            String index_page = CtxInstance.url("mill.auth.right");
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
             if (authInfo.isRoot != 1)
@@ -128,7 +130,7 @@ public class RightAdd extends HttpServlet
                 out.write("<form method=\"POST\" action=\"");
                 out.write(
 
-                    ctxInstance.url("mill.auth.commit_add_right")
+                    CtxInstance.url("mill.auth.commit_add_right")
 
                 );
                 out.write("\">\r\n");
@@ -223,10 +225,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"is_road\">\r\n\t");
                 out.write("<option value=\"0\" selected>");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -238,10 +240,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"is_service\">\r\n\t");
                 out.write("<option value=\"0\" selected>");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -253,10 +255,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"is_firm\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\" selected>");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -268,10 +270,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"rs\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -283,10 +285,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"ri\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -298,10 +300,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"ru\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -313,10 +315,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"rd\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -328,10 +330,10 @@ public class RightAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"ra\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -342,7 +344,7 @@ public class RightAdd extends HttpServlet
                 out.write("<tr align=\"center\">\r\n");
                 out.write("<td>\r\n");
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
-                out.write(ctxInstance.getStringManager().getStr("button.add"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
                 out.write("\">\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
@@ -351,7 +353,7 @@ public class RightAdd extends HttpServlet
 
             }
 
-// <p><a href="%= index_page %">%=ctxInstance.getStringManager().getStr("page.main.3")></a></p>
+// <p><a href="%= index_page %">%=CtxInstance.getStringManager().getStr("page.main.3")></a></p>
 
             out.write("\r\n");
             out.write("<br>\r\n");
@@ -362,7 +364,7 @@ public class RightAdd extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
 

@@ -34,87 +34,59 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
+import javax.portlet.PortletException;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.portlet.portlets.utils.RsetUtils;
 
 import org.apache.log4j.Logger;
 
-import javax.portlet.PortletException;
-
-public class FaqItem implements PortletGetList
-{
+public class FaqItem implements PortletGetList {
     private static Logger log = Logger.getLogger( FaqGroup.class );
 
     public String question = null;
     public String answer = null;
     public Calendar datePost = null;
 
-    public void terminate(java.lang.Long id_){}
+    public void terminate( java.lang.Long id_ ) {
+    }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         question = null;
         answer = null;
         datePost = null;
-//        param = null;
 
         super.finalize();
     }
 
-    public FaqItem(String q, String a)
-    {
+    public FaqItem( String q, String a ) {
         question = q;
         answer = a;
     }
 
-//    public void setParameter(PortletParameter param_)
-//    {
-//        this.param = param_;
-//    }
-
-    public FaqItem(){}
-
-/*
-    public String getFaqItemDate()
-    {
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.ctxInstance.getPortletRequest().getLocale());
+    public FaqItem() {
     }
 
-    public String getFaqItemTime()
-    {
-        return DateTools.getStringDate(datePost, "HH:mm", param.ctxInstance.getPortletRequest().getLocale());
-    }
-*/
-
-    public String getFaqItemQuestion()
-    {
-        return StringTools.prepareToParsing( question);
+    public String getFaqItemQuestion() {
+        return StringTools.prepareToParsing( question );
     }
 
-    public String getFaqItemAnswer()
-    {
+    public String getFaqItemAnswer() {
         return StringTools.prepareToParsing( answer );
     }
 
-    public static FaqItem getInstance(DatabaseAdapter db_, Long id)
-    {
-        try
-        {
-            return new FaqItem(db_, id);
-        }
-        catch (Exception e)
-        {
+    public static FaqItem getInstance( DatabaseAdapter db_, Long id ) {
+        try {
+            return new FaqItem( db_, id );
+        } catch (Exception e) {
         }
         return null;
     }
 
-    public FaqItem(DatabaseAdapter db_, Long id)
-        throws PortletException
-    {
+    public FaqItem(DatabaseAdapter db_, Long id) throws PortletException {
         if ( id==null)
             return;
 
@@ -125,35 +97,29 @@ public class FaqItem implements PortletGetList
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             ps = db_.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, id);
 
             rs = ps.executeQuery();
-            if (rs.next())
-            {
+            if (rs.next()) {
                 datePost = RsetTools.getCalendar(rs, "DATE_POST");
             }
-            answer = RsetUtils.getBigTextField(db_, id, "ANSWER", "SITE_PORTLET_FAQ_ANSWER", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_ANSWER");
-            question = RsetUtils.getBigTextField(db_, id, "QUESTION", "SITE_PORTLET_FAQ_QUESTION", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_QUESTION");
+            answer = DatabaseManager.getBigTextField(db_, id, "ANSWER", "SITE_PORTLET_FAQ_ANSWER", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_ANSWER");
+            question = DatabaseManager.getBigTextField(db_, id, "QUESTION", "SITE_PORTLET_FAQ_QUESTION", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_QUESTION");
         }
-        catch(SQLException exc)
-        {
+        catch(SQLException exc) {
             log.error("Error create Faq item", exc);
             throw new PortletException(exc.getMessage());
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
         }
-
     }
 
-    public List getList(Long idSiteCtxLangCatalog, Long idContext)
-    {
+    public List getList(Long idSiteCtxLangCatalog, Long idContext) {
         return null;
     }
 }

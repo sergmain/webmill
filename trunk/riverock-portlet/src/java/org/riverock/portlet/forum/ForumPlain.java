@@ -31,7 +31,7 @@
  * $Id$
  */
 
-package org.riverock.portlet.servlets.view.forum;
+package org.riverock.portlet.forum;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -43,13 +43,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletConfig;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.portlet.forum.ForumMessage;
-import org.riverock.portlet.forum.SimpleForum;
 import org.riverock.portlet.main.Constants;
 import org.riverock.webmill.portlet.ContextNavigator;
 import org.riverock.webmill.portlet.CtxInstance;
@@ -86,14 +86,22 @@ public class ForumPlain extends HttpServlet
 
             out.write("<!-- $Id$ -->");
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
+            PortletConfig portletConfig = null;
 
-            Integer year = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
-            Integer month = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
 
-            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response);
-            String nameTemplate = ctxInstance.getNameTemplate();
+            Integer year = PortletTools.getInt(renderRequest, Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
+            Integer month = PortletTools.getInt(renderRequest, Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
+
+            ForumInstance forum = null;
+
+            if (true) throw new Exception("not imnplemented");
+            // TODO uncomment and fix
+//            forum = new ForumInstance(renderRequest, response);
+
+//            String nameTemplate = ctxInstance.getNameTemplate();
 
             if (log.isDebugEnabled())
                 log.debug("id - " + forum.id);
@@ -139,14 +147,14 @@ public class ForumPlain extends HttpServlet
                         ForumMessage message = (ForumMessage)it.next();
 
                         out.write("<tr><td>");
-                        out.write("<b>" + ctxInstance.sCustom.getStr("str.date") + ':' + "</b>&nbsp;" +
-                                DateTools.getStringDate(message.getDatePost(), "dd-MMMM-yyyy HH:mm:ss", ctxInstance.getPortletRequest().getLocale()) + "<BR>"
+                        out.write("<b>" + CtxInstance.getStr( renderRequest.getLocale(), "str.date", portletConfig ) + ':' + "</b>&nbsp;" +
+                                DateTools.getStringDate(message.getDatePost(), "dd-MMMM-yyyy HH:mm:ss", renderRequest.getLocale()) + "<BR>"
                         );
-                        out.write("<b>" + ctxInstance.sCustom.getStr("str.from_who") + ':' +
+                        out.write("<b>" + CtxInstance.getStr( renderRequest.getLocale(), "str.from_who", portletConfig ) + ':' +
                                 "</b>&nbsp;<a href=\"mailto:" + message.getEmail() + "\">" +
                                 StringTools.toPlainHTML(message.getFio()) + "</a><BR>"
                         );
-                        out.write("<b>" + ctxInstance.sCustom.getStr("str.header") + ':' +
+                        out.write("<b>" + CtxInstance.getStr( renderRequest.getLocale(), "str.header", portletConfig ) + ':' +
                                 "</b>&nbsp;" + StringTools.toPlainHTML(message.getHeader()) + "<BR>"
                         );
                         out.write("<p>" + StringTools.toPlainHTML(message.getText()) + "</p>");
@@ -162,15 +170,15 @@ public class ForumPlain extends HttpServlet
             out.writeln("<a href=\""+response.encodeURL( forum.forumURI )+'?'+
                     jspPage.addURL +
                     Constants.NAME_ID_FORUM_PARAM +'='+ forum.id_forum +"\">"+
-                    ctxInstance.sCustom.getStr("str.top_forum")+"</a><br>"
+                    CtxInstance.getStr("str.top_forum")+"</a><br>"
             );
 */
 
                 out.write("<a href=\"" +
-                        ctxInstance.url(Constants.CTX_TYPE_FORUM) + '&' +
+                        CtxInstance.url(Constants.CTX_TYPE_FORUM) + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
                         "\">" +
-                        ctxInstance.sCustom.getStr("str.top_forum") + "</a>"
+                        CtxInstance.getStr( renderRequest.getLocale(), "str.top_forum", portletConfig ) + "</a>"
                 );
 
 
@@ -181,7 +189,7 @@ public class ForumPlain extends HttpServlet
             {	// if isJustEntered
                 out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"12\" width=\"100%\"><tr><td>");
                 out.write("<!-- is here -->\n");
-                out.write(forum.getStartMessages(nameTemplate));
+                out.write(forum.getStartMessages());
                 out.write("</td></tr></table>");
 
                 ServletUtils.include(request_, response, null, "/mill.forum_add_message", out);

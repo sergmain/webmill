@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -85,14 +86,15 @@ public class BindIndex extends HttpServlet
         try
         {
 
-            CtxInstance ctxInstance =
-                (CtxInstance) request_.getSession().getAttribute(org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION);
+//            CtxInstance ctxInstance =
+//                (CtxInstance) request_.getSession().getAttribute(org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION);
+            RenderRequest renderRequest = null;
 
             ContextNavigator.setContentType(response);
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession) ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession) renderRequest.getUserPrincipal();
             if (auth_ == null || !auth_.isUserInRole(BindIndex.AUTH_BIND_ROLE))
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
@@ -110,12 +112,12 @@ public class BindIndex extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.locale.AUTH_USER";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end where
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            String index_page = ctxInstance.url("mill.auth.bind");
+            String index_page = CtxInstance.url("mill.auth.bind");
 
 
             String sql_=null;
@@ -193,11 +195,11 @@ public class BindIndex extends HttpServlet
             out.write("<a href=\"");
             out.write(
 
-                ctxInstance.url("mill.auth.add_bind")
+                CtxInstance.url("mill.auth.add_bind")
 
             );
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("button.add"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("<table border=\"0\" class=\"l\">\r\n");
@@ -281,7 +283,7 @@ public class BindIndex extends HttpServlet
                 {
                     out.write("\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, renderRequest.getLocale()));
                     out.write("</td>\r\n                    ");
 
                 }
@@ -290,7 +292,7 @@ public class BindIndex extends HttpServlet
                 {
                     out.write("\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_service", false, renderRequest.getLocale()));
                     out.write("</td>\r\n                    ");
 
                 }
@@ -299,7 +301,7 @@ public class BindIndex extends HttpServlet
                 {
                     out.write("\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_road", false, renderRequest.getLocale()));
                     out.write("</td>\r\n                    ");
 
                 }
@@ -310,22 +312,22 @@ public class BindIndex extends HttpServlet
                 Long id_auth_user = RsetTools.getLong(rs, "id_auth_user");
 
                 out.write("<input type=\"button\" value=\"");
-                out.write(ctxInstance.getStringManager().getStr("button.change"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
                 out.write("\" onclick=\"location.href='");
                 out.write(
 
-                    ctxInstance.url("mill.auth.ch_bind") + '&'
+                    CtxInstance.url("mill.auth.ch_bind") + '&'
 
                 );
                 out.write("id_auth_user=");
                 out.write("" + id_auth_user);
                 out.write("';\">\r\n");
                 out.write("<input type=\"button\" value=\"");
-                out.write(ctxInstance.getStringManager().getStr("button.delete"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.delete"));
                 out.write("\" onclick=\"location.href='");
                 out.write(
 
-                    ctxInstance.url("mill.auth.del_bind") + '&'
+                    CtxInstance.url("mill.auth.del_bind") + '&'
 
                 );
                 out.write("id_auth_user=");
@@ -342,9 +344,9 @@ public class BindIndex extends HttpServlet
             out.write("<a href=\"");
             out.write(response.encodeURL("add_bind.jsp"));
             out.write("?");
-            out.write(ctxInstance.getAsURL());
+//            out.write(ctxInstance.getAsURL());
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("button.add"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
             out.write("</a>");
             out.write("</p>");
 
@@ -352,16 +354,16 @@ public class BindIndex extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("<p>");
             out.write("<a href=\"");
             out.write(response.encodeURL(CtxInstance.ctx()));
             out.write("?");
-            out.write(ctxInstance.getAsURL());
+//            out.write(ctxInstance.getAsURL());
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("page.main.4"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.4"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("</td>\r\n");

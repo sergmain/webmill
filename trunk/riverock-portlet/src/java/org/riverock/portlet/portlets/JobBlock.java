@@ -32,9 +32,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-import javax.portlet.PortletSession;
 import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletConfig;
 
 import org.apache.log4j.Logger;
 
@@ -44,74 +47,60 @@ import org.riverock.portlet.schema.portlet.job.JobBlockType;
 import org.riverock.portlet.schema.portlet.job.JobItemType;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.DateTools;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.portlet.Portlet;
 import org.riverock.webmill.portlet.PortletResultObject;
 import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.PortletParameter;
-import org.riverock.webmill.portlet.CtxInstance;
+import org.riverock.webmill.portlet.PortletResultContent;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.generic.site.SiteListSite;
 
-public class JobBlock implements Portlet, PortletResultObject, PortletGetList, PortletParameterSetter
-{
-    private static Logger log = Logger.getLogger(JobBlock.class);
+public class JobBlock implements PortletResultObject, PortletGetList, PortletResultContent {
+    private static Logger log = Logger.getLogger( JobBlock.class );
 
     private List v = new ArrayList();
-    private PortletParameter param = null;
+    private RenderRequest renderRequest = null;
+    private RenderResponse renderResponse = null;
 
-    private static Object syncDebug = new Object();
-
-    protected void finalize() throws Throwable
-    {
-        if (v != null)
-        {
+    protected void finalize() throws Throwable {
+        if (v != null) {
             v.clear();
             v = null;
         }
 
-        param = null;
-
         super.finalize();
     }
 
-    public void setParameter(PortletParameter param_)
-    {
-        this.param = param_;
+    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+        this.renderRequest = renderRequest;
+        this.renderResponse = renderResponse;
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db__, Long id) throws PortletException
-    {
+    public PortletResultContent getInstance(DatabaseAdapter db__, Long id) throws PortletException {
         return getInstance(db__);
     }
 
-    public PortletResultObject getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException
-    {
+    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException {
         return getInstance(db__);
     }
 
-    public boolean isXml()
-    {
+    public boolean isXml() {
         return true;
     }
 
-    public boolean isHtml()
-    {
+    public boolean isHtml() {
         return false;
     }
 
-    public List getJobItem()
-    {
+    public List getJobItem() {
         return v;
     }
 
-    public JobBlock()
-    {
+    public JobBlock() {
     }
 
-    public PortletResultObject getInstance(DatabaseAdapter db_)
-        throws PortletException
-    {
+    public PortletResultContent getInstance( DatabaseAdapter db_ )
+        throws PortletException {
 
         final String sql_ =
             "select	a.ID_JOB_POSITION " +
@@ -123,7 +112,8 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
         ResultSet rs = null;
         try
         {
-            Long idSite = SiteListSite.getIdSite( param.getPortletRequest().getServerName());
+            if (true) throw new Exception("need init param field");
+            Long idSite = SiteListSite.getIdSite( renderRequest.getServerName());
 
             ps = db_.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, idSite);
@@ -136,9 +126,8 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
                 JobItem item = JobItem.getInstance(
                     db_, RsetTools.getLong(rs, "ID_JOB_POSITION"),
-                    param.getPortletRequest().getServerName()
+                    renderRequest.getServerName()
                 );
-                item.setParameter( param );
                 v.add( item );
             }
             if (log.isDebugEnabled())
@@ -164,10 +153,12 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
         return null;
     }
 
+    private static Object syncDebug = new Object();
     public byte[] getXml(String rootElement) throws Exception
     {
-        PortletSession session = param.getPortletRequest().getPortletSession();
-        CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+        if (true) throw new Exception("need init param field");
+//        PortletSession session = renderRequest.getPortletSession();
+//        CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
         JobBlockType block = new JobBlockType();
         for (int i = 0; i < v.size(); i++)
@@ -184,8 +175,18 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
             job.setCityString( ji.getCityString() );
             job.setContactPerson( ji.contactPerson );
             job.setContactPersonString( ji.getContactPersonString() );
-            job.setDateEnd( ji.getJobDateEnd() );
-            job.setDatePost( ji.getJobDatePost() );
+
+            job.setDatePost(
+                DateTools.getStringDate(ji.getJobDatePost(), "dd.MMM.yyyy",
+                    renderRequest.getLocale()
+                )
+            );
+            job.setDateEnd(
+                DateTools.getStringDate(ji.getJobDateEnd(), "dd.MMM.yyyy",
+                    renderRequest.getLocale()
+                )
+            );
+
             job.setEducationString( ji.getEducationString() );
             job.setGender( ji.gender );
             job.setGenderString( ji.getGenderString() );
@@ -200,17 +201,14 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
             job.setTestPeriodString( ji.getTestPeriodString() );
             job.setTextJob( ji.textJob );
             job.setTextJobString( ji.getTextJobString() );
-            job.setUrl( ji.getUrlToJob(ctxInstance) );
+            job.setUrl( ji.getUrlToJob() );
 
             block.addJobItem( job );
         }
 
-        if (log.isDebugEnabled())
-        {
-            synchronized(syncDebug)
-            {
-                try
-                {
+        if (log.isDebugEnabled()) {
+            synchronized(syncDebug) {
+                try {
                     XmlTools.writeToFile(block, WebmillConfig.getWebmillDebugDir()+"test-job-block.xml", "utf-8", rootElement);
                     byte bDebug[] = XmlTools.getXml( block, rootElement );
                     String sDebug = new String(bDebug);
@@ -218,8 +216,7 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
                     MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-1.xml", sDebug.getBytes());
                     MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-2.xml", sDebug.getBytes("utf-8"));
                 }
-                catch (Throwable exception)
-                {
+                catch (Throwable exception) {
                     log.error("Exception in ", exception);
                 }
             }
@@ -228,14 +225,11 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
         return XmlTools.getXml( block, rootElement );
     }
 
-    public byte[] getXml()
-        throws Exception
-    {
+    public byte[] getXml() throws Exception {
         return getXml("JobBlock");
     }
 
-    public List getList(Long idSiteCtxLangCatalog, Long idContext)
-    {
+    public List getList(Long idSiteCtxLangCatalog, Long idContext) {
         return null;
     }
 }

@@ -27,11 +27,9 @@ package org.riverock.portlet.forum;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.main.CacheFactory;
 import org.riverock.portlet.schema.core.MainForumThreadsItemType;
 import org.riverock.portlet.core.GetMainForumThreadsItem;
-import org.riverock.portlet.portlets.utils.RsetUtils;
-import org.riverock.common.collections.TreeItemInterface;
+import org.riverock.interfaces.common.TreeItemInterface;
 import org.apache.log4j.Logger;
 
 import java.util.Calendar;
@@ -42,7 +40,7 @@ public class ForumMessage implements TreeItemInterface {
     private static Logger log = Logger.getLogger( ForumMessage.class );
 
     private String text = "";
-    private String ip = "";
+//    private String ip = "";
 
     public Calendar getDatePost() {
         Calendar calendar = Calendar.getInstance();
@@ -69,11 +67,6 @@ public class ForumMessage implements TreeItemInterface {
         return text==null?"":text;
     }
 
-
-    private Long mainId = null;
-    private Long forumId = null;
-    private Long threadId = null;
-
     private MainForumThreadsItemType item = null;
 
     public List getSubMessageTree() {
@@ -86,23 +79,10 @@ public class ForumMessage implements TreeItemInterface {
 
     private List subMessageTree = null;
 
-    private static CacheFactory cache = new CacheFactory( ForumMessage.class.getName() );
-
-    private ForumMessage(){}
-/*
-    private static ForumMessage getInstance(DatabaseAdapter db__, Long id__)
-            throws Exception
-    {
-        if (id__==null)
-            return null;
-
-        return (ForumMessage) cache.getInstanceNew(db__, id__ );
-    }
-*/
     public ForumMessage(DatabaseAdapter db__, MainForumThreadsItemType item)
         throws SQLException {
         this.item = item;
-        this.text = RsetUtils.getBigTextField(db__, item.getId(), "MESSAGE_TEXT", "MAIN_FORUM_TEXT", "ID", "ID_MAIN_FORUM_TEXT");
+        this.text = DatabaseManager.getBigTextField(db__, item.getId(), "MESSAGE_TEXT", "MAIN_FORUM_TEXT", "ID", "ID_MAIN_FORUM_TEXT");
     }
 
     public Long getTopId() {
@@ -124,29 +104,11 @@ public class ForumMessage implements TreeItemInterface {
     public static ForumMessage getInstance(DatabaseAdapter db__, Long id_)
             throws ForumException
     {
-        ForumMessage message = new ForumMessage();
         try
         {
             MainForumThreadsItemType item = GetMainForumThreadsItem.getInstance(db__, id_).item;
             if (item != null)
-            {
                 return new ForumMessage(db__, item);
-/*
-                header = RsetTools.getString(rs, "header", "");
-                fio = RsetTools.getString(rs, "fio", "");
-                email = RsetTools.getString(rs, "email", "");
-                ip = RsetTools.getString(rs, "ip", "");
-
-                id = RsetTools.getLong(rs, "id");
-                id_main = RsetTools.getLong(rs, "id_main");
-                id_forum = RsetTools.getLong(rs, "id_forum");
-                id_thread = RsetTools.getLong(rs, "id_thread");
-
-                datePost = RsetTools.getCalendar(rs, "date_post");
-
-                text = RsetUtils.getBigTextField(db__, id, "MESSAGE_TEXT", "MAIN_FORUM_TEXT", "ID", "ID_MAIN_FORUM_TEXT");
-*/
-            }
             else
                 return null;
         }

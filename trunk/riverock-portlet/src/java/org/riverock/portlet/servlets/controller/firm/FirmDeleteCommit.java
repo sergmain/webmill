@@ -41,6 +41,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -78,15 +79,16 @@ public class FirmDeleteCommit extends HttpServlet
         Writer out = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
+                                         
 
             ContextNavigator.setContentType(response, "utf-8");
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( "webmill.firm_delete" ) )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right", "/", "continue");
@@ -102,9 +104,9 @@ public class FirmDeleteCommit extends HttpServlet
                 try{
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    index_page = ctxInstance.url("mill.firm.index");
+                    index_page = CtxInstance.url("mill.firm.index");
 
-                    Long id_firm = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_firm");
+                    Long id_firm = PortletTools.getLong(renderRequest, "id_firm");
                     if (id_firm==null)
                         throw new IllegalArgumentException("id_firm not initialized");
 
@@ -115,7 +117,7 @@ public class FirmDeleteCommit extends HttpServlet
                     switch (dbDyn.getFamaly())
                     {
                         case DatabaseManager.MYSQL_FAMALY:
-                            String idList = AuthHelper.getGrantedFirmId(dbDyn, ctxInstance.getPortletRequest().getRemoteUser());
+                            String idList = AuthHelper.getGrantedFirmId(dbDyn, renderRequest.getRemoteUser());
 
                             sql += " ("+idList+") ";
 

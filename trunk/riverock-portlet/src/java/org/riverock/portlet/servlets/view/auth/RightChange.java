@@ -42,6 +42,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -86,14 +87,15 @@ public class RightChange extends HttpServlet
         ResultSet rs = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             out = response.getWriter();
 
             ContextNavigator.setContentType(response);
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
@@ -109,10 +111,10 @@ public class RightChange extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end
 
-            String index_page = ctxInstance.url("mill.auth.right");
+            String index_page = CtxInstance.url("mill.auth.right");
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
             if (authInfo.isRoot != 1)
@@ -124,7 +126,7 @@ public class RightChange extends HttpServlet
 //            if (ServletTools.isNotInit(request, response, "id_relate_right", index_page))
 //                return;
 
-            Long id_relate_right = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_relate_right");
+            Long id_relate_right = PortletTools.getLong(renderRequest, "id_relate_right");
             if (id_relate_right==null)
                 throw new IllegalArgumentException("id_relate_right not initialized");
 
@@ -154,12 +156,12 @@ public class RightChange extends HttpServlet
                     out.write("\r\n");
                     out.write("<FORM ACTION=\"");
                     out.write(
-                        ctxInstance.url("mill.auth.commit_ch_right")
+                        CtxInstance.url("mill.auth.commit_ch_right")
 
                     );
                     out.write("\" METHOD=\"POST\">\r\n");
                     out.write("<input type=\"submit\" value=\"");
-                    out.write(ctxInstance.getStringManager().getStr("button.change"));
+                    out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
                     out.write("\">\r\n");
                     out.write("<INPUT TYPE=\"hidden\" NAME=\"id_relate_right\" VALUE=\"");
                     out.write("" + id_relate_right);
@@ -255,7 +257,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"rs\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(S1, true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(S1, true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n");
                     out.write("</td>\r\n\t");
@@ -266,7 +268,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\n");
                     out.write("<td align=\"left\">\n");
                     out.write("<SELECT NAME=\"ru\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(U1, true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(U1, true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n\t    ");
                     out.write("</td>\r\n\t");
@@ -277,7 +279,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"ri\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(I1, true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(I1, true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n            ");
                     out.write("</td>\r\n\t");
@@ -288,7 +290,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"rd\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(D1, true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(D1, true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n            ");
                     out.write("</td>\r\n\t");
@@ -299,7 +301,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"ra\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(A1, true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(A1, true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n            ");
                     out.write("</td>\r\n\t");
@@ -310,7 +312,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<select name=\"is_road\" size=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(rs, "IS_ROAD", true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "IS_ROAD", true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</select>\r\n\t\t");
                     out.write("</td>\r\n\t");
@@ -321,7 +323,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<select name=\"is_service\" size=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(rs, "IS_SERVICE", true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "IS_SERVICE", true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</select>\r\n\t\t");
                     out.write("</td>\r\n\t");
@@ -332,7 +334,7 @@ public class RightChange extends HttpServlet
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<select name=\"is_firm\" size=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(rs, "IS_FIRM", true, ctxInstance.getPortletRequest().getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "IS_FIRM", true, renderRequest.getLocale()));
                     out.write("\r\n\t\t");
                     out.write("</select>\r\n\t\t");
                     out.write("</td>\r\n\t");
@@ -340,7 +342,7 @@ public class RightChange extends HttpServlet
                     out.write("</TABLE>                                                              \r\n");
                     out.write("<BR>                                                                  \r\n");
                     out.write("<INPUT TYPE=\"submit\" VALUE=\"");
-                    out.write(ctxInstance.getStringManager().getStr("button.change"));
+                    out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
                     out.write("\">                            \r\n");
                     out.write("</FORM>                                                               \r\n");
                     out.write("<BR>                                                                  \r\n                                                                       \r\n");
@@ -354,7 +356,7 @@ public class RightChange extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("</td>\r\n");

@@ -36,12 +36,12 @@ package org.riverock.portlet.servlets.controller.auth;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.PreparedStatement;
-import java.sql.Types;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
 
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
@@ -83,14 +83,15 @@ public class BindDeleteCommit extends HttpServlet
         Writer out = null;
         try
         {
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
 
             ContextNavigator.setContentType(response);
 
             out = response.getWriter();
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) )
             {
                 WebmillErrorPage.process(out, null, "You have not right to bind right", "/"+CtxInstance.ctx(), "continue");
@@ -105,9 +106,9 @@ public class BindDeleteCommit extends HttpServlet
                 PreparedStatement ps = null;
                 try{
                     dbDyn = DatabaseAdapter.getInstance( true );
-                    index_page = ctxInstance.url("mill.auth.bind");
+                    index_page = CtxInstance.url("mill.auth.bind");
 
-                    Long id_auth_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_auth_user");
+                    Long id_auth_user = PortletTools.getLong(renderRequest, "id_auth_user");
                     if (id_auth_user==null)
                         throw new IllegalArgumentException("id_auth_user not initialized");
 

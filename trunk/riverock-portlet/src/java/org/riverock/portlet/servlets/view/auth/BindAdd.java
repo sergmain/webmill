@@ -52,6 +52,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletConfig;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.PreparedStatement;
@@ -86,14 +89,16 @@ public class BindAdd extends HttpServlet
         try
         {
 
-            CtxInstance ctxInstance =
-                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+//            CtxInstance ctxInstance =
+//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            RenderRequest renderRequest = null;
+            PortletConfig portletConfig = null;
 
             out = response.getWriter();
 
             ContextNavigator.setContentType(response, "utf-8");
 
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( BindIndex.AUTH_BIND_ROLE ) )
             {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/"+CtxInstance.ctx(), "continue");
@@ -107,15 +112,15 @@ public class BindAdd extends HttpServlet
             String nameLocaleBundle = null;
             nameLocaleBundle = "mill.locale.AUTH_USER";
             if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
             // end
 
             AuthInfo authInfoUser = InternalAuthProvider.getAuthInfo( auth_ );
 
             db_ = DatabaseAdapter.getInstance(false);
-            String index_page = ctxInstance.url("mill.auth.bind");
+            String index_page = CtxInstance.url("mill.auth.bind");
 
-                out.write("<form method=\"POST\" action=\""+ctxInstance.url("mill.auth.commit_add_bind")+"\">\r\n");
+                out.write("<form method=\"POST\" action=\""+CtxInstance.url("mill.auth.commit_add_bind")+"\">\r\n");
                 out.write("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"1\">\r\n");
                 out.write("<tr>\r\n");
                 out.write("<th colspan=\"2\">");
@@ -227,10 +232,10 @@ public class BindAdd extends HttpServlet
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_use_current_firm\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\">");
-                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
@@ -291,10 +296,10 @@ public class BindAdd extends HttpServlet
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"is_service\">\r\n");
                     out.write("<option value=\"0\">");
-                    out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                    out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                     out.write("</option>\r\n");
                     out.write("<option value=\"1\">");
-                    out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                    out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                     out.write("</option>\r\n");
                     out.write("</select>\r\n");
                     out.write("</td>\r\n");
@@ -355,10 +360,10 @@ public class BindAdd extends HttpServlet
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"is_road\">\r\n");
                     out.write("<option value=\"0\">");
-                    out.write(ctxInstance.getStringManager().getStr("yesno.no"));
+                    out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
                     out.write("</option>\r\n");
                     out.write("<option value=\"1\">");
-                    out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
+                    out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
                     out.write("</option>\r\n");
                     out.write("</select>\r\n");
                     out.write("</td>\r\n");
@@ -413,7 +418,7 @@ public class BindAdd extends HttpServlet
                 out.write("</table>\r\n");
                 out.write("<br>\r\n");
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
-                out.write(ctxInstance.getStringManager().getStr("button.add"));
+                out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
                 out.write("\">\r\n");
                 out.write("</form>");
 
@@ -423,7 +428,7 @@ public class BindAdd extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
+            out.write(CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n\r\n");
 

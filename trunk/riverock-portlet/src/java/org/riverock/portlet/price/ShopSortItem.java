@@ -23,30 +23,26 @@
  *
  */
 
-package org.riverock.portlet.forum;
+package org.riverock.portlet.price;
 
-import javax.portlet.PortletRequest;
+import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-
-public class SimpleForum extends Forum
+/**
+ * Author: mill
+ * Date: Nov 26, 2002
+ * Time: 4:07:21 PM
+ *
+ * $Id$
+ */
+public class ShopSortItem
 {
+    private static Logger cat = Logger.getLogger("org.riverock.portlet.ShopSortItem");
 
-    public SimpleForum(PortletRequest request, javax.servlet.http.HttpServletResponse response)
-            throws ForumException
-    {
-        super(request);
-    }
+    public String name = "";
+    public String direction = "ASC";
 
-    public SimpleForum()
+    public ShopSortItem()
     {
-    }
-
-    public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__)
-            throws ForumException
-    {
-        return ForumMessage.getInstance(db__, id__);
     }
 
 }
