@@ -41,12 +41,15 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
+import org.riverock.generic.exception.DatabaseException;
+import org.riverock.generic.exception.GenericException;
 
 import org.apache.log4j.Logger;
 
@@ -1331,5 +1334,52 @@ public class DatabaseManager
 
     }
 
+    public static List getIdByList(DatabaseAdapter adapter, String sql, Object[] param)
+        throws GenericException
+    {
+        Statement stmt = null;
+        PreparedStatement pstm;
+        ResultSet rs = null;
+        List list = new ArrayList();
+        try
+        {
+            if (param == null)
+            {
+                stmt = adapter.createStatement();
+                rs = stmt.executeQuery(sql);
+            }
+            else
+            {
+                pstm = adapter.prepareStatement(sql);
+                for (int i = 0; i < param.length; i++)
+                    pstm.setObject(i + 1, param[i]);
 
+                rs = pstm.executeQuery();
+                stmt = pstm;
+            }
+
+            while (rs.next())
+            {
+                long tempLong = rs.getLong(1);
+                if (rs.wasNull())
+                    continue;
+
+                list.add( new Long(tempLong) );
+            }
+            return list;
+        }
+        catch (SQLException e)
+        {
+            log.error("error getting long value fron sql '" + sql + "'", e);
+            throw new GenericException(e.toString());
+        }
+        finally
+        {
+            close(rs, stmt);
+            rs = null;
+            stmt = null;
+            pstm = null;
+        }
+
+    }
 }
