@@ -70,6 +70,14 @@ import java.util.List;
 
 
 
+import javax.portlet.PortletSession;
+
+
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.config.ConfigException;
+
 import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -88,6 +96,8 @@ import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 
 import org.riverock.portlet.schema.portlet.news_block.NewsSiteType;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.portlet.Portlet;
 
 import org.riverock.webmill.portlet.PortletGetList;
@@ -95,12 +105,6 @@ import org.riverock.webmill.portlet.PortletGetList;
 import org.riverock.webmill.portlet.PortletParameter;
 
 import org.riverock.webmill.portlet.PortletResultObject;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-
-
-import org.apache.log4j.Logger;
 
 
 
@@ -268,6 +272,8 @@ public class NewsSite implements Portlet, PortletGetList
 
     private void initNewsItem(NewsBlockType newsBlock)
 
+    throws PortletException
+
     {
 
         if (newsBlock == null)
@@ -306,47 +312,63 @@ public class NewsSite implements Portlet, PortletGetList
 
 
 
-        for (int j=0; j<newsBlock.getNewsGroupCount(); j++)
+        PortletSession session = param.getPortletRequest().getPortletSession();
+
+        CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
+        try
 
         {
 
-            NewsGroupType newsGroupType = newsBlock.getNewsGroup(j);
-
-            for (int i=0; i<newsGroupType.getNewsItemCount(); i++)
+            for (int j=0; j<newsBlock.getNewsGroupCount(); j++)
 
             {
 
-                NewsItemType item = newsGroupType.getNewsItem( i );
+                NewsGroupType newsGroupType = newsBlock.getNewsGroup(j);
 
-                item.setToFullItem( str );
+                for (int i=0; i<newsGroupType.getNewsItemCount(); i++)
 
+                {
 
+                    NewsItemType item = newsGroupType.getNewsItem( i );
 
-                item.setUrlToFullNewsItem(
-
-                    param.getResponse().encodeURL( CtxURL.ctx()) + '?' +
-
-                    param.getPage().getAsURL() + Constants.NAME_ID_NEWS_PARAM + '=' +
-
-                    item.getNewsItemId() + '&' +
-
-                    Constants.NAME_TYPE_CONTEXT_PARAM  + '='+
-
-                    Constants.CTX_TYPE_NEWS
-
-                );
+                    item.setToFullItem( str );
 
 
 
-//                +
+                    item.setUrlToFullNewsItem(
 
-//                '&' + Constants.NAME_TEMPLATE_CONTEXT_PARAM    +
+                        ctxInstance.url( Constants.CTX_TYPE_NEWS ) + '&' +
 
-//                '=' + nameTemplate
+                        Constants.NAME_ID_NEWS_PARAM + '=' + item.getNewsItemId()
 
+                    );
 
+                }
 
             }
+
+        }
+
+        catch (IndexOutOfBoundsException indexOutOfBoundsException)
+
+        {
+
+            log.error("Exception in ", indexOutOfBoundsException);
+
+            throw new PortletException("Exception in "+ indexOutOfBoundsException.toString());
+
+        }
+
+        catch (ConfigException configException)
+
+        {
+
+            log.error("Exception in ", configException);
+
+            throw new PortletException("Exception in "+ configException.toString());
 
         }
 

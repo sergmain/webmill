@@ -68,6 +68,10 @@ import java.util.ArrayList;
 
 
 
+import javax.portlet.PortletSession;
+
+
+
 import org.apache.log4j.Logger;
 
 
@@ -93,6 +97,8 @@ import org.riverock.webmill.portlet.PortletResultObject;
 import org.riverock.webmill.portlet.PortletGetList;
 
 import org.riverock.webmill.portlet.PortletParameter;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.config.WebmillConfig;
 
@@ -326,6 +332,12 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
     {
 
+        PortletSession session = param.getPortletRequest().getPortletSession();
+
+        CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
         JobBlockType block = new JobBlockType();
 
         for (int i = 0; i < v.size(); i++)
@@ -388,7 +400,7 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
             job.setTextJobString( ji.getTextJobString() );
 
-            job.setUrl( ji.getUrlToJob() );
+            job.setUrl( ji.getUrlToJob(ctxInstance) );
 
 
 

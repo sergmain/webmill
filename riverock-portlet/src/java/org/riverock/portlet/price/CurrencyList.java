@@ -368,6 +368,10 @@ public class CurrencyList
 
         w = null;
 
+        DatabaseAdapter.close(db_);
+
+        db_ = null;
+
     }
 
 

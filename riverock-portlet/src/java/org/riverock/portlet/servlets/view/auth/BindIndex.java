@@ -200,7 +200,7 @@ public class BindIndex extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
+            String index_page = ctxInstance.url("mill.auth.bind");
 
 
 
@@ -330,7 +330,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.add_bind")
+                        ctxInstance.url("mill.auth.add_bind")
 
 
 
@@ -572,7 +572,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.ch_bind") + '&'
+                            ctxInstance.url("mill.auth.ch_bind") + '&'
 
 
 
@@ -594,7 +594,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.del_bind") + '&'
+                            ctxInstance.url("mill.auth.del_bind") + '&'
 
 
 
@@ -628,7 +628,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("?");
 
-                    out.write(ctxInstance.page.getAsURL());
+                    out.write(ctxInstance.getAsURL());
 
                     out.write("\">");
 
@@ -724,7 +724,7 @@ public class BindIndex extends HttpServlet
 
             out.write("?");
 
-            out.write(ctxInstance.page.getAsURL());
+            out.write(ctxInstance.getAsURL());
 
             out.write("\">");
 

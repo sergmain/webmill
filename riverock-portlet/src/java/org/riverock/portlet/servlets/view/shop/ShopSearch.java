@@ -606,6 +606,8 @@ public class ShopSearch extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -768,7 +770,7 @@ public class ShopSearch extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance(false);
 
 
 
@@ -1394,7 +1396,15 @@ WHERE id_query = v_id_query;
 
         }
 
+        finally
 
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

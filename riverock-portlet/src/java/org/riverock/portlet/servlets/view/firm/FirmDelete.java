@@ -108,8 +108,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
 
 
@@ -156,6 +154,8 @@ public class FirmDelete extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;;
+
         try
 
         {
@@ -188,7 +188,7 @@ public class FirmDelete extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance( false );
 
 
 
@@ -200,7 +200,7 @@ public class FirmDelete extends HttpServlet
 
 
 
-            String index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
+            String index_page = ctxInstance.url("mill.firm.index");
 
 
 
@@ -266,7 +266,7 @@ public class FirmDelete extends HttpServlet
 
 
 
-                    CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.commit_del_firm")
+                    ctxInstance.url("mill.firm.commit_del_firm")
 
 
 
@@ -286,7 +286,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("\">\r\n");
 
-              out.write( ctxInstance.page.getAsForm() );
+              out.write( ctxInstance.getAsForm() );
 
               out.write("\r\n");
 
@@ -828,7 +828,15 @@ public class FirmDelete extends HttpServlet
 
         }
 
+        finally
 
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

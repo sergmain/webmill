@@ -82,9 +82,11 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.common.tools.StringTools;
 
+import org.riverock.common.config.ConfigException;
+
 import org.riverock.webmill.portlet.PortletParameter;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.portlet.main.Constants;
 
@@ -138,19 +140,15 @@ public class JobItem implements PortletParameterSetter
 
 
 
-    public String getUrlToJob()
+    String getUrlToJob(CtxInstance ctxInstance)
+
+    throws ConfigException
 
     {
 
-        return param.getResponse().encodeURL( CtxURL.ctx() ) + '?' +
+        return ctxInstance.url(Constants.CTX_TYPE_JOB)+ '&' +
 
-            param.getPage().getAsURL() + Constants.NAME_ID_JOB_PARAM + '=' +
-
-            idPosition + '&'+
-
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' +
-
-            Constants.CTX_TYPE_JOB;
+            Constants.NAME_ID_JOB_PARAM + '=' + idPosition;
 
     }
 

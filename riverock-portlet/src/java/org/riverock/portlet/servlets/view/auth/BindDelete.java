@@ -206,7 +206,7 @@ public class BindDelete extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
+            String index_page = ctxInstance.url("mill.auth.bind");
 
 
 
@@ -258,7 +258,7 @@ public class BindDelete extends HttpServlet
 
 
 
-                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_del_bind")
+                    ctxInstance.url("mill.auth.commit_del_bind")
 
 
 
@@ -278,7 +278,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("\">\r\n");
 
-                out.write(ctxInstance.page.getAsForm());
+                out.write(ctxInstance.getAsForm());
 
                 out.write("\r\n");
 

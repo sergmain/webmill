@@ -70,6 +70,10 @@ import java.io.UnsupportedEncodingException;
 
 
 
+import javax.portlet.PortletSession;
+
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
@@ -89,6 +93,8 @@ import org.riverock.webmill.portlet.CtxURL;
 import org.riverock.webmill.portlet.PortletParameter;
 
 import org.riverock.webmill.portlet.PortletTools;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -124,21 +130,15 @@ public class ShopBasket
 
             basket.setItemInBasket( new Integer(OrderLogic.getCountItem(order)) );
 
+            PortletSession session = param.getPortletRequest().getPortletSession();
+
+            CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
 
 
             basket.setCurrentBasketUrl(
 
-                CtxURL.url(
-
-                    param.getPortletRequest(),
-
-                    param.getResponse(),
-
-                    param.getPage(),
-
-                    "mill.invoice"
-
-                ) + '&' +
+                ctxInstance.url("mill.invoice") + '&' +
 
                 Constants.NAME_ID_CURRENCY_SHOP + '=' +
 

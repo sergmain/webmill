@@ -196,7 +196,7 @@ public class RightAdd extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
+            String index_page = ctxInstance.url("mill.auth.right");
 
 
 
@@ -236,7 +236,7 @@ public class RightAdd extends HttpServlet
 
 
 
-                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_add_right")
+                    ctxInstance.url("mill.auth.commit_add_right")
 
 
 

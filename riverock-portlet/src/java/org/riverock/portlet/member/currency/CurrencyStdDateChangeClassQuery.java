@@ -142,29 +142,47 @@ public class CurrencyStdDateChangeClassQuery extends BaseClassQuery
 
     {
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+        DatabaseAdapter db_ = null;
 
-        PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
+        try
 
+        {
 
+            db_ = DatabaseAdapter.getInstance( false );
 
-        CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , idCurrency );
-
-        StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , item.getIdStandardCurrency() );
-
-
-
-        if (stdItem == null || stdItem.getCurrentCurs()==null)
-
-            return "";
+            PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
 
 
 
-        return ""+DateUtils.getStringDate(
+            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , idCurrency );
 
-                stdItem.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH
+            StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , item.getIdStandardCurrency() );
 
-        );
+
+
+            if (stdItem == null || stdItem.getCurrentCurs()==null)
+
+                return "";
+
+
+
+            return ""+DateUtils.getStringDate(
+
+                    stdItem.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH
+
+            );
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

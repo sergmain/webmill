@@ -80,6 +80,14 @@ import java.util.List;
 
 
 
+import javax.portlet.PortletSession;
+
+
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.config.ConfigException;
+
 import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -94,13 +102,9 @@ import org.riverock.portlet.schema.portlet.shop.GroupItemType;
 
 import org.riverock.portlet.schema.portlet.shop.GroupListType;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.PortletParameter;
-
-
-
-import org.apache.log4j.Logger;
 
 
 
@@ -114,11 +118,17 @@ public class PriceGroup
 
     public static GroupListType getInstance(DatabaseAdapter db_, ShopPageParam shopParam, PortletParameter param)
 
-            throws PriceException
+            throws PriceException, ConfigException
 
     {
 
         List groupVector = getInstance(db_, shopParam.id_group, shopParam.id_shop, shopParam.idSite);
+
+
+
+        PortletSession session = param.getPortletRequest().getPortletSession();
+
+        CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
 
 
@@ -152,21 +162,15 @@ public class PriceGroup
 
 
 
-            String url = param.getResponse().encodeURL(
+            String url = ctxInstance.url(Constants.CTX_TYPE_SHOP, shopParam.nameTemplate) + '&' +
 
-                CtxURL.ctx()) + '?' +
-
-                param.getPage().getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' +
-
-                item.id_group + '&' +
+                Constants.NAME_ID_GROUP_SHOP + '=' + item.id_group + '&' +
 
                 shopParam.currencyURL + '&' +
 
                 Constants.NAME_ID_SHOP_PARAM + '=' + shopParam.id_shop + '&' +
 
-                Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_SHOP + '&' +
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + shopParam.nameTemplate;
+                Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_SHOP;
 
 
 

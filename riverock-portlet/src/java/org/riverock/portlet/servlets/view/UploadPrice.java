@@ -180,7 +180,7 @@ public class UploadPrice extends HttpServlet
 
             {
 
-                String param = ctxInstance.page.getAsURL() +
+                String param = ctxInstance.getAsURL() +
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' +
 

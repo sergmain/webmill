@@ -200,7 +200,7 @@ public class ImageSelectUrl extends HttpServlet
 
                     out.write("\">\r\n            ");
 
-                    out.write(ctxInstance.page.getAsForm());
+                    out.write(ctxInstance.getAsForm());
 
                     out.write("\r\n");
 

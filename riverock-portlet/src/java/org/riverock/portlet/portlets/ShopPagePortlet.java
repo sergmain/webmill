@@ -134,6 +134,8 @@ import org.riverock.webmill.portlet.PortletResultObject;
 
 import org.riverock.webmill.portlet.PortletTools;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 
 
 public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGetList
@@ -282,6 +284,8 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         PortletSession session = param.getPortletRequest().getPortletSession();
 
+        CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
         OrderType order = (OrderType) session.getAttribute( Constants.ORDER_SESSION );
 
 
@@ -356,9 +360,9 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        // Если текущая валюта не определена(страница вызвана без указания конкретной валюты),
+        // If current currency not defined( page requested without concrete currency),
 
-        // используем валюту по умолчанию
+        // we will use default currency
 
         if (shopParam.id_currency == null)
 
@@ -400,17 +404,13 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        sortItemUrl = param.getResponse().encodeURL(CtxURL.ctx()) + '?' +
+        sortItemUrl = ctxInstance.url(Constants.CTX_TYPE_SHOP, shopParam.nameTemplate)+'&'+
 
-            param.getPage().getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
+            Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
 
             shopParam.currencyURL + '&' +
 
             Constants.NAME_ID_SHOP_PARAM + '=' + shopParam.id_shop + '&' +
-
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_SHOP + '&' +
-
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + shopParam.nameTemplate + '&' +
 
             Constants.NAME_ID_CURRENCY_SHOP + '=' + shopParam.id_currency + '&';
 
@@ -490,24 +490,6 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-/*
-
-        if (cat.isDebugEnabled())
-
-            cat.debug("LocalePackage - " + param.localePackage);
-
-
-
-        if (localePackage != null)
-
-            shopParam.sm = StringManager.getManager(localePackage, ctxInstance.getPortletRequest().getLocale());
-
-        else
-
-            shopParam.sm = jspPage.sCustom;
-
-*/
-
         shopParam.sm = param.getSm();
 
 
@@ -522,7 +504,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
                     shopParam,
 
-                    param.getPage(),
+                    ctxInstance,
 
                     param.getResponse().encodeURL(CtxURL.ctx())
 
@@ -534,7 +516,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        shopPage.setPricePosition( PriceListPosition.getInstance(db_, param.getResponse(), param.getPage(), shopParam) );
+        shopPage.setPricePosition( PriceListPosition.getInstance(db_, ctxInstance, shopParam) );
 
         shopPage.setCurrentBasket( ShopBasket.getInstance(order, shopParam.sm, param) );
 

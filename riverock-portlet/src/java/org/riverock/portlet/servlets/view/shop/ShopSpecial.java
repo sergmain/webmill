@@ -150,6 +150,8 @@ public class ShopSpecial extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -176,7 +178,7 @@ public class ShopSpecial extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance(false);
 
 
 
@@ -394,7 +396,15 @@ public class ShopSpecial extends HttpServlet
 
         }
 
+        finally
 
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
 

@@ -106,8 +106,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
 
 
@@ -198,7 +196,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index");
+                String index_page = ctxInstance.url("mill.image.index");
 
 
 
@@ -218,7 +216,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.desc") + '&' +
+                            ctxInstance.url("mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -238,7 +236,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.select_url") + '&' +
+                            ctxInstance.url("mill.image.select_url") + '&' +
 
                             "id_main=" + id_main_
 
@@ -424,7 +422,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.desc") + '&' +
+                            ctxInstance.url("mill.image.desc") + '&' +
 
                             "id_main=" + id_main_
 
@@ -444,7 +442,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.select_url") + '&' +
+                            ctxInstance.url("mill.image.select_url") + '&' +
 
                             "id_main=" + id_main_
 
@@ -464,7 +462,7 @@ public class ImageIndex extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.list") + '&' +
+                            ctxInstance.url("mill.image.list") + '&' +
 
                             "id_main=" + id_main_
 

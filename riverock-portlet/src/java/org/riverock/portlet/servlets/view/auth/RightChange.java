@@ -212,7 +212,7 @@ public class RightChange extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
+            String index_page = ctxInstance.url("mill.auth.right");
 
 
 
@@ -296,7 +296,7 @@ public class RightChange extends HttpServlet
 
                     out.write(
 
-                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_ch_right")
+                        ctxInstance.url("mill.auth.commit_ch_right")
 
 
 

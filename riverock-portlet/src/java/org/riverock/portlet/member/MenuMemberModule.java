@@ -48,7 +48,7 @@
 
 
 
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.member;
 
 
 

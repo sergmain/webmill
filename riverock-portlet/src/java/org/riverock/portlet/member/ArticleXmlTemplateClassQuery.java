@@ -122,14 +122,6 @@ public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
 
     {
 
-//        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
-
-//        PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.getServerName() );
-
-//        StringManager sm = StringManager.getManager("mill.locale.main", p.defaultLocale);
-
-
-
         return ctxInstance.page.sMain.getStr("yesno.no");
 
     }
@@ -152,43 +144,17 @@ public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
 
         List v = new ArrayList();
 
-//        DatabaseAdapter db_ = null;
-
-//        try
-
-        {
-
-//            db_ = DatabaseAdapter.getInstance( false );
-
-//            PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.getServerName() );
-
-//            StringManager sm = StringManager.getManager("mill.locale.main", p.defaultLocale);
+        ClassQueryItem item = new ClassQueryItem(new Long(0), ctxInstance.page.sMain.getStr("yesno.no") );
 
 
 
-            ClassQueryItem item = new ClassQueryItem(new Long(0), ctxInstance.page.sMain.getStr("yesno.no") );
+        item.isSelected = true;
 
 
 
-            item.isSelected = true;
+        v.add( item );
 
-
-
-            v.add( item );
-
-            return v;
-
-        }
-
-//        finally
-
-//        {
-
-//            DatabaseManager.close(db_);
-
-//            db_ = null;
-
-//        }
+        return v;
 
     }
 

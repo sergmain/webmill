@@ -94,8 +94,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
 
 
@@ -184,11 +182,17 @@ public class LoginCheck extends HttpServlet
 
 
 
-            log.warn("ctxInstance: "+ctxInstance);
+            if (log.isDebugEnabled())
 
-            if (ctxInstance!=null)
+            {
 
-                log.warn("ctxInstance.getPortletRequest(): "+ctxInstance.getPortletRequest());
+                log.debug("ctxInstance: "+ctxInstance);
+
+                if (ctxInstance!=null)
+
+                    log.debug("ctxInstance.getPortletRequest(): "+ctxInstance.getPortletRequest());
+
+            }
 
 
 
@@ -216,7 +220,7 @@ public class LoginCheck extends HttpServlet
 
             if(log.isDebugEnabled())
 
-                log.debug("URL #1: "+PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM  , "ctx?"+ctxInstance.page.getAsURL()));
+                log.debug("URL #1: "+PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM  , "ctx?"+ctxInstance.getAsURL()));
 
 
 
@@ -226,7 +230,7 @@ public class LoginCheck extends HttpServlet
 
                 session.setAttribute( Constants.AUTH_SESSION, auth_);
 
-                String url = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM  , "ctx?"+ctxInstance.page.getAsURL());
+                String url = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TOURL_PARAM  , "ctx?"+ctxInstance.getAsURL());
 
 
 
@@ -288,7 +292,7 @@ public class LoginCheck extends HttpServlet
 
 
 
-            String redirUrl= CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_LOGIN );
+            String redirUrl= ctxInstance.url(Constants.CTX_TYPE_LOGIN );
 
 
 

@@ -48,7 +48,7 @@
 
 
 
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.member;
 
 
 
@@ -71,6 +71,8 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
 
 import org.riverock.sso.a3.AuthInfo;
+
+import org.riverock.portlet.portlets.PortletException;
 
 
 

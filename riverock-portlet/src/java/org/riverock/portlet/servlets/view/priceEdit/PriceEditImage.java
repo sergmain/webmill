@@ -220,7 +220,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index");
+                String index_page = ctxInstance.url("mill.price.index");
 
 
 
@@ -290,9 +290,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                    PricePositionType pos = PriceListPosition.getInstance(db_, response,
-
-                            ctxInstance.page, shopParam);
+                    PricePositionType pos = PriceListPosition.getInstance(db_, ctxInstance, shopParam);
 
 
 
@@ -324,7 +322,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
+                                    ctxInstance.url("mill.price.image") + '&' +
 
                                     "id_item=" + id_item
 
@@ -364,7 +362,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
+                                        ctxInstance.url("mill.price.image") + '&' +
 
                                         "i=" + item.getIdGroupCurrent()
 
@@ -448,7 +446,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
+                                    ctxInstance.url("mill.price.image") + '&' +
 
                                     "id_main=" + itemGroup.id_group + "&id_item=" + id_item
 
@@ -618,7 +616,7 @@ public class PriceEditImage extends HttpServlet
 
                                 out.write("<a href=\"");
 
-                                out.write(response.encodeURL("change_desc.jsp") + "?" + ctxInstance.page.getAsURL());
+                                out.write(response.encodeURL("change_desc.jsp") + "?" + ctxInstance.getAsURL());
 
                                 out.write("id=");
 
@@ -638,7 +636,7 @@ public class PriceEditImage extends HttpServlet
 
                                 out.write(
 
-                                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description") + '&' +
+                                        ctxInstance.url("mill.price.description") + '&' +
 
                                         "id_item=" + id_item +
 
@@ -698,7 +696,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
+                                    ctxInstance.url("mill.price.image") + '&' +
 
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum - 1) +
 
@@ -740,7 +738,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image") + '&' +
+                                    ctxInstance.url("mill.price.image") + '&' +
 
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum + 1) +
 

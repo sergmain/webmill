@@ -206,7 +206,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                    String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index");
+                    String index_page = ctxInstance.url("mill.price.index");
 
 
 
@@ -602,7 +602,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description")
+                                ctxInstance.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description")
 
 
 
@@ -696,7 +696,7 @@ public class PriceEditDescription extends HttpServlet
 
 
 
-                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image")
+                                ctxInstance.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.image")
 
 
 

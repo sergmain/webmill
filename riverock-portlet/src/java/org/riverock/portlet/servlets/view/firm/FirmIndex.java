@@ -108,8 +108,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 
 
 public class FirmIndex extends HttpServlet
@@ -154,6 +152,8 @@ public class FirmIndex extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -188,11 +188,11 @@ public class FirmIndex extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance( false );
 
 
 
-            String index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
+            String index_page = ctxInstance.url("mill.firm.index");
 
 
 
@@ -284,7 +284,7 @@ public class FirmIndex extends HttpServlet
 
                          "<p><a href=\""+
 
-                         CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.add_firm")+
+                         ctxInstance.url("mill.firm.add_firm")+
 
                          "\">"+ctxInstance.page.sMain.getStr("button.add")+"</a></p>"+
 
@@ -370,7 +370,7 @@ public class FirmIndex extends HttpServlet
 
                                 "<input type=\"button\" value=\""+ctxInstance.page.sMain.getStr("button.change")+"\" onclick=\"location.href='"+
 
-                                CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.ch_firm") + '&'+
+                                ctxInstance.url("mill.firm.ch_firm") + '&'+
 
                                 "id_firm="+id_firm +
 
@@ -378,7 +378,7 @@ public class FirmIndex extends HttpServlet
 
                                 "<input type=\"button\" value=\""+ctxInstance.page.sMain.getStr("button.delete")+"\" onclick=\"location.href='"+
 
-                                CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.del_firm") + '&'+
+                                ctxInstance.url("mill.firm.del_firm") + '&'+
 
                                 "id_firm="+id_firm+
 
@@ -402,7 +402,7 @@ public class FirmIndex extends HttpServlet
 
 
 
-                            CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.add_firm")+
+                            ctxInstance.url("mill.firm.add_firm")+
 
 
 
@@ -457,6 +457,16 @@ public class FirmIndex extends HttpServlet
             log.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

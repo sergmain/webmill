@@ -178,7 +178,7 @@ public class ImageSelectFile extends HttpServlet
 
 
 
-                String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.index");
+                String index_page = ctxInstance.url("mill.image.index");
 
 
 
@@ -224,7 +224,7 @@ public class ImageSelectFile extends HttpServlet
 
 
 
-                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.image.upload_image")
+                            ctxInstance.url("mill.image.upload_image")
 
 
 
