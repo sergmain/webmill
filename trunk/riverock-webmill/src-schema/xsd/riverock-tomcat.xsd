@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.webmill - Portal framework implementation
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>Tomcat 4 Schema</xs:documentation>
+	</xs:annotation>
+	<xs:element name="Server" type="ServerType"/>
+	<xs:element name="Context" type="ContextType"/>
+	<xs:complexType name="EnvironmentType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">
+					<xs:enumeration value="java.lang.Integer"/>
+					<xs:enumeration value="java.lang.String"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="override" type="xs:boolean" use="optional"/>
+		<xs:attribute name="naming" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ConnectorType">
+		<xs:attribute name="className" type="xs:string" use="required"/>
+		<xs:attribute name="port" type="xs:int" use="required"/>
+		<xs:attribute name="minProcessors" type="xs:int" use="required"/>
+		<xs:attribute name="maxProcessors" type="xs:int" use="required"/>
+		<xs:attribute name="enableLookups" type="xs:boolean" use="required"/>
+		<xs:attribute name="redirectPort" type="xs:int" use="optional"/>
+		<xs:attribute name="acceptCount" type="xs:int" use="required"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+		<xs:attribute name="connectionTimeout" type="xs:int" use="optional"/>
+		<xs:attribute name="useURIValidationHack" type="xs:boolean" use="optional"/>
+		<xs:attribute name="protocolHandlerClassName" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="ContextType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="Logger" type="LoggerType" minOccurs="0"/>
+			<xs:element name="Ejb" type="EjbType" minOccurs="0"/>
+			<xs:element name="Environment" type="EnvironmentType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Parameter" type="ParameterType" minOccurs="0"/>
+			<xs:element name="Resource" type="ResourceType" minOccurs="0"/>
+			<xs:element name="ResourceParams" type="ResourceParamsType" minOccurs="0"/>
+			<xs:element name="ResourceLink" type="ResourceLinkType"/>
+		</xs:choice>
+		<xs:attribute name="path" type="xs:string" use="required"/>
+		<xs:attribute name="docBase" type="xs:string" use="required"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+		<xs:attribute name="reloadable" type="xs:boolean" use="optional"/>
+		<xs:attribute name="useNaming" type="xs:boolean"/>
+		<xs:attribute name="crossContext" type="xs:boolean" use="optional"/>
+		<xs:attribute name="privileged" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="EjbType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+		<xs:attribute name="home" type="xs:string" use="required"/>
+		<xs:attribute name="remote" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="EngineType">
+		<xs:sequence>
+			<xs:element name="Logger" type="LoggerType" minOccurs="0"/>
+			<xs:element name="Realm" type="RealmType" minOccurs="0"/>
+			<xs:element name="Host" type="HostType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="className" type="xs:string" use="optional"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="defaultHost" type="xs:string" use="optional"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+		<xs:attribute name="appBase" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="GlobalNamingResourcesType">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="Environment" type="EnvironmentType"/>
+			<xs:element name="Resource" type="ResourceType"/>
+			<xs:element name="ResourceParams" type="ResourceParamsType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="HostType">
+		<xs:sequence>
+			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="Logger" type="LoggerType" minOccurs="0"/>
+				<xs:element name="Valve" type="ValveType" minOccurs="0"/>
+			</xs:choice>
+			<xs:sequence>
+				<xs:element name="Context" type="ContextType"/>
+			</xs:sequence>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+		<xs:attribute name="appBase" type="xs:string" use="required"/>
+		<xs:attribute name="unpackWARs" type="xs:boolean" use="optional"/>
+		<xs:attribute name="autoDeploy" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ListenerType">
+		<xs:attribute name="className" type="xs:string" use="required"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="LoggerType">
+		<xs:attribute name="className" type="xs:string" use="required"/>
+		<xs:attribute name="prefix" type="xs:string" use="required"/>
+		<xs:attribute name="suffix" type="xs:string" use="required"/>
+		<xs:attribute name="timestamp" type="xs:boolean" use="required"/>
+		<xs:attribute name="directory" type="xs:string"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ValveType">
+		<xs:attribute name="className" type="xs:string" use="required"/>
+		<xs:attribute name="suffix" type="xs:string" use="required"/>
+		<xs:attribute name="pattern" type="xs:string" use="required"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+		<xs:attribute name="directory" type="xs:string" use="required"/>
+		<xs:attribute name="prefix" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ParameterType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+		<xs:attribute name="override" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="RealmType">
+		<xs:attribute name="className" type="xs:string" use="required"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+		<xs:attribute name="resourceName" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="ResourceType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="name" type="xs:string" use="required"/>
+				<xs:attribute name="auth" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:NMTOKEN">
+							<xs:enumeration value="Container"/>
+							<xs:enumeration value="SERVLET"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="type" type="xs:string" use="required"/>
+				<xs:attribute name="description" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="ResourceLinkType">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="global" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ResourceParamsType">
+		<xs:sequence>
+			<xs:element name="parameter" type="ResourceParameterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ServiceType">
+		<xs:sequence>
+			<xs:element name="Connector" type="ConnectorType" maxOccurs="unbounded"/>
+			<xs:element name="Engine" type="EngineType"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ResourceParameterType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="value" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ServerType">
+		<xs:sequence>
+			<xs:element name="Listener" type="ListenerType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="GlobalNamingResources" type="GlobalNamingResourcesType" minOccurs="0"/>
+			<xs:element name="Service" type="ServiceType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="port" type="xs:int" use="required"/>
+		<xs:attribute name="shutdown" type="xs:string" use="required"/>
+		<xs:attribute name="debug" type="xs:int" use="optional"/>
+	</xs:complexType>
+</xs:schema>

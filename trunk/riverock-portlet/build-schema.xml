@@ -66,7 +66,7 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <property name="local-lib.dir" value="lib"/>
 
@@ -292,7 +292,7 @@
 
     <target name="gen_member_schema" depends="prepare">
 
-        <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema\member"/>
+        <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/member"/>
 
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-member.xsd"/>
 
@@ -325,8 +325,6 @@
         <antcall target="gen_schema"/>
 
     </target>
-
-
 
     <target name="gen_core_schema" depends="prepare">
 

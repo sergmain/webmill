@@ -108,9 +108,11 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.generic.mail.MailMessage;
+import org.riverock.common.mail.MailMessage;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
+
+import org.riverock.generic.config.GenericConfig;
 
 import org.riverock.portlet.core.GetPriceListItem;
 
@@ -796,7 +798,9 @@ public class OrderLogic extends HttpServlet
 
                         jspPage.p.sites.getAdminEmail(),
 
-                        "Confirm registration"
+                        "Confirm registration",
+
+                        GenericConfig.getMailSMTPHost()
 
                     );
 
