@@ -6,6 +6,12 @@ $Id$
 
 
 
+5.0.0
+
+- all projects are moved to riverock projects. http://sf.net/projects/riverock
+
+
+
 4.0.2 (22.03.2004)
 
 - release of v4.0.2
