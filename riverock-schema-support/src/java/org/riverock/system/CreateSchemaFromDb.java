@@ -2788,53 +2788,35 @@ public class CreateSchemaFromDb
 
 
 
-        if (isKeyField( field ))
+        if (isKeyField( field ) &&
+
+            (
+
+            (field.getJavaType().intValue()==Types.DECIMAL) ||
+
+            (field.getJavaType().intValue()==Types.DOUBLE) ||
+
+            (field.getJavaType().intValue()==Types.INTEGER)
+
+            )
+
+        )
+
+            return addNamespace( DatatypeHandler.LONG_TYPE );
+
+
+
+        switch ( field.getJavaType().intValue() )
 
         {
 
-            type =  DatatypeHandler.LONG_TYPE;
-
-        }
-
-        else
-
-        {
 
 
+            case Types.DECIMAL:
 
-            switch ( field.getJavaType().intValue() )
+                if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
 
-            {
-
-
-
-                case Types.DECIMAL:
-
-                    if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
-
-                    {
-
-                        if (field.getSize().intValue()<7)
-
-                            type = DatatypeHandler.INTEGER_TYPE;
-
-                        else
-
-                            type = DatatypeHandler.LONG_TYPE;
-
-                    }
-
-                    else
-
-                        type = DatatypeHandler.DOUBLE_TYPE;
-
-
-
-                    break;
-
-
-
-                case Types.INTEGER:
+                {
 
                     if (field.getSize().intValue()<7)
 
@@ -2844,55 +2826,75 @@ public class CreateSchemaFromDb
 
                         type = DatatypeHandler.LONG_TYPE;
 
-                    break;
+                }
 
-
-
-                case Types.DOUBLE:
+                else
 
                     type = DatatypeHandler.DOUBLE_TYPE;
 
-                    break;
+
+
+                break;
 
 
 
-                case Types.VARCHAR:
+            case Types.INTEGER:
 
-                case Types.LONGVARCHAR:
+                if (field.getSize().intValue()<7)
 
-                case Types.LONGVARBINARY:
+                    type = DatatypeHandler.INTEGER_TYPE;
 
-                    type = DatatypeHandler.STRING_TYPE;
+                else
 
-                    break;
+                    type = DatatypeHandler.LONG_TYPE;
 
-
-
-                case Types.DATE:
-
-                case Types.TIMESTAMP:
-
-                    type = DatatypeHandler.DATETIME_TYPE;
-
-                    break;
+                break;
 
 
 
-                default:
+            case Types.DOUBLE:
 
-                    type = DatatypeHandler.STRING_TYPE;
+                type = DatatypeHandler.DOUBLE_TYPE;
+
+                break;
+
+
+
+            case Types.VARCHAR:
+
+            case Types.LONGVARCHAR:
+
+            case Types.LONGVARBINARY:
+
+                type = DatatypeHandler.STRING_TYPE;
+
+                break;
+
+
+
+            case Types.DATE:
+
+            case Types.TIMESTAMP:
+
+                type = DatatypeHandler.DATETIME_TYPE;
+
+                break;
+
+
+
+            default:
+
+                type = DatatypeHandler.STRING_TYPE;
 
 //                    field.setJavaStringType( "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() );
 
-                    System.out.println(
+                System.out.println(
 
                         "unknown field type field - "+field.getName()+" javaType - " + field.getJavaType() +
 
                         "\nSet to "+config.getDefaultNamespacePrefix()+':'+"string XMLSchema type"
 
-                    );
-
-            }
+                );
 
         }
 
@@ -3056,7 +3058,7 @@ public class CreateSchemaFromDb
 
                 attr.setSimpleTypeReference(
 
-                    addNamespace(DatatypeHandler.LONG_TYPE)
+                    convertType(field)
 
                 );
 
