@@ -84,13 +84,19 @@ public class JsmithyNamespases
 
 
 
-        { "jsmithy-",   "http://generic.jsmithy.com/xsd/jsmithy-database-structure.xsd" },
+        { "jsmithy-",         "http://generic.jsmithy.com/xsd/jsmithy-database-structure.xsd" },
 
-
-
-        { "jsmithy-sso",   "http://sso.jsmithy.com/xsd/jsmithy-sso.xsd" },
+        { "jsmithy-sso",      "http://sso.jsmithy.com/xsd/jsmithy-sso.xsd" },
 
         { "jsmithy-sso-core", "http://sso.jsmithy.com/xsd/jsmithy-sso-core.xsd" },
+
+
+
+        { "riverock-db-stuct", "http://generic.riverock.org/xsd/riverock-database-structure.xsd" },
+
+        { "riverock-sso",      "http://sso.riverock.org/xsd/riverock-sso.xsd" },
+
+        { "riverock-sso-core", "http://sso.riverock.org/xsd/riverock-sso-core.xsd" },
 
 
 
