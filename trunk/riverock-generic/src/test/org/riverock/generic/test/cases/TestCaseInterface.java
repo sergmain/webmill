@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.test.cases;
+package org.riverock.generic.test.cases;
 
 
 

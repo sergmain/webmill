@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.test;
+package org.riverock.generic.test;
 
 
 
@@ -74,7 +74,7 @@ public class TestURI
 
 {
 
-    private static String addr = "file:/d:\\";
+    private static String addr = "file:/c:\\";
 
 
 
