@@ -57,6 +57,10 @@
 
     <target name="set_release_version"/>
 
+    <target name="full_clean">
+        <antcall target="clean"/>
+    </target>
+
     <target name="clean" depends="init">
         <delete failonerror="false">
             <fileset dir="${build.dir}">

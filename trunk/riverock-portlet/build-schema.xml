@@ -93,12 +93,13 @@
     </target>
 
     <target name="delete_all_schema">
-        <delete includeEmptyDirs="false" failonerror="false">
+        <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${src.java.dir}/${main-package.dir}/schema/">
                 <include name="**/*.java"/>
                 <exclude name="**/CVS/**"/>
             </fileset>
         </delete>
+        <delete dir="${src.java.dir}/org" includeemptydirs="true"/>
     </target>
 
     <target name="gen_all_schema">
@@ -112,55 +113,55 @@
         <antcall target="gen_core_schema"/>
         <antcall target="gen_portlet_schema"/>
     </target>
-    <target name="gen_config_schema" depends="prepare">
+    <target name="gen_config_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/config/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-config.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.config"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_shop_schema" depends="prepare">
+    <target name="gen_shop_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/shop/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-shop.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.shop"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_member_schema" depends="prepare">
+    <target name="gen_member_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/member"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-member.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.member"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_price_schema" depends="prepare">
+    <target name="gen_price_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/price/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-price.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.price"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_import_price_schema" depends="prepare">
+    <target name="gen_import_price_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/import_price/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-import-price.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.import_price"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_core_schema" depends="prepare">
+    <target name="gen_core_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/core/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-schema-core.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.core"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_core-extend_schema" depends="prepare">
+    <target name="gen_core-extend_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/extend/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-core-extend.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.extend"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_desc_schema_$" depends="prepare">
+    <target name="gen_portlet_desc_schema_$">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/description/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-desc.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.description"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_schema" depends="prepare">
+    <target name="gen_portlet_schema">
 <!--        <antcall target="gen_portlet_desc_schema_$"/>-->
         <antcall target="gen_portlet_article_schema"/>
         <antcall target="gen_portlet_shop_schema"/>
@@ -170,82 +171,82 @@
         <antcall target="gen_portlet_job_schema"/>
         <antcall target="gen_portlet_menu_member_schema"/>
     </target>
-    <target name="gen_portlet_article_schema" depends="prepare">
+    <target name="gen_portlet_article_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/article"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-article.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.article"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_shop_schema" depends="prepare">
+    <target name="gen_portlet_shop_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/shop/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-shop.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.shop"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_menu_schema" depends="prepare">
+    <target name="gen_portlet_menu_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/menu/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-menu.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.menu"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_news_block_schema" depends="prepare">
+    <target name="gen_portlet_news_block_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/news_block"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-news-block.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.news_block"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_faq_schema" depends="prepare">
+    <target name="gen_portlet_faq_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/faq"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-faq.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.faq"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_job_schema" depends="prepare">
+    <target name="gen_portlet_job_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/job"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-job.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.job"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_portlet_menu_member_schema" depends="prepare">
+    <target name="gen_portlet_menu_member_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/portlet/menu_member/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-menu-member.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.menu_member"/>
         <antcall target="gen_schema"/>
     </target>
 <!--
-<target name="gen_transfer_file_schema" depends="prepare">
+<target name="gen_transfer_file_schema">
     <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema/transfer\"/>
     <property name="schema-file" value="${src.xsd.dir}/riverock-transfer-file.xsd"/>
     <property name="schema-package-java" value="org.riverock.schema.transfer"/>
     <antcall target="gen_schema"/>
 </target>
 
-<target name="gen_castor_schema" depends="prepare">
+<target name="gen_castor_schema">
     <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema\castor\"/>
     <property name="schema-file" value="${src.xsd.dir}/riverock-castor-mapping.xsd"/>
     <property name="schema-package-java" value="org.riverock.schema.castor"/>
     <antcall target="gen_schema"/>
 </target>
 
-    <target name="gen_test_schema" depends="prepare">
+    <target name="gen_test_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema\test\"/>
         <property name="schema-file" value="${src.xsd.dir}/test/riverock-test-schema.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.test"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_test_with_2_sequnce" depends="prepare">
+    <target name="gen_test_with_2_sequnce">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema\test\test_2_sequence"/>
         <property name="schema-file" value="${src.xsd.dir}/test\test_with_2_sequnce.xsd"/>
         <property name="schema-package-java" value="org.riverock.schema.test.test_2_sequence"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_test_import_schema" depends="prepare">
+    <target name="gen_test_import_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema\testimport\"/>
         <property name="schema-file" value="${src.xsd.dir}/test\prr_complex_only.xsd "/>
         <property name="schema-package-java" value="org.riverock.schema.testimport"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_test_import_core_schema" depends="prepare">
+    <target name="gen_test_import_core_schema">
         <property name="schema-dir" value="${src.java.dir}/${main-package.dir}/schema\testimport\core"/>
         <property name="schema-file" value="${src.xsd.dir}/test\prr-core.xsd "/>
         <property name="schema-package-java" value="org.riverock.schema.testimport.core"/>
@@ -253,7 +254,6 @@
     </target>
 -->
     <target name="gen_schema">
-<!--        <antcall target="clean"/>-->
         <delete includeEmptyDirs="false" failonerror="false">
             <fileset dir="${schema-dir}">
                 <include name="*.java"/>
@@ -280,37 +280,4 @@
         </java>
     </target>
 
-    <!-- Note this file can only make Ant display values set in the file correctly, -->
-    <!-- but external values in the environment or properties file will be operational.  -->
-    <!-- Help on usage                                                       -->
-    <target name="usage">
-        <echo message=""/>
-        <echo message=""/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=" available targets are:"/>
-        <echo message=""/>
-        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-        <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-        <echo message="   distclean    --> cleans up the distribution directory, ${dist.dir}"/>
-        <echo message="   usage        --> show this message (default)"/>
-        <echo message=""/>
-        <echo message=" See the comments inside the build.xml file for more details."/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=""/>
-    </target>
-    <!-- Prepares the build directory                                        -->
-    <target name="prepare">
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dest}"/>
-        <mkdir dir="${build.tests}"/>
-    </target>
-    <!-- Checks for necessary libraries and correct versions of libraries    -->
-    <!--
-    <target name="check.servlet" depends="prepare" unless="has.servlet">
-        <fail message="servlet library does not appear to be in the classpath."/>
-    </target>
-    -->
 </project>
