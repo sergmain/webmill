@@ -70,9 +70,9 @@ package org.riverock.generic.db.factory;
 
 import org.riverock.common.tools.RsetTools;
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 
@@ -92,11 +92,11 @@ import java.util.ArrayList;
 
 
 
-public class HSQLconnect extends DBconnect
+public class HSQLconnect extends DatabaseAdapter
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.HSQLconnect" );
+    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.HSQLconnect" );
 
 
 

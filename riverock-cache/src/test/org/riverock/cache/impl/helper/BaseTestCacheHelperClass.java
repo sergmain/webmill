@@ -48,7 +48,7 @@
 
 
 
-package org.riverock.test.cache.helper;
+package org.riverock.cache.impl.helper;
 
 
 
@@ -56,9 +56,9 @@ import org.apache.log4j.Logger;
 
 
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.main.CacheItemV2;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 
 
@@ -112,7 +112,7 @@ public class BaseTestCacheHelperClass extends CacheItemV2
 
 
 
-     public static BaseTestCacheHelperClass getInstance(DBconnect db__, Long id__)
+     public static BaseTestCacheHelperClass getInstance(DatabaseAdapter db__, Long id__)
 
          throws Exception
 
@@ -124,7 +124,7 @@ public class BaseTestCacheHelperClass extends CacheItemV2
 
 
 
-     public static BaseTestCacheHelperClass getInstance(DBconnect db__, long id__)
+     public static BaseTestCacheHelperClass getInstance(DatabaseAdapter db__, long id__)
 
          throws Exception
 
@@ -136,7 +136,7 @@ public class BaseTestCacheHelperClass extends CacheItemV2
 
 
 
-     public TestCacheItem getData(DBconnect db_, long id)
+     public TestCacheItem getData(DatabaseAdapter db_, long id)
 
          throws Exception
 
@@ -156,7 +156,7 @@ public class BaseTestCacheHelperClass extends CacheItemV2
 
 
 
-     public BaseTestCacheHelperClass(DBconnect db_, long id)
+     public BaseTestCacheHelperClass(DatabaseAdapter db_, long id)
 
          throws Exception
 
@@ -168,7 +168,7 @@ public class BaseTestCacheHelperClass extends CacheItemV2
 
 
 
-     public BaseTestCacheHelperClass(DBconnect db_, Long id)
+     public BaseTestCacheHelperClass(DatabaseAdapter db_, Long id)
 
          throws Exception
 

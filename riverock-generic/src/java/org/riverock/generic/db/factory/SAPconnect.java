@@ -84,9 +84,9 @@ import java.util.Calendar;
 
 
 
-import org.riverock.generic.db.DBconnect;
-
 import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 
@@ -110,11 +110,11 @@ import org.apache.log4j.Logger;
 
 
 
-public class SAPconnect extends DBconnect
+public class SAPconnect extends DatabaseAdapter
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.SAPconnect" );
+    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.SAPconnect" );
 
 
 

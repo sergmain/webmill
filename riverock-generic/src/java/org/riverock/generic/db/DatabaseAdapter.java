@@ -66,6 +66,8 @@ import org.riverock.generic.config.GenericConfig;
 
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 
+import org.riverock.generic.schema.config.types.DataSourceTypeType;
+
 import org.riverock.generic.schema.db.CustomSequenceType;
 
 import org.riverock.generic.schema.db.structure.*;
@@ -113,6 +115,10 @@ import java.io.FileNotFoundException;
 
 
 import org.apache.log4j.Logger;
+
+
+
+import javax.sql.DataSource;
 
 
 
@@ -674,9 +680,9 @@ public abstract class DatabaseAdapter
 
     protected boolean isDriverLoaded = false;
 
-
-
     public DatabaseConnectionType dc = null;
+
+    protected DataSource dataSource = null;
 
 
 
@@ -3196,7 +3202,9 @@ public abstract class DatabaseAdapter
 
 
 
-    protected abstract void init(DatabaseConnectionType dc_) throws SQLException, ClassNotFoundException;
+    protected abstract void init(DatabaseConnectionType dc_)
+
+        throws SQLException, ClassNotFoundException, DatabaseException;
 
 
 
@@ -3248,39 +3256,53 @@ public abstract class DatabaseAdapter
 
 
 
-    protected static DBconnect openDynamicConnect(String connectionName)
+    protected static DatabaseAdapter openDynamicConnect(String connectionName)
 
         throws DatabaseException, ConfigException
 
     {
 
-        DBconnect db_ = null;
+        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
+
+        return openDynamicConnect(dc);
+
+    }
 
 
 
-        String connName = null;
+    protected static DatabaseAdapter openDynamicConnect(DatabaseConnectionType dc)
+
+        throws DatabaseException
+
+    {
+
+        DatabaseAdapter db_ = null;
+
+
+
+        String connClassName = null;
 
         try
 
         {
 
-            connName = getDBconnectClassName(connectionName);
+            connClassName = dc.getConnectionClass();
 
             if (log.isDebugEnabled())
 
             {
 
-                System.out.println("Call for create dynamic object " + connName);
+                System.out.println("Call for create dynamic object " + connClassName);
 
-                log.debug("Call for create dynamic object " + connName);
+                log.debug("Call for create dynamic object " + connClassName);
 
             }
 
 
 
-            db_ = (DBconnect) MainTools.createCustomObject(connName);
+            db_ = (DatabaseAdapter) MainTools.createCustomObject(connClassName);
 
-            db_.init(GenericConfig.getDatabaseConnection(connectionName));
+            db_.init(dc);
 
             db_.conn.setAutoCommit(false);
 
@@ -3294,21 +3316,11 @@ public abstract class DatabaseAdapter
 
             {
 
-                System.out.println("Success create dynamic object " + connName);
+                System.out.println("Success create dynamic object " + connClassName);
 
-                log.debug("Success create dynamic object " + connName);
+                log.debug("Success create dynamic object " + connClassName);
 
             }
-
-        }
-
-        catch (ConfigException e)
-
-        {
-
-            log.error("ConfigException while get new connection()", e);
-
-            throw e;
 
         }
 
@@ -3342,15 +3354,15 @@ public abstract class DatabaseAdapter
 
 
 
-            log.fatal("Error create instance for class " + connName);
+            log.fatal("Error create instance for class " + connClassName);
 
-            log.fatal("ConnectionName - " + connectionName);
+            log.fatal("ConnectionName - " + dc.getName());
 
             log.fatal("Error:", e);
 
 
 
-            System.out.println("\nError create instance for class " + connName + "\nSee log for details");
+            System.out.println("\nError create instance for class " + connClassName + "\nSee log for details");
 
             throw new DatabaseException("Exception in create connection "+e.toString());
 
@@ -3362,13 +3374,27 @@ public abstract class DatabaseAdapter
 
 
 
-    private static DBconnect openConnectPrivate(String connectionName )
+    private static DatabaseAdapter openConnectPrivate(String connectionName )
 
             throws DatabaseException, ConfigException
 
     {
 
-        String connName = getDBconnectClassName(connectionName);
+        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
+
+        return openConnectPrivate(dc);
+
+    }
+
+
+
+    private static DatabaseAdapter openConnectPrivate(DatabaseConnectionType dc)
+
+            throws DatabaseException
+
+    {
+
+        String connClassName = dc.getConnectionClass();
 
 
 
@@ -3376,9 +3402,7 @@ public abstract class DatabaseAdapter
 
         {
 
-
-
-            DBconnect _db_ = null;
+            DatabaseAdapter _db_ = null;
 
             if (!initFlag.booleanValue())
 
@@ -3404,17 +3428,17 @@ public abstract class DatabaseAdapter
 
                             {
 
-                                System.out.println("Call for create static object " + connName);
+                                System.out.println("Call for create static object " + connClassName);
 
-                                log.debug("Call for create static object " + connName);
+                                log.debug("Call for create static object " + connClassName);
 
                             }
 
 
 
-                            _db_ = (DBconnect) MainTools.createCustomObject(connName);
+                            _db_ = (DatabaseAdapter) MainTools.createCustomObject(connClassName);
 
-                            _db_.init(GenericConfig.getDatabaseConnection(connectionName));
+                            _db_.init(GenericConfig.getDatabaseConnection(dc.getName()));
 
                             _db_.isDBOk = true;
 
@@ -3426,9 +3450,9 @@ public abstract class DatabaseAdapter
 
                             {
 
-                                System.out.println("Success create static object " + connName);
+                                System.out.println("Success create static object " + connClassName);
 
-                                log.debug("Success create static object " + connName);
+                                log.debug("Success create static object " + connClassName);
 
                             }
 
@@ -3440,17 +3464,17 @@ public abstract class DatabaseAdapter
 
                         {
 
-                            log.fatal("Error create instance for class " + connName);
+                            log.fatal("Error create instance for class " + connClassName);
 
-                            log.fatal("ConnectionName - " + connectionName);
+                            log.fatal("ConnectionName - " + dc.getName());
 
                             log.fatal("Error:", e);
 
 
 
-                            System.out.println("\nError create instance for class " + connName + "\nSee log for details");
+                            System.out.println("\nError create instance for class " + connClassName + "\nSee log for details");
 
-                            System.out.println("\nconnectionName - " + connectionName);
+                            System.out.println("\nconnectionName - " + dc.getName());
 
                             if (_db_ != null && _db_.conn != null)
 
@@ -3532,7 +3556,7 @@ public abstract class DatabaseAdapter
 
 
 
-    protected synchronized static DBconnect openConnect(String connectionName)
+    protected synchronized static DatabaseAdapter openConnect(String connectionName)
 
         throws DatabaseException, ConfigException
 
@@ -3550,7 +3574,15 @@ public abstract class DatabaseAdapter
 
 
 
-        DBconnect __db__ = (DBconnect)connectHashtable.get(connectionName);
+        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
+
+        if (dc.getDataSourceType().getType()!=DataSourceTypeType.NONE_TYPE)
+
+            return openDynamicConnect(connectionName);
+
+
+
+        DatabaseAdapter __db__ = (DatabaseAdapter)connectHashtable.get(connectionName);
 
 
 
@@ -3560,7 +3592,7 @@ public abstract class DatabaseAdapter
 
         {
 
-            __db__ = openConnectPrivate(connectionName);
+            __db__ = openConnectPrivate(dc);
 
         }
 
