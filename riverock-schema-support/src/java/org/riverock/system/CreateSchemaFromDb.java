@@ -79,6 +79,13 @@ public class CreateSchemaFromDb
     private static DbSchemaType dbSchema = null;
     private static ComplexType baseType = null;
 
+    private static boolean isInsertInterface = false;
+    private static boolean isUpdateInterface = false;
+    private static boolean isDeleteInterface = false;
+    private static String insertInterface = null;
+    private static String updateInterface = null;
+    private static String deleteInterface = null;
+
     private static String getAttributeName(DbFieldType field)
     {
         String s = StringTools.capitalizeString( field.getName() );
@@ -206,7 +213,7 @@ public class CreateSchemaFromDb
             "\n"
             :"")+
 
-            "    public static "+className+" getInstance("+db.getFactoryMethod()+" db__, long id__)\n"+
+            "    public static "+className+" getInstance("+db.getFactoryMethod()+" db__, long id__) "+
             putExceptionDefinition()+
             "    {\n"+
             "        return getInstance(db__, new Long(id__) );\n"+
@@ -216,7 +223,7 @@ public class CreateSchemaFromDb
             "    /**\n" +
             "     * @deprecated use getInstance() method\n" +
             "     */\n"+
-            "    public "+classNameItem+" getData("+db.getFactoryMethod()+" db_, long id)\n"+
+            "    public "+classNameItem+" getData("+db.getFactoryMethod()+" db_, long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "        "+className+" obj = "+className+".getInstance(db_, id);\n"+
@@ -226,7 +233,7 @@ public class CreateSchemaFromDb
             "        return new "+classNameItem+"();\n"+
             "    }\n"+
             "\n"+
-            "    public "+className+"("+db.getFactoryMethod()+" db_, long id)\n"+
+            "    public "+className+"("+db.getFactoryMethod()+" db_, long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "        this(db_, new Long(id));\n"+
@@ -237,7 +244,7 @@ public class CreateSchemaFromDb
     private static String putExceptionDefinition()
     {
         if (config.getPersistenceExceptionName()==null)
-            return "         throws Exception\n";
+            return " throws Exception ";
 
         if (config.getPersistenceExceptionName().getExceptionType().getType()==
             ExceptionDefinitionTypeExceptionTypeType.WRAP_PERSISTENCE_TYPE)
@@ -245,10 +252,10 @@ public class CreateSchemaFromDb
             if (config.getPersistenceExceptionName().getPersistenceExceptionName()==null)
                 throw new IllegalArgumentException("Not defined PersistebceExceptionName");
             else
-                return "         throws "+config.getPersistenceExceptionName().getPersistenceExceptionName()+"\n";
+                return " throws "+config.getPersistenceExceptionName().getPersistenceExceptionName()+" ";
         }
 
-        return "         throws Exception\n";
+        return " throws Exception ";
     }
 
     private static String putImportAndDeclarePart(String classNameItem, String className)
@@ -294,7 +301,7 @@ public class CreateSchemaFromDb
     private static String putGetInstanceMethod(String className, boolean isResultCanBeNull)
     {
         String s =
-            "     public static "+className+" getInstance("+db.getFactoryMethod()+" db__, Long id__)\n"+
+            "     public static "+className+" getInstance("+db.getFactoryMethod()+" db__, Long id__) "+
             putExceptionDefinition()+
             "     {\n";
 
@@ -442,7 +449,7 @@ public class CreateSchemaFromDb
             (isCloseRsPs
             ?"        finally\n"+
             "        {\n"+
-            "            _closeRsPs(rs, ps);\n"+
+            putCloseFactoryMethod()+
             "            rs = null;\n"+
             "            ps = null;\n"+
             "        }\n"
@@ -454,7 +461,7 @@ public class CreateSchemaFromDb
             if (isApplModule)
             {
                 s +=
-                    "     public byte[] processRequest( ResourceRequestType applReq, AuthSession authSession )\n"+
+                    "     public byte[] processRequest( ResourceRequestType applReq, AuthSession authSession ) "+
                     putExceptionDefinition()+
                     "     {\n";
 
@@ -583,8 +590,7 @@ public class CreateSchemaFromDb
     {
         String s =
             "         }\n"+
-            "         catch (Exception e)\n"+
-            "         {\n";
+            "         catch (Exception e) {\n";
 
         if (config.getIsUseLogging())
         {
@@ -616,15 +622,14 @@ public class CreateSchemaFromDb
                 "            throw e;\n";
 
         s +=
-            "         }\n"+
-            "         finally\n"+
-            "         {\n"+
-            "             _closeRsPs(rs, ps);\n"+
-            "             rs = null;\n"+
-            "             ps = null;\n"+
-            "         }\n"+
+            "        }\n"+
+            "        finally {\n"+
+            putCloseFactoryMethod()+
+            "            rs = null;\n"+
+            "            ps = null;\n"+
+            "        }\n"+
             "\n"+
-            "     }\n"+
+            "    }\n"+
             "\n"+
 
             (isApplModule?
@@ -700,6 +705,8 @@ public class CreateSchemaFromDb
 
     private static String getCloseRsPs()
     {
+        if (config.getCloseFactoryMethod()!=null) return "";
+
         return
             "    private static void _closeRsPs(ResultSet rs, PreparedStatement ps)\n"+
             "    {\n"+
@@ -832,13 +839,13 @@ public class CreateSchemaFromDb
                     "        \"order by "+column.getColumnName()+" ASC\";\n"
                 )+
 
-                "    public "+className+"("+db.getFactoryMethod()+" db_, Long id)\n"+
+                "    public "+className+"("+db.getFactoryMethod()+" db_, Long id) "+
                 putExceptionDefinition()+
                 "    {\n"+
                 "        this(db_, id, sql_);\n"+
                 "    }\n"+
                 "\n"+
-                "    public "+className+"("+db.getFactoryMethod()+" db_, Long id, String sqlString)\n"+
+                "    public "+className+"("+db.getFactoryMethod()+" db_, Long id, String sqlString) "+
                 putExceptionDefinition()+
                 "    {\n"+
                 "\n"+
@@ -978,7 +985,7 @@ public class CreateSchemaFromDb
                 "\"select "+table.getPrimaryKey().getColumns(0).getColumnName()+" " +
                 "from "+table.getName()+" \";\n"
             )+
-            "    public "+className+"("+db.getFactoryMethod()+" db_, Long id)\n"+
+            "    public "+className+"("+db.getFactoryMethod()+" db_, Long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "\n"+
@@ -1092,7 +1099,7 @@ public class CreateSchemaFromDb
 //            "    private static "+className+" dummy = new "+className+"();\n"+
 //            "\n"
 //            :"")+
-            "    public static "+className+" getInstance("+db.getFactoryMethod()+" db__, long id__)\n"+
+            "    public static "+className+" getInstance("+db.getFactoryMethod()+" db__, long id__) "+
             putExceptionDefinition()+
             "    {\n"+
             "        return getInstance(db__, new Long(id__) );\n"+
@@ -1102,7 +1109,7 @@ public class CreateSchemaFromDb
             "    /**\n" +
             "     * @deprecated use getInstance() method\n" +
             "     */\n"+
-            "    public "+classNameItem+" getData("+db.getFactoryMethod()+" db_, long id)\n"+
+            "    public "+classNameItem+" getData("+db.getFactoryMethod()+" db_, long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "         "+className+" obj = "+className+".getInstance(db_, id);\n"+
@@ -1114,7 +1121,7 @@ public class CreateSchemaFromDb
             "\n"+
             getCopyItemMethod(classNameItem, table)+
             "\n"+
-            "    public "+className+"("+db.getFactoryMethod()+" db_, long id)\n"+
+            "    public "+className+"("+db.getFactoryMethod()+" db_, long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "        this(db_, new Long(id));\n"+
@@ -1124,13 +1131,13 @@ public class CreateSchemaFromDb
                 className, base,
                 "        \"select * from "+table.getName()+" where "+column.getColumnName()+"=?\";\n"
             )+
-            "    public "+className+"("+db.getFactoryMethod()+" db_, Long id)\n"+
+            "    public "+className+"("+db.getFactoryMethod()+" db_, Long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "        this(db_, id, sql_);\n"+
             "    }\n"+
             "\n"+
-            "    public "+className+"("+db.getFactoryMethod()+" db_, Long id, String sqlString)\n"+
+            "    public "+className+"("+db.getFactoryMethod()+" db_, Long id, String sqlString) "+
             putExceptionDefinition()+
             "    {\n"+
             "\n"+
@@ -1784,19 +1791,19 @@ public class CreateSchemaFromDb
                 "\n"+
                 "    public "+className+"(){}\n"+
                 "\n"+
-                "    public static Long processData("+db.getFactoryMethod()+" db_, long id)\n"+
+                "    public static Long processData("+db.getFactoryMethod()+" db_, long id) "+
                 putExceptionDefinition()+
                 "    {\n"+
                 "        return new Long(process(db_, new Long(id)));\n"+
                 "    }\n"+
                 "\n"+
-                "    public static long process("+db.getFactoryMethod()+" db_, long id)\n"+
+                "    public static long process("+db.getFactoryMethod()+" db_, long id) "+
                 putExceptionDefinition()+
                 "    {\n"+
                 "        return process(db_, new Long(id));\n"+
                 "    }\n"+
                 "\n"+
-                "    public static long process("+db.getFactoryMethod()+" db_, Long id)\n"+
+                "    public static long process("+db.getFactoryMethod()+" db_, Long id) "+
                 putExceptionDefinition()+
                 "    {\n"+
                 "\n"+
@@ -1848,7 +1855,7 @@ public class CreateSchemaFromDb
                 "         }\n"+
                 "         finally\n"+
                 "         {\n"+
-                "             _closeRsPs(rs, ps);\n"+
+                putCloseFactoryMethod()+
                 "             rs = null;\n"+
                 "             ps = null;\n"+
                 "         }\n"+
@@ -1954,6 +1961,13 @@ public class CreateSchemaFromDb
         }
     }
 
+    private static String putCloseFactoryMethod() {
+        return (config.getCloseFactoryMethod()!=null
+                        ?"            "+config.getCloseFactoryMethod()+"(rs,ps);\n"
+                        :"            _closeRsPs(rs, ps);\n"
+                        );
+    }
+
     private static void createDeleteClassForPk(DbTableType table)
         throws Exception
     {
@@ -1988,22 +2002,24 @@ public class CreateSchemaFromDb
             "import java.sql.ResultSet;\n"+
             "\n"+
             "public class "+className+" " +
-            (isApplModule?
-            "implements ApplicationInterface"
-            :""
+            addInterfaceDeclaration( new String[] {
+                isApplModule?"ApplicationInterface":"",
+                isDeleteInterface?deleteInterface:""
+            }
             )+
             "\n{\n"+
             initLogging(packageClass+'.'+className)+
             "\n"+
             "     public "+className+"(){}\n"+
             "\n"+
-            "     public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            (isDeleteInterface?putProcessEntityMethos(classNameItem):"")+
+            "     public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item) "+
             putExceptionDefinition()+
             "     {\n"+
             "         return new Long(process(db_, item));\n"+
             "     }\n"+
             "\n"+
-            "     public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            "     public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item) "+
             putExceptionDefinition()+
             "     {\n"+
             "\n"+
@@ -2041,6 +2057,21 @@ public class CreateSchemaFromDb
 //        file.mkdirs();
 //        MainTools.writeToFile( d+className+".java", s.getBytes());
         writeClass(className, s);
+    }
+
+    private static String putProcessEntityMethos(String classNameItem) {
+
+        return
+            "    public long processEntity(com.swisscom.cih.db.Database db_, "+config.getBaseInterface().getEntityClassPackage()+'.'+config.getSuperClass().getComplexType()+" item) "+
+            putExceptionDefinition()+" {\n"+
+            "        try {\n"+
+            "            return process(db_, ("+classNameItem+")item);\n"+
+            "        } catch (ClassCastException e) {\n"+
+            "            cat.error(\"Exception cast to '"+classNameItem+"' type\", e);\n"+
+            "            throw new "+config.getPersistenceExceptionName().getPersistenceExceptionName()+"(\"Exception cast to '"+classNameItem+"' type\",e);\n"+
+            "        }\n"+
+            "    }\n" +
+            "\n";
     }
 
     private static void createDeleteItemForPk(DbTableType table)
@@ -2087,19 +2118,19 @@ public class CreateSchemaFromDb
             "\n"+
             "    public "+className+"(){}\n"+
             "\n"+
-            "    public static Long processData("+db.getFactoryMethod()+" db_, long id)\n"+
+            "    public static Long processData("+db.getFactoryMethod()+" db_, long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "        return new Long(process(db_, id));\n"+
             "    }\n"+
             "\n"+
-            "    public static long process("+db.getFactoryMethod()+" db_, long id)\n"+
+            "    public static long process("+db.getFactoryMethod()+" db_, long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "        return process(db_, new Long(id));\n"+
             "    }\n"+
             "\n"+
-            "    public static long process("+db.getFactoryMethod()+" db_, Long id)\n"+
+            "    public static long process("+db.getFactoryMethod()+" db_, Long id) "+
             putExceptionDefinition()+
             "    {\n"+
             "\n"+
@@ -2112,8 +2143,7 @@ public class CreateSchemaFromDb
             "\n"+
             "        PreparedStatement ps = null;\n"+
             "        ResultSet rs = null;\n"+
-            "        try\n"+
-            "        {\n"+
+            "        try {\n"+
             "            ps = db_.prepareStatement(sql_);\n"+
             "\n"+
             "            ps.setLong(1, id.longValue() );\n"+
@@ -2128,8 +2158,7 @@ public class CreateSchemaFromDb
             "            return countDeletedtRecord;\n"+
             "\n"+
             "        }\n"+
-            "        catch (Exception e)\n"+
-            "        {\n"+
+            "        catch (Exception e) {\n"+
             (config.getIsUseLogging()
             ?"             cat.error(\"Error delete from db\", e);\n"
             :"");
@@ -2150,9 +2179,8 @@ public class CreateSchemaFromDb
 
         s +=
             "        }\n"+
-            "        finally\n"+
-            "        {\n"+
-            "            _closeRsPs(rs, ps);\n"+
+            "        finally {\n"+
+            putCloseFactoryMethod()+
             "            rs = null;\n"+
             "            ps = null;\n"+
             "        }\n"+
@@ -2318,22 +2346,24 @@ public class CreateSchemaFromDb
             "import java.sql.Types;\n"+
             "\n"+
             "public class "+className+" " +
-            (isApplModule?
-            "implements ApplicationInterface"
-            :""
+            addInterfaceDeclaration( new String[] {
+                isApplModule?"ApplicationInterface":"",
+                isUpdateInterface?updateInterface:""
+            }
             )+
             "\n{\n"+
             initLogging(packageClass+'.'+className)+
             "\n"+
             "     public "+className+"(){}\n"+
             "\n"+
-            "     public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            (isUpdateInterface?putProcessEntityMethos(classNameItem):"")+
+            "     public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item) "+
             putExceptionDefinition()+
             "     {\n"+
             "         return new Long(process(db_, item));\n"+
             "     }\n"+
             "\n"+
-            "     public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            "     public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item) "+
             putExceptionDefinition()+
             "     {\n"+
             "\n"+
@@ -2565,22 +2595,25 @@ public class CreateSchemaFromDb
             "import java.sql.Types;\n"+
             "\n"+
             "public class "+className+" " +
-            (isApplModule?
-            "implements ApplicationInterface"
-            :""
+            addInterfaceDeclaration( new String[] {
+                isApplModule?"ApplicationInterface":"",
+                isInsertInterface?insertInterface:""
+            }
             )+
+
             "\n{\n"+
             initLogging(packageClass+'.'+className)+
             "\n"+
             "    public "+className+"(){}\n"+
             "\n"+
-            "    public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            (isInsertInterface?putProcessEntityMethos(classNameItem):"")+
+            "    public static Long processData("+db.getFactoryMethod()+" db_, "+classNameItem+" item) "+
             putExceptionDefinition()+
             "    {\n"+
             "        return new Long(process(db_, item));\n"+
             "    }\n"+
             "\n"+
-            "    public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item)\n"+
+            "    public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item) "+
             putExceptionDefinition()+
             "    {\n"+
             "        String sql_ =\n"+
@@ -2609,7 +2642,7 @@ public class CreateSchemaFromDb
             "        return process(db_, item, sql_);\n" +
             "    }\n" +
             "\n"+
-            "    public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item, String sql_)\n"+
+            "    public static long process("+db.getFactoryMethod()+" db_, "+classNameItem+" item, String sql_) "+
             putExceptionDefinition()+
             "    {\n"+
             "\n"+
@@ -2764,6 +2797,26 @@ public class CreateSchemaFromDb
 //        MainTools.writeToFile( d+className+".java", s.getBytes());
         writeClass(className, s);
 
+    }
+
+    private static String addInterfaceDeclaration(String[] in) {
+        if (in==null) return "";
+
+        boolean isFirst = true;
+        String s="";
+        for (int i=0; i<in.length; i++){
+            if (in[i]!=null && in[i].trim().length()>0){
+                if (isFirst){
+                    isFirst=false;
+                    s+= " implements ";
+                }
+                else
+                    s+= ", ";
+
+                s+=in[i];
+            }
+        }
+        return s;
     }
 
     private static String storeLongField(String capitalizeName, int i, boolean isNull)
@@ -3141,7 +3194,7 @@ public class CreateSchemaFromDb
 
                     extendCodeImport += "import "+config.getJavaPackageXmlSchema()+'.'+classNameItemTemp+";\n";
                     extendCodeProc +=
-                        "    private "+classNameItemTemp+" _get"+baseTemp+EXTEND_ITEM+"("+db.getFactoryMethod()+" adapter, Long id)\n" +
+                        "    private "+classNameItemTemp+" _get"+baseTemp+EXTEND_ITEM+"("+db.getFactoryMethod()+" adapter, Long id) " +
                         putExceptionDefinition() +
                         "    {\n" +
                         "" +
@@ -3332,7 +3385,7 @@ public class CreateSchemaFromDb
 //                    "    private static "+className+" dummy = new "+className+"();\n"+
 //                    "\n"
 //                    :"")+
-                    "    public static "+className+" getInstance("+db.getFactoryMethod()+" adapter, Long id__)\n"+
+                    "    public static "+className+" getInstance("+db.getFactoryMethod()+" adapter, Long id__) "+
                     putExceptionDefinition()+
                     "    {\n"+
                     (config.getIsUseCache()
@@ -3356,7 +3409,7 @@ public class CreateSchemaFromDb
                     "\n"+
                     extendCodeProc+
                     "\n"+
-                    "    public "+className+"("+db.getFactoryMethod()+" adapter, Long id)\n"+
+                    "    public "+className+"("+db.getFactoryMethod()+" adapter, Long id) "+
                     putExceptionDefinition()+
                     "    {\n"+
                     "\n"+
@@ -3594,6 +3647,22 @@ public class CreateSchemaFromDb
             dbSchema  = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrcDb);
         }
 
+        if (config.getBaseInterface()!=null){
+            if (config.getBaseInterface().getInsertInterface()!=null){
+                isInsertInterface=true;
+                insertInterface=config.getBaseInterface().getInsertInterface();
+            }
+            if (config.getBaseInterface().getUpdateInterface()!=null){
+                isUpdateInterface=true;
+                updateInterface=config.getBaseInterface().getUpdateInterface();
+            }
+            if (config.getBaseInterface().getDeleteInterface()!=null){
+                isDeleteInterface=true;
+                deleteInterface=config.getBaseInterface().getDeleteInterface();
+            }
+        }
+
+        validate();
         processTables();
 
         System.out.print("Start write schema to file "+preparePath(config.getXmlSchemaFile())+" ... ");
@@ -3602,6 +3671,14 @@ public class CreateSchemaFromDb
         SchemaWriter writer = new SchemaWriter(new OutputStreamWriter(fos, "utf-8") );
         writer.write( schema );
         System.out.println("done.");
+    }
+
+    private static void validate() throws Exception {
+        if (config.getBaseInterface()!=null && config.getPersistenceExceptionName()==null)
+            throw new Exception("If you define BaseInterface, you must define PersistenceExceptionName too.");
+
+        if (config.getBaseInterface()!=null && config.getSuperClass()==null)
+            throw new Exception("If you define BaseInterface, you must define SuperClass for entity bean too.");
     }
 
     private static String preparePath(String path)
