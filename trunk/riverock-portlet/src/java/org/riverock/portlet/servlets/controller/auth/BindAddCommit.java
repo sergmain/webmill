@@ -226,7 +226,7 @@ public class BindAddCommit extends HttpServlet
 
 
 
-                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
+                    index_page = ctxInstance.url("mill.auth.bind");
 
 
 

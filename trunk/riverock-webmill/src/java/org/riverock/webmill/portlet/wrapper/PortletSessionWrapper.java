@@ -30,9 +30,17 @@ import javax.servlet.http.HttpSession;
 
 
 
+import org.apache.log4j.Logger;
+
+
+
 public class PortletSessionWrapper implements PortletSession
 
 {
+
+    private static Logger log = Logger.getLogger( PortletSessionWrapper.class );
+
+
 
     private HttpSession session = null;
 
@@ -210,7 +218,27 @@ public class PortletSessionWrapper implements PortletSession
 
         accessTime = System.currentTimeMillis();
 
-        session.removeAttribute( s );
+        try
+
+        {
+
+            session.removeAttribute( s );
+
+        }
+
+        catch (IllegalStateException e)
+
+        {
+
+            log.error("session.removeAttribute() ", e);
+
+            throw e;
+
+//            session.invalidate();
+
+//            session = null;
+
+        }
 
     }
 

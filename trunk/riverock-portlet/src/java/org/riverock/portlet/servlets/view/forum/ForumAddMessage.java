@@ -298,7 +298,7 @@ public class ForumAddMessage extends HttpServlet
 
             out.write(
 
-                    ctxInstance.page.getAsForm()+
+                    ctxInstance.getAsForm()+
 
                     ServletTools.getHiddenItem(Constants.NAME_ID_FORUM_PARAM,
 

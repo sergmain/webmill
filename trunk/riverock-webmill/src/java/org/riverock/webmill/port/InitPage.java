@@ -62,8 +62,6 @@ package org.riverock.webmill.port;
 
 
 
-import java.util.ArrayList;
-
 import java.util.List;
 
 import java.util.Locale;
@@ -103,8 +101,6 @@ import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
-
-import org.riverock.webmill.schema.types.HiddenParamType;
 
 import org.riverock.webmill.utils.ServletUtils;
 
@@ -210,13 +206,21 @@ public class InitPage
 
         preferredLocale = Header.getAcceptLanguageAsLocaleListSorted( request );
 
+        // Todo - filter preferredLocale with locale defined for this site
+
         Locale tempLocale = getPreferredLocale(db_, request);
+
+
+
+        if (log.isDebugEnabled())
+
+            log.debug("tempLocale from getPreferredLocale(db_, request) - "+tempLocale);
 
 
 
         if (tempLocale==null)
 
-            tempLocale = p.defaultLocale;
+            tempLocale = p.getDefaultLocale();
 
 
 
@@ -578,121 +582,7 @@ public class InitPage
 
 
 
-    private static HiddenParamType getHidden(String name, String value)
-
-    {
-
-        HiddenParamType hidden = new HiddenParamType();
-
-        hidden.setHiddenParamName(name);
-
-        hidden.setHiddenParamValue(value);
-
-        return hidden;
-
-    }
-
-
-
-    public List getAsList()
-
-    {
-
-        List v = new ArrayList(1);
-
-
-
-        if (currentLocale != null)
-
-            v.add( getHidden( Constants.NAME_LANG_PARAM, currentLocale.toString()));
-
-
-
-        return v;
-
-    }
-
-
-
-    public String getAsURL()
-
-    {
-
-        return
-
-                (currentLocale != null
-
-                ?(Constants.NAME_LANG_PARAM + "=" + currentLocale.toString() + "&")
-
-                :""
-
-                );
-
-
-
-    }
-
-
-
-    public String getAsForm()
-
-    {
-
-        return
-
-            (currentLocale != null)
-
-            ?("<input type=\"hidden\" name=\"" + Constants.NAME_LANG_PARAM + "\" value=\"" + currentLocale.toString() + "\">")
-
-            :"";
-
-    }
-
-
-
-    public String getAsUrlXML()
-
-    {
-
-        return
-
-
-
-                (currentLocale != null
-
-                ?(Constants.NAME_LANG_PARAM + "=" + currentLocale.toString() + "&amp;")
-
-                :""
-
-                );
-
-    }
-
-
-
-    public String getAsFormXML()
-
-    {
-
-        return
-
-
-
-                (currentLocale != null
-
-                ?("<HiddenParam><HiddenParamName>" + Constants.NAME_LANG_PARAM + "</HiddenParamName><HiddenParamValue>" + currentLocale.toString() + "</HiddenParamValue></HiddenParam>")
-
-                :""
-
-                );
-
-
-
-    }
-
-
-
-    public Locale getCurrentLocale()
+    public Locale getLocale()
 
     {
 

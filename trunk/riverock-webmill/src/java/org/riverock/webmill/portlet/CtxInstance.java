@@ -68,9 +68,13 @@ package org.riverock.webmill.portlet;
 
 import java.util.HashMap;
 
+import java.util.Locale;
+
 import java.util.Map;
 
 import java.util.List;
+
+import java.util.ArrayList;
 
 
 
@@ -87,6 +91,12 @@ import javax.servlet.http.HttpServletResponse;
 
 
 import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.StringTools;
+
+import org.riverock.common.tools.ServletTools;
+
+import org.riverock.common.config.ConfigException;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -120,6 +130,8 @@ import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 
+import org.riverock.webmill.schema.types.HiddenParamType;
+
 
 
 public class CtxInstance {
@@ -130,7 +142,17 @@ public class CtxInstance {
 
 
 
-    public CtxInstance(HttpServletRequest request_, HttpServletResponse response_, InitPage page)
+    public CtxInstance(
+
+        HttpServletRequest request_,
+
+        HttpServletResponse response_,
+
+        InitPage page,
+
+        DatabaseAdapter db)
+
+        throws Exception
 
     {
 
@@ -144,6 +166,22 @@ public class CtxInstance {
 
 
 
+        // init real locale. Can be rewrited below, based on current context
+
+        this.realLocale = page.getLocale();
+
+
+
+        initTypeContext(
+
+            page.p.getIdSupportLanguage(realLocale), db, request_
+
+        );
+
+        setDefaultPortletDescription( PortletDescription.getInstance( defaultPortletType ) );
+
+
+
         this.portletRequest = new RenderRequestWrapper(
 
             new HashMap(),
@@ -152,7 +190,7 @@ public class CtxInstance {
 
             this.auth,
 
-            page.getCurrentLocale(),
+            realLocale,
 
             page.getPreferredLocale()
 
@@ -203,6 +241,8 @@ public class CtxInstance {
     private String nameTemplate = null;
 
     private SiteCtxCatalogItemType ctx = null;
+
+    private Locale realLocale = null;
 
 
 
@@ -280,7 +320,7 @@ public class CtxInstance {
 
             this.auth,
 
-            this.page.getCurrentLocale(),
+            this.realLocale,
 
             this.page.getPreferredLocale()
 
@@ -298,7 +338,7 @@ public class CtxInstance {
 
         if ((nameLocaleBunble != null) && (nameLocaleBunble.trim().length() != 0))
 
-            sCustom = StringManager.getManager(nameLocaleBunble, page.getCurrentLocale());
+            sCustom = StringManager.getManager(nameLocaleBunble, realLocale);
 
     }
 
@@ -526,7 +566,7 @@ public class CtxInstance {
 
             log.error( errorString );
 
-            log.error("Dump all menu for "+page.getCurrentLocale()+" locale");
+            log.error("Dump all menu for "+realLocale+" locale");
 
             try
 
@@ -632,7 +672,7 @@ public class CtxInstance {
 
         }
 
-        internalInitPageCtx(db, ctx);
+        internalInitPageCtx(db, ctx, siteLang);
 
     }
 
@@ -640,7 +680,7 @@ public class CtxInstance {
 
 
 
-    private void internalInitPageCtx(DatabaseAdapter db_, SiteCtxCatalogItemType ctx)
+    private void internalInitPageCtx(DatabaseAdapter db_, SiteCtxCatalogItemType ctx, SiteSupportLanguageItemType siteLang)
 
         throws Exception
 
@@ -679,6 +719,8 @@ public class CtxInstance {
         }
 
 
+
+        realLocale = StringTools.getLocale(siteLang.getCustomLanguage());
 
         defaultPortletType = ctxType;
 
@@ -765,6 +807,124 @@ public class CtxInstance {
     {
 
         return response;
+
+    }
+
+
+
+    public String url(String portlet)
+
+        throws ConfigException
+
+    {
+
+        return url(portlet, nameTemplate);
+
+    }
+
+    public String url(String portlet, String templateParam)
+
+        throws ConfigException
+
+    {
+
+        return response.encodeURL( CtxURL.ctx()  ) + '?' +
+
+            getAsURL()+
+
+            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' +templateParam+ '&' +
+
+            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + portlet;
+
+    }
+
+    private static HiddenParamType getHidden(String name, String value)
+
+    {
+
+        HiddenParamType hidden = new HiddenParamType();
+
+        hidden.setHiddenParamName(name);
+
+        hidden.setHiddenParamValue(value);
+
+        return hidden;
+
+    }
+
+
+
+    public List getAsList()
+
+    {
+
+        List v = new ArrayList(1);
+
+
+
+        if (realLocale != null)
+
+            v.add( getHidden( Constants.NAME_LANG_PARAM, realLocale.toString()));
+
+
+
+        return v;
+
+    }
+
+
+
+    public String getAsURL()
+
+    {
+
+        return Constants.NAME_LANG_PARAM + "=" + realLocale.toString() + "&";
+
+    }
+
+
+
+    public String getAsForm()
+
+    {
+
+        return "<input type=\"hidden\" name=\"" + Constants.NAME_LANG_PARAM + "\" value=\"" + realLocale.toString() + "\">";
+
+    }
+
+
+
+    public String getAsUrlXML()
+
+    {
+
+        return Constants.NAME_LANG_PARAM + "=" + realLocale.toString() + "&amp;";
+
+    }
+
+
+
+    public String getAsFormXML()
+
+    {
+
+        return "<HiddenParam><HiddenParamName>" + Constants.NAME_LANG_PARAM + "</HiddenParamName><HiddenParamValue>" + realLocale.toString() + "</HiddenParamValue></HiddenParam>";
+
+    }
+
+
+
+    public String urlAsForm(String nameTemplate, String portlet)
+
+    {
+
+        return
+
+            getAsForm()+
+
+            ServletTools.getHiddenItem(Constants.NAME_TEMPLATE_CONTEXT_PARAM, nameTemplate)+
+
+            ServletTools.getHiddenItem(Constants.NAME_TYPE_CONTEXT_PARAM, portlet);
 
     }
 

@@ -208,7 +208,7 @@ public class RightChangeCommit extends HttpServlet
 
 
 
-                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
+                    index_page = ctxInstance.url("mill.auth.right");
 
 
 

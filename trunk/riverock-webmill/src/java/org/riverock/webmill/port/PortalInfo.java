@@ -2,19 +2,19 @@
 
  * org.riverock.webmill -- Portal framework implementation
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -80,13 +80,9 @@ import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 
-import org.riverock.webmill.schema.site.SiteTemplate;
-
 import org.riverock.generic.site.SiteListSite;
 
 import org.riverock.webmill.site.SiteTemplateList;
-
-import org.riverock.webmill.site.SiteTemplateMember;
 
 import org.riverock.webmill.config.WebmillConfig;
 
@@ -112,8 +108,6 @@ public class PortalInfo
 
         org.riverock.sql.cache.SqlStatement.registerRelateClass( p, new SiteTemplateList().getClass());
 
-        org.riverock.sql.cache.SqlStatement.registerRelateClass( p, new SiteTemplateMember().getClass());
-
         org.riverock.sql.cache.SqlStatement.registerRelateClass( p, new GetSiteSupportLanguageWithIdSiteList().getClass());
 
     }
@@ -130,15 +124,13 @@ public class PortalInfo
 
 
 
-    public Locale defaultLocale = null;
+    private Locale defaultLocale = null;
 
 
 
-    public PortalXsltList xsltList = null;
+    private PortalXsltList xsltList = null;
 
-    public SiteTemplateList templates = null;
-
-    public SiteTemplateMember memberTemplates = null;
+    private SiteTemplateList templates = null;
 
 
 
@@ -242,44 +234,6 @@ public class PortalInfo
 
 
 
-    public SiteTemplate getMemberTemplate()
-
-    {
-
-        SiteTemplate st = null;
-
-
-
-        if (log.isDebugEnabled())
-
-            log.debug("Looking template for locale " + defaultLocale.toString());
-
-
-
-        if (memberTemplates != null && memberTemplates.memberTemplate != null)
-
-            st = (SiteTemplate) memberTemplates.memberTemplate.get(defaultLocale.toString());
-
-
-
-        if (st != null)
-
-            return st;
-
-
-
-        if (log.isInfoEnabled())
-
-            log.info("memberTemplate for Locale " + defaultLocale.toString() + " not initialized");
-
-
-
-        return new SiteTemplate();
-
-    }
-
-
-
     protected void finalize() throws Throwable
 
     {
@@ -295,8 +249,6 @@ public class PortalInfo
         xsltList = null;
 
         templates = null;
-
-        memberTemplates = null;
 
 
 
@@ -444,7 +396,7 @@ public class PortalInfo
 
             if (log.isDebugEnabled())
 
-                log.debug("Main language 1.1: " + defaultLocale.toString());
+                log.debug("Main language 1.1: " + getDefaultLocale().toString());
 
 
 
@@ -462,7 +414,7 @@ public class PortalInfo
 
                 log.debug("Language InitParam.getMainLanguage(): " + WebmillConfig.getMainLanguage());
 
-                log.debug("Language locale: " + defaultLocale.toString());
+                log.debug("Language locale: " + getDefaultLocale().toString());
 
             }
 
@@ -518,30 +470,6 @@ public class PortalInfo
 
 
 
-        memberTemplates = SiteTemplateMember.getInstance(db_, sites.getIdSite());
-
-        if (log.isInfoEnabled())
-
-        {
-
-            log.info("init member templates for  "
-
-                + (System.currentTimeMillis() - mills) + " milliseconds");
-
-        }
-
-        if (log.isInfoEnabled())
-
-            mills = System.currentTimeMillis();
-
-
-
-        if (log.isInfoEnabled())
-
-            mills = System.currentTimeMillis();
-
-
-
         supportLanguage = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, sites.getIdSite()).item;
 
         if (log.isInfoEnabled())
@@ -559,8 +487,6 @@ public class PortalInfo
     public PortalInfo(){}
 
 
-
-// Кусок кода для принудительной переинициализации класса
 
     public static PortalInfo getInstance(DatabaseAdapter db_, java.lang.Long id_)
 
@@ -619,6 +545,38 @@ public class PortalInfo
         return siteId;
 
     }
+
+
+
+    public Locale getDefaultLocale()
+
+    {
+
+        return defaultLocale;
+
+    }
+
+
+
+    public PortalXsltList getXsltList()
+
+    {
+
+        return xsltList;
+
+    }
+
+
+
+    public SiteTemplateList getTemplates()
+
+    {
+
+        return templates;
+
+    }
+
+
 
 
 

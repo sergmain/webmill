@@ -84,11 +84,7 @@
 
 	<DbTablePrefix>SITE_SUPPORT_LANGUAGE</DbTablePrefix>
 
-	<DbTablePrefix>SITE_TEMPLATE_MEMBER</DbTablePrefix>
-
 	<DbTablePrefix>SITE_TEMPLATE</DbTablePrefix>
-
-	<DbTablePrefix>SITE_TEMPLATE_MEMBER</DbTablePrefix>
 
 	<DbTablePrefix>SITE_ACCESS_STAT</DbTablePrefix>
 

@@ -110,8 +110,6 @@ import org.riverock.portlet.servlets.view.UploadPrice;
 
 import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.sso.a3.AuthTools;
-
 import org.riverock.webmill.portal.menu.MenuInterface;
 
 import org.riverock.webmill.portal.menu.MenuItemInterface;
@@ -121,8 +119,6 @@ import org.riverock.webmill.portal.menu.MenuLanguageInterface;
 import org.riverock.webmill.portal.menu.SiteMenu;
 
 import org.riverock.webmill.portlet.CtxInstance;
-
-import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -320,17 +316,7 @@ public class UploadPriceController extends HttpServlet
 
             }
 
-            srcURL = response.encodeURL( CtxURL.ctx() )+'?'+
-
-                ctxInstance.page.getAsURL()+
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM+'='+
-
-                PortletTools.getString( ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM )+'&'+
-
-                Constants.NAME_TYPE_CONTEXT_PARAM+'='+
-
-                Constants.CTX_TYPE_UPLOAD_PRICE;
+            srcURL = ctxInstance.url(Constants.CTX_TYPE_UPLOAD_PRICE);
 
 /*
 

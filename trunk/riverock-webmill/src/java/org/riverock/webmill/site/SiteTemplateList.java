@@ -114,6 +114,16 @@ public class SiteTemplateList
 
 
 
+    public void reinit()
+
+    {
+
+        cache.reinit();
+
+    }
+
+
+
     public SiteTemplateList()
 
     {

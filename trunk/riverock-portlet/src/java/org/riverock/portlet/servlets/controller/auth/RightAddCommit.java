@@ -218,7 +218,7 @@ public class RightAddCommit extends HttpServlet
 
 
 
-                    rightUrl = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
+                    rightUrl = ctxInstance.url("mill.auth.right");
 
 
 

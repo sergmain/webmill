@@ -348,7 +348,7 @@ public class ForumPlain extends HttpServlet
 
                 out.write("<a href=\"" +
 
-                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_FORUM) + '&' +
+                        ctxInstance.url(Constants.CTX_TYPE_FORUM) + '&' +
 
                         Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
 

@@ -258,8 +258,6 @@ public class ApplicationServer extends HttpServlet
 
 
 
-//        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
-
         if (authSession.checkAccess( request.getServerName() ))
 
         {
