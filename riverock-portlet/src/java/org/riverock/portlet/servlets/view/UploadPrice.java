@@ -86,19 +86,15 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.portlets.WebmillErrorPage;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -109,6 +105,8 @@ public class UploadPrice extends HttpServlet
     private static Logger log = Logger.getLogger(UploadPrice.class);
 
 
+
+    public static String UPLOAD_FILE_PARM_NAME = "f";
 
     public UploadPrice()
 
@@ -144,8 +142,6 @@ public class UploadPrice extends HttpServlet
 
         Writer out = null;
 
-        DatabaseAdapter db_ = null;
-
         try
 
         {
@@ -166,21 +162,21 @@ public class UploadPrice extends HttpServlet
 
 
 
-            db_ = DatabaseAdapter.getInstance(false);
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
+            if ( auth_==null || !auth_.isUserInRole( "webmill.upload_price_list" ) )
 
+            {
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
-
-            if (auth_ == null)
+                WebmillErrorPage.process(out, null, "You have not right to bind right", "/", "continue");
 
                 return;
 
+            }
 
 
 
 
-            if (auth_.isUserInRole("webmill.upload_price_list"))
 
             {
 
@@ -196,8 +192,6 @@ public class UploadPrice extends HttpServlet
 
 
 
-
-
                 out.write(
 
                         "<form method=\"POST\" action=\"" + response.encodeURL(CtxURL.ctx()) + '?' + param + "\" ENCTYPE=\"multipart/form-data\">" +
@@ -208,7 +202,7 @@ public class UploadPrice extends HttpServlet
 
                         "<p>" +
 
-                        "<input type=\"FILE\" name=\"f\" size=\"50\">" +
+                        "<input type=\"FILE\" name=\""+UPLOAD_FILE_PARM_NAME+"\" size=\"50\">" +
 
                         "<br>" +
 
@@ -222,7 +216,7 @@ public class UploadPrice extends HttpServlet
 
 
 
-            } // check auth
+            }
 
         }
 
@@ -235,18 +229,6 @@ public class UploadPrice extends HttpServlet
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
 
         }
-
-        finally
-
-        {
-
-            DatabaseAdapter.close(db_);
-
-            db_ = null;
-
-        }
-
-
 
     }
 

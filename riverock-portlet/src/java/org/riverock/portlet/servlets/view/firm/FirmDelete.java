@@ -98,11 +98,11 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -174,11 +174,17 @@ public class FirmDelete extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
             if ( auth_==null )
 
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
+
                 return;
+
+            }
 
 
 
@@ -682,7 +688,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("<td align=\"left\">");
 
-              out.write( HtmlTools.printYesNo(rs, "is_work", false, ctxInstance.page.currentLocale ) );
+              out.write( HtmlTools.printYesNo(rs, "is_work", false, ctxInstance.getPortletRequest().getLocale() ) );
 
               out.write("</td>\r\n");
 
@@ -714,7 +720,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("<td align=\"left\">");
 
-              out.write( HtmlTools.printYesNo(rs, "is_need_recvizit", false, ctxInstance.page.currentLocale ) );
+              out.write( HtmlTools.printYesNo(rs, "is_need_recvizit", false, ctxInstance.getPortletRequest().getLocale() ) );
 
               out.write("</td>\r\n");
 
@@ -730,7 +736,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("<td align=\"left\">");
 
-              out.write( HtmlTools.printYesNo(rs, "is_need_person", false, ctxInstance.page.currentLocale ) );
+              out.write( HtmlTools.printYesNo(rs, "is_need_person", false, ctxInstance.getPortletRequest().getLocale() ) );
 
               out.write("</td>\r\n");
 
@@ -762,7 +768,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("<td align=\"left\">");
 
-              out.write( HtmlTools.printYesNo(rs, "is_search", false, ctxInstance.page.currentLocale ) );
+              out.write( HtmlTools.printYesNo(rs, "is_search", false, ctxInstance.getPortletRequest().getLocale() ) );
 
               out.write("</td>\r\n");
 

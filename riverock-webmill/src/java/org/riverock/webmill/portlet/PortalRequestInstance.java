@@ -1,20 +1,20 @@
 /*
 
- * org.riverock.portlet -- Portlet Library
+ * org.riverock.webmill -- Portal framework implementation
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -48,75 +48,69 @@
 
 
 
-package org.riverock.portlet.forum;
+/**
+
+ * User: Admin
+
+ * Date: Aug 26, 2003
+
+ * Time: 4:40:19 PM
+
+ *
+
+ * $Id$
+
+ */
+
+package org.riverock.webmill.portlet;
 
 
 
-import javax.portlet.PortletRequest;
+import java.io.ByteArrayOutputStream;
+
+import java.util.List;
 
 
 
 import org.riverock.generic.db.DatabaseAdapter;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.port.PortalXslt;
+
+import org.riverock.webmill.schema.site.SiteTemplate;
 
 
 
-public class SimpleForum extends Forum
-
-{
+class PortalRequestInstance {
 
 
 
-    public SimpleForum(PortletRequest request,
-
-                       javax.servlet.http.HttpServletResponse response,
-
-                       InitPage jspPage)
-
-            throws ForumException
-
-    {
-
-        super(request, jspPage);
-
-    }
+    ByteArrayOutputStream byteArrayOutputStream = null;
 
 
 
-    public SimpleForum()
+    PortalXslt xslt = null;
 
-    {
+    SiteTemplate template = null;
 
-    }
+    List portlets = null;
 
 
 
-    public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__)
+    int counter;
 
-            throws ForumException
+    long startMills;
+
+    DatabaseAdapter db = null;
+
+
+
+    PortalRequestInstance()
 
     {
 
-        try
-
-        {
-
-            return SimpleForumMessage.getInstance(db__, id__);
-
-        }
-
-        catch (Exception e)
-
-        {
-
-            throw new ForumException(e.toString());
-
-        }
+        startMills = System.currentTimeMillis();
 
     }
-
-
 
 }
 

@@ -96,11 +96,11 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
@@ -184,11 +184,17 @@ public class BindChangeCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if ( auth_==null )
+            if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not right to bind right", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -197,10 +203,6 @@ public class BindChangeCommit extends HttpServlet
             String index_page = null;
 
 
-
-            if( auth_.isUserInRole("webmill.auth_bind") )
-
-            {
 
                 PreparedStatement ps = null;
 
@@ -533,8 +535,6 @@ public class BindChangeCommit extends HttpServlet
                     }
 
                 }
-
-            }
 
         }
 

@@ -64,6 +64,8 @@ import java.util.ArrayList;
 
 import java.io.Serializable;
 
+import java.security.Principal;
+
 
 
 import org.riverock.sso.schema.AuthSessionType;
@@ -82,7 +84,7 @@ import org.apache.log4j.Logger;
 
 
 
-public class AuthSession extends AuthSessionType implements Serializable
+public class AuthSession extends AuthSessionType implements Serializable, Principal
 
 {
 
@@ -278,7 +280,7 @@ public class AuthSession extends AuthSessionType implements Serializable
 
     public boolean checkAccess( String serverName)
 
-        throws Exception
+        throws AuthException
 
     {
 
@@ -330,6 +332,8 @@ public class AuthSession extends AuthSessionType implements Serializable
 
         }
 
+
+
         isAccessDenied = !status;
 
         return status;
@@ -375,6 +379,38 @@ public class AuthSession extends AuthSessionType implements Serializable
 
 
         return activeProvider.isUserInRole( this, roleName );
+
+    }
+
+
+
+    public String getName()
+
+    {
+
+        if (this.getUserInfo()==null)
+
+            return null;
+
+
+
+        String name =
+
+            (this.getUserInfo().getFirstName()!=null?this.getUserInfo().getFirstName()+' ':"")+
+
+            (this.getUserInfo().getMiddleName()!=null?this.getUserInfo().getMiddleName()+' ':"")+
+
+            (this.getUserInfo().getLastName()!=null?this.getUserInfo().getLastName()+' ':"");
+
+
+
+        if (name.trim().length()==0)
+
+            return null;
+
+
+
+        return name;
 
     }
 

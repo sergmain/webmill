@@ -112,6 +112,22 @@ public class CtxURL
 
 
 
+    public static String pageid()
+
+    {
+
+        if (GenericConfig.contextName  == null)
+
+            return Constants.PAGEID_SERVLET_NAME ;
+
+
+
+        return GenericConfig.contextName + Constants.PAGEID_SERVLET_NAME ;
+
+    }
+
+
+
     public static String page()
 
     {

@@ -322,9 +322,9 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        shopPage.setDateUploadPrice( DateTools.getStringDate(shop.dateUpload, "dd MMM yyyy", param.getPage().currentLocale) );
+        shopPage.setDateUploadPrice( DateTools.getStringDate(shop.dateUpload, "dd MMM yyyy", param.getPortletRequest().getLocale()) );
 
-        shopPage.setTimeUploadPrice( DateTools.getStringDate(shop.dateUpload, "HH:mm", param.getPage().currentLocale) );
+        shopPage.setTimeUploadPrice( DateTools.getStringDate(shop.dateUpload, "HH:mm", param.getPortletRequest().getLocale()) );
 
 
 
@@ -500,7 +500,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         if (localePackage != null)
 
-            shopParam.sm = StringManager.getManager(localePackage, ctxInstance.page.currentLocale);
+            shopParam.sm = StringManager.getManager(localePackage, ctxInstance.getPortletRequest().getLocale());
 
         else
 

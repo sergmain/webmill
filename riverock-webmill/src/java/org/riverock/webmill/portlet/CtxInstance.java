@@ -66,17 +66,15 @@ package org.riverock.webmill.portlet;
 
 
 
-import java.io.ByteArrayOutputStream;
-
-import java.util.List;
+import java.util.HashMap;
 
 import java.util.Map;
-
-import java.util.HashMap;
 
 
 
 import javax.portlet.PortletRequest;
+
+import javax.portlet.PortletResponse;
 
 import javax.servlet.http.Cookie;
 
@@ -84,43 +82,37 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
 
 
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.generic.db.DatabaseManager;
+
 import org.riverock.generic.tools.StringManager;
 
-import org.riverock.webmill.core.GetSiteCtxCatalogItem;
+import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.webmill.core.GetSiteCtxLangCatalogItem;
+import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.webmill.core.GetSiteCtxTypeItem;
-
-import org.riverock.webmill.core.GetSiteSupportLanguageItem;
-
-import org.riverock.webmill.core.GetSiteTemplateItem;
+import org.riverock.webmill.core.*;
 
 import org.riverock.webmill.main.Constants;
 
 import org.riverock.webmill.port.InitPage;
 
-import org.riverock.webmill.port.PortalXslt;
-
-import org.riverock.webmill.portlet.wrapper.PortletSessionWrapper;
+import org.riverock.webmill.portal.PortalConstants;
 
 import org.riverock.webmill.portlet.wrapper.RenderRequestWrapper;
+
+import org.riverock.webmill.portlet.wrapper.RenderResponseWrapper;
 
 import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
 
 import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
-
-import org.riverock.webmill.schema.site.SiteTemplate;
 
 
 
@@ -132,41 +124,65 @@ public class CtxInstance {
 
 
 
-    public HttpServletRequest req = null;
+    public CtxInstance(HttpServletRequest request_, HttpServletResponse response_, InitPage page)
 
-    public HttpServletResponse response = null;
+    {
 
-    public HttpSession session = null;
+        this.request = request_;
+
+        this.response = response_;
+
+        this.auth = AuthTools.getAuthSession(request);
+
+        this.page = page;
+
+
+
+        this.portletRequest = new RenderRequestWrapper(
+
+            new HashMap(),
+
+            request,
+
+            this.auth,
+
+            page.getCurrentLocale(),
+
+            page.getPreferredLocale()
+
+        );
+
+        portletRequest.setAttribute(PortalConstants.PORTAL_AUTH_ATTRIBUTE, auth);
+
+    }
+
+
+
+
+
+    private HttpServletRequest request = null;
+
+    private HttpServletResponse response = null;
+
+    private AuthSession auth = null;
+
+
 
     public InitPage page = null;
 
     public StringManager sCustom = null;
 
+
+
+
+
     private String nameLocaleBundle = null;
 
 
 
-    public ByteArrayOutputStream byteArrayOutputStream = null;
-
-
-
-    public PortalXslt xslt = null;
-
-    public SiteTemplate template = null;
-
-    public List portlets = null;
-
-
-
-    public int counter;
-
-    public long startMills;
-
-    DatabaseAdapter db = null;
-
-
-
     private PortletRequest portletRequest = null;
+
+    private PortletResponse portletResponse = null;
 
     private Map parameters = null;
 
@@ -208,7 +224,7 @@ public class CtxInstance {
 
     {
 
-        return req.getRemoteAddr();
+        return request.getRemoteAddr();
 
     }
 
@@ -218,17 +234,7 @@ public class CtxInstance {
 
     {
 
-        return req.getCookies();
-
-    }
-
-
-
-    public CtxInstance()
-
-    {
-
-        startMills = System.currentTimeMillis();
+        return request.getCookies();
 
     }
 
@@ -264,15 +270,29 @@ public class CtxInstance {
 
             parameters,
 
-            new PortletSessionWrapper(req.getSession(true))
+            request,
+
+            this.auth,
+
+            this.page.getCurrentLocale(),
+
+            this.page.getPreferredLocale()
 
         );
+
+        this.portletResponse = new RenderResponseWrapper(
+
+
+
+        );
+
+
 
         this.nameLocaleBundle = nameLocaleBunble;
 
         if ((nameLocaleBunble != null) && (nameLocaleBunble.trim().length() != 0))
 
-            sCustom = StringManager.getManager(nameLocaleBunble, page.currentLocale);
+            sCustom = StringManager.getManager(nameLocaleBunble, page.getCurrentLocale());
 
     }
 
@@ -346,7 +366,7 @@ public class CtxInstance {
 
      */
 
-    void initTypeContext(HttpServletRequest request)
+    void initTypeContext(Long idSiteSupportLanguage, DatabaseAdapter db, HttpServletRequest request)
 
     throws Exception
 
@@ -356,7 +376,7 @@ public class CtxInstance {
 
         {
 
-            if (request.getServletPath().startsWith(Constants.PAGE_SERVLET_NAME) )
+            if (request.getServletPath().startsWith(Constants.PAGEID_SERVLET_NAME) )
 
             {
 
@@ -388,13 +408,21 @@ public class CtxInstance {
 
 
 
-                ctx = GetSiteCtxCatalogItem.getInstance(db, ctxId).item;
+                initFromContext(db, ctxId, request);
 
-                if (ctx==null)
+            }
+
+            else if (request.getServletPath().startsWith(Constants.PAGE_SERVLET_NAME) )
+
+            {
+
+                String path = request.getPathInfo();
+
+                if (path==null || path.equals("/"))
 
                 {
 
-                    log.error("Context with id "+ctxId+" not found. process as 'index' page");
+                    // init as 'index' page
 
                     internalInitTypeContext(request);
 
@@ -402,15 +430,43 @@ public class CtxInstance {
 
                 }
 
+                int idx = path.indexOf('/', 1);
+
+                String pageName = null;
+
+                if (idx==-1)
+
+                    pageName = path.substring(1);
+
+                else
+
+                    pageName = path.substring(1, idx);
 
 
-                SiteCtxLangCatalogItemType langMenu = GetSiteCtxLangCatalogItem.getInstance(db, ctx.getIdSiteCtxLangCatalog()).item;
 
-                if (langMenu==null)
+                Long ctxId = DatabaseManager.getLongValue(
+
+                    db,
+
+                    "select a.ID_SITE_CTX_CATALOG " +
+
+                    "from SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b " +
+
+                    "where a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
+
+                    "b.ID_SITE_SUPPORT_LANGUAGE=? and a.CTX_PAGE_URL=?",
+
+                    new Object[]{idSiteSupportLanguage, pageName}
+
+                );
+
+
+
+                if (ctxId==null)
 
                 {
 
-                    log.error("Lang Catalog with id "+ctx.getIdSiteCtxLangCatalog()+" not found. process as 'index' page");
+                    log.error("Context with pageName "+pageName+" not found. process as 'index' page");
 
                     internalInitTypeContext(request);
 
@@ -418,35 +474,9 @@ public class CtxInstance {
 
                 }
 
+                else
 
-
-                SiteSupportLanguageItemType siteLang = GetSiteSupportLanguageItem.getInstance(db, langMenu.getIdSiteSupportLanguage()).item;
-
-                if (siteLang==null)
-
-                {
-
-                    log.error("Site language with id "+langMenu.getIdSiteSupportLanguage()+" not found. process as 'index' page");
-
-                    internalInitTypeContext(request);
-
-                    return;
-
-                }
-
-                if (!page.p.getSiteId().equals(siteLang.getIdSite()))
-
-                {
-
-                    log.error("Requested context with id "+ctxId+" is from others site. Process as 'index' page");
-
-                    internalInitTypeContext(request);
-
-                    return;
-
-                }
-
-                internalInitPageCtx(db, ctx);
+                    initFromContext(db, ctxId, request);
 
             }
 
@@ -493,6 +523,76 @@ public class CtxInstance {
             throw new Exception(errorString);
 
         }
+
+    }
+
+
+
+    private void initFromContext(DatabaseAdapter db, Long ctxId, HttpServletRequest request)
+
+        throws Exception
+
+    {
+
+        ctx = GetSiteCtxCatalogItem.getInstance(db, ctxId).item;
+
+        if (ctx==null)
+
+        {
+
+            log.error("Context with id "+ctxId+" not found. process as 'index' page");
+
+            internalInitTypeContext(request);
+
+            return;
+
+        }
+
+
+
+        SiteCtxLangCatalogItemType langMenu = GetSiteCtxLangCatalogItem.getInstance(db, ctx.getIdSiteCtxLangCatalog()).item;
+
+        if (langMenu==null)
+
+        {
+
+            log.error("Lang Catalog with id "+ctx.getIdSiteCtxLangCatalog()+" not found. process as 'index' page");
+
+            internalInitTypeContext(request);
+
+            return;
+
+        }
+
+
+
+        SiteSupportLanguageItemType siteLang = GetSiteSupportLanguageItem.getInstance(db, langMenu.getIdSiteSupportLanguage()).item;
+
+        if (siteLang==null)
+
+        {
+
+            log.error("Site language with id "+langMenu.getIdSiteSupportLanguage()+" not found. process as 'index' page");
+
+            internalInitTypeContext(request);
+
+            return;
+
+        }
+
+        if (!page.p.getSiteId().equals(siteLang.getIdSite()))
+
+        {
+
+            log.error("Requested context with id "+ctx.getIdSiteCtxCatalog()+" is from others site. Process as 'index' page");
+
+            internalInitTypeContext(request);
+
+            return;
+
+        }
+
+        internalInitPageCtx(db, ctx);
 
     }
 
@@ -605,6 +705,26 @@ public class CtxInstance {
     {
 
         return ctx;
+
+    }
+
+
+
+    public HttpServletRequest getRequest()
+
+    {
+
+        return request;
+
+    }
+
+
+
+    public HttpServletResponse getResponse()
+
+    {
+
+        return response;
 
     }
 

@@ -104,9 +104,9 @@ import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.portlets.ShopPageParam;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.portlets.WebmillErrorPage;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -162,6 +162,8 @@ public class PriceEditShop extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -180,19 +182,21 @@ public class PriceEditShop extends HttpServlet
 
 
 
-            try
+                AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            {
+                if ( auth_==null )
 
-                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+                {
 
-                if (auth_ == null)
+                    WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                     return;
 
+                }
 
 
-                DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
+
+                db_ = DatabaseAdapter.getInstance(false);
 
 
 
@@ -770,22 +774,6 @@ public class PriceEditShop extends HttpServlet
 
                 }
 
-            }
-
-            catch (Exception e)
-
-            {
-
-                log.error(e);
-
-                out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
-
-            }
-
-
-
-
-
         }
 
         catch (Exception e)
@@ -795,6 +783,16 @@ public class PriceEditShop extends HttpServlet
             log.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

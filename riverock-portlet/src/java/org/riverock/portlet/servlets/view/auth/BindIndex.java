@@ -96,13 +96,13 @@ import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
@@ -156,6 +156,8 @@ public class BindIndex extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -176,11 +178,17 @@ public class BindIndex extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -188,7 +196,7 @@ public class BindIndex extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance(false);
 
 
 
@@ -279,12 +287,6 @@ public class BindIndex extends HttpServlet
             try
 
             {
-
-                if (auth_.isUserInRole("webmill.auth_bind"))
-
-                {
-
-
 
                     ps = db_.prepareStatement(sql_);
 
@@ -504,7 +506,7 @@ public class BindIndex extends HttpServlet
 
                             out.write("<td class=\"memberArea\">");
 
-                            out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, ctxInstance.page.currentLocale));
+                            out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, ctxInstance.getPortletRequest().getLocale()));
 
                             out.write("</td>\r\n                    ");
 
@@ -522,7 +524,7 @@ public class BindIndex extends HttpServlet
 
                             out.write("<td class=\"memberArea\">");
 
-                            out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.page.currentLocale));
+                            out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.getPortletRequest().getLocale()));
 
                             out.write("</td>\r\n                    ");
 
@@ -540,7 +542,7 @@ public class BindIndex extends HttpServlet
 
                             out.write("<td class=\"memberArea\">");
 
-                            out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.page.currentLocale));
+                            out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.getPortletRequest().getLocale()));
 
                             out.write("</td>\r\n                    ");
 
@@ -635,20 +637,6 @@ public class BindIndex extends HttpServlet
                     out.write("</a>");
 
                     out.write("</p>");
-
-
-
-
-
-                }
-
-                else
-
-                {
-
-                    out.write(ctxInstance.page.sMain.getStr("access_denied"));
-
-                }
 
 
 
@@ -763,6 +751,16 @@ public class BindIndex extends HttpServlet
             cat.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

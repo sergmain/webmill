@@ -68,9 +68,11 @@ package org.riverock.portlet.servlets.controller;
 
 import java.io.IOException;
 
+import java.io.InputStream;
+
 import java.io.Writer;
 
-import java.util.Iterator;
+import java.util.Enumeration;
 
 import java.util.List;
 
@@ -90,11 +92,7 @@ import org.apache.log4j.Logger;
 
 import org.exolab.castor.xml.Unmarshaller;
 
-import org.riverock.common.multipart.AbstractPart;
-
-import org.riverock.common.multipart.MultipartHandler;
-
-import org.riverock.common.multipart.MultipartRequestWrapper;
+import org.riverock.common.config.ConfigException;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -108,11 +106,11 @@ import org.riverock.portlet.price.Shop;
 
 import org.riverock.portlet.schema.import_price.PricesType;
 
+import org.riverock.portlet.servlets.view.UploadPrice;
+
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
-
-import org.riverock.webmill.main.UploadFileException;
 
 import org.riverock.webmill.portal.menu.MenuInterface;
 
@@ -266,11 +264,13 @@ public class UploadPriceController extends HttpServlet
 
         String srcURL = "/";
 
-        boolean isGrantAccess = false;
+//        boolean isGrantAccess = false;
 
-        AbstractPart part = null;
+//        AbstractPart part = null;
 
         DatabaseAdapter db_ = null;
+
+        InputStream priceData = null;
 
 
 
@@ -290,13 +290,35 @@ public class UploadPriceController extends HttpServlet
 
             if ( log.isDebugEnabled() )
 
+            {
+
                 log.debug( "#55.01.06 " );
 
+                try
 
+                {
 
-            db_ = DatabaseAdapter.getInstance( true );
+                    for ( Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements(); )
 
+                    {
 
+                        String s = (String)e.nextElement();
+
+                        log.debug( "Request attr - "+s+", value - "+PortletTools.getString( ctxInstance.getPortletRequest(), s ) );
+
+                    }
+
+                }
+
+                catch (ConfigException configException)
+
+                {
+
+                    log.error("Exception in ", configException);
+
+                }
+
+            }
 
             srcURL = response.encodeURL( CtxURL.ctx() )+'?'+
 
@@ -310,7 +332,7 @@ public class UploadPriceController extends HttpServlet
 
                 Constants.CTX_TYPE_UPLOAD_PRICE;
 
-
+/*
 
             boolean saveUploadedFilesToDisk = false;
 
@@ -342,22 +364,6 @@ public class UploadPriceController extends HttpServlet
 
 
 
-//            Enumeration e = handler.getPartsHash().keys();
-
-//            if ( !e.hasMoreElements() )
-
-//            {
-
-//                response.sendRedirect( srcURL );
-
-//                return;
-
-//            }
-
-//            // in request must be only one file
-
-//            String key = (String)e.nextElement();
-
             Iterator e = handler.getPartsHash().keySet().iterator();
 
             if ( !e.hasNext() )
@@ -373,8 +379,6 @@ public class UploadPriceController extends HttpServlet
             // in request must be only one file
 
             String key = (String)e.next();
-
-
 
 
 
@@ -398,6 +402,36 @@ public class UploadPriceController extends HttpServlet
 
                 throw new UploadFileException( UploadFileException.WRONG_FORMAT_ERROR );
 
+*/
+
+            Object obj = ctxInstance.getPortletRequest().getParameterMap().get( UploadPrice.UPLOAD_FILE_PARM_NAME );
+
+            if (obj==null)
+
+            {
+
+                WebmillErrorPage.process(out, null, "Parameter '"+UploadPrice.UPLOAD_FILE_PARM_NAME+"' not found", srcURL, "загрузить повторно");
+
+                return;
+
+            }
+
+
+
+            if (!(obj instanceof InputStream))
+
+            {
+
+                WebmillErrorPage.process(out, null, "Parameter '"+UploadPrice.UPLOAD_FILE_PARM_NAME+"' must be type 'FILE'", srcURL, "загрузить повторно");
+
+                return;
+
+            }
+
+
+
+            priceData = (InputStream)obj;
+
 
 
             if ( log.isDebugEnabled() )
@@ -406,13 +440,21 @@ public class UploadPriceController extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check( ctxInstance.getPortletRequest(), response, "/" );
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if ( auth_==null )
+            if ( auth_==null || !auth_.isUserInRole( "webmill.upload_price_list" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not right to upload price on this site", srcURL, "загрузить повторно");
 
                 return;
 
+            }
 
+
+
+            db_ = DatabaseAdapter.getInstance( true );
 
             SiteMenu siteMenu = SiteMenu.getInstance( db_, ctxInstance.page.p.sites.getIdSite() );
 
@@ -430,8 +472,6 @@ public class UploadPriceController extends HttpServlet
 
                 WebmillErrorPage.process(out, null, "ƒанный сайт не поддерживает ни одного прайса.  од ошибки #10.04", srcURL, "загрузить повторно");
 
-
-
                 return;
 
             }
@@ -441,58 +481,6 @@ public class UploadPriceController extends HttpServlet
             if ( log.isDebugEnabled() )
 
                 log.debug( "#55.01.15 idSite -  "+ctxInstance.page.p.sites.getIdSite() );
-
-
-
-            isGrantAccess = auth_.isUserInRole( "webmill.upload_price_list" );
-
-        }
-
-        catch (Exception e)
-
-        {
-
-            log.error( "General exception import price-list", e );
-
-            if ( out!=null )
-
-            {
-
-                WebmillErrorPage.process(out, e, "General exception inport price-list", srcURL, "загрузить повторно");
-
-            }
-
-            else
-
-                throw new ServletException( e );
-
-
-
-            out.flush();
-
-            out.close();
-
-            return;
-
-        }
-
-        finally
-
-        {
-
-            DatabaseAdapter.close(db_);
-
-            db_ = null;
-
-        }
-
-
-
-
-
-        if ( isGrantAccess && part!=null)
-
-        {
 
 
 
@@ -508,7 +496,7 @@ public class UploadPriceController extends HttpServlet
 
             {
 
-                InputSource inSrc = new InputSource( part.getInputStream() );
+                InputSource inSrc = new InputSource( priceData );
 
                 prices = (PricesType)Unmarshaller.unmarshal( PricesType.class, inSrc );
 
@@ -604,11 +592,47 @@ public class UploadPriceController extends HttpServlet
 
 
 
-        } // check auth
+        }
+
+        catch (Exception e)
+
+        {
+
+            log.error( "General exception import price-list", e );
+
+            if ( out!=null )
+
+            {
+
+                WebmillErrorPage.process(out, e, "General exception inport price-list", srcURL, "загрузить повторно");
+
+            }
+
+            else
+
+                throw new ServletException( e );
+
+
+
+            out.flush();
+
+            out.close();
+
+            return;
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
+
+        }
 
     }
-
-
 
 }
 

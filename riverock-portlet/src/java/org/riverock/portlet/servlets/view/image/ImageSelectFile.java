@@ -90,9 +90,9 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.portlets.WebmillErrorPage;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -164,17 +164,17 @@ public class ImageSelectFile extends HttpServlet
 
 
 
-            try
+                AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            {
+                if ( auth_==null )
 
+                {
 
-
-                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
-
-                if (auth_ == null)
+                    WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                     return;
+
+                }
 
 
 
@@ -249,24 +249,6 @@ public class ImageSelectFile extends HttpServlet
 
 
                 }
-
-            }
-
-            catch (Exception e)
-
-            {
-
-                log.error(e);
-
-                out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
-
-            }
-
-
-
-
-
-            out.write("\r\n");
 
 
 

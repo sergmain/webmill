@@ -104,6 +104,8 @@ import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.PortletTools;
 
+import org.riverock.webmill.utils.ServletUtils;
+
 
 
 
@@ -150,6 +152,8 @@ public class ForumIndex extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -157,8 +161,6 @@ public class ForumIndex extends HttpServlet
             CtxInstance ctxInstance =
 
                 (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-
-
 
 
 
@@ -170,7 +172,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance( false );
 
 
 
@@ -212,7 +214,9 @@ public class ForumIndex extends HttpServlet
 
 
 
-            PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, forumType, out);
+//            PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, forumType, out);
+
+            ServletUtils.include(request_, response, null, forumType, out);
 
         }
 
@@ -223,6 +227,16 @@ public class ForumIndex extends HttpServlet
             log.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

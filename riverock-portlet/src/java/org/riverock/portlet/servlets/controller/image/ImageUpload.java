@@ -78,6 +78,8 @@ import java.sql.PreparedStatement;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -85,10 +87,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpSession;
-
-import javax.portlet.PortletSession;
 
 
 
@@ -108,21 +106,17 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.portlets.WebmillErrorPage;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.schema.MainUserInfoType;
 
-import org.riverock.webmill.main.UploadFile;
-
 import org.riverock.webmill.main.UploadFileException;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -180,11 +174,17 @@ public class ImageUpload extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null || !auth_.isUserInRole( "webmill.upload_image" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -205,8 +205,6 @@ public class ImageUpload extends HttpServlet
                 log.debug("right to commit image - "+auth_.isUserInRole("webmill.upload_image"));
 
 
-
-            if (auth_.isUserInRole("webmill.upload_image"))
 
             {
 

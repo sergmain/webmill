@@ -330,17 +330,13 @@ public class MainMemberServlet extends HttpServlet
 
 
 
-                        request_.getSession().setAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION, ctxInstance );
+                        ctxInstance.getPortletRequest().getPortletSession().setAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION, ctxInstance );
 
                         if (log.isDebugEnabled())
 
                         {
 
-                            log.debug("ctx session - "+ctxInstance.session);
-
-                            log.debug("portlet request session - "+ctxInstance.getPortletRequest().getPortletSession() );
-
-                            log.debug("req.getSession(true) session - "+ctxInstance.req.getSession(true));
+                            log.debug("ctx session - "+ctxInstance.getPortletRequest().getPortletSession());
 
                             for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
 

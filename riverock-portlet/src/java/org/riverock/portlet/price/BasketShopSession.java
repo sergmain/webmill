@@ -482,7 +482,7 @@ public class BasketShopSession
 
                         "Confirm registration",
 
-                        ctxInstance.page.currentLocale);
+                        ctxInstance.getPortletRequest().getLocale());
 
 
 

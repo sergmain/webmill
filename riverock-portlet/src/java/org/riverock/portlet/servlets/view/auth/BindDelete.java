@@ -90,13 +90,13 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
@@ -156,6 +156,8 @@ public class BindDelete extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
@@ -176,11 +178,17 @@ public class BindDelete extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -188,7 +196,7 @@ public class BindDelete extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance(false);
 
 //            InitPage jspPage = new InitPage(db_, request,
 
@@ -201,10 +209,6 @@ public class BindDelete extends HttpServlet
             String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
 
 
-
-//            if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
-
-//                return;
 
             Long id_auth_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_auth_user");
 
@@ -220,10 +224,6 @@ public class BindDelete extends HttpServlet
 
 
 
-//            MainUserInfo userInfo = null;
-
-
-
             if (authInfoUser != null && authInfo != null)
 
             {
@@ -233,8 +233,6 @@ public class BindDelete extends HttpServlet
                     InternalAuthProviderTools.checkRigthOnUser(db_,
 
                         authInfoUser.authUserID, authInfo.authUserID);
-
-//                userInfo = new MainUserInfo( db_, authInfoUser.userLogin );
 
             }
 
@@ -332,7 +330,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"left\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isService, false, ctxInstance.page.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isService, false, ctxInstance.getPortletRequest().getLocale()));
 
                 out.write("\r\n");
 
@@ -350,7 +348,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"left\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isRoad, false, ctxInstance.page.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isRoad, false, ctxInstance.getPortletRequest().getLocale()));
 
                 out.write("\r\n");
 
@@ -368,7 +366,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("<td align=\"left\">\r\n");
 
-                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, false, ctxInstance.page.currentLocale));
+                out.write(HtmlTools.printYesNo(authInfoUser.isUseCurrentFirm, false, ctxInstance.getPortletRequest().getLocale()));
 
                 out.write("\r\n");
 
@@ -415,6 +413,16 @@ public class BindDelete extends HttpServlet
             cat.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

@@ -462,7 +462,7 @@ public class NewsSite implements Portlet, PortletGetList
 
                 log.debug("serverName "+param.getPage().p.getServerName());
 
-                log.debug("locale " + param.getPage().currentLocale.toString());
+                log.debug("locale " + param.getPortletRequest().getLocale().toString());
 
                 log.debug("idSite " + idSite);
 
@@ -664,7 +664,7 @@ public class NewsSite implements Portlet, PortletGetList
 
             log.debug("getInstance(DatabaseAdapter db__)");
 
-            log.debug("param.ctxInstance.page.currentLocale.toString() - " + param.getPage().currentLocale.toString());
+            log.debug("param.ctxInstance.getPortletRequest().getLocale().toString() - " + param.getPortletRequest().getLocale().toString());
 
         }
 
@@ -696,7 +696,7 @@ public class NewsSite implements Portlet, PortletGetList
 
 
 
-            if (nb.getCodeLanguage().equals( param.getPage().currentLocale.toString() ))
+            if (nb.getCodeLanguage().equals( param.getPortletRequest().getLocale().toString() ))
 
             {
 
@@ -750,7 +750,7 @@ public class NewsSite implements Portlet, PortletGetList
 
             log.debug("code - " + portletCode_);
 
-            log.debug("param.ctxInstance.page.currentLocale.toString() - " + param.getPage().currentLocale.toString());
+            log.debug("param.ctxInstance.getPortletRequest().getLocale().toString() - " + param.getPortletRequest().getLocale().toString());
 
         }
 
@@ -786,7 +786,7 @@ public class NewsSite implements Portlet, PortletGetList
 
 
 
-                if (nb.getCodeLanguage().equals( param.getPage().currentLocale.toString() ))
+                if (nb.getCodeLanguage().equals( param.getPortletRequest().getLocale().toString() ))
 
                 {
 

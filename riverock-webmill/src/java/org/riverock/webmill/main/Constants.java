@@ -126,6 +126,8 @@ public class Constants
 
     public final static String PAGE_SERVLET_NAME = "/page";
 
+    public final static String PAGEID_SERVLET_NAME = "/pageid";
+
 
 
     public static final String NAME_TOURL_PARAM     = "mill.tourl";

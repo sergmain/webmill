@@ -296,7 +296,7 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPage().currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPortletRequest().getLocale());
 
     }
 
@@ -306,7 +306,7 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
 
     {
 
-        return DateTools.getStringDate(datePost, "HH:mm", param.getPage().currentLocale);
+        return DateTools.getStringDate(datePost, "HH:mm", param.getPortletRequest().getLocale());
 
     }
 
@@ -476,7 +476,7 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
 
         {
 
-            Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPage().currentLocale);
+            Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPortletRequest().getLocale());
 
 
 

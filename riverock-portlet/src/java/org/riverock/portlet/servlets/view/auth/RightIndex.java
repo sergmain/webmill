@@ -98,13 +98,13 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.portlet.portlets.WebmillErrorPage;
+
 import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
@@ -182,11 +182,17 @@ public class RightIndex extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
+            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-            if (auth_ == null)
+            if ( auth_==null )
+
+            {
+
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
 
                 return;
+
+            }
 
 
 
@@ -476,31 +482,31 @@ public class RightIndex extends HttpServlet
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(S1, false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(S1, false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(U1, false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(U1, false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(I1, false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(I1, false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(D1, false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(D1, false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(A1, false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(A1, false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n");
 
@@ -510,19 +516,19 @@ public class RightIndex extends HttpServlet
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n");
 
                     out.write("<td class=\"memberArea\">");
 
-                    out.write(HtmlTools.printYesNo(rs, "is_firm", false, ctxInstance.page.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "is_firm", false, ctxInstance.getPortletRequest().getLocale()));
 
                     out.write("</td>\r\n            ");
 
