@@ -32,13 +32,13 @@
  */
 package org.riverock.portlet.menu;
 
-import org.riverock.webmill.portal.menu.MenuInterface;
-import org.riverock.webmill.portal.menu.MenuItemInterface;
 import org.riverock.webmill.portlet.PortletParameter;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 import org.riverock.portlet.test.cases.TestSite;
 import org.riverock.interfaces.schema.javax.portlet.PortletType;
+import org.riverock.interfaces.portlet.menu.MenuInterface;
+import org.riverock.interfaces.portlet.menu.MenuItemInterface;
 import org.riverock.generic.tools.XmlTools;
 
 import org.apache.log4j.Logger;

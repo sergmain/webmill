@@ -42,6 +42,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.portlet.core.GetPriceListWithIdShopList;
 import org.riverock.portlet.core.GetSiteVirtualHostItem;
 import org.riverock.portlet.price.PriceListItemList;
+import org.riverock.portlet.price.ShopPageParam;
 import org.riverock.portlet.schema.core.PriceListListType;
 import org.riverock.portlet.schema.core.SiteVirtualHostItemType;
 import org.riverock.portlet.schema.import_price.PriceListItemType;
@@ -59,7 +60,7 @@ import org.riverock.webmill.site.WebmillNamespace;
 import org.riverock.webmill.schema.site.TemplateItemType;
 import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
 import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.portlet.portlets.ShopPageParam;
+import org.riverock.portlet.price.ShopPageParam;
 
 public class TestCaseShop extends TestCase implements TestCaseInterface
 {
