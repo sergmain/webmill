@@ -63,6 +63,9 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.sql.parser.Parser;
 import org.riverock.sql.cache.SqlStatement;
+import org.riverock.webmill.portlet.wrapper.RenderRequestImpl;
+
+import javax.portlet.PortletRequest;
 
 public class TestCaseMember extends TestCase
 {
@@ -358,7 +361,7 @@ public class TestCaseMember extends TestCase
                         Exception ee = null;
                         try
                         {
-                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_);
+                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "remote-user", "server-name");
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -400,8 +403,9 @@ public class TestCaseMember extends TestCase
                         Exception ee = null;
                         try
                         {
-                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
-                            String sql = MemberServiceClass.buildUpdateSQL(content, null, mod, db_, true, req);
+//                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
+                            PortletRequest portletRequest = new RenderRequestImpl();
+                            String sql = MemberServiceClass.buildUpdateSQL(content, null, mod, db_, true, portletRequest);
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -440,7 +444,8 @@ public class TestCaseMember extends TestCase
                         Exception ee = null;
                         try
                         {
-                            String sql = MemberServiceClass.buildDeleteSQL(content, mod, null, dbDyn);
+                            PortletRequest portletRequest = new RenderRequestImpl();
+                            String sql = MemberServiceClass.buildDeleteSQL(content, mod, null, db_, portletRequest);
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)

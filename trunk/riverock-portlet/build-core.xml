@@ -36,7 +36,7 @@
 
     <!-- runtime library -->
     <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
-    <property name="riverock-generic.lib" value="riverock-generic-4.0.3.jar"/>
+    <property name="riverock-generic.lib" value="riverock-generic-4.0.4.jar"/>
     <property name="riverock-cache.lib" value="riveroc-cache-1.0.1.jar"/>
     <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
     <property name="riverock-schema-support.lib" value="riverock-schema-support-4.0.3.jar"/>

@@ -247,7 +247,7 @@ public class MemberCommitServlet extends HttpServlet
                                     log.debug("Field with type "+FieldsTypeJspTypeType.YES_1_NO_N.toString()+" not found");
                             }
 
-                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.fromParam, mp.mod, dbDyn, ctxInstance.getPortletRequest() );
+                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.fromParam, mp.mod, dbDyn, ctxInstance.getPortletRequest().getRemoteUser(), ctxInstance.getPortletRequest().getServerName());
 
                             if (log.isDebugEnabled())
                             {
