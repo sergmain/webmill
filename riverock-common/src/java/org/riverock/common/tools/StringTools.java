@@ -1,0 +1,1163 @@
+/*
+
+ * org.riverock.common -- Supporting classes, interfaces, and utilities
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock -- The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This library is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU Lesser General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2.1 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * Lesser General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU Lesser General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+
+
+/**
+
+ * Набор методов для работы со строками.
+
+ *
+
+ * $Id$
+
+ */
+
+package org.riverock.common.tools;
+
+
+
+import org.apache.log4j.Logger;
+
+
+
+import java.util.Locale;
+
+
+
+public class StringTools
+
+{
+
+    private static Logger cat = Logger.getLogger("org.riverock.tools.StringTools" );
+
+
+
+
+
+    /**
+
+     * преобразует строку вида 'SITE_LIST_SITE' -> 'SiteListSite'
+
+     * @param f
+
+     * @return результирующая строка
+
+     */
+
+    public static String capitalizeString(String f)
+
+    {
+
+        String r = "";
+
+        if (f.indexOf('_')==-1)
+
+        {
+
+            if (f.length()==1)
+
+                return f.toUpperCase();
+
+
+
+            return StringTools.capitalizeFirstChar(f);
+
+        }
+
+
+
+        String s_ = f;
+
+
+
+        int pos;
+
+        while ((pos = s_.indexOf('_')) != -1)
+
+        {
+
+            if (pos != s_.length())
+
+            {
+
+                r += StringTools.capitalizeFirstChar(s_.substring(0, pos));
+
+                s_ = s_.substring(pos + 1, s_.length());
+
+            }
+
+        }
+
+        return r + StringTools.capitalizeFirstChar(s_);
+
+    }
+
+
+
+
+
+    public static String capitalizeFirstChar( String s )
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        if (s.length()==0)
+
+            return "";
+
+
+
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+
+    }
+
+
+
+    /**
+
+     * Построение Locale из строки. Реализация в 1.4 кривая
+
+     * @param string строка для построения лосали
+
+     * @return java.util.Locale
+
+     */
+
+    public static Locale getLocale(String string)
+
+    {
+
+        if (string==null)
+
+            return null;
+
+
+
+        int idx = string.indexOf('_');
+
+        if (idx == -1)
+
+            return new Locale(string, "");
+
+
+
+        String lang = string.substring(0, idx);
+
+        int idx1 = string.indexOf('_', idx+1);
+
+        if (idx1==-1)
+
+            return new Locale(lang, string.substring(idx+1));
+
+
+
+        return new Locale(
+
+            lang, string.substring(idx+1, idx1), string.substring(idx1+1) );
+
+    }
+
+
+
+    public static String getMultypleString(String str, int multyple)
+
+    {
+
+        if (str==null || multyple==0)
+
+            return "";
+
+
+
+        String s = "";
+
+        for (int i=0; i<multyple; i++)
+
+            s += str;
+
+
+
+        return s;
+
+    }
+
+
+
+    public static String toOrigin(String s)
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        return StringTools.replaceStringArray(
+
+                s,
+
+                new String[][]
+
+                {
+
+                    { "&gt;", ">"},
+
+                    { "&lt;", "<"},
+
+                    { "&amp;", "&"}
+
+                }
+
+        );
+
+    }
+
+
+
+
+
+    public static String encodeXml( String s )
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        return StringTools.replaceStringArray(
+
+                s,
+
+                new String[][]
+
+                {
+
+                    { "&", "&amp;" },
+
+                    { "<", "&lt;"},
+
+                    { ">", "&gt;"}
+
+                }
+
+        );
+
+    }
+
+
+
+    public static String decodeXml( String s )
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        return StringTools.replaceStringArray(
+
+                s,
+
+                new String[][]
+
+                {
+
+                    { "&gt;", ">"},
+
+                    { "&lt;", "<"},
+
+                    { "&amp;", "&"}
+
+                }
+
+        );
+
+    }
+
+
+
+    public static String prepareEditForm(String s)
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        return StringTools.replaceStringArray(
+
+                s,
+
+                new String[][]
+
+                {
+
+                    { "&", "&amp;" },
+
+                    { "<", "&lt;" },
+
+                    { ">", "&gt;" },
+
+                    { "\"", "&quot;" }
+
+
+
+/*
+
+                    { "&gt;", ">"},
+
+                    { "&lt;", "<"},
+
+                    { "&amp;", "&"}
+
+*/
+
+                }
+
+        );
+
+    }
+
+
+
+    public static String prepareToParsingSimple(String s)
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        return "<para>" + StringTools.replaceStringArray(
+
+                s,
+
+                new String[][]
+
+                {
+
+                    {"\n", "</para>\n<para>"},
+
+                }
+
+        ) + "</para>";
+
+    }
+
+
+
+    public static String prepareToParsing(String s)
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        return "<para>" + StringTools.replaceStringArray(
+
+                s,
+
+                new String[][]
+
+                {{"&", "&amp;"},
+
+                 {"<", "&lt;"},
+
+                 {">", "&gt;"},
+
+                 {"\t", "&#160;&#160;&#160;&#160;"},
+
+                 {"\n", "</para>\n<para>"},
+
+                 {" ", " &#160;"}
+
+                }
+
+        ) + "</para>";
+
+    }
+
+
+
+    public static String toPlainHTML(String s)
+
+    {
+
+        if (s==null)
+
+            return null;
+
+
+
+        return StringTools.replaceStringArray(
+
+                s,
+
+                new String[][]
+
+                {{"&", "&amp;"},
+
+                 {"<", "&lt;"},
+
+                 {">", "&gt;"},
+
+                 {"\t", "&#160;&#160;&#160;&#160;"},
+
+                 {"\n", "<br>\n"},
+
+                 {" ", " &#160;"}
+
+                }
+
+        );
+
+    }
+
+
+
+    /**
+
+     * Проверяет является объект типа String gecnsv (null) или строка пустая и если верно, то возвращает
+
+     * строку по умолчанию
+
+     * @param s - String. Строка для проверки
+
+     * @param def - String. Строка, возвращаемая, если проверочная строка == null или пустая
+
+     * @return - String. Новая строка
+
+     */
+
+    public static String replaceEmpty(String s, String def)
+
+    {
+
+        if (s == null)
+
+            return def;
+
+
+
+        if (s.trim().length() == 0)
+
+            return def;
+
+
+
+        return s;
+
+    }
+
+
+
+    /**
+
+     * Форматирует входной массив байт в столбцы по 76 символов. Применяется для base64 кодирования
+
+     * @param bytes - byte[]. Входной массив байт
+
+     * @return - byte[]. Выходной массив байт, отформатированный в столбцы по 76 байт.
+
+     */
+
+    public static byte[] formatArray(byte bytes[])
+
+    {
+
+        int newLength = bytes.length + bytes.length / 57;
+
+
+
+        if (cat.isDebugEnabled())
+
+            cat.debug("Old length: " + bytes.length + "\nNew length: " + newLength);
+
+
+
+        byte bf[] = new byte[newLength];
+
+
+
+        int charCount = 0;
+
+        for (int i = 0; i < bytes.length; i++)
+
+        {
+
+
+
+//cat.debug("charCount: "+charCount+" i: "+i);
+
+
+
+            bf[charCount++] = bytes[i];
+
+
+
+            // Add newline every 76 output chars (that's 57 input chars)
+
+            if ((i != 0) && (i % 57 == 0))
+
+            {
+
+                if (cat.isDebugEnabled())
+
+                    cat.debug(" " + i + " " + charCount);
+
+
+
+                bf[charCount++] = (byte) '\n';
+
+            }
+
+
+
+        }
+
+        return bf;
+
+    }
+
+
+
+    public static byte[] getBytesUTF(String s)
+
+    {
+
+        if (s==null)
+
+            return new byte[0];
+
+
+
+        try
+
+        {
+
+            return s.getBytes("utf-8");
+
+        }
+
+        catch (java.io.UnsupportedEncodingException e)
+
+        {
+
+            cat.warn("String.getBytes(\"utf-8\") not supported");
+
+            return new byte[0];
+
+        }
+
+    }
+
+
+
+/*
+
+	public static String parseUTFString(String s, int start, int end, int maxDBfieldLength)
+
+	{
+
+		if ((s==null) || s.length() <= start)
+
+			return "";
+
+
+
+		byte[] b = getBytesUTF(s);
+
+		int pos = getStartUTF(byte[] b, maxDBfieldLength);
+
+		String(b, int offset, int length, "utf-8")
+
+	}
+
+*/
+
+    public static int getStartUTF(String s, int maxByte)
+
+    {
+
+        return getStartUTF(getBytesUTF(s), maxByte);
+
+    }
+
+
+
+    public static int getStartUTF(byte[] b, int maxByte)
+
+    {
+
+        return getStartUTF(b, maxByte, 0);
+
+    }
+
+
+
+    public static int getStartUTF(byte[] b, int maxByte, int offset)
+
+    {
+
+        if (b.length <= offset)
+
+            return -1;
+
+
+
+        if (b.length < maxByte)
+
+            return b.length;
+
+
+
+        int idx = Math.min(b.length, maxByte + offset);
+
+
+
+        for (int i = idx - 1; i > offset; i--)
+
+        {
+
+            int j = (int) (b[i] < 0?0x100 + b[i]:b[i]);
+
+            if (j < 0x80)
+
+            {
+
+                return i + 1;
+
+            }
+
+        }
+
+        return -1;
+
+    }
+
+
+
+    public static int lengthUTF(String s)
+
+    {
+
+        return getBytesUTF(s).length;
+
+    }
+
+
+
+    /**
+
+     * Заменяет один фрагмент строки другим во всей строке.
+
+     * @param str_ - String. Строка в которой производится замена
+
+     * @param search_ - String. Подстрока для поиска
+
+     * @param ins - String. Подстрока для замены.
+
+     * @return - String. Результирующая строка. Если один из параметров равен null, возвращается null
+
+     */
+
+    public static String replaceString(String str_, String search_, String ins)
+
+    {
+
+        if ((str_ == null) || (search_ == null) || (ins == null))
+
+            return null;
+
+
+
+        String s_ = str_, resultStr = "";
+
+
+
+        int pos;
+
+        while ((pos = s_.indexOf(search_)) != -1)
+
+        {
+
+            if (pos != s_.length())
+
+            {
+
+                resultStr += (s_.substring(0, pos) + ins);
+
+                s_ = s_.substring(pos + search_.length(), s_.length());
+
+            }
+
+        }
+
+        return resultStr + s_;
+
+    }
+
+
+
+    /**
+
+     * Заменяет один фрагмент строки другим во всей строке.
+
+     * @param str_ - String. Строка в которой производится замена
+
+     * @param search_ - String. Подстрока для поиска
+
+     * @param ins - String. Подстрока для замены.
+
+     * @return - String. Результирующая строка. Если один из параметров равен null, возвращается null
+
+     */
+
+
+
+    /**
+
+     * Заменяет один фрагмент строки другим во всей строке. Строки для поиска и замены передаются
+
+     * в виде 2-ух мерного массива.
+
+     *
+
+     * @param str_ - String. Строка в которой производится замена
+
+     * @param repl - String[][]. Массив строк для поиска и замены.
+
+     * repl[][0] - строка для поиска
+
+     * repl[][1] - строка для замены
+
+     * @return - String. Новая строка
+
+     */
+
+    public static String replaceStringArray(String str_,
+
+                                            String repl[][])
+
+    {
+
+        String qqq = str_;
+
+        for (int i = 0; i < repl.length; i++)
+
+        {
+
+            qqq = StringTools.replaceString(qqq, repl[i][0], repl[i][1]);
+
+        }
+
+        return qqq;
+
+
+
+    }
+
+
+
+    /*
+
+     * @deprecated Use public static String replaceString(String str_, String search_, String ins)
+
+     */
+
+//    public static String replaceStr(String str_, String search_, String ins)
+
+//    {
+
+//        return replaceString(str_, search_, ins);
+
+//    }
+
+
+
+    /**
+
+     * Преобразует строку из одной кодировки в другую
+
+     * @param s - String. Строка для преобразования
+
+     * @param fromCharset - String. Исходная кодировка строки
+
+     * @param toCharset - String. Результирующая кодировка строки
+
+     * @return - String.
+
+     * @throws java.io.UnsupportedEncodingException
+
+     */
+
+    public static String convertString(String s, String fromCharset, String toCharset)
+
+            throws java.io.UnsupportedEncodingException
+
+    {
+
+        if (s == null)
+
+            return null;
+
+
+
+        return new String(s.getBytes(fromCharset), toCharset);
+
+    }
+
+
+
+    /**
+
+     * Дополняет строку символами cправа или слева. В зависимости от флага isLeft дополнение
+
+     * делается слева (true) или справа (false)
+
+     * @param s -  String. Строка для дополнения
+
+     * @param ch -  char. Символ, используемый для дополнения.
+
+     * @param countAddChar -  количество символов для добавления.
+
+     * @param isLeft - boolean. Дополнение слева или справа
+
+     * @return  -  String.
+
+     */
+
+    public static String addString(String s, char ch, int countAddChar, boolean isLeft)
+
+    {
+
+        if (s == null)
+
+            return null;
+
+
+
+        if (countAddChar==0)
+
+            return s;
+
+
+
+        String temp = "";
+
+        for (int i=0; i<countAddChar; i++)
+
+            temp += ch;
+
+
+
+        return isLeft?temp + s:s + temp;
+
+    }
+
+
+
+
+
+    /**
+
+     * Дополняет строку символами до указанного количества. В зависимости от флага isLeft дополнение
+
+     * делается слева (true) или справа (false)
+
+     * @param s -  String. Строка для дополнения
+
+     * @param ch -  char. Символ, используемый для дополнения.
+
+     * @param countCharInString -  String. результирующая длина строки.
+
+     * @param isLeft - boolean. Дополнение слева или справа
+
+     * @return  -  String.
+
+     */
+
+    public static String appendString(String s, char ch, int countCharInString, boolean isLeft)
+
+    {
+
+        if (s == null)
+
+            return null;
+
+
+
+        if (s.length() > countCharInString)
+
+            return s.substring(0, countCharInString - 1);
+
+
+
+        String temp = "";
+
+        for (int i = 0; i < (countCharInString - s.length()); i++)
+
+            temp += ch;
+
+
+
+        return isLeft?temp + s:s + temp;
+
+    }
+
+
+
+    /**
+
+     * Укорачивает строку до указанного количества символов
+
+     * @param s - String. Строка для укорочения
+
+     * @param count_char - int. Количество символов
+
+     * @return - String. Результирующая строка
+
+     */
+
+    public static String truncateString(String s, int count_char)
+
+    {
+
+        if (s == null)
+
+            return null;
+
+
+
+        if (s.length() > count_char)
+
+            return s.substring(0, count_char - 1);
+
+        else
+
+            return s;
+
+    }
+
+
+
+    /**
+
+     * @deprecated use truncateString(String s, int count_char)
+
+     * Укорачивает строку до указанного количества символов
+
+     * @param s - String. Строка для укорочения
+
+     * @param count_char - int. Количество символов
+
+     * @return - String. Результирующая строка
+
+     */
+
+    public static String truncString(String s, int count_char)
+
+    {
+
+        return truncateString(s, count_char);
+
+    }
+
+
+
+    public static String rewriteString(String s_)
+
+    {
+
+        if (s_ == null)
+
+            return null;
+
+
+
+        String resultStr = "";
+
+
+
+//        int pos;
+
+        for (int i = 0; i < s_.length(); i++)
+
+            resultStr += "%" + convertByte(
+
+                    s_.substring(i, i + 1).getBytes()
+
+            ).toUpperCase();
+
+
+
+        return resultStr;
+
+    }
+
+
+
+    /**
+
+     * Convert a byte array into a printable format containing a
+
+     * String of hexadecimal digit characters (two per byte).
+
+     *
+
+     * @param bytes - byte[] array representation
+
+     */
+
+    public static String convertByte(byte bytes[])
+
+    {
+
+
+
+        StringBuffer sb = new StringBuffer(bytes.length * 2);
+
+        for (int i = 0; i < bytes.length; i++)
+
+        {
+
+            sb.append(convertDigit((int) (bytes[i] >> 4)));
+
+            sb.append(convertDigit((int) (bytes[i] & 0x0f)));
+
+        }
+
+        return (sb.toString());
+
+
+
+    }
+
+
+
+    private static char convertDigit(int value)
+
+    {
+
+
+
+        value &= 0x0f;
+
+        if (value >= 10)
+
+            return ((char) (value - 10 + 'a'));
+
+        else
+
+            return ((char) (value + '0'));
+
+
+
+    }
+
+
+
+    public static String rewriteURL(String str_)
+
+    {
+
+        if (str_ == null)
+
+            return null;
+
+
+
+        String s_ = str_, resultStr = "";
+
+        String rewriteStr = "'/\\%?&\"=";
+
+
+
+//        int pos;
+
+        String processStr = "";
+
+        for (int i = 0; i < s_.length(); i++)
+
+        {
+
+            processStr = s_.substring(i, i + 1);
+
+            if (rewriteStr.indexOf(processStr) != -1)
+
+                processStr = "%" + convertByte(processStr.getBytes()).toUpperCase();
+
+
+
+            resultStr += processStr;
+
+        }
+
+        return resultStr;
+
+    }
+
+}
