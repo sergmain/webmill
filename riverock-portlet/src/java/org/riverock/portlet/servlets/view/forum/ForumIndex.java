@@ -108,7 +108,7 @@ public class ForumIndex extends HttpServlet
 
 {
 
-    private static Logger log = Logger.getLogger("org.riverock.servlets.view.forum.ForumIndex");
+    private static Logger log = Logger.getLogger("org.riverock.portlet.servlets.view.forum.ForumIndex");
 
 
 
@@ -214,7 +214,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            out.write("<!-- forum: "+forumType+" -->");
+            out.write("\n<!-- forum: "+forumType+" -->\n");
 
 
 

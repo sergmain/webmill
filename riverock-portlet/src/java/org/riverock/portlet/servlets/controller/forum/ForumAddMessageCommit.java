@@ -228,11 +228,17 @@ public class ForumAddMessageCommit extends HttpServlet
 
                 Long id_main = ServletTools.getLong(request, Constants.NAME_ID_MAIN_FORUM_PARAM);
 
-                Long id_thread;
+                Long id_thread = null;
 
                 if (id_main == null)
 
+                {
+
+                    id_main = new Long(0);
+
                     id_thread = new Long(db_.getSequenceNextValue(forum.getSequence()) );
+
+                }
 
                 else
 
