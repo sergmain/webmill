@@ -80,7 +80,7 @@
 
     <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
 
-    <property name="riverock-schema-support.lib" value="riverock-schema-support-4.0.2.jar"/>
+    <property name="riverock-schema-support.lib" value="riverock-schema-support-4.0.3.jar"/>
 
 
 
