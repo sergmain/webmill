@@ -93,7 +93,7 @@ public class CtxInstance {
             tempLocale = portalInfo.getDefaultLocale();
 
         if (tempLocale==null)
-            tempLocale = StringTools.getLocale( ServletUtils.getString(request, Constants.NAME_LANG_PARAM, tempLocale.toString()) );
+            tempLocale = StringTools.getLocale( ServletUtils.getString(request, Constants.NAME_LANG_PARAM) );
 
         if (tempLocale==null)
         {
