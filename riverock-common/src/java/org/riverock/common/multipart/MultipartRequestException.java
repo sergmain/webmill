@@ -35,26 +35,17 @@ package org.riverock.common.multipart;
 import java.lang.*;
 import java.io.IOException;
 
-public class MultipartRequestException extends Exception
-{
-    public MultipartRequestException()
-    {
+public class MultipartRequestException extends Exception {
+
+    public MultipartRequestException() {
         super();
     }
 
-    public MultipartRequestException(String s)
-    {
-        super(s);
+    public MultipartRequestException( String s ) {
+        super( s );
     }
 
-    public String toString()
-    {
-        return super.toString();
+    public MultipartRequestException( String s, Throwable cause ) {
+        super( s, cause );
     }
-
-    public String getMessage()
-    {
-        return super.getMessage();
-    }
-
 }

@@ -26,7 +26,6 @@ package org.riverock.generic.main;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.generic.exception.GenericException;
@@ -37,9 +36,9 @@ import org.apache.log4j.Logger;
 /**
  * $Id$
  */
-public class CacheDirectory
+public final class CacheDirectory
 {
-    private static Logger log = Logger.getLogger("org.riverock.generic.main.CacheDirectory");
+    private final static Logger log = Logger.getLogger( CacheDirectory.class );
 
     private long lastAccessTime = -1;
     private long delayPeriod = 1000 * 5;
@@ -55,6 +54,9 @@ public class CacheDirectory
 
     public CacheFile[] getFileArray()
     {
+        if (files==null)
+            return new CacheFile[]{};
+
         return files;
     }
 
@@ -64,7 +66,7 @@ public class CacheDirectory
         try
         {
             if (currentDir == null)
-                return true;
+                return false;
 
             File[] currentFiles = currentDir.listFiles(fileFilter);
 
@@ -77,34 +79,28 @@ public class CacheDirectory
             for (int i = 0; i < files.length; i++)
             {
                 File temp = files[i].getFile();
-                boolean isNeedReload = true;
+                File currFile = null;
                 for (int j = 0; j < currentFiles.length; j++)
                 {
-                    File currFile = currentFiles[j];
-                    if (temp.getName().equals(currFile.getName()) &&
-                        temp.lastModified() == currFile.lastModified()
-                    )
-                    {
-                        if (log.isDebugEnabled())
-                            log.debug("File " + temp.getName() + " was changed. Return status is true");
-
-                        isNeedReload = false;
-                    }
+                    currFile = currentFiles[j];
+                    if (temp.getName().equals(currFile.getName()))
+                        break;
+                    currFile = null;
                 }
-                if (isNeedReload)
+                if (currFile!=null && temp.lastModified()==currFile.lastModified()) {
+                    if (log.isDebugEnabled())
+                        log.debug("File " + temp.getName() + " was changed. Return status is true");
+
                     return true;
+                }
             }
             return false;
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            log.error("Exception in isNeedReload()", e);
-            throw new GenericException(e.toString());
-        }
-        catch (Error e)
-        {
-            log.error("Error in isNeedReload()", e);
-            throw new GenericException(e.toString());
+            final String es = "Error in isNeedReload()";
+            log.error(es, e);
+            throw new GenericException( es, e );
         }
 
     }
@@ -123,9 +119,7 @@ public class CacheDirectory
         return false;
     }
 
-    public void processDirectory()
-        throws ConfigException
-    {
+    public void processDirectory()  throws ConfigException {
         try
         {
             if (currentDir == null)
@@ -153,30 +147,30 @@ public class CacheDirectory
         {
             String errorString = "error processing directory";
             log.error(errorString, e);
-            throw new ConfigException(e.toString());
+            throw new ConfigException( errorString, e );
         }
     }
 
     public CacheDirectory(String fileName, FileFilter filter)
-        throws FileNotFoundException, ConfigException
+        throws ConfigException
     {
         this(fileName, filter, 1000 * 10);
     }
 
-    public CacheDirectory(File dir, FileFilter filter)
-        throws FileNotFoundException, ConfigException
+    public CacheDirectory( final File dir, final FileFilter filter )
+        throws ConfigException
     {
         this(dir, filter, 1000 * 10);
     }
 
-    public CacheDirectory(String dirName, FileFilter filter, long delayPeriod_)
-        throws FileNotFoundException, ConfigException
+    public CacheDirectory( final String dirName, final FileFilter filter, final long delayPeriod_)
+        throws ConfigException
     {
         this(new File(dirName), filter, delayPeriod_);
     }
 
-    public CacheDirectory(File dir, FileFilter filter, long delayPeriod_)
-        throws FileNotFoundException, ConfigException
+    public CacheDirectory( final File dir, final FileFilter filter, final long delayPeriod_ )
+        throws ConfigException
     {
         if (dir == null)
         {
@@ -185,6 +179,14 @@ public class CacheDirectory
         }
         fileFilter = filter;
         currentDir = dir;
+
+        if (currentDir == null || !currentDir.exists() || !currentDir.isDirectory()) {
+            currentDir = null;
+            String errorString = "Path '" + currentDir + "' can't be processed.";
+            log.warn( errorString );
+            return;
+        }
+/*
         if (currentDir == null)
         {
             String errorString = "Error create object File for directory " + currentDir;
@@ -205,7 +207,7 @@ public class CacheDirectory
             log.warn(errorString);
             throw new FileNotFoundException( errorString );
         }
-
+*/
         delayPeriod = delayPeriod_;
         lastAccessTime = System.currentTimeMillis();
 

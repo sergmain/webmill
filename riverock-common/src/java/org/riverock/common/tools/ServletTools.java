@@ -30,6 +30,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,20 +39,92 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 /**
- * Класс ServletTools прденазначен для работы c HttpXxx классами и др.
- *
  * $Id$
  */
 public final class ServletTools {
     private final static Logger log = Logger.getLogger( ServletTools.class   );
 
-    public static void cleanSession(HttpSession session)
+    public static class ContentType {
+
+        private StringBuffer contentType = null;
+        private Charset charset = null;
+
+        public ContentType( final String contentType ) {
+            this( contentType, (String)null);
+        }
+
+        public void setCharset( String charset_ ) {
+            this.charset = Charset.forName( charset_ );
+        }
+
+        public ContentType( final String contentType, final Charset charset ) {
+            this.contentType = new StringBuffer(contentType);
+            this.charset = charset;
+        }
+
+        public ContentType( final String contentType, final String defaultContentType ) {
+            parse( contentType );
+            if ( contentType==null )
+                this.contentType = new StringBuffer( defaultContentType );
+        }
+
+        // format: "text/html; charset=utf-8"
+        private final static String CHARSET = "charset";
+        private void parse( final String contentTypeString ) {
+            if (contentTypeString==null)
+                return;
+
+            int idx = contentTypeString.indexOf( ';' );
+            if (idx==-1) {
+                this.contentType = new StringBuffer( contentTypeString );
+//                String s = contentTypeString.trim();
+//                if (s.startsWith( CHARSET ) )
+//                    this.charset = extractCharset( contentTypeString );
+//                else
+//                    this.contentType = s;
+
+                return;
+            }
+
+            this.charset = extractCharset( contentTypeString.substring( idx+1 ) );
+            this.contentType = new StringBuffer( contentTypeString.substring( 0, idx ).trim() );
+        }
+
+        private Charset extractCharset( final String contentType ) {
+            if (contentType==null)
+                return null;
+
+            String s = contentType.trim();
+            if (!s.startsWith( CHARSET ) )
+                return null;
+
+            int idx = s.indexOf( '=' );
+            if (idx==-1)
+                return null;
+
+            return Charset.forName( s.substring( idx+1).trim() );
+        }
+
+        public String getContentType() {
+            return contentType.toString();
+        }
+
+        public StringBuffer getContentTypeStringBuffer() {
+            return contentType;
+        }
+
+        public Charset getCharset() {
+            return charset;
+        }
+    }
+
+    public static void cleanSession( final HttpSession session)
         throws Exception
     {
         if (session==null)
             return;
 
-// удаляем из сесси все объекты
+        // delete all objects from session
         int countLoop = 3;
         for (int i=0; i<countLoop; i++)
         {
@@ -78,33 +151,33 @@ public final class ServletTools {
         }
     }
 
-    public static String getHiddenItem(String name, String value)
+    public static String getHiddenItem( final String name, final String value)
     {
         return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value+ "\">\n");
     }
 
-    public static String getHiddenItem(String name, int value)
+    public static String getHiddenItem(final String name, final int value)
     {
         return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value+ "\">\n");
     }
 
-    public static String getHiddenItem(String name, Integer value)
+    public static String getHiddenItem(final String name, final Integer value)
     {
         return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value!=null?value.longValue():0) + "\">\n");
     }
 
-    public static String getHiddenItem(String name, long value)
+    public static String getHiddenItem(final String name, final long value)
     {
         return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + value+ "\">\n");
     }
 
-    public static String getHiddenItem(String name, Long value)
+    public static String getHiddenItem(final String name, final Long value)
     {
         return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value!=null?value.longValue():0) + "\">\n");
     }
 
-    public static void immediateRemoveAttribute(HttpSession session,
-                                                String attr)
+    public static void immediateRemoveAttribute(final HttpSession session,
+                                                final String attr)
     {
         Object obj = session.getAttribute(attr);
         try
@@ -135,6 +208,7 @@ public final class ServletTools {
     }
 
     /**
+     * @deprecated
      * Если при вызове текущего URL переменная не инициализирована, то перенаправление на
      * страницу index.jsp
      * Параметры:
@@ -144,12 +218,13 @@ public final class ServletTools {
      * String f - имя переменной для проверки<br>
      * </blockquote>
      */
-    public static boolean isNotInit(HttpServletRequest request, HttpServletResponse response, String f)
+    public static boolean isNotInit(final HttpServletRequest request, final HttpServletResponse response, final String f)
     {
         return isNotInit(request, response, f, "index.jsp");
     }
 
     /**
+     * @deprecated
      * Если при вызове текущего URL переменная не инициализирована, то перенаправление на
      * страницу index.jsp
      * Параметры:
@@ -160,7 +235,7 @@ public final class ServletTools {
      * String defURL - URL для перенаправления, если переменная отсутствует
      * </blockquote>
      */
-    public static boolean isNotInit(HttpServletRequest request, HttpServletResponse response, String f, String defURL)
+    public static boolean isNotInit(final HttpServletRequest request, final HttpServletResponse response, final String f, final String defURL)
     {
 
         if (request.getParameter(f) == null)
@@ -188,7 +263,7 @@ public final class ServletTools {
      * </blockquote>
      */
     public static String getString(
-        HttpServletRequest request, String f, String def, String fromCharset, String toCharset)
+        final HttpServletRequest request, final String f, final String def, final String fromCharset, final String toCharset)
     {
         String s_ = def;
         if (request.getParameter(f) != null)
@@ -213,7 +288,7 @@ public final class ServletTools {
      * String f - имя переменной для получения значения<br>
      * </blockquote>
      */
-    public static Integer getInt(HttpServletRequest request, String f)
+    public static Integer getInt(final HttpServletRequest request, final String f)
     {
         return getInt(request, f, null);
     }
@@ -227,7 +302,7 @@ public final class ServletTools {
      * int def - значение по молчанию<br>
      * </blockquote>
      */
-    public static Integer getInt(HttpServletRequest request, String f, Integer def)
+    public static Integer getInt(final HttpServletRequest request, final String f, final Integer def)
     {
         Integer i_ = def;
         if (request.getParameter(f) != null)
@@ -254,7 +329,7 @@ public final class ServletTools {
      * String f - имя переменной для получения значения<br>
      * </blockquote>
      */
-    public static Long getLong(HttpServletRequest request, String f){
+    public static Long getLong(final HttpServletRequest request, final String f){
         return getLong(request, f, null);
     }
 
@@ -267,7 +342,7 @@ public final class ServletTools {
      * long def - значение по молчанию
      * </blockquote>
      */
-    public static Long getLong(HttpServletRequest request, String f, Long def){
+    public static Long getLong(final HttpServletRequest request, final String f, final Long def){
         Long i_ = def;
         if (request.getParameter(f) != null)
         {
@@ -293,7 +368,7 @@ public final class ServletTools {
      * String f - имя переменной для получения значения<br>
      * </blockquote>
      */
-    public static Float getFloat(HttpServletRequest request, String f)
+    public static Float getFloat(final HttpServletRequest request, final String f)
     {
         return getFloat(request, f, null);
     }
@@ -307,7 +382,7 @@ public final class ServletTools {
      * float def - значение по умолчанию
      * </blockquote>
      */
-    public static Float getFloat(HttpServletRequest request, String f, Float def)
+    public static Float getFloat(final HttpServletRequest request, final String f, final Float def)
     {
         Float i_ = def;
         if (request.getParameter(f) != null)
@@ -328,7 +403,7 @@ public final class ServletTools {
         return i_;
     }
 
-    public static Double getDouble(HttpServletRequest request, String f)
+    public static Double getDouble(final HttpServletRequest request, final String f)
     {
         return getDouble(request, f, null);
     }
@@ -342,7 +417,7 @@ public final class ServletTools {
      * double def - значение по умолчанию
      * </blockquote>
      */
-    public static Double getDouble(HttpServletRequest request, String f, Double def)
+    public static Double getDouble(final HttpServletRequest request, final String f, final Double def)
     {
         Double i_ = def;
         if (request.getParameter(f) != null)
@@ -363,7 +438,7 @@ public final class ServletTools {
         return i_;
     }
 
-    public static Map getParameterMap(String parameter)
+    public static Map getParameterMap(final String parameter)
     {
         if (parameter==null)
             return null;
@@ -389,5 +464,4 @@ public final class ServletTools {
 
         return map;
     }
-
 }

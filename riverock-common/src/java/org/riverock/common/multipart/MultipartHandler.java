@@ -68,7 +68,7 @@ class EndOfPartException extends IOException
 
 public class MultipartHandler
 {
-    private static Category cat = Category.getInstance("org.riverock.multipart.MultipartHandler");
+    private static Category log = Category.getInstance(MultipartHandler.class);
 
     /** policy for whether to save uploaded files immediately.
      Default is true. If false, we add the binary data to the
@@ -195,15 +195,15 @@ public class MultipartHandler
         disallow("?*", '_');	// wildcards are a worse nuisance
         disallow('#', '_');	// UN*X shell comment chars are best avoided
 
-        if (cat.isDebugEnabled())
-            cat.debug("*** starting to read input");
+        if (log.isDebugEnabled())
+            log.debug("*** starting to read input");
 
         readrfc1867(cthdr);
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
         {
-            cat.debug("*** finished reading input");
-            cat.debug("internal count shows: read " + read +
+            log.debug("*** finished reading input");
+            log.debug("internal count shows: read " + read +
                 " of expected " + expected + " bytes\n");
         }
     }
@@ -247,8 +247,8 @@ public class MultipartHandler
 
         while (line != null && line.startsWith(boundary))
         {			// iterate over the parts in this part
-            if (cat.isDebugEnabled())
-                cat.debug("*** seeking new part");
+            if (log.isDebugEnabled())
+                log.debug("*** seeking new part");
 
             line = readLine();
             // OK: the next line after a part
@@ -294,8 +294,8 @@ public class MultipartHandler
         if (!headers.isEmpty())
         {			// if headers is empty, we've probably
             // come to the end of input. That's OK.
-            if (cat.isDebugEnabled())
-                cat.debug("*** seeking part data");
+            if (log.isDebugEnabled())
+                log.debug("*** seeking part data");
 
             String cthdr = (String) headers.get("content-type");
 
@@ -323,8 +323,8 @@ public class MultipartHandler
                 line = handlePartData(headers, boundary);
             }
 
-            if (cat.isDebugEnabled())
-                cat.debug("-- handled data, returning ["
+            if (log.isDebugEnabled())
+                log.debug("-- handled data, returning ["
                     + line + "]");
 
         }
@@ -381,8 +381,8 @@ public class MultipartHandler
 
             tokenStart = tokenEnd + 1;
 
-            if (cat.isDebugEnabled())
-                cat.debug("  ++ Setting part header [" +
+            if (log.isDebugEnabled())
+                log.debug("  ++ Setting part header [" +
                     name + "] to [" + value + "]");
 
             headers.put(name, value);
@@ -404,8 +404,8 @@ public class MultipartHandler
         while (line != null &&
             line.indexOf(':') > -1)
         {			// extract all the headers for this part
-            if (cat.isDebugEnabled())
-                cat.debug("  -- Seeking new part headers in " +
+            if (log.isDebugEnabled())
+                log.debug("  -- Seeking new part headers in " +
                     line);
 
             extractPartHeadersFromLine(line, headers);
@@ -417,8 +417,8 @@ public class MultipartHandler
         // the line which follows the headers
         // should be blank; if it's not we may
         // have an error.
-        if (cat.isDebugEnabled() && line != null && line.trim().length() > 0)
-            cat.debug("Non-blank line [" + line +
+        if (log.isDebugEnabled() && line != null && line.trim().length() > 0)
+            log.debug("Non-blank line [" + line +
                 "] (first character [" +
                 line.getBytes()[0] +
                 "]) following part headers?");
@@ -493,8 +493,8 @@ public class MultipartHandler
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        if (cat.isDebugEnabled())
-            cat.debug("-- handling inline part [" +
+        if (log.isDebugEnabled())
+            log.debug("-- handling inline part [" +
                 headers.get("name") + "]");
 
         line = readPartData(out, boundary, cte);
@@ -504,8 +504,8 @@ public class MultipartHandler
         put(name, outString);
         putValue( name, new ParameterPart(outString));
 
-        if (cat.isDebugEnabled())
-            cat.debug("-- handled inline part, value was [" +
+        if (log.isDebugEnabled())
+            log.debug("-- handled inline part, value was [" +
                 out.toString() + "]");
 
         return line;
@@ -523,8 +523,7 @@ public class MultipartHandler
      *
      *  @return the last line read-which should be the boundary...
      */
-    protected String handleFilePart(Hashtable headers, char cte,
-                                    String boundary)
+    protected String handleFilePart(Hashtable headers, char cte, String boundary)
         throws IOException, UploadException
     {
         String line = null;
@@ -539,9 +538,9 @@ public class MultipartHandler
             int sep = Math.max(filename.lastIndexOf('/'),
                 filename.lastIndexOf("\\"));
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
             {
-                cat.debug("Seeking separator in filename [" +
+                log.debug("Seeking separator in filename [" +
                     filename + "]; index was " + sep);
             }
 
@@ -569,8 +568,8 @@ public class MultipartHandler
                 charToReplaceWith.charValue());
         }
 
-        if (cat.isDebugEnabled())
-            cat.debug("-- handling file part [" + filename + "]");
+        if (log.isDebugEnabled())
+            log.debug("-- handling file part [" + filename + "]");
 
         if (isSaveUploadedFilesToDisk())
         {
@@ -579,8 +578,8 @@ public class MultipartHandler
             uploadedFile.originFullName = originFullName;
             uploadedFile.originName = originName;
 
-            if (cat.isDebugEnabled())
-                cat.debug("File "+uploadedFile+", exists - "+
+            if (log.isDebugEnabled())
+                log.debug("File "+uploadedFile+", exists - "+
                     uploadedFile.exists()+", allowOverwrite -"+allowOverwrite
                 );
 
@@ -588,8 +587,8 @@ public class MultipartHandler
             {
                 if (silentlyRename)
                 {
-                    if (cat.isDebugEnabled())
-                        cat.debug("silentlyRename name of file");
+                    if (log.isDebugEnabled())
+                        log.debug("silentlyRename name of file");
 
                     for (int i = 1; uploadedFile.exists(); i++)
                     {
@@ -598,8 +597,8 @@ public class MultipartHandler
                             File.separator +
                             new Integer(i).toString() +
                             "_" + filename;
-                        if (cat.isDebugEnabled())
-                            cat.debug("new filename - "+newFileName);
+                        if (log.isDebugEnabled())
+                            log.debug("new filename - "+newFileName);
 
                         uploadedFile = new
                             UploadedFile(newFileName);
@@ -638,9 +637,8 @@ public class MultipartHandler
                 {
                     try
                     {
-                        out.close();
+                        out.flush();
                         out = null;
-                        // make sure it is closed
                     }
                     catch (IOException ioe)
                     {
@@ -659,7 +657,14 @@ public class MultipartHandler
 
                 String name = (String) headers.get("name");
                 put(name, uploadedFile);
-                putValue(name, new FileOnDiskPart(uploadedFile) );
+                try {
+                    putValue(name, new FileOnDiskPart(uploadedFile) );
+                }
+                catch( MultipartRequestException e ) {
+                    String es = "Error create FilePart";
+                    log.error( es, e );
+                    throw new UploadException( es, e );
+                }
                 // cache the file object on the uploadedFile
                 // name - we don't cache empty files!
             }
@@ -691,8 +696,8 @@ public class MultipartHandler
             }
         }
 
-        if (cat.isDebugEnabled())
-            cat.debug("-- handled file part");
+        if (log.isDebugEnabled())
+            log.debug("-- handled file part");
 
         return line;		// and return the supposed boundary
     }
@@ -1077,8 +1082,8 @@ public class MultipartHandler
             // of the string?
         }
 
-        if (cat.isDebugEnabled())
-            cat.debug("-- String readLine returning [" +
+        if (log.isDebugEnabled())
+            log.debug("-- String readLine returning [" +
                 result + "]; total read = " + read +
                 " out of " + expected + " bytes expected");
 

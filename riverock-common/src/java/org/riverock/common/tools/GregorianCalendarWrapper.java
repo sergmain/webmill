@@ -23,6 +23,11 @@
  *
  */
 
+package org.riverock.common.tools;
+
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 /**
  * Author: mill
  * Date: Apr 1, 2003
@@ -30,15 +35,8 @@
  *
  * $Id$
  */
-
-package org.riverock.common.tools;
-
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
-
 public class GregorianCalendarWrapper extends GregorianCalendar
 {
-//    private static Logger cat = Logger.getLogger( "org.riverock.common.tools.GregorianCalendarWrapper" );
 
     public GregorianCalendarWrapper()
     {

@@ -42,15 +42,15 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 
-public class XmlTools
+public final class XmlTools
 {
-    private static Logger log = Logger.getLogger(XmlTools.class);
+    private final static Logger log = Logger.getLogger(XmlTools.class);
 
     public XmlTools()
     {
     }
 
-    public static Object getObjectFromXml(Class classType, String str) throws Exception
+    public static Object getObjectFromXml( final Class classType, final String str ) throws Exception
     {
         try
         {
@@ -64,7 +64,7 @@ public class XmlTools
         }
     }
 
-    public static String getXmlAsString(Object obj, String rootElement) throws Exception
+    public static String getXmlAsString( final Object obj, final String rootElement ) throws Exception
     {
         if (log.isDebugEnabled())
         {
@@ -76,17 +76,17 @@ public class XmlTools
             return new String( getXml(obj, rootElement) );
     }
 
-    public static byte[] getXml(Object obj, String rootElement) throws Exception
+    public static byte[] getXml( final Object obj, final String rootElement ) throws Exception
     {
         return getXml(obj, rootElement, null, "utf-8");
     }
 
-    public static byte[] getXml(Object obj, String rootElement, String namespace[][]) throws Exception
+    public static byte[] getXml( final Object obj, final String rootElement, final String namespace[][] ) throws Exception
     {
         return getXml(obj, rootElement, namespace, "utf-8");
     }
 
-    public static byte[] getXml(Object obj, String rootElement, String namespace[][], String encoding) throws Exception
+    public static byte[] getXml( final Object obj, final String rootElement, final String namespace[][], final String encoding ) throws Exception
     {
         ByteArrayOutputStream fos = null;
         if (log.isDebugEnabled())
@@ -142,40 +142,40 @@ public class XmlTools
         }
     }
 
-    public static void writeToFile(Object obj, String fileName)
+    public static void writeToFile( final Object obj, final String fileName )
         throws Exception
     {
         writeToFile(obj, fileName, "utf-8", null, true, null);
     }
 
-    public static void writeToFile(Object obj, String fileName, String encoding)
+    public static void writeToFile( final Object obj, final String fileName, final String encoding )
         throws Exception
     {
         writeToFile(obj, fileName, encoding, null, true, null);
     }
 
-    public static void writeToFile(Object obj, String fileName, String encoding, String root)
+    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root )
         throws Exception
     {
         writeToFile(obj, fileName, encoding, root, true, null);
     }
 
-    public static void writeToFile(Object obj, String fileName, String encoding, String root,
-                                   boolean isValidate)
+    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root,
+                                   final boolean isValidate)
         throws Exception
     {
         writeToFile(obj, fileName, encoding, root, isValidate, null);
     }
 
-    public static void writeToFile(Object obj, String fileName, String encoding, String root,
-                                   String namespace[][])
+    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root,
+                                   final String namespace[][])
         throws Exception
     {
         writeToFile(obj, fileName, encoding, root, true, namespace);
     }
 
-    public static void writeToFile(Object obj, String fileName, String encoding, String root,
-                                   boolean isValidate, String namespace[][])
+    public static void writeToFile( final Object obj, final String fileName, final String encoding, final String root,
+                                   final boolean isValidate, final String namespace[][] )
         throws Exception
     {
         FileOutputStream fos = new FileOutputStream( fileName );

@@ -44,37 +44,17 @@ import java.io.ByteArrayInputStream;
  *  @author Shawn Grunberger <shawn@oddpost.com>
  *  @version $Revision$
  *  This revision: $Author$
- *  <pre>
- *  $Log$
- *  Revision 1.2  2005/01/27 02:42:21  serg_main
- *  .
- *
- *  Revision 1.1  2004/04/16 19:28:24  smissan
- *  Initial import
- *
- *  Revision 1.1  2004/02/02 13:14:33  serg_main
- *  init commit
- *
- *  Revision 1.2  2003/05/05 14:18:36  admin
- *  no message
- *
- *  Revision 1.1  2002/10/08 09:22:48  simon
- *  A number of minor enhancements and some bug fixes proposed by Shawn Grunberger
- *
- *
- *  </pre>
  */
 
-public class UploadedBytes extends ByteArrayInputStream
-{
-    private static Category cat = Category.getInstance("org.riverock.multipart.UploadedBytes");
+public final class UploadedBytes extends ByteArrayInputStream {
 
     protected String clientPathname = null;
     protected String contentType = null;
+    private long length = 0;
 
-    protected UploadedBytes(byte[] buf)
-    {
-        super(buf);  // hee
+    protected UploadedBytes(byte[] buf) {
+        super(buf);
+        length = buf.length;
     }
 
     /**
@@ -117,4 +97,7 @@ public class UploadedBytes extends ByteArrayInputStream
     }
 
 
+    public long getLength() {
+        return length;
+    }
 }

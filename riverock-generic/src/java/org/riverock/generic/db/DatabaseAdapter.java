@@ -23,11 +23,6 @@
  *
  */
 
-/**
- *  ласс содержащий описани€ методов дл€ работы с базой данных.
- *
- * $Revision$ $Date$
- */
 package org.riverock.generic.db;
 
 import org.riverock.generic.config.GenericConfig;
@@ -55,9 +50,13 @@ import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
 
-public abstract class DatabaseAdapter
-{
-    private static Logger log = Logger.getLogger("org.riverock.generic.db.DatabaseAdapter");
+/**
+ *  ласс содержащий описани€ методов дл€ работы с базой данных.
+ *
+ * $Revision$ $Date$
+ */
+public abstract class DatabaseAdapter {
+    private final static Logger log = Logger.getLogger( DatabaseAdapter.class );
 
     public abstract int getFamaly();
     public abstract int getVersion();
@@ -80,7 +79,7 @@ public abstract class DatabaseAdapter
     protected Hashtable tables = new Hashtable();
     public DatabaseAdapter(){}
 
-    public PreparedStatement prepareStatement(String sql_) throws SQLException{
+    public PreparedStatement prepareStatement( final String sql_) throws SQLException{
 
         if (Boolean.TRUE.equals(dc.getIsSupportCache())){
             try {
@@ -185,7 +184,7 @@ public abstract class DatabaseAdapter
         }
     }
 
-    private static void reinitRelateClass( String className ) throws Exception
+    private static void reinitRelateClass( final String className ) throws Exception
     {
         try
         {
@@ -223,12 +222,13 @@ public abstract class DatabaseAdapter
         }
         catch(Exception ex)
         {
-            log.error("Error in reinitRelateClass", ex);
-            throw new SQLException(ex.toString());
+            final String es = "Error in reinitRelateClass";
+            log.error(es, ex);
+            throw ex;
         }
     }
 
-    private static void reinitClass( String className ) throws Exception
+    private static void reinitClass( final String className ) throws Exception
     {
         if (log.isDebugEnabled())
         {
@@ -269,11 +269,11 @@ public abstract class DatabaseAdapter
         catch(Exception ex)
         {
             log.error("Error in reinitClass "+className, ex);
-            throw new SQLException(ex.toString());
+            throw ex;
         }
     }
 
-    private boolean checkDependence( Parser checkParser, String name )
+    private boolean checkDependence( final Parser checkParser, final String name )
     {
         if (checkParser!=null)
         {
@@ -330,7 +330,7 @@ public abstract class DatabaseAdapter
         return isDynamicConnect;
     }
 
-    public void setIsDynamicConnect(boolean dynamicConnect){
+    public void setIsDynamicConnect( final boolean dynamicConnect){
         isDynamicConnect = dynamicConnect;
     }
 
@@ -540,7 +540,7 @@ public abstract class DatabaseAdapter
      * @param stamp @see java.sql.Timestamp
      * @throws SQLException
      */
-    public abstract void bindDate(PreparedStatement ps, int idx, Timestamp stamp) throws SQLException;
+    public abstract void bindDate( final PreparedStatement ps, final int idx, final Timestamp stamp ) throws SQLException;
     public abstract String getDefaultTimestampValue();
     public abstract ArrayList getViewList(String schemaPattern, String tablePattern) throws Exception;
     public abstract ArrayList getSequnceList(String schemaPattern ) throws Exception;
@@ -754,6 +754,11 @@ public abstract class DatabaseAdapter
                                     setLongVarbinary(ps, k+1, fieldData);
                                     break;
 
+                                case 1111:
+                                    if (isDebug)
+                                        System.out.println("param #"+(k+1)+", value "+fieldData.getStringData());
+                                    ps.setString(k+1, "");
+                                    break;
                                 default:
                                     System.out.println("Unknown field type.");
                             }
@@ -1074,7 +1079,7 @@ public abstract class DatabaseAdapter
 
     /**
      * ¬озвращает список таблиц по фильтру
-     * @return java.lang.Vector of DbTableType
+     * @return java.lang.ArrayList of DbTableType
      */
     public ArrayList getTableList(String schemaPattern, String tablePattern)
     {
@@ -1513,8 +1518,7 @@ public abstract class DatabaseAdapter
      * @return long - следующее значение дл€ ключа из последовательности
      * @throws SQLException
      */
-    public abstract long getSequenceNextValue(CustomSequenceType sequence)
-        throws SQLException;
+    public abstract long getSequenceNextValue( final CustomSequenceType sequence ) throws SQLException;
 
     /**
      *  онструирует и выполн€ет запрос к базе базе данных. ≈сли выборка из базы содержит
@@ -1563,11 +1567,11 @@ public abstract class DatabaseAdapter
      */
     public abstract int getMaxLengthStringField();
 
-    protected abstract void init(DatabaseConnectionType dc_)
+    protected abstract void init( final DatabaseConnectionType dc_)
         throws SQLException, ClassNotFoundException, DatabaseException;
 
 
-    protected static String getDBconnectClassName(String connectionName)
+    protected static String getDBconnectClassName( final String connectionName)
         throws ConfigException
     {
         return GenericConfig.getDBconnectClassName(connectionName);
@@ -1590,14 +1594,14 @@ public abstract class DatabaseAdapter
     }
 
 
-    protected static DatabaseAdapter openDynamicConnect(String connectionName)
+    protected static DatabaseAdapter openDynamicConnect( final String connectionName)
         throws DatabaseException, ConfigException
     {
         DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
         return openDynamicConnect(dc);
     }
 
-    protected static DatabaseAdapter openDynamicConnect(DatabaseConnectionType dc)
+    protected static DatabaseAdapter openDynamicConnect( final DatabaseConnectionType dc)
         throws DatabaseException
     {
         DatabaseAdapter db_ = null;
@@ -1649,14 +1653,14 @@ public abstract class DatabaseAdapter
         return db_;
     }
 
-    private static DatabaseAdapter openConnectPrivate(String connectionName )
+    private static DatabaseAdapter openConnectPrivate( final String connectionName )
             throws DatabaseException, ConfigException
     {
         DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
         return openConnectPrivate(dc);
     }
 
-    private static DatabaseAdapter openConnectPrivate(DatabaseConnectionType dc)
+    private static DatabaseAdapter openConnectPrivate( final DatabaseConnectionType dc)
             throws DatabaseException
     {
         String connClassName = dc.getConnectionClass();
@@ -1742,7 +1746,7 @@ public abstract class DatabaseAdapter
         } // synchronized (initFlag)
     }
 
-    protected synchronized static DatabaseAdapter openConnect(String connectionName)
+    protected synchronized static DatabaseAdapter openConnect( final String connectionName)
         throws DatabaseException, ConfigException
     {
         if (connectionName==null)
@@ -1752,7 +1756,10 @@ public abstract class DatabaseAdapter
         }
 
         DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
-        if (dc.getDataSourceType().getType()!=DataSourceTypeType.NONE_TYPE)
+        if (dc==null)
+            throw new DatabaseException( "DatabaseConnection '"+connectionName+"' not found");
+
+        if (dc.getDataSourceType()!=null && dc.getDataSourceType().getType()!=DataSourceTypeType.NONE_TYPE)
             return openDynamicConnect(connectionName);
 
         DatabaseAdapter __db__ = (DatabaseAdapter)connectHashtable.get(connectionName);
@@ -1821,7 +1828,7 @@ public abstract class DatabaseAdapter
      * @throws ConfigException
      * @see DatabaseConnectionType
      */
-    public static DatabaseAdapter getInstance(boolean isDynamic)
+    public static DatabaseAdapter getInstance( final boolean isDynamic)
         throws DatabaseException, ConfigException
     {
         return getInstance(isDynamic, GenericConfig.getDefaultConnectionName());
@@ -1838,7 +1845,7 @@ public abstract class DatabaseAdapter
      * @throws DatabaseException
      * @throws ConfigException
      */
-    public static DatabaseAdapter getInstance(boolean isDynamic, String connectionName)
+    public static DatabaseAdapter getInstance( final boolean isDynamic, final String connectionName)
         throws DatabaseException, ConfigException
     {
         if (isDynamic)
@@ -1851,7 +1858,7 @@ public abstract class DatabaseAdapter
      * Close connect to DB. If DatabaseAdapter is not 'dynamic', connection will not be closed
      * @param db_ - DatabaseAdapter. 
      */
-    public static void close(DatabaseAdapter db_)
+    public static void close( final DatabaseAdapter db_)
     {
         if (db_ == null)
             return;
@@ -1870,5 +1877,4 @@ public abstract class DatabaseAdapter
             catch (Exception e){}
         }
     }
-
 }

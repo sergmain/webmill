@@ -23,6 +23,11 @@
  *
  */
 
+package org.riverock.common.multipart;
+
+import java.io.InputStream;
+import java.io.IOException;
+
 /**
  * Author: mill
  * Date: Mar 17, 2003
@@ -30,17 +35,7 @@
  *
  * $Id$
  */
-
-package org.riverock.common.multipart;
-
-import java.io.InputStream;
-
-import org.apache.log4j.Logger;
-
-public class FileInMemoryPart implements AbstractPart
-{
-    private static Logger log = Logger.getLogger(FileOnDiskPart.class);
-
+public class FileInMemoryPart extends FilePart {
     private UploadedBytes bytes = null;
 
     public FileInMemoryPart(UploadedBytes  bytes_)
@@ -58,6 +53,10 @@ public class FileInMemoryPart implements AbstractPart
         return FILE_TYPE;
     }
 
+    public long getLength() {
+        return bytes.getLength();
+    }
+
     public InputStream getInputStream()
         throws MultipartRequestException
     {
@@ -68,5 +67,13 @@ public class FileInMemoryPart implements AbstractPart
         throws MultipartRequestException
     {
         return bytes.toString();
+    }
+
+    public String getContentType() {
+        return bytes.getContentType();
+    }
+
+    public int read() throws IOException {
+        return bytes.read();
     }
 }

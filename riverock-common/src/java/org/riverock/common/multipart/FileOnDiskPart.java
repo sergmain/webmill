@@ -22,61 +22,67 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Mar 17, 2003
- * Time: 9:44:56 AM
- *
- * $Id$
- */
-
 package org.riverock.common.multipart;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
-public class FileOnDiskPart implements AbstractPart
-{
-    private static Logger log = Logger.getLogger(FileOnDiskPart.class);
+/**
+ * Author: mill
+ * Date: Mar 17, 2003
+ * Time: 9:44:56 AM
+ * <p/>
+ * $Id$
+ */
+public class FileOnDiskPart extends FilePart {
+
+    private static Logger log = Logger.getLogger( FileOnDiskPart.class );
 
     private UploadedFile file = null;
+    private FileInputStream stream = null;
 
-    public FileOnDiskPart(UploadedFile  file_)
-    {
-        this.file = file_;
+    public FileOnDiskPart( UploadedFile file_ ) throws MultipartRequestException {
+        try {
+            this.file = file_;
+            this.stream = new FileInputStream( file );
+        }
+        catch( FileNotFoundException fileNotFoundException ) {
+            final String es = "Error create new FileOnDiskPart()";
+            log.error( es, fileNotFoundException );
+            throw new MultipartRequestException( es, fileNotFoundException );
+        }
     }
 
-    public int getSubType()
-    {
+    public int getSubType() {
         return FILE_ON_DISK_TYPE;
     }
 
-    public int getType()
-    {
+    public int getType() {
         return FILE_TYPE;
     }
 
-    public InputStream getInputStream()
-        throws MultipartRequestException
-    {
-        try
-        {
-            return new FileInputStream(file);
-        }
-        catch (FileNotFoundException fileNotFoundException)
-        {
-            log.error("Exception in ", fileNotFoundException);
-            throw new MultipartRequestException( fileNotFoundException.toString() );
-        }
+    public long getLength() {
+        return file.getLength();
     }
 
-    public String getStringValue()
-        throws MultipartRequestException
-    {
-        throw new MultipartRequestException("Not implemented");
+    public InputStream getInputStream()
+        throws MultipartRequestException {
+        return stream;
+    }
+
+    public String getStringValue() throws MultipartRequestException {
+        throw new MultipartRequestException( "Not implemented" );
+    }
+
+    public String getContentType() {
+        return file.getContentType();
+    }
+
+    public int read() throws IOException {
+        return stream.read();
     }
 }

@@ -23,9 +23,6 @@
  *
  */
 
-/**
- * $Id$
- */
 package org.riverock.common.tools;
 
 import java.math.BigDecimal;
@@ -36,11 +33,13 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
+/**
+ * $Id$
+ */
 public final class RsetTools {
     private final static Logger log = Logger.getLogger( RsetTools.class );
 
@@ -146,39 +145,43 @@ public final class RsetTools {
         if ( rs==null || f==null )
             return null;
 
-//log.debug("rs: '"+rs+"'");
-//log.debug("f: '"+f+"'");
-
-        Object obj = null;
+//        Object obj = null;
         try
         {
+            java.util.Date date = rs.getTimestamp( f );
+            if (rs.wasNull())
+                return def;
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis( date.getTime() );
+            return calendar;
+/*
             obj = rs.getObject( f );
+            if ( obj==null )
+                return def;
+
+            Calendar c = new GregorianCalendar();
+            c.setTime( rs.getTime( f ) );
+
+            int hour = c.get( Calendar.HOUR_OF_DAY );
+            int min = c.get( Calendar.MINUTE );
+            int sec = c.get( Calendar.SECOND );
+            int millsec = c.get( Calendar.MILLISECOND );
+
+            c.setTime( rs.getDate( f ) );
+
+            c.add( Calendar.HOUR_OF_DAY, hour );
+            c.add( Calendar.MINUTE, min );
+            c.add( Calendar.SECOND, sec );
+            c.add( Calendar.MILLISECOND, millsec );
+            return c;
+*/
         }
         catch (SQLException e)
         {
             log.error( "Error get Calendar value from field '"+f+"' ", e );
             throw e;
         }
-        if ( obj==null )
-            return def;
-
-        Calendar c = new GregorianCalendar();
-
-        c.setTime( rs.getTime( f ) );
-
-        int hour = c.get( Calendar.HOUR_OF_DAY );
-        int min = c.get( Calendar.MINUTE );
-        int sec = c.get( Calendar.SECOND );
-        int millsec = c.get( Calendar.MILLISECOND );
-
-        c.setTime( rs.getDate( f ) );
-
-        c.add( Calendar.HOUR_OF_DAY, hour );
-        c.add( Calendar.MINUTE, min );
-        c.add( Calendar.SECOND, sec );
-        c.add( Calendar.MILLISECOND, millsec );
-
-        return c;
     }
 
     public static Timestamp getTimestamp( final ResultSet rs, final String f )

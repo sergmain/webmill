@@ -41,7 +41,7 @@ import org.apache.log4j.Logger;
 
 public final class StartupApplication
 {
-    private static Logger cat = Logger.getLogger( "org.riverock.generic.startup.StartupApplication" );
+    private final static Logger log = Logger.getLogger( StartupApplication.class );
 
     private static boolean isInit = false;
 
@@ -78,7 +78,7 @@ public final class StartupApplication
             PropertyConfigurator.configure(
                 PropertiesProvider.getConfigPath() + File.separatorChar + log4jFileName
             );
-            cat.info("Application path: " + PropertiesProvider.getApplicationPath() );
+            log.info("Application path: " + PropertiesProvider.getApplicationPath() );
 
             isInit = true;
         }

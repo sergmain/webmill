@@ -54,6 +54,8 @@ import org.xml.sax.InputSource;
  */
 public class DbStructureExport
 {
+
+    private static final boolean IS_EXTRACT_DATA = true;
 //    private static Logger cat = Logger.getLogger("org.riverock.system.DbStructure");
 
     public static void main(String args[])
@@ -61,7 +63,7 @@ public class DbStructureExport
     {
         StartupApplication.init();
         System.out.println("GenericConfig.getGenericDebugDir() = " + GenericConfig.getGenericDebugDir());
-        export(GenericConfig.getGenericDebugDir()+"webmill-schema.xml", true);
+        export(GenericConfig.getGenericDebugDir()+"webmill-schema.xml", IS_EXTRACT_DATA);
     }
 
     public static void export(String fileName, boolean isData)
@@ -77,13 +79,17 @@ public class DbStructureExport
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "MSSQL-JTDS");
 
-        DbSchemaType schema = DatabaseManager.getDbStructure(dbOra );
+        DbSchemaType schema = DatabaseManager.getDbStructure( dbOra );
 
         int i = 0;
         for (i = 0; i < schema.getTablesCount(); i++)
         {
             DbTableType table = schema.getTables(i);
-            if (table.getName().startsWith("A_") || table.getName().startsWith("HAM_"))
+            if (
+                table.getName().startsWith("A_") ||
+                table.getName().startsWith("BIN$") ||
+                table.getName().startsWith("HAM_")
+            )
             {
                 schema.getTablesAsReference().remove(i);
                 i--;

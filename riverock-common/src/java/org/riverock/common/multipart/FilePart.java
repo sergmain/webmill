@@ -1,12 +1,12 @@
 /*
  * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -27,23 +27,11 @@ package org.riverock.common.multipart;
 import java.io.InputStream;
 
 /**
- * Author: mill
- * Date: Mar 17, 2003
- * Time: 9:22:59 AM
- *
+ * User: SergeMaslyukov
+ * Date: 26.01.2005
+ * Time: 1:54:37
  * $Id$
  */
-public interface AbstractPart {
-    public final static int PARAMETER_TYPE = 1;
-    public final static int FILE_TYPE = 2;
-
-    public final static int FILE_ON_DISK_TYPE = 2;
-    public final static int FILE_IN_MEMORY_TYPE = 3;
-
-    public int getSubType();
-    public int getType();
-    public long getLength();
-    public String getStringValue() throws MultipartRequestException;
-
-    public InputStream getInputStream() throws MultipartRequestException;
+public abstract class FilePart extends InputStream implements AbstractPart {
+    public abstract String getContentType();
 }

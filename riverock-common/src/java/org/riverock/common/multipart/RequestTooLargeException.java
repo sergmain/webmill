@@ -37,8 +37,11 @@ import java.io.IOException;
 
 public class RequestTooLargeException extends IOException
 {
-    public RequestTooLargeException(String msg)
-    {
-        super(msg);
+    public RequestTooLargeException() {
+        super();
+    }
+
+    public RequestTooLargeException(String s) {
+        super(s);
     }
 }

@@ -35,28 +35,42 @@ import java.io.PrintStream;
  * $RCSfile$
  *
  */
-public class ExceptionTools
-{
+public final class ExceptionTools {
 
-    public static String getStackTrace(Exception e, int numLines)
-    {
+    /*
+     * @deprecated
+     * @param e
+     * @param numLines
+     * @return
+     */
+//    public static String getStackTrace( final Exception e, final int numLines )
+//    {
+//        return getStackTrace((Throwable)e, numLines, null);
+//    }
+
+    /*
+     * @deprecated 
+     * @param e
+     * @param numLines
+     * @param addAtEndLine
+     * @return
+     */
+//    public static String getStackTrace( final Exception e, final int numLines, final String addAtEndLine )
+//    {
+//        return getStackTrace((Throwable )e, numLines, addAtEndLine);
+//    }
+
+    public static String getStackTrace( final Throwable e, final int numLines ) {
         return getStackTrace(e, numLines, null);
     }
 
-    public static String getStackTrace(Exception e, int numLines, String addAtEndLine)
-    {
-        return getStackTrace((Throwable )e, numLines, addAtEndLine);
-    }
-
-    public static String getStackTrace(Throwable e, int numLines, String addAtEndLine)
-    {
+    public static String getStackTrace( final Throwable e, final int numLines, final String addAtEndLine ) {
         ByteArrayOutputStream bytesOut = new ByteArrayOutputStream();
         e.printStackTrace(new PrintStream(bytesOut, true));
         byte[] bytes = bytesOut.toByteArray();
         int countLines = 0;
         int i = 0;
-        for (; i < bytes.length; i++)
-        {
+        for (; i < bytes.length; i++) {
             if (bytes[i] == '\n')
                 countLines++;
 
@@ -64,15 +78,13 @@ public class ExceptionTools
                 break;
         }
 
-        if (addAtEndLine== null || "".equals(addAtEndLine))
-        {
+        if (addAtEndLine== null || "".equals(addAtEndLine)) {
             if (i >= bytes.length)
                 return new String(bytes);
             else
                 return new String(bytes, 0, i);
         }
-        else
-        {
+        else {
             if (i >= bytes.length)
                 return StringTools.replaceString(new String(bytes), "\n", addAtEndLine + "\n");
             else
@@ -80,5 +92,4 @@ public class ExceptionTools
                         "\n", addAtEndLine + "\n");
         }
     }
-
 }

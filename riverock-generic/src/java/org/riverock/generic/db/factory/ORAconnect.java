@@ -55,7 +55,7 @@ import java.util.*;
 
 public class ORAconnect extends DatabaseAdapter
 {
-    private static Logger log = Logger.getLogger( ORAconnect.class );
+    private final static Logger log = Logger.getLogger( ORAconnect.class );
 
     public boolean getIsClosed()
             throws SQLException
@@ -494,7 +494,7 @@ DEFERRABLE INITIALLY DEFERRED
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( rs, ps );
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }
@@ -531,7 +531,7 @@ DEFERRABLE INITIALLY DEFERRED
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( rs, ps );
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }
@@ -606,7 +606,7 @@ DEFERRABLE INITIALLY DEFERRED
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( ps );
+            DatabaseManager.close( ps );
             ps = null;
         }
     }
@@ -775,9 +775,6 @@ DEFERRABLE INITIALLY DEFERRED
                     " " + w + " and rownum<2 ";
         }
 
-//		db.aM(v_s);
-
-
         PreparedStatement prepStatement = null;
         ResultSet rset = null;
         try
@@ -792,14 +789,12 @@ DEFERRABLE INITIALLY DEFERRED
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( rset, prepStatement );
+            DatabaseManager.close( rset, prepStatement );
             rset = null;
             prepStatement = null;
         }
 
         return id_;
-
-//		return fromDB(id_);
     }
 
     public Calendar getFirstValueCalendar(String t, String f, String w, String o)
@@ -821,9 +816,6 @@ DEFERRABLE INITIALLY DEFERRED
                     " " + w + " and rownum<2 ";
         }
 
-//		db.aM(v_s);
-
-
         PreparedStatement prepStatement = null;
         ResultSet rset = null;
         try
@@ -841,7 +833,7 @@ DEFERRABLE INITIALLY DEFERRED
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( rset, prepStatement );
+            DatabaseManager.close( rset, prepStatement );
             rset = null;
             prepStatement = null;
         }
@@ -849,9 +841,7 @@ DEFERRABLE INITIALLY DEFERRED
         return id_;
     }
 
-    public long getFirstValue(String t, String f, String w, String o)
-            throws SQLException
-    {
+    public long getFirstValue(String t, String f, String w, String o) throws SQLException {
 
         long id_ = -1;
 
@@ -869,9 +859,6 @@ DEFERRABLE INITIALLY DEFERRED
                     " " + w + " and rownum<2 ";
         }
 
-//		db.aM(v_s);
-
-
         PreparedStatement prepStatement = null;
         ResultSet rset = null;
         try
@@ -885,7 +872,7 @@ DEFERRABLE INITIALLY DEFERRED
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( rset, prepStatement );
+            DatabaseManager.close( rset, prepStatement );
             rset = null;
             prepStatement = null;
         }
@@ -1031,8 +1018,21 @@ DEFERRABLE INITIALLY DEFERRED
                             case DataSourceTypeType.JNDI_TYPE:
                                 if (log.isDebugEnabled())
                                     log.debug("Start create connection pooling with JNDI");
-                                try
-                                {
+                                try {
+/*
+DataSource config for OC4J
+    <data-source
+        class="com.evermind.sql.DriverManagerDataSource"
+        name="OracleDS"
+        location="jdbc/emulatedPortletPrefs"
+        xa-location="jdbc/xa/portletPrefs"
+        ejb-location="jdbc/portletPrefs"
+        connection-driver="oracle.jdbc.driver.OracleDriver"
+        username="portlet_prefs"
+        password="portlet_prefs"
+        url="jdbc:oracle:thin:@your.server.com:1521:orcl"
+    />
+*/
                                     InitialContext ic = new InitialContext();
                                     dataSource = (DataSource)ic.lookup("java:comp/env/" + dc.getDataSourceName());
                                 }

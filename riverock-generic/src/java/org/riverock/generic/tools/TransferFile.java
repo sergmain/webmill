@@ -23,15 +23,6 @@
  *
  */
 
-/**
- *
- * Author: Serg Malyukov
- * Date: Aug 31, 2002
- * Time: 8:32:21 PM
- *
- *
- * $Id$
- */
 package org.riverock.generic.tools;
 
 import java.io.FileOutputStream;
@@ -41,23 +32,17 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
-public class TransferFile
-{
-    private static Logger cat = Logger.getLogger("org.riverock.tools.TransferFile");
-
-    private static String writeToFile(String file_, byte bytes[])
-        throws Exception
-    {
-
-        FileOutputStream out = new FileOutputStream(file_, false);
-
-        out.write(bytes, 0, bytes.length);
-        out.flush();
-        out.close();
-        out = null;
-
-        return "File " + file_ + " создан успешно";
-    }
+/**
+ *
+ * Author: Serg Malyukov
+ * Date: Aug 31, 2002
+ * Time: 8:32:21 PM
+ *
+ *
+ * $Id$
+ */
+public final class TransferFile {
+    private final static Logger log = Logger.getLogger( TransferFile.class );
 
     public static byte[] getFileBytes(InputStream in, int sizeBuff)
         throws Exception

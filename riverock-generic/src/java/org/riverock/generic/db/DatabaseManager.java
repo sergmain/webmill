@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Aug 30, 2003
- * Time: 5:07:17 PM
- *
- * $Id$
- */
 package org.riverock.generic.db;
 
 import java.sql.Connection;
@@ -52,9 +44,15 @@ import org.riverock.generic.exception.GenericException;
 
 import org.apache.log4j.Logger;
 
-public class DatabaseManager
-{
-//    private static Logger cat = Logger.getLogger( "org.riverock.generic.db.DatabaseManager" );
+/**
+ * User: Admin
+ * Date: Aug 30, 2003
+ * Time: 5:07:17 PM
+ *
+ * $Id$
+ */
+public final class DatabaseManager {
+    private static Logger log = Logger.getLogger( DatabaseManager.class );
 
     public final static int ORACLE_FAMALY = 1;
     public final static int MYSQL_FAMALY = 2;
@@ -63,40 +61,28 @@ public class DatabaseManager
     public final static int HSQLDB_FAMALY = 5;
     public final static int SAPDB_FAMALY = 6;
     public final static int INTERBASE_FAMALY = 7;
-    private static Logger log = Logger.getLogger("org.riverock.generic.db.DbService");
 
 
-    public static void close( DatabaseAdapter db_)
-    {
+    public static void close( final DatabaseAdapter db_ ) {
         DatabaseAdapter.close(db_);
-        db_ = null;
     }
 
-    public static void close( DatabaseAdapter db_, ResultSet rs, PreparedStatement ps )
-    {
+    public static void close( final DatabaseAdapter db_, final ResultSet rs, final PreparedStatement ps ) {
         close(rs, ps);
-        rs = null;
-        ps = null;
         DatabaseAdapter.close(db_);
-        db_ = null;
     }
 
-    public static void close( DatabaseAdapter db_, PreparedStatement ps )
-    {
+    public static void close( final DatabaseAdapter db_, final PreparedStatement ps ) {
         close(ps);
-        ps = null;
         DatabaseAdapter.close(db_);
-        db_ = null;
     }
 
-    public static void close( ResultSet rs, Statement st )
-    {
+    public static void close( final ResultSet rs, final Statement st ) {
         if ( rs!=null )
         {
             try
             {
                 rs.close();
-                rs = null;
             }
             catch (Exception e01)
             {
@@ -107,7 +93,6 @@ public class DatabaseManager
             try
             {
                 st.close();
-                st = null;
             }
             catch (Exception e02)
             {
@@ -115,31 +100,13 @@ public class DatabaseManager
         }
     }
 
-//    public static void close( PreparedStatement st )
-//    {
-//        if ( st!=null )
-//        {
-//            try
-//            {
-//                st.close();
-//                st = null;
-//            }
-//            catch (SQLException e201)
-//            {
-//                if ( cat.isInfoEnabled() )
-//                    cat.info( "Exception close Statement", e201 );
-//            }
-//        }
-//    }
-
-    public static void close( Statement st )
+    public static void close( final Statement st )
     {
         if ( st!=null )
         {
             try
             {
                 st.close();
-                st = null;
             }
             catch (SQLException e201)
             {
@@ -147,9 +114,8 @@ public class DatabaseManager
         }
     }
 
-    public static void addPrimaryKey(DatabaseAdapter db_, DbTableType table, DbPrimaryKeyType pk)
-        throws Exception
-    {
+    public static void addPrimaryKey( final DatabaseAdapter db_, final DbTableType table, final DbPrimaryKeyType pk )
+        throws Exception {
         if ( table == null )
         {
             String s = "Add primary key failed - table object is null";
@@ -182,7 +148,7 @@ public class DatabaseManager
     }
 
     public static void copyData(
-        DatabaseAdapter db_, DbTableType fieldsList, String sourceTable, String targetTableName
+        final DatabaseAdapter db_, final DbTableType fieldsList, final String sourceTable, final String targetTableName
         )
         throws Exception
     {
@@ -239,7 +205,7 @@ public class DatabaseManager
     }
 
     public static void copyFieldData(
-        DatabaseAdapter db_, DbTableType table, DbFieldType sourceField, DbFieldType targetField
+        final DatabaseAdapter db_, final DbTableType table, final DbFieldType sourceField, final DbFieldType targetField
         )
         throws Exception
     {
@@ -277,7 +243,7 @@ public class DatabaseManager
         }
     }
 
-    public static void duplicateTable(DatabaseAdapter db_, DbTableType srcTable, String targetTableName)
+    public static void duplicateTable( final DatabaseAdapter db_, final DbTableType srcTable, final String targetTableName )
         throws Exception
     {
         if ( srcTable == null )
@@ -297,7 +263,7 @@ public class DatabaseManager
     }
 
     public static DbPrimaryKeyColumnType
-        cloneDescriptionPrimaryKeyColumn(DbPrimaryKeyColumnType srcCol)
+        cloneDescriptionPrimaryKeyColumn( final DbPrimaryKeyColumnType srcCol )
     {
         DbPrimaryKeyColumnType c = new DbPrimaryKeyColumnType();
         c.setCatalogName( srcCol.getCatalogName());
@@ -310,7 +276,7 @@ public class DatabaseManager
         return c;
     }
 
-    public static DbImportedPKColumnType cloneDescriptionFK(DbImportedPKColumnType srcFk)
+    public static DbImportedPKColumnType cloneDescriptionFK( final DbImportedPKColumnType srcFk )
     {
         if (srcFk==null)
             return null;
@@ -332,7 +298,7 @@ public class DatabaseManager
         return f;
     }
 
-    public static DbPrimaryKeyType cloneDescriptionPK(DbPrimaryKeyType srcPk)
+    public static DbPrimaryKeyType cloneDescriptionPK( final DbPrimaryKeyType srcPk )
     {
         if (srcPk==null)
             return null;
@@ -347,7 +313,7 @@ public class DatabaseManager
         return pk;
     }
 
-    public static DbFieldType cloneDescriptionField(DbFieldType srcField)
+    public static DbFieldType cloneDescriptionField( final DbFieldType srcField )
     {
         if (srcField==null)
             return null;
@@ -372,7 +338,7 @@ public class DatabaseManager
      * @param srcTable
      * @return
      */
-    public static DbTableType cloneDescriptionTable(DbTableType srcTable)
+    public static DbTableType cloneDescriptionTable( final DbTableType srcTable )
     {
         if (srcTable==null)
             return null;
@@ -403,7 +369,7 @@ public class DatabaseManager
         return r;
     }
 
-    public static DbFieldType getFieldFromStructure(DbSchemaType schema, String tableName, String fieldName)
+    public static DbFieldType getFieldFromStructure( final DbSchemaType schema, final String tableName, final String fieldName )
     {
         if (schema==null || tableName==null || fieldName==null)
             return null;
@@ -425,7 +391,7 @@ public class DatabaseManager
     }
 
     // check is 'tableName' is table or view
-    public static DbTableType getTableFromStructure(DbSchemaType schema, String tableName)
+    public static DbTableType getTableFromStructure( final DbSchemaType schema, final String tableName )
     {
         if (schema==null || tableName==null)
             return null;
@@ -439,7 +405,7 @@ public class DatabaseManager
         return null;
     }
 
-    public static DbViewType getViewFromStructure(DbSchemaType schema, String viewName)
+    public static DbViewType getViewFromStructure( final DbSchemaType schema, final String viewName )
     {
         if (schema==null || viewName==null)
             return null;
@@ -453,7 +419,7 @@ public class DatabaseManager
         return null;
     }
 
-    public static boolean isFieldForeignKey(DbTableType table, DbFieldType field)
+    public static boolean isFieldForeignKey( final DbTableType table, final DbFieldType field )
     {
         if (table==null || field==null)
             return false;
@@ -468,7 +434,7 @@ public class DatabaseManager
         return false;
     }
 
-    public static boolean isFieldPrimaryKey(DbTableType table, DbFieldType field)
+    public static boolean isFieldPrimaryKey( final DbTableType table, final DbFieldType field )
     {
         if (table==null || field==null)
             return false;
@@ -483,7 +449,7 @@ public class DatabaseManager
         return false;
     }
 
-    public static boolean isFieldExists(DbSchemaType schema, DbTableType table, DbFieldType field)
+    public static boolean isFieldExists( final DbSchemaType schema, final DbTableType table, final DbFieldType field )
     {
         if (schema==null || table==null || field==null)
             return false;
@@ -504,7 +470,7 @@ public class DatabaseManager
         return false;
     }
 
-    public static boolean isTableExists(DbSchemaType schema, DbTableType table)
+    public static boolean isTableExists( final DbSchemaType schema, final DbTableType table )
     {
         if (schema==null || table==null)
             return false;
@@ -518,7 +484,7 @@ public class DatabaseManager
         return false;
     }
 
-    public static DbSchemaType getDbStructure(DatabaseAdapter db_ )
+    public static DbSchemaType getDbStructure( final DatabaseAdapter db_ )
         throws Exception
     {
         DbSchemaType schema = new DbSchemaType();
@@ -555,7 +521,7 @@ public class DatabaseManager
         return schema;
     }
 
-    public static void createWithReplaceAllView(DatabaseAdapter db_, DbSchemaType millSchema)
+    public static void createWithReplaceAllView( final DatabaseAdapter db_, final DbSchemaType millSchema )
         throws Exception
     {
         boolean[] idx = new boolean[millSchema.getViewsCount()];
@@ -608,7 +574,7 @@ public class DatabaseManager
         }
     }
 
-    public static ArrayList getViewList(Connection conn, String schemaPattern, String tablePattern)
+    public static ArrayList getViewList( final Connection conn, final String schemaPattern, final String tablePattern )
     {
         String[] types = {"VIEW"};
 
@@ -647,7 +613,7 @@ public class DatabaseManager
         return v;
     }
 
-    public static boolean isSkipTable(String table)
+    public static boolean isSkipTable( final String table )
     {
         if (table==null)
             return false;
@@ -671,7 +637,7 @@ public class DatabaseManager
         return false;
     }
 
-    public static boolean isMultiColumnFk( DbTableType table, DbImportedPKColumnType key)
+    public static boolean isMultiColumnFk( final DbTableType table, final DbImportedPKColumnType key )
     {
         for (int i=0; i< table.getImportedKeysCount(); i++)
         {
@@ -691,7 +657,7 @@ public class DatabaseManager
      * @param val
      * @return true - значение является датой, иначе false
      */
-    public static boolean checkDefaultTimestamp(String val)
+    public static boolean checkDefaultTimestamp( final String val )
     {
         if (val==null)
             return false;
@@ -724,13 +690,13 @@ public class DatabaseManager
      * @throws Exception
      */
     public static void insertBigText(
-        DatabaseAdapter dbDyn, Object idRec, String pkName,
-        PrimaryKeyTypeTypeType pkType,
-        String nameTargetTable,
-        String namePkTargetTable,
-        String nameTargetField,
-        String insertString,
-        boolean isDelete
+        final DatabaseAdapter dbDyn, final Object idRec, final String pkName,
+        final PrimaryKeyTypeTypeType pkType,
+        final String nameTargetTable,
+        final String namePkTargetTable,
+        final String nameTargetField,
+        final String insertString,
+        final boolean isDelete
         ) throws Exception
     {
         String sql_ = null;
@@ -835,7 +801,7 @@ public class DatabaseManager
         }
     }
 
-    public static void deleteFromBigTable(DatabaseAdapter dbDyn, String nameTargetTable, String pkName, PrimaryKeyTypeTypeType pkType, Object idRec) throws Exception {
+    public static void deleteFromBigTable( final DatabaseAdapter dbDyn, final String nameTargetTable, final String pkName, final PrimaryKeyTypeTypeType pkType, final Object idRec ) throws Exception {
         PreparedStatement ps = null;
         try
         {
@@ -880,11 +846,11 @@ public class DatabaseManager
         }
     }
 
-    public static String getBigTextField( DatabaseAdapter db_, Long id_,
-        String field_,
-        String table_,
-        String idx_field_,
-        String order_field_
+    public static String getBigTextField( final DatabaseAdapter db_, final Long id_,
+        final String field_,
+        final String table_,
+        final String idx_field_,
+        final String order_field_
         )
         throws SQLException
     {
@@ -934,7 +900,7 @@ public class DatabaseManager
         return text;
     }
 
-    public static String getRelateString( DbImportedPKColumnType column )
+    public static String getRelateString( final DbImportedPKColumnType column )
     {
         return (
             column.getFkSchemaName()==null || column.getFkSchemaName().length()==0?
@@ -954,7 +920,7 @@ public class DatabaseManager
             ;
     }
 
-    public static Hashtable getFkNames( ArrayList keys )
+    public static Hashtable getFkNames( final ArrayList keys )
     {
         Hashtable hash = new Hashtable();
         for (int i=0; i<keys.size(); i++)
@@ -984,7 +950,7 @@ public class DatabaseManager
 */
     }
 
-    public static int sqlTypesMapping(String type)
+    public static int sqlTypesMapping( final String type )
     {
         if (type==null)
             return Types.OTHER;
@@ -1021,7 +987,7 @@ public class DatabaseManager
 
     }
 
-    public static void fixBigTextTable( DbTableType table, ArrayList bigTables, int maxLengthTextField )
+    public static void fixBigTextTable( final DbTableType table, final ArrayList bigTables, final int maxLengthTextField )
     {
         if (bigTables==null || table==null)
             return;
@@ -1041,7 +1007,7 @@ public class DatabaseManager
         }
     }
 
-    public static DbBigTextTableType getBigTextTableDesc( DbTableType table, ArrayList bigTables)
+    public static DbBigTextTableType getBigTextTableDesc( final DbTableType table, final ArrayList bigTables )
     {
         if (bigTables==null || table==null)
             return null;
@@ -1055,7 +1021,7 @@ public class DatabaseManager
         return null;
     }
 
-    public static void createDbStructure( DatabaseAdapter db_, DbSchemaType millSchema ) throws Exception
+    public static void createDbStructure( final DatabaseAdapter db_, final DbSchemaType millSchema ) throws Exception
     {
         int i;
         // create sequences
@@ -1161,7 +1127,7 @@ public class DatabaseManager
         createWithReplaceAllView( db_, millSchema );
     }
 
-    public static DbKeyActionRuleType decodeUpdateRule(ResultSet rs)
+    public static DbKeyActionRuleType decodeUpdateRule( final ResultSet rs )
     {
         try
         {
@@ -1207,7 +1173,7 @@ public class DatabaseManager
         return null;
     }
 
-    public static DbKeyActionRuleType decodeDeleteRule(ResultSet rs)
+    public static DbKeyActionRuleType decodeDeleteRule( final ResultSet rs )
     {
         try
         {
@@ -1253,7 +1219,7 @@ public class DatabaseManager
         return null;
     }
 
-    public static DbKeyActionRuleType decodeDeferrabilityRule(ResultSet rs)
+    public static DbKeyActionRuleType decodeDeferrabilityRule( final ResultSet rs )
     {
         try
         {
@@ -1288,7 +1254,7 @@ public class DatabaseManager
         return null;
     }
 
-    public static int runSQL(DatabaseAdapter db, String query, Object[] params, int[] types)
+    public static int runSQL( final DatabaseAdapter db, final String query, final Object[] params, final int[] types )
             throws SQLException
     {
         int n = 0;
@@ -1338,7 +1304,7 @@ public class DatabaseManager
         return n;
     }
 
-    public static Long getLongValue(DatabaseAdapter db, String sql, Object[] params)
+    public static Long getLongValue( final DatabaseAdapter db, final String sql, final Object[] params )
             throws SQLException
     {
         Statement stmt = null;
@@ -1387,7 +1353,7 @@ public class DatabaseManager
 
     }
 
-    public static List getIdByList(DatabaseAdapter adapter, String sql, Object[] param)
+    public static List getIdByList( final DatabaseAdapter adapter, final String sql, final Object[] param )
         throws GenericException
     {
         Statement stmt = null;
@@ -1423,8 +1389,9 @@ public class DatabaseManager
         }
         catch (SQLException e)
         {
-            log.error("error getting long value fron sql '" + sql + "'", e);
-            throw new GenericException(e.toString());
+            final String es = "error getting long value fron sql '" + sql + "'";
+            log.error( es, e );
+            throw new GenericException( es, e );
         }
         finally
         {
@@ -1433,6 +1400,5 @@ public class DatabaseManager
             stmt = null;
             pstm = null;
         }
-
     }
 }

@@ -25,34 +25,56 @@
 
 package org.riverock.generic.tools.servlet;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.io.OutputStream;
-import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.riverock.common.tools.ServletTools;
+
 import org.apache.log4j.Logger;
 
-public final class ServletResponseWrapperInclude extends HttpServletResponseWrapper {
+public final class ServletResponseWrapperIncludeV2 extends HttpServletResponseWrapper {
 
-    private final static Logger log = Logger.getLogger( ServletResponseWrapperInclude.class );
+    private final static Logger log = Logger.getLogger( ServletResponseWrapperIncludeV2.class );
 
     private Writer writer= null;
     private OutputStream outputStream = null;
 
     private PrintWriter realWriter= null;
     private ServletOutputStream realOutputStream = null;
+    private ServletTools.ContentType contentType = new ServletTools.ContentType( "text/html" );
+
+    public void setContentType(String contentTypeString ) {
+        if ( contentTypeString != null )
+            this.contentType = new ServletTools.ContentType( contentTypeString );
+
+        if ( log.isDebugEnabled() ) {
+            log.debug( "set new content type to " + contentTypeString );
+            log.debug( "contentType.charset " + contentType.getCharset() );
+            log.debug( "contentType.contentType " + contentType.getContentType() );
+        }
+    }
+
+    public String getCharacterEncoding() {
+        if ( contentType.getCharset()!=null )
+            return contentType.getCharset().toString();
+        else
+            return null;
+    }
 
     protected void finalize() throws Throwable {
         writer = null;
         super.finalize();
     }
 
-    public ServletResponseWrapperInclude( final ServletResponse response, final Writer writer) {
+    public ServletResponseWrapperIncludeV2( final ServletResponse response, final Writer writer) {
         super( (HttpServletResponse)response );
         if ( log.isDebugEnabled() ) {
             log.debug( "ServletResponseWrapperInclude( ServletResponse response, Writer writer), " +
@@ -63,7 +85,7 @@ public final class ServletResponseWrapperInclude extends HttpServletResponseWrap
         this.writer = writer;
     }
 
-    public ServletResponseWrapperInclude( final ServletResponse response, final OutputStream outputStream) {
+    public ServletResponseWrapperIncludeV2( final ServletResponse response, final OutputStream outputStream) {
         super( (HttpServletResponse)response );
         this.outputStream = outputStream;
     }
@@ -101,7 +123,7 @@ public final class ServletResponseWrapperInclude extends HttpServletResponseWrap
         }
     }
 
-    public java.io.PrintWriter getWriter() throws java.io.IOException {
+    public PrintWriter getWriter() {
         if (realOutputStream!=null) {
             throw new IllegalStateException( "getOutputStream() already invoked" );
         }
@@ -114,15 +136,26 @@ public final class ServletResponseWrapperInclude extends HttpServletResponseWrap
             );
         }
         if ( writer!=null ) {
-            realWriter = new PrintWriter( writer, true );
+            realWriter = new PrintWriterLogger( writer, true );
         }
         else {
-            realWriter = new PrintWriter( outputStream, true );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "charset: " + contentType.getCharset() );
+            }
+
+            if (contentType.getCharset()!=null) {
+                if ( log.isDebugEnabled() ) {
+                    log.debug( "charset: "+contentType.getCharset());
+                }
+                realWriter = new PrintWriterLogger( new OutputStreamWriter( outputStream, contentType.getCharset() ), true);
+            }
+            else
+                realWriter = new PrintWriterLogger( outputStream, true );
         }
         return realWriter;
     }
 
-    public ServletOutputStream getOutputStream() throws java.io.IOException {
+    public ServletOutputStream getOutputStream() {
         if (realWriter!=null) {
             throw new IllegalStateException( "getWriter() already invoked" );
         }

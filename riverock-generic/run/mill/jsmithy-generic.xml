@@ -35,6 +35,15 @@
 	<SecurityKeyStorage path="d:\keys\mill\keystore.ks" password="111" alias="222"/>
         <DefaultConnectionName>ORACLE</DefaultConnectionName>
 <!--	<DefaultConnectionName>MYSQL</DefaultConnectionName>-->
+	<DatabaseConnection name="ORACLE">
+		<Username>millennium</Username>
+		<Password>qqq</Password>
+		<ConnectString>jdbc:oracle:thin:@localhost:1521:MILL</ConnectString>
+		<ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
+		<DatabaseCharset>UTF8</DatabaseCharset>
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+		<IsAutoCommit>false</IsAutoCommit>
+	</DatabaseConnection>
 	<DatabaseConnection name="ORACLE_ZEON">
 		<Username>zeon</Username>
 		<Password>qqq</Password>
@@ -143,15 +152,6 @@
 		<DatabaseCharset>UTF8</DatabaseCharset>
 		<IsConvertDatabaseString>false</IsConvertDatabaseString>
 		<IsAutoCommit>true</IsAutoCommit>
-	</DatabaseConnection>
-	<DatabaseConnection name="ORACLE">
-		<Username>millennium</Username>
-		<Password>qqq</Password>
-		<ConnectString>jdbc:oracle:thin:@smaslyukov:1521:MILL</ConnectString>
-		<ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
-		<DatabaseCharset>UTF8</DatabaseCharset>
-		<IsConvertDatabaseString>false</IsConvertDatabaseString>
-		<IsAutoCommit>false</IsAutoCommit>
 	</DatabaseConnection>
 	<DatabaseConnection name="ORACLE_HOME">
 		<Username>millennium</Username>
