@@ -41,15 +41,10 @@
 
     <property name="lib.dir" value="../riverock-lib/lib"/>
     <!-- runtime library -->
-    <property name="castor.lib" value="castor-0.9.5.2-xml-snapshot.jar"/>
 
     <property file="../riverock.properties"/>
 
     <property name="site.name" value="_localhost"/>
-
-    <property name="encode.dir" value="retroguard-v1.1"/>
-    <property name="encoded-jar" value="${encode.dir}/${main.lib.encoded}"/>
-    <property name="encoded-log" value="${encode.dir}/encode.log"/>
 
     <property name="doc.dir" value="doc"/>
     <property name="war.dir" value="war"/>
@@ -69,20 +64,15 @@
     <property name="manifest-file-name" value="manifest.mf"/>
     <property name="manifest" value="src/java/${manifest-file-name}"/>
 
-    <!-- riverock runtime library -->
-    <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
-
     <path id="classpath-1.4">
-<!--            <pathelement location="${lib.dir}/1.4/ojdbc14.jar"/>-->
     </path>
     <path id="classpath-1.3">
-<!--            <pathelement location="${lib.dir}/1.3/classes12.zip"/>-->
-<!--            <pathelement location="${lib.dir}/xml-commons-1.1.1.jar"/>-->
-<!--            <pathelement location="${lib.dir}/jce1_2_1.jar"/>-->
     </path>
+
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
 
@@ -154,9 +144,6 @@
         <delete dir="${build.dir}/tomcat/" failonerror="false"/>
         <delete dir="${build.dir}/ext/" failonerror="false"/>
         <delete dir="${build.dir}" failonerror="false"/>
-
-        <delete file="${encoded-jar}" failonerror="false"/>
-        <delete file="${encoded-log}" failonerror="false"/>
     </target>
 
     <target name="make_manifest_file">

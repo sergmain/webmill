@@ -78,8 +78,6 @@
         <delete dir="${build.dir}/ext/" failonerror="false"/>
         <delete dir="${build.dir}" failonerror="false"/>
 
-        <delete file="${encoded-jar}" failonerror="false"/>
-        <delete file="${encoded-log}" failonerror="false"/>
     </target>
 
     <target name="make_manifest_file" depends="init">
@@ -183,21 +181,8 @@ Sealed: true
         <property name="main.lib.encoded" value="${Name}-${release-version}.encoded.jar"/>
 
         <property name="lib.dir" value="../riverock-lib/lib"/>
-        <!-- runtime library -->
-        <property name="castor.lib" value="castor-0.9.4.3-xml.jar"/>
-        <property name="log4j.lib" value="log4j-1.2.7.jar"/>
-        <property name="junit.lib" value="junit.jar"/>
-        <property name="hypersonic.lib" value="hsqldb.jar"/>
-        <property name="servlet.lib" value="servlet-2.3.jar"/>
-        <property name="common-httpclient.lib" value="commons-httpclient-2.0-alpha2.jar"/>
 
-
-        <property name="year" value="2003"/>
-        <property name="site.name" value="_localhost"/>
-
-        <property name="encode.dir" value="retroguard-v1.1"/>
-        <property name="encoded-jar" value="${encode.dir}/${main.lib.encoded}"/>
-        <property name="encoded-log" value="${encode.dir}/encode.log"/>
+        <property file="../riverock.properties"/>
 
         <property name="run.dir" value="run"/>
         <property name="doc.dir" value="doc"/>
@@ -208,26 +193,22 @@ Sealed: true
         <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>
         <property name="src.java.dir" value="${src.dir}/java"/>
         <property name="src.java-test.dir" value="${src.dir}/test"/>
-        <property name="src.jsp.dir" value="${src.dir}/jsp"/>
         <property name="src.xsd.dir" value="${src.dir}/xsd"/>
         <property name="src.xml.dir" value="${src.dir}/xml"/>
         <property name="src.war.dir" value="${src.dir}/${war.dir}"/>
-
-        <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
-        <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
 
         <property name="manifest-file-name" value="manifest.mf"/>
         <property name="manifest" value="src/java/${manifest-file-name}"/>
 
         <path id="classpath-1.4">
-            <pathelement location="${lib.dir}/1.4/ojdbc14.jar"/>
         </path>
         <path id="classpath-1.3">
-            <pathelement location="${lib.dir}/1.3/classes12.zip"/>
             <pathelement location="${lib.dir}/xml-commons-1.1.1.jar"/>
             <pathelement location="${lib.dir}/jce1_2_1.jar"/>
         </path>
         <path id="classpath-base">
+            <pathelement location="${lib.dir}/${common-logging.lib}"/>
+            <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
             <pathelement location="${lib.dir}/${servlet.lib}"/>
             <pathelement location="${lib.dir}/mail.jar"/>
             <pathelement location="${lib.dir}/${log4j.lib}"/>
@@ -240,36 +221,16 @@ Sealed: true
         <property name="build.dir" value="build"/>
         <property name="build.tests" value="${build.dir}/tests"/>
         <property name="build.src.java" value="${src.java.dir}"/>
-        <property name="build.src.jsp" value="${src.jsp.dir}"/>
         <property name="build.dest" value="${build.dir}/classes"/>
         <property name="dist.dir" value="${build.dir}/dist"/>
         <property name="docs.dir" value="${build.dir}/javadocs"/>
 
         <property name="www.dir" value="d:\opt2\"/>
 
-        <property name="snapshot.dir" value="../www/snapshots"/>
-        <property file="${user.home}/.ant.properties"/>
-        <property file=".argo.ant.properties"/>
-        <property file=".ant.properties"/>
         <!-- The following can be set in .ant.properties                 -->
         <property name="debug" value="on"/>
         <property name="optimize" value="off"/>
         <property name="deprecation" value="on"/>
-        <!-- developer.lib.dir is the developer snapshot directory.           -->
-        <!-- If it is not set, it defaults to build.dir, and "build install"  -->
-        <!-- will not do anything.                                            -->
-        <property name="developer.lib.dir" value="${build.dir}"/>
-        <!-- developer.bin.dir is the developer snapshot directory.           -->
-        <!-- If it is not set, it defaults to argo.bin.dir, and               -->
-        <!-- "build install"  will not do anything.                           -->
-        <property name="javadoc.use" value="true"/>
-        <!-- General javadocs probably should not show private -->
-        <property name="javadoc.private" value="false"/>
-        <property name="javadoc.splitindex" value="true"/>
-        <property name="javadoc.author" value="false"/>
-        <property name="xerces.javadoc.link" value="http://xml.apache.org/xerces-j/apiDocs"/>
-        <property name="log4j.javadoc.link" value="e:\opt2\jakarta-log4j-1.2.6/docs/api"/>
-        <property name="jdk.javadoc.link" value="http://java.sun.com/products/jdk/1.2/docs/api"/>
 
 
     </target>

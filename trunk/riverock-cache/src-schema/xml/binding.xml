@@ -1,116 +1,58 @@
 <?xml version="1.0"?>
-
 <!--
-
 /*
-
  * org.riverock.cache - Generic cache implementation
-
  * 
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  * 
-
  * Riverock - The Open-source Java Development Community
-
  * http://www.riverock.org
-
  * 
-
  * 
-
  * This program is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
 -->
-
 <riverock:binding xmlns:riverock="http://www.castor.org/SourceGenerator/Binding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.castor.org/SourceGenerator/Binding
-
 c:\sandbox\webmill\src\xsd\castor-binding.xsd" defaultBindingType="type">
-
 	<package>
-
 		<name>org.riverock.generic.schema.a3</name>
-
 		<namespace>http://webmill.askmore.info/mill/xsd/mill-auth.xsd</namespace>
-
 	</package>
-
 <!--
-
 	<package>
-
 		<name>org.riverock.schema.generic.core</name>
-
 		<namespace>http://webmill.askmore.info/mill/xsd/mill-core.xsd</namespace>
-
 	</package>
-
 -->
-
 	<package>
-
 		<name>org.riverock.generic.schema.db.structure</name>
-
 		<namespace>http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd</namespace>
-
 	</package>
-
 	<package>
-
 		<name>org.riverock.generic.schema.testimport.core</name>
-
 		<namespace>http://prr.esrr.mps/xsd/prr-core.xsd</namespace>
-
 	</package>
-
 	<package>
-
 		<name>org.riverock.generic.schema.testimport</name>
-
 		<namespace>http://prr.esrr.mps/xsd/prr-complex.xsd</namespace>
-
 	</package>
-
 <!--
-
 	<package>
-
 		<name>org.riverock.schema.javax.portlet</name>
-
 		<namespace>http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd</namespace>
-
 	</package>
-
 -->
-
 </riverock:binding>
-
