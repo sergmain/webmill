@@ -76,13 +76,13 @@ import java.io.OutputStreamWriter;
 
 import org.riverock.sql.parser.Parser;
 
+import org.riverock.generic.config.GenericConfig;
+
+import org.riverock.generic.startup.StartupApplication;
+
 
 
 import org.exolab.castor.xml.Marshaller;
-
-
-
-import mill.startup.InitParam;
 
 
 
@@ -178,7 +178,7 @@ public class TestParser
 
         }
 
-        writeToFile(obj, InitParam.getMillDebugDir()+nameFile);
+        writeToFile(obj, GenericConfig.getGenericDebugDir()+nameFile);
 
         System.out.println("object "+obj);
 
@@ -194,7 +194,7 @@ public class TestParser
 
     {
 
-        mill.startup.StartupApplication.init();
+        StartupApplication.init();
 
 
 
