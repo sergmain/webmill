@@ -187,12 +187,17 @@ abstract public class Forum
 
                 switch(db_.getFamaly()){
                     case DatabaseManager.MYSQL_FAMALY:
-                        sql_ += StringTools.getIdByString(
-                            DatabaseManager.getIdByList(db_,
-                                "select distinct z.ID_THREAD " +
+                        String mysqlSql =
+                            "select distinct z.ID_THREAD " +
                             "from " + FORUM_THREADS_TABLE + " z " +
                             "where   z.ID=? and  " +
-                            "year(z.DATE_POST)=? and month(z.DATE_POST)=?",
+                            "year(z.DATE_POST)=? and month(z.DATE_POST)=?";
+
+                        if (log.isDebugEnabled()) log.debug("year:"+year+", month: "+month+", sql: "+mysqlSql);
+
+                        sql_ += StringTools.getIdByString(
+                            DatabaseManager.getIdByList(db_,
+                                mysqlSql,
                                 new Object[]{id, new Integer(year), new Integer(month)}
                             ), "NULL"
                         );
@@ -226,14 +231,19 @@ abstract public class Forum
                 sql_ =
                     "select a.ID_THREAD " +
                     "from " + FORUM_THREADS_TABLE + " a  "+
-                    "where a.ID_THREAD in (  ";
+                    "where a.ID_THREAD in (";
 
                 switch(db_.getFamaly()){
                     case DatabaseManager.MYSQL_FAMALY:
+                        String mysqlSql =
+                            "select distinct ID_THREAD from " + FORUM_THREADS_TABLE + ' ' +
+                            "where  ID_FORUM=? and year(DATE_POST)=? and month(DATE_POST)=?";
+
+                        if (log.isDebugEnabled()) log.debug("year:"+year+", month: "+month+", sql: "+mysqlSql);
+
                         sql_ += StringTools.getIdByString(
                             DatabaseManager.getIdByList(db_,
-                                "select distinct ID_THREAD from " + FORUM_THREADS_TABLE + ' ' +
-                            "where  ID_FORUM=? and year(DATE_POST)=? and month(DATE_POST)=?",
+                                mysqlSql,
                                 new Object[]{id_forum, new Integer(year), new Integer(month)}
                             ), "NULL"
                         );
@@ -247,7 +257,7 @@ abstract public class Forum
                             "to_number(to_char(DATE_POST, 'mm')) = ? ";
                             break;
                 }
-                sql_ = "order by a.DATE_POST DESC ";
+                sql_ += ") order by a.DATE_POST DESC ";
 
                 ps = db_.prepareStatement(sql_);
                 switch(db_.getFamaly()){
@@ -364,7 +374,7 @@ abstract public class Forum
                         "from ( select distinct to_number(to_char(date_post,'yyyy')) year " +
                         "        from " + FORUM_THREADS_TABLE + " where id_forum = ? " +
                         "        union " +
-                        "        select to_numebr(to_char(sysdate,'yyyy')) year from dual ) " +
+                        "        select to_number(to_char(sysdate,'yyyy')) year from dual ) " +
                         "order by year desc ",
                         new Object[]{id_forum}
                     );
@@ -427,16 +437,14 @@ abstract public class Forum
                     break;
                 default:
                     listMonth = DatabaseManager.getIdByList(db_,
-                        "select  distinct trunc(month, 'mm') dat, " +
-                        "        to_number(to_char(month,'mm')) month " +
-                        "         " +
+                        "select  distinct to_number(to_char(month,'mm')) month " +
                         "from ( " +
                         "        select distinct trunc(date_post,'dd') month " +
                         "        from " + FORUM_THREADS_TABLE + " " +
                         "        where   id_forum = ? and to_number(to_char(date_post,'yyyy'))=? " +
                         "        union " +
                         "        select trunc(sysdate,'dd') month from dual " +
-                        "	 where to_numner(to_char(sysdate,'yyyy'))=? " +
+                        "	     where to_number(to_char(sysdate,'yyyy'))=? " +
                         ") " +
                         "order by month desc",
                         new Object[]{id_forum, new Integer(year), new Integer(year)}
@@ -445,12 +453,21 @@ abstract public class Forum
             }
             Collections.sort(listMonth);
 
-            for (int i=0; i<listMonth.size(); i++)
-            {
+            for (int i=0; i<listMonth.size(); i++) {
                 Long monthLong = (Long)listMonth.get(i);
                 int monthValue = monthLong.intValue();
+                if (log.isDebugEnabled())
+                    log.debug("monthLong: "+monthLong+", monthValue: "+monthValue+
+                        ", monthDate: "+DateTools.getDateWithMask(monthLong.toString(), "MM")+", monthStr: "+
+                        DateUtils.getStringDate(
+                            DateTools.getDateWithMask(monthLong.toString(), "MM"),
+                            "MMMM",
+                            portletRequest.getLocale()
+                        )
+                    );
+
                 String monthString = DateUtils.getStringDate(
-                    DateTools.getDateWithMask(monthLong.toString(), "mm"),
+                    DateTools.getDateWithMask(monthLong.toString(), "MM"),
                     "MMMM",
                     portletRequest.getLocale());
 
@@ -660,8 +677,6 @@ abstract public class Forum
 
     List getMessages(DatabaseAdapter db_, Long threadId)
         throws ForumException {
-//        MainForumThreadsListType thread = GetMainForumThreadsList.getInstance(db_, threadsId).item;
-//        thread.setMainForumThreadsItems(  TreeUtils.rebuildTree() );
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -700,24 +715,24 @@ abstract public class Forum
     public String getMessages(DatabaseAdapter db_, List messages, int currentLevel, Long currentMessageId)
         throws ForumException {
 
-        String r_ = "";
+        if (messages==null)
+            return "";
 
+        String r_ = "";
         try {
 
-            for (int i=0; i<messages.size(); i++)
-            {
-                ForumMessage message = (ForumMessage)messages.get(i);
+            ListIterator it = messages.listIterator();
+            while (it.hasNext()) {
+                ForumMessage message = (ForumMessage)it.next();
 
-                for (int v_i = 1; v_i <= currentLevel; v_i++)
-                    r_ += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                r_ += StringTools.getMultypleString("&nbsp;&nbsp;&nbsp;&nbsp;", currentLevel);
 
                 Long idValue = message.getId();
                 Calendar cal = message.getDatePost();
                 String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", portletRequest.getLocale());
 
                 r_ += "<b>";
-                if (!message.getId().equals(currentMessageId))
-                {
+                if (!message.getId().equals(currentMessageId)) {
                     r_ += ("<a href=\"" + CtxInstance.ctx() + '?' +
                         Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
