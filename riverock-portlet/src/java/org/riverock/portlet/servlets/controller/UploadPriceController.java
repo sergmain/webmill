@@ -292,17 +292,17 @@ public class UploadPriceController extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
 
-            jspPage = new InitPage( db_, request, response,
+            jspPage = new InitPage( db_, request,
 
-                "mill.locale.auth",
+                                    "mill.locale.auth"
 
-                Constants.NAME_LANG_PARAM, null, null );
+            );
 
 
 
             srcURL = response.encodeURL( CtxURL.ctx() )+'?'+
 
-                jspPage.cross.getAsURL()+
+                jspPage.getAsURL()+
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM+'='+
 

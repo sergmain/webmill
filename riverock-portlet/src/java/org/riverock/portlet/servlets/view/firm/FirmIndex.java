@@ -106,6 +106,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
@@ -162,7 +164,7 @@ public class FirmIndex extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -182,27 +184,15 @@ public class FirmIndex extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.firm.index",
+                                            "mill.firm.index"
 
-                Constants.NAME_LANG_PARAM, null, null);
-
-
-
-//            PortalInfo p = PortalInfo.getInstance(db_, request.getServerName() );
-
-//            CrossPageParam cross = new CrossPageParam(request, Constants.NAME_LANG_PARAM, p.defaultLocale, null, null);
-
-//            Locale loc = cross.getLocale();
-
-//            StringManager sm = StringManager.getManager("mill.locale.MAIN_LIST_FIRM", loc);
-
-//            StringManager sm1 = StringManager.getManager("mill.locale.main", loc);
+            );
 
 
 
-            String index_page = CtxURL.url( request, response, jspPage.cross, "mill.firm.index");
+            String index_page = CtxURL.url( request, response, jspPage, "mill.firm.index");
 
 
 
@@ -294,7 +284,7 @@ public class FirmIndex extends HttpServlet
 
                          "<p><a href=\""+
 
-                         CtxURL.url( request, response, jspPage.cross, "mill.firm.add_firm")+
+                         CtxURL.url( request, response, jspPage, "mill.firm.add_firm")+
 
                          "\">"+jspPage.sMain.getStr("button.add")+"</a></p>"+
 
@@ -380,7 +370,7 @@ public class FirmIndex extends HttpServlet
 
                                 "<input type=\"button\" value=\""+jspPage.sMain.getStr("button.change")+"\" onclick=\"location.href='"+
 
-                                CtxURL.url( request, response, jspPage.cross, "mill.firm.ch_firm") + '&'+
+                                CtxURL.url( request, response, jspPage, "mill.firm.ch_firm") + '&'+
 
                                 "id_firm="+id_firm +
 
@@ -388,7 +378,7 @@ public class FirmIndex extends HttpServlet
 
                                 "<input type=\"button\" value=\""+jspPage.sMain.getStr("button.delete")+"\" onclick=\"location.href='"+
 
-                                CtxURL.url( request, response, jspPage.cross, "mill.firm.del_firm") + '&'+
+                                CtxURL.url( request, response, jspPage, "mill.firm.del_firm") + '&'+
 
                                 "id_firm="+id_firm+
 
@@ -412,7 +402,7 @@ public class FirmIndex extends HttpServlet
 
 
 
-                            CtxURL.url( request, response, jspPage.cross, "mill.firm.add_firm")+
+                            CtxURL.url( request, response, jspPage, "mill.firm.add_firm")+
 
 
 

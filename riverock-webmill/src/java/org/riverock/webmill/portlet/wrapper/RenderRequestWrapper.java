@@ -150,7 +150,7 @@ public class RenderRequestWrapper implements RenderRequest
 
         this.response = ctxInstance.response ;
 
-        this.ctxType = ctxInstance.type;
+        this.ctxType = ctxInstance.getType();
 
 
 

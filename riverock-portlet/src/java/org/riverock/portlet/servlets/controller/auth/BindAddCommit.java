@@ -114,6 +114,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 
@@ -180,7 +182,7 @@ public class BindAddCommit extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -212,15 +214,15 @@ public class BindAddCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage jspPage =  new InitPage(dbDyn, request, response,
+                    InitPage jspPage =  new InitPage(dbDyn, request,
 
-                            "mill.locale.AUTH_USER",
+                                                     "mill.locale.AUTH_USER"
 
-                            Constants.NAME_LANG_PARAM, null, null);
+                    );
 
 
 
-                    index_page = CtxURL.url( request, response, jspPage.cross, "mill.auth.bind");
+                    index_page = CtxURL.url( request, response, jspPage, "mill.auth.bind");
 
 
 

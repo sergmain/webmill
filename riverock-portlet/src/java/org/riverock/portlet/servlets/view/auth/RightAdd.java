@@ -110,6 +110,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.tools.Client;
 
 import org.riverock.common.tools.ExceptionTools;
@@ -166,7 +168,7 @@ public class RightAdd extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -174,7 +176,7 @@ public class RightAdd extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -190,27 +192,15 @@ public class RightAdd extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_RELATE_RIGHT_ARM",
+                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-                Constants.NAME_LANG_PARAM, null, null);
-
-
-
-//            PortalInfo p = PortalInfo.getInstance(db_, request.getServerName());
-
-//            CrossPageParam cross = new CrossPageParam(request, Constants.NAME_LANG_PARAM, p.defaultLocale, null, null);
-
-//            Locale loc = cross.getLocale();
-
-//            StringManager sm = StringManager.getManager("mill.locale.AUTH_RELATE_RIGHT_ARM", loc);
-
-//            StringManager sm1 = StringManager.getManager("mill.locale.main", loc);
+            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.auth.right");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.right");
 
 
 
@@ -250,7 +240,7 @@ public class RightAdd extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage.cross, "mill.auth.commit_add_right")
+                    CtxURL.url(request, response, jspPage, "mill.auth.commit_add_right")
 
 
 

@@ -112,6 +112,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -168,13 +170,13 @@ public class BindChange extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
             out = response.getWriter();
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -192,29 +194,15 @@ public class BindChange extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_USER",
+                                            "mill.locale.AUTH_USER"
 
-                Constants.NAME_LANG_PARAM, null, null);
-
-
-
-//            PortalInfo p = PortalInfo.getInstance(db_, request.getServerName());
-
-//            CrossPageParam cross = new CrossPageParam(request, Constants.NAME_LANG_PARAM, p.defaultLocale, null, null);
-
-//            Locale loc = cross.getLocale();
+            );
 
 
 
-//            StringManager sm = StringManager.getManager("mill.locale.AUTH_USER", loc);
-
-//            StringManager sm1 = StringManager.getManager("mill.locale.main", loc);
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.auth.bind");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.bind");
 
 
 
@@ -266,7 +254,7 @@ public class BindChange extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage.cross, "mill.auth.commit_ch_bind")
+                    CtxURL.url(request, response, jspPage, "mill.auth.commit_ch_bind")
 
 
 

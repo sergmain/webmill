@@ -100,6 +100,8 @@ import org.riverock.portlet.price.Shop;
 
 import org.riverock.webmill.port.InitPage;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -154,7 +156,7 @@ public class ShopSpecial extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -174,11 +176,11 @@ public class ShopSpecial extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                    "mill.locale.site_hamradio",
+                                            "mill.locale.site_hamradio"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 

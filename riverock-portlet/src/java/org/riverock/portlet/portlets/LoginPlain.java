@@ -204,7 +204,7 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            out += param.getJspPage().cross.getAsForm();
+            out += param.getJspPage().getAsForm();
 
             out += ServletTools.getHiddenItem(
 
@@ -234,7 +234,7 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
             {
 
-                srcURL = CtxURL.url(param.getRequest(), param.getResponse(), param.getJspPage().cross, Constants.CTX_TYPE_LOGIN  );
+                srcURL = CtxURL.url(param.getRequest(), param.getResponse(), param.getJspPage(), Constants.CTX_TYPE_LOGIN  );
 
             }
 

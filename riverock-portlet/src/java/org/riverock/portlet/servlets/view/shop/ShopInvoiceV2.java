@@ -142,6 +142,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.utils.ServletUtils;
@@ -204,7 +206,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
@@ -214,19 +216,23 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale._price_list",
+                                            "mill.locale._price_list"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.index");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.index");
 
-            String invoice_page = CtxURL.url(request, response, jspPage.cross, "mill.invoice");
+            String invoice_page = CtxURL.url(request, response, jspPage, "mill.invoice");
 
-            String indexPageForm = CtxURL.urlAsForm(request, response, jspPage.cross, "mill.invoice");
+            String indexPageForm = CtxURL.urlAsForm(
+
+                ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM), jspPage, "mill.invoice"
+
+            );
 
 
 
@@ -1002,7 +1008,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 String shopUrl = "<a href=\"" +
 
-                    CtxURL.url(request, response, jspPage.cross, Constants.CTX_TYPE_SHOP) + '&' +
+                    CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_SHOP) + '&' +
 
                     addUrl + "\">";
 
@@ -1070,7 +1076,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                        CtxURL.url(request, response, jspPage.cross, "mill.register") + '&' +
+                        CtxURL.url(request, response, jspPage, "mill.register") + '&' +
 
                         Constants.NAME_TOURL_PARAM + '=' + backURL
 
@@ -1096,7 +1102,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     "<form method=\"POST\" action=\"" + CtxURL.ctx() + "\">\n"+
 
-                    CtxURL.urlAsForm(request, response, jspPage.cross, "mill.register")+
+                    CtxURL.urlAsForm(ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM), jspPage, "mill.register")+
+
+
 
                     addForm+
 
@@ -1154,7 +1162,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
             out.write("<a href=\"" +
 
-                CtxURL.url(request, response, jspPage.cross, Constants.CTX_TYPE_SHOP) + '&' +
+                CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_SHOP) + '&' +
 
                 addUrl + "\">");
 

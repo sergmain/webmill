@@ -2,19 +2,19 @@
 
  * org.riverock.webmill -- Portal framework implementation
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -62,53 +62,55 @@ package org.riverock.webmill.port;
 
 
 
-import java.util.Locale;
+import java.util.ArrayList;
 
 import java.util.List;
 
+import java.util.Locale;
 
+
+
+import javax.servlet.ServletRequest;
 
 import javax.servlet.http.Cookie;
 
 import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletResponse;
-
 
 
 import org.apache.log4j.Logger;
 
-
-
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.generic.tools.StringManager;
+import org.riverock.common.config.ConfigException;
 
 import org.riverock.common.html.AcceptLanguageWithLevel;
 
 import org.riverock.common.html.Header;
 
-import org.riverock.webmill.main.Constants;
+import org.riverock.common.tools.StringTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.tools.StringManager;
 
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
+
+import org.riverock.webmill.main.Constants;
+
+import org.riverock.webmill.portal.menu.MenuLanguage;
+
+import org.riverock.webmill.portal.menu.MenuLanguageInterface;
+
+import org.riverock.webmill.portal.menu.SiteMenu;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 
-import org.riverock.webmill.portal.menu.MenuLanguage;
+import org.riverock.webmill.schema.types.HiddenParamType;
 
-import org.riverock.webmill.portal.menu.SiteMenu;
+import org.riverock.webmill.utils.ServletUtils;
 
-import org.riverock.webmill.portal.menu.MenuLanguageInterface;
-
-import org.riverock.webmill.tools.CrossPageParam;
-
-import org.riverock.webmill.tools.CrossPageParamInterface;
-
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.riverock.common.tools.StringTools;
+import org.riverock.webmill.portlet.PortletDescription;
 
 
 
@@ -124,11 +126,7 @@ public class InitPage
 
     public PortalInfo p = null;
 
-    public CrossPageParamInterface cross = null;
-
     public Locale currentLocale = null;
-
-    public String addURL = "";
 
 
 
@@ -140,7 +138,37 @@ public class InitPage
 
 
 
-//    private String localePackageName = "";
+    private String type = null;
+
+    private String nameTemplate = null;
+
+
+
+    // info about current portlet
+
+    private PortletDescription portletDescription = null;
+
+
+
+
+
+    public String getType()
+
+    {
+
+        return type;
+
+    }
+
+
+
+    public String getNameTemplate()
+
+    {
+
+        return nameTemplate;
+
+    }
 
 
 
@@ -152,19 +180,13 @@ public class InitPage
 
         p = null;
 
-        cross = null;
-
         currentLocale = null;
-
-        addURL = null;
 
         sMain = null;
 
         sCustom = null;
 
         title = null;
-
-//        localePackageName = null;
 
 
 
@@ -174,17 +196,11 @@ public class InitPage
 
 
 
-    /**
+    public InitPage(DatabaseAdapter db_, HttpServletRequest request,
 
-     * @deprecated
+        String nameLocales
 
-     */
-
-    public InitPage(DatabaseAdapter db_, HttpServletRequest request, HttpServletResponse response,
-
-                    String nullParam, String nameLocales, String crossMask,
-
-                    Integer year_, Integer month_)
+        )
 
 
 
@@ -192,27 +208,27 @@ public class InitPage
 
     {
 
-        this(db_, request, response,
+        initTypeContext(request);
 
-                        nameLocales, crossMask,
-
-                        year_, month_);
-
-    }
+        portletDescription = PortletDescription.getInstance( type );
 
 
 
-    public InitPage(DatabaseAdapter db_, HttpServletRequest request, HttpServletResponse response,
+        if ( log.isDebugEnabled() )
 
-                    String nameLocales, String crossMask,
+        {
 
-                    Integer year_, Integer month_)
+            log.debug( "Portlet description "+getPortletDescription() );
+
+            if ( getPortletDescription()==null )
+
+                log.debug( "PortletDescription for type "+type+" not found" );
+
+        }
 
 
 
-            throws Exception
 
-    {
 
         long jspPagePortletInfo = 0;
 
@@ -230,7 +246,7 @@ public class InitPage
 
 
 
-                jspPagePortletInfo= System.currentTimeMillis();
+                jspPagePortletInfo = System.currentTimeMillis();
 
             }
 
@@ -282,17 +298,13 @@ public class InitPage
 
 
 
-        cross = new CrossPageParam(request, crossMask, tempLocale, year_, month_);
+        initLocaleParameter(request, tempLocale);
 
-        currentLocale = cross.getLocaleInternal();
+
 
         if (currentLocale == null)
 
             currentLocale = tempLocale;
-
-
-
-        addURL = cross.getAsURL();
 
 
 
@@ -359,6 +371,90 @@ public class InitPage
             menuLanguage = new MenuLanguage();
 
             log.warn("Menu for locale "+currentLocale.toString()+" not found");
+
+        }
+
+
+
+    }
+
+
+
+    /**
+
+     * init context type and name of template,
+
+     * if type of context is null, set it to 'index_page'
+
+     */
+
+    private void initTypeContext(ServletRequest request)
+
+    {
+
+        try
+
+        {
+
+            String ctxType = request.getParameter( Constants.NAME_TYPE_CONTEXT_PARAM );
+
+
+
+            String ctxTemplate =
+
+                request.getParameter( Constants.NAME_TEMPLATE_CONTEXT_PARAM );
+
+
+
+            if ( log.isDebugEnabled() )
+
+            {
+
+                log.debug( "getTypeContext(). TEMPLATE: "+ctxTemplate );
+
+                log.debug( "getTypeContext(). type context: "+ctxType );
+
+            }
+
+
+
+            // If not found name of template or type of context, processing as index_page
+
+            if ( ctxType==null || ctxTemplate==null )
+
+            {
+
+                type = Constants.CTX_TYPE_INDEX;
+
+                nameTemplate = null;
+
+                return;
+
+            }
+
+
+
+            type = ctxType;
+
+            nameTemplate = ctxTemplate;
+
+        }
+
+        finally
+
+        {
+
+
+
+            if ( log.isDebugEnabled() )
+
+            {
+
+                log.debug( "getTypeContext(). type: "+type );
+
+                log.debug( "getTypeContext(). template: "+nameTemplate );
+
+            }
 
         }
 
@@ -540,60 +636,6 @@ public class InitPage
 
 
 
-/*
-
-    public void reinit(HttpServletRequest request, HttpServletResponse response)
-
-    {
-
-        currentLocale = cross.getLocaleInternal();
-
-        addURL = cross.getAsURL();
-
-
-
-        sMain = StringManager.getManager("mill.locale.main", currentLocale);
-
-        sCustom = StringManager.getManager(localePackageName, currentLocale);
-
-    }
-
-*/
-
-    public static void setContentType(HttpServletResponse response, String charset)
-
-            throws Exception
-
-    {
-
-        if (log.isDebugEnabled())
-
-            log.debug("set new charset - "+charset);
-
-
-
-        try
-
-        {
-
-            response.setContentType("text/html; charset=" + charset);
-
-        }
-
-        catch(Exception e)
-
-        {
-
-            log.error("Error set new content type to "+charset);
-
-            throw e;
-
-        }
-
-    }
-
-
-
 
 
     private SiteSupportLanguageItemType includedAccept( Locale accept, SiteSupportLanguageListType supportLanguageList )
@@ -670,14 +712,148 @@ public class InitPage
 
 
 
-    public static void setContentType(HttpServletResponse response)
+    private void initLocaleParameter(HttpServletRequest request, Locale loc_)
 
-            throws Exception
+        throws ConfigException
 
     {
 
-        setContentType(response, WebmillConfig.getHtmlCharset());
+        String s = ServletUtils.getString(request, Constants.NAME_LANG_PARAM, null);
+
+        if (s == null)
+
+            currentLocale = (loc_ == null)?Locale.ENGLISH:loc_;
+
+        else
+
+            currentLocale = StringTools.getLocale(s);
 
     }
+
+
+
+    private static HiddenParamType getHidden(String name, String value)
+
+    {
+
+        HiddenParamType hidden = new HiddenParamType();
+
+        hidden.setHiddenParamName(name);
+
+        hidden.setHiddenParamValue(value);
+
+        return hidden;
+
+    }
+
+
+
+    public List getAsList()
+
+    {
+
+        List v = new ArrayList(1);
+
+
+
+        if (currentLocale != null)
+
+            v.add( getHidden( Constants.NAME_LANG_PARAM, currentLocale.toString()));
+
+
+
+        return v;
+
+    }
+
+
+
+    public String getAsURL()
+
+    {
+
+        return
+
+                (currentLocale != null
+
+                ?(Constants.NAME_LANG_PARAM + "=" + currentLocale.toString() + "&")
+
+                :""
+
+                );
+
+
+
+    }
+
+
+
+    public String getAsForm()
+
+    {
+
+        return
+
+            (currentLocale != null)
+
+            ?("<input type=\"hidden\" name=\"" + Constants.NAME_LANG_PARAM + "\" value=\"" + currentLocale.toString() + "\">")
+
+            :"";
+
+    }
+
+
+
+    public String getAsUrlXML()
+
+    {
+
+        return
+
+
+
+                (currentLocale != null
+
+                ?(Constants.NAME_LANG_PARAM + "=" + currentLocale.toString() + "&amp;")
+
+                :""
+
+                );
+
+    }
+
+
+
+    public String getAsFormXML()
+
+    {
+
+        return
+
+
+
+                (currentLocale != null
+
+                ?("<HiddenParam><HiddenParamName>" + Constants.NAME_LANG_PARAM + "</HiddenParamName><HiddenParamValue>" + currentLocale.toString() + "</HiddenParamValue></HiddenParam>")
+
+                :""
+
+                );
+
+
+
+    }
+
+
+
+    public PortletDescription getPortletDescription()
+
+    {
+
+        return portletDescription;
+
+    }
+
+
 
 }

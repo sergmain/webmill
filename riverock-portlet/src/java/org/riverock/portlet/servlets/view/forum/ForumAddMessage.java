@@ -92,6 +92,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.ServletTools;
@@ -146,7 +148,7 @@ public class ForumAddMessage extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -160,19 +162,17 @@ public class ForumAddMessage extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
             InitPage jspPage = new InitPage(DatabaseAdapter.getInstance(false),
 
-                    request, response,
+                    request,
 
-                    "mill.locale.forum",
+                    "mill.locale.forum"
 
-                    Constants.NAME_LANG_PARAM + Constants.NAME_YEAR_PARAM + Constants.NAME_MONTH_PARAM,
-
-                    null, null);
+            );
 
 
 
@@ -308,7 +308,7 @@ public class ForumAddMessage extends HttpServlet
 
             out.write(
 
-                    jspPage.cross.getAsForm()+
+                    jspPage.getAsForm()+
 
                     ServletTools.getHiddenItem(Constants.NAME_ID_FORUM_PARAM,
 

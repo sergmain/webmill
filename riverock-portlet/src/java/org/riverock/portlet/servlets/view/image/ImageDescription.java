@@ -102,6 +102,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.ServletTools;
@@ -154,7 +156,7 @@ public class ImageDescription extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -178,15 +180,15 @@ public class ImageDescription extends HttpServlet
 
                 DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-                InitPage jspPage = new InitPage(db_, request, response,
+                InitPage jspPage = new InitPage(db_, request,
 
-                        "mill.locale._price_list",
+                                                "mill.locale._price_list"
 
-                        Constants.NAME_LANG_PARAM, null, null);
+                );
 
 
 
-                String index_page = CtxURL.url(request, response, jspPage.cross, "mill.image.index");
+                String index_page = CtxURL.url(request, response, jspPage, "mill.image.index");
 
 
 
@@ -246,7 +248,7 @@ public class ImageDescription extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.image.step_file")
+                            CtxURL.url(request, response, jspPage, "mill.image.step_file")
 
 
 

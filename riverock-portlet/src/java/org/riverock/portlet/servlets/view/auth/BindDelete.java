@@ -108,6 +108,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -164,7 +166,7 @@ public class BindDelete extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -172,7 +174,7 @@ public class BindDelete extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -190,29 +192,15 @@ public class BindDelete extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_USER",
+                                            "mill.locale.AUTH_USER"
 
-                Constants.NAME_LANG_PARAM, null, null);
-
-
-
-//            PortalInfo p = PortalInfo.getInstance(db_, request.getServerName());
-
-//            CrossPageParam cross = new CrossPageParam(request, Constants.NAME_LANG_PARAM, p.defaultLocale, null, null);
-
-//            Locale loc = cross.getLocale();
+            );
 
 
 
-//            StringManager sm = StringManager.getManager("mill.locale.AUTH_USER", loc);
-
-//            StringManager sm1 = StringManager.getManager("mill.locale.main", loc);
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.auth.bind");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.bind");
 
 
 
@@ -270,7 +258,7 @@ public class BindDelete extends HttpServlet
 
 
 
-                    CtxURL.url(request, response, jspPage.cross, "mill.auth.commit_del_bind")
+                    CtxURL.url(request, response, jspPage, "mill.auth.commit_del_bind")
 
 
 
@@ -290,7 +278,7 @@ public class BindDelete extends HttpServlet
 
                 out.write("\">\r\n");
 
-                out.write(jspPage.cross.getAsForm());
+                out.write(jspPage.getAsForm());
 
                 out.write("\r\n");
 

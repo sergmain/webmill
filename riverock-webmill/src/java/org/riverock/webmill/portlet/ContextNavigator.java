@@ -2,19 +2,19 @@
 
  * org.riverock.webmill -- Portal framework implementation
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -174,122 +174,6 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    /**
-
-     * Определяем тип контекста. если определить не удается,
-
-     * то обрабатываем как 'index_page'
-
-     */
-
-    private void getTypeContext(CtxInstance ctxInstance)
-
-    {
-
-        try
-
-        {
-
-            String ctxType = ctxInstance.request.getParameter( Constants.NAME_TYPE_CONTEXT_PARAM );
-
-
-
-            String ctxTemplate = ctxInstance.request.getParameter(
-
-                Constants.NAME_TEMPLATE_CONTEXT_PARAM
-
-            );
-
-
-
-
-
-            if ( log.isDebugEnabled() )
-
-            {
-
-                log.debug( "getTypeContext(). TEMPLATE: "+ctxTemplate );
-
-                log.debug( "getTypeContext(). type context: "+ctxType );
-
-            }
-
-
-
-// Если не указан ни ID контекста ни его тип, обрабатываем как index_page
-
-            if ( ctxType==null || ctxTemplate==null )
-
-            {
-
-                ctxInstance.type = Constants.CTX_TYPE_INDEX;
-
-                ctxInstance.nameTemplate = null;
-
-                return;
-
-            }
-
-
-
-            ctxInstance.type = ctxType;
-
-            ctxInstance.nameTemplate = ctxTemplate;
-
-        }
-
-        finally {
-
-//            boolean isSessionValid = false;
-
-//            if ( ctxInstance.request==null )
-
-//                log.error( "Session validation error, request is null" );
-
-//            else
-
-//                isSessionValid = ctxInstance.request.isRequestedSessionIdValid();
-
-
-
-//            try
-
-//            {
-
-//                ctxInstance.session.setAttribute( Constants.TYPE_CTX_SESSION, ctxInstance.type );
-
-//                ctxInstance.session.setAttribute( Constants.TEMPLATE_NAME_SESSION, ctxInstance.nameTemplate );
-
-//            }
-
-//            catch (java.lang.IllegalStateException e)
-
-//            {
-
-//                log.error( "Status isSessionValid - "+isSessionValid+". Error set attribute in session ", e );
-
-//                throw e;
-
-//            }
-
-
-
-            if ( log.isDebugEnabled() )
-
-            {
-
-                log.debug( "getTypeContext(). type: "+ctxInstance.type );
-
-                log.debug( "getTypeContext(). template: "+ctxInstance.nameTemplate );
-
-            }
-
-        }
-
-    }
-
-
-
     private SitePortletDataType processPortlet( TemplateItemType templateItem, CtxInstance ctxInstance )
 
     {
@@ -298,7 +182,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-        PortletType portlet = getPortlet( ctxInstance );
+        PortletType portlet = PortletManager.getPortlet( ctxInstance );
 
         if ( portlet==null )
 
@@ -670,7 +554,7 @@ public class ContextNavigator extends HttpServlet
 
                     case TemplateItemTypeTypeType.DYNAMIC_TYPE:
 
-                        if ( Constants.CTX_TYPE_INDEX.equals( ctxInstance.type ) )
+                        if ( Constants.CTX_TYPE_INDEX.equals( ctxInstance.getType() ) )
 
                         {
 
@@ -746,17 +630,19 @@ public class ContextNavigator extends HttpServlet
 
                                     boolean flag = true;
 
-                                    // проверяем наличие файла
+                                    // check file present
+
+
+
+                                    //Todo This code need fix
 
 /*
 
-                                    // Todo здесь какая то хуйня - по идее этот код не должен выполняться никогда
-
-                                    if ( !portlet.getIsUrl() )
+                                    if ( !Boolean.TRUE.equals(isUrlTemp) )
 
                                     {
 
-                                        String nameFile = InitParam.millApplPath+portlet.getPortletClass();
+                                        String nameFile = WebmillParam.millApplPath+portlet.getPortletClass();
 
                                         if ( nameFile.indexOf( '?' )!=-1 )
 
@@ -1118,7 +1004,7 @@ public class ContextNavigator extends HttpServlet
 
                         "<SiteTemplate language=\""+
 
-                        ctxInstance.jspPage.currentLocale+"\" type=\""+ctxInstance.type+"\">" ).getBytes()
+                        ctxInstance.page.currentLocale+"\" type=\""+ctxInstance.getType()+"\">" ).getBytes()
 
                     );
 
@@ -1370,9 +1256,9 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            ctxInstance.template = ctxInstance.jspPage.p.templates.getTemplate(
+            ctxInstance.template = ctxInstance.page.p.templates.getTemplate(
 
-                nameTemplate, ctxInstance.jspPage.currentLocale.toString()
+                nameTemplate, ctxInstance.page.currentLocale.toString()
 
             );
 
@@ -1400,7 +1286,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-// запускаем все портлеты с типом 'model'
+            // run all 'models' portlet
 
             for ( int i = 0; i<ctxInstance.template.getSiteTemplateItemCount(); i++ )
 
@@ -1542,13 +1428,13 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        if ( flag )
+                            if ( flag )
 
-                            ServletUtils.include( ctxInstance.request, ctxInstance.response, d.getPortletClass(), new StringWriter() );
+                                ServletUtils.include( ctxInstance.request, ctxInstance.response, d.getPortletClass(), new StringWriter() );
 
 
 
-                    }
+                        }
 
                     }
 
@@ -1562,9 +1448,9 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            // 'model' портлеты обработаны
+            // 'model' portlets is processed
 
-            // начинаем обработку остальных портлетов
+            // run of others portlets
 
 
 
@@ -1576,21 +1462,19 @@ public class ContextNavigator extends HttpServlet
 
             if ( log.isDebugEnabled() )
 
-                log.debug( "Locale request - "+ctxInstance.jspPage.currentLocale.toString() );
+                log.debug( "Locale request - "+ctxInstance.page.currentLocale.toString() );
 
 
 
-            // готовим Xslt объекты
+            // prepare Xsl objects
 
-            if ( ctxInstance.jspPage.p.xsltList==null )
+            if ( ctxInstance.page.p.xsltList==null )
 
             {
 
                 String errorString =
 
                     "<html><head></head<body><p>XSL template not defined</p></body></html>";
-
-//                    "<p><a href=\"" + Constants.URI_MEMBER_PAGE + "\">to member page</a></p>" +
 
 
 
@@ -1604,7 +1488,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            ctxInstance.xslt = ctxInstance.jspPage.p.xsltList.getXslt( ctxInstance.jspPage.currentLocale.toString() );
+            ctxInstance.xslt = ctxInstance.page.p.xsltList.getXslt( ctxInstance.page.currentLocale.toString() );
 
 
 
@@ -1612,7 +1496,7 @@ public class ContextNavigator extends HttpServlet
 
             {
 
-                String errorString = "Index XSLT for locale "+ctxInstance.jspPage.currentLocale+" not defined.";
+                String errorString = "Index XSLT for locale "+ctxInstance.page.currentLocale+" not defined.";
 
                 log.error( errorString );
 
@@ -1730,13 +1614,13 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            String nameTemplateNew = ctxInstance.nameTemplate;
+            String nameTemplateNew = ctxInstance.getNameTemplate();
 
 
 
             if ( nameTemplateNew==null )
 
-                nameTemplateNew = ctxInstance.jspPage.menuLanguage.getIndexTemplate();
+                nameTemplateNew = ctxInstance.page.menuLanguage.getIndexTemplate();
 
 
 
@@ -1906,8 +1790,6 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            PortletType desc = null;
-
             try
 
             {
@@ -1980,7 +1862,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                InitPage.setContentType( response_ );
+                setContentType( response_ );
 
 
 
@@ -2038,7 +1920,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                // Создаем объект InitPage
+                // create InitPage object
 
                 long jspPageMills = 0;
 
@@ -2056,11 +1938,11 @@ public class ContextNavigator extends HttpServlet
 
                     }
 
-                    ctxInstance.jspPage = new InitPage( db_, ctxInstance.request, ctxInstance.response,
+                    ctxInstance.page = new InitPage( db_, ctxInstance.request,
 
-                        "mill.locale.site_hamradio",
+                        "mill.locale.site_hamradio"
 
-                        Constants.NAME_LANG_PARAM, null, null );
+                    );
 
                 }
 
@@ -2100,51 +1982,21 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                // определяем текущий тип контекста
-
-                getTypeContext( ctxInstance );
-
-
-
                 if ( log.isDebugEnabled() )
 
-                    log.debug( "type "+ctxInstance.type+
+                    log.debug( "type "+ctxInstance.getType()+
 
-                        " type is '"+Constants.CTX_TYPE_INDEX+"' - "+Constants.CTX_TYPE_INDEX.equals( ctxInstance.type ) );
-
-
-
-                desc = PortletManager.getPortletDescription( ctxInstance.type );
-
-                if ( log.isDebugEnabled() )
-
-                    log.debug( "Portlet description "+desc );
+                        " type is '"+Constants.CTX_TYPE_INDEX+"' - "+Constants.CTX_TYPE_INDEX.equals( ctxInstance.getType() ) );
 
 
 
-// если MenuItem с запрошенным типом контекста не найден или надо перейти на главную страницу.
+                // if menu item with requested type of context not found or requested 'index'.
 
-// переходим на главную страницу
+                // going to index page
 
-                if ( desc==null || Constants.CTX_TYPE_INDEX.equals( ctxInstance.type ) )
+                if ( ctxInstance.page.getPortletDescription()==null || Constants.CTX_TYPE_INDEX.equals( ctxInstance.getType() ) )
 
                 {
-
-                    if ( log.isDebugEnabled() )
-
-                    {
-
-                        if ( desc==null )
-
-                            log.debug( "PortletDescription for type "+ctxInstance.type+" not found" );
-
-
-
-                        log.debug( "process index page" );
-
-                    }
-
-
 
                     processIndexPage( ctxInstance );
 
@@ -2154,23 +2006,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                String typePortletTemp =
-
-                    PortletTools.getStringParam(
-
-                        desc, PortletTools.type_portlet
-
-                    );
-
-
-
-                PortletDescriptionTypeTypePortletType tp =
-
-                     PortletDescriptionTypeTypePortletType.valueOf( typePortletTemp );
-
-
-
-                switch (tp.getType())
+                switch (ctxInstance.page.getPortletDescription().getPortletType().getType())
 
                 {
 
@@ -2180,7 +2016,7 @@ public class ContextNavigator extends HttpServlet
 
                             PortletTools.getBooleanParam(
 
-                                desc, PortletTools.is_url
+                                ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.is_url
 
                             );
 
@@ -2190,7 +2026,7 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            RequestDispatcher dispatcher = ctxInstance.request.getRequestDispatcher( desc.getPortletClass() );
+                            RequestDispatcher dispatcher = ctxInstance.request.getRequestDispatcher( ctxInstance.page.getPortletDescription().getPortletConfig().getPortletClass() );
 
                             if ( log.isDebugEnabled() )
 
@@ -2202,7 +2038,7 @@ public class ContextNavigator extends HttpServlet
 
                             {
 
-                                String errorString = "Error get dispatcher for path "+desc.getPortletClass();
+                                String errorString = "Error get dispatcher for path "+ctxInstance.page.getPortletDescription().getPortletConfig().getPortletClass();
 
                                 log.error( errorString );
 
@@ -2252,13 +2088,13 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            log.debug( "Portlet desc - "+desc );
+                            log.debug( "Portlet desc - "+ctxInstance.page.getPortletDescription() );
 
                             log.debug( "namePortlet ID - "+
 
                                 PortletTools.getStringParam(
 
-                                    desc, PortletTools.name_portlet_id
+                                    ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.name_portlet_id
 
                                 )
 
@@ -2266,7 +2102,7 @@ public class ContextNavigator extends HttpServlet
 
                         }
 
-                        processPage( ctxInstance.nameTemplate, ctxInstance.type, desc, ctxInstance );
+                        processPage( ctxInstance.getNameTemplate(), ctxInstance.getType(), ctxInstance.page.getPortletDescription().getPortletConfig(), ctxInstance );
 
                         break;
 
@@ -2278,7 +2114,7 @@ public class ContextNavigator extends HttpServlet
 
                             PortletTools.getStringParam(
 
-                                desc, PortletTools.type_portlet
+                                ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.type_portlet
 
                             );
 
@@ -2308,15 +2144,15 @@ public class ContextNavigator extends HttpServlet
 
                 log.error( "Error processing page with ContextNavigator", e );
 
-                log.error( "CN debug. desc "+desc );
+                log.error( "CN debug. desc "+ctxInstance.page.getPortletDescription() );
 
-                if ( desc!=null )
+                if ( ctxInstance.page.getPortletDescription()!=null )
 
                 {
 
                     String typePortletTemp = PortletTools.getStringParam(
 
-                            desc, PortletTools.type_portlet
+                            ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.type_portlet
 
                         );
 
@@ -2330,7 +2166,7 @@ public class ContextNavigator extends HttpServlet
 
                 }
 
-                log.error( "CN debug. type "+ctxInstance.type );
+                log.error( "CN debug. type "+ctxInstance.getType() );
 
                 if ( log.isDebugEnabled() )
 
@@ -2510,101 +2346,47 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    private PortletType getPortlet( CtxInstance ctxInstance)
+    public static void setContentType(HttpServletResponse response, String charset)
+
+            throws Exception
 
     {
+
+        if (log.isDebugEnabled())
+
+            log.debug("set new charset - "+charset);
+
+
 
         try
 
         {
 
-            if ( ctxInstance.request==null )
-
-            {
-
-                log.warn( "call PortletTools.getPortlet(HttpServletRequest request) with null request" );
-
-                return null;
-
-            }
-
-            String typePortlet = (String)ctxInstance.session.getAttribute( Constants.NAME_PORTLET_PARAM );
-
-            if ( ( typePortlet==null || typePortlet.length()==0 ) )
-
-            {
-
-
-
-                if ( ctxInstance.request.getAttribute( Constants.NAME_PORTLET_PARAM )==null )
-
-                    return null;
-
-
-
-                String type__ = ServletUtils.getString( ctxInstance.request, Constants.NAME_PORTLET_PARAM );
-
-
-
-                if ( log.isDebugEnabled() )
-
-                    log.debug( "Session attribute not initialized. Get from parameter jsp:param. "+type__ );
-
-
-
-                typePortlet = type__;
-
-            }
-
-
-
-            if ( log.isDebugEnabled() )
-
-                log.debug( "type of portlet - "+typePortlet );
-
-
-
-
-
-            PortletType desc = PortletManager.getPortletDescription( typePortlet );
-
-
-
-            if ( log.isDebugEnabled() )
-
-            {
-
-                log.debug( "portlet description - "+typePortlet );
-
-                if ( desc!=null )
-
-                    log.debug( "portlet name ID - "+
-
-                        PortletTools.getStringParam(
-
-                            desc, PortletTools.name_portlet_id
-
-                        )
-
-                    );
-
-            }
-
-
-
-            return desc;
+            response.setContentType("text/html; charset=" + charset);
 
         }
 
-        catch (Exception e)
+        catch(Exception e)
 
         {
 
-            log.error( "Error getPortlet()", e );
+            log.error("Error set new content type to "+charset);
+
+            throw e;
 
         }
 
-        return null;
+    }
+
+
+
+    public static void setContentType(HttpServletResponse response)
+
+            throws Exception
+
+    {
+
+        setContentType(response, WebmillConfig.getHtmlCharset());
 
     }
 

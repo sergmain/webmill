@@ -84,6 +84,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.utils.ServletUtils;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -152,7 +154,7 @@ public class ForumIndex extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -160,7 +162,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -168,17 +170,11 @@ public class ForumIndex extends HttpServlet
 
 
 
-            InitPage  jspPage =  new InitPage(db_, request, response,
+            InitPage  jspPage =  new InitPage(db_, request,
 
-                    "mill.locale.forum",
+                                              "mill.locale.forum"
 
-                Constants.NAME_LANG_PARAM+
-
-                Constants.NAME_YEAR_PARAM+
-
-                Constants.NAME_MONTH_PARAM,
-
-                null, null);
+            );
 
 
 

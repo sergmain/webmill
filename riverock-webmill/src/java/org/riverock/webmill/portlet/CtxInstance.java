@@ -86,6 +86,8 @@ import org.riverock.webmill.port.PortalXslt;
 
 import org.riverock.webmill.schema.site.SiteTemplate;
 
+import org.riverock.interfaces.schema.javax.portlet.PortletType;
+
 
 
 public class CtxInstance {
@@ -98,17 +100,13 @@ public class CtxInstance {
 
     public HttpSession session = null;
 
-    public InitPage jspPage = null;
+    public InitPage page = null;
 
 
 
     public ByteArrayOutputStream byteArrayOutputStream = null;
 
 
-
-    public String type = null;
-
-    public String nameTemplate = null;
 
     public PortalXslt xslt = null;
 
@@ -131,6 +129,28 @@ public class CtxInstance {
         startMills = System.currentTimeMillis();
 
     }
+
+
+
+    public String getType()
+
+    {
+
+        return page.getType();
+
+    }
+
+
+
+    public String getNameTemplate()
+
+    {
+
+        return page.getNameTemplate();
+
+    }
+
+
 
 }
 

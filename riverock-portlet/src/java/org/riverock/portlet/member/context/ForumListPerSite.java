@@ -98,7 +98,7 @@ public class ForumListPerSite implements PortletGetList
 
 {
 
-    private static Logger log = Logger.getLogger("org.riverock.member.context.ForumListPerSite");
+    private static Logger log = Logger.getLogger("org.riverock.portlet.member.context.ForumListPerSite");
 
 
 

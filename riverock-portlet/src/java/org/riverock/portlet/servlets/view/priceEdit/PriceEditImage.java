@@ -124,6 +124,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -178,7 +180,7 @@ public class PriceEditImage extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -204,15 +206,15 @@ public class PriceEditImage extends HttpServlet
 
                 DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-                InitPage jspPage = new InitPage(db_, request, response,
+                InitPage jspPage = new InitPage(db_, request,
 
-                        "mill.locale._price_list",
+                                                "mill.locale._price_list"
 
-                        Constants.NAME_LANG_PARAM, null, null);
+                );
 
 
 
-                String index_page = CtxURL.url(request, response, jspPage.cross, "mill.price.index");
+                String index_page = CtxURL.url(request, response, jspPage, "mill.price.index");
 
 
 
@@ -316,7 +318,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.price.image") + '&' +
+                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
 
                                     "id_item=" + id_item
 
@@ -356,7 +358,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                        CtxURL.url(request, response, jspPage.cross, "mill.price.image") + '&' +
+                                        CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
 
                                         "i=" + item.getIdGroupCurrent()
 
@@ -440,7 +442,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.price.image") + '&' +
+                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
 
                                     "id_main=" + itemGroup.id_group + "&id_item=" + id_item
 
@@ -610,7 +612,7 @@ public class PriceEditImage extends HttpServlet
 
                                 out.write("<a href=\"");
 
-                                out.write(response.encodeURL("change_desc.jsp") + "?" + jspPage.addURL);
+                                out.write(response.encodeURL("change_desc.jsp") + "?" + jspPage.getAsURL());
 
                                 out.write("id=");
 
@@ -630,7 +632,7 @@ public class PriceEditImage extends HttpServlet
 
                                 out.write(
 
-                                        CtxURL.url(request, response, jspPage.cross, "mill.price.description") + '&' +
+                                        CtxURL.url(request, response, jspPage, "mill.price.description") + '&' +
 
                                         "id_item=" + id_item +
 
@@ -690,7 +692,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.price.image") + '&' +
+                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
 
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum - 1) +
 
@@ -732,7 +734,7 @@ public class PriceEditImage extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage.cross, "mill.price.image") + '&' +
+                                    CtxURL.url(request, response, jspPage, "mill.price.image") + '&' +
 
                                     "id_main=" + shopParam.id_group + "&pageNum=" + (pageNum + 1) +
 

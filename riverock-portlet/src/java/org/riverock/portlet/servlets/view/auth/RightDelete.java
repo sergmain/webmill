@@ -110,6 +110,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
@@ -168,7 +170,7 @@ public class RightDelete extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -176,7 +178,7 @@ public class RightDelete extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -192,15 +194,15 @@ public class RightDelete extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_RELATE_RIGHT_ARM",
+                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.auth.right");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.right");
 
 
 
@@ -316,7 +318,7 @@ public class RightDelete extends HttpServlet
 
                         out.write(
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.auth.commit_del_right")
+                            CtxURL.url(request, response, jspPage, "mill.auth.commit_del_right")
 
 
 
@@ -336,7 +338,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("\">\r\n");
 
-                        out.write(jspPage.cross.getAsForm());
+                        out.write(jspPage.getAsForm());
 
                         out.write("\r\n");
 

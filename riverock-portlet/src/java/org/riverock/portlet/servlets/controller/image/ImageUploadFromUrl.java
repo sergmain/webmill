@@ -122,6 +122,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 
@@ -176,7 +178,7 @@ public class ImageUploadFromUrl extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -210,15 +212,15 @@ public class ImageUploadFromUrl extends HttpServlet
 
                 dbDyn = DatabaseAdapter.getInstance(true);
 
-                InitPage jspPage = new InitPage(dbDyn, request, response,
+                InitPage jspPage = new InitPage(dbDyn, request,
 
-                        "mill.locale._price_list",
+                                                "mill.locale._price_list"
 
-                        Constants.NAME_LANG_PARAM, null, null);
+                );
 
 
 
-                String indexPage = CtxURL.url(request, response, jspPage.cross, "mill.image.index");
+                String indexPage = CtxURL.url(request, response, jspPage, "mill.image.index");
 
 
 
@@ -432,9 +434,9 @@ public class ImageUploadFromUrl extends HttpServlet
 
                             "<br>" +
 
-                            "<p><a href=\"" + CtxURL.url(request, response, jspPage.cross, "mill.image.index") + "\">Загрузить данные повторно</a></p><br>" +
+                            "<p><a href=\"" + CtxURL.url(request, response, jspPage, "mill.image.index") + "\">Загрузить данные повторно</a></p><br>" +
 
-                            "<p><a href=\"" + response.encodeURL(CtxURL.ctx()) + '?' + jspPage.addURL + "\">На главную страницу</a></p>"
+                            "<p><a href=\"" + response.encodeURL(CtxURL.ctx()) + '?' + jspPage.getAsURL() + "\">На главную страницу</a></p>"
 
                     );
 

@@ -90,6 +90,8 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.webmill.utils.ServletUtils;
 
 
@@ -156,7 +158,7 @@ public class LoginView extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -172,11 +174,11 @@ public class LoginView extends HttpServlet
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                    "mill.locale.auth",
+                                            "mill.locale.auth"
 
-                    Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
@@ -222,7 +224,7 @@ public class LoginView extends HttpServlet
 
 
 
-            out.write(jspPage.cross.getAsForm());
+            out.write(jspPage.getAsForm());
 
             out.write(ServletTools.getHiddenItem(
 
@@ -256,7 +258,7 @@ public class LoginView extends HttpServlet
 
             {
 
-                srcURL = CtxURL.url(request, response, jspPage.cross, Constants.CTX_TYPE_LOGIN);
+                srcURL = CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_LOGIN);
 
             }
 

@@ -194,7 +194,7 @@ public class PriceListPosition
 
                     String url = response.encodeURL(CtxURL.ctx()) + '?' +
 
-                        jspPage.addURL + Constants.NAME_ID_GROUP_SHOP + '=' + id_curr + '&' +
+                        jspPage.getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + id_curr + '&' +
 
                         shopParam_.currencyURL + '&' +
 
@@ -356,7 +356,7 @@ public class PriceListPosition
 
             ) + "?" +
 
-            jspPage.addURL + Constants.NAME_ID_GROUP_SHOP
+            jspPage.getAsURL() + Constants.NAME_ID_GROUP_SHOP
 
             + "=0&" +
 

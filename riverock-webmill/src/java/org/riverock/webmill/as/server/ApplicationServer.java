@@ -892,7 +892,9 @@ public class ApplicationServer extends HttpServlet
 
             res.setStartProcessing( new Long(startMills) );
 
-            res.setEndProcessing( new Long(System.currentTimeMillis()) );
+            long endprocessing = System.currentTimeMillis();
+
+            res.setEndProcessing( new Long(endprocessing) );
 
 
 
@@ -940,7 +942,9 @@ public class ApplicationServer extends HttpServlet
 
                 " total memory "+ Runtime.getRuntime().totalMemory()+
 
-                (maxMemory!=null?" max memory "+maxMemory:"")
+                (maxMemory!=null?" max memory "+maxMemory:"")+
+
+                " request processed for "+(endprocessing-startMills)
 
             );
 

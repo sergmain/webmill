@@ -110,6 +110,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -162,7 +164,7 @@ public class FirmDelete extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -182,27 +184,15 @@ public class FirmDelete extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.firm.index",
+                                            "mill.firm.index"
 
-                Constants.NAME_LANG_PARAM, null, null);
-
-
-
-//            PortalInfo p = PortalInfo.getInstance(db_, request.getServerName() );
-
-//            CrossPageParam cross = new CrossPageParam(request, Constants.NAME_LANG_PARAM, p.defaultLocale, null, null);
-
-//            Locale loc = cross.getLocale();
-
-//            StringManager sm = StringManager.getManager("mill.locale.MAIN_LIST_FIRM", loc);
-
-//            StringManager sm1 = StringManager.getManager("mill.locale.main", loc);
+            );
 
 
 
-            String index_page = CtxURL.url( request, response, jspPage.cross, "mill.firm.index");
+            String index_page = CtxURL.url( request, response, jspPage, "mill.firm.index");
 
 
 
@@ -264,7 +254,7 @@ public class FirmDelete extends HttpServlet
 
 
 
-                    CtxURL.url( request, response, jspPage.cross, "mill.firm.commit_del_firm")
+                    CtxURL.url( request, response, jspPage, "mill.firm.commit_del_firm")
 
 
 
@@ -284,7 +274,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("\">\r\n");
 
-              out.write( jspPage.cross.getAsForm() );
+              out.write( jspPage.getAsForm() );
 
               out.write("\r\n");
 

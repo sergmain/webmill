@@ -104,6 +104,8 @@ import org.riverock.common.tools.ServletTools;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 
@@ -154,7 +156,7 @@ public class ImageSelectUrl extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -178,15 +180,15 @@ public class ImageSelectUrl extends HttpServlet
 
                 DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
 
-                InitPage jspPage = new InitPage(db_, request, response,
+                InitPage jspPage = new InitPage(db_, request,
 
-                        "mill.locale._price_list",
+                                                "mill.locale._price_list"
 
-                        Constants.NAME_LANG_PARAM, null, null);
+                );
 
 
 
-                String indexPage = CtxURL.url(request, response, jspPage.cross, "mill.image.index");
+                String indexPage = CtxURL.url(request, response, jspPage, "mill.image.index");
 
 
 
@@ -214,7 +216,7 @@ public class ImageSelectUrl extends HttpServlet
 
                     out.write("\">\r\n            ");
 
-                    out.write(jspPage.cross.getAsForm());
+                    out.write(jspPage.getAsForm());
 
                     out.write("\r\n");
 

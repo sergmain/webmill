@@ -94,6 +94,8 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.StringTools;
 
+import org.riverock.common.tools.ServletTools;
+
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.portlet.forum.ForumMessage;
@@ -105,6 +107,8 @@ import org.riverock.portlet.main.Constants;
 import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.utils.ServletUtils;
 
@@ -162,7 +166,7 @@ public class ForumPlain extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -176,17 +180,17 @@ public class ForumPlain extends HttpServlet
 
             InitPage jspPage = new InitPage(DatabaseAdapter.getInstance(false),
 
-                    request, response,
+                    request,
 
-                    "mill.locale.forum",
+                    "mill.locale.forum"
 
-                    Constants.NAME_LANG_PARAM +
+            );
 
-                    Constants.NAME_YEAR_PARAM +
 
-                    Constants.NAME_MONTH_PARAM,
 
-                    null, null);
+            Integer year = ServletTools.getInt(request, Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
+
+            Integer month = ServletTools.getInt(request, Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
 
 
 
@@ -212,13 +216,13 @@ public class ForumPlain extends HttpServlet
 
 // ====
 
-            int v_curr_year = jspPage.cross.getYear().intValue();
+            int v_curr_year = year.intValue();
 
 
 
             int v_curr_month;
 
-            v_curr_month = jspPage.cross.getMonth().intValue();
+            v_curr_month = month.intValue();
 
 
 
@@ -232,7 +236,7 @@ public class ForumPlain extends HttpServlet
 
 
 
-                v_curr_month = jspPage.cross.getMonth().intValue();
+                v_curr_month = month.intValue();
 
             }
 
@@ -246,7 +250,7 @@ public class ForumPlain extends HttpServlet
 
 
 
-//	jspPage.cross.month = new Integer(v_curr_month);
+//	jspPage.month = new Integer(v_curr_month);
 
 
 
@@ -366,7 +370,7 @@ public class ForumPlain extends HttpServlet
 
                 out.write("<a href=\"" +
 
-                        CtxURL.url(request, response, jspPage.cross, Constants.CTX_TYPE_FORUM) + '&' +
+                        CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_FORUM) + '&' +
 
                         Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
 

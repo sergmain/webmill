@@ -108,6 +108,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.utils.ServletUtils;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -612,7 +614,7 @@ public class ShopSearch extends HttpServlet
 
         {
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 

@@ -158,7 +158,7 @@ public class ShopInvoice extends HttpServlet
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.invoice");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.invoice");
 
 
 
@@ -478,7 +478,7 @@ public class ShopInvoice extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.register") + '&' +
+                            CtxURL.url(request, response, jspPage, "mill.register") + '&' +
 
                             Constants.NAME_TOURL_PARAM + '=' + backURL
 
@@ -508,7 +508,7 @@ public class ShopInvoice extends HttpServlet
 
 
 
-                        CtxURL.url(request, response, jspPage.cross, "mill.register") + '&' +
+                        CtxURL.url(request, response, jspPage, "mill.register") + '&' +
 
                         Constants.NAME_TOURL_PARAM + '=' + backURL
 
@@ -622,7 +622,7 @@ public class ShopInvoice extends HttpServlet
 
                     "<FORM ACTION=\"" + response.encodeURL( CtxURL.ctx()  ) + "\" METHOD=\"GET\">\n"+
 
-                    jspPage.cross.getAsForm()+
+                    jspPage.getAsForm()+
 
                     ServletTools.getHiddenItem(Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_INVOICE )+
 
@@ -772,7 +772,7 @@ public class ShopInvoice extends HttpServlet
 
                 out.write("\">\n");
 
-                out.write(jspPage.cross.getAsForm());
+                out.write(jspPage.getAsForm());
 
                 out.write("\n");
 
@@ -830,7 +830,7 @@ public class ShopInvoice extends HttpServlet
 
                 out.write("\">\n        ");
 
-                out.write(jspPage.cross.getAsForm());
+                out.write(jspPage.getAsForm());
 
                 out.write("\n");
 
@@ -922,7 +922,7 @@ public class ShopInvoice extends HttpServlet
 
                 out.write("\">\n");
 
-                out.write(jspPage.cross.getAsForm());
+                out.write(jspPage.getAsForm());
 
                 out.write("<input type=\"hidden\" name=\"name\" value=\"send\">\r\n");
 

@@ -96,8 +96,6 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import java.util.Properties;
-
 
 
 public class PriceCurrency
@@ -182,9 +180,11 @@ public class PriceCurrency
 
 
 
-        List listHidden = jspPage.cross.getAsList();
+        List listHidden = jspPage.getAsList();
 
         ArrayList rl = new ArrayList();
+
+
 
         for (int i=0; i<listHidden.size(); i++)
 
@@ -199,8 +199,6 @@ public class PriceCurrency
             hn.setHiddenParamName(hidden.getHiddenParamName());
 
             hn.setHiddenParamValue(hidden.getHiddenParamValue());
-
-            rl.add(hn);
 
         }
 

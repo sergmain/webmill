@@ -146,9 +146,9 @@ public class PortletParameter
 
         this.response = ctxInstance.response ;
 
-        this.jspPage = ctxInstance.jspPage ;
+        this.jspPage = ctxInstance.page ;
 
-        this.ctxType = ctxInstance.type;
+        this.ctxType = ctxInstance.getType();
 
 
 
@@ -158,11 +158,11 @@ public class PortletParameter
 
         if (localePackage_ != null)
 
-            this.sm = StringManager.getManager(localePackage_, ctxInstance.jspPage.currentLocale);
+            this.sm = StringManager.getManager(localePackage_, ctxInstance.page.currentLocale);
 
         else
 
-            this.sm = ctxInstance.jspPage.sCustom;
+            this.sm = ctxInstance.page.sCustom;
 
 
 

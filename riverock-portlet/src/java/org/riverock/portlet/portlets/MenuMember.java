@@ -716,7 +716,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                             param.getResponse().encodeURL( CtxURL.ctx()  ) + '?'+
 
-                            param.getJspPage().addURL+
+                                  param.getJspPage().getAsURL()+
 
                             Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants .CTX_TYPE_MEMBER   + '&'+
 
@@ -738,7 +738,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                     param.getResponse().encodeURL( CtxURL.ctx()  ) + '?'+
 
-                    param.getJspPage().addURL+
+                    param.getJspPage().getAsURL()+
 
                     Constants.NAME_TYPE_CONTEXT_PARAM    +'='+ Constants .CTX_TYPE_MEMBER   + '&'+
 

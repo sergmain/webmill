@@ -108,6 +108,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.portlet.CtxURL;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
@@ -164,7 +166,7 @@ public class BindIndex extends HttpServlet
 
 
 
-            InitPage.setContentType(response);
+            ContextNavigator.setContentType(response);
 
 
 
@@ -188,15 +190,15 @@ public class BindIndex extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request, response,
+            InitPage jspPage = new InitPage(db_, request,
 
-                "mill.locale.AUTH_USER",
+                                            "mill.locale.AUTH_USER"
 
-                Constants.NAME_LANG_PARAM, null, null);
+            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage.cross, "mill.auth.bind");
+            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.bind");
 
 
 
@@ -374,7 +376,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                        CtxURL.url(request, response, jspPage.cross, "mill.auth.add_bind")
+                        CtxURL.url(request, response, jspPage, "mill.auth.add_bind")
 
 
 
@@ -616,7 +618,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.auth.ch_bind") + '&'
+                            CtxURL.url(request, response, jspPage, "mill.auth.ch_bind") + '&'
 
 
 
@@ -638,7 +640,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage.cross, "mill.auth.del_bind") + '&'
+                            CtxURL.url(request, response, jspPage, "mill.auth.del_bind") + '&'
 
 
 
@@ -672,7 +674,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("?");
 
-                    out.write(jspPage.cross.getAsURL());
+                    out.write(jspPage.getAsURL());
 
                     out.write("\">");
 
@@ -782,7 +784,7 @@ public class BindIndex extends HttpServlet
 
             out.write("?");
 
-            out.write(jspPage.cross.getAsURL());
+            out.write(jspPage.getAsURL());
 
             out.write("\">");
 

@@ -128,6 +128,8 @@ import org.riverock.webmill.port.InitPage;
 
 import org.riverock.webmill.utils.ServletUtils;
 
+import org.riverock.webmill.portlet.ContextNavigator;
+
 
 
 import org.apache.log4j.Logger;
@@ -186,7 +188,7 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-            InitPage.setContentType(response, "utf-8");
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
