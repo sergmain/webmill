@@ -80,22 +80,7 @@
     <property name="deprecation" value="on"/>
 
     <target name="clean">
-        <delete failonerror="false">
-            <fileset dir="${build.dir}">
-                <include name="**"/>
-                <include name="*.jar"/>
-                <include name="*.tar"/>
-                <include name="*.gz"/>
-            </fileset>
-        </delete>
-        <delete dir="${docs.dir}" failonerror="false"/>
-        <delete dir="${build.dir}/src/" failonerror="false"/>
-        <delete dir="${build.dir}/classes/" failonerror="false"/>
-        <delete dir="${build.dir}/bin/" failonerror="false"/>
-        <delete dir="${build.dir}/tomcat/" failonerror="false"/>
-        <delete dir="${build.dir}/ext/" failonerror="false"/>
-        <delete dir="${build.dir}" failonerror="false"/>
-
+        <antcall target="delete_all_schema"/>
     </target>
 
     <target name="delete_all_schema">
@@ -105,6 +90,7 @@
                 <exclude name="**/CVS/**"/>
             </fileset>
         </delete>
+        <delete dir="${src.java.dir}/org" includeemptydirs="true"/>
     </target>
 
     <target name="gen_all_schema">
@@ -116,77 +102,57 @@
         <antcall target="gen_appl-server_schema"/>
         <antcall target="gen_types_schema"/>
         <antcall target="gen_core-extend_schema"/>
-<!--        <antcall target="gen_portlet_shop_schema"/>-->
-    </target>
-    <target name="gen_all_db_schema">
-        <antcall target="gen_db_schema"/>
-        <antcall target="gen_db_structure_schema"/>
     </target>
 
-    <target name="gen_config_schema" depends="prepare">
+    <target name="gen_config_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/config/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-config.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.config"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_javax_portlet_schema" depends="prepare">
+    <target name="gen_javax_portlet_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema\javax\portlet"/>
         <property name="schema-file" value="${src.xsd.dir}/portlet.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.javax.portlet"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_site_schema" depends="prepare">
+    <target name="gen_site_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/site/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-site.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.site"/>
         <antcall target="gen_schema"/>
     </target>
-<!--
-    <target name="gen_portlet_shop_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/portlet/shop/"/>
-        <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-shop.xsd"/>
-        <property name="schema-package-java" value="org.riverock.webmill.schema.portlet.shop"/>
-        <antcall target="gen_schema"/>
-    </target>
--->
-    <target name="gen_tomcat_schema" depends="prepare">
+    <target name="gen_tomcat_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema\tomcat\"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-tomcat.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.tomcat4"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_appl-server_schema" depends="prepare">
+    <target name="gen_appl-server_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/appl_server/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-appl-server.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.appl_server"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_types_schema" depends="prepare">
+    <target name="gen_types_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/types/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-webmill-types.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.types"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_core-extend_schema" depends="prepare">
+    <target name="gen_core-extend_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema/extend/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-core-extend.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.extend"/>
         <antcall target="gen_schema"/>
     </target>
-    <target name="gen_test_schema" depends="prepare">
+    <target name="gen_test_schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/webmill/schema\test\"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-test-schema.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.test"/>
         <antcall target="gen_schema"/>
     </target>
     <target name="gen_schema">
-        <antcall target="clean"/>
-        <delete includeEmptyDirs="false" failonerror="false">
-            <fileset dir="${schema-dir}">
-                <include name="*.java"/>
-                <exclude name="**/CVS/**"/>
-            </fileset>
-        </delete>
         <echo message="XSD - ${schema-file}"/>
         <java fork="true" classname="org.exolab.castor.builder.SourceGenerator">
             <arg value="-i"/>
@@ -207,50 +173,5 @@
         </java>
     </target>
 
-<!--    <target name="del_core_files" depends="init">-->
-<!--        <delete includeEmptyDirs="false" failonerror="false">-->
-<!--            <fileset dir="${src.java.dir}/mill/main/core">-->
-<!--                <include name="*.java"/>-->
-<!--                <exclude name="**/CVS/**"/>-->
-<!--            </fileset>-->
-<!--        </delete>-->
-<!--    </target>-->
-
-    <!-- Initialization target                                               -->
-    <target name="init"/>
-
-    <!-- Note this file can only make Ant display values set in the file correctly, -->
-    <!-- but external values in the environment or properties file will be operational.  -->
-    <!-- Help on usage                                                       -->
-    <target name="usage" depends="init">
-        <echo message=""/>
-        <echo message=""/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=" available targets are:"/>
-        <echo message=""/>
-        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-        <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-        <echo message="   distclean    --> cleans up the distribution directory, ${dist.dir}"/>
-        <echo message="   usage        --> show this message (default)"/>
-        <echo message=""/>
-        <echo message=" See the comments inside the build.xml file for more details."/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=""/>
-    </target>
-    <!-- Prepares the build directory                                        -->
-    <target name="prepare">
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dest}"/>
-        <mkdir dir="${build.tests}"/>
-    </target>
-    <!-- Checks for necessary libraries and correct versions of libraries    -->
-    <!--
-    <target name="check.servlet" depends="prepare" unless="has.servlet">
-        <fail message="servlet library does not appear to be in the classpath."/>
-    </target>
-    -->
 
 </project>
