@@ -59,6 +59,8 @@ public class PortalInfo
         SqlStatement.registerRelateClass( p, new SiteMenu().getClass());
     }
 
+    private static Map portatInfoMap = new HashMap();
+
     private static Logger log = Logger.getLogger( PortalInfo.class );
 
     public SiteListSiteItemType sites = new SiteListSiteItemType();
@@ -134,7 +136,6 @@ public class PortalInfo
 
     private static long lastReadData = 0;
     private final static long LENGTH_TIME_PERIOD = 30000;
-    private static PortalInfo backupPortalInfo = null;
     private static Object syncObject = new Object();
 
     public synchronized static PortalInfo getInstance(DatabaseAdapter db_, String serverName)
@@ -144,38 +145,20 @@ public class PortalInfo
         {
             log.debug("#15.01.01 lastReadData: " + lastReadData + ", current " + System.currentTimeMillis());
             log.debug("#15.01.02 LENGTH_TIME_PERIOD " + LENGTH_TIME_PERIOD + ", status " +
-                (((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
-                || (backupPortalInfo == null))
+                ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
             );
         }
         synchronized(syncObject)
         {
-            if (((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
-                || (backupPortalInfo == null))
-            {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("#15.01.03 reinit cached value ");
-                    log.debug("#15.01.04 old value " + backupPortalInfo);
-                }
+            PortalInfo p = (PortalInfo)portatInfoMap.get(serverName);
+            if ((System.currentTimeMillis()-lastReadData)>LENGTH_TIME_PERIOD || p==null){
+                log.debug("#15.01.03 reinit cached value ");
 
-                backupPortalInfo = null;
-                backupPortalInfo = new PortalInfo(db_, serverName);
-
-                if (log.isDebugEnabled())
-                    log.debug("#15.01.05 new value " + backupPortalInfo);
+                p = new PortalInfo(db_, serverName);
+                portatInfoMap.put(serverName, p);
             }
-            else
-            {
-                if (log.isDebugEnabled())
-                    log.debug("Get from cache");
-            }
-
-            if (log.isDebugEnabled())
-                log.debug("#15.01.09 ret value " + backupPortalInfo);
-
             lastReadData = System.currentTimeMillis();
-            return backupPortalInfo;
+            return p;
         }
     }
 

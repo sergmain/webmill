@@ -47,9 +47,9 @@ public final class StartupApplication
 
     private final static String DEFAULT_DIR_NAME = "mill";
     public static void init() throws ConfigException{
-        init(DEFAULT_DIR_NAME);
+        init(DEFAULT_DIR_NAME, "mill.log4j.properties", "jsmithy");
     }
-    public static void init(String defaultNameDir)
+    public static void init(String defaultNameDir, String log4jFileName, String configPrefix)
         throws ConfigException
     {
         if (!isInit)
@@ -73,15 +73,17 @@ public final class StartupApplication
                 tempDir.mkdir();
             }
             System.setProperty("mill.logging.path", millLogPath);
+            System.setProperty("riverock.logging.path", millLogPath);
 
             PropertyConfigurator.configure(
-                PropertiesProvider.getConfigPath() + File.separatorChar + "mill.log4j.properties"
+                PropertiesProvider.getConfigPath() + File.separatorChar + log4jFileName
             );
             cat.info("Application path: " + PropertiesProvider.getApplicationPath() );
 
             isInit = true;
         }
         ConfigService.initLocale();
+        GenericConfig.setConfigPrefix(configPrefix);
         GenericConfig.getTZ();
     }
 
