@@ -1172,7 +1172,7 @@ public class ContextNavigator extends HttpServlet
 
             {
 
-                String errorString = "Template for  "+ctxInstance.getNameTemplate()+" not found";
+                String errorString = "Template for "+ctxInstance.getNameTemplate()+", locale "+ctxInstance.page.getCurrentLocale().toString()+", not found";
 
                 log.warn( errorString );
 

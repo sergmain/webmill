@@ -174,7 +174,7 @@ public class MenuLanguage implements MenuLanguageInterface
 
 
 
-// ¬озвращает ссылку на MenuItem указывающий на index page
+    // return name of template for 'index' page
 
     public String getIndexTemplate()
 

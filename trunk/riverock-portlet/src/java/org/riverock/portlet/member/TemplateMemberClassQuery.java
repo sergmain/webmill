@@ -96,7 +96,7 @@ public class TemplateMemberClassQuery extends BaseClassQuery
 
 {
 
-    private static Logger log = Logger.getLogger( "org.riverock.member.TemplateMemberClassQuery" );
+    private static Logger log = Logger.getLogger( "org.riverock.portlet.member.TemplateMemberClassQuery" );
 
 
 
@@ -124,7 +124,13 @@ public class TemplateMemberClassQuery extends BaseClassQuery
 
         if (log.isDebugEnabled())
 
-            log.debug("idSiteTemplate - "+idSiteTemplate.longValue());
+            if (idSiteTemplate!=null)
+
+                log.debug("idSiteTemplate - "+idSiteTemplate.longValue());
+
+            else
+
+                log.debug("idSiteTemplate is null");
 
     }
 

@@ -330,7 +330,7 @@ public class Menu implements MenuInterface
 
 
 
-// ¬озвращает ссылку на MenuItem указывающий на index page
+    // return name of template for 'index' page
 
     private String getIndexTemplate(List v)
 
