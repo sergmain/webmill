@@ -1633,8 +1633,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
     public void prepareBigtextData(DatabaseAdapter dbDyn, Object idRec, boolean isDelete)
         throws Exception
     {
-        if (log.isDebugEnabled())
-            log.debug("#88.01.00 " + idRec);
+        if (log.isDebugEnabled()) log.debug("#88.01.00 " + idRec);
 
         // looking for bigtext field
         for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++)
@@ -1644,8 +1643,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             // if isShow and this field is bigtext then process this field
             if (Boolean.TRUE.equals(ff.getIsShow()) && ff.getJspType().getType() == FieldsTypeJspTypeType.BIGTEXT_TYPE)
             {
-                if (log.isDebugEnabled())
-                    log.debug("BigText field - " + ff.getName());
+                if (log.isDebugEnabled()) log.debug("BigText field - " + ff.getName());
 
                 String insertString =
                     PortletTools.getString(
@@ -1653,18 +1651,15 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                     );
 
                 String nameTargetField = null;
-                for (int j = 0; j < ff.getQueryArea().getFieldsCount(); j++)
-                {
+                for (int j = 0; j < ff.getQueryArea().getFieldsCount(); j++){
                     FieldsType field = ff.getQueryArea().getFields(j);
-                    if (Boolean.TRUE.equals(field.getIsShow()) )
-                    {
+                    if (Boolean.TRUE.equals(field.getIsShow()) ){
                         nameTargetField = field.getName();
                         break;
                     }
-                } // for (int j=0; j<ff.getQueryArea().fields.size() ...
+                }
 
-                if (nameTargetField == null)
-                {
+                if (nameTargetField == null){
                     log.error("Name field for store data not found.");
                     throw new Exception("Name field for store data not found.");
                 }
@@ -1681,6 +1676,31 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             }
         }
     }
+
+    public void deleteBigtextData(DatabaseAdapter dbDyn, Object idRec)
+        throws Exception
+    {
+        if (log.isDebugEnabled()) log.debug("#88.01.00 " + idRec);
+
+        // looking for bigtext field
+        for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++){
+            FieldsType ff = content.getQueryArea().getFields(k);
+
+            // if bigtext then process this field
+            if (ff.getJspType().getType() == FieldsTypeJspTypeType.BIGTEXT_TYPE){
+                if (log.isDebugEnabled()) log.debug("BigText field - " + ff.getName());
+
+                DatabaseManager.deleteFromBigTable(
+                    dbDyn,
+                    ff.getQueryArea().getTable(0).getTable(),
+                    content.getQueryArea().getPrimaryKey(),
+                    PrimaryKeyTypeTypeType.valueOf(content.getQueryArea().getPrimaryKeyType().toString()),
+                    idRec
+                );
+            }
+        }
+    }
+
 
     public void bindDelete(PreparedStatement ps)
         throws Exception
