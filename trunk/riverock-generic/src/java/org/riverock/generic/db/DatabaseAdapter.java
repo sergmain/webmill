@@ -46,12 +46,7 @@ import org.riverock.common.config.ConfigException;
 import org.riverock.schema.sql.SqlNameType;
 
 import java.sql.*;
-import java.util.Calendar;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.TreeSet;
-import java.util.Iterator;
+import java.util.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.io.FileNotFoundException;
@@ -85,47 +80,41 @@ public abstract class DatabaseAdapter
     protected Hashtable tables = new Hashtable();
     public DatabaseAdapter(){}
 
-    public PreparedStatement prepareStatement(String sql_)
-        throws SQLException
-    {
-        try
-        {
-            Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql_);
-            if (!isDynamicConnect && parser.typeStatement!=Parser.SELECT)
-                throw new Exception("INSERT/UPDATE/DELETE statement can not be processed with static DatabaseAdapter. You must use DatabaseAdapter.getInstance(true)");
+    public PreparedStatement prepareStatement(String sql_) throws SQLException{
 
-            if (log.isDebugEnabled())
-                log.debug("parser.typeStatement!=Parser.SELECT - "+(parser.typeStatement!=Parser.SELECT));
+        if (Boolean.TRUE.equals(dc.getIsSupportCache())){
+            try {
+                Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql_);
+                if (!isDynamicConnect && parser.typeStatement!=Parser.SELECT)
+                    throw new Exception("INSERT/UPDATE/DELETE statement can not be processed with static DatabaseAdapter. You must use DatabaseAdapter.getInstance(true)");
 
-            if (parser.typeStatement!=Parser.SELECT)
-            {
-                for (int i=0; i<parser.depend.getTarget().getItemCount();i++)
-                {
-                    String name = parser.depend.getTarget().getItem(i).getOriginName();
+                if (log.isDebugEnabled())
+                    log.debug("parser.typeStatement!=Parser.SELECT - "+(parser.typeStatement!=Parser.SELECT));
 
-                    if (log.isDebugEnabled())
-                        log.debug("Name lookung table - "+name);
+                if (parser.typeStatement!=Parser.SELECT){
+                    for (int i=0; i<parser.depend.getTarget().getItemCount();i++){
+                        String name = parser.depend.getTarget().getItem(i).getOriginName();
 
-                    String nameTable = (String)tables.get( name );
-                    if (log.isDebugEnabled())
-                        log.debug("searching table "+name+" in hash - "+nameTable);
+                        if (log.isDebugEnabled())
+                            log.debug("Name lookung table - "+name);
 
-                    if (nameTable==null)
-                        tables.put(name, name);
+                        String nameTable = (String)tables.get( name );
+                        if (log.isDebugEnabled())
+                            log.debug("searching table "+name+" in hash - "+nameTable);
+
+                        if (nameTable==null)
+                            tables.put(name, name);
+                    }
                 }
             }
-        }
-        catch(Exception e)
-        {
-            log.error("Error parse SQL "+sql_, e);
-//            throw new SQLException(e.toString());
+            catch(Exception e){
+                log.error("Error parse SQL "+sql_, e);
+            }
         }
         return conn.prepareStatement(sql_);
     }
 
-    public Statement createStatement()
-        throws SQLException
-    {
+    public Statement createStatement() throws SQLException {
         return conn.createStatement();
     }
 
@@ -134,83 +123,64 @@ public abstract class DatabaseAdapter
         throws SQLException
     {
         conn.commit();
-        if (log.isDebugEnabled())
-            log.debug("Start sync cache. DB action - COMMIT");
 
-        synchronized(syncCommit)
-        {
-            try
-            {
-                if (log.isDebugEnabled())
-                    log.debug("Count of changed tables - "+tables.size());
+        if (Boolean.TRUE.equals(dc.getIsSupportCache())){
 
-                for (Enumeration e = tables.keys() ; e.hasMoreElements() ;)
-                {
-                    String tableName = (String)e.nextElement();
+            if (log.isDebugEnabled()) log.debug("Start sync cache. DB action - COMMIT");
 
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("process cache for table "+tableName);
-                        log.debug("count of class in hash "+org.riverock.sql.cache.SqlStatement.classHash.size());
-                    }
+            synchronized(syncCommit){
+                try{
+                    if (log.isDebugEnabled())log.debug("Count of changed tables - "+tables.size());
 
-                    for (Enumeration e1 = org.riverock.sql.cache.SqlStatement.classHash.keys() ; e1.hasMoreElements() ;)
-                    {
-                        String className = (String)e1.nextElement();
-                        Object obj = org.riverock.sql.cache.SqlStatement.classHash.get(className);
+                    for (Enumeration e = tables.keys() ; e.hasMoreElements() ;){
+                        String tableName = (String)e.nextElement();
 
-                        if (log.isDebugEnabled())
-                        {
-                            log.debug("-- Start new check");
-                            log.debug("class - "+className+", obj "+obj);
+                        if (log.isDebugEnabled()){
+                            log.debug("process cache for table "+tableName);
+                            log.debug("count of class in hash "+org.riverock.sql.cache.SqlStatement.classHash.size());
                         }
 
-                        boolean isDependent = false;
-                        if (obj==null)
-                            continue;
+                        for (Enumeration e1 = org.riverock.sql.cache.SqlStatement.classHash.keys() ; e1.hasMoreElements() ;){
+                            String className = (String)e1.nextElement();
+                            Object obj = org.riverock.sql.cache.SqlStatement.classHash.get(className);
 
-                        if (obj instanceof ArrayList)
-                        {
-                            for (int j=0; j<((ArrayList)obj).size(); j++)
-                            {
-                                Parser checkParser = (Parser)((ArrayList)obj).get(j);
-                                isDependent = checkDependence( checkParser, tableName );
-                                if (isDependent)
-                                    break;
+                            if (log.isDebugEnabled()){
+                                log.debug("-- Start new check");
+                                log.debug("class - "+className+", obj "+obj);
                             }
-                        }
-                        else if (obj instanceof ArrayList)
-                        {
-                            for (int j=0; j<((ArrayList)obj).size(); j++)
-                            {
-                                Parser checkParser = (Parser)((ArrayList)obj).get(j);
-                                isDependent = checkDependence( checkParser, tableName );
-                                if (isDependent)
-                                    break;
+
+                            boolean isDependent = false;
+                            if (obj==null)
+                                continue;
+
+                            if (obj instanceof List){
+                                for (int j=0; j<((List)obj).size(); j++){
+                                    Parser checkParser = (Parser)((List)obj).get(j);
+                                    isDependent = checkDependence( checkParser, tableName );
+                                    if (isDependent)
+                                        break;
+                                }
                             }
-                        }
-                        else if (obj instanceof Parser)
-                            isDependent = checkDependence( (Parser)obj, tableName );
-                        else
-                        {
-                            String errorString = "Object in hash is "+obj.getClass().getName();
-                            log.error(errorString);
-                            throw new Exception(errorString);
-                        }
+                            else if (obj instanceof Parser)
+                                isDependent = checkDependence( (Parser)obj, tableName );
+                            else{
+                                String errorString = "Object in hash is "+obj.getClass().getName();
+                                log.error(errorString);
+                                throw new Exception(errorString);
+                            }
 
-                        if (log.isDebugEnabled())
-                            log.debug("isDependent - "+isDependent);
+                            if (log.isDebugEnabled())log.debug("isDependent - "+isDependent);
 
-                        if (isDependent)
-                            reinitClass( className );
+                            if (isDependent)
+                                reinitClass( className );
+                        }
                     }
+                    tables.clear();
                 }
-                tables.clear();
-            }
-            catch(Exception ex)
-            {
-                log.error("Error reinit cache", ex);
-                throw new SQLException(ex.toString());
+                catch(Exception ex){
+                    log.error("Error reinit cache", ex);
+                    throw new SQLException(ex.toString());
+                }
             }
         }
     }
@@ -328,13 +298,12 @@ public abstract class DatabaseAdapter
 
 
     private static Object syncRollback = new Object();
-    public void rollback()
-        throws SQLException
-    {
+    public void rollback() throws SQLException {
         conn.rollback();
-        synchronized(syncRollback)
-        {
-            tables.clear();
+        if (Boolean.TRUE.equals(dc.getIsSupportCache())){
+            synchronized(syncRollback){
+                tables.clear();
+            }
         }
     }
 
@@ -342,17 +311,12 @@ public abstract class DatabaseAdapter
     public DatabaseConnectionType dc = null;
     protected DataSource dataSource = null;
 
-    protected void finalize() throws Throwable
-    {
-        if (conn != null)
-        {
-            try
-            {
+    protected void finalize() throws Throwable{
+        if (conn != null){
+            try {
                 conn.close();
             }
-            catch (Exception e)
-            {
-            }
+            catch (Exception e){}
             conn = null;
         }
         dc = null;
@@ -362,13 +326,11 @@ public abstract class DatabaseAdapter
 
 //    non dynamic connect used for 'select' operation
 //    dynamic used for 'update,delete,insert' operation
-    public boolean getIsDynamicConnect()
-    {
+    public boolean getIsDynamicConnect(){
         return isDynamicConnect;
     }
 
-    public void setIsDynamicConnect(boolean dynamicConnect)
-    {
+    public void setIsDynamicConnect(boolean dynamicConnect){
         isDynamicConnect = dynamicConnect;
     }
 
@@ -379,8 +341,8 @@ public abstract class DatabaseAdapter
     public abstract boolean getIsByteArrayInUtf8();
 
     /**
-     * Возвращает значение закрыта ли база дынных или нет.
-     * @return boolean. true - коннект к базе закрыт. false - коннект существует.
+     * return status of DB - closed or not
+     * @return boolean. true - connection is closed. false - connection is opened
      * @throws SQLException
      */
     public abstract boolean getIsClosed() throws SQLException;
@@ -1772,7 +1734,7 @@ public abstract class DatabaseAdapter
                 catch (Exception exception)
                 {
                     log.error("Exception in ", exception);
-                    throw new DatabaseException("Exception applay definition to DB"+exception.toString());
+                    throw new DatabaseException("Exception applay definition to DB"+exception.toString(), exception);
                 }
             }
 
