@@ -134,7 +134,9 @@ public class PortletManager
 
             {
 
-                temp[idx++] = mainPortletFile[i];
+                if (mainPortletFile[i]!=null)
+
+                    temp[idx++] = mainPortletFile[i];
 
             }
 
@@ -148,7 +150,9 @@ public class PortletManager
 
             {
 
-                temp[idx++] = userPortletFile[i];
+                if (userPortletFile[i]!=null)
+
+                    temp[idx++] = userPortletFile[i];
 
             }
 
@@ -194,7 +198,9 @@ public class PortletManager
 
             {
 
-                count += mainPortletFile[i].getPortletDescriptionCount();
+                if (mainPortletFile[i]!=null)
+
+                    count += mainPortletFile[i].getPortletDescriptionCount();
 
             }
 
@@ -208,7 +214,9 @@ public class PortletManager
 
             {
 
-                count += userPortletFile[i].getPortletDescriptionCount();
+                if (userPortletFile[i]!=null)
+
+                    count += userPortletFile[i].getPortletDescriptionCount();
 
             }
 
@@ -594,6 +602,12 @@ public class PortletManager
 
             {
 
+                if (mainPortletFile[k]==null)
+
+                    continue;
+
+
+
                 PortletFile mf = mainPortletFile[k];
 
 
@@ -653,6 +667,12 @@ public class PortletManager
             for (int k=0; k < userPortletFile.length; k++)
 
             {
+
+                if (userPortletFile[k]==null)
+
+                    continue;
+
+
 
                 PortletFile mf = userPortletFile[k];
 

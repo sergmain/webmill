@@ -148,7 +148,9 @@ public class ApplicationManager
 
             {
 
-                count += mainApplFile[i].getApplicationCount();
+                if (mainApplFile[i]!=null)
+
+                    count += mainApplFile[i].getApplicationCount();
 
             }
 
@@ -162,7 +164,9 @@ public class ApplicationManager
 
             {
 
-                count += userApplFile[i].getApplicationCount();
+                if (userApplFile[i]!=null)
+
+                    count += userApplFile[i].getApplicationCount();
 
             }
 
@@ -466,6 +470,12 @@ public class ApplicationManager
 
         {
 
+            if (mainApplFile[k]==null)
+
+                continue;
+
+
+
             ApplicationFile mf = mainApplFile[k];
 
             ApplicationModuleType mod = mf.getApplModule(moduleName);
@@ -501,6 +511,12 @@ public class ApplicationManager
             for (int k=0; k < userApplFile.length; k++)
 
             {
+
+                if (userApplFile[k]==null)
+
+                    continue;
+
+
 
                 ApplicationFile mf = userApplFile[k];
 
