@@ -52,7 +52,7 @@
 
 -->
 
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mill-db-stuct="http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:riverock-db-stuct="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
 
 	<xs:annotation>
 
@@ -66,7 +66,7 @@
 
 	</xs:annotation>
 
-	<xs:import namespace="http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd" schemaLocation="mill-database-structure.xsd"/>
+	<xs:import namespace="http://generic.riverock.org/xsd/riverock-database-structure.xsd" schemaLocation="riverock-database-structure.xsd"/>
 
 	<xs:complexType name="CustomSequenceType">
 
@@ -134,13 +134,13 @@
 
 				<xs:element name="Data" type="DataDefinitionDataListType" minOccurs="0"/>
 
-				<xs:element name="SequenceList" type="mill-db-stuct:DbSequenceListType" minOccurs="0"/>
+				<xs:element name="SequenceList" type="riverock-db-stuct:DbSequenceListType" minOccurs="0"/>
 
-				<xs:element name="ImportedKeys" type="mill-db-stuct:DbImportedKeyListType" minOccurs="0"/>
+				<xs:element name="ImportedKeys" type="riverock-db-stuct:DbImportedKeyListType" minOccurs="0"/>
 
-				<xs:element name="PrimaryKey" type="mill-db-stuct:DbPrimaryKeyType" minOccurs="0"/>
+				<xs:element name="PrimaryKey" type="riverock-db-stuct:DbPrimaryKeyType" minOccurs="0"/>
 
-				<xs:element name="ViewList" type="mill-db-stuct:DbViewListType" minOccurs="0"/>
+				<xs:element name="ViewList" type="riverock-db-stuct:DbViewListType" minOccurs="0"/>
 
 			</xs:choice>
 
@@ -154,7 +154,7 @@
 
 		<xs:sequence>
 
-			<xs:element name="Table" type="mill-db-stuct:DbTableType" maxOccurs="unbounded"/>
+			<xs:element name="Table" type="riverock-db-stuct:DbTableType" maxOccurs="unbounded"/>
 
 		</xs:sequence>
 
