@@ -1,0 +1,280 @@
+<!--
+
+/*
+
+ * org.riverock.webmill - Portal framework implementation
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<Server port="8005" shutdown="SHUTDOWN" debug="0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="E:\sandbox\millengine\src\xsd\mill-tomcat.xsd">
+
+	<!-- Uncomment these entries to enable JMX MBeans support -->
+
+	<Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" debug="0"/>
+
+	<Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" debug="0"/>
+
+	<!-- Global JNDI resources -->
+
+	<GlobalNamingResources>
+
+		<!-- Test entry for demonstration purposes -->
+
+		<Environment name="simpleValue" type="java.lang.Integer" value="30"/>
+
+		<!-- Editable user database that can also be used by
+
+         UserDatabaseRealm to authenticate users -->
+
+		<Resource name="UserDatabase" auth="Container" type="org.apache.catalina.UserDatabase" description="User database that can be updated and saved">
+
+    </Resource>
+
+		<ResourceParams name="UserDatabase">
+
+			<parameter>
+
+				<name>factory</name>
+
+				<value>org.apache.catalina.users.MemoryUserDatabaseFactory</value>
+
+			</parameter>
+
+			<parameter>
+
+				<name>pathname</name>
+
+				<value>conf/tomcat-users.xml</value>
+
+			</parameter>
+
+		</ResourceParams>
+
+	</GlobalNamingResources>
+
+	<!-- Define the Tomcat Stand-Alone Service -->
+
+	<Service name="Tomcat-Standalone">
+
+		<!-- Define a non-SSL Coyote HTTP/1.1 Connector on port 8081 -->
+
+		<Connector className="org.apache.coyote.tomcat4.CoyoteConnector" port="80" minProcessors="5" maxProcessors="75" enableLookups="false" redirectPort="8443" acceptCount="10" debug="0" connectionTimeout="60000" useURIValidationHack="false"/>
+
+		<!-- Define the top level container in our container hierarchy -->
+
+		<Engine name="Standalone" defaultHost="default.askmore" debug="0">
+
+			<Logger className="org.apache.catalina.logger.FileLogger" suffix=".txt" timestamp="true" debug="0" directory="logs/_catalina_" prefix="catalina_log."/>
+
+			<Realm className="org.apache.catalina.realm.MemoryRealm"/>
+
+			<!-- Define the default virtual host -->
+
+			<Host name="default.askmore" debug="0" appBase="d:\opt2\_default.askmore.info">
+
+				<Valve className="org.apache.catalina.valves.AccessLogValve" suffix=".txt" pattern="common" debug="0" directory="c:\opt2\logs\_magazin.irk.ru/access" prefix="access_log."/>
+
+				<Context path="" docBase="data" debug="0" reloadable="true" useNaming="false" crossContext="false"/>
+
+			</Host>
+
+			<Host name="me.askmore" debug="0" appBase="d:\opt2\_me.askmore.info" autoDeploy="true">
+
+				<Alias>test</Alias>
+
+				<Valve className="org.apache.catalina.valves.AccessLogValve" suffix=".txt" pattern="common" debug="0" directory="c:\opt2\logs\_me.askmore/access" prefix="access_log."/>
+
+				<Logger className="org.apache.catalina.logger.FileLogger" suffix=".txt" timestamp="true" debug="0" directory="c:\opt2\logs\_me.askmore\log" prefix="log."/>
+
+				<Context path="" docBase="data" debug="0" reloadable="true" useNaming="false" crossContext="true"/>
+
+			</Host>
+
+			<Host name="angaria.askmore" debug="0" appBase="d:\opt2\_angaria.com">
+
+				<Valve className="org.apache.catalina.valves.AccessLogValve" suffix=".txt" pattern="common" debug="0" directory="c:\opt2\logs\_angaria.com/access" prefix="access_log."/>
+
+				<Logger className="org.apache.catalina.logger.FileLogger" suffix=".txt" timestamp="true" debug="0" directory="c:\opt2\logs\_angaria.com\log" prefix="log."/>
+
+				<Context path="" docBase="data" debug="0" reloadable="true" useNaming="false" crossContext="true"/>
+
+			</Host>
+
+			<Host name="baikal.travel.askmore" debug="0" appBase="d:\opt2\_baikal.travel.askmore.info">
+
+				<Valve className="org.apache.catalina.valves.AccessLogValve" suffix=".txt" pattern="common" debug="0" directory="c:\opt2\logs\_baikal.travel.askmore/access" prefix="access_log."/>
+
+				<Logger className="org.apache.catalina.logger.FileLogger" suffix=".txt" timestamp="true" debug="0" directory="c:\opt2\logs\_baikal.travel.askmore\log" prefix="log."/>
+
+				<Context path="" docBase="data" debug="0" reloadable="true" useNaming="false" crossContext="true"/>
+
+			</Host>
+
+			<Host name="baikal.askmore" debug="0" appBase="d:\opt2\_baikal.askmore.info">
+
+				<Valve className="org.apache.catalina.valves.AccessLogValve" suffix=".txt" pattern="common" debug="0" directory="c:\opt2\logs\_baikal.askmore/access" prefix="access_log."/>
+
+				<Logger className="org.apache.catalina.logger.FileLogger" suffix=".txt" timestamp="true" debug="0" directory="c:\opt2\logs\_baikal.askmore\log" prefix="log."/>
+
+				<Context path="" docBase="data" debug="0" reloadable="true" useNaming="false" crossContext="true"/>
+
+			</Host>
+
+			<Host name="localhost" debug="0" appBase="webapps" unpackWARs="true" autoDeploy="true">
+
+				<!--
+
+        <Valve className="org.apache.catalina.authenticator.SingleSignOn"
+
+                   debug="0"/>
+
+        -->
+
+				<!--
+
+        <Valve className="org.apache.catalina.valves.AccessLogValve"
+
+                 directory="logs"  prefix="localhost_access_log." suffix=".txt"
+
+                 pattern="common" resolveHosts="false"/>
+
+        -->
+
+				<Logger className="org.apache.catalina.logger.FileLogger" directory="logs" prefix="localhost_log." suffix=".txt" timestamp="true"/>
+
+				<!-- Define properties for each web application.  This is only needed
+
+             if you want to set non-default properties, or have web application
+
+             document roots in places other than the virtual host's appBase
+
+             directory.  -->
+
+				<!-- Tomcat Root Context -->
+
+				<!--
+
+          <Context path="" docBase="ROOT" debug="0"/>
+
+        -->
+
+				<!-- Tomcat Examples Context -->
+
+				<Context path="/examples" docBase="examples" debug="0" reloadable="true" crossContext="true">
+
+					<Logger className="org.apache.catalina.logger.FileLogger" prefix="localhost_examples_log." suffix=".txt" timestamp="true"/>
+
+					<Ejb name="ejb/EmplRecord" type="Entity" home="com.wombat.empl.EmployeeRecordHome" remote="com.wombat.empl.EmployeeRecord"/>
+
+					<Environment name="maxExemptions" type="java.lang.Integer" value="15"/>
+
+					<Parameter name="context.param.name" value="context.param.value" override="false"/>
+
+					<Resource name="jdbc/EmployeeAppDb" auth="SERVLET" type="javax.sql.DataSource"/>
+
+					<ResourceParams name="jdbc/EmployeeAppDb">
+
+						<parameter>
+
+							<name>user</name>
+
+							<value>sa</value>
+
+						</parameter>
+
+						<parameter>
+
+							<name>password</name>
+
+							<value/>
+
+						</parameter>
+
+						<parameter>
+
+							<name>driverClassName</name>
+
+							<value>org.hsql.jdbcDriver</value>
+
+						</parameter>
+
+						<parameter>
+
+							<name>driverName</name>
+
+							<value>jdbc:HypersonicSQL:database</value>
+
+						</parameter>
+
+					</ResourceParams>
+
+					<Resource name="mail/Session" auth="Container" type="javax.mail.Session"/>
+
+					<ResourceParams name="mail/Session">
+
+						<parameter>
+
+							<name>mail.smtp.host</name>
+
+							<value>localhost</value>
+
+						</parameter>
+
+					</ResourceParams>
+
+					<ResourceLink name="linkToGlobalResource" global="simpleValue" type="java.lang.Integer"/>
+
+				</Context>
+
+			</Host>
+
+		</Engine>
+
+	</Service>
+
+</Server>
+

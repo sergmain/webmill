@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.common - Supporting classes, interfaces, and utilities
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This library is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU Lesser General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2.1 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * Lesser General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU Lesser General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<!--$Id$-->
+
+<project name="riverock.common" default="jar" basedir=".">
+
+    <!-- Global initialization                                               -->
+
+    <property name="release-version" value="1.2.1"/>
+
+    <property name="java.target" value="1.4"/>
+
+    <property name="java.class.target" value="1.4"/>
+
+
+
+
+
+    <target name="set_release_version"/>
+
+
+
+    <target name="clean" depends="init">
+
+        <delete failonerror="false">
+
+            <fileset dir="${build.dir}">
+
+                <include name="**"/>
+
+                <include name="*.jar"/>
+
+                <include name="*.tar"/>
+
+                <include name="*.gz"/>
+
+            </fileset>
+
+        </delete>
+
+        <delete dir="${docs.dir}" failonerror="false"/>
+
+        <delete dir="${build.dir}/src/" failonerror="false"/>
+
+        <delete dir="${build.dir}/classes/" failonerror="false"/>
+
+        <delete dir="${build.dir}/bin/" failonerror="false"/>
+
+        <delete dir="${build.dir}/tomcat/" failonerror="false"/>
+
+        <delete dir="${build.dir}/ext/" failonerror="false"/>
+
+        <delete dir="${build.dir}" failonerror="false"/>
+
+
+
+        <delete file="${encoded-jar}" failonerror="false"/>
+
+        <delete file="${encoded-log}" failonerror="false"/>
+
+    </target>
+
+
+
+    <target name="make_manifest_file" depends="init">
+
+        <echo message="Start make manifest file"/>
+
+    <echo file="${build.dest}/${manifest-file-name}">Manifest-Version: 1.0
+
+Specification-Title: ${manifest-title-name}
+
+Specification-Vendor: ${manifest-vendor-name}
+
+Specification-Version: ${release-version}
+
+Implementation-Title: ${manifest-title-name}
+
+Implementation-Vendor: ${manifest-vendor-name}
+
+Implementation-Version: ${release-version}
+
+
+
+Name: ${manifest-title-name}
+
+Sealed: true
+
+</echo>
+
+        <echo message="Manifest file is created"/>
+
+    </target>
+
+
+
+    <target name="compile" depends="prepare, set_build_number">
+
+        <mkdir dir="${build.dest}"/>
+
+        <javac
+
+            target="${java.class.target}"
+
+            srcdir="${build.src.java}"
+
+            destdir="${build.dest}"
+
+            excludes="*.txt,*.bat,*.xml,*.sh,*.jav"
+
+            debug="${debug}"
+
+            deprecation="${deprecation}"
+
+            optimize="${optimize}"
+
+            failonerror="true"
+
+            >
+
+            <classpath refid="classpath-base"/>
+
+        </javac>
+
+    </target>
+
+
+
+    <target name="full_build_module">
+
+        <antcall target="jar"/>
+
+    </target>
+
+
+
+    <target name="jar" depends="init, clean, compile, make_manifest_file">
+
+        <property name="locale-path" value="/org/riverock/common/locale"/>
+
+        <copydir src="${src.java.dir}${locale-path}" dest="${build.dest}${locale-path}" />
+
+        <jar
+
+            jarfile="${build.dir}/${main.lib}"
+
+            basedir="${build.dest}"
+
+            includes="com/**"
+
+            excludes="
+
+            org/riverock/sql/parser/test/**,
+
+            org/riverock/schema/test/**,
+
+            **/*.txt,**/*.bat,**/*.xml,**/*.sh,**/*.jav,${manifest-file-name}"
+
+            manifest="${build.dest}/${manifest-file-name}"/>
+
+
+
+        <copy file="${build.dir}/${main.lib}" todir="../js-lib/lib"/>
+
+
+
+    </target>
+
+
+
+    <!-- =================================================================== -->
+
+    <!-- Runs unit tests                                                     -->
+
+    <!-- =================================================================== -->
+
+    <target name="ut" depends="compile,init">
+
+      <echo message="Running unit tests "/>
+
+
+
+      <javac srcdir="${src.java-test.dir}"
+
+             destdir="${build.tests}"
+
+             debug="${debug}"
+
+             deprecation="${deprecation}"
+
+             optimize="${optimize}"
+
+         classpath="${lib.dir}">
+
+          <classpath>
+
+              <path location="${build.dir}/classes"/>
+
+              <path refid="classpath-base"/>
+
+          </classpath>
+
+       </javac>
+
+
+
+       <junit printsummary="yes" haltonfailure="no" haltonerror="no" showoutput="no"
+
+           dir="${run.dir}" fork="true" >
+
+
+
+          <classpath>
+
+              <path location="${build.tests}"/>
+
+              <path location="${build.dir}/classes"/>
+
+              <path refid="classpath-base"/>
+
+          </classpath>
+
+
+
+          <formatter type="plain" usefile="false"/>
+
+
+
+          <batchtest fork="yes" haltonfailure="yes" haltonerror="yes">
+
+            <fileset dir="${build.tests}">
+
+                <include name="**/Test*.class"/>
+
+                <exclude name="**/*$*.class"/>
+
+            </fileset>
+
+          </batchtest>
+
+       </junit>
+
+    </target>
+
+
+
+    <!-- Initialization target                                               -->
+
+    <target name="init" depends="set_release_version">
+
+        <property name="manifest-title-name" value="Riverock common library"/>
+
+        <property name="manifest-vendor-name" value="Riverock. http://www.riverock.org"/>
+
+
+
+        <property name="Name" value="riverock-common"/>
+
+        <property name="main.lib" value="${Name}-${release-version}.jar"/>
+
+        <property name="main.lib.encoded" value="${Name}-${release-version}.encoded.jar"/>
+
+
+
+        <property name="lib.dir" value="../js-lib/lib"/>
+
+        <!-- runtime library -->
+
+        <property name="castor.lib" value="castor-0.9.4.3-xml.jar"/>
+
+        <property name="log4j.lib" value="log4j-1.2.7.jar"/>
+
+        <property name="junit.lib" value="junit.jar"/>
+
+        <property name="hypersonic.lib" value="hsqldb.jar"/>
+
+        <property name="servlet.lib" value="servlet-2.3.jar"/>
+
+        <property name="common-httpclient.lib" value="commons-httpclient-2.0-alpha2.jar"/>
+
+
+
+
+
+        <property name="year" value="2003"/>
+
+        <property name="site.name" value="_localhost"/>
+
+
+
+        <property name="encode.dir" value="retroguard-v1.1"/>
+
+        <property name="encoded-jar" value="${encode.dir}/${main.lib.encoded}"/>
+
+        <property name="encoded-log" value="${encode.dir}/encode.log"/>
+
+
+
+        <property name="run.dir" value="run"/>
+
+        <property name="doc.dir" value="doc"/>
+
+        <property name="war.dir" value="war"/>
+
+        <property name="src.dir" value="src"/>
+
+        <property name="tomcat.dir" value="tomcat"/>
+
+
+
+        <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>
+
+        <property name="src.java.dir" value="${src.dir}/java"/>
+
+        <property name="src.java-test.dir" value="${src.dir}/test"/>
+
+        <property name="src.jsp.dir" value="${src.dir}/jsp"/>
+
+        <property name="src.xsd.dir" value="${src.dir}/xsd"/>
+
+        <property name="src.xml.dir" value="${src.dir}/xml"/>
+
+        <property name="src.war.dir" value="${src.dir}/${war.dir}"/>
+
+
+
+        <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
+
+        <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
+
+
+
+        <property name="manifest-file-name" value="manifest.mf"/>
+
+        <property name="manifest" value="src/java/${manifest-file-name}"/>
+
+
+
+        <path id="classpath-1.4">
+
+            <pathelement location="${lib.dir}/1.4/ojdbc14.jar"/>
+
+        </path>
+
+        <path id="classpath-1.3">
+
+            <pathelement location="${lib.dir}/1.3/classes12.zip"/>
+
+            <pathelement location="${lib.dir}/xml-commons-1.1.1.jar"/>
+
+            <pathelement location="${lib.dir}/jce1_2_1.jar"/>
+
+        </path>
+
+        <path id="classpath-base">
+
+            <pathelement location="${lib.dir}/${servlet.lib}"/>
+
+            <pathelement location="${lib.dir}/mail.jar"/>
+
+            <pathelement location="${lib.dir}/${log4j.lib}"/>
+
+            <pathelement location="${lib.dir}/${junit.lib}"/>
+
+            <pathelement location="${lib.dir}/${castor.lib}"/>
+
+<!--            <path refid="classpath-${java.target}"/>-->
+
+        </path>
+
+
+
+        <property name="packages" value="mill.*"/>
+
+        <property name="build.dir" value="build"/>
+
+        <property name="build.tests" value="${build.dir}/tests"/>
+
+        <property name="build.src.java" value="${src.java.dir}"/>
+
+        <property name="build.src.jsp" value="${src.jsp.dir}"/>
+
+        <property name="build.dest" value="${build.dir}/classes"/>
+
+        <property name="dist.dir" value="${build.dir}/dist"/>
+
+        <property name="docs.dir" value="${build.dir}/javadocs"/>
+
+
+
+        <property name="www.dir" value="d:\opt2\"/>
+
+
+
+        <property name="snapshot.dir" value="../www/snapshots"/>
+
+        <property file="${user.home}/.ant.properties"/>
+
+        <property file=".argo.ant.properties"/>
+
+        <property file=".ant.properties"/>
+
+        <!-- The following can be set in .ant.properties                 -->
+
+        <property name="debug" value="on"/>
+
+        <property name="optimize" value="off"/>
+
+        <property name="deprecation" value="on"/>
+
+        <!-- developer.lib.dir is the developer snapshot directory.           -->
+
+        <!-- If it is not set, it defaults to build.dir, and "build install"  -->
+
+        <!-- will not do anything.                                            -->
+
+        <property name="developer.lib.dir" value="${build.dir}"/>
+
+        <!-- developer.bin.dir is the developer snapshot directory.           -->
+
+        <!-- If it is not set, it defaults to argo.bin.dir, and               -->
+
+        <!-- "build install"  will not do anything.                           -->
+
+        <property name="javadoc.use" value="true"/>
+
+        <!-- General javadocs probably should not show private -->
+
+        <property name="javadoc.private" value="false"/>
+
+        <property name="javadoc.splitindex" value="true"/>
+
+        <property name="javadoc.author" value="false"/>
+
+        <property name="xerces.javadoc.link" value="http://xml.apache.org/xerces-j/apiDocs"/>
+
+        <property name="log4j.javadoc.link" value="e:\opt2\jakarta-log4j-1.2.6/docs/api"/>
+
+        <property name="jdk.javadoc.link" value="http://java.sun.com/products/jdk/1.2/docs/api"/>
+
+
+
+
+
+    </target>
+
+    <!-- Note this file can only make Ant display values set in the file correctly, -->
+
+    <!-- but external values in the environment or properties file will be operational.  -->
+
+    <!-- Help on usage                                                       -->
+
+    <target name="usage" depends="init">
+
+        <echo message=""/>
+
+        <echo message=""/>
+
+        <echo message="${Name} Build file"/>
+
+        <echo message="-------------------------------------------------------------"/>
+
+        <echo message=""/>
+
+        <echo message=" available targets are:"/>
+
+        <echo message=""/>
+
+        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
+
+        <echo message="   package      --> generates the ${Name}.jar file"/>
+
+        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
+
+        <echo message="   clean        --> cleans up the ${build.dir} directory"/>
+
+        <echo message="   usage        --> show this message (default)"/>
+
+        <echo message=""/>
+
+        <echo message=" See the comments inside the build.xml file for more details."/>
+
+        <echo message="-------------------------------------------------------------"/>
+
+        <echo message=""/>
+
+        <echo message=""/>
+
+    </target>
+
+
+
+    <!-- Prepares the build directory                                        -->
+
+    <target name="prepare" depends="init">
+
+        <mkdir dir="${build.dir}"/>
+
+        <mkdir dir="${build.dest}"/>
+
+        <mkdir dir="${build.tests}"/>
+
+    </target>
+
+    <!-- <target name="compile" depends="prepare"> -->
+
+    <target name="docs" depends="prepare">
+
+        <echo message="Build javadoc"/>
+
+        <!-- create directories -->
+
+        <mkdir dir="${docs.dir}"/>
+
+        <javadoc
+
+            sourcepath="${build.src.java}"
+
+            destdir="${docs.dir}"
+
+            verbose="true"
+
+            defaultexcludes="true"
+
+            packagenames="mill/db/*,mill/tools/*,mill/startup/*"
+
+            excludepackagenames="mill/price/*"
+
+            >
+
+            <classpath refid="classpath-base"/>
+
+        </javadoc>
+
+    </target>
+
+
+
+    <target name="set_build_number">
+
+        <buildnumber/>
+
+    </target>
+
+
+
+</project>
+

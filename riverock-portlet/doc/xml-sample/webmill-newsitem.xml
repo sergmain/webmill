@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<?xml-stylesheet type="text/xsl" href="webmill.xslt"?>
+
+<SiteTemplate language="ru_RU" type="mill.news">
+
+	<HeaderStart/>
+
+	<HeaderTextIndex/>
+
+	<HeaderEnd/>
+
+	<MenuSimple>
+
+		<MenuModule includeLevel="1" isCurrent="0">
+
+			<ModuleName>Новости</ModuleName>
+
+			<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.news_block&amp;mill.template=dynamic_me.askmore</ModuleUrl>
+
+		</MenuModule>
+
+		<MenuModule includeLevel="1" isCurrent="0">
+
+			<ModuleName>English</ModuleName>
+
+			<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.language&amp;mill.template=dynamic_me.askmore&amp;mill.id_language=13</ModuleUrl>
+
+		</MenuModule>
+
+		<MenuModule includeLevel="1" isCurrent="0">
+
+			<ModuleName>日本語</ModuleName>
+
+			<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.language&amp;mill.template=dynamic_me.askmore&amp;mill.id_language=14</ModuleUrl>
+
+		</MenuModule>
+
+		<MenuName/>
+
+	</MenuSimple>
+
+	<NewsBlock>
+
+		<NewsGroup newsGroupId="79" maxNews="3">
+
+			<NewsGroupName>Выход новых релизов</NewsGroupName>
+
+			<NewsItem newsItemId="9" newsDateTime="2003-02-15T13:42:00.000">
+
+				<NewsDate>15.фев.2003</NewsDate>
+
+				<NewsTime>13:42</NewsTime>
+
+				<NewsHeader>Версия 2.2.1.3</NewsHeader>
+
+				<NewsAnons>Добавлена возможность вызова всех портлетов по коду. οзменения в коде для устранения зависимости от кодировки клиента при создании XML данных из портлета. Поддержка MS SQL и MySql.</NewsAnons>
+
+				<NewsText>Добавлена возможность вызова всех портлетов по коду. Теперь шаблон страницы может включать портлеты одного типа, вызываемые по коду. οзменения в коде для устранения зависимости от кодировки клиента при создании XML данных из портлета. Данное изменение было вызвано необходимостью создания корректного XML используемого не только внутри сервера, но и для передачи XML данных клиентским приложениям. При этом сервер работает в реждиме сервера приложений. Вся структура сервера портирована на MS SQL и MySql базы данных. Полный список баз данных поддерживаемых в настоящее время включает - Oracle, HypersonicSQL, MS SQL, MySQL. Версия для HypersonicSQL является полнофункциональной, бесплатной версией. В планах портирование сервера на IBM DB2 и PostgreSQL. 
+
+&lt;br>
+
+Дистрибутив здесь - http://webmill.askmore.info/mill.binary/download/webmill-2.2.1.3.tar.gzДобавлена возможность вызова всех портлетов по коду. Теперь шаблон страницы может включать портлеты одного типа, вызываемые по коду. οзменения в коде для устранения зависимости от кодировки клиента при создании XML данных из портлета. Данное изменение было вызвано необходимостью создания корректного XML используемого не только внутри сервера, но и для передачи XML данных клиентским приложениям. При этом сервер работает в реждиме сервера приложений. Вся структура сервера портирована на MS SQL и MySql базы данных. Полный список баз данных поддерживаемых в настоящее время включает - Oracle, HypersonicSQL, MS SQL, MySQL. Версия для HypersonicSQL является полнофункциональной, бесплатной версией. В планах портирование сервера на IBM DB2 и PostgreSQL. 
+
+&lt;br>
+
+Дистрибутив здесь - http://webmill.askmore.info/mill.binary/download/webmill-2.2.1.3.tar.gz</NewsText>
+
+				<UrlToFullNewsItem>/mill/ctx?mill.lang=ru_RU&amp;mill.id_news_item=9&amp;mill.context=mill.news</UrlToFullNewsItem>
+
+				<ToFullItem>Далее</ToFullItem>
+
+			</NewsItem>
+
+			<NewsItem newsItemId="8" newsDateTime="2003-01-24T22:45:33.000">
+
+				<NewsDate>24.янв.2003</NewsDate>
+
+				<NewsTime>22:45</NewsTime>
+
+				<NewsHeader>Версия 2.1.2.2</NewsHeader>
+
+				<NewsAnons>οзменена стректура дистрибутива. Переработана идеология написания портлетов. Пофиксены очередные баги. </NewsAnons>
+
+				<NewsText>Русский язык, сообщение 2-2οзменена стректура дистрибутива. Теперь запуск демо версии возможен без каких либо дополнительных изменений настроек. В дистрибутив включен Tomcat 4.1.18. Единственное ограничение - дистрибутив должен быть развернут в корень любого диска. Переработана идеология написания портлетов. Теперь все портлеты основаны на W3C XML scheme. Преобразование из java классов в XML осуществляется с помощью библиотеки Castor Exolab. Подробнее о данной библиотеке на http://castor.exolab.org Пофиксены очередные баги. Дистрибутив здесь - http://webmill.askmore.info/mill.binary/download/webmill-2.1.2.2.tar.gzοзменена стректура дистрибутива. Теперь запуск демо версии возможен без каких либо дополнительных изменений настроек. В дистрибутив включен Tomcat 4.1.18. Единственное ограничение - дистрибутив должен быть развернут в корень любого диска. Переработана идеология написания портлетов. Теперь все портлеты основаны на W3C XML scheme. Преобразование из java классов в XML осуществляется с помощью библиотеки Castor Exolab. Подробнее о данной библиотеке на http://castor.exolab.org Пофиксены очередные баги. Дистрибутив здесь - http://webmill.askmore.info/mill.binary/download/webmill-2.1.2.2.tar.gz</NewsText>
+
+				<UrlToFullNewsItem>/mill/ctx?mill.lang=ru_RU&amp;mill.id_news_item=8&amp;mill.context=mill.news</UrlToFullNewsItem>
+
+				<ToFullItem>Далее</ToFullItem>
+
+			</NewsItem>
+
+			<NewsItem newsItemId="7" newsDateTime="2003-01-15T14:07:31.000">
+
+				<NewsDate>15.янв.2003</NewsDate>
+
+				<NewsTime>14:07</NewsTime>
+
+				<NewsHeader>Выпущена версия 2.1.2</NewsHeader>
+
+				<NewsAnons>Выпущена версия 2.1.2. Пофиксены выявленые баги.</NewsAnons>
+
+				<NewsText>Русский язык, сообщение 2-1Выпущена версия 2.1.2. Пофиксены выявленые баги. Доступна  здесь  -  http://webmill.askmore.info/mill.binary/download/webmill-2.1.2.tar.gzВыпущена версия 2.1.2. Пофиксены выявленые баги. Доступна  здесь  -  http://webmill.askmore.info/mill.binary/download/webmill-2.1.2.tar.gz</NewsText>
+
+				<UrlToFullNewsItem>/mill/ctx?mill.lang=ru_RU&amp;mill.id_news_item=7&amp;mill.context=mill.news</UrlToFullNewsItem>
+
+				<ToFullItem>Далее</ToFullItem>
+
+			</NewsItem>
+
+			<NewsGroupCode>RELEASE_NEWS</NewsGroupCode>
+
+		</NewsGroup>
+
+	</NewsBlock>
+
+	<MenuMember>
+
+		<MenuMemberApplication orderField="0" applicationId="21">
+
+			<ApplicationName>Авторизация</ApplicationName>
+
+			<ApplicationCode>AUTH</ApplicationCode>
+
+			<ApplicationRecordNumber>0</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>0</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>Привязка ролей к пользователям</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=AUTH&amp;mill.member.mod=AUTH.USER_ROLES&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>AUTH</ApplicationCode>
+
+				<ModuleCode>AUTH.USER_ROLES</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>0</ApplRecordNumber>
+
+				<ModuleRecordNumber>1</ModuleRecordNumber>
+
+				<ModuleName>Список ролей</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=AUTH&amp;mill.member.mod=AUTH.ROLES&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>AUTH</ApplicationCode>
+
+				<ModuleCode>AUTH.ROLES</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>0</ApplRecordNumber>
+
+				<ModuleRecordNumber>2</ModuleRecordNumber>
+
+				<ModuleName>Список прав для ролей</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=AUTH&amp;mill.member.mod=AUTH.RIGHT&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>AUTH</ApplicationCode>
+
+				<ModuleCode>AUTH.RIGHT</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>0</ApplRecordNumber>
+
+				<ModuleRecordNumber>3</ModuleRecordNumber>
+
+				<ModuleName>Список приложений</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=AUTH&amp;mill.member.mod=AUTH.APPL&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>AUTH</ApplicationCode>
+
+				<ModuleCode>AUTH.APPL</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>0</ApplRecordNumber>
+
+				<ModuleRecordNumber>4</ModuleRecordNumber>
+
+				<ModuleName>Разрешения пользователей</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=AUTH&amp;mill.member.mod=AUTH.BIND&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>AUTH</ApplicationCode>
+
+				<ModuleCode>AUTH.BIND</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+		<MenuMemberApplication orderField="0" applicationId="39">
+
+			<ApplicationName>Управление контентом</ApplicationName>
+
+			<ApplicationCode>CONTENT</ApplicationCode>
+
+			<ApplicationRecordNumber>1</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>XSL templates</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=XSLT_DATA&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>XSLT_DATA</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>1</ModuleRecordNumber>
+
+				<ModuleName>Templates</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=TEMPLATE.LIST&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>TEMPLATE.LIST</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>2</ModuleRecordNumber>
+
+				<ModuleName>FAQ</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.FAQ&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.FAQ</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>3</ModuleRecordNumber>
+
+				<ModuleName>Статьи XML</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.ARTICLE_XML&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.ARTICLE_XML</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="20" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>4</ModuleRecordNumber>
+
+				<ModuleName>Статьи Plain</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.ARTICLE_PLAIN&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.ARTICLE_PLAIN</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>5</ModuleRecordNumber>
+
+				<ModuleName>Новости сайта</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=WEB_NEWS&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>WEB_NEWS</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>6</ModuleRecordNumber>
+
+				<ModuleName>Регистрация доступна?</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=IS_REGISTER&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>IS_REGISTER</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>7</ModuleRecordNumber>
+
+				<ModuleName>Управление каталогом контекстов</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTEXT.CATALOG&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTEXT.CATALOG</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>8</ModuleRecordNumber>
+
+				<ModuleName>Конфигурация магазинов</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.SHOP&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.SHOP</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>9</ModuleRecordNumber>
+
+				<ModuleName>Конфигурация форумов</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.FORUM&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.FORUM</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>10</ModuleRecordNumber>
+
+				<ModuleName>Управление типом CSS</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.DYNAMIN_CSS&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.DYNAMIN_CSS</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>11</ModuleRecordNumber>
+
+				<ModuleName>Управление CSS</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.CSS&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.CSS</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="50" isNew="true">
+
+				<ApplRecordNumber>1</ApplRecordNumber>
+
+				<ModuleRecordNumber>12</ModuleRecordNumber>
+
+				<ModuleName>Собственники прав на статьи</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CONTENT&amp;mill.member.mod=CONTENT.COPYRIGHT&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CONTENT</ApplicationCode>
+
+				<ModuleCode>CONTENT.COPYRIGHT</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+		<MenuMemberApplication orderField="50" applicationId="22">
+
+			<ApplicationName>ВАЛЮТА</ApplicationName>
+
+			<ApplicationCode>CURRENCY</ApplicationCode>
+
+			<ApplicationRecordNumber>2</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>2</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>Работа с валютами</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CURRENCY&amp;mill.member.mod=CURRENCY&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CURRENCY</ApplicationCode>
+
+				<ModuleCode>CURRENCY</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="20" isNew="true">
+
+				<ApplRecordNumber>2</ApplRecordNumber>
+
+				<ModuleRecordNumber>1</ModuleRecordNumber>
+
+				<ModuleName>Точность вывода валют</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=CURRENCY&amp;mill.member.mod=PRECISION&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>CURRENCY</ApplicationCode>
+
+				<ModuleCode>PRECISION</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+		<MenuMemberApplication orderField="50" applicationId="31">
+
+			<ApplicationName>Данные по предприятию</ApplicationName>
+
+			<ApplicationCode>FIRM</ApplicationCode>
+
+			<ApplicationRecordNumber>3</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>3</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>Редактирование данных о себе</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=FIRM&amp;mill.member.mod=USER&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>FIRM</ApplicationCode>
+
+				<ModuleCode>USER</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>3</ApplRecordNumber>
+
+				<ModuleRecordNumber>1</ModuleRecordNumber>
+
+				<ModuleName>Персонал предприятия</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=FIRM&amp;mill.member.mod=PEOPLE&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>FIRM</ApplicationCode>
+
+				<ModuleCode>PEOPLE</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>3</ApplRecordNumber>
+
+				<ModuleRecordNumber>2</ModuleRecordNumber>
+
+				<ModuleName>Реквизиты предприятия</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=FIRM&amp;mill.member.mod=FIRM&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>FIRM</ApplicationCode>
+
+				<ModuleCode>FIRM</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+		<MenuMemberApplication orderField="50" applicationId="35">
+
+			<ApplicationName>Обработка изображений</ApplicationName>
+
+			<ApplicationCode>IMAGE_PROCESSING</ApplicationCode>
+
+			<ApplicationRecordNumber>4</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>4</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>Генерация каталога на основе прайса</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=IMAGE_PROCESSING&amp;mill.member.mod=BUID_IMAGE_DIR&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>IMAGE_PROCESSING</ApplicationCode>
+
+				<ModuleCode>BUID_IMAGE_DIR</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>4</ApplRecordNumber>
+
+				<ModuleRecordNumber>1</ModuleRecordNumber>
+
+				<ModuleName>Загрузка изображений</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=IMAGE_PROCESSING&amp;mill.member.mod=IMAGE_UPLOAD_FILE&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>IMAGE_PROCESSING</ApplicationCode>
+
+				<ModuleCode>IMAGE_UPLOAD_FILE</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+		<MenuMemberApplication orderField="50" applicationId="38">
+
+			<ApplicationName>Предложения по работе</ApplicationName>
+
+			<ApplicationCode>JOB</ApplicationCode>
+
+			<ApplicationRecordNumber>5</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>5</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>Вакансии</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=JOB&amp;mill.member.mod=JOB.POSITION&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>JOB</ApplicationCode>
+
+				<ModuleCode>JOB.POSITION</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+		<MenuMemberApplication orderField="50" applicationId="24">
+
+			<ApplicationName>B2C</ApplicationName>
+
+			<ApplicationCode>PRICE</ApplicationCode>
+
+			<ApplicationRecordNumber>6</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>UPLOAD_PRICE</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=UPLOAD_PRICE&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>UPLOAD_PRICE</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>1</ModuleRecordNumber>
+
+				<ModuleName>Загрузка данных о приходе товаров</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=PRICE.STORAGE.ORDERS.UPLOAD&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>PRICE.STORAGE.ORDERS.UPLOAD</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>2</ModuleRecordNumber>
+
+				<ModuleName>Принятые магазином заказы</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=ORDERS.PROCESSED&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>ORDERS.PROCESSED</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>3</ModuleRecordNumber>
+
+				<ModuleName>Заказы для подтверждения</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=ORDERS.CONFIRM_USER&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>ORDERS.CONFIRM_USER</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>4</ModuleRecordNumber>
+
+				<ModuleName>Заказы для подтверждения магазином</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=ORDERS.CONFIRM_SHOP&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>ORDERS.CONFIRM_SHOP</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>5</ModuleRecordNumber>
+
+				<ModuleName>Обработка заказов</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=LIST_ORDER&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>LIST_ORDER</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>6</ModuleRecordNumber>
+
+				<ModuleName>Описание наименований</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=B2X.SHOP_LIST&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>B2X.SHOP_LIST</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>7</ModuleRecordNumber>
+
+				<ModuleName>Скидки пользователей</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=B2C.USER_DISCOUNT&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>B2C.USER_DISCOUNT</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="false">
+
+				<ApplRecordNumber>6</ApplRecordNumber>
+
+				<ModuleRecordNumber>8</ModuleRecordNumber>
+
+				<ModuleName>Прайс-лист</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=PRICE&amp;mill.member.mod=B2C.PRICE_LIST_ITEMS&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>PRICE</ApplicationCode>
+
+				<ModuleCode>B2C.PRICE_LIST_ITEMS</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+		<MenuMemberApplication orderField="50" applicationId="27">
+
+			<ApplicationName>СοСАДМοН</ApplicationName>
+
+			<ApplicationCode>SYSADMIN</ApplicationCode>
+
+			<ApplicationRecordNumber>7</ApplicationRecordNumber>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>0</ModuleRecordNumber>
+
+				<ModuleName>Список рабочих дней</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=WORKDAY&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>WORKDAY</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>1</ModuleRecordNumber>
+
+				<ModuleName>Standart currency</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=STD_CURRENCY&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>STD_CURRENCY</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>2</ModuleRecordNumber>
+
+				<ModuleName>Список 2го уровня(служб)</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=SERVICE&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>SERVICE</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>3</ModuleRecordNumber>
+
+				<ModuleName>Список языков</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=SA_LIST_LANG&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>SA_LIST_LANG</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>4</ModuleRecordNumber>
+
+				<ModuleName>Список групп 3го уровня(дорог)</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=ROAD&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>ROAD</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>5</ModuleRecordNumber>
+
+				<ModuleName>Локализация</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=LOCALE.STORAGE&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>LOCALE.STORAGE</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>6</ModuleRecordNumber>
+
+				<ModuleName>Список сайтов</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=LIST_SITE&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>LIST_SITE</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>7</ModuleRecordNumber>
+
+				<ModuleName>Работа: список полов</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=JOB.SEX_LIST&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>JOB.SEX_LIST</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>8</ModuleRecordNumber>
+
+				<ModuleName>List of firm</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=FIRM&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>FIRM</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="0" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>9</ModuleRecordNumber>
+
+				<ModuleName>Type of context</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=CONTEXT.TYPE&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>CONTEXT.TYPE</ModuleCode>
+
+			</MenuMemberModule>
+
+			<MenuMemberModule orderField="1" isNew="true">
+
+				<ApplRecordNumber>7</ApplRecordNumber>
+
+				<ModuleRecordNumber>10</ModuleRecordNumber>
+
+				<ModuleName>Список праздничных дней</ModuleName>
+
+				<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.member&amp;mill.member.appl=SYSADMIN&amp;mill.member.mod=HOLIDAY&amp;mill.template=templ-mill-dyn4-ru</ModuleUrl>
+
+				<ApplicationCode>SYSADMIN</ApplicationCode>
+
+				<ModuleCode>HOLIDAY</ModuleCode>
+
+			</MenuMemberModule>
+
+		</MenuMemberApplication>
+
+	</MenuMember>
+
+	<Separator/>
+
+	<TopMenu>
+
+		<MenuModule includeLevel="1" isCurrent="0">
+
+			<ModuleName>Начало</ModuleName>
+
+			<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.index&amp;mill.template=templ-mill-index1-ru</ModuleUrl>
+
+		</MenuModule>
+
+		<MenuModule includeLevel="1" isCurrent="0">
+
+			<ModuleName>О проекте</ModuleName>
+
+			<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.article_xml&amp;mill.template=templ-mill-dyn2-ru&amp;mill.id_article=183</ModuleUrl>
+
+		</MenuModule>
+
+		<MenuModule includeLevel="1" isCurrent="0">
+
+			<ModuleName>Документация</ModuleName>
+
+			<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.article_plain&amp;mill.template=templ-mill-dyn3-ru&amp;mill.id_article=195</ModuleUrl>
+
+		</MenuModule>
+
+		<MenuModule includeLevel="1" isCurrent="0">
+
+			<ModuleName>Поддержка</ModuleName>
+
+			<ModuleUrl>/mill/ctx?mill.lang=ru_RU&amp;mill.context=mill.index&amp;mill.template=templ-mill-index4-ru</ModuleUrl>
+
+		</MenuModule>
+
+		<MenuName/>
+
+	</TopMenu>
+
+	<SeparatorDynStart/>
+
+	<NewsItemPara>
+
+		<NewsDate>14.янв.2003</NewsDate>
+
+		<NewsTime>20:52</NewsTime>
+
+		<NewsHeader>οзменение в лицензировании сервера WebMill</NewsHeader>
+
+		<NewsAnons>Выпущена беспланая версия сервера и версия лицензируемая по количеству процессоров.
+
+Стоимость лицензии на один процессор равна €950.</NewsAnons>
+
+		<NewsText>
+
+			<NewsTextPara>После успешного портирования сервера WebMill на HypersonicSQL базу данных, изменена система лицензирования сервера. Сервер работающий с HypersonicSQL базу данных распространяется бесплатно. Сервер WebMill  работающий с другими базами данных лензируется на основе количества процессоров на которых работает WebMill. Стоимость лицензии на один процессор равна €950.</NewsTextPara>
+
+			<NewsTextPara>После успешного портирования сервера WebMill на HypersonicSQL базу данных, изменена система лицензирования сервера. Сервер работающий с HypersonicSQL базу данных распространяется бесплатно. Сервер WebMill  работающий с другими базами данных лензируется на основе количества процессоров на которых работает WebMill. Стоимость лицензии на один процессор равна €950.</NewsTextPara>
+
+		</NewsText>
+
+	</NewsItemPara>
+
+	<SeparatorDynImage/>
+
+	<PageImage2/>
+
+	<SeparatorDynEnd/>
+
+	<Footer/>
+
+</SiteTemplate>
+

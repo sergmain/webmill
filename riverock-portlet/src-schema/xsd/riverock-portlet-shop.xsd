@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:annotation>
+
+		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+
+	</xs:annotation>
+
+	<xs:annotation>
+
+		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
+
+	</xs:annotation>
+
+	<xs:complexType name="ShopPageType">
+
+		<xs:sequence>
+
+			<xs:element name="PriceHeader" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="PriceFooter" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="CurrencyList" type="CurrencyListType" minOccurs="0"/>
+
+			<xs:element name="PricePosition" type="PricePositionType" minOccurs="0"/>
+
+			<xs:element name="CurrentBasket" type="CurrentBasketType" minOccurs="0"/>
+
+			<xs:element name="GroupList" type="GroupListType" minOccurs="0"/>
+
+			<xs:element name="ItemList" type="ItemListType" minOccurs="0"/>
+
+			<xs:element name="SortItemUrl" type="xs:string"/>
+
+			<xs:element name="SortPriceUrl" type="xs:string"/>
+
+			<xs:element name="ItemDirect" type="xs:string" default="ASC"/>
+
+			<xs:element name="PriceDirect" type="xs:string" default="ASC"/>
+
+			<xs:element name="DateUploadPrice" type="xs:string"/>
+
+			<xs:element name="TimeUploadPrice" type="xs:string"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="isProcessInvoice" type="xs:string" use="required"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="CurrencyListType">
+
+		<xs:sequence>
+
+			<xs:element name="CurrencySwitchUrl" type="xs:string"/>
+
+			<xs:element name="NoCurrencyName" type="xs:string" default="no currency"/>
+
+			<xs:element name="CurrencyNameSwitch" type="xs:string"/>
+
+			<xs:element name="CurrencySelectParam" type="xs:string"/>
+
+			<xs:element name="CurrencyItem" type="CurrencyItemType" maxOccurs="unbounded"/>
+
+			<xs:element name="HiddenParam" type="HiddenParamType" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="PricePositionType">
+
+		<xs:sequence>
+
+			<xs:element name="TopLevelName" type="xs:string" default="В начало"/>
+
+			<xs:element name="TopLevelUrl" type="xs:string"/>
+
+			<xs:element name="PositionItem" type="PositionItemType" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="CurrentBasketType">
+
+		<xs:sequence>
+
+			<xs:element name="ItemInBasket" type="xs:int"/>
+
+			<xs:element name="CurrentBasketUrl" type="xs:string"/>
+
+			<xs:element name="CurrentBasketName" type="xs:string"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="ItemListType">
+
+		<xs:sequence>
+
+			<xs:element name="PriceFieldName" type="PriceFieldNameType"/>
+
+			<xs:element name="PriceItem" type="PriceItemType" minOccurs="0" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="CurrencyItemType">
+
+		<xs:sequence>
+
+			<xs:element name="CurrencyName" type="xs:string"/>
+
+			<xs:element name="CurrencyID" type="xs:long"/>
+
+			<xs:element name="CurrencyCurs" type="xs:double"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="selectCurrentCurrency" type="xs:string" use="optional"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="PositionItemType">
+
+		<xs:sequence>
+
+			<xs:element name="PositionName" type="xs:string"/>
+
+			<xs:element name="PositionUrl" type="xs:string"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="idGroupCurrent" type="xs:long"/>
+
+		<xs:attribute name="idGroupTop" type="xs:long"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="PriceFieldNameType">
+
+		<xs:sequence>
+
+			<xs:element name="NameItem" type="xs:string" default="Item"/>
+
+			<xs:element name="NamePrice" type="xs:string" default="Price"/>
+
+			<xs:element name="NameCurrency" type="xs:string" default="Currency"/>
+
+			<xs:element name="NameToInvoice" type="xs:string"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="PriceItemType">
+
+		<xs:sequence>
+
+			<xs:element name="ItemInBasket" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="ItemID" type="xs:long"/>
+
+			<xs:element name="ItemCurrencyID" type="xs:long"/>
+
+			<xs:element name="ItemPrice" type="xs:string"/>
+
+			<xs:element name="ItemNameCurrency" type="xs:string"/>
+
+			<xs:element name="ItemDescription" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="ItemImageFileName" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="ItemName" type="xs:string"/>
+
+			<xs:element name="ItemToInvoice" type="xs:string"/>
+
+			<xs:element name="ItemToInvoiceCountParam" type="xs:string"/>
+
+			<xs:element name="HiddenParam" type="HiddenParamType" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="GroupListType">
+
+		<xs:sequence>
+
+			<xs:element name="GroupItem" type="GroupItemType" minOccurs="0" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="GroupItemType">
+
+		<xs:sequence>
+
+			<xs:element name="GroupName" type="xs:string"/>
+
+			<xs:element name="GroupUrl" type="xs:string"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="idGroup" type="xs:long"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="HiddenParamType">
+
+		<xs:sequence>
+
+			<xs:element name="HiddenParamName" type="xs:string"/>
+
+			<xs:element name="HiddenParamValue" type="xs:string"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+</xs:schema>
+

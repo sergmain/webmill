@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xs:annotation>
+
+		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+
+	</xs:annotation>
+
+	<xs:annotation>
+
+		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
+
+	</xs:annotation>
+
+	<xs:complexType name="NewsBlockType">
+
+		<xs:sequence>
+
+			<xs:element name="NewsGroup" type="NewsGroupType" minOccurs="0" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="idSiteLanguage" type="xs:long"/>
+
+		<xs:attribute name="codeLanguage" type="xs:string"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="NewsGroupType">
+
+		<xs:sequence>
+
+			<xs:element name="NewsGroupName" type="xs:string"/>
+
+			<xs:element name="NewsItem" type="NewsItemType" minOccurs="0" maxOccurs="unbounded"/>
+
+			<xs:element name="NewsGroupCode" type="xs:string" minOccurs="0"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="newsGroupId" type="xs:long"/>
+
+		<xs:attribute name="maxNews" type="xs:long"/>
+
+		<xs:attribute name="orderValue" type="xs:int"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="NewsItemType">
+
+		<xs:sequence>
+
+			<xs:element name="NewsDate" type="xs:string"/>
+
+			<xs:element name="NewsTime" type="xs:string"/>
+
+			<xs:element name="NewsHeader" type="xs:string"/>
+
+			<xs:element name="NewsAnons" type="xs:string" minOccurs="0"/>
+
+			<xs:element name="NewsText" type="xs:string"/>
+
+			<xs:element name="UrlToFullNewsItem" type="xs:string"/>
+
+			<xs:element name="ToFullItem" type="xs:string"/>
+
+		</xs:sequence>
+
+		<xs:attribute name="newsItemId" type="xs:long"/>
+
+		<xs:attribute name="newsDateTime" type="xs:dateTime"/>
+
+	</xs:complexType>
+
+	<xs:complexType name="NewsItemSimpleType">
+
+		<xs:sequence>
+
+			<xs:element name="NewsDate" type="xs:string"/>
+
+			<xs:element name="NewsTime" type="xs:string"/>
+
+			<xs:element name="NewsHeader" type="xs:string"/>
+
+			<xs:element name="NewsAnons" type="xs:string"/>
+
+			<xs:element name="NewsText" type="xs:string"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="NewsSiteType">
+
+		<xs:sequence>
+
+			<xs:element name="NewsBlock" type="NewsBlockType" minOccurs="0" maxOccurs="unbounded"/>
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+</xs:schema>
+

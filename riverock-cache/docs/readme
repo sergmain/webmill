@@ -1,0 +1,10 @@
+Main goal of project js-cache is support synchronized data which store in relational DB 
+with data which in cache. For solve this task project divided in two parts - first part 
+is simple implementation of cache with support TTL, hit-counter and second is synchronization classes. 
+For sync data all requests to JDBC driver are registered in sync factory. Internal SQL parser
+decide which type of DML is requested and extract names of tables which used in this query.
+On commit sync factory removed datas from cache which are deprecated.
+for SQL parser we use ANTLR.
+
+prgramming language - java
+

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<Article xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\js-portlet\doc\public\jsmithy-portlet-article-data.xsd">
+
+	<ArticlePara>js-common проект</ArticlePara>
+
+	<ArticlePara>js-common включает в себя классы, которые используются практически во всех проектах. Данный проект включает в себя следущие пакеты:</ArticlePara>
+
+	<ArticlePara>org.riverock.common.config -  классы для доступа к конфиг-файлам. На основе этого пакета пакета другие проекты реализуют работу со своими конфигами. В настоящее время (версия 4.х webmill'a) используется следущее соглашение в названии пакетов, работающих с конфигами - org.riverock.&lt;имя проекта&gt;.config</ArticlePara>
+
+	<ArticlePara>org.riverock.common.html - набор классов для выполнения простейщих операций с заголовками HTTP запросов</ArticlePara>
+
+	<ArticlePara>org.riverock.common.locale - классов нет. Содержит недостающую функциональность по локализации. В частности русские названия месяцов и др. Базова локализация для других языков должна помещаться в этот пакет</ArticlePara>
+
+	<ArticlePara>org.riverock.common.mail - простой интерфейс для отправки писем</ArticlePara>
+
+	<ArticlePara>org.riverock.common.multipart - пакет для работы с загружаемыми файлами. Был создан на основе кода библиотеки MayBeUpload для того, что бы исключить зависимость от O'Relly библиотеки COS. Реализует всю основную функциональность этой библиотеки.</ArticlePara>
+
+	<ArticlePara>org.riverock.common.tools - набор различных инструментальных классов. Ничего необычного.</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-interfaces проект</ArticlePara>
+
+	<ArticlePara>в настоящее время этот проект содержит классы, созданные с помощью пакета Castor на основе XSD схемы - javax.portlet.xxx и классы для конфигурации портлетов. вынесены в отдельны проект что бы развязать проект портала (webmill) и проект библиотеки портлетов.</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-lib проект</ArticlePara>
+
+	<ArticlePara>Этот проект содержит все необходимые библиотеки для сборки проектов. Создан для того, чтобы не было дублирования библиотек.</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-sql-parser проект</ArticlePara>
+
+	<ArticlePara>org.riverock.sql - включает в себя sql парсер для управления кешем. В настоящее время парсер основан на коде hypersonic DB. Для расширения функциональности лучшей поддержки планируется порторование на ANTLR</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-schema-support проект</ArticlePara>
+
+	<ArticlePara>Данный проект решает задачу автоматического создания классов уровня доступа к базе данных на основе структуры БД, сохранненой в XML файле.</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-generic проект</ArticlePara>
+
+	<ArticlePara>js-generic включает в себя generic классы, которые используются во всех других проектах. Основное отличие от js-common заключется в том, что данный проект жестко "завязан" на работу с Webmill</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.config - управление конфигурацией для generic</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.db - данный пакет содержит набор фабрик для работы с различными базами данных</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.exception - в данном пакете предполагается размещать все exception, чтобы они были в одном месте.</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.main - в этом пакете находится реализация кеша с поддержкой отслеживания изменеий в БД. Так же здесь находится класс с константами.</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.port - здесь находится только один класс LocalizedString. Предназначен для получения локализированных строк</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.security - пакет классов для шифрования данных. �?спользуется для организации передачи зашифрованных данных через HTTP</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.site - содержит класс SiteListSite.</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.startup - в этом пакете содержатся классы для инициализации глобальных пременных, не зависимо от того, в как каком равианте работает приложение - как standalone или как web-приложение</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.system - пакет классов для работы со структурой БД</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.tools  - набор различных инструментальных классов. в отличие от пакета org.riverock.common.tools содержит классы, оперирующие локалью и другими параметрами установленными в конфиге</ArticlePara>
+
+	<ArticlePara>org.riverock.generic.utils - в этот пакет перемещены методы для работы с датами, чтобы не путать их с методами из org.riverock.common.tools</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-sso проект</ArticlePara>
+
+	<ArticlePara>js-sso проект в простейшем виде реализует функциональность Single Sign-On</ArticlePara>
+
+	<ArticlePara>org.riverock.sso.a3 - реализация авторизации</ArticlePara>
+
+	<ArticlePara>org.riverock.sso.config - конфиг для SSO</ArticlePara>
+
+	<ArticlePara>org.riverock.sso.exception - здесь находятся exception</ArticlePara>
+
+	<ArticlePara>org.riverock.sso.main - константы и бин для информации о пользователе</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-cache проект</ArticlePara>
+
+	<ArticlePara>js-cache проект описывает и реализует кеш систему</ArticlePara>
+
+	<ArticlePara>org.riverock.cache.coonfig - конфиг кеша</ArticlePara>
+
+	<ArticlePara>org.riverock.cache.impl - реализация кеша</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-webmill проект</ArticlePara>
+
+	<ArticlePara>js-webmill - это проект движка для поддержки портелтов, портлет контаинер и портал</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.a3 - протоколирование HTTP запросов в базе данных.</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.as - ApplicationServer. Вызывает классы на основе запроса и посылает результат в формате xml</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.config - конфиг для webmill</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.main - константы и загрузка файлов на сервер</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.port - пакет, содержащий служебные классы для портала webmill</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.portlet - портлет контейнер</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.site - информация о сайте, на котором выполняется webmill</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.system - работа со стректурой БД.</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.tools - набор инструментальных классов</ArticlePara>
+
+	<ArticlePara>org.riverock.webmill.utils - набор инструментальных классов</ArticlePara>
+
+	<ArticlePara/>
+
+	<ArticlePara>js-portlet проект</ArticlePara>
+
+	<ArticlePara>js-portlet - это проект включает в себя набор портлетов для webmill</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+	<ArticlePara>org.riverock.portlet.</ArticlePara>
+
+</Article>
+

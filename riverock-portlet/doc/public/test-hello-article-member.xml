@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<Article xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\js-portlet\doc\public\jsmithy-portlet-article-data.xsd">
+
+	<ArticlePara>Привет мембер описателя.</ArticlePara>
+
+	<PreText>&lt;?xml version="1.0" encoding="windows-1251"?&gt;
+
+&lt;MemberArea xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="\sandbox\js-portlet\src-schema\xsd\jsmithy-portlet-member.xsd"&gt;
+
+	&lt;Module name="test.hello" authApplication="SYSADMIN" authModule="TEST" isDelete="1"&gt;
+
+		&lt;Content action="index" authAccess="S"&gt;
+
+			&lt;security-role-ref&gt;
+
+				&lt;portlet:role-name&gt;webmill.admin&lt;/portlet:role-name&gt;
+
+			&lt;/security-role-ref&gt;
+
+			&lt;security-role-ref&gt;
+
+				&lt;portlet:role-name&gt;webmill.article-select&lt;/portlet:role-name&gt;
+
+			&lt;/security-role-ref&gt;
+
+			&lt;Title isUseProperties="0"&gt;
+
+				&lt;StringData&gt;Hello&lt;/StringData&gt;
+
+			&lt;/Title&gt;
+
+			&lt;QueryArea&gt;
+
+				&lt;Restrict type="site"/&gt;
+
+				&lt;PrimaryKey&gt;ID_SITE_SUPPORT_LANGUAGE&lt;/PrimaryKey&gt;
+
+				&lt;PrimaryKeyType&gt;number&lt;/PrimaryKeyType&gt;
+
+				&lt;MainRefTable&gt;a&lt;/MainRefTable&gt;
+
+				&lt;Fields refTable="a" name="ID_SITE_SUPPORT_LANGUAGE" dbType="NUMBER" jspType="int_text" isShow="0"&gt;
+
+					&lt;NameColumn isUseProperties="0"&gt;
+
+						&lt;StringData&gt;PK&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0"&gt;
+
+					&lt;NameColumn isUseProperties="0"&gt;
+
+						&lt;StringData&gt;PK&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="CUSTOM_LANGUAGE" dbType="VARCHAR" jspType="text" isShow="true" length="20"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG"&gt;
+
+						&lt;StringData&gt;Код локали&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="NAME_CUSTOM_LANGUAGE" dbType="VARCHAR" jspType="text" isShow="true" length="40"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG"&gt;
+
+						&lt;StringData&gt;Название языка&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Table table="SITE_SUPPORT_LANGUAGE" ref="a"/&gt;
+
+			&lt;/QueryArea&gt;
+
+			&lt;TargetAreaName isUseProperties="1" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+				&lt;StringData&gt;index.jsp.action&lt;/StringData&gt;
+
+			&lt;/TargetAreaName&gt;
+
+			&lt;TargetModule action="index"&gt;
+
+				&lt;TargetModuleName isUseProperties="1" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;page.main.3&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+			&lt;TargetModule action="lookup" module="test.hello-lang"&gt;
+
+				&lt;TargetModuleName isUseProperties="0"&gt;
+
+					&lt;StringData&gt;Hello lang&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+				&lt;TargetModuleLookup type="index"/&gt;
+
+				&lt;TargetModuleLookup type="insert"/&gt;
+
+				&lt;TargetModuleLookup type="change"/&gt;
+
+				&lt;TargetModuleLookup type="delete"/&gt;
+
+			&lt;/TargetModule&gt;
+
+		&lt;/Content&gt;
+
+	&lt;/Module&gt;
+
+	&lt;Module name="test.hello-lang" authApplication="SYSADMIN" authModule="TEST" isDelete="1" type="lookup" lookupPK="ID_SITE_SUPPORT_LANGUAGE"&gt;
+
+		&lt;Content action="index" authAccess="S"&gt;
+
+			&lt;security-role-ref&gt;
+
+				&lt;portlet:role-name&gt;webmill.admin&lt;/portlet:role-name&gt;
+
+			&lt;/security-role-ref&gt;
+
+			&lt;security-role-ref&gt;
+
+				&lt;portlet:role-name&gt;webmill.article-select&lt;/portlet:role-name&gt;
+
+			&lt;/security-role-ref&gt;
+
+			&lt;Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+				&lt;StringData&gt;index.jsp.title&lt;/StringData&gt;
+
+			&lt;/Title&gt;
+
+			&lt;QueryArea&gt;
+
+				&lt;PrimaryKey&gt;ID_SITE_CTX_ARTICLE&lt;/PrimaryKey&gt;
+
+				&lt;PrimaryKeyType&gt;number&lt;/PrimaryKeyType&gt;
+
+				&lt;MainRefTable&gt;a&lt;/MainRefTable&gt;
+
+				&lt;Fields refTable="a" name="ID_HELLO" dbType="NUMBER" jspType="int_text" isShow="true"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO"&gt;
+
+						&lt;StringData&gt;##&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_CODE" dbType="VARCHAR" jspType="text" isShow="true" length="50"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello code&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_TEXT" dbType="VARCHAR" jspType="text" isShow="true" length="100"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello text&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Table table="HELLO_TEXT" ref="a"/&gt;
+
+				&lt;Order field="ID_HELLO" direction="DESC"/&gt;
+
+			&lt;/QueryArea&gt;
+
+			&lt;TargetAreaName isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+				&lt;StringData&gt;index.jsp.action&lt;/StringData&gt;
+
+			&lt;/TargetAreaName&gt;
+
+			&lt;TargetModule action="index"&gt;
+
+				&lt;TargetModuleName isUseProperties="0" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;Вернуться в начало раздела&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+			&lt;TargetModule action="insert"&gt;
+
+				&lt;TargetModuleName isUseProperties="1" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;button.add&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+			&lt;TargetModule action="change"&gt;
+
+				&lt;TargetModuleName isUseProperties="1" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;button.change&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+			&lt;TargetModule action="delete"&gt;
+
+				&lt;TargetModuleName isUseProperties="1" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;button.delete&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+		&lt;/Content&gt;
+
+		&lt;Content action="insert" authAccess="I"&gt;
+
+			&lt;security-role-ref&gt;
+
+				&lt;portlet:role-name&gt;webmill.admin&lt;/portlet:role-name&gt;
+
+			&lt;/security-role-ref&gt;
+
+			&lt;Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+				&lt;StringData&gt;add hello&lt;/StringData&gt;
+
+			&lt;/Title&gt;
+
+			&lt;QueryArea&gt;
+
+				&lt;PrimaryKey&gt;ID_SITE_CTX_ARTICLE&lt;/PrimaryKey&gt;
+
+				&lt;PrimaryKeyType&gt;number&lt;/PrimaryKeyType&gt;
+
+				&lt;MainRefTable&gt;a&lt;/MainRefTable&gt;
+
+				&lt;Fields refTable="a" name="ID_HELLO" dbType="NUMBER" jspType="int_text" isShow="true"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO"&gt;
+
+						&lt;StringData&gt;##&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_CODE" dbType="VARCHAR" jspType="text" isShow="true" length="50"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello code&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_TEXT" dbType="VARCHAR" jspType="text" isShow="true" length="100"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello text&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Table table="HELLO_TEXT" ref="a"/&gt;
+
+			&lt;/QueryArea&gt;
+
+			&lt;TargetModule action="index"&gt;
+
+				&lt;TargetModuleName isUseProperties="0" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;Вернуться в начало раздела&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+		&lt;/Content&gt;
+
+		&lt;Content action="change" authAccess="U"&gt;
+
+			&lt;security-role-ref&gt;
+
+				&lt;portlet:role-name&gt;webmill.admin&lt;/portlet:role-name&gt;
+
+			&lt;/security-role-ref&gt;
+
+			&lt;Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+				&lt;StringData&gt;change hello&lt;/StringData&gt;
+
+			&lt;/Title&gt;
+
+			&lt;QueryArea&gt;
+
+				&lt;PrimaryKey&gt;ID_SITE_CTX_ARTICLE&lt;/PrimaryKey&gt;
+
+				&lt;PrimaryKeyType&gt;number&lt;/PrimaryKeyType&gt;
+
+				&lt;MainRefTable&gt;a&lt;/MainRefTable&gt;
+
+				&lt;Fields refTable="a" name="ID_HELLO" dbType="NUMBER" jspType="int_text" isShow="true"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO"&gt;
+
+						&lt;StringData&gt;##&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_CODE" dbType="VARCHAR" jspType="text" isShow="true" length="50"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello code&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_TEXT" dbType="VARCHAR" jspType="text" isShow="true" length="100"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello text&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Table table="HELLO_TEXT" ref="a"/&gt;
+
+			&lt;/QueryArea&gt;
+
+			&lt;TargetModule action="index"&gt;
+
+				&lt;TargetModuleName isUseProperties="0" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;Вернуться в начало раздела&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+		&lt;/Content&gt;
+
+		&lt;Content action="delete" authAccess="D"&gt;
+
+			&lt;security-role-ref&gt;
+
+				&lt;portlet:role-name&gt;webmill.admin&lt;/portlet:role-name&gt;
+
+			&lt;/security-role-ref&gt;
+
+			&lt;Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+				&lt;StringData&gt;delete hello&lt;/StringData&gt;
+
+			&lt;/Title&gt;
+
+			&lt;QueryArea&gt;
+
+				&lt;PrimaryKey&gt;ID_SITE_CTX_ARTICLE&lt;/PrimaryKey&gt;
+
+				&lt;PrimaryKeyType&gt;number&lt;/PrimaryKeyType&gt;
+
+				&lt;MainRefTable&gt;a&lt;/MainRefTable&gt;
+
+				&lt;Fields refTable="a" name="ID_HELLO" dbType="NUMBER" jspType="int_text" isShow="true"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO"&gt;
+
+						&lt;StringData&gt;##&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_CODE" dbType="VARCHAR" jspType="text" isShow="true" length="50"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello code&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Fields refTable="a" name="HELLO_TEXT" dbType="VARCHAR" jspType="text" isShow="true" length="100"&gt;
+
+					&lt;NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS"&gt;
+
+						&lt;StringData&gt;hello text&lt;/StringData&gt;
+
+					&lt;/NameColumn&gt;
+
+				&lt;/Fields&gt;
+
+				&lt;Table table="HELLO_TEXT" ref="a"/&gt;
+
+			&lt;/QueryArea&gt;
+
+			&lt;TargetModule action="index"&gt;
+
+				&lt;TargetModuleName isUseProperties="0" storage="mill.locale.main"&gt;
+
+					&lt;StringData&gt;Вернуться в начало раздела&lt;/StringData&gt;
+
+				&lt;/TargetModuleName&gt;
+
+			&lt;/TargetModule&gt;
+
+		&lt;/Content&gt;
+
+	&lt;/Module&gt;
+
+&lt;/MemberArea&gt;
+
+</PreText>
+
+</Article>
+

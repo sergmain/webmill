@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+/*
+
+ * org.riverock.portlet - Portlet Library
+
+ * 
+
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+
+ * 
+
+ * Riverock - The Open-source Java Development Community
+
+ * http://www.riverock.org
+
+ * 
+
+ * 
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public
+
+ * License as published by the Free Software Foundation; either
+
+ * version 2 of the License, or (at your option) any later version.
+
+ *
+
+ * This library is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+
+ * General Public License for more details.
+
+ *
+
+ * You should have received a copy of the GNU General Public
+
+ * License along with this library; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ *
+
+ */
+
+-->
+
+<FaqBlock>
+
+	<FaqGroup>
+
+		<FaqGroupName>Test #2</FaqGroupName>
+
+		<FaqItem>
+
+			<FaqItemDate>01.сен.2002</FaqItemDate>
+
+			<FaqItemTime>19:29</FaqItemTime>
+
+			<FaqItemQuestion>&lt;para&gt;test &amp;#160;2-2&lt;/para&gt;</FaqItemQuestion>
+
+			<FaqItemAnswer>&lt;para&gt;test &amp;#160;2-2&lt;/para&gt;</FaqItemAnswer>
+
+		</FaqItem>
+
+		<FaqItem>
+
+			<FaqItemDate>01.сен.2002</FaqItemDate>
+
+			<FaqItemTime>19:28</FaqItemTime>
+
+			<FaqItemQuestion>&lt;para&gt;test &amp;#160;2-1&lt;/para&gt;</FaqItemQuestion>
+
+			<FaqItemAnswer>&lt;para&gt;test &amp;#160;2-1&lt;/para&gt;</FaqItemAnswer>
+
+		</FaqItem>
+
+	</FaqGroup>
+
+	<FaqGroup>
+
+		<FaqGroupName>TEST</FaqGroupName>
+
+		<FaqItem>
+
+			<FaqItemDate>22.авг.2002</FaqItemDate>
+
+			<FaqItemTime>22:46</FaqItemTime>
+
+			<FaqItemQuestion>&lt;para&gt;test&lt;/para&gt;</FaqItemQuestion>
+
+			<FaqItemAnswer>&lt;para&gt;test&lt;/para&gt;</FaqItemAnswer>
+
+		</FaqItem>
+
+	</FaqGroup>
+
+</FaqBlock>
+
