@@ -2496,5 +2496,207 @@ public class DatabaseManager
 
     }
 
+
+
+    public static int runSQL(DatabaseAdapter db, String query, Object[] params, int[] types)
+
+            throws SQLException
+
+    {
+
+        int n = 0;
+
+        Statement stmt = null;
+
+        PreparedStatement pstm = null;
+
+
+
+        try
+
+        {
+
+            if (params == null)
+
+            {
+
+                stmt = db.createStatement();
+
+                n = stmt.executeUpdate(query);
+
+            }
+
+            else
+
+            {
+
+                pstm = db.prepareStatement(query);
+
+                for (int i = 0; i < params.length; i++)
+
+                {
+
+                    if (params[i]!=null)
+
+                        pstm.setObject(i + 1, params[i], types[i]);
+
+                    else
+
+                        pstm.setNull(i + 1, types[i]);
+
+                }
+
+
+
+                n = pstm.executeUpdate();
+
+                stmt = pstm;
+
+            }
+
+        }
+
+        catch (SQLException e)
+
+        {
+
+            log.error("SQL query:\n" + query);
+
+            if (params != null)
+
+            {
+
+                for (int ii = 0; ii < params.length; ii++)
+
+
+
+                    log.error("parameter #" + (ii + 1) + ": " + (params[ii] != null ? params[ii].toString() : null));
+
+            }
+
+            log.error("SQLException", e);
+
+            throw e;
+
+        }
+
+        finally
+
+        {
+
+            close(stmt);
+
+            stmt = null;
+
+            pstm = null;
+
+        }
+
+        return n;
+
+    }
+
+
+
+    public static Long getLongValue(DatabaseAdapter db, String sql, Object[] params)
+
+            throws SQLException
+
+    {
+
+        Statement stmt = null;
+
+        PreparedStatement pstm;
+
+        ResultSet rs = null;
+
+
+
+        try
+
+        {
+
+            if (params == null)
+
+            {
+
+                stmt = db.createStatement();
+
+                rs = stmt.executeQuery(sql);
+
+            }
+
+            else
+
+            {
+
+                pstm = db.prepareStatement(sql);
+
+                for (int i = 0; i < params.length; i++)
+
+                    pstm.setObject(i + 1, params[i]);
+
+
+
+                rs = pstm.executeQuery();
+
+                stmt = pstm;
+
+            }
+
+
+
+            if (rs.next())
+
+            {
+
+                long tempLong = rs.getLong(1);
+
+                if (rs.wasNull())
+
+                    return null;
+
+
+
+                return new Long(tempLong);
+
+            }
+
+            return null;
+
+        }
+
+        catch (SQLException e)
+
+        {
+
+            log.error("error getting long value fron sql '" + sql + "'", e);
+
+            throw e;
+
+        }
+
+        finally
+
+        {
+
+            close(rs, stmt);
+
+            rs = null;
+
+            stmt = null;
+
+            pstm = null;
+
+        }
+
+
+
+    }
+
+
+
+
+
 }
 
