@@ -78,6 +78,8 @@ import java.util.Enumeration;
 
 import java.util.Hashtable;
 
+import java.util.Iterator;
+
 
 
 public class TestHarness
@@ -156,13 +158,11 @@ public class TestHarness
 
 
 
-            e = test.getPartsHash().keys();
-
-            while (e.hasMoreElements())
+            for ( Iterator it = test.getPartsHash().keySet().iterator(); it.hasNext(); )
 
             {
 
-                String key = (String) e.nextElement();
+                String key = (String) it.next();
 
                 Object obj = test.getPartsHash().get(key);
 
