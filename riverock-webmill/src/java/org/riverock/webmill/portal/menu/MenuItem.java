@@ -29,143 +29,138 @@ import java.util.List;
 import java.util.Locale;
 import java.util.LinkedList;
 
+import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.generic.LocalizedStringInterface;
+import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.port.LocalizedString;
+import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
+import org.riverock.webmill.schema.core.SiteTemplateItemType;
+import org.riverock.webmill.schema.core.SiteCtxTypeItemType;
+import org.riverock.webmill.core.GetSiteTemplateItem;
+import org.riverock.webmill.core.GetSiteCtxTypeItem;
+import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.exception.PortalPersistenceException;
+import org.riverock.webmill.portlet.context.CtxContextFactory;
+import org.apache.log4j.Logger;
 
 /**
  *
  * $Id$
  *
  */
-public class MenuItem implements MenuItemInterface
-{
-    private Long id = null;
-    private Long id_top = null;
-    private Long id_portlet = null;
+public class MenuItem implements MenuItemInterface{
+    private static Logger log = Logger.getLogger(CtxContextFactory.class);
+
+    private SiteCtxCatalogItemType ctx = null;
     private String nameTemplate = null;
     private String type = "";
-    private LocalizedString str = null;
-    private List catalogItems = new LinkedList();  // List of MenuItem
-    private String url = null;
 
-    protected void finalize() throws Throwable
-    {
-        setStr(null);
-        setType(null);
-        setNameTemplate(null);
-        setUrl(null);
-        if (getCatalogItems() != null)
-        {
+    private LocalizedStringInterface str = null;
+    private List catalogItems = new LinkedList();  // List of MenuItem
+
+    protected void finalize() throws Throwable{
+        str = null;
+        type = null;
+        nameTemplate = null;
+        if (getCatalogItems() != null){
             getCatalogItems().clear();
-            setCatalogItems(null);
+            catalogItems = null;
         }
 
         super.finalize();
     }
 
-    public Long getTopId() { return this.id_top; }
-    public Long getId() { return this.id; }
+    public Long getTopId() { return ctx.getIdTopCtxCatalog(); }
+    public Long getId() { return ctx.getIdSiteCtxCatalog(); }
     public List getSubTree() { return this.catalogItems;}
     public void setSubTree(List list){ this.catalogItems = list;}
 
     public String toString()
     {
         String st;
-        try
-        {
+        try{
             st = str.getString(Locale.ENGLISH);
         }
-        catch (java.io.UnsupportedEncodingException e)
-        {
+        catch (java.io.UnsupportedEncodingException e){
             st = "error";
         }
-        return "[id:"+id+", id_top:"+id_top+" type:"+type+", portletId:"+id_portlet+", template:"+nameTemplate+", str:"+st+", url:"+url+"]";
+        return
+            "[id:"+getId()+", idTop:"+getIdTop()+" type:"+type+", portletId:"+getIdPortlet()+", " +
+            "template:"+nameTemplate+", str:"+st+", url:"+getUrl()+"]";
     }
 
-    public MenuItem(Long id_, Long id_top_, Long id_portlet_, String type_, LocalizedString str_,
-                       String nameTemplate_, String url_ )
-    {
-        this.setId(id_);
-        this.setIdTop(id_top_);
-        this.setIdPortlet(id_portlet_);
-        this.setType(type_);
-        this.setStr(str_);
-        this.setNameTemplate(nameTemplate_);
-        this.setUrl(url_);
+    public MenuItem(DatabaseAdapter db_, SiteCtxCatalogItemType ctxItem) throws PortalException{
+
+        this.ctx = ctxItem;
+        if (log.isDebugEnabled()){
+            log.debug("ctxItem: "+ctx);
+            if (ctx!=null){
+                log.debug("ctxItem.getIdSiteCtxCatalog(): "+ctx.getIdSiteCtxCatalog());
+                log.debug("ctxItem.getIdSiteCtxLangCatalog(): "+ctx.getIdSiteCtxLangCatalog());
+                log.debug("ctxItem.getIdSiteTemplate(): "+ctx.getIdSiteTemplate());
+                log.debug("ctxItem.getIdSiteCtxType(): "+ctx.getIdSiteCtxType());
+            }
+        }
+
+        this.str = new LocalizedString(
+            Boolean.TRUE.equals(ctx.getIsUseProperties()),
+            ctx.getKeyMessage(),
+            ctx.getStorage()
+        );
+
+        try {
+            SiteTemplateItemType template = GetSiteTemplateItem.getInstance(db_, ctx.getIdSiteTemplate()).item;
+            if (template!=null)
+                this.nameTemplate = template.getNameSiteTemplate();
+
+            SiteCtxTypeItemType ctxType = GetSiteCtxTypeItem.getInstance(db_, ctx.getIdSiteCtxType()).item;
+            if (ctxType!=null)
+                this.type = ctxType.getType();
+
+        } catch (PortalPersistenceException e) {
+            String es = "Error create MenuItem object";
+            log.error(es, e);
+            throw new PortalException(es, e);
+        }
     }
 
-    public void setId(Long id)
-    {
-        this.id = id;
+    public Long getIdTop(){
+        return ctx.getIdTopCtxCatalog();
     }
 
-    public Long getIdTop()
-    {
-        return this.id_top;
+    public Long getIdPortlet(){
+        return ctx.getIdContext();
     }
 
-    public void setIdTop(Long id_top)
-    {
-        this.id_top = id_top;
+    public Long getIdTemplate() {
+        return ctx.getIdSiteTemplate();
     }
 
-    public Long getIdPortlet()
-    {
-        return this.id_portlet;
-    }
-
-    public void setIdPortlet(Long id_portlet)
-    {
-        this.id_portlet = id_portlet;
-    }
-
-    public String getNameTemplate()
-    {
+    public String getNameTemplate(){
         return this.nameTemplate;
     }
 
-    public void setNameTemplate(String nameTemplate)
-    {
-        this.nameTemplate = nameTemplate;
+    public Long getIdType() {
+        return ctx.getIdSiteCtxType();
     }
 
-    public String getType()
-    {
+    public String getType(){
         return this.type;
     }
 
-    public void setType(String type)
-    {
-        this.type = type;
-    }
-
-    public LocalizedString getStr()
-    {
+    public LocalizedStringInterface getStr(){
         return this.str;
     }
 
-    public void setStr(LocalizedString str)
-    {
-        this.str = str;
-    }
-
-    public List getCatalogItems()
-    {
+    public List getCatalogItems(){
         return this.catalogItems;
     }
 
-    public void setCatalogItems(List catalogItems)
-    {
-        this.catalogItems = catalogItems;
+    public String getUrl(){
+        return ctx.getCtxPageUrl();
     }
 
-    public String getUrl()
-    {
-        return this.url;
+    public String getUrlResource() {
+        return ctx.getUrlResource();
     }
-
-    public void setUrl(String url)
-    {
-        this.url = url;
-    }
-
 }

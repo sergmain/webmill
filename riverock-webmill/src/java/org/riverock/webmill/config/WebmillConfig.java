@@ -106,15 +106,16 @@ public class WebmillConfig
                 else
                     dir = dir.replace('\\', '/');
 
-                if (!dir.endsWith(File.separator))
-                    dir += File.separator;
-
                 File dirTest = new File(dir);
                 if (!dirTest.exists())
                 {
                     log.error("Specified temp directory '" + dir + "' not exists. Set to default java input/output temp directory");
                     dir = System.getProperty("java.io.tmpdir");
                 }
+
+                if (!dir.endsWith(File.separator))
+                    dir += File.separator;
+
                 getConfig().setWebmillTempDir(dir);
                 getConfig().setIsTempDirInit(Boolean.TRUE);
             }

@@ -38,18 +38,18 @@ import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.core.GetSiteListSiteItem;
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portal.menu.MenuLanguageInterface;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.schema.core.SiteListSiteItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.site.SiteTemplateList;
+import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class PortalInfo
+public final class PortalInfo
 {
     static
     {
@@ -65,14 +65,14 @@ public class PortalInfo
 
     private static Logger log = Logger.getLogger( PortalInfo.class );
 
-    public SiteListSiteItemType sites = new SiteListSiteItemType();
+    private SiteListSiteItemType sites = new SiteListSiteItemType();
+    private SiteSupportLanguageListType supportLanguage = null;
 
     private Locale defaultLocale = null;
 
     private PortalXsltList xsltList = null;
     private SiteTemplateList templates = null;
 
-    public SiteSupportLanguageListType supportLanguage = null;
     private Map supportLanguageMap = null;
     private Map languageMenuMap = null;
 
@@ -83,9 +83,9 @@ public class PortalInfo
         if (idSiteSupportLanguage==null)
             return false;
 
-        for (int i=0;i<supportLanguage.getSiteSupportLanguageCount(); i++)
+        for (int i=0;i<getSupportLanguage().getSiteSupportLanguageCount(); i++)
         {
-            SiteSupportLanguageItemType item = supportLanguage.getSiteSupportLanguage(i);
+            SiteSupportLanguageItemType item = getSupportLanguage().getSiteSupportLanguage(i);
             if (idSiteSupportLanguage.equals(item.getIdSiteSupportLanguage()) )
                 return true;
         }
@@ -97,18 +97,18 @@ public class PortalInfo
         if (log.isDebugEnabled())
         {
             log.debug("get idSupportLanguage for locale "+locale.toString());
-            log.debug("supportLanguage "+supportLanguage);
+            log.debug("supportLanguage "+getSupportLanguage());
         }
 
-        if (supportLanguage==null)
+        if (getSupportLanguage()==null)
             return null;
 
         if (supportLanguageMap==null)
         {
-            supportLanguageMap = new HashMap(supportLanguage.getSiteSupportLanguageCount());
-            for (int i=0;i<supportLanguage.getSiteSupportLanguageCount(); i++)
+            supportLanguageMap = new HashMap(getSupportLanguage().getSiteSupportLanguageCount());
+            for (int i=0;i<getSupportLanguage().getSiteSupportLanguageCount(); i++)
             {
-                SiteSupportLanguageItemType item = supportLanguage.getSiteSupportLanguage(i);
+                SiteSupportLanguageItemType item = getSupportLanguage().getSiteSupportLanguage(i);
                 supportLanguageMap.put(item.getCustomLanguage(), item.getIdSiteSupportLanguage() );
             }
         }
@@ -138,7 +138,7 @@ public class PortalInfo
     private static long lastReadData = 0;
     private final static long LENGTH_TIME_PERIOD = 30000;
     private static Object syncObject = new Object();
-
+    // Todo replace synchronized with synchronized(syncObject)
     public synchronized static PortalInfo getInstance(DatabaseAdapter db_, String serverName)
         throws PortalException
     {
@@ -183,17 +183,17 @@ public class PortalInfo
         try {
             sites = GetSiteListSiteItem.getInstance( db_, siteId ).item;
 
-            if (sites.getDefLanguage()==null)
-                sites.setDefLanguage("");
+            if (getSites().getDefLanguage()==null)
+                getSites().setDefLanguage("");
 
-            if (sites.getDefLanguage()!= null && sites.getDefLanguage().length()>0 &&
-                sites.getDefCountry() != null && sites.getDefCountry().length()>0 )
+            if (getSites().getDefLanguage()!= null && getSites().getDefLanguage().length()>0 &&
+                getSites().getDefCountry() != null && getSites().getDefCountry().length()>0 )
             {
 
                 defaultLocale = new Locale(
-                    sites.getDefLanguage(),
-                    sites.getDefCountry(),
-                    sites.getDefVariant()==null?"":sites.getDefVariant()
+                    getSites().getDefLanguage(),
+                    getSites().getDefCountry(),
+                    getSites().getDefVariant()==null?"":getSites().getDefVariant()
                 );
 
                 if (log.isDebugEnabled())
@@ -244,44 +244,37 @@ public class PortalInfo
 
     public PortalInfo(){}
 
-    public static PortalInfo getInstance(DatabaseAdapter db_, java.lang.Long id_)
-    {
+    public static PortalInfo getInstance(DatabaseAdapter db_, java.lang.Long id_) {
         return new PortalInfo();
     }
 
-    public void reinit()
-    {
-        synchronized(syncObject){
+    public void reinit() {
+        synchronized(syncObject) {
             portatInfoMap.clear();
         }
         lastReadData = 0;
     }
 
-    public void terminate(java.lang.Long id_)
-    {
-        synchronized(syncObject){
+    public void terminate(java.lang.Long id_) {
+        synchronized(syncObject) {
             portatInfoMap.clear();
         }
         lastReadData = 0;
     }
 
-    public Long getSiteId()
-    {
+    public Long getSiteId() {
         return siteId;
     }
 
-    public Locale getDefaultLocale()
-    {
+    public Locale getDefaultLocale() {
         return defaultLocale;
     }
 
-    public PortalXsltList getXsltList()
-    {
+    public PortalXsltList getXsltList() {
         return this.xsltList;
     }
 
-    public SiteTemplateList getTemplates()
-    {
+    public SiteTemplateList getTemplates() {
         return templates;
     }
 
@@ -297,22 +290,24 @@ public class PortalInfo
         }
     }
 
-    public MenuLanguageInterface getMenu(String locale)
-    {
+    public MenuLanguageInterface getMenu(String locale) {
         MenuLanguageInterface tempCat = null;
         if (locale!=null)
             tempCat = (MenuLanguageInterface)languageMenuMap.get(locale);
 
         if (tempCat!=null)
             return tempCat;
+        else
+            log.warn("Menu for locale "+locale+" not found");
 
-        log.warn("Menu for locale "+locale+" not found");
-        log.warn("Dump menu");
-//        for (int i = 0; i < sc.getMenuLanguageCount(); i++)
-//        {
-//            tempCat = sc.getMenuLanguage(i);
-//            log.warn("MenuLanguage: "+tempCat.getLocaleStr()+", lang "+tempCat.getLang());
-//        }
         return null;
+    }
+
+    public SiteListSiteItemType getSites() {
+        return sites;
+    }
+
+    public SiteSupportLanguageListType getSupportLanguage() {
+        return supportLanguage;
     }
 }

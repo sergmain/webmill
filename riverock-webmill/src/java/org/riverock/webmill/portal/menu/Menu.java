@@ -25,21 +25,22 @@
 
 package org.riverock.webmill.portal.menu;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ListIterator;
-
-import org.riverock.common.tools.RsetTools;
+import org.apache.log4j.Logger;
 import org.riverock.common.collections.TreeUtils;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.port.LocalizedString;
+import org.riverock.interfaces.portlet.menu.MenuInterface;
+import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.webmill.core.GetSiteCtxCatalogWithIdSiteCtxLangCatalogList;
+import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.main.Constants;
+import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
+import org.riverock.webmill.schema.core.SiteCtxCatalogListType;
 import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
 
-import org.apache.log4j.Logger;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.*;
 
 /**
  * $Id$
@@ -48,11 +49,16 @@ public class Menu implements MenuInterface
 {
     private static Logger log = Logger.getLogger( Menu.class );
 
-    private SiteCtxLangCatalogItemType item;
-    private List menuItem = new LinkedList();           // здесь находится дерево меню
+    private List menuItem = new LinkedList();           // contains tree of menu
+    private boolean isDefault = false;
+    private String catalogCode = null;
 
-    public List getMenuItem() {
-        return menuItem;
+    public boolean getIsDefault(){
+        return isDefault;
+    }
+
+    public String getCatalogCode(){
+        return catalogCode;
     }
 
     public MenuItemInterface searchMenuItem(Long id_)
@@ -74,6 +80,9 @@ public class Menu implements MenuInterface
 
     private MenuItemInterface searchMenuItemInternal(List v, Long id_)
     {
+        if (v==null || id_==null)
+            return null;
+
         ListIterator it = v.listIterator();
         while (it.hasNext()) {
             MenuItemInterface ci = (MenuItemInterface)it.next();
@@ -84,6 +93,10 @@ public class Menu implements MenuInterface
         }
 
         return null;
+    }
+
+    public List getMenuItem() {
+        return menuItem;
     }
 
     protected void finalize() throws Throwable
@@ -100,25 +113,12 @@ public class Menu implements MenuInterface
     {
     }
 
-    public boolean getIsDefault()
-    {
-        if (item==null)
-            return false;
-
-        return Boolean.TRUE.equals( item.getIsDefault() );
-    }
-
-    public String getCatalogCode()
-    {
-        if (item==null)
-            return null;
-
-        return item.getCatalogCode();
-    }
-
-    // return name of template for 'index' page
-    private String getIndexTemplate(List v)
-    {
+    /**
+     *
+     * @param v
+     * @return return name of template for 'index' page
+     */
+    private MenuItemInterface getIndexTemplate(List v){
         if (v == null)
             return null;
 
@@ -127,16 +127,16 @@ public class Menu implements MenuInterface
             MenuItemInterface ctxItem = (MenuItemInterface)it.next();
 
             if (Constants.CTX_TYPE_INDEX.equals(ctxItem.getType()))
-                return ctxItem.getNameTemplate();
+                return ctxItem;
 
-            String s = getIndexTemplate(ctxItem.getCatalogItems());
-            if (s != null)
-                return s;
+            ctxItem = getIndexTemplate(ctxItem.getCatalogItems());
+            if (ctxItem != null)
+                return ctxItem;
         }
         return null;
     }
 
-    public String getIndexTemplate() {
+    public MenuItemInterface getIndexMenuItem() {
         return getIndexTemplate(menuItem);
     }
 
@@ -159,61 +159,33 @@ public class Menu implements MenuInterface
         return false;
     }
 
-    static String sql_ = null;
-    static
-    {
-        sql_ =
-            "select a.ID_SITE_CTX_CATALOG, a.ID_TOP_CTX_CATALOG, c.TYPE, a.ID_CONTEXT, " +
-            "       a.IS_USE_PROPERTIES, a.KEY_MESSAGE, a.STORAGE , " +
-            "       d.NAME_SITE_TEMPLATE, a.CTX_PAGE_URL " +
-            "from   SITE_CTX_CATALOG  a, SITE_CTX_TYPE c , SITE_TEMPLATE d  " +
-            "where  a.ID_SITE_CTX_LANG_CATALOG=? and  " +
-            "       a.ID_SITE_CTX_TYPE=c.ID_SITE_CTX_TYPE and " +
-            "       a.ID_SITE_TEMPLATE=d.ID_SITE_TEMPLATE " +
-            "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC ";
+    public Menu(DatabaseAdapter db_, SiteCtxLangCatalogItemType item_) throws Exception{
 
-        try
-        {
-            MenuInterface obj = new Menu();
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, obj.getClass() );
+        if (item_==null){
+            throw new PortalException("Item of menu is null");
         }
-        catch(Exception e) {
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-        }
-        catch(Error e) {
-            log.error("Error in registerSql, sql\n"+sql_, e);
-        }
-    }
 
-    public Menu(DatabaseAdapter db_, SiteCtxLangCatalogItemType item_)
-        throws Exception
-    {
-        this.item = item_;
+        isDefault = item_.getIsDefault().booleanValue();
+        catalogCode = item_.getCatalogCode();
 
-        if (log.isDebugEnabled())
-            log.debug("#33.70.00 ");
+        if (log.isDebugEnabled()) log.debug("#33.70.00 ");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
-            ps = db_.prepareStatement(sql_);
-            ps.setObject(1, this.item.getIdSiteCtxLangCatalog() );
+        try{
+            SiteCtxCatalogListType catalogList =
+                    GetSiteCtxCatalogWithIdSiteCtxLangCatalogList.getInstance(db_, item_.getIdSiteCtxLangCatalog()).item;
 
-            rs = ps.executeQuery();
+            List list = catalogList.getSiteCtxCatalogAsReference();
+            Collections.sort(list, new MenuItemComparator());
 
-            while (rs.next())
-            {
-                menuItem.add(
-                    new MenuItem(
-                        RsetTools.getLong(rs, "ID_SITE_CTX_CATALOG"),
-                        RsetTools.getLong(rs, "ID_TOP_CTX_CATALOG"),
-                        RsetTools.getLong(rs, "ID_CONTEXT"),
-                        RsetTools.getString(rs, "TYPE"),
-                        new LocalizedString(rs),
-                        RsetTools.getString(rs, "NAME_SITE_TEMPLATE"),
-                        RsetTools.getString(rs, "CTX_PAGE_URL") )
-                );
+            Iterator it = list.iterator();
+            while (it.hasNext()){
+                SiteCtxCatalogItemType item = (SiteCtxCatalogItemType)it.next();
+
+                // Dont include menuitem with id_template==null to menu
+                if (item.getIdSiteTemplate()!=null)
+                    menuItem.add(new MenuItem(db_, item));
             }
         }
         catch(Exception e) {
@@ -235,9 +207,40 @@ public class Menu implements MenuInterface
         menuItem = TreeUtils.rebuildTree((LinkedList)menuItem);
 
         if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
-
     }
 
     public void reinit(){}
 
+
+    private class MenuItemComparator implements Comparator {
+        public int compare(Object o1, Object o2) {
+
+            if (o1==null && o2==null)
+                return 0;
+            if (o1==null)
+                return 1;
+            if (o2==null)
+                return -1;
+
+            // "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC ";
+            if (((SiteCtxCatalogItemType)o1).getIdTopCtxCatalog().equals(((SiteCtxCatalogItemType)o2).getIdTopCtxCatalog()))
+            {
+                if (((SiteCtxCatalogItemType)o1).getOrderField()==null &&
+                        ((SiteCtxCatalogItemType)o2).getOrderField()==null)
+                    return 0;
+
+                if (((SiteCtxCatalogItemType)o1).getOrderField()!=null &&
+                        ((SiteCtxCatalogItemType)o2).getOrderField()==null)
+                    return -1;
+
+                if (((SiteCtxCatalogItemType)o1).getOrderField()==null &&
+                        ((SiteCtxCatalogItemType)o2).getOrderField()!=null)
+                    return 1;
+
+                return ((SiteCtxCatalogItemType)o1).getOrderField().compareTo(((SiteCtxCatalogItemType)o2).getOrderField());
+            }
+            else
+                return ((SiteCtxCatalogItemType)o1).getIdTopCtxCatalog().compareTo(((SiteCtxCatalogItemType)o2).getIdTopCtxCatalog());
+        }
+    }
 }
