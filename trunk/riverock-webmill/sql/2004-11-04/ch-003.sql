@@ -1,0 +1,28 @@
+update SITE_CONTENT_CSS a
+set ID_LANGUAGE=
+(
+select ID_LANGUAGE 
+from SITE_SUPPORT_LANGUAGE
+where ID_SITE_SUPPORT_LANGUAGE = 
+(
+select min(ID_SITE_SUPPORT_LANGUAGE) 
+from SITE_SUPPORT_LANGUAGE z
+where a.id_site=z.id_site
+)
+),
+
+CUSTOM_LANGUAGE=
+(
+select CUSTOM_LANGUAGE 
+from SITE_SUPPORT_LANGUAGE
+where ID_SITE_SUPPORT_LANGUAGE = 
+(
+select min(ID_SITE_SUPPORT_LANGUAGE) 
+from SITE_SUPPORT_LANGUAGE z
+where a.id_site=z.id_site
+)
+)
+
+
+
+/

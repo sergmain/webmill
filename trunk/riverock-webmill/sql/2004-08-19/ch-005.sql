@@ -1,8 +1,0 @@
-update SITE_CONTENT_CSS
-set OLD_ID_SITE_CONTEXT_CSS=ID_SITE_CONTENT_CSS
-/
-
-commit
-/
-
-

@@ -56,8 +56,10 @@
 	<DbTablePrefix>SITE_CTX_ARTICLE</DbTablePrefix>
 	<DbTablePrefix>MAIN_NEWS</DbTablePrefix>
 	<DbTablePrefix>MAIN_LIST_NEWS</DbTablePrefix>
+	<DbTablePrefix>MAIN_LANGUAGE</DbTablePrefix>
 
 	<TableToList>MAIN_NEWS</TableToList>
+	<TableToList>MAIN_LANGUAGE</TableToList>
 	<TableToList>SITE_CTX_CATALOG</TableToList>
 	<TableToList>SITE_CTX_TYPE</TableToList>
 	<TableToList>SITE_CONTENT_CSS</TableToList>
