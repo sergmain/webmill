@@ -75,6 +75,7 @@
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
 
         <path refid="classpath-${java.target}"/>

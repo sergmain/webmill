@@ -1,0 +1,7 @@
+Интегрировать пакет htmlarea.zip - заменить TEXTAREA на этот пакет
+
+# ----------------------------------------------------------------------------
+# htmlArea - Readme File
+# Copyright (C) 2002 interactivetools.com, inc., All Rights Reserved
+# http://www.interactivetools.com/
+# ----------------------------------------------------------------------------

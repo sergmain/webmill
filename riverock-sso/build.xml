@@ -48,13 +48,7 @@
     <property name="lib.dir" value="../riverock-lib/lib"/>
 
 
-    <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>
-
     <property file="../riverock.properties"/>
-
-    <!--    <property name="bcel.lib" value="BCEL.jar"/>-->
-<!--    <property name="hypersonic.lib" value="hsqldb.jar"/>-->
-<!--    <property name="common-httpclient.lib" value="commons-httpclient-2.0-alpha2.jar"/>-->
 
     <property name="site.name" value="_localhost"/>
     <property name="exclude" value="**/*.txt, **/*.bat, **/*.xml, **/*.sh, **/*.jav, **/*.mf, **/*.class,**/tmp_*.java"/>
@@ -102,6 +96,7 @@
         <pathelement location="${lib.dir}/${secure.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>

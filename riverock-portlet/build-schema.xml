@@ -36,10 +36,6 @@
     <property name="local-lib.dir" value="lib"/>
 
 
-    <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>
-<!--    <property name="castor.lib" value="castor-0.9.5.3-xml.jar"/>-->
-<!--    <property name="castor.lib" value="castor-0.9.5.2-xml-snapshot.jar"/>-->
-
     <property file="../riverock.properties"/>
 
     <property name="exclude" value="**/*.txt, **/*.bat, **/*.xml, **/*.sh, **/*.jav, **/*.mf, **/*.class,**/tmp_*.java"/>
@@ -58,7 +54,8 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${castor.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${castor-schema.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
 

@@ -1,162 +1,81 @@
 <?xml version="1.0" encoding="windows-1251"?>
-
 <!--
-
 /*
-
  * org.riverock.portlet - Portlet Library
-
  * 
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  * 
-
  * Riverock - The Open-source Java Development Community
-
  * http://www.riverock.org
-
  * 
-
  * 
-
  * This program is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
 -->
-
 <Prices xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="E:\sandbox\millengine\src\xsd\mill-import-price.xsd">
-
 	<!--Внимание! 
-
 Файл импорта обязательно должен начинаться тегом XML разметки: <?xml ... ?>
-
 Никакие лидирующие символы не допускаются- ни пробелы, ни переводы катетки, 
-
 ни какие другие.
 
-
-
 в теге <NameItem> все символы '<' доллжны быть заменены на &lt, 
-
 а символ '>' заменен на &gt
 
-
-
 Наличие пробелов, табуляций и переводов строки не является критичным.
-
 Можно хоть весь файл в одну строку.
 
-
-
 В принципе, этот файл действительный пример разметки и может быть 
-
 загружен в качестве теста.-->
-
 	<!-- XXX надо заменить на код прайса, указанный на сайте. 
-
 атрибут shopCode - символьный, 20 байт
-
 Код магазина должен быть в верхнем регистре-->
-
 	<PriceList shopCode="FACT">
-
 		<!--Обязательными атрибутами являются: itemID, price, curr
 
-
-
 Если необязательный атрибут не указан, то по умолчанию они равны:
-
 parentID="0" 
-
 isGroup="0" 
-
 isLoad="YES"
 
-
-
 Размерность и тип:
-
 isGroup: 1/0, numeric
-
 itemID: целое число
-
 parentID: целое число
-
 isLoad:  YES/NO символьный
-
 price: число с плавающей точкой, разделитель - точка
-
 curr: код валюты, символьный 10 байт, русский символ занимает 2 байта, английский - 1 байт
 
-
-
 Теги:
-
 NameItem:  символьный, 250 байт, русский символ занимает 2 байта, английский - 1 байт-->
-
 		<!-- пример со всеми инициализированными атрибутами -->
-
 		<Item itemID="2618" parentID="0" isGroup="0" isLoad="YES" price="198.88" curr="p.">
-
 			<NameItem>1-Наименование №0</NameItem>
-
 		</Item>
-
 		<!-- То же самое, но с использованием значений по умолчанию -->
-
 		<Item itemID="2617" price="198.50" curr="p.">
-
 			<NameItem>1-Наименование №1</NameItem>
-
 		</Item>
-
 	</PriceList>
-
 	<!-- В одном файле вы можете сохранить данные для всех ваших прайс-листов -->
-
 	<PriceList shopCode="DELAY">
-
 		<Item itemID="2618" parentID="0" isGroup="0" isLoad="YES" price="198.00" curr="p.">
-
 			<NameItem>Наименование №2</NameItem>
-
 		</Item>
-
 		<Item itemID="2617" price="198.00" curr="p.">
-
 			<NameItem>Наименование №3</NameItem>
-
 		</Item>
-
 	</PriceList>
-
 </Prices>
-
