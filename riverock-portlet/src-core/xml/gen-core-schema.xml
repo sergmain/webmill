@@ -78,6 +78,10 @@
 
 	<OrderField>ORDER_FIELD</OrderField>
 
+	<DbTablePrefix>MAIN_FORUM</DbTablePrefix>
+
+	<DbTablePrefix>MAIN_FORUM_THREADS</DbTablePrefix>
+
 	<DbTablePrefix>SITE_LIST_SITE</DbTablePrefix>
 
 	<DbTablePrefix>SITE_SUPPORT_LANGUAGE</DbTablePrefix>
