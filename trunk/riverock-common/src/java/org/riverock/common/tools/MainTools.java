@@ -88,7 +88,7 @@ public class MainTools
 
 
 
-    public static void putKey(Map map, String key, String value)
+    public static void putKey(Map map, Object key, Object value)
 
     {
 
@@ -100,13 +100,23 @@ public class MainTools
 
             map.put( key, value );
 
+            return;
+
         }
 
-        else if (obj instanceof List)
+
+
+        if (obj instanceof List)
 
         {
 
-            ((List)obj).add( value );
+            if (value instanceof List)
+
+                ((List)obj).addAll((List)value);
+
+            else
+
+                ((List)obj).add( value );
 
         }
 
@@ -116,9 +126,17 @@ public class MainTools
 
             List v = new ArrayList();
 
-            v.add(obj);
+            if (value instanceof List)
 
-            v.add( value );
+                v.addAll( (List)value );
+
+            else
+
+                v.add( value );
+
+
+
+            v.add(obj);
 
             map.remove( key );
 
