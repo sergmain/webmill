@@ -60,7 +60,7 @@
 
     <property name="Name" value="riverock-schema-support"/>
 
-    <property name="lastversion" value="4.0.2"/>
+    <property name="lastversion" value="4.0.3"/>
 
     <property name="java.target" value="1.4"/>
 
