@@ -1,450 +1,225 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
-
 /*
-
  * org.riverock.portlet - Portlet Library
-
  * 
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  * 
-
  * Riverock - The Open-source Java Development Community
-
  * http://www.riverock.org
-
  * 
-
  * 
-
  * This program is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
 -->
-
 <xs:schema xmlns:riverock-portlet-schema-core="http://portlet.riverock.org/xsd/riverock-portlet-schema-core.xsd" xmlns:riverock-sso="http://sso.riverock.org/xsd/riverock-sso.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
 	<xs:annotation>
-
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
-
 	</xs:annotation>
-
 	<xs:annotation>
-
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
-
 	</xs:annotation>
-
 	<xs:import namespace="http://sso.riverock.org/xsd/riverock-sso.xsd" schemaLocation="riverock-sso.xsd"/>
-
 	<xs:import namespace="http://portlet.riverock.org/xsd/riverock-portlet-schema-core.xsd" schemaLocation="riverock-portlet-schema-core.xsd"/>
-
 	<xs:complexType name="OrderType">
-
 		<xs:annotation>
-
 			<xs:documentation>Заказ, объединяющий все наименованияиз разных магазов</xs:documentation>
-
 		</xs:annotation>
-
 		<xs:sequence>
-
 			<xs:element name="ShopOrdertList" type="ShopOrderType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="AuthSession" type="riverock-sso:AuthSessionType" minOccurs="0"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="idOrder" type="xs:long"/>
-
 		<xs:attribute name="serverName" type="xs:string"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="ShopOrderType">
-
 		<xs:annotation>
-
 			<xs:documentation>Часть заказа, относящаяся к определенному магазину</xs:documentation>
-
 		</xs:annotation>
-
 		<xs:sequence>
-
 			<xs:element name="OrderItemList" type="OrderItemType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="GlobalDiscount" type="DiscountType" minOccurs="0"/>
-
 			<xs:element name="CurrentOrderUrl" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="CurrentOrderName" type="xs:string" minOccurs="0"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="idShop" type="xs:long"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="OrderItemType">
-
 		<xs:complexContent>
-
 			<xs:extension base="riverock-portlet-schema-core:PriceListItemType">
-
 				<xs:sequence>
-
 					<xs:element name="PriceItemResult" type="xs:double"/>
-
 					<xs:element name="PrecisionResult" type="xs:int"/>
-
 					<xs:element name="Discount" type="DiscountType" minOccurs="0"/>
-
 					<xs:element name="CurrencyItem" type="CustomCurrencyItemType"/>
-
 					<xs:element name="ResultCurrency" type="CustomCurrencyItemType"/>
-
 				</xs:sequence>
-
 				<xs:attribute name="countItem" type="xs:int"/>
-
 				<xs:attribute name="isInDb" type="xs:boolean"/>
-
 				<xs:attribute name="idOrigin" type="xs:long"/>
-
 			</xs:extension>
-
 		</xs:complexContent>
-
 	</xs:complexType>
-
 	<xs:complexType name="OrderItemType11">
-
 		<xs:sequence>
-
 			<xs:element name="NameItem" type="xs:string"/>
-
 			<xs:element name="PriceItem" type="xs:double"/>
-
 			<xs:element name="PriceItemResult" type="xs:double"/>
-
 			<xs:element name="PrecisionResult" type="xs:int"/>
-
 			<xs:element name="Discount" type="DiscountType" minOccurs="0"/>
-
 			<xs:element name="CurrencyItem" type="CustomCurrencyItemType"/>
-
 			<xs:element name="ResultCurrency" type="CustomCurrencyItemType"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="idItem" type="xs:long"/>
-
 		<xs:attribute name="idShop" type="xs:long"/>
-
 		<xs:attribute name="countItem" type="xs:int"/>
-
 		<xs:attribute name="isInDb" type="xs:boolean"/>
-
 		<xs:attribute name="idOrigin" type="xs:long"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="DiscountItemType">
-
 		<xs:sequence>
-
 			<xs:element name="DiscountName" type="xs:string"/>
-
 			<xs:element name="DiscountValue" type="xs:double"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="DiscountType">
-
 		<xs:sequence>
-
 			<xs:element name="DiscountItem" type="DiscountItemType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="ResultDiscount" type="xs:double" minOccurs="0"/>
-
 			<xs:element name="ResultDiscountName" type="xs:string" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="CurrencyPrecisionType">
-
 		<xs:attribute name="idShopPrecision" type="xs:long"/>
-
 		<xs:attribute name="idCurrency" type="xs:long"/>
-
 		<xs:attribute name="idShop" type="xs:long"/>
-
 		<xs:attribute name="precision" type="xs:int"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="ShopType">
-
 		<xs:sequence>
-
 			<xs:element name="Discount" type="DiscountItemType">
-
 				<xs:annotation>
-
 					<xs:documentation>Общая скидка для магазина</xs:documentation>
-
 				</xs:annotation>
-
 			</xs:element>
-
 			<xs:element name="PrecisionList" type="CurrencyPrecisionListType">
-
 				<xs:annotation>
-
 					<xs:documentation>Точность округления для каждой из валют</xs:documentation>
-
 				</xs:annotation>
-
 			</xs:element>
-
 			<xs:element name="Items" type="ShopItemType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="Groups" type="ShopGroupType" minOccurs="0" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="idShop" type="xs:long"/>
-
 		<xs:attribute name="idSite" type="xs:long"/>
-
 		<xs:attribute name="isClose" type="xs:boolean"/>
-
 		<xs:attribute name="isProcessInvoice" type="xs:boolean"/>
-
 		<xs:attribute name="isNeedRecalc" type="xs:boolean"/>
-
 		<xs:attribute name="isDefaultCurrency" type="xs:boolean">
-
 			<xs:annotation>
-
 				<xs:documentation>Использовать ли валюту по умолчанию</xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 		<xs:attribute name="isNeedProcessing" type="xs:boolean"/>
-
 		<xs:attribute name="precision" type="xs:int"/>
-
 		<xs:attribute name="newItemDays" type="xs:int">
-
 			<xs:annotation>
-
 				<xs:documentation>Количество дней в течение которых позиция считается новой</xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 		<xs:attribute name="codeShop">
-
 			<xs:simpleType>
-
 				<xs:restriction base="xs:string">
-
 					<xs:maxLength value="30"/>
-
 				</xs:restriction>
-
 			</xs:simpleType>
-
 		</xs:attribute>
-
 		<xs:attribute name="dateUploadQuantity" type="xs:dateTime">
-
 			<xs:annotation>
-
 				<xs:documentation>Дата загрузки данных об остатках на складе</xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 		<xs:attribute name="dateUploadPrice" type="xs:dateTime"/>
-
 		<xs:attribute name="nameShop" type="xs:string">
-
 			<xs:annotation>
-
 				<xs:documentation>Название магазина</xs:documentation>
-
 			</xs:annotation>
-
 		</xs:attribute>
-
 		<xs:attribute name="header" type="xs:string"/>
-
 		<xs:attribute name="footer" type="xs:string"/>
-
 		<xs:attribute name="nameShopForPriceList" type="xs:string"/>
-
 		<xs:attribute name="idTypeShop1" type="xs:long"/>
-
 		<xs:attribute name="idTypeShop2" type="xs:long"/>
-
 		<xs:attribute name="idDefaultCurrency" type="xs:long"/>
-
 		<xs:attribute name="idOrderCurrency" type="xs:long"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="ShopItemType"/>
-
 	<xs:complexType name="ShopGroupType"/>
-
 	<xs:complexType name="CustomCurrencyItemType">
-
 		<xs:sequence>
-
 			<xs:element name="CurrentCurs" type="CurrencyCurrentCursType" minOccurs="0"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="idCurrency" type="xs:long"/>
-
 		<xs:attribute name="currencyCode" type="xs:string"/>
-
 		<xs:attribute name="currencyName" type="xs:string"/>
-
 		<xs:attribute name="isUsed" type="xs:boolean"/>
-
 		<xs:attribute name="isUseStandardCurrency" type="xs:boolean"/>
-
 		<xs:attribute name="percent" type="xs:double"/>
-
 		<xs:attribute name="idStandardCurrency" type="xs:long"/>
-
 		<xs:attribute name="idSite" type="xs:long"/>
-
 		<xs:attribute name="isRealInit" type="xs:boolean" default="false"/>
-
 		<xs:attribute name="realCurs" type="xs:double"/>
-
 		<xs:attribute name="realDateChange" type="xs:dateTime"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="CustomCurrencyType">
-
 		<xs:sequence>
-
 			<xs:element name="CurrencyList" type="CustomCurrencyItemType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="StandardCurrencyList" type="StandardCurrencyType" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="StandardCurrencyItemType">
-
 		<xs:sequence>
-
 			<xs:element name="CurrentCurs" type="CurrencyCurrentCursType"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="idStandardCurrency" type="xs:long"/>
-
 		<xs:attribute name="currencyCode" type="xs:string"/>
-
 		<xs:attribute name="currencyName" type="xs:string"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="StandardCurrencyType">
-
 		<xs:sequence>
-
 			<xs:element name="StandardCurrencyList" type="StandardCurrencyItemType" minOccurs="0" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="ShopListType">
-
 		<xs:annotation>
-
 			<xs:documentation>Список магазинов, которые поддерживаюбтся данным сайтом</xs:documentation>
-
 		</xs:annotation>
-
 		<xs:sequence>
-
 			<xs:element name="Shops" type="ShopType" minOccurs="0" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="CurrencyPrecisionListType">
-
 		<xs:sequence>
-
 			<xs:element name="Precisions" type="CurrencyPrecisionType" minOccurs="0" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="CurrencyCurrentCursType">
-
 		<xs:attribute name="idCurrency" type="xs:long"/>
-
 		<xs:attribute name="dateChange" type="xs:dateTime"/>
-
 		<xs:attribute name="curs" type="xs:double"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="ShopPortletListType"/>
-
 </xs:schema>
-

@@ -1,458 +1,229 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
-
 /*
-
  * org.riverock.sql - Classes for tracking database changes
-
  * 
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  * 
-
  * Riverock - The Open-source Java Development Community
-
  * http://www.riverock.org
-
  * 
-
  * 
-
  * This library is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU Lesser General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2.1 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * Lesser General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU Lesser General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
 -->
-
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
-
 	<xs:element name="SelectSql" type="SelectSqlType"/>
-
 	<xs:complexType name="SqlNameType">
-
 		<xs:sequence>
-
 			<xs:element name="OriginName" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="StatementName" type="xs:string" minOccurs="0"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="isNameQuoted" type="xs:boolean" default="false"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="SqlNameListType">
-
 		<xs:sequence>
-
 			<xs:element name="Item" type="SqlNameType" minOccurs="0" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="DependenceType">
-
 		<xs:sequence>
-
 			<xs:element name="Source" type="SqlNameListType"/>
-
 			<xs:element name="Target" type="SqlNameListType"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="ColumnType">
-
 		<xs:sequence>
-
 			<xs:element name="ColumnName" type="SqlNameType"/>
-
 			<xs:element name="columnType" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="columnSize" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="columnScale" type="xs:int" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="ColumnListType">
-
 		<xs:sequence>
-
 			<xs:element name="Item" type="ColumnType" minOccurs="0" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="SelectType">
-
 		<xs:sequence>
-
 			<xs:element name="IsPreProcess" type="xs:boolean" minOccurs="0"/>
-
 			<xs:element name="IsDistinctSelect" type="xs:boolean" minOccurs="0"/>
-
 			<xs:element name="IsAggregated" type="xs:boolean" minOccurs="0"/>
-
 			<xs:element name="IsGrouped" type="xs:boolean" minOccurs="0"/>
-
 			<xs:element name="GroupColumnNames" type="SqlNameType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="TableFilter" type="TableFilterType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="ExpCondition" type="ExpressionType" minOccurs="0"/>
-
 			<xs:element name="ExpHavingCondition" type="ExpressionType" minOccurs="0"/>
-
 			<xs:element name="ExpColumn" type="ExpressionType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="ResultLength" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="GroupLength" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="HavingIndex" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="OrderLength" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="Union" type="SelectType" minOccurs="0"/>
-
 			<xs:element name="IntoTableName" type="SqlNameType" minOccurs="0"/>
-
 			<xs:element name="IsIntoTableQuoted" type="xs:boolean" minOccurs="0"/>
-
 			<xs:element name="UnionType" minOccurs="0">
-
 				<xs:simpleType>
-
 					<xs:restriction base="xs:string">
-
 						<xs:enumeration value="UNION"/>
-
 						<xs:enumeration value="UNIONALL"/>
-
 						<xs:enumeration value="INTERSECT"/>
-
 						<xs:enumeration value="MINUS"/>
-
 					</xs:restriction>
-
 				</xs:simpleType>
-
 			</xs:element>
-
 			<xs:element name="LimitStart" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="LimitCount" type="xs:int" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="ExpressionType">
-
 		<xs:sequence>
-
 			<xs:element name="type" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="ExpArg1" type="ExpressionType" minOccurs="0"/>
-
 			<xs:element name="ExpArg2" type="ExpressionType" minOccurs="0"/>
-
 			<xs:element name="AggregateSpec" default="AGGREGATE_NONE" minOccurs="0">
-
 				<xs:simpleType>
-
 					<xs:restriction base="xs:string">
-
 						<xs:enumeration value="AGGREGATE_SELF"/>
-
 						<xs:enumeration value="AGGREGATE_NONE"/>
-
 						<xs:enumeration value="AGGREGATE_LEFT"/>
-
 						<xs:enumeration value="AGGREGATE_RIGHT"/>
-
 						<xs:enumeration value="AGGREGATE_BOTH"/>
-
 					</xs:restriction>
-
 				</xs:simpleType>
-
 			</xs:element>
-
 			<xs:element name="ValueList" type="ValueItemType" minOccurs="0" maxOccurs="unbounded"/>
-
 			<xs:element name="IsValueListHasNull" type="xs:boolean" minOccurs="0"/>
-
 			<xs:element name="DataType" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="Select" type="SelectType" minOccurs="0"/>
-
 			<xs:element name="CharLikeEscape" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="Table" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="Column" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="Filter" type="TableFilterType" minOccurs="0"/>
-
 			<xs:element name="ColumnNumber" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="ColumnSize" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="ColumnScale" type="xs:int" minOccurs="0"/>
-
 			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="IsDescending" type="xs:boolean" minOccurs="0"/>
-
 			<xs:element name="IsDistinctAggregate" type="xs:boolean" minOccurs="0"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="ObjectData" type="xs:string" use="optional"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="ValueItemType">
-
 		<xs:attribute name="item" type="xs:string" use="optional"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="TableType">
-
 		<xs:sequence>
-
 			<xs:element name="TableName" type="SqlNameType" minOccurs="0"/>
-
 			<xs:element name="Columns" type="ColumnListType" minOccurs="0"/>
-
 			<xs:element name="SubQuery" type="ExpressionType" minOccurs="0"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="columnCount" type="xs:int"/>
-
 		<xs:attribute name="visibleColumns" type="xs:int"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="TableFilterType">
-
 		<xs:sequence>
-
 			<xs:element name="Table" type="TableType" minOccurs="0"/>
-
 			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="ExpStart" type="ExpressionType" minOccurs="0"/>
-
 			<xs:element name="ExpEnd" type="ExpressionType" minOccurs="0"/>
-
 			<xs:element name="ExpAnd" type="ExpressionType" minOccurs="0"/>
-
 			<xs:element name="IsOuterJoin" type="xs:boolean" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="LimitType">
-
 		<xs:attribute name="start" type="xs:int" use="required"/>
-
 		<xs:attribute name="count" type="xs:int" use="required"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="InsertType">
-
 		<xs:sequence>
-
 			<xs:element name="Table" type="TableType" minOccurs="0"/>
-
 			<xs:element name="Select" type="SelectType" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="UpdateType">
-
 		<xs:sequence>
-
 			<xs:element name="Table" type="TableType" minOccurs="0"/>
-
 			<xs:element name="Expression" type="ExpressionType" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="DeleteType">
-
 		<xs:sequence>
-
 			<xs:element name="Table" type="TableType" minOccurs="0"/>
-
 			<xs:element name="Expression" type="ExpressionType" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="SelectSqlType">
-
 		<xs:sequence>
-
 			<xs:element name="Text" type="xs:string"/>
-
 			<xs:element name="Select" type="SelectListType"/>
-
 			<xs:element name="Limit" type="LimitType" minOccurs="0"/>
-
 			<xs:element name="From" type="FromListType"/>
-
 			<xs:element name="Where" type="WhereType" minOccurs="0"/>
-
 			<xs:element name="Having" type="HavingType" minOccurs="0"/>
-
 			<xs:element name="Group" type="GroupType" minOccurs="0"/>
-
 			<xs:element name="Order" type="OrderType" minOccurs="0"/>
-
 		</xs:sequence>
-
 		<xs:attribute name="isDistinct" type="xs:boolean" default="false"/>
-
 	</xs:complexType>
-
 	<xs:complexType name="SelectListType">
-
 		<xs:sequence>
-
 			<xs:element name="Item" type="SelectItemType" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="SelectItemType">
-
 		<xs:sequence>
-
 			<xs:element name="Column" type="xs:string"/>
-
 			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="TypeField">
-
 				<xs:simpleType>
-
 					<xs:restriction base="xs:string">
-
 						<xs:enumeration value="SUBQUERY"/>
-
 						<xs:enumeration value="FORMULA"/>
-
 						<xs:enumeration value="FIELD"/>
-
 						<xs:enumeration value="VALUE"/>
-
 					</xs:restriction>
-
 				</xs:simpleType>
-
 			</xs:element>
-
 			<xs:element name="SubQuery" type="SelectSqlType" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="FromListType">
-
 		<xs:sequence>
-
 			<xs:element name="Item" type="FromItemType" maxOccurs="unbounded"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="FromItemType">
-
 		<xs:sequence>
-
 			<xs:element name="Table" type="xs:string" minOccurs="0"/>
-
 			<xs:element name="SubQuery" type="SelectSqlType" minOccurs="0"/>
-
 			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
-
 		</xs:sequence>
-
 	</xs:complexType>
-
 	<xs:complexType name="WhereType">
-
 		<xs:sequence/>
-
 	</xs:complexType>
-
 	<xs:complexType name="HavingType">
-
 		<xs:sequence/>
-
 	</xs:complexType>
-
 	<xs:complexType name="GroupType">
-
 		<xs:sequence/>
-
 	</xs:complexType>
-
 	<xs:complexType name="OrderType">
-
 		<xs:sequence/>
-
 	</xs:complexType>
-
 </xs:schema>
-
