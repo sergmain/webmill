@@ -442,7 +442,7 @@ public class UploadPriceController extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance( true );
 
-            SiteMenu siteMenu = SiteMenu.getInstance( db_, ctxInstance.page.p.sites.getIdSite() );
+            SiteMenu siteMenu = SiteMenu.getInstance( db_, ctxInstance.getPortalInfo().sites.getIdSite() );
 
 
 
@@ -466,7 +466,7 @@ public class UploadPriceController extends HttpServlet
 
             if ( log.isDebugEnabled() )
 
-                log.debug( "#55.01.15 idSite -  "+ctxInstance.page.p.sites.getIdSite() );
+                log.debug( "#55.01.15 idSite -  "+ctxInstance.getPortalInfo().sites.getIdSite() );
 
 
 
@@ -522,7 +522,7 @@ public class UploadPriceController extends HttpServlet
 
             {
 
-                ImportPriceList.process( prices, ctxInstance.page.p.sites.getIdSite(), db_);
+                ImportPriceList.process( prices, ctxInstance.getPortalInfo().sites.getIdSite(), db_);
 
                 // reinit Shop in cache. need for correct output date/time of upload price
 

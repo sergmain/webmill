@@ -112,7 +112,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -188,7 +188,7 @@ public class RegisterUser extends HttpServlet
 
             if (log.isDebugEnabled())
 
-                log.debug("getIsRegisterAllowed " + ctxInstance.page.p.sites.getIsRegisterAllowed());
+                log.debug("getIsRegisterAllowed " + ctxInstance.getPortalInfo().sites.getIsRegisterAllowed());
 
 
 
@@ -440,7 +440,7 @@ public class RegisterUser extends HttpServlet
 
                             Long id_user = InternalAuthProviderTools.addNewUser(dbDyn,
 
-                                first_name, last_name, "", ctxInstance.page.p.sites.getIdFirm(),
+                                first_name, last_name, "", ctxInstance.getPortalInfo().sites.getIdFirm(),
 
                                 mailAddr.toString(), addr, phone);
 
@@ -448,7 +448,7 @@ public class RegisterUser extends HttpServlet
 
                             if (log.isDebugEnabled())
 
-                                log.debug("#1.0006 " + ctxInstance.page.p.sites.getIdFirm());
+                                log.debug("#1.0006 " + ctxInstance.getPortalInfo().sites.getIdFirm());
 
 
 
@@ -456,7 +456,7 @@ public class RegisterUser extends HttpServlet
 
                             id_auth_user = InternalAuthProviderTools.addUserAuth(dbDyn, id_user,
 
-                                ctxInstance.page.p.sites.getIdFirm(), null, null, username, password1,
+                                ctxInstance.getPortalInfo().sites.getIdFirm(), null, null, username, password1,
 
                                 true, false, false);
 
@@ -546,7 +546,7 @@ public class RegisterUser extends HttpServlet
 
                         if (log.isDebugEnabled())
 
-                            log.debug("Admin mail: " + ctxInstance.page.p.sites.getAdminEmail());
+                            log.debug("Admin mail: " + ctxInstance.getPortalInfo().sites.getAdminEmail());
 
 
 
@@ -560,7 +560,7 @@ public class RegisterUser extends HttpServlet
 
                             email,
 
-                            ctxInstance.page.p.sites.getAdminEmail(),
+                            ctxInstance.getPortalInfo().sites.getAdminEmail(),
 
                             "Confirm registration",
 
@@ -628,7 +628,7 @@ Locale loc)
 
 
 
-            if (!Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsRegisterAllowed()) )
+            if (!Boolean.TRUE.equals(ctxInstance.getPortalInfo().sites.getIsRegisterAllowed()) )
 
                 return;
 

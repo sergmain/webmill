@@ -102,6 +102,8 @@ import org.riverock.webmill.portlet.Portlet;
 
 import org.riverock.webmill.portlet.PortletParameter;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.cache.impl.CacheException;
@@ -476,7 +478,9 @@ public class ArticlePlain implements Portlet, PortletResultObject, PortletGetLis
 
         {
 
-            Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPortletRequest().getLocale());
+            CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+            Long idSupportLanguageCurrent = ctxInstance.getPortalInfo().getIdSupportLanguage(param.getPortletRequest().getLocale());
 
 
 

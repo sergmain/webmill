@@ -106,7 +106,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -278,11 +278,11 @@ public class SwitchLanguage extends HttpServlet
 
             if (s == null || s.length() == 0)
 
-                newUrl = response.encodeURL(CtxURL.ctx());
+                newUrl = response.encodeURL(ctxInstance.ctx());
 
             else
 
-                newUrl = response.encodeURL(CtxURL.ctx() + '?' +
+                newUrl = response.encodeURL(ctxInstance.ctx() + '?' +
 
                     Constants.NAME_LANG_PARAM + "=" + s
 

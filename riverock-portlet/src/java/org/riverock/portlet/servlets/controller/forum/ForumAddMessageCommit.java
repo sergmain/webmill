@@ -104,8 +104,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
 
 
@@ -204,7 +202,7 @@ public class ForumAddMessageCommit extends HttpServlet
 
 
 
-            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response, ctxInstance.page);
+            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response);
 
 
 

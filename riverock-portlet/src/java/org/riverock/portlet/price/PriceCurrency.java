@@ -230,7 +230,7 @@ public class PriceCurrency
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            list = CurrencyManager.getInstance(db_, ctxInstance.page.p.sites.getIdSite()).getCurrencyList();
+            list = CurrencyManager.getInstance(db_, ctxInstance.getPortalInfo().sites.getIdSite()).getCurrencyList();
 
         }
 

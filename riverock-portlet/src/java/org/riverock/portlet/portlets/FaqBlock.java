@@ -82,6 +82,8 @@ import org.riverock.webmill.portlet.PortletGetList;
 
 import org.riverock.webmill.portlet.PortletParameter;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 
 
 import org.apache.log4j.Logger;
@@ -92,9 +94,9 @@ import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 
-import java.util.Vector;
-
 import java.util.List;
+
+import java.util.ArrayList;
 
 
 
@@ -102,7 +104,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
 {
 
-    private static Logger cat = Logger.getLogger( FaqBlock.class );
+    private static Logger log = Logger.getLogger( FaqBlock.class );
 
 
 
@@ -216,7 +218,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
 
 
-        v = new Vector();
+        v = new ArrayList();
 
 
 
@@ -236,17 +238,13 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
 
 
+            CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
             RsetTools.setLong(ps, 1,
 
-                param.getPage().p.getIdSupportLanguage(param.getPortletRequest().getLocale())
+                ctxInstance.getPortalInfo().getIdSupportLanguage(param.getPortletRequest().getLocale())
 
             );
-
-
-
-//            RsetTools.setLong(ps, 1, idSite);
-
-//            ps.setString(2, param.ctxInstance.getPortletRequest().getLocale().toString());
 
 
 
@@ -256,7 +254,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
             {
 
-                cat.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_SITE_PORTLET_FAQ"));
+                log.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_SITE_PORTLET_FAQ"));
 
                 v.add(FaqGroup.getInstance(db_, RsetTools.getLong(rs, "ID_SITE_PORTLET_FAQ")));
 
@@ -264,7 +262,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
 
 
-            cat.debug("#10.01.05 ");
+            log.debug("#10.01.05 ");
 
         }
 
@@ -272,7 +270,7 @@ public class FaqBlock implements Portlet, PortletResultObject, PortletGetList, P
 
         {
 
-            cat.error("Error get faq block ", e);
+            log.error("Error get faq block ", e);
 
             throw new PortletException(e.toString());
 

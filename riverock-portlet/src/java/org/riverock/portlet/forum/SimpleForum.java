@@ -58,7 +58,7 @@ import javax.portlet.PortletRequest;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
-import org.riverock.webmill.port.InitPage;
+
 
 
 
@@ -68,17 +68,13 @@ public class SimpleForum extends Forum
 
 
 
-    public SimpleForum(PortletRequest request,
-
-                       javax.servlet.http.HttpServletResponse response,
-
-                       InitPage jspPage)
+    public SimpleForum(PortletRequest request, javax.servlet.http.HttpServletResponse response)
 
             throws ForumException
 
     {
 
-        super(request, jspPage);
+        super(request);
 
     }
 

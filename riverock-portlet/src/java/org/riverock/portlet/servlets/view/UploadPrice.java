@@ -94,7 +94,7 @@ import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 
 
@@ -194,7 +194,7 @@ public class UploadPrice extends HttpServlet
 
                 out.write(
 
-                        "<form method=\"POST\" action=\"" + response.encodeURL(CtxURL.ctx()) + '?' + param + "\" ENCTYPE=\"multipart/form-data\">" +
+                        "<form method=\"POST\" action=\"" + response.encodeURL(ctxInstance.ctx()) + '?' + param + "\" ENCTYPE=\"multipart/form-data\">" +
 
                         "Внимание! Файл импорта прайс-листа должен быть в корректном XML формате<br>" +
 

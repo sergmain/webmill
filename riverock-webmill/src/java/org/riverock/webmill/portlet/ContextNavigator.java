@@ -122,7 +122,7 @@ import org.riverock.common.config.PropertiesProvider;
 
 import org.riverock.webmill.utils.ServletUtils;
 
-import org.riverock.webmill.port.InitPage;
+
 
 import org.riverock.webmill.config.WebmillConfig;
 
@@ -1160,7 +1160,7 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            portalRequestInstance.template = ctxInstance.page.p.getTemplates().getTemplate(
+            portalRequestInstance.template = ctxInstance.getPortalInfo().getTemplates().getTemplate(
 
                 ctxInstance.getNameTemplate(), ctxInstance.getPortletRequest().getLocale().toString()
 
@@ -1430,7 +1430,7 @@ public class ContextNavigator extends HttpServlet
 
             // prepare Xsl objects
 
-            if ( ctxInstance.page.p.getXsltList()==null )
+            if ( ctxInstance.getPortalInfo().getXsltList()==null )
 
             {
 
@@ -1450,7 +1450,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            portalRequestInstance.xslt = ctxInstance.page.p.getXsltList().getXslt( ctxInstance.getPortletRequest().getLocale().toString() );
+            portalRequestInstance.xslt = ctxInstance.getPortalInfo().getXsltList().getXslt( ctxInstance.getPortletRequest().getLocale().toString() );
 
 
 
@@ -1780,7 +1780,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                portalRequestInstance.byteArrayOutputStream = new ByteArrayOutputStream( 10000 );
+                portalRequestInstance.byteArrayOutputStream = new ByteArrayOutputStream( 15000 );
 
 
 
@@ -1858,9 +1858,7 @@ public class ContextNavigator extends HttpServlet
 
                     }
 
-                    InitPage page = new InitPage( portalRequestInstance.db, request_ );
-
-                    ctxInstance = new CtxInstance(request_,response_, page, portalRequestInstance.db);
+                    ctxInstance = new CtxInstance(request_,response_, portalRequestInstance.db);
 
 
 

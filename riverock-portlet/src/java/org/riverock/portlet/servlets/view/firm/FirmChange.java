@@ -266,7 +266,7 @@ public class FirmChange extends HttpServlet
 
               out.write("<input type=\"submit\" value=\"");
 
-              out.write(ctxInstance.page.sMain.getStr("button.change"));
+              out.write(ctxInstance.getStringManager().getStr("button.change"));
 
               out.write("\">\r\n");
 
@@ -898,7 +898,7 @@ public class FirmChange extends HttpServlet
 
               out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-              out.write(ctxInstance.page.sMain.getStr("button.change"));
+              out.write(ctxInstance.getStringManager().getStr("button.change"));
 
               out.write("\">\r\n");
 
@@ -954,7 +954,7 @@ public class FirmChange extends HttpServlet
 
               out.write("\">");
 
-              out.write(ctxInstance.page.sMain.getStr("page.main.3"));
+              out.write(ctxInstance.getStringManager().getStr("page.main.3"));
 
               out.write("</a>");
 

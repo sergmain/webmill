@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -224,7 +224,7 @@ public class LoginCheck extends HttpServlet
 
 
 
-            if (auth_.checkAccess( ctxInstance.page.p.getServerName() ))
+            if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName() ))
 
             {
 

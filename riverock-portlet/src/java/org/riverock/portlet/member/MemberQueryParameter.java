@@ -66,15 +66,13 @@ package org.riverock.portlet.member;
 
 
 
-import org.riverock.webmill.port.InitPage;
+
 
 
 
 public class MemberQueryParameter
 
 {
-
-    public InitPage webPage = null;
 
 }
 

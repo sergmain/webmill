@@ -124,7 +124,7 @@ import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.exception.PortalException;
 
-import org.riverock.webmill.portlet.wrapper.RenderRequestWrapper;
+import org.riverock.webmill.portal.impl.RenderRequestImpl;
 
 import org.riverock.webmill.schema.site.SiteTemplateParameterType;
 
@@ -162,7 +162,7 @@ public class PortletTools
 
     {
 
-        RenderRequestWrapper r = new RenderRequestWrapper();
+        RenderRequestImpl r = new RenderRequestImpl();
 
         if (request == null)
 

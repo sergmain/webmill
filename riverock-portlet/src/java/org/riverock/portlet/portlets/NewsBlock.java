@@ -188,7 +188,7 @@ public class NewsBlock implements PortletResultObject
 
 //                    x += param.response.encodeURL(Constants.URI_NEWS_PAGE) + '?' + param.jspPage.addURL + Constants.NAME_ID_NEWS_PARAM + '=' + item_news.id;
 
-                    x += param.response.encodeURL( CtxURL.ctx()) + '?' +
+                    x += param.response.encodeURL( ctxInstance.ctx()) + '?' +
 
                             param.jspPage.addURL + Constants.NAME_ID_NEWS_PARAM + '=' +
 

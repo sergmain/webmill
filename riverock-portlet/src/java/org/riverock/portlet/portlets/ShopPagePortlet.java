@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -122,7 +122,7 @@ import org.riverock.portlet.schema.price.OrderType;
 
 import org.riverock.webmill.config.WebmillConfig;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.Portlet;
 
@@ -354,7 +354,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         shopParam.nameTemplate = param.getNameTemplate();
 
-        shopParam.setServerName( param.getPage().p.getServerName());
+        shopParam.setServerName( ctxInstance.getPortletRequest().getServerName());
 
         shopParam.id_currency = PortletTools.getLong( param.getPortletRequest(), Constants.NAME_ID_CURRENCY_SHOP);
 
@@ -506,7 +506,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
                     ctxInstance,
 
-                    param.getResponse().encodeURL(CtxURL.ctx())
+                    param.getResponse().encodeURL(ctxInstance.ctx())
 
                 )
 

@@ -58,21 +58,33 @@ package org.riverock.webmill.port;
 
 
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import java.util.Locale;
+
+import java.util.Map;
 
 
 
 import org.apache.log4j.Logger;
 
-
+import org.riverock.common.tools.MainTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.site.SiteListSite;
+
+import org.riverock.sql.cache.SqlStatement;
+
+import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.core.GetSiteListSiteItem;
 
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
+
+import org.riverock.webmill.portal.menu.MenuLanguageInterface;
+
+import org.riverock.webmill.portal.menu.SiteMenu;
 
 import org.riverock.webmill.schema.core.SiteListSiteItemType;
 
@@ -80,15 +92,7 @@ import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 
-import org.riverock.generic.site.SiteListSite;
-
 import org.riverock.webmill.site.SiteTemplateList;
-
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.riverock.common.tools.MainTools;
-
-import org.riverock.generic.db.DatabaseAdapter;
 
 
 
@@ -102,13 +106,15 @@ public class PortalInfo
 
         Class p = new PortalInfo().getClass();
 
-        org.riverock.sql.cache.SqlStatement.registerRelateClass( p, new GetSiteListSiteItem().getClass());
+        SqlStatement.registerRelateClass( p, new GetSiteListSiteItem().getClass());
 
-        org.riverock.sql.cache.SqlStatement.registerRelateClass( p, new PortalXsltList().getClass());
+        SqlStatement.registerRelateClass( p, new PortalXsltList().getClass());
 
-        org.riverock.sql.cache.SqlStatement.registerRelateClass( p, new SiteTemplateList().getClass());
+        SqlStatement.registerRelateClass( p, new SiteTemplateList().getClass());
 
-        org.riverock.sql.cache.SqlStatement.registerRelateClass( p, new GetSiteSupportLanguageWithIdSiteList().getClass());
+        SqlStatement.registerRelateClass( p, new GetSiteSupportLanguageWithIdSiteList().getClass());
+
+        SqlStatement.registerRelateClass( p, new SiteMenu().getClass());
 
     }
 
@@ -136,7 +142,9 @@ public class PortalInfo
 
     public SiteSupportLanguageListType supportLanguage = null;
 
-    private Hashtable supportLanguageHash = null;
+    private Map supportLanguageMap = null;
+
+    private Map languageMenuMap = null;
 
 
 
@@ -194,11 +202,11 @@ public class PortalInfo
 
 
 
-        if (supportLanguageHash==null)
+        if (supportLanguageMap==null)
 
         {
 
-            supportLanguageHash = new Hashtable(supportLanguage.getSiteSupportLanguageCount());
+            supportLanguageMap = new HashMap(supportLanguage.getSiteSupportLanguageCount());
 
             for (int i=0;i<supportLanguage.getSiteSupportLanguageCount(); i++)
 
@@ -206,7 +214,7 @@ public class PortalInfo
 
                 SiteSupportLanguageItemType item = supportLanguage.getSiteSupportLanguage(i);
 
-                supportLanguageHash.put(item.getCustomLanguage(), item.getIdSiteSupportLanguage() );
+                supportLanguageMap.put(item.getCustomLanguage(), item.getIdSiteSupportLanguage() );
 
             }
 
@@ -214,7 +222,7 @@ public class PortalInfo
 
 
 
-        Long obj  = (Long)supportLanguageHash.get( locale.toString() );
+        Long obj  = (Long)supportLanguageMap.get( locale.toString() );
 
         if (log.isDebugEnabled())
 
@@ -432,17 +440,11 @@ public class PortalInfo
 
 
 
-        xsltList = PortalXsltList.getInstance(db_, sites.getIdSite());
+        xsltList = PortalXsltList.getInstance(db_, siteId);
 
         if (log.isInfoEnabled())
 
-        {
-
-            log.info("Init xsltList for  "
-
-                + (System.currentTimeMillis() - mills) + " milliseconds");
-
-        }
+            log.info("Init xsltList for " + (System.currentTimeMillis() - mills) + " milliseconds");
 
 
 
@@ -450,17 +452,13 @@ public class PortalInfo
 
             mills = System.currentTimeMillis();
 
-        templates = SiteTemplateList.getInstance(db_, sites.getIdSite());
+        templates = SiteTemplateList.getInstance(db_, siteId);
+
+
 
         if (log.isInfoEnabled())
 
-        {
-
-            log.info("Init templates for  "
-
-                + (System.currentTimeMillis() - mills) + " milliseconds");
-
-        }
+            log.info("Init templates for "+ (System.currentTimeMillis() - mills) + " milliseconds");
 
 
 
@@ -470,15 +468,15 @@ public class PortalInfo
 
 
 
-        supportLanguage = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, sites.getIdSite()).item;
+        supportLanguage = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
 
         if (log.isInfoEnabled())
-
-        {
 
             log.info("init currency list for "+(System.currentTimeMillis()-mills)+" milliseconds");
 
-        }
+
+
+        initMenu(db_);
 
     }
 
@@ -517,6 +515,14 @@ public class PortalInfo
     }
 
 
+
+    /**
+
+     * @deprecated
+
+     * @return
+
+     */
 
     public String getServerName()
 
@@ -578,7 +584,73 @@ public class PortalInfo
 
 
 
+    private void initMenu(DatabaseAdapter db_)
 
+        throws Exception
+
+    {
+
+        if (log.isDebugEnabled())
+
+            log.debug("start get menu for site "+siteId);
+
+
+
+        // Build menu
+
+        SiteMenu sc = SiteMenu.getInstance(db_, siteId);
+
+        languageMenuMap = new HashMap(sc.getMenuLanguageCount());
+
+        for (int i = 0; i < sc.getMenuLanguageCount(); i++)
+
+        {
+
+            MenuLanguageInterface tempCat = sc.getMenuLanguage(i);
+
+            languageMenuMap.put(tempCat.getLocaleStr(), tempCat);
+
+        }
+
+    }
+
+
+
+    public MenuLanguageInterface getMenu(String locale)
+
+    {
+
+        MenuLanguageInterface tempCat = null;
+
+        if (locale!=null)
+
+            tempCat = (MenuLanguageInterface)languageMenuMap.get(locale);
+
+
+
+        if (tempCat!=null)
+
+            return tempCat;
+
+
+
+        log.warn("Menu for locale "+locale+" not found");
+
+        log.warn("Dump menu");
+
+//        for (int i = 0; i < sc.getMenuLanguageCount(); i++)
+
+//        {
+
+//            tempCat = sc.getMenuLanguage(i);
+
+//            log.warn("MenuLanguage: "+tempCat.getLocaleStr()+", lang "+tempCat.getLang());
+
+//        }
+
+        return null;
+
+    }
 
 }
 

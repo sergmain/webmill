@@ -92,7 +92,7 @@ public class PriceListItemExtend extends PriceListItem
 
         if (shopParam.isProcessInvoice)
 
-            return param.response.encodeURL(CtxURL.ctx());
+            return param.response.encodeURL(ctxInstance.ctx());
 
         else
 

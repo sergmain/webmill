@@ -88,7 +88,7 @@ import org.riverock.portlet.schema.portlet.shop.CurrentBasketType;
 
 import org.riverock.portlet.schema.price.OrderType;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletParameter;
 

@@ -74,7 +74,7 @@ import org.riverock.webmill.portlet.PortletParameter;
 
 import org.riverock.webmill.config.WebmillConfig;
 
-import org.riverock.portlet.portlets.MenuSimple;
+import org.riverock.portlet.menu.MenuSimple;
 
 import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 

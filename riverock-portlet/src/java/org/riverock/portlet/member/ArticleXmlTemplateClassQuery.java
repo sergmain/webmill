@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -122,7 +122,7 @@ public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
 
     {
 
-        return ctxInstance.page.sMain.getStr("yesno.no");
+        return ctxInstance.getStringManager().getStr("yesno.no");
 
     }
 
@@ -144,7 +144,7 @@ public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
 
         List v = new ArrayList();
 
-        ClassQueryItem item = new ClassQueryItem(new Long(0), ctxInstance.page.sMain.getStr("yesno.no") );
+        ClassQueryItem item = new ClassQueryItem(new Long(0), ctxInstance.getStringManager().getStr("yesno.no") );
 
 
 

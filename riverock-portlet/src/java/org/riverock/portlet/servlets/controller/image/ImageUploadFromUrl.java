@@ -292,7 +292,7 @@ public class ImageUploadFromUrl extends HttpServlet
 
                 Long id_main = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_main");
 
-                if (ctxInstance.page==null)
+                if (id_main==null)
 
                     throw new IllegalArgumentException("id_firm not initialized");
 

@@ -112,7 +112,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -192,7 +192,7 @@ public class RegisterUserController extends HttpServlet
 
 
 
-            String index_page = response.encodeURL(CtxURL.ctx()) + '?' +
+            String index_page = response.encodeURL(ctxInstance.ctx()) + '?' +
 
                 ctxInstance.getAsURL();
 
@@ -204,7 +204,7 @@ public class RegisterUserController extends HttpServlet
 
             if (cat.isDebugEnabled())
 
-                cat.debug("getIsRegisterAllowed " + ctxInstance.page.p.sites.getIsRegisterAllowed());
+                cat.debug("getIsRegisterAllowed " + ctxInstance.getPortalInfo().sites.getIsRegisterAllowed());
 
 
 
@@ -314,7 +314,7 @@ public class RegisterUserController extends HttpServlet
 
                 AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-                if ((auth_ != null) && (auth_.checkAccess( ctxInstance.page.p.getServerName())))
+                if ((auth_ != null) && (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName())))
 
                 {
 
@@ -348,7 +348,7 @@ public class RegisterUserController extends HttpServlet
 
                         if (auth_!=null)
 
-                            cat.debug("checkAccess "+ auth_.checkAccess( ctxInstance.page.p.getServerName()) );
+                            cat.debug("checkAccess "+ auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()) );
 
                     }
 
@@ -356,7 +356,7 @@ public class RegisterUserController extends HttpServlet
 
                     if ((auth_ == null) ||
 
-                        (!auth_.checkAccess( ctxInstance.page.p.getServerName()))
+                        (!auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
 
                     )
 
@@ -392,13 +392,13 @@ public class RegisterUserController extends HttpServlet
 
                                 if (auth_!=null)
 
-                                    cat.debug("new checkAccess "+ auth_.checkAccess( ctxInstance.page.p.getServerName()) );
+                                    cat.debug("new checkAccess "+ auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()) );
 
                             }
 
 
 
-                            if (auth_.checkAccess( ctxInstance.page.p.getServerName()))
+                            if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
 
                             {
 
@@ -458,7 +458,7 @@ public class RegisterUserController extends HttpServlet
 
                             Long id_user = InternalAuthProviderTools.addNewUser(dbDyn,
 
-                                first_name, last_name, "", ctxInstance.page.p.sites.getIdFirm(),
+                                first_name, last_name, "", ctxInstance.getPortalInfo().sites.getIdFirm(),
 
                                 mailAddr.toString(), addr, phone);
 
@@ -466,7 +466,7 @@ public class RegisterUserController extends HttpServlet
 
                             if (cat.isDebugEnabled())
 
-                                cat.debug("#1.0006 " + ctxInstance.page.p.sites.getIdFirm());
+                                cat.debug("#1.0006 " + ctxInstance.getPortalInfo().sites.getIdFirm());
 
 
 
@@ -474,7 +474,7 @@ public class RegisterUserController extends HttpServlet
 
                             id_auth_user = InternalAuthProviderTools.addUserAuth(dbDyn, id_user,
 
-                                ctxInstance.page.p.sites.getIdFirm(), null, null, username, password1,
+                                ctxInstance.getPortalInfo().sites.getIdFirm(), null, null, username, password1,
 
                                 true, false, false);
 
@@ -564,11 +564,11 @@ public class RegisterUserController extends HttpServlet
 
                         if (cat.isDebugEnabled())
 
-                            cat.debug("Admin mail: " + ctxInstance.page.p.sites.getAdminEmail());
+                            cat.debug("Admin mail: " + ctxInstance.getPortalInfo().sites.getAdminEmail());
 
 
 
-                        String args3[] = {username, password1, ctxInstance.page.p.getServerName()};
+                        String args3[] = {username, password1, ctxInstance.getPortletRequest().getServerName()};
 
 
 
@@ -578,7 +578,7 @@ public class RegisterUserController extends HttpServlet
 
                             email,
 
-                            ctxInstance.page.p.sites.getAdminEmail(),
+                            ctxInstance.getPortalInfo().sites.getAdminEmail(),
 
                             "Confirm registration",
 
@@ -588,7 +588,7 @@ public class RegisterUserController extends HttpServlet
 
                         args3 = null;
 
-                        if (auth_.checkAccess( ctxInstance.page.p.getServerName()))
+                        if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
 
                         {
 
@@ -646,7 +646,7 @@ Locale loc)
 
 
 
-            if (!Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsRegisterAllowed()) )
+            if (!Boolean.TRUE.equals(ctxInstance.getPortalInfo().sites.getIsRegisterAllowed()) )
 
                 return;
 

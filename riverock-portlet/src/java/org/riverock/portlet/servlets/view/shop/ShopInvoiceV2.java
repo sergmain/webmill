@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -144,7 +144,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -824,7 +824,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                if (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsActivateEmailOrder()) )
+                if (Boolean.TRUE.equals(ctxInstance.getPortalInfo().sites.getIsActivateEmailOrder()) )
 
                 {
 
@@ -972,7 +972,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     order.getAuthSession().getUserInfo().getEmail(),
 
-                    ctxInstance.page.p.sites.getOrderEmail(),
+                    ctxInstance.getPortalInfo().sites.getOrderEmail(),
 
                     "Your order N" + order.getIdOrder(),
 
@@ -984,7 +984,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                if (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsActivateEmailOrder()) )
+                if (Boolean.TRUE.equals(ctxInstance.getPortalInfo().sites.getIsActivateEmailOrder()) )
 
                 {
 
@@ -992,9 +992,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         orderAdminString,
 
-                        ctxInstance.page.p.sites.getOrderEmail(),
+                        ctxInstance.getPortalInfo().sites.getOrderEmail(),
 
-                        ctxInstance.page.p.sites.getOrderEmail(),
+                        ctxInstance.getPortalInfo().sites.getOrderEmail(),
 
                         "Order N" + order.getIdOrder(),
 
@@ -1016,9 +1016,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 String args1[] = {index_page};
 
-                if (ctxInstance.page.sMain.checkKey("invoice.order-send-complete"))
+                if (ctxInstance.getStringManager().checkKey("invoice.order-send-complete"))
 
-                    str = ctxInstance.page.sMain.getStr("invoice.order-send-complete", args1);
+                    str = ctxInstance.getStringManager().getStr("invoice.order-send-complete", args1);
 
                 else
 
@@ -1060,7 +1060,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                if (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsRegisterAllowed()) )
+                if (Boolean.TRUE.equals(ctxInstance.getPortalInfo().sites.getIsRegisterAllowed()) )
 
                 {
 
@@ -1086,7 +1086,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     out.write("\">");
 
-                    out.write(ctxInstance.page.sMain.getStr("button.next"));
+                    out.write(ctxInstance.getStringManager().getStr("button.next"));
 
                     out.write(" ");
 
@@ -1100,7 +1100,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     "</td>\n"+
 
-                    "<form method=\"POST\" action=\"" + CtxURL.ctx() + "\">\n"+
+                    "<form method=\"POST\" action=\"" + ctxInstance.ctx() + "\">\n"+
 
                     ctxInstance.urlAsForm(ctxInstance.getNameTemplate(), "mill.register")+
 
@@ -1298,7 +1298,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         out.write("</td>\n");
 
-                        out.write("<form method=\"GET\" action=\"" + CtxURL.ctx() + "\">\n");
+                        out.write("<form method=\"GET\" action=\"" + ctxInstance.ctx() + "\">\n");
 
                         out.write(indexPageForm);
 
@@ -1346,7 +1346,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         out.write("</form>\n");
 
-                        out.write("<form method=\"GET\" action=\"" + CtxURL.ctx() + "\">\n");
+                        out.write("<form method=\"GET\" action=\"" + ctxInstance.ctx() + "\">\n");
 
                         out.write(indexPageForm);
 
@@ -1430,9 +1430,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
             if ((order.getShopOrdertListCount() != 0) && (order.getAuthSession() != null) &&
 
-                (ctxInstance.page.p.sites.getOrderEmail().trim().length() != 0) &&
+                (ctxInstance.getPortalInfo().sites.getOrderEmail().trim().length() != 0) &&
 
-                (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsActivateEmailOrder()) )
+                (Boolean.TRUE.equals(ctxInstance.getPortalInfo().sites.getIsActivateEmailOrder()) )
 
             )
 
@@ -1442,7 +1442,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 out.write("<br>\n");
 
-                out.write("<form method=\"GET\" action=\"" + CtxURL.ctx() + "\">\n");
+                out.write("<form method=\"GET\" action=\"" + ctxInstance.ctx() + "\">\n");
 
                 out.write(indexPageForm);
 
