@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.test.independent;
+package org.riverock.generic.test.independent;
 
 
 

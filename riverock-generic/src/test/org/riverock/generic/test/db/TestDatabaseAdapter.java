@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.test.db;
+package org.riverock.generic.test.db;
 
 
 

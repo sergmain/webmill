@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.test;
+package org.riverock.generic.test;
 
 
 
