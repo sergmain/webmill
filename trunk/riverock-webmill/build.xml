@@ -55,11 +55,9 @@
     <property file="../riverock.properties"/>
 
 <!--
-castor.lib used for generate java classes
 castor-current.lib for work of engine
 -->
-    <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>
-    <property name="castor-current.lib" value="castor-0.9.4.3-xml.jar"/>
+    <property name="castor-current.lib" value="${castor.lib}"/>
 
 
 
@@ -90,8 +88,6 @@ castor-current.lib for work of engine
     <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
     <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
 
-    <property name="tomcat-service-name" value="Tomcat5"/>
-
     <property name="manifest-file-name" value="manifest.mf"/>
     <property name="manifest" value="src/java/${manifest-file-name}"/>
 
@@ -116,6 +112,7 @@ castor-current.lib for work of engine
         <pathelement location="${lib.dir}/${bcel.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${hypersonic.lib}"/>
         <pathelement location="${lib.dir}/${common-httpclient.lib}"/>
@@ -154,12 +151,12 @@ castor-current.lib for work of engine
     <property name="deprecation" value="on"/>
 
     <fileset dir="${lib.dir}/" id="web-inf-lib" >
-        <include name="${jsmithy-sso.lib}"/>
-        <include name="${jsmithy-sql-parser.lib}"/>
-        <include name="${jsmithy-interfaces.lib}"/>
-        <include name="${jsmithy-generic.lib}"/>
-        <include name="${jsmithy-common.lib}"/>
-        <include name="${jsmithy-cache.lib}"/>
+        <include name="${riverock-sso.lib}"/>
+        <include name="${riverock-sql-parser.lib}"/>
+        <include name="${riverock-interfaces.lib}"/>
+        <include name="${riverock-generic.lib}"/>
+        <include name="${riverock-common.lib}"/>
+        <include name="${riverock-cache.lib}"/>
 
         <include name="${log4j.lib}"/>
         <include name="${castor-current.lib}"/>
@@ -205,9 +202,11 @@ castor-current.lib for work of engine
 
         <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
         <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
 
         <property name="webmill-test.context" value="C:\opt2\_www\_test\mill"/>
         <copy file="${build.dir}/${mill.lib}" todir="${webmill-test.context}/WEB-INF/lib"/>
+        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
         <antcall target="start.apache"/>
     </target>
 
@@ -382,10 +381,10 @@ castor-current.lib for work of engine
 
 
     <target name="build_release" depends="build-release-properties" >
-        <ant dir="." antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
-        <antcall target="gen_all_schema"/>
+        <antcall target="full_clean"/>
+        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
+        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
         <antcall target="clean"/>
-        <antcall target="encode_jar"/>
 
         <mkdir dir="${build-release-dir}"/>
         <mkdir dir="${build-www-dir}"/>
@@ -573,13 +572,13 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
             tofile="${build-www-mill-dir}/WEB-INF/lib/${castor-current.lib}"/>
         <copy file="${lib.dir}/${portlet.lib}"
             tofile="${build-www-mill-dir}/WEB-INF/lib/${portlet.lib}"/>
-        <copy file="${lib.dir}/${jsmithy-schema.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${jsmithy-schema.lib}"/>
-        <copy file="${lib.dir}/${jsmithy-sql-parser.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${jsmithy-sql-parser.lib}"/>
 
-<!--        <copy file="${encode.dir}/${mill.lib.encoded}"-->
-<!--            tofile="${build-www-mill-dir}/WEB-INF/lib/${mill.lib.encoded}"/>-->
+<!--        <copy file="${lib.dir}/${riverock-schema.lib}"-->
+<!--            tofile="${build-www-mill-dir}/WEB-INF/lib/${jsmithy-schema.lib}"/>-->
+
+        <copy file="${lib.dir}/${riverock-sql-parser.lib}"
+            tofile="${build-www-mill-dir}/WEB-INF/lib/${riverock-sql-parser.lib}"/>
+
         <copy file="${build.dir}/${mill.lib}"
             tofile="${build-www-mill-dir}/WEB-INF/lib/${mill.lib}"/>
 
@@ -771,12 +770,21 @@ Sealed: true
     </target>
 
     <target name="replace_properties">
-        <property name="path-to-ctx" value="org/riverock/webmill/portlet"/>
-        <copy file="${src.java.dir}/${path-to-ctx}/ContextNavigator.java"
-            todir="${build.java}/${path-to-ctx}">
+        <property name="path-to-ctx" value="org/riverock/webmill"/>
+        <copy file="${src.java.dir}/${path-to-ctx}/portlet/ContextNavigator.java"
+            todir="${build.java}/${path-to-ctx}/portlet">
         </copy>
 
-        <replace file="${build.java}/${path-to-ctx}/ContextNavigator.java">
+        <replace file="${build.java}/${path-to-ctx}/portlet/ContextNavigator.java">
+            <replacefilter token="@@WEBMILL_RELEASE@@" value="${release-version}"/>
+            <replacefilter token="@@WEBMILL_BUILD@@" value="${build.number}"/>
+        </replace>
+
+        <copy file="${src.java.dir}/${path-to-ctx}/portlet/impl/PortletContextImpl.java"
+            todir="${build.java}/${path-to-ctx}/portlet/impl">
+        </copy>
+
+        <replace file="${build.java}/${path-to-ctx}/portlet/impl/PortletContextImpl.java">
             <replacefilter token="@@WEBMILL_RELEASE@@" value="${release-version}"/>
             <replacefilter token="@@WEBMILL_BUILD@@" value="${build.number}"/>
         </replace>
