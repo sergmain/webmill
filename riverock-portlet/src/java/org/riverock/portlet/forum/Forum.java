@@ -132,6 +132,8 @@ abstract public class Forum
 
     public static final String FORUM_THREADS_TABLE = "MAIN_FORUM_THREADS";
 
+    private PortletRequest portletRequest = null;
+
 
 
     abstract public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__) throws ForumException;
@@ -142,23 +144,21 @@ abstract public class Forum
 
 
 
-    public Forum(PortletRequest portletRequest,
-
-        javax.servlet.http.HttpServletResponse response,
-
-        InitPage jspPage)
+    public Forum(PortletRequest portletRequest, InitPage jspPage)
 
         throws ForumException
 
     {
 
-        id = PortletTools.getLong(portletRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
+        this.portletRequest = portletRequest;
+
+        this.id = PortletTools.getLong(portletRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
 
 
 
-        id_forum = PortletTools.getLong(portletRequest, Constants.NAME_ID_FORUM_PARAM);
+        this.id_forum = PortletTools.getLong(portletRequest, Constants.NAME_ID_FORUM_PARAM);
 
-        year = PortletTools.getInt(
+        this.year = PortletTools.getInt(
 
             portletRequest, Constants.NAME_YEAR_PARAM,
 
@@ -168,25 +168,13 @@ abstract public class Forum
 
 
 
-
-
-        if (true) throw new IllegalStateException("need fix code");
-
-//        forumURI = response.encodeURL(
-
-//            new File(request.getRequestURI()).getName());
-
-
-
         this.page = jspPage;
-
-
 
     }
 
 
 
-    public static void setCookie(PortletRequest request,
+    public static void setCookie(Cookie[] cookies_req, PortletRequest request,
 
         javax.servlet.http.HttpServletResponse response)
 
@@ -208,12 +196,6 @@ abstract public class Forum
 
 
 
-            if (true) throw new IllegalStateException("need fix code");
-
-/*
-
-            Cookie[] cookies_req = request.getCookies();
-
             for (int i = 0; i < cookies_req.length; i++)
 
             {
@@ -234,7 +216,7 @@ abstract public class Forum
 
             }
 
-*/
+
 
 
 
@@ -676,7 +658,7 @@ abstract public class Forum
 
                     s += ("<a href=\"" + CtxURL.ctx() + '?' +
 
-                        Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 
                         Constants.NAME_YEAR_PARAM + '=' + yearValue + '&' +
 
@@ -792,7 +774,7 @@ abstract public class Forum
 
 
 
-                String monthString = RsetTools.getStringDate(rs, "dat", "MMMM", "unknown", page.currentLocale);
+                String monthString = RsetTools.getStringDate(rs, "dat", "MMMM", "unknown", portletRequest.getLocale());
 
                 if (month == monthValue)
 
@@ -800,9 +782,11 @@ abstract public class Forum
 
                 else
 
-                    s += ("<a href=\"" + forumURI + '?' +
+//                    s += ("<a href=\"" + forumURI + '?' +
 
-                        Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
+                    s += ("<a href=\"" + CtxURL.ctx() + '?' +
+
+                        Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 
                         Constants.NAME_YEAR_PARAM + '=' + year + '&' +
 
@@ -1046,7 +1030,7 @@ abstract public class Forum
 
                 Calendar cal = RsetTools.getCalendar(rs, "DATE_POST");
 
-//                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", ctxInstance.page.currentLocale);
+//                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", ctxInstance.getPortletRequest().getLocale());
 
 
 
@@ -1058,7 +1042,7 @@ abstract public class Forum
 
                     "<a class=\"topictitle\" href=\"" + CtxURL.ctx() + '?' +
 
-                    Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
+                    Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 
                     Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
 
@@ -1254,7 +1238,7 @@ abstract public class Forum
 
                 Calendar cal = RsetTools.getCalendar(rs, "DATE_POST");
 
-                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", page.currentLocale);
+                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", portletRequest.getLocale());
 
 
 
@@ -1278,9 +1262,7 @@ abstract public class Forum
 
                     r_ += ("<a href=\"" + CtxURL.ctx() + '?' +
 
-                        Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
-
-//                        Constants.NAME_YEAR_PARAM + '=' + yearValue + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
 
