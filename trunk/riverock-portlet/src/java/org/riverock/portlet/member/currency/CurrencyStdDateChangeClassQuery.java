@@ -72,10 +72,6 @@ import java.util.Locale;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
-
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.utils.DateUtils;
@@ -93,6 +89,8 @@ import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.StandardCurrencyItemType;
 
 import org.riverock.webmill.port.PortalInfo;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -138,7 +136,7 @@ public class CurrencyStdDateChangeClassQuery extends BaseClassQuery
 
      */
 
-    public String getCurrentValue(HttpServletRequest request)
+    public String getCurrentValue(CtxInstance ctxInstance)
 
         throws Exception
 
@@ -146,7 +144,7 @@ public class CurrencyStdDateChangeClassQuery extends BaseClassQuery
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
 
-        PortalInfo p = PortalInfo.getInstance(db_, request.getServerName() );
+        PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
 
 
 
@@ -180,7 +178,7 @@ public class CurrencyStdDateChangeClassQuery extends BaseClassQuery
 
      */
 
-    public List getSelectList(HttpServletRequest request)
+    public List getSelectList(CtxInstance ctxInstance)
 
         throws Exception
 

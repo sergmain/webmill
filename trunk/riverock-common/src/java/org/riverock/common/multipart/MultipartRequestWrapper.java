@@ -2,19 +2,19 @@
 
  * org.riverock.common -- Supporting classes, interfaces, and utilities
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This library is free software; you can redistribute it and/or
 
@@ -82,7 +82,9 @@ import java.util.Locale;
 
 import java.util.Map;
 
-import java.util.Vector;
+import java.util.List;
+
+import java.util.ArrayList;
 
 
 
@@ -120,7 +122,7 @@ public class MultipartRequestWrapper extends Hashtable
 
      *  a multipart request */
 
-    public final String MFDHEADER = "multipart/form-data";
+    public static final String MFDHEADER = "multipart/form-data";
 
 
 
@@ -454,7 +456,7 @@ public class MultipartRequestWrapper extends Hashtable
 
             String[] array = request.getParameterValues(name);
 
-            Vector vec = new Vector();
+            List vec = new ArrayList();
 
 
 
@@ -464,13 +466,13 @@ public class MultipartRequestWrapper extends Hashtable
 
                 for (int i = 0; i < array.length; i++)
 
-                    vec.addElement(array[i]);
+                    vec.add(array[i]);
 
 
 
                 if (vec.size() == 1)
 
-                    result = vec.elementAt(0);
+                    result = vec.get(0);
 
                 else
 
@@ -580,9 +582,9 @@ public class MultipartRequestWrapper extends Hashtable
 
         {
 
-            if (value instanceof Vector)
+            if (value instanceof List)
 
-                value = ((Vector) value).elementAt(0);
+                value = ((List)value).get(0);
 
 
 
@@ -638,11 +640,11 @@ public class MultipartRequestWrapper extends Hashtable
 
             {
 
-                if (value instanceof Vector)
+                if (value instanceof List)
 
                 {
 
-                    int n = ((Vector) value).size();
+                    int n = ((List) value).size();
 
                     // number of values to be returned
 
@@ -656,7 +658,7 @@ public class MultipartRequestWrapper extends Hashtable
 
                         result[i] =
 
-                            ((Vector) value).elementAt(i).toString();
+                            ((List) value).get(i).toString();
 
                     }
 

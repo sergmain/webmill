@@ -98,7 +98,7 @@ public class JobItemSimple implements Portlet, PortletResultObject, PortletParam
 
 {
 
-    private static Logger log = Logger.getLogger("org.riverock.portlet.JobItemSimple");
+    private static Logger log = Logger.getLogger("org.riverock.portlet.portlets.JobItemSimple");
 
 
 
@@ -174,7 +174,7 @@ public class JobItemSimple implements Portlet, PortletResultObject, PortletParam
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPage().currentLocale);
 
     }
 
@@ -184,7 +184,7 @@ public class JobItemSimple implements Portlet, PortletResultObject, PortletParam
 
     {
 
-        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(dateEnd, "dd.MMM.yyyy", param.getPage().currentLocale);
 
     }
 

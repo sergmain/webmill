@@ -70,7 +70,7 @@ import java.io.IOException;
 
 import java.io.Writer;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
 import java.util.List;
 
@@ -86,15 +86,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-import org.riverock.sso.a3.AuthSession;
+import org.apache.log4j.Logger;
 
-import org.riverock.sso.a3.AuthTools;
-
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.main.UploadFileException;
+import org.exolab.castor.xml.Unmarshaller;
 
 import org.riverock.common.multipart.AbstractPart;
 
@@ -102,21 +96,9 @@ import org.riverock.common.multipart.MultipartHandler;
 
 import org.riverock.common.multipart.MultipartRequestWrapper;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.generic.db.DatabaseAdapter;
 
-import org.riverock.webmill.portal.menu.SiteMenu;
-
-import org.riverock.webmill.portal.menu.MenuInterface;
-
-import org.riverock.webmill.portal.menu.MenuLanguage;
-
-import org.riverock.webmill.portal.menu.MenuItemInterface;
-
-import org.riverock.webmill.portal.menu.MenuLanguageInterface;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.portlets.WebmillErrorPage;
 
@@ -126,11 +108,25 @@ import org.riverock.portlet.price.Shop;
 
 import org.riverock.portlet.schema.import_price.PricesType;
 
+import org.riverock.sso.a3.AuthSession;
 
+import org.riverock.sso.a3.AuthTools;
 
-import org.apache.log4j.Logger;
+import org.riverock.webmill.main.UploadFileException;
 
-import org.exolab.castor.xml.Unmarshaller;
+import org.riverock.webmill.portal.menu.MenuInterface;
+
+import org.riverock.webmill.portal.menu.MenuItemInterface;
+
+import org.riverock.webmill.portal.menu.MenuLanguageInterface;
+
+import org.riverock.webmill.portal.menu.SiteMenu;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 import org.xml.sax.InputSource;
 
@@ -260,7 +256,7 @@ public class UploadPriceController extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -274,7 +270,15 @@ public class UploadPriceController extends HttpServlet
 
         AbstractPart part = null;
 
-        InitPage jspPage = null;
+        DatabaseAdapter db_ = null;
+
+
+
+        CtxInstance ctxInstance =
+
+            (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
         try
 
@@ -290,23 +294,17 @@ public class UploadPriceController extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
-
-            jspPage = new InitPage( db_, request,
-
-                                    "mill.locale.auth"
-
-            );
+            db_ = DatabaseAdapter.getInstance( true );
 
 
 
             srcURL = response.encodeURL( CtxURL.ctx() )+'?'+
 
-                jspPage.getAsURL()+
+                ctxInstance.page.getAsURL()+
 
                 Constants.NAME_TEMPLATE_CONTEXT_PARAM+'='+
 
-                ServletUtils.getString( request, Constants.NAME_TEMPLATE_CONTEXT_PARAM )+'&'+
+                PortletTools.getString( ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM )+'&'+
 
                 Constants.NAME_TYPE_CONTEXT_PARAM+'='+
 
@@ -320,7 +318,7 @@ public class UploadPriceController extends HttpServlet
 
                 new MultipartRequestWrapper(
 
-                    request,
+                    request_,
 
                     saveUploadedFilesToDisk,
 
@@ -344,9 +342,25 @@ public class UploadPriceController extends HttpServlet
 
 
 
-            Enumeration e = handler.getPartsHash().keys();
+//            Enumeration e = handler.getPartsHash().keys();
 
-            if ( !e.hasMoreElements() )
+//            if ( !e.hasMoreElements() )
+
+//            {
+
+//                response.sendRedirect( srcURL );
+
+//                return;
+
+//            }
+
+//            // in request must be only one file
+
+//            String key = (String)e.nextElement();
+
+            Iterator e = handler.getPartsHash().keySet().iterator();
+
+            if ( !e.hasNext() )
 
             {
 
@@ -356,11 +370,13 @@ public class UploadPriceController extends HttpServlet
 
             }
 
-
-
             // in request must be only one file
 
-            String key = (String)e.nextElement();
+            String key = (String)e.next();
+
+
+
+
 
             part = (AbstractPart)handler.getPartsHash().get( key );
 
@@ -390,7 +406,7 @@ public class UploadPriceController extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check( request, response, "/" );
+            AuthSession auth_ = AuthTools.check( ctxInstance.getPortletRequest(), response, "/" );
 
             if ( auth_==null )
 
@@ -398,7 +414,7 @@ public class UploadPriceController extends HttpServlet
 
 
 
-            SiteMenu siteMenu = SiteMenu.getInstance( db_, jspPage.p.sites.getIdSite() );
+            SiteMenu siteMenu = SiteMenu.getInstance( db_, ctxInstance.page.p.sites.getIdSite() );
 
 
 
@@ -414,14 +430,6 @@ public class UploadPriceController extends HttpServlet
 
                 WebmillErrorPage.process(out, null, "Данный сайт не поддерживает ни одного прайса. Код ошибки #10.04", srcURL, "загрузить повторно");
 
-//                out.write( "<html><head></head<body>"+
-
-//                    "<p>Данный сайт не поддерживает ни одного прайса. Код ошибки #10.04</p>"+
-
-//                    "<p><a href=\""+srcURL+"\">загрузить повторно</a></p>"+
-
-//                    "</body></html>" );
-
 
 
                 return;
@@ -432,7 +440,7 @@ public class UploadPriceController extends HttpServlet
 
             if ( log.isDebugEnabled() )
 
-                log.debug( "#55.01.15 idSite -  "+jspPage.p.sites.getIdSite() );
+                log.debug( "#55.01.15 idSite -  "+ctxInstance.page.p.sites.getIdSite() );
 
 
 
@@ -465,6 +473,16 @@ public class UploadPriceController extends HttpServlet
             out.close();
 
             return;
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 
@@ -530,7 +548,7 @@ public class UploadPriceController extends HttpServlet
 
             {
 
-                ImportPriceList.process( prices, jspPage.p.sites.getIdSite() );
+                ImportPriceList.process( prices, ctxInstance.page.p.sites.getIdSite(), db_);
 
                 // reinit Shop in cache. need for correct output date/time of upload price
 

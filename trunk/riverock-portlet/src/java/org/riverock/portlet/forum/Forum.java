@@ -58,8 +58,6 @@ package org.riverock.portlet.forum;
 
 
 
-import java.io.File;
-
 import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
@@ -74,19 +72,19 @@ import java.util.List;
 
 
 
+import javax.portlet.PortletRequest;
+
 import javax.servlet.http.Cookie;
 
-import javax.servlet.http.HttpServletRequest;
 
 
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 
 import org.riverock.common.tools.DateTools;
 
 import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -100,13 +98,11 @@ import org.riverock.portlet.main.Constants;
 
 import org.riverock.webmill.port.InitPage;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.utils.ServletUtils;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -128,7 +124,7 @@ abstract public class Forum
 
     public Long id = null;
 
-    public InitPage jspPage = null;
+    public InitPage page = null;
 
     public static final String SEQ_FORUM_THREADS = "SEQ_MAIN_FORUM_THREADS";
 
@@ -146,7 +142,7 @@ abstract public class Forum
 
 
 
-    public Forum(javax.servlet.http.HttpServletRequest request,
+    public Forum(PortletRequest portletRequest,
 
         javax.servlet.http.HttpServletResponse response,
 
@@ -156,13 +152,15 @@ abstract public class Forum
 
     {
 
-        id = ServletTools.getLong(request, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
+        id = PortletTools.getLong(portletRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
 
-        id_forum = ServletTools.getLong(request, Constants.NAME_ID_FORUM_PARAM);
+//Todo need change
 
-        year = ServletTools.getInt(
+        id_forum = jspPage.getPortletId();
 
-            request, Constants.NAME_YEAR_PARAM,
+        year = PortletTools.getInt(
+
+            portletRequest, Constants.NAME_YEAR_PARAM,
 
             new Integer(Calendar.getInstance().get(Calendar.YEAR))
 
@@ -172,13 +170,15 @@ abstract public class Forum
 
 
 
-        forumURI = response.encodeURL(
+        if (true) throw new IllegalStateException("need fix code");
 
-            new File(request.getRequestURI()).getName());
+//        forumURI = response.encodeURL(
+
+//            new File(request.getRequestURI()).getName());
 
 
 
-        this.jspPage = jspPage;
+        this.page = jspPage;
 
 
 
@@ -186,7 +186,7 @@ abstract public class Forum
 
 
 
-    public static void setCookie(javax.servlet.http.HttpServletRequest request,
+    public static void setCookie(PortletRequest request,
 
         javax.servlet.http.HttpServletResponse response)
 
@@ -194,33 +194,23 @@ abstract public class Forum
 
     {
 
-        if (ServletUtils.getString(request, "action").equals("add"))
+        if (PortletTools.getString(request, "action").equals("add"))
 
         {
 
-            String email = ServletUtils.getString(request, "e");
+            String email = PortletTools.getString(request, "e");
 
-            String name = ServletUtils.getString(request, "n");
-
-/*
-
-cat.debug("#10.00.NAME1 "+StringTools.convertString(name,
-
-"UTF-8",
-
-"8859_1"));
-
-cat.debug("#10.00.NAME "+name);
-
-cat.debug("#10.00.EMAIL "+email);
-
-*/
+            String name = PortletTools.getString(request, "n");
 
             String name_req = "";
 
             String email_req = "";
 
 
+
+            if (true) throw new IllegalStateException("need fix code");
+
+/*
 
             Cookie[] cookies_req = request.getCookies();
 
@@ -234,19 +224,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 if (name_cookie.equals("_name"))
 
-                {
-
-/*			name_req = StringTools.convertString(c.getValue(),
-
-"8859_1",
-
-"UTF-8");
-
-*/
-
                     name_req = c.getValue();
-
-                }
 
 
 
@@ -256,9 +234,7 @@ cat.debug("#10.00.EMAIL "+email);
 
             }
 
-//cat.debug("COOKIE.NAME "+name_req);
-
-//cat.debug("COOKIE.EMAIL "+email_req);
+*/
 
 
 
@@ -700,7 +676,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                     s += ("<a href=\"" + CtxURL.ctx() + '?' +
 
-                        Constants.NAME_LANG_PARAM + '=' + jspPage.currentLocale.toString() + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
 
                         Constants.NAME_YEAR_PARAM + '=' + yearValue + '&' +
 
@@ -816,7 +792,7 @@ cat.debug("#10.00.EMAIL "+email);
 
 
 
-                String monthString = RsetTools.getStringDate(rs, "dat", "MMMM", "unknown", jspPage.currentLocale);
+                String monthString = RsetTools.getStringDate(rs, "dat", "MMMM", "unknown", page.currentLocale);
 
                 if (month == monthValue)
 
@@ -826,7 +802,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                     s += ("<a href=\"" + forumURI + '?' +
 
-                        Constants.NAME_LANG_PARAM + '=' + jspPage.currentLocale.toString() + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
 
                         Constants.NAME_YEAR_PARAM + '=' + year + '&' +
 
@@ -1070,7 +1046,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 Calendar cal = RsetTools.getCalendar(rs, "DATE_POST");
 
-                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", jspPage.currentLocale);
+//                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", ctxInstance.page.currentLocale);
 
 
 
@@ -1082,7 +1058,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                     "<a class=\"topictitle\" href=\"" + CtxURL.ctx() + '?' +
 
-                    Constants.NAME_LANG_PARAM + '=' + jspPage.currentLocale.toString() + '&' +
+                    Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
 
                     Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
 
@@ -1278,7 +1254,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 Calendar cal = RsetTools.getCalendar(rs, "DATE_POST");
 
-                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", jspPage.currentLocale);
+                String dat = DateTools.getStringDate(cal, "dd-MM-yyyy HH:mm:ss", page.currentLocale);
 
 
 
@@ -1302,7 +1278,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                     r_ += ("<a href=\"" + CtxURL.ctx() + '?' +
 
-                        Constants.NAME_LANG_PARAM + '=' + jspPage.currentLocale.toString() + '&' +
+                        Constants.NAME_LANG_PARAM + '=' + page.currentLocale.toString() + '&' +
 
 //                        Constants.NAME_YEAR_PARAM + '=' + yearValue + '&' +
 
@@ -1414,7 +1390,7 @@ cat.debug("#10.00.EMAIL "+email);
 
      */
 
-    public Long addMessage(HttpServletRequest request, Long id_thread__, Long id_main__)
+    public Long addMessage(CtxInstance ctxInstance, Long id_thread__, Long id_main__)
 
         throws ForumException
 
@@ -1474,13 +1450,13 @@ cat.debug("#10.00.EMAIL "+email);
 
             dbDyn.bindDate(st, 5, DateTools.getCurrentTime());
 
-            st.setString(6, ServletUtils.getString(request, "h") ); // header
+            st.setString(6, PortletTools.getString(ctxInstance.getPortletRequest(), "h") ); // header
 
-            st.setString(7, ServletUtils.getString(request, "n") ); // name
+            st.setString(7, PortletTools.getString(ctxInstance.getPortletRequest(), "n") ); // name
 
-            st.setString(8, ServletUtils.getString(request, "e") ); // email
+            st.setString(8, PortletTools.getString(ctxInstance.getPortletRequest(), "e") ); // email
 
-            st.setString(9, request.getRemoteAddr());
+            st.setString(9, ctxInstance.getRemoteAddr());
 
 
 
@@ -1500,7 +1476,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 "MESSAGE_TEXT",
 
-                ServletUtils.getString(request, "b"),
+                PortletTools.getString(ctxInstance.getPortletRequest(), "b"),
 
                 false
 

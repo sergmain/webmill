@@ -240,7 +240,7 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
         {
 
-            Long idSite = SiteListSite.getIdSite( param.getRequest().getServerName());
+            Long idSite = SiteListSite.getIdSite( param.getPortletRequest().getServerName());
 
 
 
@@ -266,7 +266,7 @@ public class JobBlock implements Portlet, PortletResultObject, PortletGetList, P
 
                     db_, RsetTools.getLong(rs, "ID_JOB_POSITION"),
 
-                    param.getRequest().getServerName()
+                    param.getPortletRequest().getServerName()
 
                 );
 

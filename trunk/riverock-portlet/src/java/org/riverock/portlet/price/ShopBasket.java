@@ -70,27 +70,25 @@ import java.io.UnsupportedEncodingException;
 
 
 
+import org.apache.log4j.Logger;
+
+import org.riverock.common.config.ConfigException;
+
+import org.riverock.generic.tools.StringManager;
+
+import org.riverock.portlet.main.Constants;
+
+import org.riverock.portlet.portlets.model.OrderLogic;
+
 import org.riverock.portlet.schema.portlet.shop.CurrentBasketType;
 
 import org.riverock.portlet.schema.price.OrderType;
 
-import org.riverock.portlet.portlets.model.OrderLogic;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.generic.tools.StringManager;
+import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.PortletParameter;
 
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.config.ConfigException;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -132,11 +130,11 @@ public class ShopBasket
 
                 CtxURL.url(
 
-                    param.getRequest(),
+                    param.getPortletRequest(),
 
                     param.getResponse(),
 
-                    param.getJspPage(),
+                    param.getPage(),
 
                     "mill.invoice"
 
@@ -144,11 +142,11 @@ public class ShopBasket
 
                 Constants.NAME_ID_CURRENCY_SHOP + '=' +
 
-                ServletTools.getInt( param.getRequest(), Constants.NAME_ID_CURRENCY_SHOP ) + '&' +
+                PortletTools.getInt( param.getPortletRequest(), Constants.NAME_ID_CURRENCY_SHOP ) + '&' +
 
                 Constants.NAME_ID_GROUP_SHOP + '=' +
 
-                ServletTools.getInt( param.getRequest(), Constants.NAME_ID_GROUP_SHOP )
+                PortletTools.getInt( param.getPortletRequest(), Constants.NAME_ID_GROUP_SHOP )
 
             );
 

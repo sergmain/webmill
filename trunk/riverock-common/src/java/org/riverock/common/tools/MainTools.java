@@ -72,15 +72,61 @@ import java.util.Locale;
 
 import java.util.StringTokenizer;
 
+import java.util.Map;
+
+import java.util.List;
+
+import java.util.ArrayList;
+
 
 
 public class MainTools
 
 {
 
-    private static Logger log = Logger.getLogger("org.riverock.tools.MainTools" );
+    private static Logger log = Logger.getLogger("org.riverock.common.tools.MainTools" );
 
 
+
+    public static void putKey(Map map, String key, String value)
+
+    {
+
+        Object obj = map.get( key );
+
+        if (obj==null)
+
+        {
+
+            map.put( key, value );
+
+        }
+
+        else if (obj instanceof List)
+
+        {
+
+            ((List)obj).add( value );
+
+        }
+
+        else
+
+        {
+
+            List v = new ArrayList();
+
+            v.add(obj);
+
+            v.add( value );
+
+            map.remove( key );
+
+            map.put( key, v );
+
+        }
+
+    }
 
 
 

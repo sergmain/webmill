@@ -88,7 +88,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -100,21 +104,13 @@ import org.riverock.sso.a3.InternalAuthProvider;
 
 import org.riverock.sso.a3.InternalAuthProviderTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.RsetTools;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -154,7 +150,7 @@ public class BindDeleteCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -166,6 +162,10 @@ public class BindDeleteCommit extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
 
 
             ContextNavigator.setContentType(response);
@@ -176,7 +176,7 @@ public class BindDeleteCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -202,23 +202,27 @@ public class BindDeleteCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage  jspPage =  new InitPage(dbDyn, request,
+//                    InitPage  jspPage =  new InitPage(dbDyn, request,
 
-                                                      "mill.locale.AUTH_USER"
+//                                                      "mill.locale.AUTH_USER"
 
-                    );
-
-
-
-                    index_page = CtxURL.url( request, response, jspPage, "mill.auth.bind");
+//                    );
 
 
 
-                    if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
+                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
 
-                        return;
 
-                    Long id_auth_user = ServletTools.getLong(request, "id_auth_user");
+
+//                    if (ServletTools.isNotInit(request, response, "id_auth_user", index_page))
+
+//                        return;
+
+                    Long id_auth_user = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_auth_user");
+
+                    if (id_auth_user==null)
+
+                        throw new IllegalArgumentException("id_auth_user not initialized");
 
 
 

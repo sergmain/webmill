@@ -80,8 +80,6 @@ import java.util.StringTokenizer;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
 
 import javax.xml.parsers.SAXParser;
@@ -96,6 +94,10 @@ import javax.xml.transform.stream.StreamSource;
 
 
 
+import org.apache.log4j.Logger;
+
+import org.exolab.castor.xml.Unmarshaller;
+
 import org.riverock.common.config.ConfigException;
 
 import org.riverock.common.tools.DateTools;
@@ -105,8 +107,6 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.MainTools;
 
 import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
 
 import org.riverock.common.tools.StringTools;
 
@@ -124,7 +124,23 @@ import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.schema.member.*;
 
-import org.riverock.portlet.schema.member.types.*;
+import org.riverock.portlet.schema.member.types.ContentTypeActionType;
+
+import org.riverock.portlet.schema.member.types.FieldValidatorTypeTypeType;
+
+import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
+
+import org.riverock.portlet.schema.member.types.ParameterTypeType;
+
+import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
+
+import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
+
+import org.riverock.portlet.schema.member.types.SqlCheckParameterTypeTypeType;
+
+import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
+
+import org.riverock.portlet.schema.member.types.TypeFieldType;
 
 import org.riverock.portlet.tools.HtmlTools;
 
@@ -134,21 +150,17 @@ import org.riverock.webmill.core.GetSiteTemplateItem;
 
 import org.riverock.webmill.port.InitPage;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
+
 import org.riverock.webmill.schema.core.SiteTemplateItemType;
 
 import org.riverock.webmill.schema.site.SiteTemplate;
 
 import org.riverock.webmill.site.SiteTemplateService;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-
-
-import org.apache.log4j.Logger;
-
-import org.exolab.castor.xml.Unmarshaller;
 
 import org.xml.sax.InputSource;
 
@@ -188,7 +200,7 @@ public class MemberProcessing
 
 
 
-    private HttpServletRequest req = null;
+    private CtxInstance ctxInstance = null;
 
 
 
@@ -216,8 +228,6 @@ public class MemberProcessing
 
     {
 
-//        ma = null;
-
         mod = null;
 
         content = null;
@@ -226,19 +236,13 @@ public class MemberProcessing
 
         jspPage = null;
 
-        DatabaseAdapter.close(db_);
-
-        db_ = null;
-
-        req = null;
-
-//        res = null;
-
         fromParam = null;
 
         thisURI = null;
 
         commitURI = null;
+
+        db_ = null;
 
 
 
@@ -470,19 +474,19 @@ public class MemberProcessing
 
                             case ParameterTypeType.NUMBER_TYPE:
 
-                                RsetTools.setLong(ps, numParam++, ServletTools.getLong(req, parameter.getParameter()) );
+                                RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(), parameter.getParameter()) );
 
                                 break;
 
                             case ParameterTypeType.STRING_TYPE:
 
-                                ps.setString(numParam++, ServletUtils.getString(req, parameter.getParameter()));
+                                ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(), parameter.getParameter()));
 
                                 break;
 
                             case ParameterTypeType.DATE_TYPE:
 
-//                        RsetTools.setLong(ps, numParam++, ServletTools.getLong(req, parameter.getParameter()));
+//                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(req, parameter.getParameter()));
 
 //                        break;
 
@@ -502,7 +506,7 @@ public class MemberProcessing
 
                     case SqlCheckParameterTypeTypeType.RESTRICT_SITE_TYPE:
 
-                        ps.setString(numParam++, req.getServerName());
+                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
                         break;
 
@@ -518,7 +522,7 @@ public class MemberProcessing
 
                             RsetTools.setLong(ps, numParam++,
 
-                                ServletTools.getLong(req,
+                                PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                                     mod.getName() + '.' + nameFirmField) );
 
@@ -690,7 +694,7 @@ public class MemberProcessing
 
                 (ff.getMask() == null || ff.getMask().trim().length() == 0 ? "dd.MM.yyyy" : ff.getMask()),
 
-                defValue, jspPage.currentLocale);
+                defValue, ctxInstance.page.currentLocale);
 
     }
 
@@ -756,7 +760,7 @@ public class MemberProcessing
 
             case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
 
-                s_ = HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, jspPage.currentLocale);
+                s_ = HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, ctxInstance.page.currentLocale);
 
                 break;
 
@@ -1968,7 +1972,7 @@ return mod.selectSQL;
 
                     //prepare lookup PK
 
-//log.debug("#3.001.01 "+ServletTools.getLong(req,
+//log.debug("#3.001.01 "+PortletTools.getLong(req,
 
 //			modName+'.'+cnt.getQueryArea().getPrimaryKey()));
 
@@ -1982,7 +1986,7 @@ return mod.selectSQL;
 
                     {
 
-                        RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
 
@@ -1992,7 +1996,7 @@ return mod.selectSQL;
 
                     {
 
-                        ps.setString(numParam++, ServletUtils.getString(req,
+                        ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()));
 
@@ -2034,7 +2038,7 @@ s_ = getRsetBigtextValue( ff.getQueryArea(), primaryKeyValue );
 
 
 
-RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
 
 modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
@@ -2064,7 +2068,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
 //log.debug("#3.001.07 "+req.getServerName());
 
-                        ps.setString(numParam++, req.getServerName());
+                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
                     }
 
@@ -2120,9 +2124,9 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
         {
 
-//log.debug("#3.001.13 "+req.getServerName());
+//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName());
 
-            ps.setString(numParam++, req.getServerName());
+            ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
         }
 
@@ -2150,7 +2154,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
         {
 
-            RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+            RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) ) );
 
@@ -2204,11 +2208,11 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
                     //prepare lookup PK
 
-//log.debug("#3.001.01 "+ServletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
+//log.debug("#3.001.01 "+PortletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
 
 
 
-//		    RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+//		    RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
 
 //			modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
@@ -2222,7 +2226,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
                         if (log.isDebugEnabled())
 
-                            log.debug(" 1 Bind param #"+numParam+" " + ServletTools.getLong(req,
+                            log.debug(" 1 Bind param #"+numParam+" " + PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                                     modName + '.' + cnt.getQueryArea().getPrimaryKey())
 
@@ -2230,7 +2234,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
 
 
-                        RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
 
@@ -2242,7 +2246,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
                         if (log.isDebugEnabled())
 
-                            log.debug(" 2 Bind param #"+numParam+" " + ServletUtils.getString(req,
+                            log.debug(" 2 Bind param #"+numParam+" " + PortletTools.getString(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey())
 
@@ -2250,7 +2254,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
 
 
-                        ps.setString(numParam++, ServletUtils.getString(req,
+                        ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()));
 
@@ -2316,13 +2320,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         if (log.isDebugEnabled())
 
-                            log.debug(" 5 Bind param #"+numParam+" " + req.getServerName()
+                            log.debug(" 5 Bind param #"+numParam+" " + ctxInstance.page.p.getServerName()
 
                             );
 
 
 
-                        ps.setString(numParam++, req.getServerName());
+                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
                     }
 
@@ -2386,13 +2390,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             if (log.isDebugEnabled())
 
-                log.debug(" 8 Bind param #"+numParam+" " + req.getServerName()
+                log.debug(" 8 Bind param #"+numParam+" " + ctxInstance.page.p.getServerName()
 
                 );
 
 
 
-            ps.setString(numParam++, req.getServerName());
+            ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
         }
 
@@ -2420,7 +2424,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 //	RsetTools.setLong(ps, numParam++,
 
-//		ServletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey())
+//		PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey())
 
 //	);
 
@@ -2434,7 +2438,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             if (log.isDebugEnabled())
 
-                log.debug("10 Bind param #"+numParam+" " + ServletTools.getLong(req,
+                log.debug("10 Bind param #"+numParam+" " + PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey())
 
@@ -2442,7 +2446,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-            RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+            RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey()) );
 
@@ -2454,7 +2458,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             if (log.isDebugEnabled())
 
-                log.debug("11 Bind param #"+numParam+" " + ServletUtils.getString(req,
+                log.debug("11 Bind param #"+numParam+" " + PortletTools.getString(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey())
 
@@ -2462,7 +2466,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-            ps.setString(numParam++, ServletUtils.getString(req,
+            ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey()));
 
@@ -2526,7 +2530,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 RsetTools.setLong(ps, numParam++,
 
-ServletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey())
+PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey())
 
 );
 
@@ -2540,7 +2544,7 @@ ServletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey
 
         {
 
-            RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+            RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey()) );
 
@@ -2550,7 +2554,7 @@ ServletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey
 
         {
 
-            ps.setString(numParam++, ServletUtils.getString(req,
+            ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey()));
 
@@ -2612,11 +2616,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     //prepare lookup PK
 
-//log.debug("#3.001.01 "+ServletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
+//log.debug("#3.001.01 "+PortletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
 
 
 
-//		    RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+//		    RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
 
 //			modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
@@ -2626,7 +2630,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-                        RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
 
@@ -2636,7 +2640,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-                        ps.setString(numParam++, ServletUtils.getString(req,
+                        ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()));
 
@@ -2694,9 +2698,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.07 "+req.getServerName());
+//log.debug("#3.001.07 "+ctxInstance.page.p.getServerName());
 
-                        ps.setString(numParam++, req.getServerName());
+                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
                     }
 
@@ -2746,9 +2750,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.13 "+req.getServerName());
+//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName());
 
-            ps.setString(numParam++, req.getServerName());
+            ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
         }
 
@@ -2780,7 +2784,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
 if ( qa.isRestrict( "site" ) ) {
 
-ps.setString(numParam++, req.getServerName() );
+ps.setString(numParam++, ctxInstance.page.p.getServerName() );
 
 }
 
@@ -2940,15 +2944,15 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                 if (log.isDebugEnabled())
 
-                    log.debug("#4.05.01 bind "+ff.getJspType().toString()+" param #" + numParam + " " + ServletUtils.getString(req, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                    log.debug("#4.05.01 bind "+ff.getJspType().toString()+" param #" + numParam + " " + PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
 
 
 
                 String stringParam =
 
-                    ServletUtils.getString(
+                    PortletTools.getString(
 
-                        req, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null
+                        ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff), null
 
                     );
 
@@ -3084,7 +3088,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                         "' param #" + numParam + " " + modName + '.' + cnt.getQueryArea().getPrimaryKey()+' '+
 
-                            ServletUtils.getString(req, modName + '.' + cnt.getQueryArea().getPrimaryKey())
+                            PortletTools.getString(ctxInstance.getPortletRequest(), modName + '.' + cnt.getQueryArea().getPrimaryKey())
 
                     );
 
@@ -3096,7 +3100,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                     case PrimaryKeyTypeType.NUMBER_TYPE:
 
-                        RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
 
@@ -3106,7 +3110,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                     case PrimaryKeyTypeType.STRING_TYPE:
 
-                            ps.setString(numParam++, ServletUtils.getString(req,
+                            ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                         modName + '.' + cnt.getQueryArea().getPrimaryKey()));
 
@@ -3172,7 +3176,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                 log.debug("#4.01.03.1 bind long param #" + numParam + " " +
 
-                    ServletTools.getLong(req, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0)).longValue()
+                    PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0)).longValue()
 
                 );
 
@@ -3180,7 +3184,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
             RsetTools.setLong(ps, numParam++,
 
-                ServletTools.getLong(req, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) )
+                PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) )
 
             );
 
@@ -3228,13 +3232,13 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                 log.debug("#4.09.08 bind long param #" + numParam + ' ' +
 
-                          SiteListSite.getIdSite( req.getServerName())
+                          SiteListSite.getIdSite( ctxInstance.getPortletRequest().getServerName())
 
                 );
 
 
 
-            RsetTools.setLong(ps, numParam++, SiteListSite.getIdSite( req.getServerName() ));
+            RsetTools.setLong(ps, numParam++, SiteListSite.getIdSite( ctxInstance.getPortletRequest().getServerName() ));
 
 
 
@@ -3316,9 +3320,9 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                 String insertString =
 
-                    ServletUtils.getString(
+                    PortletTools.getString(
 
-                        req, mod.getName() + '.' + MemberServiceClass.getRealName(ff)
+                        ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff)
 
                     );
 
@@ -3438,11 +3442,11 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                     //prepare lookup PK
 
-//log.debug("#3.001.01 "+ServletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
+//log.debug("#3.001.01 "+PortletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
 
 
 
-//		    RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+//		    RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
 
 //			modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
@@ -3452,7 +3456,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                     {
 
-                        RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
 
@@ -3462,7 +3466,7 @@ ps.setString(numParam++, auth.getUserLogin() );
 
                     {
 
-                        ps.setString(numParam++, ServletUtils.getString(req,
+                        ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()));
 
@@ -3520,9 +3524,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.07 "+req.getServerName());
+//log.debug("#3.001.07 "+ctxInstance.page.p.getServerName());
 
-                        ps.setString(numParam++, req.getServerName());
+                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
                     }
 
@@ -3556,7 +3560,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 //	RsetTools.setLong(ps, numParam++,
 
-//		ServletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey() )
+//		PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey() )
 
 //	);
 
@@ -3566,7 +3570,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+            RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey()) );
 
@@ -3576,7 +3580,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            ps.setString(numParam++, ServletUtils.getString(req,
+            ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                 mod.getName() + '.' + content.getQueryArea().getPrimaryKey()));
 
@@ -3624,7 +3628,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             RsetTools.setLong(ps, numParam++,
 
-                ServletTools.getLong(req, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0))
+                PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0))
 
             );
 
@@ -3652,9 +3656,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.13 "+req.getServerName());
+//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName());
 
-            ps.setString(numParam++, req.getServerName());
+            ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
         }
 
@@ -3680,7 +3684,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 RsetTools.setLong(ps, 1,
 
-ServletTools.getLong(req,
+PortletTools.getLong(req,
 
 mod.getName()+'.'+content.getQueryArea().getPrimaryKey() )
 
@@ -3748,7 +3752,7 @@ ps.setString(2, auth.getUserName() );
 
                             ps.setString(numParam++,
 
-                                    ServletUtils.getString(req,
+                                    PortletTools.getString(ctxInstance.getPortletRequest(),
 
                                             mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
 
@@ -3760,7 +3764,7 @@ ps.setString(2, auth.getUserName() );
 
 
 
-                            String dateToParse = ServletUtils.getString(req,
+                            String dateToParse = PortletTools.getString(ctxInstance.getPortletRequest(),
 
                                         mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
@@ -3804,7 +3808,7 @@ ps.setString(2, auth.getUserName() );
 
                             ps.setLong(numParam++,
 
-                                    ServletTools.getLong(req,
+                                    PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                                             mod.getName() + '.' + MemberServiceClass.getRealName(ff)).longValue());
 
@@ -3822,9 +3826,9 @@ ps.setString(2, auth.getUserName() );
 
                             {
 
-                                log.debug("#3.005.01 " + ServletTools.getFloat(req, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                                log.debug("#3.005.01 " + PortletTools.getFloat(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
 
-                                log.debug("#3.005.02 " + ServletUtils.getString(req, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                                log.debug("#3.005.02 " + PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
 
                             }
 
@@ -3832,7 +3836,7 @@ ps.setString(2, auth.getUserName() );
 
                             ps.setDouble(numParam++,
 
-                                    ServletTools.getDouble(req,
+                                    PortletTools.getDouble(ctxInstance.getPortletRequest(),
 
                                             mod.getName() + '.' + MemberServiceClass.getRealName(ff)).doubleValue());
 
@@ -3844,7 +3848,7 @@ ps.setString(2, auth.getUserName() );
 
                             ps.setString(numParam++,
 
-                                    ServletUtils.getString(req,
+                                    PortletTools.getString(ctxInstance.getPortletRequest(),
 
                                             mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
 
@@ -3892,11 +3896,11 @@ ps.setString(2, auth.getUserName() );
 
 //log.debug("#3.001.03 "+modName+'.'+cnt.getQueryArea().getPrimaryKey()+" "+
 
-//		ServletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
+//		PortletTools.getLong(req, modName+'.'+cnt.getQueryArea().getPrimaryKey()));
 
 
 
-//		    RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+//		    RsetTools.setLong(ps, numParam++, PortletTools.getLong(req,
 
 //			modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
@@ -3906,7 +3910,7 @@ ps.setString(2, auth.getUserName() );
 
                     {
 
-                        RsetTools.setLong(ps, numParam++, ServletTools.getLong(req,
+                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
 
@@ -3916,7 +3920,7 @@ ps.setString(2, auth.getUserName() );
 
                     {
 
-                        ps.setString(numParam++, ServletUtils.getString(req,
+                        ps.setString(numParam++, PortletTools.getString(ctxInstance.getPortletRequest(),
 
                             modName + '.' + cnt.getQueryArea().getPrimaryKey()));
 
@@ -3974,9 +3978,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.07 site "+req.getServerName());
+//log.debug("#3.001.07 site "+ctxInstance.page.p.getServerName());
 
-                        ps.setString(numParam++, req.getServerName());
+                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
                     }
 
@@ -4074,7 +4078,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             RsetTools.setLong(ps, numParam++,
 
-                ServletTools.getLong(req, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) )
+                PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) )
 
             );
 
@@ -4088,7 +4092,7 @@ if ( cnt.getQueryArea().getPrimaryKeyType().getType()== PrimaryKeyTypeType.NUMBE
 
 RsetTools.setLong(ps, numParam++,
 
-ServletTools.getLong(req, mod.getName()+'.'+mod.getSelfLookup().getTopField().getName(), 0));
+PortletTools.getLong(req, mod.getName()+'.'+mod.getSelfLookup().getTopField().getName(), 0));
 
 }
 
@@ -4098,7 +4102,7 @@ else if ( cnt.getQueryArea().getPrimaryKeyType().getType()== PrimaryKeyTypeType.
 
 ps.setString(numParam++,
 
-ServletUtils.getString(req, mod.getName()+'.'+mod.getSelfLookup().getTopField().getName()));
+PortletTools.getString(req, mod.getName()+'.'+mod.getSelfLookup().getTopField().getName()));
 
 }
 
@@ -4156,9 +4160,9 @@ throw new Exception("Wrong type of primary key");
 
         {
 
-//log.debug("#3.001.13 "+req.getServerName()+' ' +numParam);
+//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName()+' ' +numParam);
 
-            ps.setString(numParam++, req.getServerName());
+            ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
         }
 
@@ -4280,7 +4284,7 @@ throw new Exception("Wrong type of primary key");
 
                 {
 
-                    pkValue = "" + ServletTools.getLong(req, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                    pkValue = "" + PortletTools.getLong(ctxInstance.getPortletRequest(), modName + '.' + cnt.getQueryArea().getPrimaryKey());
 
                 }
 
@@ -4288,7 +4292,7 @@ throw new Exception("Wrong type of primary key");
 
                 {
 
-                    pkValue = ServletUtils.getString(req, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                    pkValue = PortletTools.getString(ctxInstance.getPortletRequest(), modName + '.' + cnt.getQueryArea().getPrimaryKey());
 
                 }
 
@@ -4406,7 +4410,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-            if (req.getParameter(str + '.' + cnt.getQueryArea().getPrimaryKey()) == null)
+            if (ctxInstance.getPortletRequest().getParameter(str + '.' + cnt.getQueryArea().getPrimaryKey()) == null)
 
                 return "Parameter " + str + '.' + cnt.getQueryArea().getPrimaryKey() + " not specified.";
 
@@ -4504,7 +4508,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     Constants.MEMBER_MODULE_PARAM + "=" + mod.getName() + "&" +
 
-                    Constants.MEMBER_ACTION_PARAM + "=insert&" + jspPage.getAsURL() +
+                    Constants.MEMBER_ACTION_PARAM + "=insert&" + ctxInstance.page.getAsURL() +
 
                     addLookupURL(true);
 
@@ -4532,7 +4536,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         '=' +
 
-                        ServletTools.getLong(req, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0)).longValue() +
+                        PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0)).longValue() +
 
                         '&'
 
@@ -4542,7 +4546,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
 
-                return s + "\">" + MemberServiceClass.getString(ta.getTargetModuleName(), jspPage.currentLocale) + "</a>";
+                return s + "\">" + MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "</a>";
 
             }
 
@@ -4644,7 +4648,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     '=' +
 
-                    ServletTools.getLong(req, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0)).longValue() +
+                    PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0)).longValue() +
 
                     '&'
 
@@ -4672,7 +4676,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         s += "<input type=\"button\" value=\"" +
 
-                            MemberServiceClass.getString(ta.getTargetModuleName(), jspPage.currentLocale) + "\" onclick=\"location.href='" +
+                            MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
 
                             thisURI +
 
@@ -4684,7 +4688,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             addLookupURL(true) +
 
-                            jspPage.getAsURL() +
+                            ctxInstance.page.getAsURL() +
 
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
 
@@ -4700,7 +4704,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         s += "<input type=\"button\" value=\"" +
 
-                            MemberServiceClass.getString(ta.getTargetModuleName(), jspPage.currentLocale) + "\" onclick=\"location.href='" +
+                            MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
 
                             thisURI +
 
@@ -4712,7 +4716,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             addLookupURL(true) +
 
-                            jspPage.getAsURL() +
+                            ctxInstance.page.getAsURL() +
 
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
 
@@ -4732,11 +4736,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     String param = "";
 
-                    if (req.getParameter(mod.getName() + '.' + mod.getSelfLookup().getTopField().getName()) == null)
+                    if (ctxInstance.getPortletRequest().getParameter(mod.getName() + '.' + mod.getSelfLookup().getTopField().getName()) == null)
 
                     {
 
-                        param = req.getQueryString();
+                        // Todo !!! need remove ref to ctxInstance.req
+
+                        param = ctxInstance.req.getQueryString();
 
 //log.debug("#5.01.01 "+param);
 
@@ -4764,7 +4770,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-                        for (e = req.getParameterNames(); e.hasMoreElements();)
+                        for (e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
 
                         {
 
@@ -4788,7 +4794,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             {
 
-                                param += req.getParameter(p) + '&';
+                                param += ctxInstance.getPortletRequest().getParameter(p) + '&';
 
                             }
 
@@ -4804,7 +4810,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     s += "<input type=\"button\" value=\"" +
 
-                        MemberServiceClass.getString(ta.getTargetModuleName(), jspPage.currentLocale) + "\" onclick=\"location.href='" +
+                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
 
                         thisURI +
 
@@ -4816,7 +4822,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     s += "<input type=\"button\" value=\"" +
 
-                        MemberServiceClass.getString(ta.getTargetModuleName(), jspPage.currentLocale) + "\" onclick=\"location.href='" +
+                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "\" onclick=\"location.href='" +
 
                         thisURI +
 
@@ -4828,7 +4834,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         addLookupURL(true, true) +
 
-                        jspPage.getAsURL() +
+                        ctxInstance.page.getAsURL() +
 
                         mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + '=' + pkID + "';\">\n";
 
@@ -4902,9 +4908,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(),
 
-                    "" + ServletTools.getLong(
+                    "" + PortletTools.getLong(
 
-                        req,
+                        ctxInstance.getPortletRequest(),
 
                         mod.getName() + '.' +
 
@@ -4934,7 +4940,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            jspPage.getAsForm() +
+            ctxInstance.page.getAsForm() +
 
             addLookupURL(false) +
 
@@ -4944,7 +4950,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 //		buildHiddenForm(mod.getName()+'.'+content.getQueryArea().getPrimaryKey(),
 
-//			""+ServletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey() )
+//			""+PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey() )
 
 //		)+
 
@@ -4984,7 +4990,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 buildHiddenForm(mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(),
 
-                    "" + ServletTools.getLong(req,
+                    "" + PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                         mod.getName() + '.' +
 
@@ -5010,7 +5016,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            pkValue = "" + ServletTools.getLong(req, mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
+            pkValue = "" + PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
 
         }
 
@@ -5018,7 +5024,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            pkValue = ServletUtils.getString(req, mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
+            pkValue = PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
 
         }
 
@@ -5060,7 +5066,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            jspPage.getAsForm() +
+            ctxInstance.page.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5100,7 +5106,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 buildHiddenForm(mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(),
 
-                    "" + ServletTools.getLong(req,
+                    "" + PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                         mod.getName() + '.' +
 
@@ -5124,7 +5130,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            pkValue = "" + ServletTools.getLong(req, mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
+            pkValue = "" + PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
 
         }
 
@@ -5132,7 +5138,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            pkValue = ServletUtils.getString(req, mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
+            pkValue = PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
 
         }
 
@@ -5174,7 +5180,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
 
-            jspPage.getAsForm() +
+            ctxInstance.page.getAsForm() +
 
             addLookupURL(false) +
 
@@ -5204,7 +5210,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             s = mod.getName() + '.' + mod.getSelfLookup().getTopField().getName() + '=' +
 
-                ServletTools.getLong(req,
+                PortletTools.getLong(ctxInstance.getPortletRequest(),
 
                     mod.getName() + '.' +
 
@@ -5230,7 +5236,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
 
-            jspPage.getAsURL() +
+            ctxInstance.page.getAsURL() +
 
             addLookupURL(true);
 
@@ -5258,7 +5264,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 return "<a href=\"" + getIndexURL() + "\">" +
 
-                    MemberServiceClass.getString(ta.getTargetModuleName(), jspPage.currentLocale) + "</a>";
+                    MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "</a>";
 
             }
 
@@ -5328,13 +5334,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
 
-                        jspPage.getAsURL();
+                        ctxInstance.page.getAsURL();
 
 
 
                     return "<a href=\"" + tempStr + "\">" +
 
-                        MemberServiceClass.getString(ta.getTargetModuleName(), jspPage.currentLocale) + "</a>";
+                        MemberServiceClass.getString(ta.getTargetModuleName(), ctxInstance.page.currentLocale) + "</a>";
 
                 }
 
@@ -5818,7 +5824,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 qa.getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
 
-                ps.setString(numParam++, req.getServerName());
+                ps.setString(numParam++, ctxInstance.page.p.getServerName());
 
 
 
@@ -5872,7 +5878,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             throw new Exception("Error get Calendar for field "+qa.getPrimaryKey());
 
-                        v_val = DateTools.getStringDate(cal, qa.getPrimaryKeyMask(), jspPage.p.defaultLocale );
+                        v_val = DateTools.getStringDate(cal, qa.getPrimaryKeyMask(), ctxInstance.page.p.defaultLocale );
 
                         break;
 
@@ -6200,7 +6206,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
 
-                                v_str += HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, jspPage.currentLocale);
+                                v_str += HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, ctxInstance.page.currentLocale);
 
                                 break;
 
@@ -6544,7 +6550,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 {
 
-                    s_ += MemberServiceClass.getString(ff.getNameColumn(), jspPage.currentLocale);
+                    s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
 
                 }
 
@@ -6642,7 +6648,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                 ("1".equals(ff.getDefValue()) ? 1 : 0),
 
-                                true, jspPage.currentLocale
+                                true, ctxInstance.page.currentLocale
 
                             ) +
 
@@ -6752,7 +6758,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 //            if(log.isDebugEnabled())
 
-//                log.debug("#5.001 "+ServletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey()) );
+//                log.debug("#5.001 "+PortletTools.getLong(req, mod.getName()+'.'+content.getQueryArea().getPrimaryKey()) );
 
 
 
@@ -6796,7 +6802,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         {
 
-                            s_ += MemberServiceClass.getString(ff.getNameColumn(), jspPage.currentLocale);
+                            s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
 
                         }
 
@@ -6886,7 +6892,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                             HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff),
 
-                                                true, jspPage.currentLocale
+                                                true, ctxInstance.page.currentLocale
 
                                             ) +
 
@@ -7290,7 +7296,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            List v = baseClass.getSelectList( req );
+            List v = baseClass.getSelectList( ctxInstance );
 
             String r = "";
 
@@ -7336,7 +7342,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-            return baseClass.getCurrentValue( req);
+            return baseClass.getCurrentValue( ctxInstance );
 
         }
 
@@ -7406,7 +7412,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         {
 
-                            s_ += MemberServiceClass.getString(ff.getNameColumn(), jspPage.currentLocale);
+                            s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
 
                         }
 
@@ -7536,7 +7542,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                     editVal = HtmlTools.printYesNo(rs,
 
-                                        MemberServiceClass.getRealName(ff), false, jspPage.currentLocale);
+                                        MemberServiceClass.getRealName(ff), false, ctxInstance.page.currentLocale);
 
                                     break;
 
@@ -7648,7 +7654,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 {
 
-                    s_ += MemberServiceClass.getString(ff.getNameColumn(), jspPage.currentLocale);
+                    s_ += MemberServiceClass.getString(ff.getNameColumn(), ctxInstance.page.currentLocale);
 
                 }
 
@@ -7666,7 +7672,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             s_ += "<th class=\"memberArea\">\n" +
 
-                MemberServiceClass.getString(content.getTargetAreaName(), jspPage.currentLocale) + "</th>\n";
+                MemberServiceClass.getString(content.getTargetAreaName(), ctxInstance.page.currentLocale) + "</th>\n";
 
 
 
@@ -7938,7 +7944,7 @@ throw new MemberForvardException();
 
     public MemberProcessing(
 
-        HttpServletRequest request,
+        CtxInstance ctxInstance,
 
         HttpServletResponse response,
 
@@ -7948,31 +7954,49 @@ throw new MemberForvardException();
 
     {
 
-        req = request;
+        this.ctxInstance = ctxInstance;
 
         auth = auth_;
 
 
 
-        db_ = DatabaseAdapter.getInstance(false);
+        db_ = ctxInstance.db;
 
 
 
-        jspPage = new InitPage(db_, request,
-
-                               null
-
-        );
+        jspPage = ctxInstance.page;
 
 
 
-        fromParam = ServletUtils.getString(req, Constants.MEMBER_FROM_PARAM).trim();
+        fromParam = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_FROM_PARAM, "").trim();
 
         try
 
         {
 
-            mod = ModuleManager.getModule(ServletUtils.getString(request, Constants.MEMBER_MODULE_PARAM));
+            String moduleName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_MODULE_PARAM);
+
+            if (log.isDebugEnabled())
+
+            {
+
+                log.debug("moduleName: - "+moduleName);
+
+                for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
+
+                {
+
+                    String s = (String) e.nextElement();
+
+                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(ctxInstance.getPortletRequest(), s).toString() );
+
+                }
+
+            }
+
+
+
+            mod = ModuleManager.getModule( moduleName );
 
         }
 
@@ -8008,7 +8032,7 @@ throw new MemberForvardException();
 
 
 
-        String templateName = ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM);
+        String templateName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM);
 
 
 
@@ -8084,7 +8108,7 @@ throw new MemberForvardException();
 
     {
 
-        String sql_ = MemberServiceClass.buildUpdateSQL(content, fromParam, mod, dbDyn, false, req);
+        String sql_ = MemberServiceClass.buildUpdateSQL(content, fromParam, mod, dbDyn, false, ctxInstance.getPortletRequest());
 
 
 
@@ -8164,7 +8188,7 @@ throw new MemberForvardException();
 
                     case FieldValidatorTypeTypeType.XML_TYPE:
 
-                        data = ServletUtils.getString(req, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                        data = PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
 
 
@@ -8204,7 +8228,7 @@ throw new MemberForvardException();
 
                     case  FieldValidatorTypeTypeType.XSLT_TYPE:
 
-                        data = ServletUtils.getString(req, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                        data = PortletTools.getString(ctxInstance.getPortletRequest(), mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
                         try
 
@@ -8240,9 +8264,9 @@ throw new MemberForvardException();
 
                     case  FieldValidatorTypeTypeType.BIND_DYNAMIC_TYPE:
 
-                        Long idTemplate = ServletTools.getLong(req, mod.getName() + '.' + "ID_SITE_TEMPLATE");
+                        Long idTemplate = PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + "ID_SITE_TEMPLATE");
 
-                        Long idCtxCatalog = ServletTools.getLong(req, mod.getName() + '.' + "ID_SITE_CTX_CATALOG");
+                        Long idCtxCatalog = PortletTools.getLong(ctxInstance.getPortletRequest(), mod.getName() + '.' + "ID_SITE_CTX_CATALOG");
 
                         if (log.isDebugEnabled())
 
@@ -8401,5 +8425,17 @@ throw new MemberForvardException();
         return null;
 
     }
+
+
+
+    public CtxInstance getCtxInstance()
+
+    {
+
+        return ctxInstance;
+
+    }
+
+
 
 }

@@ -82,6 +82,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -92,15 +94,11 @@ import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.utils.ServletUtils;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -138,7 +136,7 @@ public class UploadPrice extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -146,9 +144,17 @@ public class UploadPrice extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             if (log.isDebugEnabled())
 
@@ -160,17 +166,11 @@ public class UploadPrice extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.locale.auth"
-
-            );
+            db_ = DatabaseAdapter.getInstance(false);
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -184,11 +184,11 @@ public class UploadPrice extends HttpServlet
 
             {
 
-                String param = jspPage.getAsURL() +
+                String param = ctxInstance.page.getAsURL() +
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' +
 
-                    ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM) + '&' +
+                    PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM) + '&' +
 
                     Constants.NAME_TYPE_CONTEXT_PARAM + '=' +
 
@@ -233,6 +233,16 @@ public class UploadPrice extends HttpServlet
             log.error("Error processing UploadPrice servlet", e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

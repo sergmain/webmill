@@ -70,9 +70,7 @@ import java.util.List;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-
-
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -80,17 +78,13 @@ import org.riverock.portlet.member.BaseClassQuery;
 
 import org.riverock.portlet.member.MemberQueryParameter;
 
-import org.riverock.portlet.price.CurrencyService;
-
 import org.riverock.portlet.price.CurrencyManager;
+
+import org.riverock.portlet.price.CurrencyService;
 
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 
-import org.riverock.webmill.port.PortalInfo;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -132,7 +126,7 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
 
      */
 
-    public String getCurrentValue(HttpServletRequest request)
+    public String getCurrentValue(CtxInstance ctxInstance)
 
         throws Exception
 
@@ -140,11 +134,15 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
 
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
 
-        PortalInfo p = PortalInfo.getInstance(db_, request.getServerName() );
 
 
+        CustomCurrencyItemType item =
 
-        CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, p.sites.getIdSite()).getCurrencyList() , idCurrency );
+            CurrencyService.getCurrencyItem(
+
+                CurrencyManager.getInstance(db_, ctxInstance.page.p.sites.getIdSite()).getCurrencyList() , idCurrency
+
+            );
 
 
 
@@ -168,7 +166,7 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
 
      */
 
-    public List getSelectList(HttpServletRequest request)
+    public List getSelectList(CtxInstance ctxInstance)
 
         throws Exception
 

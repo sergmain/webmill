@@ -66,20 +66,6 @@ package org.riverock.portlet.servlets.controller;
 
 
 
-import org.apache.log4j.Logger;
-
-
-
-import javax.servlet.http.HttpServlet;
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpSession;
-
-import javax.servlet.ServletException;
-
 import java.io.IOException;
 
 import java.io.Writer;
@@ -92,23 +78,37 @@ import java.util.Enumeration;
 
 
 
-import org.riverock.webmill.port.InitPage;
+import javax.portlet.PortletSession;
+
+import javax.servlet.ServletException;
+
+import javax.servlet.http.HttpServlet;
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
+
+
+
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.RsetTools;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.portlet.main.Constants;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -222,7 +222,7 @@ public class SwitchLanguage extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -234,63 +234,21 @@ public class SwitchLanguage extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
 
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
-/*
-
-            DatabaseAdapter db_ = null;
-
-            try
-
-            {
-
-                db_ = DatabaseAdapter.getInstance(false);
-
-            }
-
-            catch (Exception e)
-
-            {
-
-                cat.error("Error create DatabaseAdapter", e);
-
-                throw  new ServletException(e);
-
-            }
-
-
-
-            try
-
-            {
-
-                jspPage = new InitPage(db_, request, response,
-
-                        CtxURL.ctx(), "mill.locale.site_hamradio",
-
-                        Constants.NAME_LANG_PARAM, null, null);
-
-            }
-
-            catch (Exception e)
-
-            {
-
-                cat.error("Error create InitPage ", e);
-
-                throw  new ServletException(e);
-
-            }
-
-*/
-
-            Long id_lang = ServletTools.getLong(request, Constants.NAME_ID_LANGUAGE);
+            Long id_lang = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_LANGUAGE);
 
 
 

@@ -90,7 +90,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -100,25 +108,13 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.generic.db.DatabaseManager;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.portlet.tools.HtmlTools;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -156,7 +152,7 @@ public class RightDelete extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -170,7 +166,11 @@ public class RightDelete extends HttpServlet
 
         {
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
 
 
@@ -182,7 +182,7 @@ public class RightDelete extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -194,15 +194,7 @@ public class RightDelete extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
-
-            );
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.right");
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
 
 
 
@@ -220,13 +212,11 @@ public class RightDelete extends HttpServlet
 
 
 
-            if (ServletTools.isNotInit(request, response, "id_relate_right", index_page))
+            Long id_relate_right = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_relate_right");
 
-                return;
+            if (id_relate_right==null)
 
-
-
-            Long id_relate_right = ServletTools.getLong(request, "id_relate_right");
+                throw new IllegalArgumentException("id_relate_right not initialized");
 
 
 
@@ -308,7 +298,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("\r\n");
 
-                        out.write(jspPage.sCustom.getStr("del_right.jsp.confirm"));
+                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.confirm"));
 
                         out.write("\r\n");
 
@@ -318,7 +308,7 @@ public class RightDelete extends HttpServlet
 
                         out.write(
 
-                            CtxURL.url(request, response, jspPage, "mill.auth.commit_del_right")
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_del_right")
 
 
 
@@ -334,11 +324,11 @@ public class RightDelete extends HttpServlet
 
                         out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-                        out.write(jspPage.sMain.getStr("button.delete"));
+                        out.write(ctxInstance.page.sMain.getStr("button.delete"));
 
                         out.write("\">\r\n");
 
-                        out.write(jspPage.getAsForm());
+                        out.write(ctxInstance.page.getAsForm());
 
                         out.write("\r\n");
 
@@ -350,7 +340,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(jspPage.sCustom.getStr("del_right.jsp.id_access_group"));
+                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.id_access_group"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -368,7 +358,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(jspPage.sCustom.getStr("del_right.jsp.id_object_arm"));
+                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.id_object_arm"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -410,7 +400,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(jspPage.sCustom.getStr("del_right.jsp.code_right"));
+                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.code_right"));
 
                         out.write("</td>\r\n\t\t");
 
@@ -428,13 +418,13 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(jspPage.sCustom.getStr("del_right.jsp.is_road"));
+                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.is_road"));
 
                         out.write("</td>\r\n\t\t");
 
                         out.write("<td align=\"left\">\r\n\t\t");
 
-                        out.write(HtmlTools.printYesNo(rs, "is_road", false, jspPage.currentLocale));
+                        out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.page.currentLocale));
 
                         out.write("\r\n\t\t");
 
@@ -446,13 +436,13 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(jspPage.sCustom.getStr("del_right.jsp.is_service"));
+                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.is_service"));
 
                         out.write("</td>\r\n\t\t");
 
                         out.write("<td align=\"left\">\r\n\t\t");
 
-                        out.write(HtmlTools.printYesNo(rs, "is_service", false, jspPage.currentLocale));
+                        out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.page.currentLocale));
 
                         out.write("\r\n\t\t");
 
@@ -464,13 +454,13 @@ public class RightDelete extends HttpServlet
 
                         out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                        out.write(jspPage.sCustom.getStr("del_right.jsp.is_firm"));
+                        out.write(ctxInstance.sCustom.getStr("del_right.jsp.is_firm"));
 
                         out.write("</td>\r\n\t\t");
 
                         out.write("<td align=\"left\">\r\n\t\t");
 
-                        out.write(HtmlTools.printYesNo(rs, "is_firm", false, jspPage.currentLocale));
+                        out.write(HtmlTools.printYesNo(rs, "is_firm", false, ctxInstance.page.currentLocale));
 
                         out.write("\r\n\t\t");
 
@@ -514,7 +504,7 @@ public class RightDelete extends HttpServlet
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
 
             out.write("</a>");
 

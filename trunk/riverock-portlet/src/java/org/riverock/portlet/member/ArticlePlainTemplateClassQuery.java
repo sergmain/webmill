@@ -90,13 +90,15 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.webmill.port.PortalInfo;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 
 
 public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.member.ArticlePlainTemplateClassQuery");
+    private static Logger cat = Logger.getLogger("org.riverock.portlet.member.ArticlePlainTemplateClassQuery");
 
 
 
@@ -116,19 +118,21 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
      */
 
-    public String getCurrentValue(HttpServletRequest request) throws Exception
+    public String getCurrentValue(CtxInstance ctxInstance) throws Exception
 
     {
 
+//        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+
+//        PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.getServerName() );
+
+//        StringManager sm = StringManager.getManager("mill.locale.main", p.defaultLocale);
+
+//        String value = sm.getStr("yesno.yes");
 
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
 
-        PortalInfo p = PortalInfo.getInstance(db_, request.getServerName() );
-
-        StringManager sm = StringManager.getManager("mill.locale.main", p.defaultLocale);
-
-        String value = sm.getStr("yesno.yes");
+        String value = ctxInstance.page.sMain.getStr("yesno.yes");
 
 
 
@@ -152,7 +156,7 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
      */
 
-    public List getSelectList(HttpServletRequest request)
+    public List getSelectList(CtxInstance ctxInstance)
 
         throws Exception
 
@@ -166,21 +170,21 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
         List v = new ArrayList();
 
-        DatabaseAdapter db_ = null;
+//        DatabaseAdapter db_ = null;
 
-        try
+//        try
 
         {
 
-            db_ = DatabaseAdapter.getInstance( false );
+//            db_ = DatabaseAdapter.getInstance( false );
 
-            PortalInfo p = PortalInfo.getInstance(db_, request.getServerName() );
+//            PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.getPortletRequest().getServerName() );
 
-            StringManager sm = StringManager.getManager("mill.locale.main", p.defaultLocale);
+//            StringManager sm = StringManager.getManager("mill.locale.main", p.defaultLocale);
 
 
 
-            ClassQueryItem item = new ClassQueryItem(new Long(1), sm.getStr("yesno.yes") );
+            ClassQueryItem item = new ClassQueryItem(new Long(1), ctxInstance.page.sMain.getStr("yesno.yes") );
 
 
 
@@ -202,15 +206,15 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
         }
 
-        finally
+//        finally
 
-        {
+//        {
 
-            DatabaseManager.close(db_);
+//            DatabaseManager.close(db_);
 
-            db_ = null;
+//            db_ = null;
 
-        }
+//        }
 
     }
 

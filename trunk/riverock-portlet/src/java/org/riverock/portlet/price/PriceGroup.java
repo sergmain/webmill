@@ -156,7 +156,7 @@ public class PriceGroup
 
                 CtxURL.ctx()) + '?' +
 
-                param.getJspPage().getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' +
+                param.getPage().getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' +
 
                 item.id_group + '&' +
 

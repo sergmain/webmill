@@ -72,9 +72,7 @@ import java.io.StringWriter;
 
 import java.io.Writer;
 
-import java.util.Enumeration;
-
-import java.util.ArrayList;
+import java.util.*;
 
 
 
@@ -174,7 +172,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    private SitePortletDataType processPortlet( TemplateItemType templateItem, CtxInstance ctxInstance )
+    private SitePortletDataType processPortlet( TemplateItemType templateItem, CtxInstance ctxInstance, Long portletId)
 
     {
 
@@ -226,9 +224,15 @@ public class ContextNavigator extends HttpServlet
 
                 portlet,
 
-                portletParameter );
+                portletParameter,
 
+                ctxInstance.db,
 
+                portletId,
+
+                ctxInstance.getPortletRequest()
+
+            );
 
             ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
 
@@ -306,7 +310,7 @@ public class ContextNavigator extends HttpServlet
 
                 if ( templateItem.getType().getType()==TemplateItemTypeTypeType.DYNAMIC_TYPE )
 
-                    xmlRoot = ServletUtils.getString( ctxInstance.request, Constants.NAME_XMLROOT_PARAM );
+                    xmlRoot = PortletTools.getString( ctxInstance.getPortletRequest(), Constants.NAME_XMLROOT_PARAM );
 
 
 
@@ -332,11 +336,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                // «аписываем все кроме XML заголовка - <? ..... ?>
-
-//                item.setData( portletBytes.substring(portletBytes.indexOf('>') + 1) );
-
-//                item.setData( "a".substring("a".indexOf('>') + 1) );
+                // write all without XML header - <? ..... ?>
 
 
 
@@ -346,7 +346,7 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    // в принципе этой ситуации возникнуть не должно
+                    // This situation not be raised
 
                 }
 
@@ -444,7 +444,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-    private void processTemplateItem( String dynamicType, PortletType portlet, CtxInstance ctxInstance )
+    private void processTemplateItem( CtxInstance ctxInstance )
 
         throws Exception
 
@@ -466,7 +466,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            // ѕортлеты с типом 'MODEL' здесь не обрабатываем
+            // Portlets 'MODEL' is skipped
 
             if ( item.getType().getType()==TemplateItemTypeTypeType.PORTLET_TYPE )
 
@@ -518,6 +518,30 @@ public class ContextNavigator extends HttpServlet
 
 
 
+            log.warn("portlet type: "+ctxInstance.page.getType());
+
+            PortletType d = null;
+
+            if (ctxInstance.page.getPortletDescription()!=null)
+
+            {
+
+                d = ctxInstance.page.getPortletDescription().getPortletConfig();
+
+            }
+
+            ctxInstance.setParameters(
+
+                PortletTools.getParameters(ctxInstance.req),
+
+                PortletTools.getStringParam(d, PortletTools.locale_name_package)
+
+            );
+
+            ctxInstance.session.setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
+
+
+
             try
 
             {
@@ -542,7 +566,9 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        data = processPortlet( item, ctxInstance );
+                        ctxInstance.setParameters(new HashMap(), null);
+
+                        data = processPortlet( item, ctxInstance, null);
 
 
 
@@ -574,15 +600,17 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            if ( dynamicType!=null )
+                            if ( ctxInstance.page.isDynamic() )
 
                             {
 
                                 if ( log.isDebugEnabled() )
 
-                                    log.debug( "process dynamic content - "+dynamicType );
+                                    log.debug( "process dynamic content - "+ctxInstance.page.isDynamic() );
 
 
+
+                                PortletType portlet = ctxInstance.page.getPortletDescription().getPortletConfig();
 
                                 Boolean isUrlTemp =
 
@@ -606,11 +634,11 @@ public class ContextNavigator extends HttpServlet
 
                                     ctxInstance.session.removeAttribute( Constants.NAME_PORTLET_PARAM );
 
-                                    ctxInstance.session.setAttribute( Constants.NAME_PORTLET_PARAM, dynamicType );
+                                    ctxInstance.session.setAttribute( Constants.NAME_PORTLET_PARAM, ctxInstance.getType() );
 
 
 
-                                    data = processPortlet( item, ctxInstance );
+                                    data = processPortlet( item, ctxInstance, ctxInstance.page.getPortletId() );
 
 
 
@@ -688,7 +716,7 @@ public class ContextNavigator extends HttpServlet
 
                                     {
 
-                                        ServletUtils.include( ctxInstance.request, ctxInstance.response, portlet.getPortletClass(), writer );
+                                        ServletUtils.include( ctxInstance.req, ctxInstance.response, portlet.getPortletClass(), writer );
 
                                         String s = writer.toString();
 
@@ -794,7 +822,9 @@ public class ContextNavigator extends HttpServlet
 
                             PortletTools.getBooleanParam(
 
-                                portlet, PortletTools.is_url
+                                ctxInstance.page.getPortletDescription().getPortletConfig(),
+
+                                PortletTools.is_url
 
                             );
 
@@ -826,7 +856,7 @@ public class ContextNavigator extends HttpServlet
 
                             {
 
-                                String errorString = "Portlet "+dynamicType+" refered to file "+testFile+" is broken";
+                                String errorString = "Portlet "+ctxInstance.getType()+" refered to file "+testFile+" is broken";
 
                                 log.error( errorString );
 
@@ -856,7 +886,7 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            ServletUtils.include( ctxInstance.request, ctxInstance.response, item.getValue(), writer );
+                            ServletUtils.include( ctxInstance.req, ctxInstance.response, item.getValue(), writer );
 
 
 
@@ -911,6 +941,8 @@ public class ContextNavigator extends HttpServlet
                 data.setIsXml( Boolean.FALSE );
 
             }
+
+            ctxInstance.session.removeAttribute( Constants.PORTLET_REQUEST_SESSION );
 
             ctxInstance.portlets.add( data );
 
@@ -986,7 +1018,7 @@ public class ContextNavigator extends HttpServlet
 
             {
 
-                // первый xml элемент
+                // 1st xml element
 
                 if ( xml==null )
 
@@ -1222,31 +1254,23 @@ public class ContextNavigator extends HttpServlet
 
     /**
 
-     *  √лавный метод дл€ обработки страницы с портлетами
+     *  Main method for processing pages with portlets
 
-     * @param nameTemplate
-
-     * @param dynamicType
-
-     * @param desc
+     * @param ctxInstance
 
      */
 
-    private void processPage( String nameTemplate, String dynamicType, PortletType desc,
-
-        CtxInstance ctxInstance)
+    private void processPage( CtxInstance ctxInstance )
 
     {
-
-
 
         if ( log.isDebugEnabled() )
 
         {
 
-            log.debug( "Dynamic content  type - "+dynamicType );
+            log.debug( "Dynamic content  type - "+ctxInstance.getType() );
 
-            log.debug( "name template - "+nameTemplate );
+            log.debug( "name template - "+ctxInstance.getNameTemplate() );
 
         }
 
@@ -1258,7 +1282,7 @@ public class ContextNavigator extends HttpServlet
 
             ctxInstance.template = ctxInstance.page.p.templates.getTemplate(
 
-                nameTemplate, ctxInstance.page.currentLocale.toString()
+                ctxInstance.getNameTemplate(), ctxInstance.page.currentLocale.toString()
 
             );
 
@@ -1268,7 +1292,7 @@ public class ContextNavigator extends HttpServlet
 
             {
 
-                String errorString = "Template for  "+nameTemplate+" not found";
+                String errorString = "Template for  "+ctxInstance.getNameTemplate()+" not found";
 
                 log.warn( errorString );
 
@@ -1380,59 +1404,73 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                        Boolean isUrlTemp =
+                            ctxInstance.setParameters(
 
-                            PortletTools.getBooleanParam(
+                                PortletTools.getParameters(ctxInstance.req),
 
-                                d, PortletTools.is_url
+                                PortletTools.getStringParam(d, PortletTools.locale_name_package)
 
                             );
 
-
-
-                        if ( log.isDebugEnabled() )
-
-                            log.debug( "process 'model' portlet - "+item.getValue()+" file "+d.getPortletClass()+", isUrl - "+isUrlTemp );
+                            ctxInstance.session.setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
 
 
 
-                        boolean flag = true;
+                            Boolean isUrlTemp =
 
-                        if ( isUrlTemp!=null && !isUrlTemp.booleanValue() )
+                                PortletTools.getBooleanParam(
 
-                        {
+                                    d, PortletTools.is_url
 
-                            String nameFile = PropertiesProvider.getApplicationPath()+d.getPortletClass();
-
-                            if ( nameFile.indexOf( '?' )!=-1 )
-
-                                nameFile = nameFile.substring( 0, nameFile.indexOf( '?' ) );
+                                );
 
 
 
-                            File testFile = new File( nameFile );
+                            if ( log.isDebugEnabled() )
 
-                            if ( !testFile.exists() )
+                                log.debug( "process 'model' portlet - "+item.getValue()+" file "+d.getPortletClass()+", isUrl - "+isUrlTemp );
+
+
+
+                            boolean flag = true;
+
+                            if ( isUrlTemp!=null && !isUrlTemp.booleanValue() )
 
                             {
 
-                                String errorString = "Portlet "+dynamicType+" refered to file "+testFile+" is broken";
+                                String nameFile = PropertiesProvider.getApplicationPath()+d.getPortletClass();
 
-                                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+                                if ( nameFile.indexOf( '?' )!=-1 )
 
-                                log.error( errorString );
+                                    nameFile = nameFile.substring( 0, nameFile.indexOf( '?' ) );
+
+
+
+                                File testFile = new File( nameFile );
+
+                                if ( !testFile.exists() )
+
+                                {
+
+                                    String errorString = "Portlet "+ctxInstance.getType()+" refered to file "+testFile+" is broken";
+
+                                    ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
+
+                                    log.error( errorString );
+
+                                }
 
                             }
-
-                        }
 
 
 
                             if ( flag )
 
-                                ServletUtils.include( ctxInstance.request, ctxInstance.response, d.getPortletClass(), new StringWriter() );
+                                ServletUtils.include( ctxInstance.req, ctxInstance.response, d.getPortletClass(), new StringWriter() );
 
 
+
+                            ctxInstance.session.removeAttribute( Constants.PORTLET_REQUEST_SESSION );
 
                         }
 
@@ -1508,11 +1546,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-//            ctxInstance.transformer = ctxInstance.xslt.translet.newTransformer();
-
-
-
-            processTemplateItem( dynamicType, desc, ctxInstance );
+            processTemplateItem( ctxInstance );
 
 
 
@@ -1576,17 +1610,17 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            log.error( "Error build page.<br>Name template - "+nameTemplate+
+            log.error( "Error build page.<br>Name template - "+ctxInstance.getNameTemplate()+
 
-                "<br>"+"Dynamic type - "+dynamicType, e );
+                "<br>"+"Dynamic type - "+ctxInstance.getType(), e );
 
             try
 
             {
 
-                String errorString = "Error build page.<br>Name template - "+nameTemplate+
+                String errorString = "Error build page.<br>Name template - "+ctxInstance.getNameTemplate()+
 
-                    "<br>"+"Dynamic type - "+dynamicType+"<br>"+
+                    "<br>"+"Dynamic type - "+ctxInstance.getType()+"<br>"+
 
                     ExceptionTools.getStackTrace( e, 15, "<BR>" );
 
@@ -1614,39 +1648,7 @@ public class ContextNavigator extends HttpServlet
 
         {
 
-            String nameTemplateNew = ctxInstance.getNameTemplate();
-
-
-
-            if ( nameTemplateNew==null )
-
-                nameTemplateNew = ctxInstance.page.menuLanguage.getIndexTemplate();
-
-
-
-
-
-            if ( nameTemplateNew==null )
-
-            {
-
-                String errorString = "<html><head></head<body>"+
-
-                    "<p>Template for page with type 'mill.index' not found</p>"+
-
-                    "</body></html>";
-
-                log.error( errorString );
-
-                ctxInstance.byteArrayOutputStream.write( errorString.getBytes() );
-
-                return;
-
-            }
-
-
-
-            processPage( nameTemplateNew, null, null, ctxInstance );
+            processPage( ctxInstance );
 
 
 
@@ -1852,7 +1854,7 @@ public class ContextNavigator extends HttpServlet
 
                 ctxInstance.session = request_.getSession( true );
 
-                ctxInstance.request = request_;
+                ctxInstance.req = request_;
 
                 ctxInstance.response = response_;
 
@@ -1866,13 +1868,11 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                DatabaseAdapter db_ = null;
-
                 try
 
                 {
 
-                    db_ = DatabaseAdapter.getInstance( false );
+                    ctxInstance.db = DatabaseAdapter.getInstance( false );
 
                 }
 
@@ -1900,9 +1900,9 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    log.debug( "Request URL - "+ctxInstance.request.getRequestURL() );
+                    log.debug( "Request URL - "+ctxInstance.req.getRequestURL() );
 
-                    log.debug( "Request query string - "+ctxInstance.request.getQueryString() );
+                    log.debug( "Request query string - "+ctxInstance.req.getQueryString() );
 
 
 
@@ -1938,11 +1938,7 @@ public class ContextNavigator extends HttpServlet
 
                     }
 
-                    ctxInstance.page = new InitPage( db_, ctxInstance.request,
-
-                        "mill.locale.site_hamradio"
-
-                    );
+                    ctxInstance.page = new InitPage( ctxInstance.db, ctxInstance.req );
 
                 }
 
@@ -2012,13 +2008,27 @@ public class ContextNavigator extends HttpServlet
 
                     case PortletDescriptionTypeTypePortletType.CONTROLLER_TYPE:
 
+
+
+                        PortletType portlet = ctxInstance.page.getPortletDescription().getPortletConfig();
+
+
+
+                        ctxInstance.setParameters(
+
+                            PortletTools.getParameters(ctxInstance.req),
+
+                            PortletTools.getStringParam(portlet, PortletTools.locale_name_package)
+
+                        );
+
+                        ctxInstance.session.setAttribute( Constants.PORTLET_REQUEST_SESSION, ctxInstance );
+
+
+
                         Boolean isUrlTemp =
 
-                            PortletTools.getBooleanParam(
-
-                                ctxInstance.page.getPortletDescription().getPortletConfig(), PortletTools.is_url
-
-                            );
+                            PortletTools.getBooleanParam( portlet, PortletTools.is_url );
 
 
 
@@ -2026,7 +2036,7 @@ public class ContextNavigator extends HttpServlet
 
                         {
 
-                            RequestDispatcher dispatcher = ctxInstance.request.getRequestDispatcher( ctxInstance.page.getPortletDescription().getPortletConfig().getPortletClass() );
+                            RequestDispatcher dispatcher = ctxInstance.req.getRequestDispatcher( ctxInstance.page.getPortletDescription().getPortletConfig().getPortletClass() );
 
                             if ( log.isDebugEnabled() )
 
@@ -2048,7 +2058,7 @@ public class ContextNavigator extends HttpServlet
 
                             else
 
-                                dispatcher.forward( ctxInstance.request, ctxInstance.response );
+                                dispatcher.forward( ctxInstance.req, ctxInstance.response );
 
                         }
 
@@ -2063,6 +2073,8 @@ public class ContextNavigator extends HttpServlet
                             );
 
                         }
+
+                        ctxInstance.session.removeAttribute( Constants.PORTLET_REQUEST_SESSION );
 
                         break;
 
@@ -2102,7 +2114,7 @@ public class ContextNavigator extends HttpServlet
 
                         }
 
-                        processPage( ctxInstance.getNameTemplate(), ctxInstance.getType(), ctxInstance.page.getPortletDescription().getPortletConfig(), ctxInstance );
+                        processPage( ctxInstance );
 
                         break;
 
@@ -2129,14 +2141,6 @@ public class ContextNavigator extends HttpServlet
                 break;
 
             }
-
-//            catch (Error err)
-
-//            {
-
-//                log.error("Error processing page with ContextNavigator ", err);
-
-//            }
 
             catch (Throwable e)
 
@@ -2172,9 +2176,9 @@ public class ContextNavigator extends HttpServlet
 
                 {
 
-                    log.error( "CN debug. Request URL - "+ctxInstance.request.getRequestURL() );
+                    log.error( "CN debug. Request URL - "+ctxInstance.req.getRequestURL() );
 
-                    log.error( "CN debug. Request query string - "+ctxInstance.request.getQueryString() );
+                    log.error( "CN debug. Request query string - "+ctxInstance.req.getQueryString() );
 
 
 
@@ -2289,6 +2293,10 @@ public class ContextNavigator extends HttpServlet
                     out = null;
 
                     ctxInstance.byteArrayOutputStream = null;
+
+                    DatabaseAdapter.close( ctxInstance.db );
+
+                    ctxInstance.db = null;
 
 
 

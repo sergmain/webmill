@@ -68,29 +68,13 @@ package org.riverock.portlet.servlets.view.forum;
 
 
 
-import org.riverock.common.tools.ExceptionTools;
+import java.io.IOException;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.forum.SimpleForum;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.portlet.schema.core.MainForumItemType;
-
-import org.riverock.portlet.core.GetMainForumItem;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-import org.riverock.webmill.portlet.ContextNavigator;
+import java.io.Writer;
 
 
 
-import org.apache.log4j.Logger;
-
-
+import javax.portlet.RenderRequest;
 
 import javax.servlet.ServletException;
 
@@ -100,9 +84,25 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 
-import java.io.Writer;
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.ExceptionTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.portlet.core.GetMainForumItem;
+
+import org.riverock.portlet.forum.SimpleForum;
+
+import org.riverock.portlet.schema.core.MainForumItemType;
+
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -142,7 +142,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -154,7 +154,11 @@ public class ForumIndex extends HttpServlet
 
         {
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
 
 
@@ -170,15 +174,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            InitPage  jspPage =  new InitPage(db_, request,
-
-                                              "mill.locale.forum"
-
-            );
-
-
-
-            SimpleForum forum = new SimpleForum( request, response, jspPage );
+            SimpleForum forum = new SimpleForum( ctxInstance.getPortletRequest(), response, ctxInstance.page );
 
 
 
@@ -216,7 +212,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            ServletUtils.include(request, response, forumType, out);
+            PortletTools.include((RenderRequest)ctxInstance.getPortletRequest(), response, forumType, out);
 
         }
 

@@ -300,96 +300,6 @@ public class SiteMenu
 
 
 
-
-
-//    public boolean isShopContext()
-
-//    {
-
-//        for (int i = 0; i < getMenuLanguageCount(); i++)
-
-//        {
-
-//            MenuLanguage c = getMenuLanguage(i);
-
-//
-
-//            for (int j = 0; j < c.getMenuCount(); j++)
-
-//            {
-
-//                Menu item = c.getMenu( j );
-
-//
-
-//                if (item.checkShopContext())
-
-//                    return true;
-
-//
-
-//            }
-
-//        }
-
-//        return false;
-
-//    }
-
-
-
-
-
-/*
-
-    static String sql_ = null;
-
-    static
-
-    {
-
-        sql_ =
-
-            "select a.CUSTOM_LANGUAGE, a.NAME_CUSTOM_LANGUAGE, a.ID_SITE_SUPPORT_LANGUAGE "  +
-
-            "from SITE_SUPPORT_LANGUAGE a " +
-
-            "where a.ID_SITE=? " +
-
-            "order by a.ID_SITE_SUPPORT_LANGUAGE ASC";
-
-
-
-        try
-
-        {
-
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, new SiteMenu().getClass() );
-
-        }
-
-        catch(Exception e)
-
-        {
-
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-
-        }
-
-        catch(Error e)
-
-        {
-
-            log.error("Error in registerSql, sql\n"+sql_, e);
-
-        }
-
-    }
-
-*/
-
-
-
     private SiteMenu(DatabaseAdapter db_, Long idSite)
 
             throws Exception
@@ -452,8 +362,6 @@ public class SiteMenu
 
 
 
-// Кусок кода для принудительной переинициализации класса
-
     public static SiteMenu getInstance(DatabaseAdapter db_, long id_)
 
         throws Exception
@@ -507,8 +415,6 @@ public class SiteMenu
         }
 
     }
-
-
 
 }
 

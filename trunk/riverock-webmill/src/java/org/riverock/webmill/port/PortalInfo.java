@@ -148,6 +148,38 @@ public class PortalInfo
 
 
 
+    private Long siteId = null;
+
+
+
+    public boolean isCurrentSite(Long idSiteSupportLanguage)
+
+    {
+
+        if (idSiteSupportLanguage==null)
+
+            return false;
+
+
+
+        for (int i=0;i<supportLanguage.getSiteSupportLanguageCount(); i++)
+
+        {
+
+            SiteSupportLanguageItemType item = supportLanguage.getSiteSupportLanguage(i);
+
+            if (idSiteSupportLanguage.equals(item.getIdSiteSupportLanguage()) )
+
+                return true;
+
+        }
+
+        return false;
+
+    }
+
+
+
     public Long getIdSupportLanguage( Locale locale )
 
     {
@@ -376,13 +408,11 @@ public class PortalInfo
 
         this.setServerName(serverName_);
 
+        this.siteId = SiteListSite.getIdSite(serverName_);
 
 
-        sites = GetSiteListSiteItem.getInstance(
 
-            db_, SiteListSite.getIdSite(serverName_)
-
-        ).item;
+        sites = GetSiteListSiteItem.getInstance( db_, siteId ).item;
 
 
 
@@ -579,6 +609,18 @@ public class PortalInfo
         this.serverName = serverName;
 
     }
+
+
+
+    public Long getSiteId()
+
+    {
+
+        return siteId;
+
+    }
+
+
 
 }
 

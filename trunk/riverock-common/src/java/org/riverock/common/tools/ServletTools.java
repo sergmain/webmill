@@ -52,7 +52,15 @@ package org.riverock.common.tools;
 
 
 
-import org.apache.log4j.Logger;
+import java.lang.reflect.Method;
+
+import java.util.Enumeration;
+
+import java.util.HashMap;
+
+import java.util.Map;
+
+import java.util.StringTokenizer;
 
 
 
@@ -62,9 +70,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import javax.servlet.http.HttpSession;
 
-import java.lang.reflect.Method;
 
-import java.util.Enumeration;
+
+import org.apache.log4j.Logger;
 
 
 
@@ -725,5 +733,61 @@ public class ServletTools
         return i_;
 
     }
+
+
+
+    public static Map getParameterMap(String parameter)
+
+    {
+
+        if (parameter==null)
+
+            return null;
+
+
+
+        Map map = new HashMap();
+
+
+
+        String s = parameter;
+
+        if (parameter.indexOf('?')!=-1)
+
+            s = parameter.substring( parameter.indexOf('?')+1);
+
+        else
+
+            s = parameter;
+
+
+
+        StringTokenizer st = new StringTokenizer(s, "&", false);
+
+        while (st.hasMoreTokens())
+
+        {
+
+            String param = st.nextToken();
+
+            int idx = param.indexOf('=');
+
+            if (idx==-1)
+
+                MainTools.putKey(map, param, "");
+
+            else
+
+                MainTools.putKey(map, param.substring(0, idx), param.substring(idx+1));
+
+        }
+
+
+
+        return map;
+
+    }
+
+
 
 }

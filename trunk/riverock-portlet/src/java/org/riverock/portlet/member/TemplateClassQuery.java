@@ -86,9 +86,7 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.common.tools.RsetTools;
 
-
-
-import javax.servlet.http.HttpServletRequest;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -148,7 +146,7 @@ public class TemplateClassQuery extends BaseClassQuery
 
      */
 
-    public String getCurrentValue(HttpServletRequest request)
+    public String getCurrentValue(CtxInstance ctxInstance)
 
         throws Exception
 
@@ -216,7 +214,7 @@ public class TemplateClassQuery extends BaseClassQuery
 
      */
 
-    public List getSelectList(HttpServletRequest request)
+    public List getSelectList(CtxInstance ctxInstance)
 
         throws Exception
 

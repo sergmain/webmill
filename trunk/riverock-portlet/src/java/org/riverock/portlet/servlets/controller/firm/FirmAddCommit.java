@@ -86,35 +86,29 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-import org.riverock.sso.a3.AuthSession;
+import org.apache.log4j.Logger;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.common.tools.ExceptionTools;
+
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.generic.schema.db.CustomSequenceType;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.RsetTools;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -152,13 +146,21 @@ public class FirmAddCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
     {
 
         Writer out = null;
+
+
+
+        CtxInstance ctxInstance =
+
+            (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
         try
 
@@ -172,7 +174,7 @@ public class FirmAddCommit extends HttpServlet
 
             out = response.getWriter();
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -198,15 +200,15 @@ public class FirmAddCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance(true);
 
-                    InitPage jspPage = new InitPage(dbDyn, request,
+//                    InitPage jspPage = new InitPage(dbDyn, request,
 
-                                                    "mill.locale.MAIN_LIST_FIRM"
+//                                                    "mill.locale.MAIN_LIST_FIRM"
 
-                    );
+//                    );
 
 
 
-                    index_page = CtxURL.url(request, response, jspPage, "mill.firm.index");
+                    index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
 
 
 
@@ -326,39 +328,39 @@ public class FirmAddCommit extends HttpServlet
 
                     RsetTools.setLong(ps, num++, sequenceValue);
 
-                    ps.setString(num++, ServletUtils.getString(request, "full_name"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "full_name"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "short_name"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_name"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "address"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "address"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "telefon_buh"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "telefon_buh"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "telefon_chief"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "telefon_chief"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "chief"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "chief"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "buh"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "buh"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "fax"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "fax"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "email"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "email"));
 
-                    RsetTools.setLong(ps, num++, ServletTools.getLong(request, "icq"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "icq"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "short_client_info"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_client_info"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "url"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "url"));
 
-                    ps.setString(num++, ServletUtils.getString(request, "short_info"));
+                    ps.setString(num++, PortletTools.getString(ctxInstance.getPortletRequest(), "short_info"));
 
-                    RsetTools.setLong(ps, num++, ServletTools.getLong(request, "is_work"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_work"));
 
-                    RsetTools.setLong(ps, num++, ServletTools.getLong(request, "is_need_recvizit"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_need_recvizit"));
 
-                    RsetTools.setLong(ps, num++, ServletTools.getLong(request, "is_need_person"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_need_person"));
 
-                    RsetTools.setLong(ps, num++, ServletTools.getLong(request, "is_search"));
+                    RsetTools.setLong(ps, num++, PortletTools.getLong(ctxInstance.getPortletRequest(), "is_search"));
 
                     ps.setString(num++, auth_.getUserLogin());
 

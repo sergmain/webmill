@@ -58,7 +58,7 @@
 
  */
 
-package org.riverock.main;
+package org.riverock.portlet.main;
 
 
 
@@ -90,8 +90,6 @@ public class UploadFile
 
 
 
-// com.oreilly.servlet.multipart.* implemention
-
     public static String save(HttpServletRequest request, int bufferSize,
 
                               String storeFile, boolean isAppend, String ext[])
@@ -101,112 +99,6 @@ public class UploadFile
     {
 
         throw new UploadFileException("not supported");
-
-/*
-
-        FilePart filePart = null;
-
-        String returnFileName = "", fileName = null;
-
-        try
-
-        {
-
-
-
-            boolean isOkUpload = true;
-
-            MultipartParser mp = new MultipartParser(request, bufferSize);
-
-
-
-            Part part = mp.readNextPart();
-
-
-
-            if (part == null)
-
-                throw new UploadFileException( UploadFileException.FILE_NOT_FOUND_ERROR );
-
-
-
-            if (!part.isFile())
-
-                throw new UploadFileException( UploadFileException.WRONG_FORMAT_ERROR );
-
-
-
-            filePart = (FilePart) part;
-
-            fileName = filePart.getFileName();
-
-
-
-            returnFileName = storeFile + (isAppend?fileName:"");
-
-
-
-            if (ext != null)
-
-            {
-
-                int i;
-
-                for (i = 0; i < ext.length; i++)
-
-                {
-
-                    if ((ext[i] != null) && returnFileName.toLowerCase().endsWith(ext[i].toLowerCase()))
-
-                        break;
-
-                }
-
-                if (i == ext.length)
-
-                    throw new UploadFileException( UploadFileException.UNSUPPORTED_EXTENSION_ERROR );
-
-            }
-
-
-
-            File file_ = new File(returnFileName);
-
-            returnFileName = file_.getName();
-
-
-
-            file_.mkdirs();
-
-            file_.delete();
-
-
-
-            if (fileName != null)
-
-                filePart.writeTo(file_);
-
-
-
-        }
-
-        catch (Exception e)
-
-        {
-
-            throw new UploadFileException(e.toString());
-
-        }
-
-        finally
-
-        {
-
-        }
-
-        return returnFileName;
-
-*/
 
     }
 
@@ -224,75 +116,7 @@ public class UploadFile
 
         throw new UploadFileException("not supported");
 
-/*
-
-
-
-        FilePart filePart = null;
-
-        try
-
-        {
-
-
-
-            boolean isOkUpload = true;
-
-            MultipartParser mp = new MultipartParser(request, bufferSize);
-
-
-
-            Part part = mp.readNextPart();
-
-
-
-            if (part == null)
-
-                throw new UploadFileException( UploadFileException.FILE_NOT_FOUND_ERROR );
-
-
-
-            if (!part.isFile())
-
-                throw new UploadFileException( UploadFileException.WRONG_FORMAT_ERROR );
-
-
-
-            filePart = (FilePart) part;
-
-            String fileName = filePart.getFileName();
-
-
-
-            if (fileName != null)
-
-                filePart.writeTo(storeFile);
-
-
-
-
-
-        }
-
-        catch (Exception e)
-
-        {
-
-            throw new UploadFileException(e.toString());
-
-        }
-
-        finally
-
-        {
-
-        }
-
-*/
-
     }
-
-
 
 }
 

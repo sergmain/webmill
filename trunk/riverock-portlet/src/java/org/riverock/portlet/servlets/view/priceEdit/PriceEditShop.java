@@ -78,6 +78,8 @@ import java.sql.SQLException;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -86,13 +88,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
 
 
+import org.apache.log4j.Logger;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -100,25 +102,19 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.portlet.portlets.ShopPageParam;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.sso.a3.AuthSession;
+
+import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.portlet.portlets.ShopPageParam;
+import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.RsetTools;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -158,7 +154,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -169,6 +165,12 @@ public class PriceEditShop extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -182,7 +184,7 @@ public class PriceEditShop extends HttpServlet
 
             {
 
-                AuthSession auth_ = AuthTools.check(request, response, "/");
+                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
                 if (auth_ == null)
 
@@ -194,11 +196,11 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                InitPage jspPage = new InitPage(db_, request,
+//                InitPage jspPage = new InitPage(db_, request,
 
-                                                "mill.locale._price_list"
+//                                                "mill.locale._price_list"
 
-                );
+//                );
 
 
 
@@ -206,23 +208,21 @@ public class PriceEditShop extends HttpServlet
 
                 ShopPageParam shopParam = new ShopPageParam();
 
-                HttpSession session = request.getSession();
+                PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
-                shopParam.nameTemplate = request.getParameter(Constants.NAME_TEMPLATE_CONTEXT_PARAM);
+                shopParam.nameTemplate = ctxInstance.getPortletRequest().getParameter(Constants.NAME_TEMPLATE_CONTEXT_PARAM);
 
-                shopParam.setServerName(request.getServerName());
-
-//                shopParam.idSite = SiteListSite.getIdSite(shopParam.getServerName() );
+                shopParam.setServerName(ctxInstance.getPortletRequest().getServerName());
 
 
 
-                if (request.getParameter(Constants.NAME_ID_SHOP_PARAM) != null)
+                if (ctxInstance.getPortletRequest().getParameter(Constants.NAME_ID_SHOP_PARAM) != null)
 
                 {
 
-                    shopParam.id_shop = ServletTools.getLong(request, Constants.NAME_ID_SHOP_PARAM);
+                    shopParam.id_shop = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_SHOP_PARAM);
 
                 }
 
@@ -238,7 +238,7 @@ public class PriceEditShop extends HttpServlet
 
                         response.sendRedirect(
 
-                                CtxURL.url(request, response, jspPage, "mill.price.index")
+                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index")
 
                         );
 
@@ -264,15 +264,15 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                    shopParam.id_group = ServletTools.getLong(request, "i");
+                    shopParam.id_group = PortletTools.getLong(ctxInstance.getPortletRequest(), "i");
 
 
 
-                    if (ServletUtils.getString(request, "action").equals("update"))
+                    if (PortletTools.getString(ctxInstance.getPortletRequest(), "action").equals("update"))
 
                     {
 
-                        int countItem = ServletTools.getInt(request, "count_item", new Integer(0)).intValue();
+                        int countItem = PortletTools.getInt(ctxInstance.getPortletRequest(), "count_item", new Integer(0)).intValue();
 
 
 
@@ -302,17 +302,17 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                Long idCode = ServletTools.getLong(request, "id_code_" + i);
+                                Long idCode = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_code_" + i);
 
 
 
-                                st.setString(1, ServletUtils.getString(request, "name_" + i + "_" + idCode));
+                                st.setString(1, PortletTools.getString(ctxInstance.getPortletRequest(), "name_" + i + "_" + idCode));
 
-                                RsetTools.setDouble(st, 2, ServletTools.getDouble(request, "price_" + i + "_" + idCode));
+                                RsetTools.setDouble(st, 2, PortletTools.getDouble(ctxInstance.getPortletRequest(), "price_" + i + "_" + idCode));
 
-                                st.setString(3, ServletUtils.getString(request, "curr_" + i + "_" + idCode));
+                                st.setString(3, PortletTools.getString(ctxInstance.getPortletRequest(), "curr_" + i + "_" + idCode));
 
-                                RsetTools.setInt(st, 4, ServletTools.getInt(request, "cb_" + i + "_" + idCode, new Integer(0) ));
+                                RsetTools.setInt(st, 4, PortletTools.getInt(ctxInstance.getPortletRequest(), "cb_" + i + "_" + idCode, new Integer(0) ));
 
                                 RsetTools.setLong(st, 5, idCode);
 
@@ -366,7 +366,7 @@ public class PriceEditShop extends HttpServlet
 
                             db_, response,
 
-                            jspPage,
+                            ctxInstance.page,
 
                             shopParam
 
@@ -404,7 +404,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.price.index")
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.index")
 
 
 
@@ -440,7 +440,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                        CtxURL.url(request, response, jspPage, "mill.price.shop") + '&' +
+                                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop") + '&' +
 
                                         "i=" + item.id_group_current + '&' +
 
@@ -496,7 +496,7 @@ public class PriceEditShop extends HttpServlet
 
 //                            shopParam.id_group,
 
-//                            request.getServerName(),
+//                            ctxInstance.getPortletRequest().getServerName(),
 
 //                            true);
 
@@ -526,7 +526,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.price.shop") + '&' +
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop") + '&' +
 
                                     "i=" + itemGroup.id_group + '&' +
 
@@ -564,7 +564,7 @@ public class PriceEditShop extends HttpServlet
 
 //                    PriceListItemList items = PriceListItemList.getInstance( db_, shopParam  );
 
-                    Vector items = PriceList.getPriceList(db_, shopParam.id_shop, 0, shopParam.id_group, request.getServerName());
+                    Vector items = PriceList.getPriceList(db_, shopParam.id_shop, 0, shopParam.id_group, ctxInstance.getPortletRequest().getServerName());
 
                     if (items != null)
 
@@ -576,7 +576,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                CtxURL.url(request, response, jspPage, "mill.price.shop")
+                                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop")
 
 
 
@@ -662,7 +662,7 @@ public class PriceEditShop extends HttpServlet
 
 
 
-                                    CtxURL.url(request, response, jspPage, "mill.price.description") + '&' +
+                                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.description") + '&' +
 
                                     "id_item=" + item.idPK
 
@@ -758,7 +758,7 @@ public class PriceEditShop extends HttpServlet
 
                         out.write("\">\n");
 
-                        out.write(jspPage.getAsForm());
+                        out.write(ctxInstance.page.getAsForm());
 
                         out.write("<input type=\"submit\" value=\"Изменить\">\n");
 

@@ -2,19 +2,19 @@
 
  * org.riverock.common -- Supporting classes, interfaces, and utilities
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This library is free software; you can redistribute it and/or
 
@@ -72,13 +72,7 @@ import org.apache.log4j.Category;
 
 import java.io.*;
 
-import java.util.Enumeration;
-
-import java.util.Hashtable;
-
-import java.util.Stack;
-
-import java.util.Vector;
+import java.util.*;
 
 
 
@@ -1432,23 +1426,23 @@ public class MultipartHandler
 
         {
 
-            Vector multival = null;
+            List multival = null;
 
 
 
-            if (existing instanceof Vector)
+            if (existing instanceof List)
 
-                multival = (Vector) existing;
+                multival = (List) existing;
 
             else
 
             {
 
-                multival = new Vector();
+                multival = new ArrayList();
 
 
 
-                multival.addElement(existing);
+                multival.add(existing);
 
                 getValues().put(name, multival);
 
@@ -1456,7 +1450,7 @@ public class MultipartHandler
 
 
 
-            multival.addElement(value);
+            multival.add(value);
 
         }
 
@@ -2370,7 +2364,7 @@ public class MultipartHandler
 
 
 
-    public Hashtable getPartsHash()
+    public Map getPartsHash()
 
     {
 

@@ -282,13 +282,13 @@ public class NewsSite implements Portlet, PortletGetList
 
         {
 
-            if (param.getJspPage().sMain.checkKey("main.next-news"))
+            if (param.getPage().sMain.checkKey("main.next-news"))
 
-                str = param.getJspPage().sMain.getStr("main.next-news");
+                str = param.getPage().sMain.getStr("main.next-news");
 
             else
 
-                str = param.getJspPage().sMain.getStr("main.next");
+                str = param.getPage().sMain.getStr("main.next");
 
 
 
@@ -326,7 +326,7 @@ public class NewsSite implements Portlet, PortletGetList
 
                     param.getResponse().encodeURL( CtxURL.ctx()) + '?' +
 
-                    param.getJspPage().getAsURL() + Constants.NAME_ID_NEWS_PARAM + '=' +
+                    param.getPage().getAsURL() + Constants.NAME_ID_NEWS_PARAM + '=' +
 
                     item.getNewsItemId() + '&' +
 
@@ -452,7 +452,7 @@ public class NewsSite implements Portlet, PortletGetList
 
         {
 
-            Long idSite = SiteListSite.getIdSite( param.getRequest().getServerName() );
+            Long idSite = SiteListSite.getIdSite( param.getPage().p.getServerName() );
 
 
 
@@ -460,9 +460,9 @@ public class NewsSite implements Portlet, PortletGetList
 
             {
 
-                log.debug("serverName "+param.getRequest().getServerName());
+                log.debug("serverName "+param.getPage().p.getServerName());
 
-                log.debug("locale " + param.getJspPage().currentLocale.toString());
+                log.debug("locale " + param.getPage().currentLocale.toString());
 
                 log.debug("idSite " + idSite);
 
@@ -664,7 +664,7 @@ public class NewsSite implements Portlet, PortletGetList
 
             log.debug("getInstance(DatabaseAdapter db__)");
 
-            log.debug("param.jspPage.currentLocale.toString() - " + param.getJspPage().currentLocale.toString());
+            log.debug("param.ctxInstance.page.currentLocale.toString() - " + param.getPage().currentLocale.toString());
 
         }
 
@@ -696,7 +696,7 @@ public class NewsSite implements Portlet, PortletGetList
 
 
 
-            if (nb.getCodeLanguage().equals( param.getJspPage().currentLocale.toString() ))
+            if (nb.getCodeLanguage().equals( param.getPage().currentLocale.toString() ))
 
             {
 
@@ -750,7 +750,7 @@ public class NewsSite implements Portlet, PortletGetList
 
             log.debug("code - " + portletCode_);
 
-            log.debug("param.jspPage.currentLocale.toString() - " + param.getJspPage().currentLocale.toString());
+            log.debug("param.ctxInstance.page.currentLocale.toString() - " + param.getPage().currentLocale.toString());
 
         }
 
@@ -786,7 +786,7 @@ public class NewsSite implements Portlet, PortletGetList
 
 
 
-                if (nb.getCodeLanguage().equals( param.getJspPage().currentLocale.toString() ))
+                if (nb.getCodeLanguage().equals( param.getPage().currentLocale.toString() ))
 
                 {
 

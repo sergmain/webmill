@@ -88,25 +88,27 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-import org.riverock.common.tools.ExceptionTools;
+import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.ServletTools;
+import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.generic.tools.XmlTools;
-
 import org.riverock.generic.main.CacheFactory;
 
-import org.riverock.portlet.member.ModuleManager;
+import org.riverock.generic.tools.XmlTools;
 
 import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.member.MemberProcessing;
 
 import org.riverock.portlet.member.MemberServiceClass;
+
+import org.riverock.portlet.member.ModuleManager;
+
+import org.riverock.portlet.schema.member.RelateClassType;
 
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 
@@ -116,23 +118,17 @@ import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 
 import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
 
-import org.riverock.portlet.schema.member.RelateClassType;
-
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.config.WebmillConfig;
 
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.utils.ServletUtils;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
+import org.riverock.webmill.portlet.CtxInstance;
 
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -170,7 +166,7 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -192,15 +188,21 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             AuthSession auth_ = null;
 
-            if ((auth_ = AuthTools.check(request, response, "/")) == null)
+            if ((auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/")) == null)
 
                 return;
 
 
 
-            MemberProcessing mp = new MemberProcessing(request, response, auth_);
+            MemberProcessing mp = new MemberProcessing(ctxInstance, response, auth_);
 
 
 
@@ -208,11 +210,11 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-            String moduleName = ServletUtils.getString(request, Constants.MEMBER_MODULE_PARAM);
+            String moduleName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_MODULE_PARAM);
 
-            String actionName = ServletUtils.getString(request, Constants.MEMBER_ACTION_PARAM);
+            String actionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_ACTION_PARAM);
 
-            String subActionName = ServletUtils.getString(request, Constants.MEMBER_SUBACTION_PARAM).trim();
+            String subActionName = PortletTools.getString(ctxInstance.getPortletRequest(), Constants.MEMBER_SUBACTION_PARAM).trim();
 
 
 
@@ -226,15 +228,15 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-                log.debug("Request URL - " + request.getRequestURL());
+                log.debug("Request URL - " + request_.getRequestURL());
 
-                for (Enumeration e = request.getParameterNames(); e.hasMoreElements();)
+                for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames(); e.hasMoreElements();)
 
                 {
 
                     String s = (String) e.nextElement();
 
-                    log.debug("Request attr - " + s + ", value - " + ServletUtils.getString(request, s));
+                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(ctxInstance.getPortletRequest(), s));
 
                 }
 
@@ -484,7 +486,7 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-                            if (MemberServiceClass.hasYesNoField(request, mp.mod, mp.content))
+                            if (MemberServiceClass.hasYesNoField(ctxInstance.getPortletRequest(), mp.mod, mp.content))
 
                             {
 
@@ -742,7 +744,7 @@ public class MemberCommitServlet extends HttpServlet
 
                             }
 
-                            if (MemberServiceClass.hasYesNoField(request, mp.mod, mp.content))
+                            if (MemberServiceClass.hasYesNoField(ctxInstance.getPortletRequest(), mp.mod, mp.content))
 
                             {
 
@@ -780,7 +782,7 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-                                    idCurrRec = ServletTools.getLong(request, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idCurrRec = PortletTools.getLong(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
 
                                     break;
 
@@ -792,7 +794,7 @@ public class MemberCommitServlet extends HttpServlet
 
 
 
-                                    idCurrRec = ServletUtils.getString(request, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idCurrRec = PortletTools.getString(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
 
                                     break;
 
@@ -834,7 +836,7 @@ public class MemberCommitServlet extends HttpServlet
 
                             {
 
-                                sql_ = MemberServiceClass.buildUpdateSQL(mp.content, mp.fromParam, mp.mod, dbDyn, true, request);
+                                sql_ = MemberServiceClass.buildUpdateSQL(mp.content, mp.fromParam, mp.mod, dbDyn, true, ctxInstance.getPortletRequest());
 
 
 
@@ -952,7 +954,7 @@ public class MemberCommitServlet extends HttpServlet
 
 //out.println("PK name: "+mod.nameModule+'.'+content.getQueryArea().primaryKey+"<br>" );
 
-//out.println("PK: "+ServletTools.getLong(req,
+//out.println("PK: "+PortletTools.getLong(req,
 
 //			mod.nameModule+'.'+content.getQueryArea().primaryKey )+"<br>");
 
@@ -986,7 +988,7 @@ public class MemberCommitServlet extends HttpServlet
 
                                 {
 
-                                    idRec = ServletTools.getLong(request, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idRec = PortletTools.getLong(ctxInstance.getPortletRequest(), mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
 
                                 }
 

@@ -76,35 +76,27 @@ import java.io.Writer;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpServlet;
 
 
 
 import org.apache.log4j.Logger;
 
-
+import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -144,7 +136,7 @@ public class ImageSelectUrl extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -155,6 +147,12 @@ public class ImageSelectUrl extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -170,25 +168,11 @@ public class ImageSelectUrl extends HttpServlet
 
 
 
-                AuthSession auth_ = AuthTools.check(request, response, "/");
+                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
                 if (auth_ == null)
 
                     return;
-
-
-
-                DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
-                InitPage jspPage = new InitPage(db_, request,
-
-                                                "mill.locale._price_list"
-
-                );
-
-
-
-                String indexPage = CtxURL.url(request, response, jspPage, "mill.image.index");
 
 
 
@@ -198,11 +182,11 @@ public class ImageSelectUrl extends HttpServlet
 
 
 
-                    if (ServletTools.isNotInit(request, response, "id_main", indexPage))
+                    Long id_main = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_main");
 
-                        return;
+                    if (id_main==null)
 
-                    Long id_main = ServletTools.getLong(request, "id_main");
+                        throw new IllegalArgumentException("id_relate_right not initialized");
 
 
 
@@ -216,7 +200,7 @@ public class ImageSelectUrl extends HttpServlet
 
                     out.write("\">\r\n            ");
 
-                    out.write(jspPage.getAsForm());
+                    out.write(ctxInstance.page.getAsForm());
 
                     out.write("\r\n");
 

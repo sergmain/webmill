@@ -86,23 +86,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-
+import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
 
 
 
@@ -140,7 +134,7 @@ public class FirmAdd extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -152,6 +146,12 @@ public class FirmAdd extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
 
 
             ContextNavigator.setContentType(response);
@@ -162,7 +162,7 @@ public class FirmAdd extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -170,19 +170,7 @@ public class FirmAdd extends HttpServlet
 
 
 
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-
-
-
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.firm.index"
-
-            );
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage, "mill.firm.index");
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
 
 
 
@@ -200,7 +188,7 @@ public class FirmAdd extends HttpServlet
 
 
 
-                        CtxURL.url(request, response, jspPage, "mill.firm.commit_add_firm")
+                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.commit_add_firm")
 
 
 
@@ -214,7 +202,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td class=\"head\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.new_rec"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.new_rec"));
 
                 out.write("</td>\r\n");
 
@@ -228,7 +216,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.number_reestr"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.number_reestr"));
 
                 out.write("</td>\r\n");
 
@@ -244,7 +232,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.zip"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.zip"));
 
                 out.write("</td>\r\n");
 
@@ -260,7 +248,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.okpo"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.okpo"));
 
                 out.write("</td>\r\n");
 
@@ -276,7 +264,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.okonh"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.okonh"));
 
                 out.write("</td>\r\n");
 
@@ -292,7 +280,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.full_name"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.full_name"));
 
                 out.write("</td>\r\n");
 
@@ -308,7 +296,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.short_name"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.short_name"));
 
                 out.write("</td>\r\n");
 
@@ -324,7 +312,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.address"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.address"));
 
                 out.write("</td>\r\n");
 
@@ -340,7 +328,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.telefon_buh"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.telefon_buh"));
 
                 out.write("</td>\r\n");
 
@@ -356,7 +344,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.telefon_chief"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.telefon_chief"));
 
                 out.write("</td>\r\n");
 
@@ -372,7 +360,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.telefon_io"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.telefon_io"));
 
                 out.write("</td>\r\n");
 
@@ -388,7 +376,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.registr_number"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.registr_number"));
 
                 out.write("</td>\r\n");
 
@@ -404,7 +392,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.chief"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.chief"));
 
                 out.write("</td>\r\n");
 
@@ -420,7 +408,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.buh"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.buh"));
 
                 out.write("</td>\r\n");
 
@@ -436,7 +424,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.fax"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.fax"));
 
                 out.write("</td>\r\n");
 
@@ -452,7 +440,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.email"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.email"));
 
                 out.write("</td>\r\n");
 
@@ -468,7 +456,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.icq"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.icq"));
 
                 out.write("</td>\r\n");
 
@@ -484,7 +472,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.account"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.account"));
 
                 out.write("</td>\r\n");
 
@@ -500,7 +488,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.bank"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.bank"));
 
                 out.write("</td>\r\n");
 
@@ -516,7 +504,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.kor_account"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.kor_account"));
 
                 out.write("</td>\r\n");
 
@@ -532,7 +520,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.bik"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.bik"));
 
                 out.write("</td>\r\n");
 
@@ -548,7 +536,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.inn_bank"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.inn_bank"));
 
                 out.write("</td>\r\n");
 
@@ -564,7 +552,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.short_client_info"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.short_client_info"));
 
                 out.write("</td>\r\n");
 
@@ -580,7 +568,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.url"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.url"));
 
                 out.write("</td>\r\n");
 
@@ -596,7 +584,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.short_info"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.short_info"));
 
                 out.write("</td>\r\n");
 
@@ -616,7 +604,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("</span>");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.is_work"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.is_work"));
 
                 out.write("</td>\r\n");
 
@@ -626,13 +614,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\" selected>");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -646,7 +634,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.type_client"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.type_client"));
 
                 out.write("</td>\r\n");
 
@@ -662,7 +650,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.is_need_recvizit"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.is_need_recvizit"));
 
                 out.write("</td>\r\n");
 
@@ -672,13 +660,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -692,7 +680,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.is_need_person"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.is_need_person"));
 
                 out.write("</td>\r\n");
 
@@ -702,13 +690,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -722,7 +710,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.fio"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.fio"));
 
                 out.write("</td>\r\n");
 
@@ -738,7 +726,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                out.write(jspPage.sCustom.getStr("add_firm.jsp.is_search"));
+                out.write(ctxInstance.sCustom.getStr("add_firm.jsp.is_search"));
 
                 out.write("</td>\r\n");
 
@@ -748,13 +736,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(jspPage.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\">");
 
-                out.write(jspPage.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -770,7 +758,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
 
-                out.write(jspPage.sMain.getStr("button.add"));
+                out.write(ctxInstance.page.sMain.getStr("button.add"));
 
                 out.write("\">\r\n");
 
@@ -792,7 +780,7 @@ public class FirmAdd extends HttpServlet
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
 
             out.write("</a>");
 

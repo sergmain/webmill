@@ -76,8 +76,6 @@ import org.riverock.webmill.main.Constants;
 
 import org.riverock.webmill.config.WebmillConfig;
 
-import org.riverock.webmill.utils.ServletUtils;
-
 import org.riverock.common.config.ConfigException;
 
 import org.riverock.common.config.PropertiesProvider;
@@ -752,7 +750,7 @@ public class PortletManager
 
         {
 
-            if ( ctxInstance.request==null )
+            if ( ctxInstance.req==null )
 
             {
 
@@ -770,13 +768,13 @@ public class PortletManager
 
 
 
-                if ( ctxInstance.request.getAttribute( Constants.NAME_PORTLET_PARAM )==null )
+                if ( ctxInstance.req.getAttribute( Constants.NAME_PORTLET_PARAM )==null )
 
                     return null;
 
 
 
-                String type__ = ServletUtils.getString( ctxInstance.request, Constants.NAME_PORTLET_PARAM );
+                String type__ = PortletTools.getString( ctxInstance.getPortletRequest(), Constants.NAME_PORTLET_PARAM );
 
 
 

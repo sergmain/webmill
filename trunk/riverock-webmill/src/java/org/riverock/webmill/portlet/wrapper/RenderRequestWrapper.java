@@ -2,19 +2,19 @@
 
  * org.riverock.webmill -- Portal framework implementation
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -68,41 +68,11 @@ package org.riverock.webmill.portlet.wrapper;
 
 import java.security.Principal;
 
-import java.util.ArrayList;
-
-import java.util.Enumeration;
-
-import java.util.Locale;
-
-import java.util.Map;
+import java.util.*;
 
 
 
-import javax.portlet.PortalContext;
-
-import javax.portlet.PortletMode;
-
-import javax.portlet.PortletPreferences;
-
-import javax.portlet.PortletSession;
-
-import javax.portlet.RenderRequest;
-
-import javax.portlet.WindowState;
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpServletResponse;
-
-
-
-import org.riverock.generic.tools.StringManager;
-
-import org.riverock.webmill.portlet.CtxInstance;
-
-import org.riverock.webmill.schema.site.TemplateItemType;
-
-import org.riverock.webmill.schema.site.SiteTemplateParameterType;
+import javax.portlet.*;
 
 
 
@@ -112,23 +82,13 @@ public class RenderRequestWrapper implements RenderRequest
 
     // global parameters for page
 
-    private HttpServletRequest request = null;
-
-    private HttpServletResponse response = null;
-
-    private String ctxType = null;
-
 
 
     // parameters for current portlet
 
-    private StringManager sm  = null;
+    private Map parameters = null;
 
-    private String portletCode = null;
-
-    private ArrayList parameters = null;
-
-
+    private PortletSession session = null;
 
 
 
@@ -138,49 +98,19 @@ public class RenderRequestWrapper implements RenderRequest
 
     public RenderRequestWrapper(
 
-        CtxInstance ctxInstance,
+        Map parameters,
 
-        TemplateItemType templateItem
+        PortletSession session
 
         )
 
     {
 
-        this.request = ctxInstance.request ;
+        this.parameters = parameters;
 
-        this.response = ctxInstance.response ;
-
-        this.ctxType = ctxInstance.getType();
-
-
-
-
-
-        this.portletCode = templateItem.getCode();
-
-
-
-        if (templateItem.getParameterAsReference()!=null) {
-
-
-
-            ArrayList parameters_ = templateItem.getParameterAsReference();
-
-            this.parameters = null;
-
-            if (templateItem!=null && parameters_.size()!=0 &&
-
-                parameters_.get(0) instanceof SiteTemplateParameterType
-
-            )
-
-                this.parameters = parameters_;
-
-        }
+        this.session = session;
 
     }
-
-
 
 
 
@@ -238,7 +168,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return session;
 
     }
 
@@ -248,13 +178,13 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        return session;
 
     }
 
 
 
-    public String getProperty( String encoding )
+    public String getProperty( String key )
 
     {
 
@@ -264,7 +194,7 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-    public Enumeration getProperties( String encoding )
+    public Enumeration getProperties( String key )
 
     {
 
@@ -334,7 +264,7 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-    public boolean isUserInRole( String encoding )
+    public boolean isUserInRole( String role )
 
     {
 
@@ -344,7 +274,7 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-    public Object getAttribute( String encoding )
+    public Object getAttribute( String key )
 
     {
 
@@ -364,11 +294,31 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-    public String getParameter( String encoding )
+    public String getParameter( String key )
 
     {
 
-        return null;
+        if (parameters==null)
+
+            return null;
+
+
+
+        Object obj = parameters.get(key);
+
+        if (obj==null)
+
+            return null;
+
+
+
+        if (obj instanceof List)
+
+            return ((List)obj).get(0).toString();
+
+
+
+        return obj.toString();
 
     }
 
@@ -378,17 +328,61 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        if (parameters==null)
+
+            return new Hashtable().elements();
+
+
+
+        return new Vector(parameters.keySet()).elements();
 
     }
 
 
 
-    public String[] getParameterValues( String encoding )
+    public String[] getParameterValues( String key )
 
     {
 
-        return new String[0];
+        if (parameters==null)
+
+            return null;
+
+
+
+        Object obj = parameters.get(key);
+
+        if (obj==null)
+
+            return null;
+
+
+
+        if (obj instanceof List)
+
+        {
+
+            int size = ((List)obj).size();
+
+            String values[] = new String[size];
+
+
+
+            for (int i=0; i<size; i++)
+
+                values[i] = ((List)obj).get(i).toString();
+
+
+
+            return values;
+
+        }
+
+        else
+
+            return new String[]{ obj.toString() };
+
+
 
     }
 
@@ -398,7 +392,7 @@ public class RenderRequestWrapper implements RenderRequest
 
     {
 
-        return null;
+        throw new IllegalStateException("Not implemented");
 
     }
 
@@ -414,7 +408,7 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-    public void setAttribute( String encoding, Object o )
+    public void setAttribute( String key, Object o )
 
     {
 
@@ -422,7 +416,7 @@ public class RenderRequestWrapper implements RenderRequest
 
 
 
-    public void removeAttribute( String encoding )
+    public void removeAttribute( String key )
 
     {
 

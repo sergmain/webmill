@@ -90,29 +90,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
-
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.tools.HtmlTools;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.portlet.tools.HtmlTools;
+import org.riverock.webmill.portlet.CtxURL;
 
 
 
@@ -150,7 +146,7 @@ public class FirmIndex extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -164,6 +160,12 @@ public class FirmIndex extends HttpServlet
 
 
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
@@ -172,7 +174,7 @@ public class FirmIndex extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -184,15 +186,7 @@ public class FirmIndex extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.firm.index"
-
-            );
-
-
-
-            String index_page = CtxURL.url( request, response, jspPage, "mill.firm.index");
+            String index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.index");
 
 
 
@@ -280,33 +274,33 @@ public class FirmIndex extends HttpServlet
 
                          "<td>"+
 
-                         "<b>" + jspPage.sCustom.getStr("index.jsp.title")+ "</b><br>"+
+                         "<b>" + ctxInstance.sCustom.getStr("index.jsp.title")+ "</b><br>"+
 
                          "<p><a href=\""+
 
-                         CtxURL.url( request, response, jspPage, "mill.firm.add_firm")+
+                         CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.add_firm")+
 
-                         "\">"+jspPage.sMain.getStr("button.add")+"</a></p>"+
+                         "\">"+ctxInstance.page.sMain.getStr("button.add")+"</a></p>"+
 
                          "<table width=\"100%\" border=\"1\" class=\"l\">"+
 
                          "<tr>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.full_name")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.full_name")+"</td>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.short_name")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.short_name")+"</td>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.address")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.address")+"</td>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.chief")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.chief")+"</td>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.short_info")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.short_info")+"</td>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.is_work")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.is_work")+"</td>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.is_search")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.is_search")+"</td>"+
 
-                         "<th class=\"memberArea\" width=\"4%\">"+jspPage.sCustom.getStr("index.jsp.action")+"</td>"+
+                         "<th class=\"memberArea\" width=\"4%\">"+ctxInstance.sCustom.getStr("index.jsp.action")+"</td>"+
 
                          "</tr>");
 
@@ -352,9 +346,9 @@ public class FirmIndex extends HttpServlet
 
                                 "<td class=\"memberArea\">"+ RsetTools.getString(rs, "short_info", "&nbsp;") +"</td>"+
 
-                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_work", false, jspPage.currentLocale ) +"</td>"+
+                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_work", false, ctxInstance.page.currentLocale ) +"</td>"+
 
-                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_search", false, jspPage.currentLocale ) +"</td>"+
+                                "<td class=\"memberArea\">"+ HtmlTools.printYesNo(rs, "is_search", false, ctxInstance.page.currentLocale ) +"</td>"+
 
                                 "<td class=\"memberAreaAction\">"
 
@@ -368,17 +362,17 @@ public class FirmIndex extends HttpServlet
 
                         out.write(
 
-                                "<input type=\"button\" value=\""+jspPage.sMain.getStr("button.change")+"\" onclick=\"location.href='"+
+                                "<input type=\"button\" value=\""+ctxInstance.page.sMain.getStr("button.change")+"\" onclick=\"location.href='"+
 
-                                CtxURL.url( request, response, jspPage, "mill.firm.ch_firm") + '&'+
+                                CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.ch_firm") + '&'+
 
                                 "id_firm="+id_firm +
 
                                 "';\">"+
 
-                                "<input type=\"button\" value=\""+jspPage.sMain.getStr("button.delete")+"\" onclick=\"location.href='"+
+                                "<input type=\"button\" value=\""+ctxInstance.page.sMain.getStr("button.delete")+"\" onclick=\"location.href='"+
 
-                                CtxURL.url( request, response, jspPage, "mill.firm.del_firm") + '&'+
+                                CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.del_firm") + '&'+
 
                                 "id_firm="+id_firm+
 
@@ -402,11 +396,11 @@ public class FirmIndex extends HttpServlet
 
 
 
-                            CtxURL.url( request, response, jspPage, "mill.firm.add_firm")+
+                            CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.firm.add_firm")+
 
 
 
-                            "\">"+jspPage.sMain.getStr("button.add")+"</a></p>"
+                            "\">"+ctxInstance.page.sMain.getStr("button.add")+"</a></p>"
 
                     );
 
@@ -430,7 +424,7 @@ public class FirmIndex extends HttpServlet
 
                 out.write(
 
-                        "<p><a href=\""+ index_page +"\">"+jspPage.sMain.getStr("page.main.3")+"</a></p>"+
+                        "<p><a href=\""+ index_page +"\">"+ctxInstance.page.sMain.getStr("page.main.3")+"</a></p>"+
 
                         "</td>"+
 

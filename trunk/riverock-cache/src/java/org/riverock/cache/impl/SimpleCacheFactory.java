@@ -734,7 +734,7 @@ public class SimpleCacheFactory implements Cache
 
     public synchronized void terminate(Long id)
 
-        throws Exception
+        throws CacheException
 
     {
 
@@ -754,7 +754,7 @@ public class SimpleCacheFactory implements Cache
 
     public synchronized void terminate(long id)
 
-        throws Exception
+        throws CacheException
 
     {
 

@@ -72,9 +72,17 @@ import java.io.InputStream;
 
 
 
+import org.apache.log4j.Logger;
+
+
+
 public class FileInMemoryPart implements AbstractPart
 
 {
+
+    private static Logger log = Logger.getLogger(FileOnDiskPart.class);
+
+
 
     private UploadedBytes bytes = null;
 
@@ -112,7 +120,7 @@ public class FileInMemoryPart implements AbstractPart
 
     public InputStream getInputStream()
 
-        throws Exception
+        throws MultipartRequestException
 
     {
 
@@ -121,6 +129,16 @@ public class FileInMemoryPart implements AbstractPart
     }
 
 
+
+    public String getStringValue()
+
+        throws MultipartRequestException
+
+    {
+
+        return bytes.toString();
+
+    }
 
 }
 

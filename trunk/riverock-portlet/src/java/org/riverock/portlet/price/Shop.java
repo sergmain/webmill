@@ -68,25 +68,23 @@ import java.util.Calendar;
 
 
 
-import javax.servlet.http.HttpServletRequest;
+import javax.portlet.PortletRequest;
 
 
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.generic.exception.GenericException;
+
 import org.riverock.generic.main.CacheFactory;
 
 import org.riverock.generic.site.SiteListSite;
-
-import org.riverock.generic.exception.GenericException;
-
-import org.riverock.common.tools.RsetTools;
-
-
-
-import org.apache.log4j.Logger;
 
 
 
@@ -284,7 +282,7 @@ public class Shop
 
 
 
-    public static Long getShopID(DatabaseAdapter db_, HttpServletRequest request)
+    public static Long getShopID(DatabaseAdapter db_, PortletRequest request)
 
             throws Exception
 

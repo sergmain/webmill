@@ -90,29 +90,25 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.ExceptionTools;
+
 import org.riverock.common.tools.NumberTools;
-
-import org.riverock.common.tools.StringTools;
-
-import org.riverock.common.tools.ServletTools;
 
 import org.riverock.common.tools.RsetTools;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.StringTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.schema.db.CustomSequenceType;
 
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.utils.ServletUtils;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
+import org.riverock.webmill.portlet.CtxInstance;
 
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -602,7 +598,7 @@ public class ShopSearch extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -613,6 +609,12 @@ public class ShopSearch extends HttpServlet
         try
 
         {
+
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
 
             ContextNavigator.setContentType(response);
 
@@ -770,7 +772,7 @@ public class ShopSearch extends HttpServlet
 
 
 
-            if (ServletUtils.getString(request, "action").toLowerCase().equals("search"))
+            if (PortletTools.getString(ctxInstance.getPortletRequest(), "action").toLowerCase().equals("search"))
 
             {
 
@@ -782,7 +784,7 @@ public class ShopSearch extends HttpServlet
 
 
 
-                String v_str_ip = request.getRemoteAddr();
+                String v_str_ip = ""; //request.getRemoteAddr();
 
 
 
@@ -798,19 +800,19 @@ public class ShopSearch extends HttpServlet
 
 
 
-                call.setString(2, ServletUtils.getString(request, "s"));
+                call.setString(2, PortletTools.getString(ctxInstance.getPortletRequest(), "s"));
 
-                call.setString(3, ServletUtils.getString(request, "s1"));
+                call.setString(3, PortletTools.getString(ctxInstance.getPortletRequest(), "s1"));
 
-                call.setString(4, ServletUtils.getString(request, "s2"));
+                call.setString(4, PortletTools.getString(ctxInstance.getPortletRequest(), "s2"));
 
-                call.setString(5, ServletUtils.getString(request, "bool1"));
+                call.setString(5, PortletTools.getString(ctxInstance.getPortletRequest(), "bool1"));
 
-                call.setString(6, ServletUtils.getString(request, "bool2"));
+                call.setString(6, PortletTools.getString(ctxInstance.getPortletRequest(), "bool2"));
 
-                call.setString(7, ServletUtils.getString(request, "minPrice"));
+                call.setString(7, PortletTools.getString(ctxInstance.getPortletRequest(), "minPrice"));
 
-                call.setString(8, ServletUtils.getString(request, "maxPrice"));
+                call.setString(8, PortletTools.getString(ctxInstance.getPortletRequest(), "maxPrice"));
 
 
 
@@ -844,7 +846,7 @@ public class ShopSearch extends HttpServlet
 
                 int v_len = v_str.length();
 
-                int v_number_page = ServletTools.getInt(request, "p", new Integer(1)).intValue();
+                int v_number_page = PortletTools.getInt(ctxInstance.getPortletRequest(), "p", new Integer(1)).intValue();
 
 
 
@@ -878,7 +880,7 @@ public class ShopSearch extends HttpServlet
 
                 RsetTools.setLong(ps, 1, v_id_query);
 
-                RsetTools.setLong(ps, 2, ServletTools.getLong(request, "i"));
+                RsetTools.setLong(ps, 2, PortletTools.getLong(ctxInstance.getPortletRequest(), "i"));
 
                 ps.setString(3, v_query);
 
@@ -1310,7 +1312,7 @@ WHERE id_query = v_id_query;
 
                     out.write("<a href=\"search_in_shop.jsp?s=");
 
-                    out.write(ServletUtils.getString(request, "s") + "&p=" + (v_number_page - 1));
+                    out.write(PortletTools.getString(ctxInstance.getPortletRequest(), "s") + "&p=" + (v_number_page - 1));
 
                     out.write("\">Предыдущая страница");
 
@@ -1342,7 +1344,7 @@ WHERE id_query = v_id_query;
 
                     out.write("<a href=\"search_in_shop.jsp?s=");
 
-                    out.write(ServletUtils.getString(request, "s") + "&p=" + (v_number_page + 1));
+                    out.write(PortletTools.getString(ctxInstance.getPortletRequest(), "s") + "&p=" + (v_number_page + 1));
 
                     out.write("\">Следующая страница");
 

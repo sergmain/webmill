@@ -52,7 +52,21 @@ package org.riverock.portlet.b2b.processing;
 
 
 
+import java.util.Vector;
+
+
+
+import javax.portlet.PortletSession;
+
+
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.Base64;
+
 import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.security.SecurityTools;
 
 import org.riverock.portlet.main.Constants;
 
@@ -62,15 +76,7 @@ import org.riverock.portlet.price.PriceListItemOrder;
 
 import org.riverock.portlet.price.Shop;
 
-import org.riverock.generic.security.SecurityTools;
-
-import org.riverock.common.tools.Base64;
-
-import org.apache.log4j.Logger;
-
-
-
-import java.util.Vector;
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -118,7 +124,7 @@ public class Menatep
 
     public static String getSignedBasket(BasketShopSession ss, String nameFilePrivateKey,
 
-                                         javax.servlet.http.HttpServletRequest request,
+                                         CtxInstance ctxInstance,
 
                                          javax.servlet.http.HttpServletResponse response)
 
@@ -136,13 +142,13 @@ public class Menatep
 
         {
 
-            javax.servlet.http.HttpSession session = request.getSession(true);
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession(true);
 
 
 
             String mainURL =
 
-                    "http://" + request.getServerName() + "/processing.jsp;jsessionid=" + session.getId();
+                    "http://" + ctxInstance.getPortletRequest().getServerName() + "/processing.jsp;jsessionid=" + session.getId();
 
 
 
@@ -184,7 +190,7 @@ public class Menatep
 
 //            v = PriceList.getOrderItems(DatabaseAdapter.getInstance(false),
 
-//                    ss.id_shop, 0, request.getServerName(), ss.id_order);
+//                    ss.id_shop, 0, ctxInstance.getPortletRequest().getServerName(), ss.id_order);
 
 
 

@@ -78,17 +78,21 @@ import java.sql.PreparedStatement;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpServlet;
 
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -98,21 +102,13 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.RsetTools;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -150,7 +146,7 @@ public class RightChangeCommit extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -162,6 +158,12 @@ public class RightChangeCommit extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
@@ -170,7 +172,7 @@ public class RightChangeCommit extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if ( auth_==null )
 
@@ -194,15 +196,15 @@ public class RightChangeCommit extends HttpServlet
 
                     dbDyn = DatabaseAdapter.getInstance( true );
 
-                    InitPage jspPage =  new InitPage(dbDyn, request,
+//                    InitPage jspPage =  new InitPage(dbDyn, request,
 
-                                                     "mill.locale.AUTH_RELATE_RIGHT_ARM"
+//                                                     "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-                    );
+//                    );
 
 
 
-                    index_page = CtxURL.url( request, response, jspPage, "mill.auth.right");
+                    index_page = CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
 
 
 
@@ -220,11 +222,15 @@ public class RightChangeCommit extends HttpServlet
 
 
 
-                    if (ServletTools.isNotInit(request, response, "id_relate_right", index_page ))
+//                    if (ServletTools.isNotInit(request, response, "id_relate_right", index_page ))
 
-                        return;
+//                        return;
 
-                    Long id_relate_right = ServletTools.getLong(request, "id_relate_right");
+                    Long id_relate_right = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_relate_right");
+
+                    if (id_relate_right==null)
+
+                    throw new IllegalArgumentException("id_relate_right not initialized");
 
 
 
@@ -232,15 +238,15 @@ public class RightChangeCommit extends HttpServlet
 
                     String right =
 
-                            (one.equals(ServletTools.getInt(request, "rs"))?"S":"")+
+                            (one.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "rs"))?"S":"")+
 
-                            (one.equals(ServletTools.getInt(request, "ri"))?"I":"")+
+                            (one.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "ri"))?"I":"")+
 
-                            (one.equals(ServletTools.getInt(request, "rd"))?"D":"")+
+                            (one.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "rd"))?"D":"")+
 
-                            (one.equals(ServletTools.getInt(request, "ru"))?"U":"")+
+                            (one.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "ru"))?"U":"")+
 
-                            (one.equals(ServletTools.getInt(request, "ra"))?"A":"");
+                            (one.equals(PortletTools.getInt(ctxInstance.getPortletRequest(), "ra"))?"A":"");
 
 
 
@@ -270,17 +276,17 @@ public class RightChangeCommit extends HttpServlet
 
 
 
-                    RsetTools.setLong(ps, 1, ServletTools.getLong(request, "id_access_group"));
+                    RsetTools.setLong(ps, 1, PortletTools.getLong(ctxInstance.getPortletRequest(), "id_access_group"));
 
-                    RsetTools.setLong(ps, 2, ServletTools.getLong(request, "id_object_arm"));
+                    RsetTools.setLong(ps, 2, PortletTools.getLong(ctxInstance.getPortletRequest(), "id_object_arm"));
 
                     ps.setString(3, right);
 
-                    ps.setInt(4, ServletTools.getInt(request, "is_road", new Integer(9)).intValue() );
+                    ps.setInt(4, PortletTools.getInt(ctxInstance.getPortletRequest(), "is_road", new Integer(9)).intValue() );
 
-                    ps.setInt(5, ServletTools.getInt(request, "is_service", new Integer(9)).intValue() );
+                    ps.setInt(5, PortletTools.getInt(ctxInstance.getPortletRequest(), "is_service", new Integer(9)).intValue() );
 
-                    ps.setInt(6, ServletTools.getInt(request, "is_firm", new Integer(9)).intValue() );
+                    ps.setInt(6, PortletTools.getInt(ctxInstance.getPortletRequest(), "is_firm", new Integer(9)).intValue() );
 
                     RsetTools.setLong(ps, 7, id_relate_right);
 

@@ -66,21 +66,19 @@ package org.riverock.portlet.portlets;
 
 
 
+import java.io.FileWriter;
+
 import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import java.util.List;
 
-import java.util.ArrayList;
-
-import java.io.FileWriter;
 
 
-
-import javax.servlet.http.HttpSession;
+import javax.portlet.PortletSession;
 
 
 
@@ -88,11 +86,21 @@ import org.apache.log4j.Logger;
 
 import org.exolab.castor.xml.Marshaller;
 
+import org.riverock.common.tools.DateTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.common.tools.StringTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.tools.XmlTools;
+
+import org.riverock.portlet.main.Constants;
+
+import org.riverock.portlet.member.ClassQueryItem;
 
 import org.riverock.portlet.price.PriceCurrency;
 
@@ -108,39 +116,23 @@ import org.riverock.portlet.price.ShopBasket;
 
 import org.riverock.portlet.schema.portlet.shop.ShopPageType;
 
-import org.riverock.portlet.schema.price.OrderType;
-
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.schema.price.OrderType;
 
-import org.riverock.portlet.member.ClassQueryItem;
+import org.riverock.webmill.config.WebmillConfig;
 
-import org.riverock.common.tools.DateTools;
-
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.tools.StringTools;
-
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.Portlet;
-
-import org.riverock.webmill.portlet.PortletResultObject;
 
 import org.riverock.webmill.portlet.PortletGetList;
 
 import org.riverock.webmill.portlet.PortletParameter;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.webmill.portlet.PortletResultObject;
 
-import org.riverock.webmill.utils.ServletUtils;
-
-import org.riverock.webmill.schema.site.SitePortletDataListType;
-
-import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -288,7 +280,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        HttpSession session = param.getRequest().getSession();
+        PortletSession session = param.getPortletRequest().getPortletSession();
 
         OrderType order = (OrderType) session.getAttribute( Constants.ORDER_SESSION );
 
@@ -330,9 +322,9 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        shopPage.setDateUploadPrice( DateTools.getStringDate(shop.dateUpload, "dd MMM yyyy", param.getJspPage().currentLocale) );
+        shopPage.setDateUploadPrice( DateTools.getStringDate(shop.dateUpload, "dd MMM yyyy", param.getPage().currentLocale) );
 
-        shopPage.setTimeUploadPrice( DateTools.getStringDate(shop.dateUpload, "HH:mm", param.getJspPage().currentLocale) );
+        shopPage.setTimeUploadPrice( DateTools.getStringDate(shop.dateUpload, "HH:mm", param.getPage().currentLocale) );
 
 
 
@@ -354,13 +346,13 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        shopParam.id_group = ServletTools.getLong( param.getRequest(), Constants.NAME_ID_GROUP_SHOP, new Long(0) );
+        shopParam.id_group = PortletTools.getLong( param.getPortletRequest(), Constants.NAME_ID_GROUP_SHOP, new Long(0) );
 
-        shopParam.nameTemplate = param.getRequest().getParameter(Constants.NAME_TEMPLATE_CONTEXT_PARAM);
+        shopParam.nameTemplate = param.getPage().getNameTemplate();
 
-        shopParam.setServerName( param.getRequest().getServerName());
+        shopParam.setServerName( param.getPage().p.getServerName());
 
-        shopParam.id_currency = ServletTools.getLong( param.getRequest(), Constants.NAME_ID_CURRENCY_SHOP);
+        shopParam.id_currency = PortletTools.getLong( param.getPortletRequest(), Constants.NAME_ID_CURRENCY_SHOP);
 
 
 
@@ -402,15 +394,15 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 // sort_direct == 0 означает сортировки по возрастанию, иначе сортировка по убыванию
 
-        shopParam.sortBy = ServletUtils.getString( param.getRequest(), Constants.NAME_SHOP_SORT_BY, "item");
+        shopParam.sortBy = PortletTools.getString( param.getPortletRequest(), Constants.NAME_SHOP_SORT_BY, "item");
 
-        shopParam.sortDirect = ServletTools.getInt( param.getRequest(), Constants.NAME_SHOP_SORT_DIRECT, new Integer(1)).intValue();
+        shopParam.sortDirect = PortletTools.getInt( param.getPortletRequest(), Constants.NAME_SHOP_SORT_DIRECT, new Integer(1)).intValue();
 
 
 
         sortItemUrl = param.getResponse().encodeURL(CtxURL.ctx()) + '?' +
 
-            param.getJspPage().getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
+            param.getPage().getAsURL() + Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
 
             shopParam.currencyURL + '&' +
 
@@ -508,7 +500,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
         if (localePackage != null)
 
-            shopParam.sm = StringManager.getManager(localePackage, jspPage.currentLocale);
+            shopParam.sm = StringManager.getManager(localePackage, ctxInstance.page.currentLocale);
 
         else
 
@@ -530,7 +522,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
                     shopParam,
 
-                    param.getJspPage(),
+                    param.getPage(),
 
                     param.getResponse().encodeURL(CtxURL.ctx())
 
@@ -542,7 +534,7 @@ public class ShopPagePortlet implements Portlet, PortletResultObject, PortletGet
 
 
 
-        shopPage.setPricePosition( PriceListPosition.getInstance(db_, param.getResponse(), param.getJspPage(), shopParam) );
+        shopPage.setPricePosition( PriceListPosition.getInstance(db_, param.getResponse(), param.getPage(), shopParam) );
 
         shopPage.setCurrentBasket( ShopBasket.getInstance(order, shopParam.sm, param) );
 

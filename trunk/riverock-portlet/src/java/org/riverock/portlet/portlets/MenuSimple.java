@@ -84,15 +84,13 @@ import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 
 import org.riverock.portlet.schema.portlet.menu.MenuSimpleType;
 
-import org.riverock.common.tools.MainTools;
+import org.riverock.portlet.main.Constants;
 
-import org.riverock.common.tools.ServletTools;
+import org.riverock.common.tools.MainTools;
 
 import org.riverock.common.config.ConfigException;
 
 import org.riverock.generic.tools.XmlTools;
-
-import org.riverock.portlet.main.Constants;
 
 import org.riverock.webmill.portlet.PortletResultObject;
 
@@ -258,7 +256,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            MenuInterface catalog = param.getJspPage().menuLanguage.getCatalogByCode( portletCode_ );
+            MenuInterface catalog = param.getPage().menuLanguage.getCatalogByCode( portletCode_ );
 
             processInstance( catalog, typePortlet );
 
@@ -304,7 +302,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            MenuInterface menu = param.getJspPage().menuLanguage.getDefault();
+            MenuInterface menu = param.getPage().menuLanguage.getDefault();
 
             if (menu!=null)
 
@@ -388,8 +386,6 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-//        menuSimple.removeAllMenuModule();
-
         if (menu != null)
 
         {
@@ -408,7 +404,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-                MenuModuleType tempMenu = getMenuModule(ci, param.getResponse(), param.getJspPage(), 1, id, desc, typePortlet);
+                MenuModuleType tempMenu = getMenuModule(ci, param.getResponse(), param.getPage(), 1, id, desc, typePortlet);
 
                 menuSimple.addMenuModule(tempMenu);
 
@@ -498,7 +494,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
-                id = ServletTools.getLong( param.getRequest(), namePortletId);
+                id = PortletTools.getLong( param.getPortletRequest(), namePortletId);
 
             }
 
@@ -514,19 +510,19 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
         if (log.isDebugEnabled())
 
-            log.debug("param.getParameters() - " + param.getParameters());
+            log.debug("param.getParameters() - " + param.getTemplateParameters());
 
 
 
         try {
 
-            String levelTemp = PortletTools.getString(param.getParameters(), "level", null);
+            String levelTemp = PortletTools.getString(param.getTemplateParameters(), "level", null);
 
             if (levelTemp==null)
 
                 return;
 
-            String compareTemp = PortletTools.getString(param.getParameters(), "type_level", null);
+            String compareTemp = PortletTools.getString(param.getTemplateParameters(), "type_level", null);
 
             if (compareTemp==null)
 
@@ -1038,7 +1034,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
         HttpServletResponse response,
 
-        InitPage jspPage,
+        InitPage page,
 
         int level,
 
@@ -1178,7 +1174,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
             {
 
-                m.setModuleName( item.getStr().getString(jspPage.currentLocale) );
+                m.setModuleName( item.getStr().getString(page.currentLocale) );
 
             }
 
@@ -1194,11 +1190,17 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
 
 
+//            m.setModuleUrl(
+
+//                response.encodeURL(CtxURL.page() + '/' + item.getId())
+
+//            );
+
             m.setModuleUrl(
 
                 response.encodeURL(CtxURL.ctx() + '?' +
 
-                                   jspPage.getAsURL() +
+                                   page.getAsURL() +
 
                 Constants.NAME_TYPE_CONTEXT_PARAM
 
@@ -1282,7 +1284,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
                 MenuModuleType menuModule = getMenuModule(
 
-                    ci, response, jspPage, level + 1, id_current_item,
+                    ci, response, page, level + 1, id_current_item,
 
                     desc_current, typePortlet
 
@@ -1528,7 +1530,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
     {
 
-//System.out.println("#4.06.01 "+item.str.getString( jspPage.p.defaultLocale)+" "+catItem.str.getString( jspPage.p.defaultLocale) );
+//System.out.println("#4.06.01 "+item.str.getString( ctxInstance.page.p.defaultLocale)+" "+catItem.str.getString( ctxInstance.page.p.defaultLocale) );
 
      String s = "";
 
@@ -1556,7 +1558,7 @@ public class MenuSimple implements Portlet, PortletResultObject, PortletGetList
 
                  res.encodeURL( CtxURL.ctx()+'?'+jspPage.addURL+Constants.NAME_ID_CONTEXT_PARAM+'='+ci.id )+
 
-                 "\">"+ ci.str.getString( jspPage.currentLocale )+"</a></td></tr>";
+                 "\">"+ ci.str.getString( ctxInstance.page.currentLocale )+"</a></td></tr>";
 
 
 

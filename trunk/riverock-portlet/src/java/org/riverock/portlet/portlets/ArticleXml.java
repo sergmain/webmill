@@ -108,6 +108,8 @@ import org.riverock.portlet.core.GetSiteCtxArticleItem;
 
 import org.riverock.portlet.member.ClassQueryItem;
 
+import org.riverock.cache.impl.CacheException;
+
 
 
 import org.apache.log4j.Logger;
@@ -145,6 +147,28 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
     public PortletParameter param = null;
 
     public Long idSupportLanguage = null;
+
+
+
+    public void reinit()
+
+    {
+
+        cache.reinit();
+
+    }
+
+
+
+    public synchronized void terminate(Long id)
+
+        throws CacheException
+
+    {
+
+        cache.terminate(id);
+
+    }
 
 
 
@@ -254,7 +278,7 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
 
     {
 
-        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(datePost, "dd.MMM.yyyy", param.getPage().currentLocale);
 
     }
 
@@ -264,7 +288,7 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
 
     {
 
-        return DateTools.getStringDate(datePost, "HH:mm", param.getJspPage().currentLocale);
+        return DateTools.getStringDate(datePost, "HH:mm", param.getPage().currentLocale);
 
     }
 
@@ -474,7 +498,7 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
 
 
 
-        Long idSupportLanguageCurrent = param.getJspPage().p.getIdSupportLanguage(param.getJspPage().currentLocale);
+        Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPage().currentLocale);
 
 
 

@@ -2,19 +2,19 @@
 
  * org.riverock.common -- Supporting classes, interfaces, and utilities
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This library is free software; you can redistribute it and/or
 
@@ -72,11 +72,21 @@ import java.io.FileInputStream;
 
 import java.io.InputStream;
 
+import java.io.FileNotFoundException;
+
+
+
+import org.apache.log4j.Logger;
+
 
 
 public class FileOnDiskPart implements AbstractPart
 
 {
+
+    private static Logger log = Logger.getLogger(FileOnDiskPart.class);
+
+
 
     private UploadedFile file = null;
 
@@ -114,15 +124,41 @@ public class FileOnDiskPart implements AbstractPart
 
     public InputStream getInputStream()
 
-        throws Exception
+        throws MultipartRequestException
 
     {
 
-        return new FileInputStream(file);
+        try
+
+        {
+
+            return new FileInputStream(file);
+
+        }
+
+        catch (FileNotFoundException fileNotFoundException)
+
+        {
+
+            log.error("Exception in ", fileNotFoundException);
+
+            throw new MultipartRequestException( fileNotFoundException.toString() );
+
+        }
 
     }
 
 
+
+    public String getStringValue()
+
+        throws MultipartRequestException
+
+    {
+
+        throw new MultipartRequestException("Not implemented");
+
+    }
 
 }
 

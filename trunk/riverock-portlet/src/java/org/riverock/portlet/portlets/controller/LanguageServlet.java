@@ -86,13 +86,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.config.ConfigException;
 
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -102,17 +102,13 @@ import org.riverock.generic.exception.DatabaseException;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.common.config.ConfigException;
-
-import org.riverock.webmill.port.InitPage;
-
 import org.riverock.webmill.portal.menu.MenuItemInterface;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -200,15 +196,15 @@ public class LanguageServlet extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
     {
 
-        HttpSession session = request.getSession();
+//        PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
-        InitPage jspPage = null;
+//        InitPage jspPage = null;
 
 
 
@@ -218,39 +214,45 @@ public class LanguageServlet extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             db_ = DatabaseAdapter.getInstance(false);
 
 
 
-            try
+//            try
 
-            {
+//            {
 
-                jspPage = new InitPage(db_, request,
+//                jspPage = new InitPage(db_, request,
 
-                                       "mill.locale.site_hamradio"
+//                                       "mill.locale.site_hamradio"
 
-                );
+//                );
 
-            }
+//            }
 
-            catch (Exception e)
+//            catch (Exception e)
 
-            {
+//            {
 
-                log.error("Error create InitPage ", e);
+//                log.error("Error create InitPage ", e);
 
-                throw  new ServletException(e);
+//                throw  new ServletException(e);
 
-            }
-
-
-
-            Long id_ctx = ServletTools.getLong(request, Constants.NAME_ID_CONTEXT_PARAM);
+//            }
 
 
 
-            MenuItemInterface catItem = jspPage.menuLanguage.searchMenuItem( id_ctx );
+            Long id_ctx = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_CONTEXT_PARAM);
+
+
+
+            MenuItemInterface catItem = ctxInstance.page.menuLanguage.searchMenuItem( id_ctx );
 
 
 
@@ -304,7 +306,9 @@ public class LanguageServlet extends HttpServlet
 
 
 
-            for (Enumeration e = session.getAttributeNames(); e.hasMoreElements();)
+
+
+            for (Enumeration e = ctxInstance.getPortletRequest().getAttributeNames(); e.hasMoreElements();)
 
             {
 
@@ -318,7 +322,7 @@ public class LanguageServlet extends HttpServlet
 
 
 
-//        session.removeAttribute(Constants.CURRENT_CATALOG_ITEM_SESSION);
+
 
             if (log.isDebugEnabled())
 

@@ -74,9 +74,17 @@ import java.util.List;
 
 
 
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.RsetTools;
+
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
+
+import org.riverock.generic.tools.XmlTools;
+
+import org.riverock.portlet.main.Constants;
 
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 
@@ -84,29 +92,19 @@ import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.sso.a3.AuthInfo;
 
-import org.riverock.common.tools.RsetTools;
+import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.Portlet;
-
-import org.riverock.webmill.portlet.PortletResultObject;
 
 import org.riverock.webmill.portlet.PortletGetList;
 
 import org.riverock.webmill.portlet.PortletParameter;
 
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.sso.a3.AuthInfo;
-
-import org.riverock.sso.a3.AuthTools;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletResultObject;
 
 
 
@@ -172,7 +170,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
         {
 
-            AuthInfo authInfo = AuthTools.getAuthInfo( param.getRequest() );
+            AuthInfo authInfo = AuthTools.getAuthInfo( param.getPortletRequest() );
 
 
 
@@ -201,8 +199,6 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
                 "where a1.is_root=1 and a1.USER_LOGIN=? ";
 
 
-
-//            db_ = DatabaseAdapter.getInstance(false);
 
             ps = db_.prepareStatement(sql_);
 
@@ -292,9 +288,9 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                 log.debug("PortletParam  param.response.encodeURL( CtxURL.ctx()  ) -  " + param.response.encodeURL( CtxURL.ctx()  ));
 
-                log.debug("PortletParam  getMemberTemplate - " + param.jspPage.p.getMemberTemplate() );
+                log.debug("PortletParam  getMemberTemplate - " + param.ctxInstance.page.p.getMemberTemplate() );
 
-                log.debug("PortletParam  nameTemplate - " + param.jspPage.p.getMemberTemplate().getNameTemplate() );
+                log.debug("PortletParam  nameTemplate - " + param.ctxInstance.page.p.getMemberTemplate().getNameTemplate() );
 
 
 
@@ -308,7 +304,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                     Constants.MEMBER_NAME_MOD_PARAM+"="+ moduleCode + '&' +
 
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.jspPage.p.getMemberTemplate().getNameTemplate()
+                    Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.ctxInstance.page.p.getMemberTemplate().getNameTemplate()
 
                 );
 
@@ -332,7 +328,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
             Constants.MEMBER_NAME_MOD_PARAM+"="+ moduleCode + '&' +
 
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.jspPage.p.getMemberTemplate().getNameTemplate();
+            Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.ctxInstance.page.p.getMemberTemplate().getNameTemplate();
 
 
 
@@ -706,9 +702,9 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                         log.debug("PortletParam  param.response.encodeURL( CtxURL.ctx()  ) -  " + param.getResponse().encodeURL( CtxURL.ctx()  ));
 
-                        log.debug("PortletParam  getMemberTemplate - " + param.getJspPage().p.getMemberTemplate() );
+                        log.debug("PortletParam  getMemberTemplate - " + param.getPage().p.getMemberTemplate() );
 
-                        log.debug("PortletParam  nameTemplate - " + param.getJspPage().p.getMemberTemplate().getNameTemplate() );
+                        log.debug("PortletParam  nameTemplate - " + param.getPage().p.getMemberTemplate().getNameTemplate() );
 
 
 
@@ -716,7 +712,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                             param.getResponse().encodeURL( CtxURL.ctx()  ) + '?'+
 
-                                  param.getJspPage().getAsURL()+
+                                  param.getPage().getAsURL()+
 
                             Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants .CTX_TYPE_MEMBER   + '&'+
 
@@ -724,7 +720,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                             Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() + '&' +
 
-                            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + param.getJspPage().p.getMemberTemplate().getNameTemplate()
+                            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + param.getPage().p.getMemberTemplate().getNameTemplate()
 
                         );
 
@@ -738,7 +734,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                     param.getResponse().encodeURL( CtxURL.ctx()  ) + '?'+
 
-                    param.getJspPage().getAsURL()+
+                    param.getPage().getAsURL()+
 
                     Constants.NAME_TYPE_CONTEXT_PARAM    +'='+ Constants .CTX_TYPE_MEMBER   + '&'+
 
@@ -746,7 +742,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                     Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() + '&' +
 
-                    Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.getJspPage().p.getMemberTemplate().getNameTemplate()
+                    Constants.NAME_TEMPLATE_CONTEXT_PARAM    + '=' + param.getPage().p.getMemberTemplate().getNameTemplate()
 
                 );
 

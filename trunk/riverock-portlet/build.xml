@@ -100,13 +100,13 @@
 
     <property name="riverock-generic.lib"    value="riverock-generic-4.0.3.jar"/>
 
-    <property name="riverock-cache.lib"      value="riverock-cache-1.0.1.jar"/>
+    <property name="riverock-cache.lib"      value="riverock-cache-1.1.0.jar"/>
 
     <property name="riverock-sso.lib"        value="riverock-sso-4.0.4.jar"/>
 
     <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
 
-    <property name="riverock-webmill.lib"    value="riverock-webmill-4.0.2.jar"/>
+    <property name="riverock-webmill.lib"    value="riverock-webmill-5.0.0.jar"/>
 
 
 

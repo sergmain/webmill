@@ -54,8 +54,6 @@ package org.riverock.portlet.price;
 
 import org.riverock.sso.a3.AuthSession;
 
-import org.apache.log4j.Logger;
-
 
 
 import java.util.Vector;
@@ -272,7 +270,7 @@ public class BasketShopSession
 
 
 
-//	String url_redir = ServletUtils.getString(request, "url", "/");
+//	String url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), "url", "/");
 
 //	String url 	= tools.replaceString(url_redir, "?", "%3F");
 
@@ -282,7 +280,7 @@ public class BasketShopSession
 
 
 
-            String url_redir = ServletUtils.getString(request, "url", CtxURL.ctx());
+            String url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), "url", CtxURL.ctx());
 
 
 
@@ -304,35 +302,35 @@ public class BasketShopSession
 
 
 
-            String action = ServletUtils.getString(request, "action");
+            String action = PortletTools.getString(ctxInstance.getPortletRequest(), "action");
 
 
 
-            String username = ServletUtils.getString(request, "username").trim();
+            String username = PortletTools.getString(ctxInstance.getPortletRequest(), "username").trim();
 
-            String password1 = ServletUtils.getString(request, "password1").trim();
+            String password1 = PortletTools.getString(ctxInstance.getPortletRequest(), "password1").trim();
 
-            String password2 = ServletUtils.getString(request, "password2").trim();
-
-
-
-            String first_name = ServletUtils.getString(request, "first_name");
-
-            String last_name = ServletUtils.getString(request, "last_name");
+            String password2 = PortletTools.getString(ctxInstance.getPortletRequest(), "password2").trim();
 
 
 
-            String email = ServletUtils.getString(request, "email");
+            String first_name = PortletTools.getString(ctxInstance.getPortletRequest(), "first_name");
 
-            String address = ServletUtils.getString(request, "address");
-
-            String phone = ServletUtils.getString(request, "phone");
+            String last_name = PortletTools.getString(ctxInstance.getPortletRequest(), "last_name");
 
 
 
+            String email = PortletTools.getString(ctxInstance.getPortletRequest(), "email");
+
+            String address = PortletTools.getString(ctxInstance.getPortletRequest(), "address");
+
+            String phone = PortletTools.getString(ctxInstance.getPortletRequest(), "phone");
 
 
-            HttpSession sess = request.getSession(true);
+
+
+
+            PortletSession sess = ctxInstance.getPortletRequest().getPortletSession(true);
 
             BasketShopSession b = (BasketShopSession) sess.getAttribute(Constants.BASKET_SHOP_SESSION);
 
@@ -358,7 +356,7 @@ public class BasketShopSession
 
             AuthSession auth_ = (AuthSession) sess.getAttribute(Constants.AUTH_SESSION);
 
-            if ((auth_ != null) && (auth_.checkAccess(db_, request.getServerName())))
+            if ((auth_ != null) && (auth_.checkAccess(db_, ctxInstance.getPortletRequest().getServerName())))
 
             {
 
@@ -394,7 +392,7 @@ public class BasketShopSession
 
                     long id_user = AuthTools.addNewUser(db_,
 
-                        first_name, last_name, "", jspPage.p.idFirm,
+                        first_name, last_name, "", ctxInstance.page.p.idFirm,
 
                         email, address, phone);
 
@@ -408,7 +406,7 @@ public class BasketShopSession
 
                         id_auth_user = AuthTools.addUserAuth(db_, id_user,
 
-                            jspPage.p.idFirm, 0, 0, username, password1,
+                            ctxInstance.page.p.idFirm, 0, 0, username, password1,
 
                             true, false, false);
 
@@ -480,15 +478,15 @@ public class BasketShopSession
 
                         email,
 
-                        jspPage.p.adminEmail,
+                        ctxInstance.page.p.adminEmail,
 
                         "Confirm registration",
 
-                        jspPage.currentLocale);
+                        ctxInstance.page.currentLocale);
 
 
 
-                    if (auth_.checkAccess(db_, request.getServerName()))
+                    if (auth_.checkAccess(db_, ctxInstance.getPortletRequest().getServerName()))
 
                     {
 
@@ -514,7 +512,7 @@ public class BasketShopSession
 
                 if ((auth_ == null) ||
 
-                    (!auth_.checkAccess(db_, request.getServerName()))
+                    (!auth_.checkAccess(db_, ctxInstance.getPortletRequest().getServerName()))
 
                 )
 
@@ -528,7 +526,7 @@ public class BasketShopSession
 
                         auth_ = new AuthSession(username, password1);
 
-                        if (auth_.checkAccess(db_, request.getServerName()))
+                        if (auth_.checkAccess(db_, ctxInstance.getPortletRequest().getServerName()))
 
                         {
 

@@ -88,6 +88,8 @@ import java.io.Writer;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -96,9 +98,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
 
 
+import org.apache.log4j.Logger;
+
+import org.riverock.common.mail.MailMessage;
 
 import org.riverock.common.tools.ExceptionTools;
 
@@ -106,15 +110,13 @@ import org.riverock.common.tools.NumberTools;
 
 import org.riverock.common.tools.ServletTools;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-
-
-import org.riverock.generic.tools.XmlTools;
+import org.riverock.common.tools.StringTools;
 
 import org.riverock.generic.config.GenericConfig;
 
-import org.riverock.common.mail.MailMessage;
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.generic.tools.XmlTools;
 
 import org.riverock.portlet.main.Constants;
 
@@ -124,10 +126,6 @@ import org.riverock.portlet.price.PriceList;
 
 import org.riverock.portlet.price.Shop;
 
-import org.riverock.sso.schema.AuthSessionType;
-
-import org.riverock.sso.schema.MainUserInfoType;
-
 import org.riverock.portlet.schema.price.OrderItemType;
 
 import org.riverock.portlet.schema.price.OrderType;
@@ -136,21 +134,19 @@ import org.riverock.portlet.schema.price.ShopOrderType;
 
 import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.common.tools.StringTools;
+import org.riverock.sso.schema.AuthSessionType;
 
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.sso.schema.MainUserInfoType;
 
 import org.riverock.webmill.config.WebmillConfig;
 
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portlet.ContextNavigator;
 
+import org.riverock.webmill.portlet.CtxInstance;
 
+import org.riverock.webmill.portlet.CtxURL;
 
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -194,7 +190,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -206,6 +202,12 @@ public class ShopInvoiceV2 extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
             DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
@@ -216,27 +218,27 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
+//            InitPage jspPage = new InitPage(db_, request,
 
-                                            "mill.locale._price_list"
+//                                            "mill.locale._price_list"
 
-            );
+//            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage, "mill.index");
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.index");
 
-            String invoice_page = CtxURL.url(request, response, jspPage, "mill.invoice");
+            String invoice_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.invoice");
 
             String indexPageForm = CtxURL.urlAsForm(
 
-                ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM), jspPage, "mill.invoice"
+                PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM), ctxInstance.page, "mill.invoice"
 
             );
 
 
 
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
             OrderType order = (OrderType) session.getAttribute(Constants.ORDER_SESSION);
 
@@ -278,11 +280,11 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 if (authSession != null && log.isDebugEnabled())
 
-                    log.debug("AuthSession not null. getLoginStatus() - " + authSession.checkAccess( request.getServerName()));
+                    log.debug("AuthSession not null. getLoginStatus() - " + authSession.checkAccess( ctxInstance.getPortletRequest().getServerName()));
 
 
 
-                if ((authSession != null) && (authSession.checkAccess( request.getServerName())))
+                if ((authSession != null) && (authSession.checkAccess( ctxInstance.getPortletRequest().getServerName())))
 
                 {
 
@@ -370,7 +372,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-            Long currencyID = ServletTools.getLong(request, Constants.NAME_ID_CURRENCY_SHOP);
+            Long currencyID = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_CURRENCY_SHOP);
 
 
 
@@ -388,7 +390,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     Constants.NAME_ID_GROUP_SHOP,
 
-                    ServletTools.getInt(request, Constants.NAME_ID_GROUP_SHOP)
+                    PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_ID_GROUP_SHOP)
 
                 ) +
 
@@ -410,13 +412,13 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 Constants.NAME_ID_GROUP_SHOP + '=' +
 
-                ServletTools.getInt(request, Constants.NAME_ID_GROUP_SHOP) + '&' +
+                PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_ID_GROUP_SHOP) + '&' +
 
                 Constants.NAME_ID_SHOP_PARAM + '=' + shop.id_shop;
 
 
 
-            String action = ServletUtils.getString(request, "action");
+            String action = PortletTools.getString(ctxInstance.getPortletRequest(), "action");
 
 
 
@@ -442,9 +444,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 {
 
-                    Long id_item = ServletTools.getLong(request, "set_id_item");
+                    Long id_item = PortletTools.getLong(ctxInstance.getPortletRequest(), "set_id_item");
 
-                    int count = ServletTools.getInt(request, Constants.NAME_INVOICE_NEW_COUNT_PARAM, new Integer(0)).intValue();
+                    int count = PortletTools.getInt(ctxInstance.getPortletRequest(), Constants.NAME_INVOICE_NEW_COUNT_PARAM, new Integer(0)).intValue();
 
 
 
@@ -457,8 +459,6 @@ public class ShopInvoiceV2 extends HttpServlet
                         log.debug("id_item - " + id_item);
 
                         log.debug("count - " + count);
-
-                        log.debug("request param - " + request.getQueryString());
 
                     }
 
@@ -532,7 +532,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 {
 
-                    Long id_item = ServletTools.getLong(request, "del_id_item");
+                    Long id_item = PortletTools.getLong(ctxInstance.getPortletRequest(), "del_id_item");
 
                     if (log.isDebugEnabled())
 
@@ -541,8 +541,6 @@ public class ShopInvoiceV2 extends HttpServlet
                         log.debug("action - del");
 
                         log.debug("id_item - " + id_item);
-
-                        log.debug("request param - " + request.getQueryString());
 
                     }
 
@@ -702,7 +700,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 String orderCustomString =
 
-                    jspPage.sCustom.getStr("reg.send_order.1",
+                    ctxInstance.sCustom.getStr("reg.send_order.1",
 
                         new Object[]
 
@@ -742,7 +740,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         Shop shopTemp = Shop.getInstance(db_, shopOrder.getIdShop());
 
-                        orderCustomString += jspPage.sCustom.getStr("reg.send_order.shop-header",
+                        orderCustomString += ctxInstance.sCustom.getStr("reg.send_order.shop-header",
 
                             new Object[]
 
@@ -782,7 +780,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                            orderCustomString += jspPage.sCustom.getStr("reg.send_order.2",
+                            orderCustomString += ctxInstance.sCustom.getStr("reg.send_order.2",
 
                                 new String[]
 
@@ -824,7 +822,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                if (Boolean.TRUE.equals(jspPage.p.sites.getIsActivateEmailOrder()) )
+                if (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsActivateEmailOrder()) )
 
                 {
 
@@ -856,7 +854,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         Shop shopTemp = Shop.getInstance(db_, shopOrder.getIdShop());
 
-                        orderAdminString += jspPage.sCustom.getStr("reg.send_order.shop-header",
+                        orderAdminString += ctxInstance.sCustom.getStr("reg.send_order.shop-header",
 
                             new Object[]
 
@@ -918,7 +916,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                            orderAdminString += jspPage.sCustom.getStr("reg.send_order.2",
+                            orderAdminString += ctxInstance.sCustom.getStr("reg.send_order.2",
 
                                 new String[]
 
@@ -972,7 +970,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     order.getAuthSession().getUserInfo().getEmail(),
 
-                    jspPage.p.sites.getOrderEmail(),
+                    ctxInstance.page.p.sites.getOrderEmail(),
 
                     "Your order N" + order.getIdOrder(),
 
@@ -984,7 +982,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                if (Boolean.TRUE.equals(jspPage.p.sites.getIsActivateEmailOrder()) )
+                if (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsActivateEmailOrder()) )
 
                 {
 
@@ -992,9 +990,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         orderAdminString,
 
-                        jspPage.p.sites.getOrderEmail(),
+                        ctxInstance.page.p.sites.getOrderEmail(),
 
-                        jspPage.p.sites.getOrderEmail(),
+                        ctxInstance.page.p.sites.getOrderEmail(),
 
                         "Order N" + order.getIdOrder(),
 
@@ -1008,7 +1006,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 String shopUrl = "<a href=\"" +
 
-                    CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_SHOP) + '&' +
+                    CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_SHOP) + '&' +
 
                     addUrl + "\">";
 
@@ -1016,9 +1014,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 String args1[] = {index_page};
 
-                if (jspPage.sMain.checkKey("invoice.order-send-complete"))
+                if (ctxInstance.page.sMain.checkKey("invoice.order-send-complete"))
 
-                    str = jspPage.sMain.getStr("invoice.order-send-complete", args1);
+                    str = ctxInstance.page.sMain.getStr("invoice.order-send-complete", args1);
 
                 else
 
@@ -1054,19 +1052,19 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 out.write("<td class=\"pricedata\" rowspan=\"2\">\n");
 
-                out.write(jspPage.sCustom.getStr("invoice.attention"));
+                out.write(ctxInstance.sCustom.getStr("invoice.attention"));
 
                 out.write("<br>\n");
 
 
 
-                if (Boolean.TRUE.equals(jspPage.p.sites.getIsRegisterAllowed()) )
+                if (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsRegisterAllowed()) )
 
                 {
 
 
 
-                    out.write(jspPage.sCustom.getStr("invoice.register"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.register"));
 
                     out.write("\n");
 
@@ -1076,7 +1074,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                        CtxURL.url(request, response, jspPage, "mill.register") + '&' +
+                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.register") + '&' +
 
                         Constants.NAME_TOURL_PARAM + '=' + backURL
 
@@ -1086,7 +1084,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     out.write("\">");
 
-                    out.write(jspPage.sMain.getStr("button.next"));
+                    out.write(ctxInstance.page.sMain.getStr("button.next"));
 
                     out.write(" ");
 
@@ -1102,7 +1100,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     "<form method=\"POST\" action=\"" + CtxURL.ctx() + "\">\n"+
 
-                    CtxURL.urlAsForm(ServletUtils.getString(request, Constants.NAME_TEMPLATE_CONTEXT_PARAM), jspPage, "mill.register")+
+                    CtxURL.urlAsForm(PortletTools.getString(ctxInstance.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM), ctxInstance.page, "mill.register")+
 
 
 
@@ -1118,7 +1116,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
 
 
-                out.write(jspPage.sCustom.getStr("invoice.login"));
+                out.write(ctxInstance.sCustom.getStr("invoice.login"));
 
                 out.write("</td>\n");
 
@@ -1136,7 +1134,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 out.write("<td class=\"pricedata\">");
 
-                out.write(jspPage.sCustom.getStr("invoice.password"));
+                out.write(ctxInstance.sCustom.getStr("invoice.password"));
 
                 out.write("</td>\r\n");
 
@@ -1162,13 +1160,13 @@ public class ShopInvoiceV2 extends HttpServlet
 
             out.write("<a href=\"" +
 
-                CtxURL.url(request, response, jspPage, Constants.CTX_TYPE_SHOP) + '&' +
+                CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, Constants.CTX_TYPE_SHOP) + '&' +
 
                 addUrl + "\">");
 
 
 
-            out.write(jspPage.sCustom.getStr("invoice.continue_select"));
+            out.write(ctxInstance.sCustom.getStr("invoice.continue_select"));
 
             out.write("</a>");
 
@@ -1176,7 +1174,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
             out.write(
 
-                jspPage.sCustom.getStr("invoice.your_select")
+                ctxInstance.sCustom.getStr("invoice.your_select")
 
             );
 
@@ -1210,37 +1208,37 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     out.write("<th class=\"priceData\">");
 
-                    out.write(jspPage.sCustom.getStr("invoice.name_item"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.name_item"));
 
                     out.write("</th>\n");
 
                     out.write("<th class=\"priceData\">");
 
-                    out.write(jspPage.sCustom.getStr("invoice.ppq"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.ppq"));
 
                     out.write("</th>\n");
 
                     out.write("<th class=\"priceData\">");
 
-                    out.write(jspPage.sCustom.getStr("invoice.quantity"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.quantity"));
 
                     out.write("</th>\n");
 
                     out.write("<th class=\"priceData\">");
 
-                    out.write(jspPage.sCustom.getStr("invoice.total_price"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.total_price"));
 
                     out.write("</th>\n");
 
                     out.write("<th class=\"priceData\">");
 
-                    out.write(jspPage.sCustom.getStr("invoice.currency"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.currency"));
 
                     out.write("</th>\n");
 
                     out.write("<th class=\"priceData\">");
 
-                    out.write(jspPage.sCustom.getStr("invoice.delete_item"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.delete_item"));
 
                     out.write("</th>\n");
 
@@ -1328,7 +1326,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         out.write("<input type=\"submit\" value=\"");
 
-                        out.write(jspPage.sCustom.getStr("invoice.change_qty"));
+                        out.write(ctxInstance.sCustom.getStr("invoice.change_qty"));
 
                         out.write("\">");
 
@@ -1364,7 +1362,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         out.write("<input type=\"submit\" value=\"");
 
-                        out.write(jspPage.sCustom.getStr("invoice.delete_button"));
+                        out.write(ctxInstance.sCustom.getStr("invoice.delete_button"));
 
                         out.write("\">");
 
@@ -1382,7 +1380,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                     out.write("<tr>\n<td colspan=\"6\" align=\"left\" border=\"0\">\n");
 
-                    out.write(jspPage.sCustom.getStr("invoice.total_summ"));
+                    out.write(ctxInstance.sCustom.getStr("invoice.total_summ"));
 
                     out.write(" " +
 
@@ -1402,7 +1400,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                         out.write("<tr>\n<td colspan=\"6\" align=\"left\" border=\"0\">\n");
 
-                        out.write(jspPage.sCustom.getStr("invoice.total_summ"));
+                        out.write(ctxInstance.sCustom.getStr("invoice.total_summ"));
 
                         out.write(" " + orderSumm + " " + currentCurrency);
 
@@ -1432,9 +1430,9 @@ public class ShopInvoiceV2 extends HttpServlet
 
             if ((order.getShopOrdertListCount() != 0) && (order.getAuthSession() != null) &&
 
-                (jspPage.p.sites.getOrderEmail().trim().length() != 0) &&
+                (ctxInstance.page.p.sites.getOrderEmail().trim().length() != 0) &&
 
-                (Boolean.TRUE.equals(jspPage.p.sites.getIsActivateEmailOrder()) )
+                (Boolean.TRUE.equals(ctxInstance.page.p.sites.getIsActivateEmailOrder()) )
 
             )
 
@@ -1454,7 +1452,7 @@ public class ShopInvoiceV2 extends HttpServlet
 
                 out.write("<input type=\"submit\" value=\"");
 
-                out.write(jspPage.sCustom.getStr("invoice.send_button"));
+                out.write(ctxInstance.sCustom.getStr("invoice.send_button"));
 
                 out.write("\">\n");
 

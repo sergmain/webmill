@@ -114,11 +114,23 @@ public class ParameterPart implements AbstractPart
 
     public InputStream getInputStream()
 
-        throws Exception
+        throws MultipartRequestException
 
     {
 
         return new ByteArrayInputStream( parameter.getBytes());
+
+    }
+
+
+
+    public String getStringValue()
+
+        throws MultipartRequestException
+
+    {
+
+        return parameter;
 
     }
 

@@ -90,7 +90,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
+import org.riverock.common.tools.RsetTools;
+
+import org.riverock.generic.db.DatabaseAdapter;
+
+import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -100,21 +106,11 @@ import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.sso.a3.InternalAuthProvider;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.RsetTools;
-
-import org.riverock.portlet.tools.HtmlTools;
+import org.riverock.webmill.portlet.CtxURL;
 
 
 
@@ -152,7 +148,7 @@ public class BindIndex extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -166,6 +162,12 @@ public class BindIndex extends HttpServlet
 
 
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
@@ -174,7 +176,7 @@ public class BindIndex extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -190,57 +192,7 @@ public class BindIndex extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
-
-                                            "mill.locale.AUTH_USER"
-
-            );
-
-
-
-            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.bind");
-
-
-
-//            String sql_ =
-
-//                "select " +
-
-//                "	a.id_auth_user\n" +
-
-//                "	,name_firm\n" +
-
-//                "	,fio\n" +
-
-//                "	,code_proff\n" +
-
-//                "	,a.id_user\n" +
-
-//                "	,a.user_login\n" +
-
-//                "	,a.is_service\n" +
-
-//                "	,a.is_road\n" +
-
-//                "	,a.is_use_current_firm\n" +
-
-//                "	,a.is_root\n" +
-
-//                "	,a.id_road\n" +
-
-//                "	,a.id_service\n" +
-
-//
-
-//                "from    V_AUTH_USER_FULL a, main_user_info b " +
-
-//                "where   a.id_user = b.id_user and b.ID_FIRM in " +
-
-//                "        (select z1.ID_FIRM from v$_read_list_firm z1 " +
-
-//                "        where z1.user_login = ?) " +
-
-//                "order by name_firm asc, a.fio asc";
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.bind");
 
 
 
@@ -364,7 +316,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("<b>");
 
-                    out.write(jspPage.sCustom.getStr("index.jsp.title"));
+                    out.write(ctxInstance.sCustom.getStr("index.jsp.title"));
 
                     out.write("</b>\r\n");
 
@@ -376,7 +328,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                        CtxURL.url(request, response, jspPage, "mill.auth.add_bind")
+                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.add_bind")
 
 
 
@@ -384,7 +336,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("\">");
 
-                    out.write(jspPage.sMain.getStr("button.add"));
+                    out.write(ctxInstance.page.sMain.getStr("button.add"));
 
                     out.write("</a>");
 
@@ -396,13 +348,13 @@ public class BindIndex extends HttpServlet
 
                     out.write("<th class=\"memberArea\">");
 
-                    out.write(jspPage.sCustom.getStr("index.jsp.name_firm"));
+                    out.write(ctxInstance.sCustom.getStr("index.jsp.name_firm"));
 
                     out.write("</th>\r\n");
 
                     out.write("<th class=\"memberArea\">");
 
-                    out.write(jspPage.sCustom.getStr("index.jsp.fio"));
+                    out.write(ctxInstance.sCustom.getStr("index.jsp.fio"));
 
                     out.write("</th>\r\n");
 
@@ -410,7 +362,7 @@ public class BindIndex extends HttpServlet
 
 //                    out.write("<th class=\"memberArea\">");
 
-//                    out.write(jspPage.sCustom.getStr("index.jsp.code_proff"));
+//                    out.write(ctxInstance.sCustom.getStr("index.jsp.code_proff"));
 
 //                    out.write("</th>\r\n");
 
@@ -418,7 +370,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("<th class=\"memberArea\">");
 
-                    out.write(jspPage.sCustom.getStr("index.jsp.user_login"));
+                    out.write(ctxInstance.sCustom.getStr("index.jsp.user_login"));
 
                     out.write("</th>\r\n            ");
 
@@ -432,7 +384,7 @@ public class BindIndex extends HttpServlet
 
                         out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                        out.write(jspPage.sCustom.getStr("index.jsp.is_use_current_firm"));
+                        out.write(ctxInstance.sCustom.getStr("index.jsp.is_use_current_firm"));
 
                         out.write("</th>\r\n                ");
 
@@ -452,7 +404,7 @@ public class BindIndex extends HttpServlet
 
                         out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                        out.write(jspPage.sCustom.getStr("index.jsp.is_service"));
+                        out.write(ctxInstance.sCustom.getStr("index.jsp.is_service"));
 
                         out.write("</th>\r\n                ");
 
@@ -472,7 +424,7 @@ public class BindIndex extends HttpServlet
 
                         out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                        out.write(jspPage.sCustom.getStr("index.jsp.is_road"));
+                        out.write(ctxInstance.sCustom.getStr("index.jsp.is_road"));
 
                         out.write("</th>\r\n                ");
 
@@ -484,7 +436,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("<th class=\"memberArea\">");
 
-                    out.write(jspPage.sCustom.getStr("index.jsp.action"));
+                    out.write(ctxInstance.sCustom.getStr("index.jsp.action"));
 
                     out.write("</th>\r\n");
 
@@ -552,7 +504,7 @@ public class BindIndex extends HttpServlet
 
                             out.write("<td class=\"memberArea\">");
 
-                            out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, jspPage.currentLocale));
+                            out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, ctxInstance.page.currentLocale));
 
                             out.write("</td>\r\n                    ");
 
@@ -570,7 +522,7 @@ public class BindIndex extends HttpServlet
 
                             out.write("<td class=\"memberArea\">");
 
-                            out.write(HtmlTools.printYesNo(rs, "is_service", false, jspPage.currentLocale));
+                            out.write(HtmlTools.printYesNo(rs, "is_service", false, ctxInstance.page.currentLocale));
 
                             out.write("</td>\r\n                    ");
 
@@ -588,7 +540,7 @@ public class BindIndex extends HttpServlet
 
                             out.write("<td class=\"memberArea\">");
 
-                            out.write(HtmlTools.printYesNo(rs, "is_road", false, jspPage.currentLocale));
+                            out.write(HtmlTools.printYesNo(rs, "is_road", false, ctxInstance.page.currentLocale));
 
                             out.write("</td>\r\n                    ");
 
@@ -610,7 +562,7 @@ public class BindIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(jspPage.sMain.getStr("button.change"));
+                        out.write(ctxInstance.page.sMain.getStr("button.change"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -618,7 +570,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.auth.ch_bind") + '&'
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.ch_bind") + '&'
 
 
 
@@ -632,7 +584,7 @@ public class BindIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(jspPage.sMain.getStr("button.delete"));
+                        out.write(ctxInstance.page.sMain.getStr("button.delete"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -640,7 +592,7 @@ public class BindIndex extends HttpServlet
 
 
 
-                            CtxURL.url(request, response, jspPage, "mill.auth.del_bind") + '&'
+                            CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.del_bind") + '&'
 
 
 
@@ -674,11 +626,11 @@ public class BindIndex extends HttpServlet
 
                     out.write("?");
 
-                    out.write(jspPage.getAsURL());
+                    out.write(ctxInstance.page.getAsURL());
 
                     out.write("\">");
 
-                    out.write(jspPage.sMain.getStr("button.add"));
+                    out.write(ctxInstance.page.sMain.getStr("button.add"));
 
                     out.write("</a>");
 
@@ -694,7 +646,7 @@ public class BindIndex extends HttpServlet
 
                 {
 
-                    out.write(jspPage.sMain.getStr("access_denied"));
+                    out.write(ctxInstance.page.sMain.getStr("access_denied"));
 
                 }
 
@@ -770,7 +722,7 @@ public class BindIndex extends HttpServlet
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
 
             out.write("</a>");
 
@@ -784,11 +736,11 @@ public class BindIndex extends HttpServlet
 
             out.write("?");
 
-            out.write(jspPage.getAsURL());
+            out.write(ctxInstance.page.getAsURL());
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.4"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.4"));
 
             out.write("</a>");
 

@@ -88,19 +88,17 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
 
-import org.riverock.portlet.tools.HtmlTools;
-
 import org.riverock.common.tools.RsetTools;
-
-import org.riverock.common.tools.ServletTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.sso.a3.AuthInfo;
 
@@ -112,15 +110,13 @@ import org.riverock.sso.a3.InternalAuthProvider;
 
 import org.riverock.tools.Client;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.CtxURL;
 
-import org.riverock.webmill.portlet.ContextNavigator;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -158,7 +154,7 @@ public class RightChange extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
         throws IOException, ServletException
 
@@ -176,7 +172,9 @@ public class RightChange extends HttpServlet
 
         {
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
 
 
@@ -188,7 +186,7 @@ public class RightChange extends HttpServlet
 
 
 
-            AuthSession auth_ = AuthTools.check(request, response, "/");
+            AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
             if (auth_ == null)
 
@@ -200,15 +198,15 @@ public class RightChange extends HttpServlet
 
 
 
-            InitPage jspPage = new InitPage(db_, request,
+//            InitPage jspPage = new InitPage(db_, request,
 
-                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
+//                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
 
-            );
+//            );
 
 
 
-            String index_page = CtxURL.url(request, response, jspPage, "mill.auth.right");
+            String index_page = CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.right");
 
 
 
@@ -226,13 +224,17 @@ public class RightChange extends HttpServlet
 
 
 
-            if (ServletTools.isNotInit(request, response, "id_relate_right", index_page))
+//            if (ServletTools.isNotInit(request, response, "id_relate_right", index_page))
 
-                return;
+//                return;
 
 
 
-            Long id_relate_right = ServletTools.getLong(request, "id_relate_right");
+            Long id_relate_right = PortletTools.getLong(ctxInstance.getPortletRequest(), "id_relate_right");
+
+            if (id_relate_right==null)
+
+                throw new IllegalArgumentException("id_relate_right not initialized");
 
 
 
@@ -288,7 +290,7 @@ public class RightChange extends HttpServlet
 
                     out.write(
 
-                        CtxURL.url(request, response, jspPage, "mill.auth.commit_ch_right")
+                        CtxURL.url(ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.auth.commit_ch_right")
 
 
 
@@ -298,7 +300,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<input type=\"submit\" value=\"");
 
-                    out.write(jspPage.sMain.getStr("button.change"));
+                    out.write(ctxInstance.page.sMain.getStr("button.change"));
 
                     out.write("\">\r\n");
 
@@ -314,7 +316,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.id_access_group"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.id_access_group"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -336,7 +338,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.id_object_arm"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.id_object_arm"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -482,7 +484,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.code_right_s"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_s"));
 
                     out.write("</td>\r\n            ");
 
@@ -490,7 +492,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<SELECT NAME=\"rs\" SIZE=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(S1, true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(S1, true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -504,7 +506,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.code_right_u"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_u"));
 
                     out.write("</td>\n");
 
@@ -512,7 +514,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<SELECT NAME=\"ru\" SIZE=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(U1, true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(U1, true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -526,7 +528,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.code_right_i"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_i"));
 
                     out.write("</td>\r\n            ");
 
@@ -534,7 +536,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<SELECT NAME=\"ri\" SIZE=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(I1, true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(I1, true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -548,7 +550,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.code_right_d"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_d"));
 
                     out.write("</td>\r\n            ");
 
@@ -556,7 +558,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<SELECT NAME=\"rd\" SIZE=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(D1, true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(D1, true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -570,7 +572,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.code_right_a"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.code_right_a"));
 
                     out.write("</td>\r\n            ");
 
@@ -578,7 +580,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<SELECT NAME=\"ra\" SIZE=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(A1, true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(A1, true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -592,7 +594,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.is_road"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.is_road"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -600,7 +602,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<select name=\"is_road\" size=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(rs, "IS_ROAD", true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "IS_ROAD", true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -614,7 +616,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.is_service"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.is_service"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -622,7 +624,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<select name=\"is_service\" size=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(rs, "IS_SERVICE", true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "IS_SERVICE", true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -636,7 +638,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
 
-                    out.write(jspPage.sCustom.getStr("ch_right.jsp.is_firm"));
+                    out.write(ctxInstance.sCustom.getStr("ch_right.jsp.is_firm"));
 
                     out.write("</td>\r\n\t\t");
 
@@ -644,7 +646,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<select name=\"is_firm\" size=\"1\">\r\n\t\t");
 
-                    out.write(HtmlTools.printYesNo(rs, "IS_FIRM", true, jspPage.currentLocale));
+                    out.write(HtmlTools.printYesNo(rs, "IS_FIRM", true, ctxInstance.page.currentLocale));
 
                     out.write("\r\n\t\t");
 
@@ -660,7 +662,7 @@ public class RightChange extends HttpServlet
 
                     out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-                    out.write(jspPage.sMain.getStr("button.change"));
+                    out.write(ctxInstance.page.sMain.getStr("button.change"));
 
                     out.write("\">                            \r\n");
 
@@ -688,7 +690,7 @@ public class RightChange extends HttpServlet
 
             out.write("\">");
 
-            out.write(jspPage.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
 
             out.write("</a>");
 

@@ -70,8 +70,6 @@ import java.util.List;
 
 
 
-import org.riverock.common.tools.ServletTools;
-
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.portlet.main.Constants;
@@ -87,6 +85,8 @@ import org.riverock.webmill.portlet.PortletGetList;
 import org.riverock.webmill.portlet.PortletParameter;
 
 import org.riverock.webmill.portlet.PortletResultObject;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -148,13 +148,13 @@ public class NewsItemSimple implements Portlet, PortletResultObject, PortletGetL
 
 //        , HttpServletRequest request, HttpServletResponse response,
 
-//                     InitPage jspPage, String localePackage)
+//                     InitPage ctxInstance.page, String localePackage)
 
             throws PortletException
 
     {
 
-        Long id__ = ServletTools.getLong( param.getRequest(), Constants.NAME_ID_NEWS_PARAM);
+        Long id__ = PortletTools.getLong( param.getPortletRequest(), Constants.NAME_ID_NEWS_PARAM);
 
         try
 

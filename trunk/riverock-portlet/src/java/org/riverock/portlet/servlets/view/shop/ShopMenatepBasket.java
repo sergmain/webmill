@@ -74,39 +74,37 @@ import java.io.Writer;
 
 
 
+import javax.portlet.PortletSession;
+
 import javax.servlet.ServletException;
+
+import javax.servlet.http.HttpServlet;
 
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-
-import javax.servlet.http.HttpServlet;
-
 
 
 import org.apache.log4j.Logger;
-
-
-
-import org.riverock.portlet.main.Constants;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.portlet.ContextNavigator;
-
-import org.riverock.portlet.price.BasketShopSession;
-
-import org.riverock.portlet.b2b.processing.Menatep;
 
 import org.riverock.common.tools.Base64;
 
 import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.common.tools.StringTools;
+
+import org.riverock.portlet.b2b.processing.Menatep;
+
+import org.riverock.portlet.main.Constants;
+
+import org.riverock.portlet.price.BasketShopSession;
+
+import org.riverock.webmill.portlet.ContextNavigator;
+
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
 
 
 
@@ -152,7 +150,7 @@ public class ShopMenatepBasket extends HttpServlet
 
      * На 03.12.2002 не работает
 
-     * @param request
+     * @param request_
 
      * @param response
 
@@ -164,7 +162,7 @@ public class ShopMenatepBasket extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -176,6 +174,12 @@ public class ShopMenatepBasket extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response);
 
 
@@ -186,7 +190,7 @@ public class ShopMenatepBasket extends HttpServlet
 
 
 
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
@@ -212,7 +216,7 @@ public class ShopMenatepBasket extends HttpServlet
 
                             "/opt2/keys/menatep/testshop.key.der",
 
-                            request, response);
+                            ctxInstance, response);
 
 
 

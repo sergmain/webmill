@@ -66,49 +66,15 @@ package org.riverock.portlet.portlets;
 
  */
 
+/**
+
+ * @deprecated
+
+ */
+
 public class HiddenParam
 
 {
-
-/*
-
-    public String name = null;
-
-    public String value = null;
-
-
-
-    protected void finalize() throws Throwable
-
-    {
-
-        name = null;
-
-        value = null;
-
-
-
-        super.finalize();
-
-    }
-
-
-
-    public HiddenParam(){}
-
-
-
-    public HiddenParam(String n_, String v_)
-
-    {
-
-        name = n_;
-
-        value = v_;
-
-    }
-
-*/
 
 }
 

@@ -72,19 +72,63 @@ import java.io.OutputStream;
 
 import java.io.PrintWriter;
 
+import java.util.ArrayList;
+
 import java.util.Locale;
 
 
 
+import javax.portlet.PortletURL;
+
 import javax.portlet.RenderResponse;
 
-import javax.portlet.PortletURL;
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
+
+
+
+import org.riverock.generic.tools.StringManager;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
 public class RenderResponseWrapper implements RenderResponse
 
 {
+
+    // global parameters for page
+
+    private HttpServletRequest request = null;
+
+    private HttpServletResponse response = null;
+
+    private String ctxType = null;
+
+
+
+    // parameters for current portlet
+
+    private StringManager sm  = null;
+
+
+
+    public RenderResponseWrapper(){}
+
+
+
+    public RenderResponseWrapper(CtxInstance ctxInstance)
+
+    {
+
+        this.response = ctxInstance.response ;
+
+        this.ctxType = ctxInstance.getType();
+
+    }
+
+
 
     public void addProperty( String encoding, String encoding1 )
 

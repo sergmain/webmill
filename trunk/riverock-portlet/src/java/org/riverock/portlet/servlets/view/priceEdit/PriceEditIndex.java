@@ -80,21 +80,19 @@ import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 
+import javax.servlet.http.HttpServlet;
+
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpServlet;
 
 
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.ExceptionTools;
 
-
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.sso.a3.AuthTools;
+import org.riverock.common.tools.RsetTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -102,15 +100,15 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.sso.a3.AuthSession;
 
-import org.riverock.webmill.portlet.CtxURL;
+import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.common.tools.ExceptionTools;
+import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.common.tools.RsetTools;
+import org.riverock.webmill.portlet.CtxURL;
 
 
 
@@ -150,7 +148,7 @@ public class PriceEditIndex extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -158,11 +156,19 @@ public class PriceEditIndex extends HttpServlet
 
         Writer out = null;
 
+        DatabaseAdapter db_ = null;
+
         try
 
         {
 
-            ContextNavigator.setContentType(response);
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
+            ContextNavigator.setContentType(response, "utf-8");
 
 
 
@@ -170,15 +176,7 @@ public class PriceEditIndex extends HttpServlet
 
 
 
-            try
-
-            {
-
-                ContextNavigator.setContentType(response, "utf-8");
-
-
-
-                AuthSession auth_ = AuthTools.check(request, response, "/");
+                AuthSession auth_ = AuthTools.check(ctxInstance.getPortletRequest(), response, "/");
 
                 if ( auth_== null )
 
@@ -186,15 +184,7 @@ public class PriceEditIndex extends HttpServlet
 
 
 
-                DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
-
-
-
-                InitPage  jspPage =  new InitPage(db_, request,
-
-                                                  null
-
-                );
+                db_ = DatabaseAdapter.getInstance( false );
 
 
 
@@ -224,7 +214,7 @@ public class PriceEditIndex extends HttpServlet
 
                         ps = db_.prepareStatement( sql_ );
 
-                        ps.setString(1, request.getServerName() );
+                        ps.setString(1, ctxInstance.getPortletRequest().getServerName() );
 
 
 
@@ -242,7 +232,7 @@ public class PriceEditIndex extends HttpServlet
 
                                 "<th class=\"memberArea\">Name shop</th>"+
 
-                                "<th class=\"memberArea\">" + jspPage.sMain.getStr("index.jsp.action") + "</th>" +
+                                "<th class=\"memberArea\">" + ctxInstance.page.sMain.getStr("index.jsp.action") + "</th>" +
 
                                 "</tr>"
 
@@ -282,7 +272,7 @@ public class PriceEditIndex extends HttpServlet
 
               out.write("<input type=\"button\" value=\"");
 
-              out.write(jspPage.sMain.getStr("button.next"));
+              out.write(ctxInstance.page.sMain.getStr("button.next"));
 
               out.write("\" onclick=\"location.href='");
 
@@ -290,7 +280,7 @@ public class PriceEditIndex extends HttpServlet
 
 
 
-                                CtxURL.url( request, response, jspPage, "mill.price.shop")+'&'+
+                                CtxURL.url( ctxInstance.getPortletRequest(), response, ctxInstance.page, "mill.price.shop")+'&'+
 
                                 Constants.NAME_ID_SHOP_PARAM + '=' +id_arm
 
@@ -348,25 +338,9 @@ public class PriceEditIndex extends HttpServlet
 
                 {
 
-                    out.write( jspPage.sMain.getStr("access_denied"));
+                    out.write( ctxInstance.page.sMain.getStr("access_denied"));
 
                 }
-
-            }
-
-            catch(Exception e)
-
-            {
-
-                log.error(e);
-
-                out.write( ExceptionTools.getStackTrace(e, 20, "<br>"));
-
-            }
-
-
-
-
 
         }
 
@@ -377,6 +351,16 @@ public class PriceEditIndex extends HttpServlet
             log.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+
+        }
+
+        finally
+
+        {
+
+            DatabaseAdapter.close(db_);
+
+            db_ = null;
 
         }
 

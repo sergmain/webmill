@@ -70,37 +70,33 @@ import java.util.List;
 
 
 
-import javax.servlet.http.HttpSession;
-
-
-
-import org.riverock.sso.a3.AuthSession;
-
-import org.riverock.generic.db.DatabaseAdapter;
-
-import org.riverock.webmill.portlet.Portlet;
-
-import org.riverock.webmill.portlet.PortletResultObject;
-
-import org.riverock.webmill.portlet.PortletGetList;
-
-import org.riverock.webmill.portlet.PortletParameter;
-
-import org.riverock.webmill.portlet.CtxURL;
-
-import org.riverock.webmill.utils.ServletUtils;
-
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.riverock.portlet.main.Constants;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ServletTools;
 
 import org.riverock.common.tools.StringTools;
 
+import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.portlet.main.Constants;
 
-import org.apache.log4j.Logger;
+import org.riverock.sso.a3.AuthSession;
+
+import org.riverock.sso.a3.AuthTools;
+
+import org.riverock.webmill.config.WebmillConfig;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.Portlet;
+
+import org.riverock.webmill.portlet.PortletGetList;
+
+import org.riverock.webmill.portlet.PortletParameter;
+
+import org.riverock.webmill.portlet.PortletResultObject;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -158,13 +154,7 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
-//            StringManager authLocalize = StringManager.getManager("mill.locale.auth", param.webPage.currentLocale);
-
-
-
-            HttpSession session = param.getRequest().getSession();
-
-            AuthSession auth_ = (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
+            AuthSession auth_ = AuthTools.getAuthSession(param.getPortletRequest());
 
 
 
@@ -174,9 +164,9 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
                 auth_ = new AuthSession(
 
-                        param.getRequest().getParameter(Constants.NAME_USERNAME_PARAM),
+                        param.getPortletRequest().getParameter(Constants.NAME_USERNAME_PARAM),
 
-                        param.getRequest().getParameter(Constants.NAME_PASSWORD_PARAM)
+                        param.getPortletRequest().getParameter(Constants.NAME_PASSWORD_PARAM)
 
                 );
 
@@ -184,13 +174,13 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            if (auth_.checkAccess( param.getRequest().getServerName()))
+            if (auth_.checkAccess( param.getPage().p.getServerName()))
 
             {
 
                 if (log.isDebugEnabled())
 
-                    log.debug("user " + auth_.getUserLogin() + "is  valid for " + param.getRequest().getServerName() + " site");
+                    log.debug("user " + auth_.getUserLogin() + "is  valid for " + param.getPage().p.getServerName() + " site");
 
 
 
@@ -204,13 +194,13 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            out += param.getJspPage().getAsForm();
+            out += param.getPage().getAsForm();
 
             out += ServletTools.getHiddenItem(
 
                     Constants.NAME_TEMPLATE_CONTEXT_PARAM,
 
-                    ServletUtils.getString(param.getRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM)
+                    PortletTools.getString(param.getPortletRequest(), Constants.NAME_TEMPLATE_CONTEXT_PARAM)
 
             );
 
@@ -226,15 +216,15 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
             String srcURL = null;
 
-            if (param.getRequest().getParameter(Constants.NAME_TOURL_PARAM) != null)
+            if (param.getPortletRequest().getParameter(Constants.NAME_TOURL_PARAM) != null)
 
-                srcURL = ServletUtils.getString(param.getRequest(), Constants.NAME_TOURL_PARAM);
+                srcURL = PortletTools.getString(param.getPortletRequest(), Constants.NAME_TOURL_PARAM);
 
             else
 
             {
 
-                srcURL = CtxURL.url(param.getRequest(), param.getResponse(), param.getJspPage(), Constants.CTX_TYPE_LOGIN  );
+                srcURL = CtxURL.url(param.getPortletRequest(), param.getResponse(), param.getPage(), Constants.CTX_TYPE_LOGIN  );
 
             }
 

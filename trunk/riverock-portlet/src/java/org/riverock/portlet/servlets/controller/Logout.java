@@ -66,20 +66,6 @@ package org.riverock.portlet.servlets.controller;
 
 
 
-import org.apache.log4j.Logger;
-
-
-
-import javax.servlet.http.HttpServlet;
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpSession;
-
-import javax.servlet.ServletException;
-
 import java.io.IOException;
 
 import java.io.Writer;
@@ -88,17 +74,29 @@ import java.util.Enumeration;
 
 
 
+import javax.portlet.PortletSession;
+
+import javax.servlet.ServletException;
+
+import javax.servlet.http.HttpServlet;
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
+
+
+
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
-
-import org.riverock.common.tools.ServletTools;
-
-import org.riverock.webmill.port.InitPage;
-
-import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.ContextNavigator;
 
-import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portlet.CtxInstance;
+
+import org.riverock.webmill.portlet.CtxURL;
+
+import org.riverock.webmill.portlet.PortletTools;
 
 
 
@@ -136,7 +134,7 @@ public class Logout extends HttpServlet
 
 
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
 
             throws IOException, ServletException
 
@@ -148,11 +146,17 @@ public class Logout extends HttpServlet
 
         {
 
+            CtxInstance ctxInstance =
+
+                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+
+
             ContextNavigator.setContentType(response, "utf-8");
 
 
 
-            HttpSession session = request.getSession();
+            PortletSession session = ctxInstance.getPortletRequest().getPortletSession();
 
 
 
@@ -160,7 +164,7 @@ public class Logout extends HttpServlet
 
             {
 
-                for (Enumeration e = request.getParameterNames();
+                for (Enumeration e = ctxInstance.getPortletRequest().getParameterNames();
 
                      e.hasMoreElements(); )
 
@@ -170,7 +174,7 @@ public class Logout extends HttpServlet
 
                     String param = (String)e.nextElement();
 
-                    log.debug("parameter "+ param+" value "+ServletUtils.getString(request, param) );
+                    log.debug("parameter "+ param+" value "+PortletTools.getString(ctxInstance.getPortletRequest(), param) );
 
                 }
 
@@ -179,18 +183,6 @@ public class Logout extends HttpServlet
             }
 
 
-
-/*
-
-            InitPage webPage =  new InitPage( DatabaseAdapter.getInstance(false),
-
-                    request, response,
-
-                    CtxURL.ctx(), null,
-
-                    Constants.NAME_LANG_PARAM, null, null);
-
-*/
 
             int countLoop = 3;
 
@@ -224,9 +216,7 @@ public class Logout extends HttpServlet
 
 
 
-                        ServletTools.immediateRemoveAttribute( session, name );
-
-//		session.removeAttribute( name );
+                        PortletTools.immediateRemoveAttribute( session, name );
 
                     }
 
