@@ -30,6 +30,7 @@ package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
@@ -37,6 +38,7 @@ import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 
 import org.apache.log4j.Logger;
 
@@ -59,10 +61,8 @@ public class SiteMenu
         }
     }
 
-//    private static Object syncObject = new Object();
-
-    private ArrayList menuLanguage = new ArrayList(2);  //vector of MenuLanguage
-    private static HashMap siteMenuLaguage = new HashMap();
+    private ArrayList menuLanguage = new ArrayList(2);  //List of MenuLanguage
+    private static Map siteMenuLaguage = new HashMap();
 
     public int getMenuLanguageCount()
     {

@@ -47,11 +47,10 @@ import org.riverock.webmill.schema.site.SiteTemplateDescriptionType;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.common.tools.RsetTools;
 
-public class SiteTemplateList
+public final class SiteTemplateList
 {
-    private static Logger log = Logger.getLogger( SiteTemplateList.class );
-
-    private static CacheFactory cache = new CacheFactory( SiteTemplateList.class.getName() );
+    private final static Logger log = Logger.getLogger( SiteTemplateList.class );
+    private final static CacheFactory cache = new CacheFactory( SiteTemplateList.class.getName() );
 
     public Hashtable hash = new Hashtable(4);
     public Hashtable hashId = new Hashtable(4);
@@ -93,16 +92,16 @@ public class SiteTemplateList
     public SiteTemplate getTemplate(long id) {
         if (log.isDebugEnabled()) log.debug("search  template for id - "+ id);
 
-        return ( SiteTemplate ) hashId.get( new Long(id) );
+        return (SiteTemplate)hashId.get( new Long(id) );
     }
 
-    public SiteTemplate getTemplate(String nameTemplate , String lang) {
-        if (log.isDebugEnabled()) log.debug("search  template for name - "+ nameTemplate+" lang "+lang);
+    public SiteTemplate getTemplate( String nameTemplate, String lang ) {
+        if ( log.isDebugEnabled() ) log.debug( "search template for name: '" + nameTemplate + "', lang: '" + lang + "'" );
 
-        if (nameTemplate == null)
+        if ( nameTemplate == null || lang == null )
             return null;
 
-        return ( SiteTemplate) hash.get( nameTemplate+'_'+lang );
+        return (SiteTemplate)hash.get( nameTemplate + '_' + lang );
     }
 
     static String sql_ = null;

@@ -1,488 +1,243 @@
 /*
-
  * org.riverock.webmill -- Portal framework implementation
-
  *
-
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
-
  *
-
  * Riverock -- The Open-source Java Development Community
-
  * http://www.riverock.org
-
  *
-
  *
-
  * This program is free software; you can redistribute it and/or
-
  * modify it under the terms of the GNU General Public
-
  * License as published by the Free Software Foundation; either
-
  * version 2 of the License, or (at your option) any later version.
-
  *
-
  * This library is distributed in the hope that it will be useful,
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-
  * General Public License for more details.
-
  *
-
  * You should have received a copy of the GNU General Public
-
  * License along with this library; if not, write to the Free Software
-
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-
  *
-
  */
-
-
 
 /**
-
  * User: serg_main
-
  * Date: 20.05.2004
-
  * Time: 21:14:18
-
  * @author Serge Maslyukov
-
  * $Id$
-
  */
-
-
 
 package org.riverock.webmill.portlet.wrapper;
 
-
-
 import java.util.HashMap;
-
 import java.util.Iterator;
-
 import java.util.Map;
+import java.util.List;
+import java.util.Arrays;
 
+import javax.portlet.PortletMode;
+import javax.portlet.PortletModeException;
+import javax.portlet.PortletSecurityException;
+import javax.portlet.PortletURL;
+import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
 
-
-import javax.portlet.*;
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpServletResponse;
-
-
-
+import org.riverock.webmill.portlet.PortalRequestInstance;
 import org.riverock.webmill.portlet.CtxInstance;
+import org.riverock.common.collections.MapWithParameters;
 
+import org.apache.log4j.Logger;
 
-
-public class PortletURLImpl implements PortletURL
-
-{
+public final class PortletURLImpl implements PortletURL {
+    private final static Logger log = Logger.getLogger( PortletURLImpl.class );
 
     protected PortletMode mode = null;
 
-
-
-    protected HashMap parameters = new HashMap();
-
-
+    protected Map parameters = new HashMap();
 
 //    protected PortletWindow portletWindow;
 
-
-
     private boolean secure;
-
-    private HttpServletRequest servletRequest = null;
-
-    private HttpServletResponse servletResponse = null;
-
     private WindowState state = null;
+    private PortalRequestInstance portalRequestInstance = null;
 
-    private CtxInstance ctxInstance = null;
-
-
-
-
-
-    public PortletURLImpl(
-
-        CtxInstance ctxInstance,
-
-        javax.servlet.http.HttpServletRequest servletRequest,
-
-        javax.servlet.http.HttpServletResponse servletResponse)
-
-    {
-
-        this.servletRequest = servletRequest;
-
-        this.servletResponse = servletResponse;
-
-        this.ctxInstance = ctxInstance;
-
-        secure = servletRequest.isSecure();
-
+    public PortletURLImpl( PortalRequestInstance portalRequestInstance ) {
+        this.portalRequestInstance = portalRequestInstance;
+        secure = this.portalRequestInstance.getHttpRequest().isSecure();
     }
 
-
-
-    // javax.portlet.PortletURL -------------------------------------------------------------------
-
-    public void setWindowState(WindowState windowState) throws WindowStateException
-
-    {
-
+    public void setWindowState( WindowState windowState ) throws WindowStateException {
 //        PortalContext portalContext = .getPortalContext();
-
 //        Enumeration supportedWindowStates = portalContext.getSupportedWindowStates();
-
 //        if (windowState != null)
-
 //        {
-
 //            while (supportedWindowStates.hasMoreElements())
-
 //            {
-
 //                WindowState supportedWindowState = (WindowState) supportedWindowStates.nextElement();
-
 //                if (windowState.equals(supportedWindowState))
-
 //                {
-
 //                    state = windowState;
-
 //                    return;
-
 //                }
-
 //            }
-
 //        }
-
-        throw new WindowStateException("unsupported Window State used: " + windowState, windowState);
-
+        throw new WindowStateException( "unsupported Window State used: " + windowState, windowState );
     }
 
-
-
-    public void setPortletMode(PortletMode portletMode) throws PortletModeException
-
-    {
-
-        if (isPortletModeSupported(portletMode))
-
-        {
-
+    public void setPortletMode( PortletMode portletMode ) throws PortletModeException {
+        if ( isPortletModeSupported( portletMode ) ) {
             mode = portletMode;
-
             return;
-
         }
-
-        throw new PortletModeException("unsupported Portlet Mode used: " + portletMode, portletMode);
-
+        throw new PortletModeException( "unsupported Portlet Mode used: " + portletMode, portletMode );
     }
 
-
-
-    public void setParameter(String name, String value)
-
-    {
-
-        if (name == null || value == null)
-
-        {
-
-            throw new IllegalArgumentException("name and value must not be null");
-
+    public void setParameter( String name, String value ) {
+        if ( name == null || value == null ) {
+            throw new IllegalArgumentException( "name and value must not be null" );
         }
-
-
-
-        parameters.put(name, value);
-
+        MapWithParameters.put( parameters, name, value );
+//        parameters.put( name, value );
     }
 
-
-
-    public void setParameter(String name, String[] values)
-
-    {
-
-        if (name == null || values == null || values.length == 0)
-
-        {
-
-            throw new IllegalArgumentException("name and values must not be null or values be an empty array");
-
+    public void setParameter( String name, String[] values ) {
+        if ( name == null || values == null || values.length == 0 ) {
+            throw new IllegalArgumentException( "name and values must not be null or values be an empty array" );
         }
-
-
-
-        parameters.put(name, values);
-
+        List list = Arrays.asList( values );
+        parameters.put( name, list );
     }
-
-
 
     /* (non-Javadoc)
-
      * @see javax.portlet.PortletURL#setParameters(Map)
-
      */
-
-    public void setParameters(Map parameters)
-
-    {
-
-        if (parameters == null)
-
-        {
-
-            throw new IllegalArgumentException("Parameters must not be null.");
-
+    public void setParameters( Map parameters ) {
+        if ( parameters == null ) {
+            throw new IllegalArgumentException( "Parameters must not be null." );
         }
 
-        for (Iterator iter = parameters.entrySet().iterator(); iter.hasNext();)
-
-        {
-
-            Map.Entry entry = (Map.Entry) iter.next();
-
-            if (!(entry.getKey() instanceof String))
-
-            {
-
-                throw new IllegalArgumentException("Key must not be null and of type java.lang.String.");
-
+        Map temp = new HashMap( 2*parameters.size() );
+        for( Iterator iter = parameters.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry entry = (Map.Entry)iter.next();
+            if ( !( entry.getKey() instanceof String ) ) {
+                throw new IllegalArgumentException( "Key must not be null and of type java.lang.String." );
             }
-
-            if (!(entry.getValue() instanceof String[]))
-
-            {
-
-                throw new IllegalArgumentException("Value must not be null and of type java.lang.String[].");
-
+            Object obj = entry.getValue();
+            if (obj==null) {
+                throw new IllegalArgumentException( "Value must not be null" );
             }
-
+            if ( log.isDebugEnabled() ) {
+                log.debug("Object: "+obj.getClass().getName() );
+            }
+            if ( !( obj instanceof String) && !( obj instanceof String[] ) && !( obj instanceof List ) ) {
+                throw new IllegalArgumentException( "Value must be type java.lang.String, java.lang.String[] or java.util.List. Type is "+obj.getClass().getName() );
+            }
+            if ( obj instanceof List )
+                temp.put( entry.getKey(), obj );
+            else if (obj instanceof String )
+                temp.put( entry.getKey(), obj );
+            else
+                temp.put( entry.getKey(), Arrays.asList((String[])obj) );
         }
 
-
-
-        this.parameters = new HashMap(parameters);
-
+        this.parameters = temp;
     }
 
-
-
-    public void setSecure(boolean secure) throws PortletSecurityException
-
-    {
-
+    public void setSecure( boolean secure ) throws PortletSecurityException {
         // This implementation does assume not having a supporting security environment installed!
-
-        if (secure == true)
-
-        {
-
-            throw new PortletSecurityException(
-
-                "The current implementation does assume not having a supporting security environment installed!"
-
-            );
-
+        if ( secure == true ) {
+            throw new PortletSecurityException( "The current implementation does assume not having a supporting security environment installed!" );
         }
-
-
 
         this.secure = secure;
-
     }
 
+    public String toString() {
+        StringBuffer url = new StringBuffer( 200 );
 
+        url.append( CtxInstance.ctx() );
 
-    public String toString()
+        if ( parameters != null ) {
+            url.append( '?' );
 
-    {
-
-        StringBuffer url = new StringBuffer(200);
-
-
-
-//        if (parameters != null)
-
-//        {
-
-//            Iterator names = parameters.keySet().iterator();
-
-//            while (names.hasNext())
-
-//            {
-
-//                String name = (String) names.next();
-
-//                Object value = parameters.get(name);
-
-//                String[] values = value instanceof String ? new String[]{(String) value} : (String[]) value;
-
-//                if (action)
-
-//                {
-
-//                    controlURL.setRequestParam(name, values);
-
-//                }
-
-//                else
-
-//                {
-
-//                    controlURL.setRenderParam(portletWindow, name, values);
-
-//                }
-
-//            }
-
-//        }
-
-
+            Iterator names = parameters.keySet().iterator();
+            boolean isNotFirst = false;
+            while( names.hasNext() ) {
+                String key = (String)names.next();
+                Object obj = parameters.get( key );
+                if (obj instanceof List) {
+                    Iterator it = ((List)obj).iterator();
+                    while (it.hasNext()) {
+                        String value = (String)it.next();
+                        if (isNotFirst) {
+                            url.append( '&' );
+                            isNotFirst = true;
+                        }
+                        url.append( key ).append( '=' ).append( value );
+                    }
+                }
+                else {
+                    url.append( key ).append( '=' ).append( obj.toString() );
+                }
+            }
+        }
 
         return url.toString();
-
     }
-
     // --------------------------------------------------------------------------------------------
-
-
 
     // internal methods ---------------------------------------------------------------------------
-
-    private boolean isPortletModeSupported(PortletMode requestedPortletMode)
-
-    {
-
+    private boolean isPortletModeSupported( PortletMode requestedPortletMode ) {
 //        PortletDefinition portletDefinition = referencedPortletWindow.getPortletEntity().getPortletDefinition();
-
 //        ContentTypeSet contentTypes = portletDefinition.getContentTypeSet();
-
 //        ContentType contentType = contentTypes.get("text/html");
-
 //        Iterator portletModes = contentType.getPortletModes();
-
 //        if (requestedPortletMode != null)
-
 //        {
-
 //            while (portletModes.hasNext())
-
 //            {
-
 //                PortletMode supportedPortletMode = (PortletMode) portletModes.next();
-
 //                if (requestedPortletMode.equals(supportedPortletMode))
-
 //                {
-
 //                    return true;
-
 //                }
-
 //            }
-
 //        }
-
         return false;
-
     }
-
     // --------------------------------------------------------------------------------------------
-
-
 
     // additional methods -------------------------------------------------------------------------
-
-    public String getParameter(String name)
-
-    {
-
-        return (String) parameters.get(name);
-
+    public String getParameter( String name ) {
+        return (String)parameters.get( name );
     }
 
-
-
-    public String[] getParameters(String name)
-
-    {
-
-        return (String[]) parameters.get(name);
-
+    public String[] getParameters( String name ) {
+        return (String[])parameters.get( name );
     }
 
-
-
-    public PortletMode getPortletMode()
-
-    {
-
+    public PortletMode getPortletMode() {
         return mode;
-
     }
 
-
-
-    public WindowState getWindowState()
-
-    {
-
+    public WindowState getWindowState() {
         return state;
-
     }
-
     // --------------------------------------------------------------------------------------------
-
-
-
 
 
     private boolean action;
 
-
-
-    public void setAction()
-
-    {
-
+    public void setAction() {
         action = true;
-
     }
 
-
-
-    public void setSecure()
-
-    {
-
+    public void setSecure() {
         secure = true;
-
     }
-
-
 
 }
-

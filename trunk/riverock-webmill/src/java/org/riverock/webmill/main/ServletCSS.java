@@ -83,10 +83,10 @@ public class ServletCSS extends HttpServlet
             PortalInfo p = PortalInfo.getInstance(db_, request_.getServerName());
 
             if (log.isDebugEnabled())
-                log.debug("Dynamic status " + p.sites.getIsCssDynamic());
+                log.debug("Dynamic status " + p.getSites().getIsCssDynamic());
 
-            if (Boolean.TRUE.equals(p.sites.getIsCssDynamic()) ) {
-                if (log.isDebugEnabled()) log.debug("ID_SITE " + p.sites.getIdSite());
+            if (Boolean.TRUE.equals(p.getSites().getIsCssDynamic()) ) {
+                if (log.isDebugEnabled()) log.debug("ID_SITE " + p.getSites().getIdSite());
                 if (log.isDebugEnabled()) log.debug("p.getDefaultLocale().toString() " + p.getDefaultLocale().toString());
                 if (log.isDebugEnabled()) log.debug("request_.getParameter " + request_.getParameter("mill.lang"));
 
@@ -106,7 +106,7 @@ public class ServletCSS extends HttpServlet
                 return;
             }
 
-            String cssFile = (p.sites.getCssFile() != null ? p.sites.getCssFile() : "//front_styles.css");
+            String cssFile = (p.getSites().getCssFile() != null ? p.getSites().getCssFile() : "//front_styles.css");
 
             if (log.isDebugEnabled())
                 log.debug("forvard to static CSS: " + cssFile);

@@ -30,7 +30,6 @@ package org.riverock.webmill.portlet;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -45,10 +44,9 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.multipart.AbstractPart;
 import org.riverock.common.multipart.MultipartHandler;
@@ -56,65 +54,68 @@ import org.riverock.common.multipart.MultipartRequestException;
 import org.riverock.common.multipart.MultipartRequestWrapper;
 import org.riverock.common.multipart.UploadException;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.schema.javax.portlet.InitParamType;
+import org.riverock.interfaces.schema.javax.portlet.MimeTypeType;
 import org.riverock.interfaces.schema.javax.portlet.PortletType;
+import org.riverock.interfaces.schema.javax.portlet.SupportsType;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portlet.wrapper.RenderRequestImpl;
 import org.riverock.webmill.schema.site.SiteTemplateParameterType;
 
-public class PortletTools
-{
-    private static Logger log = Logger.getLogger(PortletTools.class);
+import org.apache.log4j.Logger;
 
+public final class PortletTools {
+    private final static Logger log = Logger.getLogger(PortletTools.class);
+
+    public static final String MIME_TYPE_TEXT_XML = "text/xml";
+    public static final String MIME_TYPE_TEXT_HTML = "text/html";
+    public static final String MIME_TYPE_TEXT_WML = "text/wml";
 
     public static final String type_portlet = "type-portlet";
     public static final String is_url = "is-url";
+    public static final String is_xml = "is-xml";
     public static final String name_portlet_id = "name-portlet-id";
     public static final String locale_name_package = "locale-name-package";
     public static final String name_portlet_code_string = "name-portlet-code-string";
-    public static final String is_get_instance = "is-get-instance";
+//    public static final String is_get_instance = "is-get-instance";
     public static final String class_name_get_list = "class-name-get-list";
+    public static final String is_direct_request = "is-direct-request";
 
+    public static boolean isSupportMimeType(PortletType portletType, String mimeType){
+        if (portletType==null || mimeType==null)
+            return false;
 
-    public static RenderRequest getRenderRequest(HttpServletRequest request)
-    {
-        RenderRequestImpl r = new RenderRequestImpl();
-        if (request == null)
-            return r;
-
-        return r;
+        for (int i = 0; i < portletType.getSupportsCount(); i++) {
+            SupportsType supportsType = portletType.getSupports(i);
+            MimeTypeType type = supportsType.getMimeType();
+            if (type!=null && mimeType.equals( type.getContent()))
+                return true;
+        }
+        return false;
     }
 
-    public static String getStringParam(PortletType v, String name_)
-    {
+    public static String getStringParam(PortletType v, String name_) {
         return getStringParam(v, name_, null);
     }
 
-    public static String getStringParam(PortletType v, String name_, String defaultValue)
-    {
+    public static String getStringParam(PortletType v, String name_, String defaultValue) {
         if (v == null || name_ == null || name_.trim().length() == 0)
             return defaultValue;
 
-        for (int i = 0; i < v.getInitParamCount(); i++)
-        {
+        for (int i = 0; i < v.getInitParamCount(); i++) {
             InitParamType init = v.getInitParam(i);
-            if (name_.equals(init.getName().getContent()))
-            {
+            if (name_.equals(init.getName().getContent())) {
                 return init.getValue() != null ? init.getValue().getContent() : defaultValue;
             }
         }
         return defaultValue;
     }
 
-    public static Boolean getBooleanParam(PortletType v, String name_)
-    {
+    public static Boolean getBooleanParam(PortletType v, String name_) {
         if (v == null || name_ == null || name_.trim().length() == 0)
             return null;
 
-        for (int i = 0; i < v.getInitParamCount(); i++)
-        {
+        for (int i = 0; i < v.getInitParamCount(); i++) {
             InitParamType init = v.getInitParam(i);
             if (name_.equals(init.getName().getContent()))
                 return new Boolean(init.getValue().getContent());
@@ -122,13 +123,11 @@ public class PortletTools
         return null;
     }
 
-    public static Long getLongParam(List v, String name_)
-    {
+    public static Long getLongParam(List v, String name_) {
         if (v == null || name_ == null || name_.trim().length() == 0)
             return null;
 
-        for (int i = 0; i < v.size(); i++)
-        {
+        for (int i = 0; i < v.size(); i++) {
             InitParamType init = (InitParamType) v.get(i);
             if (name_.equals(init.getName().getContent()))
                 return new Long(init.getValue().getContent());
@@ -144,13 +143,11 @@ public class PortletTools
         return getString(v, nameParam, null);
     }
 
-    public synchronized static String getString(List v, String nameParam, String defValue)
-    {
+    public synchronized static String getString(List v, String nameParam, String defValue) {
         if (v == null || nameParam == null || nameParam.trim().length() == 0)
             return defValue;
 
-        for (int i = 0; i < v.size(); i++)
-        {
+        for (int i = 0; i < v.size(); i++) {
             SiteTemplateParameterType item = (SiteTemplateParameterType) v.get(i);
             if (item.getName().equals(nameParam))
                 return item.getValue();
@@ -158,10 +155,10 @@ public class PortletTools
         return defValue;
     }
 
+/*
     public static PortletResultObject getPortletObject(
         PortletType desc,
         PortletParameter portletParameter,
-        DatabaseAdapter adapter,
         PortletRequest portletRequest
         )
         throws PortalException
@@ -176,32 +173,22 @@ public class PortletTools
                 log.debug("Create instance of " + desc.getPortletClass());
             }
 
-///////////////////
-            Constructor constructor = Class.forName(desc.getPortletClass()).getConstructor(null);
+            Portlet portlet = PortletContainer.getPortletInstance( desc.getPortletName().getContent() );
 
-            if (log.isDebugEnabled())
-                log.debug("#12.12.005  constructor is " + constructor);
+            StringWriter writer = new StringWriter(10000);
+            RenderResponse renderResponse = new RenderResponseImpl(response, writer);
 
-            Portlet object = null;
-            if (constructor != null)
-                object = (Portlet) constructor.newInstance(null);
-            else
-                throw new PortalException("Error get constructor for " + desc.getPortletClass());
+            portlet.render( , renderResponse);
 
-            object.setParameter(portletParameter);
-
-///////////
             PortletResultObject portletObject = null;
             // create portlet without portlet code
-            if (codePortlet == null || codePortlet.length() == 0)
-            {
+            if (codePortlet == null || codePortlet.length() == 0) {
                 if (log.isDebugEnabled())
                     log.debug("Get portlet object w/o portlet code. namePortletID - " + getStringParam(desc, name_portlet_id));
 
                 Long id = null;
                 String namePortletId = getStringParam(desc, name_portlet_id);
-                if (namePortletId != null && namePortletId.length() != 0)
-                {
+                if ( namePortletId != null && namePortletId.length()!=0 ) {
                     if (log.isDebugEnabled())
                         log.debug("Get ID from request");
 
@@ -214,17 +201,21 @@ public class PortletTools
                         return null;
                 }
 
-                portletObject = object.getInstance(adapter, id);
+                // need rewrite
+//                portletObject = object.getInstance(adapter, id);
+                throw new Exception("not implemented");
             }
-            else
-            {
+            else {
                 if (log.isDebugEnabled())
                     log.debug("Get portlet object with portlet code. namePortletID - " + getStringParam(desc, name_portlet_id) + " code " + codePortlet);
 
-                portletObject = object.getInstanceByCode(adapter, codePortlet);
+                // need rewrite
+//                portletObject = object.getInstanceByCode(adapter, codePortlet);
+                throw new Exception("not implemented");
             }
 
-            return portletObject;
+            // need rewrite
+//            return portletObject;
         }
         catch (Throwable e){
             String es = "Error get news block ";
@@ -232,19 +223,18 @@ public class PortletTools
             throw new PortalException(es, e);
         }
     }
-
+*/
     private static final boolean saveUploadedFilesToDisk = false;
 
     public static Map getParameters(HttpServletRequest request)
-        throws IOException, UploadException, PortalException, MultipartRequestException
-    {
+        throws IOException, UploadException, PortalException, MultipartRequestException {
 
         Map p = new HashMap();
         String contentType = request.getContentType();
 
         if (contentType != null &&
-            contentType.toLowerCase().indexOf(MultipartRequestWrapper.MFDHEADER) > -1)
-        {			// it's a multipart request
+            contentType.toLowerCase().indexOf(MultipartRequestWrapper.MFDHEADER) > -1) {
+            // it's a multipart request
 
             MultipartRequestWrapper reqWrapper =
                 new MultipartRequestWrapper(
@@ -253,7 +243,7 @@ public class PortletTools
                     null,
                     false,
                     false,
-                    1024 * 1024
+                    3*1024*1024
                 );
 
             MultipartHandler handler = reqWrapper.getMultipartHandler();
@@ -407,22 +397,17 @@ public class PortletTools
         return s_;
     }
 
-    public static Float getFloat(PortletRequest request, String f)
-    {
+    public static Float getFloat(PortletRequest request, String f) {
         return getFloat(request, f, null);
     }
 
-    public static Float getFloat(PortletRequest request, String f, Float def)
-    {
+    public static Float getFloat(PortletRequest request, String f, Float def) {
         Float s_ = def;
-        if (request.getParameter(f) != null)
-        {
-            try
-            {
+        if (request.getParameter(f) != null) {
+            try {
                 s_ = new Float(request.getParameter(f));
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 // not rethrow exception 'cos this method return def value in this case
                 log.warn("Exception in getFloat(), def value will be return", e);
             }
@@ -430,28 +415,20 @@ public class PortletTools
         return s_;
     }
 
-    public static void include(RenderRequest renderRequest, HttpServletResponse response,
-                               String path, Writer out_
-                               )
-        throws javax.portlet.PortletException, IOException
-    {
-
-//        RequestDispatcher rd = request.getContextgetRequestDispatcher(path);
-//
-//        rd.include(request,
-//            new ServletResponseWrapperInclude(response, out_)
-//        );
-        PortletContext context = null;
+    public static void include(
+        PortletContext context,
+        RenderRequest renderRequest, RenderResponse renderResponse,
+        String path, Writer out_
+        )
+        throws javax.portlet.PortletException, IOException {
         PortletRequestDispatcher rd = context.getRequestDispatcher(path);
-        rd.include(renderRequest, null);
+        rd.include(renderRequest, renderResponse);
     }
 
-    public static void immediateRemoveAttribute(PortletSession session,
-                                                String attr)
-    {
+    public static void immediateRemoveAttribute( PortletSession session, String attr) {
+
         Object obj = session.getAttribute(attr);
-        try
-        {
+        try {
             if (log.isDebugEnabled())
                 log.debug("#12.12.001 search method 'clearObject'");
 
@@ -467,8 +444,7 @@ public class PortletTools
             if (log.isDebugEnabled())
                 log.debug("#12.12.003 complete invoke method 'clearObject'");
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             if (log.isInfoEnabled())
                 log.info("#12.12.003  method 'clearObject' not found. Error " + e.toString());
         }
@@ -477,9 +453,7 @@ public class PortletTools
         obj = null;
     }
 
-    public static void cleanSession(PortletSession session)
-        throws Exception
-    {
+    public static void cleanSession(PortletSession session) throws Exception {
         if (session==null)
             return;
 
