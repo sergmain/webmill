@@ -60,7 +60,7 @@
 
     <property name="lastversion" value="v3"/>
 
-    <property name="release-version" value="4.0.2"/>
+    <property name="release-version" value="5.0.0"/>
 
     <property name="java.target" value="1.4"/>
 
