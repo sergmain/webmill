@@ -176,7 +176,9 @@ public class DataDefinitionManager
 
             {
 
-                temp[idx++] = mainDefinitionFile[i];
+                if (mainDefinitionFile[i]!=null)
+
+                    temp[idx++] = mainDefinitionFile[i];
 
             }
 
@@ -190,7 +192,9 @@ public class DataDefinitionManager
 
             {
 
-                temp[idx++] = userDefinitionFile[i];
+                if (userDefinitionFile[i]!=null)
+
+                    temp[idx++] = userDefinitionFile[i];
 
             }
 
@@ -215,52 +219,6 @@ public class DataDefinitionManager
             (userDefinitionFile==null?0:userDefinitionFile.length);
 
     }
-
-
-
-/*
-
-    public static int getCountModule()
-
-    {
-
-        int count = 0;
-
-        if (mainDefinitionFile!=null)
-
-        {
-
-            for (int i=0; i<mainDefinitionFile.length; i++)
-
-            {
-
-                count += mainDefinitionFile[i].getApplicationCount();
-
-            }
-
-        }
-
-        if (userDefinitionFile!=null)
-
-        {
-
-            for (int i=0; i<userDefinitionFile.length; i++)
-
-            {
-
-                count += userDefinitionFile[i].getApplicationCount();
-
-            }
-
-        }
-
-
-
-        return count;
-
-    }
-
-*/
 
 
 
@@ -524,6 +482,12 @@ public class DataDefinitionManager
 
         {
 
+                if (mainDefinitionFile[k]==null)
+
+                continue;
+
+
+
             DataDefinitionFile mf = mainDefinitionFile[k];
 
             DataDefinitionType mod = mf.getDataDefinition(definitionName_);
@@ -559,6 +523,12 @@ public class DataDefinitionManager
             for (int k=0; k < userDefinitionFile.length; k++)
 
             {
+
+                if (userDefinitionFile[k]==null)
+
+                continue;
+
+
 
                 DataDefinitionFile mf = userDefinitionFile[k];
 
