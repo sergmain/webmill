@@ -108,7 +108,7 @@ import org.riverock.portlet.schema.core.*;
 
 import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
 
-import org.riverock.portlet.port.menu.MenuLanguage;
+import org.riverock.portlet.menu.MenuLanguage;
 
 import org.riverock.webmill.core.InsertSiteTemplateItem;
 

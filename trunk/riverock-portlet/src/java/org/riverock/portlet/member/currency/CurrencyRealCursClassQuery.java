@@ -146,7 +146,7 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
 
                 CurrencyService.getCurrencyItem(
 
-                    CurrencyManager.getInstance(db_, ctxInstance.page.p.sites.getIdSite()).getCurrencyList() , idCurrency
+                    CurrencyManager.getInstance(db_, ctxInstance.getPortalInfo().sites.getIdSite()).getCurrencyList() , idCurrency
 
                 );
 

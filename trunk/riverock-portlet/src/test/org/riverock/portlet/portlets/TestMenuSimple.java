@@ -70,6 +70,8 @@ import junit.framework.Assert;
 
 import junit.framework.TestCase;
 
+import org.riverock.portlet.menu.MenuSimple;
+
 
 
 public class  TestMenuSimple extends TestCase

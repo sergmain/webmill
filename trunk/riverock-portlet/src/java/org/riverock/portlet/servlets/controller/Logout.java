@@ -94,7 +94,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -242,11 +242,11 @@ public class Logout extends HttpServlet
 
             if (log.isDebugEnabled())
 
-                log.debug("url to redir:  "+response.encodeURL( CtxURL.ctx() ) );
+                log.debug("url to redir:  "+response.encodeURL( ctxInstance.ctx() ) );
 
 
 
-            response.sendRedirect( response.encodeURL( CtxURL.ctx() ) );
+            response.sendRedirect( response.encodeURL( ctxInstance.ctx() ) );
 
             return;
 

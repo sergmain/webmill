@@ -44,6 +44,16 @@ public class PortalException extends Exception
 
 
 
+    public PortalException(String s, Throwable cause)
+
+    {
+
+        super(s, cause);
+
+    }
+
+
+
     public String toString()
 
     {

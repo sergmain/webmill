@@ -286,7 +286,7 @@ public class FirmIndex extends HttpServlet
 
                          ctxInstance.url("mill.firm.add_firm")+
 
-                         "\">"+ctxInstance.page.sMain.getStr("button.add")+"</a></p>"+
+                         "\">"+ctxInstance.getStringManager().getStr("button.add")+"</a></p>"+
 
                          "<table width=\"100%\" border=\"1\" class=\"l\">"+
 
@@ -368,7 +368,7 @@ public class FirmIndex extends HttpServlet
 
                         out.write(
 
-                                "<input type=\"button\" value=\""+ctxInstance.page.sMain.getStr("button.change")+"\" onclick=\"location.href='"+
+                                "<input type=\"button\" value=\""+ctxInstance.getStringManager().getStr("button.change")+"\" onclick=\"location.href='"+
 
                                 ctxInstance.url("mill.firm.ch_firm") + '&'+
 
@@ -376,7 +376,7 @@ public class FirmIndex extends HttpServlet
 
                                 "';\">"+
 
-                                "<input type=\"button\" value=\""+ctxInstance.page.sMain.getStr("button.delete")+"\" onclick=\"location.href='"+
+                                "<input type=\"button\" value=\""+ctxInstance.getStringManager().getStr("button.delete")+"\" onclick=\"location.href='"+
 
                                 ctxInstance.url("mill.firm.del_firm") + '&'+
 
@@ -406,7 +406,7 @@ public class FirmIndex extends HttpServlet
 
 
 
-                            "\">"+ctxInstance.page.sMain.getStr("button.add")+"</a></p>"
+                            "\">"+ctxInstance.getStringManager().getStr("button.add")+"</a></p>"
 
                     );
 
@@ -430,7 +430,7 @@ public class FirmIndex extends HttpServlet
 
                 out.write(
 
-                        "<p><a href=\""+ index_page +"\">"+ctxInstance.page.sMain.getStr("page.main.3")+"</a></p>"+
+                        "<p><a href=\""+ index_page +"\">"+ctxInstance.getStringManager().getStr("page.main.3")+"</a></p>"+
 
                         "</td>"+
 

@@ -280,7 +280,7 @@ public class BasketShopSession
 
 
 
-            String url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), "url", CtxURL.ctx());
+            String url_redir = PortletTools.getString(ctxInstance.getPortletRequest(), "url", ctxInstance.ctx());
 
 
 
@@ -340,7 +340,7 @@ public class BasketShopSession
 
             {
 
-                response.sendRedirect(response.encodeURL(CtxURL.ctx()));
+                response.sendRedirect(response.encodeURL(ctxInstance.ctx()));
 
                 return true;
 

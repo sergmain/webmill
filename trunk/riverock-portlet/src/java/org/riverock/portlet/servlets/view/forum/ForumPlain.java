@@ -106,8 +106,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
 
 import org.riverock.webmill.utils.ServletUtils;
@@ -120,7 +118,7 @@ public class ForumPlain extends HttpServlet
 
 {
 
-    private static Logger cat = Logger.getLogger(ForumPlain.class);
+    private static Logger log = Logger.getLogger(ForumPlain.class);
 
 
 
@@ -138,9 +136,9 @@ public class ForumPlain extends HttpServlet
 
     {
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug("method is POST");
+            log.debug("method is POST");
 
 
 
@@ -196,15 +194,15 @@ public class ForumPlain extends HttpServlet
 
 
 
-            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response, ctxInstance.page);
+            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response);
 
             String nameTemplate = ctxInstance.getNameTemplate();
 
 
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
-                cat.debug("id - " + forum.id);
+                log.debug("id - " + forum.id);
 
 // ====
 
@@ -222,9 +220,9 @@ public class ForumPlain extends HttpServlet
 
             {
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("#FORUM.01.01.1");
+                    log.debug("#FORUM.01.01.1");
 
 
 
@@ -236,23 +234,21 @@ public class ForumPlain extends HttpServlet
 
             {
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("#FORUM.01.01.2");
+                    log.debug("#FORUM.01.01.2");
 
 
-
-                forum.page = ctxInstance.page;
 
             }
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
             {
 
-                cat.debug("#FORUM.01.03: " + v_curr_month);
+                log.debug("#FORUM.01.03: " + v_curr_month);
 
-                cat.debug("#FORUM.01.05: " + forum.year);
+                log.debug("#FORUM.01.05: " + forum.year);
 
             }
 
@@ -426,7 +422,7 @@ public class ForumPlain extends HttpServlet
 
         {
 
-            cat.error(e);
+            log.error(e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
 

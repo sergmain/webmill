@@ -148,7 +148,7 @@ public class CurrencyDateChangeClassQuery extends BaseClassQuery
 
             db_ = DatabaseAdapter.getInstance( false );
 
-            PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.page.p.getServerName() );
+            PortalInfo p = PortalInfo.getInstance(db_, ctxInstance.getPortletRequest().getServerName() );
 
 
 

@@ -74,8 +74,6 @@ import java.io.Writer;
 
 
 
-import javax.portlet.RenderRequest;
-
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
@@ -176,7 +174,7 @@ public class ForumIndex extends HttpServlet
 
 
 
-            SimpleForum forum = new SimpleForum( ctxInstance.getPortletRequest(), response, ctxInstance.page );
+            SimpleForum forum = new SimpleForum( ctxInstance.getPortletRequest(), response );
 
 
 

@@ -96,11 +96,11 @@ import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
 
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.webmill.port.InitPage;
+
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -124,8 +124,6 @@ abstract public class Forum
 
     public Long id = null;
 
-    public InitPage page = null;
-
     public static final String SEQ_FORUM_THREADS = "SEQ_MAIN_FORUM_THREADS";
 
     public static final String SEQ_FORUM_MESSAGE = "SEQ_MAIN_FORUM_MESSAGE";
@@ -133,6 +131,8 @@ abstract public class Forum
     public static final String FORUM_THREADS_TABLE = "MAIN_FORUM_THREADS";
 
     private PortletRequest portletRequest = null;
+
+    private CtxInstance ctxInstance = null;
 
 
 
@@ -144,13 +144,15 @@ abstract public class Forum
 
 
 
-    public Forum(PortletRequest portletRequest, InitPage jspPage)
+    public Forum(PortletRequest portletRequest)
 
         throws ForumException
 
     {
 
         this.portletRequest = portletRequest;
+
+        this.ctxInstance = (CtxInstance)portletRequest.getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
         this.id = PortletTools.getLong(portletRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
 
@@ -166,11 +168,9 @@ abstract public class Forum
 
         ).intValue();
 
-
-
-        this.page = jspPage;
-
     }
+
+
 
 
 
@@ -656,7 +656,7 @@ abstract public class Forum
 
                 else
 
-                    s += ("<a href=\"" + CtxURL.ctx() + '?' +
+                    s += ("<a href=\"" + ctxInstance.ctx() + '?' +
 
                         Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 
@@ -784,7 +784,7 @@ abstract public class Forum
 
 //                    s += ("<a href=\"" + forumURI + '?' +
 
-                    s += ("<a href=\"" + CtxURL.ctx() + '?' +
+                    s += ("<a href=\"" + ctxInstance.ctx() + '?' +
 
                         Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 
@@ -1040,7 +1040,7 @@ abstract public class Forum
 
                     "<span class=\"topictitle\">" +
 
-                    "<a class=\"topictitle\" href=\"" + CtxURL.ctx() + '?' +
+                    "<a class=\"topictitle\" href=\"" + ctxInstance.ctx() + '?' +
 
                     Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 
@@ -1260,7 +1260,7 @@ abstract public class Forum
 
 */
 
-                    r_ += ("<a href=\"" + CtxURL.ctx() + '?' +
+                    r_ += ("<a href=\"" + ctxInstance.ctx() + '?' +
 
                         Constants.NAME_LANG_PARAM + '=' + portletRequest.getLocale().toString() + '&' +
 

@@ -92,7 +92,7 @@ public class ApplicationManager
 
 {
 
-    private static Logger cat = Logger.getLogger( "org.riverock.webmill.as.server.ApplicationManager" );
+    private static Logger log = Logger.getLogger( "org.riverock.webmill.as.server.ApplicationManager" );
 
 
 
@@ -232,6 +232,20 @@ public class ApplicationManager
 
         {
 
+            File dir = new File(PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_APPL_DIR);
+
+            if (!dir.exists())
+
+            {
+
+                log.warn("Directory '"+dir+"' not exists");
+
+                return;
+
+            }
+
+
+
             if (mainDir==null)
 
                 mainDir = new CacheDirectory(
@@ -258,9 +272,9 @@ public class ApplicationManager
 
 
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("#2.001 read list file");
+                    log.debug("#2.001 read list file");
 
 
 
@@ -268,9 +282,9 @@ public class ApplicationManager
 
 
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("#2.003 array of files - " + mainDir.getFileArray());
+                    log.debug("#2.003 array of files - " + mainDir.getFileArray());
 
 
 
@@ -278,15 +292,15 @@ public class ApplicationManager
 
 
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
                 {
 
-                    cat.debug("CacheFile - " + cacheFile);
+                    log.debug("CacheFile - " + cacheFile);
 
                     if ( cacheFile!=null )
 
-                        cat.debug( "cacheFile.length - "+cacheFile.length);
+                        log.debug( "cacheFile.length - "+cacheFile.length);
 
                 }
 
@@ -300,9 +314,9 @@ public class ApplicationManager
 
                 {
 
-                    if (cat.isDebugEnabled())
+                    if (log.isDebugEnabled())
 
-                        cat.debug("CacheFile[i] - " + cacheFile[i]);
+                        log.debug("CacheFile[i] - " + cacheFile[i]);
 
 
 
@@ -398,9 +412,9 @@ public class ApplicationManager
 
 
 
-                    if (cat.isDebugEnabled())
+                    if (log.isDebugEnabled())
 
-                        cat.debug("#2.001 read list file");
+                        log.debug("#2.001 read list file");
 
 
 
@@ -408,9 +422,9 @@ public class ApplicationManager
 
 
 
-                    if (cat.isDebugEnabled())
+                    if (log.isDebugEnabled())
 
-                        cat.debug("#2.003 array of files - " + userDir.getFileArray());
+                        log.debug("#2.003 array of files - " + userDir.getFileArray());
 
 
 
@@ -438,7 +452,7 @@ public class ApplicationManager
 
         {
 
-            cat.error("error get application module", e);
+            log.error("error get application module", e);
 
             throw e;
 
@@ -484,9 +498,9 @@ public class ApplicationManager
 
             {
 
-                if (cat.isDebugEnabled())
+                if (log.isDebugEnabled())
 
-                    cat.debug("Module '" + moduleName + "' is found");
+                    log.debug("Module '" + moduleName + "' is found");
 
 
 
@@ -498,9 +512,9 @@ public class ApplicationManager
 
 
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug("Application '" + moduleName + "' in main directory not found");
+            log.debug("Application '" + moduleName + "' in main directory not found");
 
 
 
@@ -526,9 +540,9 @@ public class ApplicationManager
 
                 {
 
-                    if (cat.isDebugEnabled())
+                    if (log.isDebugEnabled())
 
-                        cat.debug("Application '" + moduleName + "' is found in custom directory");
+                        log.debug("Application '" + moduleName + "' is found in custom directory");
 
 
 
@@ -542,9 +556,9 @@ public class ApplicationManager
 
 
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug("Application '" + moduleName + "' not found");
+            log.debug("Application '" + moduleName + "' not found");
 
 
 

@@ -106,8 +106,6 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
-
 import org.riverock.webmill.portlet.PortletTools;
 
 import org.riverock.webmill.utils.ServletUtils;
@@ -184,7 +182,7 @@ public class ForumStandard extends HttpServlet
 
 
 
-            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response, ctxInstance.page);
+            SimpleForum forum = new SimpleForum(ctxInstance.getPortletRequest(), response );
 
 
 
@@ -233,8 +231,6 @@ public class ForumStandard extends HttpServlet
                 v_curr_month = month.intValue();
 
             else
-
-                forum.page = ctxInstance.page;
 
 
 

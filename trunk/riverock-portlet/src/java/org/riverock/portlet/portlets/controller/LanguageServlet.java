@@ -106,7 +106,7 @@ import org.riverock.webmill.portal.menu.MenuItemInterface;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -250,9 +250,13 @@ public class LanguageServlet extends HttpServlet
 
             Long id_ctx = PortletTools.getLong(ctxInstance.getPortletRequest(), Constants.NAME_ID_CONTEXT_PARAM);
 
+            MenuItemInterface catItem =
 
+                ctxInstance.getPortalInfo().getMenu(
 
-            MenuItemInterface catItem = ctxInstance.page.menuLanguage.searchMenuItem( id_ctx );
+                    ctxInstance.getPortletRequest().getLocale().toString()
+
+                ).searchMenuItem( id_ctx );
 
 
 
@@ -266,7 +270,7 @@ public class LanguageServlet extends HttpServlet
 
             {
 
-                response.sendRedirect( response.encodeURL( CtxURL.ctx() ) );
+                response.sendRedirect( response.encodeURL( ctxInstance.ctx() ) );
 
                 return;
 
@@ -288,11 +292,11 @@ public class LanguageServlet extends HttpServlet
 
             if (s == null || s.length() == 0)
 
-                newUrl = response.encodeURL( CtxURL.ctx() );
+                newUrl = response.encodeURL( ctxInstance.ctx() );
 
             else
 
-                newUrl = response.encodeURL(CtxURL.ctx() + '?' +
+                newUrl = response.encodeURL(ctxInstance.ctx() + '?' +
 
                     Constants.NAME_LANG_PARAM + '=' + s
 

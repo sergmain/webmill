@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -70,15 +70,11 @@ import java.util.List;
 
 
 
-import javax.portlet.PortletSession;
-
-
-
 import org.apache.log4j.Logger;
 
-import org.riverock.common.config.ConfigException;
-
 import org.riverock.common.tools.RsetTools;
+
+import org.riverock.common.config.ConfigException;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -270,7 +266,7 @@ public class NewsSite implements Portlet, PortletGetList
 
 
 
-    private void initNewsItem(NewsBlockType newsBlock)
+    private void initNewsItem(NewsBlockType newsBlock, CtxInstance ctxInstance)
 
     throws PortletException
 
@@ -288,13 +284,13 @@ public class NewsSite implements Portlet, PortletGetList
 
         {
 
-            if (param.getPage().sMain.checkKey("main.next-news"))
+            if (ctxInstance.getStringManager().checkKey("main.next-news"))
 
-                str = param.getPage().sMain.getStr("main.next-news");
+                str = ctxInstance.getStringManager().getStr("main.next-news");
 
             else
 
-                str = param.getPage().sMain.getStr("main.next");
+                str = ctxInstance.getStringManager().getStr("main.next");
 
 
 
@@ -309,12 +305,6 @@ public class NewsSite implements Portlet, PortletGetList
             str = "error";
 
         }
-
-
-
-        PortletSession session = param.getPortletRequest().getPortletSession();
-
-        CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
 
 
@@ -340,7 +330,7 @@ public class NewsSite implements Portlet, PortletGetList
 
                     item.setUrlToFullNewsItem(
 
-                        ctxInstance.url( Constants.CTX_TYPE_NEWS ) + '&' +
+                        ctxInstance.url(Constants.CTX_TYPE_NEWS, null) + '&' +
 
                         Constants.NAME_ID_NEWS_PARAM + '=' + item.getNewsItemId()
 
@@ -367,8 +357,6 @@ public class NewsSite implements Portlet, PortletGetList
         {
 
             log.error("Exception in ", configException);
-
-            throw new PortletException("Exception in "+ configException.toString());
 
         }
 
@@ -474,7 +462,9 @@ public class NewsSite implements Portlet, PortletGetList
 
         {
 
-            Long idSite = SiteListSite.getIdSite( param.getPage().p.getServerName() );
+            CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+            Long idSite = SiteListSite.getIdSite( ctxInstance.getPortletRequest().getServerName() );
 
 
 
@@ -482,9 +472,9 @@ public class NewsSite implements Portlet, PortletGetList
 
             {
 
-                log.debug("serverName "+param.getPage().p.getServerName());
+                log.debug("serverName "+ctxInstance.getPortletRequest().getServerName());
 
-                log.debug("locale " + param.getPortletRequest().getLocale().toString());
+                log.debug("locale " + ctxInstance.getPortletRequest().getLocale().toString());
 
                 log.debug("idSite " + idSite);
 
@@ -680,6 +670,8 @@ public class NewsSite implements Portlet, PortletGetList
 
     {
 
+        CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
         if (log.isDebugEnabled())
 
         {
@@ -722,7 +714,7 @@ public class NewsSite implements Portlet, PortletGetList
 
             {
 
-                initNewsItem( nb );
+                initNewsItem( nb, ctxInstance );
 
                 for (int j=0; j<nb.getNewsGroupCount(); j++)
 
@@ -763,6 +755,8 @@ public class NewsSite implements Portlet, PortletGetList
             throws Exception
 
     {
+
+        CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
         if (log.isDebugEnabled())
 
@@ -856,7 +850,7 @@ public class NewsSite implements Portlet, PortletGetList
 
         NewsBlock block = new NewsBlock();
 
-        initNewsItem( newsBlock );
+        initNewsItem( newsBlock, ctxInstance );
 
         block.newsBlockType = newsBlock;
 

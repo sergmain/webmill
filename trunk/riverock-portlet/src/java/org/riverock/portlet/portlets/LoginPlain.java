@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -70,10 +70,6 @@ import java.util.List;
 
 
 
-import javax.portlet.PortletSession;
-
-
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ServletTools;
@@ -90,7 +86,7 @@ import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.Portlet;
 
@@ -178,13 +174,15 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            if (auth_.checkAccess( param.getPage().p.getServerName()))
+            CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+            if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
 
             {
 
                 if (log.isDebugEnabled())
 
-                    log.debug("user " + auth_.getUserLogin() + "is  valid for " + param.getPage().p.getServerName() + " site");
+                    log.debug("user " + auth_.getUserLogin() + "is  valid for " + ctxInstance.getPortletRequest().getServerName() + " site");
 
 
 
@@ -194,13 +192,7 @@ public class LoginPlain implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            PortletSession session = param.getPortletRequest().getPortletSession();
-
-            CtxInstance ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-
-
-
-            out += "<form method=\"POST\" action=\"" + CtxURL.ctx() + "\" >\n";
+            out += "<form method=\"POST\" action=\"" + ctxInstance.ctx() + "\" >\n";
 
 
 

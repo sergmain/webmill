@@ -104,7 +104,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 
 
@@ -200,7 +200,7 @@ public class ShopMenatepBasket extends HttpServlet
 
             {
 
-                response.sendRedirect(CtxURL.ctx());
+                response.sendRedirect(ctxInstance.ctx());
 
                 return;
 

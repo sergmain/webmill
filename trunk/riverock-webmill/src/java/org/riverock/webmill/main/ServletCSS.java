@@ -98,7 +98,7 @@ public class ServletCSS extends HttpServlet
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.main.ServletCSS");
+    private static Logger cat = Logger.getLogger("org.riverock.webmill.main.ServletCSS");
 
 
 

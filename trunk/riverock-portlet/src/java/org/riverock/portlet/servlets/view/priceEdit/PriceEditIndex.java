@@ -108,7 +108,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 
 
@@ -238,7 +238,7 @@ public class PriceEditIndex extends HttpServlet
 
                                 "<th class=\"memberArea\">Name shop</th>"+
 
-                                "<th class=\"memberArea\">" + ctxInstance.page.sMain.getStr("index.jsp.action") + "</th>" +
+                                "<th class=\"memberArea\">" + ctxInstance.getStringManager().getStr("index.jsp.action") + "</th>" +
 
                                 "</tr>"
 
@@ -278,7 +278,7 @@ public class PriceEditIndex extends HttpServlet
 
               out.write("<input type=\"button\" value=\"");
 
-              out.write(ctxInstance.page.sMain.getStr("button.next"));
+              out.write(ctxInstance.getStringManager().getStr("button.next"));
 
               out.write("\" onclick=\"location.href='");
 
@@ -344,7 +344,7 @@ public class PriceEditIndex extends HttpServlet
 
                 {
 
-                    out.write( ctxInstance.page.sMain.getStr("access_denied"));
+                    out.write( ctxInstance.getStringManager().getStr("access_denied"));
 
                 }
 

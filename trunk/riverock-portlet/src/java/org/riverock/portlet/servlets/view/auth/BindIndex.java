@@ -110,7 +110,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 
 
@@ -338,7 +338,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("\">");
 
-                    out.write(ctxInstance.page.sMain.getStr("button.add"));
+                    out.write(ctxInstance.getStringManager().getStr("button.add"));
 
                     out.write("</a>");
 
@@ -564,7 +564,7 @@ public class BindIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(ctxInstance.page.sMain.getStr("button.change"));
+                        out.write(ctxInstance.getStringManager().getStr("button.change"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -586,7 +586,7 @@ public class BindIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(ctxInstance.page.sMain.getStr("button.delete"));
+                        out.write(ctxInstance.getStringManager().getStr("button.delete"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -632,7 +632,7 @@ public class BindIndex extends HttpServlet
 
                     out.write("\">");
 
-                    out.write(ctxInstance.page.sMain.getStr("button.add"));
+                    out.write(ctxInstance.getStringManager().getStr("button.add"));
 
                     out.write("</a>");
 
@@ -710,7 +710,7 @@ public class BindIndex extends HttpServlet
 
             out.write("\">");
 
-            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
 
             out.write("</a>");
 
@@ -720,7 +720,7 @@ public class BindIndex extends HttpServlet
 
             out.write("<a href=\"");
 
-            out.write(response.encodeURL(CtxURL.ctx()));
+            out.write(response.encodeURL(ctxInstance.ctx()));
 
             out.write("?");
 
@@ -728,7 +728,7 @@ public class BindIndex extends HttpServlet
 
             out.write("\">");
 
-            out.write(ctxInstance.page.sMain.getStr("page.main.4"));
+            out.write(ctxInstance.getStringManager().getStr("page.main.4"));
 
             out.write("</a>");
 

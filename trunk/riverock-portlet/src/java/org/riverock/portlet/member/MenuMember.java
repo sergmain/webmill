@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -106,7 +106,7 @@ import org.riverock.sso.a3.AuthInfo;
 
 import org.riverock.sso.a3.AuthTools;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.Portlet;
 
@@ -200,13 +200,13 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
 
 
-            memberTemplates = SiteTemplateMember.getInstance(db_, param.getPage().p.getSiteId());
-
-
-
             PortletSession session = param.getPortletRequest().getPortletSession();
 
             ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+            memberTemplates = SiteTemplateMember.getInstance(db_, ctxInstance.getPortalInfo().getSiteId());
+
+
 
 
 
@@ -642,7 +642,7 @@ public class MenuMember implements Portlet, PortletResultObject, PortletGetList
 
                         log.debug("PortletParam  response - " + param.getResponse());
 
-                        log.debug("PortletParam  param.response.encodeURL( CtxURL.ctx()  ) -  " + param.getResponse().encodeURL( CtxURL.ctx()  ));
+                        log.debug("PortletParam  param.response.encodeURL( ctxInstance.ctx()  ) -  " + param.getResponse().encodeURL( ctxInstance.ctx()  ));
 
                         log.debug("PortletParam  getMemberTemplate - " + getMemberTemplate() );
 

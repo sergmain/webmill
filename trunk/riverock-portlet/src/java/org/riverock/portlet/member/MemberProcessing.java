@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -148,11 +148,9 @@ import org.riverock.portlet.tools.HtmlTools;
 
 import org.riverock.webmill.core.GetSiteTemplateItem;
 
-import org.riverock.webmill.port.InitPage;
+
 
 import org.riverock.webmill.portlet.CtxInstance;
-
-import org.riverock.webmill.portlet.CtxURL;
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -181,8 +179,6 @@ public class MemberProcessing
     public ModuleType mod = null;
 
     public ContentType content = null;
-
-    private InitPage jspPage = null;
 
     private DatabaseAdapter db_ = null;
 
@@ -239,8 +235,6 @@ public class MemberProcessing
         content = null;
 
         portletRequest = null;
-
-        jspPage = null;
 
         fromParam = null;
 
@@ -514,7 +508,7 @@ public class MemberProcessing
 
                     case SqlCheckParameterTypeTypeType.RESTRICT_SITE_TYPE:
 
-                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
+                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
                         break;
 
@@ -2076,7 +2070,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
 //log.debug("#3.001.07 "+req.getServerName());
 
-                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
+                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
                     }
 
@@ -2132,9 +2126,9 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
         {
 
-//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName());
+//log.debug("#3.001.13 "+ctxInstance.getPortletRequest().getServerName());
 
-            ps.setString(numParam++, ctxInstance.page.p.getServerName());
+            ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
         }
 
@@ -2328,13 +2322,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                         if (log.isDebugEnabled())
 
-                            log.debug(" 5 Bind param #"+numParam+" " + ctxInstance.page.p.getServerName()
+                            log.debug(" 5 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName()
 
                             );
 
 
 
-                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
+                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
                     }
 
@@ -2398,13 +2392,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             if (log.isDebugEnabled())
 
-                log.debug(" 8 Bind param #"+numParam+" " + ctxInstance.page.p.getServerName()
+                log.debug(" 8 Bind param #"+numParam+" " + ctxInstance.getPortletRequest().getServerName()
 
                 );
 
 
 
-            ps.setString(numParam++, ctxInstance.page.p.getServerName());
+            ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
         }
 
@@ -2706,9 +2700,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.07 "+ctxInstance.page.p.getServerName());
+//log.debug("#3.001.07 "+ctxInstance.getPortletRequest().getServerName());
 
-                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
+                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
                     }
 
@@ -2758,9 +2752,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName());
+//log.debug("#3.001.13 "+ctxInstance.getPortletRequest().getServerName());
 
-            ps.setString(numParam++, ctxInstance.page.p.getServerName());
+            ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
         }
 
@@ -2792,7 +2786,7 @@ ps.setString(numParam++, portletRequest.getRemoteUser() );
 
 if ( qa.isRestrict( "site" ) ) {
 
-ps.setString(numParam++, ctxInstance.page.p.getServerName() );
+ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName() );
 
 }
 
@@ -3526,9 +3520,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.07 "+ctxInstance.page.p.getServerName());
+//log.debug("#3.001.07 "+ctxInstance.getPortletRequest().getServerName());
 
-                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
+                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
                     }
 
@@ -3658,9 +3652,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         {
 
-//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName());
+//log.debug("#3.001.13 "+ctxInstance.getPortletRequest().getServerName());
 
-            ps.setString(numParam++, ctxInstance.page.p.getServerName());
+            ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
         }
 
@@ -3980,9 +3974,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     {
 
-//log.debug("#3.001.07 site "+ctxInstance.page.p.getServerName());
+//log.debug("#3.001.07 site "+ctxInstance.getPortletRequest().getServerName());
 
-                        ps.setString(numParam++, ctxInstance.page.p.getServerName());
+                        ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
                     }
 
@@ -4162,9 +4156,9 @@ throw new Exception("Wrong type of primary key");
 
         {
 
-//log.debug("#3.001.13 "+ctxInstance.page.p.getServerName()+' ' +numParam);
+//log.debug("#3.001.13 "+ctxInstance.getPortletRequest().getServerName()+' ' +numParam);
 
-            ps.setString(numParam++, ctxInstance.page.p.getServerName());
+            ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
         }
 
@@ -5800,7 +5794,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 qa.getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
 
-                ps.setString(numParam++, ctxInstance.page.p.getServerName());
+                ps.setString(numParam++, ctxInstance.getPortletRequest().getServerName());
 
 
 
@@ -7246,8 +7240,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         MemberQueryParameter queryParameter = new MemberQueryParameter();
 
-        queryParameter.webPage = jspPage;
-
         baseClass.setQueryParameter( queryParameter );
 
 
@@ -7933,10 +7925,6 @@ throw new MemberForvardException();
         this.firmId = auth.getUserInfo().getIdFirm();
 
         this.userId = auth.getUserInfo().getIdUser();
-
-
-
-        jspPage = ctxInstance.page;
 
 
 

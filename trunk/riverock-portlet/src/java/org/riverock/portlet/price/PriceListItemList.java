@@ -114,9 +114,11 @@ import org.riverock.portlet.schema.price.OrderType;
 
 import org.riverock.webmill.config.WebmillConfig;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletParameter;
+
+import org.riverock.webmill.portlet.CtxInstance;
 
 
 
@@ -189,6 +191,8 @@ public class PriceListItemList
         try
 
         {
+
+            CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
             fieldName.setNameToInvoice(
 
@@ -280,7 +284,7 @@ public class PriceListItemList
 
                     shopParam.isProcessInvoice ?
 
-                    param.getResponse().encodeURL(CtxURL.ctx()) :
+                    param.getResponse().encodeURL(ctxInstance.ctx()) :
 
                     null
 
@@ -316,7 +320,7 @@ public class PriceListItemList
 
                     (CurrencyItem) CurrencyService.getCurrencyItemByCode(
 
-                        CurrencyManager.getInstance(db_, param.getPage().p.sites.getIdSite()).getCurrencyList(), currencyCode
+                        CurrencyManager.getInstance(db_, ctxInstance.getPortalInfo().sites.getIdSite()).getCurrencyList(), currencyCode
 
                     );
 
@@ -330,7 +334,7 @@ public class PriceListItemList
 
                 currencyItem.fillRealCurrencyData(
 
-                    CurrencyManager.getInstance(db_, param.getPage().p.sites.getIdSite()).getCurrencyList().getStandardCurrencyList()
+                    CurrencyManager.getInstance(db_, ctxInstance.getPortalInfo().sites.getIdSite()).getCurrencyList().getStandardCurrencyList()
 
                 );
 
@@ -374,7 +378,7 @@ public class PriceListItemList
 
                     CustomCurrencyItemType targetCurrency =
 
-                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, param.getPage().p.sites.getIdSite()).getCurrencyList(), shopParam.id_currency);
+                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, ctxInstance.getPortalInfo().sites.getIdSite()).getCurrencyList(), shopParam.id_currency);
 
 
 

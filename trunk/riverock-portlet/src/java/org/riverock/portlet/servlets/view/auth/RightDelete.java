@@ -114,7 +114,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -332,7 +332,7 @@ public class RightDelete extends HttpServlet
 
                         out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-                        out.write(ctxInstance.page.sMain.getStr("button.delete"));
+                        out.write(ctxInstance.getStringManager().getStr("button.delete"));
 
                         out.write("\">\r\n");
 
@@ -512,7 +512,7 @@ public class RightDelete extends HttpServlet
 
             out.write("\">");
 
-            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
 
             out.write("</a>");
 

@@ -306,7 +306,7 @@ public class RightIndex extends HttpServlet
 
                 out.write("\">");
 
-                out.write(ctxInstance.page.sMain.getStr("button.add"));
+                out.write(ctxInstance.getStringManager().getStr("button.add"));
 
                 out.write("</a>");
 
@@ -526,7 +526,7 @@ public class RightIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(ctxInstance.page.sMain.getStr("button.change"));
+                        out.write(ctxInstance.getStringManager().getStr("button.change"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -548,7 +548,7 @@ public class RightIndex extends HttpServlet
 
                         out.write("<input type=\"button\" value=\"");
 
-                        out.write(ctxInstance.page.sMain.getStr("button.delete"));
+                        out.write(ctxInstance.getStringManager().getStr("button.delete"));
 
                         out.write("\" onclick=\"location.href='");
 
@@ -604,7 +604,7 @@ public class RightIndex extends HttpServlet
 
                 out.write("\">");
 
-                out.write(ctxInstance.page.sMain.getStr("button.add"));
+                out.write(ctxInstance.getStringManager().getStr("button.add"));
 
                 out.write("</a>");
 
@@ -618,7 +618,7 @@ public class RightIndex extends HttpServlet
 
             {
 
-                out.write(ctxInstance.page.sMain.getStr("access_denied"));
+                out.write(ctxInstance.getStringManager().getStr("access_denied"));
 
             }
 

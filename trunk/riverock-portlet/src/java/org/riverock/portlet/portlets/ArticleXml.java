@@ -100,6 +100,8 @@ import org.riverock.webmill.portlet.PortletGetList;
 
 import org.riverock.webmill.portlet.PortletParameter;
 
+import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.riverock.portlet.schema.core.SiteCtxArticleItemType;
@@ -498,7 +500,9 @@ public class ArticleXml implements Portlet, PortletResultObject, PortletGetList
 
 
 
-        Long idSupportLanguageCurrent = param.getPage().p.getIdSupportLanguage(param.getPortletRequest().getLocale());
+        CtxInstance ctxInstance = (CtxInstance)param.getPortletRequest().getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+
+        Long idSupportLanguageCurrent = ctxInstance.getPortalInfo().getIdSupportLanguage(param.getPortletRequest().getLocale());
 
 
 

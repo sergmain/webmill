@@ -322,7 +322,7 @@ public class ShopSpecial extends HttpServlet
 
                     out.write("<form action=\"");
 
-                    out.write(response.encodeURL(CtxURL.ctx()));
+                    out.write(response.encodeURL(ctxInstance.ctx()));
 
                     out.write("\">\r\n");
 

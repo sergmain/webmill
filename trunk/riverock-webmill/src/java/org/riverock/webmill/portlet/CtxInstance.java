@@ -66,21 +66,15 @@ package org.riverock.webmill.portlet;
 
 
 
-import java.util.HashMap;
-
-import java.util.Locale;
-
-import java.util.Map;
-
-import java.util.List;
-
-import java.util.ArrayList;
+import java.util.*;
 
 
 
 import javax.portlet.PortletRequest;
 
 import javax.portlet.PortletResponse;
+
+import javax.portlet.PortletURL;
 
 import javax.servlet.http.Cookie;
 
@@ -92,11 +86,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
+import org.riverock.common.config.ConfigException;
+
+import org.riverock.common.html.AcceptLanguageWithLevel;
+
+import org.riverock.common.html.Header;
 
 import org.riverock.common.tools.ServletTools;
 
-import org.riverock.common.config.ConfigException;
+import org.riverock.common.tools.StringTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -104,15 +102,19 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.generic.tools.StringManager;
 
+import org.riverock.generic.config.GenericConfig;
+
 import org.riverock.sso.a3.AuthSession;
 
 import org.riverock.sso.a3.AuthTools;
 
 import org.riverock.webmill.core.*;
 
+import org.riverock.webmill.exception.PortalException;
+
 import org.riverock.webmill.main.Constants;
 
-import org.riverock.webmill.port.InitPage;
+import org.riverock.webmill.port.PortalInfo;
 
 import org.riverock.webmill.portal.PortalConstants;
 
@@ -120,9 +122,13 @@ import org.riverock.webmill.portal.menu.MenuInterface;
 
 import org.riverock.webmill.portal.menu.MenuItemInterface;
 
-import org.riverock.webmill.portlet.wrapper.RenderRequestWrapper;
+import org.riverock.webmill.portal.menu.MenuLanguageInterface;
 
-import org.riverock.webmill.portlet.wrapper.RenderResponseWrapper;
+import org.riverock.webmill.portal.impl.RenderRequestImpl;
+
+import org.riverock.webmill.portal.impl.RenderResponseImpl;
+
+import org.riverock.webmill.portal.impl.PortletURLImpl;
 
 import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
 
@@ -130,7 +136,11 @@ import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
 
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 
+import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
+
 import org.riverock.webmill.schema.types.HiddenParamType;
+
+import org.riverock.webmill.utils.ServletUtils;
 
 
 
@@ -148,8 +158,6 @@ public class CtxInstance {
 
         HttpServletResponse response_,
 
-        InitPage page,
-
         DatabaseAdapter db)
 
         throws Exception
@@ -162,27 +170,77 @@ public class CtxInstance {
 
         this.auth = AuthTools.getAuthSession(request);
 
-        this.page = page;
+
+
+        initPortalInfo(db);
+
+        // Todo - filter preferredLocale with locale defined for this site
+
+        tempLocale = getPreferredLocale(db);
+
+        if (tempLocale==null)
+
+            tempLocale = portalInfo.getDefaultLocale();
 
 
 
-        // init real locale. Can be rewrited below, based on current context
+        if (tempLocale==null)
 
-        this.realLocale = page.getLocale();
+            tempLocale = StringTools.getLocale( ServletUtils.getString(request, Constants.NAME_LANG_PARAM, tempLocale.toString()) );
 
 
 
-        initTypeContext(
+        if (tempLocale==null)
 
-            page.p.getIdSupportLanguage(realLocale), db, request_
+        {
 
-        );
+            String es = "Locales for this site not defined";
+
+            log.error(es);
+
+            throw new PortalException(es);
+
+        }
+
+
+
+
+
+        initTypeContext(db);
 
         setDefaultPortletDescription( PortletDescription.getInstance( defaultPortletType ) );
 
 
 
-        this.portletRequest = new RenderRequestWrapper(
+        preferredLocale = Header.getAcceptLanguageAsLocaleListSorted( request );
+
+        if (this.realLocale==null)
+
+        {
+
+
+
+            realLocale = (tempLocale!=null?tempLocale:Locale.ENGLISH);
+
+            log.warn("Locale of request is null, process as "+realLocale.toString());
+
+        }
+
+
+
+        // init string manager with real locale
+
+        stringManager = StringManager.getManager("mill.locale.main", realLocale);
+
+
+
+
+
+
+
+
+
+        this.portletRequest = new RenderRequestImpl(
 
             new HashMap(),
 
@@ -192,15 +250,19 @@ public class CtxInstance {
 
             realLocale,
 
-            page.getPreferredLocale()
+            preferredLocale
 
         );
+
+        this.portletResponse = new RenderResponseImpl(response);
 
         portletRequest.setAttribute(PortalConstants.PORTAL_AUTH_ATTRIBUTE, auth);
 
     }
 
 
+
+    private Locale[] preferredLocale = null;
 
 
 
@@ -211,8 +273,6 @@ public class CtxInstance {
     private AuthSession auth = null;
 
 
-
-    public InitPage page = null;
 
     public StringManager sCustom = null;
 
@@ -243,6 +303,12 @@ public class CtxInstance {
     private SiteCtxCatalogItemType ctx = null;
 
     private Locale realLocale = null;
+
+    private Locale tempLocale = null; // used for process request with ref page alias - '../page/home'
+
+    private PortalInfo portalInfo = null;
+
+    private StringManager stringManager = null;
 
 
 
@@ -312,7 +378,7 @@ public class CtxInstance {
 
 
 
-        this.portletRequest = new RenderRequestWrapper(
+        this.portletRequest = new RenderRequestImpl(
 
             parameters,
 
@@ -322,11 +388,11 @@ public class CtxInstance {
 
             this.realLocale,
 
-            this.page.getPreferredLocale()
+            this.preferredLocale
 
         );
 
-        this.portletResponse = new RenderResponseWrapper(
+        this.portletResponse = new RenderResponseImpl(
 
 
 
@@ -412,7 +478,7 @@ public class CtxInstance {
 
      */
 
-    void initTypeContext(Long idSiteSupportLanguage, DatabaseAdapter db, HttpServletRequest request)
+    void initTypeContext(DatabaseAdapter db)
 
     throws Exception
 
@@ -462,6 +528,8 @@ public class CtxInstance {
 
             {
 
+                // format request: /<CONTEXT>/page/<PAGE_NAME>/<LOCALE>/...
+
                 String path = request.getPathInfo();
 
                 if (path==null || path.equals("/"))
@@ -480,13 +548,35 @@ public class CtxInstance {
 
                 String pageName = null;
 
+                String localeFromUrl = null;
+
                 if (idx==-1)
+
+                {
 
                     pageName = path.substring(1);
 
+                    localeFromUrl = tempLocale.toString();
+
+                }
+
                 else
 
+                {
+
                     pageName = path.substring(1, idx);
+
+                    int idxLocale = path.indexOf('/', idx+1);
+
+                    if (idxLocale==-1)
+
+                        localeFromUrl = path.substring(idx+1);
+
+                    else
+
+                        localeFromUrl = path.substring(idx+1, idxLocale);
+
+                }
 
 
 
@@ -496,13 +586,17 @@ public class CtxInstance {
 
                     "select a.ID_SITE_CTX_CATALOG " +
 
-                    "from SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b " +
+                    "from   SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b, SITE_SUPPORT_LANGUAGE c " +
 
-                    "where a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
+                    "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
 
-                    "b.ID_SITE_SUPPORT_LANGUAGE=? and a.CTX_PAGE_URL=?",
+                    "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
 
-                    new Object[]{idSiteSupportLanguage, pageName}
+                    "       c.ID_SITE=? and c.CUSTOM_LANGUAGE=? and " +
+
+                    "       a.CTX_PAGE_URL=?",
+
+                    new Object[]{portalInfo.getSiteId(), localeFromUrl, pageName}
 
                 );
 
@@ -554,7 +648,7 @@ public class CtxInstance {
 
         if ( nameTemplate==null )
 
-            nameTemplate = page.menuLanguage.getIndexTemplate();
+            nameTemplate = portalInfo.getMenu(realLocale.toString()).getIndexTemplate();
 
 
 
@@ -572,11 +666,13 @@ public class CtxInstance {
 
             {
 
-                for (int i=0; i<page.menuLanguage.getMenuCount(); i++)
+                MenuLanguageInterface ml = portalInfo.getMenu(realLocale.toString());
+
+                for (int i=0; i<ml.getMenuCount(); i++)
 
                 {
 
-                    MenuInterface catalog = page.menuLanguage.getMenu(i);
+                    MenuInterface catalog = ml.getMenu(i);
 
                     for (int k=0; k<catalog.getMenuItemCount(); k++)
 
@@ -660,7 +756,7 @@ public class CtxInstance {
 
         }
 
-        if (!page.p.getSiteId().equals(siteLang.getIdSite()))
+        if (!getPortalInfo().getSiteId().equals(siteLang.getIdSite()))
 
         {
 
@@ -758,6 +854,8 @@ public class CtxInstance {
 
 
 
+        this.realLocale = StringTools.getLocale( ServletUtils.getString(request, Constants.NAME_LANG_PARAM, tempLocale.toString()) );
+
         // If not found name of template or type of context, processing as index_page
 
         if ( ctxType==null || ctxTemplate==null )
@@ -766,7 +864,7 @@ public class CtxInstance {
 
             defaultPortletType = Constants.CTX_TYPE_INDEX;
 
-            nameTemplate = page.menuLanguage.getIndexTemplate();
+            nameTemplate = portalInfo.getMenu(realLocale.toString()).getIndexTemplate();
 
             return;
 
@@ -774,9 +872,9 @@ public class CtxInstance {
 
 
 
-        defaultPortletType = ctxType;
+        this.defaultPortletType = ctxType;
 
-        nameTemplate = ctxTemplate;
+        this.nameTemplate = ctxTemplate;
 
     }
 
@@ -822,21 +920,87 @@ public class CtxInstance {
 
     }
 
+
+
     public String url(String portlet, String templateParam)
 
         throws ConfigException
 
     {
 
-        return response.encodeURL( CtxURL.ctx()  ) + '?' +
+        return response.encodeURL( ctx()  ) + '?' +
 
             getAsURL()+
 
-            Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' +templateParam+ '&' +
+            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + portlet +
 
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + portlet;
+            (templateParam!=null?("&" + Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' +templateParam):"")
+
+            ;
 
     }
+
+
+
+    public PortletURL getURL()
+
+    {
+
+        return new PortletURLImpl(this, request, response);
+
+    }
+
+
+
+    public static String ctx()
+
+    {
+
+        if (GenericConfig.contextName  == null)
+
+            return Constants.URI_CTX_MANAGER ;
+
+
+
+        return GenericConfig.contextName + Constants.URI_CTX_MANAGER ;
+
+    }
+
+
+
+    public static String pageid()
+
+    {
+
+        if (GenericConfig.contextName  == null)
+
+            return Constants.PAGEID_SERVLET_NAME ;
+
+
+
+        return GenericConfig.contextName + Constants.PAGEID_SERVLET_NAME ;
+
+    }
+
+
+
+    public static String page()
+
+    {
+
+        if (GenericConfig.contextName  == null)
+
+            return Constants.PAGE_SERVLET_NAME ;
+
+
+
+        return GenericConfig.contextName + Constants.PAGE_SERVLET_NAME ;
+
+    }
+
+
+
+
 
     private static HiddenParamType getHidden(String name, String value)
 
@@ -925,6 +1089,338 @@ public class CtxInstance {
             ServletTools.getHiddenItem(Constants.NAME_TEMPLATE_CONTEXT_PARAM, nameTemplate)+
 
             ServletTools.getHiddenItem(Constants.NAME_TYPE_CONTEXT_PARAM, portlet);
+
+    }
+
+
+
+    private void initPortalInfo(DatabaseAdapter db_)
+
+        throws PortalException
+
+    {
+
+        long jspPagePortletInfo = 0;
+
+        try
+
+        {
+
+            if (log.isInfoEnabled())
+
+            {
+
+                if (log.isInfoEnabled())
+
+                    log.info("start get instance of PortalInfo ");
+
+
+
+                jspPagePortletInfo = System.currentTimeMillis();
+
+            }
+
+            portalInfo = PortalInfo.getInstance(db_, request.getServerName());
+
+        }
+
+        catch(Exception e)
+
+        {
+
+            String es = "Error PortalInfo.getInstance(db_, request.getServerName())";
+
+            log.error(es, e);
+
+            throw new PortalException(es, e);
+
+        }
+
+        finally
+
+        {
+
+            if (log.isInfoEnabled())
+
+            {
+
+                log.info("Get instance of PortalInfo  for  "
+
+                        + (System.currentTimeMillis()-jspPagePortletInfo)+" milliseconds");
+
+            }
+
+        }
+
+    }
+
+
+
+    public PortalInfo getPortalInfo()
+
+    {
+
+        return portalInfo;
+
+    }
+
+
+
+
+
+    private Locale getPreferredLocale(DatabaseAdapter db_)
+
+        throws Exception
+
+    {
+
+        // determinate preffered locale
+
+        // AcceptLanguageWithLevel[] accept =
+
+        List acceptVector = Header.getAcceptLanguageAsList( request );
+
+
+
+        SiteSupportLanguageListType supportLanguageList =
+
+              GetSiteSupportLanguageWithIdSiteList.getInstance(db_, portalInfo.sites.getIdSite()).item;
+
+
+
+        if (log.isDebugEnabled())
+
+            log.debug("Start looking for preffered locale");
+
+
+
+        // Locale not queried in URL
+
+        Locale tempLocale = null;
+
+        AcceptLanguageWithLevel bestAccept = null;
+
+        SiteSupportLanguageItemType includedFromCookie = null;
+
+
+
+        Cookie[] cookies_req = request.getCookies();
+
+        if (cookies_req!=null)
+
+        {
+
+            for (int i = 0; i<cookies_req.length; i++)
+
+            {
+
+                Cookie c = cookies_req[i];
+
+                String name_cookie = c.getName();
+
+                if (name_cookie.equals( Constants.NAME_LOCALE_COOKIE))
+
+                {
+
+                    includedFromCookie =
+
+                        includedAccept(StringTools.getLocale( c.getValue()) , supportLanguageList );
+
+                    break;
+
+                }
+
+            }
+
+        }
+
+
+
+        if (includedFromCookie!=null)
+
+        {
+
+            tempLocale = StringTools.getLocale(includedFromCookie.getCustomLanguage());
+
+        }
+
+        else
+
+        {
+
+            if (log.isDebugEnabled())
+
+            {
+
+                log.debug("Total accepted locale vector - "+ acceptVector);
+
+                if (acceptVector!=null)
+
+                    log.debug("Total accepted locale elements - "+ acceptVector.size());
+
+            }
+
+
+
+            if (acceptVector!=null)
+
+            {
+
+                for (int i=0; i<acceptVector.size(); i++)
+
+                {
+
+                    AcceptLanguageWithLevel accept = (AcceptLanguageWithLevel)acceptVector.get(i);
+
+
+
+                    if (log.isDebugEnabled())
+
+                        log.debug("Accepted locale item, locale - "+ accept.locale+", level - "+ accept.level);
+
+
+
+                    SiteSupportLanguageItemType included = includedAccept(accept.locale, supportLanguageList );
+
+
+
+                    if (log.isDebugEnabled())
+
+                        log.debug("included - "+included);
+
+
+
+                    if  (bestAccept==null)
+
+                    {
+
+                        if (included!=null)
+
+                        {
+
+                            bestAccept = accept;
+
+                            tempLocale = StringTools.getLocale( included.getCustomLanguage() );
+
+                        }
+
+                    }
+
+                    else
+
+                    {
+
+                        if (included!=null && bestAccept.level<accept.level)
+
+                        {
+
+                            bestAccept = accept;
+
+                            tempLocale = StringTools.getLocale( included.getCustomLanguage() );
+
+                        }
+
+                    }
+
+
+
+                    if (log.isDebugEnabled())
+
+                        log.debug("tempLocale - "+tempLocale);
+
+
+
+                }
+
+            }
+
+        }
+
+        return tempLocale;
+
+    }
+
+
+
+    private SiteSupportLanguageItemType includedAccept( Locale accept, SiteSupportLanguageListType supportLanguageList )
+
+    {
+
+        boolean hasVariant = (accept.getVariant()!=null && accept.getVariant().trim().length()>0);
+
+        boolean hasCountry = (accept.getCountry()!=null && accept.getCountry().trim().length()>0);
+
+
+
+        if (log.isDebugEnabled())
+
+            log.debug("hasVariant - "+hasVariant + ", hasCountry - "+hasCountry);
+
+
+
+        for (int i=0; i<supportLanguageList.getSiteSupportLanguageCount(); i++)
+
+        {
+
+            SiteSupportLanguageItemType sl = supportLanguageList.getSiteSupportLanguage(i);
+
+
+
+            if (log.isDebugEnabled())
+
+                log.debug("SiteSupportLanguageItemType.getNameCustomLanguage - "+sl.getCustomLanguage());
+
+
+
+            Locale cl = StringTools.getLocale( sl.getCustomLanguage() );
+
+
+
+            if (log.isDebugEnabled())
+
+                log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale - "+cl);
+
+
+
+            if (!hasVariant && !hasCountry && accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
+
+                return sl;
+
+
+
+            if (!hasVariant &&
+
+                accept.getCountry().equalsIgnoreCase(cl.getCountry()) &&
+
+                accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
+
+                return sl;
+
+
+
+            if (accept.getVariant().equalsIgnoreCase(cl.getVariant()) &&
+
+                accept.getCountry().equalsIgnoreCase(cl.getCountry()) &&
+
+                accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
+
+                return sl;
+
+        }
+
+
+
+        return null;
+
+    }
+
+
+
+    public StringManager getStringManager()
+
+    {
+
+        return stringManager;
 
     }
 

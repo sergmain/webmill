@@ -282,7 +282,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-              out.write(ctxInstance.page.sMain.getStr("button.delete"));
+              out.write(ctxInstance.getStringManager().getStr("button.delete"));
 
               out.write("\">\r\n");
 
@@ -808,7 +808,7 @@ public class FirmDelete extends HttpServlet
 
               out.write("\">");
 
-              out.write(ctxInstance.page.sMain.getStr("page.main.3"));
+              out.write(ctxInstance.getStringManager().getStr("page.main.3"));
 
               out.write("</a>");
 

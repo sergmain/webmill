@@ -96,7 +96,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 
 
@@ -620,13 +620,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\" selected>");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -666,13 +666,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\">");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -696,13 +696,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\">");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -742,13 +742,13 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<option value=\"0\">");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.no"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.no"));
 
                 out.write("</option>\r\n");
 
                 out.write("<option value=\"1\">");
 
-                out.write(ctxInstance.page.sMain.getStr("yesno.yes"));
+                out.write(ctxInstance.getStringManager().getStr("yesno.yes"));
 
                 out.write("</option>\r\n");
 
@@ -764,7 +764,7 @@ public class FirmAdd extends HttpServlet
 
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
 
-                out.write(ctxInstance.page.sMain.getStr("button.add"));
+                out.write(ctxInstance.getStringManager().getStr("button.add"));
 
                 out.write("\">\r\n");
 
@@ -786,7 +786,7 @@ public class FirmAdd extends HttpServlet
 
             out.write("\">");
 
-            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
 
             out.write("</a>");
 

@@ -68,7 +68,7 @@ import org.riverock.webmill.schema.site.SiteTemplateParameterType;
 
 import org.riverock.webmill.schema.site.TemplateItemType;
 
-import org.riverock.webmill.port.InitPage;
+
 
 
 
@@ -95,8 +95,6 @@ public class PortletParameter
 //    private HttpServletRequest request = null;
 
     private HttpServletResponse response = null;
-
-    private InitPage page = null;
 
     private String ctxType = null;
 
@@ -152,8 +150,6 @@ public class PortletParameter
 
         this.response = ctxInstance.getResponse() ;
 
-        this.page = ctxInstance.page ;
-
         this.ctxType = ctxInstance.getDefaultPortletType();
 
         this.portletRequest = ctxInstance.getPortletRequest();
@@ -207,14 +203,6 @@ public class PortletParameter
     public HttpServletResponse getResponse() {
 
         return response;
-
-    }
-
-
-
-    public InitPage getPage() {
-
-        return page;
 
     }
 

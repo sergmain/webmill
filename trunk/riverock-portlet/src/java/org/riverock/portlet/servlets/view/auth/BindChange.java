@@ -110,7 +110,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -268,7 +268,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<input type=\"submit\" value=\"");
 
-                out.write(ctxInstance.page.sMain.getStr("button.change"));
+                out.write(ctxInstance.getStringManager().getStr("button.change"));
 
                 out.write("\">\r\n");
 
@@ -546,7 +546,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<INPUT TYPE=\"submit\" VALUE=\"");
 
-                out.write(ctxInstance.page.sMain.getStr("button.change"));
+                out.write(ctxInstance.getStringManager().getStr("button.change"));
 
                 out.write("\">\r\n");
 
@@ -570,7 +570,7 @@ public class BindChange extends HttpServlet
 
             out.write("\">");
 
-            out.write(ctxInstance.page.sMain.getStr("page.main.3"));
+            out.write(ctxInstance.getStringManager().getStr("page.main.3"));
 
             out.write("</a>");
 

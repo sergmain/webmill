@@ -388,7 +388,7 @@ public class OrderLogic extends HttpServlet
 
                     order = new OrderType();
 
-                    order.setServerName(ctxInstance.page.p.getServerName());
+                    order.setServerName(ctxInstance.getPortletRequest().getServerName());
 
 
 
@@ -416,7 +416,7 @@ public class OrderLogic extends HttpServlet
 
                     AuthSession authSession = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
 
-                    if ((authSession != null) && (authSession.checkAccess(ctxInstance.page.p.getServerName())))
+                    if ((authSession != null) && (authSession.checkAccess(ctxInstance.getPortletRequest().getServerName())))
 
                     {
 

@@ -72,7 +72,7 @@ import org.riverock.generic.tools.XmlTools;
 
 import org.riverock.portlet.portlets.InternalTestMenuSimple;
 
-import org.riverock.portlet.portlets.MenuSimple;
+import org.riverock.portlet.menu.MenuSimple;
 
 import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 

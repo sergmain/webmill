@@ -82,7 +82,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
 
 import org.riverock.webmill.portlet.CtxInstance;
 
-import org.riverock.webmill.portlet.CtxURL;
+
 
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -206,7 +206,7 @@ public class LoginView extends HttpServlet
 
 
 
-            out.write( "<form method = \"POST\" action = \"" + CtxURL.ctx() + "\" >");
+            out.write( "<form method = \"POST\" action = \"" + ctxInstance.ctx() + "\" >");
 
 
 
