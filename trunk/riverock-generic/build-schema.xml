@@ -70,7 +70,7 @@
 
 
 
-    <property name="lib.dir" value="../js-lib/lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <property name="local-lib.dir" value="lib"/>
 
@@ -308,7 +308,7 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/config/"/>
 
-        <property name="schema-file" value="${src.dir}/xsd/riverock-generic-config.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-generic-config.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.generic.schema.config"/>
 
@@ -320,7 +320,7 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/transfer/"/>
 
-        <property name="schema-file" value="${src.dir}\xsd\mill-transfer-file.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-transfer-file.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.generic.schema.transfer"/>
 
@@ -328,7 +328,7 @@
 
     </target>
 
-
+<!--
 
     <target name="gen_site_schema" depends="prepare">
 
@@ -442,7 +442,7 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\testimport\core"/>
 
-        <property name="schema-file" value="${src.dir}\xsd\test\prr-core.xsd "/>
+        <property name="schema-file" value="${src.xsd.dir}/test/prr-core.xsd "/>
 
         <property name="schema-package-java" value="org.riverock.schema.testimport.core"/>
 
@@ -450,11 +450,13 @@
 
     </target>
 
+-->
+
     <target name="gen_db_structure_schema" depends="prepare">
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/db/structure"/>
 
-        <property name="schema-file" value="${src.dir}\xsd\mill-database-structure.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-database-structure.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.generic.schema.db.structure"/>
 
@@ -466,7 +468,7 @@
 
         <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/db"/>
 
-        <property name="schema-file" value="${src.dir}\xsd\mill-database.xsd"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-database.xsd"/>
 
         <property name="schema-package-java" value="org.riverock.generic.schema.db"/>
 
