@@ -2,19 +2,19 @@
 
  * org.riverock.portlet -- Portlet Library
 
- * 
+ *
 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
 
- * 
+ *
 
  * Riverock -- The Open-source Java Development Community
 
  * http://www.riverock.org
 
- * 
+ *
 
- * 
+ *
 
  * This program is free software; you can redistribute it and/or
 
@@ -66,8 +66,6 @@ import java.sql.ResultSet;
 
 import java.sql.Types;
 
-import java.sql.SQLException;
-
 import java.util.ArrayList;
 
 import java.util.Calendar;
@@ -97,8 +95,6 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
-
-import org.riverock.generic.exception.DatabaseException;
 
 import org.riverock.portlet.main.Constants;
 
@@ -132,7 +128,7 @@ abstract public class Forum
 
     public Long id = null;
 
-    public boolean isJustEntered = true;
+//    public boolean isJustEntered = true;
 
     public InitPage jspPage = null;
 
@@ -176,19 +172,19 @@ abstract public class Forum
 
     {
 
-        isJustEntered = (
+//        isJustEntered = (
 
-            request.getParameter(
+//            request.getParameter(
 
-                Constants.NAME_ID_MESSAGE_FORUM_PARAM
+//                Constants.NAME_ID_MESSAGE_FORUM_PARAM
 
-            ) == null
+//            ) == null
 
-            );
+//            );
 
 
 
-        id = ServletTools.getLong(request, Constants.NAME_ID_MESSAGE_FORUM_PARAM, new Long(0) );
+        id = ServletTools.getLong(request, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
 
         id_forum = ServletTools.getLong(request, Constants.NAME_ID_FORUM_PARAM);
 
@@ -446,21 +442,21 @@ cat.debug("#10.00.EMAIL "+email);
 
             db_ = DatabaseAdapter.getInstance(false);
 
-            if (!isJustEntered)
+            if (id!=null)
 
             {
 
                 sql_ =
 
-                    "select distinct id_thread " +
+                    "select distinct ID_THREAD " +
 
                     "from " + getNameTable() + " " +
 
                     "where   id = ? and  " +
 
-                    "to_number(to_char(date_post, 'yyyy')) = ? and " +
+                    "to_number(to_char(DATE_POST, 'yyyy')) = ? and " +
 
-                    "to_number(to_char(date_post, 'mm')) = ? ";
+                    "to_number(to_char(DATE_POST, 'mm')) = ? ";
 
 
 
@@ -480,15 +476,15 @@ cat.debug("#10.00.EMAIL "+email);
 
                 sql_ =
 
-                    "select  distinct id_thread " +
+                    "select  distinct ID_THREAD " +
 
                     "from " + getNameTable() + " " +
 
-                    "where   id_forum = ? and " +
+                    "where   ID_FORUM = ? and " +
 
-                    "to_number(to_char(date_post, 'yyyy')) = ? and " +
+                    "to_number(to_char(DATE_POST, 'yyyy')) = ? and " +
 
-                    "to_number(to_char(date_post, 'mm')) = ? ";
+                    "to_number(to_char(DATE_POST, 'mm')) = ? ";
 
 
 
@@ -514,7 +510,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 s += getMessages(id,
 
-                    RsetTools.getLong(rs, "id_thread"), new Long(0), new Long(0), nameTemplate);
+                    RsetTools.getLong(rs, "ID_THREAD"), new Long(0), new Long(0), nameTemplate);
 
             }
 
@@ -890,7 +886,7 @@ cat.debug("#10.00.EMAIL "+email);
 
     {
 
-        if (isJustEntered)
+        if (id==null)
 
             return null;
 
@@ -1128,7 +1124,7 @@ cat.debug("#10.00.EMAIL "+email);
 
     {
 
-        if (isJustEntered)
+        if (id==null)
 
             return null;
 
@@ -1254,7 +1250,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 r_ += "<b>";
 
-                if (idValue != id__)
+                if (!idValue.equals(id__))
 
                 {
 
@@ -1314,7 +1310,7 @@ cat.debug("#10.00.EMAIL "+email);
 
                 r_ += header_;
 
-                if (idValue != id__)
+                if (!idValue.equals(id__))
 
                     r_ += "</a>";
 

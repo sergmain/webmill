@@ -208,7 +208,7 @@ public class ForumPlain extends HttpServlet
 
             if (cat.isDebugEnabled())
 
-                cat.debug("isJustEnabled - " + forum.isJustEntered);
+                cat.debug("id - " + forum.id);
 
 // ====
 
@@ -284,7 +284,7 @@ public class ForumPlain extends HttpServlet
 
 // ====
 
-            if (!forum.isJustEntered)
+            if (forum.id!=null)
 
             {
 

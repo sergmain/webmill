@@ -172,7 +172,7 @@ public class ForumStandard extends HttpServlet
 
 
 
-            out.write("<!-- begin standart forum -->");
+            out.write("<!-- begin standart forum -->\n");
 
 
 
@@ -234,55 +234,29 @@ public class ForumStandard extends HttpServlet
 
 
 
+            if (log.isDebugEnabled())
+
+                log.debug("Requested year is equals current year - "+(v_curr_year == Calendar.getInstance().get(Calendar.YEAR)));
+
+
+
             if (v_curr_year == Calendar.getInstance().get(Calendar.YEAR))
-
-            {
-
-                if (log.isDebugEnabled())
-
-                    log.debug("#FORUM.01.01.1");
-
-
 
                 v_curr_month = jspPage.cross.getMonth().intValue();
 
-            }
-
             else
-
-            {
-
-                if (log.isDebugEnabled())
-
-                    log.debug("#FORUM.01.01.2");
-
-
-
-//	jspPage.cross.month = new Integer(v_curr_month);
-
-
-
-//	Integer firstMonth = forum.getFirstMonthInYear();
-
-//	if (firstMonth==null)
-
-//		v_curr_month =
-
-
-
-//                jspPage.reinit(request, response);
 
                 forum.jspPage = jspPage;
 
-            }
+
 
             if (log.isDebugEnabled())
 
             {
 
-                log.debug("#FORUM.01.03: " + v_curr_month);
+                log.debug("#FORUM month: " + v_curr_month);
 
-                log.debug("#FORUM.01.05: " + forum.year);
+                log.debug("#FORUM year: " + v_curr_year);
 
             }
 
@@ -296,13 +270,13 @@ public class ForumStandard extends HttpServlet
 
             if (log.isDebugEnabled())
 
-                log.debug("isJustEnabled - " + forum.isJustEntered);
+                log.debug("id - " + forum.id);
 
 
 
 // Show messaage with id="id"
 
-            if (!forum.isJustEntered)
+            if (forum.id!=null)
 
             {
 
@@ -420,7 +394,7 @@ public class ForumStandard extends HttpServlet
 
                     out.write("Error get message id=" + forum.id + "<br>");
 
-            } // if (!isJustEntered)
+            } // if (forum.id!=null)
 
 
 
@@ -476,7 +450,7 @@ public class ForumStandard extends HttpServlet
 
 
 
-            if (forum.isJustEntered)
+            if (forum.id==null)
 
             {
 
@@ -502,7 +476,7 @@ public class ForumStandard extends HttpServlet
 
             out.write("\r\n");
 
-            out.write("<!--End of Forum -->");
+            out.write("<!--End of Forum -->\n");
 
 
 

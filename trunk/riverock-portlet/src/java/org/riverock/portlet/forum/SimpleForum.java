@@ -70,7 +70,7 @@ public class SimpleForum extends Forum
 
     {
 
-        return "main_forum_threads";
+        return "MAIN_FORUM_THREADS";
 
     }
 
@@ -80,7 +80,7 @@ public class SimpleForum extends Forum
 
     {
 
-        return "seq_main_forum_message";
+        return "SEQ_MAIN_FORUM_THREADS";
 
     }
 
@@ -92,9 +92,9 @@ public class SimpleForum extends Forum
 
         CustomSequenceType seq = new CustomSequenceType();
 
-        seq.setSequenceName("SEQ_MAIN_FORUM_THREADS");
+        seq.setSequenceName( getNameIdSequence() );
 
-        seq.setTableName( "MAIN_FORUM_THREADS");
+        seq.setTableName( getNameTable() );
 
         seq.setColumnName( "ID_THREAD" );
 
