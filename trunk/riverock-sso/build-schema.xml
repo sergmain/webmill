@@ -28,16 +28,11 @@
 <!--$Id$-->
 <project name="riverock SSO schema classes gen" default="gen_all_schema" basedir=".">
 
-    <property name="lastversion" value="v3"/>
-
     <property name="java.target" value="1.4"/>
     <property name="java.class.target" value="1.4"/>
 
     <property name="lib.dir" value="../riverock-lib/lib"/>
     <property name="local-lib.dir" value="lib"/>
-
-    <!--    <property name="castor.lib" value="castor-0.9.5.2-snapshot-xml.jar"/>-->
-    <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>
 
     <property file="../riverock.properties"/>
 
@@ -45,7 +40,6 @@
 
     <property name="src.java.dir" value="${src.dir}/java"/>
 
-    <property name="src.jsp.dir" value="${src.dir}/jsp"/>
     <property name="src.xsd.dir" value="${src.dir}/xsd"/>
     <property name="src.xml.dir" value="${src.dir}/xml"/>
 
@@ -53,23 +47,13 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${castor.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${castor-schema.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
 
 <!--        <path refid="classpath-${java.target}"/>-->
     </path>
-
-    <property name="packages" value="org.riverock.*"/>
-    <property name="build.dir" value="build-schema"/>
-    <property name="build.dest" value="${build.dir}/classes"/>
-    <property name="build.java" value="${build.dir}/java"/>
-    <property name="build.tests" value="${build.dir}/tests"/>
-    <property name="build.src.java" value="${src.java.dir}"/>
-    <property name="build.src.jsp" value="${src.jsp.dir}"/>
-
-    <property name="dist.dir" value="${build.dir}/dist"/>
-    <property name="docs.dir" value="${build.dir}/javadocs"/>
 
     <property name="debug" value="on"/>
     <property name="optimize" value="off"/>

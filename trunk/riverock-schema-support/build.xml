@@ -42,9 +42,8 @@
 
 
     <property name="lib.dir" value="../riverock-lib/lib"/>
+    <property name="local-lib.dir" value="lib"/>
     <!-- runtime library -->
-    <property name="castor.lib" value="castor-0.9.4.3-xml.jar"/>
-<!--        <property name="castor.lib" value="castor-0.9.5.2-xml-snapshot.jar"/>-->
 
     <property file="../riverock.properties"/>
 
@@ -65,6 +64,8 @@
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
+        <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
@@ -135,7 +136,10 @@
             <arg value="-f"/>
             <arg value="-binding-file"/>
             <arg value="${src.xml.dir}/binding.xml"/>
-            <classpath refid="classpath-base"/>
+            <classpath>
+                <pathelement location="${local-lib.dir}/castor" />
+                <path refid="classpath-base"/>
+            </classpath>
         </java>
     </target>
 

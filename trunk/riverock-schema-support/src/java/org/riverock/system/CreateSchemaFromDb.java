@@ -833,7 +833,7 @@ public class CreateSchemaFromDb
                 "\n"+
                 initSql(
                     className, base,
-                    "        \"select "+column.getColumnName()+" \"+\n" +
+                    "        \"select * \"+\n" +
                     "        \"from "+table.getName()+" \"+\n" +
                     "        \"where "+key.getFkColumnName()+"=? \"+\n" +
                     "        \"order by "+column.getColumnName()+" ASC\";\n"
@@ -862,6 +862,8 @@ public class CreateSchemaFromDb
                 "            rs = ps.executeQuery();\n"+
                 "            while (rs.next())\n"+
                 "            {\n" +
+                (config.getIsUseCache()
+                ?
                 "                Get"+base+"Item tempItem = "+"Get"+base+"Item.getInstance(db_, rs.getLong(\""+column.getColumnName()+"\"));\n"+
                 "                if (tempItem!=null && tempItem.item!=null)\n" +
                 "                {\n"+
@@ -870,7 +872,14 @@ public class CreateSchemaFromDb
                 "\n" +
                 "                    this.isFound = true;\n"+
                 "                    item.add"+StringTools.capitalizeString( table.getName() )+"( tempItem.item );\n" +
-                "                }\n"+
+                "                }\n"
+                :
+                "                if (item==null)\n" +
+                "                    item = new " + classNameItem + "();\n" +
+                "\n" +
+                "                this.isFound = true;\n"+
+                "                item.add"+StringTools.capitalizeString( table.getName() )+"( Get"+base+"Item.fillBean(rs) );\n"
+                )+
                 "            }\n";
 
             s += getEndOfClass(className, classNameItem,
