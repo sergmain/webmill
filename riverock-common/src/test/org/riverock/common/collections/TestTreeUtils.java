@@ -1,11 +1,11 @@
 package org.riverock.common.collections;
 
-import junit.framework.TestCase;
-
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
-import org.riverock.common.tools.TestCaseStringTools;
+import org.riverock.interfaces.common.TreeItemInterface;
+
+import junit.framework.TestCase;
 
 /**
  * User: smaslyukov

@@ -48,32 +48,14 @@
     <property name="lib.dir" value="../riverock-lib/lib"/>
 
     <!-- riverock runtime library -->
-<!--    <property name="riverock-common.lib"     value="riverock-common-1.2.1.jar"/>-->
-<!--    <property name="riverock-cache.lib"      value="riverock-cache-1.1.0.jar"/>-->
-<!--    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>-->
-
-
-    <property name="secure.lib" value="bcprov-jdk14-122.jar"/>
-
-<!--    castor.lib used for generate classes
-    castor-current.lib for work of engine
--->
-    <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>
-    <property name="castor-current.lib" value="castor-0.9.4.3-xml.jar"/>
+<!--    <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>-->
+<!--    <property name="castor-current.lib" value="castor-0.9.4.3-xml.jar"/>-->
 
     <property file="../riverock.properties"/>
-
-    <property name="bcel.lib" value="BCEL.jar"/>
-    <property name="hypersonic.lib" value="hsqldb.jar"/>
-    <property name="common-httpclient.lib" value="commons-httpclient-2.0-alpha2.jar"/>
 
     <property name="site.name" value="_localhost"/>
 
     <property name="exclude" value="**/*.txt, **/*.bat, **/*.xml, **/*.sh, **/*.jav, **/*.mf, **/*.class,**/tmp_*.java"/>
-
-    <property name="encode.dir" value="retroguard-v1.1"/>
-    <property name="encoded-jar" value="${encode.dir}/${mill.lib.encoded}"/>
-    <property name="encoded-log" value="${encode.dir}/encode.log"/>
 
     <property name="doc.dir" value="doc"/>
     <property name="src.dir" value="src"/>
@@ -102,6 +84,7 @@
     </path>
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${junit.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
@@ -113,6 +96,7 @@
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${hypersonic.lib}"/>
         <pathelement location="${lib.dir}/${common-httpclient.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${xalan.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
@@ -146,11 +130,14 @@
     <property name="optimize" value="off"/>
     <property name="deprecation" value="on"/>
 
-    <target name="run_tomcat_with_new jar" depends="init">
+    <target name="run_tomcat_with_new jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
 
-        <copy file="${build.dir}\${mill.lib}" todir="C:\opt2\_www\mill\WEB-INF\lib"/>
+        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
+        <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+
         <antcall target="start.apache"/>
     </target>
 
@@ -162,7 +149,6 @@
 
     <target name="jar" depends="jar_without_copy">
         <echo message="start encode jar" level="debug" />
-        <delete file="${encode.dir}\${mill.lib.encoded}"/>
 <!--        <java fork="true" classname="RetroGuard">-->
 <!--            <arg value="${build.dir}\${mill.lib}"/>-->
 <!--            <arg value="${encode.dir}\${mill.lib.encoded}"/>-->
@@ -196,15 +182,12 @@
         <delete dir="${build.dir}/tomcat/" failonerror="false"/>
         <delete dir="${build.dir}/ext/" failonerror="false"/>
         <delete dir="${build.dir}" failonerror="false"/>
-
-        <delete file="${encoded-jar}" failonerror="false"/>
-        <delete file="${encoded-log}" failonerror="false"/>
     </target>
 
     <!-- =================================================================== -->
     <!-- Runs unit tests                                                     -->
     <!-- =================================================================== -->
-    <target name="ut" depends="compile,init">
+    <target name="ut" depends="compile">
       <echo message="Running unit tests "/>
 
       <javac srcdir="${src.java-test.dir}"
@@ -220,7 +203,7 @@
        </javac>
 
        <junit printsummary="yes" haltonfailure="no" haltonerror="no" showoutput="no"
-           dir="${run}" fork="true" >
+           dir="run" fork="true" >
 
           <classpath>
               <path location="${build.tests}"/>
@@ -241,7 +224,7 @@
     </target>
 
 
-    <target name="make_manifest_file" depends="init">
+    <target name="make_manifest_file">
         <echo message="Start make manifest file"/>
     <echo file="${build.dest}/${manifest-file-name}">Manifest-Version: 1.0
 Specification-Title: ${manifest-title-name}
@@ -265,7 +248,7 @@ Sealed: true
         <echo message="Run others tasks"/>
     </target>
 
-    <target name="compile" depends="set_build_number, prepare, init">
+    <target name="compile" depends="set_build_number, prepare">
 
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${build.java}">
@@ -314,7 +297,7 @@ Sealed: true
             manifest="${build.dest}/${manifest-file-name}"/>
     </target>
 
-    <target name="copy-mill-core.xsd" depends="init">
+    <target name="copy-mill-core.xsd">
         <copy file="../mill-core/src/xsd/mill-core.xsd" tofile="src/xsd/mill-core.xsd" filtering="off" overwrite="true"/>
     </target>
 
@@ -327,7 +310,7 @@ Sealed: true
         </delete>
     </target>
 
-    <target name="del_core_files" depends="init">
+    <target name="del_core_files">
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${src.java.dir}/mill/main/core">
                 <include name="**/*.java"/>
@@ -339,38 +322,11 @@ Sealed: true
     <target name="compile_all_schema">
         <antcall target="compile"/>
     </target>
-    <!-- Initialization target                                               -->
-    <target name="init">
 
-<!--
-        <property name="snapshot.dir" value="../www/snapshots"/>
-        <property file="${user.home}/.ant.properties"/>
-        <property file=".argo.ant.properties"/>
-        <property file=".ant.properties"/>
--->
-        <!-- developer.lib.dir is the developer snapshot directory.           -->
-        <!-- If it is not set, it defaults to build.dir, and "build install"  -->
-        <!-- will not do anything.                                            -->
-<!--        <property name="developer.lib.dir" value="${build.dir}"/>-->
-        <!-- developer.bin.dir is the developer snapshot directory.           -->
-        <!-- If it is not set, it defaults to argo.bin.dir, and               -->
-        <!-- "build install"  will not do anything.                           -->
-        <!--
-        <available classname="javax.servlet.Servlet" classpath="${classpath}" property="has.servlet"/>
-        -->
-<!--        <property name="javadoc.use" value="true"/>-->
-        <!-- General javadocs probably should not show private -->
-<!--        <property name="javadoc.private" value="false"/>-->
-<!--        <property name="javadoc.splitindex" value="true"/>-->
-<!--        <property name="javadoc.author" value="false"/>-->
-<!--        <property name="xerces.javadoc.link" value="http://xml.apache.org/xerces-j/apiDocs"/>-->
-<!--        <property name="log4j.javadoc.link" value="e:\opt2\jakarta-log4j-1.2.6/docs/api"/>-->
-<!--        <property name="jdk.javadoc.link" value="http://java.sun.com/products/jdk/1.2/docs/api"/>-->
-    </target>
     <!-- Note this file can only make Ant display values set in the file correctly, -->
     <!-- but external values in the environment or properties file will be operational.  -->
     <!-- Help on usage                                                       -->
-    <target name="usage" depends="init">
+    <target name="usage">
         <echo message=""/>
         <echo message=""/>
         <echo message="${Name} Build file"/>
@@ -390,6 +346,7 @@ Sealed: true
         <echo message=""/>
         <echo message=""/>
     </target>
+
     <!-- Prepares the build directory                                        -->
     <target name="prepare">
         <mkdir dir="${build.dir}"/>
@@ -402,6 +359,7 @@ Sealed: true
         <fail message="servlet library does not appear to be in the classpath."/>
     </target>
     -->
+
     <!-- Compiles the source directory                                       -->
     <!-- <target name="compile" depends="prepare"> -->
     <target name="docs" depends="prepare">
@@ -418,7 +376,6 @@ Sealed: true
             >
             <classpath refid="classpath-base"/>
         </javadoc>
-
     </target>
 
     <target name="restart.apache">
@@ -429,14 +386,14 @@ Sealed: true
     <target name="start.apache">
         <property name="null.prop" value=""/>
         <exec executable="net" outputproperty="null.prop">
-            <arg line=" start 'Apache Tomcat 4.1'"/>
+            <arg line=" start '${tomcat-service-name}'"/>
         </exec>
     </target>
 
     <target name="stop.apache">
         <property name="null.prop" value=""/>
         <exec executable="net" outputproperty="null.prop">
-            <arg line=" stop 'Apache Tomcat 4.1'"/>
+            <arg line=" stop '${tomcat-service-name}'"/>
         </exec>
     </target>
 
