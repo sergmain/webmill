@@ -64,7 +64,7 @@
 
 
 
-package companies.jsmithy.webmill.as;
+package org.riverock.webmill.as;
 
 
 
