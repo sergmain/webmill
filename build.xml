@@ -1,17 +1,67 @@
-1 interfaces
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * org.riverock.webmill - Portal framework implementation
+ *
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<project name="Main build of all riverock modules" default="full_build_module" basedir=".">
 
-2 common
+    <!--
+    1 interfaces
+    2 common
+    3 sql-parser
+    4 cache
+    5 generic
+    6 schema-support
+    7 SSO
+    8 webmill
+    9 portlet
+    -->
 
-3 sql-parser
+    <target name="full_build_module">
+        <ant antfile="riverock-interfaces/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-common/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-sql-parser/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-cache/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-generic/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-schema-support/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-sso/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-webmill/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-portlet/build.xml" target="full_build_module"  inheritall="false" />
+    </target>
 
-4 cache
+    <target name="full_clean">
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-interfaces" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-common" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-sql-parser" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-cache" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-generic" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-schema-support" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-sso" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-webmill" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-portlet" />
+    </target>
 
-5 generic
-
-6 schema-support
-
-7 SSO
-
-8 webmill
-
-9 portlet
+</project>

@@ -109,7 +109,7 @@
             failonerror="true"
             classname="org.riverock.system.CreateSchemaFromDb">
             <arg value="../../../xml/gen-core-schema.xml"/>
-            <arg value="../../../xsd/webmill-schema.xsd"/>
+            <arg value="../../../xml/webmill-schema.xml"/>
             <classpath refid="classpath-v3"/>
         </java>
     </target>
@@ -121,30 +121,20 @@
     </target>
 
     <target name="clean-dynamic-part">
-        <delete dir="${src.java.mill-schema.dir}" failonerror="false" includeemptydirs="true"/>
-        <delete file="${src.xsd.dir}/riverock-portlet-core.xsd" failonerror="false"/>
+        <delete includeEmptyDirs="true" failonerror="false">
+            <fileset dir="${src.java.dir}/org/riverock/portlet/schema">
+                <include name="**/*.java"/>
+                <exclude name="**/CVS/**"/>
+            </fileset>
+        </delete>
+        <delete dir="${src.java.dir}/org" includeemptydirs="true"/>
     </target>
 
     <target name="clean">
-        <delete failonerror="false">
-            <fileset dir="${build.dir}">
-                <include name="**"/>
-                <include name="*.jar"/>
-                <include name="*.tar"/>
-                <include name="*.gz"/>
-            </fileset>
-        </delete>
-        <delete dir="${docs.dir}" failonerror="false"/>
-        <delete dir="${build.dir}/src/" failonerror="false"/>
-        <delete dir="${build.dir}/classes/" failonerror="false"/>
-        <delete dir="${build.dir}/bin/" failonerror="false"/>
-        <delete dir="${build.dir}/tomcat/" failonerror="false"/>
-        <delete dir="${build.dir}/ext/" failonerror="false"/>
-        <delete dir="${build.dir}" failonerror="false"/>
-
+        <antcall target="clean-dynamic-part"/>
     </target>
 
-    <target name="gen-core-schema" depends="prepare">
+    <target name="gen-core-schema">
         <property name="schema-dir" value="${src.java.dir}/org/riverock/portlet/schema/core/"/>
         <property name="schema-file" value="${src.xsd.dir}/riverock-portlet-schema-core.xsd"/>
         <property name="schema-package-java" value="org.riverock.portlet.schema.core"/>
@@ -153,7 +143,6 @@
     </target>
 
     <target name="gen_schema" >
-        <antcall target="clean"/>
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${schema-dir}">
                 <include name="**/*.java"/>
@@ -187,52 +176,4 @@
         </delete>
     </target>
 
-    <!-- Initialization target                                               -->
-    <!-- Note this file can only make Ant display values set in the file correctly, -->
-    <!-- but external values in the environment or properties file will be operational.  -->
-    <!-- Help on usage                                                       -->
-    <target name="usage">
-        <echo message=""/>
-        <echo message=""/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=" available targets are:"/>
-        <echo message=""/>
-        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-        <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-        <echo message="   distclean    --> cleans up the distribution directory, ${dist.dir}"/>
-        <echo message="   usage        --> show this message (default)"/>
-        <echo message=""/>
-        <echo message=" See the comments inside the build.xml file for more details."/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=""/>
-    </target>
-    <!-- Prepares the build directory                                        -->
-    <target name="prepare">
-        <!--
-        <echo message="Preparing the build directories"/>
-        -->
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dest}"/>
-    </target>
-    <!-- Checks for necessary libraries and correct versions of libraries    -->
-    <!-- Compiles the source directory                                       -->
-    <!-- <target name="compile" depends="prepare"> -->
-    <target name="docs" depends="prepare">
-        <echo message="Build javadoc"/>
-        <!-- create directories -->
-        <mkdir dir="${docs.dir}"/>
-        <javadoc
-            sourcepath="${build.src.java}"
-            destdir="${docs.dir}"
-            verbose="true"
-            defaultexcludes="true"
-            packagenames="org/riverock/db/*, org/riverock/tools/*, org/riverock/startup/*"
-            excludepackagenames="org/riverock/price/*"
-            >
-            <classpath refid="classpath-v3"/>
-        </javadoc>
-    </target>
 </project>
