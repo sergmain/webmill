@@ -142,7 +142,9 @@ public class ModuleManager
 
             {
 
-                temp[idx++] = mainMemberFile[i];
+                if (mainMemberFile[i]!= null)
+
+                    temp[idx++] = mainMemberFile[i];
 
             }
 
@@ -156,7 +158,9 @@ public class ModuleManager
 
             {
 
-                temp[idx++] = userMemberFile[i];
+                if (userMemberFile[i]!= null)
+
+                    temp[idx++] = userMemberFile[i];
 
             }
 
@@ -198,7 +202,9 @@ public class ModuleManager
 
             {
 
-                count += mainMemberFile[i].getMemberModuleCount();
+                if (mainMemberFile[i]!=null)
+
+                    count += mainMemberFile[i].getMemberModuleCount();
 
             }
 
@@ -212,7 +218,9 @@ public class ModuleManager
 
             {
 
-                count += userMemberFile[i].getMemberModuleCount();
+                if (userMemberFile[i]!=null)
+
+                    count += userMemberFile[i].getMemberModuleCount();
 
             }
 
@@ -500,6 +508,12 @@ public class ModuleManager
 
         {
 
+            if (mainMemberFile[k]==null)
+
+                continue;
+
+
+
             MemberFile mf = mainMemberFile[k];
 
             ModuleType mod = mf.getModule(moduleName);
@@ -583,6 +597,12 @@ public class ModuleManager
             for (int k=0; k < userMemberFile.length; k++)
 
             {
+
+                if (userMemberFile[k]==null)
+
+                    continue;
+
+
 
                 MemberFile mf = userMemberFile[k];
 
