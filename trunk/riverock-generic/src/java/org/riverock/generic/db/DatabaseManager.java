@@ -48,7 +48,6 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.exception.GenericException;
 
 import org.apache.log4j.Logger;
@@ -879,6 +878,60 @@ public class DatabaseManager
             close( ps );
             ps = null;
         }
+    }
+
+    public static String getBigTextField( DatabaseAdapter db_, Long id_,
+        String field_,
+        String table_,
+        String idx_field_,
+        String order_field_
+        )
+        throws SQLException
+    {
+        if ( id_==null )
+            return "";
+
+        PreparedStatement ps = null;
+        ResultSet rset = null;
+        String sql_ = "select "+field_+" from "+table_+" where "+idx_field_+"= ? order by "+order_field_+" ASC";
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "ID: "+id_ );
+            log.debug( "SQL: "+sql_ );
+        }
+
+        String text = "";
+        try
+        {
+            ps = db_.prepareStatement( sql_ );
+
+            if ( log.isDebugEnabled() )
+                log.debug( "11.03.01" );
+
+            RsetTools.setLong( ps, 1, id_ );
+            rset = ps.executeQuery();
+
+            if ( log.isDebugEnabled() )
+                log.debug( "11.03.01" );
+
+            while ( rset.next() )
+            {
+                if ( log.isDebugEnabled() )
+                    log.debug( "11.03.01 "+text );
+
+                text += RsetTools.getString( rset, field_ );
+
+                if ( log.isDebugEnabled() )
+                    log.debug( "11.03.01" );
+            }
+        } finally
+        {
+            DatabaseManager.close(rset, ps);
+            rset = null;
+            ps = null;
+        }
+        return text;
     }
 
     public static String getRelateString( DbImportedPKColumnType column )
