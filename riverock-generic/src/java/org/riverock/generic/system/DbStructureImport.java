@@ -140,7 +140,7 @@ public class DbStructureImport
 
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "ORACLE_PORT");
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "HSQLDB");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "MYSQL");
 
 
 
@@ -164,7 +164,7 @@ public class DbStructureImport
 
                 File.separatorChar+"data" +
 
-                File.separatorChar+"webmill-def-v2-1.xml";
+                File.separatorChar+"webmill-def-v2.xml";
 
             System.out.println("Unmarshal data from file "+fileName);
 

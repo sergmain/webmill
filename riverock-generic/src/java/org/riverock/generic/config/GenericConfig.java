@@ -270,7 +270,7 @@ public class GenericConfig
 
                     if (log.isDebugEnabled())
 
-                        log.debug("GenericConfig.getTZ() #4 Set TimeZone to "+nameTimeZone);
+                        log.debug("GenericConfig.getTZ(). Set TimeZone to "+nameTimeZone);
 
 
 
@@ -388,19 +388,13 @@ public class GenericConfig
 
                 if (File.separatorChar=='\\')
 
-                {
-
-                    dir.replace( '/', '\\');
-
-                }
+                    dir = dir.replace( '/', '\\');
 
                 else
 
-                {
+                    dir = dir.replace( '\\', '/');
 
-                    dir.replace( '\\', '/');
-
-                }
+                
 
                 if (!dir.endsWith( File.separator ))
 
@@ -484,37 +478,47 @@ public class GenericConfig
 
             String dir = getConfig().getGenericDebugDir();
 
-            if (File.separatorChar=='\\')
+            if (dir==null)
 
-            {
-
-                dir.replace( '/', '\\');
-
-            }
+                dir = System.getProperty("java.io.tmpdir");
 
             else
 
             {
 
-                dir.replace( '\\', '/');
+                if (File.separatorChar=='\\')
 
-            }
+                {
 
-            if (!dir.endsWith( File.separator ))
+                    dir.replace( '/', '\\');
 
-                dir += File.separator;
+                }
+
+                else
+
+                {
+
+                    dir.replace( '\\', '/');
+
+                }
+
+                if (!dir.endsWith( File.separator ))
+
+                    dir += File.separator;
 
 
 
-            File dirTest = new File(dir);
+                File dirTest = new File(dir);
 
-            if ( !dirTest.exists() )
+                if ( !dirTest.exists() )
 
-            {
+                {
 
-                log.warn("Specified debug directory '"+dir+"' not exists. Set to default java input/output temp directory");
+                    log.warn("Specified debug directory '"+dir+"' not exists. Set to default java input/output temp directory");
 
-                dir = System.getProperty("java.io.tmpdir");
+                    dir = System.getProperty("java.io.tmpdir");
+
+                }
 
             }
 

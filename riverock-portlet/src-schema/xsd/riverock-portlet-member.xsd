@@ -25,7 +25,7 @@
  *
  */
 -->
-<xs:schema xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
 	</xs:annotation>
@@ -133,8 +133,9 @@
 			</xs:element>
 			<xs:element name="Table" type="TableType" maxOccurs="unbounded"/>
 			<xs:element name="Where" type="xs:string" minOccurs="0"/>
+			<xs:element name="WhereCompelx" type="SqlWhereType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Order" type="SortOrderType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="sqlCache" type="SqlCacheType" minOccurs="0"/>
+			<xs:element name="SqlCache" type="SqlCacheType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="FieldsType">
@@ -302,13 +303,19 @@
 	<xs:element name="SqlCache" type="SqlCacheType"/>
 	<xs:complexType name="SqlCacheType">
 		<xs:sequence>
-			<xs:element name="Sql" type="xs:string" minOccurs="0"/>
-			<xs:element name="CheckSql" type="xs:string" minOccurs="0"/>
+			<xs:element name="Field" type="SqlCacheFieldType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="CheckParam" type="SqlCheckParameterType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="From" type="SqlFromType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="Where" type="SqlWhereType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Sql" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="isInit" type="xs:boolean"/>
+	</xs:complexType>
+	<xs:complexType name="SqlCacheFieldType">
+		<xs:sequence>
+			<xs:element name="Alias" type="xs:string" minOccurs="0"/>
+			<xs:element name="Name" type="xs:string"/>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="SqlCheckParameterType">
 		<xs:sequence>
@@ -342,6 +349,7 @@
 	</xs:complexType>
 	<xs:complexType name="SqlWhereType">
 		<xs:sequence>
+			<xs:element name="Comment" type="xs:string" minOccurs="0"/>
 			<xs:element name="Left" type="SqlWhereColumnType"/>
 			<xs:element name="Right" type="SqlWhereColumnType"/>
 		</xs:sequence>
@@ -360,6 +368,7 @@
 				</xs:simpleType>
 			</xs:element>
 			<xs:element name="Value" type="xs:string" minOccurs="0"/>
+			<xs:element name="SubQuery" type="SqlCacheType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RelateClassListType">

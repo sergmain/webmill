@@ -486,9 +486,9 @@ public final class RequestStatisticFilter implements Filter
 
 
 
-                                    new GetSiteAccessUserAgentItem().reinit();
+                                    GetSiteAccessUserAgentItem.reinit();
 
-                                    new GetSiteAccessUserAgentFullList().reinit();
+                                    GetSiteAccessUserAgentFullList.reinit();
 
                                     isLoop = true;
 
@@ -640,9 +640,9 @@ public final class RequestStatisticFilter implements Filter
 
                                 {
 
-                                    new GetSiteAccessUrlItem().reinit();
+                                    GetSiteAccessUrlItem.reinit();
 
-                                    new GetSiteAccessUrlFullList().reinit();
+                                    GetSiteAccessUrlFullList.reinit();
 
                                     isLoop = true;
 

@@ -43,7 +43,7 @@
 			<xs:element name="DatabaseCharset" type="xs:string"/>
 			<xs:element name="IsConvertDatabaseString" type="xs:boolean" default="false"/>
 			<xs:element name="IsAutoCommit" type="xs:boolean" default="false"/>
-			<xs:element name="DataSourceType" default="NONE">
+			<xs:element name="DataSourceType" default="NONE" minOccurs="0">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
 						<xs:enumeration value="NONE"/>
@@ -58,8 +58,8 @@
 	</xs:complexType>
 	<xs:complexType name="GenericConfigType">
 		<xs:sequence>
-			<xs:element name="GenericTempDir" type="xs:string" default="\\tmp"/>
-			<xs:element name="GenericDebugDir" type="xs:string" default="c:\\opt1" minOccurs="0"/>
+			<xs:element name="GenericTempDir" type="xs:string" default="\\temp"/>
+			<xs:element name="GenericDebugDir" type="xs:string" minOccurs="0"/>
 			<xs:element name="DTS" type="DateTimeSavingType" minOccurs="0"/>
 			<xs:element name="MailHost" type="xs:string" minOccurs="0"/>
 			<xs:element name="CustomDirs" type="CustomDirsType" minOccurs="0"/>
@@ -69,6 +69,7 @@
 		</xs:sequence>
 		<xs:attribute name="isDebugDirInit" type="xs:boolean" default="false"/>
 		<xs:attribute name="isTempDirInit" type="xs:boolean" default="false"/>
+		<xs:attribute name="isCheckStructure" type="xs:boolean" default="false"/>
 	</xs:complexType>
 	<xs:element name="DateTimeSaving" type="DateTimeSavingType"/>
 	<xs:complexType name="DateTimeSavingType">

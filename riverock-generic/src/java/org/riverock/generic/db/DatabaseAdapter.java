@@ -3292,7 +3292,7 @@ public abstract class DatabaseAdapter
 
             {
 
-                System.out.println("Call for create dynamic object " + connClassName);
+//                System.out.println("Call for create dynamic object " + connClassName);
 
                 log.debug("Call for create dynamic object " + connClassName);
 
@@ -3316,7 +3316,7 @@ public abstract class DatabaseAdapter
 
             {
 
-                System.out.println("Success create dynamic object " + connClassName);
+//                System.out.println("Success create dynamic object " + connClassName);
 
                 log.debug("Success create dynamic object " + connClassName);
 
@@ -3428,7 +3428,7 @@ public abstract class DatabaseAdapter
 
                             {
 
-                                System.out.println("Call for create static object " + connClassName);
+//                                System.out.println("Call for create static object " + connClassName);
 
                                 log.debug("Call for create static object " + connClassName);
 
@@ -3450,7 +3450,7 @@ public abstract class DatabaseAdapter
 
                             {
 
-                                System.out.println("Success create static object " + connClassName);
+//                                System.out.println("Success create static object " + connClassName);
 
                                 log.debug("Success create static object " + connClassName);
 
@@ -3514,7 +3514,11 @@ public abstract class DatabaseAdapter
 
 
 
-            if (_db_!=null && isNeedValidateStructure)
+            if (_db_!=null &&
+
+                isNeedValidateStructure &&
+
+                Boolean.TRUE.equals(dc.getIsConvertDatabaseString()))
 
             {
 
@@ -3682,6 +3686,16 @@ public abstract class DatabaseAdapter
 
 
 
+    public static DatabaseAdapter getInstance()
+
+        throws DatabaseException, ConfigException
+
+    {
+
+        return getInstance(true, GenericConfig.getDefaultConnectionName());
+
+    }
+
     /**
 
      * —оздает новый коннект к базе данных. ≈сли параметер getIsCssDynamic == true, то открываетс€
@@ -3758,7 +3772,7 @@ public abstract class DatabaseAdapter
 
     /**
 
-     * «акрывает существующий коннект к базе данных, если данный коннект €вл€етс€ динамическим.
+     * Close connect to DB. If DatabaseAdapter is not 'dynamic', connection will not be closed
 
      * @param db_ - DatabaseAdapter.  оннект к базе дл€ закрыти€.
 

@@ -94,13 +94,17 @@ import org.apache.log4j.Logger;
 
 
 
+import javax.naming.InitialContext;
+
+import javax.naming.NamingException;
+
+import javax.sql.DataSource;
+
 import java.io.InputStream;
 
 import java.sql.*;
 
-import java.util.Calendar;
-
-import java.util.ArrayList;
+import java.util.*;
 
 
 
@@ -1994,6 +1998,12 @@ DEFERRABLE INITIALLY DEFERRED
 
                             case DataSourceTypeType.DRIVER_TYPE:
 
+                                if (log.isDebugEnabled())
+
+                                    log.debug("Start create connection pooling with driver");
+
+
+
                                 OracleConnectionPoolDataSource pool = new OracleConnectionPoolDataSource();
 
                                 pool.setURL(dc.getConnectString());
@@ -2038,13 +2048,41 @@ DEFERRABLE INITIALLY DEFERRED
 
                             case DataSourceTypeType.JNDI_TYPE:
 
-                                throw new DatabaseException("not implemented");
+                                if (log.isDebugEnabled())
 
-//                                break;
+                                    log.debug("Start create connection pooling with JNDI");
+
+                                try
+
+                                {
+
+                                    InitialContext ic = new InitialContext();
+
+                                    dataSource = (DataSource)ic.lookup("java:comp/env/" + dc.getDataSourceName());
+
+                                }
+
+                                catch (NamingException e)
+
+                                {
+
+                                    log.error("Error get value from JDNI context", e);
+
+                                    throw new DatabaseException( e.toString() );
+
+                                }
+
+
+
+                                break;
 
 
 
                             case DataSourceTypeType.NONE_TYPE:
+
+                                if (log.isDebugEnabled())
+
+                                    log.debug("Start create connection pooling with simple mnaager");
 
                                 Class cl_ = Class.forName("oracle.jdbc.driver.OracleDriver");
 
@@ -2092,9 +2130,9 @@ DEFERRABLE INITIALLY DEFERRED
 
                 case DataSourceTypeType.JNDI_TYPE:
 
-                    throw new DatabaseException("not implemented");
+                    conn = dataSource.getConnection();
 
-//                    break;
+                    break;
 
 
 
@@ -2105,8 +2143,6 @@ DEFERRABLE INITIALLY DEFERRED
                     break;
 
             }
-
-
 
 
 

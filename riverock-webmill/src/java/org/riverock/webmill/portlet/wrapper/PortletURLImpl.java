@@ -64,7 +64,7 @@
 
 
 
-package org.riverock.webmill.portal.impl;
+package org.riverock.webmill.portlet.wrapper;
 
 
 

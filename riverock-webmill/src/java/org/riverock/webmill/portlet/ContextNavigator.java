@@ -556,8 +556,6 @@ public class ContextNavigator extends HttpServlet
 
 
 
-            Boolean isUrlTemp = null;
-
             Map map = null;
 
             PortletType portlet = null;
@@ -638,7 +636,9 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        isUrlTemp = PortletTools.getBooleanParam(portlet, PortletTools.is_url);
+                        Boolean isUrlTempBoolean = null;
+
+                        isUrlTempBoolean = PortletTools.getBooleanParam(portlet, PortletTools.is_url);
 
 
 
@@ -652,7 +652,7 @@ public class ContextNavigator extends HttpServlet
 
                         );
 
-                        if ( Boolean.FALSE.equals(isUrlTemp) )
+                        if ( Boolean.FALSE.equals(isUrlTempBoolean) )
 
                         {
 
@@ -672,7 +672,7 @@ public class ContextNavigator extends HttpServlet
 
                             if ( log.isDebugEnabled() )
 
-                                log.debug( "process dynamic content. include "+portlet.getPortletClass()+", isUrl - "+isUrlTemp );
+                                log.debug( "process dynamic content. include "+portlet.getPortletClass()+", isUrl - "+isUrlTempBoolean );
 
 
 

@@ -254,7 +254,7 @@ public final class StartupServlet extends HttpServlet
 
             Context envCtx = (Context) ctx.lookup("java:/comp/env/");
 
-            System.out.println("list() on /comp/env Context : ");
+            System.out.println("list() on java:/comp/env Context : ");
 
             NamingEnumeration enum = ctx.list("java:/comp/env/");
 
@@ -268,7 +268,7 @@ public final class StartupServlet extends HttpServlet
 
             }
 
-            System.out.println("listBindings() on /comp/env Context : " + "<br>");
+            System.out.println("list Bindings() on java:/comp/env Context : " + "<br>");
 
             enum = ctx.listBindings("java:/comp/env/");
 
@@ -312,7 +312,7 @@ public final class StartupServlet extends HttpServlet
 
             }
 
-            System.out.println("listBindings() on /comp/env Context : " + "<br>");
+            System.out.println("list Bindings() on /comp/env Context : " + "<br>");
 
             enum = ctx.listBindings("bean/");
 
@@ -344,31 +344,29 @@ public final class StartupServlet extends HttpServlet
 
     {
 
-//            System.out.println("1");
-
         String logPath = null;
 
         try
 
         {
 
-//                System.out.println("2");
-
             InitialContext ic = new InitialContext();
-
-//                System.out.println("3");
 
             logPath = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_PATH);
 
-//                System.out.println("4");
+            if (File.separatorChar=='\\')
+
+                logPath = logPath.replace( '/', '\\');
+
+            else
+
+                logPath = logPath.replace( '\\', '/');
+
+
 
             System.setProperty("mill.logging.path", logPath);
 
-//                System.out.println("5");
-
             System.out.println("logPath - " + logPath);
-
-//                System.out.println("isServletEnv - "+isServletEnv);
 
 
 
@@ -397,6 +395,16 @@ public final class StartupServlet extends HttpServlet
             InitialContext ic = new InitialContext();
 
             logConfigFile = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_CONFIG_FILE); // mill/LogConfigFile");
+
+            if (File.separatorChar=='\\')
+
+                logConfigFile = logConfigFile.replace( '/', '\\');
+
+            else
+
+                logConfigFile = logConfigFile.replace( '\\', '/');
+
+
 
             System.out.println("millLogConfigFile - " + logConfigFile);
 
@@ -504,7 +512,13 @@ public final class StartupServlet extends HttpServlet
 
 
 
-        cat.info("servletConfig - " + config.getServletContext());
+        cat.info("getServletContextName - " + config.getServletContext().getServletContextName());
+
+        System.out.println("info getServletContextName - " + config.getServletContext().getServletContextName());
+
+
+
+        cat.info("servletConfig - " + config.getServletContext().getServletContextName());
 
         System.out.println("info servletConfig - " + config.getServletContext());
 
@@ -640,6 +654,10 @@ public final class StartupServlet extends HttpServlet
 
 
 
+        // Todo investigate how work context.getResource
+
+/*
+
         try
 
         {
@@ -664,11 +682,11 @@ public final class StartupServlet extends HttpServlet
 
         {
 
-            System.out.println("Error get URL" + e.toString());
+            System.out.println("Error get URL " + e.toString());
 
         }
 
-
+*/
 
 
 

@@ -82,7 +82,7 @@ public class SiteListSite
 
 {
 
-    private static Logger log = Logger.getLogger("org.riverock.webmill.site.SiteListSite");
+    private static Logger log = Logger.getLogger(SiteListSite.class);
 
 
 

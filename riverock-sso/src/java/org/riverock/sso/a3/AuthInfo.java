@@ -354,6 +354,8 @@ public class AuthInfo
 
         {
 
+            log.error("AuthInfo.getInstance() exception", e);
+
             throw new AuthException(e.toString());
 
         }

@@ -54,7 +54,7 @@
 
  */
 
-package org.riverock.tools;
+package org.riverock.webmill.tools;
 
 
 
@@ -73,10 +73,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 public class Client
 
 {
-
-//    private static Logger cat = Logger.getLogger( "org.riverock.tools.Client"   );
-
-
 
     public static String make_list_prn(
 

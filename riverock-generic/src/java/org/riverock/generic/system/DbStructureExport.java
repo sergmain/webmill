@@ -140,9 +140,11 @@ public class DbStructureExport
 
 
 
-//        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE_PORT");
+        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE_CNT");
 
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
+//        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
+
+//        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "MYSQL");
 
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE-DART");
 

@@ -302,7 +302,13 @@ public class MYSQLconnect extends DatabaseAdapter
 
                 case Types.DECIMAL:
 
-                    sql += " DECIMAL";
+                    if (field.getDecimalDigit().intValue()==0)
+
+                        sql += " DECIMAL";
+
+                    else
+
+                        sql += " DECIMAL("+field.getSize()+","+field.getDecimalDigit()+")";
 
                     break;
 
@@ -319,6 +325,14 @@ public class MYSQLconnect extends DatabaseAdapter
                 case Types.DOUBLE:
 
                     sql += " DOUBLE";
+
+                    if (field.getDecimalDigit().intValue()==0)
+
+                        sql += " DOUBLE";
+
+                    else
+
+                        sql += " DOUBLE("+field.getSize()+","+field.getDecimalDigit()+")";
 
                     break;
 
@@ -1093,62 +1107,6 @@ public class MYSQLconnect extends DatabaseAdapter
         }
 
 */
-
-
-
-    public long getSequenceNextValue(String s)
-
-            throws SQLException
-
-    {
-
-        long id_ = -1;
-
-
-
-        String sql_ =
-
-                "select " + s.trim() + ".nextval from dual";
-
-        PreparedStatement ps = null;
-
-        ResultSet rs = null;
-
-        try
-
-        {
-
-            ps = this.conn.prepareStatement(sql_);
-
-
-
-            rs = ps.executeQuery();
-
-
-
-            if (rs.next())
-
-                id_ = rs.getLong(1);
-
-        }
-
-        finally
-
-        {
-
-            org.riverock.generic.db.DatabaseManager.close(rs, ps);
-
-            rs = null;
-
-            ps = null;
-
-        }
-
-
-
-        return id_;
-
-    }
 
 
 
