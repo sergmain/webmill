@@ -96,7 +96,7 @@ public class TemplateClassQuery extends BaseClassQuery
 
 {
 
-    private static Logger cat = Logger.getLogger( "org.riverock.member.TemplateClassQuery" );
+    private static Logger cat = Logger.getLogger( "org.riverock.portlet.member.TemplateClassQuery" );
 
 
 
@@ -118,7 +118,7 @@ public class TemplateClassQuery extends BaseClassQuery
 
         if (cat.isDebugEnabled())
 
-            cat.debug("idSiteCtxLangCatalog - "+idSiteCtxLangCatalog.longValue());
+            cat.debug("idSiteCtxLangCatalog - "+idSiteCtxLangCatalog);
 
     }
 
@@ -134,7 +134,7 @@ public class TemplateClassQuery extends BaseClassQuery
 
         if (cat.isDebugEnabled())
 
-            cat.debug("idSiteTemplate - "+idSiteTemplate.longValue());
+            cat.debug("idSiteTemplate - "+idSiteTemplate);
 
     }
 

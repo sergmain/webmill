@@ -120,7 +120,7 @@ public class CurrencyCurrentCursClassQuery extends BaseClassQuery
 
         if (cat.isDebugEnabled())
 
-            cat.debug("idCurrency - "+idCurrency.longValue());
+            cat.debug("idCurrency - "+idCurrency);
 
     }
 
