@@ -36,33 +36,33 @@
 	<xs:element name="JobItemSimple" type="JobItemType"/>
 	<xs:complexType name="JobItemType">
 		<xs:sequence>
-			<xs:element name="TextJob" type="xs:string"/>
+			<xs:element name="TextJob" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="url" type="xs:string" use="optional"/>
-		<xs:attribute name="datePost" type="xs:string" use="required"/>
-		<xs:attribute name="dateEnd" type="xs:string" use="required"/>
-		<xs:attribute name="jobName" type="xs:string" use="required"/>
-		<xs:attribute name="ageFrom" type="xs:int" use="required"/>
-		<xs:attribute name="ageTill" type="xs:int" use="required"/>
-		<xs:attribute name="gender" type="xs:string" use="required"/>
-		<xs:attribute name="education" type="xs:string" use="required"/>
-		<xs:attribute name="salary" type="xs:string" use="required"/>
-		<xs:attribute name="city" type="xs:string" use="required"/>
-		<xs:attribute name="testPeriod" type="xs:string" use="required"/>
-		<xs:attribute name="contactPerson" type="xs:string" use="required"/>
-		<xs:attribute name="datePostString" type="xs:string" use="required"/>
-		<xs:attribute name="dateEndString" type="xs:string" use="required"/>
+		<xs:attribute name="datePost" type="xs:string" use="optional"/>
+		<xs:attribute name="dateEnd" type="xs:string" use="optional"/>
+		<xs:attribute name="jobName" type="xs:string" use="optional"/>
+		<xs:attribute name="ageFrom" type="xs:int" use="optional"/>
+		<xs:attribute name="ageTill" type="xs:int" use="optional"/>
+		<xs:attribute name="gender" type="xs:string" use="optional"/>
+		<xs:attribute name="education" type="xs:string" use="optional"/>
+		<xs:attribute name="salary" type="xs:string" use="optional"/>
+		<xs:attribute name="city" type="xs:string" use="optional"/>
+		<xs:attribute name="testPeriod" type="xs:string" use="optional"/>
+		<xs:attribute name="contactPerson" type="xs:string" use="optional"/>
+		<xs:attribute name="datePostString" type="xs:string" use="optional"/>
+		<xs:attribute name="dateEndString" type="xs:string" use="optional"/>
 		<xs:attribute name="jobNameString" type="xs:string" use="required"/>
-		<xs:attribute name="ageString" type="xs:string" use="required"/>
-		<xs:attribute name="ageFromString" type="xs:string" use="required"/>
-		<xs:attribute name="ageTillString" type="xs:string" use="required"/>
-		<xs:attribute name="genderString" type="xs:string" use="required"/>
-		<xs:attribute name="educationString" type="xs:string" use="required"/>
-		<xs:attribute name="salaryString" type="xs:string" use="required"/>
-		<xs:attribute name="cityString" type="xs:string" use="required"/>
-		<xs:attribute name="testPeriodString" type="xs:string" use="required"/>
-		<xs:attribute name="contactPersonString" type="xs:string" use="required"/>
-		<xs:attribute name="textJobString" type="xs:string" use="required"/>
+		<xs:attribute name="ageString" type="xs:string" use="optional"/>
+		<xs:attribute name="ageFromString" type="xs:string" use="optional"/>
+		<xs:attribute name="ageTillString" type="xs:string" use="optional"/>
+		<xs:attribute name="genderString" type="xs:string" use="optional"/>
+		<xs:attribute name="educationString" type="xs:string" use="optional"/>
+		<xs:attribute name="salaryString" type="xs:string" use="optional"/>
+		<xs:attribute name="cityString" type="xs:string" use="optional"/>
+		<xs:attribute name="testPeriodString" type="xs:string" use="optional"/>
+		<xs:attribute name="contactPersonString" type="xs:string" use="optional"/>
+		<xs:attribute name="textJobString" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:complexType name="JobBlockType">
 		<xs:sequence>
