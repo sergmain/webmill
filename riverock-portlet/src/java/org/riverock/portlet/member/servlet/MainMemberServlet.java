@@ -312,11 +312,7 @@ public class MainMemberServlet extends HttpServlet
 
                     {
 
-                        if (log.isDebugEnabled())
-
-                            log.debug("RequestDispatcher is null");
-
-
+                        log.error("RequestDispatcher is null");
 
                         out.write("Error get dispatcher for path " + fullUrl);
 

@@ -98,6 +98,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
 
+import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 
 import org.riverock.portlet.tools.HtmlTools;
@@ -198,11 +200,23 @@ public class RightIndex extends HttpServlet
 
 
 
-//            InitPage jspPage = new InitPage(db_, request,
+            // Todo. After implement this portlet as 'real' portlet, not servlet,
 
-//                                            "mill.locale.AUTH_RELATE_RIGHT_ARM"
+            // remove following code, and switch to 'ctxInstance.sCustom' field
 
-//            );
+            // start from
+
+            StringManager sCustom = null;
+
+            String nameLocaleBundle = null;
+
+            nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
+
+            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
+
+                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+
+            // end
 
 
 
@@ -286,7 +300,7 @@ public class RightIndex extends HttpServlet
 
                 out.write("<b>");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.title"));
+                out.write(sCustom.getStr("index.jsp.title"));
 
                 out.write("</b>\r\n");
 
@@ -318,61 +332,61 @@ public class RightIndex extends HttpServlet
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.id_access_group"));
+                out.write(sCustom.getStr("index.jsp.id_access_group"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.id_object_arm"));
+                out.write(sCustom.getStr("index.jsp.id_object_arm"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_s"));
+                out.write(sCustom.getStr("index.jsp.code_right_s"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_u"));
+                out.write(sCustom.getStr("index.jsp.code_right_u"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_i"));
+                out.write(sCustom.getStr("index.jsp.code_right_i"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_d"));
+                out.write(sCustom.getStr("index.jsp.code_right_d"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.code_right_a"));
+                out.write(sCustom.getStr("index.jsp.code_right_a"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.is_road"));
+                out.write(sCustom.getStr("index.jsp.is_road"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.is_service"));
+                out.write(sCustom.getStr("index.jsp.is_service"));
 
                 out.write("</th>\r\n");
 
                 out.write("<th class=\"memberArea\" width=\"5%\">");
 
-                out.write(ctxInstance.sCustom.getStr("index.jsp.is_firm"));
+                out.write(sCustom.getStr("index.jsp.is_firm"));
 
                 out.write("</th>\r\n        ");
 
@@ -386,7 +400,7 @@ public class RightIndex extends HttpServlet
 
                     out.write("<th class=\"memberArea\">");
 
-                    out.write(ctxInstance.sCustom.getStr("index.jsp.action"));
+                    out.write(sCustom.getStr("index.jsp.action"));
 
                     out.write("</th>\r\n            ");
 

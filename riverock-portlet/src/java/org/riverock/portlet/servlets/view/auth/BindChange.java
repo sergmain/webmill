@@ -90,6 +90,8 @@ import org.riverock.common.tools.ExceptionTools;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
+import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 
 import org.riverock.portlet.tools.HtmlTools;
@@ -200,11 +202,25 @@ public class BindChange extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance(false);
 
-//            InitPage jspPage = new InitPage(db_, request,
 
-//                                            "mill.locale.AUTH_USER"
 
-//            );
+            // Todo. After implement this portlet as 'real' portlet, not servlet,
+
+            // remove following code, and switch to 'ctxInstance.sCustom' field
+
+            // start from
+
+            StringManager sCustom = null;
+
+            String nameLocaleBundle = null;
+
+            nameLocaleBundle = "mill.locale.AUTH_USER";
+
+            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
+
+                sCustom = StringManager.getManager(nameLocaleBundle, ctxInstance.getPortletRequest().getLocale());
+
+            // end
 
 
 
@@ -284,7 +300,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"20%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.fio"));
+                out.write(sCustom.getStr("ch_bind.jsp.fio"));
 
                 out.write("</td>\r\n");
 
@@ -302,7 +318,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.user_login"));
+                out.write(sCustom.getStr("ch_bind.jsp.user_login"));
 
                 out.write("</td>\r\n");
 
@@ -322,7 +338,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.user_password"));
+                out.write(sCustom.getStr("ch_bind.jsp.user_password"));
 
                 out.write("</td>\r\n");
 
@@ -342,7 +358,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.user_password_check"));
+                out.write(sCustom.getStr("ch_bind.jsp.user_password_check"));
 
                 out.write("</td>\r\n");
 
@@ -362,7 +378,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.is_use_current_firm"));
+                out.write(sCustom.getStr("ch_bind.jsp.is_use_current_firm"));
 
                 out.write("</td>\r\n");
 
@@ -380,7 +396,7 @@ public class BindChange extends HttpServlet
 
                 out.write("<td align=\"right\" width=\"20%\" class=\"par\">");
 
-                out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.list_firm"));
+                out.write(sCustom.getStr("ch_bind.jsp.list_firm"));
 
                 out.write("</td>\r\n");
 
@@ -422,7 +438,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.is_service"));
+                    out.write(sCustom.getStr("ch_bind.jsp.is_service"));
 
                     out.write("</td>\r\n");
 
@@ -440,7 +456,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.id_service"));
+                    out.write(sCustom.getStr("ch_bind.jsp.id_service"));
 
                     out.write("</td>\r\n");
 
@@ -488,7 +504,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.is_road"));
+                    out.write(sCustom.getStr("ch_bind.jsp.is_road"));
 
                     out.write("</td>\r\n");
 
@@ -506,7 +522,7 @@ public class BindChange extends HttpServlet
 
                     out.write("<td align=\"right\" class=\"par\">");
 
-                    out.write(ctxInstance.sCustom.getStr("ch_bind.jsp.id_road"));
+                    out.write(sCustom.getStr("ch_bind.jsp.id_road"));
 
                     out.write("</td>\r\n");
 

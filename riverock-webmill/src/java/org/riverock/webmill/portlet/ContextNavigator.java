@@ -560,6 +560,8 @@ public class ContextNavigator extends HttpServlet
 
             Map map = null;
 
+            PortletType portlet = null;
+
             try
 
             {
@@ -578,7 +580,11 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        ctxInstance.setParameters(new HashMap(), null);
+                        portlet = PortletManager.getPortletDescription( ctxInstance.getDefaultPortletType() );
+
+                        ctxInstance.setParameters(
+
+                            new HashMap(), PortletTools.getStringParam(portlet, PortletTools.locale_name_package));
 
                         data = processPortlet( item, ctxInstance, item.getValue(), portalRequestInstance);
 
@@ -610,7 +616,7 @@ public class ContextNavigator extends HttpServlet
 
 
 
-                        PortletType portlet = PortletManager.getPortletDescription( ctxInstance.getDefaultPortletType() );
+                        portlet = PortletManager.getPortletDescription( ctxInstance.getDefaultPortletType() );
 
                         if ( portlet==null )
 
@@ -1874,7 +1880,7 @@ public class ContextNavigator extends HttpServlet
 
                     String errorString = "Error init ContextData<br>"+
 
-                        ExceptionTools.getStackTrace( e, 30, "<BR>" );
+                        ExceptionTools.getStackTrace( e, 100, "<BR>" );
 
                     portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
 

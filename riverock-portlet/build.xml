@@ -302,7 +302,9 @@
 
 
 
-        <copy file="${build.dir}\${mill.lib}" todir="C:\opt2\_www\mill\WEB-INF\lib"/>
+        <copy file="${build.dir}/${mill.lib}" todir="C:\opt2\_www\mill\WEB-INF\lib"/>
+
+        <copy file="${webinf.jsp.dir}/mill/portlet/portlet.xml" todir="C:\opt2\_www\mill\WEB-INF/mill/portlet"/>
 
         <antcall target="start.apache"/>
 

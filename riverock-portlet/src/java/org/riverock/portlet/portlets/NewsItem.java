@@ -80,6 +80,8 @@ import org.riverock.generic.utils.DateUtils;
 
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 
+import org.riverock.cache.impl.CacheException;
+
 
 
 import org.apache.log4j.Logger;
@@ -105,6 +107,26 @@ public class NewsItem
     public NewsItem()
 
     {
+
+    }
+
+
+
+    public void reinit()
+
+    {
+
+        cache.reinit();
+
+    }
+
+
+
+    public void terminate(Long id) throws CacheException
+
+    {
+
+        cache.terminate(id);
 
     }
 

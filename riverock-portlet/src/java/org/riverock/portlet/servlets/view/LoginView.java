@@ -56,6 +56,8 @@ import java.io.IOException;
 
 import java.io.Writer;
 
+import java.util.Locale;
+
 
 
 import javax.servlet.ServletException;
@@ -86,6 +88,8 @@ import org.riverock.webmill.portlet.CtxInstance;
 
 import org.riverock.webmill.portlet.PortletTools;
 
+import org.riverock.generic.tools.StringManager;
+
 
 
 /**
@@ -106,7 +110,7 @@ public class LoginView extends HttpServlet
 
 {
 
-    private static Logger cat = Logger.getLogger("org.riverock.servlets.view.LoginView");
+    private static Logger log = Logger.getLogger("org.riverock.servlets.view.LoginView");
 
 
 
@@ -124,9 +128,9 @@ public class LoginView extends HttpServlet
 
     {
 
-        if (cat.isDebugEnabled())
+        if (log.isDebugEnabled())
 
-            cat.debug("method is POST");
+            log.debug("method is POST");
 
 
 
@@ -164,49 +168,77 @@ public class LoginView extends HttpServlet
 
 
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
-                cat.debug("Process input auth data");
-
-
-
-            AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+                log.debug("Process input auth data");
 
 
 
-            if (auth_ == null)
+            StringManager sCustom = null;
+
+            if (ctxInstance!=null)
 
             {
 
-                auth_ = new AuthSession(
+                AuthSession auth_ = (AuthSession)ctxInstance.getPortletRequest().getUserPrincipal();
+
+
+
+                if (auth_ == null)
+
+                {
+
+                    auth_ = new AuthSession(
 
                         ctxInstance.getPortletRequest().getParameter(Constants.NAME_USERNAME_PARAM),
 
                         ctxInstance.getPortletRequest().getParameter(Constants.NAME_PASSWORD_PARAM)
 
-                );
+                    );
+
+                }
+
+
+
+                if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
+
+                {
+
+                    if (log.isDebugEnabled())
+
+                        log.debug("user " + auth_.getUserLogin() + "is  valid for " + ctxInstance.getPortletRequest().getServerName() + " site");
+
+
+
+                    return;
+
+                }
+
+                sCustom = ctxInstance.sCustom;
 
             }
 
 
 
-            if (auth_.checkAccess( ctxInstance.getPortletRequest().getServerName()))
+            if (sCustom==null)
 
             {
 
-                if (cat.isDebugEnabled())
+                String nameLocaleBundle = null;
 
-                    cat.debug("user " + auth_.getUserLogin() + "is  valid for " + ctxInstance.getPortletRequest().getServerName() + " site");
+                nameLocaleBundle = "mill.locale.auth";
 
+                if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
 
+                    sCustom = StringManager.getManager(nameLocaleBundle, Locale.ENGLISH);
 
-                return;
+                // end
 
             }
 
 
 
-            out.write( "<form method = \"POST\" action = \"" + ctxInstance.ctx() + "\" >");
+            out.write( "<form method = \"POST\" action = \"" + CtxInstance.ctx() + "\" >");
 
 
 
@@ -248,9 +280,9 @@ public class LoginView extends HttpServlet
 
 
 
-            if (cat.isDebugEnabled())
+            if (log.isDebugEnabled())
 
-                cat.debug("Header string - " + ctxInstance.sCustom.getStr("auth.check.header"));
+                log.debug("Header string - " + ctxInstance.sCustom.getStr("auth.check.header"));
 
 
 
@@ -258,15 +290,15 @@ public class LoginView extends HttpServlet
 
             out.write("<table border = \"1\" cellspacing = \"0\" cellpadding = \"2\" align = \"center\" width = \"100%\">"+
 
-                    "<tr><th class=\"formworks\">"+ ctxInstance.sCustom.getStr("auth.check.header") + "</th></tr>" +
+                    "<tr><th class=\"formworks\">"+ sCustom.getStr("auth.check.header") + "</th></tr>" +
 
-                    "<tr><td class=\"formworks\"><input type = \"text\" name = \""+ Constants.NAME_USERNAME_PARAM + "\">&nbsp;"+ ctxInstance.sCustom.getStr("auth.check.login") + "&nbsp;</td></tr>"+
+                    "<tr><td class=\"formworks\"><input type = \"text\" name = \""+ Constants.NAME_USERNAME_PARAM + "\">&nbsp;"+ sCustom.getStr("auth.check.login") + "&nbsp;</td></tr>"+
 
-                    "<tr><td class=\"formworks\"><input type = \"password\" name=\""+ Constants.NAME_PASSWORD_PARAM +"\" value = \"\" >&nbsp;"+ ctxInstance.sCustom.getStr("auth.check.password") +"</td></tr>"+
+                    "<tr><td class=\"formworks\"><input type = \"password\" name=\""+ Constants.NAME_PASSWORD_PARAM +"\" value = \"\" >&nbsp;"+ sCustom.getStr("auth.check.password") +"</td></tr>"+
 
                     "<tr><td class=\"formworks\" align=\"center\"><input type=\"submit\" name=\"button\" value=\""+
 
-                    ctxInstance.sCustom.getStr("auth.check.register") +"\"></td></tr>"+
+                    sCustom.getStr("auth.check.register") +"\"></td></tr>"+
 
             "</table>"+
 
@@ -278,7 +310,7 @@ public class LoginView extends HttpServlet
 
         {
 
-            cat.error(e);
+            log.error("Exception in LoginView", e);
 
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
 

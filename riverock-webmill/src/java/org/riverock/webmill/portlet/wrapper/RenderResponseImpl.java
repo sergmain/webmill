@@ -62,7 +62,7 @@
 
  */
 
-package org.riverock.webmill.portlet.wrapper;
+package org.riverock.webmill.portal.impl;
 
 
 
@@ -90,7 +90,7 @@ import org.riverock.webmill.portlet.CtxInstance;
 
 
 
-public class RenderResponseWrapper implements RenderResponse
+public class RenderResponseImpl implements RenderResponse
 
 {
 
@@ -100,11 +100,11 @@ public class RenderResponseWrapper implements RenderResponse
 
 
 
-    public RenderResponseWrapper(){}
+    public RenderResponseImpl(){}
 
 
 
-    public RenderResponseWrapper(HttpServletResponse response)
+    public RenderResponseImpl(HttpServletResponse response)
 
     {
 

@@ -100,7 +100,19 @@ public class NewsGroup
 
     {
 
+        newsGroup = null;
+
         super.finalize();
+
+    }
+
+
+
+    public void reinit()
+
+    {
+
+        cache.reinit();
 
     }
 
