@@ -23,11 +23,6 @@
  *
  */
 
-/**
- *
- *  $Id$
- */
-
 package org.riverock.sso.a3;
 
 import java.sql.PreparedStatement;
@@ -40,23 +35,26 @@ import org.riverock.common.tools.RsetTools;
 
 import org.apache.log4j.Logger;
 
-public class AuthInfo
-{
+/**
+ *
+ *  $Id$
+ */
+public class AuthInfo {
     private static Logger log = Logger.getLogger(AuthInfo.class);
 
-    public Long authUserID;
-    public Long userID;
-    public Long firmID;
-    public Long serviceID;
-    public Long roadID;
+    private Long authUserID;
+    private Long userID;
+    private Long firmID;
+    private Long serviceID;
+    private Long roadID;
 
-    public String userLogin = "";
-    public String userPassword = "";
+    private String userLogin = "";
+    private String userPassword = "";
 
-    public int isUseCurrentFirm = 0;
-    public int isService = 0;
-    public int isRoad = 0;
-    public int isRoot = 0;
+    private int isUseCurrentFirm = 0;
+    private int isService = 0;
+    private int isRoad = 0;
+    private int isRoot = 0;
 
     protected void finalize() throws Throwable
     {
@@ -68,27 +66,19 @@ public class AuthInfo
 
     public AuthInfo(){}
 
-    private void set(ResultSet rs)
-        throws SQLException
-    {
+    private void set(ResultSet rs) throws SQLException {
         authUserID = RsetTools.getLong(rs, "ID_AUTH_USER");
         userID = RsetTools.getLong(rs, "ID_USER");
         firmID = RsetTools.getLong(rs, "ID_FIRM");
         serviceID = RsetTools.getLong(rs, "ID_SERVICE");
         roadID = RsetTools.getLong(rs, "ID_ROAD");
-
         userLogin = RsetTools.getString(rs, "USER_LOGIN");
-
         userPassword = RsetTools.getString(rs, "USER_PASSWORD");
 
         int isUseCurrentFirmTemp = RsetTools.getInt(rs, "IS_USE_CURRENT_FIRM", new Integer(0)).intValue();
         int isServiceTemp = RsetTools.getInt(rs, "IS_SERVICE", new Integer(0)).intValue();
         int isRoadTemp = RsetTools.getInt(rs, "IS_ROAD", new Integer(0)).intValue();
         int isRootTemp = RsetTools.getInt(rs, "IS_ROOT", new Integer(0)).intValue();
-
-//        decode(IS_USE_CURRENT_FIRM+is_service+is_road+is_root,0,0,1) IS_USE_CURRENT_FIRM,
-//        decode(is_service+is_road+is_root,0,0,1) IS_SERVICE,
-//        decode(is_road+is_root,0,0,1) IS_ROAD,
 
         isUseCurrentFirm = ((isUseCurrentFirmTemp+isServiceTemp+isRoadTemp+isRootTemp)>0?1:0);
         isService = ((isServiceTemp+isRoadTemp+isRootTemp)>0?1:0);
@@ -140,15 +130,8 @@ public class AuthInfo
         ResultSet rs = null;
         AuthInfo auth_ = null;
         try{
-
-
-//            AuthUserItemType auth = GetAuthUserItem.getInstance(db_, id_auth_user).item;
-
-            ps = db_.prepareStatement(
-                "select * FROM AUTH_USER where ID_AUTH_USER=?");
-
+            ps = db_.prepareStatement( "select * FROM AUTH_USER where ID_AUTH_USER=?" );
             RsetTools.setLong(ps, 1, id_auth_user);
-
             rs = ps.executeQuery();
             if (rs.next()){
                 auth_ = new AuthInfo();
@@ -168,5 +151,48 @@ public class AuthInfo
         return auth_;
     }
 
+    public Long getAuthUserID() {
+        return authUserID;
+    }
+
+    public Long getUserID() {
+        return userID;
+    }
+
+    public Long getFirmID() {
+        return firmID;
+    }
+
+    public Long getServiceID() {
+        return serviceID;
+    }
+
+    public Long getRoadID() {
+        return roadID;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public int getUseCurrentFirm() {
+        return isUseCurrentFirm;
+    }
+
+    public int getService() {
+        return isService;
+    }
+
+    public int getRoad() {
+        return isRoad;
+    }
+
+    public int getRoot() {
+        return isRoot;
+    }
 }
 

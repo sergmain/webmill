@@ -23,9 +23,6 @@
  *
  */
 
-/**
- * $Id$
- */
 package org.riverock.sso.a3;
 
 import java.util.List;
@@ -38,23 +35,26 @@ import org.riverock.sso.schema.config.AuthType;
 import org.riverock.sso.schema.config.AuthProviderType;
 import org.riverock.sso.config.SsoConfig;
 import org.riverock.common.tools.MainTools;
+import org.riverock.common.tools.StringTools;
 
 import org.apache.log4j.Logger;
 
-public class AuthSession extends AuthSessionType implements Serializable, Principal
-{
-    private static Logger log = Logger.getLogger(AuthSession.class);
+/**
+ * $Id$
+ */
+public final class AuthSession extends AuthSessionType implements Serializable, Principal {
+    private final static Logger log = Logger.getLogger(AuthSession.class);
 
-    private static List authProviderList = null;
-    private AuthProviderInterface activeProvider = null;
-    private boolean isAccessChecked = false;
-    private boolean isAccessDenied = true;
+    private transient static List authProviderList = null;
+    private transient AuthProviderInterface activeProvider = null;
+    private transient boolean isAccessChecked = false;
+    private transient boolean isAccessDenied = true;
 
-    private static Object syncObj = new Object();
-    public static List getAuthProviderList() throws AuthException{
+    private transient static Object syncObj = new Object();
+    public static List getAuthProviderList() throws AuthException {
         if (authProviderList==null){
             synchronized(syncObj){
-                if (authProviderList==null){
+                if (authProviderList==null) {
                     AuthType auth = null;
                     try{
                         auth = SsoConfig.getAuth();
@@ -103,46 +103,46 @@ public class AuthSession extends AuthSessionType implements Serializable, Princi
         super.finalize();
     }
 
-    public AuthSession()
-    {
+    public AuthSession() {
     }
 
-    public AuthSession(String l_, String p_)
-    {
+    public AuthSession( final String l_, final String p_ ) {
         setUserLogin(l_);
         setUserPassword(p_);
-        if (log.isDebugEnabled())
-        {
-            log.debug("userLogin param " + l_);
-            log.debug("userLogin object " + p_);
+        if (log.isDebugEnabled()) {
+            log.debug("userLogin: " + (l_!=null? (l_.toString()+", class: "+l_.getClass().getName()) :"null") );
+            log.debug("userPassword: " + (p_!=null? (p_.toString()+", class: "+p_.getClass().getName()) :"null") );
         }
     }
 
-    public boolean checkAccess( String serverName)
-        throws AuthException
-    {
+    public boolean checkAccess( final String serverName )
+        throws AuthException {
+
         isAccessChecked = true;
         isAccessDenied = true;
-        if ( getUserLogin()==null || getUserLogin().trim().length()==0 || getUserPassword()==null )
+        if ( StringTools.isEmpty(getUserLogin()) || StringTools.isEmpty(getUserPassword()) ) {
             return false;
+        }
 
         boolean status = false;
-        for (int i=0; i<getAuthProviderList().size(); i++)
-        {
+        for (int i=0; i<getAuthProviderList().size(); i++) {
             AuthProviderInterface provider = (AuthProviderInterface)getAuthProviderList().get(i);
             if (log.isInfoEnabled())
                 log.info("Check role with provider named '"+provider+"'");
 
-            status = provider.checkAccess( this, serverName );
-            if (status)
-            {
+            try {
+                status = provider.checkAccess( this, serverName );
+            }
+            catch( AuthException e ) {
+                log.error( "Check with provider "+provider.getClass().getName()+" failed. ", e );
+            }
+            if (status) {
                 activeProvider = provider;
                 break;
             }
         }
 
-        if (status)
-        {
+        if (status) {
             activeProvider.initUserInfo( this );
         }
 
@@ -150,17 +150,13 @@ public class AuthSession extends AuthSessionType implements Serializable, Princi
         return status;
     }
 
-    public boolean isUserInRole(String roleName)
-        throws AuthException
-    {
-        if (activeProvider==null)
-        {
+    public boolean isUserInRole( final String roleName ) throws AuthException {
+        if (activeProvider==null) {
             log.warn("Access denied by all enabled auth providers");
             return false;
         }
 
-        if (!isAccessChecked)
-        {
+        if (!isAccessChecked) {
             log.warn("Access denied. Firstly check grant to access this site");
             return false;
         }
@@ -171,8 +167,7 @@ public class AuthSession extends AuthSessionType implements Serializable, Princi
         return activeProvider.isUserInRole( this, roleName );
     }
 
-    public String getName()
-    {
+    public String getName() {
         if (this.getUserInfo()==null)
             return null;
 
