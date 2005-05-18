@@ -41,6 +41,7 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
 import org.riverock.generic.exception.GenericException;
+import org.riverock.generic.exception.DatabaseException;
 
 import org.apache.log4j.Logger;
 
@@ -492,7 +493,19 @@ public final class DatabaseManager {
         DatabaseMetaData db = db_.getConnection().getMetaData();
         String dbSchema = db.getUserName();
 
-        schema.setTables( db_.getTableList( dbSchema, "%"));
+        ArrayList list = db_.getTableList( dbSchema, "%");
+        final int initialCapacity = list.size();
+        ArrayList target = new ArrayList(initialCapacity);
+        for (int i = 0; i < initialCapacity; i++) {
+            DbTableType table = (DbTableType)list.get(i);
+            if ( table.getName().startsWith("BIN$") ) {
+                continue;
+            }
+            target.add( table );
+        }
+        schema.setTables( target );
+
+
         ArrayList viewVector = db_.getViewList( dbSchema, "%");
         if (viewVector!=null)
             schema.setViews( viewVector );
@@ -852,7 +865,7 @@ public final class DatabaseManager {
         final String idx_field_,
         final String order_field_
         )
-        throws SQLException
+        throws SQLException, DatabaseException
     {
         if ( id_==null )
             return "";
@@ -1255,7 +1268,7 @@ public final class DatabaseManager {
     }
 
     public static int runSQL( final DatabaseAdapter db, final String query, final Object[] params, final int[] types )
-            throws SQLException
+        throws SQLException, DatabaseException
     {
         int n = 0;
         Statement stmt = null;
@@ -1305,7 +1318,7 @@ public final class DatabaseManager {
     }
 
     public static Long getLongValue( final DatabaseAdapter db, final String sql, final Object[] params )
-            throws SQLException
+        throws SQLException, DatabaseException
     {
         Statement stmt = null;
         PreparedStatement pstm;
@@ -1354,7 +1367,7 @@ public final class DatabaseManager {
     }
 
     public static List getIdByList( final DatabaseAdapter adapter, final String sql, final Object[] param )
-        throws GenericException
+        throws GenericException, DatabaseException
     {
         Statement stmt = null;
         PreparedStatement pstm;

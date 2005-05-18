@@ -62,6 +62,12 @@ public class DbStructureImportOrigin{
             File.separatorChar+"data" +
             File.separatorChar+"webmill-def-v2.xml";
 
-        DbStructureImport.importStructure(fileName, true);
+//        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "SAPDB_DBA");
+//        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "IBM-DB2");
+//        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "ORACLE_PORT");
+//        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "MYSQL");
+        String dbAlias = "MYSQL";
+
+        DbStructureImport.importStructure(fileName, true, dbAlias );
     }
 }

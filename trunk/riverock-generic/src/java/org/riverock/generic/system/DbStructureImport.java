@@ -22,21 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Nov 28, 2002
- * Time: 3:10:19 PM
- *
- * $Id$
- */
 package org.riverock.generic.system;
 
 import java.io.FileInputStream;
-import java.io.File;
 import java.sql.SQLException;
 
-import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
@@ -48,35 +38,37 @@ import org.riverock.generic.startup.StartupApplication;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
+
 /**
- * Заливаем данные из XML файла в БД
+ * Author: mill
+ * Date: Nov 28, 2002
+ * Time: 3:10:19 PM
+ *
+ * $Id$
+ *
+ * import data from XML file to DB
  */
 public class DbStructureImport
 {
     public static void main(String args[]) throws Exception
     {
+        if (args.length<3) {
+            System.out.println( "Command line format: <DB_ALIAS> <IMPORT_FILE> <REPORT_FILE>" );
+            return;
+        }
         StartupApplication.init();
-        String fileName =
-            GenericConfig.getGenericDebugDir()+ "webmill-schema.xml";
-
-        fileName = "mill"+File.separatorChar+"data-definition"+File.separatorChar+"data"+File.separatorChar+"webmill-def-v2.xml";
-
-        fileName = "c:\\5\\webmill-schema.xml";
-
-        DbStructureImport.importStructure(fileName, true);
+        final String dbAlias = args[0];
+        final String fileName = args[1];
+        DbStructureImport.importStructure(fileName, true, dbAlias);
     }
 
-    public static void importStructure(String fileName, boolean isData)
+    public static void importStructure(String fileName, boolean isData, String dbAlias )
         throws Exception
     {
-
-//        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "SAPDB_DBA");
-//        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "IBM-DB2");
-//        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "ORACLE_PORT");
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "MYSQL");
-
+        DatabaseAdapter db_ = null;
         try
         {
+            db_ = DatabaseAdapter.getInstance(true, dbAlias );
             System.out.println("db connect - "+db_.getClass().getName());
 
             int i = 0;
@@ -89,6 +81,9 @@ public class DbStructureImport
             for (i=0; i<millSchema.getTablesCount(); i++)
             {
                 DbTableType table = millSchema.getTables(i);
+                if (table.getName().toLowerCase().startsWith("tb_") )
+                    continue;
+
 //                if (isContinue && !"MAIN_NEWS_TEXT".equalsIgnoreCase( table.getName() ))
 //                    continue;
 //                isContinue = false;
@@ -192,7 +187,9 @@ public class DbStructureImport
         }
         finally
         {
-            db_.commit();
+            if (db_!=null) {
+                db_.commit();
+            }
             DatabaseAdapter.close(db_);
             db_ = null;
         }

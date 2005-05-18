@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.generic.startup;
 
 import java.io.File;
@@ -50,6 +46,9 @@ import org.riverock.common.config.ConfigException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+/**
+ * $Id$
+ */
 public final class StartupServlet extends HttpServlet
 {
     private final static Logger log = Logger.getLogger(StartupServlet.class);
@@ -183,7 +182,7 @@ public final class StartupServlet extends HttpServlet
 
         }
         catch (NamingException e) {
-            System.out.println("Error get millLogPath object" + e.toString());
+            System.out.println("Error get millLogPath object: " + e.toString());
             e.printStackTrace(System.out);
             return;
         }
@@ -210,6 +209,8 @@ public final class StartupServlet extends HttpServlet
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
+        System.out.println("\n\n\n");
+
 //        test();
         Object testObj = config.getServletContext().getAttribute("javax.servlet.context.tempdir");
         System.out.println("info Object tempdir - " + testObj);
@@ -234,9 +235,7 @@ public final class StartupServlet extends HttpServlet
 
         ServletContext context = config.getServletContext();
 
-        PropertiesProvider.setApplicationPath( config.getServletContext().getRealPath("/") );
-
-//        context.getResourcePaths()
+        PropertiesProvider.setApplicationPath( context.getRealPath("/") );
 
         PropertiesProvider.setConfigPath(
             PropertiesProvider.getApplicationPath() +
@@ -263,10 +262,10 @@ public final class StartupServlet extends HttpServlet
         log.info("dir - " + dir.getName());
         System.out.println("info dir - " + dir.getName());
 
-        GenericConfig.setContextName( "/" + dir.getName() );
-
-        log.info("ServletContextName - " + GenericConfig.getContextName());
-        System.out.println("info ServletContextName - " + GenericConfig.getContextName());
+//        GenericConfig.setContextName( "/" + dir.getName() );
+//
+//        log.info("ServletContextName - " + GenericConfig.getContextName());
+//        System.out.println("info ServletContextName - " + GenericConfig.getContextName());
 
         Provider provider = Security.getProvider( "BC" );
         if (provider != null) {

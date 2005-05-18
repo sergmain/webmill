@@ -30,12 +30,12 @@ package org.riverock.generic.tools;
  * $Revision$
  * $Date$
  * $RCSfile$
- *
+ *                                                                         return PortletTools.getDouble(portletRequest, key);
+
  */
 public final class SimpleStringTokenizer extends org.riverock.common.tools.SimpleStringTokenizer
 {
-    public SimpleStringTokenizer()
-    {
+    public SimpleStringTokenizer() {
         super();
     }
 }

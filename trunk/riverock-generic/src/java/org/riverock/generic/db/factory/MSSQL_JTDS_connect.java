@@ -834,6 +834,10 @@ ALTER TABLE table
         return id_;
     }
 
+    public Long getFirstLongValue(String t, String f, String w, String o) throws SQLException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public boolean testExceptionTableNotFound(Exception e)
     {
         if (((SQLException)e).getErrorCode() == 208)

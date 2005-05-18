@@ -54,23 +54,51 @@ public final class ServletResponseWrapperIncludeV3 implements ServletResponse {
     private boolean isCommited = false;
     private Locale locale = null;
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream( BUFFER_INITIAL_SIZE );
+    private static final String DEFAULT__CONTENT__TYPE = "text/html";
 
     public byte[] getBytes() {
         return outputStream.toByteArray();
     }
 
     public void setContentType(String contentTypeString ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug( "set new contentType: " + contentTypeString );
+        }
+
         // if writer or stream returned, dont change contentType
-        if (realWriter!=null || realOutputStream!=null )
+        if ( realWriter != null || realOutputStream != null || contentTypeString == null ) {
+            return;
+        }
+
+        ServletTools.ContentType type = new ServletTools.ContentType( contentTypeString );
+        if ( log.isDebugEnabled() ) {
+            log.debug( "parsed contentType: " + type );
+            if (type!=null) {
+                log.debug( "contentType.getContentType(): " + type.getContentType() );
+                log.debug( "contentType.getCharset(): " + type.getCharset() );
+            }
+        }
+        if ( type == null )
             return;
 
-        if ( contentTypeString != null )
-            this.contentType = new ServletTools.ContentType( contentTypeString );
+        StringBuffer contentTypeTemp = null;
+        if ( type.getContentType() != null )
+            contentTypeTemp = type.getContentTypeStringBuffer();
+        else
+            contentTypeTemp = new StringBuffer( DEFAULT_CONTENT_TYPE );
+
+        Charset charsetTemp = null;
+        if ( type.getCharset() != null ) {
+            charsetTemp = type.getCharset();
+        } else {
+            charsetTemp = DEFAULT_CHARSET;
+        }
+
+        this.contentType = new ServletTools.ContentType( contentTypeTemp, charsetTemp );
 
         if ( log.isDebugEnabled() ) {
-            log.debug( "set new content type to " + contentTypeString );
-            log.debug( "contentType.charset " + contentType.getCharset() );
-            log.debug( "contentType.contentType " + contentType.getContentType() );
+            log.debug( "result contentType.charset " + contentType.getCharset() );
+            log.debug( "result contentType.contentType " + contentType.getContentType() );
         }
     }
 
@@ -103,6 +131,17 @@ public final class ServletResponseWrapperIncludeV3 implements ServletResponse {
         if ( contentType==null )
             contentType = initContentType();
 
+        if ( log.isDebugEnabled()) {
+            log.debug("start getCharacterEncoding");
+            log.debug("contentType: " + contentType );
+            if (contentType!=null ) {
+                log.debug("contentType: " + contentType.getCharset().toString() );
+            }
+            else {
+                log.debug( "contentType is null" );
+            }
+        }
+
         if ( contentType.getCharset()!=null )
             return contentType.getCharset().toString();
         else
@@ -114,15 +153,24 @@ public final class ServletResponseWrapperIncludeV3 implements ServletResponse {
     // and that element provides a mapping for the given locale, that mapping is used.
     // Otherwise, the mapping from locale to character encoding is container dependent.
     final static Charset DEFAULT_CHARSET = Charset.forName( "ISO-8859-1" );
+    final static String DEFAULT_CONTENT_TYPE = "text/html";
     private ServletTools.ContentType initContentType() {
-        if (locale==null)
-            return new ServletTools.ContentType( "text/html", DEFAULT_CHARSET );
+        if ( log.isDebugEnabled()) {
+            log.debug("start initContentType");
+            log.debug("locale: " + locale );
+        }
+        if ( locale == null ) {
+            return new ServletTools.ContentType( DEFAULT__CONTENT__TYPE, DEFAULT_CHARSET );
+        }
 
         String charset = charsetMapper.getCharset( locale );
-        if (charset==null)
+        if ( log.isDebugEnabled()) {
+            log.debug("mapped charset: " + charset );
+        }
+        if ( charset == null )
             return new ServletTools.ContentType( "text/html", DEFAULT_CHARSET );
-
-        return new ServletTools.ContentType( "text/html", Charset.forName(charset) );
+        else
+            return new ServletTools.ContentType( "text/html", Charset.forName( charset ) );
     }
 
     protected void finalize() throws Throwable {
@@ -178,12 +226,11 @@ public final class ServletResponseWrapperIncludeV3 implements ServletResponse {
         }
 
         if ( log.isDebugEnabled() ) {
-            log.debug( "charset: " + contentType.getCharset() );
+            log.debug( "contentType: " + contentType );
+            if (contentType!=null)
+                log.debug( "charset: " + contentType.getCharset() );
         }
 
-        if ( log.isDebugEnabled() ) {
-            log.debug( "getCharacterEncoding: "+getCharacterEncoding());
-        }
         realWriter = new PrintWriterLogger(
             new OutputStreamWriter( outputStream, getCharacterEncoding() ), true
         );

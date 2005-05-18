@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.test;
+
+import java.net.URL;
 
 /**
  * User: Admin
@@ -30,25 +33,22 @@
  *
  * $Id$
  */
-package org.riverock.generic.test;
-
-import java.net.URL;
-
 public class TestURI
 {
-    private static String addr = "file:/c:\\";
+//    private static String addr = "http://me.askmore:8080/mill/ctx?aaa=bbb&ccc=ddd";
+    private static String addr = "http://me.askmore";
 
     public static void main(String args[])
         throws Exception
     {
         URL url = new URL(addr);
         System.out.println( url.toString());
-
-        Object obj = url.getContent();
-//        url.
-
-        System.out.println( obj.toString() );
-//        sun.net.www.content.text.PlainTextInputStream a;
+        System.out.println( "getProtocol " + url.getProtocol() );
+        System.out.println( "getHost " + url.getHost() );
+        System.out.println( "getPort " + url.getPort() );
+        System.out.println( "getPath " + url.getPath() );
+        System.out.println( "getFile " + url.getFile() );
+        System.out.println( "getQuery " + url.getQuery() );
+        System.out.println( "getRef " + url.getRef() );
     }
-
 }

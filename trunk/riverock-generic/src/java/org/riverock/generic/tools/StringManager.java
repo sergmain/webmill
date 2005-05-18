@@ -28,23 +28,23 @@
  */
 package org.riverock.generic.tools;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.GenericException;
 
 import org.apache.log4j.Logger;
 
-public final class StringManager
-{
+public final class StringManager {
     private final static Logger log = Logger.getLogger( StringManager.class );
 
     private String storage = null;
@@ -53,20 +53,14 @@ public final class StringManager
     private String currentLocaleBase = null;
     private boolean isVariant = false;
 
-    private static Map messages = null;
+    private static Map messages = new HashMap();
+    private static boolean isInit = false;
 
-
-    public static boolean isInit()
-    {
-        return messages != null;
+    public static boolean isInit() {
+        return isInit;
     }
 
-    protected void finalize() throws Throwable
-    {
-        if (messages!=null){
-            messages.clear();
-            messages = null;
-        }
+    protected void finalize() throws Throwable {
         storage = null;
         currentLocaleString = null;
         currentLocaleBase = null;
@@ -74,35 +68,35 @@ public final class StringManager
         super.finalize();
     }
 
-    public synchronized void reinit()
-    {
-        if (log.isDebugEnabled())
-            log.debug("Start reinit hashtable ");
+    public synchronized void reinit() {
+        if ( log.isDebugEnabled() ) {
+            log.debug( "Start reinit hashtable " );
+        }
 
         clear();
     }
 
-    public synchronized void terminate(java.lang.Long id_)
-    {
-        if (log.isDebugEnabled())
-            log.debug("Start terminate message in hashtable ");
+    public synchronized void terminate( java.lang.Long id_ ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug( "Start terminate message in hashtable " );
+        }
 
         clear();
     }
 
-
-    public synchronized static void clear()
-    {
+    public synchronized static void clear() {
         if (log.isDebugEnabled())
             log.debug("Start clear hashtable " + messages);
 
-        if (messages != null)
+        if (messages != null) {
             messages.clear();
+        }
+
+        isInit = false;
 
         if (log.isDebugEnabled())
             log.debug("End clear hashtable " + messages);
 
-        messages = null;
     }
 
     public StringManager(){}
@@ -112,7 +106,6 @@ public final class StringManager
         return new StringManager();
     };
 
-
     public synchronized static StringManager getManager(String packageName, Locale loc)
     {
         if (log.isDebugEnabled())
@@ -121,10 +114,8 @@ public final class StringManager
         return new StringManager(packageName, loc);
     }
 
-    private StringManager(String packageName, Locale loc)
-    {
-        if (loc == null)
-        {
+    private StringManager(String packageName, Locale loc) {
+        if (loc == null) {
             log.error("Error init StringManager - locale is null");
             currentLocaleString = null;
             currentLocaleBase = null;
@@ -153,13 +144,15 @@ public final class StringManager
         storage = packageName;
     }
 
-    public boolean checkKey(String key)
-    {
-        if (messages==null)
-            return false;
+    public boolean checkKey(String key) throws GenericException {
 
-        if (getString(key)==null)
+        if (!isInit) {
             return false;
+        }
+
+        if (getString(key)==null) {
+            return false;
+        }
 
         return true;
     }
@@ -167,24 +160,42 @@ public final class StringManager
     /**
      * @param key
      * @return
-     * @throws UnsupportedEncodingException
+     * @throws GenericException
      */
-    public String getStr(String key)
-            throws UnsupportedEncodingException
-    {
-        if (messages == null)
-        {
+    public String getStr( String key )
+        throws GenericException {
+        if ( !isInit ) {
             initMessages();
         }
 
         String s = getString(key);
-        if (s == null)
-        {
-            if (log.isDebugEnabled())
-                log.debug("Error get message for key '" +
-                        storage + "-" +
-                        currentLocaleString + "-" +
-                        key + "'");
+        if ( s == null ) {
+            if ( log.isDebugEnabled() ) {
+                log.debug( "Error get message for key '" +
+                    storage + "-" +
+                    currentLocaleString + "-" +
+                    key + "'" );
+            }
+            return "store " + storage + ", key " + key;
+        }
+
+        return s;
+
+    }
+
+    public String getStr( String key, Object[] args ) throws GenericException {
+        if (!isInit ) {
+            initMessages();
+        }
+
+        String s = getString( key, args );
+
+        if ( s == null ) {
+            if ( log.isDebugEnabled() )
+                log.debug( "Error get message for key '" +
+                    storage + "-" +
+                    currentLocaleString + "-" +
+                    key + "'" );
 
             return "store " + storage + ", key " + key;
         }
@@ -193,52 +204,22 @@ public final class StringManager
 
     }
 
-    public String getStr(String key, Object[] args)
-            throws UnsupportedEncodingException
-    {
-        if (messages == null)
-        {
-            initMessages();
-        }
-
-        String s = getString(key, args);
-
-        if (s == null)
-        {
-            if (log.isDebugEnabled())
-                log.debug("Error get message for key '" +
-                        storage + "-" +
-                        currentLocaleString + "-" +
-                        key + "'");
-
-            return "store " + storage + ", key " + key;
-        }
-
-        return s;
-
-    }
-
-
-    public String getString(String key)
-    {
-        if (messages == null)
-        {
-            initMessages();
-        }
-
-        if (key == null)
-        {
+    public String getString(String key) throws GenericException {
+        if (key==null){
             String msg = "key is null";
             log.error("Invoke StringManager with null's  locale key");
 
             throw new NullPointerException(msg);
         }
 
+        if ( !isInit ){
+            initMessages();
+        }
+
         String str = null;
         String errorString = "cannot find message associated with key : " + key;
 
-        if (currentLocaleString == null)
-        {
+        if (currentLocaleString==null) {
             log.error("Invoke StringManager without initialize locale");
             return errorString;
         }
@@ -255,21 +236,19 @@ public final class StringManager
         return messages.keySet();
     }
 
-    public String getString(String key, Object[] args)
-    {
-        if (messages == null)
-        {
+    public String getString(String key, Object[] args) throws GenericException {
+        if (!isInit) {
             initMessages();
         }
 
         String iString = null;
         String value = null;
-        try
-        {
+        try {
             value = getString(key);
 
-            if (value==null)
+            if (value==null) {
                 throw new IllegalArgumentException("Key "+key+" not found. "+storage + "-" + currentLocaleString + "-" + key);
+            }
 
         // this check for the runtime exception is some pre 1.1.6
         // VM's don't do an automatic toString() on the passed in
@@ -304,26 +283,42 @@ public final class StringManager
     }
 
 
-    synchronized void initMessages() {
-        if (log.isDebugEnabled())
+    static synchronized void initMessages() throws GenericException {
+        if (log.isDebugEnabled()) {
             log.debug( "#77.005.01 " + (messages != null ? "" + messages.size() : "messages is null") );
+        }
 
-        if (messages != null)
-            return;
+        if (messages == null) {
+            throw new IllegalStateException("Message map is null");
+        }
+
+        messages.clear();
+
         try {
-            messages = prepareMessages();
+            messages.putAll( prepareMessages() );
+            isInit = true;
         } catch (Exception e) {
             if (messages != null) {
                 messages.clear();
                 messages = null;
             }
+            String es = "Error init messages";
+            log.error( es, e );
+            throw new GenericException( es, e );
         }
     }
 
-    public static Map prepareMessages() throws GenericException {
+    public static Map getMessages()  throws GenericException  {
+        if (!isInit) {
+            initMessages();
+        }
+        return Collections.unmodifiableMap( messages );
+    }
+
+    private static Map prepareMessages() throws GenericException {
         log.debug("Start prepare message hashtable");
 
-        Map messageMap = new Hashtable(9000);
+        Map messageMap = new HashMap(9000);
 
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -355,19 +350,17 @@ public final class StringManager
             log.error( es, e );
             throw new GenericException( es, e );
         }
-        finally
-        {
-            org.riverock.generic.db.DatabaseManager.close(db_, rs, st);
+        finally {
+            DatabaseManager.close(db_, rs, st);
             db_ = null;
             rs = null;
             st = null;
         }
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("End init message hashtable ");
+        }
 
         return messageMap;
     }
-
-
 }

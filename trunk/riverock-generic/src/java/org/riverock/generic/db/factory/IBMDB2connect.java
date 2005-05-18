@@ -688,6 +688,10 @@ public class IBMDB2connect extends DatabaseAdapter
         return id_;
     }
 
+    public Long getFirstLongValue(String t, String f, String w, String o) throws SQLException {
+        throw new SQLException("not implemented");
+    }
+
     public boolean testExceptionTableNotFound(Exception e)
     {
         if (e instanceof SQLException)

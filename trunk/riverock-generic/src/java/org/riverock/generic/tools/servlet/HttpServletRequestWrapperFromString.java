@@ -30,31 +30,68 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Collections;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.riverock.common.tools.MainTools;
+import org.riverock.common.tools.StringTools;
+import org.riverock.common.tools.ServletTools;
 
 /**
- * User: serg_main
- * Date: 13.05.2004
- * Time: 17:55:24
- * @author Serge Maslyukov
+ * User: SergeMaslyukov
+ * Date: 04.02.2005
+ * Time: 0:44:53
  * $Id$
  */
-public final class HttpServletRequestWrapperInclude extends HttpServletRequestWrapper {
+public final class HttpServletRequestWrapperFromString extends HttpServletRequestWrapper {
     Map param = null;
-    public HttpServletRequestWrapperInclude(HttpServletRequest request, Map param)
-    {
+    URL url = null;
+    public HttpServletRequestWrapperFromString(HttpServletRequest request, String url) throws MalformedURLException {
         super(request);
-        this.param = param;
+        this.url = new URL( url );
+        this.param = ServletTools.getParameterMap( this.url.getQuery() );
+    }
+
+    public int getServerPort() {
+        return url.getPort()!=-1?url.getPort():80;
+    }
+
+    public String getServerName() {
+        return url.getHost();
+    }
+
+    public String getScheme() {
+        return url.getProtocol();
+    }
+
+    public String getPathInfo() {
+        if (StringTools.isEmpty( url.getPath() ) )
+            return null;
+
+        if (url.getPath().startsWith( super.getContextPath() ) ) {
+            return url.getPath().substring( super.getContextPath().length() );
+        }
+        else {
+            return url.getPath();
+        }
+    }
+
+    public String getContextPath() {
+        if (url.getPath().startsWith( super.getContextPath() ) ) {
+            return super.getContextPath();
+        }
+        else {
+            return "/";
+        }
     }
 
     public String getParameter(String name)
     {
-        String s = super.getParameter(name);
-        if (s==null && param!=null)
+        String s = null;
+        if (param!=null)
         {
             Object obj = param.get(name);
             if (obj!=null)
@@ -72,7 +109,6 @@ public final class HttpServletRequestWrapperInclude extends HttpServletRequestWr
     public Map getParameterMap()
     {
         Map map = new HashMap();
-        map.putAll( super.getParameterMap());
 
         if (param==null)
             return map;
@@ -102,6 +138,7 @@ public final class HttpServletRequestWrapperInclude extends HttpServletRequestWr
             }
             return strings;
         }
+
         return new String[]{obj.toString()};
     }
 }

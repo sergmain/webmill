@@ -22,30 +22,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.generic.site;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 
 import org.apache.log4j.Logger;
 
-public class SiteListSite{
+/**
+ * $Id$
+ */
+public final class SiteListSite{
 
-    private static Logger log = Logger.getLogger(SiteListSite.class);
+    private final static Logger log = Logger.getLogger(SiteListSite.class);
 
-    private HashMap hashListSite = new HashMap();
+    private Map hashListSite = new HashMap();
 
-    public Long getLongIdSite(String serverName) {
+    public Long getLongIdSite( final String serverName) {
         if (serverName==null) return null;
         Long siteId = (Long)hashListSite.get(serverName.toLowerCase());
         if (siteId==null){
@@ -130,24 +133,17 @@ public class SiteListSite{
     }
 
     static String sql_ = null;
-    static
-    {
+    static {
         sql_ =
             "select a.ID_SITE, a.NAME_VIRTUAL_HOST from site_virtual_host a";
 
-        SiteListSite tempObj = new SiteListSite();
-        Class dependClass = tempObj.getClass();
-        try
-        {
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, dependClass );
+        try {
+            SqlStatement.registerSql( sql_, new SiteListSite().getClass() );
         }
-        catch(Exception e)
-        {
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-        }
-        catch(Error e)
-        {
-            log.error("Error in registerSql, sql\n"+sql_, e);
+        catch( Throwable exception ) {
+            final String es = "Exception in SqlStatement.registerRelateClass()";
+            log.error( es, exception );
+            throw new SqlStatementRegisterException( es, exception );
         }
     }
 
@@ -171,11 +167,12 @@ public class SiteListSite{
             }
         }
         catch(Throwable e){
-            log.error("Error get list of virtual host ", e);
-            throw new GenericException("Error get list of virtual host", e);
+            final String es = "Error get list of virtual host ";
+            log.error(es, e);
+            throw new GenericException(es, e);
         }
         finally {
-            org.riverock.generic.db.DatabaseManager.close(db_, rs, ps);
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
         }

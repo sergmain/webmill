@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Feb 19, 2003
- * Time: 2:36:30 PM
- *
- * $Id$
- */
-
 package org.riverock.generic.tools.servlet;
 
 import java.util.Enumeration;
@@ -42,6 +33,13 @@ import javax.servlet.http.HttpSessionContext;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Author: mill
+ * Date: Feb 19, 2003
+ * Time: 2:36:30 PM
+ *
+ * $Id$
+*/
 public class HttpSessionApplWrapper implements HttpSession
 {
     private static Logger cat = Logger.getLogger("org.riverock.generic.tools.servlet.HttpSessionApplWrapper");

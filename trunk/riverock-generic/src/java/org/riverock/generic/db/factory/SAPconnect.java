@@ -51,6 +51,7 @@ import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
 import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.common.tools.RsetTools;
 
 import org.apache.log4j.Logger;
 
@@ -331,46 +332,41 @@ public class SAPconnect extends DatabaseAdapter
         throw new SQLException("not implemented method");
     }
 
-    public long getFirstValue(String t, String f, String w, String o)
-            throws SQLException
-    {
-//		Debug db = new Debug();
+    public long getFirstValue(String t, String f, String w, String o) throws SQLException {
+        Long value = getFirstLongValue(t,f,w,o);
+        if (value==null) {
+            return -1;
+        }
+        return value.longValue();
+    }
 
-        long id_ = -1;
+    public Long getFirstLongValue(String t, String f, String w, String o) throws SQLException {
 
-        String v_s = "select " + f + " from " + t;
-
-        if (o != null)
-        {
+        Long id_ = null;
+        String v_s = "select " + f + " ID from " + t;
+        if (o != null) {
             v_s += (w == null)? "": " " + w;
             v_s += (" order by " + o);
         }
-        else
-        {
+        else {
             v_s += (w == null)?
-                    " where rownum <2 ":
+                    "":
                     " " + w + " and rownum<2 ";
         }
 
-//		db.aM(v_s);
-
-
         PreparedStatement prepStatement = null;
         ResultSet rset = null;
-        try
-        {
+        try {
             prepStatement = this.conn.prepareStatement(v_s);
-
             rset = prepStatement.executeQuery();
-
-            if (rset.next())
-                id_ = rset.getLong(1);
+            if (rset.next()) {
+                id_ = RsetTools.getLong(rset, "ID");
+            }
         }
-        finally
-        {
-            org.riverock.generic.db.DatabaseManager.close( rset, prepStatement);
+        finally {
+            DatabaseManager.close( rset, prepStatement );
             rset = null;
-            prepStatement= null;
+            prepStatement = null;
         }
 
         return id_;
