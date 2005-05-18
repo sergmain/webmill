@@ -3,9 +3,6 @@ build-schema
 temp
 tomcat
 hypersonic
-mill-schema.ipr
-mill-schema.iws
-millengine.ipr
-millengine.iws
+riverock-webmill.iml 
 riverock-webmill.ipr 
-riverock-webmill.iws
+riverock-webmill.iws 

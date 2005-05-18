@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <!--
 /*
  * org.riverock.webmill - Portal framework implementation
@@ -26,79 +26,42 @@
  */
 -->
 <!--$Id$-->
-<project name="millengine v3" default="jar" basedir=".">
+<project name="Webmill portal build script" default="jar_without_copy" basedir=".">
 
-    <property name="lastversion" value="v3"/>
+    <property name="Name" value="riverock-webmill"/>
     <property name="release-version" value="5.0.1"/>
-    <property name="java.target" value="1.4"/>
-    <property name="java.class.target" value="1.4"/>
-
-    <!-- Global initialization -->
-    <target name="setversion">
-    </target>
-    <target name="set_release_version">
-    </target>
-
     <property name="build-release-name" value="webmill-${release-version}"/>
     <property name="manifest-title-name" value="WebMill engine"/>
     <property name="manifest-vendor-name" value="WebMill. http://webmill.askmore.info"/>
 
-    <property name="Name" value="riverock-webmill"/>
-    <property name="mill.lib" value="${Name}-${release-version}.jar"/>
-    <property name="mill-schema.lib" value="${Name}-schema-${release-version}.jar"/>
-    <property name="mill.lib.encoded" value="${Name}-${release-version}.encoded.jar"/>
-
-    <property name="lib.dir" value="../riverock-lib/lib"/>
-
-    <!-- Riverock runtime library -->
-
-    <property file="../riverock.properties"/>
-
-<!--
-castor-current.lib for work of engine
--->
-    <property name="castor-current.lib" value="${castor.lib}"/>
-
-
+    <import file="../riverock-include.xml"/>
 
     <property name="site.name" value="_localhost"/>
-
-    <property name="exclude" value="**/*.txt, **/*.bat, **/*.xml, **/*.sh, **/*.jav, **/*.mf, **/*.class,**/tmp_*.java"/>
-
-    <property name="encode.dir" value="retroguard-v1.1"/>
-    <property name="encoded-jar" value="${encode.dir}/${mill.lib.encoded}"/>
-    <property name="encoded-log" value="${encode.dir}/encode.log"/>
-
-    <property name="doc.dir" value="doc"/>
-    <property name="src.dir" value="src"/>
+<!---->
+<!--    <property name="exclude" value="**/*.txt, **/*.bat, **/*.xml, **/*.sh, **/*.jav, **/*.mf, **/*.class,**/tmp_*.java"/>-->
+<!---->
+<!--    <property name="doc.dir" value="doc"/>-->
+<!--    <property name="src.dir" value="src"/>-->
     <property name="tomcat.dir" value="tomcat"/>
-
-    <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>
-
-    <property name="src.java.dir" value="${src.dir}/java"/>
-    <property name="src-core.java.dir" value="${src.dir}-core/java"/>
-    <property name="src-schema.java.dir" value="${src.dir}-schema/java"/>
-    <property name="src-pluto-container.java.dir" value="${src.dir}-pluto/java/container"/>
-    <property name="src.java-test.dir" value="${src.dir}/test"/>
-
-    <property name="src.jsp.dir" value="${src.dir}/jsp"/>
-    <property name="src.xsd.dir" value="${src.dir}/xsd"/>
-    <property name="src.xml.dir" value="${src.dir}/xml"/>
-
+<!---->
+<!--    <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>-->
+<!---->
+<!--    <property name="src.java.dir" value="${src.dir}/java"/>-->
+<!--    <property name="src-core.java.dir" value="${src.dir}-core/java"/>-->
+<!--    <property name="src-schema.java.dir" value="${src.dir}-schema/java"/>-->
+<!--    <property name="src-pluto-container.java.dir" value="${src.dir}-pluto/java/container"/>-->
+<!--    <property name="src.java-test.dir" value="${src.dir}/test"/>-->
+<!---->
+<!--    <property name="src.jsp.dir" value="${src.dir}/jsp"/>-->
+<!--    <property name="src.xsd.dir" value="${src.dir}/xsd"/>-->
+<!--    <property name="src.xml.dir" value="${src.dir}/xml"/>-->
+<!---->
     <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
     <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
+<!---->
+<!--    <property name="manifest-file-name" value="manifest.mf"/>-->
+<!--    <property name="manifest" value="src/java/${manifest-file-name}"/>-->
 
-    <property name="manifest-file-name" value="manifest.mf"/>
-    <property name="manifest" value="src/java/${manifest-file-name}"/>
-
-    <path id="classpath-1.4">
-        <pathelement location="${lib.dir}/ojdbc14.jar"/>
-    </path>
-    <path id="classpath-1.3">
-        <pathelement location="${lib.dir}/classes12.zip"/>
-<!--        <pathelement location="${lib.dir}/xml-commons-1.1.1.jar"/>-->
-        <pathelement location="${lib.dir}/jce1_2_1.jar"/>
-    </path>
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
@@ -121,34 +84,10 @@ castor-current.lib for work of engine
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
 
-        <path refid="classpath-${java.target}"/>
+        <pathelement location="${lib.dir}/ojdbc14.jar"/>
     </path>
 
-<!--
-    <property name="classpath" value="${lib.dir}/${junit.lib}:${lib.dir}/${jsmithy-multipart.lib}:${lib.dir}/mill-core-v1.encoded.jar:${lib.dir}/ojdbc14.jar:${lib.dir}/servlet.jar:${lib.dir}/${secure.lib}:${lib.dir}/mail.jar:${lib.dir}/xercesImpl.jar:${lib.dir}/xalan.jar:${lib.dir}/xml-apis.jar:${lib.dir}/${log4j.lib}:${lib.dir}/junit.jar:${lib.dir}/${castor.lib}:${lib.dir}/${hypersonic.lib}:${common-httpclient.lib}:${classpath-extend}"/>
--->
-    <property name="packages" value="org.riverock.*"/>
-    <property name="build.dir" value="build"/>
-    <property name="build.dest" value="${build.dir}/classes"/>
-    <property name="build.java" value="${build.dir}/java"/>
-    <property name="build.tests" value="${build.dir}/tests"/>
-    <property name="build.src.java" value="${src.java.dir}"/>
-    <property name="build.src.jsp" value="${src.jsp.dir}"/>
-
-    <property name="dist.dir" value="${build.dir}/dist"/>
-    <property name="docs.dir" value="${build.dir}/javadocs"/>
-    <property name="build_context" value="${build.dir}/mill_context"/>
-    <property name="build_mill_context" value="${build_context}/mill"/>
-    <property name="build_mill_context_lib" value="${build_mill_context}/WEB-INF/lib"/>
-    <property name="build_mill_context_images" value="${build_mill_context}/images"/>
-    <property name="build_mill_context_xsd" value="${build_mill_context}/xsd"/>
-
-
     <property name="www.dir" value="c:\opt2\_www"/>
-
-    <property name="debug" value="on"/>
-    <property name="optimize" value="off"/>
-    <property name="deprecation" value="on"/>
 
     <fileset dir="${lib.dir}/" id="web-inf-lib" >
         <include name="${riverock-sso.lib}"/>
@@ -159,21 +98,11 @@ castor-current.lib for work of engine
         <include name="${riverock-cache.lib}"/>
 
         <include name="${log4j.lib}"/>
-        <include name="${castor-current.lib}"/>
+        <include name="${castor.lib}"/>
         <include name="${portlet.lib}"/>
 
     </fileset>
 
-    <!--
-    <target name="clean_java_schema">
-    <delete includeEmptyDirs="true" failonerror="false">
-    <fileset dir="${src.java.dir}\mill\schema\">
-    <include name="**/*.java"/>
-    <exclude name="**/CVS"/>
-    </fileset>
-    </delete>
-    </target>
-    -->
     <target name="run_all_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
@@ -196,17 +125,32 @@ castor-current.lib for work of engine
     </target>
 
 
-    <target name="run_tomcat_with_new jar">
+    <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
 
         <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <copy file="${build.dir}/${mill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
 
-        <property name="webmill-test.context" value="C:\opt2\_www\_test\mill"/>
-        <copy file="${build.dir}/${mill.lib}" todir="${webmill-test.context}/WEB-INF/lib"/>
-        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
+        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-cache.lib}" todir="${webmill.lib-dir}"/>
+
+        <property name="webmill.context" value="C:\opt2\_www\_test\mill"/>
+        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
+
+        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
+        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
+        <copy file="../riverock-lib/lib/${riverock-cache.lib}" todir="${webmill.lib-dir}"/>
+
         <antcall target="start.apache"/>
     </target>
 
@@ -217,103 +161,13 @@ castor-current.lib for work of engine
         <antcall target="jar"/>
     </target>
 
-    <target name="jar" depends="jar_without_restart">
-        <echo message="start encode jar" level="debug" />
-        <delete file="${encode.dir}/${mill.lib.encoded}"/>
-        <copy file="${build.dir}/${mill.lib}" todir="../riverock-lib/lib"/>
-    </target>
-
     <target name="full_clean">
         <ant antfile="build-core.xml" target="clean"  inheritall="false" />
         <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
-    <target name="clean">
-        <delete failonerror="false">
-            <fileset dir="${build.dir}">
-                <include name="**"/>
-                <include name="*.jar"/>
-                <include name="*.tar"/>
-                <include name="*.gz"/>
-            </fileset>
-        </delete>
-        <delete dir="${docs.dir}" failonerror="false"/>
-        <delete dir="${build.dir}/src/" failonerror="false"/>
-        <delete dir="${build.dir}/classes/" failonerror="false"/>
-        <delete dir="${build.dir}/bin/" failonerror="false"/>
-        <delete dir="${build.dir}/tomcat/" failonerror="false"/>
-        <delete dir="${build.dir}/ext/" failonerror="false"/>
-        <delete dir="${build.dir}" failonerror="false"/>
-
-        <delete file="${encoded-jar}" failonerror="false"/>
-        <delete file="${encoded-log}" failonerror="false"/>
-    </target>
-
-<!--    <target name="encode_jar_short" depends="jar_short_without_copy">-->
-<!--        <echo message="start encode jar" level="debug" />-->
-<!--        <delete file="${encode.dir}\${mill.lib.encoded}"/>-->
-<!--        <java fork="true" classname="RetroGuard">-->
-<!--            <arg value="${build.dir}\${mill.lib}"/>-->
-<!--            <arg value="${encode.dir}\${mill.lib.encoded}"/>-->
-<!--            <arg value="${encode.dir}\script.txt"/>-->
-<!--            <arg value="${encoded-log}"/>-->
-<!--            <classpath location="${lib.dir}/retroguard.jar"/>-->
-<!--            <classpath refid="classpath-base"/>-->
-<!--        </java>-->
-<!--        <copy file="${encode.dir}\${mill.lib.encoded}" todir="${build.dir}"/>-->
-<!--        <copy file="${encode.dir}\${mill.lib.encoded}" todir="../mill-core/lib"/>-->
-<!--    </target>-->
-
-    <target name="run_tomcat_encoded_jar">
-        <property name="target-encoded-jar" value="${www.dir}/mill/WEB-INF/lib/${mill.lib}"/>
-        <antcall target="stop.apache"/>
-        <antcall target="jar_without_restart"/>
-        <antcall target="copy_web.xml"/>
-        <antcall target="copy.project"/>
-        <echo message="encoded jar - ${encoded-jar}" level="debug" />
-        <echo message="target encoded jar - ${target-encoded-jar}" level="debug" />
-        <delete file="${www.dir}/mill/WEB-INF/lib/${mill.lib.encoded}"/>
-        <delete file="${www.dir}/mill/WEB-INF/lib/${mill.lib}"/>
-        <copy
-            file="${build.dir}/${mill.lib}"
-            tofile="${www.dir}/mill/WEB-INF/lib/${mill.lib}"
-            failonerror="true"
-            overwrite="true"
-            verbose="true"
-            />
-<!--        <copy-->
-<!--            file="${encode.dir}/${mill.lib.encoded}"-->
-<!--            tofile="${www.dir}/mill/WEB-INF/lib/${mill.lib}"-->
-<!--            failonerror="true"-->
-<!--            overwrite="true"-->
-<!--            verbose="true"-->
-<!--            />-->
-        <copy todir="${www.dir}/mill/WEB-INF/lib"
-            failonerror="true" overwrite="true" verbose="true">
-            <fileset refid="web-inf-lib"/>
-        </copy>
-
-<!--        <copy-->
-<!--            file="${lib.dir}/${jsmithy-webmill-core.lib}"-->
-<!--            tofile="${www.dir}/mill/WEB-INF/lib/${jsmithy-webmill-core.lib}"-->
-<!--            failonerror="true" overwrite="true" verbose="true"/>-->
-<!--        <copy-->
-<!--            file="${lib.dir}/${jsmithy-sql-parser.lib}"-->
-<!--            tofile="${www.dir}/mill/WEB-INF/lib/${jsmithy-sql-parser.lib}"-->
-<!--            failonerror="true" overwrite="true" verbose="true"/>-->
-<!--        <copy-->
-<!--            file="${lib.dir}/${jsmithy-common.lib}"-->
-<!--            tofile="${www.dir}/mill/WEB-INF/lib/${jsmithy-common.lib}"-->
-<!--            failonerror="true" overwrite="true" verbose="true"/>-->
-<!--        <copy-->
-<!--            file="${lib.dir}/${jsmithy-cache.lib}"-->
-<!--            tofile="${www.dir}/mill/WEB-INF/lib/${jsmithy-cache.lib}"-->
-<!--            failonerror="true" overwrite="true" verbose="true"/>-->
-        <antcall target="start.apache"/>
-    </target>
-
-    <target name="test-full" depends="compile, set_release_version">
+    <target name="test-full" depends="compile">
         <junit printsummary="yes" haltonfailure="yes" haltonerror="yes" fork="yes" dir="${webinf.jsp.dir}">
             <classpath>
                 <path refid="classpath-base"/>
@@ -324,7 +178,7 @@ castor-current.lib for work of engine
         </junit>
     </target>
 
-    <target name="test-string" depends="set_release_version">
+    <target name="test-string">
         <junit printsummary="yes" haltonfailure="yes" haltonerror="yes" fork="yes" dir="${webinf.jsp.dir}" >
             <classpath>
                 <path refid="classpath"/>
@@ -362,7 +216,7 @@ castor-current.lib for work of engine
 
 
         <property name="build-empty-file-name" value="empty.txt"/>
-        <property name="build-empty-file" value="${doc.dir}/${build-empty-file-name}"/>
+        <property name="build-empty-file" value="${docs.dir}/${build-empty-file-name}"/>
 
         <property name="build-log4j-config-file" value="mill.log4j.properties"/>
         <property name="build-logs-name" value="logs"/>
@@ -434,27 +288,20 @@ cd ..\..
         <copy file="${lib.dir}/${log4j.lib}"
             tofile="${build-tomcat-common-lib-dir}/${log4j.lib}" filtering="on"/>
 
-        <!-- copy main config files -->
         <copy file="${src.jsp.dir}/mill-config.xml" tofile="${build-www-dir}/mill-config-origin.xml" filtering="on"/>
-<!--
-classpath="${classpath}:${build.dir}/${mill.lib}"
- -->
         <java fork="true"
             classname="org.riverock.system.ProcessMillConfig"
             failonerror="true">
             <arg value="${build-www-dir}/mill-config-origin.xml"/>
             <arg value="${build-www-dir}/mill-config.xml"/>
             <arg value="${build-release-name}/${build-temp-dir-name}"/>
-            <classpath location="${build.dir}/${mill.lib}"/>
+            <classpath location="${build.dir}/${main.lib}"/>
             <classpath refid="classpath-base"/>
         </java>
         <delete file="${build-www-dir}/mill-config-origin.xml"/>
 
         <copy file="${src.jsp.dir}/mill.xml" tofile="${build-temp-dir}/mill-origin.xml" filtering="on"/>
 
-        <!--
-        classpath="${classpath}:${build.dir}/${mill.lib}"
-         -->
         <java fork="true"
             classname="org.riverock.system.ProcessMillContextConfig"
             failonerror="true">
@@ -463,7 +310,7 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
             <arg value="${build-release-name}/${build-logs-name}/${build-log4j-name}/${build-host-name}"/>
             <arg value="${build-release-name}/${build-logs-name}/${build-log4j-name}/${build-log4j-config-file}"/>
             <arg value="${build-release-name}/mill-config.xml"/>
-            <classpath location="${build.dir}/${mill.lib}"/>
+            <classpath location="${build.dir}/${main.lib}"/>
             <classpath refid="classpath-base"/>
         </java>
         <copy file="${build-temp-dir}/mill.xml" tofile="${build-www-localhost-dir}/mill.xml"/>
@@ -478,36 +325,23 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
         <echo message="out param - ${build-tomcat-config-dir}/server.xml"/>
         <echo message="appsBase - ${build-release-name}/${build-www-name}/${build-host-name}"/>
 
-        <!--
-        classpath="${classpath}:${build.dir}/${mill.lib}"
-         -->
         <java fork="true"
             classname="org.riverock.system.ProcessTomcatServerConfig"
             failonerror="true">
             <arg value="${build-tomcat-config-dir}/server-origin.xml"/>
             <arg value="${build-tomcat-config-dir}/server.xml"/>
             <arg value="webapps"/>
-            <classpath location="${build.dir}/${mill.lib}"/>
+            <classpath location="${build.dir}/${main.lib}"/>
             <classpath refid="classpath-base"/>
         </java>
         <delete file="${build-tomcat-config-dir}/server-origin.xml"/>
 
-        <!--
-        </target>
-        <target name="build_release1">
-        -->
-
-        <copy file="${doc.dir}\install.txt"
+        <copy file="${docs.dir}\install.txt"
             tofile="${build-release-dir}\install.txt" filtering="on"/>
 
         <copy file="${webinf.jsp.dir}\mill\mill.log4j.properties"
             tofile="${build-logs-log4j-dir}\${build-log4j-config-file}" filtering="on"/>
 
-
-<!--
-        <copy file="${lib.dir}\cos_servlet2.3.jar"
-            tofile="${build-tomcat-common-lib-dir}\cos_servlet2.3.jar" filtering="on"/>
--->
         <copy file="${lib.dir}\${hypersonic.lib}"
             tofile="${build-tomcat-common-lib-dir}\${hypersonic.lib}"/>
         <copy file="${lib.dir}\activation.jar"
@@ -568,8 +402,8 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
             tofile="${build-www-mill-dir}/WEB-INF/web.xml"/>
 
         <!-- copy jar files in mill\WEB-INF\mill\lib -->
-        <copy file="${lib.dir}/${castor-current.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${castor-current.lib}"/>
+        <copy file="${lib.dir}/${castor.lib}"
+            tofile="${build-www-mill-dir}/WEB-INF/lib/${castor.lib}"/>
         <copy file="${lib.dir}/${portlet.lib}"
             tofile="${build-www-mill-dir}/WEB-INF/lib/${portlet.lib}"/>
 
@@ -579,8 +413,8 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
         <copy file="${lib.dir}/${riverock-sql-parser.lib}"
             tofile="${build-www-mill-dir}/WEB-INF/lib/${riverock-sql-parser.lib}"/>
 
-        <copy file="${build.dir}/${mill.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${mill.lib}"/>
+        <copy file="${build.dir}/${main.lib}"
+            tofile="${build-www-mill-dir}/WEB-INF/lib/${main.lib}"/>
 
 <!--        <copy file="${lib.dir}/${jsmithy-webmill-core.lib}"-->
 <!--            tofile="${build-www-mill-dir}/WEB-INF/lib/${jsmithy-webmill-core.lib}"/>-->
@@ -623,10 +457,9 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
         <exclude name="classes/**"/>
         </zip>
         -->
-        <delete file="${build.dir}/${mill.lib.encoded}"/>
         <tar tarfile="${build-release-full-name}.tar" basedir="${build.dir}" longfile="gnu"  includes="">
             <exclude name="**/*.java"/>
-            <exclude name="${mill.lib}"/>
+            <exclude name="${main.lib}"/>
             <exclude name="classes/**"/>
             <exclude name="java/**"/>
         </tar>
@@ -637,10 +470,9 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
     </target>
 
     <target name="make-release-files" depends="build-release-properties">
-        <delete file="${build.dir}/${mill.lib.encoded}"/>
         <tar tarfile="${build-release-full-name}.tar" basedir="${build.dir}" longfile="gnu" includes="">
             <exclude name="**/*.java"/>
-            <exclude name="${mill.lib}"/>
+            <exclude name="${main.lib}"/>
             <exclude name="classes/**"/>
             <exclude name="java/**"/>
         </tar>
@@ -649,49 +481,10 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
     </target>
 
 
-    <!-- =================================================================== -->
-    <!-- Runs unit tests                                                     -->
-    <!-- =================================================================== -->
-    <target name="ut" depends="compile">
-      <echo message="Running unit tests "/>
-
-      <javac srcdir="${src.java-test.dir}"
-             destdir="${build.tests}"
-             debug="${debug}"
-             deprecation="${deprecation}"
-             optimize="${optimize}"
-         classpath="${lib.dir}">
-          <classpath>
-              <path location="${build.dir}/classes"/>
-              <path refid="classpath-base"/>
-          </classpath>
-       </javac>
-
-       <junit printsummary="yes" haltonfailure="no" haltonerror="no" showoutput="no"
-           dir="${webinf.jsp.dir}" fork="true" >
-
-          <classpath>
-              <path location="${build.tests}"/>
-              <path location="${build.dir}/classes"/>
-              <path refid="classpath-base"/>
-          </classpath>
-
-          <formatter type="plain" usefile="false"/>
-
-          <batchtest fork="yes" haltonfailure="yes" haltonerror="yes">
-            <fileset dir="${build.tests}">
-                <include name="**/Test*.class"/>
-                <exclude name="**/*$*.class"/>
-            </fileset>
-          </batchtest>
-       </junit>
-
-    </target>
-
-
     <target name="del.webapps.dir">
         <delete dir="c:\opt\Tomcat 4.1\work\"/>
     </target>
+
     <target name="clean.webapps">
         <property name="null.prop" value=""/>
         <exec executable="net" outputproperty="null.prop">
@@ -701,72 +494,6 @@ classpath="${classpath}:${build.dir}/${mill.lib}"
         <exec executable="net" outputproperty="null.prop">
             <arg line=" start 'Apache Tomcat 4.1'"/>
         </exec>
-    </target>
-
-    <target name="make_manifest_file">
-        <echo message="Start make manifest file"/>
-    <echo file="${build.dest}/${manifest-file-name}">Manifest-Version: 1.0
-Specification-Title: ${manifest-title-name}
-Specification-Vendor: ${manifest-vendor-name}
-Specification-Version: ${release-version}
-Implementation-Title: ${manifest-title-name}
-Implementation-Vendor: ${manifest-vendor-name}
-Implementation-Version: ${release-version}
-
-Name: ${manifest-title-name}
-Sealed: true
-</echo>
-        <echo message="Manifest file is created"/>
-    </target>
-
-
-    <target name="run-hypersonic" depends="prepare">
-        <java fork="true" classname="org.hsqldb.Server">
-            <classpath refid="classpath-base"/>
-        </java>
-        <echo message="Run others tasks"/>
-    </target>
-
-    <target name="compile-without-tests" depends="set_build_number, prepare">
-
-        <delete includeEmptyDirs="true" failonerror="false">
-            <fileset dir="${build.java}">
-                <include name="**"/>
-            </fileset>
-        </delete>
-        <mkdir dir="${build.java}" />
-        <copy todir="${build.java}">
-            <fileset dir="${src.java.dir}">
-                <exclude name="**/CVS"/>
-                <exclude name="**/*.jav"/>
-                <exclude name="**/*.class"/>
-                <exclude name="com/jsmithy/schema/**"/>
-                <exclude name="com/jsmithy/locale/**"/>
-                <exclude name="com/jsmithy/test/**"/>
-                <include name="**"/>
-            </fileset>
-        </copy>
-
-        <antcall target="replace_properties"/>
-<!--        <replace file="${build.java}/com/jsmithy/portlet/ContextNavigator.java">-->
-<!--            <replacefilter token="@@WEBMILL_RELEASE@@" value="${release-version}"/>-->
-<!--            <replacefilter token="@@WEBMILL_BUILD@@" value="${build.number}"/>-->
-<!--        </replace>-->
-
-        <javac
-            target="${java.class.target}"
-            srcdir="${build.java}"
-            destdir="${build.dest}"
-            excludes="${exclude}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            memoryInitialSize="128m"
-            memoryMaximumSize="256m"
-            >
-            <classpath refid="classpath-base"/>
-        </javac>
     </target>
 
     <target name="replace_properties">
@@ -800,10 +527,10 @@ Sealed: true
 
         <javac
             target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${src.java.dir}"
             destdir="${build.dest}"
             includes="**/org/riverock/webmill/exception/*.java"
-            excludes="${exclude}"
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}"
@@ -815,7 +542,7 @@ Sealed: true
                 <path refid="classpath-base"/>
             </classpath>
         </javac>
-
+<!--
         <javac
             target="${java.class.target}"
             srcdir="${src-pluto-container.java.dir}"
@@ -833,12 +560,12 @@ Sealed: true
                 <path location="${build.dest}"/>
             </classpath>
         </javac>
-
+-->
         <javac
             target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${src-core.java.dir}"
             destdir="${build.dest}"
-            excludes="${exclude}"
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}"
@@ -854,9 +581,9 @@ Sealed: true
 
         <javac
             target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${src-schema.java.dir}"
             destdir="${build.dest}"
-            excludes="${exclude}"
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}"
@@ -871,9 +598,9 @@ Sealed: true
         </javac>
         <javac
             target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${src.java.dir}"
             destdir="${build.dest}"
-            excludes="${exclude}"
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}"
@@ -892,9 +619,9 @@ Sealed: true
 
         <javac
             target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${build.java}"
             destdir="${build.dest}"
-            excludes="${exclude}"
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}"
@@ -909,22 +636,8 @@ Sealed: true
         </javac>
     </target>
 
-    <target name="jar_without_restart" depends="compile">
-        <antcall target="make_manifest_file"/>
-        <jar jarfile="${build.dir}/${mill.lib}"
-            basedir="${build.dest}"
-            includes="org/riverock/**"
-            excludes="*.txt,*.bat,*.xml,*.sh,*.jav,${manifest-file-name},com/jsmithy/schema/**"
-            manifest="${build.dest}/${manifest-file-name}"/>
-<!--        <copy file="${build.dir}/${mill.lib}" todir="../jsmithy-portlet/lib"/> -->
-    </target>
-
     <target name="jar_start_apache">
-        <!--
-        <antcall target="make_manifest_file"/>
-        <jar jarfile="${build.dir}/${mill.lib}" basedir="${build.dest}" includes="mill/**" excludes="*.txt,*.bat,*.xml,*.sh,*.jav,${manifest-file-name}" manifest="${build.dest}/${manifest-file-name}"/>
--->
-        <antcall target="jar_without_restart"/>
+        <antcall target="jar_without_copy"/>
         <antcall target="stop.apache"/>
         <antcall target="copy_web.xml"/>
         <antcall target="copy.project"/>
@@ -939,104 +652,11 @@ Sealed: true
         <copy file="../mill-core/src/xsd/mill-core.xsd" tofile="src/xsd/mill-core.xsd" filtering="off" overwrite="true"/>
     </target>
 
-    <target name="restart.apache">
-        <antcall target="stop.apache"/>
-        <antcall target="start.apache"/>
-    </target>
-
-    <target name="start.apache">
-        <property name="null.prop" value=""/>
-        <exec executable="net" outputproperty="null.prop">
-            <arg line=" start '${tomcat-service-name}'"/>
-        </exec>
-    </target>
-
-    <target name="stop.apache">
-        <property name="null.prop" value=""/>
-        <exec executable="net" outputproperty="null.prop">
-            <arg line=" stop '${tomcat-service-name}'"/>
-        </exec>
-    </target>
-
-    <target name="delete_all_schema">
-        <delete includeEmptyDirs="true" failonerror="false">
-            <fileset dir="${src.java.dir}/com/jsmithy/schema/">
-                <include name="**/*.java"/>
-                <exclude name="**/CVS"/>
-            </fileset>
-        </delete>
-    </target>
-
-    <target name="del_core_files">
-        <delete includeEmptyDirs="true" failonerror="false">
-            <fileset dir="${src.java.dir}/mill/main/core">
-                <include name="**/*.java"/>
-                <exclude name="**/CVS"/>
-            </fileset>
-        </delete>
-    </target>
-
-    <target name="compile_all_schema">
-        <antcall target="compile"/>
-    </target>
-
-    <!-- Note this file can only make Ant display values set in the file correctly, -->
-    <!-- but external values in the environment or properties file will be operational.  -->
-    <!-- Help on usage                                                       -->
-    <target name="usage">
-        <echo message=""/>
-        <echo message=""/>
-        <echo message="${Name} Build file"/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=" available targets are:"/>
-        <echo message=""/>
-        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-        <echo message="   package      --> generates the ${Name}.jar file"/>
-        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-        <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-        <echo message="   distclean    --> cleans up the distribution directory, ${dist.dir}"/>
-        <echo message="   usage        --> show this message (default)"/>
-        <echo message=""/>
-        <echo message=" See the comments inside the build.xml file for more details."/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=""/>
-    </target>
-    <!-- Prepares the build directory                                        -->
-    <target name="prepare">
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dest}"/>
-        <mkdir dir="${build.tests}"/>
-    </target>
-    <!-- Checks for necessary libraries and correct versions of libraries    -->
-    <!--
-    <target name="check.servlet" depends="prepare" unless="has.servlet">
-        <fail message="servlet library does not appear to be in the classpath."/>
-    </target>
-    -->
-    <!-- Compiles the source directory                                       -->
-    <!-- <target name="compile" depends="prepare"> -->
-    <target name="docs" depends="prepare">
-        <echo message="Build javadoc"/>
-        <!-- create directories -->
-        <mkdir dir="${docs.dir}"/>
-        <javadoc
-            sourcepath="${build.src.java}"
-            destdir="${docs.dir}"
-            verbose="true"
-            defaultexcludes="true"
-            packagenames="mill/db/*,mill/tools/*, mill/startup/*"
-            excludepackagenames="mill/price/*"
-            >
-            <classpath refid="classpath-base"/>
-        </javadoc>
-
-    </target>
     <target name="copy_and_restart.project">
         <antcall target="copy.project"/>
         <antcall target="restart.apache"/>
     </target>
+
     <target name="copy.project">
         <antcall target="copy.WEB-INF.project"/>
     </target>
@@ -1049,7 +669,7 @@ Sealed: true
         </delete>
         <mkdir dir="${build_context}" />
 
-        <copy file="${build.dir}/${mill.lib}" tofile="${build_mill_context_lib}/${mill.lib}" filtering="off" overwrite="true"/>
+        <copy file="${build.dir}/${mill.lib}" tofile="${build_mill_context_lib}/${main.lib}" filtering="off" overwrite="true"/>
         <copy todir="${build_mill_context_lib}">
             <fileset refid="web-inf-lib"/>
         </copy>
@@ -1089,7 +709,7 @@ Sealed: true
 
     <target name="copy.WEB-INF.project" depends="build_mill_context">
 
-        <copy file="${build.dir}/${mill.lib}" tofile="c:\jdk\lib\${mill.lib}" filtering="off" overwrite="true"/>
+        <copy file="${build.dir}/${main.lib}" tofile="c:\jdk\lib\${main.lib}" filtering="off" overwrite="true"/>
 
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${www.dir}/mill">
@@ -1104,11 +724,11 @@ Sealed: true
         </copy>
 
 
-        <property name="web-inf.path" value="/data/WEB-INF/lib/${mill.lib}"/>
+        <property name="web-inf.path" value="/data/WEB-INF/lib/${main.lib}"/>
 
-        <copy file="${build.dir}/${mill.lib}" tofile="${www.dir}/_angaria.com${web-inf.path}" filtering="off" overwrite="true"/>
-        <copy file="${build.dir}/${mill.lib}" tofile="${www.dir}/_test${web-inf.path}" filtering="off" overwrite="true"/>
-        <copy file="${build.dir}/${mill.lib}" tofile="${www.dir}/_baikal.travel.askmore.info${web-inf.path}" filtering="off" overwrite="true"/>
+        <copy file="${build.dir}/${main.lib}" tofile="${www.dir}/_angaria.com${web-inf.path}" filtering="off" overwrite="true"/>
+        <copy file="${build.dir}/${main.lib}" tofile="${www.dir}/_test${web-inf.path}" filtering="off" overwrite="true"/>
+        <copy file="${build.dir}/${main.lib}" tofile="${www.dir}/_baikal.travel.askmore.info${web-inf.path}" filtering="off" overwrite="true"/>
 
 <!--
         <property name="jsp.path" value="src\jsp\_localhost\"/>
@@ -1132,74 +752,4 @@ Sealed: true
         </copy>
 -->
     </target>
-
-    <!-- Creates the class package                                           -->
-    <!-- Creates the distribution                                            -->
-    <!--
-    <target name="dist" depends="jar">
-    <echo message="Building the distribution files (zip,tar)"/>
-
-    <echo file="${build.dir}/${tomcat.dir}/bin/main_run.bat">
-set CATALINA_BASE=..
-set CATALINA_HOME=..
-call catalina.bat run
-</echo>
-
-<tar longfile="gnu" tarfile="${build.dir}/${Name}-${version}.tar" basedir="${build.dir}" includes="${tomcat.dir}/**"/>
-
-<gzip zipfile="${build.dir}/${Name}-${version}.tar.gz" src="${build.dir}/${Name}-${version}.tar"/>
-<delete file="${build.dir}/${Name}-${version}.tar"/>
-</target>
-    -->
-    <!-- Creates the source distribution                                            -->
-    <!--
-    <target name="dist-src">
-    <echo message="Building the source distribution files (zip,tar)"/>
-    <chmod file="${src.dir}/build.sh" perm="ugo+rx"/>
-    <tar tarfile="${build.dir}/${Name}-${version}-src.tar" basedir="${src.java.dir}" excludes="**/*.bat **/*.jav" includes=""/>
-    <gzip zipfile="${build.dir}/${Name}-${version}-src.tar.gz" src="${build.dir}/${Name}-${version}-src.tar"/>
-    <delete file="${build.dir}/${Name}-${version}-src.tar"/>
-    </target>
-    -->
-    <!-- Creates the oracle distribution                                            -->
-    <!--
-    <target name="dist-oracle">
-    <echo message="Building the source distribution files (zip,tar)"/>
-    <tar tarfile="${build.dir}/${Name}-${version}-oracle.tar" basedir="${oracle.dir}" includes=""/>
-    <gzip zipfile="${build.dir}/${Name}-${version}-oracle.tar.gz" src="${build.dir}/${Name}-${version}-oracle.tar"/>
-    <delete file="${build.dir}/${Name}-${version}-oracle.tar"/>
-    </target>
-    -->
-    <!--
-    <target name="dist-full">
-    <echo message="Building the full distribution files .gz"/>
-    <tar tarfile="${build.dir}/${Name}-${version}-full.tar" basedir="../.." excludes="**/build/**" includes="millengine/**"/>
-    <gzip zipfile="${build.dir}/${Name}-${version}-full.tar.gz" src="${build.dir}/${Name}-${version}-full.tar"/>
-    <delete file="${build.dir}/${Name}-${version}-full.tar"/>
-    </target>
-    -->
-    <!-- Creates the lib distribution                                            -->
-    <!--
-    <target name="dist-lib">
-    <echo message="Building the library distribution files (zip,tar)"/>
-    <tar tarfile="../${Name}-${version}-libs.tar" basedir="${lib.dir}/.." includes=""/>
-    <delete file="../${Name}-${version}-libs.tar"/>
-    </target>
-    -->
-    <!-- Creates the whole distribution                                            -->
-    <!--
-    <target name="dist-all" depends="dist,dist-oracle"/>
-    -->
-    <!-- Creates the whole distribution with adjusted version number         -->
-    <!--
-    <target name="dist-release" depends="setversion">
-    <property name="version" value="${lastversion}"/>
-    <antcall target="dist-all"/>
-    </target>
-    -->
-
-    <target name="set_build_number">
-        <buildnumber/>
-    </target>
-
 </project>
