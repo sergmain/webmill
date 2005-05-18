@@ -25,7 +25,7 @@
  *
  */
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
 	</xs:annotation>
@@ -36,7 +36,7 @@
 		<xs:documentation>Tomcat 4 Schema</xs:documentation>
 	</xs:annotation>
 	<xs:element name="Server" type="ServerType"/>
-	<xs:element name="Context" type="ContextType"/>
+	<xs:element name="ContextElement" type="ContextType"/>
 	<xs:complexType name="EnvironmentType">
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="value" type="xs:string" use="required"/>
