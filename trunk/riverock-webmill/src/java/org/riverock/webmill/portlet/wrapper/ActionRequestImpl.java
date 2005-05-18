@@ -22,6 +22,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.portlet.wrapper;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.util.Map;
+
+import javax.portlet.ActionRequest;
+import javax.servlet.ServletContext;
+
+import org.riverock.webmill.portlet.PortalRequestInstance;
 
 /**
  * User: Admin
@@ -30,220 +40,40 @@
  *
  * $Id$
  */
-package org.riverock.webmill.portlet.wrapper;
+public final class ActionRequestImpl extends WebmillPortletRequestV2 implements ActionRequest {
 
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.PortalContext;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletSession;
-import javax.portlet.PortletPreferences;
-import javax.portlet.WindowState;
-
-public class ActionRequestImpl implements ActionRequest
-{
-    public boolean isWindowStateAllowed( WindowState windowState )
-    {
-        return false;
+    public void destroy() {
+        super.destroy();
     }
 
-    public boolean isPortletModeAllowed( PortletMode portletMode )
-    {
-        return false;
+    public ActionRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, ServletContext servletContext, Map portletAttributes) {
+        super( servletContext, portalRequestInstance.getHttpRequest() );
+        prepareRequest( parameters, portalRequestInstance, null, portletAttributes);
     }
 
-    public PortletMode getPortletMode()
-    {
+    public InputStream getPortletInputStream() {
+        throw new IllegalStateException( "not implemented. use request.getParameter() method" );
+    }
+
+    public BufferedReader getReader() {
         return null;
     }
 
-    public WindowState getWindowState()
-    {
-        return null;
+    public void setCharacterEncoding( String s ) {
+        throw new IllegalStateException( "not implemented" );
+//        httpResponse.setContent
     }
 
-    public PortletPreferences getPreferences()
-    {
-        return null;
+    public String getCharacterEncoding() {
+        return httpRequest.getCharacterEncoding();
     }
 
-    public PortletSession getPortletSession()
-    {
-        return null;
+    public String getContentType() {
+        return httpRequest.getContentType();
     }
 
-    public PortletSession getPortletSession( boolean b )
-    {
-        return null;
-    }
-
-    public String getProperty( String encoding )
-    {
-        return null;
-    }
-
-    public Enumeration getProperties( String encoding )
-    {
-        return null;
-    }
-
-    public Enumeration getPropertyNames()
-    {
-        return null;
-    }
-
-    public PortalContext getPortalContext()
-    {
-        return null;
-    }
-
-    public String getAuthType()
-    {
-        return null;
-    }
-
-    public String getContextPath()
-    {
-        return null;
-    }
-
-    public String getRemoteUser()
-    {
-        return null;
-    }
-
-    public Principal getUserPrincipal()
-    {
-        return null;
-    }
-
-    public boolean isUserInRole( String encoding )
-    {
-        return false;
-    }
-
-    public Object getAttribute( String encoding )
-    {
-        return null;
-    }
-
-    public Enumeration getAttributeNames()
-    {
-        return null;
-    }
-
-    public String getParameter( String encoding )
-    {
-        return null;
-    }
-
-    public Enumeration getParameterNames()
-    {
-        return null;
-    }
-
-    public String[] getParameterValues( String encoding )
-    {
-        return new String[0];
-    }
-
-    public Map getParameterMap()
-    {
-        return null;
-    }
-
-    public boolean isSecure()
-    {
-        return false;
-    }
-
-    public void setAttribute( String encoding, Object o )
-    {
-    }
-
-    public void removeAttribute( String encoding )
-    {
-    }
-
-    public String getRequestedSessionId()
-    {
-        return null;
-    }
-
-    public boolean isRequestedSessionIdValid()
-    {
-        return false;
-    }
-
-    public String getResponseContentType()
-    {
-        return null;
-    }
-
-    public Enumeration getResponseContentTypes()
-    {
-        return null;
-    }
-
-    public Locale getLocale()
-    {
-        return null;
-    }
-
-    public Enumeration getLocales()
-    {
-        return null;
-    }
-
-    public String getScheme()
-    {
-        return null;
-    }
-
-    public String getServerName()
-    {
-        return null;
-    }
-
-    public int getServerPort()
-    {
-        return 0;
-    }
-
-    public InputStream getPortletInputStream() throws IOException
-    {
-        return null;
-    }
-
-    public void setCharacterEncoding( String encoding ) throws UnsupportedEncodingException
-    {
-    }
-
-    public BufferedReader getReader() throws UnsupportedEncodingException, IOException
-    {
-        return null;
-    }
-
-    public String getCharacterEncoding()
-    {
-        return null;
-    }
-
-    public String getContentType()
-    {
-        return null;
-    }
-
-    public int getContentLength()
-    {
-        return 0;
+    public int getContentLength() {
+        return httpRequest.getContentLength();
     }
 }
+

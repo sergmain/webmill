@@ -22,16 +22,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.webmill.site;
 
 import java.io.StringReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
@@ -46,14 +43,19 @@ import org.riverock.webmill.schema.site.SiteTemplateDescListType;
 import org.riverock.webmill.schema.site.SiteTemplateDescriptionType;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 
-public final class SiteTemplateList
-{
+/**
+ * $Id$
+ */
+public final class SiteTemplateList {
     private final static Logger log = Logger.getLogger( SiteTemplateList.class );
     private final static CacheFactory cache = new CacheFactory( SiteTemplateList.class.getName() );
 
-    public Hashtable hash = new Hashtable(4);
-    public Hashtable hashId = new Hashtable(4);
+    public Map hash = new HashMap(10);
+    public Map hashId = new HashMap(10);
 
     public SiteTemplateDescListType templateList = new SiteTemplateDescListType();
 
@@ -89,14 +91,16 @@ public final class SiteTemplateList
         super.finalize();
     }
 
-    public SiteTemplate getTemplate(long id) {
+    public SiteTemplate getTemplate( final long id ) {
         if (log.isDebugEnabled()) log.debug("search  template for id - "+ id);
 
         return (SiteTemplate)hashId.get( new Long(id) );
     }
 
-    public SiteTemplate getTemplate( String nameTemplate, String lang ) {
-        if ( log.isDebugEnabled() ) log.debug( "search template for name: '" + nameTemplate + "', lang: '" + lang + "'" );
+    public SiteTemplate getTemplate( final String nameTemplate, final String lang ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug( "search template for name: '" + nameTemplate + "', lang: '" + lang + "'" );
+        }
 
         if ( nameTemplate == null || lang == null )
             return null;
@@ -113,19 +117,13 @@ public final class SiteTemplateList
             "from SITE_TEMPLATE a, SITE_SUPPORT_LANGUAGE b " +
             "where b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
-        try
-        {
-            SiteTemplateList tempObj = new SiteTemplateList();
-            Class dependClass = tempObj.getClass();
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, dependClass );
+        try {
+            SqlStatement.registerSql( sql_, new SiteTemplateList().getClass() );
         }
-        catch(Exception e)
-        {
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-        }
-        catch(Error e)
-        {
-            log.error("Error in registerSql, sql\n"+sql_, e);
+        catch( Throwable exception ) {
+            final String es = "Exception in SqlStatement.registerSql()";
+            log.error( es, exception );
+            throw new SqlStatementRegisterException( es, exception );
         }
     }
 
@@ -152,7 +150,9 @@ public final class SiteTemplateList
                     );
                     st.setNameTemplate( RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
                     Long idSiteTemplate = RsetTools.getLong(rs, "ID_SITE_TEMPLATE");
-                    String lang = RsetTools.getString(rs, "CUSTOM_LANGUAGE");
+                    String lang = StringTools.getLocale(
+                        RsetTools.getString(rs, "CUSTOM_LANGUAGE")
+                    ).toString();
                     hash.put( st.getNameTemplate()+'_'+lang, st);
                     hashId.put( idSiteTemplate, st );
 
@@ -165,7 +165,7 @@ public final class SiteTemplateList
                 }
                 catch(Exception e)
                 {
-                    // Todo. Add to template text data. If we get erro, then create template with error message
+                    // Todo. Add to template text data. If we get error, then create template with error message
                     log.error("Error unmarshaling site template "+templateData, e);
                 }
             }

@@ -35,7 +35,6 @@ import javax.portlet.RenderRequest;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.riverock.webmill.portlet.PortalRequestInstance;
 import org.riverock.generic.tools.servlet.ServletResponseWrapperIncludeV3;
@@ -49,26 +48,31 @@ import org.apache.log4j.Logger;
  *
  * $Id$
  */
-public final class RenderResponseImpl extends HttpServletResponseWrapper implements RenderResponse {
-    private final static Logger log = Logger.getLogger( RenderResponseImpl.class );
+public final class RenderResponseImplV2 implements RenderResponse, HttpServletResponse {
+
+    private final static Logger log = Logger.getLogger( RenderResponseImplV2.class );
 
     private boolean isRedirected = false;
     private String redirectUrl = null;
 
     private boolean isUsingWriter;
     private boolean isUsingStream;
-    private String namespace = null;
 
     private ServletOutputStream wrappedWriter = null;
 
     // global parameters for page
     private PortalRequestInstance portalRequestInstance = null;
     private RenderRequest renderRequest = null;
+    private String namespace = null;
+    protected String title = null;
 
     private HttpServletResponse httpServletResponse = null;
     private ServletResponse servletResponse = null;
 
-    protected String title = null;
+
+    private ServletResponse _getServletResponse() {
+        return servletResponse;
+    }
 
     public byte[] getBytes() {
         if (servletResponse!=null && servletResponse instanceof ServletResponseWrapperIncludeV3 )
@@ -83,6 +87,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public void destroy() {
+        servletResponse = null;
         if (wrappedWriter!=null) {
             try {
                 wrappedWriter.close();
@@ -93,17 +98,29 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         }
         portalRequestInstance = null;
         renderRequest = null;
-        servletResponse = null;
         namespace = null;
         title = null;
     }
 
-    public RenderResponseImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest, HttpServletResponse response, String namespace ) {
-        super(response);
+    public ServletResponse getResponse(){
+        if ( log.isDebugEnabled() ) {
+            log.debug( "getResponse(), return this: " + this );
+        }
+        return this;
+    }
+
+    public void setResponse(ServletResponse response){
+        if ( log.isDebugEnabled() ) {
+            log.debug( "setResponse(), new response: " + response);
+        }
+        servletResponse = response;
+    }
+
+    public RenderResponseImplV2( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest, HttpServletResponse response, String namespace ) {
+        this.httpServletResponse = response;
         this.portalRequestInstance = portalRequestInstance;
         this.renderRequest = renderRequest;
         this.namespace = namespace;
-        this.httpServletResponse = response;
         this.servletResponse = new ServletResponseWrapperIncludeV3( portalRequestInstance.getLocale() );
     }
 
@@ -124,32 +141,33 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public String encodeURL( String url ) {
-        return super.encodeURL( url );
+        return httpServletResponse.encodeURL( url );
     }
 
     public void addCookie( javax.servlet.http.Cookie cookie ) {
-        super.addCookie( cookie );
+        httpServletResponse.addCookie( cookie );
     }
 
     public boolean containsHeader( String name ) {
-        return super.containsHeader( name );
+        return httpServletResponse.containsHeader( name );
     }
 
     public String encodeRedirectUrl( String url ) {
-        return super.encodeRedirectURL( url );
+        return httpServletResponse.encodeRedirectURL( url );
     }
 
     public String encodeRedirectURL( String url ) {
-        return super.encodeRedirectURL( url );
+        return httpServletResponse.encodeRedirectURL( url );
     }
 
     public void sendRedirect( String url ) {
-        if (url==null)
-            return;
-
         if ( log.isDebugEnabled() ) {
             log.debug( "sendRedirect to new url: " + url );
         }
+
+        if (url==null)
+            return;
+
         this.redirectUrl = url;
         this.isRedirected = true;
     }
@@ -158,18 +176,18 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 //        response.setDateHeader( name, date );
     }
 
-    public void sendError( int statusCode, String message ) throws java.io.IOException {
+    public void sendError( int statusCode, String message ) {
         log.error( "sendError(). statusCode: " + statusCode + ", message: "+message );
-        super.sendError( statusCode, message );
+//        httpResponseWrapper.sendError( statusCode, message );
     }
 
-    public void sendError( int statusCode ) throws java.io.IOException {
+    public void sendError( int statusCode ) {
         log.error( "sendError(). statusCode: " + statusCode);
-        super.sendError( statusCode );
+//        httpResponseWrapper.sendError( statusCode );
     }
 
     public void addHeader( String name, String value ) {
-        super.addHeader( name, value );
+//        httpResponseWrapper.addHeader( name, value );
     }
 
     public void setIntHeader( String name, int value ) {
@@ -185,15 +203,15 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public void setStatus( int sc ) {
-        super.setStatus( sc );
+//        httpResponseWrapper.setStatus( sc );
     }
 
     public void setStatus( int sc, String sm ) {
-        super.setStatus( sc, sm );
+//        httpResponseWrapper.setStatus( sc, sm );
     }
 
     public void addIntHeader( String name, int value ) {
-        super.addIntHeader( name, value );
+//        httpResponseWrapper.addIntHeader( name, value );
     }
 
     public void setContentLength( int len ) {
@@ -205,7 +223,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public void setLocale( Locale loc ) {
-        servletResponse.setLocale( loc );
+        _getServletResponse().setLocale( loc );
     }
 
     public String getContentType() {
@@ -218,7 +236,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         }
 
         if (wrappedWriter == null) {
-            wrappedWriter = servletResponse.getOutputStream();
+            wrappedWriter = _getServletResponse().getOutputStream();
         }
 
         isUsingStream = true;
@@ -232,7 +250,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         }
 
         if (wrappedWriter == null) {
-            wrappedWriter = servletResponse.getOutputStream();
+            wrappedWriter = _getServletResponse().getOutputStream();
         }
 
         isUsingStream = true;
@@ -244,7 +262,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
         if ( log.isDebugEnabled() ) {
             log.debug( "getWriter(), isUsingStream: "+isUsingStream+", isUsingWriter; "+isUsingWriter);
-            log.debug( "response: "+servletResponse.getClass().getName() );
+            log.debug( "response: "+_getServletResponse().getClass().getName() );
         }
 
         if ( isUsingStream )
@@ -252,7 +270,11 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
         isUsingWriter = true;
 
-        return servletResponse.getWriter();
+        return _getServletResponse().getWriter();
+    }
+
+    public void setCharacterEncoding( String charset ) {
+        _getServletResponse().setCharacterEncoding( charset );
     }
 
     public Locale getLocale() {
@@ -264,23 +286,23 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public int getBufferSize() {
-        return servletResponse.getBufferSize();
+        return _getServletResponse().getBufferSize();
     }
 
     public void flushBuffer() throws IOException {
-        servletResponse.flushBuffer();
+        _getServletResponse().flushBuffer();
     }
 
     public void resetBuffer() {
-        servletResponse.resetBuffer();
+        _getServletResponse().resetBuffer();
     }
 
     public boolean isCommitted() {
-        return servletResponse.isCommitted();
+        return _getServletResponse().isCommitted();
     }
 
     public void reset() {
-        servletResponse.reset();
+        _getServletResponse().reset();
     }
 
     public PortletURL createRenderURL() {
@@ -300,11 +322,11 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public void setContentType( String contentType ) {
-        servletResponse.setContentType( contentType );
+        _getServletResponse().setContentType( contentType );
     }
 
     public String getCharacterEncoding() {
-        return servletResponse.getCharacterEncoding();
+        return _getServletResponse().getCharacterEncoding();
     }
 
 }

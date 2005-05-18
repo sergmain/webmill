@@ -35,6 +35,7 @@ package org.riverock.webmill.utils;
 
 import java.io.Writer;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,66 +43,76 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
 
-import org.riverock.generic.tools.servlet.ServletResponseWrapperInclude;
 import org.riverock.generic.tools.servlet.HttpServletRequestWrapperInclude;
+import org.riverock.generic.tools.servlet.ServletResponseWrapperIncludeV2;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.common.config.ConfigException;
 
 import org.apache.log4j.Logger;
 
-public class ServletUtils
-{
-    private static Logger log = Logger.getLogger( "org.riverock.webmill.utils.ServletUtils" );
+/**
+ * 
+ * $Id$
+ */
+public final class ServletUtils {
+    private final static Logger log = Logger.getLogger( ServletUtils.class );
 
     public static void include(
-        HttpServletRequest request, HttpServletResponse response,
-        Map parameters,
-        String path, Writer out_
+        final HttpServletRequest request, final HttpServletResponse response,
+        final Map parameters,
+        final String path, final Writer out_
         )
-        throws IOException, ServletException
-    {
+        throws IOException, ServletException {
 
         RequestDispatcher rd = request.getRequestDispatcher(path);
 
         rd.include(
-            new HttpServletRequestWrapperInclude(request,parameters),
-            new ServletResponseWrapperInclude(response, out_)
+            new HttpServletRequestWrapperInclude( request, parameters ),
+            new ServletResponseWrapperIncludeV2( response, out_ )
         );
-
     }
 
-    public static String getString(HttpServletRequest request, String f)
-        throws ConfigException
-    {
+    public static void include(
+        final HttpServletRequest request, final HttpServletResponse response,
+        final Map parameters,
+        final String path, final OutputStream out_
+        )
+        throws IOException, ServletException {
+
+        RequestDispatcher rd = request.getRequestDispatcher(path);
+
+        rd.include(
+            new HttpServletRequestWrapperInclude( request, parameters ),
+            new ServletResponseWrapperIncludeV2( response, out_ )
+        );
+    }
+
+    public static String getString( final HttpServletRequest request, final String f)
+        throws ConfigException {
         return org.riverock.common.tools.ServletTools.getString(request, f, "", WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
     }
 
-    public static String getString(HttpServletRequest request, String f, String def)
-        throws ConfigException
-    {
-        return org.riverock.common.tools.ServletTools.getString(request, f, def, WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
+    public static String getString( final HttpServletRequest request, final String f, final String def)
+        throws ConfigException {
+        return org.riverock.common.tools.ServletTools.getString( request, f, def, WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset() );
     }
 
-    public static void setContentType(HttpServletResponse response, String charset)
-            throws Exception
-    {
+    public static void setContentType( final HttpServletResponse response, final String charset )
+        throws Exception {
         if (log.isDebugEnabled())
             log.debug("set new charset - "+charset);
 
-        try
-        {
+        try {
             response.setContentType("text/html; charset=" + charset);
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             log.error("Error set new content type to "+charset);
             throw e;
         }
     }
 
-    public static void setContentType(HttpServletResponse response)
-            throws Exception
-    {
+    public static void setContentType( final HttpServletResponse response)
+        throws Exception {
         setContentType(response, WebmillConfig.getHtmlCharset());
     }
 

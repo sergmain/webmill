@@ -34,12 +34,14 @@
 package org.riverock.webmill.config;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
 import org.riverock.webmill.schema.config.WebmillConfigType;
 import org.riverock.webmill.schema.config.CustomDirsType;
 import org.riverock.webmill.main.Constants;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.common.config.ConfigException;
+import org.riverock.common.tools.StringTools;
 
 import org.apache.log4j.Logger;
 
@@ -171,9 +173,13 @@ public class WebmillConfig
         if (!isConfigProcessed)
             readConfig();
 
-        if (log.isDebugEnabled()) log.debug("#15.904 Main language: " + getConfig().getMainLanguage());
+        if (log.isDebugEnabled()) {
+            log.debug("#15.904 Main language: " +
+                StringTools.getLocale( getConfig().getMainLanguage()).toString()
+            );
+        }
 
-        return getConfig().getMainLanguage();
+        return StringTools.getLocale( getConfig().getMainLanguage() ).toString();
     }
     public static String getServerCharset() throws ConfigException {
         if (log.isDebugEnabled()) log.debug("#15.905");
@@ -200,6 +206,21 @@ public class WebmillConfig
             log.debug("#15.924");
 
         return getConfig().getHtmlCharset();
+    }
+
+    public static Charset getCharset()
+        throws ConfigException
+    {
+        if (log.isDebugEnabled())
+            log.debug("#15.923");
+
+        if (!isConfigProcessed)
+            readConfig();
+
+        if (log.isDebugEnabled())
+            log.debug("#15.924");
+
+        return Charset.forName( getConfig().getHtmlCharset() );
     }
 
     public static boolean getIsSafePage()

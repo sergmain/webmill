@@ -38,11 +38,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-import org.riverock.webmill.schema.tomcat4.ContextType;
-import org.riverock.webmill.schema.tomcat4.ContextTypeItem;
-import org.riverock.webmill.schema.tomcat4.EnvironmentType;
-import org.riverock.webmill.schema.tomcat4.types.EnvironmentTypeTypeType;
-
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
@@ -55,7 +50,7 @@ public class ProcessMillContextConfig
     public ProcessMillContextConfig()
     {
     }
-
+/*
     private static EnvironmentType getEnv(String name, String value, String type, boolean override, boolean naming)
     {
         EnvironmentType env = new EnvironmentType();
@@ -66,12 +61,12 @@ public class ProcessMillContextConfig
         env.setNaming( new Boolean(naming) );
         return env;
     }
-
+*/
     public static void main(String args[])
         throws Exception
     {
         String encoding = "UTF-8";
-
+/*
         if (args.length <5)
             throw new Exception("Not enough arguments");
 
@@ -107,5 +102,6 @@ public class ProcessMillContextConfig
         marsh.setMarshalAsDocument( true );
         marsh.setEncoding( encoding );
         marsh.marshal( obj );
+*/
     }
 }

@@ -22,15 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.webmill.portlet;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 
 import org.riverock.generic.main.CacheDirectory;
 import org.riverock.generic.main.CacheFile;
@@ -44,9 +39,11 @@ import org.riverock.interfaces.schema.javax.portlet.PortletType;
 
 import org.apache.log4j.Logger;
 
-public class PortletManager
-{
-    private static Logger log = Logger.getLogger( PortletManager.class );
+/**
+ * $Id$
+ */
+public final class PortletManager {
+    private final static Logger log = Logger.getLogger( PortletManager.class );
 
     private static FileFilter portletFilter = new ExtensionFileFilter(".xml");
 
@@ -57,6 +54,7 @@ public class PortletManager
     private static PortletFile userPortletFile[] = null;
 
     private static boolean isUserDirectoryExists = true;
+    private static final int REFRESH_DELAY_PERIOD = 1000*30;  // scan dir every 30 seconds
 
     public static PortletFile[] getPortletFileArray()
     {
@@ -156,7 +154,7 @@ public class PortletManager
                 mainDir = new CacheDirectory(
                     PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_PORTLET_DIR,
                     portletFilter,
-                    1000*30 // сканировать директорий каждые 30 секунд
+                    REFRESH_DELAY_PERIOD
                 );
             }
 
@@ -195,19 +193,19 @@ public class PortletManager
 
                 if (customPortletDir!=null && customPortletDir.length()!=0)
                 {
-                    try
+//                    try
                     {
                         userDir = new CacheDirectory(
                             customPortletDir,
                             portletFilter,
-                            1000*30 // сканировать директорий каждые 30 секунд
+                            REFRESH_DELAY_PERIOD
                         );
                     }
-                    catch( FileNotFoundException e )
-                    {
-                        isUserDirectoryExists = false;
-                        return;
-                    }
+//                    catch( FileNotFoundException e )
+//                    {
+//                        isUserDirectoryExists = false;
+//                        return;
+//                    }
                 }
                 else
                     return;
@@ -235,7 +233,7 @@ public class PortletManager
                         userDir = new CacheDirectory(
                             customPortletDir,
                             portletFilter,
-                            1000*30 // сканировать директорий каждые 30 секунд
+                            REFRESH_DELAY_PERIOD
                         );
                     }
                 }
@@ -274,7 +272,7 @@ public class PortletManager
         }
     }
 
-    public static PortletType getPortletDescription(String portletName )
+    public static PortletType getPortletDescription( final String portletName )
             throws FileManagerException
     {
         if (portletName==null)

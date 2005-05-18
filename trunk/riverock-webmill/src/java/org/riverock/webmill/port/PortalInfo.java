@@ -22,18 +22,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.webmill.port;
 
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.MainTools;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.generic.exception.GenericException;
+import org.riverock.generic.site.SiteListSite;
+import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.core.GetSiteListSiteItem;
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
@@ -43,40 +45,45 @@ import org.riverock.webmill.schema.core.SiteListSiteItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.site.SiteTemplateList;
-import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import org.apache.log4j.Logger;
 
-public final class PortalInfo
-{
-    static
-    {
-        Class p = new PortalInfo().getClass();
-        SqlStatement.registerRelateClass( p, new GetSiteListSiteItem().getClass());
-        SqlStatement.registerRelateClass( p, new PortalXsltList().getClass());
-        SqlStatement.registerRelateClass( p, new SiteTemplateList().getClass());
-        SqlStatement.registerRelateClass( p, new GetSiteSupportLanguageWithIdSiteList().getClass());
-        SqlStatement.registerRelateClass( p, new SiteMenu().getClass());
+/**
+ * $Id$
+ */
+public final class PortalInfo implements Serializable  {
+    private transient final static Logger log = Logger.getLogger( PortalInfo.class );
+
+    static {
+        try {
+            Class p = new PortalInfo().getClass();
+            SqlStatement.registerRelateClass( p, new GetSiteListSiteItem().getClass() );
+            SqlStatement.registerRelateClass( p, new PortalXsltList().getClass() );
+            SqlStatement.registerRelateClass( p, new SiteTemplateList().getClass() );
+            SqlStatement.registerRelateClass( p, new GetSiteSupportLanguageWithIdSiteList().getClass() );
+            SqlStatement.registerRelateClass( p, new SiteMenu().getClass() );
+        }
+        catch( Exception exception ) {
+            final String es = "Exception in ";
+            log.error( es, exception );
+            throw new SqlStatementRegisterException( es, exception );
+        }
     }
 
-    private static Map portatInfoMap = new HashMap();
+    private transient static Map portatInfoMap = new HashMap();
 
-    private static Logger log = Logger.getLogger( PortalInfo.class );
+    private transient SiteListSiteItemType sites = new SiteListSiteItemType();
+    private transient SiteSupportLanguageListType supportLanguage = null;
 
-    private SiteListSiteItemType sites = new SiteListSiteItemType();
-    private SiteSupportLanguageListType supportLanguage = null;
+    private transient Locale defaultLocale = null;
 
-    private Locale defaultLocale = null;
+    private transient PortalXsltList xsltList = null;
+    private transient SiteTemplateList templates = null;
 
-    private PortalXsltList xsltList = null;
-    private SiteTemplateList templates = null;
+    private transient Map supportLanguageMap = null;
+    private transient Map languageMenuMap = null;
 
-    private Map supportLanguageMap = null;
-    private Map languageMenuMap = null;
-
-    private Long siteId = null;
+    private transient Long siteId = null;
 
     public boolean isCurrentSite(Long idSiteSupportLanguage)
     {
@@ -186,25 +193,23 @@ public final class PortalInfo
             if (getSites().getDefLanguage()==null)
                 getSites().setDefLanguage("");
 
-            if (getSites().getDefLanguage()!= null && getSites().getDefLanguage().length()>0 &&
-                getSites().getDefCountry() != null && getSites().getDefCountry().length()>0 )
+            if ( !StringTools.isEmpty( getSites().getDefLanguage()) &&
+                !StringTools.isEmpty( getSites().getDefCountry()) )
             {
 
                 defaultLocale = new Locale(
-                    getSites().getDefLanguage(),
+                    getSites().getDefLanguage().toLowerCase(),
                     getSites().getDefCountry(),
-                    getSites().getDefVariant()==null?"":getSites().getDefVariant()
+                    (getSites().getDefVariant()==null?"":getSites().getDefVariant()).toLowerCase()
                 );
 
                 if (log.isDebugEnabled())
                     log.debug("Main language 1.1: " + getDefaultLocale().toString());
 
             }
-            else
-            {
-                defaultLocale = MainTools.getLocale(WebmillConfig.getMainLanguage());
-                if (log.isDebugEnabled())
-                {
+            else {
+                defaultLocale = StringTools.getLocale( WebmillConfig.getMainLanguage() );
+                if (log.isDebugEnabled()) {
                     log.debug("Language InitParam.getMainLanguage(): " + WebmillConfig.getMainLanguage());
                     log.debug("Language locale: " + getDefaultLocale().toString());
                 }
@@ -229,7 +234,7 @@ public final class PortalInfo
             if (log.isInfoEnabled())
                 mills = System.currentTimeMillis();
 
-            supportLanguage = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
+            supportLanguage = processSupportLanguage( db_, siteId );
 
         } catch (Throwable e) {
             String es = "Error in PortalInfo(DatabaseAdapter db_, Long siteId)";
@@ -240,6 +245,17 @@ public final class PortalInfo
             log.info("init currency list for "+(System.currentTimeMillis()-mills)+" milliseconds");
 
         initMenu(db_);
+    }
+
+    public static SiteSupportLanguageListType processSupportLanguage( DatabaseAdapter db_, Long siteId ) throws org.riverock.webmill.exception.PortalPersistenceException {
+        SiteSupportLanguageListType langs = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
+
+        for (int i=0; i<langs.getSiteSupportLanguageCount(); i++) {
+            SiteSupportLanguageItemType lang = langs.getSiteSupportLanguage(i);
+            lang.setCustomLanguage( StringTools.getLocale( lang.getCustomLanguage() ).toString() );
+        }
+
+        return langs;
     }
 
     public PortalInfo(){}

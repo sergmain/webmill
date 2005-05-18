@@ -39,24 +39,26 @@ import java.util.Calendar;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.generic.site.SiteListSite;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 
 import org.apache.log4j.Logger;
 
-public class ContentCSS
+public final class ContentCSS
 {
-    private static Logger log = Logger.getLogger( ContentCSS.class );
+    private final static Logger log = Logger.getLogger( ContentCSS.class );
 
-    public String css = "";
-//    public long id_site;
-    public Calendar datePost = null;
+    private String css = "";
+    private Calendar datePost = null;
 
     private static CacheFactory cache = new CacheFactory( ContentCSS.class.getName() );
 
     protected void finalize() throws Throwable
     {
-        css = null;
-        datePost = null;
+        setCss( null );
+        setDatePost( null );
 
         super.finalize();
     }
@@ -88,26 +90,20 @@ public class ContentCSS
         return (ContentCSS) cache.getInstanceNew(db__, id__);
     }
 
-    static String sql_ = null;
-    static
-    {
-        sql_ =
-            "select a.date_post, b.css_data " +
-            "from SITE_CONTENT_CSS a, SITE_CONTENT_CSS_DATA b " +
-            "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.is_current=1 and " +
-            "a.id_site_content_css=b.id_site_content_css " +
-            "order by ID_SITE_CONTENT_CSS_DATA asc";
-
-        try
-        {
-            ContentCSS obj = new ContentCSS();
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, obj.getClass() );
+    static String sql_ =
+        "select a.date_post, b.css_data " +
+        "from SITE_CONTENT_CSS a, SITE_CONTENT_CSS_DATA b " +
+        "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.is_current=1 and " +
+        "a.id_site_content_css=b.id_site_content_css " +
+        "order by ID_SITE_CONTENT_CSS_DATA asc";
+    static {
+        try {
+            SqlStatement.registerSql( sql_, new ContentCSS().getClass() );
         }
-        catch(Exception e) {
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-        }
-        catch(Error e) {
-            log.error("Error in registerSql, sql\n"+sql_, e);
+        catch( Throwable exception ) {
+            final String es = "Exception in SqlStatement.registerSql()";
+            log.error( es, exception );
+            throw new SqlStatementRegisterException( es, exception );
         }
     }
 
@@ -126,14 +122,14 @@ public class ContentCSS
 
             RsetTools.setLong(ps, 1, id_);
             rset = ps.executeQuery();
-            css = "";
+            setCss( "" );
             while (rset.next()){
                 if (isFirstRecord){
-                    datePost = RsetTools.getCalendar(rset, "DATE_POST");
+                    setDatePost( RsetTools.getCalendar(rset, "DATE_POST") );
                     isFirstRecord = false;
                 }
 
-                css += RsetTools.getString(rset, "CSS_DATA");
+                setCss( getCss() + RsetTools.getString(rset, "CSS_DATA") );
             }
         }
         catch (Exception e) {
@@ -145,5 +141,28 @@ public class ContentCSS
             rset = null;
             ps = null;
         }
+    }
+
+    public String getCss() {
+        return css;
+    }
+
+    public void setCss( String css ) {
+        this.css = css;
+    }
+
+    public Calendar getDatePost() {
+        return datePost;
+    }
+
+    public void setDatePost( Calendar datePost ) {
+        this.datePost = datePost;
+    }
+
+    public boolean getIsEmpty() {
+        if (css==null || css.length()==0)
+            return true;
+        else
+            return false;
     }
 }

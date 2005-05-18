@@ -24,9 +24,6 @@
  */
 package org.riverock.webmill.portlet;
 
-import org.apache.log4j.Logger;
-import org.riverock.webmill.schema.site.SitePortletDataType;
-import org.riverock.webmill.schema.site.TemplateItemType;
 import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
 
 /**
@@ -36,19 +33,16 @@ import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
  * $Id$
  */
 public final class TemplateItemAsPortlet extends TemplateItemBaseClass {
-    private static Logger log = Logger.getLogger(TemplateItemAsPortlet.class);
 
-    SitePortletDataType getData( TemplateItemType item, PortalRequestInstance portalRequestInstance )
-        throws Exception {
+    void getData( PageElement pageElement ) {
+        pageElement.renderPortlet();
+    }
 
-        if ( log.isDebugEnabled() )
-            log.debug( "Portlet item  - "+item.getValue() );
-
-        return processPortlet( item, item.getValue(), portalRequestInstance );
+    void processAction( PageElement pageElement ) {
+        pageElement.processActionPortlet();
     }
 
     TemplateItemTypeTypeType getType() {
         return TemplateItemTypeTypeType.PORTLET;
     }
-
 }

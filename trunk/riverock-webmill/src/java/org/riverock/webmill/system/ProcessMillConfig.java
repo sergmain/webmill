@@ -65,7 +65,7 @@ public class ProcessMillConfig
         String outFile = args[1];
         String tempPath = args[2];
 
-        //Todo После того как когфиг файлы быди разделены
+        //Todo После того как когфиг файлы были разделены
         //Todo необходимо изменить создание контекста
         if (true) throw new Exception("Not implemented in version 4.x.x ");
 /*

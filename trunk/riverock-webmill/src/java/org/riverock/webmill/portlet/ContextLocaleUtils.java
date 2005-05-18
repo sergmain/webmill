@@ -48,10 +48,10 @@ import java.util.List;
 /**
  * $Id$
  */
-public class ContextLocaleUtils {
-    private static Logger log = Logger.getLogger( ContextLocaleUtils.class );
+public final class ContextLocaleUtils {
+    private final static Logger log = Logger.getLogger( ContextLocaleUtils.class );
 
-    static Locale prepareLocale(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo) throws PortalPersistenceException, PortalException {
+    static Locale prepareLocale( final DatabaseAdapter adapter, final HttpServletRequest request, final PortalInfo portalInfo) throws PortalPersistenceException, PortalException {
         // Todo - filter preferredLocale with locale defined for this site
         Locale tempLocale = null;
         tempLocale = getPreferredLocale(adapter, request, portalInfo.getSites().getIdSite());
@@ -75,7 +75,7 @@ public class ContextLocaleUtils {
         return realLocale;
     }
 
-    private static Locale getPreferredLocale(DatabaseAdapter db_, HttpServletRequest request, Long siteId) throws PortalPersistenceException {
+    private static Locale getPreferredLocale( final DatabaseAdapter db_, final HttpServletRequest request, final Long siteId ) throws PortalPersistenceException {
         // determinate preffered locale
         // AcceptLanguageWithLevel[] accept =
         List acceptVector = Header.getAcceptLanguageAsList( request );
@@ -92,14 +92,11 @@ public class ContextLocaleUtils {
         SiteSupportLanguageItemType includedFromCookie = null;
 
         Cookie[] cookies_req = request.getCookies();
-        if (cookies_req!=null)
-        {
-            for (int i = 0; i<cookies_req.length; i++)
-            {
+        if (cookies_req!=null) {
+            for (int i = 0; i<cookies_req.length; i++) {
                 Cookie c = cookies_req[i];
                 String name_cookie = c.getName();
-                if (name_cookie.equals( Constants.NAME_LOCALE_COOKIE))
-                {
+                if (name_cookie.equals( Constants.NAME_LOCALE_COOKIE)) {
                     includedFromCookie =
                         includedAccept(StringTools.getLocale( c.getValue()) , supportLanguageList );
                     break;
@@ -149,8 +146,8 @@ public class ContextLocaleUtils {
         return tempLocale;
     }
 
-    private static SiteSupportLanguageItemType includedAccept( Locale accept, SiteSupportLanguageListType supportLanguageList )
-    {
+    private static SiteSupportLanguageItemType includedAccept( final Locale accept, final SiteSupportLanguageListType supportLanguageList ) {
+
         boolean hasVariant = (accept.getVariant()!=null && accept.getVariant().trim().length()>0);
         boolean hasCountry = (accept.getCountry()!=null && accept.getCountry().trim().length()>0);
 

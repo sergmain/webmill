@@ -24,19 +24,10 @@
  */
 package org.riverock.webmill.portlet;
 
-import java.util.Locale;
-import java.io.UnsupportedEncodingException;
 
-import javax.portlet.PortletConfig;
-import javax.portlet.RenderResponse;
-
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.tools.StringManager;
-import org.riverock.webmill.main.Constants;
-
-import org.apache.log4j.Logger;
 
 /**
+ * @deprecated 
  * User: Admin
  * Date: Aug 26, 2003
  * Time: 4:40:19 PM
@@ -44,91 +35,6 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class CtxInstance {
-    private final static Logger log = Logger.getLogger(CtxInstance.class);
-
-    public static String url(String portlet) {
-        return null;
-//        return url(portlet, contextFactory.getNameTemplate());
-    }
-
-    public static String url( String portlet, String templateParam, RenderResponse renderResponse ) {
-//        return null;
-        return renderResponse.encodeURL( ctx() ) + '?' +
-            Constants.NAME_TYPE_CONTEXT_PARAM + '=' + portlet;
-//            getAsURL()+
-//            (templateParam!=null?("&" + Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' +templateParam):"");
-    }
-
-    /**
-     * @deprecated Use ResourceBundle
-     * @param locale
-     * @return
-     */
-    public static StringManager getStringManager( Locale locale ) {
-        return StringManager.getManager("mill.locale.main", locale);
-    }
-
-    /**
-     * @deprecated Use ResourceBundle
-     * @param locale
-     * @return
-     */
-    public static String getStr( Locale locale, String key, PortletConfig portletConfig ) {
-        String localePackage = portletConfig.getInitParameter( PortletTools.locale_name_package );
-        try {
-            return StringManager.getManager( localePackage, locale ).getStr(key);
-        }
-        catch( UnsupportedEncodingException e ) {
-            String es = "error getString";
-            log.error(es, e);
-            return null;
-        }
-    }
-
-    /**
-     * @deprecated Use ResourceBundle
-     * @param locale
-     * @return
-     */
-    public static String getStr( Locale locale, String key, String args[], PortletConfig portletConfig ) {
-        String localePackage = portletConfig.getInitParameter( PortletTools.locale_name_package );
-        try {
-            return StringManager.getManager( localePackage, locale ).getStr(key, args);
-        }
-        catch( UnsupportedEncodingException e ) {
-            String es = "error getString";
-            log.error(es, e);
-            return null;
-        }
-    }
-
-    public static String ctx() {
-        if (GenericConfig.contextName  == null)
-            return Constants.URI_CTX_MANAGER ;
-
-        return GenericConfig.contextName + Constants.URI_CTX_MANAGER ;
-    }
-
-    public static String pageid() {
-        if (GenericConfig.contextName  == null)
-            return Constants.PAGEID_SERVLET_NAME ;
-
-        return GenericConfig.contextName + Constants.PAGEID_SERVLET_NAME ;
-    }
-
-    public static String page() {
-        if (GenericConfig.contextName  == null)
-            return Constants.PAGE_SERVLET_NAME ;
-
-        return GenericConfig.contextName + Constants.PAGE_SERVLET_NAME ;
-    }
-
-    public static String urlPage() {
-        if (GenericConfig.contextName  == null)
-            return Constants.URL_SERVLET_NAME ;
-
-        return GenericConfig.contextName + Constants.URL_SERVLET_NAME ;
-    }
 
 //    public StringManager sCustom = null;
 //    private StringManager stringManager = null;

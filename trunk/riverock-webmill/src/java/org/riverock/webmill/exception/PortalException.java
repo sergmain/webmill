@@ -1,3 +1,5 @@
+package org.riverock.webmill.exception;
+
 /**
  * User: serg_main
  * Date: 11.05.2004
@@ -5,10 +7,7 @@
  * @author Serge Maslyukov
  * $Id$
  */
-
-package org.riverock.webmill.exception;
-
-public class PortalException extends Exception{
+public class PortalException extends Exception {
 
     public PortalException(){
         super();
@@ -20,14 +19,6 @@ public class PortalException extends Exception{
 
     public PortalException(String s, Throwable cause){
         super(s, cause);
-    }
-
-    public String toString(){
-        return super.toString();
-    }
-
-    public String getMessage(){
-        return super.getMessage();
     }
 }
 

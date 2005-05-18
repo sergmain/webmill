@@ -35,27 +35,31 @@ import org.riverock.webmill.portlet.ContextFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.StringTokenizer;
+import java.util.Map;
 
 /**
  * $Id$
  */
-public class UrlContextFactory extends ContextFactory {
-    private static Logger log = Logger.getLogger(UrlContextFactory.class);
+public final class UrlContextFactory extends ContextFactory {
+    private final static Logger log = Logger.getLogger(UrlContextFactory.class);
 
     private UrlContextFactory(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
         super(adapter, request, portalInfo);
     }
 
-    public static UrlContextFactory getInstance(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
+    public static ContextFactory getInstance(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
         UrlContextFactory factory = new UrlContextFactory(db, request, portalInfo);
-
-        return factory;
+        if (factory.getDefaultCtx()!=null)
+            return factory;
+        else
+            return null;
     }
 
-    protected Long getCtxId(DatabaseAdapter db, HttpServletRequest request) throws PortalPersistenceException {
+    public static final String URL_PAGE = "/page-";
+    protected Long initPortalParameters(DatabaseAdapter db, HttpServletRequest request) throws PortalException {
 
-        log.debug("Start process as page, format request: /<CONTEXT>/url/<LOCALE>,<PORTLET_TYPE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page/<URL_TO_PAGE>");
-        // format request: /<CONTEXT>/url/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page/<URL_TO_PAGE>
+        log.debug("Start process as page, format request: /<CONTEXT>/url/<LOCALE>,<PORTLET_TYPE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page-/<ID_CONTEXT><URL_TO_RESOURCE>");
+        // format request: /<CONTEXT>/url/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page-/<ID_CONTEXT><URL_TO_PAGE>
         // URL_TO_PAGE: [/CONTEXT_NAME]/page-url (page-url is html, jsp or other page)
 
 
@@ -77,52 +81,40 @@ public class UrlContextFactory extends ContextFactory {
             localeFromUrl = path.substring(1, idxSlash);
             StringTokenizer st = new StringTokenizer(localeFromUrl, ",", false);
             if (log.isDebugEnabled()) log.debug("st.countTokens(): "+st.countTokens());
-            if (st.countTokens()!=3)
+
+            if ( st.countTokens()!=4 )
                 return null;
 
             realLocale = StringTools.getLocale( st.nextToken() );
             String ctxType = st.nextToken();
             String ctxTemplate = st.nextToken();
+            Long ctxId = new Long( st.nextToken() );
 
             Long id = null;
-//            if (namePortletId!=null)
-//                id = ServletTools.getLong(request, namePortletId);
 
-            setPortletInfo(id, ctxType, ctxTemplate);
+            setPortletInfo( ctxTemplate );
 
-            if ( log.isDebugEnabled() ){
-                log.debug( "ctxTemplate: "+ctxTemplate );
-                log.debug( "ctxType: "+ctxType );
-                log.debug( "locale: "+realLocale );
-                log.debug( "namePortletId: "+namePortletId );
-                log.debug( "portletId: "+id );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "ctxTemplate: " + ctxTemplate );
+                log.debug( "ctxType: " + ctxType );
+                log.debug( "locale: " + realLocale );
+                log.debug( "portletId: " + id );
+                log.debug( "part: " + path.substring( idxSlash ) );
             }
-/*
-            Long ctxId = null;
-            ctxId = DatabaseManager.getLongValue(
-                    db,
-                    "select a.ID_SITE_CTX_CATALOG " +
-                    "from   SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b, SITE_SUPPORT_LANGUAGE c " +
-                    "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
-                    "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                    "       c.ID_SITE=? and c.CUSTOM_LANGUAGE=? and " +
-                    "       a.CTX_PAGE_URL=?",
-                    new Object[]{portalInfo.getSiteId(), localeFromUrl, pageName}
-            );
+
+            idxSlash = path.indexOf( URL_PAGE, idxSlash );
+            if (log.isDebugEnabled()) log.debug("idx of '" + URL_PAGE + "': " + idxSlash);
+            if (idxSlash==-1)
+                return null;
+
+            urlResource = path.substring( idxSlash + URL_PAGE.length() );
+
+            if (log.isDebugEnabled()) log.debug("urlResource: " + urlResource);
             return ctxId;
-*/
-            return null;
         }
-/*
-        catch (SQLException e) {
-            String es = "Error get ID of context from DB";
-            log.error(es, e);
-            throw new PortalPersistenceException(es, e);
-        }
-*/
     }
 
-    protected void prepareParameters( HttpServletRequest httpRequest )  throws PortalException {
-        //To change body of created methods use File | Settings | File Templates.
+    protected void prepareParameters( HttpServletRequest httpRequest, Map httpRequestParameter )  throws PortalException {
+        dynamicParameter = httpRequestParameter;
     }
 }

@@ -43,12 +43,6 @@ import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
-import org.riverock.webmill.schema.tomcat4.EngineType;
-import org.riverock.webmill.schema.tomcat4.HostType;
-import org.riverock.webmill.schema.tomcat4.ServerType;
-import org.riverock.webmill.schema.tomcat4.ContextType;
-import org.riverock.webmill.schema.tomcat4.HostTypeSequence;
-
 public class ProcessTomcatServerConfig
 {
     private static Logger cat = Logger.getLogger("org.riverock.webmill.system.ProcessTomcatServerConfig");
@@ -61,7 +55,7 @@ public class ProcessTomcatServerConfig
         throws Exception
     {
         String encoding = "UTF-8";
-
+/*
         if (args.length <3)
             throw new Exception("Not enough arguments");
 
@@ -91,8 +85,9 @@ public class ProcessTomcatServerConfig
         marsh.setMarshalAsDocument( true );
         marsh.setEncoding( encoding );
         marsh.marshal( obj );
+*/
     }
-
+/*
     private static HostType createHost( String nameHost )
     {
         HostType host = new HostType();
@@ -114,4 +109,5 @@ public class ProcessTomcatServerConfig
 
         return host;
     }
+*/    
 }

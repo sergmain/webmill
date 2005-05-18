@@ -47,9 +47,8 @@ import java.io.FileNotFoundException;
 import java.util.Hashtable;
 import java.util.Enumeration;
 
-public class PortletFile extends CacheFile
-{
-    private static Logger log = Logger.getLogger("org.riverock.webmill.portlet.PortletFile");
+public final class PortletFile extends CacheFile {
+    private final static Logger log = Logger.getLogger( PortletFile.class );
 
 //    private PortletListType portlet = null;
     private Hashtable portletHash = null; // PortletDescriptionType
