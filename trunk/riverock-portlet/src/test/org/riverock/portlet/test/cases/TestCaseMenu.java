@@ -40,7 +40,7 @@ import org.riverock.portlet.menu.InternalTestMenuSimple;
 import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.portal.menu.MenuInterface;
-import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.portlet.PortletParameter;
 import org.riverock.webmill.schema.core.SiteVirtualHostItemType;
 import org.riverock.webmill.schema.site.TemplateItemType;

@@ -25,10 +25,11 @@
 package org.riverock.portlet.menu;
 
 import junit.framework.TestCase;
-import org.riverock.common.collections.TreeItemInterface;
 import org.riverock.common.collections.TreeUtils;
 import org.riverock.webmill.portal.menu.MenuItem;
+import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
 import org.riverock.interfaces.common.TreeItemInterface;
+import org.riverock.generic.db.DatabaseAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,29 +42,44 @@ import java.util.List;
  */
 public class TestMenuTreeRebuild extends TestCase {
 
+    private static class MenuItemTest {
+        static SiteCtxCatalogItemType get( Long idSiteCtxCatalog, Long idTopCtxCatalog ){
+            SiteCtxCatalogItemType item = new SiteCtxCatalogItemType();
+            item.setIdSiteCtxCatalog( idSiteCtxCatalog );
+            item.setIdTopCtxCatalog( idTopCtxCatalog );
+            item.setKeyMessage( "message_"+idSiteCtxCatalog+"-"+idTopCtxCatalog );
+            return item;
+        }
+    }
+
     public void testRebuildTree()
         throws Exception
     {
+        org.riverock.generic.startup.StartupApplication.init();
+//        DatabaseAdapter db = DatabaseAdapter.getInstance(true);
+        DatabaseAdapter db = null;
+
         LinkedList list = new LinkedList();
-        list.add( new MenuItem(new Long(1), new Long(0), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(2), new Long(0), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(3), new Long(0), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(4), new Long(0), null, null, null, null, null) );
 
-        list.add( new MenuItem(new Long(10), new Long(1), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(11), new Long(1), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(12), new Long(1), null, null, null, null, null) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(1), new Long(0)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(2), new Long(0)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(3), new Long(0)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(4), new Long(0)) ) );
 
-        list.add( new MenuItem(new Long(100), new Long(10), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(101), new Long(10), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(102), new Long(10), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(103), new Long(10), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(104), new Long(10), null, null, null, null, null) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(10), new Long(1)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(11), new Long(1)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(12), new Long(1)) ) );
 
-        list.add( new MenuItem(new Long(21), new Long(2), null, null, null, null, null) );
-        list.add( new MenuItem(new Long(21), new Long(2), null, null, null, null, null) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(100), new Long(10)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(101), new Long(10)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(102), new Long(10)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(103), new Long(10)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(104), new Long(10)) ) );
 
-        list.add( new MenuItem(new Long(30), new Long(3), null, null, null, null, null) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(21), new Long(2)) ) );
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(21), new Long(2)) ) );
+
+        list.add( new MenuItem( db, MenuItemTest.get(new Long(30), new Long(3)) ) );
 
         List result = TreeUtils.rebuildTree(list);
 

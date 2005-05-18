@@ -29,10 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.RenderRequest;
+import javax.portlet.PortletRequest;
 
 import org.riverock.portlet.member.BaseClassQuery;
-import org.riverock.portlet.member.ClassQueryItem;
+import org.riverock.portlet.member.ClassQueryItemImpl;
 import org.riverock.portlet.member.MemberQueryParameter;
+import org.riverock.portlet.member.ClassQueryItemImpl;
 
 import org.apache.log4j.Logger;
 
@@ -81,18 +83,18 @@ public final class TestOption extends BaseClassQuery
 
     }
 
-    public String getCurrentValue( RenderRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest )
     {
         return type;
     }
 
-    public List getSelectList( RenderRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest )
     {
         List v = new ArrayList();
-        v.add( new ClassQueryItem(1, "aaa") );
-        v.add( new ClassQueryItem(2, "bbb") );
-        v.add( new ClassQueryItem(3, "ccc") );
-        v.add( new ClassQueryItem(4, "ddd") );
+        v.add( new ClassQueryItemImpl(1, "aaa") );
+        v.add( new ClassQueryItemImpl(2, "bbb") );
+        v.add( new ClassQueryItemImpl(3, "ccc") );
+        v.add( new ClassQueryItemImpl(4, "ddd") );
         return v;
     }
 

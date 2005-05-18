@@ -30,18 +30,16 @@
  *
  * $Id$
  */
-package org.riverock.portlet.test.cases;
+package org.riverock.portlet.shop;
 
 import java.io.ByteArrayInputStream;
 
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
-
-import junit.framework.TestCase;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.startup.StartupApplication;
+import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.core.GetPriceListWithIdShopList;
 import org.riverock.portlet.core.GetSiteVirtualHostItem;
-import org.riverock.portlet.price.PriceListItemList;
+import org.riverock.portlet.price.ImportPriceList;
 import org.riverock.portlet.price.ShopPageParam;
 import org.riverock.portlet.schema.core.PriceListListType;
 import org.riverock.portlet.schema.core.SiteVirtualHostItemType;
@@ -49,194 +47,189 @@ import org.riverock.portlet.schema.import_price.PriceListItemType;
 import org.riverock.portlet.schema.import_price.PriceListType;
 import org.riverock.portlet.schema.import_price.PricesType;
 import org.riverock.portlet.schema.import_price.types.PriceListItemTypeIsLoadType;
-import org.riverock.portlet.schema.portlet.shop.ItemListType;
-
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.tools.StringManager;
-import org.riverock.generic.startup.StartupApplication;
-import org.riverock.webmill.portlet.PortletParameter;
-import org.riverock.webmill.portlet.CtxInstance;
-import org.riverock.webmill.site.WebmillNamespace;
+import org.riverock.portlet.test.cases.TestCaseInterface;
+import org.riverock.portlet.test.cases.TestCaseSiteAbstract;
+import org.riverock.portlet.test.cases.TestSite;
+import org.riverock.portlet.test.independent.TestCaseTimestamp;
+import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.schema.site.TemplateItemType;
 import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.portlet.price.ShopPageParam;
+import org.riverock.webmill.site.WebmillNamespace;
 
-public class TestCaseShop extends TestCase implements TestCaseInterface
-{
+import junit.framework.TestCase;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
+
+public class TestCaseShop extends TestCase implements TestCaseInterface {
 
     private TestCaseSiteAbstract testAbstract = null;
 
-    public TestCaseShop(String testName)
-    {
-        super(testName);
+    public TestCaseShop( String testName ) {
+        super( testName );
     }
 
-    public void insertTestData() throws Exception
-    {
+    public void insertTestData() throws Exception {
         PricesType shopListData = new PricesType();
-        PriceListType shopData = new  PriceListType();
-        shopData.setShopCode(TestSite.shopCode);
+        PriceListType shopData = new PriceListType();
+        shopData.setShopCode( TestSite.shopCode );
 
         PriceListItemType item1 = new PriceListItemType();
         item1.setCurr( TestSite.nameRUB );
         item1.setIsGroup( Boolean.FALSE );
         item1.setIsLoad( PriceListItemTypeIsLoadType.YES );
-        item1.setItemID( new Long(211) );
-        item1.setNameItem( "test item "+item1.getItemID() );
-        item1.setParentID( new Long(0) );
-        item1.setPrice( new Double(23.34) );
+        item1.setItemID( new Long( 211 ) );
+        item1.setNameItem( "test item " + item1.getItemID() );
+        item1.setParentID( new Long( 0 ) );
+        item1.setPrice( new Double( 23.34 ) );
         shopData.addItem( item1 );
 
         PriceListItemType item2 = new PriceListItemType();
         item2.setCurr( TestSite.nameEURO );
         item2.setIsGroup( Boolean.FALSE );
         item2.setIsLoad( PriceListItemTypeIsLoadType.YES );
-        item2.setItemID( new Long(212) );
-        item2.setNameItem( "test item "+item2.getItemID() );
-        item2.setParentID( new Long(0) );
-        item2.setPrice( new Double(4.34) );
+        item2.setItemID( new Long( 212 ) );
+        item2.setNameItem( "test item " + item2.getItemID() );
+        item2.setParentID( new Long( 0 ) );
+        item2.setPrice( new Double( 4.34 ) );
         shopData.addItem( item2 );
 
         PriceListItemType item21 = new PriceListItemType();
         item21.setCurr( TestSite.nameEURO );
         item21.setIsGroup( Boolean.FALSE );
         item21.setIsLoad( PriceListItemTypeIsLoadType.NO );
-        item21.setItemID( new Long(212) );
-        item21.setNameItem( "test item "+item21.getItemID() );
-        item21.setParentID( new Long(0) );
-        item21.setPrice( new Double(4.34) );
+        item21.setItemID( new Long( 212 ) );
+        item21.setNameItem( "test item " + item21.getItemID() );
+        item21.setParentID( new Long( 0 ) );
+        item21.setPrice( new Double( 4.34 ) );
         shopData.addItem( item21 );
 
         PriceListItemType item3 = new PriceListItemType();
         item3.setCurr( TestSite.nameEURO );
         item3.setIsGroup( Boolean.TRUE );
         item3.setIsLoad( PriceListItemTypeIsLoadType.YES );
-        item3.setItemID( new Long(10) );
-        item3.setNameItem( "test item "+item3.getItemID() );
-        item3.setParentID( new Long(0) );
-        item3.setPrice( new Double(15.34) );
+        item3.setItemID( new Long( 10 ) );
+        item3.setNameItem( "test item " + item3.getItemID() );
+        item3.setParentID( new Long( 0 ) );
+        item3.setPrice( new Double( 15.34 ) );
         shopData.addItem( item3 );
 
         PriceListItemType item4 = new PriceListItemType();
         item4.setCurr( TestSite.nameEURO );
         item4.setIsGroup( Boolean.FALSE );
         item4.setIsLoad( PriceListItemTypeIsLoadType.YES );
-        item4.setItemID( new Long(510) );
-        item4.setNameItem( "test item "+item4.getItemID() );
-        item4.setParentID( new Long(10) );
-        item4.setPrice( new Double(11.34) );
+        item4.setItemID( new Long( 510 ) );
+        item4.setNameItem( "test item " + item4.getItemID() );
+        item4.setParentID( new Long( 10 ) );
+        item4.setPrice( new Double( 11.34 ) );
         shopData.addItem( item4 );
         shopListData.addPriceList( shopData );
 
-        int countItems=0;
-        for (int i=0; i<shopData.getItemCount(); i++)
-        {
-            if (shopData.getItem(i).getIsLoad().getType()==PriceListItemTypeIsLoadType.YES.getType())
+        int countItems = 0;
+        for( int i = 0; i<shopData.getItemCount(); i++ ) {
+            if ( shopData.getItem( i ).getIsLoad().getType() == PriceListItemTypeIsLoadType.YES.getType() )
                 countItems++;
         }
-        System.out.println("Count item in import - "+shopData.getItemCount()+
-            ", valid count - "+countItems);
+        System.out.println( "Count item in import - " + shopData.getItemCount() +
+            ", valid count - " + countItems );
         testAbstract.db_.commit();
 
-        byte[] bytes = XmlTools.getXml(shopListData, "Prices", WebmillNamespace.getWebmillNamespace());
+        byte[] bytes = XmlTools.getXml( shopListData, "Prices", WebmillNamespace.getWebmillNamespace() );
 
-        InputSource inSrc = new InputSource( new ByteArrayInputStream(bytes) );
-        PricesType prices = (PricesType) Unmarshaller.unmarshal(PricesType.class, inSrc);
+        InputSource inSrc = new InputSource( new ByteArrayInputStream( bytes ) );
+        PricesType prices = (PricesType)Unmarshaller.unmarshal( PricesType.class, inSrc );
         testAbstract.initRequestSession();
-//        ImportPriceList.process(prices, testAbstract.jspPage.p.sites.getIdSite());
+        ImportPriceList.process(prices, TestCaseSiteAbstract.testSite.idSite, testAbstract.db_ );
 
         testAbstract.db_.commit();
 
-        PriceListListType price = GetPriceListWithIdShopList.getInstance(testAbstract.db_, TestSite.idShop).item;
-        assertFalse("Error insert items in price-list, count of items in price-list wrong",
-            price.getPriceListCount()!=countItems
-        );
+        PriceListListType price = GetPriceListWithIdShopList.getInstance( testAbstract.db_, TestSite.idShop ).item;
+        assertFalse( "Error insert items in price-list, count of items in price-list wrong",
+            price.getPriceListCount() != countItems );
 
         ShopPageParam shopParam = new ShopPageParam();
         shopParam.id_currency = TestCaseSiteAbstract.testSite.idCurrencyEURO;
-        shopParam.sm = new StringManager();
         shopParam.sortBy = "item";
         shopParam.sortDirect = 0;
-        shopParam.id_group = new Long(0);
+        shopParam.id_group = new Long( 0 );
         shopParam.id_shop = TestSite.idShop;
         shopParam.isProcessInvoice = true;
         shopParam.idSite = TestCaseSiteAbstract.testSite.idSite;
-        shopParam.nameTemplate = "name_template";
-
-        CtxInstance ctxInstance = new CtxInstance(testAbstract.request, testAbstract.response, testAbstract.db_);
-
 
         TemplateItemType templateItem = new TemplateItemType();
-        templateItem.setType(TemplateItemTypeTypeType.PORTLET );
+        templateItem.setType( TemplateItemTypeTypeType.PORTLET );
         templateItem.setCode( TestSite.shopCode );
         templateItem.setValue( "mill.shop" );
 
-        PortletParameter param = new PortletParameter(ctxInstance, null, templateItem) ;
-
-        ItemListType item = PriceListItemList.getInstance(testAbstract.db_, shopParam, param);
-
+        // Todo write test of data which stored in DB after import price-list
+/*
+        RenderRequest renderRequest = null;
+        RenderResponse renderResponse = null;
+        ResourceBundle bundle = null;
+        ItemListType item = PriceListItemList.getInstance(
+            testAbstract.db_, shopParam, renderRequest, renderResponse, bundle );
+*/
 
     }
 
-    public void doTest() throws Exception
-    {
+    public void doTest() throws Exception {
     }
 
     public void tearDown()
-        throws Exception
-    {
-        System.out.println("start tearDown()");
+        throws Exception {
+        System.out.println( "start tearDown()" );
 
-        if (testAbstract!=null)
-        {
-            if (testAbstract.db_!=null && testAbstract.db_.conn != null)
-            {
+        if ( testAbstract != null ) {
+            if ( testAbstract.db_ != null && testAbstract.db_.conn != null ) {
                 testAbstract.db_.commit();
             }
-            DatabaseAdapter.close( testAbstract.db_);
+            DatabaseAdapter.close( testAbstract.db_ );
             testAbstract.db_ = null;
         }
     }
 
     public void testWithOracleConnection()
-        throws Exception
-    {
+        throws Exception {
         testAbstract = new TestCaseSiteAbstract();
         testAbstract.testWithOracleConnection( this );
     }
 
     public void testWithHypersonicConnection()
-        throws Exception
-    {
+        throws Exception {
         testAbstract = new TestCaseSiteAbstract();
         testAbstract.testWithHypersonicConnection( this );
+
+        try
+        {
+            TestCaseTimestamp t = new TestCaseTimestamp("aaa");
+            t.testHypersonic();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Hsql exception "+e.toString());
+        }
+
     }
 
     public void testWithMySqlConnection()
-        throws Exception
-    {
+        throws Exception {
         testAbstract = new TestCaseSiteAbstract();
         testAbstract.testWithMySqlConnection( this );
     }
 
     public void testWithIbmDB2Connection()
-        throws Exception
-    {
+        throws Exception {
         testAbstract = new TestCaseSiteAbstract();
         testAbstract.testWithIbmDB2Connection( this );
     }
 
     public void testWithMSSQLConnection()
-        throws Exception
-    {
+        throws Exception {
         testAbstract = new TestCaseSiteAbstract();
         testAbstract.testWithMSSQLConnection( this );
     }
 
-    public static void main(String args[])
-        throws Exception
-    {
+    public static void main( String args[] )
+        throws Exception {
         StartupApplication.init();
 
         long id = 1;
@@ -244,15 +237,13 @@ public class TestCaseShop extends TestCase implements TestCaseInterface
 
         String[][] ns = new String[][]
         {
-            { "mill-core", "http://webmill.askmore.info/mill/xsd/mill-core.xsd" }
+            {"mill-core", "http://webmill.askmore.info/mill/xsd/mill-core.xsd"}
         };
 
-        XmlTools.writeToFile(
-            resultItem,
-            WebmillConfig.getWebmillDebugDir()+"test-site_virtual_host-item.xml",
+        XmlTools.writeToFile( resultItem,
+            WebmillConfig.getWebmillDebugDir() + "test-site_virtual_host-item.xml",
             "utf-8",
             null,
-            ns
-        );
+            ns );
     }
 }

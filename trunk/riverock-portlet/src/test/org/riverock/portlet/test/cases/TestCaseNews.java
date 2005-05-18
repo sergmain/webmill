@@ -38,7 +38,7 @@ import java.sql.Timestamp;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.portlet.PortletParameter;
 import org.riverock.webmill.portlet.PortletManager;
 import org.riverock.webmill.portlet.PortletTools;
@@ -52,6 +52,7 @@ import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.portlet.news.NewsBlock;
 import org.riverock.portlet.news.NewsBlock;
+import org.riverock.portlet.news.NewsSite;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.MainTools;
@@ -389,8 +390,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
                 newsItem.setToFullItem( str );
                 newsItem.setUrlToFullNewsItem(
-//                    CtxInstance.url( Constants .CTX_TYPE_NEWS ) + '&' +
-                    Constants.NAME_ID_NEWS_PARAM + '=' + newsItem.getNewsItemId() + '&'
+//                    PortletTools.url( Constants .CTX_TYPE_NEWS ) + '&' +
+                    NewsSite.NAME_ID_NEWS_PARAM + '=' + newsItem.getNewsItemId() + '&'
                 );
             }
         }

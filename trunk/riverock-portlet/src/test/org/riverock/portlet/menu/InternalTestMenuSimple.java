@@ -32,7 +32,6 @@
  */
 package org.riverock.portlet.menu;
 
-import org.riverock.webmill.portlet.PortletParameter;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.portlet.schema.portlet.menu.MenuModuleType;
 import org.riverock.portlet.test.cases.TestSite;
@@ -49,7 +48,7 @@ import java.util.ListIterator;
 public class  InternalTestMenuSimple
 
 {
-    private static Logger log = Logger.getLogger("org.riverock.portlet.menu.InternalTestMenuSimple");
+    private static Logger log = Logger.getLogger(InternalTestMenuSimple.class);
 
     private final static int COUNT_TOP_LEVEL_MENU = 4;
     private final static int COUNT_SUB_MENU = 3;
@@ -65,7 +64,7 @@ public class  InternalTestMenuSimple
         MenuSimple menu = new MenuSimple();
         menu.setParameter( param );
 
-        PortletType desc = menu.searchPortletDescription(portletType);
+        PortletType desc = menu.initPortletId(portletType);
 
 //        Assert.assertEquals(true, desc!=null);
 //        Assert.assertEquals(portletType, desc.getPortletName().getContent());

@@ -39,6 +39,8 @@ import junit.framework.TestCase;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.sql.DatabaseMetaData;
 import java.sql.Types;
 
@@ -49,6 +51,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.startup.StartupApplication;
+import org.riverock.generic.startup.StartupServlet;
 import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.portlet.schema.member.ModuleType;
 import org.riverock.portlet.schema.member.ContentType;
@@ -76,7 +79,7 @@ import javax.portlet.PortletRequest;
 public class TestMemberServiceClass extends TestCase
 {
     private static boolean isUseAssertion = true;
-    private static Logger log = Logger.getLogger( "org.riverock.portlet.member.TestMemberServiceClass" );
+    private static Logger log = Logger.getLogger( TestMemberServiceClass.class );
 
 
     public TestMemberServiceClass(String testName)
@@ -496,9 +499,9 @@ public class TestMemberServiceClass extends TestCase
                         Exception ee = null;
                         try
                         {
-//                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
-                            PortletRequest portletRequest = new RenderRequestImpl();
-                            String sql = MemberServiceClass.buildUpdateSQL(content, null, mod, db_, true, portletRequest);
+//                            PortletRequest portletRequest = new RenderRequestImpl();
+                            Map map = new HashMap();
+                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name" );
                             Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -535,8 +538,9 @@ public class TestMemberServiceClass extends TestCase
                         Exception ee = null;
                         try
                         {
-                            PortletRequest portletRequest = new RenderRequestImpl();
-                            String sql = MemberServiceClass.buildDeleteSQL(content, mod, null, db_, portletRequest);
+//                            PortletRequest portletRequest = new RenderRequestImpl();
+                            Map map = new HashMap();
+                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name" );
                             Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -1058,7 +1062,14 @@ public class TestMemberServiceClass extends TestCase
         throws Exception
     {
         StartupApplication.init();
+
+        System.out.println("info Xalan version - " + org.apache.xalan.Version.getVersion());
+        System.out.println("info Xerces version - " + org.apache.xerces.impl.Version.getVersion());
+        System.out.println("info Castor version - " + org.exolab.castor.util.Version.getBuildVersion());
+
         ModuleManager.init();
+
+        MemberFile[] member = ModuleManager.getMemberFileArray();
 
         ModuleType module = ModuleManager.getModule(TemplateMemberClassQuery.nameModule);
         assertFalse("Module '" + TemplateMemberClassQuery.nameModule + "' not found",
