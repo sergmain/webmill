@@ -217,12 +217,11 @@ public class ImportPriceProcess
                     ps2 = dbDyn.prepareStatement(
                         "select CODE_SHOP from PRICE_SHOP_TABLE where ID_SITE=?"
                     );
-                    RsetTools.setLong(ps, 1, idSite);
+                    RsetTools.setLong(ps2, 1, idSite);
 
                     rs2 = ps2.executeQuery();
 
-                    while(rs2.next())
-                    {
+                    while( rs2.next() ) {
                         isFound = true;
                         if (isFirst)
                             isFirst = false;
@@ -233,7 +232,7 @@ public class ImportPriceProcess
                     }
 
                 }
-                catch(Exception e)
+                catch( Exception e )
                 {
                     log.error("error mark for delete", e);
                     throw e;
@@ -338,17 +337,12 @@ public class ImportPriceProcess
 
         try
         {
-
-        // На Линукс с JDK 1.3.1 вместо приведения к верхнему регистру,
-        // код магазина переводится в нижний регистр.
-        // Повторить баг не удалось. Вроде не пил и не спал ;)
-//            setUpperShopCode( dbDyn );
             dbDyn.createStatement().executeUpdate(
                 "update PRICE_IMPORT_TABLE set SHOP_CODE = UPPER(SHOP_CODE)"
             );
 
-        // Удаляем дерево ненужных групп
-        // сначала помечаем все явные наименования и группы
+        // delete tree of unused groups
+        // 1st mark all concrete items and groups
             markForDelete( dbDyn, idSite );
 /*
             UPDATE PRICE_IMPORT_TABLE
@@ -553,10 +547,16 @@ public class ImportPriceProcess
             try
             {
                 ps = dbDyn.prepareStatement(
-                    "update PRICE_SHOP_TABLE set LAST_DATE_UPLOAD="+dbDyn.getNameDateBind()+" where ID_SITE=?"
+                    "update PRICE_SHOP_TABLE " +
+                    "set LAST_DATE_UPLOAD="+dbDyn.getNameDateBind()+" " +
+                    "where ID_SITE=? and CODE_SHOP in " +
+                    "(select distinct x1.SHOP_CODE from PRICE_IMPORT_TABLE x1 )"
+
+//                    "update PRICE_LIST set ABSOLETE=1 where ID_SHOP in "+
+//                    "(select z1.ID_SHOP from PRICE_SHOP_TABLE z1, PRICE_IMPORT_TABLE x1 "+
+//                    "where z1.ID_SITE=? and z1.CODE_SHOP=x1.SHOP_CODE)"
                 );
                 dbDyn.bindDate(ps, 1, DateTools.getCurrentTime());
-//                ps.setTimestamp(1, new Timestamp( System.currentTimeMillis() ) );
                 RsetTools.setLong(ps, 2, idSite);
                 ps.executeUpdate();
             }
@@ -570,11 +570,6 @@ public class ImportPriceProcess
                 DatabaseManager.close(ps);
                 ps = null;
             }
-/*
-            update price_shop_table
-            set last_date_upload = sysdate
-            where idSite = siteID;
-*/
 
 
 /*
@@ -626,8 +621,7 @@ public class ImportPriceProcess
         // Значения обновлены
 
         }
-        catch(Exception e)
-        {
+        catch( Exception e ) {
             log.error("Error inport price-list",e);
             throw e;
         }

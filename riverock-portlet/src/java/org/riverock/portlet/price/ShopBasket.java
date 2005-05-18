@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Author$
- *
- * $Id$
- *
- */
 package org.riverock.portlet.price;
 
 import java.util.ResourceBundle;
@@ -43,32 +35,38 @@ import org.riverock.portlet.schema.portlet.shop.CurrentBasketType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.webmill.portlet.PortletTools;
 
-public class ShopBasket {
+/**
+ *
+ * $Author$
+ *
+ * $Id$
+ *
+ */
+public final class ShopBasket {
 //    private static Logger log = Logger.getLogger( ShopBasket.class );
 
     public static CurrentBasketType getInstance(
-        OrderType order, ShopPageParam shopParam, RenderRequest renderRequest, RenderResponse renderResponse,
-        ResourceBundle bundle) {
+        final OrderType order, final ShopPageParam shopParam,
+        final RenderRequest renderRequest, final RenderResponse renderResponse,
+        final ResourceBundle bundle) {
 
-        if (order == null || OrderLogic.getCountItem(order) == 0)
+        if (order == null || OrderLogic.getCountItem(order)==0)
             return null;
 
         CurrentBasketType basket = new CurrentBasketType();
 
-//            basket.setCurrentBasketName( shopParam.sm.getStr("price.invoice") );
         basket.setCurrentBasketName( bundle.getString( "price.invoice" ) );
 
         basket.setItemInBasket( new Integer(OrderLogic.getCountItem(order)) );
 
         PortletURL portletURL = renderResponse.createRenderURL();
         portletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_INVOICE );
-//        portletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam.nameTemplate );
-        portletURL.setParameter( Constants.NAME_ID_GROUP_SHOP, PortletTools.getInt( renderRequest, Constants.NAME_ID_GROUP_SHOP ).toString() );
+        portletURL.setParameter( Constants.NAME_ID_GROUP_SHOP, PortletTools.getInt( renderRequest, Constants.NAME_ID_GROUP_SHOP, new Integer(0) ).toString() );
         portletURL.setParameters( shopParam.currencyURL );
         portletURL.setParameter( Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
 
 //            basket.setCurrentBasketUrl(
-//                CtxInstance.url(Constants.CTX_TYPE_INVOICE) + '&' +
+//                PortletTools.url(Constants.CTX_TYPE_INVOICE) + '&' +
 //                Constants.NAME_ID_CURRENCY_SHOP + '=' +
 //                PortletTools.getInt( renderRequest, Constants.NAME_ID_CURRENCY_SHOP ) + '&' +
 //                Constants.NAME_ID_GROUP_SHOP + '=' +

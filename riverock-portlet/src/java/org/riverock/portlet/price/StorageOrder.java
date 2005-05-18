@@ -28,14 +28,15 @@ package org.riverock.portlet.price;
 import java.io.PrintStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
-public class StorageOrder
-{
+import org.apache.log4j.Logger;
+
+public final class StorageOrder {
+    private final static Logger log = Logger.getLogger( StorageOrder.class );
     String dateOrder = "";
     String numberOrder;
     long orderID;
@@ -99,7 +100,7 @@ public class StorageOrder
      или null
      */
     public Long checkOrderInDB(DatabaseAdapter db_, long id_shop)
-            throws PriceException
+        throws PriceException
     {
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -120,9 +121,11 @@ public class StorageOrder
                 retID = new Long(rs.getLong("id_PRICE_STORAGE_ORDER"));
 
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
-            throw new PriceException(e.toString());
+            String es = "Error in checkOrderInDB()";
+            log.error( es, e );
+            throw new PriceException(es, e);
         }
         finally
         {
@@ -184,9 +187,11 @@ public class StorageOrder
             st.executeUpdate();
 
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
-            throw new PriceException(e.toString());
+            String es = "Error in save()";
+            log.error( es, e );
+            throw new PriceException(es, e);
         }
         finally
         {
@@ -232,7 +237,7 @@ public class StorageOrder
     }
 
     public static void calcQuantity(DatabaseAdapter db_, long id_shop)
-            throws PriceException
+        throws PriceException
     {
         PreparedStatement st = null;
         try
@@ -290,9 +295,11 @@ public class StorageOrder
             st.executeUpdate();
 
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
-            throw new PriceException(e.toString());
+            String es = "Error in calcQuantity()";
+            log.error( es, e );
+            throw new PriceException(es, e);
         }
         finally
         {

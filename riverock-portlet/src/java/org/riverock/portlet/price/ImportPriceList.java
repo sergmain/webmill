@@ -31,17 +31,16 @@ package org.riverock.portlet.price;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 
+import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.portlet.core.GetPriceShopTableWithIdSiteList;
+import org.riverock.portlet.schema.core.PriceShopTableItemType;
+import org.riverock.portlet.schema.core.PriceShopTableListType;
 import org.riverock.portlet.schema.import_price.PriceListItemType;
 import org.riverock.portlet.schema.import_price.PriceListType;
 import org.riverock.portlet.schema.import_price.PricesType;
-import org.riverock.portlet.schema.core.PriceShopTableListType;
-import org.riverock.portlet.schema.core.PriceShopTableItemType;
-import org.riverock.portlet.core.GetPriceShopTableWithIdSiteList;
-import org.riverock.common.tools.RsetTools;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
@@ -73,7 +72,6 @@ public class ImportPriceList
         PreparedStatement ps = null;
 
         String sql_ = null;
-        Statement st = null;
         PriceListItemType debugItem = null;
         try
         {
@@ -228,17 +226,16 @@ public class ImportPriceList
             else
                 log.error("debugItem is null");
 
-            log.error("error process import price-list, sql "+sql_);
-            log.error("error process import price-list", e);
-            try
-            {
+            log.error("sql:\n"+sql_);
+            final String es = "error process import price-list";
+            log.error( es, e );
+            try {
                 dbDyn.rollback();
             }
-            catch (Exception e11)
-            {
+            catch (Exception e11) {
             }
 
-            throw new PriceException(e.toString());
+            throw new PriceException( es, e );
         }
         finally
         {

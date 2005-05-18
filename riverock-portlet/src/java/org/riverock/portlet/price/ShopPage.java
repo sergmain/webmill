@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Author$
- *
- * $Id$
- *
- */
 package org.riverock.portlet.price;
 
 import java.io.FileWriter;
@@ -57,6 +49,13 @@ import org.riverock.webmill.portlet.PortletResultContent;
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Marshaller;
 
+/**
+ *
+ * $Author$
+ *
+ * $Id$
+ *
+ */
 public final class ShopPage implements PortletResultObject, PortletResultContent {
     private final static Logger log = Logger.getLogger( ShopPage.class );
 
@@ -149,10 +148,6 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
 
             shopParam.id_group = PortletTools.getLong( renderRequest, Constants.NAME_ID_GROUP_SHOP, new Long(0) );
-
-//            shopParam.nameTemplate = param.getNameTemplate();
-//            shopParam.nameTemplate = (String)renderRequest.getAttribute(PortalConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE);
-
             shopParam.setServerName( renderRequest.getServerName() );
             shopParam.id_currency = PortletTools.getLong( renderRequest, Constants.NAME_ID_CURRENCY_SHOP);
 
@@ -185,16 +180,12 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
             PortletURL itemPortletURL = renderResponse.createRenderURL();
             itemPortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP );
-//            itemPortletURL.setParameter(org.riverock.webmill.main.Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam.nameTemplate);
             itemPortletURL.setParameter( Constants.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
-
-//            if ( shopParam.currencyURL!=null )
-                itemPortletURL.setParameters( shopParam.currencyURL );
-
+            itemPortletURL.setParameters( shopParam.currencyURL );
             itemPortletURL.setParameter( Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
             itemPortletURL.setParameter( Constants.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
 
-//            sortItemUrl = CtxInstance.url(Constants.CTX_TYPE_SHOP, shopParam.nameTemplate)+'&'+
+//            sortItemUrl = PortletTools.url(Constants.CTX_TYPE_SHOP, shopParam.nameTemplate)+'&'+
 //                Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
 //                shopParam.currencyURL + '&' +
 //                Constants.NAME_ID_SHOP_PARAM + '=' + shopParam.id_shop + '&' +
@@ -202,24 +193,16 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
             PortletURL pricePortletURL = renderResponse.createRenderURL();
             pricePortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP );
-//            pricePortletURL.setParameter(org.riverock.webmill.main.Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam.nameTemplate);
             pricePortletURL.setParameter( Constants.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
-
-//            if ( shopParam.currencyURL!=null )
-                pricePortletURL.setParameters( shopParam.currencyURL );
-
+            pricePortletURL.setParameters( shopParam.currencyURL );
             pricePortletURL.setParameter( Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
             pricePortletURL.setParameter(  Constants.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
 
-//            sortPriceUrl = sortItemUrl;
-
-            if ("item".equals(shopParam.sortBy))
-            {
+            if ("item".equals(shopParam.sortBy)) {
                 itemDirect = (shopParam.sortDirect == 0 ? "DESC" : "ASC");
                 shopPage.setItemDirect( itemDirect );
             }
-            else if ("price".equals(shopParam.sortBy))
-            {
+            else if ("price".equals(shopParam.sortBy)) {
                 priceDirect = (shopParam.sortDirect == 0 ? "DESC" : "ASC");
                 shopPage.setPriceDirect( priceDirect );
             }
@@ -231,7 +214,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 //                Constants.NAME_SHOP_SORT_DIRECT + '=' + ("DESC".equals(itemDirect) ? 1 : 0);
 
             pricePortletURL.setParameter(Constants.NAME_SHOP_SORT_BY, "price");
-            pricePortletURL.setParameter(Constants.NAME_SHOP_SORT_DIRECT, ""+("DESC".equals(itemDirect) ? 1 : 0));
+            pricePortletURL.setParameter(Constants.NAME_SHOP_SORT_DIRECT, ""+("DESC".equals(priceDirect) ? 1 : 0));
 //            sortPriceUrl +=
 //                Constants.NAME_SHOP_SORT_BY + "=price&" +
 //                Constants.NAME_SHOP_SORT_DIRECT + '=' + ("DESC".equals(priceDirect) ? 1 : 0);
@@ -239,16 +222,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             shopPage.setSortItemUrl( itemPortletURL.toString() );
             shopPage.setSortPriceUrl( pricePortletURL.toString() );
 
-//            if (shopParam.nameTemplate == null)
-//            {
-//                log.error("shop template not defined");
-//                throw new PortletException("shop template not defined");
-//            }
-
-//            shopParam.sm = param.getSm();
-
-            if (shop.isNeedRecalc)
-            {
+            if (shop.isNeedRecalc) {
                 shopPage.setCurrencyList(
                     PriceCurrency.getCurrencyList(
                         shopParam,

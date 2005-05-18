@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.riverock.webmill.portlet.PortletGetList;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.portlet.member.ClassQueryItem;
+import org.riverock.portlet.member.ClassQueryItemImpl;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 import org.apache.log4j.Logger;
 
@@ -38,11 +39,13 @@ public class ShopListProvider implements PortletGetList {
         List v = new ArrayList();
         try {
             db_ = DatabaseAdapter.getInstance( false );
-            ps = db_.prepareStatement( "SELECT b.ID_SHOP, b.CODE_SHOP, b.NAME_SHOP " +
+            ps = db_.prepareStatement( 
+                "SELECT b.ID_SHOP, b.CODE_SHOP, b.NAME_SHOP " +
                 "FROM site_ctx_lang_catalog a, PRICE_SHOP_TABLE b, site_support_language c " +
                 "where a.ID_SITE_CTX_LANG_CATALOG=? and " +
                 "a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "c.ID_SITE=b.ID_SITE" );
+                "c.ID_SITE=b.ID_SITE" 
+            );
 
             RsetTools.setLong( ps, 1, idSiteCtxLangCatalog );
 
@@ -54,10 +57,11 @@ public class ShopListProvider implements PortletGetList {
                     RsetTools.getString( rs, "NAME_SHOP" );
 
                 ClassQueryItem item =
-                    new ClassQueryItem( id, StringTools.truncateString( name, 60 ) );
+                    new ClassQueryItemImpl( id, StringTools.truncateString( name, 60 ) );
 
-                if (idContext.equals( item.index ))
-                    item.isSelected = true;
+                if (idContext!=null && idContext.equals( item.getIndex() )) {
+                    item.setSelected(true);
+                }
 
                 v.add( item );
             }

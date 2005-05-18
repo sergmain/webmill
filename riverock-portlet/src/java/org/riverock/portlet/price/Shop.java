@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *  $Id$
- */
 package org.riverock.portlet.price;
 
 import java.sql.PreparedStatement;
@@ -40,12 +36,16 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.GenericException;
+import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.generic.site.SiteListSite;
+import org.riverock.sql.cache.SqlStatement;
 
-public class Shop
-{
-    private static Logger log = Logger.getLogger( Shop.class );
+/**
+ *  $Id$
+ */
+public final class Shop {
+    private final static Logger log = Logger.getLogger( Shop.class );
 
     private static CacheFactory cache = new CacheFactory( Shop.class.getName() );
 
@@ -110,7 +110,7 @@ public class Shop
     public Shop(){};
 
     public static Long getShopID(DatabaseAdapter ora_, String codeShop)
-            throws SQLException
+        throws SQLException, DatabaseException
     {
         if (codeShop == null)
             return null;
@@ -130,7 +130,7 @@ public class Shop
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( rs, ps );
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }
@@ -183,8 +183,9 @@ public class Shop
         }
         catch (GenericException genericException)
         {
-            log.error("Exception in ", genericException);
-            throw new PriceException(genericException.getMessage());
+            final String es = "Exception in ";
+            log.error(es, genericException);
+            throw new PriceException(es, genericException);
         }
     }
 
@@ -195,7 +196,7 @@ public class Shop
             "select * from PRICE_SHOP_TABLE where ID_SHOP = ?";
 
         try {
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, new Shop().getClass() );
+            SqlStatement.registerSql( sql_, new Shop().getClass() );
         } catch (Exception e) {
             log.error( "Exception in registerSql, sql\n" + sql_, e );
         } catch (Error e) {
@@ -262,15 +263,11 @@ public class Shop
                 id_type_shop_2 = RsetTools.getLong(rs, "ID_TYPE_SHOP_2");
             }
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            log.error("Exception create shop object", e);
-            throw new PriceException(e.toString());
-        }
-        catch (Error e)
-        {
-            log.error("Eror create shop object", e);
-            throw new PriceException(e.toString());
+            final String es = "Exception create shop object";
+            log.error(es, e);
+            throw new PriceException(es, e);
         }
         finally
         {

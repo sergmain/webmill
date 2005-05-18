@@ -33,6 +33,12 @@
 package org.riverock.portlet.portlets;
 
 import java.io.Writer;
+import java.io.IOException;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 
 import org.riverock.common.tools.ExceptionTools;
 
@@ -40,7 +46,44 @@ import org.apache.log4j.Logger;
 
 public class WebmillErrorPage
 {
-    private static Logger log = Logger.getLogger( "org.riverock.portlet.portlets.WebmillErrorPage" );
+    private static Logger log = Logger.getLogger( WebmillErrorPage.class );
+
+    public static void processPortletError( Writer out, Throwable th, String errorMessage, String url, String urlMessage ) throws IOException {
+
+        if ( out==null )
+            return;
+
+        out.write( errorMessage + "<p><a href=\""+url+"\">"+urlMessage+"</a></p>\n" );
+        if ( th!=null ) {
+            out.write( getErrorMessage( th ) );
+        }
+    }
+    
+    public static void setErrorInfo( 
+        ActionResponse actionResponse, 
+        String text,
+        String textConst,
+        Throwable th, 
+        String urlName, 
+        String urlNameConsts,
+        String url,
+        String urlConsts ) {
+        
+//Todo switch to setAttribute()
+        actionResponse.setRenderParameter(
+            textConst,
+            text + (th!=null? WebmillErrorPage.getErrorMessage(th):"")
+        );
+        actionResponse.setRenderParameter( urlNameConsts, urlName );
+        actionResponse.setRenderParameter( urlConsts, url  );
+
+//        actionResponse.setRenderParameter(
+//            textConst,
+//            text + (th!=null? WebmillErrorPage.getErrorMessage(th):"")
+//        );
+//        actionResponse.setRenderParameter( urlNameConsts, urlName );
+//        actionResponse.setRenderParameter( urlConsts, url  );
+    }
 
     public static void process( Writer out, Throwable th, String errorMessage, String url, String urlMessage )
     {
@@ -51,15 +94,13 @@ public class WebmillErrorPage
         {
             out.write(
                 "<html><head></head><body>\n"+
-                errorMessage+"<br>\n"+
+                errorMessage+
                 "<p><a href=\""+url+"\">"+urlMessage+"</a></p>\n"
             );
             if ( th!=null )
             {
                 out.write(
-                    "<span style=\"font-family: verdana,arial,helvetica,sans-serif; font-size: 10px;\">\n"+
-                    ExceptionTools.getStackTrace( th, 20, "<br>" )+"<br>"+
-                    "</span>\n"
+                    getErrorMessage( th )
                 );
             }
             out.write(
@@ -74,6 +115,13 @@ public class WebmillErrorPage
         {
             log.error( "Exception while create error page", e );
         }
+    }
+
+    public static String getErrorMessage( Throwable th ) {
+        return
+            "<br><span style=\"font-family: verdana,arial,helvetica,sans-serif; font-size: 10px;\">\n"+
+            ExceptionTools.getStackTrace( th, 40, "<br>" )+"\n"+
+            "</span><br>\n";
     }
 
 }
