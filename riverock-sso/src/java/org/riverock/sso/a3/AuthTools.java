@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.sso.a3;
 
 import java.io.IOException;
@@ -39,7 +35,10 @@ import org.riverock.sso.main.Constants;
 
 import org.apache.log4j.Logger;
 
-public class AuthTools
+/**
+ * $Id$
+ */
+public final class AuthTools
 {
     private static Logger log = Logger.getLogger(AuthTools.class);
 
@@ -71,13 +70,15 @@ public class AuthTools
                     break;
                 }
                 catch (IOException e){
-                    log.error("IOException auth check. Send redirect failed ", e);
-                    throw new AuthException( e.toString() );
+                    final String es = "IOException auth check. Send redirect failed ";
+                    log.error(es, e);
+                    throw new AuthException( es, e );
                 }
                 catch (IllegalStateException e){
                     if (i == 4) { // last loop
-                        log.error("IllegalStateException auth check. Send redirect failed ", e);
-                        throw new AuthException(e.toString());
+                        final String es = "IllegalStateException auth check. Send redirect failed ";
+                        log.error(es, e);
+                        throw new AuthException( es, e );
                     }
                     else{
                         if (log.isInfoEnabled())
@@ -103,8 +104,9 @@ public class AuthTools
             }
         }
         catch (Exception e){
-            log.error("Exception auth check. Access denied.", e);
-            throw new AuthException(e.toString());
+            final String es = "Exception auth check. Access denied.";
+            log.error(es, e);
+            throw new AuthException( es, e );
         }
         return authSession;
     }

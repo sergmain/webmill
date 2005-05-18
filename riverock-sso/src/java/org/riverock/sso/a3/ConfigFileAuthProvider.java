@@ -37,23 +37,20 @@ import java.io.Serializable;
 import org.riverock.sso.schema.config.AuthProviderParametersListType;
 
 
-public class ConfigFileAuthProvider implements AuthProviderInterface, Serializable
-{
-    public boolean isUserInRole( AuthSession authSession, String role ) throws AuthException
-    {
+public final class ConfigFileAuthProvider implements AuthProviderInterface, Serializable {
+    public boolean isUserInRole( final AuthSession authSession, String role ) throws AuthException {
         return false;
     }
 
-    public boolean checkAccess( AuthSession authSession, String serverName ) throws AuthException
-    {
+    public boolean checkAccess( final AuthSession authSession, final String serverName ) throws AuthException {
         return false;
     }
 
-    public void setParameters( AuthProviderParametersListType params ) throws Exception
+    public void setParameters( final AuthProviderParametersListType params ) throws Exception
     {
     }
 
-    public void initUserInfo( AuthSession authSession ) throws AuthException
+    public void initUserInfo( final AuthSession authSession ) throws AuthException
     {
     }
 }

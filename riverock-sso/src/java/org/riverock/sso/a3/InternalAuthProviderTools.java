@@ -45,7 +45,9 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.ServletTools;
 import org.riverock.sso.utils.AuthHelper;
 import org.riverock.sso.schema.core.AuthUserItemType;
+import org.riverock.sso.schema.core.AuthRelateAccgroupItemType;
 import org.riverock.sso.core.GetAuthUserItem;
+import org.riverock.sso.core.InsertAuthRelateAccgroupItem;
 
 import org.apache.log4j.Logger;
 
@@ -214,18 +216,41 @@ public class InternalAuthProviderTools
         return getUserRole(ora_, id_user, id_role);
     }
 
-    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user,
-        String role_name)
+    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user, String role_name)
         throws Exception
     {
-        Long id_role = checkWithCreateRole(ora_, role_name);
-        return bindUserRole(ora_, id_auth_user, id_role);
+//        Long id_role = checkWithCreateRole(ora_, role_name);
+        Long roleId = getIDRole(ora_, role_name);
+        if (roleId==null) {
+             return false;
+        }
+        return bindUserRole(ora_, id_auth_user, roleId );
     }
 
-    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user,
-        Long id_role)
+    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user, Long id_role)
         throws Exception
     {
+        if (id_auth_user==null)  {
+            throw new AuthException( "authUserId argument must not be null" );
+        }
+
+        if (id_role==null)  {
+            throw new AuthException( "roleId argument must not be null" );
+        }
+
+        AuthRelateAccgroupItemType item = new AuthRelateAccgroupItemType();
+             CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_auth_relate_accgroup");
+            seq.setTableName( "AUTH_RELATE_ACCGROUP");
+            seq.setColumnName( "ID_RELATE_ACCGROUP" );
+            long id = ora_.getSequenceNextValue( seq );
+
+        item.setIdRelateAccgroup( new Long(id) );
+        item.setIdAuthUser( id_auth_user );
+        item.setIdAccessGroup( id_role );
+        InsertAuthRelateAccgroupItem.process( ora_, item );
+        return true;
+/*
         PreparedStatement ps = null;
         try
         {
@@ -246,8 +271,9 @@ public class InternalAuthProviderTools
             ps.setObject(3, id_role);
             int i = ps.executeUpdate();
 
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Count of added role - "+i);
+            }
         }
         catch (Exception e)
         {
@@ -269,6 +295,7 @@ public class InternalAuthProviderTools
             }
         }
         return true;
+*/
     }
 
     public static Long addUserAuth(DatabaseAdapter db_, Long id_user,

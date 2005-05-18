@@ -48,9 +48,8 @@ import org.riverock.sso.schema.config.ParameterType;
 import org.apache.log4j.Logger;
 
 
-public class LDAPAuthProvider implements AuthProviderInterface, Serializable
-{
-    private static Logger log = Logger.getLogger("org.riverock.sso.a3.LDAPAuthProvider");
+public final class LDAPAuthProvider implements AuthProviderInterface, Serializable {
+    private final static Logger log = Logger.getLogger( LDAPAuthProvider.class );
 
     private static final String CANONICAL_NAME_MEMBEROF = "memberOf";
 
@@ -72,7 +71,7 @@ public class LDAPAuthProvider implements AuthProviderInterface, Serializable
     }
 
 
-    public boolean isUserInRole( AuthSession authSession, String role )
+    public boolean isUserInRole( final AuthSession authSession, final String role )
         throws AuthException
     {
         if (ctx==null || role==null || role.trim().length()==0)
@@ -84,12 +83,10 @@ public class LDAPAuthProvider implements AuthProviderInterface, Serializable
         return internalCheckRole( authSession, role );
     }
 
-    private boolean internalCheckRole( AuthSession authSession, String role )
-    {
+    private boolean internalCheckRole( final AuthSession authSession, final String role ) {
         String[] attrs = new String[]{ CANONICAL_NAME_MEMBEROF };
 
-        try
-        {
+        try {
             Attributes result =
                 ctx.getAttributes("CN="+authSession.getUserLogin()+",CN=Users", attrs);
 
@@ -116,7 +113,7 @@ public class LDAPAuthProvider implements AuthProviderInterface, Serializable
         return false;
     }
 
-    public static String parseCanonicalName( String m_ )
+    public static String parseCanonicalName( final String m_ )
     {
         String cn = m_;
         if (!cn.startsWith("CN="))
@@ -131,11 +128,11 @@ public class LDAPAuthProvider implements AuthProviderInterface, Serializable
         return cn;
     }
 
-    public boolean checkAccess( AuthSession authSession, String serverName ) throws AuthException
+    public boolean checkAccess( final AuthSession authSession, final String serverName ) throws AuthException
     {
         if (ctx==null)
         {
-            Hashtable env = new Hashtable(5, 0.75f);
+            Hashtable env = new Hashtable(5, 1.1f);
             /*
             * Specify the initial context implementation to use.
             * For example,
@@ -176,7 +173,7 @@ public class LDAPAuthProvider implements AuthProviderInterface, Serializable
         return true;
     }
 
-    public void setParameters( AuthProviderParametersListType parametersList ) throws Exception
+    public void setParameters( final AuthProviderParametersListType parametersList ) throws Exception
     {
         if (parametersList==null)
             return;
