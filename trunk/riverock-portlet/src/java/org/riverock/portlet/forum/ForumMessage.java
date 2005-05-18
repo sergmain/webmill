@@ -25,19 +25,19 @@
 
 package org.riverock.portlet.forum;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.schema.core.MainForumThreadsItemType;
-import org.riverock.portlet.core.GetMainForumThreadsItem;
-import org.riverock.interfaces.common.TreeItemInterface;
-import org.apache.log4j.Logger;
-
 import java.util.Calendar;
 import java.util.List;
-import java.sql.SQLException;
 
-public class ForumMessage implements TreeItemInterface {
-    private static Logger log = Logger.getLogger( ForumMessage.class );
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.common.TreeItemInterface;
+import org.riverock.portlet.core.GetMainForumThreadsItem;
+import org.riverock.portlet.schema.core.MainForumThreadsItemType;
+
+import org.apache.log4j.Logger;
+
+public final class ForumMessage implements TreeItemInterface {
+    private final static Logger log = Logger.getLogger( ForumMessage.class );
 
     private String text = "";
 //    private String ip = "";
@@ -80,9 +80,16 @@ public class ForumMessage implements TreeItemInterface {
     private List subMessageTree = null;
 
     public ForumMessage(DatabaseAdapter db__, MainForumThreadsItemType item)
-        throws SQLException {
+        throws ForumException {
         this.item = item;
-        this.text = DatabaseManager.getBigTextField(db__, item.getId(), "MESSAGE_TEXT", "MAIN_FORUM_TEXT", "ID", "ID_MAIN_FORUM_TEXT");
+        try {
+            this.text = DatabaseManager.getBigTextField(db__, item.getId(), "MESSAGE_TEXT", "MAIN_FORUM_TEXT", "ID", "ID_MAIN_FORUM_TEXT");
+        }
+        catch( Exception e ) {
+            String es = "Error create FirumMessage";
+            log.error( es, e );
+            throw new ForumException( es, e );
+        }
     }
 
     public Long getTopId() {

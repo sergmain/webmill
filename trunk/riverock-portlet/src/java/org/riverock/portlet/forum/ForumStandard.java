@@ -33,59 +33,33 @@
 
 package org.riverock.portlet.forum;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Calendar;
+import java.util.ResourceBundle;
+import java.io.OutputStream;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
-import javax.portlet.PortletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.CtxInstance;
-import org.riverock.webmill.utils.ServletUtils;
 
-public final class ForumStandard extends HttpServlet
-{
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.wrapper.StreamWrapper;
+
+import org.apache.log4j.Logger;
+
+final class ForumStandard {
     private final static Logger log = Logger.getLogger(ForumStandard.class);
 
-    public ForumStandard()
-    {
-    }
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
-    {
-        if (log.isDebugEnabled())
-            log.debug("method is POST");
-
-        doGet(request, response);
-    }
-
-    public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
-    {
-        Writer out = null;
+    static void process(
+        final OutputStream outputStream, final RenderRequest renderRequest, final RenderResponse renderResponse, final PortletConfig portletConfig) throws ForumException {
         try
         {
-//            CtxInstance ctxInstance =
-//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-            RenderRequest renderRequest = null;
-            PortletConfig portletConfig = null;
-
-            out = response.getWriter();
-
-            ContextNavigator.setContentType(response, "utf-8");
+            ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
+            StreamWrapper out = new StreamWrapper(outputStream);
 
             out.write("<!-- begin standart forum -->\n");
 
@@ -93,18 +67,11 @@ public final class ForumStandard extends HttpServlet
             Integer month = PortletTools.getInt(renderRequest, Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
 
             ForumInstance forum = null;
-
-            if (true) throw new Exception("not imnplemented");
-            // TODO uncomment and fix
-//            forum = new ForumInstance(renderRequest, response);
+            forum = new ForumInstance( renderRequest );
 
             PortletSession session = renderRequest.getPortletSession();
 
-//            String nameTemplate = (String) session.getAttribute(Constants.TEMPLATE_NAME_SESSION);
-//            String nameTemplate = ctxInstance.getNameTemplate();
-
-            if (log.isDebugEnabled())
-            {
+            if (log.isDebugEnabled()) {
                 log.debug("ID message: " + forum.id);
                 log.debug("ID forum: " + forum.id_forum);
                 log.debug("#FORUM.01.01: " + month);
@@ -134,7 +101,7 @@ public final class ForumStandard extends HttpServlet
             if (log.isDebugEnabled())
                 log.debug("id - " + forum.id);
 
-// Show messaage with id="id"
+            // Show messaage with id="id"
             if (forum.id!=null) {
                 ForumMessage message = forum.getCurrentMessage();
                 if (message!=null) {
@@ -145,8 +112,7 @@ public final class ForumStandard extends HttpServlet
                     out.write("<tr>");
                     out.write("<td>\r\n");
 
-
-                    ServletUtils.include(request_, response, null, "/mill.forum_add_message", out );
+                    ForumAddMessage.includeMessageForm( outputStream, renderRequest, renderResponse, portletConfig );
 
                     out.write("\r\n");
                     out.write("</td>");
@@ -156,25 +122,23 @@ public final class ForumStandard extends HttpServlet
                     out.write("<tr>");
                     out.write("<td>\r\n");
                     out.write("<b>");
-                    out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.date", portletConfig ));
+                    out.write(bundle.getString( "str.date" ));
                     out.write(":");
                     out.write("</b>&nbsp;");
                     out.write(DateTools.getStringDate(message.getDatePost(), "dd-MMMM-yyyy HH:mm:ss", renderRequest.getLocale()));
                     out.write("<BR>\r\n");
                     out.write("<b>");
-                    out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.from_who", portletConfig ));
+                    out.write( bundle.getString( "str.from_who" ) );
                     out.write(":");
                     out.write("</b>&nbsp;");
                     out.write("<a href=\"mailto:");
                     out.write(message.getEmail());
                     out.write("\">");
-                    out.write(
-                            StringTools.toPlainHTML(message.getFio())
-                    );
+                    out.write( StringTools.toPlainHTML(message.getFio()) );
                     out.write("</a>");
                     out.write("<BR>\r\n");
                     out.write("<b>");
-                    out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.header", portletConfig ));
+                    out.write( bundle.getString( "str.header" ) );
                     out.write(":");
                     out.write("</b>&nbsp;");
                     out.write(StringTools.toPlainHTML(message.getHeader()));
@@ -205,12 +169,12 @@ public final class ForumStandard extends HttpServlet
 
 
             String url = ("<a href=\"" +
-                CtxInstance.url(
-                    Constants.CTX_TYPE_FORUM) + '&' +
+                PortletTools.url(
+                    Constants.CTX_TYPE_FORUM, renderRequest, renderResponse ) + '&' +
                 Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
                 "\">");
 
-            out.write(url + CtxInstance.getStr( renderRequest.getLocale(), "str.top_forum", portletConfig ) + "</a>");
+            out.write(url + bundle.getString( "str.top_forum" ) + "</a>");
 
             out.write("\r\n");
             out.write("</td>");
@@ -220,7 +184,7 @@ public final class ForumStandard extends HttpServlet
 
             if (forum.id==null) {
                 out.write("<table border=\"0\"><tr><td>");
-                ServletUtils.include(request_, response, null, "/mill.forum_add_message", out);
+                ForumAddMessage.includeMessageForm( outputStream, renderRequest, renderResponse, portletConfig );
                 out.write("</td></tr></table>");
             }
 
@@ -233,10 +197,10 @@ public final class ForumStandard extends HttpServlet
             out.write("<!--End of Forum -->\n");
 
         }
-        catch (Exception e)
-        {
-            log.error(e);
-            out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+        catch ( Exception e ) {
+            String es = "Error process standard forum";
+            log.error(es, e);
+            throw new ForumException( es, e );
         }
     }
 }

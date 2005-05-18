@@ -23,6 +23,19 @@
  *
  */
 
+package org.riverock.portlet.member;
+
+import java.util.List;
+import java.util.LinkedList;
+
+import javax.portlet.PortletRequest;
+
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+
+import org.apache.log4j.Logger;
+
+
 /**
  * Author: mill
  * Date: Jan 10, 2003
@@ -30,18 +43,6 @@
  *
  * $Id$
  */
-
-package org.riverock.portlet.member;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import javax.portlet.RenderRequest;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.webmill.portlet.CtxInstance;
-
 public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 {
     private static Logger log = Logger.getLogger(ArticlePlainTemplateClassQuery.class);
@@ -53,9 +54,9 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
     /**
      * @return String
      */
-    public String getCurrentValue( RenderRequest renderRequest ) throws Exception
+    public String getCurrentValue( PortletRequest renderRequest ) throws Exception
     {
-        String value = CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes");
+        String value = PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes");
 
         if (log.isDebugEnabled())
             log.debug( "ArticlePlainTemplateClassQuery value - " + value );
@@ -67,17 +68,17 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
      *  Возвращает список возможных значений для построения <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( RenderRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest )
         throws Exception
     {
         if (log.isDebugEnabled())
             log.debug( "ArticlePlainTemplateClassQuery get select");
 
-        List v = new ArrayList();
+        List v = new LinkedList();
         {
-            ClassQueryItem item = new ClassQueryItem(new Long(1), CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes") );
+            ClassQueryItem item = new ClassQueryItemImpl(new Long(1), PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes") );
 
-            item.isSelected = true;
+            item.setSelected(true);
 
             v.add( item );
 

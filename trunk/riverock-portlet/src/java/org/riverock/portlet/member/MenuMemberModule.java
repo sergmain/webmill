@@ -38,12 +38,12 @@ import org.apache.log4j.Logger;
  * $Id$
  *
  */
-public class MenuMemberModule
+public final class MenuMemberModule
 {
-    private static Logger cat = Logger.getLogger( MenuMemberModule.class );
+    private final static Logger log = Logger.getLogger( MenuMemberModule.class );
 
     /**
-     module - название модуля
+     * module - название модуля
      */
     public String moduleName = "";
 
@@ -51,7 +51,7 @@ public class MenuMemberModule
     public String applicationCode = null;
 
     /**
-     order - значение для порядка вывода модуля
+     * order - значение для порядка вывода модуля
      */
     public int order = 0;
     public int isNew = -1;
@@ -86,25 +86,8 @@ public class MenuMemberModule
         }
         catch (Exception e)
         {
-            cat.error("Error get member module", e);
+            log.error("Error get member module", e);
             throw e;
         }
     }
-/*
-    public byte[] getPlainHTML()
-    {
-        return null;
-    }
-
-    public byte[] getXml(String rootElement) throws Exception
-    {
-        return "".getBytes();
-    }
-    public byte[] getXml(){ return "".getBytes(); }
-
-    public Vector getList(Long idSiteCtxLangCatalog, Long idContext)
-    {
-        return null;
-    }
-*/
 }

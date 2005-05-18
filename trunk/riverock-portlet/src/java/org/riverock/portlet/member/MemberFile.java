@@ -23,9 +23,6 @@
  *
  */
 
-/**
- * $Id$
- */
 package org.riverock.portlet.member;
 
 import org.riverock.portlet.schema.member.MemberArea;
@@ -43,12 +40,14 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Iterator;
 
-public class MemberFile extends CacheFile
-{
-    private static Logger log = Logger.getLogger("org.riverock.member.MemberFile");
+/**
+ * $Id$
+ */
+public final class MemberFile extends CacheFile {
+    private final static Logger log = Logger.getLogger( MemberFile.class );
 
-//    private MemberArea ma = null;
     private Hashtable memberHash = null;
 
     protected void finalize() throws Throwable
@@ -82,11 +81,18 @@ public class MemberFile extends CacheFile
         if (memberHash==null || nameModule_==null)
             return null;
 
+        boolean isUseCache = isUseCache();
         if (log.isDebugEnabled())
-            log.debug("#7.1.0  " + nameModule_ + " " + getFile().getName());
+            log.debug("#7.1.0  " + nameModule_ + ", isUseCache:" + isUseCache + ", " + getFile().getName());
 
-        if ( isUseCache() )
-            return (ModuleType)memberHash.get(nameModule_);
+        ModuleType moduleType = null;
+        if ( isUseCache ) {
+            moduleType = (ModuleType)memberHash.get(nameModule_);
+            if ( log.isDebugEnabled() )
+                log.debug( "moduleType: " + moduleType );
+
+            return moduleType;
+        }
 
         try
         {
@@ -118,10 +124,20 @@ public class MemberFile extends CacheFile
             return null;
         }
 
-        if (log.isDebugEnabled())
+        moduleType = (ModuleType)memberHash.get(nameModule_);
+        if (log.isDebugEnabled()) {
             log.debug("#7.02 file not changed. Get module from cache");
+            log.debug( "moduleType: " + moduleType );
+            log.debug( "Values in HashMap: " +memberHash.size() );
+            Iterator iterator = memberHash.keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = (String)iterator.next();
+                ModuleType type = (ModuleType)memberHash.get(key);
+                log.debug("key: "+key+", value: "+type.getName());
+            }
+        }
 
-        return (ModuleType)memberHash.get(nameModule_);
+        return moduleType;
     }
 
     public MemberFile(File tempFile)
@@ -150,30 +166,28 @@ public class MemberFile extends CacheFile
     }
 
     private static Object syncObj = new Object();
-    private void processFile()
-        throws Exception
-    {
-        try
-        {
+    private void processFile() throws Exception {
+        try {
+            log.debug( "start processFile()" ) ;
+
             InputSource inSrc = new InputSource(new FileInputStream( getFile() ));
             MemberArea ma = (MemberArea) Unmarshaller.unmarshal(MemberArea.class, inSrc);
             ma.validate();
 
             memberHash = new Hashtable();
-            for (int i=0; i<ma.getModuleCount(); i++)
-            {
+            for (int i=0; i<ma.getModuleCount(); i++) {
                 ModuleType desc = ma.getModule(i);
+                if (log.isDebugEnabled()) {
+                    log.debug( "put new module in filenaame hash, key: "+desc.getName()+", " + desc.getName() ) ;
+                }
                 memberHash.put( desc.getName(), desc);
             }
 
 
-            if (log.isDebugEnabled())
-            {
-                synchronized(syncObj)
-                {
-                    try
-                    {
-                        FileWriter w = new FileWriter(WebmillConfig.getWebmillDebugDir() + "a.xml");
+            if (log.isDebugEnabled()) {
+                synchronized(syncObj) {
+                    try {
+                        FileWriter w = new FileWriter(WebmillConfig.getWebmillDebugDir() + System.currentTimeMillis()+'-'+getFile().getName() );
                         Marshaller.marshal(ma, w);
                     }
                     catch (Exception e)
@@ -182,8 +196,7 @@ public class MemberFile extends CacheFile
                 }
             }
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             String errorString = "Error processing member file "+getFile();
             log.error( errorString, e);
             throw e;

@@ -41,7 +41,7 @@ import org.riverock.portlet.member.MemberQueryParameter;
 import org.riverock.portlet.price.CurrencyManager;
 import org.riverock.portlet.price.CurrencyService;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.webmill.portlet.CtxInstance;
+
 import org.riverock.webmill.port.PortalInfo;
 import org.riverock.webmill.portal.PortalConstants;
 
@@ -67,7 +67,7 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( RenderRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest )
         throws Exception
     {
         DatabaseAdapter db_ = null;
@@ -98,7 +98,7 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( RenderRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest )
         throws Exception
     {
         throw new Exception("Not implemented");

@@ -22,6 +22,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.member;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.portlet.PortletRequest;
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 /**
  * User: Admin
@@ -30,23 +45,6 @@
  *
  * $Id$
  */
-package org.riverock.portlet.member;
-
-import org.apache.log4j.Logger;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.webmill.portlet.CtxInstance;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.RenderRequest;
-
 public class TemplateClassQuery extends BaseClassQuery
 {
     private static Logger cat = Logger.getLogger( TemplateClassQuery.class );
@@ -75,7 +73,7 @@ public class TemplateClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( RenderRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -109,7 +107,7 @@ public class TemplateClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( RenderRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -131,13 +129,13 @@ public class TemplateClassQuery extends BaseClassQuery
             rs = ps.executeQuery();
             while (rs.next())
             {
-                ClassQueryItem item = new ClassQueryItem(
+                ClassQueryItem item = new ClassQueryItemImpl(
                     RsetTools.getLong(rs, "ID_SITE_TEMPLATE"),
                     RsetTools.getString(rs, "NAME_SITE_TEMPLATE")
                 );
 
-                if (item.index.equals( idSiteTemplate ))
-                    item.isSelected = true;
+                if (item.getIndex().equals( idSiteTemplate ))
+                    item.setSelected(true);
 
                 v.add( item );
             }

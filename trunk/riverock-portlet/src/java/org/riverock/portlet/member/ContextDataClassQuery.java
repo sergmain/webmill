@@ -22,6 +22,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.member;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.portlet.PortletRequest;
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.schema.javax.portlet.PortletType;
+import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.webmill.portlet.PortletManager;
+import org.riverock.webmill.portlet.PortletTools;
 
 /**
  * User: Admin
@@ -30,33 +51,9 @@
  *
  * $Id$
  */
-package org.riverock.portlet.member;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Vector;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.interfaces.schema.javax.portlet.PortletType;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.webmill.portlet.PortletManager;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.CtxInstance;
-
-import org.apache.log4j.Logger;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.RenderRequest;
-
 public class ContextDataClassQuery extends BaseClassQuery
 {
-    private static Logger log = Logger.getLogger( "org.riverock.portlet.member.ContextDataClassQuery" );
+    private static Logger log = Logger.getLogger( ContextDataClassQuery.class );
 
     // ID_SITE_CTX_TYPE
     private Long idSiteCtxType = null;
@@ -95,7 +92,7 @@ public class ContextDataClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( RenderRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -103,7 +100,7 @@ public class ContextDataClassQuery extends BaseClassQuery
         DatabaseAdapter db_ = null;
 
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                 "select ID_SITE_CTX_TYPE, TYPE "+
                 "from SITE_CTX_TYPE "+
@@ -131,13 +128,13 @@ public class ContextDataClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( RenderRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest )
         throws Exception
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        List v = new ArrayList();
+        List v = new LinkedList();
         String namePortlet = null;
         DatabaseAdapter db_ = null;
         try {
@@ -197,16 +194,24 @@ public class ContextDataClassQuery extends BaseClassQuery
         if (log.isDebugEnabled())
             log.debug("#12.12.005  constructor is " + constructor);
 
-        if (constructor != null)
-        {
+        if (constructor != null) {
             PortletGetList obj = null;
-            try
-            {
-                obj = (PortletGetList) constructor.newInstance( null );
+            Object o = null;
+            try {
+                o = constructor.newInstance(null);
+                obj = (PortletGetList)o;
             }
-            catch(InvocationTargetException e)
-            {
-                log.error("Error invoke constructor ",e);
+            catch (InvocationTargetException e) {
+                log.error("Error invoke constructor ", e);
+                throw e;
+            }
+            catch (ClassCastException e) {
+                if (o!=null) {
+                    log.error("ClassCastException to PortletGetList.class  from "+o.getClass().getName(), e);
+                }
+                else {
+                    log.error("ClassCastException to PortletGetList.class  from null", e);
+                }
                 throw e;
             }
 
@@ -223,7 +228,7 @@ public class ContextDataClassQuery extends BaseClassQuery
             v = obj.getList( idSiteCtxLangCatalog, idContext);
 
             if (v==null)
-                return new Vector();
+                return new LinkedList();
 
         }
 

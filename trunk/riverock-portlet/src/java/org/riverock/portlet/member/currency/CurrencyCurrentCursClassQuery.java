@@ -47,6 +47,7 @@ import org.riverock.webmill.portal.PortalConstants;
 import org.apache.log4j.Logger;
 
 import javax.portlet.RenderRequest;
+import javax.portlet.PortletRequest;
 
 public final class CurrencyCurrentCursClassQuery extends BaseClassQuery
 {
@@ -67,7 +68,7 @@ public final class CurrencyCurrentCursClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( RenderRequest renderRequest ) throws Exception
+    public String getCurrentValue( PortletRequest renderRequest ) throws Exception
     {
         DatabaseAdapter db_ = null;
         try
@@ -93,7 +94,7 @@ public final class CurrencyCurrentCursClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( RenderRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest )
         throws Exception
     {
         throw new Exception("Not implemented");

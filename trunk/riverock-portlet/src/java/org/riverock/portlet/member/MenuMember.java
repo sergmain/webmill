@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Author$
- *
- * $Id$
- *
- */
 package org.riverock.portlet.member;
 
 import java.sql.PreparedStatement;
@@ -40,7 +32,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -51,6 +42,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.exception.DatabaseException;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
@@ -59,66 +51,67 @@ import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.port.PortalInfo;
 import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portlet.CtxInstance;
-import org.riverock.webmill.portlet.PortletGetList;
+
+import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.webmill.portlet.PortletResultObject;
 import org.riverock.webmill.portlet.PortletResultContent;
+import org.riverock.webmill.portlet.PortletTools;
 import org.riverock.webmill.schema.site.SiteTemplate;
 
 import org.apache.log4j.Logger;
 
-public final class MenuMember implements PortletResultObject, PortletGetList, PortletResultContent
-{
+/**
+ *
+ * $Author$
+ *
+ * $Id$
+ *
+ */
+public final class MenuMember implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger( MenuMember.class );
 
     private MenuMemberType menu = new MenuMemberType();
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
-    private ResourceBundle bundle = null;
+//    private ResourceBundle bundle = null;
+//    private PortletConfig portletConfig = null;
 
-    public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
+    public void setParameters( final RenderRequest renderRequest, final RenderResponse renderResponse, final PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;
-        this.bundle = bundle;
+//        this.portletConfig = portletConfig;
+//        this.bundle = portletConfig.getResourceBundle()
     }
 
     protected void finalize() throws Throwable {
         menu = null;
 //        param = null;
-        renderRequest = null;
+//        renderRequest = null;
         super.finalize();
     }
 
     public MenuMember(){}
 
-    public boolean isXml(){ return true; }
-    public boolean isHtml(){ return false; }
-
     SiteTemplateMember memberTemplates = null;
-//    CtxInstance ctxInstance = null;
 
-    public PortletResultContent getInstance(DatabaseAdapter db_)
-        throws PortletException
-    {
+    public PortletResultContent getInstance(DatabaseAdapter db_) throws PortletException {
         PreparedStatement ps = null;
         ResultSet rset = null;
 
-        log.debug("Start getInstance()");
+        if ( log.isDebugEnabled() ) {
+            log.debug("Start getInstance()");
+            log.debug("session ID status: " + renderRequest.isRequestedSessionIdValid() );
+        }
 
-        try
-        {
+        try {
             AuthInfo authInfo = AuthTools.getAuthInfo( renderRequest );
 
             if (log.isDebugEnabled())
-                log.debug("authInfo: "+authInfo);
+                log.debug("MenuMember authInfo: " + authInfo );
 
             if (authInfo == null)
                 return this;
 
-//            PortletSession session = param.getPortletRequest().getPortletSession();
-//            ctxInstance = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-
-            RenderRequest renderRequest = null;
             PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
             memberTemplates = SiteTemplateMember.getInstance(db_, portalInfo.getSiteId());
 
@@ -135,8 +128,8 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
             ps = db_.prepareStatement(sql_);
 
-            ps.setString(1, authInfo.userLogin);
-            ps.setString(2, authInfo.userLogin);
+            ps.setString( 1, authInfo.getUserLogin() );
+            ps.setString( 2, authInfo.getUserLogin() );
 
             rset = ps.executeQuery();
             int recordNumber = 0;
@@ -146,20 +139,18 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
                 if (appl != null)
                     list.add(appl);
             }
-            Collections.sort(list, new MenuMemberApplicationComparator());
-            menu.setMenuMemberApplicationAsReference(list);
+            Collections.sort( list, new MenuMemberApplicationComparator() );
+            menu.setMenuMemberApplicationAsReference( list );
 
             if (log.isDebugEnabled())
                 log.debug("recordNumber: "+recordNumber);
         }
-        catch (Throwable e)
-        {
+        catch (Throwable e) {
             String es = "Error get list of member application";
             log.error(es, e);
             throw new PortletException(es, e);
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(rset, ps);
             rset = null;
             ps = null;
@@ -213,19 +204,15 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         return null;
     }
 
-    public byte[] getXml(String rootElement) throws Exception
-    {
+    public byte[] getXml(String rootElement) throws Exception {
         return XmlTools.getXml( menu, rootElement );
     }
 
-    public byte[] getXml()
-            throws Exception
-    {
+    public byte[] getXml() throws Exception {
         return getXml( "MenuMember" );
     }
 
-    public List getList(Long idSiteCtxLangCatalog, Long idContext)
-    {
+    public List getList(Long idSiteCtxLangCatalog, Long idContext) {
         return null;
     }
 
@@ -292,7 +279,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             appl.setApplicationId( RsetTools.getLong(rs, "ID_ARM") );
             appl.setApplicationRecordNumber( new Integer(recordNumber_) );
 
-            ps = makeStatement( db_, authInfo.userLogin, appl.getApplicationId() );
+            ps = makeStatement( db_, authInfo.getUserLogin(), appl.getApplicationId() );
 
             rset = ps.executeQuery();
             int moduleRecordNumber = 0;
@@ -311,10 +298,11 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             appl.setMenuMemberModuleAsReference(list);
             return appl;
         }
-        catch (Exception e1)
+        catch (Throwable e1)
         {
-            log.error("Error get member application", e1);
-            throw new PortletException(e1.toString());
+            final String es = "Error get member application";
+            log.error(es, e1);
+            throw new PortletException( es, e1 );
         }
         finally
         {
@@ -326,7 +314,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
     }
 
     private PreparedStatement makeStatement(DatabaseAdapter db_, String userLogin, Long applicationId)
-        throws SQLException
+        throws SQLException, DatabaseException
     {
 
         PreparedStatement ps = null;
@@ -358,6 +346,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             return null;
 
         MenuMemberModuleType mod = new MenuMemberModuleType();
+        SiteTemplate siteTemplate = getMemberTemplate();
         mod.setApplicationCode( applicationCode_ );
         try
         {
@@ -374,14 +363,14 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
                     log.debug("PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
 
                     log.debug(
-                        "Module url - "+ CtxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate(), renderResponse ) + '&' +
+                        "Module url - "+ PortletTools.url( Constants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
                         Constants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
                         Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
                     );
                 }
 
                 mod.setModuleUrl(
-                    CtxInstance.url( Constants.CTX_TYPE_MEMBER, getMemberTemplate().getNameTemplate(), renderResponse ) + '&' +
+                    PortletTools.url( Constants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
                     Constants.MEMBER_NAME_APPL_PARAM  + '=' + applicationCode_ + '&' +
                     Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
                 );
@@ -402,32 +391,31 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private SiteTemplate getMemberTemplate()
-    {
+    private SiteTemplate getMemberTemplate() {
+
         SiteTemplate st = null;
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("Looking template for locale " + renderRequest.getLocale().toString());
+        }
 
         st = getMemberTemplate(renderRequest.getLocale());
         if (st != null)
             return st;
 
-        if (log.isInfoEnabled())
-            log.info("memberTemplate for Locale " + renderRequest.getLocale().toString() + " not initialized");
+        log.warn("memberTemplate for Locale " + renderRequest.getLocale().toString() + " not initialized");
 
         return new SiteTemplate();
     }
 
-    public SiteTemplate getMemberTemplate(Locale locale)
-    {
+    private SiteTemplate getMemberTemplate(Locale locale) {
         if (memberTemplates==null || memberTemplates.memberTemplate == null)
             return null;
 
         return (SiteTemplate) memberTemplates.memberTemplate.get(locale.toString());
     }
 
-    private class MenuMemberApplicationComparator implements Comparator {
+    private final static class MenuMemberApplicationComparator implements Comparator {
         public int compare(Object o1, Object o2) {
 
             if (o1==null && o2==null)
@@ -456,8 +444,8 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private class MenuMemberModuleComparator implements Comparator {
-        public int compare(Object o1, Object o2) {
+    private final static class MenuMemberModuleComparator implements Comparator {
+        public int compare( final Object o1, final Object o2) {
 
             if (o1==null && o2==null)
                 return 0;

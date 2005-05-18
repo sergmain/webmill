@@ -1,0 +1,183 @@
+/*
+ * org.riverock.portlet -- Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock -- The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+package org.riverock.portlet.shop.edit;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.apache.log4j.Logger;
+import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.sso.a3.AuthSession;
+import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.portlet.PortletTools;
+
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 2:41:47 PM
+ *
+ * $Id$
+ */
+public final class PriceEditIndex extends HttpServlet {
+    private final static Logger log = Logger.getLogger(PriceEditIndex.class);
+
+    public PriceEditIndex()
+    {
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException
+    {
+        if (log.isDebugEnabled())
+            log.debug("method is POST");
+
+        doGet(request, response);
+    }
+
+    public void doGet(HttpServletRequest request_, HttpServletResponse response)
+            throws IOException, ServletException
+    {
+        Writer out = null;
+        DatabaseAdapter db_ = null;
+        try
+        {
+            RenderRequest renderRequest = null;
+            RenderResponse renderResponse= null;
+            ContextNavigator.setContentType(response, "utf-8");
+
+            out = response.getWriter();
+
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
+            if ( auth_==null )
+            {
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
+                return;
+            }
+
+                db_ = DatabaseAdapter.getInstance( false );
+
+                String sql_ =
+                        "select a.* from price_shop_table a, site_virtual_host b "+
+                        "where a.ID_SITE = b.ID_SITE and b.NAME_VIRTUAL_HOST=? ";
+
+                PreparedStatement ps = null;
+                ResultSet rs = null;
+
+                if( auth_.isUserInRole("webmill.edit_price_list") )
+                {
+
+                    try
+                    {
+                        ps = db_.prepareStatement( sql_ );
+                        ps.setString(1, renderRequest.getServerName() );
+
+                        rs = ps.executeQuery();
+
+                        out.write(
+                                "<b>" + "Configure shop" + "</b>"+
+                                "<table width=\"100%\" border=\"1\" class=\"l\">"+
+                                "<tr>"+
+                                "<th class=\"memberArea\">Name shop</th>"+
+                                "<th class=\"memberArea\">" + PortletTools.getStringManager( renderRequest.getLocale() ).getStr("index.jsp.action") + "</th>" +
+                                "</tr>"
+                        );
+
+                        while (rs.next() )
+                        {
+
+                            out.write(
+                                    "<tr>"+
+                                    "<td class=\"memberArea\">"+
+                                    RsetTools.getString(rs, "NAME_SHOP", "&nbsp;") +
+                                    "</td>"
+                            );
+
+                            out.write("<td class=\"memberAreaAction\">");
+
+                            Long id_arm = RsetTools.getLong(rs, "ID_SHOP");
+
+              out.write("\r\n");
+              out.write("<input type=\"button\" value=\"");
+              out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.next"));
+              out.write("\" onclick=\"location.href='");
+              out.write(
+                  PortletTools.url("mill.price.shop", renderRequest, renderResponse )+'&'+
+                  Constants.NAME_ID_SHOP_PARAM + '=' +id_arm
+              );
+              out.write("';\">\r\n");
+              out.write("</td>\r\n");
+              out.write("</tr>\r\n                    ");
+
+                        }
+              out.write("\r\n");
+              out.write("</table>\r\n            ");
+
+
+                    }
+                    catch(Exception e)
+                    {
+                        out.write( e.toString() );
+                        log.error("Error create list of shops", e);
+                    }
+                    finally
+                    {
+                        DatabaseManager.close(rs, ps);
+                        rs = null;
+                        ps = null;
+
+                    }
+                }
+                else
+                {
+                    out.write( PortletTools.getStringManager( renderRequest.getLocale() ).getStr("access_denied"));
+                }
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+            out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+        }
+        finally
+        {
+            DatabaseAdapter.close(db_);
+            db_ = null;
+        }
+
+    }
+}

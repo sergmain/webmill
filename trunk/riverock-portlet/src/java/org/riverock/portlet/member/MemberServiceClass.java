@@ -22,18 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Nov 19, 2002
- * Time: 9:57:07 PM
- *
- * $Id$
- */
 package org.riverock.portlet.member;
 
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.Map;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -43,52 +36,60 @@ import javax.portlet.PortletRequest;
 import org.apache.log4j.Logger;
 import org.riverock.common.tools.StringTools;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.collections.MapTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.StringManager;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.exception.GenericException;
 import org.riverock.interfaces.schema.javax.portlet.SecurityRoleRefType;
 import org.riverock.portlet.schema.member.*;
 import org.riverock.portlet.schema.member.types.*;
-import org.riverock.portlet.exception.MemberException;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.portlet.PortletTools;
 import org.riverock.webmill.site.SiteUtils;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.sso.utils.AuthHelper;
 
-class RestrictDescription
-{
-    public int type;
-    public String nameField = null;
+/**
+ * User: Admin
+ * Date: Nov 19, 2002
+ * Time: 9:57:07 PM
+ *
+ * $Id$
+ */
+public final class MemberServiceClass {
 
-    public RestrictDescription(int type_, String nameField_)
+    private final static Logger log = Logger.getLogger( MemberServiceClass.class );
+
+    private static class RestrictDescription
     {
-        this.type = type_;
-        this.nameField = nameField_;
+        int type;
+        String nameField = null;
+
+        RestrictDescription(int type_, String nameField_)
+        {
+            this.type = type_;
+            this.nameField = nameField_;
+        }
     }
-}
 
-public class MemberServiceClass
-{
 
-    private static Logger log = Logger.getLogger( MemberServiceClass.class );
+    private final static Object syncDebug = new Object();
 
-    private static Object syncDebug = new Object();
-
-    private static RestrictDescription restrictDesc[] =
+    private final static RestrictDescription restrictDesc[] =
         {
             new RestrictDescription(RestrictTypeTypeType.FIRM_TYPE, "ID_FIRM"),
             new RestrictDescription(RestrictTypeTypeType.SITE_TYPE, "ID_SITE"),
             new RestrictDescription(RestrictTypeTypeType.USER_TYPE, "ID_USER")
         };
 
-    public static String getString(MultiLangStringType str, Locale loc) throws java.io.UnsupportedEncodingException {
+    public static String getString(MultiLangStringType str, Locale loc) throws GenericException {
         return getString(str, loc, "");
     }
 
     public static String getString(MultiLangStringType str, Locale loc, String defaultString)
-            throws java.io.UnsupportedEncodingException
+            throws GenericException
     {
         if (str==null)
             return defaultString;
@@ -980,8 +981,9 @@ public class MemberServiceClass
         return false;
     }
 
-    public static String buildUpdateSQL(
-        ContentType content, String fromParam, ModuleType mod, DatabaseAdapter dbDyn, boolean isUsePrimaryKey, PortletRequest request)
+    public static String buildUpdateSQL( DatabaseAdapter dbDyn, ContentType content, String fromParam,
+        ModuleType mod,
+        boolean isUsePrimaryKey, Map map, String remoteUser, String serverName )
         throws Exception
     {
         if (content == null || content.getQueryArea() == null)
@@ -995,7 +997,7 @@ public class MemberServiceClass
         boolean isNotComma = true;
 
         // Проверяем, что если есть хоть одно поле YES_1_NO_N и этот запрос выполняет установку данного поля в false
-        if (hasYesNoField(request, mod, content) && !isUsePrimaryKey)
+        if (hasYesNoField(map, mod, content) && !isUsePrimaryKey)
         {
             if (log.isDebugEnabled())
                 log.debug("Build update clause for YES_1_NO_N");
@@ -1057,7 +1059,7 @@ public class MemberServiceClass
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, request.getRemoteUser(), request.getServerName());
+                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, remoteUser, serverName);
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -1107,7 +1109,7 @@ public class MemberServiceClass
 
                 where_ += (
                     prevPK + " in (" +
-                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, request)+
+                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, map, serverName, remoteUser )+
                     ")"
                     );
 
@@ -1162,7 +1164,7 @@ public class MemberServiceClass
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(dbDyn, request.getRemoteUser());
+                    String idList = AuthHelper.getGrantedFirmId(dbDyn, remoteUser);
 
                     where_ += " ID_FIRM in ("+idList+") ";
 
@@ -1192,10 +1194,10 @@ public class MemberServiceClass
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     if (log.isDebugEnabled())
-                        log.debug("get list of siteId for host "+request.getServerName());
+                        log.debug("get list of siteId for host "+serverName);
 
 
-                    String idSite = SiteUtils.getGrantedSiteId(dbDyn, request.getServerName());
+                    String idSite = SiteUtils.getGrantedSiteId(dbDyn, serverName);
 
                     if (log.isDebugEnabled())
                         log.debug("siteId list: "+idSite);
@@ -1227,7 +1229,7 @@ public class MemberServiceClass
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = AuthHelper.getGrantedUserId(dbDyn, request.getRemoteUser());
+                    String idUser = AuthHelper.getGrantedUserId(dbDyn, remoteUser);
                     where_ += " ID_USER in ("+idUser+") ";
                     break;
 
@@ -1252,7 +1254,7 @@ public class MemberServiceClass
         return sql_ + (where_ != null && where_.trim().length()>0? (" where " + where_): "" );
     }
 
-    private static String processSubQuery(DatabaseAdapter adapter, String sql, String fromParam, PortletRequest portletRequest)
+    private static String processSubQuery( DatabaseAdapter adapter, String sql, String fromParam, Map map, String serverName, String remoteUser )
         throws Exception
     {
 
@@ -1266,7 +1268,7 @@ public class MemberServiceClass
             case DatabaseManager.MYSQL_FAMALY:
                 try {
                     ps = adapter.prepareStatement(sql);
-                    bindSubQueryParam(ps, 1, fromParam, portletRequest, adapter);
+                    bindSubQueryParam(ps, 1, fromParam, adapter, map, serverName, remoteUser );
                     rs = ps.executeQuery();
 
                     String r = "";
@@ -1292,19 +1294,21 @@ public class MemberServiceClass
         }
     }
 
-    public static boolean hasYesNoField(PortletRequest req, ModuleType mod1, ContentType content1)
+    public static boolean hasYesNoField( final Map map, final ModuleType mod1, final ContentType content1)
     {
         for (int k = 0; k < content1.getQueryArea().getFieldsCount(); k++)
         {
             FieldsType ff = content1.getQueryArea().getFields(k);
 
             if (ff.getJspType().getType() == FieldsTypeJspTypeType.YES_1_NO_N_TYPE &&
-                    new Integer(1).equals(PortletTools.getInt(req, mod1.getName() + '.' + getRealName(ff)))
+                    new Integer(1).equals(
+                        MapTools.getInt(map, mod1.getName() + '.' + getRealName(ff))
+                    )
             )
             {
                 if (log.isDebugEnabled())
                     log.debug("yes1-noN field - "+mod1.getName() + '.' + getRealName(ff)+
-                            " value - "+PortletTools.getInt(req, mod1.getName() + '.' + getRealName(ff)));
+                            " value - "+MapTools.getInt(map, mod1.getName() + '.' + getRealName(ff)));
 
                 return true;
             }
@@ -1313,7 +1317,8 @@ public class MemberServiceClass
         return false;
     }
 
-    public static String buildDeleteSQL(ContentType content, ModuleType mod, String fromParam, DatabaseAdapter dbDyn, PortletRequest portletRequest)
+    public static String buildDeleteSQL( DatabaseAdapter dbDyn, ModuleType mod, ContentType content, String fromParam,
+        Map map, String remoteUser, String serverName )
         throws Exception
     {
         String insTable = content.getQueryArea().getTable(0).getTable();
@@ -1353,7 +1358,7 @@ public class MemberServiceClass
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, portletRequest.getRemoteUser(), portletRequest.getServerName());
+                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, remoteUser, serverName );
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -1402,7 +1407,7 @@ public class MemberServiceClass
 //                    " from " + sc.from + " where " + sc.where + ")";
 
                     prevPK + " in (" +
-                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, portletRequest)+
+                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, map, serverName, remoteUser )+
                     ")";
 
 
@@ -1456,7 +1461,7 @@ public class MemberServiceClass
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(dbDyn, portletRequest.getRemoteUser());
+                    String idList = AuthHelper.getGrantedFirmId(dbDyn, remoteUser );
                     // do update without aliases
                     where_ += " and ID_FIRM in ("+idList+") ";
 
@@ -1479,7 +1484,7 @@ public class MemberServiceClass
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idSite = SiteUtils.getGrantedSiteId(dbDyn, portletRequest.getServerName());
+                    String idSite = SiteUtils.getGrantedSiteId(dbDyn, serverName );
 
                     where_ += " and ID_SITE in ("+idSite+") ";
 
@@ -1502,7 +1507,7 @@ public class MemberServiceClass
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = AuthHelper.getGrantedUserId(dbDyn, portletRequest.getRemoteUser());
+                    String idUser = AuthHelper.getGrantedUserId(dbDyn, remoteUser );
                     where_ += " and ID_USER in ("+idUser+") ";
                     break;
 
@@ -1521,7 +1526,8 @@ public class MemberServiceClass
         return sql_ + (where_ != null && where_.trim().length()>0? (" where " + where_): "" );
     }
 
-    public static int bindSubQueryParam(PreparedStatement ps, int numParam, String fromParam, PortletRequest portletRequest, DatabaseAdapter dbDyn)
+    public static int bindSubQueryParam( PreparedStatement ps, int numParam, String fromParam,
+        DatabaseAdapter dbDyn, Map map, String serverName, String remoteUser )
         throws Exception {
 
         if (fromParam.length() > 0) {
@@ -1538,13 +1544,21 @@ public class MemberServiceClass
                     //prepare lookup PK
                     if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
                     {
-                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(portletRequest,
-                            modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
+                        final Long longParam = MapTools.getLong(map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+
+                        if (log.isDebugEnabled())
+                            log.debug( "Param  #" + numParam + ", value: " + longParam );
+
+                        RsetTools.setLong(ps, numParam++, longParam );
                     }
                     else if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
                     {
-                        ps.setString(numParam++, PortletTools.getString(portletRequest,
-                            modName + '.' + cnt.getQueryArea().getPrimaryKey()));
+                        final String stringParam = PortletTools.getString( map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+
+                        if (log.isDebugEnabled())
+                            log.debug( "Param  #" + numParam + ", value: " + stringParam );
+
+                        ps.setString(numParam++, stringParam);
                     }
 /*
 else if ( content.getQueryArea().getPrimaryKeyType().equals("date"))
@@ -1570,8 +1584,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                 break;
                             default:
                                 if (log.isDebugEnabled())
-                                    log.debug("#3.001.04 firm "+portletRequest.getRemoteUser() );
-                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                    log.debug( "Param  #" + numParam + ", value: " + remoteUser );
+
+                                ps.setString(numParam++, remoteUser );
                                 break;
                         }
                     }
@@ -1584,8 +1599,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                 break;
                             default:
                                 if (log.isDebugEnabled())
-                                    log.debug("#3.001.07 site "+portletRequest.getServerName());
-                                ps.setString(numParam++, portletRequest.getServerName());
+                                    log.debug( "Param  #" + numParam + ", value: " + serverName );
+
+                                ps.setString(numParam++, serverName );
                                 break;
                         }
                     }
@@ -1598,16 +1614,15 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                 break;
                             default:
                                 if (log.isDebugEnabled())
-                                    log.debug("#3.001.09 firm "+portletRequest.getRemoteUser() );
-                                ps.setString(numParam++, portletRequest.getRemoteUser());
+                                    log.debug( "Param  #" + numParam + ", value: " + remoteUser );
+
+                                ps.setString( numParam++, remoteUser );
                                 break;
                         }
                     }
                 }
             }
-
         }
         return numParam;
     }
-
 }

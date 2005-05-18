@@ -22,36 +22,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.portlet.member;
 
+import java.io.File;
+import java.io.FileFilter;
+
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.config.PropertiesProvider;
+import org.riverock.generic.main.CacheDirectory;
+import org.riverock.generic.main.CacheFile;
+import org.riverock.generic.main.ExtensionFileFilter;
+import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.member.ContentType;
 import org.riverock.portlet.schema.member.ModuleType;
-import org.riverock.portlet.schema.member.SqlCacheType;
 import org.riverock.portlet.schema.member.QueryAreaType;
+import org.riverock.portlet.schema.member.SqlCacheType;
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
-import org.riverock.portlet.main.Constants;
-import org.riverock.generic.main.CacheDirectory;
-import org.riverock.generic.main.ExtensionFileFilter;
-import org.riverock.generic.main.CacheFile;
-import org.riverock.common.config.PropertiesProvider;
-import org.riverock.common.config.ConfigException;
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-
-public class ModuleManager
+/**
+ * $Id$
+ */
+public final class ModuleManager
 {
-    private static Logger cat = Logger.getLogger( "org.riverock.portlet.member.ModuleManager" );
+    private final static Logger log = Logger.getLogger( ModuleManager.class );
 
-    private static FileFilter memberFilter = new ExtensionFileFilter(".xml");
+    private final static FileFilter memberFilter = new ExtensionFileFilter(".xml");
 
     private static CacheDirectory mainDir = null;
     private static CacheDirectory userDir = null;
@@ -154,6 +152,13 @@ public class ModuleManager
         return dir;
     }
 
+    public static synchronized void reinit() {
+        mainDir = null;
+        userDir = null;
+        mainMemberFile = null;
+        userMemberFile = null;
+    }
+
     public static void init()
         throws Exception
     {
@@ -171,13 +176,13 @@ public class ModuleManager
                     memberFilter
                 );
 
-            if (cat.isDebugEnabled())
-                cat.debug("#2.001 read list file");
+            if (log.isDebugEnabled())
+                log.debug("#2.001 read list file");
 
             mainDir.processDirectory();
 
-            if (cat.isDebugEnabled())
-                cat.debug("#2.003 array of files - " + mainDir.getFileArray());
+            if (log.isDebugEnabled())
+                log.debug("#2.003 array of files - " + mainDir.getFileArray());
 
             CacheFile cacheFile[] = mainDir.getFileArray();
             mainMemberFile = null;
@@ -195,7 +200,7 @@ public class ModuleManager
                 String customMemberDir = getCustomDir();
                 if (customMemberDir!=null && customMemberDir.length()!=0)
                 {
-                    try
+//                    try
                     {
                         userDir = new CacheDirectory(
                             customMemberDir,
@@ -203,11 +208,11 @@ public class ModuleManager
                             1000*30 // сканировать директорий каждые 30 секунд
                         );
                     }
-                    catch( FileNotFoundException e )
-                    {
-                        isUserDirectoryExists = false;
-                        return;
-                    }
+//                    catch( FileNotFoundException e )
+//                    {
+//                        isUserDirectoryExists = false;
+//                        return;
+//                    }
                 }
                 else
                     return;
@@ -228,13 +233,13 @@ public class ModuleManager
                     }
                 }
 
-                if (cat.isDebugEnabled())
-                    cat.debug("#2.001 read list file");
+                if (log.isDebugEnabled())
+                    log.debug("#2.001 read list file");
 
                 userDir.processDirectory();
 
-                if (cat.isDebugEnabled())
-                    cat.debug("#2.003 array of files - " + userDir.getFileArray());
+                if (log.isDebugEnabled())
+                    log.debug("#2.003 array of files - " + userDir.getFileArray());
 
                 CacheFile cacheFile[] = userDir.getFileArray();
                 userMemberFile = null;
@@ -260,8 +265,8 @@ public class ModuleManager
             ModuleType mod = mf.getModule(moduleName);
             if (mod != null)
             {
-                if (cat.isDebugEnabled())
-                    cat.debug("Module '" + moduleName + "' is found in main directory");
+                if (log.isDebugEnabled())
+                    log.debug("Module '" + moduleName + "' is found in main directory");
 
                 for (int i=0; i<mod.getContentCount(); i++)
                 {
@@ -283,7 +288,7 @@ public class ModuleManager
                             case ContentTypeActionType.DELETE_TYPE:
                                 break;
                             default:
-                                cat.error("unknown type of content - "+content.getAction().toString());
+                                log.error("unknown type of content - "+content.getAction().toString());
                         }
                     }
                 }
@@ -291,8 +296,8 @@ public class ModuleManager
             }
         }
 
-        if (cat.isDebugEnabled())
-            cat.debug("Module '" + moduleName + "' in main directory not found");
+        if (log.isDebugEnabled())
+            log.debug("Module '" + moduleName + "' in main directory not found");
 
         if (userMemberFile!=null)
         {
@@ -305,16 +310,16 @@ public class ModuleManager
                 ModuleType mod = mf.getModule( moduleName );
                 if (mod != null)
                 {
-                    if (cat.isDebugEnabled())
-                        cat.debug("Module '" + moduleName + "' is found in custom directory");
+                    if (log.isDebugEnabled())
+                        log.debug("Module '" + moduleName + "' is found in custom directory");
 
                     return mod;
                 }
             }
         }
 
-        if (cat.isDebugEnabled())
-            cat.debug("Module '" + moduleName + "' not found");
+        if (log.isDebugEnabled())
+            log.debug("Module '" + moduleName + "' not found");
 
         return null;
     }

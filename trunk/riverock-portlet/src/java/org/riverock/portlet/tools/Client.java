@@ -33,11 +33,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.exception.DatabaseException;
 import org.riverock.common.tools.RsetTools;
 
-public class Client
+public final class Client
 {
-//    private static Logger cat = Logger.getLogger( "org.riverock.tools.Client"   );
 
     public static String make_list_prn(
             ResultSet rs,
@@ -47,23 +48,9 @@ public class Client
             String i,
             String f
             )
-            throws SQLException
+        throws SQLException, DatabaseException
     {
         return make_list_prn(rs, field, ora_, t, i, f, "", null, "0");
-    }
-
-    public static String make_list_prn(
-            ResultSet rs,
-            String field,
-            DatabaseAdapter ora_,
-            String t,
-            String i,
-            String f,
-            String w
-            )
-            throws SQLException
-    {
-        return make_list_prn(rs, field, ora_, t, i, f, w, null, "0");
     }
 
     public static String make_list_prn(
@@ -76,7 +63,7 @@ public class Client
             String w,
             String o
             )
-            throws SQLException
+        throws SQLException, DatabaseException
     {
         return make_list_prn(rs, field, ora_, t, i, f, w, o, "0");
     }
@@ -93,7 +80,7 @@ public class Client
             String o,
             String d
             )
-            throws SQLException
+        throws SQLException, DatabaseException
     {
 
         long v_id = 0;
@@ -105,7 +92,6 @@ public class Client
         return make_list_prn(v_id, ora_, t, i, f, w, o, d);
     }
 
-
     public static String make_list_prn(
             long v_id,
             DatabaseAdapter ora_,
@@ -116,7 +102,7 @@ public class Client
             String o,
             String d
             )
-            throws SQLException
+        throws SQLException, DatabaseException
     {
 
         String v_s = "";
@@ -129,12 +115,9 @@ public class Client
         if (o != null)
             v_s += (" order by " + o);
 
-//	cat.debug(v_s);
-
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             ps = ora_.prepareStatement(v_s);
 
             rs = ps.executeQuery();
@@ -144,8 +127,7 @@ public class Client
             String v_select;
             String r = "";
 
-            while (rs.next())
-            {
+            while (rs.next()) {
 
                 v_num = rs.getLong(1);
                 v_str = rs.getString(2);
@@ -164,30 +146,10 @@ public class Client
             ;
             return r;
         }
-        finally
-        {
-            if (rs != null)
-            {
-                try
-                {
-                    rs.close();
-                    rs = null;
-                }
-                catch (Exception e01)
-                {
-                }
-            }
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e01)
-                {
-                }
-            }
+        finally {
+            DatabaseManager.close( rs, ps );
+            rs = null;
+            ps = null;
         }
     }
 
@@ -201,7 +163,7 @@ public class Client
             String o,
             String d
             )
-            throws SQLException
+        throws SQLException, DatabaseException
     {
 
         String v_s = "select ";
@@ -214,14 +176,10 @@ public class Client
         if (o != null)
             v_s += (" order by " + o);
 
-//if (true) return v_s;
-
         String r = "";
         PreparedStatement ps = null;
         ResultSet rs = null;
-
-        try
-        {
+        try {
             ps = ora_.prepareStatement(v_s);
 
             rs = ps.executeQuery();
@@ -247,30 +205,10 @@ public class Client
             }
             ;
         }
-        finally
-        {
-            if (rs != null)
-            {
-                try
-                {
-                    rs.close();
-                    rs = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+        finally {
+            DatabaseManager.close( rs, ps );
+            rs = null;
+            ps = null;
         }
         return r;
     }

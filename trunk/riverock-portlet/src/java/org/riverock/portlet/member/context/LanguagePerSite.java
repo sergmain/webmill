@@ -41,8 +41,9 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.member.ClassQueryItem;
-import org.riverock.webmill.portlet.PortletGetList;
+import org.riverock.portlet.member.ClassQueryItemImpl;
+import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 import org.apache.log4j.Logger;
 
@@ -79,14 +80,14 @@ public class LanguagePerSite implements PortletGetList
             {
                 Long id = RsetTools.getLong(rs, "ID_SITE_SUPPORT_LANGUAGE");
                 String name = "" + id + ", " +
-                        RsetTools.getString(rs, "CUSTOM_LANGUAGE") + ", " +
+                        StringTools.getLocale( RsetTools.getString(rs, "CUSTOM_LANGUAGE") ).toString() + ", " +
                         RsetTools.getString(rs, "NAME_CUSTOM_LANGUAGE");
 
                 ClassQueryItem item =
-                        new ClassQueryItem(id, StringTools.truncateString(name, 60) );
+                        new ClassQueryItemImpl(id, StringTools.truncateString(name, 60) );
 
-                if (item.index.equals(idContext))
-                    item.isSelected = true;
+                if (item.getIndex().equals(idContext))
+                    item.setSelected(true);
 
                 v.add( item );
             }

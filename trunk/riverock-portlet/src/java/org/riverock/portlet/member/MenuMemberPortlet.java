@@ -29,7 +29,7 @@ public final class MenuMemberPortlet extends GenericWebmillPortlet {
     }
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
-        MenuMember shopPage = new MenuMember();
-        doRender(renderRequest, renderResponse, shopPage);
+        MenuMember menuMember = new MenuMember();
+        doRender(renderRequest, renderResponse, menuMember);
     }
 }
