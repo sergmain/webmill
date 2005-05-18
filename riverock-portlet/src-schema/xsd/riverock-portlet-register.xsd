@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<xs:schema xmlns:riverock-portlet-schema-core="http://portlet.riverock.org/xsd/riverock-portlet-schema-core.xsd" xmlns:riverock-sso="http://sso.riverock.org/xsd/riverock-sso.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:documentation>Copyright 2002-2005, riverock.org</xs:documentation>
+	</xs:annotation>
+	<xs:annotation>
+		<xs:documentation>WebMill XML/XSLT web portlet engine. Register portlet XML schema</xs:documentation>
+	</xs:annotation>
+	<xs:element name="Register" type="RegisterType"/>
+	<xs:complexType name="RegisterType">
+		<xs:sequence>
+			<xs:element name="ActionUrl" type="xs:string"/>
+			<xs:element name="BackUrl" type="xs:string"/>
+			<xs:element name="SendPassword" type="SendPasswordType"/>
+			<xs:element name="NewUser" type="NewRegisterType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BaseActionType">
+		<xs:sequence>
+			<xs:element name="ActionName" type="xs:string"/>
+			<xs:element name="ActionTitle" type="xs:string"/>
+			<xs:element name="ActionButton" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SendPasswordType">
+		<xs:complexContent>
+			<xs:extension base="BaseActionType">
+				<xs:sequence>
+					<xs:element name="EMail" type="FieldType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="NewRegisterType">
+		<xs:complexContent>
+			<xs:extension base="BaseActionType">
+				<xs:sequence>
+					<xs:element name="Login" type="FieldType"/>
+					<xs:element name="Password" type="FieldType"/>
+					<xs:element name="PasswordRepeat" type="FieldType"/>
+					<xs:element name="FirstName" type="FieldType"/>
+					<xs:element name="LastName" type="FieldType"/>
+					<xs:element name="MiddleName" type="FieldType"/>
+					<xs:element name="Phone" type="FieldType"/>
+					<xs:element name="Address" type="FieldType"/>
+					<xs:element name="EMail" type="FieldType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FieldType">
+		<xs:attributeGroup ref="FieldAttribute"/>
+	</xs:complexType>
+	<xs:attributeGroup name="FieldAttribute">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="inputName" type="xs:string" use="required"/>
+	</xs:attributeGroup>
+</xs:schema>
