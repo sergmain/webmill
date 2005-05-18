@@ -26,6 +26,7 @@
 package org.riverock.interfaces.generic;
 
 import java.util.Locale;
+import java.io.IOException;
 
 /**
  * User: serg_main
@@ -35,5 +36,5 @@ import java.util.Locale;
  * $Id$
  */
 public interface LocalizedStringInterface {
-    public String getString(Locale loc) throws java.io.UnsupportedEncodingException;
+    public String getString(Locale loc) throws IOException;
 }
