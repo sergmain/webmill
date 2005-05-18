@@ -85,8 +85,9 @@ public final class ConfigService {
             }
             catch (java.util.MissingResourceException e)
             {
-                log.error("Error getting resource for language " + localeLanguage[i], e);
-                throw new ConfigException( e.toString());
+                final String es = "Error getting resource for language " + localeLanguage[i];
+                log.error(es, e);
+                throw new ConfigException(es, e);
             }
         }
     }

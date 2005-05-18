@@ -22,23 +22,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.cache.impl;
+
+import java.lang.reflect.Method;
+
+import org.riverock.cache.config.CacheConfig;
+import org.riverock.cache.schema.config.CacheClassItemType;
+import org.riverock.common.tools.MainTools;
+
+import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-package org.riverock.cache.impl;
-
-import org.riverock.common.tools.MainTools;
-import org.riverock.cache.schema.config.CacheClassItemType;
-import org.riverock.cache.config.CacheConfig;
-
-import org.apache.log4j.Logger;
-
-import java.lang.reflect.Method;
-
-public class SimpleCacheFactory implements Cache
-{
-    private static Logger log = Logger.getLogger( SimpleCacheFactory.class );
+public final class SimpleCacheFactory implements Cache {
+    private final static Logger log = Logger.getLogger( SimpleCacheFactory.class );
 
     private String cacheClass = null;
     private int maxCount = 0;
@@ -60,12 +58,6 @@ public class SimpleCacheFactory implements Cache
         return classDefinition.getMaxObjectCount().intValue();
     }
 
-//    private int initCountItems()
-//    {
-//        initClassDefinition();
-//        return classDefinition.getInitObjectCount().intValue();
-//    }
-
     private void initClassDefinition()
     {
         if (classDefinition==null)
@@ -74,13 +66,13 @@ public class SimpleCacheFactory implements Cache
         if (classDefinition==null)
         {
             classDefinition = new CacheClassItemType();
-            log.warn("Cache for class "+ cacheClass+" not defined. Use default");
             if (log.isInfoEnabled())
             {
-                log.info("initObjectCount - "+classDefinition.getInitObjectCount());
-                log.info("maxObjectCount - "+classDefinition.getMaxObjectCount());
-                log.info("ttl - "+classDefinition.getTtl());
-                log.info("cache control - "+classDefinition.getCacheControlType().toString());
+                log.info("Cache for class "+ cacheClass+" not defined. Use default:");
+                log.info("    initObjectCount: "+classDefinition.getInitObjectCount());
+                log.info("    maxObjectCount: "+classDefinition.getMaxObjectCount());
+                log.info("    ttl: "+classDefinition.getTtl());
+                log.info("    cache control: "+classDefinition.getCacheControlType().toString());
             }
         }
     }
@@ -375,203 +367,15 @@ public class SimpleCacheFactory implements Cache
             terminate(id.longValue());
     }
 
-    public synchronized void terminate(long id)
-        throws CacheException
-    {
-//        int cacheIdx = getIndex();
+    public synchronized void terminate(long id) throws CacheException {
 
         int itemIdx = getIndexOfItem(id);
         if (itemIdx==-1)
             return;
 
-//	accessTime[cacheIdx][itemIdx] = null;
-//	accessCount[cacheIdx][itemIdx] = null;
-//	indexValue[cacheIdx][itemIdx] = null;
         cache[itemIdx] = null;
     }
 
-/*
-    public synchronized int getIndex()
-    {
-        checkWithInitArray();
-
-//            if(log.isInfoEnabled())
-//            {
-//                log.info("Start looking for cache index for class "+getNameClass());
-//                log.info("CountClassInCache - "+CountClassInCache.intValue()+
-//                    ", cacheClass length - "+cacheClass.length
-//                );
-//            }
-
-        while (true)
-        {
-            for (int i = 0; i < CountClassInCache.intValue(); i++)
-            {
-                if (cacheClass[i] == null)
-                {
-                    cacheClass[i] = getNameClass();
-                    return i;
-                }
-
-                if (cacheClass[i].equals(getNameClass()))
-                    return i;
-
-            }
-
-            int oldValue = CountClassInCache.intValue();
-            CountClassInCache =
-                new Integer(
-                    (int)(CountClassInCache.intValue() * ((CACHE_INCREASE_PERCENT+100)/100) )
-                );
-
-            if (log.isDebugEnabled())
-                log.debug("new value of CountClassInCache can't equals to oldValue, di increment");
-
-            if (oldValue==CountClassInCache.intValue())
-                CountClassInCache = new Integer(oldValue+1);
-
-            log.warn("Cache array is full");
-            log.warn("Old value of CountClassInCache "+oldValue+", new "+CountClassInCache.intValue());
-
-            long mills = System.currentTimeMillis();
-            if(log.isInfoEnabled())
-                log.info("Start applay new size to cache array");
-
-            if (log.isDebugEnabled())
-            {
-                log.debug("maxCount.length - "+maxCount.length);
-                log.debug("CountClassInCache.intValue() - "+CountClassInCache.intValue());
-            }
-            {
-                int maxCountTemp[] = new int[ CountClassInCache.intValue() ];
-                for (int i=0; i<maxCount.length; i++)
-                    maxCountTemp[i] = maxCount[i];
-                maxCount = maxCountTemp;
-            }
-
-            {
-                String cacheClassTemp[] = new String[CountClassInCache.intValue()];
-                for (int i=0; i<cacheClass.length; i++)
-                    cacheClassTemp[i] = cacheClass[i];
-                cacheClass = cacheClassTemp;
-            }
-
-            {
-                long accessTimeTemp[][] = new long[CountClassInCache.intValue()][];
-                for (int i=0; i<accessTime.length; i++)
-                {
-                    accessTimeTemp[i] = new long[maxCount[i]];
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("accessTimeTemp[i] "+accessTimeTemp[i].length);
-                        log.debug("maxCount[i] "+maxCount[i]);
-                    }
-                    if (accessTime[i]!=null)
-                    {
-//                        for (int j=0; j<accessTime[i].length; j++)
-                        for (int j=0; j<maxCount[i]; j++)
-                            accessTimeTemp[i][j] = accessTime[i][j];
-                    }
-//                    if (accessTime[i]==null)
-//                    {
-//                        accessTimeTemp[i] = new long[maxCount[i]];
-//                    }
-//                    else
-//                    {
-//                        accessTimeTemp[i] = new long[accessTime[i].length];
-//                        for (int j=0; j<accessTime[i].length; j++)
-//                            accessTimeTemp[i][j] = accessTime[i][j];
-//                    }
-                }
-                accessTime = accessTimeTemp;
-            }
-
-            {
-                long accessCountTemp[][] = new long[CountClassInCache.intValue()][];
-                for (int i=0; i<accessCount.length; i++)
-                {
-                    accessCountTemp[i] = new long[ maxCount[i] ];
-                    if (accessCount[i]!=null)
-                    {
-//                        for (int j=0; j<accessCount[i].length; j++)
-                        for (int j=0; j<maxCount[i]; j++)
-                            accessCountTemp[i][j] = accessCount[i][j];
-                    }
-//                    if (accessCount[i]==null)
-//                    {
-//                        accessCountTemp[i] = new long[ maxCount[i] ];
-//                    }
-//                    else
-//                    {
-//                        accessCountTemp[i] = new long[accessCount[i].length];
-//                        for (int j=0; j<accessCount[i].length; j++)
-//                            accessCountTemp[i][j] = accessCount[i][j];
-//                    }
-                }
-                accessCount = accessCountTemp;
-            }
-
-            {
-                long indexValueTemp[][] = new long[CountClassInCache.intValue()][];
-                for (int i=0; i<indexValue.length; i++)
-                {
-                    indexValueTemp[i] = new long[ maxCount[i] ];
-                    if (indexValue[i]!=null)
-                    {
-//                        for (int j=0; j<indexValue[i].length; j++)
-                        for (int j=0; j<maxCount[i]; j++)
-                            indexValueTemp[i][j] = indexValue[i][j];
-                    }
-//                    if (indexValue[i]==null)
-//                    {
-//                        indexValueTemp[i] = new long[ maxCount[i] ];
-//                    }
-//                    else
-//                    {
-//                        indexValueTemp[i] = new long[indexValue[i].length];
-//                        for (int j=0; j<indexValue[i].length; j++)
-//                            indexValueTemp[i][j] = indexValue[i][j];
-//                    }
-                }
-                indexValue = indexValueTemp;
-            }
-
-            {
-                Object cacheTemp[][] = new SimpleCache[CountClassInCache.intValue()][];
-                for (int i=0; i<cache.length; i++)
-                {
-                    cacheTemp[i] = new SimpleCache[ maxCount[i] ];
-                    if (cache[i]!=null)
-                    {
-//                        for (int j=0; j<cache[i].length; j++)
-                        for (int j=0; j<maxCount[i]; j++)
-                            cacheTemp[i][j] = cache[i][j];
-                    }
-//                    if (cache[i]==null)
-//                    {
-//                        cacheTemp[i] = new SimpleCache[ maxCount[i] ];
-//                    }
-//                    else
-//                    {
-//                        cacheTemp[i] = new SimpleCache[cache[i].length];
-//                        for (int j=0; j<cache[i].length; j++)
-//                            cacheTemp[i][j] = cache[i][j];
-//                    }
-                }
-                cache = cacheTemp;
-            }
-            if(log.isInfoEnabled())
-                log.info("Done applay new size to cache array for "+(System.currentTimeMillis()-mills)+" milliseconds");
-
-        }
-    }
-*/
-
-//    public synchronized static void reinitFullCache()
-//    {
-//        destroyCache();
-//    }
-//
     private synchronized void destroyCache()
     {
         accessTime = null;
@@ -595,8 +399,6 @@ public class SimpleCacheFactory implements Cache
     private synchronized void initValueArray()
     {
         int countItem = maxCountItems();
-//        int cacheIndex = getIndex();
-        //int cacheIndex = getCacheIndex();
 
         if (log.isDebugEnabled())
             log.debug("#12.05.02 countItem " + countItem );
@@ -611,7 +413,6 @@ public class SimpleCacheFactory implements Cache
         indexValue = new long[countItem];
         cache = new Object[countItem];
         maxCount = countItem;
-//        cacheClass = getNameClass();
     }
 
     protected synchronized void checkFullInitArray()
@@ -746,10 +547,4 @@ public class SimpleCacheFactory implements Cache
         return idx;
 
     }
-
-//    public static Integer getCountClassInCache()
-//    {
-//        return CountClassInCache;
-//    }
-
 }

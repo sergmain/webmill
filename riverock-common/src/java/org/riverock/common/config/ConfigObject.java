@@ -56,7 +56,6 @@ public class ConfigObject
     }
 
     public static ConfigObject load(String nameJndiCtx, String nameConfigFile_, Class configClass)
-        throws ConfigException
     {
         ConfigObject config = new ConfigObject();
         File configFile = null;

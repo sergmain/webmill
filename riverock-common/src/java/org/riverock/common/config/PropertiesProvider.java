@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.common.config;
 
 /**
  * User: serg_main
@@ -30,9 +31,6 @@
  * @author Serge Maslyukov
  * $Id$
  */
-
-package org.riverock.common.config;
-
 public class PropertiesProvider
 {
     private static boolean isServletEnv = false;

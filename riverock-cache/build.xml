@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <!--
 /*
  * org.riverock.cache - Generic cache implementation
@@ -26,48 +26,16 @@
  */
 -->
 <!--$Id$-->
-<project name="riverock.cache" default="jar" basedir=".">
+<project name="riverock.cache" default="usage-main" basedir=".">
     <!-- Global initialization                                               -->
+    <property name="Name" value="riverock-cache"/>
     <property name="release-version" value="1.1.0"/>
-    <property name="java.target" value="1.4"/>
-    <property name="java.class.target" value="1.4"/>
-
     <property name="manifest-title-name" value="riverock cache library"/>
     <property name="manifest-vendor-name" value="Riverock. http://www.riverock.org"/>
 
-    <property name="Name" value="riverock-cache"/>
-    <property name="main.lib" value="${Name}-${release-version}.jar"/>
-    <property name="main.lib.encoded" value="${Name}-${release-version}.encoded.jar"/>
-
-    <property name="lib.dir" value="../riverock-lib/lib"/>
-    <!-- runtime library -->
-
-    <property file="../riverock.properties"/>
+    <import file="../riverock-include.xml"/>
 
     <property name="site.name" value="_localhost"/>
-
-    <property name="doc.dir" value="doc"/>
-    <property name="war.dir" value="war"/>
-    <property name="src.dir" value="src"/>
-    <property name="tomcat.dir" value="tomcat"/>
-
-    <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>
-    <property name="src.java.dir" value="${src.dir}/java"/>
-    <property name="src.jsp.dir" value="${src.dir}/jsp"/>
-    <property name="src.xsd.dir" value="${src.dir}/xsd"/>
-    <property name="src.xml.dir" value="${src.dir}/xml"/>
-    <property name="src.war.dir" value="${src.dir}/${war.dir}"/>
-
-    <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
-    <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
-
-    <property name="manifest-file-name" value="manifest.mf"/>
-    <property name="manifest" value="src/java/${manifest-file-name}"/>
-
-    <path id="classpath-1.4">
-    </path>
-    <path id="classpath-1.3">
-    </path>
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
@@ -75,33 +43,13 @@
         <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
-
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
-
-<!--            <path refid="classpath-${java.target}"/>-->
     </path>
-
-    <property name="packages" value="mill.*"/>
-    <property name="build.dir" value="build"/>
-    <property name="src-schema.java.dir" value="${src.dir}-schema/java"/>
-    <property name="build.src.java" value="${src.java.dir}"/>
-    <property name="build.src.jsp" value="${src.jsp.dir}"/>
-    <property name="build.dest" value="${build.dir}/classes"/>
-    <property name="dist.dir" value="${build.dir}/dist"/>
-    <property name="docs.dir" value="${build.dir}/javadocs"/>
-
-    <property name="exclude" value="**/*.txt, **/*.bat, **/*.xml, **/*.sh, **/*.jav, **/*.mf, **/*.class,**/tmp_*.java"/>
-
-    <!-- The following can be set in .ant.properties                 -->
-    <property name="debug" value="on"/>
-    <property name="optimize" value="off"/>
-    <property name="deprecation" value="on"/>
 
     <target name="run_tomcat_with_new jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
-
         <copy file="${build.dir}\${main.lib}" todir="C:\opt2\_www\mill\WEB-INF\lib"/>
         <antcall target="start.apache"/>
     </target>
@@ -112,60 +60,15 @@
         <antcall target="jar"/>
     </target>
 
-    <target name="jar" depends="clean, compile, make_manifest_file">
-        <jar
-            jarfile="${build.dir}/${main.lib}"
-            basedir="${build.dest}"
-            includes="org/**"
-            excludes="
-            **/*.txt,**/*.bat,**/*.xml,**/*.sh,**/*.jav,${manifest-file-name}"
-            manifest="${build.dest}/${manifest-file-name}"/>
-        <copy file="${build.dir}/${main.lib}" todir="../riverock-lib/lib"/>
-    </target>
-
     <target name="full_clean">
         <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
-    <target name="clean">
-        <delete failonerror="false">
-            <fileset dir="${build.dir}">
-                <include name="**"/>
-                <include name="*.jar"/>
-                <include name="*.tar"/>
-                <include name="*.gz"/>
-            </fileset>
-        </delete>
-        <delete dir="${docs.dir}" failonerror="false"/>
-        <delete dir="${build.dir}/src/" failonerror="false"/>
-        <delete dir="${build.dir}/classes/" failonerror="false"/>
-        <delete dir="${build.dir}/bin/" failonerror="false"/>
-        <delete dir="${build.dir}/tomcat/" failonerror="false"/>
-        <delete dir="${build.dir}/ext/" failonerror="false"/>
-        <delete dir="${build.dir}" failonerror="false"/>
-    </target>
-
-    <target name="make_manifest_file">
-        <echo message="Start make manifest file"/>
-    <echo file="${build.dest}/${manifest-file-name}">Manifest-Version: 1.0
-Specification-Title: ${manifest-title-name}
-Specification-Vendor: ${manifest-vendor-name}
-Specification-Version: ${release-version}
-Implementation-Title: ${manifest-title-name}
-Implementation-Vendor: ${manifest-vendor-name}
-Implementation-Version: ${release-version}
-
-Name: ${manifest-title-name}
-Sealed: true
-</echo>
-        <echo message="Manifest file is created"/>
-    </target>
-
     <target name="compile" depends="prepare, set_build_number">
-        <mkdir dir="${build.dest}"/>
         <javac
             target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${src-schema.java.dir}"
             destdir="${build.dest}"
             debug="${debug}"
@@ -177,9 +80,9 @@ Sealed: true
         </javac>
         <javac
             target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${src.java.dir}"
             destdir="${build.dest}"
-            excludes="${exclude}"
             debug="${debug}"
             deprecation="${deprecation}"
             optimize="${optimize}"
@@ -194,70 +97,4 @@ Sealed: true
             </classpath>
         </javac>
     </target>
-
-    <!-- Note this file can only make Ant display values set in the file correctly, -->
-    <!-- but external values in the environment or properties file will be operational.  -->
-    <!-- Help on usage                                                       -->
-    <target name="usage">
-        <echo message=""/>
-        <echo message=""/>
-        <echo message="${Name} Build file"/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=" available targets are:"/>
-        <echo message=""/>
-        <echo message="   compile      --> compiles the source code to the tree under ${build.dir}"/>
-        <echo message="   package      --> generates the ${Name}.jar file"/>
-        <echo message="   prepare-docs --> writes the documentation to ${docs.dir}"/>
-        <echo message="   clean        --> cleans up the ${build.dir} directory"/>
-        <echo message="   usage        --> show this message (default)"/>
-        <echo message=""/>
-        <echo message=" See the comments inside the build.xml file for more details."/>
-        <echo message="-------------------------------------------------------------"/>
-        <echo message=""/>
-        <echo message=""/>
-    </target>
-    <!-- Prepares the build directory                                        -->
-    <target name="prepare">
-        <!--
-        <echo message="Preparing the build directories"/>
-        -->
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dest}"/>
-    </target>
-    <!-- <target name="compile" depends="prepare"> -->
-    <target name="docs" depends="prepare">
-        <echo message="Build javadoc"/>
-        <!-- create directories -->
-        <mkdir dir="${docs.dir}"/>
-        <javadoc
-            sourcepath="${build.src.java}"
-            destdir="${docs.dir}"
-            verbose="true"
-            defaultexcludes="true"
-            packagenames="mill/db/*,mill/tools/*,mill/startup/*"
-            excludepackagenames="mill/price/*"
-            >
-            <classpath refid="classpath-base"/>
-        </javadoc>
-    </target>
-
-    <target name="start.apache">
-        <property name="null.prop" value=""/>
-        <exec executable="net" outputproperty="null.prop">
-            <arg line=" start 'Apache Tomcat 4.1'"/>
-        </exec>
-    </target>
-
-    <target name="stop.apache">
-        <property name="null.prop" value=""/>
-        <exec executable="net" outputproperty="null.prop">
-            <arg line=" stop 'Apache Tomcat 4.1'"/>
-        </exec>
-    </target>
-
-    <target name="set_build_number">
-        <buildnumber/>
-    </target>
-
 </project>

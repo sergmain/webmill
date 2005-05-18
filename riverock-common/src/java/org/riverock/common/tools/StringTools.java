@@ -39,13 +39,19 @@ public class StringTools
 {
     private static Logger log = Logger.getLogger(StringTools.class);
 
+    public static boolean isEmpty( final String s) {
+        if (s==null || s.trim().length()==0)
+            return true;
+        else
+            return false;
+    }
 
     /**
      * преобразует строку вида 'SITE_LIST_SITE' -> 'SiteListSite'
      * @param f
      * @return результирующая строка
      */
-    public static String capitalizeString(String f)
+    public static String capitalizeString( final String f)
     {
         String r = "";
         if (f.indexOf('_')==-1)
@@ -71,7 +77,7 @@ public class StringTools
     }
 
 
-    public static String capitalizeFirstChar( String s )
+    public static String capitalizeFirstChar( final String s )
     {
         if (s==null)
             return null;
@@ -82,45 +88,92 @@ public class StringTools
         return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
+    public static Locale normalizeLocale( Locale locale ) {
+        if (locale==null) {
+            return null;
+        }
+
+        return new Locale(
+            locale.getLanguage()!=null?locale.getLanguage().toLowerCase():"",
+            locale.getCountry()!=null?locale.getCountry().toLowerCase():"",
+            locale.getVariant()!=null?locale.getVariant().toLowerCase():""
+        );
+    }
+
     /**
      * Build Locale from string. jdk1.4 have bug
-     * @param string with locale
+     * @param locale with locale
      * @return java.util.Locale
      */
-    public static Locale getLocale(String string)
-    {
-        if (string==null)
+    public static Locale getLocale( final String locale ) {
+        if (locale==null) {
             return null;
+        }
+
+        String string = locale.replace( '-', '_' );
 
         int idx = string.indexOf('_');
         if (idx == -1)
-            return new Locale(string, "");
+            return new Locale(string.toLowerCase(), "");
 
-        String lang = string.substring(0, idx);
+        String lang = string.substring(0, idx).toLowerCase();
         int idx1 = string.indexOf('_', idx+1);
         if (idx1==-1)
-            return new Locale(lang, string.substring(idx+1));
+            return new Locale(lang, string.substring(idx+1).toLowerCase() );
 
         return new Locale(
-            lang, string.substring(idx+1, idx1), string.substring(idx1+1) );
+            lang, string.substring(idx+1, idx1).toLowerCase( ), string.substring(idx1+1).toLowerCase() );
     }
 
-    public static String getMultypleString(String str, int multyple)
+    public static String getMultypleString( final String str, final int multyple)
     {
         if (str==null || multyple==0)
             return "";
 
-        String s = "";
+        StringBuffer s = new StringBuffer();
         for (int i=0; i<multyple; i++)
-            s += str;
+            s.append( str );
 
-        return s;
+        return s.toString();
     }
 
-    public static String toOrigin(String s)
+    /**
+     * @deprecated use decodeXml
+     * @param s
+     * @return
+     */
+    public static String toOrigin( final String s) {
+        return decodeXml( s );
+    }
+
+
+    public static String encodeXml( final String s )
     {
-        if (s==null)
-            return null;
+        if (s==null || s.length()==0)
+            return s;
+
+        StringBuffer buf = new StringBuffer();
+        char ch = ' ';
+        for (int i = 0; i < s.length(); i++) {
+            ch = s.charAt(i);
+            if (ch == '<')
+                buf.append("&lt;");
+            else if (ch == '>')
+                buf.append("&gt;");
+            else if (ch == '&')
+                buf.append("&amp;");
+            else if (ch == '"')
+                buf.append("&quot;");
+            else
+                buf.append(ch);
+        }
+        return buf.toString();
+    }
+
+    public static String decodeXml( final String s )
+    {
+        if (s==null || s.length()==0)
+            return s;
 
         return StringTools.replaceStringArray(
                 s,
@@ -128,68 +181,22 @@ public class StringTools
                 {
                     { "&gt;", ">"},
                     { "&lt;", "<"},
+                    { "&quot;", "\""},
                     { "&amp;", "&"}
                 }
         );
     }
 
-
-    public static String encodeXml( String s )
-    {
-        if (s==null)
-            return null;
-
-        return StringTools.replaceStringArray(
-                s,
-                new String[][]
-                {
-                    { "&", "&amp;" },
-                    { "<", "&lt;"},
-                    { ">", "&gt;"}
-                }
-        );
+    /**
+     * @deprecated use encodeXml
+     * @param s
+     * @return
+     */
+    public static String prepareEditForm( final String s) {
+        return encodeXml( s );
     }
 
-    public static String decodeXml( String s )
-    {
-        if (s==null)
-            return null;
-
-        return StringTools.replaceStringArray(
-                s,
-                new String[][]
-                {
-                    { "&gt;", ">"},
-                    { "&lt;", "<"},
-                    { "&amp;", "&"}
-                }
-        );
-    }
-
-    public static String prepareEditForm(String s)
-    {
-        if (s==null)
-            return null;
-
-        return StringTools.replaceStringArray(
-                s,
-                new String[][]
-                {
-                    { "&", "&amp;" },
-                    { "<", "&lt;" },
-                    { ">", "&gt;" },
-                    { "\"", "&quot;" }
-
-/*
-                    { "&gt;", ">"},
-                    { "&lt;", "<"},
-                    { "&amp;", "&"}
-*/
-                }
-        );
-    }
-
-    public static String prepareToParsingSimple(String s)
+    public static String prepareToParsingSimple( final String s)
     {
         if (s==null)
             return null;
@@ -203,7 +210,7 @@ public class StringTools
         ) + "</para>";
     }
 
-    public static String prepareToParsing(String s)
+    public static String prepareToParsing( final String s)
     {
         if (s==null)
             return null;
@@ -221,7 +228,7 @@ public class StringTools
         ) + "</para>";
     }
 
-    public static String toPlainHTML(String s)
+    public static String toPlainHTML( final String s)
     {
         if (s==null)
             return null;
@@ -246,15 +253,11 @@ public class StringTools
      * @param def - String. Строка, возвращаемая, если проверочная строка == null или пустая
      * @return - String. Новая строка
      */
-    public static String replaceEmpty(String s, String def)
-    {
-        if (s == null)
+    public static String replaceEmpty( final String s, final String def) {
+        if (isEmpty(s))
             return def;
-
-        if (s.trim().length() == 0)
-            return def;
-
-        return s;
+        else
+            return s;
     }
 
     /**
@@ -262,7 +265,7 @@ public class StringTools
      * @param bytes - byte[]. Входной массив байт
      * @return - byte[]. Выходной массив байт, отформатированный в столбцы по 76 байт.
      */
-    public static byte[] formatArray(byte bytes[])
+    public static byte[] formatArray( final byte bytes[])
     {
         int newLength = bytes.length + bytes.length / 57;
 
@@ -292,7 +295,7 @@ public class StringTools
         return bf;
     }
 
-    public static byte[] getBytesUTF(String s)
+    public static byte[] getBytesUTF( final String s)
     {
         if (s==null)
             return new byte[0];
@@ -319,17 +322,17 @@ public class StringTools
 		String(b, int offset, int length, "utf-8")
 	}
 */
-    public static int getStartUTF(String s, int maxByte)
+    public static int getStartUTF( final String s, final int maxByte)
     {
         return getStartUTF(getBytesUTF(s), maxByte);
     }
 
-    public static int getStartUTF(byte[] b, int maxByte)
+    public static int getStartUTF( final byte[] b, final int maxByte)
     {
         return getStartUTF(b, maxByte, 0);
     }
 
-    public static int getStartUTF(byte[] b, int maxByte, int offset)
+    public static int getStartUTF( final byte[] b, final int maxByte, final int offset)
     {
         if (b.length <= offset)
             return -1;
@@ -362,7 +365,7 @@ public class StringTools
      * @param ins - String for replace.
      * @return - String. Результирующая строка. Если один из параметров равен null, возвращается null
      */
-    public static String replaceString(String str_, String search_, String ins)
+    public static String replaceString( final String str_, final String search_, final String ins)
     {
         if ((str_ == null) || (search_ == null) || (ins == null))
             return null;
@@ -399,8 +402,7 @@ public class StringTools
      * repl[][1] - строка для замены
      * @return - String. Новая строка
      */
-    public static String replaceStringArray(String str_,
-                                            String repl[][])
+    public static String replaceStringArray( final String str_, final String repl[][])
     {
         String qqq = str_;
         for (int i = 0; i < repl.length; i++)
@@ -411,14 +413,6 @@ public class StringTools
 
     }
 
-    /*
-     * @deprecated Use public static String replaceString(String str_, String search_, String ins)
-     */
-//    public static String replaceStr(String str_, String search_, String ins)
-//    {
-//        return replaceString(str_, search_, ins);
-//    }
-
     /**
      * Преобразует строку из одной кодировки в другую
      * @param s - String. Строка для преобразования
@@ -427,7 +421,7 @@ public class StringTools
      * @return - String.
      * @throws java.io.UnsupportedEncodingException
      */
-    public static String convertString(String s, String fromCharset, String toCharset)
+    public static String convertString( final String s, final String fromCharset, final String toCharset)
             throws java.io.UnsupportedEncodingException
     {
         if (s == null)
@@ -445,7 +439,7 @@ public class StringTools
      * @param isLeft - boolean. Дополнение слева или справа
      * @return  -  String.
      */
-    public static String addString(String s, char ch, int countAddChar, boolean isLeft)
+    public static String addString( final String s, final char ch, final int countAddChar, final boolean isLeft)
     {
         if (s == null)
             return null;
@@ -470,7 +464,7 @@ public class StringTools
      * @param isLeft - boolean. Дополнение слева или справа
      * @return  -  String.
      */
-    public static String appendString(String s, char ch, int countCharInString, boolean isLeft)
+    public static String appendString( final String s, final char ch, final int countCharInString, final boolean isLeft)
     {
         if (s == null)
             return null;
@@ -491,7 +485,7 @@ public class StringTools
      * @param count_char - int. Количество символов
      * @return - String. Результирующая строка
      */
-    public static String truncateString(String s, int count_char)
+    public static String truncateString( final String s, int count_char)
     {
         if (s == null)
             return null;
@@ -509,12 +503,12 @@ public class StringTools
      * @param count_char - int. Количество символов
      * @return - String. Результирующая строка
      */
-    public static String truncString(String s, int count_char)
+    public static String truncString( final String s, final int count_char)
     {
         return truncateString(s, count_char);
     }
 
-    public static String rewriteString(String s_)
+    public static String rewriteString( final String s_)
     {
         if (s_ == null)
             return null;
@@ -536,7 +530,7 @@ public class StringTools
      *
      * @param bytes - byte[] array representation
      */
-    public static String convertByte(byte bytes[])
+    public static String convertByte( final byte bytes[])
     {
 
         StringBuffer sb = new StringBuffer(bytes.length * 2);
@@ -549,9 +543,9 @@ public class StringTools
 
     }
 
-    private static char convertDigit(int value)
+    private static char convertDigit( final int valueToConvert)
     {
-
+        int value = valueToConvert;
         value &= 0x0f;
         if (value >= 10)
             return ((char) (value - 10 + 'a'));
@@ -560,7 +554,7 @@ public class StringTools
 
     }
 
-    public static String rewriteURL(String str_)
+    public static String rewriteURL( final String str_)
     {
         if (str_ == null)
             return null;
@@ -580,7 +574,7 @@ public class StringTools
         return resultStr;
     }
 
-    public static String getIdByString(List list, String defaultForNull)
+    public static String getIdByString( final List list, final String defaultForNull )
     {
         if (list.size()==0)
             return defaultForNull;

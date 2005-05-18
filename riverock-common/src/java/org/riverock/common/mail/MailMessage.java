@@ -41,9 +41,9 @@ import org.apache.log4j.Logger;
  *
  */
 
-public class MailMessage
+public final class MailMessage
 {
-    private static Logger log = Logger.getLogger("org.riverock.common.mail.MailMessage");
+    private static Logger log = Logger.getLogger(MailMessage.class);
 
     public static void sendMessage(
             String message,
