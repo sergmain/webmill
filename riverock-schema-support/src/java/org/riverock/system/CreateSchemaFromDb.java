@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Feb 28, 2003
- * Time: 12:02:41 AM
- *
- * $Id$
- */
 package org.riverock.system;
 
 import java.io.File;
@@ -64,8 +56,15 @@ import org.exolab.castor.xml.schema.writer.SchemaWriter;
 import org.exolab.castor.util.Version;
 import org.xml.sax.InputSource;
 
-public class CreateSchemaFromDb
-{
+
+/**
+ * User: Admin
+ * Date: Feb 28, 2003
+ * Time: 12:02:41 AM
+ *
+ * $Id$
+ */
+public final class CreateSchemaFromDb {
     private static SchemaGenConfigType config = null;
 
     private static String packageClass = null;
@@ -1654,21 +1653,22 @@ public class CreateSchemaFromDb
                     case Types.DECIMAL:
                         if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
                         {
-                            element.setDefaultValue( ""+field.getDefaultValue() );
+                            element.setDefaultValue( field.getDefaultValue() );
                         }
                         else
                         {
                             String defVal = field.getDefaultValue().trim().replace(',','.');
-                            element.setDefaultValue( ""+new Double(defVal).doubleValue() );
+                            element.setDefaultValue( new Double(defVal).toString() );
                         }
                         break;
 
                     case Types.INTEGER:
-                        element.setDefaultValue( ""+field.getDefaultValue() );
-
+                        element.setDefaultValue( field.getDefaultValue() );
+                        break;
+                        
                     case Types.DOUBLE:
                         String defVal = field.getDefaultValue().trim().replace(',','.');
-                        element.setDefaultValue( ""+new Double(defVal).doubleValue() );
+                        element.setDefaultValue( new Double(defVal).toString() );
                         break;
 
                     case Types.VARCHAR:
@@ -2071,7 +2071,7 @@ public class CreateSchemaFromDb
     private static String putProcessEntityMethos(String classNameItem) {
 
         return
-            "    public long processEntity(com.swisscom.cih.db.Database db_, "+config.getBaseInterface().getEntityClassPackage()+'.'+config.getSuperClass().getComplexType()+" item) "+
+            "    public long processEntity( "+db.getFactoryMethod()+" db_, "+config.getBaseInterface().getEntityClassPackage()+'.'+config.getSuperClass().getComplexType()+" item) "+
             putExceptionDefinition()+" {\n"+
             "        try {\n"+
             "            return process(db_, ("+classNameItem+")item);\n"+

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <!--
 /*
  * org.riverock - 
@@ -26,40 +26,14 @@
  */
 -->
 <!--$Id$-->
-<project name="riverock schema gen support" default="jar" basedir=".">
-    <!-- Global initialization                                               -->
-    <property name="Name" value="riverock-schema-support"/>
-    <property name="lastversion" value="4.0.3"/>
-    <property name="java.target" value="1.4"/>
-    <property name="java.class.target" value="1.4"/>
+<project name="riverock schema gen support" default="usage-main" basedir=".">
 
+    <property name="Name" value="riverock-schema-support"/>
+    <property name="release-version" value="4.0.3"/>
     <property name="manifest-title-name" value="WebMill schema support library"/>
     <property name="manifest-vendor-name" value="WebMill. http://webmill.askmore.info"/>
 
-    <property name="name.current" value="${Name}-${lastversion}"/>
-    <property name="main.lib" value="${name.current}.jar"/>
-    <property name="main.lib.encoded" value="${name.current}.encoded.jar"/>
-
-
-    <property name="lib.dir" value="../riverock-lib/lib"/>
-    <property name="local-lib.dir" value="lib"/>
-    <!-- runtime library -->
-
-    <property file="../riverock.properties"/>
-
-    <property name="site.name" value="_localhost"/>
-
-    <property name="doc.dir" value="doc"/>
-    <property name="src.dir" value="src"/>
-
-    <property name="src.java.dir" value="${src.dir}/java"/>
-    <property name="src.jsp.dir" value="${src.dir}/jsp"/>
-    <property name="src.xsd.dir" value="${src.dir}/xsd"/>
-
-    <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
-
-    <property name="manifest-file-name" value="manifest.mf"/>
-    <property name="manifest" value="src/java/${manifest-file-name}"/>
+    <import file="../riverock-include.xml"/>
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
@@ -71,123 +45,20 @@
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
     </path>
 
-    <property name="build.dir" value="build"/>
-    <property name="build.src.java" value="${src.java.dir}"/>
-    <property name="build.src.jsp" value="${src.jsp.dir}"/>
-    <property name="build.dest" value="${build.dir}/classes"/>
-    <property name="dist.dir" value="${build.dir}/dist"/>
-    <property name="docs.dir" value="${build.dir}/javadocs"/>
-    <property name="src.xsd.dir" value="${src.dir}/xsd"/>
-    <property name="src.xml.dir" value="${src.dir}/xml"/>
-
-    <!-- The following can be set in .ant.properties                 -->
-    <property name="debug" value="on"/>
-    <property name="optimize" value="off"/>
-    <property name="deprecation" value="on"/>
-
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <antcall target="gen_all_schema"/>
         <antcall target="jar"/>
     </target>
-
-    <target name="jar" depends="compile">
-        <antcall target="jar_without_copy"/>
-        <copy file="${build.dir}\${main.lib}" todir="../riverock-lib/lib"/>
-    </target>
-
-    <target name="gen_all_schema">
-        <antcall target="delete_all_schema"/>
-        <antcall target="gen_schema-gen-config"/>
-    </target>
-
-    <target name="delete_all_schema">
-        <delete includeEmptyDirs="false" failonerror="false">
-            <fileset dir="${src.java.dir}/org/riverock/schema/">
-                <include name="**/*.java"/>
-                <exclude name="**/CVS/**"/>
-            </fileset>
-        </delete>
-    </target>
-
-    <target name="gen_schema-gen-config" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/gen/"/>
-        <property name="schema-file" value="${src.xsd.dir}/riverock-gen-schema.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.gen"/>
-        <antcall target="gen_schema"/>
-    </target>
-
-    <target name="gen_schema">
-        <antcall target="clean"/>
-        <delete includeEmptyDirs="true" failonerror="false">
-            <fileset dir="${schema-dir}">
-                <include name="**/*.java"/>
-                <exclude name="**/CVS"/>
-            </fileset>
-        </delete>
-        <echo message="XSD - ${schema-file}"/>
-        <java fork="true" classname="org.exolab.castor.builder.SourceGenerator">
-            <arg value="-i"/>
-            <arg value="${schema-file}"/>
-            <arg value="-package"/>
-            <arg value="${schema-package-java}"/>
-            <arg value="-dest"/>
-            <arg value="${src.java.dir}"/>
-            <arg value="-f"/>
-            <arg value="-binding-file"/>
-            <arg value="${src.xml.dir}/binding.xml"/>
-            <classpath>
-                <pathelement location="${local-lib.dir}/castor" />
-                <path refid="classpath-base"/>
-            </classpath>
-        </java>
-    </target>
-
 
     <target name="full_clean">
         <antcall target="clean"/>
     </target>
 
-    <target name="clean">
-        <delete failonerror="false">
-            <fileset dir="${build.dir}">
-                <include name="**"/>
-                <include name="*.jar"/>
-                <include name="*.tar"/>
-                <include name="*.gz"/>
-            </fileset>
-        </delete>
-        <delete dir="${docs.dir}" failonerror="false"/>
-        <delete dir="${build.dir}/src/" failonerror="false"/>
-        <delete dir="${build.dir}/classes/" failonerror="false"/>
-        <delete dir="${build.dir}/bin/" failonerror="false"/>
-        <delete dir="${build.dir}/tomcat/" failonerror="false"/>
-        <delete dir="${build.dir}/ext/" failonerror="false"/>
-        <delete dir="${build.dir}" failonerror="false"/>
-
-        <antcall target="delete_all_schema"/>
-    </target>
-
-    <target name="make_manifest_file">
-        <echo message="Start make manifest file"/>
-    <echo file="${build.dest}/${manifest-file-name}">Manifest-Version: 1.0
-Specification-Title: ${manifest-title-name}
-Specification-Vendor: ${manifest-vendor-name}
-Specification-Version: ${release-version}
-Implementation-Title: ${manifest-title-name}
-Implementation-Vendor: ${manifest-vendor-name}
-Implementation-Version: ${release-version}
-
-Name: ${manifest-title-name}
-Sealed: true
-</echo>
-        <echo message="Manifest file is created"/>
-    </target>
-
-
     <target name="compile" depends="prepare">
         <mkdir dir="${build.dest}"/>
         <javac
+            target="${java.class.target}"
+            source="${java.class.source}"
             srcdir="${build.src.java}"
             destdir="${build.dest}"
             excludes="*.txt,*.bat,*.xml,*.sh,*.jav"
@@ -198,23 +69,4 @@ Sealed: true
             <classpath refid="classpath-base"/>
         </javac>
     </target>
-
-    <target name="jar_without_copy" depends="compile">
-        <antcall target="make_manifest_file"/>
-        <jar jarfile="${build.dir}/${main.lib}"
-            basedir="${build.dest}"
-            includes="org/riverock/**"
-            excludes="*.txt,*.bat,*.xml,*.sh,*.jav,${manifest-file-name}"
-            manifest="${build.dest}/${manifest-file-name}"/>
-    </target>
-
-    <!-- Prepares the build directory                                        -->
-    <target name="prepare">
-        <!--
-        <echo message="Preparing the build directories"/>
-        -->
-        <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dest}"/>
-    </target>
-
 </project>

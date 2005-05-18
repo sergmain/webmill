@@ -1,4 +1,5 @@
 build
 temp
-mill-schema-support.ipr 
-mill-schema-support.iws
+riverock-schema-support.iml 
+riverock-schema-support.ipr 
+riverock-schema-support.iws 
