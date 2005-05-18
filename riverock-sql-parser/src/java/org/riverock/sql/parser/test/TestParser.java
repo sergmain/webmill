@@ -23,14 +23,6 @@
  *
  */
 
-/**
- * Author: mill
- * Date: Apr 29, 2003
- * Time: 10:13:18 AM
- *
- * $Id$
- */
-
 package org.riverock.sql.parser.test;
 
 import java.io.FileOutputStream;
@@ -42,6 +34,13 @@ import org.riverock.generic.startup.StartupApplication;
 
 import org.exolab.castor.xml.Marshaller;
 
+/**
+ * Author: mill
+ * Date: Apr 29, 2003
+ * Time: 10:13:18 AM
+ *
+ * $Id$
+ */
 public class TestParser
 {
 //    private static Logger log = Logger.getLogger( "org.riverock.sql.parser.test.TestParser" );
@@ -98,7 +97,7 @@ public class TestParser
     {
         StartupApplication.init();
 
-//        testSelect();
+        testSelect();
         testInsert();
 //        testUpdate();
 //        testDelete();
@@ -177,6 +176,14 @@ public class TestParser
     private static void testSelect()
         throws Exception
     {
+        doProcess(
+            "select b.id_firm id, concat(b.id_firm, ', ', b.full_name) NAME_FIRM "+
+            "from   main_LIST_FIRM b "+
+            "where  b.ID_FIRM in (10,12) and b.is_deleted=0 "+
+            "order  by b.ID_FIRM ASC ",
+            "parser-select-22.xml",
+            new String[]{"main_LIST_FIRM"}
+    );
 /*
         doProcess(
             "select distinct a.*, b.count_field  " +
