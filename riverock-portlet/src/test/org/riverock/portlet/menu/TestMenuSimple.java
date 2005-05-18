@@ -22,6 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.menu;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 
 /**
  *
@@ -30,17 +35,8 @@
  * $Id$
  *
  */
-package org.riverock.portlet.menu;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.riverock.portlet.menu.MenuSimple;
-
-public class  TestMenuSimple extends TestCase
-
-{
-    public static void testDecodeLevel()
-    {
+public class  TestMenuSimple extends TestCase {
+    public static void testDecodeLevel() {
         Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel("hkfjsdhfksdj"));
         Assert.assertEquals(MenuSimple.UNKNOWN_LEVEL, MenuSimple.decodeLevel(null));
         Assert.assertEquals(MenuSimple.EQUAL_LEVEL, MenuSimple.decodeLevel("equal"));

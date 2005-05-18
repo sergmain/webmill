@@ -36,6 +36,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.Types;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -404,8 +406,9 @@ public class TestCaseMember extends TestCase
                         try
                         {
 //                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
-                            PortletRequest portletRequest = new RenderRequestImpl();
-                            String sql = MemberServiceClass.buildUpdateSQL(content, null, mod, db_, true, portletRequest);
+//                            PortletRequest portletRequest = new RenderRequestImpl();
+                            Map map = new HashMap();
+                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name" );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -444,8 +447,9 @@ public class TestCaseMember extends TestCase
                         Exception ee = null;
                         try
                         {
-                            PortletRequest portletRequest = new RenderRequestImpl();
-                            String sql = MemberServiceClass.buildDeleteSQL(content, mod, null, db_, portletRequest);
+//                            PortletRequest portletRequest = new RenderRequestImpl();
+                            Map map = new HashMap();
+                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name" );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)

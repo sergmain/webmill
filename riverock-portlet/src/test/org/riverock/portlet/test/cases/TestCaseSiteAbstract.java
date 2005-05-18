@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: May 9, 2003
- * Time: 11:53:17 AM
- *
- * $Id$
- */
 package org.riverock.portlet.test.cases;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -40,11 +32,17 @@ import org.riverock.generic.tools.servlet.HttpServletResponseApplWrapper;
 import org.riverock.generic.tools.servlet.HttpSessionApplWrapper;
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.main.CacheItemV2;
 import org.riverock.generic.startup.StartupApplication;
+import org.riverock.cache.impl.CacheArray;
 
-public class TestCaseSiteAbstract
-{
+/**
+ * User: Admin
+ * Date: May 9, 2003
+ * Time: 11:53:17 AM
+ *
+ * $Id$
+ */
+public class TestCaseSiteAbstract {
     public DatabaseAdapter db_ = null;
     public HttpServletRequestApplWrapper request = null;
     public HttpServletResponseApplWrapper response = null;
@@ -52,12 +50,9 @@ public class TestCaseSiteAbstract
     public static TestSite testSite = null;
     public String nameConnection = null;
 
-    public void initDatabaseConnection()
-        throws Exception
-    {
+    public void initDatabaseConnection() throws Exception {
+
         System.out.println( "Start nameConnection with nameConnection "+nameConnection);
-//        WebmillConfig conf = WebmillConfig.getWebmillConfig();
-//        conf.setDefaultConnectionName( nameConnection );
 
         db_ = DatabaseAdapter.getInstance(true, nameConnection);
         if (db_==null)
@@ -67,7 +62,7 @@ public class TestCaseSiteAbstract
     protected void testSiteStructure( TestCaseInterface testCase )
         throws Exception
     {
-        CacheItemV2.reinitFullCache();
+        CacheArray.reinitFullCache();
 
         DatabaseConnectionType dbConnConfig = GenericConfig.getDatabaseConnection( nameConnection );
         if (dbConnConfig==null)
@@ -95,7 +90,7 @@ public class TestCaseSiteAbstract
         throws Exception
     {
         DatabaseAdapter.isNeedValidateStructure = false;
-        org.riverock.generic.startup.StartupApplication.init();
+        StartupApplication.init();
         nameConnection = "HSQLDB";
         testSiteStructure( testCase );
     }
@@ -103,8 +98,9 @@ public class TestCaseSiteAbstract
     public void testWithMySqlConnection( TestCaseInterface testCase )
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        StartupApplication.init();
         nameConnection = "MYSQL";
+        GenericConfig.setDefaultConnectionName( nameConnection );
         testSiteStructure( testCase );
     }
 
@@ -125,7 +121,7 @@ public class TestCaseSiteAbstract
         testSiteStructure( testCase );
     }
 
-    protected void initRequestSession()
+    public void initRequestSession()
         throws Exception
     {
         request = null;

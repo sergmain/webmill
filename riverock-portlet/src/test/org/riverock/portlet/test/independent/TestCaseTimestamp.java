@@ -114,9 +114,7 @@ public class TestCaseTimestamp extends TestCase
         Assert.assertFalse("Error code of SQLException is wrong", e.getErrorCode() != -org.hsqldb.Trace.TABLE_ALREADY_EXISTS);
     }
 
-    public void testHypersonic()
-        throws Exception
-    {
+    public void testHypersonic() throws Exception {
         nameTable = "\"AAA_TEST\"";
         setTimeZone();
         initHypersonic();

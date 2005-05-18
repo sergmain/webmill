@@ -22,6 +22,49 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.test.cases;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.Iterator;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.site.SiteListSite;
+import org.riverock.generic.tools.XmlTools;
+import org.riverock.interfaces.portlet.menu.MenuInterface;
+import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
+import org.riverock.portlet.core.GetCashCurrencyStdFullList;
+import org.riverock.portlet.core.GetSiteCtxTypeFullList;
+import org.riverock.portlet.core.InsertCashCurrValueItem;
+import org.riverock.portlet.core.InsertCashCurrencyItem;
+import org.riverock.portlet.core.InsertPriceShopTableItem;
+import org.riverock.portlet.core.InsertSiteCtxCatalogItem;
+import org.riverock.portlet.core.InsertSiteCtxLangCatalogItem;
+import org.riverock.portlet.core.InsertSiteSupportLanguageItem;
+import org.riverock.portlet.price.CurrencyList;
+import org.riverock.portlet.price.CurrencyService;
+import org.riverock.portlet.schema.core.*;
+import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
+import org.riverock.portlet.schema.price.CustomCurrencyItemType;
+import org.riverock.webmill.core.InsertSiteListSiteItem;
+import org.riverock.webmill.core.InsertSiteTemplateItem;
+import org.riverock.webmill.core.InsertSiteVirtualHostItem;
+import org.riverock.webmill.port.PortalInfo;
+import org.riverock.webmill.portal.menu.SiteMenu;
+import org.riverock.webmill.portlet.PortletManager;
+import org.riverock.webmill.schema.core.SiteListSiteItemType;
+import org.riverock.webmill.schema.core.SiteTemplateItemType;
+import org.riverock.webmill.schema.core.SiteVirtualHostItemType;
+import org.riverock.webmill.site.SiteService;
+
+import junit.framework.Assert;
+import org.apache.log4j.Logger;
 
 /**
  * User: Admin
@@ -30,52 +73,9 @@
  *
  * $Id$
  */
-package org.riverock.portlet.test.cases;
+public class TestSite {
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.site.SiteListSite;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.core.InsertCashCurrValueItem;
-import org.riverock.portlet.core.InsertCashCurrencyItem;
-import org.riverock.portlet.core.InsertPriceShopTableItem;
-import org.riverock.portlet.core.InsertSiteSupportLanguageItem;
-import org.riverock.portlet.core.GetCashCurrencyStdFullList;
-import org.riverock.portlet.core.GetSiteCtxTypeFullList;
-import org.riverock.portlet.core.InsertSiteCtxLangCatalogItem;
-import org.riverock.portlet.core.InsertSiteCtxCatalogItem;
-import org.riverock.portlet.price.CurrencyService;
-import org.riverock.portlet.schema.core.*;
-import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
-import org.riverock.portlet.menu.MenuLanguage;
-import org.riverock.webmill.core.InsertSiteTemplateItem;
-import org.riverock.webmill.core.InsertSiteVirtualHostItem;
-import org.riverock.webmill.core.InsertSiteListSiteItem;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portlet.PortletManager;
-import org.riverock.webmill.schema.core.SiteListSiteItemType;
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
-import org.riverock.webmill.schema.core.SiteVirtualHostItemType;
-import org.riverock.webmill.site.SiteService;
-import org.riverock.webmill.portal.menu.MenuItemInterface;
-import org.riverock.webmill.portal.menu.SiteMenu;
-import org.riverock.webmill.portal.menu.MenuLanguageInterface;
-import org.riverock.webmill.portal.menu.MenuInterface;
-import org.riverock.webmill.config.WebmillConfig;
-
-import junit.framework.Assert;
-import org.apache.log4j.Logger;
-
-public class TestSite
-{
-
-    private static Logger log = Logger.getLogger( "org.riverock.tools.StringManager" );
+    private static Logger log = Logger.getLogger( TestSite.class );
 
     public final static String TEST_SERVER_NAME = "test-host";
     public final static String TEST_LANGUAGE = "ru_RU";
@@ -140,15 +140,19 @@ public class TestSite
         listSite.reinit();
         p.reinit();
         p = PortalInfo.getInstance(db_, TEST_SERVER_NAME);
-/*
-        Assert.assertFalse("Error init list of currency", p.currencyList==null);
-        for (int i=0; i<p.currencyList.getCurrencyListCount(); i++)
+
+        Long idSite = SiteListSite.getIdSite( TEST_SERVER_NAME );
+
+        CurrencyList currList = CurrencyList.getInstance(db_, idSite);
+
+        Assert.assertFalse("Error init list of currency", currList==null);
+        for (int i=0; i<currList.list.getCurrencyListCount(); i++)
         {
-            CustomCurrencyItemType item = p.currencyList.getCurrencyList(i);
+            CustomCurrencyItemType item = currList.list.getCurrencyList(i);
             Assert.assertFalse("Error init current curs of currency", item.getRealCurs().doubleValue()==0);
         }
-*/
-        SiteListSiteItemType site = p.sites;
+
+        SiteListSiteItemType site = p.getSites();
         if (site==null || site.getIdSite()==null)
             throw new Exception("PortalInfo for serverName '"+TEST_SERVER_NAME+"' not initialized" );
 
@@ -222,7 +226,6 @@ public class TestSite
 
         Assert.assertFalse("Error insert new lang menu", countRec.longValue()==0);
 
-        int numberItem = 0;
         for (int i=0; i<COUNT_TOP_LEVEL_MENU; i++)
         {
             SiteCtxCatalogItemType menu = new SiteCtxCatalogItemType();
@@ -279,24 +282,20 @@ public class TestSite
 
         MenuInterface c = cList.getMenu(0);
 
-        XmlTools.writeToFile(c, WebmillConfig.getWebmillDebugDir()+"test-catalog.xml");
+        XmlTools.writeToFile(c, GenericConfig.getGenericDebugDir()+"test-catalog.xml");
 
 
-//        Assert.assertFalse( "Wrong total of items, value - "+c.ctxArray.length,
-//                c.ctxArray.length!=(COUNT_TOP_LEVEL_MENU*COUNT_SUB_MENU)
-//        );
+        Assert.assertFalse( "Wrong count of top level, value - "+c.getMenuItem().size(),
+                c.getMenuItem().size()!=(COUNT_TOP_LEVEL_MENU)
+        );
 
-//        Assert.assertFalse( "Wrong count of top level, value - "+c.getMenuItemCount(),
-//                c.getMenuItemCount()!=(COUNT_TOP_LEVEL_MENU)
-//        );
-//        for (int i=0; i<c.getMenuItemCount(); i++)
-//        {
-//            MenuItemInterface ci = c.getMenuItem(i);
-//            Assert.assertFalse( "Wrong count of top level, value - "+ci.getCatalogItems().size(),
-//                    ci.getCatalogItems().size()!=(COUNT_SUB_MENU)
-//            );
-//        }
-
+        Iterator iterator = c.getMenuItem().iterator();
+        while( iterator.hasNext() ) {
+            MenuItemInterface ci = (MenuItemInterface)iterator.next();
+            Assert.assertFalse( "Wrong count of top level, value - "+ci.getCatalogItems().size(),
+                    ci.getCatalogItems().size()!=(COUNT_SUB_MENU)
+            );
+        }
     }
 
     public void insertShopTestData() throws Exception
@@ -364,9 +363,7 @@ public class TestSite
 
         curs = new CashCurrValueItemType();
         curs.setCurs( cursRUB );
-//        Timestamp stamp = new Timestamp(System.currentTimeMillis() );
-//        String s = DateTools.getStringDate(stamp, "dd.MM.yyyy HH:mm:ss.SSS", Locale.ENGLISH);
-//        curs.setDateChange( stamp );
+
         Timestamp stampTemp = new Timestamp(System.currentTimeMillis() );
         curs.setDateChange( stampTemp );
         curs.setIdCurrency( idCurrencyRUB );
@@ -393,16 +390,6 @@ public class TestSite
         curs.setIdCurval( id );
         InsertCashCurrValueItem.processData(db_, curs);
         db_.commit();
-
-//        try
-//        {
-//            TestCaseTimestamp t = new TestCaseTimestamp("aaa");
-//            t.testHypersonic( db_.conn , CurrentTimeZone.getTZ() );
-//        }
-//        catch(Exception e)
-//        {
-//            System.out.println("Hsql exception "+e.toString());
-//        }
 
         CurrencyCurrentCursType currentCurs =
             CurrencyService.getCurrentCurs(db_, idCurrencyEURO, idSite );

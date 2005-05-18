@@ -23,38 +23,37 @@
  *
  */
 
+package org.riverock.portlet.shop;
+
+import junit.framework.TestSuite;
+
 /**
- * Author: mill
- * Date: Apr 2, 2003
- * Time: 4:37:39 PM
+ *
+ * $Author$
  *
  * $Id$
+ *
  */
-
-package org.riverock.portlet.test;
-
-import org.riverock.common.html.AcceptLanguageWithLevel;
-import org.riverock.common.html.Header;
-
-import org.apache.log4j.Logger;
-
-public class TestAcceptLanguage
+public class SuiteShop
 {
-    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestAcceptLanguage" );
+    public SuiteShop(){}
 
-    public TestAcceptLanguage()
+    public static TestSuite suite ( )
     {
-    }
 
-    public static void main(String args[])
-        throws Exception
-    {
-        AcceptLanguageWithLevel[] accept =
-            Header.getAcceptLanguageArray("ru,en;q=0.8,en-gb;q=0.5,ja;q=0.33");
+		TestSuite suite= new TestSuite("News tests");
 
-        for (int i=0; i<accept.length; i++)
-        {
-            System.out.println( "Locale - "+accept[i].locale+" level - "+accept[i].level );
-        }
-    }
+        suite.addTest( new TestCaseShop("testWithOracleConnection") );
+//        suite.addTest( new TestCaseShop("testWithHypersonicConnection") );
+//        suite.addTest( new TestCaseShop("testWithMSSQLConnection") );
+//        suite.addTest( new TestCaseShop("testWithMySqlConnection") );
+
+
+//        suite.addTest( new TestCaseNews("testWithIbmDB2Connection") );
+
+        return suite;
+
+	}
+
+
 }
