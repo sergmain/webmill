@@ -22,6 +22,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sql.cache;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+
+import org.riverock.sql.parser.Parser;
+
+import org.apache.log4j.Logger;
 
 /**
  * User: Admin
@@ -30,23 +40,13 @@
  *
  * $Id$
  */
-package org.riverock.sql.cache;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-
-import org.riverock.sql.parser.Parser;
-
-import org.apache.log4j.Logger;
-
 public class SqlStatement
 {
-    private static Logger log = Logger.getLogger( "org.riverock.sql.cache.SqlStatement" );
+    private static Logger log = Logger.getLogger( SqlStatement.class );
 
-    private static HashMap sqlParserHash = new HashMap( 100 );
-    public static Hashtable classHash = new Hashtable();
-    public static Hashtable classRelateHash = new Hashtable();
+    private static Map sqlParserHash = new HashMap( 100 );
+    public static Map classHash = new HashMap();
+    public static Map classRelateHash = new HashMap();
 
     public synchronized static Parser parseSql( String sql )
         throws Exception
@@ -88,16 +88,16 @@ public class SqlStatement
                 String clone = new String( sql.toCharArray() );
                 Parser newParser = Parser.getInstance(clone);
 
-                ArrayList v = new ArrayList(4);
+                List v = new ArrayList(4);
                 v.add(obj);
                 v.add(newParser);
 
                 sqlParserHash.put( clone, v );
                 return tempParserObj;
             }
-            else if (obj instanceof ArrayList)
+            else if (obj instanceof List)
             {
-                ArrayList arrayList = (ArrayList)obj;
+                List arrayList = (List)obj;
                 for ( int i=0; i<arrayList.size(); i++)
                 {
                     Parser tempParser = (Parser)arrayList.get(i);
@@ -123,7 +123,7 @@ public class SqlStatement
         }
         catch (Exception e)
         {
-            log.error( "Error parse SQL "+sql );
+            log.error( "Error parse SQL "+sql, e );
             throw e;
         }
     }
@@ -137,17 +137,14 @@ public class SqlStatement
               throw new IllegalArgumentException( "Can not set relation to self" );
 
         Object obj = classRelateHash.get( classMain.getName() );
-        if ( obj==null )
-        {
+        if ( obj==null ) {
             classRelateHash.put( classMain.getName(), classTarget.getName() );
         }
-        else if ( obj instanceof ArrayList )
-        {
-            ( (ArrayList)obj ).add( classTarget.getName() );
+        else if ( obj instanceof List ) {
+            ( (List)obj ).add( classTarget.getName() );
         }
-        else
-        {
-            ArrayList v = new ArrayList();
+        else {
+            List v = new ArrayList();
             v.add( obj );
             v.add( classTarget.getName() );
             classRelateHash.put( classMain.getName(), v );
@@ -169,13 +166,13 @@ public class SqlStatement
             {
                 classHash.put( class_.getName(), parser );
             }
-            else if ( obj instanceof ArrayList )
+            else if ( obj instanceof List )
             {
-                ( (ArrayList)obj ).add( parser );
+                ( (List)obj ).add( parser );
             }
             else
             {
-                ArrayList v = new ArrayList();
+                List v = new ArrayList();
                 v.add( obj );
                 v.add( parser );
                 classHash.put( class_.getName(), v );
