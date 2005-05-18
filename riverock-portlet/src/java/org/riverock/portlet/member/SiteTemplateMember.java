@@ -42,7 +42,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.schema.site.SiteTemplate;
+import org.riverock.sql.cache.SqlStatement;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
@@ -54,7 +56,7 @@ public class SiteTemplateMember
 
     private static CacheFactory cache = new CacheFactory( SiteTemplateMember.class.getName() );
 
-    public HashMap memberTemplate = new HashMap();
+    public Map memberTemplate = new HashMap();
 
     public void reinit()
     {
@@ -100,9 +102,7 @@ public class SiteTemplateMember
 
         try
         {
-            SiteTemplateMember tempObj = new SiteTemplateMember();
-            Class dependClass = tempObj.getClass();
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, dependClass );
+            SqlStatement.registerSql( sql_, new SiteTemplateMember().getClass() );
         }
         catch(Exception e)
         {
@@ -129,16 +129,16 @@ public class SiteTemplateMember
             while (rs.next())
             {
                 SiteTemplate st = (SiteTemplate) Unmarshaller.unmarshal(SiteTemplate.class,
-                        new InputSource(
-                                new StringReader(
-                                        RsetTools.getString(rs, "TEMPLATE_DATA")
-                                )
-                        )
+                    new InputSource(
+                        new StringReader( RsetTools.getString(rs, "TEMPLATE_DATA") )
+                    )
                 );
 
                 st.setNameTemplate( RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
 
-                memberTemplate.put( RsetTools.getString(rs, "CUSTOM_LANGUAGE"), st );
+                memberTemplate.put(
+                    StringTools.getLocale( RsetTools.getString(rs, "CUSTOM_LANGUAGE") ).toString(),
+                    st );
             }
         }
         catch(Exception e)

@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.portlet.news;
 
 import java.sql.PreparedStatement;
@@ -36,14 +32,19 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
+import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.sql.cache.SqlStatement;
 
 import org.apache.log4j.Logger;
 
 import javax.portlet.PortletException;
 
-public class NewsGroup
+/**
+ * $Id$
+ */
+public final class NewsGroup
 {
-    private static Logger log = Logger.getLogger( NewsGroup.class  );
+    private final static Logger log = Logger.getLogger( NewsGroup.class  );
 
     public NewsGroupType newsGroup = new NewsGroupType();
 
@@ -84,15 +85,13 @@ public class NewsGroup
 
         try
         {
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, new NewsGroup().getClass() );
+            SqlStatement.registerSql( sql_, new NewsGroup().getClass() );
         }
-        catch(Exception e)
+        catch(Throwable e)
         {
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-        }
-        catch(Error e)
-        {
-            log.error("Error in registerSql, sql\n"+sql_, e);
+            final String es = "Error in registerSql, sql\n"+sql_;
+            log.error(es, e);
+            throw new SqlStatementRegisterException( es, e );
         }
     }
 
@@ -131,15 +130,11 @@ public class NewsGroup
                     log.debug("newsGroupName - "+newsGroup.getNewsGroupName() + " maxNews - "+newsGroup.getMaxNews() );
             }
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            log.error("Exception create NewsGroup",e);
-            throw new PortletException(e.toString());
-        }
-        catch (Error e)
-        {
-            log.error("Error create NewsGroup",e);
-            throw new PortletException(e.toString());
+            final String es = "Error create NewsGroup";
+            log.error(es, e);
+            throw new PortletException( es, e );
         }
         finally
         {
@@ -159,15 +154,13 @@ public class NewsGroup
 
         try
         {
-            org.riverock.sql.cache.SqlStatement.registerSql( sql1_, new NewsGroup().getClass() );
+            SqlStatement.registerSql( sql1_, new NewsGroup().getClass() );
         }
-        catch(Exception e)
+        catch(Throwable e)
         {
-            log.error("Exception in registerSql, sql\n"+sql1_, e);
-        }
-        catch(Error e)
-        {
-            log.error("Error in registerSql, sql\n"+sql1_, e);
+            final String es = "Error in registerSql, sql\n"+sql_;
+            log.error(es, e);
+            throw new SqlStatementRegisterException( es, e );
         }
     }
 
@@ -196,15 +189,11 @@ public class NewsGroup
                 newsGroup.addNewsItem( item.newsItem );
             }
         }
-        catch (Exception e)
+        catch (Throwable e)
         {
-            log.error("Exception fillNewsItems", e);
-            throw new PortletException(e.toString());
-        }
-        catch (Error e)
-        {
-            log.error("Error fillNewsItems", e);
-            throw new PortletException(e.toString());
+            final String es = "Error in fillNewsItems";
+            log.error(es, e);
+            throw new PortletException( es, e );
         }
         finally
         {

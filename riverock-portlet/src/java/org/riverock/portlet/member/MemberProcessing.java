@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.portlet.member;
 
 import java.io.StringReader;
@@ -38,17 +34,16 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.Iterator;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Unmarshaller;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.ExceptionTools;
@@ -71,26 +66,34 @@ import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
 import org.riverock.portlet.schema.member.types.SqlCheckParameterTypeTypeType;
 import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 import org.riverock.portlet.schema.member.types.TypeFieldType;
-import org.riverock.portlet.tools.HtmlTools;
-import org.riverock.webmill.core.GetSiteTemplateItem;
-
-import org.riverock.webmill.portlet.CtxInstance;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
-import org.riverock.webmill.schema.site.SiteTemplate;
-import org.riverock.webmill.site.SiteTemplateService;
-import org.riverock.webmill.site.SiteUtils;
-import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.tools.HtmlTools;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.utils.AuthHelper;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.schema.site.SiteTemplate;
+import org.riverock.webmill.schema.site.TemplateItemType;
+import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.webmill.site.SiteUtils;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+
+import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * $Id$
+ */
 public final class MemberProcessing {
     private final static Logger log = Logger.getLogger( MemberProcessing.class );
 
     public ModuleType mod = null;
     public ContentType content = null;
+
+    public DatabaseAdapter getDatabaseAdapter() {
+        return db_;
+    }
+
     private DatabaseAdapter db_ = null;
 
     public boolean isMainAccess = false;
@@ -99,13 +102,12 @@ public final class MemberProcessing {
     public boolean isChangeAccess = false;
     public boolean isDeleteAccess = false;
 
-//    private CtxInstance ctxInstance = null;
-    private RenderRequest renderRequest = null;
-    private RenderResponse renderResponse = null;
+    private PortletRequest renderRequest = null;
+    private PortletResponse renderResponse = null;
 
-    public final static String aliasFirmRestrict = "z1243";
-    public final static String aliasSiteRestrict = "z1207";
-    public final static String aliasUserRestrict = "z1279";
+    final static String aliasFirmRestrict = "z1243";
+    final static String aliasSiteRestrict = "z1207";
+    final static String aliasUserRestrict = "z1279";
 
     public final int linesInException = 20;
 
@@ -115,23 +117,26 @@ public final class MemberProcessing {
     private Long firmId = null;
     private Long userId = null;
 
-    protected void finalize() throws Throwable
+    public void destroy()
     {
-        mod = null;
-        content = null;
-        renderRequest = null;
-        fromParam = null;
-        thisURI = null;
-        commitURI = null;
         DatabaseAdapter.close(db_);
         db_ = null;
 
-        super.finalize();
+        mod = null;
+        content = null;
+        renderRequest = null;
+        renderResponse = null;
+
+        fromParam = null;
+        thisURI = null;
+        commitURI = null;
+        firmId = null;
+        userId = null;
+
     }
 
-    public MemberProcessing()
-    {
-    }
+//    public MemberProcessing(){
+//    }
 
     public boolean checkRestrict() throws Exception
     {
@@ -927,10 +932,17 @@ public final class MemberProcessing {
     private void bindSelectSQL(PreparedStatement ps)
         throws Exception
     {
-        if (content == null || content.getQueryArea() == null)
+        if (content == null || content.getQueryArea() == null) {
             throw new Exception("content or QueryAreaType is null.");
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Start bindSelectSql" );
+        }
 
         int numParam = 1;
+        Long longTemp = null;
+        String stringTemp = null;
         if (fromParam.length() > 0)
         {
             StringTokenizer st = new StringTokenizer(fromParam, ",");
@@ -945,13 +957,19 @@ public final class MemberProcessing {
                     //prepare lookup PK
                     if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
                     {
-                        RsetTools.setLong(ps, numParam++, PortletTools.getLong(renderRequest,
-                            modName + '.' + cnt.getQueryArea().getPrimaryKey()) );
+                        longTemp = PortletTools.getLong(renderRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                        if (log.isDebugEnabled()) {
+                            log.debug("param#"+numParam+": "+longTemp);
+                        }
+                        RsetTools.setLong(ps, numParam++, longTemp );
                     }
                     else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
                     {
-                        ps.setString(numParam++, PortletTools.getString(renderRequest,
-                            modName + '.' + cnt.getQueryArea().getPrimaryKey()));
+                        stringTemp = PortletTools.getString(renderRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                        if (log.isDebugEnabled()) {
+                            log.debug("param#"+numParam+": "+stringTemp);
+                        }
+                        ps.setString(numParam++, stringTemp );
                     }
 /*
 else if ( content.getQueryArea().getPrimaryKeyType().equals("date"))
@@ -977,14 +995,17 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
-                        if (log.isDebugEnabled())
-                            log.debug("#3.001.04 "+renderRequest.getRemoteUser() );
-
+                        if (log.isDebugEnabled()) {
+                            log.debug("#3.001.04 param#"+numParam+": "+renderRequest.getRemoteUser() );
+                        }
                         switch (db_.getFamaly())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
                             default:
+                                if (log.isDebugEnabled()) {
+                                    log.debug("param#"+numParam+": "+renderRequest.getRemoteUser());
+                                }
                                 ps.setString(numParam++, renderRequest.getRemoteUser());
                                 break;
                         }
@@ -998,7 +1019,7 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
                                 break;
                             default:
                                 if (log.isDebugEnabled())
-                                    log.debug("#3.001.07 "+renderRequest.getServerName());
+                                    log.debug("#3.001.07 param#"+numParam+": "+renderRequest.getServerName());
                                 ps.setString(numParam++, renderRequest.getServerName());
                                 break;
                         }
@@ -1009,10 +1030,15 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
                         switch (db_.getFamaly())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
+                                if (log.isDebugEnabled()) {
+                                    log.debug("#3.001.09 param#"+numParam+": "+renderRequest.getRemoteUser());
+                                }
+                                ps.setString(numParam++, renderRequest.getRemoteUser());
                                 break;
                             default:
-                                if (log.isDebugEnabled())
-                                    log.debug("#3.001.09 "+renderRequest.getRemoteUser());
+                                if (log.isDebugEnabled()) {
+                                    log.debug("#3.001.09 param#"+numParam+": "+renderRequest.getRemoteUser());
+                                }
                                 ps.setString(numParam++, renderRequest.getRemoteUser());
                                 break;
                         }
@@ -1026,6 +1052,9 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
+                    if (log.isDebugEnabled()) {
+                        log.debug("param#"+numParam+": "+renderRequest.getRemoteUser());
+                    }
                     ps.setString(numParam++, renderRequest.getRemoteUser());
                     break;
             }
@@ -1036,14 +1065,21 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
+                    if (log.isDebugEnabled()) {
+                        log.debug("param#"+numParam+": "+renderRequest.getServerName());
+                    }
                     ps.setString(numParam++, renderRequest.getServerName());
                     break;
             }
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE) {
+            if (log.isDebugEnabled()) {
+                log.debug("param#"+numParam+": "+renderRequest.getRemoteUser());
+            }
             switch (db_.getFamaly()) {
                 case DatabaseManager.MYSQL_FAMALY:
+                    ps.setString(numParam++, renderRequest.getRemoteUser());
                     break;
                 default:
                     ps.setString(numParam++, renderRequest.getRemoteUser());
@@ -1052,8 +1088,12 @@ modName+'.'+cnt.getQueryArea().getPrimaryKey()) );
         }
 
         if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null & mod.getSelfLookup().getTopField() != null) {
-            RsetTools.setLong(ps, numParam++, PortletTools.getLong(renderRequest,
-                mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) ) );
+            longTemp = PortletTools.getLong(renderRequest,
+                mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) );
+            if (log.isDebugEnabled()) {
+                log.debug("param#"+numParam+": "+longTemp);
+            }
+            RsetTools.setLong(ps, numParam++, longTemp );
         }
     }
 
@@ -1696,7 +1736,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             case DatabaseManager.MYSQL_FAMALY:
                 break;
             default:
-                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, renderRequest, db_);
+                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, db_, renderRequest.getParameterMap(), renderRequest.getServerName(), renderRequest.getRemoteUser() );
                 break;
         }
 
@@ -1769,7 +1809,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         }
     }
 
-    public void bindUpdate( DatabaseAdapter dbDyn, PreparedStatement ps, Object returnIdPK, boolean isUsePrimaryKey)
+    public void bindUpdate( final DatabaseAdapter dbDyn, final PreparedStatement ps, final Object returnIdPK, final boolean isUsePrimaryKey )
         throws Exception
     {
         if (content == null || content.getQueryArea() == null)
@@ -1779,86 +1819,93 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         // Если есть хоть одно поле YES_1_NO_N и этот запрос выполняет установку данного поля в false
         // то подразумевается что поле установится в 0 в момент построения SQL запроса
-        if (isUsePrimaryKey)
-        {
-            for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++)
-            {
+        if (isUsePrimaryKey) {
+            String stringParam = null;
+            Double doubleParam = null;
+            Long longParam = null;
+            for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++) {
                 FieldsType ff = content.getQueryArea().getFields(k);
-                if (Boolean.TRUE.equals(ff.getIsShow()) && Boolean.TRUE.equals(ff.getIsEdit()) && (ff.getJspType().getType() != FieldsTypeJspTypeType.BIGTEXT_TYPE))
-                {
-                    switch (ff.getJspType().getType())
-                    {
+                if (Boolean.TRUE.equals(ff.getIsShow()) && Boolean.TRUE.equals(ff.getIsEdit()) && (ff.getJspType().getType() != FieldsTypeJspTypeType.BIGTEXT_TYPE)) {
+                    switch (ff.getJspType().getType()) {
                         case FieldsTypeJspTypeType.TEXT_TYPE:
                         case FieldsTypeJspTypeType.TEXT_AREA_TYPE:
 
-                            RsetTools.setString(ps, numParam++,
-                                    PortletTools.getString(renderRequest,
-                                            mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                            stringParam =
+                                PortletTools.getString(renderRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
+
+                            RsetTools.setString(ps, numParam++, stringParam);
                             break;
 
                         case FieldsTypeJspTypeType.DATE_TEXT_TYPE:
 
-                            String dateToParse = PortletTools.getString(renderRequest,
-                                        mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                            stringParam =
+                                PortletTools.getString(renderRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
-                            if (dateToParse.length()==0)
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
+
+                            if (stringParam.length()==0)
                                 ps.setNull( numParam++, Types.DATE );
                             else
                             {
                                 java.util.Date updateDate =
-                                        DateTools.getDateWithMask( dateToParse, ff.getMask() );
+                                        DateTools.getDateWithMask( stringParam, ff.getMask() );
 
                                 dbDyn.bindDate(ps, numParam++, new java.sql.Timestamp( updateDate.getTime()) );
                             }
                             break;
 
                         case FieldsTypeJspTypeType.INT_TEXT_TYPE:
-                            RsetTools.setLong(
-                                ps, numParam++, PortletTools.getLong(renderRequest,
-                                    mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                            longParam = PortletTools.getLong(renderRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
+
+                            RsetTools.setLong(ps, numParam++, longParam);
                             break;
 
                         case FieldsTypeJspTypeType.FLOAT_TEXT_TYPE:
                         case FieldsTypeJspTypeType.DOUBLE_TEXT_TYPE:
 
-                            if (log.isDebugEnabled())
-                            {
-                                log.debug("#3.005.01 " + PortletTools.getFloat(renderRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
-                                log.debug("#3.005.02 " + PortletTools.getString(renderRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
-                            }
+                            doubleParam =
+                                PortletTools.getDouble(renderRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
-                            RsetTools.setDouble(ps, numParam++,
-                                    PortletTools.getDouble(renderRequest,
-                                            mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + doubleParam);
+
+                            RsetTools.setDouble(ps, numParam++, doubleParam);
                             break;
 
                         default:
-                            RsetTools.setString(ps, numParam++,
-                                    PortletTools.getString(renderRequest,
-                                            mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                            stringParam = PortletTools.getString(renderRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
+
+                            RsetTools.setString(ps, numParam++, stringParam);
                     }
                 }
             }
         }
 
-        switch (db_.getFamaly())
-        {
+        switch (db_.getFamaly()) {
             case DatabaseManager.MYSQL_FAMALY:
                 break;
             default:
-                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, renderRequest, dbDyn);
+                numParam = MemberServiceClass.bindSubQueryParam(ps, numParam, this.fromParam, dbDyn, renderRequest.getParameterMap(), renderRequest.getServerName(), renderRequest.getRemoteUser() );
                 break;
         }
 
+        if ( isUsePrimaryKey ) {
+            if (log.isDebugEnabled())
+                log.debug("Param  #" + numParam + ", value: " + returnIdPK);
 
-        if ( isUsePrimaryKey )
-        {
-            if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
-            {
+            if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE) {
                 RsetTools.setLong(ps, numParam++, ((Long) returnIdPK) );
             }
-            else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
-            {
+            else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE) {
                 ps.setString(numParam++, (String) returnIdPK);
             }
 /*
@@ -1881,8 +1928,13 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null &&
             mod.getSelfLookup().getTopField() != null)
         {
+            final Long longParam = PortletTools.getLong(renderRequest, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) );
+
+            if (log.isDebugEnabled())
+                log.debug("Param  #" + numParam + ", value: " + longParam);
+
             RsetTools.setLong(ps, numParam++,
-                PortletTools.getLong(renderRequest, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), new Long(0) )
+                longParam
             );
         }
 
@@ -1892,6 +1944,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
+                    if (log.isDebugEnabled())
+                        log.debug("Param  #" + numParam + ", value: " + renderRequest.getRemoteUser());
+
                     ps.setString(numParam++, renderRequest.getRemoteUser());
                     break;
             }
@@ -1903,6 +1958,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
+                    if (log.isDebugEnabled())
+                        log.debug("Param  #" + numParam + ", value: " + renderRequest.getServerName());
+
                     ps.setString(numParam++, renderRequest.getServerName());
                     break;
             }
@@ -1914,6 +1972,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
+                    if (log.isDebugEnabled())
+                        log.debug("Param  #" + numParam + ", value: " + renderRequest.getRemoteUser());
+
                     ps.setString(numParam++, renderRequest.getRemoteUser());
                     break;
             }
@@ -2415,7 +2476,6 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             s +
             Constants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
             Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
-//            ctxInstance.getAsURL() +
             addLookupURL(true);
     }
 
@@ -2445,15 +2505,12 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         String nameModule = st.nextToken();
         ContentType tempCnt = ModuleManager.getContent(nameModule, ContentTypeActionType.INDEX_TYPE);
 
-//log.debug("#12.003.2");
-
         for (int i=0; tempCnt!=null && i<tempCnt.getTargetModuleCount(); i++){
             TargetModuleType ta = tempCnt.getTargetModule(i);
             if (ta.getAction().getType() == TargetModuleTypeActionType.INDEX_TYPE){
                 String tempStr = thisURI +
                     Constants.MEMBER_MODULE_PARAM + '=' + nameModule + '&' +
                     Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&';
-//                    ctxInstance.getAsURL();
 
                 return "<a href=\"" + tempStr + "\">" +
                     MemberServiceClass.getString(ta.getTargetModuleName(), renderRequest.getLocale()) + "</a>";
@@ -3398,21 +3455,19 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         MemberQueryParameter queryParameter = new MemberQueryParameter();
         baseClass.setQueryParameter( queryParameter );
 
-        if (isEdit && Boolean.TRUE.equals(ff.getIsEdit()))
-        {
-            List v = baseClass.getSelectList( renderRequest);
+        if (isEdit && Boolean.TRUE.equals(ff.getIsEdit())) {
             String r = "";
             String isSelected = null;
-            for (int i=0; i<v.size(); i++)
-            {
-                ClassQueryItem item = (ClassQueryItem)v.get(i);
-                if ( item.isSelected )
+            Iterator iterator = baseClass.getSelectList( renderRequest ).iterator();
+            while(iterator.hasNext()) {
+                ClassQueryItem item = (ClassQueryItem)iterator.next();
+                if ( item.isSelected() )
                     isSelected = " selected";
                 else
                     isSelected = "";
 
                 r += ("<option" + isSelected + " value=\"" +
-                    item.index + "\">" + (item.value==null?"":item.value).replace('\"', '\'') +
+                    item.getIndex() + "\">" + (item.getValue()==null?"":item.getValue()).replace('\"', '\'') +
                     "</option>\n");
             }
             return
@@ -3544,9 +3599,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         }
         catch (Exception e)
         {
-            log.error("Error processing buildDeleteHTMLTable.", e);
-            s_ = "Exeception: " + e.toString() + "\n<br>" +
-                ExceptionTools.getStackTrace(e, linesInException, "<br>");
+            final String es = "Error processing buildDeleteHTMLTable.";
+            log.error(es, e);
+            throw new MemberException( es, e );
+//            s_ = "Exeception: " + e.toString() + "\n<br>" +
+//                ExceptionTools.getStackTrace(e, linesInException, "<br>");
         }
         finally
         {
@@ -3559,9 +3616,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         return s_;
     }
 
-    public String buildSelectHTMLTable(String sql_)
-        throws Exception
-    {
+    public String buildSelectHTMLTable(String sql_) throws Exception {
         QueryAreaType qa = content.getQueryArea();
         String s_ = null;
 
@@ -3665,52 +3720,17 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 s_ += "</tr>\n";
             }
 
-/*
-// this part temporary down
-// It's must automaticaly forvard to lookup module
-// if exists only one action - lookup
-
-// if restrict == "site" and no others action found
-// forvard to lookup module
-
-//log.debug("#10.04.01 "+content.getQueryArea().restricts.size() );
-//log.debug("#10.04.02 "+((Restrict)content.getQueryArea().restricts.elementAt(0)).type );
-//log.debug("#10.04.03 "+countRecord );
-
-if ( countRecord==1 &&
-content.getQueryArea().restricts.size()==1 &&
-content.t.size()==1 &&
-"lookup".equals( ((TargetModuleType)content.t.elementAt(0)).action) &&
-"site".equals( ((Restrict)content.getQueryArea().restricts.elementAt(0)).type)
-)
-{
-String newLocation =
-thisURI+
-Constants.MEMBER_MODULE_PARAM+"="+
-((TargetModuleType)content.t.elementAt(0)).module+"&"+
-Constants.MEMBER_ACTION_PARAM+"=index&"+
-addLookupURL( true, true )+
-jspPage.getAsURL1()+
-mod.getName()+'.'+content.getQueryArea().getPrimaryKey()+"="+idPK;
-
-log.debug("#10.04.05 "+newLocation);
-
-res.sendRedirect( newLocation );
-throw new MemberForvardException();
-}
-*/
-
-                s_ += "</table>";
+            s_ += "</table>";
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("SQL:\n"+sql_);
-            log.error("Error processing buildSelectHTMLTable.", e);
-            s_ = sql_ + "<br>Exeception: " + e.toString() + "\n" +
-                ExceptionTools.getStackTrace(e, linesInException, "<br>");
+            final String es = "Error processing buildSelectHTMLTable.";
+            log.error(es, e);
+            throw new MemberException( es, e );
+//            s_ = sql_ + "<br>Exeception: " + e.toString() + "\n" +
+//                ExceptionTools.getStackTrace(e, linesInException, "<br>");
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
@@ -3718,12 +3738,8 @@ throw new MemberForvardException();
         return s_;
     }
 
-    public MemberProcessing( RenderRequest renderRequest, RenderResponse renderResponse )
+    public MemberProcessing( PortletRequest renderRequest, PortletResponse renderResponse )
         throws Exception {
-
-//        this.ctxInstance = ctxInstance;
-//        if (ctxInstance== null)
-//            throw new Exception("CtxInstance must not null");
 
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;
@@ -3741,17 +3757,17 @@ throw new MemberForvardException();
         this.userId = auth.getUserInfo().getIdUser();
 
         fromParam = PortletTools.getString(this.renderRequest, Constants.MEMBER_FROM_PARAM, "").trim();
+        db_ = DatabaseAdapter.getInstance();
         try
         {
-            db_ = DatabaseAdapter.getInstance(false);
-            String moduleName = PortletTools.getString(this.renderRequest, Constants.MEMBER_MODULE_PARAM);
+            String moduleName = PortletTools.getString( this.renderRequest, Constants.MEMBER_MODULE_PARAM );
             if (log.isDebugEnabled())
             {
-                log.debug("moduleName: - "+moduleName);
+                log.debug("moduleName: "+moduleName);
                 for (Enumeration e = this.renderRequest.getParameterNames(); e.hasMoreElements();)
                 {
                     String s = (String) e.nextElement();
-                    log.debug("Request attr - " + s + ", value - " + PortletTools.getString(this.renderRequest, s).toString() );
+                    log.debug("Request parameter: " + s + ", value: " + PortletTools.getString(this.renderRequest, s).toString() );
                 }
             }
 
@@ -3773,8 +3789,8 @@ throw new MemberForvardException();
             }
         }
 
-        thisURI = CtxInstance.url(Constants.CTX_TYPE_MEMBER_VIEW , null, this.renderResponse ) + '&';
-        commitURI = CtxInstance.url(Constants.CTX_TYPE_MEMBER_COMMIT , null, this.renderResponse ) + '&';
+        thisURI = PortletTools.url(Constants.CTX_TYPE_MEMBER_VIEW , renderRequest, this.renderResponse ) + '&';
+        commitURI = PortletTools.url(Constants.CTX_TYPE_MEMBER_COMMIT , renderRequest, this.renderResponse ) + '&';
 
     }
 
@@ -3795,7 +3811,7 @@ throw new MemberForvardException();
     public void process_Yes_1_No_N_Fields(DatabaseAdapter dbDyn)
         throws Exception
     {
-        String sql_ = MemberServiceClass.buildUpdateSQL(content, fromParam, mod, dbDyn, false, renderRequest);
+        String sql_ = MemberServiceClass.buildUpdateSQL( dbDyn, content, fromParam, mod, false, renderRequest.getParameterMap(), renderRequest.getRemoteUser(), renderRequest.getServerName() );
 
         log.info("sql for update yes1-noN\n" + sql_);
 
@@ -3873,6 +3889,7 @@ throw new MemberForvardException();
                         break;
 
                     case  FieldValidatorTypeTypeType.BIND_DYNAMIC_TYPE:
+/*
                         Long idTemplate = PortletTools.getLong(renderRequest, mod.getName() + '.' + "ID_SITE_TEMPLATE");
                         Long idCtxCatalog = PortletTools.getLong(renderRequest, mod.getName() + '.' + "ID_SITE_CTX_CATALOG");
                         if (log.isDebugEnabled())
@@ -3940,11 +3957,11 @@ throw new MemberForvardException();
                         if (template==null)
                             return "Template with ID "+idTemplate+" not found";
 
-                        if ( SiteTemplateService.isDynamic( template ) )
+                        if ( isDynamic( template ) )
                             return
                                 "Template '"+template.getNameTemplate()+"' is dynamic template and "+
                                 " can not bind to context with 'mill.index' type";
-
+*/
                         break;
 
                     default:
@@ -3953,6 +3970,21 @@ throw new MemberForvardException();
             }
         }
         return null;
+    }
+
+    private static boolean isDynamic(SiteTemplate siteTemplate)
+    {
+        if (siteTemplate == null)
+            return false;
+
+        for (int i = 0; i < siteTemplate.getSiteTemplateItemCount(); i++)
+        {
+            TemplateItemType item = siteTemplate.getSiteTemplateItem(i);
+
+            if (item.getType().getType() == TemplateItemTypeTypeType.DYNAMIC_TYPE)
+                return true;
+        }
+        return false;
     }
 
     public String getFromParam() {

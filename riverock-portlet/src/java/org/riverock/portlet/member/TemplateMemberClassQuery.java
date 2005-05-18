@@ -22,6 +22,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.member;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.portlet.PortletRequest;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.core.GetSiteTemplateItem;
+import org.riverock.webmill.core.GetSiteTemplateWithIdSiteSupportLanguageList;
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.schema.core.SiteTemplateItemType;
+import org.riverock.webmill.schema.core.SiteTemplateListType;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+
+import org.apache.log4j.Logger;
+
 
 /**
  * User: Admin
@@ -30,24 +47,7 @@
  *
  * $Id$
  */
-package org.riverock.portlet.member;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.portlet.RenderRequest;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.core.GetSiteTemplateItem;
-import org.riverock.webmill.core.GetSiteTemplateWithIdSiteSupportLanguageList;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
-import org.riverock.webmill.schema.core.SiteTemplateListType;
-
-import org.apache.log4j.Logger;
-
-public final class TemplateMemberClassQuery extends BaseClassQuery
-{
+public final class TemplateMemberClassQuery extends BaseClassQuery {
     private final static Logger log = Logger.getLogger( TemplateMemberClassQuery.class );
 
     private Long idSiteTemplate = null;
@@ -72,7 +72,7 @@ public final class TemplateMemberClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( RenderRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest )
         throws Exception
     {
         DatabaseAdapter db_ = null;
@@ -98,7 +98,7 @@ public final class TemplateMemberClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return List of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( RenderRequest renderRequest ) throws Exception
+    public List getSelectList( PortletRequest renderRequest ) throws Exception
     {
         DatabaseAdapter db_ = null;
         try
@@ -117,12 +117,12 @@ public final class TemplateMemberClassQuery extends BaseClassQuery
             for (int i=0; i<templateList.getSiteTemplateCount(); i++)
             {
                 SiteTemplateItemType templateItem = templateList.getSiteTemplate(i);
-                ClassQueryItem item = new ClassQueryItem(
+                ClassQueryItem item = new ClassQueryItemImpl(
                     templateItem.getIdSiteTemplate(),
                     templateItem.getNameSiteTemplate()
                 );
-                if (item.index.equals(idSiteTemplate))
-                    item.isSelected = true;
+                if (item.getIndex().equals(idSiteTemplate))
+                    item.setSelected(true);
                 v.add( item );
             }
             return v;

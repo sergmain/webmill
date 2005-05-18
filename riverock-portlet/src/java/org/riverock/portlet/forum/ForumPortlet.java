@@ -23,18 +23,11 @@
  *
  */
 
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 2:56:21 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.forum;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
+import java.util.Enumeration;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -44,18 +37,24 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.portlet.core.GetMainForumItem;
 import org.riverock.portlet.schema.core.MainForumItemType;
 import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.wrapper.StreamWrapper;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 2:56:21 PM
+ *
+ * $Id$
+ */
+public final class ForumPortlet implements Portlet {
 
-public class ForumPortlet implements Portlet {
-
-    private static Logger log = Logger.getLogger( ForumPortlet.class );
+    private final static Logger log = Logger.getLogger( ForumPortlet.class );
 
     public ForumPortlet(){}
 
@@ -72,48 +71,48 @@ public class ForumPortlet implements Portlet {
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException
     {
-        Writer out = null;
         DatabaseAdapter db_ = null;
-        try
-        {
-            out = renderResponse.getWriter();
-
-//            ContextNavigator.setContentType(renderResponse, "utf-8");
+        OutputStream outputStream = null;
+        try {
+            if (log.isDebugEnabled()) {
+                for (Enumeration en = renderRequest.getParameterNames(); en.hasMoreElements();) {
+                    String s = (String) en.nextElement();
+                    log.debug("Parameter: " + s + ", value - " + PortletTools.getString(renderRequest, s));
+                }
+            }
+            outputStream = renderResponse.getPortletOutputStream();
+            StreamWrapper out = new StreamWrapper(outputStream);
 
             db_ = DatabaseAdapter.getInstance( false );
 
-            ForumInstance forum = new ForumInstance( renderRequest, renderResponse );
+            ForumInstance forum = new ForumInstance( renderRequest );
 
-            if (forum.id_forum == null)
-            {
-                out.write("ForumPortlet's ID not defined.");
+            if ( forum.id_forum == null ) {
+                out.write( "ForumPortlet's ID not defined." );
                 return;
             }
 
-            MainForumItemType forumCfg = GetMainForumItem.getInstance(db_, forum.id_forum).item;
+            MainForumItemType forumCfg = GetMainForumItem.getInstance( db_, forum.id_forum ).item;
 
-            String forumType = "";
-
-            if (Boolean.TRUE.equals(forumCfg.getIsAllThread()) )
-                forumType = "/mill.forum_plain";
-            else
-                forumType = "/mill.forum_standard";
-
-            out.write("\n<!-- forum: "+forumType+" -->\n");
-
-            PortletTools.include(
-                portletConfig.getPortletContext(),
-                renderRequest, renderResponse, forumType, out
-            );
-//            ServletUtils.include(request_, response, null, forumType, out);
+            if ( Boolean.TRUE.equals( forumCfg.getIsAllThread() ) ) {
+                out.write( "\n<!-- plain forum -->\n" );
+                ForumPlain.process( outputStream, renderRequest, renderResponse, portletConfig );
+            } else {
+                out.write( "\n<!-- standard forum -->\n" );
+                ForumStandard.process( outputStream, renderRequest, renderResponse, portletConfig );
+            }
         }
-        catch (Exception e){
-            log.error(e);
-            out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+        catch( Exception e ) {
+            String es = "Error render forum portlet";
+            log.error( es, e);
+            throw new PortletException( es, e );
         }
         finally{
-            DatabaseAdapter.close(db_);
+            DatabaseAdapter.close( db_ );
             db_ = null;
         }
+        outputStream.flush();
+        outputStream.close();
+        outputStream = null;
     }
 }

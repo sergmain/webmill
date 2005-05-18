@@ -191,7 +191,7 @@ public class MenuMemberApplication
 
             ps = db_.prepareStatement(sql_);
 
-            ps.setString(1, authInfo.userLogin);
+            ps.setString(1, authInfo.getUserLogin());
             ps.setObject(2, applicationID);
 
             rset = ps.executeQuery();

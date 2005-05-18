@@ -62,13 +62,12 @@ public class Constants
     public final static String NAME_TEMPLATE_CONTEXT_PARAM    = "mill.template";
 
     public final static String NAME_AS_XML_FORMAT = "mill.asxml";
-    public final static String NAME_ID_NEWS_PARAM = "mill.id_news_item";
 
     public final static String NAME_ID_ARTICLE_PARAM = "mill.id_article";
     public final static String NAME_ADMIN_PARAM = "mill.admin";
     public final static String NAME_ID_FAQ_PARAM = "mill.id_faq";
 
-    public static final String NAME_REGISTER_ACTION_PARAM = "mill.register.action";
+//    public static final String NAME_REGISTER_ACTION_PARAM = "mill.register.action";
 
 
     public final static String NAME_FAQ_CODE_PARAM    = "mill.faq_code";
@@ -113,7 +112,6 @@ public class Constants
     public final static String CTX_TYPE_MEMBER_COMMIT = "mill.member_commit";
     public final static String CTX_TYPE_MEMBER_VIEW = "mill.member_view";
 
-    public final static String CTX_TYPE_REGISTER   = "mill.register";
     public final static String CTX_TYPE_SHOP = "mill.shop";
     public final static String CTX_TYPE_NEWS = "mill.news";
     public final static String CTX_TYPE_JOB = "mill.job";
@@ -122,12 +120,10 @@ public class Constants
     public final static String CTX_TYPE_ARTICLE_PLAIN = "mill.article_plain";
     public final static String CTX_TYPE_ARTICLE_XML = "mill.article_xml";
 
-    public final static String CTX_TYPE_NEWS_BLOCK = "mill.news_block";
     public final static String CTX_TYPE_POSITION_BLOCK = "mill.position_block";
     public final static String CTX_TYPE_LANGUAGE = "mill.language";
     public final static String CTX_TYPE_INDEX = "mill.index";
-    public final static String CTX_TYPE_LOGIN_CHECK   = "mill.login_check";
-    public final static String CTX_TYPE_LOGIN  = "mill.login";
+    public final static String CTX_TYPE_LOGIN_XML  = "mill.login_xml";
     public final static String CTX_TYPE_UPLOAD_PRICE_CONTR    = "mill.upload_price_controller";
     public final static String CTX_TYPE_UPLOAD_PRICE   = "mill.upload_price";
 

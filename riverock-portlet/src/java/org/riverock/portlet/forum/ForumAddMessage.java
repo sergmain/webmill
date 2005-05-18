@@ -22,6 +22,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.forum;
+
+import java.util.ResourceBundle;
+import java.net.URLDecoder;
+import java.io.OutputStream;
+import java.io.IOException;
+
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletSession;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.http.Cookie;
+
+import org.riverock.common.tools.ServletTools;
+import org.riverock.portlet.main.Constants;
+import org.riverock.webmill.portal.PortalConstants;
+
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.wrapper.StreamWrapper;
+
+import org.apache.log4j.Logger;
+
 
 /**
  * Author: mill
@@ -30,112 +52,58 @@
  *
  * $Id$
  */
+final class ForumAddMessage {
+    private final static Logger log = Logger.getLogger( ForumAddMessage.class );
 
-package org.riverock.portlet.forum;
-
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.PortletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.ServletTools;
-import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.CtxInstance;
-
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portal.PortalConstants;
-
-
-public class ForumAddMessage extends HttpServlet
-{
-    private static Logger cat = Logger.getLogger("org.riverock.servlets.view.forum.ForumAddMessage");
-
-    public ForumAddMessage()
-    {
-    }
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
-    {
-        if (cat.isDebugEnabled())
-            cat.debug("method is POST");
-
-        doGet(request, response);
-    }
-
-    public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
-    {
-        Writer out = null;
+    static void includeMessageForm(
+        final OutputStream outputStream, final RenderRequest renderRequest,
+        final RenderResponse renderResponse, final PortletConfig portletConfig) throws ForumException {
         try
         {
-//            CtxInstance ctxInstance =
-//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
+            StreamWrapper out = new StreamWrapper(outputStream);
+            ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
+            out.write("\n<!--$Id$-->\n");
 
-            RenderRequest renderRequest = null;
-            PortletConfig portletConfig = null;
-
-            ContextNavigator.setContentType(response);
-
-            out = response.getWriter();
-
-            out.write("<!--$Id$-->\r\n");
-
-
-            ContextNavigator.setContentType(response, "utf-8");
-
-            String forum_name = "";
-            String forum_email = "";
-
-            if (cat.isDebugEnabled())
-                cat.debug("#13.55");
+            String forumName = "";
+            String forumEmail = "";
 
             Cookie[] cookies = (Cookie[])renderRequest.getAttribute(PortalConstants.PORTAL_COOKIES_ATTRIBUTE) ;
-            if (cookies != null)
-            {
+
+            if (log.isDebugEnabled())
+                log.debug("#13.55, cookie array: " + cookies );
+
+            if (cookies != null) {
                 for (int i = 0; i < cookies.length; i++)
                 {
                     Cookie c = cookies[i];
                     String name = c.getName();
 
-                    if (cat.isDebugEnabled())
-                        cat.debug("#13.00: " + name);
+                    if (log.isDebugEnabled())
+                        log.debug("#13.00: " + name + ", value: " + c.getValue() );
 
-                    if (name.equals("_name"))
-                    {
-                        forum_name = c.getValue();
-//			forum_name = StringTools.convertString(c.getValue(),
+                    if (name.equals("_name")) {
+                        forumName = URLDecoder.decode( c.getValue(), "utf8" );
+
+//			forumName = StringTools.convertString(c.getValue(),
 //				"8859_1",
 //				"UTF-8");
-//			forum_name = StringTools.convertString(c.getValue(),
+//			forumName = StringTools.convertString(c.getValue(),
 //				System.getProperties().getProperty("file.encoding"),
 //				"UTF-8");
 
-                        if (cat.isDebugEnabled())
-                        {
-                            cat.debug("#13.01.01: " + forum_name);
-                            cat.debug("#13.01.02: " + c.getValue());
-                        }
                     }
 
-                    if (name.equals("_email"))
-                    {
-                        forum_email = c.getValue();
-//			forum_email = StringTools.convertString(c.getValue(),
+                    if (name.equals("_email")) {
+                        forumEmail = c.getValue();
+//			forumEmail = StringTools.convertString(c.getValue(),
 //				System.getProperties().getProperty("file.encoding"),
 //				"UTF-8");
                     }
                 }
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("forumName: " + forumName );
+                log.debug("forumEmail: " + forumEmail );
             }
 
             PortletSession session = renderRequest.getPortletSession();
@@ -144,26 +112,22 @@ public class ForumAddMessage extends HttpServlet
                 subject = "";
             session.removeAttribute(Constants.FORUM_SUBJECT_SESSION);
 
-// xxx work around of deutch answer - AW:
+            // xxx work around of deutch answer - AW:
             if ((subject.trim().length() > 0) && (!subject.toUpperCase().startsWith("RE: ")))
                 subject = "RE: " + subject;
 
-            out.write("\r\n");
-            out.write("<form action=\"");
-            out.write(response.encodeURL(CtxInstance.ctx()));
-            out.write("\" method=\"POST\">\r\n");
+            out.write("\n");
+            out.write( "<form action=\"" );
+            out.write( renderResponse.encodeURL(PortletTools.ctx( renderRequest )) );
+            out.write( "\" method=\"POST\">\n" );
 
             out.write(
-//                    ctxInstance.getAsForm()+
                     ServletTools.getHiddenItem(Constants.NAME_ID_FORUM_PARAM,
                             "" + PortletTools.getLong(renderRequest, Constants.NAME_ID_FORUM_PARAM)
                     )+
                     ServletTools.getHiddenItem(Constants.NAME_TYPE_CONTEXT_PARAM,
                             Constants.CTX_TYPE_FORUM_COMMIT
                     )+
-//                    ServletTools.getHiddenItem(Constants.NAME_TEMPLATE_CONTEXT_PARAM,
-//                            ctxInstance.getNameTemplate()
-//                    )+
                     ServletTools.getHiddenItem(Constants.NAME_ID_MAIN_FORUM_PARAM,
                             "" + PortletTools.getLong(renderRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM)
                     )+
@@ -174,12 +138,12 @@ public class ForumAddMessage extends HttpServlet
             out.write("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\r\n");
             out.write("<tr>\r\n");
             out.write("<td align=\"right\">");
-            out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.name", portletConfig ));
+            out.write( bundle.getString( "str.name" ) );
             out.write(":&nbsp;");
             out.write("</td>\r\n");
             out.write("<td>");
             out.write("<input type=\"text\" name=\"n\" size=\"40\" value=\"");
-            out.write(forum_name);
+            out.write(forumName);
             out.write("\">");
             out.write("</td>\r\n");
             out.write("</tr>\r\n");
@@ -188,13 +152,13 @@ public class ForumAddMessage extends HttpServlet
             out.write("</td>\r\n");
             out.write("<td>");
             out.write("<input type=\"text\" name=\"e\" size=\"40\" value=\"");
-            out.write(forum_email);
+            out.write(forumEmail);
             out.write("\">");
             out.write("</td>\r\n");
             out.write("</tr>\r\n");
             out.write("<tr>\r\n");
             out.write("<td align=\"right\">");
-            out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.header", portletConfig ));
+            out.write( bundle.getString( "str.header" ) );
             out.write(":&nbsp;");
             out.write("</td>\r\n");
             out.write("<td>");
@@ -205,7 +169,7 @@ public class ForumAddMessage extends HttpServlet
             out.write("</tr>\r\n");
             out.write("<tr>\r\n");
             out.write("<td colspan=\"2\">");
-            out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.message", portletConfig ));
+            out.write( bundle.getString( "str.message" ) );
             out.write(":");
             out.write("<br>\r\n");
             out.write("<textarea name=\"b\" rows=\"8\" cols=\"55\">");
@@ -215,7 +179,7 @@ public class ForumAddMessage extends HttpServlet
             out.write("<tr>\r\n");
             out.write("<td colspan=\"2\">");
             out.write("<input type=\"submit\" value=\"");
-            out.write(CtxInstance.getStr( renderRequest.getLocale(), "str.add", portletConfig ));
+            out.write( bundle.getString( "str.add" ) );
             out.write("\">");
             out.write("</td>\r\n");
             out.write("</tr>\r\n");
@@ -223,11 +187,10 @@ public class ForumAddMessage extends HttpServlet
             out.write("</form>");
 
         }
-        catch (Exception e)
-        {
-            cat.error(e);
-            out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+        catch ( Exception e ) {
+            String es = "Error include form for post message in forum";
+            log.error(es, e);
+            throw new ForumException( es, e );
         }
-
     }
 }

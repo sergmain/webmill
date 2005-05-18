@@ -39,9 +39,8 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.site.SiteListSite;
 import org.riverock.common.tools.RsetTools;
 
-public class JobPosition
-{
-    private static Logger cat = Logger.getLogger( JobPosition.class );
+public final class JobPosition {
+    private final static Logger log = Logger.getLogger( JobPosition.class );
 
     private static String sqlJobPosition =
         "select a.id_job_position, a.date_post, (a.date_post + a.period_activity) date_end, " +
@@ -190,7 +189,7 @@ return (JobPosition) dummy.getInstanceNew( db__, id__);
         }
         catch (Exception e)
         {
-            cat.error("Error get position", e);
+            log.error("Error get position", e);
             throw new Exception(e.toString());
         }
         finally

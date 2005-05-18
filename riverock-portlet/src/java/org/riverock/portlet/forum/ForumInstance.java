@@ -23,22 +23,18 @@
  *
  */
 
-/**
- * $Id$
- */
 package org.riverock.portlet.forum;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
+import java.net.URLEncoder;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.RenderRequest;
 import javax.servlet.http.Cookie;
 
 import org.apache.log4j.Logger;
-import org.riverock.common.config.ConfigException;
+
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -51,14 +47,15 @@ import org.riverock.generic.utils.DateUtils;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.core.GetMainForumThreadsItem;
 
-import org.riverock.webmill.portlet.CtxInstance;
-
 import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portlet.CookieManager;
 import org.riverock.webmill.portal.PortalConstants;
 
-public class ForumInstance
-{
-    private static Logger log = Logger.getLogger(ForumInstance.class);
+/**
+ * $Id$
+ */
+public final class ForumInstance {
+    private final static Logger log = Logger.getLogger( ForumInstance.class );
 
     public String forumURI = "";
     public int month = 0;
@@ -70,22 +67,20 @@ public class ForumInstance
     public static final String SEQ_FORUM_THREADS = "SEQ_MAIN_FORUM_THREADS";
     public static final String SEQ_FORUM_MESSAGE = "SEQ_MAIN_FORUM_MESSAGE";
     public static final String FORUM_THREADS_TABLE = "MAIN_FORUM_THREADS";
-    private RenderRequest renderRequest = null;
-    private RenderResponse renderResponse = null;
+
+    private PortletRequest renderRequest = null;
 
     public ForumMessage getForumMessage(DatabaseAdapter db__, Long id__)
-            throws ForumException
-    {
+        throws ForumException {
+
         return ForumMessage.getInstance(db__, id__);
     }
 
     public ForumInstance(){}
 
-    public ForumInstance(RenderRequest renderRequest, RenderResponse renderResponse)
-    {
+    public ForumInstance(PortletRequest renderRequest) {
+
         this.renderRequest = renderRequest;
-        this.renderResponse = renderResponse;
-//        this.ctxInstance = (CtxInstance)renderRequest.getPortletSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
         this.id = PortletTools.getLong(renderRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
 
         this.id_forum = PortletTools.getLong(renderRequest, Constants.NAME_ID_FORUM_PARAM);
@@ -96,48 +91,62 @@ public class ForumInstance
     }
 
 
-    public static void setCookie(Cookie[] cookies_req, PortletRequest request,
-        javax.servlet.http.HttpServletResponse response)
-        throws ConfigException
-    {
-        if (PortletTools.getString(request, "action").equals("add"))
-        {
-            String email = PortletTools.getString(request, "e");
-            String name = PortletTools.getString(request, "n");
-            String name_req = "";
-            String email_req = "";
+    static void setCookie( PortletRequest request ) throws ForumException {
+        try {
+            Cookie[] cookies = (Cookie[])request.getAttribute( PortalConstants.PORTAL_COOKIES_ATTRIBUTE );
+            CookieManager cookieManager = (CookieManager)request.getAttribute( PortalConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE );
 
-            for (int i = 0; i < cookies_req.length; i++)
+            if (PortletTools.getString(request, "action").equals("add"))
             {
-                Cookie c = cookies_req[i];
-                String name_cookie = c.getName();
-                if (name_cookie.equals("_name"))
-                    name_req = c.getValue();
+                String email = PortletTools.getString(request, "e");
+                String name = PortletTools.getString(request, "n");
+                String name_req = "";
+                String email_req = "";
 
-                if (name_cookie.equals("_email"))
-                    email_req = c.getValue();
+                for (int i = 0; i < cookies.length; i++)
+                {
+                    Cookie c = cookies[i];
+                    String name_cookie = c.getName();
+                    if (name_cookie.equals("_name"))
+                        name_req = c.getValue();
+
+                    if (name_cookie.equals("_email"))
+                        email_req = c.getValue();
+                }
+
+                if ( log.isDebugEnabled() ) {
+                    log.debug( "cookie name: " + name + ", email; " + email );
+                    log.debug( "cookie name: " + StringTools.convertString( name, "Cp1251", "utf8" ) );
+                    log.debug( "cookie name: " + StringTools.convertString( name, "utf8", "Cp1251" ) );
+                }
+
+
+                if ((name != null) && !name.equals(name_req)) {
+
+//                    name = StringTools.convertString( name, "Cp1251", "utf8" );
+                    name = URLEncoder.encode( name, "utf8" );
+                    Cookie cookie = new Cookie("_name", name);
+                    cookie.setVersion( 1 );
+                    cookie.setMaxAge(1 * 365 * 24 * 3600);
+                    cookieManager.addCookie(cookie);
+                }
+
+                if ((email != null) && !email.equals(email_req)) {
+                    Cookie cookie = new Cookie("_email", email);
+                    cookie.setVersion( 1 );
+                    cookie.setMaxAge(1 * 365 * 24 * 3600);
+                    cookieManager.addCookie(cookie);
+                }
             }
-
-
-            if ((name != null) && !name.equals(name_req))
-            {
-                Cookie cookie = new Cookie("_name", name);
-                cookie.setMaxAge(1 * 365 * 24 * 3600);
-                response.addCookie(cookie);
-            }
-
-            if ((email != null) && !email.equals(email_req))
-            {
-                Cookie cookie = new Cookie("_email", email);
-                cookie.setMaxAge(1 * 365 * 24 * 3600);
-                response.addCookie(cookie);
-            }
+        }
+        catch( Throwable e ) {
+            String es = "Error set forum cookie";
+            log.error( es, e );
+            throw new ForumException( es, e );
         }
     }
 
-    public Long getIdThread(Long id_main__)
-        throws ForumException
-    {
+    public Long getIdThread(Long id_main__) throws ForumException {
 
         Long retValue = null;
 
@@ -159,7 +168,7 @@ public class ForumInstance
         catch (Throwable e){
             String es = "Error in getIdThread()";
             log.error(es, e);
-            throw new ForumException(es, e);
+            throw new ForumException( es, e );
         }
         finally
         {
@@ -177,7 +186,7 @@ public class ForumInstance
     }
 
 
-    public String getThreads()throws ForumException {
+    public String getThreads() throws ForumException {
         String sql_ = "";
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -188,13 +197,11 @@ public class ForumInstance
         {
             db_ = DatabaseAdapter.getInstance(false);
             if (id!=null) {
-                sql_ =
-                    "select a.ID_THREAD " +
-                    "from "  + FORUM_THREADS_TABLE + " a " +
-                    "where a.ID_THREAD in ( " ;
+                sql_ = "";
 
                 switch(db_.getFamaly()){
                     case DatabaseManager.MYSQL_FAMALY:
+                        // Todo check for duplicate of ID_THREAD
                         String mysqlSql =
                             "select distinct z.ID_THREAD " +
                             "from " + FORUM_THREADS_TABLE + " z " +
@@ -203,15 +210,21 @@ public class ForumInstance
 
                         if (log.isDebugEnabled()) log.debug("year:"+year+", month: "+month+", sql: "+mysqlSql);
 
-                        sql_ += StringTools.getIdByString(
-                            DatabaseManager.getIdByList(db_,
-                                mysqlSql,
-                                new Object[]{id, new Integer(year), new Integer(month)}
-                            ), "NULL"
-                        );
+                        sql_ +=
+                            "select a.ID_THREAD " +
+                            "from "  + FORUM_THREADS_TABLE + " a " +
+                            "where a.ID_THREAD in ( " +
+                            StringTools.getIdByString(
+                                DatabaseManager.getIdByList(db_,
+                                    mysqlSql,
+                                    new Object[]{id, new Integer(year), new Integer(month)}
+                                ), "NULL"
+                            )+
+                            ") order by a.DATE_POST DESC ";
+
                         break;
                     default:
-                        sql_ +=
+                        sql_ =
                             "select distinct z.ID_THREAD " +
                             "from " + FORUM_THREADS_TABLE + " z " +
                             "where   z.ID = ? and  " +
@@ -219,7 +232,7 @@ public class ForumInstance
                             "to_number(to_char(z.DATE_POST, 'mm')) = ? ";
                         break;
                 }
-                sql_ += ") order by a.DATE_POST DESC ";
+//                sql_ += ") order by a.DATE_POST DESC ";
 
                 if (log.isDebugEnabled()) log.debug("sql: "+sql_);
 
@@ -393,12 +406,11 @@ public class ForumInstance
                 if (year == yearValue)
                     s += ("<b>" + yearValue + "</b>&nbsp;");
                 else
-                    s += ("<a href=\"" + CtxInstance.ctx() + '?' +
+                    s += ("<a href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                         Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                         Constants.NAME_YEAR_PARAM + '=' + yearValue + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                         Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
-//                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
                         "\">" + yearValue + "</a>&nbsp;");
             }
         }
@@ -482,13 +494,12 @@ public class ForumInstance
                 if (monthValue==effectiveMonth)
                     s += ("<b>" + monthString + "</b>&nbsp;");
                 else
-                    s += ("<a href=\"" + CtxInstance.ctx() + '?' +
+                    s += ("<a href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                         Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                         Constants.NAME_YEAR_PARAM + '=' + year + '&' +
                         Constants.NAME_MONTH_PARAM + '=' + monthValue + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                         Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
-//                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
                         "\">" + monthString + "</a>&nbsp;");
             }
         }
@@ -626,7 +637,7 @@ public class ForumInstance
                 s += (
                     "<tr><td>" +
                     "<span class=\"topictitle\">" +
-                    "<a class=\"topictitle\" href=\"" + CtxInstance.ctx() + '?' +
+                    "<a class=\"topictitle\" href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                     Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                     Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                     Constants.NAME_ID_MESSAGE_FORUM_PARAM + '=' +
@@ -738,7 +749,7 @@ public class ForumInstance
 
                 r_ += "<b>";
                 if (!message.getId().equals(currentMessageId)) {
-                    r_ += ("<a href=\"" + CtxInstance.ctx() + '?' +
+                    r_ += ("<a href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                         Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
                         Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
                         Constants.NAME_ID_MESSAGE_FORUM_PARAM + '='+ message.getId() + '&' +

@@ -22,38 +22,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Id$
- *
- */
 package org.riverock.portlet.news;
+
+import java.util.Date;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletConfig;
 
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
+import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
+import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.webmill.portlet.PortletResultContent;
+import org.riverock.webmill.config.WebmillConfig;
 
 import org.apache.log4j.Logger;
 
+/**
+ *
+ * $Id$
+ *
+ */
 public final class NewsBlock implements PortletResultContent {
     private final static Logger log = Logger.getLogger( NewsBlock.class );
 
     private NewsBlockType newsBlockType = null;
-//    private RenderRequest renderRequest = null;
-//    private RenderResponse renderResponse = null;
-//    private PortletConfig portletConfig = null;
-//    private ResourceBundle resourceBundle = null;
 
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
-//        this.renderRequest = renderRequest;
-//        this.renderResponse = renderResponse;
-//        this.portletConfig = portletConfig;
-//        this.resourceBundle = this.portletConfig.getResourceBundle( renderRequest.getLocale() );
     }
 
     public NewsBlock(NewsBlockType newsBlockType){
@@ -63,86 +59,61 @@ public final class NewsBlock implements PortletResultContent {
     public NewsBlock(){
     }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         super.finalize();
     }
 
-//    public PortletResultContent getInstance( DatabaseAdapter db_, Long id ) throws PortletException {
-//        return new NewsBlock();
-//    }
-//
-//    public PortletResultContent getInstanceByCode( DatabaseAdapter db__, String portletCode_ ) throws PortletException {
-//        return new NewsBlock();
-//        return null;
-//    }
-//
-    public byte[] getPlainHTML()
-    {
-        return null;
-/*
-        String x =
-                "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
-        for (int i_list_news = 0; i_list_news < v.size(); i_list_news++)
+    public byte[] getPlainHTML() throws Exception {
+        StringBuffer s =
+                new StringBuffer( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
+
+        for (int i = 0; i < newsBlockType.getNewsGroupCount(); i++)
         {
-            NewsGroup news = (NewsGroup) v.elementAt(i_list_news);
-            int count_news = news.v.size();
-            if (count_news > 0)
+            NewsGroupType newsGroup = newsBlockType.getNewsGroup(i);
+            if (newsGroup.getNewsItemCount() > 0)
             {
-                x += "<tr><td colspan=\"2\" class=\"newshead\"><%= news.newsGroupName %></td></tr>";
-                int i_news;
-                Calendar curr_date = null;
+                s.
+                    append( "<tr><td colspan=\"2\" class=\"newshead\">" ).
+                    append( newsGroup.getNewsGroupName() ).
+                    append( "</td></tr>\n" );
+
+                Date currentDate = null;
                 boolean isFirst = true;
-                for (i_news = 0; i_news < count_news; i_news++)
+                for (int i_news = 0; i_news < newsGroup.getNewsItemCount(); i_news++)
                 {
-                    NewsItem item_news = (NewsItem) news.v.elementAt(i_news);
-                    if (!DateTools.compareDate(curr_date, item_news.date))
+                    NewsItemType newsItem = newsGroup.getNewsItem(i_news);
+                    if (currentDate==null || currentDate.getTime()!= newsItem.getNewsDateTime().getTime())
                     {
-                        curr_date = item_news.date;
+                        currentDate = newsItem.getNewsDateTime();
                         isFirst = true;
                     }
                     if (isFirst)
                     {
-                        x += "<tr><td class=\"newsdate\" valign=\"top\">";
-                        x += DateTools.getStringDate(curr_date, "dd.MM.yyyy", param.renderRequest.getLocale());
-                        x += "</td><td>&nbsp;</td></tr>";
+
+                            s.append( "<tr><td class=\"newsdate\" valign=\"top\">" ).append( newsItem.getNewsDate() ).append( "</td><td>&nbsp;</td></tr>\n" );
 
                         isFirst = false;
                     }
-                    x += "<tr><td class=\"newstime\" valign=\"top\">";
-                    x += DateTools.getStringDate(item_news.date, "HH:mm", param.renderRequest.getLocale());
-                    x += "</td><td width=\"100%\" class=\"newstitle\"><h6> ";
-                    x += item_news.header;
-                    x += "</h6><p>";
-                    x += item_news.anons;
-                    x += "&nbsp;&nbsp;&nbsp;<a class=\"newsNext\" href=\"";
-
-//                    x += param.response.encodeURL(Constants.URI_NEWS_PAGE) + '?' + param.jspPage.addURL + Constants.NAME_ID_NEWS_PARAM + '=' + item_news.id;
-                    x += param.response.encodeURL( ctxInstance.ctx()) + '?' +
-                            param.jspPage.addURL + Constants.NAME_ID_NEWS_PARAM + '=' +
-                            item_news.id + '&' +
-                            Constants.NAME_TYPE_CONTEXT_PARAM + '=' +
-                            Constants.CTX_TYPE_NEWS;
-
-                    x += "\">";
-
-                    try
-                    {
-                        x += param.CtxInstance.getStr("main.next");
-                    }
-                    catch (Exception e)
-                    {
-                        log.error("Error encoding string", e);
-                        x += "<!-- error encoding string -->";
-                    }
-                    x += ">></a></p></td></tr>";
+                    s.
+                        append( "<tr>\n" ).
+                        append( "<td class=\"newstime\" valign=\"top\">\n" ).
+                        append( newsItem.getNewsTime() ).
+                        append( "</td>\n" ).
+                        append( "<td width=\"100%\" class=\"newstitle\">\n<h6> " ).
+                        append( newsItem.getNewsHeader() ).
+                        append( "</h6>\n<p>" ).
+                        append( newsItem.getNewsAnons() ).
+                        append( "&nbsp;&nbsp;&nbsp;<a class=\"newsNext\" href=\"" ).
+                        append( newsItem.getUrlToFullNewsItem() ).
+                        append( "\">" ).
+                        append( newsItem.getToFullItem() ).
+                        append( "></a></p>\n</td></tr>\n" );
                 }
-                x += "<tr><td>&nbsp;</td></tr>";
-            } // if count_news >0
+                s.append( "<tr><td>&nbsp;</td></tr>\n" );
+            }
         }
-        x += "</table>";
-        return x.getBytes();
-*/
+        s.append( "</table>\n" );
+        return s.toString().getBytes( WebmillConfig.getHtmlCharset() );
     }
 
     public byte[] getXml(String rootElement) throws Exception
@@ -158,5 +129,4 @@ public final class NewsBlock implements PortletResultContent {
     {
         return getXml("NewsBlock");
     }
-
 }

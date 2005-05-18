@@ -36,9 +36,13 @@ package org.riverock.portlet.member;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.riverock.webmill.portlet.CtxInstance;
+
 
 import javax.portlet.RenderRequest;
+import javax.portlet.PortletRequest;
+
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
 {
@@ -52,22 +56,22 @@ public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( RenderRequest renderRequest ) throws Exception
+    public String getCurrentValue( PortletRequest renderRequest ) throws Exception
     {
-        return CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no");
+        return PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no");
     }
 
     /**
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( RenderRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest )
         throws Exception
     {
         List v = new ArrayList();
-        ClassQueryItem item = new ClassQueryItem(new Long(0), CtxInstance.getStringManager( renderRequest.getLocale() ).getStr("yesno.no") );
+        ClassQueryItem item = new ClassQueryItemImpl(new Long(0), PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no") );
 
-        item.isSelected = true;
+        item.setSelected(true);
 
         v.add( item );
         return v;

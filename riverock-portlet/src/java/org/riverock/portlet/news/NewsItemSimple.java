@@ -22,6 +22,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.news;
+
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
+import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.webmill.portlet.PortletResultContent;
+import org.riverock.webmill.portlet.PortletResultObject;
+import org.riverock.webmill.portlet.PortletTools;
+
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,45 +45,18 @@
  * $Id$
  *
  */
-package org.riverock.portlet.news;
-
-import java.util.List;
-import java.util.ResourceBundle;
-
-import javax.portlet.PortletException;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.PortletConfig;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.main.Constants;
-import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.portlet.PortletGetList;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.PortletResultContent;
-
-import org.apache.log4j.Logger;
-
-public final class NewsItemSimple implements PortletResultObject, PortletGetList, PortletResultContent {
+public final class NewsItemSimple implements PortletResultObject, PortletResultContent {
     private final static Logger log = Logger.getLogger( NewsItemSimple.class );
 
     private NewsItemSimpleType newsItem = new NewsItemSimpleType();
-    private NewsItem item = null;
 
     private RenderRequest renderRequest = null;
-    private RenderResponse renderResponse = null;
-    private ResourceBundle bundle = null;
 
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
-        this.renderResponse = renderResponse;
-        this.bundle = bundle;
     }
 
     protected void finalize() throws Throwable {
-        item = null;
         newsItem = null;
         super.finalize();
     }
@@ -77,15 +65,12 @@ public final class NewsItemSimple implements PortletResultObject, PortletGetList
     {
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db_)
-//        , HttpServletRequest request, HttpServletResponse response,
-//                     InitPage ctxInstance.page, String localePackage)
-            throws PortletException
+    public PortletResultContent getInstance(DatabaseAdapter db_) throws PortletException
     {
-        Long id__ = PortletTools.getLong( renderRequest, Constants.NAME_ID_NEWS_PARAM);
+        Long id__ = PortletTools.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
         try
         {
-            item = NewsItem.getInstance(db_, id__);
+            NewsItem item = NewsItem.getInstance(db_, id__);
 
             newsItem.setNewsAnons( item.newsItem.getNewsAnons() );
             newsItem.setNewsDate( item.newsItem.getNewsDate() );
@@ -95,8 +80,9 @@ public final class NewsItemSimple implements PortletResultObject, PortletGetList
         }
         catch(Exception e)
         {
-            log.error("Error get NewsItem object", e);
-            throw (PortletException)e;
+            final String es = "Error get NewsItem object";
+            log.error(es, e);
+            throw new PortletException( es, e );
         }
         return this;
     }
@@ -112,9 +98,28 @@ public final class NewsItemSimple implements PortletResultObject, PortletGetList
     public boolean isXml(){ return true; }
     public boolean isHtml(){ return false; }
 
-    public byte[] getPlainHTML()
-    {
-        return null;
+    public byte[] getPlainHTML() throws Exception {
+
+        StringBuffer s = new StringBuffer().
+            append( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n").
+            append( "<tr><td colspan=\"2\" class=\"newshead\">" ).
+            append( newsItem.getNewsHeader() ).
+            append( "</td></tr>\n" ).
+            append( "<tr><td class=\"newsdate\" valign=\"top\">" ).append( newsItem.getNewsDate() ).append( "</td><td>&nbsp;</td></tr>\n" ).
+            append( "<tr>\n" ).
+            append( "<td class=\"newstime\" valign=\"top\">\n" ).
+            append( newsItem.getNewsTime() ).
+            append( "</td>\n" ).
+            append( "<td width=\"100%\" class=\"newstitle\">\n<h6> " ).
+            append( newsItem.getNewsAnons() ).
+//            append( StringTools.replaceString(newsItem.getNewsAnons(), "\n", "<br>\n") ).
+            append( "</h6>\n" ).
+            append( newsItem.getNewsText() ).
+//            append( StringTools.replaceString(newsItem.getNewsText(), "\n", "<br>\n") ).
+            append( "\n</td></tr>\n" ).
+            append( "</table>\n" );
+
+        return s.toString().getBytes( WebmillConfig.getHtmlCharset() );
     }
 
     public byte[] getXml()
@@ -123,32 +128,29 @@ public final class NewsItemSimple implements PortletResultObject, PortletGetList
         return getXml( "NewsItemSimple");
     }
 
-    public byte[] getXml(String rootElement) throws Exception
-    {
-        newsItem.setNewsAnons( item.newsItem.getNewsAnons() );
-        newsItem.setNewsDate( item.newsItem.getNewsDate() );
-        newsItem.setNewsHeader( item.newsItem.getNewsHeader() );
-        newsItem.setNewsText( item.newsItem.getNewsText() );
-        newsItem.setNewsTime( item.newsItem.getNewsTime() );
+    public byte[] getXml( final String rootElement) throws Exception {
 
-        String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"+
-            '<'+rootElement+'>' +
-            "<NewsDate>"+ newsItem.getNewsDate() + "</NewsDate>"+
-            "<NewsTime>"+ newsItem.getNewsTime()+ "</NewsTime>"+
-            "<NewsHeader>"+ newsItem.getNewsHeader()+ "</NewsHeader>"+
-            "<NewsAnons>"+ newsItem.getNewsAnons() + "</NewsAnons>"+
-            "<NewsText>"+ newsItem.getNewsText()+"</NewsText>" +
-            "</"+rootElement+'>';
+        String root = PortletTools.getMetadata( renderRequest, "xml-root-name", rootElement );
+//        newsItem.setNewsAnons( item.newsItem.getNewsAnons() );
+//        newsItem.setNewsDate( item.newsItem.getNewsDate() );
+//        newsItem.setNewsHeader( item.newsItem.getNewsHeader() );
+//        newsItem.setNewsText( item.newsItem.getNewsText() );
+//        newsItem.setNewsTime( item.newsItem.getNewsTime() );
 
-        if (log.isDebugEnabled())
+        String xml = new StringBuffer().
+            append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
+            append( '<' ).append( root ).append( '>' ).
+            append( "<NewsDate>" ).append( newsItem.getNewsDate() ).append( "</NewsDate>" ).
+            append( "<NewsTime>" ).append( newsItem.getNewsTime() ).append( "</NewsTime>" ).
+            append( "<NewsHeader>" ).append( newsItem.getNewsHeader()!=null?newsItem.getNewsHeader():"" ).append( "</NewsHeader>" ).
+            append( "<NewsAnons>" ).append( newsItem.getNewsAnons()!=null?newsItem.getNewsAnons():"" ).append( "</NewsAnons>" ).
+            append( "<NewsText>" ).append( newsItem.getNewsText()!=null?newsItem.getNewsText():"" ).append( "</NewsText>" ).
+            append( "</" ).append( root ).append( '>' ).toString();
+
+        if (log.isDebugEnabled()) {
             log.debug( "ArticleXml. getXml - "+xml );
+        }
 
         return xml.getBytes( WebmillConfig.getHtmlCharset() );
-//        return XmlTools.getXml( newsItem, rootElement );
-    }
-
-    public List getList(Long idSiteCtxLangCatalog, Long idContext)
-    {
-        return null;
     }
 }
