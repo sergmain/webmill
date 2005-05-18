@@ -44,9 +44,9 @@ import org.riverock.common.config.ConfigObject;
 
 import org.apache.log4j.Logger;
 
-public class CacheConfig
+public final class CacheConfig
 {
-    private static Logger log = Logger.getLogger( CacheConfig.class );
+    private final static Logger log = Logger.getLogger( CacheConfig.class );
 
     public static String contextName = "";
 //

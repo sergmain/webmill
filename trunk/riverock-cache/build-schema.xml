@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <!--
 /*
  * org.riverock.cache - Generic cache implementation
@@ -26,103 +26,25 @@
  */
 -->
 <!--$Id$-->
-<project name="Webmill cache schema " default="gen_all_schema" basedir=".">
+<project name="Riverock cache schema" default="gen_all_schema" basedir=".">
 
-    <property name="java.target" value="1.4"/>
-    <property name="java.class.target" value="1.4"/>
-
-    <property name="lib.dir" value="../riverock-lib/lib"/>
-    <property name="local-lib.dir" value="lib"/>
-
-    <!-- riverock runtime library -->
-
-
-    <property file="../riverock.properties"/>
-
-
-    <property name="doc.dir" value="doc"/>
-    <property name="src.dir" value="src-schema"/>
-    <property name="tomcat.dir" value="tomcat"/>
-
-    <property name="src.java.dir" value="${src.dir}/java"/>
-    <property name="src.java-test.dir" value="${src.dir}/test"/>
-
-    <property name="src.jsp.dir" value="${src.dir}/jsp"/>
-    <property name="src.xsd.dir" value="${src.dir}/xsd"/>
-    <property name="src.xml.dir" value="${src.dir}/xml"/>
-
-    <path id="classpath-base">
-        <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
-        <pathelement location="${lib.dir}/${castor-schema.lib}"/>
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
-    </path>
-
-    <property name="packages" value="org.riverock.*"/>
-    <property name="build.dir" value="build-schema"/>
-    <property name="build.dest" value="${build.dir}/classes"/>
-    <property name="build.java" value="${build.dir}/java"/>
-    <property name="build.tests" value="${build.dir}/tests"/>
-    <property name="build.src.java" value="${src.java.dir}"/>
-    <property name="build.src.jsp" value="${src.jsp.dir}"/>
-
-    <property name="dist.dir" value="${build.dir}/dist"/>
-    <property name="docs.dir" value="${build.dir}/javadocs"/>
-
-    <property name="debug" value="on"/>
-    <property name="optimize" value="off"/>
-    <property name="deprecation" value="on"/>
+    <import file="../riverock-globals-prop.xml"/>
+    <import file="../riverock-globals-target.xml"/>
 
     <target name="clean">
         <antcall target="delete_all_schema"/>
-    </target>
-
-    <target name="delete_all_schema">
-        <delete includeEmptyDirs="false" failonerror="false">
-            <fileset dir="${src.java.dir}/org/riverock/cache/schema">
-                <include name="**/*.java"/>
-                <exclude name="**/CVS/**"/>
-            </fileset>
-        </delete>
-        <delete dir="${src.java.dir}/org" includeemptydirs="true"/>
     </target>
 
     <target name="gen_all_schema">
         <antcall target="delete_all_schema"/>
         <antcall target="gen_config_schema"/>
     </target>
+
     <target name="gen_config_schema">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/cache/schema/config/"/>
-        <property name="schema-file" value="${src.xsd.dir}/riverock-cache-config.xsd"/>
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/cache/schema/config/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-cache-config.xsd"/>
         <property name="schema-package-java" value="org.riverock.cache.schema.config"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_schema">
-        <delete includeEmptyDirs="false" failonerror="false">
-            <fileset dir="${schema-dir}">
-                <include name="*.java"/>
-                <exclude name="**/CVS/**"/>
-            </fileset>
-        </delete>
-        <echo message="XSD - ${schema-file}"/>
-        <java fork="true" classname="org.exolab.castor.builder.SourceGenerator">
-            <arg value="-i"/>
-            <arg value="${schema-file}"/>
-            <arg value="-package"/>
-            <arg value="${schema-package-java}"/>
-            <arg value="-dest"/>
-            <arg value="${src.java.dir}"/>
-            <arg value="-types"/>
-            <arg value="j2"/>
-            <arg value="-f"/>
-            <arg value="-binding-file"/>
-            <arg value="${src.xml.dir}/binding.xml"/>
-            <classpath>
-                <pathelement location="${local-lib.dir}/castor" />
-                <path refid="classpath-base"/>
-            </classpath>
-        </java>
+        <antcall target="gen_schema_from_schema"/>
     </target>
 
 </project>

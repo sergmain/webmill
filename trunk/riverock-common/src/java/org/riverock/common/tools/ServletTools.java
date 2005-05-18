@@ -57,6 +57,11 @@ public final class ServletTools {
             this.charset = Charset.forName( charset_ );
         }
 
+        public ContentType( final StringBuffer contentType, final Charset charset ) {
+            this.contentType = contentType;
+            this.charset = charset;
+        }
+
         public ContentType( final String contentType, final Charset charset ) {
             this.contentType = new StringBuffer(contentType);
             this.charset = charset;
@@ -77,12 +82,6 @@ public final class ServletTools {
             int idx = contentTypeString.indexOf( ';' );
             if (idx==-1) {
                 this.contentType = new StringBuffer( contentTypeString );
-//                String s = contentTypeString.trim();
-//                if (s.startsWith( CHARSET ) )
-//                    this.charset = extractCharset( contentTypeString );
-//                else
-//                    this.contentType = s;
-
                 return;
             }
 

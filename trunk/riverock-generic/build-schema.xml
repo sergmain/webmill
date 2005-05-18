@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <!--
 /*
  * org.riverock.generic - Database connectivity classes
@@ -28,46 +28,11 @@
 <!--$Id$-->
 <project name="Webmill schema generic" default="gen_all_schema" basedir=".">
 
-    <property name="java.target" value="1.4"/>
-    <property name="java.class.target" value="1.4"/>
-
-    <property name="lib.dir" value="../riverock-lib/lib"/>
-    <property name="local-lib.dir" value="lib"/>
-
-    <property file="../riverock.properties"/>
-
-    <property name="src.dir" value="src-schema"/>
-
-    <property name="src.java.dir" value="${src.dir}/java"/>
-    <property name="src.java-test.dir" value="${src.dir}/test"/>
-
-    <property name="src.xsd.dir" value="${src.dir}/xsd"/>
-    <property name="src.xml.dir" value="${src.dir}/xml"/>
-
-    <path id="classpath-base">
-        <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
-        <pathelement location="${lib.dir}/${castor-schema.lib}"/>
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
-    </path>
-
-    <property name="debug" value="on"/>
-    <property name="optimize" value="off"/>
-    <property name="deprecation" value="on"/>
+    <import file="../riverock-globals-prop.xml"/>
+    <import file="../riverock-globals-target.xml"/>
 
     <target name="clean">
         <antcall target="delete_all_schema"/>
-    </target>
-
-    <target name="delete_all_schema">
-        <delete includeEmptyDirs="false" failonerror="false">
-            <fileset dir="${src.java.dir}/org/riverock/generic/schema">
-                <include name="**/*.java"/>
-                <exclude name="**/CVS/**"/>
-            </fileset>
-        </delete>
-        <delete dir="${src.java.dir}/org" includeemptydirs="true"/>
     </target>
 
     <target name="gen_all_schema">
@@ -75,15 +40,6 @@
         <antcall target="gen_all_db_schema"/>
         <antcall target="gen_config_schema"/>
         <antcall target="gen_transfer_file_schema"/>
-
-<!--        <antcall target="gen_site_schema"/>-->
-<!--        <antcall target="gen_tomcat_schema"/>-->
-<!--        <antcall target="gen_castor_schema"/>-->
-<!--        <antcall target="gen_core-extend_schema"/>-->
-<!--        <antcall target="gen_java_auth_schema"/>-->
-<!--        <antcall target="gen_test_schema"/>-->
-<!--        <antcall target="gen_test_import_schema"/>-->
-<!--        <antcall target="gen_test_import_core_schema"/>-->
     </target>
 
     <target name="gen_all_db_schema">
@@ -92,118 +48,30 @@
     </target>
 
     <target name="gen_config_schema">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/config/"/>
-        <property name="schema-file" value="${src.xsd.dir}/riverock-generic-config.xsd"/>
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/generic/schema/config/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-generic-config.xsd"/>
         <property name="schema-package-java" value="org.riverock.generic.schema.config"/>
-        <antcall target="gen_schema"/>
+        <antcall target="gen_schema_from_schema"/>
     </target>
 
     <target name="gen_transfer_file_schema">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/transfer/"/>
-        <property name="schema-file" value="${src.xsd.dir}/riverock-transfer-file.xsd"/>
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/generic/schema/transfer/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-transfer-file.xsd"/>
         <property name="schema-package-java" value="org.riverock.generic.schema.transfer"/>
-        <antcall target="gen_schema"/>
+        <antcall target="gen_schema_from_schema"/>
     </target>
-<!--
-    <target name="gen_site_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\site\"/>
-        <property name="schema-file" value="${src.dir}\xsd\mill-site.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.site"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_tomcat_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\tomcat\"/>
-        <property name="schema-file" value="${src.dir}\xsd\mill-tomcat.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.tomcat4"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_castor_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\castor\"/>
-        <property name="schema-file" value="${src.dir}\xsd\mill-castor-mapping.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.castor"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_appl-server_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/appl_server/"/>
-        <property name="schema-file" value="${src.dir}/xsd/mill-appl-server.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.appl_server"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_core-extend_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema/extend/"/>
-        <property name="schema-file" value="${src.dir}/xsd/mill-core-extend.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.extend"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_java_auth_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\a3\"/>
-        <property name="schema-file" value="${src.dir}\xsd\mill-auth.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.a3"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_test_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\test\"/>
-        <property name="schema-file" value="${src.dir}\xsd\test\mill-test-schema.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.test"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_test_with_2_sequnce" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\test\test_2_sequence"/>
-        <property name="schema-file" value="${src.dir}\xsd\test\test_with_2_sequnce.xsd"/>
-        <property name="schema-package-java" value="org.riverock.schema.test.test_2_sequence"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_test_import_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\testimport\"/>
-        <property name="schema-file" value="${src.dir}\xsd\test\prr_complex_only.xsd "/>
-        <property name="schema-package-java" value="org.riverock.schema.testimport"/>
-        <antcall target="gen_schema"/>
-    </target>
-    <target name="gen_test_import_core_schema" depends="prepare">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/schema\testimport\core"/>
-        <property name="schema-file" value="${src.xsd.dir}/test/prr-core.xsd "/>
-        <property name="schema-package-java" value="org.riverock.schema.testimport.core"/>
-        <antcall target="gen_schema"/>
-    </target>
--->
+
     <target name="gen_db_structure_schema" >
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/db/structure"/>
-        <property name="schema-file" value="${src.xsd.dir}/riverock-database-structure.xsd"/>
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/generic/schema/db/structure"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-database-structure.xsd"/>
         <property name="schema-package-java" value="org.riverock.generic.schema.db.structure"/>
-        <antcall target="gen_schema"/>
+        <antcall target="gen_schema_from_schema"/>
     </target>
 
     <target name="gen_db_schema">
-        <property name="schema-dir" value="${src.java.dir}/org/riverock/generic/schema/db"/>
-        <property name="schema-file" value="${src.xsd.dir}/riverock-database.xsd"/>
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/generic/schema/db"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-database.xsd"/>
         <property name="schema-package-java" value="org.riverock.generic.schema.db"/>
-        <antcall target="gen_schema"/>
-    </target>
-
-    <target name="gen_schema">
-        <delete includeEmptyDirs="false" failonerror="false">
-            <fileset dir="${schema-dir}">
-                <include name="*.java"/>
-                <exclude name="**/CVS/**"/>
-            </fileset>
-        </delete>
-        <echo message="XSD - ${schema-file}"/>
-        <java fork="true" classname="org.exolab.castor.builder.SourceGenerator">
-            <arg value="-i"/>
-            <arg value="${schema-file}"/>
-            <arg value="-package"/>
-            <arg value="${schema-package-java}"/>
-            <arg value="-dest"/>
-            <arg value="${src.java.dir}"/>
-            <arg value="-types"/>
-            <arg value="j2"/>
-            <arg value="-f"/>
-            <arg value="-binding-file"/>
-            <arg value="${src.xml.dir}/binding.xml"/>
-            <classpath>
-                <pathelement location="${local-lib.dir}/castor" />
-                <path refid="classpath-base"/>
-            </classpath>
-        </java>
+        <antcall target="gen_schema_from_schema"/>
     </target>
 </project>

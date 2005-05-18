@@ -41,7 +41,7 @@ import junit.framework.TestCase;
 
 public class TestCaseStringTools extends TestCase
 {
-    private static Logger cat = Logger.getLogger("org.riverock.common.tools.TestCaseStringTools");
+    private static Logger cat = Logger.getLogger( TestCaseStringTools.class );
 
     public TestCaseStringTools(String testName)
     {
@@ -55,20 +55,20 @@ public class TestCaseStringTools extends TestCase
         String locale = tl.s;
         if (tl.isVariant)
         {
-            assertFalse(locale+" Locale variant is null", l.getVariant()==null );
-            assertFalse(locale+" Locale variant not valid", (!l.getVariant().equals( tl.v )));
+            assertFalse(tl.s +", "+l+", "+locale+" Locale variant is null", l.getVariant()==null );
+            assertFalse(tl.s +", "+l+", "+locale+" Locale variant not valid", (!l.getVariant().equals( tl.v )));
         }
 
         if (tl.isCountry)
         {
-            assertFalse(locale+" Locale country is null", l.getCountry()==null );
-            assertFalse(locale+" Locale country not valid", (!l.getCountry().equals( tl.c )));
+            assertFalse(tl.s +", "+l+", "+locale+" Locale country is null", l.getCountry()==null );
+            assertFalse(tl.s +", "+l+", "+locale+" Locale country not valid", (!l.getCountry().equals( tl.c )));
         }
 
         if (tl.isLang)
         {
-            assertFalse(locale+" Locale language is null", l.getLanguage()==null );
-            assertFalse(locale+" Locale language not valid", (!l.getLanguage().equals( tl.l )));
+            assertFalse(tl.s +", "+l+", "+locale+" Locale language is null", l.getLanguage()==null );
+            assertFalse(tl.s +", "+l+", "+locale+" Locale language not valid", (!l.getLanguage().equals( tl.l )));
         }
     }
 
@@ -101,13 +101,15 @@ public class TestCaseStringTools extends TestCase
     {
         TestLocale[] localeToTest =
             {
-                new TestLocale("ru_RU_TEST", "ru", "RU", "TEST", true, true, true),
+                new TestLocale("ru_RU_TEST", "ru", "RU", "test", true, true, true),
                 new TestLocale("en", "en", null, null, true, false, false),
                 new TestLocale("en_GB", "en", "GB", null, true, true, false),
-                new TestLocale("en_GB_HE", "en", "GB", "HE", true, true, true),
+                new TestLocale("en_GB_HE", "en", "GB", "he", true, true, true),
                 new TestLocale("ru", "ru", null, null, true, false, false),
                 new TestLocale("ru_RU", "ru", "RU", null, true, true, false),
-                new TestLocale("en_US_TEST", "en", "US", "TEST", true, true, true)
+                new TestLocale("en_US_TEST", "en", "US", "test", true, true, true),
+                new TestLocale("en-US-TEST", "en", "US", "test", true, true, true),
+                new TestLocale("en_US-TEST", "en", "US", "test", true, true, true)
             };
 
         for (int i=0; i<localeToTest.length; i++)

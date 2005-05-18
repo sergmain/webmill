@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.common.tools;
 
 import org.apache.log4j.Logger;
@@ -34,11 +30,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
 import java.util.Locale;
-import java.util.StringTokenizer;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
+/**
+ * $Id$
+ */
 public final class MainTools
 {
     private final static Logger log = Logger.getLogger( MainTools.class );
@@ -61,13 +59,14 @@ public final class MainTools
         }
         else
         {
-            List v = new ArrayList();
+            List v = new LinkedList();
+            v.add(obj);
+
             if (value instanceof List)
                 v.addAll( (List)value );
             else
                 v.add( value );
 
-            v.add(obj);
             map.remove( key );
             map.put( key, v );
         }
@@ -217,31 +216,10 @@ public final class MainTools
     }
 
     /**
-     * Создает объект Locale из строки вида "ru_RU_admin"
-     * @param locale - String
-     * @return - Locale
+     * @deprecated use StringTools.getLocale()
      */
-    public static Locale getLocale( final String locale )
-    {
-        StringTokenizer st = new StringTokenizer(locale, "_");
-        String defLanguage = null;
-        String defCountry = null;
-        String defVariant = "";
-
-        if (st.hasMoreTokens())
-            defLanguage = st.nextToken();
-        else
-            return null;
-
-        if (st.hasMoreTokens())
-            defCountry = st.nextToken();
-        else
-            return null;
-
-        if (st.hasMoreTokens())
-            defVariant = st.nextToken();
-
-        return new Locale(defLanguage, defCountry, defVariant);
+    public static Locale getLocale( final String locale ) {
+        return StringTools.getLocale( locale );
     }
 
     /**
