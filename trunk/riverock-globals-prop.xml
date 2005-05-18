@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<!--
+/*
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<project name="riverock global properties file" basedir=".">
+
+    <property name="java.target" value="1.4"/>
+    <property name="java.class.target" value="1.4"/>
+    <property name="java.class.source" value="1.4"/>
+
+    <property name="local-lib.dir" value="lib"/>
+    <property name="lib.dir" value="../riverock-lib/lib"/>
+
+    <property name="tomcat-service-name" value="Tomcat5"/>
+
+<!--    <property name="castor.lib" value="castor-0.9.6-RC2-xml.jar"/>-->
+    <property name="castor.lib" value="castor-0.9.6-xml.jar"/>
+<!--    <property name="castor.lib" value="castor-0.9.5.3-xml.jar"/>-->
+<!--    <property name="castor.lib" value="castor-0.9.5.1.1-xml.jar"/>-->
+<!--    <property name="castor.lib" value="castor-0.9.4.3-xml.jar"/>-->
+
+<!--    <property name="castor-core.lib" value="castor-0.9.4.3-xml.jar"/>  -->
+<!--    <property name="castor-core.lib" value="castor-0.9.6-RC2-xml.jar"/> -->
+    <property name="castor-core.lib" value="castor-0.9.6-xml.jar"/>
+
+<!--    <property name="castor-schema.lib" value="castor-0.9.5.3-xml.jar"/> -->
+<!--    <property name="castor-schema.lib" value="castor-0.9.5.2-xml-snapshot.jar"/>-->
+<!--    <property name="castor-schema.lib" value="castor-0.9.6-RC2-xml.jar"/>-->
+    <property name="castor-schema.lib" value="castor-0.9.6-xml.jar"/>
+
+    <property name="xerces.lib" value="xercesImpl-2.6.2.jar"/>
+    <property name="xml-api.lib" value="xmlParserAPIs-2.6.2.jar"/>
+    <property name="xalan.lib" value="xalan-2.4.1.jar"/>
+    <property name="log4j.lib" value="log4j-1.2.8.jar"/>
+    <property name="junit.lib" value="junit-3.8.1.jar"/>
+    <property name="servlet.lib" value="servlet-2.4.jar"/>
+
+    <property name="portlet.lib" value="portlet-1.0.jar"/>
+    <property name="secure.lib" value="bcprov-jdk14-122.jar"/>
+    <property name="bcel.lib" value="BCEL.jar"/>
+
+    <property name="hypersonic.lib" value="hsqldb.jar"/>
+
+    <!--# apache's common library-->
+    <property name="common-httpclient.lib" value="commons-httpclient-3.0-beta1.jar"/>
+    <property name="common-logging.lib" value="commons-logging-1.0.3.jar"/>
+    <property name="common-codec.lib" value="commons-codec-1.3.jar"/>
+    <property name="common-digister.lib" value="commons-digester-1.6.jar"/>
+    <property name="common-collections.lib" value="commons-collections-2.1.jar"/>
+
+    <!--#riverock libraries-->
+    <property name="riverock-generic.lib" value="riverock-generic-4.0.4.jar"/>
+    <property name="riverock-interfaces.lib" value="riverock-interfaces-1.0.3.jar"/>
+    <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
+    <property name="riverock-cache.lib" value="riverock-cache-1.1.0.jar"/>
+    <property name="riverock-sso.lib" value="riverock-sso-4.0.4.jar"/>
+    <property name="riverock-sql-parser.lib" value="riverock-sql-parser-1.1.6.jar"/>
+    <property name="riverock-webmill.lib" value="riverock-webmill-5.0.1.jar"/>
+    <property name="riverock-schema-support.lib" value="riverock-schema-support-4.0.3.jar"/>
+    <property name="riverock-portlet.lib" value="riverock-portlet-4.0.0.jar"/>
+    <property name="riverock-module.lib" value="riverock-module-1.0.0.jar"/>
+
+
+    <path id="classpath-core">
+        <pathelement location="${lib.dir}/${xerces.lib}"/>
+        <pathelement location="${lib.dir}/${xml-api.lib}"/>
+        <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${castor-core.lib}"/>
+        <pathelement location="${lib.dir}/1.4/ojdbc14.jar"/>
+        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-schema-support.lib}" />
+    </path>
+
+
+    <path id="classpath-schema">
+        <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${castor-schema.lib}"/>
+        <pathelement location="${lib.dir}/${xerces.lib}"/>
+        <pathelement location="${lib.dir}/${xml-api.lib}"/>
+    </path>
+
+
+    <property name="src-schema.dir" value="src-schema"/>
+    <property name="src-schema.java.dir" value="${src-schema.dir}/java"/>
+    <property name="src-schema.xsd.dir" value="${src-schema.dir}/xsd"/>
+    <property name="src-schema.xml.dir" value="${src-schema.dir}/xml"/>
+
+    <property name="src-core.dir" value="src-core"/>
+    <property name="src-core.java.dir" value="${src-core.dir}/java"/>
+    <property name="src-core.xsd.dir" value="${src-core.dir}/xsd"/>
+    <property name="src-core.xml.dir" value="${src-core.dir}/xml"/>
+
+    <property name="src.dir" value="src"/>
+    <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>
+    <property name="src.java.dir" value="${src.dir}/java"/>
+    <property name="src.java-test.dir" value="${src.dir}/test"/>
+    <property name="src.jsp.dir" value="${src.dir}/jsp"/>
+    <property name="src.xsd.dir" value="${src.dir}/xsd"/>
+    <property name="src.xml.dir" value="${src.dir}/xml"/>
+
+    <property name="build.dir" value="build"/>
+    <property name="build.dest" value="${build.dir}/classes"/>
+    <property name="build.java" value="${build.dir}/java"/>
+    <property name="build.tests" value="${build.dir}/tests"/>
+    <property name="build.src.java" value="${src.java.dir}"/>
+    <property name="build.src.jsp" value="${src.jsp.dir}"/>
+
+    <property name="docs.dir" value="doc"/>
+
+    <property name="debug" value="on"/>
+    <property name="optimize" value="off"/>
+    <property name="deprecation" value="on"/>
+
+    <property name="manifest-file-name" value="manifest.mf"/>
+    <property name="manifest" value="${src.java.dir}/${manifest-file-name}"/>
+
+</project>

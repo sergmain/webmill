@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<!--
+/*
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<project name="riverock common file for build module" default="jar" basedir=".">
+
+    <import file="riverock-globals-prop.xml"/>
+    <import file="riverock-globals-target.xml"/>
+
+    <property name="main.lib" value="${Name}-${release-version}.jar"/>
+
+    <target name="jar" depends="jar_without_copy">
+        <copy file="${build.dir}\${main.lib}" todir="../riverock-lib/lib"/>
+    </target>
+
+    <target name="clean">
+        <delete failonerror="false">
+            <fileset dir="${build.dir}">
+                <include name="**"/>
+                <include name="*.jar"/>
+                <include name="*.tar"/>
+                <include name="*.gz"/>
+            </fileset>
+        </delete>
+        <delete dir="${docs.dir}" failonerror="false"/>
+        <delete dir="${build.dir}/src/" failonerror="false"/>
+        <delete dir="${build.dir}/classes/" failonerror="false"/>
+        <delete dir="${build.dir}/bin/" failonerror="false"/>
+        <delete dir="${build.dir}/tomcat/" failonerror="false"/>
+        <delete dir="${build.dir}/ext/" failonerror="false"/>
+        <delete dir="${build.dir}" failonerror="false"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- Runs unit tests                                                     -->
+    <!-- =================================================================== -->
+    <target name="ut" depends="compile">
+      <echo message="Running unit tests "/>
+
+      <javac srcdir="${src.java-test.dir}"
+             destdir="${build.tests}"
+             debug="${debug}"
+             deprecation="${deprecation}"
+             optimize="${optimize}"
+         classpath="${lib.dir}">
+          <classpath>
+              <path location="${build.dir}/classes"/>
+              <path refid="classpath-base"/>
+          </classpath>
+       </javac>
+
+       <junit printsummary="yes" haltonfailure="no" haltonerror="no" showoutput="no"
+           dir="${webinf.jsp.dir}" fork="true" >
+
+          <classpath>
+              <path location="${build.tests}"/>
+              <path location="${build.dir}/classes"/>
+              <path refid="classpath-base"/>
+          </classpath>
+
+          <formatter type="plain" usefile="false"/>
+
+          <batchtest fork="yes" haltonfailure="yes" haltonerror="yes">
+            <fileset dir="${build.tests}">
+                <include name="**/Test*.class"/>
+                <exclude name="**/*$*.class"/>
+            </fileset>
+          </batchtest>
+       </junit>
+    </target>
+
+    <target name="make_manifest_file">
+        <echo message="Start make manifest file"/>
+    <echo file="${build.dest}/${manifest-file-name}">Manifest-Version: 1.0
+Specification-Title: ${manifest-title-name}
+Specification-Vendor: ${manifest-vendor-name}
+Specification-Version: ${release-version}
+Implementation-Title: ${manifest-title-name}
+Implementation-Vendor: ${manifest-vendor-name}
+Implementation-Version: ${release-version}
+
+Name: ${manifest-title-name}
+Sealed: true
+</echo>
+        <echo message="Manifest file is created"/>
+    </target>
+
+    <target name="jar_without_copy" depends="compile">
+        <antcall target="make_manifest_file"/>
+        <jar jarfile="${build.dir}/${main.lib}"
+            basedir="${build.dest}"
+            includes="org/riverock/**"
+            excludes="**/*.txt,**/*.bat,**/*.sh,**/*.jav,**/*.java,${manifest-file-name}"
+            manifest="${build.dest}/${manifest-file-name}"/>
+    </target>
+
+    <!-- Prepares the build directory                                        -->
+    <target name="prepare">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dest}"/>
+        <mkdir dir="${build.tests}"/>
+    </target>
+
+    <target name="docs" depends="prepare">
+        <echo message="Build javadoc"/>
+        <!-- create directories -->
+        <mkdir dir="${docs.dir}"/>
+        <javadoc
+            sourcepath="${build.src.java}"
+            destdir="${docs.dir}"
+            verbose="true"
+            defaultexcludes="true"
+            packagenames="mill/db/*,mill/tools/*, mill/startup/*"
+            excludepackagenames="mill/price/*"
+            >
+            <classpath refid="classpath-base"/>
+        </javadoc>
+    </target>
+
+    <target name="usage-main">
+        <echo message=""/>
+        <echo message="${Name} Build file"/>
+        <echo message="   full_build_module --> full rebuild module"/>
+        <echo message=""/>
+    </target>
+
+</project>
