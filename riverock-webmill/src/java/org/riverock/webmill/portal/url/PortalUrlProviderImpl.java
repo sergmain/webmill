@@ -1,12 +1,12 @@
 /*
  * org.riverock.webmill -- Portal framework implementation
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
@@ -22,36 +22,32 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.portal.url;
 
-package org.riverock.webmill.portlet;
+import org.riverock.webmill.portlet.PortletTools;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 /**
- *
- * $Author$
- *
- * $Id$
- *
+ * @author Serge Maslyukov
+ *         Date: 17.04.2005
+ *         Time: 20:34:29
+ *         $Id$
  */
-public class HiddenParam
-{
-/*
-    public String name = null;
-    public String value = null;
-
-    protected void finalize() throws Throwable
-    {
-        name = null;
-        value = null;
-
-        super.finalize();
+public class PortalUrlProviderImpl implements PortalUrlProvider {
+    private PortletRequest portletRequest = null;
+    private PortletResponse portletResponse = null;
+    public PortalUrlProviderImpl(PortletRequest portletRequest, PortletResponse portletResponse) {
+        this.portletRequest = portletRequest;
+        this.portletResponse = portletResponse;
     }
 
-    public HiddenParam(){}
-
-    public HiddenParam(String n_, String v_)
-    {
-        name = n_;
-        value = v_;
+    public String getUrl(String portletName) {
+        return PortletTools.url( portletName, portletRequest, portletResponse );
     }
-*/
+
+    public StringBuffer getUrlStrigBuffer(String portletName) {
+        return PortletTools.urlStringBuffer( portletName, portletRequest, portletResponse );
+    }
 }

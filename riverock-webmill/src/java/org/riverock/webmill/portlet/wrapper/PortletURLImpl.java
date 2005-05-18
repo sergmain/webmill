@@ -23,14 +23,6 @@
  *
  */
 
-/**
- * User: serg_main
- * Date: 20.05.2004
- * Time: 21:14:18
- * @author Serge Maslyukov
- * $Id$
- */
-
 package org.riverock.webmill.portlet.wrapper;
 
 import java.util.HashMap;
@@ -45,29 +37,42 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletRequest;
 
 import org.riverock.webmill.portlet.PortalRequestInstance;
-import org.riverock.webmill.portlet.CtxInstance;
+import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.main.Constants;
 import org.riverock.common.collections.MapWithParameters;
 
 import org.apache.log4j.Logger;
 
+/**
+ * User: serg_main
+ * Date: 20.05.2004
+ * Time: 21:14:18
+ * @author Serge Maslyukov
+ * $Id$
+ */
 public final class PortletURLImpl implements PortletURL {
     private final static Logger log = Logger.getLogger( PortletURLImpl.class );
 
     protected PortletMode mode = null;
 
-    protected Map parameters = new HashMap();
+    private Map parameters = new HashMap();
 
 //    protected PortletWindow portletWindow;
 
     private boolean secure;
     private WindowState state = null;
     private PortalRequestInstance portalRequestInstance = null;
+    private PortletRequest portletRequest = null;
 
-    public PortletURLImpl( PortalRequestInstance portalRequestInstance ) {
+    public PortletURLImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest ) {
         this.portalRequestInstance = portalRequestInstance;
-        secure = this.portalRequestInstance.getHttpRequest().isSecure();
+        this.portletRequest = renderRequest;
+        this.secure = portalRequestInstance.getHttpRequest().isSecure();
     }
 
     public void setWindowState( WindowState windowState ) throws WindowStateException {
@@ -144,7 +149,7 @@ public final class PortletURLImpl implements PortletURL {
                 temp.put( entry.getKey(), Arrays.asList((String[])obj) );
         }
 
-        this.parameters = temp;
+        this.parameters.putAll( temp );
     }
 
     public void setSecure( boolean secure ) throws PortletSecurityException {
@@ -157,14 +162,33 @@ public final class PortletURLImpl implements PortletURL {
     }
 
     public String toString() {
-        StringBuffer url = new StringBuffer( 200 );
+        StringBuffer url = new StringBuffer( 50 );
 
-        url.append( CtxInstance.ctx() );
+        String portletName = getParameter( Constants.NAME_TYPE_CONTEXT_PARAM );
+        if ( log.isDebugEnabled() ) {
+            log.debug( "portlet name for insert into url: " + portletName );
+            log.debug( "portletRequest: " + portletRequest );
+        }
+        Object tempObj = portletRequest.getAttribute( PortalConstants.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE );
+        if ( log.isDebugEnabled() ) {
+            log.debug( "portlet name from attributes: " + tempObj );
+        }
+
+        if (portletName==null && tempObj!=null)
+            portletName = (String)tempObj;
+
+        if ( log.isDebugEnabled() ) {
+            log.debug( "Result portlet name for insert into url: " + portletName );
+        }
+
+        url.append( PortletTools.ctxStringBuffer( portletRequest, portletName ) );
 
         if ( parameters != null ) {
-            url.append( '?' );
-
             Iterator names = parameters.keySet().iterator();
+
+            if (names.hasNext())
+                url.append( '?' );
+
             boolean isNotFirst = false;
             while( names.hasNext() ) {
                 String key = (String)names.next();
@@ -175,13 +199,15 @@ public final class PortletURLImpl implements PortletURL {
                         String value = (String)it.next();
                         if (isNotFirst) {
                             url.append( '&' );
+                        }
+                        else {
                             isNotFirst = true;
                         }
                         url.append( key ).append( '=' ).append( value );
                     }
                 }
                 else {
-                    url.append( key ).append( '=' ).append( obj.toString() );
+                    url.append( key ).append( '=' ).append( obj.toString() ).append( '&' );
                 }
             }
         }

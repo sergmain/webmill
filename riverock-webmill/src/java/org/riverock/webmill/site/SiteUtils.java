@@ -37,6 +37,9 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.log4j.Logger;
 
 /**
  * User: smaslyukov
@@ -44,9 +47,9 @@ import java.util.ArrayList;
  * Time: 19:58:16
  * $Id$
  */
-public class SiteUtils {
+public final class SiteUtils {
 
-    private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(SiteUtils.class );
+    private final static Logger log = Logger.getLogger( SiteUtils.class );
 
     public static String getGrantedSiteId(DatabaseAdapter adapter, String username)
         throws PortalException
@@ -55,13 +58,13 @@ public class SiteUtils {
         if (list.size()==0)
             return "NULL";
 
+        Iterator it = list.iterator();
         String r = "";
-        for (int i=0; i<list.size(); i++)
-        {
-            if (r.length()!=0)
+        while (it.hasNext()) {
+            if (r.length()!=0) {
                 r += ", ";
-
-            r += list.get(i).toString();
+            }
+            r += it.next().toString();
         }
         return r;
     }
@@ -94,8 +97,9 @@ public class SiteUtils {
         }
         catch(Exception e)
         {
-            log.error("Exception get siteID", e);
-            throw new PortalException(e.getMessage());
+            final String es = "Exception get siteID";
+            log.error(es, e);
+            throw new PortalException( es, e );
         }
         finally {
             DatabaseManager.close(rs, ps);

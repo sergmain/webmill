@@ -30,7 +30,6 @@ package org.riverock.webmill.as.server;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
 
 import org.riverock.generic.main.CacheDirectory;
 import org.riverock.generic.main.CacheFile;
@@ -171,7 +170,7 @@ public class ApplicationManager
                     String customApplDir = getCustomDir();
                     if (customApplDir!=null && customApplDir.length()!=0)
                     {
-                        try
+//                        try
                         {
                             userDir = new CacheDirectory(
                                 customApplDir,
@@ -179,11 +178,11 @@ public class ApplicationManager
                                 1000*30 // сканировать директорий каждые 30 секунд
                             );
                         }
-                        catch( FileNotFoundException e )
-                        {
-                            isUserDirectoryExists = false;
-                            return;
-                        }
+//                        catch( FileNotFoundException e )
+//                        {
+//                            isUserDirectoryExists = false;
+//                            return;
+//                        }
                     }
                     else
                         return;

@@ -38,9 +38,9 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 
-public class WebmillErrorPage
+public final class WebmillErrorPage
 {
-    private static Logger log = Logger.getLogger( "org.riverock.webmill.portlet.WebmillErrorPage" );
+    private final static Logger log = Logger.getLogger( WebmillErrorPage.class );
 
     public static void process( Writer out, Throwable th, String errorMessage, String url, String urlMessage )
     {

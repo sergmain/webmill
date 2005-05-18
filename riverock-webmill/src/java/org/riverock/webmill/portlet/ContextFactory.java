@@ -42,6 +42,7 @@ import org.riverock.interfaces.schema.javax.portlet.PortletType;
 import org.riverock.webmill.core.GetSiteCtxCatalogItem;
 import org.riverock.webmill.core.GetSiteCtxLangCatalogItem;
 import org.riverock.webmill.core.GetSiteSupportLanguageItem;
+import org.riverock.webmill.core.GetSiteCtxTypeItem;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.main.Constants;
@@ -54,6 +55,7 @@ import org.riverock.webmill.portlet.context.UrlContextFactory;
 import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
 import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
+import org.riverock.webmill.schema.core.SiteCtxTypeItemType;
 import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
 
 import org.apache.log4j.Logger;
@@ -62,6 +64,8 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public abstract class ContextFactory {
+
+    private static Logger log = Logger.getLogger( ContextFactory.class );
 
     public final static class PortletParameters {
         private String namespace = null;
@@ -81,31 +85,128 @@ public abstract class ContextFactory {
         }
     }
 
-    private static Logger log = Logger.getLogger( ContextFactory.class );
 
-    protected Long portletId = null;
-    protected String portletType = null;
+    public final static class DefaultCtx {
+        private SiteCtxCatalogItemType ctx = null;
+        private SiteCtxLangCatalogItemType langMenu = null;
+        private SiteSupportLanguageItemType siteLang = null;
+        private PortletType portlet = null;
+        private String namePortletId = null;
+
+        private DefaultCtx(){}
+
+        public SiteCtxCatalogItemType getCtx() {
+            return ctx;
+        }
+
+        public PortletType getPortletDefinition() {
+            return portlet;
+        }
+
+        public String getNamePortletId() {
+            return namePortletId;
+        }
+
+        public static DefaultCtx getInstance( final DatabaseAdapter db, final PortalInfo portalInfo, final Long ctxId )
+            throws PortalPersistenceException, PortalException, FileManagerException {
+
+            try {
+                DefaultCtx defaultCtx = new DefaultCtx();
+                defaultCtx.ctx = GetSiteCtxCatalogItem.getInstance(db, ctxId).item;
+                if (defaultCtx.ctx==null) {
+                    log.error("Context with id "+ctxId+" not found. process as 'index' page");
+                    return null;
+                }
+
+                defaultCtx.langMenu = GetSiteCtxLangCatalogItem.getInstance(db, defaultCtx.ctx.getIdSiteCtxLangCatalog()).item;
+                if (defaultCtx.langMenu==null){
+                    log.error("Lang Catalog with id "+defaultCtx.ctx.getIdSiteCtxLangCatalog()+" not found. process as 'index' page");
+                    return null;
+                }
+
+                defaultCtx.siteLang = GetSiteSupportLanguageItem.getInstance(db, defaultCtx.langMenu.getIdSiteSupportLanguage()).item;
+                if (defaultCtx.siteLang==null){
+                    log.error("Site language with id "+defaultCtx.langMenu.getIdSiteSupportLanguage()+" not found. process as 'index' page");
+                    return null;
+                }
+
+                if (log.isDebugEnabled()) {
+                    log.debug( "portalInfo: " + portalInfo );
+                    if (portalInfo!=null) {
+                        log.debug("portalInfo.getSiteId(): "+portalInfo.getSiteId());
+                    }
+                    log.debug("siteLang: "+defaultCtx.siteLang);
+                    if (defaultCtx.siteLang!=null) {
+                        log.debug("siteLang.getIdSite(): "+defaultCtx.siteLang.getIdSite());
+                    }
+                }
+
+                if (!portalInfo.getSiteId().equals(defaultCtx.siteLang.getIdSite())) {
+                    log.error("Requested context with id "+defaultCtx.ctx.getIdSiteCtxCatalog()+" is from others site. Process as 'index' page");
+                    return null;
+                }
+
+                if (defaultCtx.ctx.getIdSiteCtxType()==null) {
+                    log.error( "idSiteCtxCatalog: " + defaultCtx.ctx.getIdSiteCtxCatalog() );
+                    log.error( "ctxId: " + ctxId );
+                    throw new PortalException("contextTypeId is null, unknown portlet");
+                }
+
+                SiteCtxTypeItemType ctxType = GetSiteCtxTypeItem.getInstance( db, defaultCtx.ctx.getIdSiteCtxType() ).item;
+                if (ctxType==null) {
+                    throw new PortalException("portletName for id "+defaultCtx.ctx.getIdSiteCtxType()+" not found");
+                }
+
+                initPortletDefinition( defaultCtx, ctxType.getType() );
+                return defaultCtx;
+            }
+            catch (Exception e) {
+                log.error("Error", e);
+                throw new PortalException("error", e);
+            }
+        }
+
+        public static DefaultCtx getInstance( final String portletName )
+            throws FileManagerException {
+
+            DefaultCtx defaultCtx = new DefaultCtx();
+            initPortletDefinition( defaultCtx, portletName );
+            return defaultCtx;
+        }
+
+        protected static void initPortletDefinition( DefaultCtx defaultCtx, String portletName ) throws FileManagerException {
+
+            defaultCtx.portlet = PortletManager.getPortletDescription( portletName );
+            if (defaultCtx.portlet!=null)  {
+                defaultCtx.namePortletId =
+                    PortletTools.getStringParam(defaultCtx.portlet, PortletTools.name_portlet_id);
+            }
+        }
+    }
+
+
+
+//    protected Long portletId = null;
+//    protected String portletType = null;
     protected String nameTemplate = null;
-
-
     protected Locale realLocale = null;
     protected PortalInfo portalInfo = null;
-    protected String namePortletId = null;
-
+//    protected String namePortletId = null;
     protected Map dynamicParameter = null;
     protected List portletsParameter = new LinkedList();
+    protected String urlResource = null;
+//    protected SiteCtxCatalogItemType defaultCtx = null;
+    protected DefaultCtx defaultCtx = null;
 
-    protected abstract Long getCtxId(DatabaseAdapter db, HttpServletRequest request) throws PortalPersistenceException;
-    protected abstract void prepareParameters( HttpServletRequest httpRequest ) throws PortalException;
-
-    protected boolean isInited = false;
+    protected abstract Long initPortalParameters( final DatabaseAdapter db, final HttpServletRequest request) throws PortalException;
+    protected abstract void prepareParameters( final HttpServletRequest httpRequest, final Map httpRequestParameter ) throws PortalException;
 
     public PortletParameters getParameters( final String namespace, final TemplateItemTypeTypeType type ) {
         if (type!=null && type.getType()==TemplateItemTypeTypeType.DYNAMIC_TYPE) {
             return new PortletParameters(namespace, dynamicParameter);
         }
 
-        if ( namespace==null || portletsParameter==null || portletsParameter.size()==0 ) {
+        if ( namespace==null || portletsParameter==null ) {
             return null;
         }
 
@@ -125,105 +226,77 @@ public abstract class ContextFactory {
     }
 
     protected String getNamePortletId() {
-        return namePortletId;
+        return defaultCtx.namePortletId;
     }
 
     protected Long getPortletId() {
-        return portletId;
+if (log.isDebugEnabled()){
+if (defaultCtx!=null)
+log.debug("defaultCtx.ctx: " + defaultCtx.ctx);
+else
+log.debug("defaultCtx is null");
+}
+
+        if (defaultCtx==null || defaultCtx.ctx==null)
+            return null;
+
+        return defaultCtx.ctx.getIdContext();
     }
 
+
     public String getDefaultPortletType() {
-        return portletType;
+        if (log.isDebugEnabled()){
+            if (defaultCtx!=null)
+                log.debug("defaultCtx.portlet: " + defaultCtx.portlet);
+            else
+                log.debug("defaultCtx is null");
+        }
+
+        if (defaultCtx==null || defaultCtx.portlet==null)
+            return null;
+
+        return defaultCtx.portlet.getPortletName().getContent();
     }
 
     public String getNameTemplate() {
         return nameTemplate;
     }
 
-    protected ContextFactory(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo)
+    public String getUrlResource() {
+        return urlResource;
+    }
+
+    public DefaultCtx getDefaultCtx() {
+        return defaultCtx;
+    }
+
+    protected ContextFactory( final DatabaseAdapter adapter, final HttpServletRequest request, final PortalInfo portalInfo )
         throws PortalException, PortalPersistenceException {
 
         this.portalInfo = portalInfo;
         this.realLocale = ContextLocaleUtils.prepareLocale(adapter, request, portalInfo);
 
         try {
-            Long ctxId = getCtxId(adapter, request);
+            Long ctxId = initPortalParameters(adapter, request);
 
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("ctxId - "+ctxId);
+            }
 
             if (ctxId==null)
                 return;
 
-            isInited = initFromContext(adapter, ctxId);
+            defaultCtx = DefaultCtx.getInstance( adapter, portalInfo, ctxId );
+            initFromContext(adapter);
 
         } catch (FileManagerException e) {
             String es = "Error get portlet definition";
-            log.error(es, e);
-            throw new PortalException(es, e);
+            log.error( es, e );
+            throw new PortalException( es, e );
         }
     }
 
-    protected boolean initFromContext(DatabaseAdapter db, Long ctxId)
-            throws PortalPersistenceException, PortalException, FileManagerException {
-
-        SiteCtxCatalogItemType ctx = GetSiteCtxCatalogItem.getInstance(db, ctxId).item;
-        if (ctx==null) {
-            log.error("Context with id "+ctxId+" not found. process as 'index' page");
-            return false;
-        }
-
-        SiteCtxLangCatalogItemType langMenu = GetSiteCtxLangCatalogItem.getInstance(db, ctx.getIdSiteCtxLangCatalog()).item;
-        if (langMenu==null){
-            log.error("Lang Catalog with id "+ctx.getIdSiteCtxLangCatalog()+" not found. process as 'index' page");
-            return false;
-        }
-
-        SiteSupportLanguageItemType siteLang = GetSiteSupportLanguageItem.getInstance(db, langMenu.getIdSiteSupportLanguage()).item;
-        if (siteLang==null){
-            log.error("Site language with id "+langMenu.getIdSiteSupportLanguage()+" not found. process as 'index' page");
-            return false;
-        }
-
-        if (log.isDebugEnabled()){
-            log.debug("portalInfo: "+portalInfo);
-            if (portalInfo!=null){
-                log.debug("portalInfo.getSiteId(): "+portalInfo.getSiteId());
-            }
-            log.debug("siteLang: "+siteLang);
-            if (siteLang!=null){
-                log.debug("siteLang.getIdSite(): "+siteLang.getIdSite());
-            }
-        }
-
-        if (!portalInfo.getSiteId().equals(siteLang.getIdSite())){
-            log.error("Requested context with id "+ctx.getIdSiteCtxCatalog()+" is from others site. Process as 'index' page");
-            return false;
-        }
-
-        MenuItemInterface menuItem = new MenuItem(db, ctx);
-        setPortletInfo(menuItem);
-
-        realLocale = StringTools.getLocale(siteLang.getCustomLanguage());
-
-        PortletType portlet = PortletManager.getPortletDescription( portletType );
-        if (portlet!=null){
-            namePortletId =
-                PortletTools.getStringParam(portlet, PortletTools.name_portlet_id);
-        }
-
-        return true;
-    }
-
-    protected void setPortletInfo(MenuItemInterface menuItem) {
-        portletId = menuItem.getIdPortlet();
-        portletType = menuItem.getType();
-        nameTemplate =menuItem.getNameTemplate();
-    }
-
-    protected void setPortletInfo(Long portletId, String portletType, String nameTemplate) {
-        this.portletId = portletId;
-        this.portletType = portletType;
+    protected void setPortletInfo( final String nameTemplate ) {
         this.nameTemplate = nameTemplate;
     }
 
@@ -244,15 +317,15 @@ public abstract class ContextFactory {
      * init context type and name of template,
      * if type of context is null, set it to 'index_page'
      */
-    static ContextFactory initTypeContext(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo)
+    public static ContextFactory initTypeContext( final DatabaseAdapter db, final HttpServletRequest request, final PortalInfo portalInfo, final Map httpRequestParameter )
         throws PortalException, PortalPersistenceException {
 
         ContextFactory contextFactoryTemp = null;
 
         String servletPath = request.getServletPath();
         Integer idx = (Integer)contextTypeHash.get(servletPath);
-        if (idx!=null){
-            switch(idx.intValue()){
+        if (idx!=null) {
+            switch(idx.intValue()) {
                 case PAGEID_SERVLET_IDX:
                     contextFactoryTemp = PageidContextFactory.getInstance(db, request, portalInfo);
                     break;
@@ -281,15 +354,28 @@ public abstract class ContextFactory {
 
         if ( log.isDebugEnabled() ) {
             log.debug( "#2 contextFactoryTemp: "+contextFactoryTemp );
-            if (contextFactoryTemp!=null){
+            if (contextFactoryTemp!=null) {
                 log.debug( "contextFactoryTemp.getDefaultPortletType(): "+contextFactoryTemp.getDefaultPortletType() );
                 log.debug( "contextFactoryTemp.getNameTemplate(): "+contextFactoryTemp.getNameTemplate() );
             }
         }
 
-        contextFactoryTemp.prepareParameters(request);
+        contextFactoryTemp.prepareParameters(request, httpRequestParameter );
 
         return contextFactoryTemp;
     }
 
+    protected void initFromContext( final DatabaseAdapter db ) throws PortalException {
+
+        if (defaultCtx.ctx==null)
+            return;
+
+        MenuItemInterface menuItem = new MenuItem(db, defaultCtx.ctx);
+        setPortletInfo( menuItem.getNameTemplate() );
+
+        if (defaultCtx.siteLang!=null) {
+        realLocale = StringTools.getLocale( defaultCtx.siteLang.getCustomLanguage() );
+}
+
+    }
 }

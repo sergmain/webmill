@@ -22,51 +22,121 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.webmill.portlet;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Iterator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.Cookie;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.MainTools;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.utils.ServletUtils;
-import org.riverock.generic.db.DatabaseAdapter;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
+/**
+ * $Id$
+ */
 public final class ContextNavigator extends HttpServlet {
-    private static Logger log = Logger.getLogger(ContextNavigator.class);
+    private final static Logger log = Logger.getLogger(ContextNavigator.class);
 
-    static final String copyright =
+     static final String copyright =
         "<!--\n" +
-        "  Engine: WebMill\n" +
+        "  Portal: WebMill\n" +
         " Release: @@WEBMILL_RELEASE@@\n" +
         "   Build: @@WEBMILL_BUILD@@\n" +
         "Homepage: http://webmill.riverock.org\n" +
         "-->\n";
 
-    private static final int NUM_LINES = 100;
+    private static final int NUM_LINES = 300;
+
+    private static class InternalServletResponseWrapper extends HttpServletResponseWrapper {
+
+        // all methos in HttpServletResponse must invoked only from ContextNavigator
+        // all others invokes are wrong
+        boolean isOk = false;
+
+        public InternalServletResponseWrapper( HttpServletResponse httpServletResponse ) {
+            super( httpServletResponse );
+        }
+
+        public ServletResponse getResponse(){
+            if ( !isOk )
+                log.error( "!!! Requested getResponse() from http response" );
+
+            return super.getResponse();
+        }
+
+        public void setResponse(ServletResponse response){
+            if ( !isOk )
+                log.warn( "!!! Requested setResponse() from http response" );
+
+            super.setResponse( response );
+        }
+
+        public PrintWriter getWriter() throws IOException {
+            if ( !isOk )
+                log.warn( "!!! Requested getWriter() from http response" );
+
+            return super.getWriter();
+        }
+
+        public ServletOutputStream getOutputStream() throws IOException {
+            if ( !isOk )
+                log.warn( "!!! Requested getOutputStream() from http response" );
+
+            return super.getOutputStream();
+        }
+
+        public void setHeader( String name, String value ) {
+            if ( !isOk )
+                log.warn( "!!! Requested setHeader() from http response" );
+
+            super.setHeader( name, value );
+        }
+
+        public void setContentLength( int length ) {
+            if ( !isOk )
+                log.warn( "!!! Requested setContentLength() from http response" );
+
+            super.setContentLength( length );
+        }
+
+        public void setContentType( String type ) {
+            if ( !isOk )
+                log.warn( "!!! Requested setContentType() from http response" );
+
+            super.setContentType( type );
+        }
+
+        public void addCookie(Cookie cookie) {
+            if ( !isOk )
+                log.warn( "!!! Requested addCookie() from http response" );
+
+            super.addCookie( cookie );
+        }
+    }
 
     static ServletConfig portalServletConfig = null;
-    public void init( ServletConfig servletConfig ) throws ServletException{
+    public void init( ServletConfig servletConfig ) {
         portalServletConfig = servletConfig;
-        super.init(servletConfig);
     }
 
     public ContextNavigator() {
@@ -83,163 +153,134 @@ public final class ContextNavigator extends HttpServlet {
     private static Object syncCounter = new Object();
     private static int counterNDC = 0;
 
-    public void doGet(HttpServletRequest request_, HttpServletResponse response_)
+    public void doGet(HttpServletRequest request_, HttpServletResponse httpResponse )
         throws IOException, ServletException {
 
-        PortalRequestInstance portalRequestInstance = new PortalRequestInstance();
+        int counter = 0;
+        InternalServletResponseWrapper response_ = new InternalServletResponseWrapper( httpResponse );
 
         // Prepare Nested D... Context
         synchronized (syncCounter) {
             if (log.isDebugEnabled())
                 log.debug("counterNDC #1 " + counterNDC);
 
-            portalRequestInstance.counter = counterNDC;
+            counter = counterNDC;
             ++counterNDC;
 
             if (log.isDebugEnabled()) {
                 log.debug("counterNDC #2 " + counterNDC);
-                log.debug("counter #3 " + portalRequestInstance.counter);
+                log.debug("counter #3 " + counter);
             }
 
-            NDC.push("" + portalRequestInstance.counter);
+            NDC.push("" + counter);
 
             if (log.isDebugEnabled()) {
                 log.debug("counterNDC #4 " + counterNDC);
-                log.debug("counter #5 " + portalRequestInstance.counter);
+                log.debug("counter #5 " + counter);
             }
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("counter #6 " + portalRequestInstance.counter);
+            log.debug("counter #6 " + counter);
             log.debug("this " + this);
             log.debug("request_ " + request_);
             log.debug("response_ " + response_);
+            log.debug("Request methos type - " + request_.getMethod() );
+            log.debug("Request URL - " + request_.getRequestURL());
+            log.debug("Request query string - " + request_.getQueryString());
+
+            for (Enumeration e = request_.getParameterNames(); e.hasMoreElements();) {
+                String s = (String) e.nextElement();
+                log.debug("Request parameter - " + s + ", value - " + request_.getParameter(s) );
+            }
+            log.debug( "This request made with cookie" );
+            Cookie[] cookies = request_.getCookies();
+            if (cookies!=null) {
+                for (int i=0; i<cookies.length; i++) {
+                    log.debug( cookieToString( cookies[i]) );
+                }
+            }
+            putResourceDebug();
         }
 
+
+        PortalRequestInstance portalRequestInstance = null;
         try {
             boolean isSessionValid = request_.isRequestedSessionIdValid();
 
-            if (log.isDebugEnabled())
-                log.debug("session ID is valid - " + isSessionValid);
+            if (log.isDebugEnabled()) {
+                log.debug("old session ID is valid: " + isSessionValid);
+                log.debug("old session ID (from request): " + request_.getRequestedSessionId() );
+                HttpSession session = request_.getSession( false );
+                log.debug("session: " + session );
+                if (session!=null) {
+                    log.debug("old session ID (from session): " + session.getId() );
+                }
+                else {
+                    log.debug(" old session is null" );
+                }
+            }
 
             if (!isSessionValid) {
-                if (log.isInfoEnabled())
+                if (log.isInfoEnabled()) {
                     log.info("invalidate current session ");
+                }
 
+                HttpSession tempSession = null;
                 try {
-                    HttpSession tempSession = request_.getSession(false);
-                    if (tempSession != null)
+                    tempSession = request_.getSession(false);
+                    if (tempSession != null) {
                         tempSession.invalidate();
+                    }
 
-                    request_.getSession(true);
+                    tempSession = request_.getSession(true);
                 } catch (java.lang.IllegalStateException e) {
                     log.warn("Error invalidate session", e);
                 }
 
-                if (log.isInfoEnabled())
-                    log.info("Status of new session ID is - " + request_.isRequestedSessionIdValid());
+                if (log.isInfoEnabled()) {
+                    log.info("Status of new session ID: " + request_.isRequestedSessionIdValid() );
+                    log.info("new session ID (from request): " + request_.getRequestedSessionId() );
+                    if (tempSession!=null) {
+                        log.info("new session ID (from session): " + tempSession.getId() );
+                    }
+                    else {
+                        log.info("new session ID (from session) is null" );
+                    }
+                }
 
             }
 
-            setContentType(response_);
+if (log.isDebugEnabled()) {
+log.debug("#100.0");
+ContextNavigator.putResourceDebug();
+}
 
-            try {
-                portalRequestInstance.db = DatabaseAdapter.getInstance(false);
-            } catch (Exception e) {
-                log.error("Error create DBconnect", e);
-
-                String errorString = "Error create DBconnect<br>" +
-                    ExceptionTools.getStackTrace(e, NUM_LINES);
-                portalRequestInstance.byteArrayOutputStream.write(errorString.getBytes());
+            portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig );
+            if (!portalRequestInstance.getIsTextMimeType()) {
                 return;
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Request URL - " + request_.getRequestURL());
-                log.debug("Request query string - " + request_.getQueryString());
+if (log.isDebugEnabled()) {
+log.debug("#100.1");
+ContextNavigator.putResourceDebug();
+}
 
-                for (Enumeration e = request_.getParameterNames(); e.hasMoreElements();) {
-                    String s = (String) e.nextElement();
-                    log.debug("Request attr - " + s + ", value - " + ServletUtils.getString(request_, s));
-                }
-            }
+            PortalRequestProcessor.processPortalRequest( portalRequestInstance );
 
-            long jspPageMills = 0;
-            try {
-                if (log.isInfoEnabled()) {
-                    jspPageMills = System.currentTimeMillis();
-                    log.info("start init PortalRequestInstance ");
-                }
-                portalRequestInstance.init(request_, response_, portalRequestInstance.db);
+if (log.isDebugEnabled()) {
+log.debug("#100.2");
+ContextNavigator.putResourceDebug();
+}
 
-            } catch (Exception e) {
-                final String es = "Error init PortalRequestInstance ";
-                log.error(es, e);
-                portalRequestInstance.byteArrayOutputStream.write(
-                    (es+"<br>"+ExceptionTools.getStackTrace(e, NUM_LINES, "<BR>")).getBytes()
-                );
-                return;
-            } finally {
-                if (log.isInfoEnabled()) {
-                    log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - jspPageMills) + " milliseconds");
-                }
-            }
-
-            if ( !portalRequestInstance.initTemplate() ) return;
-            if ( !portalRequestInstance.initXslt() ) return;
-
-
-            // if default portlet type is null, process as 'mill.index'
-//            if (ctxInstance.getDefaultPortletType() == null) {
-//                PortalRequestProcessor.processRequest(ctxInstance, portalRequestInstance);
-//                return;
-//            }
-
-//            PortletType portlet = ctxInstance.getDefaultPortletDescription().getPortletConfig();
-//
-//            if (log.isDebugEnabled()) {
-//                log.debug("Portlet type: " + ctxInstance.getDefaultPortletType());
-//                log.debug("namePortlet ID: " + PortletTools.getStringParam(portlet, PortletTools.name_portlet_id));
-//            }
-
-            PortalRequestProcessor.processRequest( portalRequestInstance );
-/*
-
-            switch (ctxInstance.getDefaultPortletDescription().getPortletType().getType()) {
-                case PortletDescriptionTypeTypePortletType.CONTROLLER_TYPE:
-
-                    RequestControllerProcessor.processControllerRequest(ctxInstance, portlet, portalRequestInstance);
-                    break;
-
-                case PortletDescriptionTypeTypePortletType.MODEL_TYPE:
-
-                    String errorString = "Portlet with type 'model' can't bind to Menu";
-                    log.error(errorString);
-                    portalRequestInstance.byteArrayOutputStream.write(errorString.getBytes());
-                    break;
-
-                case PortletDescriptionTypeTypePortletType.VIEW_TYPE:
-
-                    PortalRequestProcessor.processRequest(ctxInstance, portalRequestInstance);
-                    break;
-
-                default:
-                    errorString =
-                        "Unknown type of portlet - " +
-                        PortletTools.getStringParam(portlet, PortletTools.type_portlet);
-                    log.error(errorString);
-                    portalRequestInstance.byteArrayOutputStream.write(errorString.getBytes());
-                    break;
-            }
-*/
         }
         catch (Throwable e) {
-            log.error("Error processing page with ContextNavigator", e);
-            log.error("CN debug. type " + portalRequestInstance.getDefaultPortletType());
+            String es = "General error processing request";
+            log.error( es, e );
 
             if (log.isDebugEnabled()) {
-                log.error("CN debug. Request URL - " + portalRequestInstance.getHttpRequest().getRequestURL());
-                log.error("CN debug. Request query string - " + portalRequestInstance.getHttpRequest().getQueryString());
+                log.error("CN debug. Request URL - " + request_.getRequestURL());
+                log.error("CN debug. Request query string - " + request_.getQueryString());
 
                 for (Enumeration en = request_.getParameterNames(); en.hasMoreElements();) {
                     String s = (String) en.nextElement();
@@ -249,80 +290,208 @@ public final class ContextNavigator extends HttpServlet {
                     }
                 }
             }
+            if (portalRequestInstance==null)
+                portalRequestInstance = new PortalRequestInstance();
 
+            portalRequestInstance.byteArrayOutputStream.reset();
             portalRequestInstance.byteArrayOutputStream.write(
-                ("Error processing page with ContextNavigator<br>" +
-                ExceptionTools.getStackTrace(e, NUM_LINES, "<br>")
-                ).getBytes()
+                ( es + "<br>" + ExceptionTools.getStackTrace(e, NUM_LINES, "<br>") ).getBytes()
             );
         }
         finally {
+            if (log.isDebugEnabled()) {
+                log.debug("Start finally block");
+            }
             try {
-                String timeString = "\n<!-- NDC #" + portalRequestInstance.counter + ", page with portlets processed for " + (System.currentTimeMillis() - portalRequestInstance.startMills) + " milliseconds -->";
+                // work around with not text mimeType
+                if (!portalRequestInstance.getIsTextMimeType()) {
+                    response_.isOk = true;
+                    response_.setContentType( portalRequestInstance.getMimeType() );
+                    portalRequestInstance.byteArrayOutputStream.close();
+                    portalRequestInstance.byteArrayOutputStream = null;
+                    httpResponse.sendRedirect( portalRequestInstance.getUrlResource() );
+//                    RequestDispatcher rd = request_.getRequestDispatcher( portalRequestInstance.getUrlResource() );
+//                    rd.forward( request_, httpResponse );
+                    return;
+                }
 
-                if (log.isInfoEnabled())
-                    log.info(timeString);
+                // work around with redirect
+                if ( portalRequestInstance.getRedirectUrl()!=null ) {
+                    if ( log.isDebugEnabled() ) {
+                        log.debug( "redirect to new url: "+ portalRequestInstance.getRedirectUrl());
+                    }
+                    response_.isOk = true;
+
+                    setCookie( portalRequestInstance, response_ );
+
+                    portalRequestInstance.byteArrayOutputStream.close();
+                    portalRequestInstance.byteArrayOutputStream = null;
+
+                    response_.sendRedirect( portalRequestInstance.getRedirectUrl() );
+                    return;
+                }
 
                 if (portalRequestInstance.byteArrayOutputStream == null) {
-                    String es = "byteArrayOutputStream is null, try to recover data and start another loop for this request";
+                    String es = "byteArrayOutputStream is null";
                     log.error(es);
                     throw new PortalException(es);
                 }
 
-                portalRequestInstance.byteArrayOutputStream.write(timeString.getBytes());
+                portalRequestInstance.byteArrayOutputStream.close();
+                StringBuffer timeString = getTimeString( counter, portalRequestInstance.startMills );
+                final byte[] bytesCopyright = getCopyright().getBytes();
+                final byte[] bytes = portalRequestInstance.byteArrayOutputStream.toByteArray();
+                final byte[] bytesTimeString = timeString.toString().getBytes();
 
-                Writer out = response_.getWriter();
-                if (out == null) {
-                    String fatalString = "fatal error - response.getWriter() is null";
-                    log.fatal(fatalString);
-                    throw new ServletException(fatalString);
+                final String pageContent = new String( bytes, WebmillConfig.getHtmlCharset() );
+
+                if ( log.isDebugEnabled() ) {
+                    log.debug( "ContentLength: " + bytes.length );
+                    log.debug( "pageContent:\n" + pageContent );
                 }
 
-                portalRequestInstance.byteArrayOutputStream.flush();
-                portalRequestInstance.byteArrayOutputStream.close();
-                response_.setContentLength(portalRequestInstance.byteArrayOutputStream.size());
-                out.write(new String(portalRequestInstance.byteArrayOutputStream.toByteArray(), WebmillConfig.getHtmlCharset()));
+                response_.isOk = true;
+                if (portalRequestInstance.getLocale()!=null) {
+                    response_.setLocale( portalRequestInstance.getLocale() );
+                }
+                setCookie( portalRequestInstance, response_ );
+                setContentType( response_ );
+                response_.setHeader( "Cache-Control", "no-cache" );
+                response_.setHeader( "Pragma", "no-cache" );
+                response_.setContentLength( bytesCopyright.length + bytes.length + bytesTimeString.length );
 
+                portalRequestInstance.destroy();
+                portalRequestInstance = null;
+
+                OutputStream out = response_.getOutputStream();
+                // output copyright
+                out.write( bytesCopyright );
+                out.write( bytes );
+                out.write( bytesTimeString );
                 out.flush();
                 out.close();
                 out = null;
-                portalRequestInstance.byteArrayOutputStream = null;
-                DatabaseAdapter.close(portalRequestInstance.db);
-                portalRequestInstance.db = null;
 
-                Long maxMemory = null;
-                try {
-                    maxMemory = MainTools.getMaxMemory();
-                }
-                catch (Exception e) {
-                }
+                if (log.isInfoEnabled())
+                    log.info( timeString.toString() );
 
-                log.warn("free memory " + Runtime.getRuntime().freeMemory() +
+                long maxMemory = Runtime.getRuntime().maxMemory();
+                log.warn(
+                    "free memory " + Runtime.getRuntime().freeMemory() +
                     " total memory " + Runtime.getRuntime().totalMemory() +
-                    (maxMemory != null ? " max memory " + maxMemory : ""));
+                    " max memory " + maxMemory
+                );
             }
             catch (Throwable th) {
-                final String es = "Throwable ";
+                final String es = "Error last step of build page";
                 log.error(es, th);
                 throw new ServletException( es, th );
             }
+            finally{
+            if (log.isDebugEnabled()) {
+                log.debug("Start finally-finally block");
+            }
+                try {
+                    if ( portalRequestInstance!=null ) {
+                        portalRequestInstance.destroy();
+                    }
+                }
+                catch( Throwable e ) {
+                    log.error("Error destroy portalRequestInstance object", e);
+                }
+if (log.isDebugEnabled()){
+            putResourceDebug();
+}
+                NDC.pop();
+            }
         }
-        NDC.pop();//remove();
     }
 
-    public static void setContentType(HttpServletResponse response) throws Exception {
+    private StringBuffer getTimeString( int counter, long startMills ) {
+        return new StringBuffer( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
+    }
+
+    private static void setCookie( PortalRequestInstance portalRequestInstance, InternalServletResponseWrapper response_ ) {
+        // set Cookie
+        CookieManager cookieManager = portalRequestInstance.getCookieManager();
+        if (log.isDebugEnabled() ) {
+            log.debug( "CookieManager: " + cookieManager );
+        }
+        if ( cookieManager!=null ) {
+            List cookieList = cookieManager.getCookieList();
+            Iterator iterator = cookieList.iterator();
+            while( iterator.hasNext() ) {
+                Cookie cookie = (Cookie)iterator.next();
+                if (log.isDebugEnabled() ) {
+                    log.debug( cookieToString( cookie) );
+                }
+                response_.addCookie( cookie );
+            }
+        }
+    }
+
+    private static String cookieToString( Cookie cookie) {
+        return
+            "Cookie: " +
+            "domain: " + cookie.getDomain()+", " +
+            "path: "+cookie.getPath()+", " +
+            "name: "+cookie.getName()+", " +
+            "value: "+cookie.getValue();
+    }
+
+    public static void setContentType(HttpServletResponse response) throws PortalException, ConfigException {
         setContentType(response, WebmillConfig.getHtmlCharset());
     }
 
     public static void setContentType(HttpServletResponse response, String charset) throws PortalException {
 
-        if (log.isDebugEnabled()) log.debug("set new charset - " + charset);
+        final String type = "text/html; charset=" + charset;
+
+        if (log.isDebugEnabled()) {
+            log.debug("set new charset: " + type);
+            log.debug("response: " + response);
+        }
+
         try {
-            response.setContentType("text/html; charset=" + charset);
+            response.setContentType(type);
         } catch (Exception e) {
             final String es = "Error set new content type to " + charset;
             log.error(es, e);
             throw new PortalException(es, e);
+        }
+    }
+
+    public static String getCopyright() {
+        return copyright;
+    }
+
+    static void putResourceDebug() {
+//        long currentTimeMills = System.currentTimeMillis();
+//        while ( (System.currentTimeMillis() - currentTimeMills)<1000) {
+//            for (int i=0; i<50; i++);
+//        }
+
+//        try {
+//            Thread.sleep( 2000 );
+//        }
+//        catch( InterruptedException e ) {
+//            log.error( "error", e );
+//        }
+
+//            log.debug("Messages: " + PortletResourceBundleProvider.getMessagesMapInternal() );
+        if ( PortletResourceBundleProvider.getMessagesMapInternal()!=null ) {
+            log.debug("Messages: " + PortletResourceBundleProvider.getMessagesMapInternal().size() );
+            log.debug("Messages: " + PortletResourceBundleProvider.getMessagesMapInternal().getClass() );
+        }
+        else {
+            log.debug("Messages is null" );
+        }
+//            log.debug("Portlets: " + PortletResourceBundleProvider.getPortletsMapInternal() );
+        if ( PortletResourceBundleProvider.getPortletsMapInternal()!=null ) {
+            log.debug( "Portlets: " + PortletResourceBundleProvider.getPortletsMapInternal().size() );
+        }
+        else {
+            log.debug( "Portlets is null" );
         }
     }
 }

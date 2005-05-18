@@ -1,12 +1,12 @@
 /*
  * org.riverock.webmill -- Portal framework implementation
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
@@ -22,41 +22,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.portlet;
+
+import java.util.ResourceBundle;
+import java.util.Enumeration;
+import java.util.Collections;
+import java.util.ArrayList;
 
 /**
- * User: Admin
- * Date: Jan 25, 2003
- * Time: 9:57:52 PM
- *
+ * User: SergeMaslyukov
+ * Date: 10.02.2005
+ * Time: 0:24:14
  * $Id$
  */
-package org.riverock.webmill.test;
+public class PortletResourceBundleEmpty extends ResourceBundle {
 
-public class LittleTest
-{
-
-    public byte LitleTest()
-    {
-//        byte b; b = (b + 5);
-//        float f = 3.1;
-
-        double d = 1.0 + 0.2 - 1.0;
-        return 0;
+    public PortletResourceBundleEmpty() {
     }
 
-    public static void main(String s[])
-        throws Exception
-    {
-        Class c = Void.class;
+    public Enumeration getKeys() {
+        return Collections.enumeration( new ArrayList() );
+    }
 
-        float f = 30;
-        Integer i = new Integer((int)(30 * ((f+100)/100)) );
-
-        System.out.println("i - "+i.intValue());
-
-        System.out.println("Class name - "+c.getName());
-
-        System.out.println("Test (1.0 + 0.2 - 1.0) - "+(1.0 + 0.2 - 1.0) );
-//        byte b = '\l';
+    protected Object handleGetObject( final String key ) {
+        return null;
     }
 }

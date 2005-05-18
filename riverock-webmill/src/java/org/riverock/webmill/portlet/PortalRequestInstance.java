@@ -26,21 +26,28 @@ package org.riverock.webmill.portlet;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletConfig;
 
+import org.riverock.common.html.Header;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.port.PortalXslt;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.schema.site.SiteTemplate;
-import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
-import org.riverock.webmill.exception.PortalException;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
-import org.riverock.common.html.Header;
+import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.port.PortalInfo;
+import org.riverock.webmill.port.PortalXslt;
+import org.riverock.webmill.portlet.wrapper.ActionRequestImpl;
+import org.riverock.webmill.schema.site.SiteTemplate;
+import org.riverock.webmill.schema.site.TemplateItemType;
+import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
 
 import org.apache.log4j.Logger;
 
@@ -48,24 +55,21 @@ import org.apache.log4j.Logger;
  * User: Admin
  * Date: Aug 26, 2003
  * Time: 4:40:19 PM
- *
+ * 
  * $Id$
  */
 public final class PortalRequestInstance {
+    private final static Logger log = Logger.getLogger(PortalRequestInstance.class);
 
-    private static Logger log = Logger.getLogger( PortalRequestInstance.class );
+    private List pageElementList = new LinkedList();
 
     private static final int WEBPAGE_BUFFER_SIZE = 15000;
 
     ByteArrayOutputStream byteArrayOutputStream = null;
-
     PortalXslt xslt = null;
     SiteTemplate template = null;
-    List portletResultOutput = null;
 
-    int counter = 0;
     long startMills;
-    DatabaseAdapter db = null;
 
     private ContextFactory contextFactory = null;
     private PortalInfo portalInfo = null;
@@ -73,43 +77,191 @@ public final class PortalRequestInstance {
     private HttpServletRequest httpRequest = null;
     private HttpServletResponse httpResponse = null;
     private AuthSession auth = null;
+    private ActionRequestImpl actionRequest = null;
+    private Map httpRequestParameter = null;
+    private CookieManager cookieManager = new CookieManager();
+    private boolean isTextMimeType = true;
+    private String mimeType = null;
 
-    PortalRequestInstance() {
-        startMills = System.currentTimeMillis();
-        this.byteArrayOutputStream = new ByteArrayOutputStream( WEBPAGE_BUFFER_SIZE );
+    private String errorString = null;
+    private String redirectUrl = null;
+
+    public void destroy() {
+        Iterator iterator = getPageElementList().iterator();
+        while (iterator.hasNext()) {
+            PageElement pageElement = (PageElement) iterator.next();
+            pageElement.destroy();
+        }
+
+        if (byteArrayOutputStream != null) {
+            try {
+                byteArrayOutputStream.close();
+            }
+            catch (IOException e) {
+            }
+            byteArrayOutputStream = null;
+        }
+        xslt = null;
+        template = null;
+        contextFactory = null;
+        portalInfo = null;
+        preferredLocale = null;
+        httpRequest = null;
+        httpResponse = null;
+        auth = null;
+        if (actionRequest != null) {
+            actionRequest.destroy();
+            actionRequest = null;
+        }
+        httpRequestParameter = null;
+        cookieManager = null;
+        errorString = null;
+        redirectUrl = null;
+        mimeType = null;
     }
 
-    void init( HttpServletRequest request_, HttpServletResponse response_, DatabaseAdapter db )
-        throws PortalException {
+    public PortalRequestInstance() {
+        startMills = System.currentTimeMillis();
+        this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
+    }
+
+    PortalRequestInstance(HttpServletRequest request_, HttpServletResponse response_, ServletConfig portalServletConfig)
+        throws Throwable {
+
+        startMills = System.currentTimeMillis();
+        this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
+
+        if (log.isInfoEnabled()) {
+            log.info("start init PortalRequestInstance ");
+        }
 
         this.httpRequest = request_;
         this.httpResponse = response_;
+        DatabaseAdapter db = null;
         try {
+            db = DatabaseAdapter.getInstance();
+            httpRequestParameter = Collections.unmodifiableMap(PortletTools.getParameters(httpRequest));
 
-            this.auth = AuthTools.getAuthSession( httpRequest );
-            this.portalInfo = PortalInfo.getInstance( db, httpRequest.getServerName() );
+            this.auth = AuthTools.getAuthSession(httpRequest);
+            if (log.isDebugEnabled()) {
+                log.debug("auth: " + this.auth);
+            }
+            this.portalInfo = PortalInfo.getInstance(db, httpRequest.getServerName());
 
-            this.contextFactory = ContextFactory.initTypeContext( db, httpRequest, portalInfo );
-            this.preferredLocale = Header.getAcceptLanguageAsLocaleListSorted( httpRequest );
+            this.contextFactory = ContextFactory.initTypeContext(db, httpRequest, portalInfo, httpRequestParameter);
+            if (contextFactory.getUrlResource() != null) {
+                mimeType = portalServletConfig.getServletContext().getMimeType(contextFactory.getUrlResource());
+                if (log.isDebugEnabled()) {
+                    log.debug("mimeType: " + mimeType);
+                }
+                if (mimeType != null && !mimeType.startsWith("text/")) {
+                    isTextMimeType = false;
+                    return;
+                }
+            }
+            this.preferredLocale = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
+
+            if (log.isDebugEnabled()) {
+                log.debug("#77.0");
+                ContextNavigator.putResourceDebug();
+            }
+            initTemplate();
+
+            if (log.isDebugEnabled()) {
+                log.debug("#77.0");
+                ContextNavigator.putResourceDebug();
+            }
+
+            initXslt();
+
+            if (log.isDebugEnabled()) {
+                log.debug("#5.0");
+                ContextNavigator.putResourceDebug();
+            }
+
+            // init page element list
+            for (int i = 0; i < template.getSiteTemplateItemCount(); i++) {
+
+                if (log.isDebugEnabled()) {
+                    log.debug("#5.1-" + i);
+                    ContextNavigator.putResourceDebug();
+                }
+
+                TemplateItemType templateItem = template.getSiteTemplateItem(i);
+
+                PageElement element = new PageElement();
+                // Todo: check structure namespace
+                // The getNamespace method must return a valid identifier as defined in the 3.8 Identifier
+                // Section of the Java Language Specification Second Edition.
+                element.setNamespace(templateItem.getNamespace() != null ? templateItem.getNamespace() : "p" + i);
+                element.setTemplateItemType(templateItem);
+                element.setParams(getParameters(element.getNamespace(), templateItem.getType()));
+
+                if (log.isDebugEnabled()) {
+                    log.debug("TemplateItem, idx: " + i + ", " +
+                        "type: " + (templateItem.getType() != null ? templateItem.getType().toString() : null) + ", " +
+                        "value: " + templateItem.getValue() + ", " +
+                        "namespace: " + element.getNamespace() +
+                        ", code: " + templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot());
+                }
+
+                if (log.isDebugEnabled()) {
+                    log.debug("#5.10");
+                    ContextNavigator.putResourceDebug();
+                }
+
+                switch (templateItem.getType().getType()) {
+                    case TemplateItemTypeTypeType.PORTLET_TYPE:
+                        element.initPortlet(templateItem.getValue(), this);
+                        break;
+                    case TemplateItemTypeTypeType.DYNAMIC_TYPE:
+                        element.initPortlet(getDefaultPortletType(), this);
+                        break;
+                    case TemplateItemTypeTypeType.FILE_TYPE:
+                    case TemplateItemTypeTypeType.CUSTOM_TYPE:
+                        break;
+                    default:
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("#5.20");
+                    ContextNavigator.putResourceDebug();
+                }
+
+
+                pageElementList.add(element);
+            }
+
         }
-        catch( Throwable e ) {
+        catch (Throwable e) {
             String es = "Error create portal request instance";
-            log.error( es, e );
-            throw new PortalException( es, e );
+            log.error(es, e);
+            throw e;
         }
+        finally {
+            DatabaseAdapter.close(db);
+            db = null;
 
-        // init string manager with real locale
-//        this.stringManager = StringManager.getManager("mill.locale.main", contextFactory.getRealLocale());
-
-//        this.portletRequest = new RenderRequestImpl(
-//            new HashMap(),
-//            httpRequest,
-//            this.auth,
-//            contextFactory.getRealLocale(),
-//            preferredLocale
-//        );
+            if (log.isInfoEnabled()) {
+                log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - startMills) + " milliseconds");
+            }
+        }
     }
 
+    public List getPageElementList() {
+        return pageElementList;
+    }
+
+    public String getErrorString() {
+        return errorString;
+    }
+
+    public Map getHttpRequestParameter() {
+        return httpRequestParameter;
+    }
+
+    ActionRequestImpl getActionRequest() {
+        return actionRequest;
+    }
 
     public Locale[] getPreferredLocale() {
         return preferredLocale;
@@ -120,35 +272,45 @@ public final class PortalRequestInstance {
     }
 
     public String getNameTemplate() {
-        if ( contextFactory == null )
+        if (contextFactory == null)
             return null;
 
         return contextFactory.getNameTemplate();
     }
 
-    public ContextFactory.PortletParameters getParameters(String namespace, TemplateItemTypeTypeType type ) {
-        if ( contextFactory == null )
+    public ContextFactory.PortletParameters getParameters(String namespace, TemplateItemTypeTypeType type) {
+        if (contextFactory == null)
             return null;
 
-        return contextFactory.getParameters( namespace, type );
+        return contextFactory.getParameters(namespace, type);
     }
 
     public String getDefaultPortletType() {
-        if ( contextFactory == null )
+        if (contextFactory == null)
             return null;
 
         return contextFactory.getDefaultPortletType();
     }
 
     public Long getDefaultPortletId() {
-        if ( contextFactory == null )
+        if (contextFactory == null)
             return null;
 
         return contextFactory.getPortletId();
     }
 
     public Locale getLocale() {
+        if (contextFactory == null)
+            return null;
+
         return contextFactory.getRealLocale();
+    }
+
+    public String getLocaleString() {
+        if (contextFactory == null || contextFactory.getRealLocale() == null)
+            return null;
+
+        return contextFactory.getRealLocale().toString();
     }
 
     public HttpServletRequest getHttpRequest() {
@@ -163,41 +325,63 @@ public final class PortalRequestInstance {
         return portalInfo;
     }
 
-    boolean initTemplate()
-        throws IOException {
+    private void initTemplate() throws PortalException {
 
-        template = getPortalInfo().getTemplates().getTemplate(
-            getNameTemplate(), getLocale().toString()
-        );
+        template = getPortalInfo().getTemplates().getTemplate(getNameTemplate(), getLocaleString());
 
-        if ( template==null ) {
-            String errorString = "Template '"+getNameTemplate()+"', locale "+getLocale().toString()+", not found";
-            log.warn( errorString );
-            byteArrayOutputStream.write( errorString.getBytes() );
-            return false;
+        if (template == null) {
+            String errorString = "Template '" + getNameTemplate() + "', locale " + getLocaleString() + ", not found";
+            log.warn(errorString);
+            throw new PortalException(errorString);
         }
-        return true;
     }
 
-    boolean initXslt() throws IOException {
+    private void initXslt() throws PortalException {
         // prepare Xsl objects
-        if ( getPortalInfo().getXsltList()==null ) {
-            String errorString =
-                "<html><head></head<body><p>XSL template not defined</p></body></html>";
-
-            log.error( errorString );
-            byteArrayOutputStream.write( errorString.getBytes() );
-            return false;
+        if (getPortalInfo().getXsltList() == null) {
+            String errorString = "XSL template not defined";
+            log.error(errorString);
+            throw new PortalException(errorString);
         }
-
-        xslt = getPortalInfo().getXsltList().getXslt( getLocale().toString() );
-
-        if ( xslt==null ) {
-            String errorString = "XSLT for locale "+getLocale().toString()+" not defined.";
-            log.error( errorString );
-            byteArrayOutputStream.write( errorString.getBytes() );
-            return false;
+        xslt = getPortalInfo().getXsltList().getXslt(getLocaleString());
+        if (xslt == null) {
+            String errorString = "XSLT for locale " + getLocaleString() + " not defined.";
+            log.error(errorString);
+            throw new PortalException(errorString);
         }
-        return true;
+    }
+
+    public String getUrlResource() {
+        if (contextFactory == null)
+            return null;
+
+        return contextFactory.getUrlResource();
+    }
+
+    public ContextFactory.DefaultCtx getDefaultCtx() {
+        if (contextFactory == null)
+            return null;
+
+        return contextFactory.getDefaultCtx();
+    }
+
+    public CookieManager getCookieManager() {
+        return cookieManager;
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
+
+    public boolean getIsTextMimeType() {
+        return isTextMimeType;
+    }
+
+    public String getMimeType() {
+        return mimeType;
     }
 }

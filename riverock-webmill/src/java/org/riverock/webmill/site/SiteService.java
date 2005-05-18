@@ -37,7 +37,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.webmill.core.*;
 import org.riverock.webmill.schema.core.*;
 
-public class SiteService
+public final class SiteService
 {
     public SiteService()
     {
@@ -112,7 +112,7 @@ public class SiteService
         }
         DatabaseAdapter_.commit();
 
-        // Todo Fix acces to CSS with new structure 
+        // Todo Fix acces to CSS with new structure
 /*
         System.out.println("delete CSS data");
         SiteContentCssListType cssList = new GetSiteContentCssWithIdSiteList(DatabaseAdapter_, idSiteForDrop).item;

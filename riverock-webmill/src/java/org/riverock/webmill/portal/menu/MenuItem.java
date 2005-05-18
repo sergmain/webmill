@@ -28,6 +28,7 @@ package org.riverock.webmill.portal.menu;
 import java.util.List;
 import java.util.Locale;
 import java.util.LinkedList;
+import java.io.IOException;
 
 import org.riverock.interfaces.portlet.menu.MenuItemInterface;
 import org.riverock.interfaces.generic.LocalizedStringInterface;
@@ -40,7 +41,6 @@ import org.riverock.webmill.core.GetSiteTemplateItem;
 import org.riverock.webmill.core.GetSiteCtxTypeItem;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.portlet.context.CtxContextFactory;
 import org.apache.log4j.Logger;
 
 /**
@@ -48,8 +48,8 @@ import org.apache.log4j.Logger;
  * $Id$
  *
  */
-public class MenuItem implements MenuItemInterface{
-    private static Logger log = Logger.getLogger(CtxContextFactory.class);
+public final class MenuItem implements MenuItemInterface{
+    private final static Logger log = Logger.getLogger( MenuItem.class );
 
     private SiteCtxCatalogItemType ctx = null;
     private String nameTemplate = null;
@@ -62,7 +62,7 @@ public class MenuItem implements MenuItemInterface{
         str = null;
         type = null;
         nameTemplate = null;
-        if (getCatalogItems() != null){
+        if (getCatalogItems()!=null) {
             getCatalogItems().clear();
             catalogItems = null;
         }
@@ -81,7 +81,7 @@ public class MenuItem implements MenuItemInterface{
         try{
             st = str.getString(Locale.ENGLISH);
         }
-        catch (java.io.UnsupportedEncodingException e){
+        catch (IOException e){
             st = "error";
         }
         return
@@ -109,16 +109,18 @@ public class MenuItem implements MenuItemInterface{
         );
 
         try {
-            SiteTemplateItemType template = GetSiteTemplateItem.getInstance(db_, ctx.getIdSiteTemplate()).item;
-            if (template!=null)
-                this.nameTemplate = template.getNameSiteTemplate();
+            if (db_!=null) {
+                SiteTemplateItemType template = GetSiteTemplateItem.getInstance(db_, ctx.getIdSiteTemplate()).item;
+                if (template!=null)
+                    this.nameTemplate = template.getNameSiteTemplate();
 
-            SiteCtxTypeItemType ctxType = GetSiteCtxTypeItem.getInstance(db_, ctx.getIdSiteCtxType()).item;
-            if (ctxType!=null)
-                this.type = ctxType.getType();
+                SiteCtxTypeItemType ctxType = GetSiteCtxTypeItem.getInstance(db_, ctx.getIdSiteCtxType()).item;
+                if (ctxType!=null)
+                    this.type = ctxType.getType();
+            }
 
         } catch (PortalPersistenceException e) {
-            String es = "Error create MenuItem object";
+            String es = "Error create MenuItem object, db: "+db_;
             log.error(es, e);
             throw new PortalException(es, e);
         }

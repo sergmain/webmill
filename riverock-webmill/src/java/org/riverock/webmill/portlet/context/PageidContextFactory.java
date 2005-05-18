@@ -25,40 +25,48 @@
 
 package org.riverock.webmill.portlet.context;
 
-import org.riverock.webmill.portlet.ContextFactory;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.apache.log4j.Logger;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.exception.PortalPersistenceException;
+import org.riverock.webmill.port.PortalInfo;
+import org.riverock.webmill.portlet.ContextFactory;
+import org.riverock.common.tools.StringTools;
+
+import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-public class PageidContextFactory extends ContextFactory {
-    private static Logger log = Logger.getLogger(PageidContextFactory.class);
+public final class PageidContextFactory extends ContextFactory {
+    private final static Logger log = Logger.getLogger(PageidContextFactory.class);
 
     private PageidContextFactory(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
         super(adapter, request, portalInfo);
     }
 
-    public static PageidContextFactory getInstance(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
+    public static ContextFactory getInstance(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
         PageidContextFactory factory = new PageidContextFactory(db, request, portalInfo);
-
-        return factory;
+        if (factory.getDefaultCtx()!=null)
+            return factory;
+        else
+            return null;
     }
 
-    protected Long getCtxId(DatabaseAdapter db, HttpServletRequest request) throws PortalPersistenceException {
+    protected Long initPortalParameters(DatabaseAdapter db, HttpServletRequest request) throws PortalException {
 
         log.debug("Start process as '/pageid', format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...");
         // format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...
 
         try {
             String path = request.getPathInfo();
+            if (log.isDebugEnabled()) {
+                log.debug( "path: " + path + ", content type: " +request.getContentType() );
+            }
             if (path==null || path.equals("/")) {
                 return null;
             }
@@ -85,20 +93,21 @@ public class PageidContextFactory extends ContextFactory {
                 "from   SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b, SITE_SUPPORT_LANGUAGE c " +
                 "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
                 "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       c.ID_SITE=? and c.CUSTOM_LANGUAGE=? and a.ID_SITE_CTX_CATALOG=?",
-                new Object[]{portalInfo.getSiteId(), localeFromUrl, new Long(pageId) }
+                "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and a.ID_SITE_CTX_CATALOG=?",
+                new Object[]{
+                    portalInfo.getSiteId(),
+                    StringTools.getLocale( localeFromUrl ).toString().toLowerCase(), new Long(pageId) }
             );
 
             return ctxId;
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             String es = "Error get ID of context from DB";
             log.error(es, e);
-            throw new PortalPersistenceException(es, e);
+            throw new PortalException(es, e);
         }
     }
 
-    protected void prepareParameters( HttpServletRequest httpRequest )  throws PortalException {
-        //To change body of created methods use File | Settings | File Templates.
+    protected void prepareParameters( HttpServletRequest httpRequest, Map httpRequestParameter ) {
     }
 }

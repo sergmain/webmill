@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.webmill.port;
 
 import java.sql.PreparedStatement;
@@ -35,13 +31,17 @@ import java.util.HashMap;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.sql.cache.SqlStatement;
 
 import org.apache.log4j.Logger;
 
-public class PortalXsltList
-{
-    private static Logger log = Logger.getLogger( PortalXsltList.class );
+/**
+ * $Id$
+ */
+public final class PortalXsltList {
+    private final static Logger log = Logger.getLogger( PortalXsltList.class );
 
     public HashMap hash = new HashMap(4);
 
@@ -49,7 +49,7 @@ public class PortalXsltList
     {
         try
         {
-            org.riverock.sql.cache.SqlStatement.registerRelateClass( new PortalXsltList().getClass(), new PortalXslt().getClass());
+            SqlStatement.registerRelateClass( new PortalXsltList().getClass(), new PortalXslt().getClass());
         }
         catch (Exception exception)
         {
@@ -74,16 +74,23 @@ public class PortalXsltList
     {
     }
 
-    public PortalXslt getXslt(String lang)
-    {
-        if (log.isDebugEnabled()) log.debug("XsltList.size - " + hash.size());
+    public PortalXslt getXslt(String lang) {
+        if (lang==null) {
+            return null;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("XsltList.size - " + hash.size());
+        }
 
         return (PortalXslt) hash.get( lang );
     }
 
     public static PortalXsltList getInstance(DatabaseAdapter db_, Long idSite) throws PortalException {
 
-        if (log.isDebugEnabled()) log.debug("XsltList. serverName  ID - " + idSite);
+        if (log.isDebugEnabled()) {
+            log.debug("XsltList. serverName  ID - " + idSite);
+        }
 
         PortalXsltList list = new PortalXsltList();
 
@@ -106,7 +113,8 @@ public class PortalXsltList
             rset = ps.executeQuery();
             while (rset.next())
             {
-                String lang = RsetTools.getString(rset, "CUSTOM_LANGUAGE");
+                String lang = StringTools.getLocale(
+                    RsetTools.getString(rset, "CUSTOM_LANGUAGE") ).toString();
                 Long id = RsetTools.getLong(rset, "ID_SITE_XSLT");
 
                 if (log.isDebugEnabled())
@@ -122,8 +130,9 @@ public class PortalXsltList
             }
         }
         catch (Throwable e) {
-            log.error("Error create PortalXsltList", e);
-            throw new PortalException(e.toString(), e);
+            final String es = "Error create PortalXsltList";
+            log.error(es, e);
+            throw new PortalException(es, e);
         }
         finally {
             DatabaseManager.close(rset, ps);
@@ -131,7 +140,9 @@ public class PortalXsltList
             ps = null;
         }
 
-        if (log.isDebugEnabled()) log.debug( "XsltList. count of templates - " + tempHash.size() );
+        if (log.isDebugEnabled()) {
+            log.debug( "XsltList. count of templates - " + tempHash.size() );
+        }
 
         if(tempHash.size() == 0)
             return null;

@@ -29,18 +29,23 @@ import java.net.MalformedURLException;
 import java.util.StringTokenizer;
 
 import javax.portlet.PortletContext;
+import javax.portlet.PortletRequestDispatcher;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 
-import org.apache.pluto.core.impl.PortletRequestDispatcherImpl;
+import org.apache.log4j.Logger;
 
-public class PortletContextImpl implements PortletContext {
-    private javax.servlet.ServletContext servletContext;
+public final class PortletContextImpl implements PortletContext {
+    private final static Logger log = Logger.getLogger( PortletContextImpl.class );
+
+    private ServletContext servletContext;
 
     private static final String PORTAL_NAME_INFO = "WebMill";
     private static final String PORTAL_VERSION_INFO = "@@WEBMILL_RELEASE@@";
 
     private static PortalVersion portalVersion = new PortalVersion( PORTAL_VERSION_INFO );
 
-    public PortletContextImpl( javax.servlet.ServletContext servletContext ) {
+    public PortletContextImpl( ServletContext servletContext ) {
         this.servletContext = servletContext;
     }
 
@@ -48,22 +53,22 @@ public class PortletContextImpl implements PortletContext {
         return PORTAL_NAME_INFO + '/' + PORTAL_VERSION_INFO;
     }
 
-    public javax.portlet.PortletRequestDispatcher getRequestDispatcher( String path ) {
-        try {
-            javax.servlet.RequestDispatcher rd = servletContext.getRequestDispatcher( path );
-            return new PortletRequestDispatcherImpl( rd );
-        } catch (Exception e) {
-            return null;
+    public PortletRequestDispatcher getRequestDispatcher( final String path ) {
+        RequestDispatcher rd = servletContext.getRequestDispatcher( path );
+        if ( log.isDebugEnabled() ) {
+            log.debug( "ServletContext: " + servletContext );
+            log.debug( "RequestDispatcher: " + rd ); 
         }
+
+        return new PortletRequestDispatcherImpl( rd );
     }
 
-    public javax.portlet.PortletRequestDispatcher getNamedDispatcher( String name ) {
-        javax.servlet.RequestDispatcher rd = servletContext.getNamedDispatcher( name );
-        return rd != null ? new PortletRequestDispatcherImpl( rd )
-            : null;
+    public PortletRequestDispatcher getNamedDispatcher( final String name ) {
+        RequestDispatcher rd = servletContext.getNamedDispatcher( name );
+        return rd!=null ?new PortletRequestDispatcherImpl( rd ) :null;
     }
 
-    public java.io.InputStream getResourceAsStream( String path ) {
+    public java.io.InputStream getResourceAsStream( final String path ) {
         return servletContext.getResourceAsStream( path );
     }
 
@@ -75,26 +80,26 @@ public class PortletContextImpl implements PortletContext {
         return portalVersion.minor;
     }
 
-    public String getMimeType( String file ) {
+    public String getMimeType( final String file ) {
         return servletContext.getMimeType( file );
     }
 
-    public String getRealPath( String path ) {
+    public String getRealPath( final String path ) {
         return servletContext.getRealPath( path );
     }
 
-    public java.util.Set getResourcePaths( String path ) {
+    public java.util.Set getResourcePaths( final String path ) {
         return servletContext.getResourcePaths( path );
     }
 
-    public java.net.URL getResource( String path ) throws MalformedURLException {
+    public java.net.URL getResource( final String path ) throws MalformedURLException {
         if (path == null || !path.startsWith( "/" )) {
             throw new MalformedURLException( "path must start with a '/'" );
         }
         return servletContext.getResource( path );
     }
 
-    public Object getAttribute( String name ) {
+    public Object getAttribute( final String name ) {
         if (name == null) {
             throw new IllegalArgumentException( "Attribute name == null" );
         }
@@ -106,7 +111,7 @@ public class PortletContextImpl implements PortletContext {
         return servletContext.getAttributeNames();
     }
 
-    public String getInitParameter( String name ) {
+    public String getInitParameter( final String name ) {
         if (name == null) {
             throw new IllegalArgumentException( "Parameter name == null" );
         }
@@ -118,15 +123,15 @@ public class PortletContextImpl implements PortletContext {
         return servletContext.getInitParameterNames();
     }
 
-    public void log( String msg ) {
+    public void log( final String msg ) {
         servletContext.log( msg );
     }
 
-    public void log( String message, Throwable throwable ) {
+    public void log( final String message, final Throwable throwable ) {
         servletContext.log( message, throwable );
     }
 
-    public void removeAttribute( String name ) {
+    public void removeAttribute( final String name ) {
         if (name == null) {
             throw new IllegalArgumentException( "Attribute name == null" );
         }
@@ -134,7 +139,7 @@ public class PortletContextImpl implements PortletContext {
         servletContext.removeAttribute( name );
     }
 
-    public void setAttribute( String name, Object object ) {
+    public void setAttribute( final String name, final Object object ) {
         if (name == null) {
             throw new IllegalArgumentException( "Attribute name == null" );
         }

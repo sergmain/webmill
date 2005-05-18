@@ -1,12 +1,12 @@
 /*
  * org.riverock.webmill -- Portal framework implementation
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
@@ -22,19 +22,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.portal.url;
 
 /**
- *
- * $Author$
- *
- * $Id$
- *
+ * @author Serge Maslyukov
+ *         Date: 17.04.2005
+ *         Time: 20:33:20
+ *         $Id$
  */
-package org.riverock.webmill.portlet;
-
-import java.util.List;
-
-public interface PortletGetList
-{
-    public List getList(Long idSiteCtxLangCatalog, Long idContext);
+public interface PortalUrlProvider {
+    public String getUrl(String portlet);
+    public StringBuffer getUrlStrigBuffer(String portletName);
 }

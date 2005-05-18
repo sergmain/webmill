@@ -24,8 +24,6 @@
  */
 package org.riverock.webmill.portlet;
 
-import org.riverock.webmill.schema.site.SitePortletDataType;
-import org.riverock.webmill.schema.site.TemplateItemType;
 import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
 
 import org.apache.log4j.Logger;
@@ -39,16 +37,19 @@ import org.apache.log4j.Logger;
 public final class TemplateItemAsCustom extends TemplateItemBaseClass {
     private final static Logger log = Logger.getLogger(TemplateItemAsCustom.class);
 
-    SitePortletDataType getData( TemplateItemType item, PortalRequestInstance portalRequestInstance )
-      throws Exception {
+    void getData( PageElement pageElement ) {
         if ( log.isDebugEnabled() )
-            log.debug( "Template item  type - "+item.getType()+"  value "+item.getValue() );
+            log.debug( "Template item  type - "+pageElement.getTemplateItemType().getType()+"  value "+pageElement.getTemplateItemType().getValue() );
 
-        return PortalRequestProcessor.setData(
-            new StringBuffer("<").append( item.getValue() ).append( "/>" ).toString().getBytes(),
-            false, true
+        pageElement.setData(
+            PortalRequestProcessor.setData(
+                new StringBuffer("<").append( pageElement.getTemplateItemType().getValue() ).append( "/>" ).toString().getBytes(),
+                false, true
+            )
         );
-//        return PortalRequestProcessor.setData( ("<"+item.getValue()+"/>").getBytes(), false, true);
+    }
+
+    void processAction( PageElement item ) {
     }
 
     TemplateItemTypeTypeType getType() {

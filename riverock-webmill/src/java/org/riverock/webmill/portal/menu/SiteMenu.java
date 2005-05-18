@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
@@ -34,30 +30,35 @@ import java.util.Map;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.port.PortalInfo;
 import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 
 import org.apache.log4j.Logger;
 
 /**
+ * $Id$
+ *
+ *
  * return menu for all supported languages for this site
  */
-public class SiteMenu
-{
-    private static Logger log = Logger.getLogger( SiteMenu.class );
+public final class SiteMenu {
+    private final static Logger log = Logger.getLogger( SiteMenu.class );
 
-    static
-    {
-        try
-        {
-            SqlStatement.registerRelateClass( new SiteMenu().getClass(), new MenuLanguage().getClass());
+    static {
+        try {
+            Class c = new SiteMenu().getClass();
+            SqlStatement.registerRelateClass( c, new MenuLanguage().getClass() );
+            SqlStatement.registerRelateClass( c, new GetSiteSupportLanguageWithIdSiteList().getClass() );
         }
-        catch (Exception exception)
-        {
-            log.error("Exception in ", exception);
+        catch( Exception exception ) {
+            final String es = "Exception in ";
+            log.error( es, exception );
+            throw new SqlStatementRegisterException( es, exception );
         }
     }
 
@@ -72,7 +73,7 @@ public class SiteMenu
         return menuLanguage.size();
     }
 
-    public MenuLanguageInterface getMenuLanguage(int index)
+    public MenuLanguageInterface getMenuLanguage( final int index )
             throws java.lang.IndexOutOfBoundsException
     {
         if ((index < 0) || (index > menuLanguage.size())) {
@@ -98,8 +99,7 @@ public class SiteMenu
 
     public SiteMenu(){}
 
-    public static SiteMenu getInstance(DatabaseAdapter db_, Long idSite_) throws PortalException
-    {
+    public static SiteMenu getInstance( final DatabaseAdapter db_, final Long idSite_) throws PortalException {
         SiteMenu tempLangMenu = (SiteMenu)siteMenuLaguage.get( idSite_ );
 
         if (tempLangMenu!=null)
@@ -108,32 +108,12 @@ public class SiteMenu
         synchronized(siteMenuLaguage)
         {
             SiteMenu temp = new SiteMenu(db_, idSite_);
-//            if (temp==null)
-//                return null;
-
             siteMenuLaguage.put( idSite_,  temp);
             return temp;
-
-//            SiteMenu tempLangMenu = (SiteMenu)siteMenuLaguage.get( new Long(idSite_));
-//            if (tempLangMenu == null)
-//            {
-//                SiteMenu tempCatalog = new SiteMenu(db_, idSite_);
-//                siteMenuLaguage.put(new Long(idSite_),  tempCatalog);
-//
-//                return tempCatalog;
-//            }
-//            else
-//            {
-//                if (log.isDebugEnabled())
-//                    log.debug("Get from cache");
-//
-//                return tempLangMenu;
-//            }
         }
     }
 
-    public MenuLanguageInterface getMenuLanguage(String localeName)
-    {
+    public MenuLanguageInterface getMenuLanguage( final String localeName) {
         for (int i = 0; i < getMenuLanguageCount(); i++)
         {
             MenuLanguageInterface tempCat = getMenuLanguage(i);
@@ -149,13 +129,17 @@ public class SiteMenu
         return new MenuLanguage();
     }
 
-    private SiteMenu(DatabaseAdapter db_, Long idSite) throws PortalException{
-        if (log.isDebugEnabled())log.debug("#33.60.00 ");
+    private SiteMenu( final DatabaseAdapter db_, final Long idSite) throws PortalException {
+        if (log.isDebugEnabled()) {
+            log.debug("#33.60.00 ");
+        }
 
         try {
-            SiteSupportLanguageListType list = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, idSite).item;
+            SiteSupportLanguageListType list = PortalInfo.processSupportLanguage( db_, idSite );
 
-            if (log.isDebugEnabled()) log.debug("Count of language for this site is "+list.getSiteSupportLanguageCount());
+            if (log.isDebugEnabled()) {
+                log.debug("Count of language for this site is "+list.getSiteSupportLanguageCount());
+            }
 
             for (int i=0; i<list.getSiteSupportLanguageCount(); i++) {
                 SiteSupportLanguageItemType item = list.getSiteSupportLanguage(i);
@@ -169,9 +153,7 @@ public class SiteMenu
         }
     }
 
-    public static SiteMenu getInstance(DatabaseAdapter db_, long id_)
-        throws Exception
-    {
+    public static SiteMenu getInstance( final DatabaseAdapter db_, final long id_) throws Exception {
         return getInstance(db_, new Long(id_) );
     }
 
@@ -186,7 +168,7 @@ public class SiteMenu
         }
     }
 
-    public void terminate(java.lang.Long id_)
+    public void terminate( final Long id_ )
     {
         if (siteMenuLaguage!=null)
         {

@@ -27,9 +27,11 @@ package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetSiteCtxLangCatalogWithIdSiteSupportLanguageList;
 import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
 import org.riverock.webmill.schema.core.SiteCtxLangCatalogListType;
@@ -43,23 +45,23 @@ import org.apache.log4j.Logger;
 /**
  * $Id$
  */
-public class MenuLanguage implements MenuLanguageInterface {
-    private static Logger log = Logger.getLogger( MenuLanguage.class );
+public final class MenuLanguage implements MenuLanguageInterface {
+    private final static Logger log = Logger.getLogger( MenuLanguage.class );
 
     static{
-        MenuInterface objMain = new Menu();
-        MenuLanguageInterface objTarget = new MenuLanguage();
+        Class c = new MenuLanguage().getClass();
         try{
-            SqlStatement.registerRelateClass( objTarget.getClass(), objMain.getClass() );
+            SqlStatement.registerRelateClass( c, new Menu().getClass() );
+            SqlStatement.registerRelateClass( c, new GetSiteCtxLangCatalogWithIdSiteSupportLanguageList().getClass() );
         }
-        catch(Exception exc){
-            log.error("Exception in SqlStatement.registerRelateClass()", exc);
+        catch( Exception exception ) {
+            final String es = "Exception in SqlStatement.registerRelateClass()";
+            log.error( es, exception );
+            throw new SqlStatementRegisterException( es, exception );
         }
-        objMain = null;
-        objTarget = null;
     }
 
-    private List menu = new ArrayList();  // vector of Menu
+    private List menu = new ArrayList();  // List of Menu
     private SiteSupportLanguageItemType item = null;
 
     public MenuLanguage(){}
@@ -85,8 +87,8 @@ public class MenuLanguage implements MenuLanguageInterface {
     // return name of template for 'index' page
     public MenuItemInterface getIndexMenuItem(){
         if (log.isDebugEnabled()){
-            log.debug("menu - "+menu);
-            log.debug( "getMenuCounte() - "+getMenuCount() );
+            log.debug("menu: "+menu);
+            log.debug( "getMenuCount(): "+getMenuCount() );
         }
 
         for (int i = 0; i < menu.size(); i++){

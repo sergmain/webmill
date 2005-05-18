@@ -37,6 +37,8 @@ import org.riverock.webmill.main.Constants;
 import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
 import org.riverock.webmill.schema.core.SiteCtxCatalogListType;
 import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,9 +47,20 @@ import java.util.*;
 /**
  * $Id$
  */
-public class Menu implements MenuInterface
-{
-    private static Logger log = Logger.getLogger( Menu.class );
+public final class Menu implements MenuInterface {
+    private final static Logger log = Logger.getLogger( Menu.class );
+
+    static{
+        Class c = new Menu().getClass();
+        try{
+            SqlStatement.registerRelateClass( c, new GetSiteCtxCatalogWithIdSiteCtxLangCatalogList().getClass() );
+        }
+        catch( Exception exception ) {
+            final String es = "Exception in SqlStatement.registerRelateClass()";
+            log.error( es, exception );
+            throw new SqlStatementRegisterException( es, exception );
+        }
+    }
 
     private List menuItem = new LinkedList();           // contains tree of menu
     private boolean isDefault = false;
@@ -119,19 +132,27 @@ public class Menu implements MenuInterface
      * @return return name of template for 'index' page
      */
     private MenuItemInterface getIndexTemplate(List v){
+        if (log.isDebugEnabled()) {
+            log.debug("list for search index: " + v);
+        }
         if (v == null)
             return null;
 
-        ListIterator it = v.listIterator();
+        Iterator it = v.iterator();
         while (it.hasNext()) {
             MenuItemInterface ctxItem = (MenuItemInterface)it.next();
 
-            if (Constants.CTX_TYPE_INDEX.equals(ctxItem.getType()))
+            if (log.isDebugEnabled()) {
+                log.debug("Menu item type: " + ctxItem.getType());
+            }
+            if (Constants.CTX_TYPE_INDEX.equals(ctxItem.getType())) {
                 return ctxItem;
+            }
 
             ctxItem = getIndexTemplate(ctxItem.getCatalogItems());
-            if (ctxItem != null)
+            if (ctxItem != null) {
                 return ctxItem;
+            }
         }
         return null;
     }
@@ -159,7 +180,7 @@ public class Menu implements MenuInterface
         return false;
     }
 
-    public Menu(DatabaseAdapter db_, SiteCtxLangCatalogItemType item_) throws Exception{
+    public Menu(DatabaseAdapter db_, SiteCtxLangCatalogItemType item_) throws Exception {
 
         if (item_==null){
             throw new PortalException("Item of menu is null");
@@ -188,13 +209,10 @@ public class Menu implements MenuInterface
                     menuItem.add(new MenuItem(db_, item));
             }
         }
-        catch(Exception e) {
-            log.error("Exception in Menu(....", e);
-            throw e;
-        }
-        catch(Error e) {
-            log.error("Error in Menu(....", e);
-            throw e;
+        catch(Throwable e) {
+            final String es = "Exception in Menu(....";
+            log.error(es, e);
+            throw new PortalException( es, e );
         }
         finally {
             DatabaseManager.close(rs, ps);

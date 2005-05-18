@@ -33,18 +33,24 @@ import javax.portlet.PortletContext;
 
 import org.riverock.interfaces.schema.javax.portlet.PortletType;
 import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.PortletResourceBundleProvider;
+import org.riverock.webmill.portlet.PortletResourceBundle;
 
-public class PortletConfigImpl implements PortletConfig {
+/**
+ * User: SergeMaslyukov
+ * Date: 08.12.2004
+ * Time: 0:22:19
+ * $Id$
+ */
+public final class PortletConfigImpl implements PortletConfig {
     
     private PortletContext portletContext;
     private PortletType portletDefinition;
-    private PortletResourceBundleProvider.PortletResourceBundle resourceBundle = null;
+    private PortletResourceBundle resourceBundle = null;
 
     public PortletConfigImpl(
         PortletContext portletContext,
         PortletType portletDefinition,
-        PortletResourceBundleProvider.PortletResourceBundle resourceBundle
+        PortletResourceBundle resourceBundle
         )
     {
         this.portletContext = portletContext;

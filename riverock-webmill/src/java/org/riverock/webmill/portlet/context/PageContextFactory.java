@@ -25,37 +25,41 @@
 
 package org.riverock.webmill.portlet.context;
 
-import org.apache.log4j.Logger;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.port.PortalInfo;
 import org.riverock.webmill.portlet.ContextFactory;
+import org.riverock.common.tools.StringTools;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
+import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-public class PageContextFactory extends ContextFactory {
-
-    private static Logger log = Logger.getLogger(PageContextFactory.class);
+public final class PageContextFactory extends ContextFactory {
+    private final static Logger log = Logger.getLogger(PageContextFactory.class);
 
     private PageContextFactory(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
         super(adapter, request, portalInfo);
     }
 
-    public static PageContextFactory getInstance(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo)
+    public static ContextFactory getInstance(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo)
         throws PortalException, PortalPersistenceException {
 
         PageContextFactory factory = new PageContextFactory(db, request, portalInfo);
-
-        return factory;
+        if (factory.getDefaultCtx()!=null)
+            return factory;
+        else
+            return null;
     }
 
-    protected Long getCtxId(DatabaseAdapter db, HttpServletRequest request) throws PortalPersistenceException {
+    protected Long initPortalParameters(DatabaseAdapter db, HttpServletRequest request) throws PortalException {
 
         log.debug(
             "Start process as 'page', format request: " +
@@ -71,16 +75,11 @@ public class PageContextFactory extends ContextFactory {
             String localeFromUrl = null;
             String pageName = null;
             if (idxSlash==-1) {
-                localeFromUrl = path.substring(1);
-                pageName = getRealLocale().toString();
+                return null;
             }
             else {
                 localeFromUrl = path.substring(1, idxSlash);
-                int idxLocale = path.indexOf('/', idxSlash+1);
-                if (idxLocale==-1)
-                    pageName = path.substring(idxSlash+1);
-                else
-                    pageName = path.substring(idxSlash+1, idxLocale);
+                pageName = path.substring( idxSlash+1 );
             }
 
             Long ctxId = DatabaseManager.getLongValue(
@@ -89,21 +88,30 @@ public class PageContextFactory extends ContextFactory {
                     "from   SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b, SITE_SUPPORT_LANGUAGE c " +
                     "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
                     "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                    "       c.ID_SITE=? and c.CUSTOM_LANGUAGE=? and " +
+                    "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +
                     "       a.CTX_PAGE_URL=?",
-                    new Object[]{portalInfo.getSiteId(), localeFromUrl, pageName}
+                    new Object[]{
+                        portalInfo.getSiteId(),
+                        StringTools.getLocale( localeFromUrl ).toString().toLowerCase(),
+                        pageName}
             );
 
+            if (log.isDebugEnabled())  {
+                log.debug("siteId: " + portalInfo.getSiteId() );
+                log.debug("locale: " + StringTools.getLocale( localeFromUrl ).toString().toLowerCase());
+                log.debug("pageName: " + pageName);
+                log.debug("ctxId: " + ctxId);
+            }
             return ctxId;
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             String es = "Error get ID of context from DB";
             log.error(es, e);
-            throw new PortalPersistenceException(es, e);
+            throw new PortalException(es, e);
         }
     }
 
-    protected void prepareParameters( HttpServletRequest httpRequest )  throws PortalException {
-        //To change body of created methods use File | Settings | File Templates.
+    protected void prepareParameters( HttpServletRequest httpRequest, Map httpRequestParameter ) {
+
     }
 }

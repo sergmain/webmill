@@ -24,12 +24,7 @@
  */
 package org.riverock.webmill.portlet;
 
-import java.io.StringWriter;
-
-import org.riverock.webmill.schema.site.SitePortletDataType;
-import org.riverock.webmill.schema.site.TemplateItemType;
 import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
-import org.riverock.webmill.utils.ServletUtils;
 
 import org.apache.log4j.Logger;
 
@@ -40,38 +35,26 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class TemplateItemAsFile extends TemplateItemBaseClass {
-    private static Logger log = Logger.getLogger(TemplateItemAsFile.class);
+    private final static Logger log = Logger.getLogger(TemplateItemAsFile.class);
 
-    SitePortletDataType getData( TemplateItemType item, PortalRequestInstance portalRequestInstance )
-        throws Exception {
+    void getData( PageElement pageElement ) {
 
         if ( log.isDebugEnabled() )
-            log.debug( "include file - "+item.getValue());
+            log.debug( "include file - "+pageElement.getTemplateItemType().getValue());
 
-        // check of existing file not work with files from others context
+        throw new IllegalArgumentException( "not implemented" );
 /*
-        String nameFile = PropertiesProvider.getApplicationPath()+item.getValue();
-        if ( nameFile.indexOf( '?' )!=-1 )
-            nameFile = nameFile.substring( 0, nameFile.indexOf( '?' ) );
-
-        File testFile = new File( nameFile );
-        if ( !testFile.exists() ) {
-            testFile = null;
-
-            String errorString = "Portlet "+portalRequestInstance.getDefaultPortletType()+" refered to file "+testFile+" is broken";
-            log.error( errorString );
-            portalRequestInstance.byteArrayOutputStream.write( errorString.getBytes() );
-            return PortalRequestProcessor.setData( errorString.getBytes(), true, false);
-        }
-        testFile = null;
-*/
         StringWriter writer = new StringWriter();
         ServletUtils.include(
             portalRequestInstance.getHttpRequest(), portalRequestInstance.getHttpResponse(),
             null,
-            item.getValue(), writer
+            pageElement.getValue(), writer
         );
         return PortalRequestProcessor.setData( writer.toString().getBytes(), false, false);
+*/
+    }
+
+    void processAction( PageElement item ) {
     }
 
     TemplateItemTypeTypeType getType() {
