@@ -33,41 +33,35 @@
 
 package org.riverock.webmill.as;
 
-import java.io.File;
-import java.io.StringReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
-import java.util.List;
-import java.util.ArrayList;
 
-import org.riverock.webmill.schema.appl_server.ResourceRequestType;
-import org.riverock.webmill.schema.appl_server.ResourceResponseType;
+import org.riverock.common.tools.Base64;
+import org.riverock.generic.tools.XmlTools;
+import org.riverock.webmill.as.server.ApplicationServerConstants;
+import org.riverock.webmill.as.service.SimpleApplicationServerProvider;
 import org.riverock.webmill.schema.appl_server.ResourceCompressionType;
 import org.riverock.webmill.schema.appl_server.ResourceRequestParameterType;
+import org.riverock.webmill.schema.appl_server.ResourceRequestType;
+import org.riverock.webmill.schema.appl_server.ResourceResponseType;
 import org.riverock.webmill.schema.appl_server.StringResultType;
 import org.riverock.webmill.schema.appl_server.types.ResourceCompressionTypeTypeCompressionType;
 import org.riverock.webmill.schema.appl_server.types.ResourceResponseTypeErrorTypeType;
-import org.riverock.webmill.as.service.SimpleApplicationServerProvider;
-import org.riverock.webmill.as.server.ApplicationServerConstants;
-import org.riverock.common.tools.StringTools;
-import org.riverock.common.tools.Base64;
-import org.riverock.generic.tools.XmlTools;
 
-import junit.framework.TestCase;
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.HttpUnitOptions;
+import com.meterware.httpunit.PostMethodWebRequest;
+import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
-import com.meterware.httpunit.HttpUnitOptions;
-import com.meterware.httpunit.GetMethodWebRequest;
-import com.meterware.httpunit.PostMethodWebRequest;
-import com.meterware.httpunit.WebForm;
-import com.meterware.httpunit.UploadFileSpec;
-import com.meterware.httpunit.WebConversation;
-import org.xml.sax.InputSource;
+import junit.framework.TestCase;
 import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
 
 
 public class TestApplicationServer extends TestCase
@@ -264,7 +258,7 @@ public class TestApplicationServer extends TestCase
         WebRequest req = null;
         WebResponse resp = null;
         HttpUnitOptions.setExceptionsThrownOnScriptError(false);
-        boolean isResponseOutputted = false;
+//        boolean isResponseOutputted = false;
 
         String serverURL = "http://me.askmore";
         String context = "/mill";
