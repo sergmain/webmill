@@ -24,28 +24,39 @@
  */
 
 /**
- * User: serg_main
- * Date: 10.01.2004
- * Time: 15:03:11
- * @author Serge Maslyukov
+ * User: Admin
+ * Date: Jan 25, 2003
+ * Time: 9:57:52 PM
+ *
  * $Id$
  */
+package org.riverock.webmill.test;
 
-package org.riverock.webmill.dust;
-
-import org.riverock.common.tools.StringTools;
-
-import org.apache.commons.httpclient.util.URIUtil;
-
-
-public class EcodeString
+public class LittleTest
 {
 
-    public static void main(String args[])
+    public byte LitleTest()
     {
-        String s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ResourseRequest>	<CodeResource>webmill.as.simple</CodeResource></ResourseRequest>";
+//        byte b; b = (b + 5);
+//        float f = 3.1;
 
-        System.out.println("s = " + StringTools.rewriteURL( s ) );
+        double d = 1.0 + 0.2 - 1.0;
+        return 0;
     }
 
+    public static void main(String s[])
+        throws Exception
+    {
+        Class c = Void.class;
+
+        float f = 30;
+        Integer i = new Integer((int)(30 * ((f+100)/100)) );
+
+        System.out.println("i - "+i.intValue());
+
+        System.out.println("Class name - "+c.getName());
+
+        System.out.println("Test (1.0 + 0.2 - 1.0) - "+(1.0 + 0.2 - 1.0) );
+//        byte b = '\l';
+    }
 }
