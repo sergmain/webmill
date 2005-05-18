@@ -187,7 +187,7 @@
 			<xs:element name="NumberData" type="xs:decimal" minOccurs="0"/>
 			<xs:element name="IsNull" type="xs:boolean"/>
 		</xs:sequence>
-		<xs:attribute name="size" type="xs:int" use="required"/>
+		<xs:attribute name="size" type="xs:int" use="optional"/>
 		<xs:attribute name="decimalDigit" type="xs:int"/>
 	</xs:complexType>
 </xs:schema>

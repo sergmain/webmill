@@ -22,13 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
- *
- * $Id$
- */
-
 package org.riverock.generic.db.factory;
 
 import org.riverock.common.tools.RsetTools;
@@ -53,6 +46,12 @@ import java.io.InputStream;
 import java.sql.*;
 import java.util.*;
 
+
+/**
+ * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
+ *
+ * $Id$
+ */
 public class ORAconnect extends DatabaseAdapter
 {
     private final static Logger log = Logger.getLogger( ORAconnect.class );
@@ -132,7 +131,7 @@ public class ORAconnect extends DatabaseAdapter
                 case Types.DOUBLE:
                 case Types.NUMERIC:
                 case Types.INTEGER:
-                    if (field.getDecimalDigit().intValue()==0)
+                    if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
                         sql += " NUMBER";
                     else
                         sql += " NUMBER("+field.getSize()+","+field.getDecimalDigit()+")";
@@ -345,7 +344,7 @@ DEFERRABLE INITIALLY DEFERRED
             case Types.DOUBLE:
             case Types.NUMERIC:
             case Types.INTEGER:
-                if (field.getDecimalDigit().intValue()==0)
+                if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
                     sql += " NUMBER";
                 else
                     sql += " NUMBER("+field.getSize()+","+field.getDecimalDigit()+")";
@@ -841,19 +840,32 @@ DEFERRABLE INITIALLY DEFERRED
         return id_;
     }
 
+    /**
+     * @deprecated use getFirstLongValue() instead
+     * @param t
+     * @param f
+     * @param w
+     * @param o
+     * @return
+     * @throws SQLException
+     */
     public long getFirstValue(String t, String f, String w, String o) throws SQLException {
+        Long value = getFirstLongValue(t,f,w,o);
+        if (value==null) {
+            return -1;
+        }
+        return value.longValue();
+    }
 
-        long id_ = -1;
+    public Long getFirstLongValue(String t, String f, String w, String o) throws SQLException {
 
-        String v_s = "select " + f + " from " + t;
-
-        if (o != null)
-        {
+        Long id_ = null;
+        String v_s = "select " + f + " ID from " + t;
+        if (o != null) {
             v_s += (w == null)? "": " " + w;
             v_s += (" order by " + o);
         }
-        else
-        {
+        else {
             v_s += (w == null)?
                     "":
                     " " + w + " and rownum<2 ";
@@ -861,17 +873,14 @@ DEFERRABLE INITIALLY DEFERRED
 
         PreparedStatement prepStatement = null;
         ResultSet rset = null;
-        try
-        {
+        try {
             prepStatement = this.conn.prepareStatement(v_s);
-
             rset = prepStatement.executeQuery();
-
-            if (rset.next())
-                id_ = rset.getLong(1);
+            if (rset.next()) {
+                id_ = RsetTools.getLong(rset, "ID");
+            }
         }
-        finally
-        {
+        finally {
             DatabaseManager.close( rset, prepStatement );
             rset = null;
             prepStatement = null;
@@ -970,8 +979,7 @@ DEFERRABLE INITIALLY DEFERRED
      * @param dc_ DatabaseConnectionType
      * @throws DatabaseException
      */
-    protected void init(DatabaseConnectionType dc_)
-        throws DatabaseException
+    protected void init(DatabaseConnectionType dc_) throws DatabaseException
     {
         dc = dc_;
 
@@ -1080,8 +1088,9 @@ DataSource config for OC4J
 
             conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
         } catch (Exception e) {
-            log.error("Expeption create new Connection", e);
-            throw new DatabaseException(e.toString());
+            final String es = "Expeption create new Connection";
+            log.error(es, e);
+            throw new DatabaseException( es, e );
         }
     }
 

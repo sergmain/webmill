@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 public final class GenericConfig {
     private final static Logger log = Logger.getLogger( GenericConfig.class );
 
-    private static String contextName = "";
+//    private static String contextName = "";
     //
     private static ConfigObject configObject = null;
     private static Hashtable dbConfig = null;
@@ -79,22 +79,24 @@ public final class GenericConfig {
                 Constants.JNDI_GENERIC_CONFIG_FILE , configPrefix+"-generic.xml", GenericConfigType.class
             );
 
-            if (log.isDebugEnabled()) log.debug("#15.006");
+            if (log.isDebugEnabled()) {
+                log.debug("#15.006");
+            }
 
-            if (dbConfig != null)
-            {
+            if (dbConfig != null) {
                 dbConfig.clear();
                 dbConfig = null;
             }
 
             dbConfig = new Hashtable( getConfig().getDatabaseConnectionCount() );
-            for (int i = 0; i < getConfig().getDatabaseConnectionCount(); i++)
-            {
+            for (int i = 0; i < getConfig().getDatabaseConnectionCount(); i++) {
                 DatabaseConnectionType dbc =  getConfig().getDatabaseConnection(i);
                 dbConfig.put( dbc.getName(), dbc);
             }
 
-            log.warn("Name default DB connect " + getConfig().getDefaultConnectionName());
+            if (log.isInfoEnabled()) {
+                log.info("Name default DB connect " + getConfig().getDefaultConnectionName());
+            }
 
             isConfigProcessed = true;
         }
@@ -350,14 +352,14 @@ public final class GenericConfig {
         return dirs.getCustomDataDefinitionDir();
     }
 
-    public static String getContextName() {
-        return contextName;
-    }
-
-    public static void setContextName( String contextName_ ) {
-        if (log.isInfoEnabled()) {
-            log.info( "Set new application context to " + contextName_);
-        }
-        contextName = contextName_;
-    }
+//    public static String getContextName() {
+//        return contextName;
+//    }
+//
+//    public static void setContextName( String contextName_ ) {
+//        if (log.isInfoEnabled()) {
+//            log.info( "Set new application context to " + contextName_);
+//        }
+//        contextName = contextName_;
+//    }
 }

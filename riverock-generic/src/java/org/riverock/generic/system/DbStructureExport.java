@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Nov 28, 2002
- * Time: 3:10:19 PM
- *
- * $Id$
- */
 package org.riverock.generic.system;
 
 import java.io.File;
@@ -49,14 +41,20 @@ import org.riverock.generic.startup.StartupApplication;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
+
+/**
+ * Author: mill
+ * Date: Nov 28, 2002
+ * Time: 3:10:19 PM
+ *
+ * $Id$
+ */
 /**
  * Export data from DB to XML file
  */
-public class DbStructureExport
-{
+public class DbStructureExport {
 
     private static final boolean IS_EXTRACT_DATA = true;
-//    private static Logger cat = Logger.getLogger("org.riverock.system.DbStructure");
 
     public static void main(String args[])
         throws Exception
@@ -71,9 +69,10 @@ public class DbStructureExport
     {
 
 
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
+//        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "HSQLDB");
+//        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE_TEST");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
-//        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "MYSQL");
+        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "MYSQL_CONTEST");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE-DART");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "IBM-DB2");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
@@ -86,9 +85,11 @@ public class DbStructureExport
         {
             DbTableType table = schema.getTables(i);
             if (
-                table.getName().startsWith("A_") ||
-                table.getName().startsWith("BIN$") ||
-                table.getName().startsWith("HAM_")
+                table.getName().toUpperCase().startsWith("A_") ||
+                table.getName().toUpperCase().startsWith("BIN$") ||
+                table.getName().toUpperCase().startsWith("CIH_") ||
+                table.getName().toUpperCase().startsWith("TB_") ||
+                table.getName().toUpperCase().startsWith("HAM_")
             )
             {
                 schema.getTablesAsReference().remove(i);

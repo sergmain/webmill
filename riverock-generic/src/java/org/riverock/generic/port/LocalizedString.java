@@ -28,20 +28,23 @@ package org.riverock.generic.port;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
+import java.io.IOException;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.tools.StringManager;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.interfaces.generic.LocalizedStringInterface;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  *  $Id$
  *
  */
+public class LocalizedString implements LocalizedStringInterface {
+    private final static Logger log = Logger.getLogger( LocalizedString.class );
 
-public class LocalizedString implements LocalizedStringInterface
-{
     private boolean isProp = false;	// is use Properties
     private String value = null;
     private String storage = null;
@@ -70,11 +73,20 @@ public class LocalizedString implements LocalizedStringInterface
         }
     }
 
-    public String getString(Locale loc) throws java.io.UnsupportedEncodingException {
+    public String getString(Locale loc) throws IOException {
         if (isProp){
             StringManager strMan = StringManager.getManager(storage, loc);
 
-            return strMan.getStr(value);
+            try {
+                return strMan.getStr(value);
+            }
+            catch( GenericException e ) {
+                String es = "Error get localized string";
+                log.error( es, e );
+                IOException ioException = new IOException( es );
+                ioException.initCause( e );
+                throw ioException;
+            }
         }
         else{
             return value;

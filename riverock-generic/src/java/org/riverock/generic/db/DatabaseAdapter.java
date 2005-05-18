@@ -25,33 +25,48 @@
 
 package org.riverock.generic.db;
 
+import java.io.FileNotFoundException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+import java.util.Map;
+import java.util.HashMap;
+
+import javax.sql.DataSource;
+
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.MainTools;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.db.definition.DefinitionService;
+import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.schema.config.types.DataSourceTypeType;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
-import org.riverock.generic.db.definition.DefinitionService;
-import org.riverock.generic.exception.DatabaseException;
-import org.riverock.sql.parser.Parser;
-import org.riverock.common.tools.MainTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.config.ConfigException;
 import org.riverock.schema.sql.SqlNameType;
-
-import java.sql.*;
-import java.util.*;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.io.FileNotFoundException;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.parser.Parser;
 
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
-
 /**
- * Класс содержащий описания методов для работы с базой данных.
  *
  * $Revision$ $Date$
  */
@@ -62,7 +77,7 @@ public abstract class DatabaseAdapter {
     public abstract int getVersion();
     public abstract int getSubVersion();
 
-    protected static Hashtable connectHashtable = new Hashtable();
+    protected static Map connectionMap = new HashMap();
 
     protected static Boolean initFlag = new Boolean(false);
 
@@ -71,46 +86,55 @@ public abstract class DatabaseAdapter {
 
     public Connection conn = null;
 
-    public Connection getConnection()
-    {
+    public Connection getConnection() {
         return conn;
     }
 
-    protected Hashtable tables = new Hashtable();
+    protected Map tables = new HashMap();
     public DatabaseAdapter(){}
 
-    public PreparedStatement prepareStatement( final String sql_) throws SQLException{
+    public PreparedStatement prepareStatement( final String sql_) throws SQLException, DatabaseException{
 
-        if (Boolean.TRUE.equals(dc.getIsSupportCache())){
-            try {
-                Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql_);
-                if (!isDynamicConnect && parser.typeStatement!=Parser.SELECT)
-                    throw new Exception("INSERT/UPDATE/DELETE statement can not be processed with static DatabaseAdapter. You must use DatabaseAdapter.getInstance(true)");
+        try {
+            if ( Boolean.TRUE.equals( dc.getIsSupportCache() ) ) {
+                Parser parser = org.riverock.sql.cache.SqlStatement.parseSql( sql_ );
+                if ( !isDynamicConnect && parser.typeStatement != Parser.SELECT )
+                    throw new Exception( "INSERT/UPDATE/DELETE statement can not be processed with static DatabaseAdapter. You must use DatabaseAdapter.getInstance(true)" );
 
-                if (log.isDebugEnabled())
-                    log.debug("parser.typeStatement!=Parser.SELECT - "+(parser.typeStatement!=Parser.SELECT));
+                if ( log.isDebugEnabled() )
+                    log.debug( "parser.typeStatement!=Parser.SELECT - " + ( parser.typeStatement != Parser.SELECT ) );
 
-                if (parser.typeStatement!=Parser.SELECT){
-                    for (int i=0; i<parser.depend.getTarget().getItemCount();i++){
-                        String name = parser.depend.getTarget().getItem(i).getOriginName();
+                if ( parser.typeStatement != Parser.SELECT ) {
+                    for( int i = 0; i<parser.depend.getTarget().getItemCount(); i++ ) {
+                        String name = parser.depend.getTarget().getItem( i ).getOriginName();
 
-                        if (log.isDebugEnabled())
-                            log.debug("Name lookung table - "+name);
+                        if ( log.isDebugEnabled() )
+                            log.debug( "Name lookung table - " + name );
 
                         String nameTable = (String)tables.get( name );
-                        if (log.isDebugEnabled())
-                            log.debug("searching table "+name+" in hash - "+nameTable);
+                        if ( log.isDebugEnabled() )
+                            log.debug( "searching table " + name + " in hash - " + nameTable );
 
-                        if (nameTable==null)
-                            tables.put(name, name);
+                        if ( nameTable == null )
+                            tables.put( name, name );
                     }
                 }
             }
-            catch(Exception e){
-                log.error("Error parse SQL "+sql_, e);
-            }
         }
-        return conn.prepareStatement(sql_);
+        catch(Exception e){
+            final String es = "Error prepareStatement, SQL: "+sql_;
+            log.error(es, e);
+            throw new DatabaseException( es, e );
+        }
+
+        try {
+            return conn.prepareStatement( sql_ );
+        }
+        catch(SQLException e){
+            final String es = "Error prepareStatement, SQL: "+sql_;
+            log.error(es, e);
+            throw e;
+        }
     }
 
     public Statement createStatement() throws SQLException {
@@ -118,77 +142,83 @@ public abstract class DatabaseAdapter {
     }
 
     private static Object syncCommit = new Object();
-    public void commit()
-        throws SQLException
-    {
-        conn.commit();
+    public void commit() throws SQLException, DatabaseException {
+        try {
+            conn.commit();
+        }
+        catch( SQLException ex ) {
+            final String es = "Error reinit cache";
+            log.error( es, ex );
+            throw ex;
+        }
 
-        if (Boolean.TRUE.equals(dc.getIsSupportCache())){
+        try {
+            if ( Boolean.TRUE.equals( dc.getIsSupportCache() ) ) {
 
-            if (log.isDebugEnabled()) log.debug("Start sync cache. DB action - COMMIT");
+                if ( log.isDebugEnabled() ) log.debug( "Start sync cache. DB action - COMMIT" );
 
-            synchronized(syncCommit){
-                try{
-                    if (log.isDebugEnabled())log.debug("Count of changed tables - "+tables.size());
+                synchronized (syncCommit) {
+                    if ( log.isDebugEnabled() ) log.debug( "Count of changed tables - " + tables.size() );
 
-                    for (Enumeration e = tables.keys() ; e.hasMoreElements() ;){
-                        String tableName = (String)e.nextElement();
+                    Iterator iterator = tables.keySet().iterator();
+                    while ( iterator.hasNext() ) {
+                        String tableName = (String)iterator.next();
 
-                        if (log.isDebugEnabled()){
-                            log.debug("process cache for table "+tableName);
-                            log.debug("count of class in hash "+org.riverock.sql.cache.SqlStatement.classHash.size());
+                        if ( log.isDebugEnabled() ) {
+                            log.debug( "process cache for table " + tableName );
+                            log.debug( "count of class in hash " + SqlStatement.classHash.size() );
                         }
 
-                        for (Enumeration e1 = org.riverock.sql.cache.SqlStatement.classHash.keys() ; e1.hasMoreElements() ;){
-                            String className = (String)e1.nextElement();
-                            Object obj = org.riverock.sql.cache.SqlStatement.classHash.get(className);
+                        Iterator iteratorClass = SqlStatement.classHash.keySet().iterator();
+                        while ( iteratorClass.hasNext() ) {
+                            String className = (String)iteratorClass.next();
+                            Object obj = SqlStatement.classHash.get( className );
 
-                            if (log.isDebugEnabled()){
-                                log.debug("-- Start new check");
-                                log.debug("class - "+className+", obj "+obj);
+                            if ( log.isDebugEnabled() ) {
+                                log.debug( "-- Start new check for class - " + className + ", obj " + obj );
                             }
 
                             boolean isDependent = false;
-                            if (obj==null)
+                            if ( obj == null )
                                 continue;
 
-                            if (obj instanceof List){
-                                for (int j=0; j<((List)obj).size(); j++){
-                                    Parser checkParser = (Parser)((List)obj).get(j);
+                            if ( obj instanceof List ) {
+                                for( int j = 0; j<( (List)obj ).size(); j++ ) {
+                                    Parser checkParser = (Parser)( (List)obj ).get( j );
                                     isDependent = checkDependence( checkParser, tableName );
-                                    if (isDependent)
+                                    if ( isDependent )
                                         break;
                                 }
-                            }
-                            else if (obj instanceof Parser)
+                            } else if ( obj instanceof Parser )
                                 isDependent = checkDependence( (Parser)obj, tableName );
-                            else{
-                                String errorString = "Object in hash is "+obj.getClass().getName();
-                                log.error(errorString);
-                                throw new Exception(errorString);
+                            else {
+                                String errorString = "Object in hash is " + obj.getClass().getName() + ", but expected Parser or List";
+                                log.error( errorString );
+                                throw new Exception( errorString );
                             }
 
-                            if (log.isDebugEnabled())log.debug("isDependent - "+isDependent);
+                            if ( log.isDebugEnabled() ) log.debug( "isDependent - " + isDependent );
 
-                            if (isDependent)
+                            if ( isDependent )
                                 reinitClass( className );
                         }
                     }
                     tables.clear();
                 }
-                catch(Exception ex){
-                    log.error("Error reinit cache", ex);
-                    throw new SQLException(ex.toString());
-                }
             }
+        }
+        catch( Exception ex ) {
+            final String es = "Error reinit cache";
+            log.error( es, ex );
+            throw new DatabaseException( es, ex );
         }
     }
 
-    private static void reinitRelateClass( final String className ) throws Exception
+    private static void reinitRelateClass( final String className ) throws DatabaseException
     {
         try
         {
-            Object relateObject = org.riverock.sql.cache.SqlStatement.classRelateHash.get( className );
+            Object relateObject = SqlStatement.classRelateHash.get( className );
 
             if (log.isDebugEnabled())
                 log.debug("relate class for class - "+className+" is "+relateObject);
@@ -220,15 +250,15 @@ public abstract class DatabaseAdapter {
                 reinitClass( (String)relateObject );
             }
         }
-        catch(Exception ex)
+        catch(Throwable e)
         {
             final String es = "Error in reinitRelateClass";
-            log.error(es, ex);
-            throw ex;
+            log.error(es, e);
+            throw new DatabaseException( es, e );
         }
     }
 
-    private static void reinitClass( final String className ) throws Exception
+    private static void reinitClass( final String className ) throws DatabaseException
     {
         if (log.isDebugEnabled())
         {
@@ -247,10 +277,9 @@ public abstract class DatabaseAdapter {
             Method method1 = objTemp.getClass().getMethod("reinit", null);
 
             if (log.isDebugEnabled())
-                log.debug("#2.2.009  method1 is " + method1);
+                log.debug("#2.2.009  method is " + method1);
 
-            if (method1 != null)
-            {
+            if (method1 != null) {
                 method1.invoke(objTemp, null);
 
                 if (log.isDebugEnabled())
@@ -258,18 +287,11 @@ public abstract class DatabaseAdapter {
             }
             reinitRelateClass( className );
         }
-        catch(NoSuchMethodException noSuchExc)
+        catch(Throwable e)
         {
-            log.error("Error in reinitClass "+className, noSuchExc);
-        }
-        catch(InvocationTargetException envE)
-        {
-            log.error("Error in reinitClass "+className, envE);
-        }
-        catch(Exception ex)
-        {
-            log.error("Error in reinitClass "+className, ex);
-            throw ex;
+            final String es = "Error in reinitClass "+className;
+            log.error(es, e);
+            throw new DatabaseException( es, e );
         }
     }
 
@@ -617,6 +639,11 @@ public abstract class DatabaseAdapter {
     public void setDataTable(DbTableType table, ArrayList bigTables)
         throws Exception
     {
+        if (table==null || table.getData()==null|| table.getData().getRecordsCount()==0){
+            System.out.println("Table is empty");
+            return;
+        }
+
         DbBigTextTableType big = DatabaseManager.getBigTextTableDesc(table, bigTables);
 
         if (table.getFieldsCount() == 0)
@@ -671,6 +698,7 @@ public abstract class DatabaseAdapter {
 
         if (big==null)
         {
+
             for (int i = 0; i < tableData.getRecordsCount(); i++)
             {
                 DbDataRecordType record = tableData.getRecords(i);
@@ -680,11 +708,13 @@ public abstract class DatabaseAdapter {
                 {
                     ps = conn.prepareStatement(sql_);
 
+                    int fieldPtr = 0;
                     for (int k = 0; k < record.getFieldsDataCount(); k++)
                     {
+                        DbFieldType field = table.getFields( fieldPtr++ );
                         DbDataFieldDataType fieldData = record.getFieldsData(k);
 
-                        if (fieldData.getIsNull().booleanValue() )
+                        if ( fieldData.getIsNull().booleanValue() )
                         {
                             int type = fieldData.getJavaTypeField().intValue();
                             if (fieldData.getJavaTypeField().intValue()==Types.TIMESTAMP)
@@ -696,13 +726,14 @@ public abstract class DatabaseAdapter {
                         {
                             if (isDebug)
                                 System.out.println("param #"+(k+1)+", type "+fieldData.getJavaTypeField());
+
                             switch (fieldData.getJavaTypeField().intValue())
                             {
                                 case Types.DECIMAL:
                                 case Types.DOUBLE:
                                 case Types.NUMERIC:
-                                    if ( fieldData.getDecimalDigit()==null ||
-                                        fieldData.getDecimalDigit().intValue()==0 )
+                                    if ( field.getDecimalDigit()==null ||
+                                        field.getDecimalDigit().intValue()==0 )
                                     {
                                         if (isDebug)
                                             System.out.println("Types.NUMERIC as Types.INTEGER param #"+(k+1)+", " +
@@ -1003,8 +1034,10 @@ public abstract class DatabaseAdapter {
 
             System.out.println("count of fields " + table.getFieldsCount());
 
+            int countRecords = 0;
             while (rs.next())
             {
+                countRecords++;
                 DbDataRecordType record = new DbDataRecordType();
 
                 for (int i = 0; i < table.getFieldsCount(); i++)
@@ -1015,8 +1048,8 @@ public abstract class DatabaseAdapter {
                     Object obj = rs.getObject(field.getName());
 
                     fieldData.setJavaTypeField(field.getJavaType());
-                    fieldData.setSize( field.getSize() );
-                    fieldData.setDecimalDigit( field.getDecimalDigit() );
+//                    fieldData.setSize( field.getSize() );
+//                    fieldData.setDecimalDigit( field.getDecimalDigit() );
 
                     if (obj == null)
                     {
@@ -1051,6 +1084,7 @@ public abstract class DatabaseAdapter {
 
                             case Types.LONGVARCHAR:
                             case Types.LONGVARBINARY:
+                                fieldData.setStringData(rs.getString(field.getName()));
                                 break;
                             default:
                                 System.out.println("Unknown field type. Field '" + field.getName() + "' type '" + field.getJavaStringType() + "'");
@@ -1060,6 +1094,7 @@ public abstract class DatabaseAdapter {
                 }
                 tableData.addRecords(record);
             }
+            System.out.println("count of records " + countRecords);
             return tableData;
         }
         catch (Exception e)
@@ -1233,7 +1268,8 @@ public abstract class DatabaseAdapter {
         }
         catch (Exception e)
         {
-            System.out.println(ExceptionTools.getStackTrace(e, 30));
+            System.out.println("schemaPattern: " + schemaPattern + ", tablePattern: " + tablePattern);
+            System.out.println(ExceptionTools.getStackTrace(e, 100));
         }
         finally
         {
@@ -1521,18 +1557,22 @@ public abstract class DatabaseAdapter {
     public abstract long getSequenceNextValue( final CustomSequenceType sequence ) throws SQLException;
 
     /**
-     * Конструирует и выполняет запрос к базе базе данных. Если выборка из базы содержит
-     * более одной записи, возвращается значение первой записи в ResultSet.
-     * @param t - String. Строка для 'FROM' выражения
-     * @param f - String. Строка содержащая имя поля, содержащее значение для возврата. Тип
-     * поля в базе данных 'numeric'
-     * @param w - String. Строка для 'WHERE' выражения
-     * @param o - String. Строка для 'ORDER BY' выражения
-     * @return - long.
+     * @deprecated use getFirstLongValue()
      * @throws SQLException
      */
-    public abstract long getFirstValue(String t, String f, String w, String o)
-        throws SQLException;
+    public abstract long getFirstValue(String t, String f, String w, String o) throws SQLException;
+
+    /**
+    * Конструирует и выполняет запрос к базе базе данных. Если выборка из базы содержит
+    * более одной записи, возвращается значение первой записи в ResultSet.
+    * @param t - String. Строка для 'FROM' выражения
+    * @param f - String. Строка содержащая имя поля, содержащее значение для возврата. Тип
+    * поля в базе данных 'numeric'
+    * @param w - String. Строка для 'WHERE' выражения
+    * @param o - String. Строка для 'ORDER BY' выражения
+    * @return - long.
+    */
+    public abstract Long getFirstLongValue(String t, String f, String w, String o) throws SQLException;
 
     /**
      * Конструирует и выполняет запрос к базе базе данных. Если выборка из базы содержит
@@ -1586,7 +1626,7 @@ public abstract class DatabaseAdapter {
      * DatabaseAdapter dbDyn = DatabaseAdapter.getInstance( true );
      * .
      * DatabaseAdapter.close( dbDyn );
-     * dbDyn = null; // обязательно требуется.
+     * dbDyn = null;
      */
     public boolean isDynamic()
     {
@@ -1594,16 +1634,15 @@ public abstract class DatabaseAdapter {
     }
 
 
-    protected static DatabaseAdapter openDynamicConnect( final String connectionName)
-        throws DatabaseException, ConfigException
-    {
-        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
-        return openDynamicConnect(dc);
-    }
-
     protected static DatabaseAdapter openDynamicConnect( final DatabaseConnectionType dc)
         throws DatabaseException
     {
+        if (dc==null) {
+            String es = "DatabaseConnection is null.";
+            log.fatal(es);
+            throw new DatabaseException( es );
+        }
+
         DatabaseAdapter db_ = null;
 
         String connClassName = null;
@@ -1622,9 +1661,7 @@ public abstract class DatabaseAdapter {
             db_.isDBOk = true;
             db_.isDynamicConnect = true;
 
-            if (log.isDebugEnabled())
-            {
-//                System.out.println("Success create dynamic object " + connClassName);
+            if (log.isDebugEnabled()) {
                 log.debug("Success create dynamic object " + connClassName);
             }
         }
@@ -1647,17 +1684,11 @@ public abstract class DatabaseAdapter {
             log.fatal("ConnectionName - " + dc.getName());
             log.fatal("Error:", e);
 
-            System.out.println("\nError create instance for class " + connClassName + "\nSee log for details");
-            throw new DatabaseException("Exception in create connection "+e.toString());
+            final String es = "Error create instance for class " + connClassName + ". See log for details";
+            System.out.println(es);
+            throw new DatabaseException(es, e);
         }
         return db_;
-    }
-
-    private static DatabaseAdapter openConnectPrivate( final String connectionName )
-            throws DatabaseException, ConfigException
-    {
-        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
-        return openConnectPrivate(dc);
     }
 
     private static DatabaseAdapter openConnectPrivate( final DatabaseConnectionType dc)
@@ -1678,9 +1709,7 @@ public abstract class DatabaseAdapter {
                     {
                         try
                         {
-                            if (log.isDebugEnabled())
-                            {
-//                                System.out.println("Call for create static object " + connClassName);
+                            if (log.isDebugEnabled()) {
                                 log.debug("Call for create static object " + connClassName);
                             }
 
@@ -1689,80 +1718,48 @@ public abstract class DatabaseAdapter {
                             _db_.isDBOk = true;
                             _db_.isDynamicConnect = false;
 
-                            if (log.isDebugEnabled())
-                            {
-//                                System.out.println("Success create static object " + connClassName);
+                            if (log.isDebugEnabled()) {
                                 log.debug("Success create static object " + connClassName);
                             }
                             break;
                         }
                         catch (Exception e)
                         {
-                            log.fatal("Error create instance for class " + connClassName);
+                            final String es = "Error create instance for class " + connClassName;
+                            log.fatal(es);
                             log.fatal("ConnectionName - " + dc.getName());
                             log.fatal("Error:", e);
 
                             System.out.println("\nError create instance for class " + connClassName + "\nSee log for details");
                             System.out.println("\nconnectionName - " + dc.getName());
-                            if (_db_ != null && _db_.conn != null)
-                            {
-                                try
-                                {
+                            if (_db_ != null && _db_.conn != null) {
+                                try {
                                     _db_.conn.close();
                                     _db_.conn = null;
                                 }
                                 catch (Exception e02){}
                             }
                             _db_ = null;
+                            throw new DatabaseException( es, e );
                         }
                     }
-                } // try
-                finally
-                {
+                }
+                finally {
                     initFlag = new Boolean(false);
-                }
-            } // if (!initFlag)
-
-            if (_db_!=null &&
-                isNeedValidateStructure &&
-                Boolean.TRUE.equals(dc.getIsConvertDatabaseString()))
-            {
-                try
-                {
-                    DefinitionService.validateDatabaseStructure( _db_ );
-                }
-                catch (FileNotFoundException exception)
-                {
-                    log.error("Exception ", exception);
-                }
-                catch (Exception exception)
-                {
-                    log.error("Exception in ", exception);
-                    throw new DatabaseException("Exception applay definition to DB"+exception.toString(), exception);
                 }
             }
 
             return _db_;
-        } // synchronized (initFlag)
+        } 
     }
 
-    protected synchronized static DatabaseAdapter openConnect( final String connectionName)
+    protected synchronized static DatabaseAdapter openConnect( final DatabaseConnectionType dc )
         throws DatabaseException, ConfigException
     {
-        if (connectionName==null)
-        {
-            log.error("Call DatabaseAdapter.openConnect(String connectionName) with connectionName==null");
-            return null;
-        }
-
-        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
-        if (dc==null)
-            throw new DatabaseException( "DatabaseConnection '"+connectionName+"' not found");
-
         if (dc.getDataSourceType()!=null && dc.getDataSourceType().getType()!=DataSourceTypeType.NONE_TYPE)
-            return openDynamicConnect(connectionName);
+            return openDynamicConnect(dc);
 
-        DatabaseAdapter __db__ = (DatabaseAdapter)connectHashtable.get(connectionName);
+        DatabaseAdapter __db__ = (DatabaseAdapter)connectionMap.get(dc.getName());
 
         boolean isNew = true;
         if (__db__ == null)
@@ -1785,14 +1782,14 @@ public abstract class DatabaseAdapter {
                     }
                     catch (Exception e01){}
 
-                    __db__ = openConnectPrivate(connectionName);
+                    __db__ = openConnectPrivate(dc);
                 }
                 else
                     isNew = false;
             }
             catch (SQLException e1)
             {
-                connectHashtable.remove( connectionName );
+                connectionMap.remove( dc.getName() );
                 if (__db__ != null && __db__.conn != null)
                 {
                     try
@@ -1807,7 +1804,7 @@ public abstract class DatabaseAdapter {
         }
 
         if (isNew && __db__ != null)
-            connectHashtable.put(connectionName, __db__);
+            connectionMap.put(dc.getName(), __db__);
 
         return __db__;
     }
@@ -1817,6 +1814,7 @@ public abstract class DatabaseAdapter {
     {
         return getInstance(true, GenericConfig.getDefaultConnectionName());
     }
+
     /**
      * Создает новый коннект к базе данных. Если параметер getIsCssDynamic == true, то открывается
      * новый коннект к базе. Иначе используется статический коннект. При использовании
@@ -1846,12 +1844,71 @@ public abstract class DatabaseAdapter {
      * @throws ConfigException
      */
     public static DatabaseAdapter getInstance( final boolean isDynamic, final String connectionName)
-        throws DatabaseException, ConfigException
-    {
+        throws DatabaseException {
+        if (connectionName==null) {
+            log.error("Call DatabaseAdapter.getInstance(final boolean isDynamic, final String connectionName) with connectionName==null");
+            return null;
+        }
+
+        DatabaseConnectionType dc = GenericConfig.getDatabaseConnection(connectionName);
+        if (dc==null) {
+            String es = "DatabaseConnection definition for connection name '"+connectionName +"' not found.";
+            log.fatal(es);
+            throw new DatabaseException( es );
+        }
+
+        DatabaseAdapter adapater = null;
         if (isDynamic)
-            return openDynamicConnect(connectionName);
+            adapater = openDynamicConnect(dc);
         else
-            return openConnect(connectionName);
+            adapater = openConnect(dc);
+
+        checkDatabaseStructure(adapater, dc);
+
+        return adapater;
+    }
+
+    private static Object syncObj = new Object();
+    private static void checkDatabaseStructure(DatabaseAdapter adapater, DatabaseConnectionType dc) throws DatabaseException {
+        if (log.isDebugEnabled()) {
+            log.debug( "isNeedValidateStructure: " + isNeedValidateStructure);
+            log.debug( "dc.getIsCheckStructure(): " + dc.getIsCheckStructure());
+        }
+
+        if (adapater!=null && Boolean.TRUE.equals(dc.getIsCheckStructure()))
+        {
+            synchronized( syncObj )  {
+                if (!Boolean.TRUE.equals(dc.getIsCheckStructure())) {
+                    return;
+                }
+
+                try {
+                    if (adapater.isDynamic()) {
+                        DefinitionService.validateDatabaseStructure( adapater );
+                    }
+                    else {
+                        DatabaseAdapter db = null;
+                        try {
+                            db = openDynamicConnect(dc);
+                            DefinitionService.validateDatabaseStructure( db );
+                        }
+                        finally {
+                            DatabaseAdapter.close( db );
+                            db = null;
+                        }
+                    }
+                    dc.setIsCheckStructure( Boolean.FALSE );
+                }
+                catch (FileNotFoundException exception) {
+                    log.error("Exception ", exception);
+                }
+                catch (Exception exception) {
+                    final String es = "Exception applay definition to DB";
+                    log.error( es, exception);
+                    throw new DatabaseException( es, exception );
+                }
+            }
+        }
     }
 
     /**

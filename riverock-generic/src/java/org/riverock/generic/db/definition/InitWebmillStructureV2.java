@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: May 20, 2003
- * Time: 9:49:58 PM
- *
- * $Id$
- */
 package org.riverock.generic.db.definition;
 
 import java.io.File;
@@ -41,14 +33,22 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.Constants;
 import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.common.config.PropertiesProvider;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
+/**
+ * User: Admin
+ * Date: May 20, 2003
+ * Time: 9:49:58 PM
+ *
+ * $Id$
+ */
 public class InitWebmillStructureV2 implements DefinitionProcessingInterface
 {
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.definition.InitWebmillStructureV2" );
+    private static Logger log = Logger.getLogger( InitWebmillStructureV2.class );
 
     public InitWebmillStructureV2(){}
 
@@ -66,7 +66,7 @@ public class InitWebmillStructureV2 implements DefinitionProcessingInterface
                 log.debug("Unmarshal data from file");
 
             String defFileName =
-                GenericConfig.getConfig() + File.separator +
+                PropertiesProvider.getConfigPath() + File.separator +
                 Constants.MILL_DEFINITION_DIR + File.separator +
                 "data" + File.separator +
                 "webmill-def-v2.xml";

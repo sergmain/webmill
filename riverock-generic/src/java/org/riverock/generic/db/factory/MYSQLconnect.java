@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Microsoft database connect from sourceforge.net
- * $Author$
- *
- * $Id$
- *
- */
 package org.riverock.generic.db.factory;
 
 import org.riverock.common.tools.RsetTools;
@@ -45,42 +37,42 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.ArrayList;
 
-public class MYSQLconnect extends DatabaseAdapter
-{
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.MYSQLconnect" );
 
-    public int getFamaly()
-    {
+/**
+ * MySQL database connect
+ * $Author$
+ *
+ * $Id$
+ *
+ */
+public final class MYSQLconnect extends DatabaseAdapter {
+    private final static Logger log = Logger.getLogger( MYSQLconnect.class );
+
+    public int getFamaly() {
         return DatabaseManager.MYSQL_FAMALY;
     }
 
-    public int getVersion()
-    {
+    public int getVersion() {
         return 4;
     }
 
-    public int getSubVersion()
-    {
+    public int getSubVersion() {
         return 0;
     }
 
-    public MYSQLconnect()
-    {
+    public MYSQLconnect() {
         super();
     }
 
 //    public boolean isNeedUpdateBracket = false;
 
-    public boolean getIsClosed()
-            throws SQLException
-    {
+    public boolean getIsClosed() throws SQLException {
         if (conn == null)
             return true;
         return conn.isClosed();
     }
 
-    public int getMaxLengthStringField()
-    {
+    public int getMaxLengthStringField() {
         return 1000000;
     }
 
@@ -185,12 +177,10 @@ public class MYSQLconnect extends DatabaseAdapter
                     break;
 
                 case Types.LONGVARCHAR:
-                    // Oracle 'long' fields type
-                    sql += " VARCHAR(10)";
+                    sql += " text ";
                     break;
 
                 case Types.LONGVARBINARY:
-                    // Oracle 'long raw' fields type
                     sql += " LONGVARBINARY";
                     break;
 
@@ -207,12 +197,21 @@ public class MYSQLconnect extends DatabaseAdapter
             {
                 String val = field.getDefaultValue().trim();
 
-//                if (!val.equalsIgnoreCase("null"))
-//                    val = "'"+val+"'";
-                if ( DatabaseManager.checkDefaultTimestamp(val) )
-                    val = "'CURRENT_TIMESTAMP'";
+                if (!StringTools.isEmpty(val)) {
+                    switch ( field.getJavaType().intValue() ) {
+                        case Types.VARCHAR:
+                            break;
+                        case Types.TIMESTAMP:
+                        case Types.DATE:
+                            if ( DatabaseManager.checkDefaultTimestamp(val) )
+                                val = "CURRENT_TIMESTAMP";
 
-                sql += (" DEFAULT "+val);
+                            break;
+                        default:
+                    }
+                    val = "'" + val + "'";
+                    sql += (" DEFAULT "+val);
+                }
             }
 
             if (field.getNullable().intValue() == DatabaseMetaData.columnNoNulls )
@@ -226,12 +225,8 @@ public class MYSQLconnect extends DatabaseAdapter
 
             String namePk = pk.getColumns(0).getPkName();
 
-//            constraintDefinition:
-//            [ CONSTRAINT name ]
-//            UNIQUE ( column [,column...] ) |
-//            PRIMARY KEY ( column [,column...] ) |
-
-            sql += ",\nCONSTRAINT "+namePk+" PRIMARY KEY (\n";
+            // in MySQL all primary keys named as 'PRIMARY'
+            sql += ",\n PRIMARY KEY (\n";
 
             int seq = Integer.MIN_VALUE;
             isFirst = true;
@@ -481,7 +476,7 @@ public class MYSQLconnect extends DatabaseAdapter
 
     public ArrayList getViewList(String schemaPattern, String tablePattern) throws Exception
     {
-        // в версиях 3.х и 4.0 view не поддерживаются
+        // version 3.х and 4.0 of MySQL not support view
         return new ArrayList(0);
     }
 
@@ -513,7 +508,6 @@ public class MYSQLconnect extends DatabaseAdapter
         {
             ps = this.conn.createStatement();
             ps.execute( sql_);
-//            ps.execute();
         }
         catch(SQLException e)
         {
@@ -542,7 +536,7 @@ public class MYSQLconnect extends DatabaseAdapter
     public void setLongVarchar(PreparedStatement ps, int index, DbDataFieldDataType fieldData)
             throws SQLException
     {
-        ps.setString(index, "");
+        ps.setString(index, fieldData.getStringData());
     }
 
     public String getClobField(ResultSet rs, String nameField, int maxLength)
@@ -684,6 +678,7 @@ public class MYSQLconnect extends DatabaseAdapter
         return id_;
     }
 
+
     public long getFirstValue(String t, String f, String w, String o)
             throws SQLException
     {
@@ -704,8 +699,6 @@ public class MYSQLconnect extends DatabaseAdapter
                     " " + w + " and rownum<2 ";
         }
 
-//		db.aM(v_s);
-
 
         PreparedStatement prepStatement = null;
         ResultSet rset = null;
@@ -720,7 +713,7 @@ public class MYSQLconnect extends DatabaseAdapter
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close(rset, prepStatement);
+            DatabaseManager.close(rset, prepStatement);
             rset = null;
             prepStatement = null;
         }
@@ -728,42 +721,42 @@ public class MYSQLconnect extends DatabaseAdapter
         return id_;
     }
 
-    public boolean testExceptionTableNotFound(Exception e)
-    {
-
-        if ((e instanceof SQLException) &&
-                (e.toString().indexOf("ORA-00942") != -1))
-            return true;
-        return false;
+    public Long getFirstLongValue(String t, String f, String w, String o) throws SQLException {
+        return null;
     }
 
-    public boolean testExceptionIndexUniqueKey(Exception e, String index)
-    {
-        if (e instanceof SQLException)
-        {
-            if (((SQLException)e).getErrorCode() == -(org.hsqldb.Trace.VIOLATION_OF_UNIQUE_INDEX))
+    public boolean testExceptionTableNotFound(Exception e) {
+
+        if (e instanceof SQLException) {
+            SQLException exception = (SQLException)e;
+            log.error("Error code: " + exception.getErrorCode());
+            log.error("getSQLState : " + exception.getSQLState());
+            if (exception.getErrorCode()== 1146) {
                 return true;
+            }
         }
-/*
-        if ((e instanceof SQLException) &&
-                ((e.toString().indexOf("ORA-00001") != -1) &&
-                (e.toString().indexOf(index) != -1)))
-
-            return true;
-*/
         return false;
     }
 
-    public boolean testExceptionIndexUniqueKey( Exception e )
-    {
+    public boolean testExceptionIndexUniqueKey(Exception e, String index) {
+        return testExceptionIndexUniqueKey( e );
+    }
+
+    public boolean testExceptionIndexUniqueKey( Exception e ) {
+        if (e instanceof SQLException) {
+            SQLException exception = (SQLException)e;
+            log.error("Error code: " + exception.getErrorCode());
+            log.error("getSQLState : " + exception.getSQLState());
+            if (exception.getErrorCode()== 1062) {
+                return true;
+            }
+        }
         return false;
     }
 
-    public boolean testExceptionTableExists(Exception e)
-    {
-        if (e instanceof SQLException)
-        {
-            if (((SQLException)e).getErrorCode() == 1050)
+    public boolean testExceptionTableExists(Exception e) {
+        if (e instanceof SQLException) {
+            if (((SQLException) e).getErrorCode() == 1050)
                 return true;
         }
         return false;
@@ -802,9 +795,7 @@ public class MYSQLconnect extends DatabaseAdapter
      cd - объект типа DatabaseConnection<br>
      </blockquote>
      */
-    protected void init(DatabaseConnectionType dc_)
-            throws SQLException, ClassNotFoundException
-    {
+    protected void init(DatabaseConnectionType dc_) throws SQLException, ClassNotFoundException {
         dc = dc_;
 
         if (dc == null)
@@ -832,19 +823,4 @@ public class MYSQLconnect extends DatabaseAdapter
 
         conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
     }
-/*
-    private Connection getConnection()
-             throws Exception
-    {
-        Class.forName( "net.sourceforge.jtds.jdbc.Driver" );
-        String fileName = "conf/connection.properties";
-
-        Properties props = loadProperties( fileName );
-        String url = props.getProperty( "url" );
-        Connection con = DriverManager.getConnection( url, props );
-        showWarnings( con.getWarnings() );
-        initLanguage( con );
-        return con;
-    }
-*/
 }

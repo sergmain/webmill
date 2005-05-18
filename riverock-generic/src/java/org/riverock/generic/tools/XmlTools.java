@@ -23,13 +23,6 @@
  *
  */
 
-/**
- * Author: mill
- * Date: Jan 22, 2003
- * Time: 9:33:19 AM
- *
- * $Id$
- */
 package org.riverock.generic.tools;
 
 import org.apache.log4j.Logger;
@@ -42,6 +35,13 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 
+/**
+ * Author: mill
+ * Date: Jan 22, 2003
+ * Time: 9:33:19 AM
+ *
+ * $Id$
+ */
 public final class XmlTools
 {
     private final static Logger log = Logger.getLogger(XmlTools.class);

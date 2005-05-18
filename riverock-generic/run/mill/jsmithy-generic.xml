@@ -75,7 +75,7 @@
 	<DatabaseConnection name="ORACLE_TEST">
 		<Username>TEST</Username>
 		<Password>qqq</Password>
-		<ConnectString>jdbc:oracle:thin:@oracle:1521:MILL</ConnectString>
+		<ConnectString>jdbc:oracle:thin:@localhost:1521:MILL</ConnectString>
 		<ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
 		<DatabaseCharset>UTF8</DatabaseCharset>
 		<IsConvertDatabaseString>false</IsConvertDatabaseString>
@@ -183,7 +183,16 @@
 	<DatabaseConnection name="MYSQL">
 		<Username>sa</Username>
 		<Password/>
-		<ConnectString>jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=Cp1251</ConnectString>
+		<ConnectString>jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf8</ConnectString>
+		<ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>
+		<DatabaseCharset>UTF-8</DatabaseCharset>
+		<IsConvertDatabaseString>false</IsConvertDatabaseString>
+		<IsAutoCommit>false</IsAutoCommit>
+	</DatabaseConnection>
+	<DatabaseConnection name="MYSQL_CONTEST">
+		<Username>sa</Username>
+		<Password/>
+		<ConnectString>jdbc:mysql://localhost/javakonkurs?useUnicode=true&amp;characterEncoding=utf8</ConnectString>
 		<ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>
 		<DatabaseCharset>UTF-8</DatabaseCharset>
 		<IsConvertDatabaseString>false</IsConvertDatabaseString>

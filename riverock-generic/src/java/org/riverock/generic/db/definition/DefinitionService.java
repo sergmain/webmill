@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: May 15, 2003
- * Time: 11:15:35 PM
- *
- * $Id$
- */
 package org.riverock.generic.db.definition;
 
 import org.riverock.common.tools.MainTools;
@@ -49,6 +41,14 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
+
+/**
+ * User: Admin
+ * Date: May 15, 2003
+ * Time: 11:15:35 PM
+ *
+ * $Id$
+ */
 public final class DefinitionService
 {
     private static Logger log = Logger.getLogger("org.riverock.generic.db.definition.DefinitionService");
@@ -478,9 +478,9 @@ public final class DefinitionService
         {
             DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
 
-//            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-//            DataDefinitionTableListType tableList = choice.getDataDefinitionTypeChoiceItem(k).getTableList();
-            DataDefinitionTableListType tableList = choice.getDataDefinitionTypeChoiceItem().getTableList();
+            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
+            DataDefinitionTableListType tableList = choice.getDataDefinitionTypeChoiceItem(k).getTableList();
+//            DataDefinitionTableListType tableList = choice.getDataDefinitionTypeChoiceItem().getTableList();
 
             try
             {
@@ -499,6 +499,7 @@ public final class DefinitionService
                 if (Boolean.FALSE.equals( defItem.getIsSilensAction() ) )
                     throw e;
             }
+            }
         }
     }
 
@@ -512,9 +513,9 @@ public final class DefinitionService
         {
             DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
 
-//            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-//            DbPrimaryKeyType pk = choice.getDataDefinitionTypeChoiceItem(k).getPrimaryKey();
-            DbPrimaryKeyType pk = choice.getDataDefinitionTypeChoiceItem().getPrimaryKey();
+            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
+            DbPrimaryKeyType pk = choice.getDataDefinitionTypeChoiceItem(k).getPrimaryKey();
+//            DbPrimaryKeyType pk = choice.getDataDefinitionTypeChoiceItem().getPrimaryKey();
 
             try
             {
@@ -531,6 +532,7 @@ public final class DefinitionService
                 if (Boolean.FALSE.equals( defItem.getIsSilensAction() ) )
                     throw e;
             }
+            }
         }
     }
 
@@ -544,9 +546,9 @@ public final class DefinitionService
         {
             DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
 
-//            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-//            DbImportedKeyListType fkList = choice.getDataDefinitionTypeChoiceItem(k).getImportedKeys();
-            DbImportedKeyListType fkList = choice.getDataDefinitionTypeChoiceItem().getImportedKeys();
+            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
+            DbImportedKeyListType fkList = choice.getDataDefinitionTypeChoiceItem(k).getImportedKeys();
+//            DbImportedKeyListType fkList = choice.getDataDefinitionTypeChoiceItem().getImportedKeys();
             try
             {
                 if (fkList!=null && fkList.getKeysCount()>0)
@@ -567,6 +569,7 @@ public final class DefinitionService
                 if (Boolean.FALSE.equals( defItem.getIsSilensAction()) )
                     throw e;
             }
+            }
         }
     }
 
@@ -579,9 +582,10 @@ public final class DefinitionService
         for (int j=0; j<defItem.getDataDefinitionTypeChoiceCount(); j++)
         {
             DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
-//            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-//            DbSequenceListType seqList = choice.getDataDefinitionTypeChoiceItem(k).getSequenceList();
-            DbSequenceListType seqList = choice.getDataDefinitionTypeChoiceItem().getSequenceList();
+
+            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
+            DbSequenceListType seqList = choice.getDataDefinitionTypeChoiceItem(k).getSequenceList();
+//            DbSequenceListType seqList = choice.getDataDefinitionTypeChoiceItem().getSequenceList();
             try
             {
                 if (seqList!=null)
@@ -599,6 +603,7 @@ public final class DefinitionService
                 if (Boolean.FALSE.equals( defItem.getIsSilensAction()) )
                     throw e;
             }
+            }
         }
     }
 
@@ -615,9 +620,9 @@ public final class DefinitionService
         {
             DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
 
-//            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-//            DataDefinitionActionListType actionList = choice.getDataDefinitionTypeChoiceItem(k).getActionList();
-            DataDefinitionActionListType actionList = choice.getDataDefinitionTypeChoiceItem().getActionList();
+            for (int k=0; k<choice.getDataDefinitionTypeChoiceItemCount(); k++) {
+            DataDefinitionActionListType actionList = choice.getDataDefinitionTypeChoiceItem(k).getActionList();
+//            DataDefinitionActionListType actionList = choice.getDataDefinitionTypeChoiceItem().getActionList();
 
             if (actionList!=null)
             {
@@ -806,6 +811,7 @@ public final class DefinitionService
                             throw e;
                     }
                 }
+            }
             }
         }
     }
