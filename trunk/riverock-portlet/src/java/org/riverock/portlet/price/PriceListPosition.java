@@ -95,7 +95,7 @@ public class PriceListPosition {
                     portletURL.setParameters(shopParam_.currencyURL);
                     portletURL.setParameter(Constants.NAME_ID_SHOP_PARAM, shopParam_.id_shop.toString() );
 
-//                    String url = CtxInstance.url(
+//                    String url = PortletTools.url(
 //                        Constants.CTX_TYPE_SHOP, shopParam_.nameTemplate) + '&' +
 //                        Constants.NAME_ID_GROUP_SHOP + '=' + id_curr + '&' +
 //                        shopParam_.currencyURL + '&' +
@@ -180,7 +180,7 @@ public class PriceListPosition {
         portletURL.setParameter(Constants.NAME_ID_SHOP_PARAM, shopParam_.id_shop.toString());
 
 //            position.setTopLevelUrl(
-//                CtxInstance.url( Constants.CTX_TYPE_SHOP, shopParam_.nameTemplate ) + '&' +
+//                PortletTools.url( Constants.CTX_TYPE_SHOP, shopParam_.nameTemplate ) + '&' +
 //                Constants.NAME_ID_GROUP_SHOP + "=0&" +
 //                shopParam_.currencyURL + '&' +
 //                Constants.NAME_ID_SHOP_PARAM + '=' + shopParam_.id_shop

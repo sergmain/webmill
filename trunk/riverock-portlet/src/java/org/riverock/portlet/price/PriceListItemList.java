@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Author$
- *
- * $Id$
- *
- */
 package org.riverock.portlet.price;
 
 import java.io.UnsupportedEncodingException;
@@ -61,10 +53,19 @@ import org.riverock.webmill.portal.PortalConstants;
 
 import org.apache.log4j.Logger;
 
-public class PriceListItemList
-{
-    private static Logger log = Logger.getLogger( PriceListItemList.class );
 
+/**
+ *
+ * $Author$
+ *
+ * $Id$
+ *
+ */
+public final class PriceListItemList
+{
+    private final static Logger log = Logger.getLogger( PriceListItemList.class );
+
+    // dont edit return type - name must be with package
     private static org.riverock.portlet.schema.portlet.shop.HiddenParamType getHidden(String name, String value)
     {
         org.riverock.portlet.schema.portlet.shop.HiddenParamType hidden = new org.riverock.portlet.schema.portlet.shop.HiddenParamType();
@@ -98,7 +99,6 @@ public class PriceListItemList
             PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
             fieldName.setNameToInvoice(
                 bundle.getString("price.to_invoice")
-//                shopParam.sm.getStr("price.to_invoice")
             );
             sql_ =
                 "select a.* " +
@@ -238,7 +238,6 @@ public class PriceListItemList
                     item.addHiddenParam(getHidden(Constants.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
                     item.addHiddenParam(getHidden(Constants.NAME_ADD_ID_ITEM, "" + idPk));
                     item.addHiddenParam(getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP));
-//                    item.addHiddenParam(getHidden(Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam.nameTemplate ));
                     item.addHiddenParam(getHidden(Constants.NAME_SHOP_SORT_BY, shopParam.sortBy));
                     item.addHiddenParam(getHidden(Constants.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
                 }

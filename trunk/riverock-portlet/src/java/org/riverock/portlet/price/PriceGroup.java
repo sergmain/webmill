@@ -22,20 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Author$
- *
- * $Id$
- *
- */
-
 package org.riverock.portlet.price;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,17 +40,20 @@ import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.shop.GroupItemType;
 import org.riverock.portlet.schema.portlet.shop.GroupListType;
 
-public class PriceGroup
-{
-    private static Logger log = Logger.getLogger("org.riverock.portlet.price.PriceGroup" );
+/**
+ *
+ * $Author$
+ *
+ * $Id$
+ *
+ */
+public final class PriceGroup {
+    private final static Logger log = Logger.getLogger( PriceGroup.class );
 
     public static GroupListType getInstance(DatabaseAdapter db_, ShopPageParam shopParam, RenderResponse renderResponse)
             throws PriceException
     {
         List groupVector = getInstance(db_, shopParam.id_group, shopParam.id_shop, shopParam.idSite);
-
-//        PortletSession session = param.getPortletRequest().getPortletSession();
-//        CtxInstance ctxInstance1 = (CtxInstance)session.getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
 
         if (groupVector == null || groupVector.size()==0)
             return null;
@@ -79,12 +72,11 @@ public class PriceGroup
 
             PortletURL portletURL = renderResponse.createRenderURL();
             portletURL.setParameter(org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP);
-//            portletURL.setParameter(org.riverock.webmill.main.Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam.nameTemplate);
             portletURL.setParameter(Constants.NAME_ID_GROUP_SHOP, item.id_group.toString());
             portletURL.setParameters(shopParam.currencyURL);
             portletURL.setParameter(Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString());
 
-//            String url = CtxInstance.url(
+//            String url = PortletTools.url(
 //                Constants.CTX_TYPE_SHOP, shopParam.nameTemplate) + '&' +
 //                Constants.NAME_ID_GROUP_SHOP + '=' + item.id_group + '&' +
 //                shopParam.currencyURL + '&' +
@@ -151,10 +143,11 @@ public class PriceGroup
                 log.debug( "size group vector - "+v.size() );
 
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
-            log.error("Error get price group list ", e);
-            throw new PriceException( e.toString() );
+            final String es = "Error get price group list ";
+            log.error(es, e);
+            throw new PriceException( es, e );
         }
         finally
         {

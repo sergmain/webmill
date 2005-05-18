@@ -22,26 +22,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.price;
 
 import java.io.PrintStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.common.tools.RsetTools;
+
+import org.apache.log4j.Logger;
 
 /**
  *
  *  $Id$
  *
  */
-
-public class StorageOrderItem
-{
-
+public final class StorageOrderItem {
+    private final static Logger log = Logger.getLogger(StorageOrderItem.class);
     Long itemID;
     long quantity;
 
@@ -64,9 +62,11 @@ public class StorageOrderItem
 
             st.executeUpdate();
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
-            throw new PriceException(e.toString());
+            String es = "Error in save()";
+            log.error( es, e );
+            throw new PriceException(es, e);
         }
         finally
         {
@@ -101,9 +101,11 @@ public class StorageOrderItem
 
             st.executeUpdate();
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
-            throw new PriceException(e.toString());
+            String es = "Error in update()";
+            log.error( es, e );
+            throw new PriceException(es, e);
         }
         finally
         {
@@ -182,9 +184,11 @@ public class StorageOrderItem
             }
 
         }
-        catch (SQLException e)
+        catch (Exception e)
         {
-            throw new PriceException(e.toString());
+            String es = "Error in checkItem()";
+            log.error( es, e );
+            throw new PriceException(es, e);
         }
         finally
         {

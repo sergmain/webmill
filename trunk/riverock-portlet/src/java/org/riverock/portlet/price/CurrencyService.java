@@ -22,20 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 9, 2002
- * Time: 11:41:02 AM
- *
- * $Id$
- */
-
 package org.riverock.portlet.price;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -55,9 +45,15 @@ import org.riverock.portlet.schema.price.CustomCurrencyType;
 
 import org.apache.log4j.Logger;
 
-public class CurrencyService
-{
-    private static Logger log = Logger.getLogger( CurrencyService.class );
+/**
+ * Author: mill
+ * Date: Dec 9, 2002
+ * Time: 11:41:02 AM
+ *
+ * $Id$
+ */
+public final class CurrencyService {
+    private final static Logger log = Logger.getLogger( CurrencyService.class );
 
     public static CurrencyCurrentCursType getCurrentCurs(DatabaseAdapter db_, Long idCurrency, Long idSite)
         throws PriceException
@@ -271,10 +267,10 @@ public class CurrencyService
             }
             list.setStandardCurrencyList((ArrayList)v);
         }
-        catch(SQLException exc)
-        {
-            log.error(exc);
-            throw new PriceException(exc.getMessage());
+        catch(Exception exc) {
+            String es = "Error getStandardCurrencyList()";
+            log.error( es, exc );
+            throw new PriceException( es, exc );
         }
         finally
         {

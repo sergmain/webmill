@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: serg_main
- * Date: 06.02.2004
- * Time: 17:07:00
- * @author Serge Maslyukov
- * $Id$
- */
-
 package org.riverock.portlet.price;
 
 import org.riverock.sql.cache.SqlStatement;
@@ -42,7 +33,13 @@ import org.riverock.webmill.config.WebmillConfig;
 
 import org.apache.log4j.Logger;
 
-
+/**
+ * User: serg_main
+ * Date: 06.02.2004
+ * Time: 17:07:00
+ * @author Serge Maslyukov
+ * $Id$
+ */
 public class CurrencyManager
 {
     private static Logger log = Logger.getLogger( CurrencyManager.class );
@@ -60,7 +57,7 @@ public class CurrencyManager
         return currencyList;
     }
 
-    protected CurrencyManager(){}
+    public CurrencyManager(){}
 
     private static Object syncDebug = new Object();
     public static CurrencyManager getInstance(DatabaseAdapter db_, Long idSite)
