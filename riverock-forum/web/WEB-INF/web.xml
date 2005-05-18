@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<!DOCTYPE web-app PUBLIC
+	"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+	"http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app id="Riverock-portlet-forum">
+
+	<display-name>Riverock forum portlet</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+	<taglib>
+		<taglib-uri>jstl/format</taglib-uri>
+		<taglib-location>/WEB-INF/tld/jstl/fmt.tld</taglib-location>
+	</taglib>
+    <taglib>
+        <taglib-uri>jstl/core</taglib-uri>
+        <taglib-location>/WEB-INF/tld/jstl/c.tld</taglib-location>
+    </taglib>
+    <taglib>
+      <taglib-uri>/tld/jakarta-request</taglib-uri>
+      <taglib-location>/WEB-INF/tld/jakarta/taglibs-request.tld</taglib-location>
+    </taglib>
+    <taglib>
+      <taglib-uri>/tld/jakarta-session</taglib-uri>
+      <taglib-location>/WEB-INF/tld/jakarta/taglibs-session.tld</taglib-location>
+    </taglib>
+
+</web-app>
