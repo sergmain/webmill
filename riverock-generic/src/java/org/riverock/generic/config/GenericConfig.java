@@ -30,7 +30,6 @@ import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.List;
 
-import org.riverock.generic.main.Constants;
 import org.riverock.generic.schema.config.*;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.common.config.ConfigException;
@@ -43,14 +42,17 @@ import org.apache.log4j.Logger;
 public final class GenericConfig {
     private final static Logger log = Logger.getLogger( GenericConfig.class );
 
-//    private static String contextName = "";
-    //
+    public static final String CONFIG_FILE_PARAM_NAME = "generic-config-file";
+
+    private static final String NAME_CONFIG_FILE = "-generic.xml";
+    private static String configPrefix = "jsmithy";
+    public final static String JNDI_GENERIC_CONFIG_FILE = "jsmithy/generic/ConfigFile";
+
     private static ConfigObject configObject = null;
     private static Hashtable dbConfig = null;
     private static TimeZone currentTimeZone = null;
 
     private static boolean isConfigProcessed = false;
-    private static String configPrefix = "jsmithy";
     private static String defaultConnectionName = null;
 
     public static String getConfigPrefix() {
@@ -76,7 +78,7 @@ public final class GenericConfig {
                 return;
 
             configObject = ConfigObject.load(
-                Constants.JNDI_GENERIC_CONFIG_FILE , configPrefix+"-generic.xml", GenericConfigType.class
+                JNDI_GENERIC_CONFIG_FILE, CONFIG_FILE_PARAM_NAME, configPrefix+NAME_CONFIG_FILE, GenericConfigType.class
             );
 
             if (log.isDebugEnabled()) {
