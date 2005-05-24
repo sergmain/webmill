@@ -61,8 +61,8 @@ public class JobItem
     }
 
     public String getUrlToJob( RenderRequest renderRequest, RenderResponse renderResponse ) throws ConfigException {
-        return PortletTools.url(Constants.CTX_TYPE_JOB, renderRequest, renderResponse )+ '&' +
-            Constants.NAME_ID_JOB_PARAM + '=' + idPosition;
+        return PortletTools.url(JobBlockPortlet.CTX_TYPE_JOB, renderRequest, renderResponse )+ '&' +
+            JobBlockPortlet.NAME_ID_JOB_PARAM + '=' + idPosition;
     }
 
     public Calendar getJobDatePost() throws Exception {

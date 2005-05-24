@@ -47,6 +47,7 @@ import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.price.ImportPriceList;
 import org.riverock.portlet.price.Shop;
+import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.schema.import_price.PricesType;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.webmill.port.PortalInfo;
@@ -93,7 +94,7 @@ public final class UploadPriceControllerPortlet implements Portlet {
             MenuItemInterface ctxItem =
                 (MenuItemInterface) v.get(j);
 
-            if (Constants.CTX_TYPE_SHOP.equals(ctxItem.getType()))
+            if (ShopPortlet.CTX_TYPE_SHOP.equals(ctxItem.getType()))
                 return true;
 
             if (checkShopContext(ctxItem.getCatalogItems()))
@@ -126,7 +127,7 @@ public final class UploadPriceControllerPortlet implements Portlet {
 
         if ( renderRequest.getAttribute( ERROR_TEXT )!=null ) {
             Writer out = renderResponse.getWriter();
-            String srcURL = PortletTools.url(Constants.CTX_TYPE_UPLOAD_PRICE, renderRequest, renderResponse );
+            String srcURL = PortletTools.url(UploadPrice.CTX_TYPE_UPLOAD_PRICE, renderRequest, renderResponse );
             WebmillErrorPage.processPortletError(out, null, (String)renderRequest.getAttribute( ERROR_TEXT ), srcURL, (String)renderRequest.getAttribute( ERROR_TEXT ));
 
             out.flush();
@@ -234,7 +235,7 @@ public final class UploadPriceControllerPortlet implements Portlet {
                 return;
             }
 
-            String srcURL = PortletTools.url( Constants.CTX_TYPE_UPLOAD_PRICE, actionRequest, actionResponse );
+            String srcURL = PortletTools.url( UploadPrice.CTX_TYPE_UPLOAD_PRICE, actionRequest, actionResponse );
 
             if ( log.isDebugEnabled() ){
                 log.debug( "#55.01.15  finish import price in db" );

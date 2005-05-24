@@ -107,10 +107,10 @@ final class ForumAddMessage {
             }
 
             PortletSession session = renderRequest.getPortletSession();
-            String subject = (String) session.getAttribute(Constants.FORUM_SUBJECT_SESSION);
+            String subject = (String) session.getAttribute(ForumPortlet.FORUM_SUBJECT_SESSION);
             if (subject == null)
                 subject = "";
-            session.removeAttribute(Constants.FORUM_SUBJECT_SESSION);
+            session.removeAttribute(ForumPortlet.FORUM_SUBJECT_SESSION);
 
             // xxx work around of deutch answer - AW:
             if ((subject.trim().length() > 0) && (!subject.toUpperCase().startsWith("RE: ")))
@@ -122,14 +122,14 @@ final class ForumAddMessage {
             out.write( "\" method=\"POST\">\n" );
 
             out.write(
-                    ServletTools.getHiddenItem(Constants.NAME_ID_FORUM_PARAM,
-                            "" + PortletTools.getLong(renderRequest, Constants.NAME_ID_FORUM_PARAM)
+                    ServletTools.getHiddenItem(ForumPortlet.NAME_ID_FORUM_PARAM,
+                            "" + PortletTools.getLong(renderRequest, ForumPortlet.NAME_ID_FORUM_PARAM)
                     )+
                     ServletTools.getHiddenItem(Constants.NAME_TYPE_CONTEXT_PARAM,
-                            Constants.CTX_TYPE_FORUM_COMMIT
+                            ForumPortlet.CTX_TYPE_FORUM_COMMIT
                     )+
-                    ServletTools.getHiddenItem(Constants.NAME_ID_MAIN_FORUM_PARAM,
-                            "" + PortletTools.getLong(renderRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM)
+                    ServletTools.getHiddenItem(ForumPortlet.NAME_ID_MAIN_FORUM_PARAM,
+                            "" + PortletTools.getLong(renderRequest, ForumPortlet.NAME_ID_MESSAGE_FORUM_PARAM)
                     )+
                     ServletTools.getHiddenItem("action", "add")
             );

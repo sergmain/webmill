@@ -91,11 +91,11 @@ public final class BindChangeCommitPortlet implements Portlet {
         try {
 
             AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
-            if ( auth_==null || !auth_.isUserInRole( "webmill.auth_bind" ) ) {
+            if ( auth_ == null || !auth_.isUserInRole( BindIndex.AUTH_BIND_ROLE ) ) {
                 throw new PortletException( "You have not access right to bind right" );
             }
 
-                    dbDyn = DatabaseAdapter.getInstance( true );
+                    dbDyn = DatabaseAdapter.getInstance();
                     index_page = PortletTools.url("mill.auth.bind", actionRequest, actionResponse );
 
                     Long id_auth_user = PortletTools.getLong(actionRequest, "id_auth_user");

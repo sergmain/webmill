@@ -115,9 +115,9 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
         try {
             PortletSession session = renderRequest.getPortletSession();
-            OrderType order = (OrderType) session.getAttribute( Constants.ORDER_SESSION );
+            OrderType order = (OrderType) session.getAttribute( ShopPortlet.ORDER_SESSION );
 
-            shop = (Shop) session.getAttribute( Constants.CURRENT_SHOP );
+            shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP );
 
             if (shop == null)
             {
@@ -147,16 +147,16 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             shopPage.setIsProcessInvoice( shop.isProcessInvoice ? "true" : "false" );
 
 
-            shopParam.id_group = PortletTools.getLong( renderRequest, Constants.NAME_ID_GROUP_SHOP, new Long(0) );
+            shopParam.id_group = PortletTools.getLong( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, new Long(0) );
             shopParam.setServerName( renderRequest.getServerName() );
-            shopParam.id_currency = PortletTools.getLong( renderRequest, Constants.NAME_ID_CURRENCY_SHOP);
+            shopParam.id_currency = PortletTools.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP);
 
             // If current currency not defined( page requested without concrete currency),
             // we will use default currency
             if (shopParam.id_currency == null)
                 shopParam.id_currency = shop.currencyID;
 
-            shopParam.currencyURL.put( Constants.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
+            shopParam.currencyURL.put( ShopPortlet.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
 
             if ((shopParam.id_currency == null) && (shop.is_default_currency == 1)){
                 shopParam.currencyURL.clear();
@@ -175,15 +175,15 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             // установка параметров для сортировки
             // sort_direct == 0 означает сортировки по возрастанию,
             // иначе сортировка по убыванию
-            shopParam.sortBy = PortletTools.getString( renderRequest, Constants.NAME_SHOP_SORT_BY, "item");
-            shopParam.sortDirect = PortletTools.getInt( renderRequest, Constants.NAME_SHOP_SORT_DIRECT, new Integer(1)).intValue();
+            shopParam.sortBy = PortletTools.getString( renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
+            shopParam.sortDirect = PortletTools.getInt( renderRequest, ShopPortlet.NAME_SHOP_SORT_DIRECT, new Integer(1)).intValue();
 
             PortletURL itemPortletURL = renderResponse.createRenderURL();
-            itemPortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP );
-            itemPortletURL.setParameter( Constants.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
+            itemPortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );
+            itemPortletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
             itemPortletURL.setParameters( shopParam.currencyURL );
-            itemPortletURL.setParameter( Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
-            itemPortletURL.setParameter( Constants.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
+            itemPortletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
+            itemPortletURL.setParameter( ShopPortlet.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
 
 //            sortItemUrl = PortletTools.url(Constants.CTX_TYPE_SHOP, shopParam.nameTemplate)+'&'+
 //                Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
@@ -192,11 +192,11 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 //                Constants.NAME_ID_CURRENCY_SHOP + '=' + shopParam.id_currency + '&';
 
             PortletURL pricePortletURL = renderResponse.createRenderURL();
-            pricePortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP );
-            pricePortletURL.setParameter( Constants.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
+            pricePortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );
+            pricePortletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
             pricePortletURL.setParameters( shopParam.currencyURL );
-            pricePortletURL.setParameter( Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
-            pricePortletURL.setParameter(  Constants.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
+            pricePortletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
+            pricePortletURL.setParameter(  ShopPortlet.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
 
             if ("item".equals(shopParam.sortBy)) {
                 itemDirect = (shopParam.sortDirect == 0 ? "DESC" : "ASC");
@@ -207,14 +207,14 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
                 shopPage.setPriceDirect( priceDirect );
             }
 
-            itemPortletURL.setParameter(Constants.NAME_SHOP_SORT_BY, "item");
-            itemPortletURL.setParameter(Constants.NAME_SHOP_SORT_DIRECT, ""+("DESC".equals(itemDirect) ? 1 : 0));
+            itemPortletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, "item");
+            itemPortletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, ""+("DESC".equals(itemDirect) ? 1 : 0));
 //            sortItemUrl +=
 //                Constants.NAME_SHOP_SORT_BY + "=item&" +
 //                Constants.NAME_SHOP_SORT_DIRECT + '=' + ("DESC".equals(itemDirect) ? 1 : 0);
 
-            pricePortletURL.setParameter(Constants.NAME_SHOP_SORT_BY, "price");
-            pricePortletURL.setParameter(Constants.NAME_SHOP_SORT_DIRECT, ""+("DESC".equals(priceDirect) ? 1 : 0));
+            pricePortletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, "price");
+            pricePortletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, ""+("DESC".equals(priceDirect) ? 1 : 0));
 //            sortPriceUrl +=
 //                Constants.NAME_SHOP_SORT_BY + "=price&" +
 //                Constants.NAME_SHOP_SORT_DIRECT + '=' + ("DESC".equals(priceDirect) ? 1 : 0);

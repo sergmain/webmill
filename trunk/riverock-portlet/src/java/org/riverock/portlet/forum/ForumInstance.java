@@ -81,11 +81,11 @@ public final class ForumInstance {
     public ForumInstance(PortletRequest renderRequest) {
 
         this.renderRequest = renderRequest;
-        this.id = PortletTools.getLong(renderRequest, Constants.NAME_ID_MESSAGE_FORUM_PARAM );
+        this.id = PortletTools.getLong(renderRequest, ForumPortlet.NAME_ID_MESSAGE_FORUM_PARAM );
 
-        this.id_forum = PortletTools.getLong(renderRequest, Constants.NAME_ID_FORUM_PARAM);
+        this.id_forum = PortletTools.getLong(renderRequest, ForumPortlet.NAME_ID_FORUM_PARAM);
         this.year = PortletTools.getInt(
-            renderRequest, Constants.NAME_YEAR_PARAM,
+            renderRequest, ForumPortlet.NAME_YEAR_PARAM,
             new Integer(Calendar.getInstance().get(Calendar.YEAR))
         ).intValue();
     }
@@ -408,9 +408,9 @@ public final class ForumInstance {
                 else
                     s += ("<a href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                         Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
-                        Constants.NAME_YEAR_PARAM + '=' + yearValue + '&' +
-                        Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
-                        Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
+                        ForumPortlet.NAME_YEAR_PARAM + '=' + yearValue + '&' +
+                        ForumPortlet.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
+                        Constants.NAME_TYPE_CONTEXT_PARAM + '=' + ForumPortlet.CTX_TYPE_FORUM + '&' +
                         "\">" + yearValue + "</a>&nbsp;");
             }
         }
@@ -496,10 +496,10 @@ public final class ForumInstance {
                 else
                     s += ("<a href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                         Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
-                        Constants.NAME_YEAR_PARAM + '=' + year + '&' +
-                        Constants.NAME_MONTH_PARAM + '=' + monthValue + '&' +
-                        Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
-                        Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
+                        ForumPortlet.NAME_YEAR_PARAM + '=' + year + '&' +
+                        ForumPortlet.NAME_MONTH_PARAM + '=' + monthValue + '&' +
+                        ForumPortlet.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
+                        Constants.NAME_TYPE_CONTEXT_PARAM + '=' + ForumPortlet.CTX_TYPE_FORUM + '&' +
                         "\">" + monthString + "</a>&nbsp;");
             }
         }
@@ -639,14 +639,14 @@ public final class ForumInstance {
                     "<span class=\"topictitle\">" +
                     "<a class=\"topictitle\" href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                     Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
-                    Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
-                    Constants.NAME_ID_MESSAGE_FORUM_PARAM + '=' +
+                    ForumPortlet.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
+                    ForumPortlet.NAME_ID_MESSAGE_FORUM_PARAM + '=' +
                     RsetTools.getLong(rs, "ID") + '&' +
 
-                    Constants.NAME_YEAR_PARAM + '=' + cal.get(Calendar.YEAR) + '&' +
-                    Constants.NAME_MONTH_PARAM + '=' + (cal.get(Calendar.MONTH) + 1) + '&' +
+                    ForumPortlet.NAME_YEAR_PARAM + '=' + cal.get(Calendar.YEAR) + '&' +
+                    ForumPortlet.NAME_MONTH_PARAM + '=' + (cal.get(Calendar.MONTH) + 1) + '&' +
 
-                    Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
+                    Constants.NAME_TYPE_CONTEXT_PARAM + '=' + ForumPortlet.CTX_TYPE_FORUM + '&' +
 //                    Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + nameTemplate +
                     "\">" + RsetTools.getString(rs, "header", "___") + "</a>" +
                     "</span>" +
@@ -751,11 +751,11 @@ public final class ForumInstance {
                 if (!message.getId().equals(currentMessageId)) {
                     r_ += ("<a href=\"" + PortletTools.ctx( renderRequest ) + '?' +
                         Constants.NAME_LANG_PARAM + '=' + renderRequest.getLocale().toString() + '&' +
-                        Constants.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
-                        Constants.NAME_ID_MESSAGE_FORUM_PARAM + '='+ message.getId() + '&' +
-                        Constants.NAME_YEAR_PARAM + '=' + cal.get(Calendar.YEAR) + '&' +
-                        Constants.NAME_MONTH_PARAM + '=' + (cal.get(Calendar.MONTH) + 1) + '&' +
-                        Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_FORUM + '&' +
+                        ForumPortlet.NAME_ID_FORUM_PARAM + '=' + id_forum + '&' +
+                        ForumPortlet.NAME_ID_MESSAGE_FORUM_PARAM + '='+ message.getId() + '&' +
+                        ForumPortlet.NAME_YEAR_PARAM + '=' + cal.get(Calendar.YEAR) + '&' +
+                        ForumPortlet.NAME_MONTH_PARAM + '=' + (cal.get(Calendar.MONTH) + 1) + '&' +
+                        Constants.NAME_TYPE_CONTEXT_PARAM + '=' + ForumPortlet.CTX_TYPE_FORUM + '&' +
 //                        Constants.NAME_TEMPLATE_CONTEXT_PARAM + '=' + ctxInstance.getNameTemplate() +
                         "\">");
                 }

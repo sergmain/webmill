@@ -95,7 +95,7 @@ public final class ForumAddMessageCommitPortlet implements Portlet {
             }
 
             Long id = PortletTools.getLong( actionRequest,
-                Constants.NAME_ID_MESSAGE_FORUM_PARAM );
+                ForumPortlet.NAME_ID_MESSAGE_FORUM_PARAM );
 
             // Add forum message
             boolean isAdd = PortletTools.getString( actionRequest, "action" ).equals( "add" );
@@ -103,7 +103,7 @@ public final class ForumAddMessageCommitPortlet implements Portlet {
 
             if ( isAdd ) {
 
-                Long id_main = PortletTools.getLong( actionRequest, Constants.NAME_ID_MAIN_FORUM_PARAM );
+                Long id_main = PortletTools.getLong( actionRequest, ForumPortlet.NAME_ID_MAIN_FORUM_PARAM );
                 Long id_thread = null;
                 if ( id_main == null ) {
                     id_main = new Long( 0 );
@@ -121,17 +121,17 @@ public final class ForumAddMessageCommitPortlet implements Portlet {
             String subject = PortletTools.getString( actionRequest, "nameForumSubject_", "" );
 
             PortletSession session = actionRequest.getPortletSession( true );
-            subject = (String)session.getAttribute( Constants.FORUM_SUBJECT_SESSION );
+            subject = (String)session.getAttribute( ForumPortlet.FORUM_SUBJECT_SESSION );
             if ( subject == null )
                 subject = "";
-            session.removeAttribute( Constants.FORUM_SUBJECT_SESSION );
+            session.removeAttribute( ForumPortlet.FORUM_SUBJECT_SESSION );
 
             if ( ( subject.trim().length()>0 ) && ( !subject.toUpperCase().startsWith( "RE: " ) ) )
                 subject = "RE: " + subject;
 
-            String url = PortletTools.url( Constants.CTX_TYPE_FORUM, actionRequest, actionResponse ) + '&' +
-                Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum + '&' +
-                Constants.NAME_ID_MESSAGE_FORUM_PARAM + '=' + id;
+            String url = PortletTools.url( ForumPortlet.CTX_TYPE_FORUM, actionRequest, actionResponse ) + '&' +
+                ForumPortlet.NAME_ID_FORUM_PARAM + '=' + forum.id_forum + '&' +
+                ForumPortlet.NAME_ID_MESSAGE_FORUM_PARAM + '=' + id;
 
             actionResponse.sendRedirect( url );
             return;

@@ -48,6 +48,8 @@ public final class LoginUtils {
 
     static final String CTX_TYPE_LOGIN_PLAIN  = "mill.login_plain";
     static final String CTX_TYPE_LOGIN_XML  = "mill.login_xml";
+    public static final String NAME_USERNAME_PARAM     = "mill.username";
+    public static final String NAME_PASSWORD_PARAM     = "mill.password";
 
     public static void check(final ActionRequest actionRequest, final ActionResponse actionResponse)
         throws PortletException {
@@ -56,8 +58,8 @@ public final class LoginUtils {
             PortletSession session = actionRequest.getPortletSession();
             AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
 
-            String l_ = actionRequest.getParameter( Constants.NAME_USERNAME_PARAM );
-            String p_ = actionRequest.getParameter( Constants.NAME_PASSWORD_PARAM );
+            String l_ = actionRequest.getParameter( NAME_USERNAME_PARAM );
+            String p_ = actionRequest.getParameter( NAME_PASSWORD_PARAM );
             if (log.isDebugEnabled()) {
                 log.debug("userLogin: " + (l_!=null? (l_.toString()+", class: "+l_.getClass().getName()) :"null") );
                 log.debug("userPassword: " + (p_!=null? (p_.toString()+", class: "+p_.getClass().getName()) :"null") );

@@ -33,6 +33,7 @@ import javax.portlet.RenderResponse;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.shop.CurrentBasketType;
 import org.riverock.portlet.schema.price.OrderType;
+import org.riverock.portlet.invoice.InvoicePortlet;
 import org.riverock.webmill.portlet.PortletTools;
 
 /**
@@ -60,10 +61,10 @@ public final class ShopBasket {
         basket.setItemInBasket( new Integer(OrderLogic.getCountItem(order)) );
 
         PortletURL portletURL = renderResponse.createRenderURL();
-        portletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_INVOICE );
-        portletURL.setParameter( Constants.NAME_ID_GROUP_SHOP, PortletTools.getInt( renderRequest, Constants.NAME_ID_GROUP_SHOP, new Integer(0) ).toString() );
+        portletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, InvoicePortlet.CTX_TYPE_INVOICE );
+        portletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, PortletTools.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, new Integer(0) ).toString() );
         portletURL.setParameters( shopParam.currencyURL );
-        portletURL.setParameter( Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
+        portletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
 
 //            basket.setCurrentBasketUrl(
 //                PortletTools.url(Constants.CTX_TYPE_INVOICE) + '&' +

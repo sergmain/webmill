@@ -19,6 +19,19 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class ShopPortlet extends GenericWebmillPortlet {
+    public final static String CTX_TYPE_SHOP = "mill.shop";
+    public final static String CURRENT_SHOP = "MILL.CURRENT_SHOP";
+    public final static String BASKET_SHOP_SESSION = "MILL.BASKET_SHOP_SESSION";
+    public final static String ORDER_SESSION = "MILL.ORDER_SESSION";
+    public final static String ID_SHOP_SESSION = "MILL.ID_SHOP_SESSION";
+    public final static String NAME_INVOICE_NEW_COUNT_PARAM = "mill.invoice.count";
+    public final static String NAME_SHOP_SORT_BY = "mill.shop.sort";
+    public final static String NAME_SHOP_SORT_DIRECT = "mill.shop.sort.direct";
+    public final static String NAME_ID_GROUP_SHOP = "mill.id_group";
+    public final static String NAME_ID_CURRENCY_SHOP   = "mill.id_currency";
+    public final static String NAME_COUNT_ADD_ITEM_SHOP    = "mill.count_add";
+    public final static String NAME_ADD_ID_ITEM = "mill.add_id";
+    public final static String NAME_ID_SHOP_PARAM = "mill.id_shop";
 
 //    private final static Logger log = Logger.getLogger( ShopPortlet.class );
 

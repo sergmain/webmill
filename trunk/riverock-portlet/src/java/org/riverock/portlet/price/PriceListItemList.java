@@ -128,7 +128,7 @@ public final class PriceListItemList
             rs = ps.executeQuery();
 
             PortletSession session = renderRequest.getPortletSession();
-            OrderType order = (OrderType) session.getAttribute(Constants.ORDER_SESSION);
+            OrderType order = (OrderType) session.getAttribute(ShopPortlet.ORDER_SESSION);
             Shop shop = Shop.getInstance(db_, shopParam.id_shop);
             while (rs.next()) {
                 Long idPk = RsetTools.getLong(rs, "ID_ITEM");
@@ -145,7 +145,7 @@ public final class PriceListItemList
 
                 item.setItemToInvoiceCountParam(
                     shopParam.isProcessInvoice ?
-                    Constants.NAME_COUNT_ADD_ITEM_SHOP :
+                    ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP :
                     null
                 );
 
@@ -233,13 +233,13 @@ public final class PriceListItemList
                     item.setItemImageFileName(image.getItemImage(idPk));
 
                 if (shopParam.isProcessInvoice) {
-                    item.addHiddenParam(getHidden(Constants.NAME_ID_SHOP_PARAM, "" + shopParam.id_shop));
-                    item.addHiddenParam(getHidden(Constants.NAME_ID_GROUP_SHOP, "" + RsetTools.getLong(rs, "ID_MAIN")));
-                    item.addHiddenParam(getHidden(Constants.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
-                    item.addHiddenParam(getHidden(Constants.NAME_ADD_ID_ITEM, "" + idPk));
-                    item.addHiddenParam(getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP));
-                    item.addHiddenParam(getHidden(Constants.NAME_SHOP_SORT_BY, shopParam.sortBy));
-                    item.addHiddenParam(getHidden(Constants.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
+                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam.id_shop));
+                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + RsetTools.getLong(rs, "ID_MAIN")));
+                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
+                    item.addHiddenParam(getHidden(ShopPortlet.NAME_ADD_ID_ITEM, "" + idPk));
+                    item.addHiddenParam(getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
+                    item.addHiddenParam(getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy));
+                    item.addHiddenParam(getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
                 }
 
                 if (log.isDebugEnabled()) {

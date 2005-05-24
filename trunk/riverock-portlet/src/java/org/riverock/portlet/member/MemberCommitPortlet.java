@@ -119,9 +119,9 @@ public final class MemberCommitPortlet implements Portlet {
 
             mp = new MemberProcessing( actionRequest, actionResponse );
 
-            String moduleName = PortletTools.getString(actionRequest, Constants.MEMBER_MODULE_PARAM);
-            String actionName = PortletTools.getString(actionRequest, Constants.MEMBER_ACTION_PARAM);
-            String subActionName = PortletTools.getString(actionRequest, Constants.MEMBER_SUBACTION_PARAM).trim();
+            String moduleName = PortletTools.getString(actionRequest, MemberConstants.MEMBER_MODULE_PARAM);
+            String actionName = PortletTools.getString(actionRequest, MemberConstants.MEMBER_ACTION_PARAM);
+            String subActionName = PortletTools.getString(actionRequest, MemberConstants.MEMBER_SUBACTION_PARAM).trim();
 
             if ( log.isDebugEnabled() ) {
                 Enumeration e = actionRequest.getParameterNames();

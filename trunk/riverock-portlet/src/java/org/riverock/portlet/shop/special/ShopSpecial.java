@@ -50,6 +50,7 @@ import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.price.BasketShopSession;
 import org.riverock.portlet.price.PriceSpecialItems;
 import org.riverock.portlet.price.Shop;
+import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.webmill.portlet.ContextNavigator;
 
 
@@ -93,7 +94,7 @@ public class ShopSpecial extends HttpServlet
 
             PortletSession session = renderRequest.getPortletSession();
 
-            BasketShopSession b = (BasketShopSession) session.getAttribute(Constants.BASKET_SHOP_SESSION);
+            BasketShopSession b = (BasketShopSession) session.getAttribute(ShopPortlet.BASKET_SHOP_SESSION);
             if (cat.isDebugEnabled())
                 cat.debug("BasketShopSession - " + b);
 

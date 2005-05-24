@@ -63,8 +63,8 @@ final class ForumStandard {
 
             out.write("<!-- begin standart forum -->\n");
 
-            Integer year = PortletTools.getInt(renderRequest, Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
-            Integer month = PortletTools.getInt(renderRequest, Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
+            Integer year = PortletTools.getInt(renderRequest, ForumPortlet.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
+            Integer month = PortletTools.getInt(renderRequest, ForumPortlet.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
 
             ForumInstance forum = null;
             forum = new ForumInstance( renderRequest );
@@ -105,7 +105,7 @@ final class ForumStandard {
             if (forum.id!=null) {
                 ForumMessage message = forum.getCurrentMessage();
                 if (message!=null) {
-                    session.setAttribute(Constants.FORUM_SUBJECT_SESSION, message.getHeader());
+                    session.setAttribute(ForumPortlet.FORUM_SUBJECT_SESSION, message.getHeader());
 
                     out.write("\r\n");
                     out.write("<table border=\"0\">");
@@ -170,8 +170,8 @@ final class ForumStandard {
 
             String url = ("<a href=\"" +
                 PortletTools.url(
-                    Constants.CTX_TYPE_FORUM, renderRequest, renderResponse ) + '&' +
-                Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
+                    ForumPortlet.CTX_TYPE_FORUM, renderRequest, renderResponse ) + '&' +
+                ForumPortlet.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
                 "\">");
 
             out.write(url + bundle.getString( "str.top_forum" ) + "</a>");

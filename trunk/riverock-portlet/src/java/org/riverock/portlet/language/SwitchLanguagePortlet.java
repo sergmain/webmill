@@ -55,6 +55,7 @@ import org.apache.log4j.Logger;
  */
 public final class SwitchLanguagePortlet implements Portlet {
     private final static Logger log = Logger.getLogger( SwitchLanguagePortlet.class );
+    public final static String NAME_ID_LANGUAGE   = "mill.id_language";
 
     public SwitchLanguagePortlet() {
     }
@@ -120,7 +121,7 @@ public final class SwitchLanguagePortlet implements Portlet {
                     log.debug( "PortletRequest attr - "+s+", value - "+PortletTools.getString( actionRequest, s ) );
                 }
             }
-            Long id_lang = PortletTools.getLong( actionRequest, Constants.NAME_ID_LANGUAGE );
+            Long id_lang = PortletTools.getLong( actionRequest, NAME_ID_LANGUAGE );
 
             String s = getLanguageName( id_lang );
 

@@ -55,6 +55,14 @@ import org.apache.log4j.Logger;
 public final class ForumPortlet implements Portlet {
 
     private final static Logger log = Logger.getLogger( ForumPortlet.class );
+    public final static String CTX_TYPE_FORUM = "mill.forum";
+    public final static String CTX_TYPE_FORUM_COMMIT   = "mill.forum_commit";
+    public final static String NAME_YEAR_PARAM = "mill.year";
+    public final static String NAME_MONTH_PARAM = "mill.month";
+    public final static String FORUM_SUBJECT_SESSION = "MILL.FORUM_SUBJECT_SESSION";
+    public final static String NAME_ID_FORUM_PARAM = "mill.id_forum";
+    public final static String NAME_ID_MESSAGE_FORUM_PARAM = "mill.id_forum_message";
+    public final static String NAME_ID_MAIN_FORUM_PARAM = "mill.forum.id_main";
 
     public ForumPortlet(){}
 

@@ -1998,15 +1998,15 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         if (st.hasMoreTokens())
         {
             if (asURL)
-                s += Constants.MEMBER_FROM_PARAM + '=' + from;
+                s += MemberConstants.MEMBER_FROM_PARAM + '=' + from;
             else
-                s += buildHiddenForm(Constants.MEMBER_FROM_PARAM, from);
+                s += buildHiddenForm(MemberConstants.MEMBER_FROM_PARAM, from);
         }
 
         if (isCurrFrom && asURL)
         {
             if (s.length() == 0)
-                s += Constants.MEMBER_FROM_PARAM + '=' + mod.getName();
+                s += MemberConstants.MEMBER_FROM_PARAM + '=' + mod.getName();
             else
                 s += ',' + mod.getName();
         }
@@ -2073,7 +2073,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             if (module == null)
             {
                 log.warn("checkRecursiveCall. module is null. Str - " + str);
-                return Constants.MEMBER_FROM_PARAM + " section is incorrect. ";
+                return MemberConstants.MEMBER_FROM_PARAM + " section is incorrect. ";
             }
 
             cnt = module.getContent(ContentTypeActionType.INDEX_TYPE);
@@ -2125,8 +2125,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                 String s = "<a href=\"" +
                     thisURI +
-                    Constants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
-                    Constants.MEMBER_ACTION_PARAM + "=insert&" +
+                    MemberConstants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
+                    MemberConstants.MEMBER_ACTION_PARAM + "=insert&" +
 //                    ctxInstance.getAsURL() +
                     addLookupURL(true);
 
@@ -2211,8 +2211,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             MemberServiceClass.getString(ta.getTargetModuleName(), renderRequest.getLocale()) + "\" onclick=\"location.href='" +
                             thisURI +
                             sl +
-                            Constants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
-                            Constants.MEMBER_ACTION_PARAM + '=' + TargetModuleTypeActionType.CHANGE.toString() + '&' +
+                            MemberConstants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
+                            MemberConstants.MEMBER_ACTION_PARAM + '=' + TargetModuleTypeActionType.CHANGE.toString() + '&' +
                             addLookupURL(true) +
 //                            ctxInstance.getAsURL() +
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
@@ -2225,8 +2225,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             MemberServiceClass.getString(ta.getTargetModuleName(), renderRequest.getLocale()) + "\" onclick=\"location.href='" +
                             thisURI +
                             sl +
-                            Constants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
-                            Constants.MEMBER_ACTION_PARAM + '=' + TargetModuleTypeActionType.DELETE.toString() + '&' +
+                            MemberConstants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
+                            MemberConstants.MEMBER_ACTION_PARAM + '=' + TargetModuleTypeActionType.DELETE.toString() + '&' +
                             addLookupURL(true) +
 //                            ctxInstance.getAsURL() +
                             mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + "=" + pkID + "';\">\n";
@@ -2285,8 +2285,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                         MemberServiceClass.getString(ta.getTargetModuleName(), renderRequest.getLocale()) + "\" onclick=\"location.href='" +
                         thisURI +
                         sl +
-                        Constants.MEMBER_MODULE_PARAM + '=' + ta.getModule() + '&' +
-                        Constants.MEMBER_ACTION_PARAM + '=' + TargetModuleTypeActionType.INDEX.toString() + '&' +
+                        MemberConstants.MEMBER_MODULE_PARAM + '=' + ta.getModule() + '&' +
+                        MemberConstants.MEMBER_ACTION_PARAM + '=' + TargetModuleTypeActionType.INDEX.toString() + '&' +
                         addLookupURL(true, true) +
 //                        ctxInstance.getAsURL() +
                         mod.getName() + '.' + content.getQueryArea().getPrimaryKey() + '=' + pkID + "';\">\n";
@@ -2336,9 +2336,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
 
         return "<form method=\"POST\" action=\"" + commitURI + "\">\n" +
-            buildHiddenForm(Constants.MEMBER_MODULE_PARAM, mod.getName()) +
-            buildHiddenForm(Constants.MEMBER_ACTION_PARAM, ContentTypeActionType.INSERT.toString()) +
-            buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
+            buildHiddenForm(MemberConstants.MEMBER_MODULE_PARAM, mod.getName()) +
+            buildHiddenForm(MemberConstants.MEMBER_ACTION_PARAM, ContentTypeActionType.INSERT.toString()) +
+            buildHiddenForm(MemberConstants.MEMBER_SUBACTION_PARAM, "commit") +
 //            ctxInstance.getAsForm() +
             addLookupURL(false) +
             s;
@@ -2391,9 +2391,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             throw new Exception("Wrong type of primary key");
 
         return "<form method=\"POST\" action=\"" + commitURI + "\">\n" +
-            buildHiddenForm(Constants.MEMBER_MODULE_PARAM, mod.getName()) +
-            buildHiddenForm(Constants.MEMBER_ACTION_PARAM, ContentTypeActionType.CHANGE.toString()) +
-            buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
+            buildHiddenForm(MemberConstants.MEMBER_MODULE_PARAM, mod.getName()) +
+            buildHiddenForm(MemberConstants.MEMBER_ACTION_PARAM, ContentTypeActionType.CHANGE.toString()) +
+            buildHiddenForm(MemberConstants.MEMBER_SUBACTION_PARAM, "commit") +
 //            ctxInstance.getAsForm() +
             addLookupURL(false) +
             buildHiddenForm(mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), pkValue) +
@@ -2446,9 +2446,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             throw new Exception("Wrong type of primary key");
 
         return "<form method=\"POST\" action=\"" + commitURI + "\">\n" +
-            buildHiddenForm(Constants.MEMBER_MODULE_PARAM, mod.getName()) +
-            buildHiddenForm(Constants.MEMBER_ACTION_PARAM, ContentTypeActionType.DELETE.toString()) +
-            buildHiddenForm(Constants.MEMBER_SUBACTION_PARAM, "commit") +
+            buildHiddenForm(MemberConstants.MEMBER_MODULE_PARAM, mod.getName()) +
+            buildHiddenForm(MemberConstants.MEMBER_ACTION_PARAM, ContentTypeActionType.DELETE.toString()) +
+            buildHiddenForm(MemberConstants.MEMBER_SUBACTION_PARAM, "commit") +
 //            ctxInstance.getAsForm() +
             addLookupURL(false) +
             buildHiddenForm(mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), pkValue) +
@@ -2474,8 +2474,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         return thisURI +
             s +
-            Constants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
-            Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
+            MemberConstants.MEMBER_MODULE_PARAM + '=' + mod.getName() + '&' +
+            MemberConstants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&' +
             addLookupURL(true);
     }
 
@@ -2509,8 +2509,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             TargetModuleType ta = tempCnt.getTargetModule(i);
             if (ta.getAction().getType() == TargetModuleTypeActionType.INDEX_TYPE){
                 String tempStr = thisURI +
-                    Constants.MEMBER_MODULE_PARAM + '=' + nameModule + '&' +
-                    Constants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&';
+                    MemberConstants.MEMBER_MODULE_PARAM + '=' + nameModule + '&' +
+                    MemberConstants.MEMBER_ACTION_PARAM + '=' + ContentTypeActionType.INDEX + '&';
 
                 return "<a href=\"" + tempStr + "\">" +
                     MemberServiceClass.getString(ta.getTargetModuleName(), renderRequest.getLocale()) + "</a>";
@@ -3131,7 +3131,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                             mod.getName() + '.' + MemberServiceClass.getRealName(ff) +
                             "\" size=\"" + (( ff.getLength()==null || ff.getLength().intValue() > 50) ? 50 : ff.getLength().intValue()) + "\" maxlength=\"" +
                             ff.getLength() + "\" value=\"" +
-                            StringTools.prepareEditForm(defValue) +
+                            StringTools.encodeXml(defValue) +
                             "\"" +
                             ">\n";
                         break;
@@ -3140,7 +3140,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                         s_ += "<textarea name=\"" + mod.getName() + '.' + MemberServiceClass.getRealName(ff) +
                             "\" rows=\"" + ((ff.getLength()!=null?ff.getLength().intValue():0) / 50 + 5) + "\" cols=\"50\" maxlength=\"" +
                             ff.getLength() + "\">" +
-                            StringTools.prepareEditForm(defValue) +
+                            StringTools.encodeXml(defValue) +
                             "</textarea>";
                         break;
 
@@ -3159,7 +3159,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                     case FieldsTypeJspTypeType.BIGTEXT_LOB_TYPE:
                         s_ += "<textarea name=\"" + mod.getName() + '.' + MemberServiceClass.getRealName(ff) +
                             "\" rows=\"50\" cols=\"65\">" +
-                            StringTools.prepareEditForm(defValue) +
+                            StringTools.encodeXml(defValue) +
                             "</textarea>";
                         break;
 
@@ -3288,7 +3288,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                                 mod.getName() + '.' + MemberServiceClass.getRealName(ff) +
                                                 "\" size=\"" + inputSize + "\" maxlength=\"" + inputMaxSize +
                                                 "\" value=\"" +
-                                                StringTools.prepareEditForm(editVal) +
+                                                StringTools.encodeXml(editVal) +
                                                 "\">\n";
                                             break;
                                         case FieldsTypeJspTypeType.TEXT_AREA_TYPE:
@@ -3297,7 +3297,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                             s_ += "<textarea name=\"" + mod.getName() + '.' + MemberServiceClass.getRealName(ff) +
                                                 "\" rows=\"" + ((ff.getLength()!=null?ff.getLength().intValue():0) / 50 + 5) + "\" cols=\"50\" maxlength=\"" +
                                                 inputMaxSize + "\">" +
-                                                StringTools.prepareEditForm(editVal) +
+                                                StringTools.encodeXml(editVal) +
                                                 "</textarea>";
                                             break;
                                         case FieldsTypeJspTypeType.BIGTEXT_TYPE:
@@ -3306,7 +3306,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                                             s_ += "<textarea name=\"" + mod.getName() + '.' + MemberServiceClass.getRealName(ff) +
                                                 "\" rows=\"50\" cols=\"65\">" +
-                                                StringTools.prepareEditForm(editVal) +
+                                                StringTools.encodeXml(editVal) +
                                                 "</textarea>";
                                             break;
                                         case FieldsTypeJspTypeType.DATE_TEXT_TYPE:
@@ -3756,11 +3756,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         this.firmId = auth.getUserInfo().getIdFirm();
         this.userId = auth.getUserInfo().getIdUser();
 
-        fromParam = PortletTools.getString(this.renderRequest, Constants.MEMBER_FROM_PARAM, "").trim();
+        fromParam = PortletTools.getString(this.renderRequest, MemberConstants.MEMBER_FROM_PARAM, "").trim();
         db_ = DatabaseAdapter.getInstance();
         try
         {
-            String moduleName = PortletTools.getString( this.renderRequest, Constants.MEMBER_MODULE_PARAM );
+            String moduleName = PortletTools.getString( this.renderRequest, MemberConstants.MEMBER_MODULE_PARAM );
             if (log.isDebugEnabled())
             {
                 log.debug("moduleName: "+moduleName);
@@ -3789,8 +3789,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             }
         }
 
-        thisURI = PortletTools.url(Constants.CTX_TYPE_MEMBER_VIEW , renderRequest, this.renderResponse ) + '&';
-        commitURI = PortletTools.url(Constants.CTX_TYPE_MEMBER_COMMIT , renderRequest, this.renderResponse ) + '&';
+        thisURI = PortletTools.url(MemberConstants.CTX_TYPE_MEMBER_VIEW , renderRequest, this.renderResponse ) + '&';
+        commitURI = PortletTools.url(MemberConstants.CTX_TYPE_MEMBER_COMMIT , renderRequest, this.renderResponse ) + '&';
 
     }
 

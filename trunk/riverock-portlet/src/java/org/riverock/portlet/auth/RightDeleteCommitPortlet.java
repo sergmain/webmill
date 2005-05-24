@@ -80,7 +80,7 @@ public final class RightDeleteCommitPortlet implements Portlet {
         try {
 
             AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
-            if ( auth_ == null || !auth_.isUserInRole( "webmill.auth_bind" ) ) {
+            if ( auth_ == null || !auth_.isUserInRole( RightIndex.AUTH_RIGHT_ROLE ) ) {
                 throw new PortletException( "You have not enough right" );
             }
 

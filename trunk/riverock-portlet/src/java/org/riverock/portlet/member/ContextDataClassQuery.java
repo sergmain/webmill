@@ -138,7 +138,7 @@ public class ContextDataClassQuery extends BaseClassQuery
         String namePortlet = null;
         DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                     "select ID_SITE_CTX_TYPE, TYPE "+
                     "from SITE_CTX_TYPE "+
@@ -156,9 +156,10 @@ public class ContextDataClassQuery extends BaseClassQuery
         }
         finally
         {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
+            db_ = null;
         }
 
         if (log.isDebugEnabled())

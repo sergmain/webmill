@@ -74,7 +74,7 @@ public final class OrderLogic {
 
             PortletSession session = renderRequest.getPortletSession(true);
 
-            Long idShop = PortletTools.getIdPortlet(Constants.NAME_ID_SHOP_PARAM, renderRequest);
+            Long idShop = PortletTools.getIdPortlet(ShopPortlet.NAME_ID_SHOP_PARAM, renderRequest);
 
 
             if (log.isDebugEnabled())
@@ -86,7 +86,7 @@ public final class OrderLogic {
             }
 
             // get current shop from session
-            Shop tempShop = (Shop) session.getAttribute(Constants.CURRENT_SHOP);
+            Shop tempShop = (Shop) session.getAttribute(ShopPortlet.CURRENT_SHOP);
 
             if (log.isDebugEnabled()) {
                 log.debug("tempShop " + tempShop);
@@ -102,7 +102,7 @@ public final class OrderLogic {
                     log.debug("tempShop is null and idShop is not null ");
 
                 shop = Shop.getInstance(dbDyn, idShop);
-                session.setAttribute(Constants.CURRENT_SHOP, shop);
+                session.setAttribute(ShopPortlet.CURRENT_SHOP, shop);
             }
             // если в сессии есть текущий магазин и
             // код вызванного магазина совпадает с кодом мкгаза в сессии,
@@ -118,17 +118,18 @@ public final class OrderLogic {
 // если в сессии есть текущий магазин и
 // код вызванного магазина не совпадает с кодом магаза в сессии,
 // заменяем магаз в сессии на магаз с вызываемым кодом
-            else if (tempShop != null && idShop != null && !tempShop.id_shop.equals(idShop)) {
-                if (log.isDebugEnabled())
+            else if (tempShop != null && idShop != null && !idShop.equals(tempShop.id_shop)) {
+                if (log.isDebugEnabled()) {
                     log.debug("#11.22.09 create shop instance with idShop - " + idShop.longValue());
+                }
 
                 shop = Shop.getInstance(dbDyn, idShop);
 
                 if (log.isDebugEnabled())
                     log.debug("idShop of created shop - " + shop.id_shop);
 
-                session.removeAttribute(Constants.CURRENT_SHOP);
-                session.setAttribute(Constants.CURRENT_SHOP, shop);
+                session.removeAttribute(ShopPortlet.CURRENT_SHOP);
+                session.setAttribute(ShopPortlet.CURRENT_SHOP, shop);
             }
 // теперь в shop находится текущий магаз ( тот который в сессии )
 // если его создание прошло успешно - магаз с вызываемым кодом действительно есть,
@@ -144,7 +145,7 @@ public final class OrderLogic {
 // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
 // если заказа в сессии нет, то создаем
             if (shop != null && shop.id_shop != null) {
-                order = (OrderType) session.getAttribute(Constants.ORDER_SESSION);
+                order = (OrderType) session.getAttribute(ShopPortlet.ORDER_SESSION);
 
                 if (log.isDebugEnabled())
                     log.debug("order object - " + order);
@@ -175,8 +176,8 @@ public final class OrderLogic {
                     }
                 }
 
-                Long id_item = PortletTools.getLong(renderRequest, Constants.NAME_ADD_ID_ITEM);
-                int count = PortletTools.getInt(renderRequest, Constants.NAME_COUNT_ADD_ITEM_SHOP, new Integer(0)).intValue();
+                Long id_item = PortletTools.getLong(renderRequest, ShopPortlet.NAME_ADD_ID_ITEM);
+                int count = PortletTools.getInt(renderRequest, ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP, new Integer(0)).intValue();
 
 // если при вызове было указано какое либо количество определенного наименования,
 // то помещаем это наименование в заказ
@@ -193,8 +194,8 @@ public final class OrderLogic {
 
                     addItem(dbDyn, order, id_item, count);
                 }
-                session.removeAttribute(Constants.ORDER_SESSION);
-                session.setAttribute(Constants.ORDER_SESSION, order);
+                session.removeAttribute(ShopPortlet.ORDER_SESSION);
+                session.setAttribute(ShopPortlet.ORDER_SESSION, order);
             }
 
             dbDyn.commit();

@@ -51,8 +51,19 @@ public class Menatep
 
     // Code of currency, which used processing center
     public ProcessingInCurrency pic[] = {
-        new ProcessingInCurrency(Constants.CURRENCY_RUB, "RUR", 0L, 1)
+        new ProcessingInCurrency(CURRENCY_RUB, "RUR", 0L, 1)
     };
+    public final static String CURRENCY_RUB = "RUB";
+    public final static String CURRENCY_USD = "USD";
+    public final static String CURRENCY_EURO = "EURO";
+    public final static String MD5RSA = "md5WithRSAEncryption";
+    public final static String FORGE_MD5RSA = "MD5withRSA";
+    public final static String CARD_VISA = "VISA";
+    public final static String CARD_MASTER = "MASTER";
+    public final static String CARD_DINER_CLUB = "DINERCLUB";
+    public final static String CARD_AMEX = "AMERICAN_EXPRESS";
+    public final static String CARD_SBER = "SBER_BANK";
+    public final static String RSA = "RSA";
 
     public static boolean isOrderCanProcessed()
     {
@@ -128,7 +139,7 @@ str +=
 
             byte[] signature = SecurityTools.sign(nameFilePrivateKey,
                     dataToSign.getBytes(),
-                    Constants.FORGE_MD5RSA);
+                FORGE_MD5RSA);
 
             String signatureTAG =
                     "<signature signer=\"" + shop.name_shop + "\" method=\"RSA-MD5\">\n" +

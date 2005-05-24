@@ -54,6 +54,9 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
     public String answer = null;
     public Calendar datePost = null;
 
+    public void reinit() {
+    }
+
     public void terminate( Long id_ ) {
     }
 

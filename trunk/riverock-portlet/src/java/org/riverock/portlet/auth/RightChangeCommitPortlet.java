@@ -84,7 +84,7 @@ public final class RightChangeCommitPortlet implements Portlet {
             ActionResponse actionResponse = (ActionResponse)response;
 
             AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
-            if ( auth_ == null || !auth_.isUserInRole( "webmill.auth_bind" ) ) {
+            if ( auth_ == null || !auth_.isUserInRole( RightIndex.AUTH_RIGHT_ROLE ) ) {
                 throw new PortletException( "You have not enough right" );
             }
 
@@ -108,7 +108,7 @@ public final class RightChangeCommitPortlet implements Portlet {
                 ( one.equals( PortletTools.getInt( actionRequest, "ru" ) ) ?"U" :"" ) +
                 ( one.equals( PortletTools.getInt( actionRequest, "ra" ) ) ?"A" :"" );
 
-            dbDyn = DatabaseAdapter.getInstance( true );
+            dbDyn = DatabaseAdapter.getInstance();
             ps = dbDyn.prepareStatement( "UPDATE AUTH_RELATE_RIGHT_ARM " +
                 "SET " +
                 "	id_access_group = ?, " +

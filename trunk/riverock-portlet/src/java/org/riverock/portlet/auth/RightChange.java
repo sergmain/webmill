@@ -95,8 +95,7 @@ public final class RightChange extends HttpServlet
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
-            if ( auth_==null )
-            {
+            if ( auth_ == null || !auth_.isUserInRole( RightIndex.AUTH_RIGHT_ROLE ) ) {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
                 return;
             }

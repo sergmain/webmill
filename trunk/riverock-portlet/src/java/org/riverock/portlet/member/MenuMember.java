@@ -363,16 +363,16 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
                     log.debug("PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
 
                     log.debug(
-                        "Module url - "+ PortletTools.url( Constants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
-                        Constants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
-                        Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
+                        "Module url - "+ PortletTools.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
+                        MemberConstants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
+                        MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
                     );
                 }
 
                 mod.setModuleUrl(
-                    PortletTools.url( Constants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
-                    Constants.MEMBER_NAME_APPL_PARAM  + '=' + applicationCode_ + '&' +
-                    Constants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
+                    PortletTools.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
+                    MemberConstants.MEMBER_NAME_APPL_PARAM  + '=' + applicationCode_ + '&' +
+                    MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
                 );
 
             }

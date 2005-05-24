@@ -41,6 +41,8 @@ import org.riverock.webmill.portlet.GenericWebmillPortlet;
  * $Id$
  */
 public class JobBlockPortlet  extends GenericWebmillPortlet {
+    public final static String CTX_TYPE_JOB = "mill.job";
+    public final static String NAME_ID_JOB_PARAM  = "mill.id_job";
 
     public JobBlockPortlet(){}
 

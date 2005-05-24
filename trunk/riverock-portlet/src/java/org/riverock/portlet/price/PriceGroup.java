@@ -71,10 +71,10 @@ public final class PriceGroup {
             groupItem.setIdGroup( item.id_group );
 
             PortletURL portletURL = renderResponse.createRenderURL();
-            portletURL.setParameter(org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP);
-            portletURL.setParameter(Constants.NAME_ID_GROUP_SHOP, item.id_group.toString());
+            portletURL.setParameter(org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
+            portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, item.id_group.toString());
             portletURL.setParameters(shopParam.currencyURL);
-            portletURL.setParameter(Constants.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString());
+            portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString());
 
 //            String url = PortletTools.url(
 //                Constants.CTX_TYPE_SHOP, shopParam.nameTemplate) + '&' +
@@ -87,8 +87,8 @@ public final class PriceGroup {
 //                url += ("&" + Constants.NAME_SHOP_SORT_BY + '=' + shopParam.sortBy +
 //                    '&' + Constants.NAME_SHOP_SORT_DIRECT + '=' + shopParam.sortDirect
 //                    );
-                portletURL.setParameter(Constants.NAME_SHOP_SORT_BY, shopParam.sortBy);
-                portletURL.setParameter(Constants.NAME_SHOP_SORT_DIRECT, ""+shopParam.sortDirect);
+                portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy);
+                portletURL.setParameter(ShopPortlet.NAME_SHOP_SORT_DIRECT, ""+shopParam.sortDirect);
             }
             groupItem.setGroupUrl( portletURL.toString() );
 

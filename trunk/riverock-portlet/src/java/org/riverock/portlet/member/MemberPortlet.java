@@ -77,8 +77,8 @@ public final class MemberPortlet  implements Portlet {
 
         try {
 
-            String applicationCode = PortletTools.getString(renderRequest, Constants.MEMBER_NAME_APPL_PARAM);
-            String moduleCode = PortletTools.getString(renderRequest, Constants.MEMBER_NAME_MOD_PARAM);
+            String applicationCode = PortletTools.getString(renderRequest, MemberConstants.MEMBER_NAME_APPL_PARAM);
+            String moduleCode = PortletTools.getString(renderRequest, MemberConstants.MEMBER_NAME_MOD_PARAM);
 
             if (log.isDebugEnabled())
             {

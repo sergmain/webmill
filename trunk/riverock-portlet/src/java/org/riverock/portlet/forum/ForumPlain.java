@@ -65,8 +65,8 @@ final class ForumPlain {
             out.write("\n<!-- $Id$ -->\n");
 
 
-            Integer year = PortletTools.getInt(renderRequest, Constants.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
-            Integer month = PortletTools.getInt(renderRequest, Constants.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
+            Integer year = PortletTools.getInt(renderRequest, ForumPortlet.NAME_YEAR_PARAM, new Integer(Calendar.getInstance().get(Calendar.YEAR)));
+            Integer month = PortletTools.getInt(renderRequest, ForumPortlet.NAME_MONTH_PARAM, new Integer(Calendar.getInstance().get(Calendar.MONTH) + 1));
 
             ForumInstance forum = null;
             forum = new ForumInstance( renderRequest );
@@ -139,8 +139,8 @@ final class ForumPlain {
 */
 
                 out.write("<a href=\"" +
-                        PortletTools.url(Constants.CTX_TYPE_FORUM, renderRequest, renderResponse ) + '&' +
-                        Constants.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
+                        PortletTools.url(ForumPortlet.CTX_TYPE_FORUM, renderRequest, renderResponse ) + '&' +
+                        ForumPortlet.NAME_ID_FORUM_PARAM + '=' + forum.id_forum +
                         "\">" +
                     bundle.getString( "str.top_forum" ) + "</a>"
                 );
