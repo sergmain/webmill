@@ -63,7 +63,7 @@ public class ForumDAO {
                 forumConcreteBean.setF_name(rs.getString("f_name"));
                 forumConcreteBean.setModeratorId(rs.getInt("f_u_id"));
                 forumConcreteBean.setModeratorName(
-                    CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
+                    StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
                 );
                 forumConcreteBean.setF_info(rs.getString("f_info"));
                 forumConcreteBean.setF_topics(rs.getInt("f_topics"));
@@ -141,10 +141,10 @@ public class ForumDAO {
                 topic.setT_lasttime( rs.getTimestamp("t_lasttime") );
                 topic.setT_u_id2(rs.getInt("t_u_id2"));
                 topic.setU_name(
-                    CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
+                    StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
                 );
                 topic.setU_name2(
-                    CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME2"), RsetTools.getString(rs, "MIDDLE_NAME2"), RsetTools.getString(rs, "LAST_NAME2") )
+                    StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME2"), RsetTools.getString(rs, "MIDDLE_NAME2"), RsetTools.getString(rs, "LAST_NAME2") )
                 );
                 countPages = (int)(topic.getT_replies()/messagesPerPage);
                 if ((topic.getT_replies()%messagesPerPage)!=0) {

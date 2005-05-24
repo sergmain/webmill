@@ -59,6 +59,11 @@ public class UpgradeForumFromV1ToV2 {
 
     public static void main(String s[]) throws Exception {
 
+        if (s.length==0) {
+            throw new IllegalArgumentException("usage: UpgradeForumFromV1ToV2 <DB_CONNECTION_NAME>");
+        }
+
+        System.out.println("Connection name: " + s[0]);
         
         StartupApplication.init();
         System.out.println("GenericConfig.getGenericDebugDir() = " + GenericConfig.getGenericDebugDir());

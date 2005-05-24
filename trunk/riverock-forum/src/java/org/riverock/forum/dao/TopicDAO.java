@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
@@ -67,7 +68,7 @@ public class TopicDAO {
                 topicBean.setF_info(rs.getString("F_INFO"));
                 topicBean.setF_u_id(rs.getInt("F_U_ID"));
                 topicBean.setModeratorName(
-                    CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
+                    StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
                 );
                 topicBean.setF_topics(rs.getInt("F_TOPICS"));
                 topicBean.setF_messages(rs.getInt("F_MESSAGES"));
@@ -144,7 +145,7 @@ public class TopicDAO {
                 message.setM_time(rs.getTimestamp("m_time"));
                 message.setM_u_id(rs.getInt("m_u_id"));
                 message.setU_name(
-                    CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
+                    StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
                 );
                 message.setU_regtime(rs.getTimestamp("DATE_START_WORK"));
                 message.setU_address(rs.getString("ADDRESS"));

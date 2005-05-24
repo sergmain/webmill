@@ -11,6 +11,7 @@ import org.riverock.forum.bean.UserBean;
 import org.riverock.module.exception.ActionException;
 import org.riverock.forum.util.CommonUtils;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 
 /**
  * UserDAO interface
@@ -43,7 +44,7 @@ public class UserDAO {
                 userBean = new UserBean();
                 userBean.setU_id(u_id.intValue());
                 userBean.setU_name(
-                    CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
+                    StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
                 );
                 userBean.setU_avatar_id(rs.getInt("u_avatar_id"));
                 userBean.setU_password("");

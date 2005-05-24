@@ -90,7 +90,7 @@ public class ForumListManagerPortlet extends AbstractForumPortlet {
         genericBean.setRegisterUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
         genericBean.setMembersUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setForumHomeUrl(
-            PortletTools.ctxStringBuffer((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_PORTLET_NAME).
+            PortletTools.ctxStringBuffer((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_LIST_MANAGER_PORTLET_NAME).
             append('?').
             append("a=1")
         );

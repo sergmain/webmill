@@ -3,13 +3,16 @@ package org.riverock.forum.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.exception.DatabaseException;
 import org.riverock.forum.bean.ForumSmallBean;
+import org.riverock.common.tools.RsetTools;
 
 public final class CommonDAO {
 
@@ -80,5 +83,43 @@ public final class CommonDAO {
             ps = null;
         }
         return forums;
+    }
+
+    public static void deleteForumConcrete(DatabaseAdapter adapter, Integer forumConcreteId) throws SQLException, DatabaseException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = adapter.prepareStatement(
+                "select a.T_ID from WM_FORUM_TOPIC a where T_F_ID=?"
+            );
+            ps.setInt(1, forumConcreteId.intValue());
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                DatabaseManager.runSQL(
+                    adapter,
+                    "delete from WM_FORUM_MESSAGE where M_T_ID=? ",
+                    new Object[] { RsetTools.getLong(rs, "T_ID") },
+                    new int[] { Types.INTEGER }
+                );
+            }
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_FORUM_TOPIC where T_F_ID=? ",
+                new Object[] { forumConcreteId },
+                new int[] { Types.INTEGER }
+            );
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_FORUM_CONCRETE where F_ID=? ",
+                new Object[] { forumConcreteId },
+                new int[] { Types.INTEGER }
+            );
+        }
+        finally {
+            DatabaseManager.close(rs, ps);
+            rs = null;
+            ps = null;
+        }
     }
 }

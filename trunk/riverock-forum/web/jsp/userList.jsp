@@ -1,13 +1,12 @@
 <!--forum.jsp-->
 <%@page language="java" contentType="text/html; charset=utf-8" import="org.riverock.forum.util.*,org.riverock.forum.bean.*,java.util.Iterator"%>
-<jsp:useBean id="userListBean" scope="request" class="org.riverock.forum.bean.UserListBean"/>
 <%@include file="inc/header.jsp" %>
 
 <!--bar-->
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
 	<tr>
 		<td  >
-			<b><IMG SRC="/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">&nbsp;<a href="<c:out value='${genericBean.forumHomeUrl}'/>"><c:out value="${genericBean.forumName}"/></A>&nbsp;&gt;&nbsp;User List</b>
+			<b><IMG SRC="/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">&nbsp;<a href="<c:out value='${genericBean.forumHomeUrl}'/>"><c:out value="${genericBean.forumName}"/></A>&nbsp;&gt;&nbsp;User List</b>
 		</td>
 	</tr>
 </table>
@@ -33,10 +32,10 @@ while(users.hasNext()){
   <tr>
 	<td width="15%" class="forum-td">
     <%=StringTools.encodeXml(user.getU_name())%></td>
-	<td width="7%" bgcolor="<%=TD_BGCOLOR2%>"><img src="/forum/img/avatars/<%=user.getU_avatar_id()%>.gif" width=36 height=36 border="0"></td>
+	<td width="7%" bgcolor="<%=TD_BGCOLOR2%>"><img src="/riverock/forum/img/avatars/<%=user.getU_avatar_id()%>.gif" width=36 height=36 border="0"></td>
 	<td width="15%" class="forum-td"><%=user.getR_name()%></td>
 	<td width="7%" bgcolor="<%=TD_BGCOLOR2%>"><A HREF="mailto:
-    <%=StringTools.encodeXml(user.getU_email())%>"><IMG SRC="/forum/img/email.gif" WIDTH="16" HEIGHT="16" BORDER=0 ALT="Email"></A></td>
+    <%=StringTools.encodeXml(user.getU_email())%>"><IMG SRC="/riverock/forum/img/email.gif" WIDTH="16" HEIGHT="16" BORDER=0 ALT="Email"></A></td>
 	<td width="15%" class="forum-td"><%=DateTimeUtil.shortFmt(user.getU_regtime())%></td>
 	<td width="20%" bgcolor="<%=TD_BGCOLOR2%>">
     <%=StringTools.encodeXml(user.getU_address())%></td>
