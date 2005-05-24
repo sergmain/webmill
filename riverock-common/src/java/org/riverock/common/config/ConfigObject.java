@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.common.config;
 
 import java.io.File;
@@ -38,9 +34,13 @@ import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
+/**
+ * $Id$
+ */
 public class ConfigObject
 {
     private static Logger log = Logger.getLogger(ConfigObject.class);
+    public static final String LOCAL_CONFIG_PARAM_NAME = "is-local-config";
 
     private String nameConfigFile = null;
 
@@ -55,42 +55,42 @@ public class ConfigObject
         return configObject;
     }
 
-    public static ConfigObject load(String nameJndiCtx, String nameConfigFile_, Class configClass)
+    public static ConfigObject load(String nameJndiCtx, String nameConfigParam, String nameConfigFile_, Class configClass)
     {
         ConfigObject config = new ConfigObject();
         File configFile = null;
-        if (PropertiesProvider.getIsServletEnv())
-        {
-            try
-            {
-                InitialContext ic = new InitialContext();
-                config.nameConfigFile = (String)ic.lookup("java:comp/env/" + nameJndiCtx);
-                if (File.separatorChar=='\\')
-                    config.nameConfigFile = config.nameConfigFile.replace( '/', '\\');
-                else
-                    config.nameConfigFile = config.nameConfigFile.replace( '\\', '/');
-
-                configFile = new File( config.nameConfigFile );
+        if (PropertiesProvider.getIsServletEnv()) {
+            boolean isLocal = "true".equalsIgnoreCase( (String)PropertiesProvider.getParameter(LOCAL_CONFIG_PARAM_NAME) );
+            if (isLocal) {
+                config.nameConfigFile =
+                    PropertiesProvider.getApplicationPath()+
+                    File.separatorChar+
+                    "WEB-INF" +
+                    File.separatorChar+
+                    PropertiesProvider.getParameter(nameConfigParam);
             }
-            catch (NamingException e)
-            {
-                String es = "Error get value from JDNI context";
-                log.error(es, e);
-                throw new ConfigException( es, e );
+            else {
+                try {
+                    InitialContext ic = new InitialContext();
+                    config.nameConfigFile = (String)ic.lookup("java:comp/env/" + nameJndiCtx);
+                }
+                catch (NamingException e) {
+                    String es = "Error get value from JDNI context";
+                    log.error(es, e);
+                    throw new ConfigException( es, e );
+                }
+            }
+            if (config.nameConfigFile==null) {
+                log.warn("Config file not defined. isLocal: " + isLocal);
             }
         }
-        else
-        {
-
+        else {
             String defURL = null;
-
-            if (PropertiesProvider.getConfigPath() == null)
-            {
+            if (PropertiesProvider.getConfigPath() == null) {
                 String es = "Config path not resolved";
                 log.fatal(es);
                 throw new IllegalStateException(es);
             }
-
             if (log.isDebugEnabled())
                 log.debug("#15.100");
 
@@ -102,10 +102,24 @@ public class ConfigObject
                 log.debug("#15.101" + defURL);
 
             config.nameConfigFile = defURL;
-
-            configFile = new File( defURL );
-
         }
+
+        if (config.nameConfigFile==null) {
+            String errorString = "name of config file not determinated";
+            log.error(errorString);
+            throw new IllegalArgumentException(errorString);
+        }
+
+        if (File.separatorChar=='\\')
+            config.nameConfigFile = config.nameConfigFile.replace( '/', '\\');
+        else
+            config.nameConfigFile = config.nameConfigFile.replace( '\\', '/');
+
+        if (log.isInfoEnabled()) {
+            log.info( "nameConfigFile: " + config.nameConfigFile );
+        }
+
+        configFile = new File( config.nameConfigFile );
 
         if (!configFile.exists())
         {

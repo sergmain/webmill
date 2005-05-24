@@ -24,53 +24,65 @@
  */
 package org.riverock.common.config;
 
+import java.util.Map;
+import java.util.HashMap;
+
 /**
  * User: serg_main
  * Date: 28.11.2003
  * Time: 19:05:41
+ *
  * @author Serge Maslyukov
- * $Id$
+ *         $Id$
  */
-public class PropertiesProvider
-{
+public class PropertiesProvider {
     private static boolean isServletEnv = false;
     private static String applicationPath = null;
     private static String configPath = null;
+    private static Map parameters = new HashMap();
 
     private final static String lang[] = {"ru"};
-    public static String[] getLocaleLanguage()
-    {
+
+    public static String[] getLocaleLanguage() {
         return lang;
     }
 
-    public static String getConfigPath()
-    {
+    public static String getConfigPath() {
         return configPath;
     }
 
-    public static void setConfigPath(String configPath)
-    {
+    public static void setConfigPath(String configPath) {
         PropertiesProvider.configPath = configPath;
     }
 
-    public static String getApplicationPath()
-    {
+    public static String getApplicationPath() {
         return applicationPath;
     }
 
-    public static void setApplicationPath(String applicationPath)
-    {
+    public static void setApplicationPath(String applicationPath) {
         PropertiesProvider.applicationPath = applicationPath;
     }
 
-    public static boolean getIsServletEnv()
-    {
+    public static boolean getIsServletEnv() {
         return isServletEnv;
     }
 
-    public static void setIsServletEnv(boolean servletEnv)
-    {
+    public static void setIsServletEnv(boolean servletEnv) {
         isServletEnv = servletEnv;
     }
 
+    public static Map getParameters() {
+        return parameters;
+    }
+
+    public static void setParameters(Map parameters) {
+        PropertiesProvider.parameters = parameters;
+    }
+
+    public static Object getParameter(String key) {
+        if (key==null) {
+            return null;
+        }
+        return PropertiesProvider.parameters.get( key );
+    }
 }
