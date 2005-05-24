@@ -39,6 +39,5 @@ public class Constants
 
     public final static String JNDI_MILL_LOG_PATH = "jsmithy/generic/LogPath";
     public final static String JNDI_MILL_LOG_CONFIG_FILE = "jsmithy/generic/LogConfigFile";
-    public final static String JNDI_GENERIC_CONFIG_FILE = "jsmithy/generic/ConfigFile";
 
 }
