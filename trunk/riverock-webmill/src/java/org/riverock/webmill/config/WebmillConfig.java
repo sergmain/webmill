@@ -22,6 +22,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.config;
+
+import java.io.File;
+import java.nio.charset.Charset;
+
+import org.riverock.webmill.schema.config.WebmillConfigType;
+import org.riverock.webmill.schema.config.CustomDirsType;
+import org.riverock.common.config.ConfigObject;
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.tools.StringTools;
+
+import org.apache.log4j.Logger;
+
 
 /**
  * User: serg_main
@@ -30,27 +43,13 @@
  * @author Serge Maslyukov
  * $Id$
  */
-
-package org.riverock.webmill.config;
-
-import java.io.File;
-import java.nio.charset.Charset;
-
-import org.riverock.webmill.schema.config.WebmillConfigType;
-import org.riverock.webmill.schema.config.CustomDirsType;
-import org.riverock.webmill.main.Constants;
-import org.riverock.common.config.ConfigObject;
-import org.riverock.common.config.ConfigException;
-import org.riverock.common.tools.StringTools;
-
-import org.apache.log4j.Logger;
-
-public class WebmillConfig
-{
-
+public class WebmillConfig {
     private static Logger log = Logger.getLogger(WebmillConfig.class);
+    private static final String CONFIG_FILE_PARAM_NAME = "webmill-config-file";
+    private static final String NAME_CONFIG_PARAM = "jsmithy-webmill.xml";
+    private static final String JNDI_WEBMILL_CONFIG_FILE = "jsmithy/webmill/ConfigFile";
 
-    public static String contextName = "";
+//    public static String contextName = "";
     private static ConfigObject configObject = null;
 
     private static boolean isConfigProcessed = false;
@@ -71,7 +70,8 @@ public class WebmillConfig
             if (isConfigProcessed)
                 return;
 
-            configObject = ConfigObject.load(Constants.JNDI_WEBMILL_CONFIG_FILE, "jsmithy-webmill.xml", WebmillConfigType.class);
+            configObject = ConfigObject.load(
+                JNDI_WEBMILL_CONFIG_FILE, CONFIG_FILE_PARAM_NAME, NAME_CONFIG_PARAM, WebmillConfigType.class);
 
             if (log.isDebugEnabled())
                 log.debug("#15.006");

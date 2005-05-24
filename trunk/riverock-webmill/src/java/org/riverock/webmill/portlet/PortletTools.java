@@ -51,7 +51,6 @@ import org.riverock.common.multipart.MultipartRequestWrapper;
 import org.riverock.common.multipart.UploadException;
 import org.riverock.common.multipart.FilePart;
 import org.riverock.common.tools.StringTools;
-import org.riverock.common.config.ConfigException;
 import org.riverock.interfaces.schema.javax.portlet.InitParamType;
 import org.riverock.interfaces.schema.javax.portlet.MimeTypeType;
 import org.riverock.interfaces.schema.javax.portlet.PortletType;
@@ -104,10 +103,11 @@ public final class PortletTools {
             return defValue;
 
         String value = p.getProperty( key );
-        if (value!=null)
-            return value;
-        else
+        if ( StringTools.isEmpty( value ) ) {
             return defValue;
+        }
+        
+        return value;
     }
 
     public static Integer getInitParameterInt( final PortletConfig portletConfig, final String name, final Integer defValue ) {

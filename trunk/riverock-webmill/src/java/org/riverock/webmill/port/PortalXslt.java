@@ -40,6 +40,7 @@ import org.riverock.webmill.core.GetSiteXsltDataWithIdSiteXsltList;
 import org.riverock.webmill.schema.core.SiteXsltDataItemType;
 import org.riverock.webmill.schema.core.SiteXsltDataListType;
 import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.common.tools.StringTools;
 
 import org.apache.log4j.Logger;
 
@@ -53,7 +54,7 @@ public class PortalXslt
     private static CacheFactory cache = new CacheFactory( PortalXslt.class.getName() );
 
     public String xsltLang = null;
-    public String xslt = null;
+    private String xslt = null;
     private Transformer transformer = null;
     private Object transformerSync = new Object();
 
@@ -109,8 +110,9 @@ public class PortalXslt
                 SiteXsltDataItemType item = xsltList.getSiteXsltData(i);
                 xslt += item.getXslt();
             }
-
-            createTransformer();
+            if (!StringTools.isEmpty(xslt)) {
+                createTransformer();
+            }
         }
         catch(Exception e)
         {

@@ -180,8 +180,12 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
             log.debug( "full key: " + localePackageName + '-' + locale + '-' + key );
         }
         Object obj = messages.get( localePackageName + '-' + locale + '-' + key );
-        if ( messages == null )
-            return null;
+        if ( obj == null ) {
+            // try search 'system' property
+            obj = messages.get( "mill.locale.main" + '-' + locale + '-' + key );
+            if ( obj == null )
+                return null;
+        }
 
         if ( log.isDebugEnabled() ) {
             log.debug( "message: " + obj );
