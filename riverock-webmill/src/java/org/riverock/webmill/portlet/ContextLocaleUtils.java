@@ -151,8 +151,9 @@ public final class ContextLocaleUtils {
         boolean hasVariant = (accept.getVariant()!=null && accept.getVariant().trim().length()>0);
         boolean hasCountry = (accept.getCountry()!=null && accept.getCountry().trim().length()>0);
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("accept locale: "+accept.toString()+", hasVariant - "+hasVariant + ", hasCountry - "+hasCountry);
+        }
 
         SiteSupportLanguageItemType result = null;
         Locale rl = null;
@@ -163,8 +164,18 @@ public final class ContextLocaleUtils {
 
             Locale cl = StringTools.getLocale( sl.getCustomLanguage() );
 
-            if (log.isDebugEnabled())
-                log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale - "+cl.toString());
+            if (log.isDebugEnabled()) {
+                if (cl==null) {
+                    log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale is null");
+                }
+                else {
+                    log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale - "+cl.toString());
+                }
+            }
+
+            if (cl==null) {
+                continue;
+            }
 
             if (accept.toString().equalsIgnoreCase(cl.toString()))
                 return sl;
@@ -181,7 +192,9 @@ public final class ContextLocaleUtils {
                 }
             }
             else if (accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) ){
-                if (log.isDebugEnabled()) log.debug("new resultTemp locale is: "+cl.toString());
+                if (log.isDebugEnabled()) {
+                    log.debug("new resultTemp locale is: "+cl.toString());
+                }
                 resultTemp = sl;
                 rlTemp = cl;
             }
@@ -209,7 +222,12 @@ public final class ContextLocaleUtils {
             }
         }
 
-        if (log.isDebugEnabled()) log.debug("Result SiteSupportLanguageItemType.getCustomLanguage is: "+result.getCustomLanguage());
+        if (log.isDebugEnabled()) {
+            log.debug("Result SiteSupportLanguageItemType: "+result);
+            if (result!=null) {
+                log.debug("Result SiteSupportLanguageItemType.getCustomLanguage is: "+result.getCustomLanguage());
+            }
+        }
         return result;
     }
 }
