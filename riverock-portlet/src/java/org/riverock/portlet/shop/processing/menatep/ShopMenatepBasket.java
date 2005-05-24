@@ -50,6 +50,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.portlet.b2b.processing.Menatep;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.price.BasketShopSession;
+import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.webmill.portlet.ContextNavigator;
 import org.riverock.webmill.portlet.PortletTools;
 
@@ -99,7 +100,7 @@ public class ShopMenatepBasket extends HttpServlet
 
             PortletSession session = renderRequest.getPortletSession();
 
-            BasketShopSession b = (BasketShopSession) session.getAttribute(Constants.BASKET_SHOP_SESSION);
+            BasketShopSession b = (BasketShopSession) session.getAttribute(ShopPortlet.BASKET_SHOP_SESSION);
             if (b == null)
             {
                 response.sendRedirect(PortletTools.ctx( renderRequest ));

@@ -83,11 +83,11 @@ public final class RightAddCommitPortlet implements Portlet {
             ActionResponse renderResponse = (ActionResponse)response;
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
-            if ( auth_ == null || !auth_.isUserInRole( "webmill.auth_bind" ) ) {
-                throw new PortletException( "You have not enough right" );
+            if ( auth_ == null || !auth_.isUserInRole( RightIndex.AUTH_RIGHT_ROLE ) ) {
+                throw new PortletException( "You have not enough right to set right" );
             }
 
-            dbDyn = DatabaseAdapter.getInstance( true );
+            dbDyn = DatabaseAdapter.getInstance();
 
             String rightUrl = PortletTools.url( "mill.auth.right", renderRequest, renderResponse );
 

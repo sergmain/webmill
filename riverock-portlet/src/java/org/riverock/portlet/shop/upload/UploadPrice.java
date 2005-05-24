@@ -55,6 +55,8 @@ public final class UploadPrice extends HttpServlet {
     private final static Logger log = Logger.getLogger( UploadPrice.class );
 
     public final static String UPLOAD_FILE_PARM_NAME = "f";
+    public final static String CTX_TYPE_UPLOAD_PRICE_CONTR    = "mill.upload_price_controller";
+    public final static String CTX_TYPE_UPLOAD_PRICE   = "mill.upload_price";
 
     public UploadPrice() {
     }
@@ -79,12 +81,12 @@ public final class UploadPrice extends HttpServlet {
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_ == null || !auth_.isUserInRole( "webmill.upload_price_list" ) ) {
-                WebmillErrorPage.process( out, null, "You have not right to bind right", "/", "continue" );
+                WebmillErrorPage.process( out, null, "You have not right to upload price", "/", "continue" );
                 return;
             }
 
             String param =
-                Constants.NAME_TYPE_CONTEXT_PARAM + '=' + Constants.CTX_TYPE_UPLOAD_PRICE_CONTR;
+                Constants.NAME_TYPE_CONTEXT_PARAM + '=' + CTX_TYPE_UPLOAD_PRICE_CONTR;
 
             out.write(
                 "<form method=\"POST\" action=\"" + response.encodeURL( PortletTools.ctx( renderRequest ) ) + '?' + param + "\" ENCTYPE=\"multipart/form-data\">" +

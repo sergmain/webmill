@@ -64,6 +64,8 @@ public final class RightIndex extends HttpServlet
 {
     private final static Logger log = Logger.getLogger(RightIndex.class);
 
+    static String AUTH_RIGHT_ROLE = "webmill.auth_right";
+
     public RightIndex()
     {
     }
@@ -93,8 +95,7 @@ public final class RightIndex extends HttpServlet
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
-            if ( auth_==null )
-            {
+            if ( auth_ == null || !auth_.isUserInRole( RightIndex.AUTH_RIGHT_ROLE ) ) {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
                 return;
             }

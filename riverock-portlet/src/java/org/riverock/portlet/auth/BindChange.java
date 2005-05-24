@@ -98,7 +98,7 @@ public class BindChange extends HttpServlet
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
 
-            db_ = DatabaseAdapter.getInstance(true);
+            db_ = DatabaseAdapter.getInstance();
 
             StringManager sCustom = null;
             String nameLocaleBundle = null;

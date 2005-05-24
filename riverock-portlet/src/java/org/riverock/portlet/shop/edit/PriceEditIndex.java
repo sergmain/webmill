@@ -43,6 +43,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.webmill.portlet.ContextNavigator;
 import org.riverock.webmill.portlet.PortletTools;
@@ -138,7 +139,7 @@ public final class PriceEditIndex extends HttpServlet {
               out.write("\" onclick=\"location.href='");
               out.write(
                   PortletTools.url("mill.price.shop", renderRequest, renderResponse )+'&'+
-                  Constants.NAME_ID_SHOP_PARAM + '=' +id_arm
+                  ShopPortlet.NAME_ID_SHOP_PARAM + '=' +id_arm
               );
               out.write("';\">\r\n");
               out.write("</td>\r\n");

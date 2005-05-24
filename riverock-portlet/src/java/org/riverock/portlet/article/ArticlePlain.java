@@ -159,7 +159,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             if (log.isDebugEnabled() )
                 log.debug("isSimpleTextBlock - "+isSimpleTextBlock);
 
-            s = StringTools.toOrigin(s );
+            s = StringTools.decodeXml(s );
         }
 
         return s;
@@ -195,7 +195,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
         try
         {
-            SqlStatement.registerSql( sql_, new ArticlePlain().getClass() );
+            SqlStatement.registerSql( sql_, ArticlePlain.class );
         }
         catch(Throwable e)
         {
@@ -272,7 +272,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             "select * from SITE_CTX_ARTICLE where ID_SITE_CTX_ARTICLE=? and IS_DELETED=0";
 
         try {
-            SqlStatement.registerSql( sql1_, new ArticlePlain().getClass() );
+            SqlStatement.registerSql( sql1_, ArticlePlain.class );
         }
         catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
@@ -300,7 +300,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
                 articleCode = RsetTools.getString(rs, "ARTICLE_CODE");
                 idSupportLanguage = RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE");
 
-                initTextField();
+                initTextField( db_ );
             }
         }
         finally {
@@ -320,7 +320,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             "order by ID_SITE_CTX_ARTICLE_DATA ASC";
 
         try {
-            SqlStatement.registerSql( sql2_, new ArticlePlain().getClass() );
+            SqlStatement.registerSql( sql2_, ArticlePlain.class );
         }
         catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
@@ -329,30 +329,32 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         }
     }
 
-    public void initTextField() throws Exception {
+    private void initTextField( DatabaseAdapter db_ ) throws Exception {
         if (id == null)
             return;
 
-        DatabaseAdapter db_ = null;
         PreparedStatement ps = null;
         ResultSet rset = null;
         try {
-            db_ = DatabaseAdapter.getInstance(false);
             ps = db_.prepareStatement( sql2_ );
 
             RsetTools.setLong(ps, 1, id);
             rset = ps.executeQuery();
-            text = "";
-            while (rset.next())
-            {
-                text += RsetTools.getString(rset, "ARTICLE_DATA");
+            StringBuffer sb = new StringBuffer("");
+            while (rset.next()) {
+                sb.append( RsetTools.getString(rset, "TEXT") );
             }
+
+            if (log.isDebugEnabled()) {
+                log.debug( "Result text of article: " + sb.toString());
+            }
+
+            text = sb.toString();
         }
         finally {
-            DatabaseManager.close(db_, rset, ps);
+            DatabaseManager.close(rset, ps);
             rset = null;
             ps = null;
-            db_ = null;
         }
     }
 

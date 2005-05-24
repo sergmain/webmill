@@ -58,6 +58,7 @@ public final class ModuleManager
     private static MemberFile userMemberFile[] = null;
 
     private static boolean isUserDirectoryExists = true;
+    public static final String MILL_MEMBER_DIR    = "xml";
 
     public static MemberFile[] getMemberFileArray()
     {
@@ -164,7 +165,7 @@ public final class ModuleManager
     {
         if (mainDir==null)
             mainDir = new CacheDirectory(
-                PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_MEMBER_DIR,
+                PropertiesProvider.getConfigPath() + File.separator + MILL_MEMBER_DIR,
                 memberFilter
             );
 
@@ -172,7 +173,7 @@ public final class ModuleManager
         {
             if (mainDir.isNeedReload())
                 mainDir = new CacheDirectory(
-                    PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_MEMBER_DIR,
+                    PropertiesProvider.getConfigPath() + File.separator + MILL_MEMBER_DIR,
                     memberFilter
                 );
 

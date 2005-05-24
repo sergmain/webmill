@@ -91,7 +91,7 @@ public final class NewsItem {
 
         try
         {
-            SqlStatement.registerSql( sql_, new NewsItem().getClass() );
+            SqlStatement.registerSql( sql_, NewsItem.class );
         }
         catch(Throwable e)
         {
@@ -132,10 +132,10 @@ public final class NewsItem {
                 newsItem.setNewsTime(
                     DateUtils.getStringDate(newsItem.getNewsDateTime(), "HH:mm", locale)
                 );
-                newsItem.setNewsHeader( StringTools.toOrigin( RsetTools.getString(rs, "HEADER")) );
-                newsItem.setNewsAnons( StringTools.toOrigin(RsetTools.getString(rs, "ANONS")) );
+                newsItem.setNewsHeader( StringTools.decodeXml( RsetTools.getString(rs, "HEADER")) );
+                newsItem.setNewsAnons( StringTools.decodeXml(RsetTools.getString(rs, "ANONS")) );
 
-                initTextField();
+                initTextField(db_);
 
             }
         }
@@ -169,26 +169,27 @@ public final class NewsItem {
         }
     }
 
-    public void initTextField()
-            throws PortletException
-    {
+    private void initTextField( DatabaseAdapter db_ ) throws PortletException {
         if ( newsItem.getNewsItemId() == null)
             return;
 
-        DatabaseAdapter db_ = null;
         PreparedStatement ps = null;
         ResultSet rset = null;
         try {
-            db_ = DatabaseAdapter.getInstance(false);
             ps = db_.prepareStatement( sql1_ );
 
             RsetTools.setLong(ps, 1, newsItem.getNewsItemId());
             rset = ps.executeQuery();
-            String text = "";
+            StringBuffer text = new StringBuffer("");
             while (rset.next()) {
-                text += RsetTools.getString(rset, "TEXT");
+                text.append( RsetTools.getString(rset, "TEXT") );
             }
-            newsItem.setNewsText( text );
+
+            if (log.isDebugEnabled()) {
+                log.debug( "Result text of news: " + text.toString());
+            }
+
+            newsItem.setNewsText( text.toString() );
         }
         catch (Throwable e) {
             final String es = "Exception initTextField";
@@ -196,10 +197,9 @@ public final class NewsItem {
             throw new PortletException( es, e );
         }
         finally {
-            DatabaseManager.close(db_, rset, ps);
+            DatabaseManager.close(rset, ps);
             rset = null;
             ps = null;
-            db_ = null;
         }
     }
 }

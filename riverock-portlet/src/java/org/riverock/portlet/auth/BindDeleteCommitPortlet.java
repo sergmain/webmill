@@ -81,11 +81,11 @@ public final class BindDeleteCommitPortlet implements Portlet {
         PreparedStatement ps = null;
         try {
             AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
-            if ( auth_ == null || !auth_.isUserInRole( "webmill.auth_bind" ) ) {
+            if ( auth_ == null || !auth_.isUserInRole( BindIndex.AUTH_BIND_ROLE ) ) {
                 throw new PortletException( "You have not right to bind right" );
             }
 
-            dbDyn = DatabaseAdapter.getInstance( true );
+            dbDyn = DatabaseAdapter.getInstance();
 
             String index_page = PortletTools.url( "mill.auth.bind", actionRequest, actionResponse );
 

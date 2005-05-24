@@ -104,9 +104,9 @@ public final class MemberViewServlet extends HttpServlet
 
 ///////////////
 
-            String moduleName = PortletTools.getString(renderRequest, Constants.MEMBER_MODULE_PARAM);
-            String actionName = PortletTools.getString(renderRequest, Constants.MEMBER_ACTION_PARAM);
-            String subActionName = PortletTools.getString(renderRequest, Constants.MEMBER_SUBACTION_PARAM, "").trim();
+            String moduleName = PortletTools.getString(renderRequest, MemberConstants.MEMBER_MODULE_PARAM);
+            String actionName = PortletTools.getString(renderRequest, MemberConstants.MEMBER_ACTION_PARAM);
+            String subActionName = PortletTools.getString(renderRequest, MemberConstants.MEMBER_SUBACTION_PARAM, "").trim();
 
             if (log.isDebugEnabled())
             {

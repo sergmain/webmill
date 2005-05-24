@@ -119,8 +119,8 @@ public final class LoginXmlPortlet implements Portlet {
 
             out.write( "<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"100%\">\n" +
                 "<tr><th class=\"formworks\">" + bundle.getString( "auth.check.header" ) + "</th></tr>\n" +
-                "<tr><td class=\"formworks\"><input type = \"text\" name = \"" + Constants.NAME_USERNAME_PARAM + "\">&nbsp;" + bundle.getString( "auth.check.login" ) + "&nbsp;</td></tr>\n" +
-                "<tr><td class=\"formworks\"><input type = \"password\" name=\"" + Constants.NAME_PASSWORD_PARAM + "\" value = \"\" >&nbsp;" + bundle.getString( "auth.check.password" ) + "</td></tr>\n" +
+                "<tr><td class=\"formworks\"><input type = \"text\" name = \"" + LoginUtils.NAME_USERNAME_PARAM + "\">&nbsp;" + bundle.getString( "auth.check.login" ) + "&nbsp;</td></tr>\n" +
+                "<tr><td class=\"formworks\"><input type = \"password\" name=\"" + LoginUtils.NAME_PASSWORD_PARAM + "\" value = \"\" >&nbsp;" + bundle.getString( "auth.check.password" ) + "</td></tr>\n" +
                 "<tr><td class=\"formworks\" align=\"center\"><input type=\"submit\" name=\"button\" value=\"" +
                 bundle.getString( "auth.check.register" ) + "\"></td></tr>\n" +
                 "</table>\n" +

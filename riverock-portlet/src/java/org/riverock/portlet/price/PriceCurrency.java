@@ -95,15 +95,15 @@ public class PriceCurrency
         
         currency.setCurrencySwitchUrl(switchCurrencyUrl_);
 
-        currency.setCurrencySelectParam(Constants.NAME_ID_CURRENCY_SHOP);
+        currency.setCurrencySelectParam(ShopPortlet.NAME_ID_CURRENCY_SHOP);
 
         currency.addHiddenParam( getHidden(org.riverock.webmill.main.Constants.NAME_LANG_PARAM, portletRequest.getLocale().toString()) );
-        currency.addHiddenParam( getHidden(Constants.NAME_ID_GROUP_SHOP, "" + shopParam_.id_group));
-        currency.addHiddenParam( getHidden(Constants.NAME_ID_SHOP_PARAM, "" + shopParam_.id_shop));
-        currency.addHiddenParam( getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, Constants.CTX_TYPE_SHOP));
+        currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + shopParam_.id_group));
+        currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam_.id_shop));
+        currency.addHiddenParam( getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
 //        currency.addHiddenParam( getHidden(Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam_.nameTemplate));
-        currency.addHiddenParam( getHidden(Constants.NAME_SHOP_SORT_BY, shopParam_.sortBy));
-        currency.addHiddenParam( getHidden(Constants.NAME_SHOP_SORT_DIRECT, "" + shopParam_.sortDirect));
+        currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy));
+        currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam_.sortDirect));
 
         CustomCurrencyType list = null;
 

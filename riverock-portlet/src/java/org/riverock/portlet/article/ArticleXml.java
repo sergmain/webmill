@@ -170,7 +170,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.ARTICLE_CODE=? and a.IS_DELETED=0";
 
         try {
-            SqlStatement.registerSql( sql_, new ArticleXml().getClass() );
+            SqlStatement.registerSql( sql_, ArticleXml.class );
         }
         catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
@@ -246,7 +246,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         datePost = Calendar.getInstance();
         datePost.setTimeInMillis( article.getDatePost().getTime() );
         nameArticle = article.getNameArticle();
-        initTextField();
+        initTextField( db_ );
     }
 
     static String sql2_ = null;
@@ -268,23 +268,27 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private void initTextField() throws PortletException {
+    private void initTextField( DatabaseAdapter db_ ) throws PortletException {
         if (id == null)
             return;
 
-        DatabaseAdapter db_ = null;
         PreparedStatement ps = null;
         ResultSet rset = null;
         try {
-            db_ = DatabaseAdapter.getInstance(false);
             ps = db_.prepareStatement( sql2_ );
 
             RsetTools.setLong(ps, 1, id);
             rset = ps.executeQuery();
-            text = "";
-            while (rset.next()){
-                text += RsetTools.getString(rset, "ARTICLE_DATA");
+            StringBuffer sb = new StringBuffer("");
+            while (rset.next()) {
+                sb.append( RsetTools.getString(rset, "ARTICLE_DATA") );
             }
+
+            if (log.isDebugEnabled()) {
+                log.debug( "Result text of article: " + sb.toString());
+            }
+
+            text = sb.toString();
         }
         catch(Exception e) {
             String es = "Exception in ArticleXml.initTextField";
@@ -297,10 +301,9 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             throw new PortletException(es, e);
         }
         finally {
-            DatabaseManager.close(db_, rset, ps);
+            DatabaseManager.close(rset, ps);
             rset = null;
             ps = null;
-            db_ = null;
         }
     }
 
@@ -314,7 +317,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             "b.IS_PLAIN_HTML=0";
 
         try {
-            SqlStatement.registerSql( sql3_, new ArticleXml().getClass() );
+            SqlStatement.registerSql( sql3_, ArticleXml.class );
         }
         catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql3_;
@@ -334,7 +337,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         List v = new ArrayList();
         try
         {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql3_ );
 
             RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );

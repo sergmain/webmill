@@ -125,7 +125,7 @@ public final class LoginPlainPortlet implements Portlet {
                 "&nbsp;" + bundle.getString( "auth.check.login" ) +
                 "</td><td>&nbsp;&nbsp;" +
                 "</td><td>" +
-                "<input type=\"text\" name=\"" + Constants.NAME_USERNAME_PARAM + "\" tabindex=\"1\">" +
+                "<input type=\"text\" name=\"" + LoginUtils.NAME_USERNAME_PARAM + "\" tabindex=\"1\">" +
                 "</td>" +
                 "<td align=\"left\" valing=\"top\" cellspan=\"2\">" +
                 "<input type=\"submit\" name=\"button\" value=\""+bundle.getString( "auth.check.register" ) + "\" tabindex=\"3\">" +
@@ -134,7 +134,7 @@ public final class LoginPlainPortlet implements Portlet {
                 "&nbsp;" + bundle.getString( "auth.check.password" ) +
                 "</td><td>" +
                 "</td><td aling=\"left\">" +
-                "<input type=\"password\" name=\"" + Constants.NAME_PASSWORD_PARAM + "\" value = \"\" tabindex=\"2\">" +
+                "<input type=\"password\" name=\"" + LoginUtils.NAME_PASSWORD_PARAM + "\" value = \"\" tabindex=\"2\">" +
                 "</td></tr>\n" +
                 "</table>" +
                 "</td>" +

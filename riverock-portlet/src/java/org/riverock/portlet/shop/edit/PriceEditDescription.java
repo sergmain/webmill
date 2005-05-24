@@ -53,6 +53,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.webmill.portlet.ContextNavigator;
 
@@ -107,13 +108,13 @@ public class PriceEditDescription extends HttpServlet
                     String index_page = PortletTools.url("mill.price.index", renderRequest, renderResponse );
 
                     Long id_shop = null;
-                    if (renderRequest.getParameter(Constants.NAME_ID_SHOP_PARAM) != null)
+                    if (renderRequest.getParameter(ShopPortlet.NAME_ID_SHOP_PARAM) != null)
                     {
-                        id_shop = PortletTools.getLong(renderRequest, Constants.NAME_ID_SHOP_PARAM);
+                        id_shop = PortletTools.getLong(renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM);
                     }
                     else
                     {
-                        Long id_ = (Long) session.getAttribute(Constants.ID_SHOP_SESSION);
+                        Long id_ = (Long) session.getAttribute(ShopPortlet.ID_SHOP_SESSION);
                         if (id_ == null)
                         {
                             response.sendRedirect(index_page);
@@ -122,8 +123,8 @@ public class PriceEditDescription extends HttpServlet
                         id_shop = id_;
                     }
 
-                    session.removeAttribute(Constants.ID_SHOP_SESSION);
-                    session.setAttribute(Constants.ID_SHOP_SESSION, id_shop);
+                    session.removeAttribute(ShopPortlet.ID_SHOP_SESSION);
+                    session.setAttribute(ShopPortlet.ID_SHOP_SESSION, id_shop);
 
                     if (auth_.isUserInRole("webmill.edit_price_list"))
                     {

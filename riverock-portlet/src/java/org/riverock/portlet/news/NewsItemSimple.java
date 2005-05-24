@@ -95,9 +95,6 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
         return getInstance( db__ );
     }
 
-    public boolean isXml(){ return true; }
-    public boolean isHtml(){ return false; }
-
     public byte[] getPlainHTML() throws Exception {
 
         StringBuffer s = new StringBuffer().
@@ -131,11 +128,6 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
     public byte[] getXml( final String rootElement) throws Exception {
 
         String root = PortletTools.getMetadata( renderRequest, "xml-root-name", rootElement );
-//        newsItem.setNewsAnons( item.newsItem.getNewsAnons() );
-//        newsItem.setNewsDate( item.newsItem.getNewsDate() );
-//        newsItem.setNewsHeader( item.newsItem.getNewsHeader() );
-//        newsItem.setNewsText( item.newsItem.getNewsText() );
-//        newsItem.setNewsTime( item.newsItem.getNewsTime() );
 
         String xml = new StringBuffer().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
@@ -148,7 +140,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
             append( "</" ).append( root ).append( '>' ).toString();
 
         if (log.isDebugEnabled()) {
-            log.debug( "ArticleXml. getXml - "+xml );
+            log.debug( "NewsXml. getXml: "+xml );
         }
 
         return xml.getBytes( WebmillConfig.getHtmlCharset() );
