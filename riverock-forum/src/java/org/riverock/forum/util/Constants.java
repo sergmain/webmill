@@ -12,6 +12,8 @@ public class Constants {
     public static final String ERROR_EXECUTE_STATUS = "error";
 
     public static final String WM_FORUM_PORTLET_NAME = "riverock.forum";
+    public static final String WM_FORUM_LIST_MANAGER_PORTLET_NAME = "riverock.forum-list-manager";
+
     public static final String ACTION_CONFIG_PARAM_NAME = "wm-forum-action-config";
     public static final String MESSAGES_PER_PAGE_INIT_PARAM = "messages-per-page";
     public static final String TOPICS_PER_PAGE_INIT_PARAM = "topics-per-page";

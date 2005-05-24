@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!--
+/*
+ * org.riverock.forum - Riverock forum
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<project name="riverock forum" default="usage-main" basedir=".">
+
+    <property name="Name" value="riverock-forum"/>
+    <property name="release-version" value="1.0.0"/>
+    <property name="build-release-name" value="riverock-forum-${release-version}"/>
+    <property name="manifest-title-name" value="riverock forum"/>
+    <property name="manifest-vendor-name" value="riverock. http://www.riverock.com"/>
+
+    <import file="../riverock-include.xml"/>
+
+    <path id="classpath-base">
+        <pathelement location="${lib.dir}/${riverock-common.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-module.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>
+        <pathelement location="${lib.dir}/${servlet.lib}"/>
+        <pathelement location="${lib.dir}/${secure.lib}"/>
+        <pathelement location="${lib.dir}/mail.jar"/>
+        <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${junit.lib}"/>
+        <pathelement location="${lib.dir}/${castor.lib}"/>
+        <pathelement location="${lib.dir}/${xerces.lib}"/>
+        <pathelement location="${lib.dir}/${xml-api.lib}"/>
+        <pathelement location="${lib.dir}/${portlet.lib}"/>
+
+        <pathelement location="${lib.dir}/ojdbc14.jar"/>
+    </path>
+
+    <target name="full_build_module">
+        <antcall target="full_clean"/>
+        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
+<!--        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" /> -->
+        <antcall target="jar"/>
+    </target>
+
+    <target name="run_tomcat_with_new jar">
+        <antcall target="stop.apache"/>
+        <antcall target="jar"/>
+
+        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
+        <copy file="${build.dir}/${main.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-sso.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-module.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-generic.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-common.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-webmill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-interfaces.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <antcall target="start.apache"/>
+    </target>
+
+    <target name="full_clean">
+        <ant antfile="build-core.xml" target="clean"  inheritall="false" />
+        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
+        <antcall target="clean"/>
+    </target>
+
+    <target name="compile" depends="set_build_number, prepare">
+        <!-- Compile PersistenceException -->
+        <javac
+            target="${java.class.target}"
+            source="${java.class.source}"
+            srcdir="${src.java.dir}/org/riverock/forum/exception"
+            destdir="${build.dest}"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}"
+            failonerror="true"
+            memoryInitialSize="128m"
+            memoryMaximumSize="256m"
+            >
+            <classpath refid="classpath-base"/>
+        </javac>
+
+        <javac
+            target="${java.class.target}"
+            source="${java.class.source}"
+            srcdir="${src-schema.java.dir}"
+            destdir="${build.dest}"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}"
+            failonerror="true"
+            memoryInitialSize="128m"
+            memoryMaximumSize="256m"
+            >
+            <classpath>
+                <path refid="classpath-base"/>
+                <path location="${build.dest}"/>
+            </classpath>
+        </javac>
+        <javac
+            target="${java.class.target}"
+            source="${java.class.source}"
+            srcdir="${src-core.java.dir}"
+            destdir="${build.dest}"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}"
+            failonerror="true"
+            memoryInitialSize="128m"
+            memoryMaximumSize="256m"
+            >
+            <classpath>
+                <path refid="classpath-base"/>
+                <path location="${build.dest}"/>
+            </classpath>
+        </javac>
+        <javac
+            target="${java.class.target}"
+            source="${java.class.source}"
+            srcdir="${src.java.dir}"
+            destdir="${build.dest}"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}"
+            failonerror="true"
+            memoryInitialSize="128m"
+            memoryMaximumSize="256m"
+            >
+            <classpath>
+                <path refid="classpath-base"/>
+                <path location="${build.dest}"/>
+            </classpath>
+        </javac>
+    </target>
+</project>

@@ -23,6 +23,7 @@ import org.riverock.forum.schema.core.WmForumItemType;
 import org.riverock.forum.core.GetWmForumCategoryWithForumIdList;
 import org.riverock.forum.core.GetWmForumItem;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 
 /**
  * HomeDAO interface
@@ -99,10 +100,10 @@ public class HomeDAO {
                     forumConcrete.setF_messages(rs.getInt("f_messages"));
                     forumConcrete.setLastPorterId(rs.getInt("f_u_id2"));
                     forumConcrete.setModeratorName(
-                        CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
+                        StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
                     );
                     forumConcrete.setLastPosterName(
-                        CommonUtils.getUserName( RsetTools.getString(rs, "FIRST_NAME2"), RsetTools.getString(rs, "MIDDLE_NAME2"), RsetTools.getString(rs, "LAST_NAME2") )
+                        StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME2"), RsetTools.getString(rs, "MIDDLE_NAME2"), RsetTools.getString(rs, "LAST_NAME2") )
                     );
 
                     if (forumConcrete.getF_topics()!=0) {

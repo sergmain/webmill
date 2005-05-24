@@ -1,13 +1,12 @@
 <!--user.jsp-->
 <%@page language="java" contentType="text/html; charset=utf-8" import="org.riverock.forum.util.*,org.riverock.forum.bean.*"%>
 <%@include file="inc/header.jsp" %>
-<jsp:useBean id="userBean" scope="request" class="org.riverock.forum.bean.UserBean"/>
 
 <!--bar-->
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
 	<tr>
 		<td>
-			<b><IMG SRC="/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">&nbsp;<a href="<c:out value='${genericBean.forumHomeUrl}'/>"><c:out value="${genericBean.forumName}"/></A>&nbsp;&gt;&nbsp;Edit Profile</b>
+			<b><IMG SRC="/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">&nbsp;<a href="<c:out value='${genericBean.forumHomeUrl}'/>"><c:out value="${genericBean.forumName}"/></A>&nbsp;&gt;&nbsp;Edit Profile</b>
 		</td>
 	</tr>
 </table>
@@ -33,7 +32,7 @@ function sCheck(){
 	FormPost.submit();
 }
 
-function changegAvatar(){   	document.images.avatar.src="/forum/img/avatars/"+document.FormPost.u_avatar_id.options[document.FormPost.u_avatar_id.selectedIndex].value+".gif";
+function changegAvatar(){   	document.images.avatar.src="/riverock/forum/img/avatars/"+document.FormPost.u_avatar_id.options[document.FormPost.u_avatar_id.selectedIndex].value+".gif";
 }
 
 //-->
@@ -61,7 +60,7 @@ function changegAvatar(){   	document.images.avatar.src="/forum/img/avatars/"+do
 								<option value="<%=i%>" <%if (i==userBean.getU_avatar_id()) {%>selected<%}%>>&nbsp;<%=i%></option>
 						  <%}%>
 					</select>
-					<img name="avatar" src="/forum/img/avatars/<%=userBean.getU_avatar_id()%>.gif"  width=36 height=36 border=0 >
+					<img name="avatar" src="/riverock/forum/img/avatars/<%=userBean.getU_avatar_id()%>.gif"  width=36 height=36 border=0 >
 
 					</td>
 				</tr>

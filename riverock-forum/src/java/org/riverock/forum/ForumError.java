@@ -97,6 +97,7 @@ public final class ForumError {
     }
 
     public static String error(ModuleRequest request, ResourceBundle resourceBundle, String errorCode) {
+        // hack to output where exception is created
         try {
             getException();
         }

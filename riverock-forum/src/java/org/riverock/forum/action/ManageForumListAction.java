@@ -8,6 +8,7 @@ import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.ForumListManagerDAO;
 import org.riverock.forum.dao.TopLevelForumDAO;
 import org.riverock.forum.util.Constants;
+import org.riverock.forum.util.CommonUtils;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;

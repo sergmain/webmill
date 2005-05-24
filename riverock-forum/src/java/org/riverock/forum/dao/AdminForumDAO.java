@@ -20,6 +20,7 @@ import org.riverock.forum.util.CommonUtils;
 import org.riverock.forum.util.Constants;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.common.tools.RsetTools;
 
 /**
@@ -134,41 +135,7 @@ public class AdminForumDAO {
         }
 
         if (isPermanent) {
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            try {
-                ps = forumActionBean.getAdapter().prepareStatement(
-                    "select a.T_ID from WM_FORUM_TOPIC a where T_F_ID=?"
-                );
-                ps.setInt(1, forumConcreteId.intValue());
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    DatabaseManager.runSQL(
-                        forumActionBean.getAdapter(),
-                        "delete from WM_FORUM_MESSAGE where M_T_ID=? ",
-                        new Object[] { RsetTools.getLong(rs, "T_ID") },
-                        new int[] { Types.INTEGER }
-                    );
-                }
-                DatabaseManager.runSQL(
-                    forumActionBean.getAdapter(),
-                    "delete from WM_FORUM_TOPIC where T_F_ID=? ",
-                    new Object[] { forumConcreteId },
-                    new int[] { Types.INTEGER }
-                );
-                DatabaseManager.runSQL(
-                    forumActionBean.getAdapter(),
-                    "delete from WM_FORUM_CONCRETE where F_ID=? ",
-                    new Object[] { forumConcreteId },
-                    new int[] { Types.INTEGER }
-                );
-            }
-            finally {
-                DatabaseManager.close(rs, ps);
-                rs = null;
-                ps = null;
-            }
+            CommonDAO.deleteForumConcrete(forumActionBean.getAdapter(), forumConcreteId);
         }
         else {
             DatabaseManager.runSQL(

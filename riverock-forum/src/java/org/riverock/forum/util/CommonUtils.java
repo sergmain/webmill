@@ -20,38 +20,7 @@ import org.riverock.forum.core.GetWmForumItem;
  *         $Id$
  */
 public final class CommonUtils {
-    private final static Logger log = Logger.getLogger(CommonDAO.class);
-
-    public static String getUserName(String firstName, String middleName, String lastName) {
-        if (log.isDebugEnabled()) {
-            log.debug("firstName: " + firstName+ ", middleName: " +middleName+ ", lastName: " + lastName );
-        }
-
-        String s = "";
-        if (!StringTools.isEmpty(firstName)) {
-            s += firstName;
-
-            if (!StringTools.isEmpty(middleName) || !StringTools.isEmpty(lastName)) {
-                s += " ";
-            }
-        }
-        if (!StringTools.isEmpty(middleName)) {
-            s += middleName;
-            if (!StringTools.isEmpty(lastName)) {
-                s += " ";
-            }
-        }
-        if (!StringTools.isEmpty(lastName)) {
-            s += lastName;
-        }
-
-        if (StringTools.isEmpty(s)) {
-            return "unknown";
-        }
-        else {
-            return StringTools.encodeXml(s);
-        }
-    }
+    private final static Logger log = Logger.getLogger(CommonUtils.class);
 
     public static boolean checkForumConcreteId(DatabaseAdapter adapter, Long forumId, Integer f_id) {
 
