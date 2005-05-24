@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: serg_main
- * Date: 28.11.2003
- * Time: 22:38:10
- * @author Serge Maslyukov
- * $Id$
- */
-
 package org.riverock.sso.config;
 
 import java.io.File;
@@ -43,11 +34,19 @@ import org.riverock.sso.schema.config.AuthType;
 
 import org.apache.log4j.Logger;
 
-public class SsoConfig
-{
+/**
+ * User: serg_main
+ * Date: 28.11.2003
+ * Time: 22:38:10
+ * @author Serge Maslyukov
+ * $Id$
+ */
+public class SsoConfig {
     private static Logger log = Logger.getLogger(SsoConfig.class );
 
-    public static String contextName = "";
+    private static final String CONFIG_FILE_PARAM_NAME = "sso-config-file";
+    private static final String NAME_CONFIG_FILE = "sso.xml";
+    private final static String JNDI_SSO_CONFIG_FILE = "jsmithy/sso/ConfigFile";
 
     private static ConfigObject configObject = null;
 
@@ -70,7 +69,7 @@ public class SsoConfig
             if (isConfigProcessed)
                 return;
 
-            configObject = ConfigObject.load(Constants.JNDI_SSO_CONFIG_FILE , "sso.xml", SsoConfigType.class);
+            configObject = ConfigObject.load(JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfigType.class);
             if (log.isDebugEnabled())
                 log.debug("#15.006");
 

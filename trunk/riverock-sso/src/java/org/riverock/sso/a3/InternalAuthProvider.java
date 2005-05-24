@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Sep 6, 2003
- * Time: 10:33:28 PM
- *
- * $Id$
- */
 package org.riverock.sso.a3;
 
 import java.sql.PreparedStatement;
@@ -47,6 +39,13 @@ import org.riverock.common.tools.RsetTools;
 
 import org.apache.log4j.Logger;
 
+/**
+ * User: Admin
+ * Date: Sep 6, 2003
+ * Time: 10:33:28 PM
+ *
+ * $Id$
+ */
 public final class InternalAuthProvider implements AuthProviderInterface, Serializable {
 
     private final static Logger log = Logger.getLogger( InternalAuthProvider.class );
@@ -207,7 +206,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
     public boolean checkAccess( final AuthSession authSession, final String serverName ) throws AuthException {
         DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             switch( db_.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     return checkAccessMySql( db_, authSession, serverName );
@@ -233,7 +232,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
     public boolean isUserInRole( final AuthSession authSession, final String role_ )
         throws AuthException {
         if ( log.isDebugEnabled() )
-            log.debug( "role '" + role_ + "', user login '" + authSession.getUserLogin() + "', user password '" + authSession.getUserPassword() + "'" );
+            log.debug( "role '" + role_ + "', user login '" + authSession.getUserLogin() + "'  " );
 
         if ( authSession.getUserLogin() == null ||
             authSession.getUserLogin().trim().length() == 0 ||
@@ -251,7 +250,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
         DatabaseAdapter db_ = null;
         AuthInfo authInfo = null;
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             authInfo = AuthInfo.getInstance( db_, authSession.getUserLogin(), authSession.getUserPassword() );
 
             if ( authInfo == null )
