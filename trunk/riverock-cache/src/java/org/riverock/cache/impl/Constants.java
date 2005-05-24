@@ -36,6 +36,4 @@ package org.riverock.cache.impl;
 public class Constants
 {
 
-    public final static String JNDI_CACHE_CONFIG_FILE = "jsmithy/cache/ConfigFile";
-
 }

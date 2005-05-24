@@ -22,22 +22,53 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.common.tools;
+
+import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Locale;
+import java.util.List;
 
 /**
  * Public tools for work with strings.
  *
  * $Id$
  */
-package org.riverock.common.tools;
+public class StringTools {
+    private static final Log log = LogFactory.getLog(StringTools.class);
 
-import org.apache.log4j.Logger;
+    public static String getUserName(String firstName, String middleName, String lastName) {
+        if (log.isDebugEnabled()) {
+            log.debug("firstName: " + firstName+ ", middleName: " +middleName+ ", lastName: " + lastName );
+        }
 
-import java.util.Locale;
-import java.util.List;
+        String s = "";
+        if (!StringTools.isEmpty(firstName)) {
+            s += firstName;
 
-public class StringTools
-{
-    private static Logger log = Logger.getLogger(StringTools.class);
+            if (!StringTools.isEmpty(middleName) || !StringTools.isEmpty(lastName)) {
+                s += " ";
+            }
+        }
+        if (!StringTools.isEmpty(middleName)) {
+            s += middleName;
+            if (!StringTools.isEmpty(lastName)) {
+                s += " ";
+            }
+        }
+        if (!StringTools.isEmpty(lastName)) {
+            s += lastName;
+        }
+
+        if (StringTools.isEmpty(s)) {
+            return "unknown";
+        }
+        else {
+            return StringTools.encodeXml(s);
+        }
+    }
 
     public static boolean isEmpty( final String s) {
         if (s==null || s.trim().length()==0)

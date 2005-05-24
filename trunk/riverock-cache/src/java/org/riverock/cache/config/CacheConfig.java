@@ -48,10 +48,15 @@ public final class CacheConfig
 {
     private final static Logger log = Logger.getLogger( CacheConfig.class );
 
-    public static String contextName = "";
-//
-    private static ConfigObject configObject = null;
+    // used in web.xml file
+    public static final String CONFIG_FILE_PARAM_NAME = "cache-config-file";
+    // name of local config file
+    private static final String NAME_CONFIG_FILE = "jsmithy-cache.xml";
+    // name of config file in JNDI
+    public final static String JNDI_CACHE_CONFIG_FILE = "jsmithy/cache/ConfigFile";
 
+//    public static String contextName = "";
+    private static ConfigObject configObject = null;
     private static boolean isConfigProcessed = false;
     private static HashMap classMap = new HashMap();
 
@@ -73,7 +78,7 @@ public final class CacheConfig
                 return;
 
             configObject = ConfigObject.load(
-                Constants.JNDI_CACHE_CONFIG_FILE , "jsmithy-cache.xml", CacheConfigType.class);
+                JNDI_CACHE_CONFIG_FILE , CONFIG_FILE_PARAM_NAME, NAME_CONFIG_FILE, CacheConfigType.class);
 
             if (log.isDebugEnabled())
                 log.debug("#15.006");
