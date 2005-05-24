@@ -47,11 +47,25 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
+        <antcall target="gen_all_schema"/>
         <antcall target="jar"/>
     </target>
 
     <target name="full_clean">
         <antcall target="clean"/>
+        <antcall target="delete_all_schema"/>
+    </target>
+
+    <target name="gen_all_schema">
+        <antcall target="delete_all_schema"/>
+        <antcall target="gen_schema-gen-config"/>
+    </target>
+
+    <target name="gen_schema-gen-config" depends="prepare">
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/schema/gen/"/>
+        <property name="schema-file" value="${src.xsd.dir}/riverock-gen-schema.xsd"/>
+        <property name="schema-package-java" value="org.riverock.schema.gen"/>
+        <antcall target="gen_schema_from_schema"/>
     </target>
 
     <target name="compile" depends="prepare">
@@ -59,7 +73,19 @@
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
-            srcdir="${build.src.java}"
+            srcdir="${src-schema.java.dir}"
+            destdir="${build.dest}"
+            excludes="*.txt,*.bat,*.xml,*.sh,*.jav"
+            debug="${debug}"
+            deprecation="${deprecation}"
+            optimize="${optimize}"
+            >
+            <classpath refid="classpath-base"/>
+        </javac>
+        <javac
+            target="${java.class.target}"
+            source="${java.class.source}"
+            srcdir="${src.java.dir}"
             destdir="${build.dest}"
             excludes="*.txt,*.bat,*.xml,*.sh,*.jav"
             debug="${debug}"
