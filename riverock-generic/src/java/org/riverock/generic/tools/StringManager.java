@@ -326,7 +326,7 @@ public final class StringManager {
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance();
             String sql_ =
                 "select a.NAME_STORAGE, d.SHORT_NAME_LANGUAGE, b.NAME_ITEM, c.MESSAGE " +
                 "from main_i18n_storage a, main_i18n_item b, main_i18n_message c, main_language d " +
