@@ -60,8 +60,8 @@ public final class ContextNavigator extends HttpServlet {
      static final String copyright =
         "<!--\n" +
         "  Portal: WebMill\n" +
-        " Release: @@WEBMILL_RELEASE@@\n" +
-        "   Build: @@WEBMILL_BUILD@@\n" +
+        " Release: @WEBMILL_RELEASE@\n" +
+        "   Build: @WEBMILL_BUILD@\n" +
         "Homepage: http://webmill.riverock.org\n" +
         "-->\n";
 
@@ -71,6 +71,7 @@ public final class ContextNavigator extends HttpServlet {
 
         // all methos in HttpServletResponse must invoked only from ContextNavigator
         // all others invokes are wrong
+        // 2005.05.24 - may be not wrong. need investigate
         boolean isOk = false;
 
         public InternalServletResponseWrapper( HttpServletResponse httpServletResponse ) {

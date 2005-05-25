@@ -44,7 +44,6 @@
                 <include name="*.gz"/>
             </fileset>
         </delete>
-        <delete dir="${docs.dir}" failonerror="false"/>
         <delete dir="${build.dir}/src/" failonerror="false"/>
         <delete dir="${build.dir}/classes/" failonerror="false"/>
         <delete dir="${build.dir}/bin/" failonerror="false"/>

@@ -124,32 +124,45 @@
         <copy file="${lib.dir}/${riverock-portlet.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
     </target>
 
+    <macrodef name="copy_jars_to_context">
+        <attribute name="webmill-context"/>
+        <sequential>
+            <property name="webmill.lib-dir" value="@{webmill-context}/WEB-INF/lib"/>
+            <delete file="${webmill.lib-dir}}/castor-*.jar"/>
+            <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
+            <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
+            <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
+            <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
+            <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
+            <copy file="../riverock-lib/lib/${riverock-cache.lib}" todir="${webmill.lib-dir}"/>
+            <copy file="../riverock-lib/lib/${riverock-sso.lib}" todir="${webmill.lib-dir}"/>
+            <copy file="../riverock-lib/lib/${riverock-module.lib}" todir="${webmill.lib-dir}"/>
+        </sequential>
+      </macrodef>
+
+    <target name="copy_to_mill">
+        <copy_jars_to_context webmill-context="C:\opt2\_www\_me.askmore.info\mill"/>
+    </target>
+
+    <target name="copy_to_javakonkurs">
+        <copy_jars_to_context webmill-context="C:\opt2\_www\_me.askmore.info\javakonkurs"/>
+    </target>
+
+    <target name="copy_to_test_mill">
+        <copy_jars_to_context webmill-context="C:\opt2\_www\_test\mill"/>
+    </target>
+
+    <target name="copy_new_jars">
+        <antcall target="copy_to_mill"/>
+        <antcall target="copy_to_javakonkurs"/>
+        <antcall target="copy_to_test_mill"/>
+    </target>
 
     <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
 
-        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
-
-        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
-        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-cache.lib}" todir="${webmill.lib-dir}"/>
-
-        <property name="webmill.context" value="C:\opt2\_www\_test\mill"/>
-        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
-
-        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
-        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-cache.lib}" todir="${webmill.lib-dir}"/>
+        <antcall target="copy_new_jars"/>
 
         <antcall target="start.apache"/>
     </target>
@@ -500,31 +513,39 @@ cd ..\..
         <property name="path-to-ctx" value="org/riverock/webmill"/>
         <copy file="${src.java.dir}/${path-to-ctx}/portlet/ContextNavigator.java"
             todir="${build.java}/${path-to-ctx}/portlet">
+            <filterset>
+              <filter token="WEBMILL_RELEASE" value="${release-version}"/>
+              <filter token="WEBMILL_BUILD" value="${build.number}"/>
+            </filterset>
         </copy>
-
-        <replace file="${build.java}/${path-to-ctx}/portlet/ContextNavigator.java">
-            <replacefilter token="@@WEBMILL_RELEASE@@" value="${release-version}"/>
-            <replacefilter token="@@WEBMILL_BUILD@@" value="${build.number}"/>
-        </replace>
-
         <copy file="${src.java.dir}/${path-to-ctx}/portlet/impl/PortletContextImpl.java"
             todir="${build.java}/${path-to-ctx}/portlet/impl">
+            <filterset>
+                <filter token="WEBMILL_RELEASE" value="${release-version}"/>
+                <filter token="WEBMILL_BUILD" value="${build.number}"/>
+            </filterset>
         </copy>
-
-        <replace file="${build.java}/${path-to-ctx}/portlet/impl/PortletContextImpl.java">
-            <replacefilter token="@@WEBMILL_RELEASE@@" value="${release-version}"/>
-            <replacefilter token="@@WEBMILL_BUILD@@" value="${build.number}"/>
-        </replace>
     </target>
 
-    <target name="compile" depends="set_build_number, prepare">
+    <target name="delete_existing_files">
+        <property name="path-to-ctx" value="org/riverock/webmill/portlet"/>
+        <delete file="${build.dest}/${path-to-ctx}/ContextNavigator.class"/>
+        <delete file="${build.dest}/${path-to-ctx}/impl/PortletContextImpl.class"/>
+        <delete file="${build.dest}/${path-to-ctx}/impl/PortletContextImpl$PortalVersion.class"/>
+    </target>
 
+    <target name="prepare_local">
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${build.java}">
                 <include name="**"/>
             </fileset>
         </delete>
+        <mkdir dir="${build.java}" />
+    </target>
 
+    <target name="compile" depends="set_build_number, prepare, prepare_local">
+
+        <antcall target="replace_properties" inheritall="true" />
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
@@ -542,25 +563,6 @@ cd ..\..
                 <path refid="classpath-base"/>
             </classpath>
         </javac>
-<!--
-        <javac
-            target="${java.class.target}"
-            srcdir="${src-pluto-container.java.dir}"
-            destdir="${build.dest}"
-            excludes="${exclude}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            memoryInitialSize="128m"
-            memoryMaximumSize="256m"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-        </javac>
--->
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
@@ -614,8 +616,7 @@ cd ..\..
             </classpath>
         </javac>
 
-        <mkdir dir="${build.java}" />
-        <antcall target="replace_properties"/>
+        <antcall target="delete_existing_files"/>
 
         <javac
             target="${java.class.target}"

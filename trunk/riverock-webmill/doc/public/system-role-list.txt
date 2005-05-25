@@ -1,0 +1,17 @@
+
+webmill.root - role with full accees
+
+webmill.upload_price_list - upload data for price-list
+webmill.auth_bind - init auth info of users
+webmill.auth_right - init right on module
+
+webmill.firm_select - select data of firm
+webmill.firm_insert - insert new firm
+webmill.firm_update - update firm
+webmill.firm_delete - delete firm
+
+
+webmill.upload_image - upload imeges to site
+
+webmill.edit_price_list - edit data of price-list
+
