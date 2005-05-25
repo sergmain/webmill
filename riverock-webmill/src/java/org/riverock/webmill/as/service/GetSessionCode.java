@@ -63,7 +63,8 @@ public class GetSessionCode implements ApplicationInterface
         org.riverock.generic.startup.StartupApplication.init();
 
         long id = 1;
-        SiteListSiteItemType resultItem = GetSiteListSiteItem.getInstance( DatabaseAdapter.getInstance( false ), id ).item;
+        DatabaseAdapter adapter = DatabaseAdapter.getInstance();
+        SiteListSiteItemType resultItem = GetSiteListSiteItem.getInstance( adapter, id ).item;
 
         String[][] ns = new String[][]
         {
@@ -77,5 +78,6 @@ public class GetSessionCode implements ApplicationInterface
             null,
             ns
         );
+        DatabaseAdapter.close(adapter);
     }
 }

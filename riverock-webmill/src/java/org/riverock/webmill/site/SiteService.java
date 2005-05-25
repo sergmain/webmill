@@ -207,7 +207,7 @@ public final class SiteService
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             return getExtendData(db_, host);
         }
         finally

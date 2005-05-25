@@ -41,7 +41,7 @@ public final class PortletContextImpl implements PortletContext {
     private ServletContext servletContext;
 
     private static final String PORTAL_NAME_INFO = "WebMill";
-    private static final String PORTAL_VERSION_INFO = "@@WEBMILL_RELEASE@@";
+    private static final String PORTAL_VERSION_INFO = "@WEBMILL_RELEASE@";
 
     private static PortalVersion portalVersion = new PortalVersion( PORTAL_VERSION_INFO );
 

@@ -48,7 +48,7 @@ import org.apache.log4j.Logger;
 
 public class DoRegister implements ApplicationInterface
 {
-    private static Logger cat = Logger.getLogger("org.riverock.webmill.core.GetSiteListSiteItem" );
+    private static Logger cat = Logger.getLogger( DoRegister.class );
 
     public DoRegister(){}
 
@@ -101,7 +101,8 @@ public class DoRegister implements ApplicationInterface
         org.riverock.generic.startup.StartupApplication.init();
 
         long id = 1;
-        SiteListSiteItemType resultItem = GetSiteListSiteItem.getInstance( DatabaseAdapter.getInstance( false ), id ).item;
+        DatabaseAdapter adapter = DatabaseAdapter.getInstance();
+        SiteListSiteItemType resultItem = GetSiteListSiteItem.getInstance( adapter, id ).item;
 
         String[][] ns = new String[][]
         {
@@ -115,5 +116,6 @@ public class DoRegister implements ApplicationInterface
             null,
             ns
         );
+        DatabaseAdapter.close(adapter);
     }
 }
