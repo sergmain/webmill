@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<JobBlock xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="E:\sandbox\millengine\src\xsd\mill-portlet-job.xsd">
+	<JobItem url="/mill/ctx?mill.lang=ru_RU&amp;mill.id_job=5&amp;mill.context=mill.job" datePost="29.дек.2001" dateEnd="29.дек.2001" jobName="Бухгалтер" ageFrom="23" ageTill="40" gender="не имеет значения" education="средне-специальное" salary="рублей в месяц" city="Иркутск" testPeriod="2 месяца" contactPerson="Главный бухгалтер" datePostString="Дата размещения" dateEndString="Действительна до" jobNameString="Вакансия" ageString="Возраст" ageFromString="от" ageTillString="до" genderString="Пол" educationString="Образование" salaryString="Зарплата от" cityString="Город" testPeriodString="Испытательный срок" contactPersonString="Контакт по данной вакансии" textJobString="Проффесиональные навыки:">
+		<TextJob>Бухгалтер по обработке первичных документов. 
+&lt;br&gt;
+Знание 1С ( Бухгалтерия, торговля + склад) обязательно. 
+&lt;br&gt;
+Уверенный пользователь ПК. Ответственность, педантичность. 
+&lt;br&gt;
+</TextJob>
+	</JobItem>
+	<JobItem url="/mill/ctx?mill.lang=ru_RU&amp;mill.id_job=1&amp;mill.context=mill.job" datePost="11.дек.2001" dateEnd="11.дек.2001" jobName="web-программист" ageFrom="22" ageTill="35" gender="мужской" education="высшее" salary="рублей в месяц" city="Урюпинск" testPeriod="1 месяц" contactPerson="Антон" datePostString="Дата размещения" dateEndString="Действительна до" jobNameString="Вакансия" ageString="Возраст" ageFromString="от" ageTillString="до" genderString="Пол" educationString="Образование" salaryString="Зарплата от" cityString="Город" testPeriodString="Испытательный срок" contactPersonString="Контакт по данной вакансии" textJobString="Проффесиональные навыки:">
+		<TextJob>Требуется опытный web-программист, разработчик сложных программных компонентов. Профессиональные знания: PHP, MySQL, Perl, JavaScript, HTML, CSS. Желательно знание FLASH (actionscript). Обязателен опыт участия в завершенных коммерческих проектах. Приветствуется большое желание работать, высокая самоотдача, ответственность.</TextJob>
+	</JobItem>
+	<JobItem url="/mill/ctx?mill.lang=ru_RU&amp;mill.id_job=3&amp;mill.context=mill.job" datePost="30.ноя.2001" dateEnd="30.ноя.2001" jobName="Менеджер по рекламе" ageFrom="25" ageTill="35" gender="не имеет значения" education="высшее" salary="рублей в месяц" city="Иркутск" testPeriod="1 месяц" contactPerson="Коммерческий директор" datePostString="Дата размещения" dateEndString="Действительна до" jobNameString="Вакансия" ageString="Возраст" ageFromString="от" ageTillString="до" genderString="Пол" educationString="Образование" salaryString="Зарплата от" cityString="Город" testPeriodString="Испытательный срок" contactPersonString="Контакт по данной вакансии" textJobString="Проффесиональные навыки:">
+		<TextJob>Исследование рынка бизнес услуг, разработка рекламных кампаний, ценообразование, ведение клиентской базы, поддержка корпоративного сайта. 
+&lt;br&gt;
+Резюме направляйте по факсу и электронной почте. 
+&lt;br&gt;
+</TextJob>
+	</JobItem>
+</JobBlock>

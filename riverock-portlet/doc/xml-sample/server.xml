@@ -1,0 +1,67 @@
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<Server port="8005" shutdown="SHUTDOWN" debug="0">
+	<!-- Uncomment these entries to enable JMX MBeans support -->
+	<Listener className="org.apache.catalina.mbeans.ServerLifecycleListener" debug="0"/>
+	<Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" debug="0"/>
+	<!-- Global JNDI resources -->
+	<GlobalNamingResources>
+
+		<!-- Editable user database that can also be used by
+         		UserDatabaseRealm to authenticate users -->
+		<Resource name="UserDatabase" auth="Container" type="org.apache.catalina.UserDatabase" description="User database that can be updated and saved"/>
+		<ResourceParams name="UserDatabase">
+			<parameter>
+				<name>factory</name>
+				<value>org.apache.catalina.users.MemoryUserDatabaseFactory</value>
+			</parameter>
+			<parameter>
+				<name>pathname</name>
+				<value>conf/tomcat-users.xml</value>
+			</parameter>
+		</ResourceParams>
+	</GlobalNamingResources>
+
+	<Service name="Tomcat-Standalone">
+		<Connector className="org.apache.coyote.tomcat4.CoyoteConnector" port="80" 
+			minProcessors="5" maxProcessors="75" 
+			enableLookups="false" redirectPort="8443" 
+			acceptCount="10" debug="0" connectionTimeout="60000" 
+			useURIValidationHack="false"/>
+
+		<Engine name="Standalone" defaultHost="localhost" debug="0">
+			<Logger className="org.apache.catalina.logger.FileLogger" suffix=".txt" timestamp="true" debug="0" directory="logs/_catalina_" prefix="catalina_log."/>
+			<Realm className="org.apache.catalina.realm.MemoryRealm"/>
+			<!-- Define the default virtual host -->
+			<Host name="localhost" debug="0" appBase="d:\opt2\_localhost">
+				<Valve className="org.apache.catalina.valves.AccessLogValve" suffix=".txt" pattern="common" debug="0" directory="c:\opt2\logs\_localhost/access" prefix="access_log."/>
+				<Logger className="org.apache.catalina.logger.FileLogger" suffix=".txt" timestamp="true" debug="0" directory="c:\opt2\logs\_localhost\log" prefix="log."/>
+				<Context path="" docBase="data" debug="0" reloadable="true" useNaming="false" crossContext="false"/>
+			</Host>
+		</Engine>
+	</Service>
+</Server>
