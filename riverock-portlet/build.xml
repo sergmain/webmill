@@ -47,6 +47,7 @@
         <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-module.lib}"/>
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${secure.lib}"/>
