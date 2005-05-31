@@ -201,7 +201,6 @@ public final class ContextNavigator extends HttpServlet {
                     log.debug( cookieToString( cookies[i]) );
                 }
             }
-            putResourceDebug();
         }
 
 
@@ -252,28 +251,24 @@ public final class ContextNavigator extends HttpServlet {
 
             }
 
-if (log.isDebugEnabled()) {
-log.debug("#100.0");
-ContextNavigator.putResourceDebug();
-}
+            if (log.isDebugEnabled()) {
+                log.debug("#100.0");
+            }
 
             portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig );
             if (!portalRequestInstance.getIsTextMimeType()) {
                 return;
             }
 
-if (log.isDebugEnabled()) {
-log.debug("#100.1");
-ContextNavigator.putResourceDebug();
-}
+            if (log.isDebugEnabled()) {
+                log.debug("#100.1");
+            }
 
             PortalRequestProcessor.processPortalRequest( portalRequestInstance );
 
-if (log.isDebugEnabled()) {
-log.debug("#100.2");
-ContextNavigator.putResourceDebug();
-}
-
+            if (log.isDebugEnabled()) {
+                log.debug("#100.2");
+            }
         }
         catch (Throwable e) {
             String es = "General error processing request";
@@ -401,7 +396,6 @@ ContextNavigator.putResourceDebug();
                     log.error("Error destroy portalRequestInstance object", e);
                 }
 if (log.isDebugEnabled()){
-            putResourceDebug();
 }
                 NDC.pop();
             }
@@ -466,33 +460,4 @@ if (log.isDebugEnabled()){
         return copyright;
     }
 
-    static void putResourceDebug() {
-//        long currentTimeMills = System.currentTimeMillis();
-//        while ( (System.currentTimeMillis() - currentTimeMills)<1000) {
-//            for (int i=0; i<50; i++);
-//        }
-
-//        try {
-//            Thread.sleep( 2000 );
-//        }
-//        catch( InterruptedException e ) {
-//            log.error( "error", e );
-//        }
-
-//            log.debug("Messages: " + PortletResourceBundleProvider.getMessagesMapInternal() );
-        if ( PortletResourceBundleProvider.getMessagesMapInternal()!=null ) {
-            log.debug("Messages: " + PortletResourceBundleProvider.getMessagesMapInternal().size() );
-            log.debug("Messages: " + PortletResourceBundleProvider.getMessagesMapInternal().getClass() );
-        }
-        else {
-            log.debug("Messages is null" );
-        }
-//            log.debug("Portlets: " + PortletResourceBundleProvider.getPortletsMapInternal() );
-        if ( PortletResourceBundleProvider.getPortletsMapInternal()!=null ) {
-            log.debug( "Portlets: " + PortletResourceBundleProvider.getPortletsMapInternal().size() );
-        }
-        else {
-            log.debug( "Portlets is null" );
-        }
-    }
 }

@@ -1,0 +1,3 @@
+add to <Connector> there attributes:
+               
+useBodyEncodingForURI="true"  URIEncoding="UTF-8"

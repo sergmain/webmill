@@ -122,7 +122,6 @@ public final class PageElement {
         redirectUrl = null;
 if (log.isDebugEnabled()) {
 log.debug("#13.1");
-ContextNavigator.putResourceDebug();
 }
         if ( renderParameters!=null ) {
             renderParameters.clear();
@@ -130,7 +129,6 @@ ContextNavigator.putResourceDebug();
         }
 if (log.isDebugEnabled()) {
 log.debug("#13.2");
-ContextNavigator.putResourceDebug();
 }
     }
 
@@ -184,7 +182,6 @@ ContextNavigator.putResourceDebug();
 
 if (log.isDebugEnabled()) {
 log.debug("#10.1");
-ContextNavigator.putResourceDebug();
 }
             if ( !isUrl ){
                 portletEntry.getPortlet().render( renderRequest, renderResponse );
@@ -194,7 +191,6 @@ ContextNavigator.putResourceDebug();
 
                 if (log.isDebugEnabled()) {
                     log.debug("#91.1");
-                    ContextNavigator.putResourceDebug();
                 }
 
                 if ( log.isDebugEnabled() ) {
@@ -205,29 +201,24 @@ ContextNavigator.putResourceDebug();
 
                 if (log.isDebugEnabled()) {
                     log.debug("#91.2");
-                    ContextNavigator.putResourceDebug();
                 }
 
                 if (log.isDebugEnabled()) {
                     log.debug("#91.3");
-                    ContextNavigator.putResourceDebug();
                 }
                 PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl( rd );
                 if (log.isDebugEnabled()) {
                     log.debug("#91.4");
-                    ContextNavigator.putResourceDebug();
                 }
                 dispatcher.include( renderRequest, renderResponse );
                 if (log.isDebugEnabled()) {
                     log.debug("#91.5");
-                    ContextNavigator.putResourceDebug();
                 }
             }
             renderResponse.flushBuffer();
 
             if (log.isDebugEnabled()) {
                 log.debug("#10.2");
-                ContextNavigator.putResourceDebug();
             }
 
             if ( renderResponse.getIsRedirected() ) {

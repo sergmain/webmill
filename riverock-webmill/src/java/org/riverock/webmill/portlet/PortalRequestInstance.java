@@ -163,20 +163,17 @@ public final class PortalRequestInstance {
 
             if (log.isDebugEnabled()) {
                 log.debug("#77.0");
-                ContextNavigator.putResourceDebug();
             }
             initTemplate();
 
             if (log.isDebugEnabled()) {
                 log.debug("#77.0");
-                ContextNavigator.putResourceDebug();
             }
 
             initXslt();
 
             if (log.isDebugEnabled()) {
                 log.debug("#5.0");
-                ContextNavigator.putResourceDebug();
             }
 
             // init page element list
@@ -184,7 +181,6 @@ public final class PortalRequestInstance {
 
                 if (log.isDebugEnabled()) {
                     log.debug("#5.1-" + i);
-                    ContextNavigator.putResourceDebug();
                 }
 
                 TemplateItemType templateItem = template.getSiteTemplateItem(i);
@@ -207,7 +203,6 @@ public final class PortalRequestInstance {
 
                 if (log.isDebugEnabled()) {
                     log.debug("#5.10");
-                    ContextNavigator.putResourceDebug();
                 }
 
                 switch (templateItem.getType().getType()) {
@@ -224,7 +219,6 @@ public final class PortalRequestInstance {
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("#5.20");
-                    ContextNavigator.putResourceDebug();
                 }
 
 

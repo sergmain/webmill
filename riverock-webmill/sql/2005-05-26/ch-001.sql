@@ -1,0 +1,10 @@
+ALTER TABLE WM_FORUM_MESSAGE
+ ADD (
+  LAST_EDITED_TIME date DEFAULT sysdate NOT NULL
+ )
+/
+
+alter table WM_FORUM_MESSAGE
+drop column LAST_EDITED
+/
+

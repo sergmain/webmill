@@ -37,30 +37,9 @@
     <import file="../riverock-include.xml"/>
 
     <property name="site.name" value="_localhost"/>
-<!---->
-<!--    <property name="exclude" value="**/*.txt, **/*.bat, **/*.xml, **/*.sh, **/*.jav, **/*.mf, **/*.class,**/tmp_*.java"/>-->
-<!---->
-<!--    <property name="doc.dir" value="doc"/>-->
-<!--    <property name="src.dir" value="src"/>-->
     <property name="tomcat.dir" value="tomcat"/>
-<!---->
-<!--    <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>-->
-<!---->
-<!--    <property name="src.java.dir" value="${src.dir}/java"/>-->
-<!--    <property name="src-core.java.dir" value="${src.dir}-core/java"/>-->
-<!--    <property name="src-schema.java.dir" value="${src.dir}-schema/java"/>-->
-<!--    <property name="src-pluto-container.java.dir" value="${src.dir}-pluto/java/container"/>-->
-<!--    <property name="src.java-test.dir" value="${src.dir}/test"/>-->
-<!---->
-<!--    <property name="src.jsp.dir" value="${src.dir}/jsp"/>-->
-<!--    <property name="src.xsd.dir" value="${src.dir}/xsd"/>-->
-<!--    <property name="src.xml.dir" value="${src.dir}/xml"/>-->
-<!---->
     <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
     <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
-<!---->
-<!--    <property name="manifest-file-name" value="manifest.mf"/>-->
-<!--    <property name="manifest" value="src/java/${manifest-file-name}"/>-->
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${junit.lib}"/>
@@ -106,64 +85,22 @@
     <target name="run_all_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
-        <property name="target.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <antcall target="copy_webmill_jar"/>
-        <property name="target.context" value="C:\opt2\_www\_test\mill"/>
-        <antcall target="copy_webmill_jar"/>
+        <antcall target="copy_new_jars"/>
         <antcall target="start.apache"/>
     </target>
 
-    <target name="copy_webmill_jar">
-        <copy file="${lib.dir}/${riverock-generic.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-        <copy file="${lib.dir}/${riverock-interfaces.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-        <copy file="${lib.dir}/${riverock-common.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-        <copy file="${lib.dir}/${riverock-cache.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-        <copy file="${lib.dir}/${riverock-sso.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-        <copy file="${lib.dir}/${riverock-sql-parser.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-        <copy file="${lib.dir}/${riverock-webmill.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-        <copy file="${lib.dir}/${riverock-portlet.lib}" todir="${target.context}/WEB-INF/lib" overwrite="true" />
-    </target>
-
-    <macrodef name="copy_jars_to_context">
-        <attribute name="webmill-context"/>
-        <sequential>
-            <property name="webmill.lib-dir" value="@{webmill-context}/WEB-INF/lib"/>
-            <delete file="${webmill.lib-dir}}/castor-*.jar"/>
-            <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
-            <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
-            <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
-            <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
-            <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
-            <copy file="../riverock-lib/lib/${riverock-cache.lib}" todir="${webmill.lib-dir}"/>
-            <copy file="../riverock-lib/lib/${riverock-sso.lib}" todir="${webmill.lib-dir}"/>
-            <copy file="../riverock-lib/lib/${riverock-module.lib}" todir="${webmill.lib-dir}"/>
-        </sequential>
-      </macrodef>
-
     <target name="copy_to_mill">
-        <copy_jars_to_context webmill-context="C:\opt2\_www\_me.askmore.info\mill"/>
-    </target>
-
-    <target name="copy_to_javakonkurs">
-        <copy_jars_to_context webmill-context="C:\opt2\_www\_me.askmore.info\javakonkurs"/>
-    </target>
-
-    <target name="copy_to_test_mill">
-        <copy_jars_to_context webmill-context="C:\opt2\_www\_test\mill"/>
+        <copy_jars_to_context webmill-context="C:\opt2\_www\mill"/>
     </target>
 
     <target name="copy_new_jars">
         <antcall target="copy_to_mill"/>
-        <antcall target="copy_to_javakonkurs"/>
-        <antcall target="copy_to_test_mill"/>
     </target>
 
     <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
-
         <antcall target="copy_new_jars"/>
-
         <antcall target="start.apache"/>
     </target>
 
@@ -637,31 +574,6 @@ cd ..\..
         </javac>
     </target>
 
-    <target name="jar_start_apache">
-        <antcall target="jar_without_copy"/>
-        <antcall target="stop.apache"/>
-        <antcall target="copy_web.xml"/>
-        <antcall target="copy.project"/>
-        <antcall target="start.apache"/>
-    </target>
-
-    <target name="copy_web.xml">
-        <copy file="${webinf.jsp.dir}/web.xml" tofile="${www.dir}/mill/WEB-INF/web.xml" filtering="off" overwrite="true" />
-    </target>
-
-    <target name="copy-mill-core.xsd">
-        <copy file="../mill-core/src/xsd/mill-core.xsd" tofile="src/xsd/mill-core.xsd" filtering="off" overwrite="true"/>
-    </target>
-
-    <target name="copy_and_restart.project">
-        <antcall target="copy.project"/>
-        <antcall target="restart.apache"/>
-    </target>
-
-    <target name="copy.project">
-        <antcall target="copy.WEB-INF.project"/>
-    </target>
-
     <target name="build_mill_context" >
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${build_context}">
@@ -697,60 +609,5 @@ cd ..\..
         </copy>
         <copy file="${webinf.jsp.dir}/web.xml"
             tofile="${build_mill_context}/WEB-INF/web.xml"/>
-    </target>
-
-    <target name="copy_webmill_xml_to_site" >
-        <copy todir="${www.dir}/mill/WEB-INF/mill/xml">
-            <fileset dir="${webinf.jsp.dir}/mill/xml">
-                <include name="**/*.xml"/>
-                <exclude name="**/CVS"/>
-            </fileset>
-        </copy>
-    </target>
-
-    <target name="copy.WEB-INF.project" depends="build_mill_context">
-
-        <copy file="${build.dir}/${main.lib}" tofile="c:\jdk\lib\${main.lib}" filtering="off" overwrite="true"/>
-
-        <delete includeEmptyDirs="true" failonerror="false">
-            <fileset dir="${www.dir}/mill">
-                <include name="**"/>
-            </fileset>
-        </delete>
-        <mkdir dir="${www.dir}/mill" />
-        <copy todir="${www.dir}/mill" includeEmptyDirs="true" >
-            <fileset dir="${build_mill_context}">
-                <include name="**"/>
-            </fileset>
-        </copy>
-
-
-        <property name="web-inf.path" value="/data/WEB-INF/lib/${main.lib}"/>
-
-        <copy file="${build.dir}/${main.lib}" tofile="${www.dir}/_angaria.com${web-inf.path}" filtering="off" overwrite="true"/>
-        <copy file="${build.dir}/${main.lib}" tofile="${www.dir}/_test${web-inf.path}" filtering="off" overwrite="true"/>
-        <copy file="${build.dir}/${main.lib}" tofile="${www.dir}/_baikal.travel.askmore.info${web-inf.path}" filtering="off" overwrite="true"/>
-
-<!--
-        <property name="jsp.path" value="src\jsp\_localhost\"/>
-        <copy todir="${www.dir}_angaria.com\data\WEB-INF\mill" overwrite="true">
-            <fileset dir="${jsp.path}WEB-INF\mill\"/>
-        </copy>
-        <copy todir="${www.dir}_test\data\WEB-INF\mill" overwrite="true">
-            <fileset dir="${jsp.path}WEB-INF\mill\"/>
-        </copy>
-        <copy todir="${www.dir}_baikal.travel.askmore.info\data\WEB-INF\mill" overwrite="true">
-            <fileset dir="${jsp.path}WEB-INF\mill\"/>
-        </copy>
-        <copy todir="\sandbox\sign_files\mill" overwrite="true">
-            <fileset dir="${jsp.path}WEB-INF\mill\"/>
-        </copy>
-        <copy todir="\sandbox\castor_jdo\mill" overwrite="true">
-            <fileset dir="${jsp.path}WEB-INF\mill\"/>
-        </copy>
-        <copy todir="\sandbox\db-explorer\mill" overwrite="true">
-            <fileset dir="${jsp.path}WEB-INF\mill\"/>
-        </copy>
--->
     </target>
 </project>
