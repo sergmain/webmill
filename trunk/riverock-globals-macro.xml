@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/*
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<project name="riverock global macro file" basedir=".">
+    <macrodef name="copy_jars_to_context">
+        <attribute name="webmill-context"/>
+        <sequential>
+            <property name="webmill.lib-dir" value="@{webmill-context}/WEB-INF/lib"/>
+            <delete file="${webmill.lib-dir}}/castor-*.jar"/>
+            <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-cache.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-sso.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-module.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-interfaces.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+            <copy file="../riverock-lib/lib/${riverock-forum.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
+        </sequential>
+    </macrodef>
+</project>

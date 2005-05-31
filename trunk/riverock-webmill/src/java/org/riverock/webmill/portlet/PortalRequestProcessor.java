@@ -27,6 +27,7 @@ package org.riverock.webmill.portlet;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
@@ -34,9 +35,11 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.schema.site.SitePortletDataType;
 import org.riverock.webmill.schema.site.TemplateItemType;
+import org.riverock.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
 
@@ -63,8 +66,17 @@ public final class PortalRequestProcessor {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("#20.0");
-            ContextNavigator.putResourceDebug();
+            log.debug("template: " + portalRequestInstance.template);
+            if (portalRequestInstance.template!=null) {
+                log.debug("template role: " + portalRequestInstance.template.getRole());
+            }
+        }
+
+        if (!checkTemplateRole(portalRequestInstance)) {
+            portalRequestInstance.byteArrayOutputStream.write(
+                ("You has no sufficient roles. Need: "+portalRequestInstance.template.getRole()).getBytes()
+            );
+            return;
         }
 
         processActionSiteTemplateItems( portalRequestInstance );
@@ -74,7 +86,6 @@ public final class PortalRequestProcessor {
 
         if (log.isDebugEnabled()) {
             log.debug("#20.1");
-            ContextNavigator.putResourceDebug();
         }
 
         render( portalRequestInstance );
@@ -84,15 +95,33 @@ public final class PortalRequestProcessor {
 
         if (log.isDebugEnabled()) {
             log.debug("#20.2");
-            ContextNavigator.putResourceDebug();
         }
 
         buildPage( portalRequestInstance );
 
         if (log.isDebugEnabled()) {
             log.debug("#20.3");
-            ContextNavigator.putResourceDebug();
         }
+    }
+
+    private static boolean checkTemplateRole(PortalRequestInstance portalRequestInstance) throws AuthException {
+        if (portalRequestInstance.template==null ||
+            StringTools.isEmpty( portalRequestInstance.template.getRole() ) ) {
+            return true;
+        }
+
+        if (portalRequestInstance.getAuth()==null) {
+            return false;
+        }
+
+        StringTokenizer st = new StringTokenizer( portalRequestInstance.template.getRole(), ", ", false);
+        while (st.hasMoreTokens()) {
+            String role = st.nextToken();
+            if (portalRequestInstance.getAuth().isUserInRole(role)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static void processActionSiteTemplateItems( PortalRequestInstance portalRequestInstance ) {
@@ -163,7 +192,6 @@ public final class PortalRequestProcessor {
             ++i;
             if (log.isDebugEnabled()) {
                 log.debug("#30.1-"+i);
-                ContextNavigator.putResourceDebug();
             }
 
             SitePortletDataType item = null;
@@ -193,7 +221,6 @@ public final class PortalRequestProcessor {
 
             if (log.isDebugEnabled()) {
                 log.debug("#30.1-"+i);
-                ContextNavigator.putResourceDebug();
             }
 
             if ( Boolean.TRUE.equals(item.getIsError()) || !Boolean.TRUE.equals(item.getIsXml()) ) {
@@ -246,7 +273,6 @@ public final class PortalRequestProcessor {
 
             if (log.isDebugEnabled()) {
                 log.debug("#30.1-"+i);
-                ContextNavigator.putResourceDebug();
             }
 
             pageElement = pageElementNext;
@@ -270,7 +296,6 @@ public final class PortalRequestProcessor {
 
         if (log.isDebugEnabled()) {
             log.debug("#40.1");
-            ContextNavigator.putResourceDebug();
         }
 
         byte[] bytes = xml.toByteArray();
@@ -287,7 +312,6 @@ public final class PortalRequestProcessor {
 
         if (log.isDebugEnabled()) {
             log.debug("#40.2");
-            ContextNavigator.putResourceDebug();
         }
 
         try {
@@ -324,7 +348,6 @@ public final class PortalRequestProcessor {
 
             if (log.isDebugEnabled()) {
                 log.debug("#40.3");
-                ContextNavigator.putResourceDebug();
             }
 
         }

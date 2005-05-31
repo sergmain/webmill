@@ -1,0 +1,1 @@
+<SiteTemplate role="webmill.root, webmill.forum">   

@@ -26,6 +26,7 @@
 <!--$Id$-->
 <project name="riverock common file for build module" default="jar" basedir=".">
 
+    <import file="riverock-globals-macro.xml"/>
     <import file="riverock-globals-prop.xml"/>
     <import file="riverock-globals-target.xml"/>
 
