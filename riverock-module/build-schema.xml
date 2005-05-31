@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /*
- * org.riverock.interfaces - Common classes and interafces shared between projects
+ * org.riverock.module - Abstract layer for web module
  *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
  *

@@ -106,11 +106,18 @@
         <antcall target="gen_portlet_job_schema"/>
         <antcall target="gen_portlet_menu_member_schema"/>
         <antcall target="gen_portlet_register_schema"/>
+        <antcall target="gen_portlet_login_schema"/>
     </target>
     <target name="gen_portlet_register_schema">
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/register"/>
         <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-register.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.portlet.register"/>
+        <antcall target="gen_schema_from_schema"/>
+    </target>
+    <target name="gen_portlet_login_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/login"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-login.xsd"/>
+        <property name="schema-package-java" value="${main-package}.schema.portlet.login"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
     <target name="gen_portlet_article_schema">

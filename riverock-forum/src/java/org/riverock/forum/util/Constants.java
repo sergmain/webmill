@@ -51,4 +51,5 @@ public class Constants {
     public static final String LOGOUT_ACTION = "logout";
     public static final String HELP_ACTION = "help";
     public static final String ADMIN_FORUM_ACTION = "admin-forum";
+    public static final String REQUEST_LOCALE_VALUE = "request-locale";
 }

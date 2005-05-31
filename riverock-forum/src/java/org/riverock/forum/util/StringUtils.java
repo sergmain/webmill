@@ -36,6 +36,9 @@ public class StringUtils {
      * @return string
      */
     public static String displayHtml(String input) {
+        if (input==null) {
+            return "";
+        }
         String str = input;
         str = createBreaks(str, 80);
         str = StringTools.encodeXml(str);
@@ -85,8 +88,9 @@ public class StringUtils {
      * @return string
      */
     public static String convertURL(String input) {
-        if (input == null || input.length() == 0)
-            return input;
+        if (StringTools.isEmpty(input)) {
+            return "";
+        }
         StringBuffer buf = new StringBuffer(input.length() + 25);
         char chars[] = input.toCharArray();
         int len = input.length();

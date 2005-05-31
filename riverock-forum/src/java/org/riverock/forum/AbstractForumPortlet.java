@@ -13,8 +13,9 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.forum.util.Constants;
+import org.riverock.module.action.ActionNameProvider;
+import org.riverock.module.action.WebmillPortletActionNameProviderImpl;
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.exception.ModuleException;
 import org.riverock.module.factory.ActionFactory;
 import org.riverock.module.factory.WebmillPortletActionFactoryImpl;
 import org.riverock.module.web.config.ModuleConfig;
@@ -57,6 +58,7 @@ public abstract class AbstractForumPortlet implements Portlet {
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
 
+        renderRequest.setAttribute( Constants.REQUEST_LOCALE_VALUE, renderRequest.getLocale() );
         ModuleRequest moduleRequest = new WebmillPortletModuleRequestImpl(renderRequest);
         ModuleResponse moduleResponse = new PortletModuleResponseImpl(renderResponse);
         ResourceBundle bundle = moduleConfig.getResourceBundle(renderRequest.getLocale());
@@ -79,11 +81,14 @@ public abstract class AbstractForumPortlet implements Portlet {
             th = e;
         }
         if (th!=null) {
-            forwardPage = ForumError.systemError(moduleRequest, bundle );
+            String forwardName = ForumError.systemError(moduleRequest, bundle );
+            ModuleRequest request = new WebmillPortletModuleRequestImpl(renderRequest);
+            ActionNameProvider actionNameProvider = new WebmillPortletActionNameProviderImpl(request);
             try {
+                forwardPage = actionFactory.getForwardPath( actionNameProvider.getActionName(), forwardName );
                 moduleConfig.getContext().getRequestDispatcher( forwardPage ).include( moduleRequest, moduleResponse );
             }
-            catch (ModuleException e) {
+            catch (Exception e) {
                 throw new PortletException("Error include context", e);
             }
         }

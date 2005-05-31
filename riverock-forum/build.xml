@@ -69,17 +69,16 @@
     <target name="run_tomcat_with_new jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
-
-        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <copy file="${build.dir}/${main.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-sso.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-module.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-generic.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-common.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-webmill.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-portlet.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-interfaces.lib}" todir="${webmill.context}/WEB-INF/lib"/>
+        <antcall target="copy_new_jars"/>
         <antcall target="start.apache"/>
+    </target>
+
+    <target name="copy_to_mill">
+        <copy_jars_to_context webmill-context="C:\opt2\_www\mill"/>
+    </target>
+
+    <target name="copy_new_jars">
+        <antcall target="copy_to_mill"/>
     </target>
 
     <target name="full_clean">

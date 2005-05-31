@@ -14,6 +14,7 @@ public class ForumCategoryBean {
     private String categoryName = null;
     private Collection forums = new LinkedList();
     private Integer forumCategoryId = null;
+    private boolean isDeleted = false;
 
     public boolean isUseLocale() {
         return isUseLocale;
@@ -45,5 +46,13 @@ public class ForumCategoryBean {
 
     public void setForumCategoryId(Integer forumCategoryId) {
         this.forumCategoryId = forumCategoryId;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

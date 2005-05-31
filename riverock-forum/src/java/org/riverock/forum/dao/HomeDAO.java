@@ -7,23 +7,21 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.forum.bean.ForumConcreteBean;
-import org.riverock.forum.bean.ForumBean;
-import org.riverock.forum.bean.ForumCategoryBean;
-import org.riverock.module.exception.ActionException;
-import org.riverock.module.web.url.UrlProvider;
-import org.riverock.forum.util.CommonUtils;
-import org.riverock.forum.util.Constants;
-import org.riverock.forum.ForumPortletv2;
-import org.riverock.forum.schema.core.WmForumCategoryListType;
-import org.riverock.forum.schema.core.WmForumCategoryItemType;
-import org.riverock.forum.schema.core.WmForumItemType;
-import org.riverock.forum.core.GetWmForumCategoryWithForumIdList;
-import org.riverock.forum.core.GetWmForumItem;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.forum.bean.ForumBean;
+import org.riverock.forum.bean.ForumCategoryBean;
+import org.riverock.forum.bean.ForumConcreteBean;
+import org.riverock.forum.core.GetWmForumCategoryWithForumIdList;
+import org.riverock.forum.core.GetWmForumItem;
+import org.riverock.forum.schema.core.WmForumCategoryItemType;
+import org.riverock.forum.schema.core.WmForumCategoryListType;
+import org.riverock.forum.schema.core.WmForumItemType;
+import org.riverock.forum.util.Constants;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.module.exception.ActionException;
+import org.riverock.module.web.url.UrlProvider;
 
 /**
  * HomeDAO interface
@@ -70,6 +68,7 @@ public class HomeDAO {
                 ForumCategoryBean categoryBean = new ForumCategoryBean();
                 categoryBean.setForumCategoryId( item.getForumCategoryId() );
                 categoryBean.setCategoryName( item.getForumCategoryName() );
+                categoryBean.setDeleted( item.getIsDeleted().booleanValue() );
                 categoriesList.add(categoryBean);
 
                 String sql = sqlStart;

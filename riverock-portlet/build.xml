@@ -74,36 +74,16 @@
     <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
-
-        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
-
-        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
-        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-interfaces.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-common.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-sql-parser.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="${webinf.jsp.dir}/web.xml" todir="${webmill.context}/WEB-INF"/>
-        <copy file="${webinf.jsp.dir}/mill/portlet/portlet.xml" todir="${webmill.context}/WEB-INF/mill/portlet"/>
-
-        <property name="webmill.context" value="C:\opt2\_www\_test\mill"/>
-        <property name="webmill.lib-dir" value="${webmill.context}/WEB-INF/lib"/>
-
-        <delete file="${webmill.lib-dir}}/castor-*.jar"/>
-        <copy file="../riverock-lib/lib/${castor.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-interfaces.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-webmill.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-portlet.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-generic.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-common.lib}"  todir="${webmill.lib-dir}"/>
-        <copy file="../riverock-lib/lib/${riverock-sql-parser.lib}" todir="${webmill.lib-dir}"/>
-        <copy file="${webinf.jsp.dir}/web.xml" todir="${webmill.context}/WEB-INF"/>
-        <copy file="${webinf.jsp.dir}/mill/portlet/portlet.xml" todir="${webmill.context}/WEB-INF/mill/portlet"/>
-
+        <antcall target="copy_new_jars"/>
         <antcall target="start.apache"/>
+    </target>
+
+    <target name="copy_to_mill">
+        <copy_jars_to_context webmill-context="C:\opt2\_www\mill"/>
+    </target>
+
+    <target name="copy_new_jars">
+        <antcall target="copy_to_mill"/>
     </target>
 
     <target name="full_build_module">
