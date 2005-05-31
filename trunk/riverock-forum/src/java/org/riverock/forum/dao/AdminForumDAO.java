@@ -1,27 +1,30 @@
 package org.riverock.forum.dao;
 
-import java.sql.SQLException;
-import java.sql.Types;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.RsetTools;
 import org.riverock.forum.ForumActionBean;
-import org.riverock.forum.exception.PersistenceException;
-import org.riverock.module.exception.ActionException;
-import org.riverock.module.web.url.UrlProvider;
-import org.riverock.module.web.user.ModuleUser;
+import org.riverock.forum.core.GetWmForumCategoryItem;
+import org.riverock.forum.core.GetWmForumConcreteItem;
 import org.riverock.forum.core.InsertWmForumCategoryItem;
 import org.riverock.forum.core.InsertWmForumConcreteItem;
+import org.riverock.forum.core.UpdateWmForumCategoryItem;
+import org.riverock.forum.core.UpdateWmForumConcreteItem;
+import org.riverock.forum.exception.PersistenceException;
 import org.riverock.forum.schema.core.WmForumCategoryItemType;
 import org.riverock.forum.schema.core.WmForumConcreteItemType;
 import org.riverock.forum.util.CommonUtils;
 import org.riverock.forum.util.Constants;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.exception.DatabaseException;
+import org.riverock.module.exception.ActionException;
+import org.riverock.module.web.url.UrlProvider;
+import org.riverock.module.web.user.ModuleUser;
 
 /**
  * @author SMaslyukov
@@ -48,19 +51,34 @@ public class AdminForumDAO {
 
         try {
             if (subAction.equals("add-new-category")) {
-                addNewCategory(auth_, forumActionBean, forumId);
+                addNewCategory(forumActionBean, forumId);
             }
             else if (subAction.equals("add-new-forum")) {
                 addNewForumConcrete(auth_, forumActionBean, forumId);
             }
             else if (subAction.equals("delete-forum")) {
-                deleteForumConcrete(auth_, forumActionBean, forumId, false);
+                deleteForumConcrete(forumActionBean, forumId, false);
             }
             else if (subAction.equals("permanent-delete-forum")) {
-                deleteForumConcrete(auth_, forumActionBean, forumId, true);
+                deleteForumConcrete(forumActionBean, forumId, true);
             }
             else if (subAction.equals("restore-forum")) {
-                restoreForumConcrete(auth_, forumActionBean, forumId);
+                restoreForumConcrete(forumActionBean, forumId);
+            }
+            else if (subAction.equals("update-forum-category")) {
+                updateForumCategory(forumActionBean, forumId );
+            }
+            else if (subAction.equals("delete-forum-category")) {
+                deleteForumCategory(forumActionBean, false, forumId);
+            }
+            else if (subAction.equals("permanent-delete-forum-category")) {
+                deleteForumCategory(forumActionBean, true, forumId);
+            }
+            else if (subAction.equals("restore-forum-category")) {
+                restoreForumCategory(forumActionBean, forumId);
+            }
+            else if (subAction.equals("update-forum-concrete")) {
+                updateForumConcrete(forumActionBean, forumId );
             }
             forumActionBean.getAdapter().commit();
         }
@@ -82,18 +100,14 @@ public class AdminForumDAO {
         log.debug("out execute()");
     }
 
-    private void restoreForumConcrete(ModuleUser auth_, ForumActionBean forumActionBean, Long forumId) throws SQLException, DatabaseException {
+    private void restoreForumConcrete(ForumActionBean forumActionBean, Long forumId) throws SQLException, DatabaseException {
         log.debug("in restoreForumConcrete()");
 
-//        int checkBox = PortletTools.getInt(forumActionBean.getRequest(), "confirm-delete", new Integer(0) ).intValue();
         Integer forumConcreteId = forumActionBean.getRequest().getInt( "forumConcreteId" );
         if (log.isDebugEnabled()) {
-//            log.debug("checkBox: "+checkBox);
             log.debug("forumConcreteId: "+forumConcreteId);
         }
-//        if (checkBox!=1) {
-//            return;
-//        }
+
         if (forumConcreteId==null) {
             return;
         }
@@ -114,7 +128,7 @@ public class AdminForumDAO {
 
     }
 
-    private void deleteForumConcrete(ModuleUser auth_, ForumActionBean forumActionBean, Long forumId, boolean isPermanent) throws SQLException, DatabaseException {
+    private void deleteForumConcrete(ForumActionBean forumActionBean, Long forumId, boolean isPermanent) throws SQLException, DatabaseException {
         log.debug("in deleteForumConcrete()");
 
         int checkBox = forumActionBean.getRequest().getInt( "confirm-delete", new Integer(0) ).intValue();
@@ -177,7 +191,7 @@ public class AdminForumDAO {
         log.debug("out addNewForumConcrete()");
     }
 
-    private void addNewCategory(ModuleUser auth_, ForumActionBean forumActionBean, Long forumId) throws SQLException, PersistenceException {
+    private void addNewCategory(ForumActionBean forumActionBean, Long forumId) throws SQLException, PersistenceException {
         log.debug("in addNewCategory()");
 
         WmForumCategoryItemType item = new WmForumCategoryItemType();
@@ -189,4 +203,116 @@ public class AdminForumDAO {
 
         log.debug("out addNewCategory()");
     }
+
+    ///////////
+
+    private void restoreForumCategory(ForumActionBean forumActionBean, Long forumId) throws SQLException, DatabaseException {
+        log.debug("in restoreForumCategory()");
+
+        Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
+        if (!CommonUtils.checkForumCategoryId(forumActionBean.getAdapter(), forumId, forumCategoryId)){
+            return;
+        }
+
+        DatabaseManager.runSQL(
+            forumActionBean.getAdapter(),
+            "update WM_FORUM_CATEGORY " +
+            "set    IS_DELETED=0 " +
+            "where  FORUM_CATEGORY_ID=? ",
+            new Object[] { forumCategoryId },
+            new int[] { Types.INTEGER }
+        );
+        log.debug("out restoreForumCategory()");
+
+    }
+
+    private void deleteForumCategory(ForumActionBean forumActionBean, boolean isPermanent, Long forumId) throws SQLException, DatabaseException {
+        log.debug("in deleteForumCategory()");
+
+        Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
+        if (!CommonUtils.checkForumCategoryId(forumActionBean.getAdapter(), forumId, forumCategoryId)){
+            return;
+        }
+
+        int checkBox = forumActionBean.getRequest().getInt( "confirm-delete", new Integer(0) ).intValue();
+        if (log.isDebugEnabled()) {
+            log.debug("checkBox: "+checkBox);
+        }
+        if (checkBox!=1) {
+            return;
+        }
+
+        if (isPermanent) {
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            try {
+                ps = forumActionBean.getAdapter().prepareStatement(
+                    "select a.F_ID " +
+                    "from   WM_FORUM_CONCRETE a " +
+                    "where  a.FORUM_CATEGORY_ID=?"
+                );
+                ps.setInt(1, forumCategoryId.intValue());
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    CommonDAO.deleteForumConcrete(forumActionBean.getAdapter(), RsetTools.getInt(rs, "F_ID"));
+                }
+                DatabaseManager.runSQL(
+                    forumActionBean.getAdapter(),
+                    "delete from WM_FORUM_CATEGORY where FORUM_CATEGORY_ID=? ",
+                    new Object[] { forumCategoryId },
+                    new int[] { Types.INTEGER }
+                );
+            }
+            finally {
+                DatabaseManager.close(rs, ps);
+                rs = null;
+                ps = null;
+            }
+        }
+        else {
+            DatabaseManager.runSQL(
+                forumActionBean.getAdapter(),
+                "update WM_FORUM_CATEGORY " +
+                "set    IS_DELETED=1 " +
+                "where  FORUM_CATEGORY_ID=? ",
+                new Object[] { forumCategoryId },
+                new int[] { Types.INTEGER }
+            );
+        }
+        log.debug("out deleteForumCategory()");
+
+    }
+
+    private void updateForumCategory(ForumActionBean forumActionBean, Long forumId) throws PersistenceException {
+        log.debug("in updateForumCategory()");
+
+        Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
+        if (!CommonUtils.checkForumCategoryId(forumActionBean.getAdapter(), forumId, forumCategoryId)){
+            return;
+        }
+
+        WmForumCategoryItemType forumCategory = GetWmForumCategoryItem.getInstance(forumActionBean.getAdapter(), forumCategoryId.intValue() ).item;
+        forumCategory.setForumCategoryName( forumActionBean.getRequest().getString( "forum-category-name" ));
+        UpdateWmForumCategoryItem.process( forumActionBean.getAdapter(), forumCategory );
+
+        log.debug("out updateForumCategory()");
+    }
+
+    private void updateForumConcrete(ForumActionBean forumActionBean, Long forumId) throws PersistenceException {
+        log.debug("in updateForumConcrete()");
+
+        Integer forumConcreteId = forumActionBean.getRequest().getInt( "forumConcreteId" );
+        if (!CommonUtils.checkForumConcreteId(forumActionBean.getAdapter(), forumId, forumConcreteId)){
+            return;
+        }
+        WmForumConcreteItemType forumConcrete = GetWmForumConcreteItem.getInstance( forumActionBean.getAdapter(), forumConcreteId.intValue()).item;
+        forumConcrete.setFName( forumActionBean.getRequest().getString( "forum-name" ));
+        forumConcrete.setFInfo( forumActionBean.getRequest().getString( "forum-desc" ));
+        UpdateWmForumConcreteItem.process( forumActionBean.getAdapter(), forumConcrete );
+
+        log.debug("out updateForumConcrete()");
+    }
+
+
 }

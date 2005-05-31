@@ -26,7 +26,7 @@
 package org.riverock.portlet.login;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.Writer;
 import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
@@ -37,14 +37,13 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ServletTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.portlet.main.Constants;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.wrapper.StreamWrapper;
-
-import org.apache.log4j.Logger;
 
 /**
  * Author: mill
@@ -74,20 +73,21 @@ public final class LoginPlainPortlet implements Portlet {
 
     public void render( final RenderRequest renderRequest, final RenderResponse renderResponse ) throws PortletException, IOException {
 
-        OutputStream outputStream = null;
+        Writer out = null;
         try {
-            outputStream = renderResponse.getPortletOutputStream();
-            StreamWrapper out = new StreamWrapper(outputStream);
+            out = renderResponse.getWriter();
             ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isDebugEnabled() ) {
                 log.debug( "Process input auth data" );
+            }
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
             if ( auth_ != null && auth_.checkAccess( renderRequest.getServerName() ) ) {
-                if ( log.isDebugEnabled() )
+                if ( log.isDebugEnabled() ) {
                     log.debug( "user " + auth_.getUserLogin() + " is  valid for " + renderRequest.getServerName() + " site" );
+                }
 
                 out.write( "User already logged in." );
                 return;
@@ -143,14 +143,16 @@ public final class LoginPlainPortlet implements Portlet {
                 "</form>\n" );
         }
         catch( Throwable e ) {
-            String es = "Error in getInstance(DatabaseAdapter db__)";
+            String es = "Error in render()";
             log.error( es, e );
             throw new PortletException( es, e );
         }
         finally {
+            if (out!=null) {
+                out.flush();
+                out.close();
+                out = null;
+            }
         }
-        outputStream.flush();
-        outputStream.close();
-        outputStream = null;
     }
 }

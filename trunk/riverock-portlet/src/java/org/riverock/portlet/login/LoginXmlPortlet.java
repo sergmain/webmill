@@ -39,12 +39,14 @@ import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.ServletTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.schema.portlet.login.LoginType;
+import org.riverock.portlet.schema.portlet.login.types.LoginTypeIsLoggedType;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.wrapper.StreamWrapper;
+import org.riverock.webmill.portal.PortalConstants;
 
 /**
  * User: Admin
@@ -74,67 +76,75 @@ public final class LoginXmlPortlet implements Portlet {
 
     public void render( final RenderRequest renderRequest, final RenderResponse renderResponse ) throws PortletException, IOException {
 
-        OutputStream outputStream = null;
+        OutputStream out = null;
         try {
-            outputStream = renderResponse.getPortletOutputStream();
-            StreamWrapper out = new StreamWrapper(outputStream);
+            out = renderResponse.getPortletOutputStream();
             ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
 
-            if ( log.isDebugEnabled() )
+            if ( log.isDebugEnabled() ) {
                 log.debug( "Process input auth data" );
+            }
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
+            LoginType login = new LoginType();
+            login.setPortletName( LoginUtils.CTX_TYPE_LOGIN_XML );
             if ( auth_ != null && auth_.checkAccess( renderRequest.getServerName() ) ) {
                 if ( log.isDebugEnabled() )
                     log.debug( "user " + auth_.getUserLogin() + " is  valid for " + renderRequest.getServerName() + " site" );
 
-                out.write( "User already logged in." );
-                return;
+                login.setIsLogged( LoginTypeIsLoggedType.VALUE_1 );
+                login.setInviteMessage( "User already logged in." );
+                login.setUserName( auth_.getName() );
+            }
+            else {
+
+                String srcURL = null;
+                if ( renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) != null ) {
+                    srcURL = PortletTools.getString( renderRequest, Constants.NAME_TOURL_PARAM );
+                }
+                else {
+                    srcURL = PortletTools.url( Constants.CTX_TYPE_INDEX, renderRequest, renderResponse );
+                }
+
+                srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
+                srcURL = StringTools.replaceString( srcURL, "%26", "&" );
+
+                if ( log.isDebugEnabled() ) {
+                    log.debug( "reqeust parameter  mill.tourl: " + renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) );
+                    log.debug( "toURL: " + srcURL );
+                    log.debug( "encoded toURL - " + srcURL );
+                    log.debug( "Header string - " + bundle.getString( "auth.check.header" ) );
+                }
+
+                login.setActionUrl( PortletTools.ctx( renderRequest ) );
+                login.setToUrl( srcURL );
+                login.setInviteMessage( bundle.getString( "auth.check.header" ) );
+                login.setLoginMessage( bundle.getString( "auth.check.login" ) );
+                login.setPasswordMessage( bundle.getString( "auth.check.password" ) );
+                login.setButtonMessage( bundle.getString( "auth.check.register" ) );
+                login.setIsLogged( LoginTypeIsLoggedType.VALUE_0 );
             }
 
-            out.write( "<form method=\"POST\" action=\"" + PortletTools.ctx( renderRequest ) + "\" >\n" );
-
-            out.write( ServletTools.getHiddenItem( Constants.NAME_TYPE_CONTEXT_PARAM,
-                LoginUtils.CTX_TYPE_LOGIN_PLAIN ) );
-
-            String srcURL = null;
-            if ( renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) != null ) {
-                srcURL = PortletTools.getString( renderRequest, Constants.NAME_TOURL_PARAM );
-            } else {
-                srcURL = PortletTools.url( Constants.CTX_TYPE_INDEX, renderRequest, renderResponse );
+            String xmlRoot = (String)renderRequest.getAttribute(PortalConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE );
+            if (StringTools.isEmpty( xmlRoot ) ) {
+                xmlRoot = "LoginXml";
             }
 
-            srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
-            srcURL = StringTools.replaceString( srcURL, "%26", "&" );
-
-            out.write( ServletTools.getHiddenItem( Constants.NAME_TOURL_PARAM, srcURL ) );
-
-            if ( log.isDebugEnabled() ) {
-                log.debug( "reqeust parameter  mill.tourl: " + renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) );
-                log.debug( "toURL: " + srcURL );
-                log.debug( "encoded toURL - " + srcURL );
-                log.debug( "Header string - " + bundle.getString( "auth.check.header" ) );
-            }
-
-            out.write( "<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"100%\">\n" +
-                "<tr><th class=\"formworks\">" + bundle.getString( "auth.check.header" ) + "</th></tr>\n" +
-                "<tr><td class=\"formworks\"><input type = \"text\" name = \"" + LoginUtils.NAME_USERNAME_PARAM + "\">&nbsp;" + bundle.getString( "auth.check.login" ) + "&nbsp;</td></tr>\n" +
-                "<tr><td class=\"formworks\"><input type = \"password\" name=\"" + LoginUtils.NAME_PASSWORD_PARAM + "\" value = \"\" >&nbsp;" + bundle.getString( "auth.check.password" ) + "</td></tr>\n" +
-                "<tr><td class=\"formworks\" align=\"center\"><input type=\"submit\" name=\"button\" value=\"" +
-                bundle.getString( "auth.check.register" ) + "\"></td></tr>\n" +
-                "</table>\n" +
-                "</form>\n" );
+            byte[] bytes = XmlTools.getXml( login, xmlRoot, null, "utf-8");
+            out.write( bytes );
         }
         catch( Throwable e ) {
-            String es = "Error in getInstance(DatabaseAdapter db__)";
+            String es = "Error in render()";
             log.error( es, e );
             throw new PortletException( es, e );
         }
         finally {
+            if (out!=null) {
+                out.flush();
+                out.close();
+                out = null;
+            }
         }
-        outputStream.flush();
-        outputStream.close();
-        outputStream = null;
     }
 }

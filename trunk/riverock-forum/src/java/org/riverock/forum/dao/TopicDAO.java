@@ -150,11 +150,11 @@ public class TopicDAO {
                 message.setU_regtime(rs.getTimestamp("DATE_START_WORK"));
                 message.setU_address(rs.getString("ADDRESS"));
                 message.setU_post(rs.getInt("u_post"));
-                message.setU_sign(rs.getString("u_sign"));
-                message.setU_avatar_id(rs.getInt("u_avatar_id"));
+                message.setU_sign( rs.getString("u_sign") );
+                message.setU_avatar_id( rs.getInt("u_avatar_id") );
 
                 if (moduleUser!=null && moduleUser.getId()==null) {
-                    throw new IllegalStateException("???");
+                    throw new IllegalStateException("User unknown");
                 }
 
                 if (moduleUser!=null && moduleUser.getId().intValue()==message.getM_u_id()) {
