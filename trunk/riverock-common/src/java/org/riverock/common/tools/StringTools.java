@@ -178,10 +178,10 @@ public class StringTools {
     }
 
 
-    public static String encodeXml( final String s )
-    {
-        if (s==null || s.length()==0)
+    public static String encodeXml( final String s ) {
+        if (isEmpty(s)) {
             return s;
+        }
 
         StringBuffer buf = new StringBuffer();
         char ch = ' ';
@@ -201,10 +201,10 @@ public class StringTools {
         return buf.toString();
     }
 
-    public static String decodeXml( final String s )
-    {
-        if (s==null || s.length()==0)
+    public static String decodeXml( final String s ) {
+        if (isEmpty(s)) {
             return s;
+        }
 
         return StringTools.replaceStringArray(
                 s,
