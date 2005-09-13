@@ -25,23 +25,22 @@
 
 package org.riverock.portlet.shop.upload;
 
-import java.io.IOException;
 import java.io.Writer;
 
+import javax.portlet.RenderRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.portlet.RenderRequest;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: Admin
@@ -52,7 +51,7 @@ import org.riverock.webmill.portlet.ContextNavigator;
  */
 public final class UploadPrice extends HttpServlet {
 
-    private final static Logger log = Logger.getLogger( UploadPrice.class );
+    private final static Log log = LogFactory.getLog( UploadPrice.class );
 
     public final static String UPLOAD_FILE_PARM_NAME = "f";
     public final static String CTX_TYPE_UPLOAD_PRICE_CONTR    = "mill.upload_price_controller";
@@ -76,7 +75,7 @@ public final class UploadPrice extends HttpServlet {
 
             RenderRequest renderRequest = (RenderRequest)request_;
 
-            ContextNavigator.setContentType( response );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
@@ -86,10 +85,10 @@ public final class UploadPrice extends HttpServlet {
             }
 
             String param =
-                Constants.NAME_TYPE_CONTEXT_PARAM + '=' + CTX_TYPE_UPLOAD_PRICE_CONTR;
+                ContainerConstants.NAME_TYPE_CONTEXT_PARAM + '=' + CTX_TYPE_UPLOAD_PRICE_CONTR;
 
             out.write(
-                "<form method=\"POST\" action=\"" + response.encodeURL( PortletTools.ctx( renderRequest ) ) + '?' + param + "\" ENCTYPE=\"multipart/form-data\">" +
+                "<form method=\"POST\" action=\"" + response.encodeURL( PortletService.ctx( renderRequest ) ) + '?' + param + "\" ENCTYPE=\"multipart/form-data\">" +
                 "Внимание! Файл импорта прайс-листа должен быть в корректном XML формате<br>" +
                 "Если загрузка прайс-листа прошла успешно, то дополнительных сообщений выдано не будет" +
                 "<p>" +

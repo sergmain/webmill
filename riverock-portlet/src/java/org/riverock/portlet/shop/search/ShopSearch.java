@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 3:15:26 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.shop.search;
 
 import java.io.IOException;
@@ -45,20 +36,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.webmill.container.tools.PortletService;
 
 
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 3:15:26 PM
+ *
+ * $Id$
+ */
 public class ShopSearch extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(ShopSearch.class);
+    private static Log log = LogFactory.getLog(ShopSearch.class);
 
     class ParseException extends Exception
     {
@@ -80,10 +82,10 @@ public class ShopSearch extends HttpServlet
     {
         try
         {
-            if ((s_ == null) || (s_.length() == 0))
+            if (StringTools.isEmpty(s_))
                 return default_return;
 
-            double d = new Double(replcd(s_)).doubleValue();
+            double d = Double.parseDouble(replcd(s_));
 
             if (log.isDebugEnabled())
             {
@@ -206,13 +208,13 @@ public class ShopSearch extends HttpServlet
                     if (!v_flag)
                     {
                         v_bool = decode_logic(bool1);
-                        v_str = v_str + v_bool;
-                        v_result = v_result + v_bool;
+                        v_str += v_bool;
+                        v_result += v_bool;
                     }
                     v_flag = false;
                     v_multi = true;
-                    v_result = v_result + s1;
-                    v_str = v_str + " (UPPER(a.item) like ''%' ||UPPER(s1)||'%'') ";
+                    v_result += s1;
+                    v_str += " (UPPER(a.item) like ''%' ||UPPER(s1)||'%'') ";
                 }
                 if (to_digit(bool2) == 0)
                 {
@@ -223,12 +225,12 @@ public class ShopSearch extends HttpServlet
                     if (!v_flag)
                     {
                         v_bool = decode_logic(bool2);
-                        v_str = v_str + v_bool;
-                        v_result = v_result + v_bool;
+                        v_str += v_bool;
+                        v_result += v_bool;
                     }
                     v_flag = false;
-                    v_result = v_result + s2;
-                    v_str = v_str + " (UPPER(a.item) like ''%' ||UPPER(s2)||'%'') ";
+                    v_result += s2;
+                    v_str += " (UPPER(a.item) like ''%' ||UPPER(s2)||'%'') ";
                 }
 
             }
@@ -246,8 +248,8 @@ public class ShopSearch extends HttpServlet
                 {
                     if (!v_flag)
                     {
-                        v_str = v_str + " and (";
-                        v_result = v_result + " and (";
+                        v_str += " and (";
+                        v_result += " and (";
                     }
                     v_flag = false;
                     v_multi = true;
@@ -259,8 +261,8 @@ public class ShopSearch extends HttpServlet
                 {
                     if (!v_flag)
                     {
-                        v_str = v_str + " and ";
-                        v_result = v_result + " and ";
+                        v_str += " and ";
+                        v_result += " and ";
                     }
 
                     v_flag = false;
@@ -269,8 +271,8 @@ public class ShopSearch extends HttpServlet
                     v_str = v_str + " price <= " + to_digit(v_max) + " ";
                 }
 
-                v_str = v_str + " ) ";
-                v_result = v_result + " ) ";
+                v_str += " ) ";
+                v_result += " ) ";
 
             }
 
@@ -306,10 +308,7 @@ public class ShopSearch extends HttpServlet
         try
         {
             RenderRequest renderRequest = null;
-//            CtxInstance ctxInstance =
-//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
-
-            ContextNavigator.setContentType(response);
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
 
             out = response.getWriter();
 
@@ -382,9 +381,9 @@ public class ShopSearch extends HttpServlet
             out.write("</form>\r\n");
 
 
-            db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance();
 
-            if (PortletTools.getString(renderRequest, "action").toLowerCase().equals("search"))
+            if (RequestTools.getString(renderRequest, "action").toLowerCase().equals("search"))
             {
 
                 int v_count_search = 2147483647;
@@ -398,13 +397,13 @@ public class ShopSearch extends HttpServlet
                 call.registerOutParameter(1, oracle.jdbc.driver.OracleTypes.VARCHAR);
                 call.registerOutParameter(9, oracle.jdbc.driver.OracleTypes.VARCHAR);
 
-                call.setString(2, PortletTools.getString(renderRequest, "s"));
-                call.setString(3, PortletTools.getString(renderRequest, "s1"));
-                call.setString(4, PortletTools.getString(renderRequest, "s2"));
-                call.setString(5, PortletTools.getString(renderRequest, "bool1"));
-                call.setString(6, PortletTools.getString(renderRequest, "bool2"));
-                call.setString(7, PortletTools.getString(renderRequest, "minPrice"));
-                call.setString(8, PortletTools.getString(renderRequest, "maxPrice"));
+                call.setString(2, RequestTools.getString(renderRequest, "s"));
+                call.setString(3, RequestTools.getString(renderRequest, "s1"));
+                call.setString(4, RequestTools.getString(renderRequest, "s2"));
+                call.setString(5, RequestTools.getString(renderRequest, "bool1"));
+                call.setString(6, RequestTools.getString(renderRequest, "bool2"));
+                call.setString(7, RequestTools.getString(renderRequest, "minPrice"));
+                call.setString(8, RequestTools.getString(renderRequest, "maxPrice"));
 
                 call.execute();
                 String v_str = StringTools.truncateString(call.getString(1), 400);
@@ -421,7 +420,7 @@ public class ShopSearch extends HttpServlet
 //return;
 
                 int v_len = v_str.length();
-                int v_number_page = PortletTools.getInt(renderRequest, "p", new Integer(1)).intValue();
+                int v_number_page = PortletService.getInt(renderRequest, "p", 1);
 
                 // Todo this is simple stub, current not work
                 // Todo because sequence was used to simple getting of next id of file
@@ -429,7 +428,7 @@ public class ShopSearch extends HttpServlet
                 seq.setSequenceName("seq_shop_query_table");
                 seq.setTableName( "MAIN_FORUM_THREADS");
                 seq.setColumnName( "ID_THREAD" );
-                Long v_id_query = new Long(db_.getSequenceNextValue( seq ) );
+                Long v_id_query = db_.getSequenceNextValue( seq );
 
                 String sql_ =
                         "insert into price_query_table " +
@@ -438,7 +437,7 @@ public class ShopSearch extends HttpServlet
 
                 PreparedStatement ps = db_.prepareStatement(sql_);
                 RsetTools.setLong(ps, 1, v_id_query);
-                RsetTools.setLong(ps, 2, PortletTools.getLong(renderRequest, "i"));
+                RsetTools.setLong(ps, 2, PortletService.getLong(renderRequest, "i"));
                 ps.setString(3, v_query);
                 ps.setString(4, v_str_ip);
                 ps.setString(5, v_str_ip);
@@ -496,7 +495,7 @@ WHERE id_query = v_id_query;
 
                         Long sclient_rec_id_client = RsetTools.getLong(rs, "ID_FIRM");
                         String sclient_rec_full_name = RsetTools.getString(rs, "full_name");
-                        int is_work = RsetTools.getInt(rs, "is_work", new Integer(0) ).intValue();
+                        int is_work = RsetTools.getInt(rs, "is_work", 0);
 
                         boolean v_flag = false;
                         boolean v_flag_firm = true;
@@ -535,7 +534,7 @@ WHERE id_query = v_id_query;
 
                             int v_col_span = 4;
 
-                            if (new Integer(1).equals(RsetTools.getInt(rs_item, "is_artikul")) )
+                            if ( RsetTools.getInt(rs_item, "is_artikul")==1 )
                                 v_col_span++;
 
                             boolean v_flag_shop = true;
@@ -595,10 +594,10 @@ WHERE id_query = v_id_query;
                                     if (v_first_step_shop)
                                     {
                                         out.write("<table border=\"1\" width=\"100%\">");
-                                        if (new Integer(1).equals(RsetTools.getInt(rs_item, "is_header_table")) )
+                                        if ( RsetTools.getInt(rs_item, "is_header_table")==1 )
                                         {
                                             out.write("<tr align=\"center\"><td width=\"67%\">" + RsetTools.getString(rs_item, "name_items") + "</td>");
-                                            if (new Integer(1).equals(RsetTools.getInt(rs_item, "is_artikul")) )
+                                            if ( RsetTools.getInt(rs_item, "is_artikul")==1 )
                                             {
                                                 out.write("<td width=\"8%\">" + RsetTools.getString(rs_item, "name_artikul") + "</td>");
                                             }
@@ -610,7 +609,7 @@ WHERE id_query = v_id_query;
 
                                     out.write("<tr>");
 
-                                    if (new Integer(1).equals(RsetTools.getInt(rs_detail, "is_group")) )
+                                    if ( RsetTools.getInt(rs_detail, "is_group")==1 )
                                     {
                                         out.write("<td colspan=\"" + v_col_span + "\"><a href=\"/price/price.jsp?i=" +
                                                 RsetTools.getLong(rs_detail, "id") + "&id=" + RsetTools.getString(rs_detail, "id_shop") +
@@ -654,7 +653,7 @@ WHERE id_query = v_id_query;
                 if (v_number_page > 0)
                 {
                     out.write("<a href=\"search_in_shop.jsp?s=");
-                    out.write(PortletTools.getString(renderRequest, "s") + "&p=" + (v_number_page - 1));
+                    out.write(RequestTools.getString(renderRequest, "s") + "&p=" + (v_number_page - 1));
                     out.write("\">Предыдущая страница");
                     out.write("</a>\"");
 
@@ -670,7 +669,7 @@ WHERE id_query = v_id_query;
                 if ((v_count_search - ((v_number_page + 1) * v_display_item)) >= 0)
                 {
                     out.write("<a href=\"search_in_shop.jsp?s=");
-                    out.write(PortletTools.getString(renderRequest, "s") + "&p=" + (v_number_page + 1));
+                    out.write(RequestTools.getString(renderRequest, "s") + "&p=" + (v_number_page + 1));
                     out.write("\">Следующая страница");
                     out.write("</a>");
 

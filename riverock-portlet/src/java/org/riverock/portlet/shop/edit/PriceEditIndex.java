@@ -28,25 +28,31 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ResourceBundle;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.price.ShopPortlet;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
+
+
 
 /**
  * Author: mill
@@ -56,15 +62,12 @@ import org.riverock.webmill.portlet.PortletTools;
  * $Id$
  */
 public final class PriceEditIndex extends HttpServlet {
-    private final static Logger log = Logger.getLogger(PriceEditIndex.class);
+    private final static Log log = LogFactory.getLog(PriceEditIndex.class);
 
-    public PriceEditIndex()
-    {
+    public PriceEditIndex() {
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
-    {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException  {
         if (log.isDebugEnabled())
             log.debug("method is POST");
 
@@ -72,15 +75,15 @@ public final class PriceEditIndex extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
-    {
+            throws IOException {
         Writer out = null;
         DatabaseAdapter db_ = null;
         try
         {
-            RenderRequest renderRequest = null;
-            RenderResponse renderResponse= null;
-            ContextNavigator.setContentType(response, "utf-8");
+            RenderRequest renderRequest = (RenderRequest)request_;
+            RenderResponse renderResponse= (RenderResponse)response;
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
 
             out = response.getWriter();
 
@@ -91,7 +94,7 @@ public final class PriceEditIndex extends HttpServlet {
                 return;
             }
 
-                db_ = DatabaseAdapter.getInstance( false );
+                db_ = DatabaseAdapter.getInstance();
 
                 String sql_ =
                         "select a.* from price_shop_table a, site_virtual_host b "+
@@ -115,7 +118,7 @@ public final class PriceEditIndex extends HttpServlet {
                                 "<table width=\"100%\" border=\"1\" class=\"l\">"+
                                 "<tr>"+
                                 "<th class=\"memberArea\">Name shop</th>"+
-                                "<th class=\"memberArea\">" + PortletTools.getStringManager( renderRequest.getLocale() ).getStr("index.jsp.action") + "</th>" +
+                                "<th class=\"memberArea\">" + bundle.getString("index.jsp.action") + "</th>" +
                                 "</tr>"
                         );
 
@@ -135,10 +138,10 @@ public final class PriceEditIndex extends HttpServlet {
 
               out.write("\r\n");
               out.write("<input type=\"button\" value=\"");
-              out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.next"));
+              out.write(bundle.getString("button.next"));
               out.write("\" onclick=\"location.href='");
               out.write(
-                  PortletTools.url("mill.price.shop", renderRequest, renderResponse )+'&'+
+                  PortletService.url("mill.price.shop", renderRequest, renderResponse )+'&'+
                   ShopPortlet.NAME_ID_SHOP_PARAM + '=' +id_arm
               );
               out.write("';\">\r\n");
@@ -166,7 +169,7 @@ public final class PriceEditIndex extends HttpServlet {
                 }
                 else
                 {
-                    out.write( PortletTools.getStringManager( renderRequest.getLocale() ).getStr("access_denied"));
+                    out.write( bundle.getString("access_denied"));
                 }
         }
         catch (Exception e)
