@@ -48,7 +48,7 @@ import java.util.TimeZone;
 
 public class TestDatabaseTimestamp
 {
-//    private static Logger cat = Logger.getLogger( "org.riverock.test.TestTimestamp" );
+//    private static Logger cat = Logger.getLogger( "org.riverock.test.TimestampTest" );
 
     public TestDatabaseTimestamp()
     {

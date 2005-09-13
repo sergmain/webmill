@@ -36,7 +36,7 @@ import org.riverock.generic.exception.FileManagerException;
  */
 public class CacheFile
 {
-    private static Logger log = Logger.getLogger("org.riverock.generic.main.CacheFile");
+    private static Logger log = Logger.getLogger(CacheFile.class);
 
     private long lastAccessTime = 0;
     private long delayPeriod = 1000 * 10;

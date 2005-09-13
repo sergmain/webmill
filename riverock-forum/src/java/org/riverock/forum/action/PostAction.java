@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.ForumError;
-import org.riverock.forum.ForumPortletv2;
+import org.riverock.forum.ForumPortlet;
 import org.riverock.forum.bean.PostBean;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.PostDAO;
@@ -42,7 +42,7 @@ public class PostAction implements Action {
             log.debug("strLPT: " + lastPortTime);
         }
         if ( lastPortTime!=null ) {
-            int floodTime = ForumPortletv2.getFloodTime( forumActionBean.getConfig() );
+            int floodTime = ForumPortlet.getFloodTime( forumActionBean.getConfig() );
             if ((System.currentTimeMillis()-lastPortTime.longValue()) < floodTime * 1000) {
                 return ForumError.floodError(forumActionBean);
             }

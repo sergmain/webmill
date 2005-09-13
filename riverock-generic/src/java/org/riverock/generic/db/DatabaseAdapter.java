@@ -27,26 +27,23 @@ package org.riverock.generic.db;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.TreeSet;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.ExceptionTools;
@@ -64,8 +61,6 @@ import org.riverock.schema.sql.SqlNameType;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.parser.Parser;
 
-import org.apache.log4j.Logger;
-
 /**
  *
  * $Revision$ $Date$
@@ -79,7 +74,7 @@ public abstract class DatabaseAdapter {
 
     protected static Map connectionMap = new HashMap();
 
-    protected static Boolean initFlag = new Boolean(false);
+    protected static Boolean initFlag = false;
 
     public boolean isDBOk = false;
     public static boolean isNeedValidateStructure = true;
@@ -263,7 +258,7 @@ public abstract class DatabaseAdapter {
         if (log.isDebugEnabled())
         {
             log.debug("reinit class - "+className);
-            Long maxMemory = MainTools.getMaxMemory();
+            Long maxMemory = Runtime.getRuntime().maxMemory();
 
             log.debug(
                 "free memory " + Runtime.getRuntime().freeMemory()+
@@ -427,13 +422,13 @@ public abstract class DatabaseAdapter {
 
 //                    System.out.println("here 2.1");
 
-                    if (seq < columnTemp.getKeySeq().intValue() && columnTemp.getKeySeq().intValue() < seqTemp )
+                    if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp )
                     {
-                        seqTemp = columnTemp.getKeySeq().intValue();
+                        seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
                     }
                 }
-                seq = column.getKeySeq().intValue();
+                seq = column.getKeySeq();
 
                 if (!isFirst)
                     sql += ",";
@@ -463,14 +458,14 @@ public abstract class DatabaseAdapter {
                     if (!searchCurrent.equals(searchTemp))
                         continue;
 
-                    if (seq < columnTemp.getKeySeq().intValue() && columnTemp.getKeySeq().intValue() < seqTemp )
+                    if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp )
                     {
-                        seqTemp = columnTemp.getKeySeq().intValue();
+                        seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
                     }
                 }
 
-                seq = column.getKeySeq().intValue();
+                seq = column.getKeySeq();
 
                 if (!isFirst)
                     sql += ",";
@@ -680,7 +675,7 @@ public abstract class DatabaseAdapter {
             else
                 sql_ += ", ";
 
-            if (field.getJavaType().intValue()!=Types.DATE && field.getJavaType().intValue()!=Types.TIMESTAMP )
+            if (field.getJavaType()!=Types.DATE && field.getJavaType()!=Types.TIMESTAMP )
                 sql_ += " ?";
             else
                 sql_ += getNameDateBind();
@@ -714,10 +709,10 @@ public abstract class DatabaseAdapter {
                         DbFieldType field = table.getFields( fieldPtr++ );
                         DbDataFieldDataType fieldData = record.getFieldsData(k);
 
-                        if ( fieldData.getIsNull().booleanValue() )
+                        if ( fieldData.getIsNull() )
                         {
-                            int type = fieldData.getJavaTypeField().intValue();
-                            if (fieldData.getJavaTypeField().intValue()==Types.TIMESTAMP)
+                            int type = fieldData.getJavaTypeField();
+                            if (fieldData.getJavaTypeField()==Types.TIMESTAMP)
                                 type=Types.DATE;
 
                             ps.setNull(k+1, type);
@@ -733,7 +728,7 @@ public abstract class DatabaseAdapter {
                                 case Types.DOUBLE:
                                 case Types.NUMERIC:
                                     if ( field.getDecimalDigit()==null ||
-                                        field.getDecimalDigit().intValue()==0 )
+                                        field.getDecimalDigit()==0 )
                                     {
                                         if (isDebug)
                                             System.out.println("Types.NUMERIC as Types.INTEGER param #"+(k+1)+", " +
@@ -855,7 +850,7 @@ public abstract class DatabaseAdapter {
                 DbDataRecordType record = tableData.getRecords(i);
 
                 DbDataFieldDataType fieldFk = record.getFieldsData(idxFk);
-                Long idRec = new Long(fieldFk.getNumberData().longValue());
+                Long idRec = fieldFk.getNumberData().longValue();
 
                 hashFk.put(idRec, new Object());
             }
@@ -882,8 +877,8 @@ public abstract class DatabaseAdapter {
                     DbDataFieldDataType fieldPk = record.getFieldsData(idxPk);
                     long idPkRec = fieldPk.getNumberData().longValue();
 
-                    if (idFk.longValue()==idRec)
-                        setPk.add( new Long( idPkRec ) );
+                    if (idFk==idRec)
+                        setPk.add( idPkRec );
                 }
 
                 Iterator it = setPk.iterator();
@@ -891,7 +886,7 @@ public abstract class DatabaseAdapter {
                 // двигаясь по списку первичных ключей создаем результирующий строковый объект
                 while (it.hasNext())
                 {
-                    long pk = ((Long)it.next()).longValue();
+                    long pk = ((Long) it.next());
 
                     for (int i = 0; i < tableData.getRecordsCount(); i++)
                     {
@@ -955,9 +950,9 @@ public abstract class DatabaseAdapter {
                         ps1.setLong(1, idSeq);
 
                         if (log.isDebugEnabled())
-                            log.debug("Bind param #2 " + idFk.longValue());
+                            log.debug("Bind param #2 " + idFk);
 
-                        ps1.setLong(2, idFk.longValue());
+                        ps1.setLong(2, idFk);
 
 
                         String s = new String(b, prevPos, pos - prevPos, "utf-8");
@@ -1176,7 +1171,7 @@ public abstract class DatabaseAdapter {
 
                 field.setName(metaField.getString("COLUMN_NAME"));
                 field.setDataType(metaField.getString("TYPE_NAME"));
-                field.setJavaType( RsetTools.getInt(metaField, "DATA_TYPE", new Integer(Integer.MIN_VALUE)) );
+                field.setJavaType( RsetTools.getInt(metaField, "DATA_TYPE", Integer.MIN_VALUE) );
                 field.setSize( RsetTools.getInt( metaField, "COLUMN_SIZE") );
                 field.setDecimalDigit( RsetTools.getInt( metaField, "DECIMAL_DIGITS"));
                 field.setNullable( RsetTools.getInt( metaField, "NULLABLE") );
@@ -1232,13 +1227,13 @@ public abstract class DatabaseAdapter {
                     default:
                         if (field.getDataType().equals("BLOB"))
                         {
-                            field.setJavaType( new Integer(Types.BLOB) );
+                            field.setJavaType( Types.BLOB );
                             field.setJavaStringType("java.sql.Types.BLOB");
                             break;
                         }
                         if (field.getDataType().equals("CLOB"))
                         {
-                            field.setJavaType( new Integer(Types.CLOB) );
+                            field.setJavaType( Types.CLOB );
                             field.setJavaStringType("java.sql.Types.CLOB");
                             break;
                         }
@@ -1255,7 +1250,7 @@ public abstract class DatabaseAdapter {
                     log.debug("Field decimalDigit - " + field.getDecimalDigit());
                     log.debug("Field nullable - " + field.getNullable());
 
-                    if (field.getNullable().intValue() == DatabaseMetaData.columnNullableUnknown)
+                    if (field.getNullable() == DatabaseMetaData.columnNullableUnknown)
                         log.debug("Table " + tablePattern + " field - " + field.getName() + " with unknown nullable status");
 
                 }
@@ -1607,8 +1602,96 @@ public abstract class DatabaseAdapter {
      */
     public abstract int getMaxLengthStringField();
 
-    protected abstract void init( final DatabaseConnectionType dc_)
-        throws SQLException, ClassNotFoundException, DatabaseException;
+    protected abstract DataSource createDataSource() throws SQLException;
+    public abstract String getDriverClass();
+
+    private static Object syncObject = new Object();
+    protected void init(DatabaseConnectionType dc_) throws DatabaseException, SQLException {
+        dc = dc_;
+
+        try {
+            if (dc == null)
+            {
+                log.fatal("DatabaseConnection not initialized");
+                throw new DatabaseException("#21.001 DatabaseConnection not initialized.");
+            }
+
+            if (!isDriverLoaded)
+            {
+                synchronized(syncObject)
+                {
+                    if (!isDriverLoaded)
+                    {
+                        switch (dc.getDataSourceType().getType())
+                        {
+                            case DataSourceTypeType.DRIVER_TYPE:
+                                if (log.isDebugEnabled())
+                                    log.debug("Start create connection pooling with driver");
+
+
+                                break;
+                            case DataSourceTypeType.JNDI_TYPE:
+                                
+                                if (log.isDebugEnabled())
+                                    log.debug("Start create connection pooling with JNDI");
+                                try {
+                                    Context initCtx = new InitialContext();
+                                    Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+                                    // Look up our data source
+                                    dataSource = (DataSource)envCtx.lookup( dc.getDataSourceName() );
+
+                                }
+                                catch (NamingException e)
+                                {
+                                    final String es = "Error get value from JDNI context";
+                                    log.error(es, e);
+                                    throw new DatabaseException( es, e );
+                                }
+
+                                break;
+
+                            case DataSourceTypeType.NONE_TYPE:
+                                if (log.isDebugEnabled())
+                                    log.debug("Start create connection pooling with simple mnaager");
+                                Class.forName( getDriverClass() );
+                                break;
+                        }
+                        isDriverLoaded = true;
+
+                    }
+                }
+            }
+
+            if (log.isDebugEnabled())
+            {
+                log.debug("ConnectString - "+dc.getConnectString());
+                log.debug("username - "+dc.getUsername());
+                log.debug("password - "+dc.getPassword());
+                log.debug("isAutoCommit - "+dc.getIsAutoCommit());
+            }
+
+            switch (dc.getDataSourceType().getType())
+            {
+                case DataSourceTypeType.DRIVER_TYPE:
+                    conn = dataSource.getConnection();
+                    break;
+                case DataSourceTypeType.JNDI_TYPE:
+                    conn = dataSource.getConnection();
+                    break;
+
+                case DataSourceTypeType.NONE_TYPE:
+                    conn = DriverManager.getConnection(dc.getConnectString(), dc.getUsername(), dc.getPassword());
+                    break;
+            }
+
+            conn.setAutoCommit(dc.getIsAutoCommit());
+        } catch (Exception e) {
+            final String es = "Expeption create new Connection";
+            log.error(es, e);
+            throw new DatabaseException( es, e );
+        }
+    }
 
 
     protected static String getDBconnectClassName( final String connectionName)
@@ -1699,9 +1782,9 @@ public abstract class DatabaseAdapter {
         synchronized (initFlag)
         {
             DatabaseAdapter _db_ = null;
-            if (!initFlag.booleanValue())
+            if (!initFlag)
             {
-                initFlag = new Boolean(true);
+                initFlag = true;
                 try
                 {
 
@@ -1745,7 +1828,7 @@ public abstract class DatabaseAdapter {
                     }
                 }
                 finally {
-                    initFlag = new Boolean(false);
+                    initFlag = false;
                 }
             }
 

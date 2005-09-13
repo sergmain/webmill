@@ -32,23 +32,37 @@
  */
 package org.riverock.generic.db.factory;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.tools.DateTools;
-import org.riverock.generic.tools.CurrentTimeZone;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.*;
-import org.riverock.common.config.ConfigException;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+
+import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.ArrayList;
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.tools.DateTools;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
+import org.riverock.generic.schema.db.structure.DbFieldType;
+import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
+import org.riverock.generic.schema.db.structure.DbSequenceType;
+import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.tools.CurrentTimeZone;
 
 
 public class MSSQL_JTDS_connect extends DatabaseAdapter
@@ -75,8 +89,6 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter
         super();
     }
 
-//    public boolean isNeedUpdateBracket = false;
-
     public boolean getIsClosed()
             throws SQLException
     {
@@ -88,6 +100,14 @@ public class MSSQL_JTDS_connect extends DatabaseAdapter
     public int getMaxLengthStringField()
     {
         return 4000;
+    }
+
+    protected DataSource createDataSource() throws SQLException {
+        return null;
+    }
+
+    public String getDriverClass() {
+        return "net.sourceforge.jtds.jdbc.Driver";
     }
 
     protected void finalize() throws Throwable
@@ -901,58 +921,4 @@ ALTER TABLE table
         }
         return false;
     }
-
-    /**
-     Этот метод создает коннект к серверу с указанным объектом типа DatabaseConnection.<br>
-
-     Параметры:
-     <blockquote>
-     cd - объект типа DatabaseConnection<br>
-     </blockquote>
-     */
-    protected void init(DatabaseConnectionType dc_)
-            throws SQLException, ClassNotFoundException
-    {
-        dc = dc_;
-
-        if (dc == null)
-        {
-            log.fatal("DatabaseConnection not initialized");
-            throw new SQLException("#21.001 DatabaseConnection not initialized.");
-        }
-
-        if (!isDriverLoaded)
-        {
-            Class cl_ = Class.forName( "net.sourceforge.jtds.jdbc.Driver" );
-            isDriverLoaded = true;
-        }
-
-        if (log.isDebugEnabled())
-        {
-            log.debug("ConnectString - " + dc.getConnectString());
-            log.debug("username - " + dc.getUsername());
-            log.debug("password - " + dc.getPassword());
-            log.debug("isAutoCommit - " + dc.getIsAutoCommit());
-        }
-
-        conn = DriverManager.getConnection
-                (dc.getConnectString(), dc.getUsername(), dc.getPassword());
-
-        conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
-    }
-/*
-    private Connection getConnection()
-             throws Exception
-    {
-        Class.forName( "net.sourceforge.jtds.jdbc.Driver" );
-        String fileName = "conf/connection.properties";
-
-        Properties props = loadProperties( fileName );
-        String url = props.getProperty( "url" );
-        Connection con = DriverManager.getConnection( url, props );
-        showWarnings( con.getWarnings() );
-        initLanguage( con );
-        return con;
-    }
-*/
 }

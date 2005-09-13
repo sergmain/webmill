@@ -49,6 +49,7 @@ import org.riverock.common.config.ConfigObject;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.LogManager;
 
 /**
  * $Id$
@@ -259,7 +260,10 @@ public final class StartupServlet extends HttpServlet {
         else {
             System.out.println("Log config file not configured. isLocal config: " + isLocal);
         }
+    }
 
+    public final void destroy() {
+       LogManager.shutdown();
     }
 
     private static String getLogConfigFileFormConfig() {
@@ -329,16 +333,16 @@ public final class StartupServlet extends HttpServlet {
         try {
             Context envCtx = (Context) ctx.lookup("java:/comp/env/");
             System.out.println("list() on java:/comp/env Context : ");
-            NamingEnumeration enum = ctx.list("java:/comp/env/");
-            while (enum.hasMoreElements()) {
+            NamingEnumeration en = ctx.list("java:/comp/env/");
+            while (en.hasMoreElements()) {
                 System.out.print("Binding : " + "<br>");
-                System.out.println(enum.nextElement().toString() + "<br>");
+                System.out.println(en.nextElement().toString() + "<br>");
             }
             System.out.println("list Bindings() on java:/comp/env Context : " + "<br>");
-            enum = ctx.listBindings("java:/comp/env/");
-            while (enum.hasMoreElements()) {
+            en = ctx.listBindings("java:/comp/env/");
+            while (en.hasMoreElements()) {
                 System.out.print("Binding : " + "<br>");
-                System.out.println(enum.nextElement().toString() + "<br>");
+                System.out.println(en.nextElement().toString() + "<br>");
             }
         }
         catch (NamingException e) {
@@ -347,16 +351,16 @@ public final class StartupServlet extends HttpServlet {
 
         try {
             System.out.println("list() on /comp/env Context : ");
-            NamingEnumeration enum = ctx.list("java:/comp/env/");
-            while (enum.hasMoreElements()) {
+            NamingEnumeration en = ctx.list("java:/comp/env/");
+            while (en.hasMoreElements()) {
                 System.out.print("Binding : " + "<br>");
-                System.out.println(enum.nextElement().toString() + "<br>");
+                System.out.println(en.nextElement().toString() + "<br>");
             }
             System.out.println("list Bindings() on /comp/env Context : " + "<br>");
-            enum = ctx.listBindings("bean/");
-            while (enum.hasMoreElements()) {
+            en = ctx.listBindings("bean/");
+            while (en.hasMoreElements()) {
                 System.out.print("Binding : " + "<br>");
-                System.out.println(enum.nextElement().toString() + "<br>");
+                System.out.println(en.nextElement().toString() + "<br>");
             }
         }
         catch (NamingException e) {

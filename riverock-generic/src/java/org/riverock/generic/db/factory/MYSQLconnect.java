@@ -37,6 +37,8 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
 
 /**
  * MySQL database connect
@@ -74,6 +76,14 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
     public int getMaxLengthStringField() {
         return 1000000;
+    }
+
+    protected DataSource createDataSource() throws SQLException {
+        return null;
+    }
+
+    public String getDriverClass() {
+        return "com.mysql.jdbc.Driver";
     }
 
     protected void finalize() throws Throwable
@@ -785,42 +795,5 @@ public final class MYSQLconnect extends DatabaseAdapter {
                 return true;
         }
         return false;
-    }
-
-    /**
-     Этот метод создает коннект к серверу с указанным объектом типа DatabaseConnection.<br>
-
-     Параметры:
-     <blockquote>
-     cd - объект типа DatabaseConnection<br>
-     </blockquote>
-     */
-    protected void init(DatabaseConnectionType dc_) throws SQLException, ClassNotFoundException {
-        dc = dc_;
-
-        if (dc == null)
-        {
-            log.fatal("DatabaseConnection not initialized");
-            throw new SQLException("#21.001 DatabaseConnection not initialized.");
-        }
-
-        if (!isDriverLoaded)
-        {
-            Class cl_ = Class.forName( "com.mysql.jdbc.Driver" );
-            isDriverLoaded = true;
-        }
-
-        if (log.isDebugEnabled())
-        {
-            log.debug("ConnectString - " + dc.getConnectString());
-            log.debug("username - " + dc.getUsername());
-            log.debug("password - " + dc.getPassword());
-            log.debug("isAutoCommit - " + dc.getIsAutoCommit());
-        }
-
-        conn = DriverManager.getConnection
-                (dc.getConnectString(), dc.getUsername(), dc.getPassword());
-
-        conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
     }
 }

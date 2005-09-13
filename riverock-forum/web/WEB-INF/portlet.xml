@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * org.riverock.forum - Forum portlet Library
+ * 
+ * Copyright (C) 2005, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
+	<portlet>
+		<portlet-name>riverock.forum</portlet-name>
+		<portlet-class>org.riverock.forum.ForumPortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.forum</value>
+		</init-param>
+		<init-param>
+			<name>messages-per-page</name>
+			<value>20</value>
+		</init-param>
+		<init-param>
+			<name>topics-per-page</name>
+			<value>50</value>
+		</init-param>
+		<init-param>
+			<name>flood-time</name>
+			<value>5</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-id</name>
+			<value>forum_id</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.forum.util.ForumListPerSite</value>
+		</init-param>
+		<init-param>
+			<name>wm-forum-action-config</name>
+			<value>/WEB-INF/config/forum-action.xml</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.forum.i18n.ForumResourses</resource-bundle>
+		<portlet-info>
+			<title>Riverock forum portlet</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>riverock.forum-list-manager</portlet-name>
+		<portlet-class>org.riverock.forum.ForumListManagerPortlet</portlet-class>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.forum</value>
+		</init-param>
+		<init-param>
+			<name>wm-forum-action-config</name>
+			<value>/WEB-INF/config/forum-action-manage-list.xml</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<resource-bundle>org.riverock.forum.i18n.ForumResourses</resource-bundle>
+		<portlet-info>
+			<title>Riverock forum portlet list manager</title>
+		</portlet-info>
+	</portlet>
+</portlet-app>

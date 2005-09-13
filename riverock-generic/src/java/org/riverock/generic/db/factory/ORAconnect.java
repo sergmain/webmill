@@ -24,27 +24,38 @@
  */
 package org.riverock.generic.db.factory;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.schema.config.types.DataSourceTypeType;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.*;
-import org.riverock.generic.exception.DatabaseException;
+import java.io.InputStream;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import javax.sql.DataSource;
+
 import oracle.jdbc.driver.OracleResultSet;
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 import oracle.jdbc.pool.OracleConnectionCacheImpl;
+import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 import oracle.sql.BLOB;
 import oracle.sql.CLOB;
 import org.apache.log4j.Logger;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import java.io.InputStream;
-import java.sql.*;
-import java.util.*;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
+import org.riverock.generic.schema.db.structure.DbFieldType;
+import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
+import org.riverock.generic.schema.db.structure.DbSequenceType;
+import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.schema.db.structure.DbViewType;
 
 
 /**
@@ -131,7 +142,7 @@ public class ORAconnect extends DatabaseAdapter
                 case Types.DOUBLE:
                 case Types.NUMERIC:
                 case Types.INTEGER:
-                    if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                    if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                         sql += " NUMBER";
                     else
                         sql += " NUMBER("+field.getSize()+","+field.getDecimalDigit()+")";
@@ -142,7 +153,7 @@ public class ORAconnect extends DatabaseAdapter
                     break;
 
                 case Types.VARCHAR:
-                    if (field.getSize().intValue()<this.getMaxLengthStringField() )
+                    if (field.getSize()<this.getMaxLengthStringField() )
                         sql += " VARCHAR2("+field.getSize()+")";
                     else
                         sql += ( " VARCHAR2("+this.getMaxLengthStringField()+")" );
@@ -181,7 +192,7 @@ public class ORAconnect extends DatabaseAdapter
                 sql += (" DEFAULT "+val);
             }
 
-            if (field.getNullable().intValue() == DatabaseMetaData.columnNoNulls )
+            if (field.getNullable() == DatabaseMetaData.columnNoNulls )
             {
                 sql += " NOT NULL ";
             }
@@ -208,13 +219,13 @@ public class ORAconnect extends DatabaseAdapter
                 for ( int k=0; k<pk.getColumnsCount(); k++ )
                 {
                     DbPrimaryKeyColumnType columnTemp = pk.getColumns(k);
-                    if (seq < columnTemp.getKeySeq().intValue() && columnTemp.getKeySeq().intValue() < seqTemp )
+                    if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp )
                     {
-                        seqTemp = columnTemp.getKeySeq().intValue();
+                        seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
                     }
                 }
-                seq = column.getKeySeq().intValue();
+                seq = column.getKeySeq();
 
                 if (!isFirst)
                     sql += ",";
@@ -344,7 +355,7 @@ DEFERRABLE INITIALLY DEFERRED
             case Types.DOUBLE:
             case Types.NUMERIC:
             case Types.INTEGER:
-                if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                     sql += " NUMBER";
                 else
                     sql += " NUMBER("+field.getSize()+","+field.getDecimalDigit()+")";
@@ -355,7 +366,7 @@ DEFERRABLE INITIALLY DEFERRED
                 break;
 
             case Types.VARCHAR:
-                if (field.getSize().intValue()<this.getMaxLengthStringField() )
+                if (field.getSize()<this.getMaxLengthStringField() )
                     sql += " VARCHAR2("+field.getSize()+")";
                 else
                     sql += ( " VARCHAR2("+this.getMaxLengthStringField()+")" );
@@ -393,7 +404,7 @@ DEFERRABLE INITIALLY DEFERRED
             sql += (" DEFAULT "+val);
         }
 
-        if (field.getNullable().intValue() == DatabaseMetaData.columnNoNulls )
+        if (field.getNullable() == DatabaseMetaData.columnNoNulls )
         {
             sql += " NOT NULL ";
         }
@@ -587,7 +598,7 @@ DEFERRABLE INITIALLY DEFERRED
             "INCREMENT BY "+seq.getIncrementBy()+ " "+
             "MINVALUE "+seq.getMinValue()+ " "+
             "MAXVALUE "+seq.getMaxValue()+" "+
-            (seq.getCacheSize().intValue()==0?"NOCACHE":"CACHE "+seq.getCacheSize())+" "+
+            (seq.getCacheSize()==0?"NOCACHE":"CACHE "+seq.getCacheSize())+" "+
             (Boolean.TRUE.equals( seq.getIsCycle() )?"CYCLE":"NOCYCLE")+" "+
             (Boolean.TRUE.equals( seq.getIsOrder() )?"ORDER":"")+" ";
 
@@ -854,7 +865,7 @@ DEFERRABLE INITIALLY DEFERRED
         if (value==null) {
             return -1;
         }
-        return value.longValue();
+        return value;
     }
 
     public Long getFirstLongValue(String t, String f, String w, String o) throws SQLException {
@@ -973,125 +984,33 @@ DEFERRABLE INITIALLY DEFERRED
         return false;
     }
 
-    private static Object syncObject = new Object();
-    /**
-     * Get new connection to DB
-     * @param dc_ DatabaseConnectionType
-     * @throws DatabaseException
-     */
-    protected void init(DatabaseConnectionType dc_) throws DatabaseException
-    {
-        dc = dc_;
+    protected DataSource createDataSource() throws SQLException {
+        DataSource ds = null;
+        OracleConnectionPoolDataSource pool = new OracleConnectionPoolDataSource();
+        pool.setURL(dc.getConnectString());
+        pool.setUser(dc.getUsername());
+        pool.setPassword(dc.getPassword());
+        // Initialize the Connection Cache
+        ds = new OracleConnectionCacheImpl(pool);
 
-        try {
-            if (dc == null)
-            {
-                log.fatal("DatabaseConnection not initialized");
-                throw new DatabaseException("#21.001 DatabaseConnection not initialized.");
-            }
+        // Set Max Limit for the Cache
+        ((OracleConnectionCacheImpl)ds).setMaxLimit(5);
 
-            if (!isDriverLoaded)
-            {
-                synchronized(syncObject)
-                {
-                    if (!isDriverLoaded)
-                    {
-                        switch (dc.getDataSourceType().getType())
-                        {
-                            case DataSourceTypeType.DRIVER_TYPE:
-                                if (log.isDebugEnabled())
-                                    log.debug("Start create connection pooling with driver");
+        // Set Min Limit for the Cache
+        ((OracleConnectionCacheImpl)ds).setMinLimit(1);
 
-                                OracleConnectionPoolDataSource pool = new OracleConnectionPoolDataSource();
-                                pool.setURL(dc.getConnectString());
-                                pool.setUser(dc.getUsername());
-                                pool.setPassword(dc.getPassword());
-                                // Initialize the Connection Cache
-                                dataSource = new OracleConnectionCacheImpl(pool);
+        // Set Caching Scheme as DYNAMIC_SCHEME
+        // Caching Schema means that once the connection active size becomes 5,
+        // the next request for Connection will be served by creating a new pooled
+        // connection instance and close the connection automatically when it is
+        // no longer in use.
+        ((OracleConnectionCacheImpl)ds).setCacheScheme(OracleConnectionCacheImpl.DYNAMIC_SCHEME);
 
-                                // Set Max Limit for the Cache
-                                ((OracleConnectionCacheImpl)dataSource).setMaxLimit(5);
+        return ds;
+    }
 
-                                // Set Min Limit for the Cache
-                                ((OracleConnectionCacheImpl)dataSource).setMinLimit(1);
-
-                                // Set Caching Scheme as DYNAMIC_SCHEME
-                                // Caching Schema means that once the connection active size becomes 5,
-                                // the next request for Connection will be served by creating a new pooled
-                                // connection instance and close the connection automatically when it is
-                                // no longer in use.
-                                ((OracleConnectionCacheImpl)dataSource).setCacheScheme(OracleConnectionCacheImpl.DYNAMIC_SCHEME);
-
-                                break;
-                            case DataSourceTypeType.JNDI_TYPE:
-                                if (log.isDebugEnabled())
-                                    log.debug("Start create connection pooling with JNDI");
-                                try {
-/*
-DataSource config for OC4J
-    <data-source
-        class="com.evermind.sql.DriverManagerDataSource"
-        name="OracleDS"
-        location="jdbc/emulatedPortletPrefs"
-        xa-location="jdbc/xa/portletPrefs"
-        ejb-location="jdbc/portletPrefs"
-        connection-driver="oracle.jdbc.driver.OracleDriver"
-        username="portlet_prefs"
-        password="portlet_prefs"
-        url="jdbc:oracle:thin:@your.server.com:1521:orcl"
-    />
-*/
-                                    InitialContext ic = new InitialContext();
-                                    dataSource = (DataSource)ic.lookup("java:comp/env/" + dc.getDataSourceName());
-                                }
-                                catch (NamingException e)
-                                {
-                                    log.error("Error get value from JDNI context", e);
-                                    throw new DatabaseException( e.toString() );
-                                }
-
-                                break;
-
-                            case DataSourceTypeType.NONE_TYPE:
-                                if (log.isDebugEnabled())
-                                    log.debug("Start create connection pooling with simple mnaager");
-                                Class cl_ = Class.forName("oracle.jdbc.driver.OracleDriver");
-                                break;
-                        }
-                        isDriverLoaded = true;
-
-                    }
-                }
-            }
-
-            if (log.isDebugEnabled())
-            {
-                log.debug("ConnectString - "+dc.getConnectString());
-                log.debug("username - "+dc.getUsername());
-                log.debug("password - "+dc.getPassword());
-                log.debug("isAutoCommit - "+dc.getIsAutoCommit());
-            }
-
-            switch (dc.getDataSourceType().getType())
-            {
-                case DataSourceTypeType.DRIVER_TYPE:
-                    conn = dataSource.getConnection();
-                    break;
-                case DataSourceTypeType.JNDI_TYPE:
-                    conn = dataSource.getConnection();
-                    break;
-
-                case DataSourceTypeType.NONE_TYPE:
-                    conn = DriverManager.getConnection(dc.getConnectString(), dc.getUsername(), dc.getPassword());
-                    break;
-            }
-
-            conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
-        } catch (Exception e) {
-            final String es = "Expeption create new Connection";
-            log.error(es, e);
-            throw new DatabaseException( es, e );
-        }
+    public String getDriverClass() {
+        return "oracle.jdbc.driver.OracleDriver";
     }
 
     public int getFamaly()

@@ -36,7 +36,6 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
 import org.apache.log4j.Logger;
@@ -45,10 +44,12 @@ import java.sql.*;
 import java.util.Calendar;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
 
 public class IBMDB2connect extends DatabaseAdapter
 {
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.IBMDB2connect" );
+    private static Logger log = Logger.getLogger( IBMDB2connect.class );
 
     public int getFamaly()
     {
@@ -83,6 +84,14 @@ public class IBMDB2connect extends DatabaseAdapter
     public int getMaxLengthStringField()
     {
         return 2000;
+    }
+
+    protected DataSource createDataSource() throws SQLException {
+        return null;
+    }
+
+    public String getDriverClass() {
+        return "com.ibm.db2.jcc.DB2Driver";
     }
 
     protected void finalize() throws Throwable
@@ -763,58 +772,4 @@ public class IBMDB2connect extends DatabaseAdapter
     {
         int i = 0;
     }
-
-    /**
-     Этот метод создает коннект к серверу с указанным объектом типа DatabaseConnection.<br>
-
-     Параметры:
-     <blockquote>
-     cd - объект типа DatabaseConnection<br>
-     </blockquote>
-     */
-    protected void init(DatabaseConnectionType dc_)
-            throws SQLException, ClassNotFoundException
-    {
-        dc = dc_;
-
-        if (dc == null)
-        {
-            log.fatal("DatabaseConnection not initialized");
-            throw new SQLException("#21.001 DatabaseConnection not initialized.");
-        }
-
-        if (!isDriverLoaded)
-        {
-            Class cl_ = Class.forName( "com.ibm.db2.jcc.DB2Driver" );
-            isDriverLoaded = true;
-        }
-
-        if (log.isDebugEnabled())
-        {
-            log.debug("ConnectString - " + dc.getConnectString());
-            log.debug("username - " + dc.getUsername());
-            log.debug("password - " + dc.getPassword());
-            log.debug("isAutoCommit - " + dc.getIsAutoCommit());
-        }
-
-        conn = DriverManager.getConnection
-            (dc.getConnectString(), dc.getUsername(), dc.getPassword());
-
-        conn.setAutoCommit( dc.getIsAutoCommit().booleanValue() );
-    }
-/*
-    private Connection getConnection()
-             throws Exception
-    {
-        Class.forName( "net.sourceforge.jtds.jdbc.Driver" );
-        String fileName = "conf/connection.properties";
-
-        Properties props = loadProperties( fileName );
-        String url = props.getProperty( "url" );
-        Connection con = DriverManager.getConnection( url, props );
-        showWarnings( con.getWarnings() );
-        initLanguage( con );
-        return con;
-    }
-*/
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serge (Home) -->
 <!--
 /*
  * org.riverock.generic - Database connectivity classes
@@ -35,9 +36,9 @@
 	<xs:element name="WebmillConfig" type="GenericConfigType"/>
 	<xs:complexType name="DatabaseConnectionType">
 		<xs:sequence>
-			<xs:element name="Username" type="xs:string"/>
-			<xs:element name="Password" type="xs:string"/>
-			<xs:element name="ConnectString" type="xs:string"/>
+			<xs:element name="Username" type="xs:string" minOccurs="0"/>
+			<xs:element name="Password" type="xs:string" minOccurs="0"/>
+			<xs:element name="ConnectString" type="xs:string" minOccurs="0"/>
 			<xs:element name="ConnectionClass" type="xs:string"/>
 			<xs:element name="DatabaseCharset" type="xs:string" minOccurs="0">
 				<xs:annotation>
@@ -51,7 +52,7 @@
 @deprecated</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="IsAutoCommit" type="xs:boolean" default="false"/>
+			<xs:element name="IsAutoCommit" type="xs:boolean" default="false" minOccurs="0"/>
 			<xs:element name="DataSourceType" default="NONE" minOccurs="0">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">

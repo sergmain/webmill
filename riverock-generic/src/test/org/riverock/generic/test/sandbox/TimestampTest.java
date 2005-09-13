@@ -23,15 +23,7 @@
  *
  */
 
-/**
- * Author: mill
- * Date: Mar 31, 2003
- * Time: 10:41:57 AM
- *
- * $Id$
- */
-
-package org.riverock.generic.test;
+package org.riverock.generic.test.sandbox;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.generic.tools.CurrentTimeZone;
@@ -44,29 +36,35 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
+import java.util.Date;
 
-public class TestTimestamp
+/**
+ * Author: mill
+ * Date: Mar 31, 2003
+ * Time: 10:41:57 AM
+ *
+ * $Id$
+ */
+public class TimestampTest
 {
 //    private static Logger cat = Logger.getLogger( "org.riverock.test.TestTimestamp" );
 
-    public TestTimestamp()
+    public TimestampTest()
     {
-    }
-
-    private static void printZoneInfo()
-    {
-        String zone[] = TimeZone.getAvailableIDs(1 * 60 * 60 * 1000);
-        for (int i=0; i<zone.length; i++)
-            System.out.println("zone info "+zone[i]);
     }
 
     public static void main(String args[])
         throws Exception
     {
         Timestamp t = new Timestamp( System.currentTimeMillis() );
+        System.out.println("t = " + t);
+        Date date = new Date();
+        System.out.println("date = " + date);
+
+         System.out.println("date = " + DateTools.getStringDate(new Date(), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getTimeZone(  "Europe/Moscow" )) );
 
         SimpleDateFormat df = new SimpleDateFormat("dd.MMMMM.yyyy HH:mm:ss", Locale.ENGLISH);
-        SimpleTimeZone pdt = new SimpleTimeZone(8 * 60 * 60 * 1000, "Asia/Irkutsk");
+        SimpleTimeZone pdt = new SimpleTimeZone(8 * 60 * 60 * 1000, "Europe/Moscow");
 
         int springDTS = 1;
         int fallDTS = 1;
@@ -77,6 +75,8 @@ public class TestTimestamp
 
         String s = df.format( t );
         System.out.println( s );
+
+        s = DateTools.getStringDate(new Date(), "dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH, TimeZone.getTimeZone(  "Europe/Moscow" ));
 
         org.riverock.generic.startup.StartupApplication.init();
 
@@ -111,5 +111,12 @@ public class TestTimestamp
         System.out.println( "current time "+DateUtils.getCurrentDate("dd.MMMMM.yyyy HH:mm:ss.SSS", Locale.ENGLISH) );
 
         printZoneInfo();
+    }
+
+    private static void printZoneInfo()
+    {
+        String zone[] = TimeZone.getAvailableIDs(1 * 60 * 60 * 1000);
+        for (int i=0; i<zone.length; i++)
+            System.out.println("zone info "+zone[i]);
     }
 }

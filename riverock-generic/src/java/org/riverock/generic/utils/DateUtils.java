@@ -22,46 +22,41 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.utils;
+
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+
+import org.riverock.common.config.ConfigException;
+import org.riverock.generic.tools.CurrentTimeZone;
 
 /**
  *
  * $Id$
  *
  */
-package org.riverock.generic.utils;
-
-import org.riverock.generic.tools.CurrentTimeZone;
-import org.riverock.common.config.ConfigException;
-
-import java.util.GregorianCalendar;
-import java.util.Locale;
-
-public class DateUtils
-{
+public class DateUtils {
     /**
      * @param date
      * @param mask
      * @param loc
      * @return
      */
-    public static String getStringDate(java.util.Date date, String mask, Locale loc)
-        throws ConfigException
-    {
-        return org.riverock.common.tools.DateTools.getStringDate(date, mask, loc, CurrentTimeZone.getTZ());
+    public static String getStringDate(java.util.Date date, String mask, Locale loc) {
+        return DateFormatUtils.format(date, mask, CurrentTimeZone.getTZ(), loc);
+//        return org.riverock.common.tools.DateTools.getStringDate(date, mask, loc, CurrentTimeZone.getTZ());
     }
 
-    public static String getCurrentDate(String mask, Locale loc)
-        throws ConfigException
-    {
-        return org.riverock.common.tools.DateTools.getStringDate(
-            new GregorianCalendar(CurrentTimeZone.getTZ()), mask, loc);
+    public static String getCurrentDate(String mask, Locale loc) {
+        return DateFormatUtils.format(System.currentTimeMillis(), mask, CurrentTimeZone.getTZ(), loc);
+//        return org.riverock.common.tools.DateTools.getStringDate(
+//            new GregorianCalendar(CurrentTimeZone.getTZ()), mask, loc);
     }
 
-    public static String getCurrentDate(String mask)
-        throws ConfigException
-    {
-        return org.riverock.common.tools.DateTools.getStringDate(
-            new GregorianCalendar(CurrentTimeZone.getTZ()), mask, Locale.ENGLISH);
+    public static String getCurrentDate(String mask) {
+        return DateFormatUtils.format(System.currentTimeMillis(), mask, CurrentTimeZone.getTZ(), Locale.ENGLISH);
+//        return org.riverock.common.tools.DateTools.getStringDate(new GregorianCalendar(CurrentTimeZone.getTZ()), mask, Locale.ENGLISH);
     }
-
 }

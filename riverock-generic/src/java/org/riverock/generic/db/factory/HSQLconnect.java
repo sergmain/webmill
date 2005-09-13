@@ -36,7 +36,6 @@ package org.riverock.generic.db.factory;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
 import org.apache.log4j.Logger;
@@ -44,6 +43,8 @@ import org.apache.log4j.Logger;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.ArrayList;
+
+import javax.sql.DataSource;
 
 public class HSQLconnect extends DatabaseAdapter
 {
@@ -82,6 +83,14 @@ public class HSQLconnect extends DatabaseAdapter
     public int getMaxLengthStringField()
     {
         return 1000000;
+    }
+
+    protected DataSource createDataSource() throws SQLException {
+        return null;
+    }
+
+    public String getDriverClass() {
+        return "org.hsqldb.jdbcDriver";
     }
 
     protected void finalize() throws Throwable
@@ -782,44 +791,4 @@ public class HSQLconnect extends DatabaseAdapter
     {
         int i = 0;
     }
-
-    /**
-     Этот метод создает коннект к серверу с указанным объектом типа DatabaseConnection.<br>
-
-     Параметры:
-     <blockquote>
-     cd - объект типа DatabaseConnection<br>
-     </blockquote>
-     */
-    protected void init(DatabaseConnectionType dc_)
-            throws SQLException, ClassNotFoundException
-    {
-        dc = dc_;
-
-        if (dc == null)
-        {
-            log.fatal("DatabaseConnection not initialized");
-            throw new SQLException("#21.001 DatabaseConnection not initialized.");
-        }
-
-        if (!isDriverLoaded)
-        {
-            Class cl_ = Class.forName( "org.hsqldb.jdbcDriver" );
-            isDriverLoaded = true;
-        }
-
-        if (log.isDebugEnabled())
-        {
-            log.debug("ConnectString - " + dc.getConnectString());
-            log.debug("username - " + dc.getUsername());
-            log.debug("password - " + dc.getPassword());
-            log.debug("isAutoCommit - " + dc.getIsAutoCommit());
-        }
-
-        conn = DriverManager.getConnection
-                (dc.getConnectString(), dc.getUsername(), dc.getPassword());
-
-        conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
-    }
-
 }

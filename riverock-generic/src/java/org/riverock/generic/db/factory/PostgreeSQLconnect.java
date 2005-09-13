@@ -31,27 +31,36 @@
 
 package org.riverock.generic.db.factory;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.schema.config.types.DataSourceTypeType;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.structure.*;
-import org.riverock.generic.exception.DatabaseException;
+import java.io.InputStream;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import javax.sql.DataSource;
+
 import oracle.jdbc.driver.OracleResultSet;
-import oracle.jdbc.pool.OracleConnectionPoolDataSource;
-import oracle.jdbc.pool.OracleConnectionCacheImpl;
 import oracle.sql.BLOB;
 import oracle.sql.CLOB;
 import org.apache.log4j.Logger;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import java.io.InputStream;
-import java.sql.*;
-import java.util.*;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
+import org.riverock.generic.schema.db.structure.DbFieldType;
+import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
+import org.riverock.generic.schema.db.structure.DbSequenceType;
+import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.schema.db.structure.DbViewType;
 
 public class PostgreeSQLconnect extends DatabaseAdapter
 {
@@ -68,6 +77,15 @@ public class PostgreeSQLconnect extends DatabaseAdapter
     public int getMaxLengthStringField()
     {
         return 4000;
+    }
+
+    protected DataSource createDataSource() throws SQLException {
+        return null;
+    }
+
+    public String getDriverClass() {
+        if (true) throw new IllegalStateException("Not implemented");
+        return null;
     }
 
     protected void finalize() throws Throwable
@@ -979,114 +997,6 @@ DEFERRABLE INITIALLY DEFERRED
             return true;
 
         return false;
-    }
-
-    private static Object syncObject = new Object();
-    /**
-     * Get new connection to DB
-     * @param dc_ DatabaseConnectionType
-     * @throws org.riverock.generic.exception.DatabaseException
-     */
-    protected void init(DatabaseConnectionType dc_)
-        throws DatabaseException
-    {
-        dc = dc_;
-
-        try {
-            if (dc == null)
-            {
-                log.fatal("DatabaseConnection not initialized");
-                throw new DatabaseException("#21.001 DatabaseConnection not initialized.");
-            }
-
-            if (!isDriverLoaded)
-            {
-                synchronized(syncObject)
-                {
-                    if (!isDriverLoaded)
-                    {
-                        switch (dc.getDataSourceType().getType())
-                        {
-                            case DataSourceTypeType.DRIVER_TYPE:
-                                if (log.isDebugEnabled())
-                                    log.debug("Start create connection pooling with driver");
-
-                                OracleConnectionPoolDataSource pool = new OracleConnectionPoolDataSource();
-                                pool.setURL(dc.getConnectString());
-                                pool.setUser(dc.getUsername());
-                                pool.setPassword(dc.getPassword());
-                                // Initialize the Connection Cache
-                                dataSource = new OracleConnectionCacheImpl(pool);
-
-                                // Set Max Limit for the Cache
-                                ((OracleConnectionCacheImpl)dataSource).setMaxLimit(5);
-
-                                // Set Min Limit for the Cache
-                                ((OracleConnectionCacheImpl)dataSource).setMinLimit(1);
-
-                                // Set Caching Scheme as DYNAMIC_SCHEME
-                                // Caching Schema means that once the connection active size becomes 5,
-                                // the next request for Connection will be served by creating a new pooled
-                                // connection instance and close the connection automatically when it is
-                                // no longer in use.
-                                ((OracleConnectionCacheImpl)dataSource).setCacheScheme(OracleConnectionCacheImpl.DYNAMIC_SCHEME);
-
-                                break;
-                            case DataSourceTypeType.JNDI_TYPE:
-                                if (log.isDebugEnabled())
-                                    log.debug("Start create connection pooling with JNDI");
-                                try
-                                {
-                                    InitialContext ic = new InitialContext();
-                                    dataSource = (DataSource)ic.lookup("java:comp/env/" + dc.getDataSourceName());
-                                }
-                                catch (NamingException e)
-                                {
-                                    log.error("Error get value from JDNI context", e);
-                                    throw new DatabaseException( e.toString() );
-                                }
-
-                                break;
-
-                            case DataSourceTypeType.NONE_TYPE:
-                                if (log.isDebugEnabled())
-                                    log.debug("Start create connection pooling with simple mnaager");
-                                Class cl_ = Class.forName("oracle.jdbc.driver.OracleDriver");
-                                break;
-                        }
-                        isDriverLoaded = true;
-
-                    }
-                }
-            }
-
-            if (log.isDebugEnabled())
-            {
-                log.debug("ConnectString - "+dc.getConnectString());
-                log.debug("username - "+dc.getUsername());
-                log.debug("password - "+dc.getPassword());
-                log.debug("isAutoCommit - "+dc.getIsAutoCommit());
-            }
-
-            switch (dc.getDataSourceType().getType())
-            {
-                case DataSourceTypeType.DRIVER_TYPE:
-                    conn = dataSource.getConnection();
-                    break;
-                case DataSourceTypeType.JNDI_TYPE:
-                    conn = dataSource.getConnection();
-                    break;
-
-                case DataSourceTypeType.NONE_TYPE:
-                    conn = DriverManager.getConnection(dc.getConnectString(), dc.getUsername(), dc.getPassword());
-                    break;
-            }
-
-            conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
-        } catch (Exception e) {
-            log.error("Expeption create new Connection", e);
-            throw new DatabaseException(e.toString());
-        }
     }
 
     public int getFamaly()
