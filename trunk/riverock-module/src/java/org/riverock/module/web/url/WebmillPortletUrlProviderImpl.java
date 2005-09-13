@@ -6,7 +6,7 @@ import javax.portlet.PortletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.action.ModuleActionRequest;
@@ -40,13 +40,13 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
             log.debug("response class: " + moduleResponse.getClass().getName());
         }
         return
-            PortletTools.url( moduleName, (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ) +
+            PortletService.url( moduleName, (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ) +
             WebmillPortletConstants.ACTION_NAME_PARAM + '=' + actionName + '&';
     }
 
     public StringBuffer getUrlStringBuffer(String moduleName, String actionName) {
         return
-            PortletTools.urlStringBuffer( moduleName,  (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ).
+            PortletService.urlStringBuffer( moduleName,  (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ).
             append( WebmillPortletConstants.ACTION_NAME_PARAM ).
             append( '=' ).
             append( actionName ).
