@@ -46,7 +46,6 @@ import javax.servlet.RequestDispatcher;
 import org.riverock.generic.tools.servlet.HttpServletRequestWrapperInclude;
 import org.riverock.generic.tools.servlet.ServletResponseWrapperIncludeV2;
 import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.common.config.ConfigException;
 
 import org.apache.log4j.Logger;
 
@@ -87,13 +86,11 @@ public final class ServletUtils {
         );
     }
 
-    public static String getString( final HttpServletRequest request, final String f)
-        throws ConfigException {
+    public static String getString( final HttpServletRequest request, final String f) {
         return org.riverock.common.tools.ServletTools.getString(request, f, "", WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
     }
 
-    public static String getString( final HttpServletRequest request, final String f, final String def)
-        throws ConfigException {
+    public static String getString( final HttpServletRequest request, final String f, final String def) {
         return org.riverock.common.tools.ServletTools.getString( request, f, def, WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset() );
     }
 

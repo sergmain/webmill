@@ -24,28 +24,31 @@
  */
 package org.riverock.webmill.site;
 
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.digester.Digester;
 import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.main.CacheFactory;
-import org.riverock.generic.exception.GenericException;
-import org.riverock.webmill.schema.site.SiteTemplate;
-import org.riverock.webmill.schema.site.SiteTemplateDescListType;
-import org.riverock.webmill.schema.site.SiteTemplateDescriptionType;
-import org.riverock.webmill.exception.PortalException;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.exception.GenericException;
+import org.riverock.generic.main.CacheFactory;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.container.schema.site.SiteTemplate;
+import org.riverock.webmill.container.schema.site.SiteTemplateDescListType;
+import org.riverock.webmill.container.schema.site.SiteTemplateDescriptionType;
+import org.riverock.webmill.container.schema.site.SiteTemplateParameterType;
+import org.riverock.webmill.container.schema.site.TemplateItemType;
+import org.riverock.webmill.exception.PortalException;
 
 /**
  * $Id$
@@ -66,7 +69,7 @@ public final class SiteTemplateList {
     public SiteTemplateList(){}
 
     public static SiteTemplateList getInstance(DatabaseAdapter db__, long id__) throws PortalException{
-        return getInstance(db__, new Long(id__) );
+        return getInstance(db__, id__ );
     }
 
     public static SiteTemplateList getInstance(DatabaseAdapter db__, Long id__) throws PortalException{
@@ -94,7 +97,7 @@ public final class SiteTemplateList {
     public SiteTemplate getTemplate( final long id ) {
         if (log.isDebugEnabled()) log.debug("search  template for id - "+ id);
 
-        return (SiteTemplate)hashId.get( new Long(id) );
+        return (SiteTemplate)hashId.get( id );
     }
 
     public SiteTemplate getTemplate( final String nameTemplate, final String lang ) {
@@ -134,7 +137,7 @@ public final class SiteTemplateList {
         try
         {
             ps = db_.prepareStatement(sql_);
-            ps.setLong(1, idSite.longValue());
+            ps.setLong(1, idSite);
 
             rs = ps.executeQuery();
 
@@ -144,10 +147,8 @@ public final class SiteTemplateList {
                 String templateData = null;
                 try {
                     templateData = RsetTools.getString(rs, "TEMPLATE_DATA");
-                    SiteTemplate st=null;
-                    st = (SiteTemplate)Unmarshaller.unmarshal(SiteTemplate.class,
-                        new InputSource(new StringReader( templateData ) )
-                    );
+                    SiteTemplate st = null;
+                    st = digestSiteTemplate(templateData);
                     st.setNameTemplate( RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
                     Long idSiteTemplate = RsetTools.getLong(rs, "ID_SITE_TEMPLATE");
                     String lang = StringTools.getLocale(
@@ -180,5 +181,37 @@ public final class SiteTemplateList {
             rs = null;
             ps = null;
         }
+    }
+
+    public static SiteTemplate digestSiteTemplate(String templateData) throws IOException, SAXException {
+        if (StringTools.isEmpty(templateData) ) {
+            return new SiteTemplate();
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Digest template:\n" + templateData);
+        }
+        SiteTemplate st = null;
+
+        Digester digester = new Digester();
+        digester.setValidating(false);
+
+        digester.addObjectCreate("SiteTemplate", SiteTemplate.class);
+        digester.addSetProperties("SiteTemplate", "role", "role");
+
+        digester.addObjectCreate("SiteTemplate/SiteTemplateItem", TemplateItemType.class);
+        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "type", "type");
+        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "value", "value");
+        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "code", "code");
+        digester.addSetProperties("SiteTemplate/SiteTemplateItem", "xmlRoot", "xmlRoot");
+        digester.addSetNext("SiteTemplate/SiteTemplateItem", "addSiteTemplateItem");
+
+        digester.addObjectCreate("SiteTemplate/SiteTemplateItem/Parameter", SiteTemplateParameterType.class);
+        digester.addSetProperties("SiteTemplate/SiteTemplateItem/Parameter", "name", "name");
+        digester.addSetProperties("SiteTemplate/SiteTemplateItem/Parameter", "value", "value");
+        digester.addSetNext("SiteTemplate/SiteTemplateItem/Parameter", "addParameter");
+
+        st = (SiteTemplate) digester.parse( new ByteArrayInputStream( templateData.getBytes() ));
+
+        return st;
     }
 }

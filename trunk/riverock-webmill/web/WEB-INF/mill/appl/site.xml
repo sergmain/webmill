@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.webmill - Portal framework implementation
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<Application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\js-webmill\src-schema\xsd\jsmithy-webmill-appl-server.xsd">
+	<ApplicationModule>
+		<CodeResource>mill.SiteData</CodeResource>
+		<Role>webmill.test_role</Role>
+		<ClassName>org.riverock.as.service.site.SiteData</ClassName>
+	</ApplicationModule>
+    <ApplicationModule>
+        <CodeResource>webmill.as.simple</CodeResource>
+        <ClassName>org.riverock.webmill.as.service.SimpleApplicationServerProvider</ClassName>
+    </ApplicationModule>
+    <ApplicationModule>
+        <CodeResource>webmill.as.simple-with-auth</CodeResource>
+        <Role>webmill.root</Role>
+        <ClassName>org.riverock.webmill.as.service.SimpleApplicationServerProvider</ClassName>
+    </ApplicationModule>
+    <ApplicationModule>
+        <CodeResource>webmill.as.simple-with-wrong-auth</CodeResource>
+        <Role>beee-uuu</Role>
+        <ClassName>org.riverock.webmill.as.service.SimpleApplicationServerProvider</ClassName>
+    </ApplicationModule>
+</Application>
