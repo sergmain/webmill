@@ -58,8 +58,8 @@ public class TestCaseDbService extends TestCase
         sourceTable.setData( null );
 
         DbTableType targetTable = DatabaseManager.cloneDescriptionTable( sourceTable );
-//        XmlTools.writeToFile(sourceTable, WebmillConfig.getWebmillDebugDir()+"clone-src.xml");
-//        XmlTools.writeToFile(targetTable, WebmillConfig.getWebmillDebugDir()+"clone-trg.xml");
+//        XmlTools.writeToFile(sourceTable, SiteUtils.getTempDir()+"clone-src.xml");
+//        XmlTools.writeToFile(targetTable, SiteUtils.getTempDir()+"clone-trg.xml");
 
         byte[] sourceByte = XmlTools.getXml( sourceTable, null );
         byte[] targetByte = XmlTools.getXml( targetTable, null );

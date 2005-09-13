@@ -27,16 +27,20 @@ package org.riverock.portlet.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.PortletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.ClassQueryItemImpl;
 import org.riverock.portlet.member.MemberQueryParameter;
 import org.riverock.portlet.member.ClassQueryItemImpl;
 
-import org.apache.log4j.Logger;
+
 
 /**
  * User: Admin
@@ -47,7 +51,7 @@ import org.apache.log4j.Logger;
  */
 public final class TestOption extends BaseClassQuery
 {
-    private final static Logger log = Logger.getLogger( TestOption.class );
+    private final static Log log = LogFactory.getLog( TestOption.class );
 
     public String type = null;
     public Long idLang = null;
@@ -83,12 +87,12 @@ public final class TestOption extends BaseClassQuery
 
     }
 
-    public String getCurrentValue( PortletRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
     {
         return type;
     }
 
-    public List getSelectList( PortletRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
     {
         List v = new ArrayList();
         v.add( new ClassQueryItemImpl(1, "aaa") );

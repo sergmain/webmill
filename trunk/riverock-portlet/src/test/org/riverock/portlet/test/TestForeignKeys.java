@@ -32,7 +32,10 @@
  */
 package org.riverock.portlet.test;
 
-import org.apache.log4j.Logger;
+
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -43,7 +46,7 @@ import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
 
 public class TestForeignKeys
 {
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.test.TestForeignKeys");
+    private static Log cat = LogFactory.getLog("org.riverock.portlet.test.TestForeignKeys");
 
     public TestForeignKeys(){}
 

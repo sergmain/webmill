@@ -94,7 +94,7 @@ public class TestNewsSimpleItem
 
         byte[] resultByte = obj.getXml();
 
-        MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-news-by-id-bytes-from-portlet.xml", resultByte);
+        MainTools.writeToFile(SiteUtils.getTempDir()+"test-news-by-id-bytes-from-portlet.xml", resultByte);
 */
     }
 }

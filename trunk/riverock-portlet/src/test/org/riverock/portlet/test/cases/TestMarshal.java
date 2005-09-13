@@ -32,19 +32,19 @@
  */
 package org.riverock.portlet.test.cases;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.webmill.config.WebmillConfig;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 
 import junit.framework.TestCase;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.portlet.tools.SiteUtils;
 
 public class TestMarshal extends TestCase
 {
@@ -61,7 +61,7 @@ public class TestMarshal extends TestCase
 
         String encoding = "UTF-8";
         String nameFile = nameOutputFiel;
-        String outputSchemaFile = WebmillConfig.getWebmillDebugDir()+nameFile;
+        String outputSchemaFile = SiteUtils.getTempDir()+nameFile;
         System.out.println("Marshal data to file " + nameFile);
 
         FileOutputStream fos = new FileOutputStream( outputSchemaFile );
@@ -84,7 +84,7 @@ public class TestMarshal extends TestCase
 
         System.out.println("Unmarshal data from file");
         InputSource inSrc = new InputSource(
-            new FileInputStream( WebmillConfig.getWebmillDebugDir()+fileName )
+            new FileInputStream( SiteUtils.getTempDir()+fileName )
         );
         DbSchemaType millSchema =
             (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);

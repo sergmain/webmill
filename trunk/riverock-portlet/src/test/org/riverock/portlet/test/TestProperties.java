@@ -37,13 +37,16 @@ import java.util.Properties;
 import java.util.Enumeration;
 import java.sql.Timestamp;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.StringTools;
 import org.riverock.common.tools.DateTools;
 
 public class TestProperties
 {
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.test.TestProperties");
+    private static Log cat = LogFactory.getLog("org.riverock.portlet.test.TestProperties");
 
     public TestProperties()
     {

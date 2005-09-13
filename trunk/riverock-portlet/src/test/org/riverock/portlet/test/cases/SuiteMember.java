@@ -33,11 +33,13 @@
 package org.riverock.portlet.test.cases;
 
 import junit.framework.TestSuite;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 public class SuiteMember
 {
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.test.MillTest" );
+    private static Log cat = LogFactory.getLog("org.riverock.portlet.test.MillTest" );
 
     public SuiteMember(){}
 

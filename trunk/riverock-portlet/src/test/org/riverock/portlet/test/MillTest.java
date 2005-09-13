@@ -27,11 +27,14 @@ package org.riverock.portlet.test;
 
 import org.riverock.common.tools.NumberTools;
 import junit.framework.Assert;
-import org.apache.log4j.Logger;
+
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * 
@@ -42,7 +45,7 @@ import java.text.DecimalFormat;
  */
 public class MillTest
 {
-    private static Logger cat = Logger.getLogger("org.riverock.portlet.test.MillTest" );
+    private static Log cat = LogFactory.getLog( MillTest.class );
 
     public MillTest()
     {
@@ -53,7 +56,7 @@ public class MillTest
         System.out.println("test toString() " +NumberTools.toString( 1234.34, 3));
         System.out.println("value of expresion: "+(1.0+0.2-1.0));
         BigInteger bigInt = new BigInteger("492061");
-        Double dd = new Double(1);
+        Double dd = 1.0;
 
         BigDecimal big1 = new BigDecimal(198.2);
         big1.setScale(1, BigDecimal.ROUND_DOWN);

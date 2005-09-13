@@ -40,7 +40,7 @@ import org.exolab.castor.xml.Marshaller;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.portlet.tools.SiteUtils;
 
 
 public class TestGetDbStructure
@@ -54,7 +54,7 @@ public class TestGetDbStructure
 
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 
-        FileOutputStream fos = new FileOutputStream( WebmillConfig.getWebmillDebugDir()+"hypersonic-schema.xml" );
+        FileOutputStream fos = new FileOutputStream( SiteUtils.getTempDir()+"hypersonic-schema.xml" );
         Marshaller marsh = new Marshaller(new OutputStreamWriter(fos, "utf-8"));
 //        marsh.setRootElement("TestLanguage");
         marsh.setMarshalAsDocument(true);
