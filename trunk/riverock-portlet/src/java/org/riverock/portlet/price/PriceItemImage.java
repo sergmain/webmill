@@ -22,17 +22,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Dec 19, 2002
- * Time: 3:19:17 PM
- *
- * $Id$
- */
 package org.riverock.portlet.price;
 
-import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -42,9 +33,19 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * User: Admin
+ * Date: Dec 19, 2002
+ * Time: 3:19:17 PM
+ *
+ * $Id$
+ */
 public class PriceItemImage
 {
-    private static Logger log = Logger.getLogger( PriceItemImage.class );
+    private static Log log = LogFactory.getLog( PriceItemImage.class );
 
     private static Map imageMap = new HashMap();
     private Map image = new HashMap();
@@ -134,7 +135,7 @@ public class PriceItemImage
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql_ );
 
             RsetTools.setLong(ps, 1, idSite);
@@ -151,7 +152,7 @@ public class PriceItemImage
         }
         finally
         {
-            DatabaseManager.close( db_);
+            DatabaseManager.close( db_, rs, ps);
             rs = null;
             ps = null;
             db_ = null;

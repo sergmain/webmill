@@ -24,14 +24,15 @@
  */
 package org.riverock.portlet.price;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.common.tools.MainTools;
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.apache.log4j.Logger;
 
 /**
  * User: serg_main
@@ -40,9 +41,8 @@ import org.apache.log4j.Logger;
  * @author Serge Maslyukov
  * $Id$
  */
-public class CurrencyManager
-{
-    private static Logger log = Logger.getLogger( CurrencyManager.class );
+public class CurrencyManager {
+    private static Log log = LogFactory.getLog( CurrencyManager.class );
 
     static
     {
@@ -78,7 +78,7 @@ public class CurrencyManager
                 try
                 {
                     byte[] originByte = XmlTools.getXml( currency.currencyList, null );
-                    MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"debug-custom-currency-type.xml", originByte);
+                    MainTools.writeToFile(SiteUtils.getTempDir()+"debug-custom-currency-type.xml", originByte);
                 }
                 catch(Exception e)
                 {

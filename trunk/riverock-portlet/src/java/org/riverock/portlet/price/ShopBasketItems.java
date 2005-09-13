@@ -22,24 +22,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.price;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.common.tools.RsetTools;
 
 /**
  *
  *  $Id$
  *
  */
-package org.riverock.portlet.price;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.common.tools.RsetTools;
-import org.apache.log4j.Logger;
-
 public class ShopBasketItems
 {
-    private static Logger cat = Logger.getLogger(ShopBasketItems.class);
+    private static Log cat = LogFactory.getLog(ShopBasketItems.class);
 
     public Long id_item;
     public int count;
@@ -79,7 +80,7 @@ public class ShopBasketItems
             if (rs.next())
             {
                 item = RsetTools.getString(rs, "ITEM");
-                price = RsetTools.getDouble(rs, "PRICE").doubleValue();
+                price = RsetTools.getDouble( rs, "PRICE" );
                 currency = RsetTools.getString(rs, "CURRENCY");
             }
         }

@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.auth;
 
 import java.io.IOException;
@@ -30,6 +29,7 @@ import java.io.Writer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,28 +38,28 @@ import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.StringManager;
 import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.webmill.tools.HtmlTools;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.a3.InternalAuthProviderTools;
 import org.riverock.sso.main.MainUserInfo;
 import org.riverock.sso.utils.AuthHelper;
-import org.riverock.webmill.portlet.ContextNavigator;
-
-
-import org.riverock.webmill.portlet.PortletTools;
-
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 public class BindChange extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(BindChange.class);
+    private static Log log = LogFactory.getLog(BindChange.class);
 
     public BindChange()
     {
@@ -85,14 +85,14 @@ public class BindChange extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-
-            ContextNavigator.setContentType(response);
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( BindIndex.AUTH_BIND_ROLE ) )
             {
-                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/"+PortletTools.ctx( renderRequest ), "continue");
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/"+PortletService.ctx( renderRequest ), "continue");
                 return;
             }
 
@@ -100,16 +100,9 @@ public class BindChange extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance();
 
-            StringManager sCustom = null;
-            String nameLocaleBundle = null;
-            nameLocaleBundle = "mill.locale.AUTH_USER";
-            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
-            // end where
+            String index_page = PortletService.url("mill.auth.bind", renderRequest, renderResponse );
 
-            String index_page = PortletTools.url("mill.auth.bind", renderRequest, renderResponse );
-
-            Long id_auth_user = PortletTools.getLong(renderRequest, "id_auth_user");
+            Long id_auth_user = PortletService.getLong(renderRequest, "id_auth_user");
             if (id_auth_user==null)
                 throw new IllegalArgumentException("id_auth_user not initialized");
 
@@ -132,12 +125,12 @@ public class BindChange extends HttpServlet
                 out.write("<FORM ACTION=\"");
                 out.write(
 
-                    PortletTools.url("mill.auth.commit_ch_bind", renderRequest, renderResponse )
+                    PortletService.url("mill.auth.commit_ch_bind", renderRequest, renderResponse )
 
                 );
                 out.write("\" METHOD=\"POST\">\r\n");
                 out.write("<input type=\"submit\" value=\"");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
+                out.write(bundle.getString("button.change"));
                 out.write("\">\r\n");
                 out.write("<INPUT TYPE=\"hidden\" NAME=\"id_auth_user\" VALUE=\"");
                 out.write("" + id_auth_user);
@@ -145,7 +138,7 @@ public class BindChange extends HttpServlet
                 out.write("<TABLE  border=\"0\" width=\"100%\" class=\"l\">\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"20%\" class=\"par\">");
-                out.write(sCustom.getStr("ch_bind.jsp.fio"));
+                out.write(bundle.getString("ch_bind.jsp.fio"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\" colspan=\"3\">\r\n");
                 out.write(userInfo.getLastName() + "&nbsp;" + userInfo.getFirstName() + "&nbsp;" + userInfo.getMiddleName());
@@ -154,7 +147,7 @@ public class BindChange extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" class=\"par\">");
-                out.write(sCustom.getStr("ch_bind.jsp.user_login"));
+                out.write(bundle.getString("ch_bind.jsp.user_login"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\" colspan=\"3\">\r\n");
                 out.write("<input type=\"text\" name=\"user_login\" size=\"20\" maxlength=\"20\"  \r\nvalue=\"");
@@ -164,7 +157,7 @@ public class BindChange extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" class=\"par\">");
-                out.write(sCustom.getStr("ch_bind.jsp.user_password"));
+                out.write(bundle.getString("ch_bind.jsp.user_password"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\" colspan=\"3\">\r\n");
                 out.write("<input type=\"text\" name=\"user_password\" size=\"20\" maxlength=\"20\"\r\nvalue=\"");
@@ -174,7 +167,7 @@ public class BindChange extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" class=\"par\">");
-                out.write(sCustom.getStr("ch_bind.jsp.user_password_check"));
+                out.write(bundle.getString("ch_bind.jsp.user_password_check"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\" colspan=\"3\">\r\n");
                 out.write("<input type=\"text\" name=\"user_password_resume\" size=\"20\" maxlength=\"20\" \r\nvalue=\"");
@@ -184,16 +177,16 @@ public class BindChange extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" class=\"par\">");
-                out.write(sCustom.getStr("ch_bind.jsp.is_use_current_firm"));
+                out.write(bundle.getString("ch_bind.jsp.is_use_current_firm"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\" witdth=\"30%\">\r\n");
                 out.write("<select name=\"is_use_current_firm\" size=\"1\">\r\n");
-                out.write(HtmlTools.printYesNo(authInfoUser.getUseCurrentFirm(), true, renderRequest.getLocale()));
+                out.write(HtmlTools.printYesNo(authInfoUser.getUseCurrentFirm(), true, bundle ));
                 out.write("\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
                 out.write("<td align=\"right\" width=\"20%\" class=\"par\">");
-                out.write(sCustom.getStr("ch_bind.jsp.list_firm"));
+                out.write(bundle.getString("ch_bind.jsp.list_firm"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"id_firm\" size=\"1\">");
@@ -230,10 +223,6 @@ public class BindChange extends HttpServlet
                 rs = null;
                 ps = null;
 
-//                out.write(
-//                    Client.make_list_prn(authInfoUser.firmID, db_, "v_list_read_firm", "id",
-//                        "name_firm", " where user_login = '" + auth_.getUserLogin() + "'", null, null)
-//                );
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n\r\n");
@@ -245,16 +234,16 @@ public class BindChange extends HttpServlet
                     out.write("\r\n");
                     out.write("<tr>\r\n");
                     out.write("<td align=\"right\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_bind.jsp.is_service"));
+                    out.write(bundle.getString("ch_bind.jsp.is_service"));
                     out.write("</td>\r\n");
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"is_service\" size=\"1\">\r\n");
-                    out.write(HtmlTools.printYesNo(authInfoUser.getService(), true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(authInfoUser.getService(), true, bundle ));
                     out.write("\r\n");
                     out.write("</select>\r\n");
                     out.write("</td>\r\n");
                     out.write("<td align=\"right\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_bind.jsp.id_service"));
+                    out.write(bundle.getString("ch_bind.jsp.id_service"));
                     out.write("</td>\r\n");
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"id_service\" size=\"1\">");
@@ -302,16 +291,16 @@ public class BindChange extends HttpServlet
                     out.write("\r\n");
                     out.write("<tr>\r\n");
                     out.write("<td align=\"right\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_bind.jsp.is_road"));
+                    out.write(bundle.getString("ch_bind.jsp.is_road"));
                     out.write("</td>\r\n");
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"is_road\" size=\"1\">\r\n");
-                    out.write(HtmlTools.printYesNo(authInfoUser.getRoad(), true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(authInfoUser.getRoad(), true, bundle ));
                     out.write("\r\n");
                     out.write("</select>\r\n");
                     out.write("</td>\r\n");
                     out.write("<td align=\"right\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_bind.jsp.id_road"));
+                    out.write(bundle.getString("ch_bind.jsp.id_road"));
                     out.write("</td>\r\n");
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"id_road\" size=\"1\">");
@@ -356,7 +345,7 @@ public class BindChange extends HttpServlet
                 out.write("</TABLE>\r\n");
                 out.write("<BR>\r\n");
                 out.write("<INPUT TYPE=\"submit\" VALUE=\"");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
+                out.write(bundle.getString("button.change"));
                 out.write("\">\r\n");
                 out.write("</FORM>\r\n");
                 out.write("<BR>");
@@ -368,7 +357,7 @@ public class BindChange extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
+            out.write(bundle.getString("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("</td>\r\n");
@@ -403,9 +392,7 @@ public class BindChange extends HttpServlet
             if (v_str==null)
                 v_str = ""+v_num+", unknown value";
 
-            if (v_str == null) v_str = "";
-
-            if (v_num == value.longValue())
+            if (v_num == value)
                 v_select = " SELECTED";
             else
                 v_select = "";

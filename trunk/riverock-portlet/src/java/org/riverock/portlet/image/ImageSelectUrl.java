@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 12:32:13 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.image;
 
 import java.io.IOException;
@@ -42,17 +33,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
 
-
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 12:32:13 PM
+ *
+ * $Id$
+ */
 public class ImageSelectUrl extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(ImageSelectUrl.class);
+    private static Log log = LogFactory.getLog(ImageSelectUrl.class);
 
     public ImageSelectUrl()
     {
@@ -73,11 +73,9 @@ public class ImageSelectUrl extends HttpServlet
         Writer out = null;
         try
         {
-//            CtxInstance ctxInstance =
-//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
             RenderRequest renderRequest = null;
 
-            ContextNavigator.setContentType(response);
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
 
             out = response.getWriter();
 
@@ -91,7 +89,7 @@ public class ImageSelectUrl extends HttpServlet
                 if (auth_.isUserInRole("webmill.upload_image"))
                 {
 
-                    Long id_main = PortletTools.getLong(renderRequest, "id_main");
+                    Long id_main = PortletService.getLong(renderRequest, "id_main");
                     if (id_main==null)
                         throw new IllegalArgumentException("id_relate_right not initialized");
 
@@ -100,7 +98,6 @@ public class ImageSelectUrl extends HttpServlet
                     out.write("<form method=\"post\" action=\"");
                     out.write(response.encodeURL("upload_from_url.jsp"));
                     out.write("\">\r\n            ");
-//                    out.write(ctxInstance.getAsForm());
                     out.write("\r\n");
                     out.write("<input type=\"hidden\" name=\"id_main\" value=\"");
                     out.write("" + id_main);

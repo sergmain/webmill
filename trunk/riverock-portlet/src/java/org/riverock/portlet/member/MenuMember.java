@@ -38,27 +38,30 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletConfig;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.exception.DatabaseException;
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthTools;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
+
 
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletResultContent;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.schema.site.SiteTemplate;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.schema.site.SiteTemplate;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
-import org.apache.log4j.Logger;
+
 
 /**
  *
@@ -68,7 +71,7 @@ import org.apache.log4j.Logger;
  *
  */
 public final class MenuMember implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Logger log = Logger.getLogger( MenuMember.class );
+    private final static Log log = LogFactory.getLog( MenuMember.class );
 
     private MenuMemberType menu = new MenuMemberType();
     private RenderRequest renderRequest = null;
@@ -94,7 +97,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
     SiteTemplateMember memberTemplates = null;
 
-    public PortletResultContent getInstance(DatabaseAdapter db_) throws PortletException {
+    public PortletResultContent getInstance() throws PortletException {
         PreparedStatement ps = null;
         ResultSet rset = null;
 
@@ -103,7 +106,9 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             log.debug("session ID status: " + renderRequest.isRequestedSessionIdValid() );
         }
 
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             AuthInfo authInfo = AuthTools.getAuthInfo( renderRequest );
 
             if (log.isDebugEnabled())
@@ -112,7 +117,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             if (authInfo == null)
                 return this;
 
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
             memberTemplates = SiteTemplateMember.getInstance(db_, portalInfo.getSiteId());
 
 
@@ -151,21 +156,20 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             throw new PortletException(es, e);
         }
         finally {
-            DatabaseManager.close(rset, ps);
+            DatabaseManager.close(db_, rset, ps);
             rset = null;
             ps = null;
+            db_ = null;
         }
         return this;
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__, Long id) throws PortletException
-    {
-        return getInstance( db__ );
+    public PortletResultContent getInstance( Long id) throws PortletException {
+        return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException
-    {
-        return getInstance( db__ );
+    public PortletResultContent getInstanceByCode( String portletCode_) throws PortletException {
+        return getInstance();
     }
 
     public byte[] getPlainHTML()
@@ -277,7 +281,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             appl.setOrderField( RsetTools.getInt(rs, "ORDER_FIELD" ));
 
             appl.setApplicationId( RsetTools.getLong(rs, "ID_ARM") );
-            appl.setApplicationRecordNumber( new Integer(recordNumber_) );
+            appl.setApplicationRecordNumber( recordNumber_ );
 
             ps = makeStatement( db_, authInfo.getUserLogin(), appl.getApplicationId() );
 
@@ -289,7 +293,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
                 MenuMemberModuleType mod = getModule(rset, appl.getApplicationCode() );
                 if (mod!=null)
                 {
-                    mod.setModuleRecordNumber( new Integer(moduleRecordNumber++) );
+                    mod.setModuleRecordNumber( moduleRecordNumber++ );
                     mod.setApplRecordNumber( appl.getApplicationRecordNumber() );
                     list.add(mod);
                 }
@@ -353,7 +357,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             mod.setModuleName( RsetTools.getString(rs, "NAME_OBJECT_ARM") );
             mod.setModuleCode( RsetTools.getString(rs, "CODE_OBJECT_ARM") );
             mod.setOrderField( RsetTools.getInt(rs, "ORDER_FIELD") );
-            mod.setIsNew( new Boolean(new Integer(1).equals(RsetTools.getInt(rs, "IS_NEW"))) );
+            mod.setIsNew( RsetTools.getInt(rs, "IS_NEW",0)==1 );
 
             try
             {
@@ -363,14 +367,14 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
                     log.debug("PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
 
                     log.debug(
-                        "Module url - "+ PortletTools.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
+                        "Module url - "+ PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
                         MemberConstants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
                         MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
                     );
                 }
 
                 mod.setModuleUrl(
-                    PortletTools.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
+                    PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
                     MemberConstants.MEMBER_NAME_APPL_PARAM  + '=' + applicationCode_ + '&' +
                     MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode()
                 );

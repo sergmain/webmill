@@ -32,7 +32,7 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.webmill.portlet.GenericWebmillPortlet;
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
 
 /**
  * User: SergeMaslyukov
@@ -40,7 +40,7 @@ import org.riverock.webmill.portlet.GenericWebmillPortlet;
  * Time: 10:46:00
  * $Id$
  */
-public class FaqBlockPortlet  extends GenericWebmillPortlet {
+public class FaqBlockPortlet extends GenericWebmillPortlet {
 
     public FaqBlockPortlet(){}
 

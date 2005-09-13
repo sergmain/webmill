@@ -37,26 +37,27 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
 
-import org.apache.log4j.Logger;
+
 
 public class PriceItemDescription
 {
-    private static Logger log = Logger.getLogger(PriceItemDescription.class);
+    private static Log log = LogFactory.getLog(PriceItemDescription.class);
 
     private static Map descMap = new HashMap();
     private Map description = new HashMap();
 
-    public String getItemDescription(long id)
-    {
-        return (String)description.get( new Long(id) );
+    public String getItemDescription(long id) {
+        return (String)description.get( id );
     }
 
-    public void reinit()
-    {
+    public void reinit() {
         synchronized(syncObject){
             descMap.clear();
         }
@@ -133,8 +134,8 @@ public class PriceItemDescription
         ResultSet rs = null;
 
         DatabaseAdapter db_ = null;
-        try{
-            db_ = DatabaseAdapter.getInstance(false);
+        try {
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql_ );
 
             RsetTools.setLong(ps, 1, idSite);
@@ -150,11 +151,9 @@ public class PriceItemDescription
             throw new PriceException(es, e);
         }
         finally{
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
-
-            DatabaseAdapter.close( db_);
             db_ = null;
         }
     }

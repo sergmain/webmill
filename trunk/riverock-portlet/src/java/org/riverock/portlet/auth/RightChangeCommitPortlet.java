@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 12:12:43 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.auth;
 
 import java.sql.PreparedStatement;
@@ -43,7 +34,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -51,11 +44,18 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
 
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 12:12:43 PM
+ *
+ * $Id$
+ */
 public final class RightChangeCommitPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( RightChangeCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( RightChangeCommitPortlet.class );
 
     public RightChangeCommitPortlet() {
     }
@@ -88,7 +88,7 @@ public final class RightChangeCommitPortlet implements Portlet {
                 throw new PortletException( "You have not enough right" );
             }
 
-            String index_page = PortletTools.url( "mill.auth.right", actionRequest, actionResponse );
+            String index_page = PortletService.url( "mill.auth.right", actionRequest, actionResponse );
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
             if ( authInfo.getRoot() != 1 ) {
@@ -96,17 +96,17 @@ public final class RightChangeCommitPortlet implements Portlet {
                 return;
             }
 
-            Long id_relate_right = PortletTools.getLong( actionRequest, "id_relate_right" );
+            Long id_relate_right = PortletService.getLong( actionRequest, "id_relate_right" );
             if ( id_relate_right == null )
                 throw new IllegalArgumentException( "id_relate_right not initialized" );
 
-            Integer one = new Integer( 1 );
+            Integer one = 1;
             String right =
-                ( one.equals( PortletTools.getInt( actionRequest, "rs" ) ) ?"S" :"" ) +
-                ( one.equals( PortletTools.getInt( actionRequest, "ri" ) ) ?"I" :"" ) +
-                ( one.equals( PortletTools.getInt( actionRequest, "rd" ) ) ?"D" :"" ) +
-                ( one.equals( PortletTools.getInt( actionRequest, "ru" ) ) ?"U" :"" ) +
-                ( one.equals( PortletTools.getInt( actionRequest, "ra" ) ) ?"A" :"" );
+                ( one.equals( PortletService.getInt( actionRequest, "rs" ) ) ?"S" :"" ) +
+                ( one.equals( PortletService.getInt( actionRequest, "ri" ) ) ?"I" :"" ) +
+                ( one.equals( PortletService.getInt( actionRequest, "rd" ) ) ?"D" :"" ) +
+                ( one.equals( PortletService.getInt( actionRequest, "ru" ) ) ?"U" :"" ) +
+                ( one.equals( PortletService.getInt( actionRequest, "ra" ) ) ?"A" :"" );
 
             dbDyn = DatabaseAdapter.getInstance();
             ps = dbDyn.prepareStatement( "UPDATE AUTH_RELATE_RIGHT_ARM " +
@@ -120,12 +120,12 @@ public final class RightChangeCommitPortlet implements Portlet {
                 "WHERE " +
                 "	id_relate_right = ?" );
 
-            RsetTools.setLong( ps, 1, PortletTools.getLong( actionRequest, "id_access_group" ) );
-            RsetTools.setLong( ps, 2, PortletTools.getLong( actionRequest, "id_object_arm" ) );
+            RsetTools.setLong( ps, 1, PortletService.getLong( actionRequest, "id_access_group" ) );
+            RsetTools.setLong( ps, 2, PortletService.getLong( actionRequest, "id_object_arm" ) );
             ps.setString( 3, right );
-            ps.setInt( 4, PortletTools.getInt( actionRequest, "is_road", new Integer( 0 ) ).intValue() );
-            ps.setInt( 5, PortletTools.getInt( actionRequest, "is_service", new Integer( 0 ) ).intValue() );
-            ps.setInt( 6, PortletTools.getInt( actionRequest, "is_firm", new Integer( 0 ) ).intValue() );
+            ps.setInt( 4, PortletService.getInt( actionRequest, "is_road", 0) );
+            ps.setInt( 5, PortletService.getInt( actionRequest, "is_service", 0) );
+            ps.setInt( 6, PortletService.getInt( actionRequest, "is_firm", 0) );
             RsetTools.setLong( ps, 7, id_relate_right );
 
             int i1 = ps.executeUpdate();

@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.portlet.price;
 
 import java.io.File;
@@ -42,13 +38,17 @@ import org.riverock.portlet.schema.import_price.PriceListItemType;
 import org.riverock.portlet.schema.import_price.PriceListType;
 import org.riverock.portlet.schema.import_price.PricesType;
 
-import org.apache.log4j.Logger;
+
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public class ImportPriceList
-{
-    private static Logger log = Logger.getLogger( ImportPriceList.class );
+/**
+ * $Id$
+ */
+public class ImportPriceList {
+    private static Log log = LogFactory.getLog( ImportPriceList.class );
 
     public static void process(File file, Long id_site, DatabaseAdapter db)
             throws PriceException

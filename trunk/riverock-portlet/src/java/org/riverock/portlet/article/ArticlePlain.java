@@ -32,10 +32,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortletConfig;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
 import org.riverock.cache.impl.CacheException;
 import org.riverock.common.tools.DateTools;
@@ -44,18 +48,16 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.portlet.member.ClassQueryItemImpl;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletResultContent;
+import org.riverock.portlet.member.ClassQueryItemImpl;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
 /**
  * Author: mill
@@ -65,7 +67,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class ArticlePlain implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Logger log = Logger.getLogger( ArticlePlain.class );
+    private final static Log log = LogFactory.getLog( ArticlePlain.class );
 
     private final static CacheFactory cache = new CacheFactory( ArticlePlain.class.getName() );
 
@@ -127,7 +129,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         return (isTranslateCR?
                 StringTools.replaceString(text, "\n", "<br>\n"):
                 text
-                ).getBytes( WebmillConfig.getHtmlCharset() );
+                ).getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 
     public boolean isXml(){ return false; }
@@ -159,7 +161,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             if (log.isDebugEnabled() )
                 log.debug("isSimpleTextBlock - "+isSimpleTextBlock);
 
-            s = StringTools.decodeXml(s );
+            s = StringEscapeUtils.unescapeXml(s );
         }
 
         return s;
@@ -170,18 +172,24 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
     public PortletResultContent getInstance(DatabaseAdapter db__, long id__)
             throws Exception {
-        return getInstance(db__, new Long(id__) );
+        return getInstance(db__, id__ );
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__, Long id__)
+    public PortletResultContent getInstance(Long id__)
             throws PortletException {
+        DatabaseAdapter db__ = null;
         try {
+            db__ = DatabaseAdapter.getInstance();
             return (ArticlePlain) cache.getInstanceNew(db__, id__);
         }
         catch(Throwable e) {
             String es = "Error get instance of ArticlePlain";
             log.error(es, e);
             throw new PortletException(es, e);
+        }
+        finally {
+            DatabaseManager.close(db__);
+            db__ = null;
         }
 
     }
@@ -205,7 +213,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         }
     }
 
-    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String articleCode_)
+    public PortletResultContent getInstanceByCode(String articleCode_)
             throws PortletException
     {
         if (log.isDebugEnabled())
@@ -213,25 +221,12 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        DatabaseAdapter db__ = null;
         try {
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
-            Long idSupportLanguageCurrent = portalInfo.getIdSupportLanguage( renderRequest.getLocale() );
+            db__ = DatabaseAdapter.getInstance();
 
-            //Todo Need optimize
-//            for (int i = 0; i < cache.maxCountItems(); i++)
-//            {
-//
-//                if (cache[i] != null &&
-//                    ((ArticlePlain) cache[i]).articleCode.equals(articleCode_) &&
-//                    ((ArticlePlain) cache[i]).idSupportLanguage.equals(idSupportLanguageCurrent)
-//                )
-//                {
-//                    if (log.isDebugEnabled())
-//                        log.debug("#10.01.03");
-//
-//                    return (ArticlePlain) cache[i];
-//                }
-//            }
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+            Long idSupportLanguageCurrent = portalInfo.getSupportLanguageId( renderRequest.getLocale() );
 
             ps = db__.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, idSupportLanguageCurrent );
@@ -260,9 +255,10 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         }
         finally
         {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db__, rs, ps);
             rs = null;
             ps = null;
+            db__ = null;
         }
     }
 
@@ -294,9 +290,9 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             if (rs.next()) {
                 datePost = RsetTools.getCalendar(rs, "DATE_POST");
                 nameArticle = RsetTools.getString(rs, "NAME_ARTICLE");
-                isTranslateCR = new Integer(1).equals(RsetTools.getInt(rs, "IS_TRANSLATE_CR"));
-                isPlainHTML = new Integer(1).equals(RsetTools.getInt(rs, "IS_PLAIN_HTML"));
-                isSimpleTextBlock = new Integer(1).equals(RsetTools.getInt(rs, "IS_SIMPLE_TEXT"));
+                isTranslateCR = (RsetTools.getInt(rs, "IS_TRANSLATE_CR", 0)==1);
+                isPlainHTML = (RsetTools.getInt(rs, "IS_PLAIN_HTML", 0)==1);
+                isSimpleTextBlock = (RsetTools.getInt(rs, "IS_SIMPLE_TEXT", 0)==1);
                 articleCode = RsetTools.getString(rs, "ARTICLE_CODE");
                 idSupportLanguage = RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE");
 
@@ -387,7 +383,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
         List v = new ArrayList();
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql3_ );
 
             RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );

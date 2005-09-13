@@ -35,21 +35,25 @@ import java.util.Calendar;
 import javax.portlet.RenderResponse;
 import javax.portlet.RenderRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.site.SiteListSite;
-import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
 
 
-import org.apache.log4j.Logger;
+
+
+
 
 public class JobItem
 {
-    private static Logger log = Logger.getLogger( JobItem.class );
+    private static Log log = LogFactory.getLog( JobItem.class );
 
     public Integer periodActivity;
 
@@ -61,7 +65,7 @@ public class JobItem
     }
 
     public String getUrlToJob( RenderRequest renderRequest, RenderResponse renderResponse ) throws ConfigException {
-        return PortletTools.url(JobBlockPortlet.CTX_TYPE_JOB, renderRequest, renderResponse )+ '&' +
+        return PortletService.url(JobBlockPortlet.CTX_TYPE_JOB, renderRequest, renderResponse )+ '&' +
             JobBlockPortlet.NAME_ID_JOB_PARAM + '=' + idPosition;
     }
 

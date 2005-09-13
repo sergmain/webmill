@@ -16,7 +16,7 @@ import org.riverock.portlet.portlets.AbstractPortlet;
 import org.riverock.portlet.portlets.PortletErrors;
 import org.riverock.portlet.portlets.bean.GenericBean;
 import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.PortletTools;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.request.WebmillPortletModuleRequestImpl;
@@ -29,6 +29,8 @@ import org.riverock.module.action.WebmillPortletActionNameProviderImpl;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.action.ModuleActionRequestImpl;
 import org.riverock.module.exception.ActionException;
+import org.riverock.webmill.container.tools.PortletMetadataService;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * @author SMaslyukov
@@ -103,12 +105,12 @@ public class AuthPortlet extends AbstractPortlet {
     private GenericBean initGenericBean(ModuleActionRequest moduleActionRequest ) {
         GenericBean genericBean = new GenericBean();
 
-        genericBean.setLoginUrl( PortletTools.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.LOGIN_URL_METADATA ) );
-        genericBean.setLogoutUrl( PortletTools.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
-        genericBean.setRegisterUrl( PortletTools.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
-        genericBean.setMembersUrl( PortletTools.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
+        genericBean.setLoginUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.LOGIN_URL_METADATA ) );
+        genericBean.setLogoutUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
+        genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
+        genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setBaseModuleUrl(
-            PortletTools.ctxStringBuffer((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "riverock.auth" ).
+            PortletService.ctxStringBuffer((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "riverock.auth" ).
             append("?a=1")
         );
         genericBean.setRemoteAddr( moduleActionRequest.getRequest().getRemoteAddr() );

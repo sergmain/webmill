@@ -24,31 +24,38 @@
  */
 package org.riverock.portlet.member;
 
-import java.util.Locale;
-import java.util.StringTokenizer;
-import java.util.Map;
-import java.sql.ResultSet;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletException;
 
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.StringTools;
-import org.riverock.common.tools.RsetTools;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.collections.MapTools;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.StringManager;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.tools.StringManager;
 import org.riverock.generic.exception.GenericException;
-import org.riverock.interfaces.schema.javax.portlet.SecurityRoleRefType;
 import org.riverock.portlet.schema.member.*;
-import org.riverock.portlet.schema.member.types.*;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.site.SiteUtils;
-import org.riverock.webmill.exception.PortalException;
+import org.riverock.portlet.schema.member.types.ContentTypeActionType;
+import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
+import org.riverock.portlet.schema.member.types.ParameterTypeType;
+import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
+import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
+import org.riverock.portlet.schema.member.types.SqlCheckParameterTypeTypeType;
+import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
+import org.riverock.portlet.schema.member.types.TypeFieldType;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.sso.utils.AuthHelper;
 
 /**
@@ -60,7 +67,7 @@ import org.riverock.sso.utils.AuthHelper;
  */
 public final class MemberServiceClass {
 
-    private final static Logger log = Logger.getLogger( MemberServiceClass.class );
+    private final static Log log = LogFactory.getLog( MemberServiceClass.class );
 
     private static class RestrictDescription
     {
@@ -84,26 +91,27 @@ public final class MemberServiceClass {
             new RestrictDescription(RestrictTypeTypeType.USER_TYPE, "ID_USER")
         };
 
-    public static String getString(MultiLangStringType str, Locale loc) throws GenericException {
+    public static String getString(MultiLangStringType str, Locale loc) {
         return getString(str, loc, "");
     }
 
-    public static String getString(MultiLangStringType str, Locale loc, String defaultString)
-            throws GenericException
-    {
+    public static String getString(MultiLangStringType str, Locale loc, String defaultString) {
         if (str==null)
             return defaultString;
 
-        if (Boolean.TRUE.equals(str.getIsUseProperties()) )
-        {
+        if ( str.getIsUseProperties() ) {
             StringManager strMan =
                     StringManager.getManager( str.getStorage(), loc);
 
-            return strMan.getStr( str.getStringData() );
+            try {
+                return strMan.getStr( str.getStringData() );
+            }
+            catch( GenericException e ) {
+                return defaultString;
+            }
         }
-        else
-        {
-            if (Boolean.TRUE.equals(str.getIsInit()))
+        else {
+            if ( str.getIsInit() )
                 return str.getStringData();
 
             str.setStringData( str.getStringData() == null?defaultString:str.getStringData() );
@@ -170,7 +178,8 @@ public final class MemberServiceClass {
         return null;
     }
 
-    public static String buildInsertSQL(ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn, String remoteUser, String serverName)
+    public static String buildInsertSQL(ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn, 
+        String remoteUser, String serverName, ModuleManager moduleManager)
         throws Exception
     {
 
@@ -183,7 +192,7 @@ public final class MemberServiceClass {
                 try
                 {
                 XmlTools.writeToFile(content1.getQueryArea().getSqlCache(),
-                    WebmillConfig.getWebmillDebugDir()+"member-content-site-start.xml",
+                    SiteUtils.getTempDir()+"member-content-site-start.xml",
                     "windows-1251");
                 }
                 catch(Exception ee){}
@@ -205,7 +214,7 @@ public final class MemberServiceClass {
             {
                 String modName = st.nextToken();
 
-                ModuleType module = ModuleManager.getModule(modName);
+                ModuleType module = moduleManager.getModule(modName);
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
 
                 if (cnt != null && cnt.getQueryArea() != null)
@@ -271,7 +280,7 @@ public final class MemberServiceClass {
                     synchronized(syncDebug)
                     {
                         XmlTools.writeToFile(content1.getQueryArea().getSqlCache(),
-                            WebmillConfig.getWebmillDebugDir()+"member-content-site-from-"+module.getName()+".xml",
+                            SiteUtils.getTempDir()+"member-content-site-from-"+module.getName()+".xml",
                             "windows-1251");
                     }
                 }
@@ -484,7 +493,7 @@ public final class MemberServiceClass {
                 try
                 {
                 XmlTools.writeToFile(content1.getQueryArea().getSqlCache(),
-                    WebmillConfig.getWebmillDebugDir()+"member-content-site.xml",
+                    SiteUtils.getTempDir()+"member-content-site.xml",
                     "windows-1251");
                 }
                 catch(Exception ee){}
@@ -542,11 +551,9 @@ public final class MemberServiceClass {
     public static boolean checkRestrictField( ContentType content1, int restrictType )
     {
         RestrictDescription desc = null;
-        for (int i=0; i<restrictDesc.length; i++)
-        {
-            if (restrictDesc[i].type == restrictType)
-            {
-                desc = restrictDesc[i];
+        for( final RestrictDescription newVar : restrictDesc ) {
+            if( newVar.type == restrictType ) {
+                desc = newVar;
                 break;
             }
         }
@@ -737,7 +744,7 @@ public final class MemberServiceClass {
                     String idSite = null;
                     try {
                         idSite = SiteUtils.getGrantedSiteId(db_, serverName);
-                    } catch (PortalException e) {
+                    } catch (PortletException e) {
                         log.error("Exception get siteId list");
                         throw new MemberException(e.getMessage());
                     }
@@ -983,7 +990,8 @@ public final class MemberServiceClass {
 
     public static String buildUpdateSQL( DatabaseAdapter dbDyn, ContentType content, String fromParam,
         ModuleType mod,
-        boolean isUsePrimaryKey, Map map, String remoteUser, String serverName )
+        boolean isUsePrimaryKey, Map map, String remoteUser, String serverName,
+        ModuleManager moduleManager)
         throws Exception
     {
         if (content == null || content.getQueryArea() == null)
@@ -1055,7 +1063,7 @@ public final class MemberServiceClass {
             {
                 String modName = st.nextToken();
 
-                ModuleType module = ModuleManager.getModule(modName);
+                ModuleType module = moduleManager.getModule(modName);
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
@@ -1109,7 +1117,7 @@ public final class MemberServiceClass {
 
                 where_ += (
                     prevPK + " in (" +
-                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, map, serverName, remoteUser )+
+                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, map, serverName, remoteUser, moduleManager )+
                     ")"
                     );
 
@@ -1254,7 +1262,7 @@ public final class MemberServiceClass {
         return sql_ + (where_ != null && where_.trim().length()>0? (" where " + where_): "" );
     }
 
-    private static String processSubQuery( DatabaseAdapter adapter, String sql, String fromParam, Map map, String serverName, String remoteUser )
+    private static String processSubQuery( DatabaseAdapter adapter, String sql, String fromParam, Map map, String serverName, String remoteUser, ModuleManager moduleManager )
         throws Exception
     {
 
@@ -1268,7 +1276,7 @@ public final class MemberServiceClass {
             case DatabaseManager.MYSQL_FAMALY:
                 try {
                     ps = adapter.prepareStatement(sql);
-                    bindSubQueryParam(ps, 1, fromParam, adapter, map, serverName, remoteUser );
+                    bindSubQueryParam(ps, 1, fromParam, adapter, map, serverName, remoteUser, moduleManager );
                     rs = ps.executeQuery();
 
                     String r = "";
@@ -1301,9 +1309,7 @@ public final class MemberServiceClass {
             FieldsType ff = content1.getQueryArea().getFields(k);
 
             if (ff.getJspType().getType() == FieldsTypeJspTypeType.YES_1_NO_N_TYPE &&
-                    new Integer(1).equals(
-                        MapTools.getInt(map, mod1.getName() + '.' + getRealName(ff))
-                    )
+                MapTools.getInt(map, mod1.getName() + '.' + getRealName(ff), 0)==1
             )
             {
                 if (log.isDebugEnabled())
@@ -1318,7 +1324,7 @@ public final class MemberServiceClass {
     }
 
     public static String buildDeleteSQL( DatabaseAdapter dbDyn, ModuleType mod, ContentType content, String fromParam,
-        Map map, String remoteUser, String serverName )
+        Map map, String remoteUser, String serverName, ModuleManager moduleManager )
         throws Exception
     {
         String insTable = content.getQueryArea().getTable(0).getTable();
@@ -1353,7 +1359,7 @@ public final class MemberServiceClass {
             {
                 String modName = st.nextToken();
 
-                ModuleType module = ModuleManager.getModule(modName);
+                ModuleType module = moduleManager.getModule(modName);
 
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
@@ -1407,7 +1413,7 @@ public final class MemberServiceClass {
 //                    " from " + sc.from + " where " + sc.where + ")";
 
                     prevPK + " in (" +
-                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, map, serverName, remoteUser )+
+                    processSubQuery(dbDyn, "select " + prevAlias + prevPK + " from " + sc.from + " where " + sc.where, fromParam, map, serverName, remoteUser, moduleManager )+
                     ")";
 
 
@@ -1527,7 +1533,7 @@ public final class MemberServiceClass {
     }
 
     public static int bindSubQueryParam( PreparedStatement ps, int numParam, String fromParam,
-        DatabaseAdapter dbDyn, Map map, String serverName, String remoteUser )
+        DatabaseAdapter dbDyn, Map map, String serverName, String remoteUser, ModuleManager moduleManager )
         throws Exception {
 
         if (fromParam.length() > 0) {
@@ -1537,7 +1543,7 @@ public final class MemberServiceClass {
             {
                 String modName = st.nextToken();
 
-                ContentType cnt = ModuleManager.getContent(modName, ContentTypeActionType.INDEX_TYPE);
+                ContentType cnt = moduleManager.getContent(modName, ContentTypeActionType.INDEX_TYPE);
 
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
@@ -1553,7 +1559,7 @@ public final class MemberServiceClass {
                     }
                     else if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
                     {
-                        final String stringParam = PortletTools.getString( map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                        final String stringParam = RequestTools.getString( map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
 
                         if (log.isDebugEnabled())
                             log.debug( "Param  #" + numParam + ", value: " + stringParam );

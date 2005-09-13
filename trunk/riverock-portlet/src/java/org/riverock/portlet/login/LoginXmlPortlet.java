@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.login;
 
 import java.io.IOException;
@@ -37,16 +36,19 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.schema.portlet.login.LoginType;
 import org.riverock.portlet.schema.portlet.login.types.LoginTypeIsLoggedType;
+import org.riverock.portlet.tools.RequestTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: Admin
@@ -56,7 +58,7 @@ import org.riverock.webmill.portal.PortalConstants;
  * $Id$
  */
 public final class LoginXmlPortlet implements Portlet {
-    private final static Logger log = Logger.getLogger( LoginXmlPortlet.class );
+    private final static Log log = LogFactory.getLog( LoginXmlPortlet.class );
 
     public LoginXmlPortlet() {
     }
@@ -100,24 +102,24 @@ public final class LoginXmlPortlet implements Portlet {
             else {
 
                 String srcURL = null;
-                if ( renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) != null ) {
-                    srcURL = PortletTools.getString( renderRequest, Constants.NAME_TOURL_PARAM );
+                if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
+                    srcURL = RequestTools.getString( renderRequest, LoginUtils.NAME_TOURL_PARAM );
                 }
                 else {
-                    srcURL = PortletTools.url( Constants.CTX_TYPE_INDEX, renderRequest, renderResponse );
+                    srcURL = PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse );
                 }
 
                 srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
                 srcURL = StringTools.replaceString( srcURL, "%26", "&" );
 
                 if ( log.isDebugEnabled() ) {
-                    log.debug( "reqeust parameter  mill.tourl: " + renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) );
+                    log.debug( "reqeust parameter  mill.tourl: " + renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) );
                     log.debug( "toURL: " + srcURL );
                     log.debug( "encoded toURL - " + srcURL );
                     log.debug( "Header string - " + bundle.getString( "auth.check.header" ) );
                 }
 
-                login.setActionUrl( PortletTools.ctx( renderRequest ) );
+                login.setActionUrl( PortletService.ctx( renderRequest ) );
                 login.setToUrl( srcURL );
                 login.setInviteMessage( bundle.getString( "auth.check.header" ) );
                 login.setLoginMessage( bundle.getString( "auth.check.login" ) );
@@ -126,7 +128,7 @@ public final class LoginXmlPortlet implements Portlet {
                 login.setIsLogged( LoginTypeIsLoggedType.VALUE_0 );
             }
 
-            String xmlRoot = (String)renderRequest.getAttribute(PortalConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE );
+            String xmlRoot = (String)renderRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE );
             if (StringTools.isEmpty( xmlRoot ) ) {
                 xmlRoot = "LoginXml";
             }

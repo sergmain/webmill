@@ -9,7 +9,9 @@ import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
@@ -17,20 +19,22 @@ import org.riverock.common.tools.ServletTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.register.RegisterUser;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.sso.a3.AuthException;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.core.InsertMainUserMetadataItem;
-import org.riverock.webmill.core.UpdateMainUserMetadataItem;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portal.PortalUserMetadata;
-import org.riverock.webmill.portlet.PortletResultContent;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.schema.core.MainUserMetadataItemType;
+
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
+import org.riverock.webmill.container.core.InsertMainUserMetadataItem;
+import org.riverock.webmill.container.core.UpdateMainUserMetadataItem;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.tools.PortalUserMetadata;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
 /**
  * @author SMaslyukov
@@ -38,8 +42,8 @@ import org.riverock.webmill.schema.core.MainUserMetadataItemType;
  *         Time: 15:05:33
  *         $Id$
  */
-public class NewsSubscribe  implements PortletResultObject, PortletResultContent {
-    private final static Logger log = Logger.getLogger(RegisterUser.class);
+public class NewsSubscribe implements PortletResultObject, PortletResultContent {
+    private final static Log log = LogFactory.getLog(RegisterUser.class);
 
     public NewsSubscribe()
     {
@@ -55,19 +59,18 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
 //        this.bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
     }
 
-    public PortletResultContent getInstance( final DatabaseAdapter db_ , final Long id )
+    public PortletResultContent getInstance( final Long id )
         throws PortletException {
-        return getInstance( db_ );
+        return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode( final DatabaseAdapter db__, final String portletCode_ )
+    public PortletResultContent getInstanceByCode( final String portletCode_ )
         throws PortletException {
 
         throw new PortletException("This portlet not support method getInstanceByCode()");
     }
 
-    public PortletResultContent getInstance( DatabaseAdapter db_ ) throws PortletException {
-
+    public PortletResultContent getInstance() throws PortletException {
         return this;
     }
 
@@ -97,7 +100,7 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
         if (log.isDebugEnabled()) {
             log.debug("end get XmlByte array. length of array - " + b.length);
 
-            final String testFile = WebmillConfig.getWebmillDebugDir()+"regiser-item.xml";
+            final String testFile = SiteUtils.getTempDir()+"regiser-item.xml";
             log.debug("Start output test data to file " + testFile );
             synchronized(syncDebug){
                 MainTools.writeToFile(testFile, b);
@@ -119,7 +122,7 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
 
             db_ = DatabaseAdapter.getInstance();
 
-            String indexPage = PortletTools.url(Constants.CTX_TYPE_INDEX, renderRequest, renderResponse, "" );
+            String indexPage = PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse, "" );
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
@@ -170,9 +173,9 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
     private void printSubscribeForm(StringBuffer out, boolean isSubscribed) {
         out
             .append("\n<form method=\"POST\" action=\"")
-            .append(PortletTools.ctx(renderRequest))
+            .append(PortletService.ctx(renderRequest))
             .append("\" >\n")
-            .append( ServletTools.getHiddenItem( Constants.NAME_TYPE_CONTEXT_PARAM, NewsSubscribePortlet.PORTLET_NAME ) )
+            .append( ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, NewsSubscribePortlet.PORTLET_NAME ) )
             .append( ServletTools.getHiddenItem( NewsSubscribePortlet.CHANGE_STATUS_PARAM, NewsSubscribePortlet.CHANGE_STATUS_PARAM  ) )
             .append("\nChange your subscribtion status on news: \n")
             .append("<input type=\"checkbox\" name=\"")
@@ -190,7 +193,7 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
         if (meta==null || meta.getIntValue()==null) {
             return false;
         }
-        return meta.getIntValue().longValue()==1;
+        return meta.getIntValue()==1;
     }
 
     static void setSubscribeStatus(PortletRequest portletRequest, boolean isSubscribe) throws Exception {
@@ -200,7 +203,7 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
 
             db_ = DatabaseAdapter.getInstance();
 
-            PortalInfo portalInfo = (PortalInfo)portletRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            PortalInfo portalInfo = (PortalInfo)portletRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
             AuthSession auth_ = (AuthSession)portletRequest.getUserPrincipal();
             MainUserMetadataItemType meta = PortalUserMetadata.getMetadata( db_, auth_.getUserLogin(), portletRequest.getServerName(), NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS);
 
@@ -209,18 +212,18 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
                 seq.setSequenceName( "SEQ_MAIN_USER_METADATA" );
                 seq.setTableName( "MAIN_USER_METADATA" );
                 seq.setColumnName( "ID_MAIN_USER_METADATA" );
-                Long id = new Long( db_.getSequenceNextValue( seq ) );
+                Long id = db_.getSequenceNextValue( seq );
 
                 meta = new MainUserMetadataItemType();
                 meta.setIdMainUserMetadata( id );
                 meta.setIdUser( auth_.getUserInfo().getIdUser() );
                 meta.setIdSite( portalInfo.getSiteId() );
                 meta.setMeta( NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS );
-                meta.setIntValue( new Long(isSubscribe?1:0) );
+                meta.setIntValue( isSubscribe?1L:0L );
                 InsertMainUserMetadataItem.process(db_, meta);
             }
             else {
-                meta.setIntValue( new Long(isSubscribe?1:0) );
+                meta.setIntValue( isSubscribe?1L:0L );
                 UpdateMainUserMetadataItem.process(db_, meta);
             }
             db_.commit();
@@ -256,6 +259,6 @@ public class NewsSubscribe  implements PortletResultObject, PortletResultContent
     }
 
     private byte[] prepareReturn(StringBuffer out) throws ConfigException, UnsupportedEncodingException {
-        return out.toString().getBytes( WebmillConfig.getHtmlCharset() );
+        return out.toString().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 }

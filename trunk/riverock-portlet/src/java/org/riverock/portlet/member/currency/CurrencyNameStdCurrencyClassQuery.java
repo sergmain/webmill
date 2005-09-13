@@ -22,6 +22,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.member.currency;
+
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.portlet.PortletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.portlet.member.BaseClassQuery;
+import org.riverock.portlet.member.MemberQueryParameter;
+import org.riverock.portlet.price.CurrencyManager;
+import org.riverock.portlet.price.CurrencyService;
+import org.riverock.portlet.schema.price.CustomCurrencyItemType;
+import org.riverock.portlet.schema.price.StandardCurrencyItemType;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portal.PortalInfo;
 
 /**
  * User: Admin
@@ -30,29 +49,9 @@
  *
  * $Id$
  */
-package org.riverock.portlet.member.currency;
-
-import java.util.List;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.member.BaseClassQuery;
-import org.riverock.portlet.member.MemberQueryParameter;
-import org.riverock.portlet.price.CurrencyService;
-import org.riverock.portlet.price.CurrencyManager;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.schema.price.StandardCurrencyItemType;
-import org.riverock.webmill.port.PortalInfo;
-
-import org.riverock.webmill.portal.PortalConstants;
-
-import org.apache.log4j.Logger;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.RenderRequest;
-
 public class CurrencyNameStdCurrencyClassQuery extends BaseClassQuery
 {
-    private static Logger cat = Logger.getLogger( CurrencyNameStdCurrencyClassQuery.class );
+    private static Log cat = LogFactory.getLog( CurrencyNameStdCurrencyClassQuery.class );
 
     // ID_CURRENCY
     private Long idCurrency = null;
@@ -69,17 +68,17 @@ public class CurrencyNameStdCurrencyClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance( false );
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            db_ = DatabaseAdapter.getInstance();
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
 
-            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, portalInfo.getSites().getIdSite()).getCurrencyList() , idCurrency );
-            StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance(db_, portalInfo.getSites().getIdSite()).getCurrencyList() , item.getIdStandardCurrency() );
+            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList() , idCurrency );
+            StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList() , item.getIdStandardCurrency() );
 
             if (stdItem == null)
                 return "";
@@ -97,7 +96,7 @@ public class CurrencyNameStdCurrencyClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         throw new Exception("Not implemented");

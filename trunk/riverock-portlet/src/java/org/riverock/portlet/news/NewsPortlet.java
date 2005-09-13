@@ -32,10 +32,8 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.webmill.portlet.GenericWebmillPortlet;
-import org.riverock.webmill.portlet.PortletResultObject;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
 /**
  * User: SergeMaslyukov
@@ -44,12 +42,9 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class NewsPortlet extends GenericWebmillPortlet {
-
-    private final static Logger log = Logger.getLogger( NewsPortlet.class );
-
     public NewsPortlet(){}
 
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
     }
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {

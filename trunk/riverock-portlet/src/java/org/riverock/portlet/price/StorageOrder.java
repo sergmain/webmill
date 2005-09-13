@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.price;
 
 import java.io.PrintStream;
@@ -31,12 +30,13 @@ import java.sql.ResultSet;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.generic.db.DatabaseAdapter;
 
-import org.apache.log4j.Logger;
-
 public final class StorageOrder {
-    private final static Logger log = Logger.getLogger( StorageOrder.class );
+    private final static Log log = LogFactory.getLog( StorageOrder.class );
     String dateOrder = "";
     String numberOrder;
     long orderID;
@@ -118,7 +118,7 @@ public final class StorageOrder {
             rs = st.executeQuery();
 
             if (rs.next())
-                retID = new Long(rs.getLong("id_PRICE_STORAGE_ORDER"));
+                retID = rs.getLong( "id_PRICE_STORAGE_ORDER" );
 
         }
         catch (Exception e)
@@ -164,12 +164,13 @@ public final class StorageOrder {
     {
         PreparedStatement st = null;
         boolean retFlag = false;
-        long idPK;
+        Long idPK = null;
         try
         {
             if (true) throw new PriceException("not implemented");
 
-//            idPK = db_.getSequenceNextValue("seq_PRICE_STORAGE_ORDER");
+            final String sequenceName = "seq_PRICE_STORAGE_ORDER";
+            idPK = db_.getSequenceNextValue( null );
 
             st = db_.prepareStatement(
                     "insert into PRICE_STORAGE_ORDER " +
@@ -207,7 +208,7 @@ public final class StorageOrder {
                 }
             }
         }
-        return new Long(idPK);
+        return idPK;
     }
 
     public void process(DatabaseAdapter db_, long id_shop)
@@ -226,12 +227,12 @@ public final class StorageOrder {
         for (int i = 0; i < items.size(); i++)
         {
             orderItem = (StorageOrderItem) items.elementAt(i);
-            if (orderItem.checkItem(db_, idPK.longValue()))
+            if (orderItem.checkItem(db_, idPK))
                 flag = true;
         }
 
         if (flag)
-            setIsProcessed(db_, idPK.longValue(), false);
+            setIsProcessed(db_, idPK, false);
 
         calcQuantity(db_, id_shop);
     }

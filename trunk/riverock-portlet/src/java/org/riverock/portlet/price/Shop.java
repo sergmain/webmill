@@ -31,7 +31,10 @@ import java.util.Calendar;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -42,10 +45,10 @@ import org.riverock.generic.site.SiteListSite;
 import org.riverock.sql.cache.SqlStatement;
 
 /**
- *  $Id$
+ * $Id$
  */
 public final class Shop {
-    private final static Logger log = Logger.getLogger( Shop.class );
+    private final static Log log = LogFactory.getLog( Shop.class );
 
     private static CacheFactory cache = new CacheFactory( Shop.class.getName() );
 
@@ -77,7 +80,7 @@ public final class Shop {
     public int is_default_currency = 1;
 
     public boolean isNeedProcessing = false;  // Нужен ли интерфейс для проведения финансовых транзакций
-    public boolean isProcessInvoice= false; //  Нужен ли интерфейс для выписки счетов
+    public boolean isProcessInvoice = false; //  Нужен ли интерфейс для выписки счетов
     public boolean isNeedRecalc = false;//  Нужен ли интерфейс для пересчета из одной валюты в другую
 
 //    public Vector precision = null;
@@ -88,15 +91,13 @@ public final class Shop {
     public Long id_type_shop_1 = null;
     public Long id_type_shop_2 = null;
 
-    public static void reinit()
-    {
+    public static void reinit() {
         cache.reinit();
     }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         name_shop = null;
-        footer= null;
+        footer = null;
         header = null;
         code_shop = null;
         name_shop_for_price_list = null;
@@ -107,29 +108,27 @@ public final class Shop {
         super.finalize();
     }
 
-    public Shop(){};
+    public Shop() {
+    };
 
-    public static Long getShopID(DatabaseAdapter ora_, String codeShop)
-        throws SQLException, DatabaseException
-    {
-        if (codeShop == null)
+    public static Long getShopID( DatabaseAdapter ora_, String codeShop )
+        throws SQLException, DatabaseException {
+        if( codeShop == null )
             return null;
 
         String sql_ = "select ID_SHOP from PRICE_SHOP_TABLE where CODE_SHOP = ?";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
-            ps = ora_.prepareStatement(sql_);
-            ps.setString(1, codeShop.toUpperCase());
+        try {
+            ps = ora_.prepareStatement( sql_ );
+            ps.setString( 1, codeShop.toUpperCase() );
             rs = ps.executeQuery();
 
-            if (rs.next())
-                return RsetTools.getLong(rs, "ID_SHOP");
+            if( rs.next() )
+                return RsetTools.getLong( rs, "ID_SHOP" );
         }
-        finally
-        {
+        finally {
             DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
@@ -137,30 +136,27 @@ public final class Shop {
         return null;
     }
 
-    public static Long getShopID(DatabaseAdapter db_, PortletRequest portletRequest)
-            throws Exception
-    {
+    public static Long getShopID( DatabaseAdapter db_, PortletRequest portletRequest )
+        throws Exception {
 
-        if (portletRequest == null)
+        if( portletRequest == null )
             return null;
 
-        Long idSite = SiteListSite.getIdSite(portletRequest.getServerName());
+        Long idSite = SiteListSite.getIdSite( portletRequest.getServerName() );
 
         String sql_ = "select ID_SHOP from PRICE_SHOP_TABLE where ID_SITE=?";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
-            ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSite);
+        try {
+            ps = db_.prepareStatement( sql_ );
+            RsetTools.setLong( ps, 1, idSite );
             rs = ps.executeQuery();
 
-            if (rs.next())
-                return RsetTools.getLong(rs, "ID_SHOP");
+            if( rs.next() )
+                return RsetTools.getLong( rs, "ID_SHOP" );
         }
-        finally
-        {
+        finally {
             DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
@@ -168,114 +164,92 @@ public final class Shop {
         return null;
     }
 
-    public static Shop getInstance(DatabaseAdapter db_, long id)
-        throws PriceException
-    {
-        return getInstance(db_, new Long(id) );
+    public static Shop getInstance( DatabaseAdapter db_, long id ) throws PriceException {
+        return getInstance( db_, id );
     }
 
-    public static Shop getInstance(DatabaseAdapter db_, Long id)
-        throws PriceException
-    {
-        try
-        {
-            return (Shop) cache.getInstanceNew(db_, id);
+    public static Shop getInstance( DatabaseAdapter db_, Long id ) throws PriceException {
+        try {
+            return ( Shop ) cache.getInstanceNew( db_, id );
         }
-        catch (GenericException genericException)
-        {
+        catch( GenericException genericException ) {
             final String es = "Exception in ";
-            log.error(es, genericException);
-            throw new PriceException(es, genericException);
+            log.error( es, genericException );
+            throw new PriceException( es, genericException );
         }
     }
 
     static String sql_ = null;
-    static
-    {
+
+    static {
         sql_ =
             "select * from PRICE_SHOP_TABLE where ID_SHOP = ?";
 
         try {
             SqlStatement.registerSql( sql_, new Shop().getClass() );
-        } catch (Exception e) {
+        }
+        catch( Exception e ) {
             log.error( "Exception in registerSql, sql\n" + sql_, e );
-        } catch (Error e) {
+        }
+        catch( Error e ) {
             log.error( "Error in registerSql, sql\n" + sql_, e );
         }
     }
 
-    public Shop(DatabaseAdapter db_, Long id_shop_)
-            throws PriceException
-    {
+    public Shop( DatabaseAdapter db_, Long id_shop_ )
+        throws PriceException {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        try
-        {
-            ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, id_shop_);
+        try {
+            ps = db_.prepareStatement( sql_ );
+            RsetTools.setLong( ps, 1, id_shop_ );
             rs = ps.executeQuery();
 
-            if (rs.next())
-            {
+            if( rs.next() ) {
                 this.id_shop = id_shop_;
 
-                isProcessInvoice = (RsetTools.getInt(rs, "IS_PROCESS_INVOICE", new Integer(0)).intValue()==1?true:false);
-                isNeedProcessing = (RsetTools.getInt(rs, "IS_NEED_PROCESSING", new Integer(0)).intValue()==1?true:false);
-                isNeedRecalc = (RsetTools.getInt(rs, "IS_NEED_RECALC", new Integer(0)).intValue()==1?true:false);
+                isProcessInvoice = RsetTools.getInt( rs, "IS_PROCESS_INVOICE", 0) == 1;
+                isNeedProcessing = RsetTools.getInt( rs, "IS_NEED_PROCESSING", 0) == 1;
+                isNeedRecalc = RsetTools.getInt( rs, "IS_NEED_RECALC", 0) == 1 ;
 
-                name_shop = RsetTools.getString(rs, "NAME_SHOP");
-                name_shop_for_price_list = RsetTools.getString(rs, "NAME_SHOP_FOR_PRICE_LIST", "");
+                name_shop = RsetTools.getString( rs, "NAME_SHOP" );
+                name_shop_for_price_list = RsetTools.getString( rs, "NAME_SHOP_FOR_PRICE_LIST", "" );
 
-                footer = RsetTools.getString(rs, "FOOTER_STRING");
-                header = RsetTools.getString(rs, "HEADER_STRING");
+                footer = RsetTools.getString( rs, "FOOTER_STRING" );
+                header = RsetTools.getString( rs, "HEADER_STRING" );
+                dateUpload = RsetTools.getCalendar( rs, "LAST_DATE_UPLOAD" );
+                dateCalcQuantity = RsetTools.getCalendar( rs, "DATE_CALC_QUANTITY" );
+                newItemDays = RsetTools.getInt( rs, "NEW_ITEM_DAYS", 0);
+                currencyID = RsetTools.getLong( rs, "ID_CURRENCY" );
+                idOrderCurrency = RsetTools.getLong( rs, "ID_ORDER_CURRENCY" );
+                discount = RsetTools.getDouble( rs, "DISCOUNT", 0.0);
 
-//                order_email = RsetTools.getString(rs, "ORDER_EMAIL");
-                dateUpload = RsetTools.getCalendar(rs, "LAST_DATE_UPLOAD");
-                dateCalcQuantity = RsetTools.getCalendar(rs, "DATE_CALC_QUANTITY");
-                newItemDays = RsetTools.getInt(rs, "NEW_ITEM_DAYS", new Integer(0) ).intValue();
-//                is_activate_email_order = RsetTools.getInt(rs, "IS_ACTIVATE_EMAIL_ORDER");
-
-                currencyID = RsetTools.getLong(rs, "ID_CURRENCY");
-
-                idOrderCurrency =
-                        RsetTools.getLong(rs, "ID_ORDER_CURRENCY");
-
-//                defaultCurrency = CurrencyItem.getCurrency(db_,
-//                    RsetTools.getLong(rs, "ID_CURRENCY")
-//                );
-
-//                is_default_currency = RsetTools.getInt(rs, "is_default_currency");
-
-                discount = RsetTools.getDouble(rs, "DISCOUNT", new Double(0)).doubleValue();
-
-                if (discount <0)
+                if( discount < 0 )
                     discount = 0;
 
-                if (discount >=100)
+                if( discount >= 100 )
                     discount = 99;
 
 
-                is_close = RsetTools.getInt(rs, "IS_CLOSE", new Integer(0) ).intValue();
+                is_close = RsetTools.getInt( rs, "IS_CLOSE", 0);
 
-                code_shop = RsetTools.getString(rs, "CODE_SHOP");
-                id_type_shop_1 = RsetTools.getLong(rs, "ID_TYPE_SHOP_1");
-                id_type_shop_2 = RsetTools.getLong(rs, "ID_TYPE_SHOP_2");
+                code_shop = RsetTools.getString( rs, "CODE_SHOP" );
+                id_type_shop_1 = RsetTools.getLong( rs, "ID_TYPE_SHOP_1" );
+                id_type_shop_2 = RsetTools.getLong( rs, "ID_TYPE_SHOP_2" );
             }
         }
-        catch (Throwable e)
-        {
+        catch( Throwable e ) {
             final String es = "Exception create shop object";
-            log.error(es, e);
-            throw new PriceException(es, e);
+            log.error( es, e );
+            throw new PriceException( es, e );
         }
-        finally
-        {
+        finally {
             DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }
 
-        precisionList.initCurrencyPrecision(db_, id_shop);
+        precisionList.initCurrencyPrecision( db_, id_shop );
     }
 }

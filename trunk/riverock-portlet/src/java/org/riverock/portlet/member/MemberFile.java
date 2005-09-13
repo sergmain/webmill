@@ -22,31 +22,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.member;
-
-import org.riverock.portlet.schema.member.MemberArea;
-import org.riverock.portlet.schema.member.ModuleType;
-import org.riverock.generic.main.CacheFile;
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Iterator;
+
+import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+
+import org.riverock.generic.main.CacheFile;
+import org.riverock.portlet.schema.member.MemberArea;
+import org.riverock.portlet.schema.member.ModuleType;
+import org.riverock.portlet.tools.SiteUtils;
 
 /**
  * $Id$
  */
 public final class MemberFile extends CacheFile {
-    private final static Logger log = Logger.getLogger( MemberFile.class );
+    private final static Log log = LogFactory.getLog( MemberFile.class );
 
     private Hashtable memberHash = null;
 
@@ -187,7 +187,7 @@ public final class MemberFile extends CacheFile {
             if (log.isDebugEnabled()) {
                 synchronized(syncObj) {
                     try {
-                        FileWriter w = new FileWriter(WebmillConfig.getWebmillDebugDir() + System.currentTimeMillis()+'-'+getFile().getName() );
+                        FileWriter w = new FileWriter(SiteUtils.getTempDir() + System.currentTimeMillis()+'-'+getFile().getName() );
                         Marshaller.marshal(ma, w);
                     }
                     catch (Exception e)

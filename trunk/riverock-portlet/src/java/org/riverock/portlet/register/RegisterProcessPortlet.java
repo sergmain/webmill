@@ -36,17 +36,22 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.main.Constants;
-import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portlet.PortletTools;
 
-import org.apache.log4j.Logger;
+import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.login.LoginUtils;
+import org.riverock.sso.a3.AuthSession;
+
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.tools.PortletMetadataService;
 
 /**
  * Author: mill
@@ -57,7 +62,7 @@ import org.apache.log4j.Logger;
  */
 public final class RegisterProcessPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger(RegisterProcessPortlet.class);
+    private final static Log log = LogFactory.getLog(RegisterProcessPortlet.class);
 
     public RegisterProcessPortlet() {
     }
@@ -75,7 +80,7 @@ public final class RegisterProcessPortlet implements Portlet {
         throws IOException, PortletException {
 
         Writer out = renderResponse.getWriter();
-        String indexPage = PortletTools.url(Constants.CTX_TYPE_INDEX, renderRequest, renderResponse, "");
+        String indexPage = PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse, "");
         try {
 
             if (renderRequest.getParameter(RegisterPortlet.ERROR_TEXT) != null) {
@@ -102,7 +107,7 @@ public final class RegisterProcessPortlet implements Portlet {
 */
             String action = null;
             try {
-                action = PortletTools.getString(renderRequest, RegisterPortlet.NAME_REGISTER_ACTION_PARAM);
+                action = RequestTools.getString(renderRequest, RegisterPortlet.NAME_REGISTER_ACTION_PARAM);
             } catch (ConfigException e) {
                 String es = "Error get parameter";
                 log.error(es, e);
@@ -146,39 +151,44 @@ public final class RegisterProcessPortlet implements Portlet {
 
         StringBuffer out = new StringBuffer();
         DatabaseAdapter db_ = null;
-        String registerUrl = PortletTools.url(RegisterPortlet.REGISTER_PORTLET, actionRequest, actionResponse);
+        String registerUrl = PortletService.url(RegisterPortlet.REGISTER_PORTLET, actionRequest, actionResponse);
         try {
-//            PortletSession session = actionRequest.getPortletSession();
             AuthSession auth_ = (AuthSession) actionRequest.getUserPrincipal();
-
-
             ResourceBundle bundle = portletConfig.getResourceBundle(actionRequest.getLocale());
-
             db_ = DatabaseAdapter.getInstance();
 
-            String indexPage = PortletTools.url(Constants.CTX_TYPE_INDEX, actionRequest, actionResponse, "" );
+            String indexPage = PortletService.url(ContainerConstants.CTX_TYPE_INDEX, actionRequest, actionResponse, "" );
 
-            PortalInfo portalInfo = (PortalInfo) actionRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            PortalInfo portalInfo = (PortalInfo) actionRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+
+            boolean isRegisterAllowed = false;
+            String adminEmail = null;
+            // Todo uncomment and implement
+/*
+            boolean isRegisterAllowed = portalInfo.getSites().getIsRegisterAllowed();
+            String adminEmail = portalInfo.getSites().getAdminEmail();
+*/
+
 
             if (log.isDebugEnabled()) {
-                log.debug("getIsRegisterAllowed " + portalInfo.getSites().getIsRegisterAllowed());
+                log.debug("getIsRegisterAllowed " + isRegisterAllowed);
             }
 
             String url = "";
-            String url_redir = PortletTools.getString(actionRequest, Constants.NAME_TOURL_PARAM, indexPage);
+            String url_redir = RequestTools.getString(actionRequest, LoginUtils.NAME_TOURL_PARAM, indexPage);
 
             if (log.isDebugEnabled()) {
                 log.debug("urlRedir " + url_redir);
             }
 
-            String action = PortletTools.getString(actionRequest, RegisterPortlet.NAME_REGISTER_ACTION_PARAM);
+            String action = RequestTools.getString(actionRequest, RegisterPortlet.NAME_REGISTER_ACTION_PARAM);
 
             if (log.isDebugEnabled()) {
                 log.debug(RegisterPortlet.NAME_REGISTER_ACTION_PARAM + " " + action);
             }
 
             if (action != null) {
-//                url_redir = PortletTools.getString(actonRequest, Constants.NAME_TOURL_PARAM, index_page);
+//                url_redir = RequestTools.getString(actonRequest, Constants.NAME_TOURL_PARAM, index_page);
 
                 url_redir = StringTools.replaceString(url_redir, "%2F", "/");
                 url_redir = StringTools.replaceString(url_redir, "%3F", "?");
@@ -199,18 +209,18 @@ public final class RegisterProcessPortlet implements Portlet {
                     log.debug("#1.003 url_redir: " + url_redir);
 
 
-                String username = PortletTools.getString(actionRequest, RegisterPortlet.USERNAME_PARAM);
+                String username = RequestTools.getString(actionRequest, RegisterPortlet.USERNAME_PARAM);
 
-                String password1 = PortletTools.getString(actionRequest, RegisterPortlet.PASSWORD1_PARAM);
-                String password2 = PortletTools.getString(actionRequest, RegisterPortlet.PASSWORD2_PARAM);
+                String password1 = RequestTools.getString(actionRequest, RegisterPortlet.PASSWORD1_PARAM);
+                String password2 = RequestTools.getString(actionRequest, RegisterPortlet.PASSWORD2_PARAM);
 
-                String firstName = PortletTools.getString(actionRequest, RegisterPortlet.FIRST_NAME_PARAM);
-                String lastName = PortletTools.getString(actionRequest, RegisterPortlet.LAST_NAME_PARAM);
-                String middleName = PortletTools.getString(actionRequest, RegisterPortlet.MIDDLE_NAME_PARAM);
+                String firstName = RequestTools.getString(actionRequest, RegisterPortlet.FIRST_NAME_PARAM);
+                String lastName = RequestTools.getString(actionRequest, RegisterPortlet.LAST_NAME_PARAM);
+                String middleName = RequestTools.getString(actionRequest, RegisterPortlet.MIDDLE_NAME_PARAM);
 
-                String email = PortletTools.getString(actionRequest, RegisterPortlet.EMAIL_PARAM);
-//                String address = PortletTools.getString(actionRequest, RegisterPortlet.ADDRESS_PARAM);
-//                String phone = PortletTools.getString(actionRequest, RegisterPortlet.PHONE_PARAM);
+                String email = RequestTools.getString(actionRequest, RegisterPortlet.EMAIL_PARAM);
+//                String address = RequestTools.getString(actionRequest, RegisterPortlet.ADDRESS_PARAM);
+//                String phone = RequestTools.getString(actionRequest, RegisterPortlet.PHONE_PARAM);
 
                 if (action.equals("reg_new")) {
 
@@ -226,14 +236,14 @@ public final class RegisterProcessPortlet implements Portlet {
                         return;
                     }
 
-                    if (!Boolean.TRUE.equals(portalInfo.getSites().getIsRegisterAllowed())) {
+                    if (!isRegisterAllowed) {
                         if (log.isDebugEnabled()) {
                             log.debug("Registration on this site not allowed");
                         }
                         return;
                     }
 
-                    String role = PortletTools.getMetadata(actionRequest, RegisterPortlet.DEFAULT_ROLE_METADATA);
+                    String role = PortletMetadataService.getMetadata(actionRequest, RegisterPortlet.DEFAULT_ROLE_METADATA);
                     RegisterProcessor processor = new RegisterProcessor(username, password1, password2,
                         email,
                         firstName,
@@ -248,9 +258,8 @@ public final class RegisterProcessPortlet implements Portlet {
                         case RegisterProcessor.USERNAME_ALREADY_EXISTS_STATUS:
                             String args2[] = {username, registerUrl};
                             out.append(
-                                PortletTools.getString(bundle, "reg.login_exists", args2)
+                                PortletService.getString(bundle, "reg.login_exists", args2)
                             );
-//                            out.append(PortletTools.getStr(actionRequest.getLocale(), "reg.login_exists", args2, portletConfig));
                             args2 = null;
                             break;
                     }
@@ -270,7 +279,7 @@ public final class RegisterProcessPortlet implements Portlet {
                         return;
                     }
 
-                    RegisterProcessor.sendPassword( auth_, portalInfo.getSites().getAdminEmail(), bundle);
+                    RegisterProcessor.sendPassword( auth_, adminEmail, bundle);
                 }
             }
 

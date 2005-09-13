@@ -27,27 +27,30 @@ package org.riverock.portlet.price;
 import java.io.FileWriter;
 import java.util.ResourceBundle;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortletConfig;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.Marshaller;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.shop.ShopPageType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.OrderType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.PortletResultContent;
-
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  *
@@ -57,7 +60,7 @@ import org.exolab.castor.xml.Marshaller;
  *
  */
 public final class ShopPage implements PortletResultObject, PortletResultContent {
-    private final static Logger log = Logger.getLogger( ShopPage.class );
+    private final static Log log = LogFactory.getLog( ShopPage.class );
 
     private ShopPageType shopPage = new ShopPageType();;
     private Shop shop = null;
@@ -89,7 +92,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         if ( log.isDebugEnabled() ) {
             synchronized(syncDebug) {
                 log.debug( "Unmarshal ShopPage object" );
-                FileWriter w = new FileWriter( WebmillConfig.getWebmillDebugDir()+"portlet-shop.xml" );
+                FileWriter w = new FileWriter( SiteUtils.getTempDir()+"portlet-shop.xml" );
                 Marshaller marsh = new Marshaller( w );
                 marsh.setMarshalAsDocument( true );
                 marsh.setEncoding( "utf-8" );
@@ -111,9 +114,11 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
     public ShopPage() {
     }
 
-    public PortletResultContent getInstance( DatabaseAdapter db_ ) throws PortletException {
+    public PortletResultContent getInstance() throws PortletException {
 
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             PortletSession session = renderRequest.getPortletSession();
             OrderType order = (OrderType) session.getAttribute( ShopPortlet.ORDER_SESSION );
 
@@ -147,9 +152,9 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             shopPage.setIsProcessInvoice( shop.isProcessInvoice ? "true" : "false" );
 
 
-            shopParam.id_group = PortletTools.getLong( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, new Long(0) );
+            shopParam.id_group = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0L );
             shopParam.setServerName( renderRequest.getServerName() );
-            shopParam.id_currency = PortletTools.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP);
+            shopParam.id_currency = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP);
 
             // If current currency not defined( page requested without concrete currency),
             // we will use default currency
@@ -175,24 +180,24 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             // установка параметров для сортировки
             // sort_direct == 0 означает сортировки по возрастанию,
             // иначе сортировка по убыванию
-            shopParam.sortBy = PortletTools.getString( renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
-            shopParam.sortDirect = PortletTools.getInt( renderRequest, ShopPortlet.NAME_SHOP_SORT_DIRECT, new Integer(1)).intValue();
+            shopParam.sortBy = RequestTools.getString( renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
+            shopParam.sortDirect = PortletService.getInt( renderRequest, ShopPortlet.NAME_SHOP_SORT_DIRECT, 1);
 
             PortletURL itemPortletURL = renderResponse.createRenderURL();
-            itemPortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );
+            itemPortletURL.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );
             itemPortletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
             itemPortletURL.setParameters( shopParam.currencyURL );
             itemPortletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
             itemPortletURL.setParameter( ShopPortlet.NAME_ID_CURRENCY_SHOP, shopParam.id_currency.toString() );
 
-//            sortItemUrl = PortletTools.url(Constants.CTX_TYPE_SHOP, shopParam.nameTemplate)+'&'+
+//            sortItemUrl = PortletService.url(Constants.CTX_TYPE_SHOP, shopParam.nameTemplate)+'&'+
 //                Constants.NAME_ID_GROUP_SHOP + '=' + shopParam.id_group + '&' +
 //                shopParam.currencyURL + '&' +
 //                Constants.NAME_ID_SHOP_PARAM + '=' + shopParam.id_shop + '&' +
 //                Constants.NAME_ID_CURRENCY_SHOP + '=' + shopParam.id_currency + '&';
 
             PortletURL pricePortletURL = renderResponse.createRenderURL();
-            pricePortletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );
+            pricePortletURL.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP );
             pricePortletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, shopParam.id_group.toString() );
             pricePortletURL.setParameters( shopParam.currencyURL );
             pricePortletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
@@ -241,14 +246,18 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             log.error(es, e);
             throw new PortletException(es, e);
         }
+        finally {
+            DatabaseManager.close(db_);
+            db_ = null;
+        }
         return this;
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__, Long id) throws PortletException {
-        return getInstance( db__ );
+    public PortletResultContent getInstance(Long id) throws PortletException {
+        return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException {
-        return getInstance( db__ );
+    public PortletResultContent getInstanceByCode( String portletCode_) throws PortletException {
+        return getInstance();
     }
 }

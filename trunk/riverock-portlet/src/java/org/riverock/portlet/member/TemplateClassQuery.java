@@ -28,10 +28,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -47,7 +50,7 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
  */
 public class TemplateClassQuery extends BaseClassQuery
 {
-    private static Logger cat = Logger.getLogger( TemplateClassQuery.class );
+    private static Log cat = LogFactory.getLog( TemplateClassQuery.class );
 
     private Long idSiteCtxLangCatalog = null;
 
@@ -73,7 +76,7 @@ public class TemplateClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -81,7 +84,7 @@ public class TemplateClassQuery extends BaseClassQuery
         DatabaseAdapter db_ = null;
 
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                 "select NAME_SITE_TEMPLATE from SITE_TEMPLATE where ID_SITE_TEMPLATE = ?"
             );
@@ -107,7 +110,7 @@ public class TemplateClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -116,7 +119,7 @@ public class TemplateClassQuery extends BaseClassQuery
         List v = new ArrayList();
         DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                 "select a.ID_SITE_TEMPLATE, a.NAME_SITE_TEMPLATE "+
                 "from SITE_TEMPLATE a, SITE_CTX_LANG_CATALOG b "+

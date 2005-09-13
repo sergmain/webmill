@@ -36,10 +36,12 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.PortletTools;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import org.apache.log4j.Logger;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: Admin
@@ -50,7 +52,7 @@ import org.apache.log4j.Logger;
  */
 public final class LogoutPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( LogoutPortlet.class );
+    private final static Log log = LogFactory.getLog( LogoutPortlet.class );
     private static final int COUNT_LOOP = 3;
 
     public LogoutPortlet() {
@@ -79,7 +81,7 @@ public final class LogoutPortlet implements Portlet {
                 for (Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
 
                     String param = (String)e.nextElement();
-                    log.debug("parameter "+ param+" value "+PortletTools.getString(actionRequest, param) );
+                    log.debug("parameter "+ param+" value "+RequestTools.getString(actionRequest, param) );
                 }
             }
 
@@ -95,7 +97,7 @@ public final class LogoutPortlet implements Portlet {
                         if (log.isDebugEnabled())
                             log.debug("Attribute: "+name);
 
-                        PortletTools.immediateRemoveAttribute( session, name );
+                        PortletService.immediateRemoveAttribute( session, name );
                     }
                 }
                 catch( ConcurrentModificationException e ) {
@@ -107,9 +109,9 @@ public final class LogoutPortlet implements Portlet {
             session.invalidate();
 
             if (log.isDebugEnabled())
-                log.debug("url to redir:  "+actionResponse.encodeURL( PortletTools.ctx( actionRequest ) ) );
+                log.debug("url to redir:  "+actionResponse.encodeURL( PortletService.ctx( actionRequest ) ) );
 
-            actionResponse.sendRedirect( PortletTools.url(Constants.CTX_TYPE_INDEX, actionRequest, actionResponse ) );
+            actionResponse.sendRedirect( PortletService.url(ContainerConstants.CTX_TYPE_INDEX, actionRequest, actionResponse, "" ) );
             return;
 
         }

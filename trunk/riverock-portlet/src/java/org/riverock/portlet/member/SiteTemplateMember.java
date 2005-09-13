@@ -43,16 +43,17 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.schema.site.SiteTemplate;
 import org.riverock.sql.cache.SqlStatement;
+import org.riverock.webmill.container.schema.site.SiteTemplate;
 
-import org.apache.log4j.Logger;
+
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public class SiteTemplateMember
-{
-    private static Logger log = Logger.getLogger( SiteTemplateMember.class );
+public class SiteTemplateMember {
+    private static Log log = LogFactory.getLog( SiteTemplateMember.class );
 
     private static CacheFactory cache = new CacheFactory( SiteTemplateMember.class.getName() );
 
@@ -67,10 +68,8 @@ public class SiteTemplateMember
     {
     }
 
-    public static SiteTemplateMember getInstance(DatabaseAdapter db__, long id__)
-            throws Exception
-    {
-        return getInstance(db__, new Long(id__) );
+    public static SiteTemplateMember getInstance(DatabaseAdapter db__, long id__) throws Exception {
+        return getInstance(db__, id__ );
     }
 
     public static SiteTemplateMember getInstance(DatabaseAdapter db__, Long id__)
@@ -162,10 +161,9 @@ public class SiteTemplateMember
         {
             Object[] obj = memberTemplate.entrySet() .toArray();
 
-            for (int i = 0; i < obj.length; i++)
-            {
-                Map.Entry entry = (Map.Entry) obj[i];
-                log.debug("hashmap key - "+entry.getKey()+" value "+entry.getValue());
+            for( final Object newVar : obj ) {
+                Map.Entry entry = ( Map.Entry ) newVar;
+                log.debug( "hashmap key - " + entry.getKey() + " value " + entry.getValue() );
             }
         }
     }

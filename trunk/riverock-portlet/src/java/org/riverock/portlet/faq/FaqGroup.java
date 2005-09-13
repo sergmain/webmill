@@ -30,6 +30,9 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -39,8 +42,6 @@ import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.cache.impl.CacheException;
 
-import org.apache.log4j.Logger;
-
 /**
  * Author: Serg Malyukov
  * Date: Aug 24, 2002
@@ -49,7 +50,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public class FaqGroup implements PortletGetList {
-    private static Logger log = Logger.getLogger(FaqGroup.class);
+    private static Log log = LogFactory.getLog(FaqGroup.class);
 
     static String sql_ = null;
     static {
@@ -122,7 +123,7 @@ public class FaqGroup implements PortletGetList {
 
     public static FaqGroup getInstance(DatabaseAdapter db__, long id__)
         throws Exception {
-        return getInstance(db__, new Long(id__));
+        return getInstance(db__, id__);
     }
 
     public static FaqGroup getInstance(DatabaseAdapter db__, Long id__)

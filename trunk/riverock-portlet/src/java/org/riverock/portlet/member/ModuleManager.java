@@ -27,88 +27,96 @@ package org.riverock.portlet.member;
 import java.io.File;
 import java.io.FileFilter;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.config.ConfigException;
-import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.main.CacheDirectory;
 import org.riverock.generic.main.CacheFile;
 import org.riverock.generic.main.ExtensionFileFilter;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.schema.member.ContentType;
 import org.riverock.portlet.schema.member.ModuleType;
 import org.riverock.portlet.schema.member.QueryAreaType;
 import org.riverock.portlet.schema.member.SqlCacheType;
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-public final class ModuleManager
-{
-    private final static Logger log = Logger.getLogger( ModuleManager.class );
+public final class ModuleManager {
+    private final static Log log = LogFactory.getLog( ModuleManager.class );
 
-    private final static FileFilter memberFilter = new ExtensionFileFilter(".xml");
+    private final static FileFilter memberFilter = new ExtensionFileFilter( ".xml" );
 
-    private static CacheDirectory mainDir = null;
-    private static CacheDirectory userDir = null;
+    private CacheDirectory mainDir = null;
+    private CacheDirectory userDir = null;
 
-    private static MemberFile mainMemberFile[] = null;
-    private static MemberFile userMemberFile[] = null;
+    private MemberFile mainMemberFile[] = null;
+    private MemberFile userMemberFile[] = null;
 
-    private static boolean isUserDirectoryExists = true;
-    public static final String MILL_MEMBER_DIR    = "xml";
+    private boolean isUserDirectoryExists = true;
+    private final String MILL_MEMBER_DIR = "xml";
+    private String rootDir = null;
 
-    public static MemberFile[] getMemberFileArray()
-    {
+    private static ModuleManager moduleManager = null;
+
+    public static ModuleManager getInstance(String rootDir) {
+        if (moduleManager==null) {
+            moduleManager = new ModuleManager(rootDir);
+        }
+        return moduleManager;
+    }
+
+    private ModuleManager(String rootDir) {
+        this.rootDir = rootDir;
+    }
+
+    private void destroy() {
+        mainDir = null;
+        userDir = null;
+        mainMemberFile = null;
+        userMemberFile = null;
+    }
+
+    public MemberFile[] getMemberFileArray() {
         MemberFile[] temp = new MemberFile[getCountFile()];
 
         int idx = 0;
-        if (mainMemberFile!=null)
-        {
-            for (int i=0; i<mainMemberFile.length; i++)
-            {
-                if (mainMemberFile[i]!= null)
-                    temp[idx++] = mainMemberFile[i];
+        if( mainMemberFile != null ) {
+            for( final MemberFile newVar : mainMemberFile ) {
+                if( newVar != null )
+                    temp[idx++] = newVar;
             }
         }
-        if (userMemberFile!=null)
-        {
-            for (int i=0; i<userMemberFile.length; i++)
-            {
-                if (userMemberFile[i]!= null)
-                    temp[idx++] = userMemberFile[i];
+        if( userMemberFile != null ) {
+            for( final MemberFile newVar : userMemberFile ) {
+                if( newVar != null )
+                    temp[idx++] = newVar;
             }
         }
 
         return temp;
     }
 
-    public static int getCountFile()
-    {
+    public int getCountFile() {
         return
-            (mainMemberFile==null?0:mainMemberFile.length)+
-            (userMemberFile==null?0:userMemberFile.length);
+            ( mainMemberFile == null ? 0 : mainMemberFile.length ) +
+            ( userMemberFile == null ? 0 : userMemberFile.length );
     }
 
-    public static int getCountModule()
-    {
+    public int getCountModule() {
         int count = 0;
-        if (mainMemberFile!=null)
-        {
-            for (int i=0; i<mainMemberFile.length; i++)
-            {
-                if (mainMemberFile[i]!=null)
-                    count += mainMemberFile[i].getMemberModuleCount();
+        if( mainMemberFile != null ) {
+            for( final MemberFile newVar : mainMemberFile ) {
+                if( newVar != null )
+                    count += newVar.getMemberModuleCount();
             }
         }
-        if (userMemberFile!=null)
-        {
-            for (int i=0; i<userMemberFile.length; i++)
-            {
-                if (userMemberFile[i]!=null)
-                    count += userMemberFile[i].getMemberModuleCount();
+        if( userMemberFile != null ) {
+            for( final MemberFile newVar : userMemberFile ) {
+                if( newVar != null )
+                    count += newVar.getMemberModuleCount();
             }
         }
 
@@ -116,27 +124,23 @@ public final class ModuleManager
     }
 
 
-    public static ContentType getContent(String moduleName, int actionType)
-            throws Exception
-    {
-        ModuleType mod = getModule(moduleName);
-        if (mod == null)
+    public ContentType getContent( String moduleName, int actionType ) throws Exception {
+        ModuleType mod = getModule( moduleName );
+        if( mod == null )
             return null;
 
-        for (int i = 0; i < mod.getContentCount(); i++)
-        {
-            ContentType cnt = mod.getContent(i);
-            if (cnt.getAction().getType() == actionType)
+        for( int i = 0; i < mod.getContentCount(); i++ ) {
+            ContentType cnt = mod.getContent( i );
+            if( cnt.getAction().getType() == actionType )
                 return cnt;
         }
         return null;
     }
 
-    private static String getCustomDir()
-        throws ConfigException
-    {
+    private String getCustomDir()
+        throws ConfigException {
         String dir = null;
-        dir = WebmillConfig.getCustomMemberDir();
+//        dir = WebmillConfig.getCustomMemberDir();
 /*
         try {
             InitialContext ic = new InitialContext();
@@ -154,132 +158,99 @@ public final class ModuleManager
     }
 
     public static synchronized void reinit() {
-        mainDir = null;
-        userDir = null;
-        mainMemberFile = null;
-        userMemberFile = null;
+        moduleManager.destroy();
+        moduleManager = null;
     }
 
-    public static void init()
-        throws Exception
-    {
-        if (mainDir==null)
-            mainDir = new CacheDirectory(
-                PropertiesProvider.getConfigPath() + File.separator + MILL_MEMBER_DIR,
-                memberFilter
-            );
+    public void init() throws Exception {
+        if( mainDir == null )
+            mainDir = new CacheDirectory( rootDir + File.separator + MILL_MEMBER_DIR,
+                memberFilter );
 
-        if (mainMemberFile == null || !mainDir.isUseCache())
-        {
-            if (mainDir.isNeedReload())
-                mainDir = new CacheDirectory(
-                    PropertiesProvider.getConfigPath() + File.separator + MILL_MEMBER_DIR,
-                    memberFilter
-                );
+        if( mainMemberFile == null || !mainDir.isUseCache() ) {
+            if( mainDir.isNeedReload() )
+                mainDir = new CacheDirectory( rootDir + File.separator + MILL_MEMBER_DIR,
+                    memberFilter );
 
-            if (log.isDebugEnabled())
-                log.debug("#2.001 read list file");
+            if( log.isDebugEnabled() )
+                log.debug( "#2.001 read list file" );
 
             mainDir.processDirectory();
 
-            if (log.isDebugEnabled())
-                log.debug("#2.003 array of files - " + mainDir.getFileArray());
+            if( log.isDebugEnabled() )
+                log.debug( "#2.003 array of files - " + mainDir.getFileArray() );
 
             CacheFile cacheFile[] = mainDir.getFileArray();
             mainMemberFile = null;
             mainMemberFile = new MemberFile[cacheFile.length];
-            for (int i=0; i<mainDir.getFileArray().length; i++)
-            {
-                mainMemberFile[i] = new MemberFile( cacheFile[i].getFile());
+            for( int i = 0; i < mainDir.getFileArray().length; i++ ) {
+                mainMemberFile[i] = new MemberFile( cacheFile[i].getFile() );
             }
         }
         // init Custom member module list
-        if (isUserDirectoryExists)
-        {
-            if (userDir==null)
-            {
+        if( isUserDirectoryExists ) {
+            if( userDir == null ) {
                 String customMemberDir = getCustomDir();
-                if (customMemberDir!=null && customMemberDir.length()!=0)
-                {
-//                    try
-                    {
-                        userDir = new CacheDirectory(
-                            customMemberDir,
-                            memberFilter,
-                            1000*30 // сканировать директорий каждые 30 секунд
-                        );
-                    }
-//                    catch( FileNotFoundException e )
-//                    {
-//                        isUserDirectoryExists = false;
-//                        return;
-//                    }
+                if( customMemberDir != null && customMemberDir.length() != 0 ) {
+                    userDir = new CacheDirectory( customMemberDir,
+                        memberFilter,
+                        1000 * 30 // scan every 30 seconds
+                    );
                 }
                 else
                     return;
             }
 
-            if (userMemberFile == null || !userDir.isUseCache())
-            {
-                if (userDir.isNeedReload())
-                {
+            if( userMemberFile == null || !userDir.isUseCache() ) {
+                if( userDir.isNeedReload() ) {
                     String customMemberDir = getCustomDir();
-                    if (customMemberDir!=null && customMemberDir.length()!=0)
-                    {
-                        userDir = new CacheDirectory(
-                            customMemberDir,
+                    if( customMemberDir != null && customMemberDir.length() != 0 ) {
+                        userDir = new CacheDirectory( customMemberDir,
                             memberFilter,
-                            1000*30 // сканировать директорий каждые 30 секунд
+                            1000 * 30 // scan every 30 seconds
                         );
                     }
                 }
 
-                if (log.isDebugEnabled())
-                    log.debug("#2.001 read list file");
+                if( log.isDebugEnabled() )
+                    log.debug( "#2.001 read list file" );
 
                 userDir.processDirectory();
 
-                if (log.isDebugEnabled())
-                    log.debug("#2.003 array of files - " + userDir.getFileArray());
+                if( log.isDebugEnabled() )
+                    log.debug( "#2.003 array of files - " + userDir.getFileArray() );
 
                 CacheFile cacheFile[] = userDir.getFileArray();
                 userMemberFile = null;
                 userMemberFile = new MemberFile[cacheFile.length];
-                for (int i=0; i<userDir.getFileArray().length; i++)
-                {
-                    userMemberFile[i] = new MemberFile( cacheFile[i].getFile());
+                for( int i = 0; i < userDir.getFileArray().length; i++ ) {
+                    userMemberFile[i] = new MemberFile( cacheFile[i].getFile() );
                 }
             }
         }
     }
 
-    public static ModuleType getModule(String moduleName )
-            throws Exception
-    {
+    public ModuleType getModule( String moduleName )
+        throws Exception {
         init();
-        for (int k=0; k < mainMemberFile.length; k++)
-        {
-            if (mainMemberFile[k]==null)
+        for( final MemberFile newVar : mainMemberFile ) {
+            if( newVar == null )
                 continue;
 
-            MemberFile mf = mainMemberFile[k];
-            ModuleType mod = mf.getModule(moduleName);
-            if (mod != null)
-            {
-                if (log.isDebugEnabled())
-                    log.debug("Module '" + moduleName + "' is found in main directory");
+            MemberFile mf = newVar;
+            ModuleType mod = mf.getModule( moduleName );
+            if( mod != null ) {
+                if( log.isDebugEnabled() )
+                    log.debug( "Module '" + moduleName + "' is found in main directory" );
 
-                for (int i=0; i<mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
-                    if (qa.getSqlCache()==null)
+                    if( qa.getSqlCache() == null )
                         qa.setSqlCache( new SqlCacheType() );
 
-                    if (Boolean.FALSE.equals(qa.getSqlCache().getIsInit()) )
-                    {
-                        switch (content.getAction().getType())
-                        {
+                    if( Boolean.FALSE.equals( qa.getSqlCache().getIsInit() ) ) {
+                        switch( content.getAction().getType() ) {
                             case ContentTypeActionType.INDEX_TYPE:
                                 break;
                             case ContentTypeActionType.INSERT_TYPE:
@@ -289,7 +260,7 @@ public final class ModuleManager
                             case ContentTypeActionType.DELETE_TYPE:
                                 break;
                             default:
-                                log.error("unknown type of content - "+content.getAction().toString());
+                                log.error( "unknown type of content - " + content.getAction().toString() );
                         }
                     }
                 }
@@ -297,30 +268,27 @@ public final class ModuleManager
             }
         }
 
-        if (log.isDebugEnabled())
-            log.debug("Module '" + moduleName + "' in main directory not found");
+        if( log.isDebugEnabled() )
+            log.debug( "Module '" + moduleName + "' in main directory not found" );
 
-        if (userMemberFile!=null)
-        {
-            for (int k=0; k < userMemberFile.length; k++)
-            {
-                if (userMemberFile[k]==null)
+        if( userMemberFile != null ) {
+            for( final MemberFile newVar : userMemberFile ) {
+                if( newVar == null )
                     continue;
 
-                MemberFile mf = userMemberFile[k];
+                MemberFile mf = newVar;
                 ModuleType mod = mf.getModule( moduleName );
-                if (mod != null)
-                {
-                    if (log.isDebugEnabled())
-                        log.debug("Module '" + moduleName + "' is found in custom directory");
+                if( mod != null ) {
+                    if( log.isDebugEnabled() )
+                        log.debug( "Module '" + moduleName + "' is found in custom directory" );
 
                     return mod;
                 }
             }
         }
 
-        if (log.isDebugEnabled())
-            log.debug("Module '" + moduleName + "' not found");
+        if( log.isDebugEnabled() )
+            log.debug( "Module '" + moduleName + "' not found" );
 
         return null;
     }

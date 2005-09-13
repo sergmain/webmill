@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -12,8 +15,6 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.portlet.member.ClassQueryItemImpl;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
-
-import org.apache.log4j.Logger;
 
 /**
  * User: SergeMaslyukov
@@ -25,7 +26,7 @@ import org.apache.log4j.Logger;
  */
 public class ShopListProvider implements PortletGetList {
 
-    private static Logger log = Logger.getLogger( ShopPage.class );
+    private static Log log = LogFactory.getLog( ShopPage.class );
 
     public List getList( Long idSiteCtxLangCatalog, Long idContext ) {
 
@@ -38,7 +39,7 @@ public class ShopListProvider implements PortletGetList {
 
         List v = new ArrayList();
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( 
                 "SELECT b.ID_SHOP, b.CODE_SHOP, b.NAME_SHOP " +
                 "FROM site_ctx_lang_catalog a, PRICE_SHOP_TABLE b, site_support_language c " +

@@ -28,10 +28,13 @@ import java.io.PrintStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.common.tools.RsetTools;
 
-import org.apache.log4j.Logger;
+
 
 /**
  *
@@ -39,7 +42,7 @@ import org.apache.log4j.Logger;
  *
  */
 public final class StorageOrderItem {
-    private final static Logger log = Logger.getLogger(StorageOrderItem.class);
+    private final static Log log = LogFactory.getLog(StorageOrderItem.class);
     Long itemID;
     long quantity;
 
@@ -47,7 +50,7 @@ public final class StorageOrderItem {
             throws PriceException
     {
         PreparedStatement st = null;
-        boolean retFlag = false;
+//        boolean retFlag = false;
         try
         {
             st = db_.prepareStatement(
@@ -146,7 +149,7 @@ public final class StorageOrderItem {
 
             if (rs.next())
             {
-                Long quant = RsetTools.getLong(rs, "quantity", new Long(0) );
+                Long quant = RsetTools.getLong(rs, "quantity", 0l );
                 Long idPK = RsetTools.getLong(rs, "ID_PRICE_STORAGE_ORDER_ITEMS");
 
                 if (rs != null)
@@ -171,7 +174,7 @@ public final class StorageOrderItem {
                     {
                     }
                 }
-                if (quant.longValue() != quantity)
+                if (quant != quantity)
                 {
                     update(db_, idPK);
                     retFlag = true;

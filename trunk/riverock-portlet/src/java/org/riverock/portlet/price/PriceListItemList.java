@@ -34,24 +34,27 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.schema.portlet.shop.ItemListType;
 import org.riverock.portlet.schema.portlet.shop.PriceFieldNameType;
 import org.riverock.portlet.schema.portlet.shop.PriceItemType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.OrderType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
 
-import org.apache.log4j.Logger;
+
 
 
 /**
@@ -63,7 +66,7 @@ import org.apache.log4j.Logger;
  */
 public final class PriceListItemList
 {
-    private final static Logger log = Logger.getLogger( PriceListItemList.class );
+    private final static Log log = LogFactory.getLog( PriceListItemList.class );
 
     // dont edit return type - name must be with package
     private static org.riverock.portlet.schema.portlet.shop.HiddenParamType getHidden(String name, String value)
@@ -96,7 +99,7 @@ public final class PriceListItemList
         items.setPriceFieldName(fieldName);
         try
         {
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
             fieldName.setNameToInvoice(
                 bundle.getString("price.to_invoice")
             );
@@ -157,23 +160,23 @@ public final class PriceListItemList
 
                 CurrencyItem currencyItem =
                     (CurrencyItem) CurrencyService.getCurrencyItemByCode(
-                        CurrencyManager.getInstance(db_, portalInfo.getSites().getIdSite()).getCurrencyList(), currencyCode
+                        CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList(), currencyCode
                     );
 
                 if (log.isDebugEnabled())
                     log.debug("currencyItem "+currencyItem);
 
                 currencyItem.fillRealCurrencyData(
-                    CurrencyManager.getInstance(db_, portalInfo.getSites().getIdSite()).getCurrencyList().getStandardCurrencyList()
+                    CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList().getStandardCurrencyList()
                 );
 
                 double resultPrice = 0;
-                double rsetPrice = RsetTools.getDouble(rs,"PRICE", new Double(0)).doubleValue();
+                double rsetPrice = RsetTools.getDouble(rs,"PRICE", 0.0);
 
                 if (log.isDebugEnabled())
                     log.debug("currencyItem.getIdCurrency()"+currencyItem.getIdCurrency()+", shopParam.id_currency "+ shopParam.id_currency);
                 int precisionValue = 0;
-                if (currencyItem.getIdCurrency().equals(shopParam.id_currency) ||  shopParam.id_currency.longValue()==0 ) {
+                if (currencyItem.getIdCurrency().equals(shopParam.id_currency) ||  shopParam.id_currency==0 ) {
                     item.setItemCurrencyID( currencyItem.getIdCurrency() );
                     item.setItemNameCurrency( currencyItem.getCurrencyName() );
 
@@ -184,7 +187,7 @@ public final class PriceListItemList
                     precisionValue = getPrecisionValue( shop, shopParam.id_currency );
 
                     CustomCurrencyItemType targetCurrency =
-                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, portalInfo.getSites().getIdSite()).getCurrencyList(), shopParam.id_currency);
+                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList(), shopParam.id_currency);
 
                     if (log.isDebugEnabled()) {
                         log.debug("targetCurrency "+targetCurrency);
@@ -196,7 +199,7 @@ public final class PriceListItemList
                     if (log.isDebugEnabled()) {
                         synchronized(syncObj) {
                             try {
-                                XmlTools.writeToFile(targetCurrency, WebmillConfig.getWebmillDebugDir()+"schema-currency-default.xml");
+                                XmlTools.writeToFile(targetCurrency, SiteUtils.getTempDir()+"schema-currency-default.xml");
                             }
                             catch(Exception e) {
                                 log.error("Exception write targetCurrency to file", e);
@@ -207,7 +210,7 @@ public final class PriceListItemList
                     }
 
                     double crossCurs =
-                        currencyItem.getRealCurs().doubleValue() / targetCurrency.getRealCurs().doubleValue();
+                        currencyItem.getRealCurs() / targetCurrency.getRealCurs();
 
                     resultPrice =
                         NumberTools.truncate(rsetPrice, precisionValue) *
@@ -237,7 +240,7 @@ public final class PriceListItemList
                     item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + RsetTools.getLong(rs, "ID_MAIN")));
                     item.addHiddenParam(getHidden(ShopPortlet.NAME_ID_CURRENCY_SHOP, "" + shopParam.id_currency));
                     item.addHiddenParam(getHidden(ShopPortlet.NAME_ADD_ID_ITEM, "" + idPk));
-                    item.addHiddenParam(getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
+                    item.addHiddenParam(getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
                     item.addHiddenParam(getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam.sortBy));
                     item.addHiddenParam(getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam.sortDirect));
                 }
@@ -245,7 +248,7 @@ public final class PriceListItemList
                 if (log.isDebugEnabled()) {
                     synchronized(syncObj) {
                         try {
-                            XmlTools.writeToFile(item, WebmillConfig.getWebmillDebugDir()+"schema-currency-item.xml");
+                            XmlTools.writeToFile(item, SiteUtils.getTempDir()+"schema-currency-item.xml");
                         }
                         catch(Exception e) {
                             log.error("Exception write item to file", e);
@@ -292,7 +295,7 @@ public final class PriceListItemList
         if (prec==null)
             return 2;
 
-        return prec.getPrecision()!=null?prec.getPrecision().intValue():0;
+        return prec.getPrecision()!=null ?prec.getPrecision() :0;
     }
 
 }

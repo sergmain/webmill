@@ -44,18 +44,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.container.tools.PortletService;
 
 
-import org.riverock.webmill.portlet.PortletTools;
+
+
 
 public class ImageDescription extends HttpServlet
 {
-    private static Logger cat = Logger.getLogger(ImageDescription.class);
+    private static Log cat = LogFactory.getLog(ImageDescription.class);
 
     public ImageDescription()
     {
@@ -78,7 +83,7 @@ public class ImageDescription extends HttpServlet
             RenderRequest renderRequest = null;
             RenderResponse renderResponse= null;
 
-            ContextNavigator.setContentType(response);
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
 
             out = response.getWriter();
 
@@ -96,18 +101,18 @@ public class ImageDescription extends HttpServlet
                 {
 
                     PortletSession sess = renderRequest.getPortletSession(true);
-                    Long l = PortletTools.getLong(renderRequest, "id_main");
+                    Long l = PortletService.getLong(renderRequest, "id_main");
                     if (l==null)
                         throw new IllegalArgumentException("id_main not initialized");
 
-                    out.write("" + l.longValue());
+                    out.write("" + l);
 
                     out.write("<br>");
                     sess.setAttribute("MILL.IMAGE.ID_MAIN", l);
 
                     l = (Long) sess.getAttribute("MILL.IMAGE.ID_MAIN");
                     if (l != null)
-                        out.write("" + l.longValue());
+                        out.write("" + l);
                     else
                         out.write("is null");
 
@@ -116,7 +121,7 @@ public class ImageDescription extends HttpServlet
                     out.write("<form method=\"POST\" action=\"");
                     out.write(
 
-                            PortletTools.url("mill.image.step_file", renderRequest, renderResponse )
+                            PortletService.url("mill.image.step_file", renderRequest, renderResponse )
 
                     );
                     out.write("\">\r\n");

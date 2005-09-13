@@ -35,6 +35,9 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletConfig;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -43,19 +46,18 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.faq.FaqBlockType;
 import org.riverock.portlet.schema.portlet.faq.FaqGroupType;
 import org.riverock.portlet.schema.portlet.faq.FaqItemType;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletResultContent;
 
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 
 /**
  * $Id$
  */
 public final class FaqBlock implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Logger log = Logger.getLogger( FaqBlock.class );
+    private final static Log log = LogFactory.getLog( FaqBlock.class );
 
     private List v = null;
     private RenderRequest renderRequest = null;
@@ -79,13 +81,13 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
         super.finalize();
     }
 
-    public PortletResultContent getInstance( final DatabaseAdapter db__, final Long id ) throws PortletException {
-        return getInstance(db__);
+    public PortletResultContent getInstance( final Long id ) throws PortletException {
+        return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode( final DatabaseAdapter db__, final String portletCode_ ) throws PortletException
+    public PortletResultContent getInstanceByCode( final String portletCode_ ) throws PortletException
     {
-        return getInstance(db__);
+        return getInstance();
     }
 
     public List getFaqGroup() {
@@ -95,7 +97,7 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
     public FaqBlock() {
     }
 
-    public PortletResultContent getInstance( final DatabaseAdapter db_ )
+    public PortletResultContent getInstance()
         throws PortletException {
 
         String sql_ =
@@ -105,13 +107,14 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(sql_);
 
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
-            RsetTools.setLong(ps, 1,
-                portalInfo.getIdSupportLanguage( renderRequest.getLocale() )
-            );
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+            Long idSupportLanguageCurrent = portalInfo.getSupportLanguageId( renderRequest.getLocale() );
+            RsetTools.setLong(ps, 1, idSupportLanguageCurrent );
 
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -126,9 +129,10 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
             throw new PortletException(e.toString());
         }
         finally {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
+            db_ = null;
         }
         return this;
     }

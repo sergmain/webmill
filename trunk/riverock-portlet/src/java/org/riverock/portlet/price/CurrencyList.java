@@ -22,16 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 9, 2002
- * Time: 11:41:02 AM
- *
- * $Id$
- */
-
 package org.riverock.portlet.price;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -44,11 +38,16 @@ import org.riverock.portlet.schema.core.CashCurrencyItemType;
 import org.riverock.portlet.schema.core.CashCurrencyListType;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
 
-import org.apache.log4j.Logger;
-
+/**
+ * Author: mill
+ * Date: Dec 9, 2002
+ * Time: 11:41:02 AM
+ *
+ * $Id$
+ */
 public class CurrencyList
 {
-    private static Logger log = Logger.getLogger( CurrencyList.class );
+    private static Log log = LogFactory.getLog( CurrencyList.class );
 
     private static CacheFactory cache = new CacheFactory( CurrencyList.class.getName() );
 
@@ -137,7 +136,7 @@ public class CurrencyList
 
         StartupApplication.init();
         GenericConfig.setDefaultConnectionName( "MYSQL" );
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false );
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance();
 
         Long idSite = SiteListSite.getIdSite("me.askmore");
 

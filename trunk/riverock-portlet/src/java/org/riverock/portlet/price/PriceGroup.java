@@ -32,13 +32,17 @@ import java.util.List;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletURL;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.schema.portlet.shop.GroupItemType;
 import org.riverock.portlet.schema.portlet.shop.GroupListType;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  *
@@ -48,7 +52,7 @@ import org.riverock.portlet.schema.portlet.shop.GroupListType;
  *
  */
 public final class PriceGroup {
-    private final static Logger log = Logger.getLogger( PriceGroup.class );
+    private final static Log log = LogFactory.getLog( PriceGroup.class );
 
     public static GroupListType getInstance(DatabaseAdapter db_, ShopPageParam shopParam, RenderResponse renderResponse)
             throws PriceException
@@ -71,12 +75,12 @@ public final class PriceGroup {
             groupItem.setIdGroup( item.id_group );
 
             PortletURL portletURL = renderResponse.createRenderURL();
-            portletURL.setParameter(org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
+            portletURL.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
             portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, item.id_group.toString());
             portletURL.setParameters(shopParam.currencyURL);
             portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString());
 
-//            String url = PortletTools.url(
+//            String url = PortletService.url(
 //                Constants.CTX_TYPE_SHOP, shopParam.nameTemplate) + '&' +
 //                Constants.NAME_ID_GROUP_SHOP + '=' + item.id_group + '&' +
 //                shopParam.currencyURL + '&' +

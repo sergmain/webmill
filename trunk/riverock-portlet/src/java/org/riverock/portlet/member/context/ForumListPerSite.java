@@ -22,6 +22,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.member.context;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.portlet.member.ClassQueryItemImpl;
 
 /**
  * User: Admin
@@ -30,27 +48,9 @@
  *
  * $Id$
  */
-package org.riverock.portlet.member.context;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.member.ClassQueryItemImpl;
-import org.riverock.portlet.member.ClassQueryItemImpl;
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
-
-import org.apache.log4j.Logger;
-
 public class ForumListPerSite implements PortletGetList
 {
-    private static Logger log = Logger.getLogger( ForumListPerSite.class );
+    private static Log log = LogFactory.getLog( ForumListPerSite.class );
 
     public ForumListPerSite(){}
 
@@ -66,7 +66,7 @@ public class ForumListPerSite implements PortletGetList
 
         List v = new ArrayList();
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                     "SELECT b.ID_FORUM, b.NAME_FORUM, b.ID_SITE "+
                     "FROM site_ctx_lang_catalog a, MAIN_FORUM b, site_support_language c "+

@@ -32,7 +32,6 @@
 	<xs:annotation>
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
 	</xs:annotation>
-	<xs:import namespace="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" schemaLocation="portlet.xsd"/>
 	<xs:element name="MemberArea">
 		<xs:annotation>
 			<xs:documentation xml:lang="ru">Root элемент</xs:documentation>
@@ -70,7 +69,7 @@
 	</xs:complexType>
 	<xs:complexType name="ContentType">
 		<xs:sequence>
-			<xs:element name="security-role-ref" type="portlet:security-role-refType" maxOccurs="unbounded"/>
+			<xs:element name="security-role-ref" type="security-role-refType" maxOccurs="unbounded"/>
 			<xs:element name="Title" type="MultiLangStringType"/>
 			<xs:element name="QueryArea" type="QueryAreaType"/>
 			<xs:element name="ActionButtonName" type="MultiLangStringType" minOccurs="0"/>
@@ -99,6 +98,49 @@
 		</xs:attribute>
 		<xs:attribute name="authRole" type="xs:string" use="optional"/>
 	</xs:complexType>
+	<xs:complexType name="security-role-refType">
+		<xs:annotation>
+			<xs:documentation>
+			The security-role-ref element contains the declaration of a 
+			security role reference in the code of the web application. The 
+			declaration consists of an optional description, the security 
+			role name used in the code, and an optional link to a security 
+			role. If the security role is not specified, the Deployer must 
+			choose an appropriate security role.
+			The value of the role name element must be the String used 
+			as the parameter to the 
+			EJBContext.isCallerInRole(String roleName) method
+			or the HttpServletRequest.isUserInRole(String role) method.
+			Used in: portlet
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="description" type="descriptionType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="role-name" type="role-nameType"/>
+			<xs:element name="role-link" type="role-linkType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="descriptionType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="role-linkType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="role-nameType">
+		<xs:annotation>
+			<xs:documentation>
+			The role-nameType designates the name of a security role.
+
+			The name must conform to the lexical rules for an NMTOKEN.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:NMTOKEN"/>
+	</xs:simpleType>
 	<xs:complexType name="RelateClassType">
 		<xs:attribute name="isFullReinitCache" type="xs:boolean" use="required"/>
 		<xs:attribute name="className" type="xs:string" use="required"/>

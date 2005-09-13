@@ -31,13 +31,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.Portlet;
-import javax.portlet.PortletConfig;
 
-import org.riverock.webmill.portlet.GenericWebmillPortlet;
-import org.riverock.webmill.portlet.PortletResultObject;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
 
 /**
  * User: SergeMaslyukov
@@ -46,9 +41,6 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class RegisterPortlet extends GenericWebmillPortlet {
-
-    private final static Logger log = Logger.getLogger( RegisterPortlet.class );
-
     public static final String NAME_REGISTER_ACTION_PARAM = "mill.register.action";
     public static final String REGISTER_PROCESS_PORTLET = "mill.register_process";
     public static final String REGISTER_PORTLET = "mill.register";
@@ -68,7 +60,7 @@ public final class RegisterPortlet extends GenericWebmillPortlet {
 
     public RegisterPortlet(){}
 
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
     }
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {

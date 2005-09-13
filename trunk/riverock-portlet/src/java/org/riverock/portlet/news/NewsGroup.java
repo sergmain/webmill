@@ -35,16 +35,19 @@ import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.sql.cache.SqlStatement;
 
-import org.apache.log4j.Logger;
+
 
 import javax.portlet.PortletException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
  */
 public final class NewsGroup
 {
-    private final static Logger log = Logger.getLogger( NewsGroup.class  );
+    private final static Log log = LogFactory.getLog( NewsGroup.class  );
 
     public NewsGroupType newsGroup = new NewsGroupType();
 
@@ -68,7 +71,7 @@ public final class NewsGroup
     public static NewsGroup getInstance(DatabaseAdapter db__, long id__)
             throws Exception
     {
-        return getInstance(db__, new Long(id__) );
+        return getInstance(db__, id__ );
     }
 
     public static NewsGroup getInstance(DatabaseAdapter db__, Long id__)

@@ -22,6 +22,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.firm;
+
+import java.io.Writer;
+import java.util.ResourceBundle;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.sso.a3.AuthSession;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -30,39 +50,15 @@
  *
  * $Id$
  */
-
-package org.riverock.portlet.firm;
-
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
-import org.apache.log4j.Logger;
-import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
-
-import org.riverock.generic.tools.StringManager;
-
-
 public final class FirmAdd extends HttpServlet
 {
-    private final static Logger log = Logger.getLogger( FirmAdd.class );
+    private final static Log log = LogFactory.getLog( FirmAdd.class );
 
     public FirmAdd()
     {
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
-    {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         if (log.isDebugEnabled())
             log.debug("method is POST");
 
@@ -70,14 +66,14 @@ public final class FirmAdd extends HttpServlet
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
+            throws ServletException
     {
         Writer out = null;
         try {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-
-            ContextNavigator.setContentType(response);
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
@@ -87,14 +83,7 @@ public final class FirmAdd extends HttpServlet
                 return;
             }
 
-            StringManager sCustom = null;
-            String nameLocaleBundle = null;
-            nameLocaleBundle = "mill.firm.index";
-            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
-            // end where
-
-            String index_page = PortletTools.url("mill.firm.index", renderRequest, renderResponse );
+            String index_page = PortletService.url("mill.firm.index", renderRequest, renderResponse );
 
             if (auth_.isUserInRole("webmill.firm_insert"))
             {
@@ -102,20 +91,20 @@ public final class FirmAdd extends HttpServlet
                 out.write("\r\n");
                 out.write("<form method=\"POST\" action=\"");
                 out.write(
-                        PortletTools.url("mill.firm.commit_add_firm", renderRequest, renderResponse )
+                        PortletService.url("mill.firm.commit_add_firm", renderRequest, renderResponse )
                 );
                 out.write("\">\r\n");
                 out.write("<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"1\" bordercolor=\"#000000\">\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td class=\"head\">");
-                out.write(sCustom.getStr("add_firm.jsp.new_rec"));
+                out.write(bundle.getString("add_firm.jsp.new_rec"));
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("</table>\r\n");
                 out.write("<table width=\"100%\" border=\"1\" cellspacing=\"0\" bordercolor=\"#000000\" cellpadding=\"3\" class=\"l\">\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.full_name"));
+                out.write(bundle.getString("add_firm.jsp.full_name"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"full_name\" size=\"50\" maxlength=\"800\" value=\"\">\r\n");
@@ -123,7 +112,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.short_name"));
+                out.write(bundle.getString("add_firm.jsp.short_name"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"short_name\" size=\"50\" maxlength=\"250\" value=\"\">\r\n");
@@ -131,7 +120,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.address"));
+                out.write(bundle.getString("add_firm.jsp.address"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"address\" size=\"50\" maxlength=\"200\" value=\"\">\r\n");
@@ -139,7 +128,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.telefon_buh"));
+                out.write(bundle.getString("add_firm.jsp.telefon_buh"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"telefon_buh\" size=\"30\" maxlength=\"30\" value=\"\">\r\n");
@@ -147,7 +136,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.telefon_chief"));
+                out.write(bundle.getString("add_firm.jsp.telefon_chief"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"telefon_chief\" size=\"30\" maxlength=\"30\" value=\"\">\r\n");
@@ -155,7 +144,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.chief"));
+                out.write(bundle.getString("add_firm.jsp.chief"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"chief\" size=\"50\" maxlength=\"200\" value=\"\">\r\n");
@@ -163,7 +152,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.buh"));
+                out.write(bundle.getString("add_firm.jsp.buh"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"buh\" size=\"50\" maxlength=\"200\" value=\"\">\r\n");
@@ -171,7 +160,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.fax"));
+                out.write(bundle.getString("add_firm.jsp.fax"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"fax\" size=\"30\" maxlength=\"30\" value=\"\">\r\n");
@@ -179,7 +168,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.email"));
+                out.write(bundle.getString("add_firm.jsp.email"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"email\" size=\"50\" maxlength=\"80\" value=\"\">\r\n");
@@ -187,7 +176,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.icq"));
+                out.write(bundle.getString("add_firm.jsp.icq"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"icq\" size=\"20\" maxlength=\"20\" value=\"\">\r\n");
@@ -195,7 +184,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.short_client_info"));
+                out.write(bundle.getString("add_firm.jsp.short_client_info"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"short_client_info\" size=\"50\" maxlength=\"1500\" value=\"\">\r\n");
@@ -203,7 +192,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.url"));
+                out.write(bundle.getString("add_firm.jsp.url"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"url\" size=\"50\" maxlength=\"160\" value=\"\">\r\n");
@@ -211,7 +200,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.short_info"));
+                out.write(bundle.getString("add_firm.jsp.short_info"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"short_info\" size=\"50\" maxlength=\"2000\" value=\"\">\r\n");
@@ -221,52 +210,52 @@ public final class FirmAdd extends HttpServlet
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
                 out.write("<span style=\"color:red\">*");
                 out.write("</span>");
-                out.write(sCustom.getStr("add_firm.jsp.is_work"));
+                out.write(bundle.getString("add_firm.jsp.is_work"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_work\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\" selected>");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.is_need_recvizit"));
+                out.write(bundle.getString("add_firm.jsp.is_need_recvizit"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_need_recvizit\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.is_need_person"));
+                out.write(bundle.getString("add_firm.jsp.is_need_person"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_need_person\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.fio"));
+                out.write(bundle.getString("add_firm.jsp.fio"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<input type=\"text\" name=\"fio\" size=\"50\" maxlength=\"200\" value=\"\">\r\n");
@@ -274,15 +263,15 @@ public final class FirmAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_firm.jsp.is_search"));
+                out.write(bundle.getString("add_firm.jsp.is_search"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"is_search\">\r\n");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n");
                 out.write("</select>\r\n");
                 out.write("</td>\r\n");
@@ -290,7 +279,7 @@ public final class FirmAdd extends HttpServlet
                 out.write("</table>\r\n");
                 out.write("<br>\r\n");
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
+                out.write(bundle.getString("button.add"));
                 out.write("\">\r\n");
                 out.write("</form>\r\n");
 
@@ -301,7 +290,7 @@ public final class FirmAdd extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
+            out.write(bundle.getString("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
 

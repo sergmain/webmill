@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 12:31:59 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.image;
 
 import java.io.IOException;
@@ -47,22 +38,29 @@ import javax.portlet.RenderRequest;
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.container.tools.PortletService;
 
-
-import org.riverock.webmill.portlet.PortletTools;
-
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 12:31:59 PM
+ *
+ * $Id$
+ */
 public final class ImageList extends HttpServlet {
 
-    private final static Logger cat = Logger.getLogger( ImageList.class );
+    private final static Log cat = LogFactory.getLog( ImageList.class );
 
     public ImageList() {
     }
@@ -76,7 +74,7 @@ public final class ImageList extends HttpServlet {
     }
 
     public void doGet( HttpServletRequest request_, HttpServletResponse response )
-        throws IOException, ServletException {
+        throws IOException {
         Writer out = null;
         DatabaseAdapter db_ = null;
         try {
@@ -86,7 +84,7 @@ public final class ImageList extends HttpServlet {
             PortletConfig portletConfig = null;
             ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
 
-            ContextNavigator.setContentType( response );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
 
             out = response.getWriter();
 
@@ -96,15 +94,15 @@ public final class ImageList extends HttpServlet {
                 return;
             }
 
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
 
-            String index_page = PortletTools.url( "mill.image.index", renderRequest, renderResponse );
+            String index_page = PortletService.url( "mill.image.index", renderRequest, renderResponse );
 
             if ( auth_.isUserInRole( "webmill.upload_image" ) ) {
 
-                Long id_main_ = PortletTools.getLong( renderRequest, "id_main" );
-                long pageNum = PortletTools.getInt( renderRequest, "pageNum", new Integer( 0 ) ).intValue();
-                long countImage = PortletTools.getInt( renderRequest, "countImage", new Integer( 10 ) ).intValue();
+                Long id_main_ = PortletService.getLong( renderRequest, "id_main" );
+                long pageNum = PortletService.getInt( renderRequest, "pageNum", 0);
+                long countImage = PortletService.getInt( renderRequest, "countImage", 10 );
 
                 String sql_ =
                     "select  a.id_main, a.name_file " +
@@ -167,7 +165,7 @@ public final class ImageList extends HttpServlet {
                         out.write( "<tr>\r\n" );
                         out.write( "<td class=\"imageDirData\" width=\"100%\">\r\n" );
                         out.write( "<a href=\"" );
-                        out.write( PortletTools.url( "mill.image.change_desc", renderRequest, renderResponse ) + '&' +
+                        out.write( PortletService.url( "mill.image.change_desc", renderRequest, renderResponse ) + '&' +
                             "id=" + id_ );
                         out.write( "\">\r\n                    " );
                         out.write( RsetTools.getString( rs, "description" ) );
@@ -191,7 +189,7 @@ public final class ImageList extends HttpServlet {
                 if ( pageNum>0 ) {
                     out.write( "\r\n" );
                     out.write( "<a href=\"" );
-                    out.write( PortletTools.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
+                    out.write( PortletService.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
                         "id_main=" + id_main_ + "&pageNum=" + ( pageNum - 1 ) );
                     out.write( "\">prev" );
                     out.write( "</a>\r\n                " );
@@ -204,7 +202,7 @@ public final class ImageList extends HttpServlet {
 
                     out.write( "\r\n" );
                     out.write( "<a href=\"" );
-                    out.write( PortletTools.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
+                    out.write( PortletService.url( "mill.image.list", renderRequest, renderResponse ) + '&' +
                         "id_main=" + id_main_ + "&pageNum=" + ( pageNum + 1 ) );
                     out.write( "\">next" );
                     out.write( "</a>" );
@@ -224,7 +222,7 @@ public final class ImageList extends HttpServlet {
                 out.write( "\r\n" );
                 out.write( "</table>\r\n\r\n" );
                 out.write( "<a href=\"" );
-                out.write( PortletTools.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
+                out.write( PortletService.url( "mill.image.desc", renderRequest, renderResponse ) + '&' +
                     "id_main=" + id_main_ );
                 out.write( "\">upload file" );
                 out.write( "</a>" );
@@ -232,7 +230,6 @@ public final class ImageList extends HttpServlet {
                 out.write( "<a href=\"" );
                 out.write( response.encodeURL( "a.jsp" ) );
                 out.write( "?" );
-//                    out.write(ctxInstance.getAsURL());
                 out.write( "id_main=" );
                 out.write( "" + id_main_ );
                 out.write( "\">Browse folder with image" );

@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,25 +46,28 @@ import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.StringManager;
 import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.webmill.tools.HtmlTools;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.utils.AuthHelper;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 
 public final class BindIndex extends HttpServlet
 {
-    private final static Logger log = Logger.getLogger(BindIndex.class);
+    private final static Log log = LogFactory.getLog(BindIndex.class);
     static String AUTH_BIND_ROLE = "webmill.auth_bind";
 
     public BindIndex(){}
@@ -78,8 +82,8 @@ public final class BindIndex extends HttpServlet
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-        throws IOException, ServletException
-    {
+        throws IOException {
+
         Writer out = null;
         DatabaseAdapter db_ = null;
         PreparedStatement ps = null;
@@ -89,29 +93,22 @@ public final class BindIndex extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
 
-            ContextNavigator.setContentType(response);
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession) renderRequest.getUserPrincipal();
-            if (auth_ == null || !auth_.isUserInRole(BindIndex.AUTH_BIND_ROLE))
-            {
+            if (auth_ == null || !auth_.isUserInRole(BindIndex.AUTH_BIND_ROLE)) {
                 WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
                 return;
             }
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo(auth_);
 
-            StringManager sCustom = null;
-            String nameLocaleBundle = null;
-            nameLocaleBundle = "mill.locale.AUTH_USER";
-            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
-            // end where
-
             db_ = DatabaseAdapter.getInstance();
 
-            String index_page = PortletTools.url("mill.auth.bind", renderRequest, renderResponse );
+            String index_page = PortletService.url("mill.auth.bind", renderRequest, renderResponse );
 
 
             String sql_=null;
@@ -183,37 +180,37 @@ public final class BindIndex extends HttpServlet
 
             out.write("\r\n");
             out.write("<b>");
-            out.write(sCustom.getStr("index.jsp.title"));
+            out.write(bundle.getString("index.jsp.title"));
             out.write("</b>\r\n");
             out.write("<p>");
             out.write("<a href=\"");
-            out.write( PortletTools.url("mill.auth.add_bind", renderRequest, renderResponse ) );
+            out.write( PortletService.url("mill.auth.add_bind", renderRequest, renderResponse ) );
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
+            out.write(bundle.getString("button.add"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("<table border=\"0\" class=\"l\">\r\n");
             out.write("<tr>\r\n");
             out.write("<th class=\"memberArea\">");
-            out.write(sCustom.getStr("index.jsp.name_firm"));
+            out.write(bundle.getString("index.jsp.name_firm"));
             out.write("</th>\r\n");
             out.write("<th class=\"memberArea\">");
-            out.write(sCustom.getStr("index.jsp.fio"));
+            out.write(bundle.getString("index.jsp.fio"));
             out.write("</th>\r\n");
 
 //                    out.write("<th class=\"memberArea\">");
-//                    out.write(sCustom.getStr("index.jsp.code_proff"));
+//                    out.write(bundle.getString("index.jsp.code_proff"));
 //                    out.write("</th>\r\n");
 
             out.write("<th class=\"memberArea\">");
-            out.write(sCustom.getStr("index.jsp.user_login"));
+            out.write(bundle.getString("index.jsp.user_login"));
             out.write("</th>\r\n            ");
 
             if (authInfo.getUseCurrentFirm() == 1)
             {
                 out.write("\r\n");
                 out.write("<th class=\"memberArea\" width=\"5%\">");
-                out.write(sCustom.getStr("index.jsp.is_use_current_firm"));
+                out.write(bundle.getString("index.jsp.is_use_current_firm"));
                 out.write("</th>\r\n                ");
 
             }
@@ -223,7 +220,7 @@ public final class BindIndex extends HttpServlet
             {
                 out.write("\r\n");
                 out.write("<th class=\"memberArea\" width=\"5%\">");
-                out.write(sCustom.getStr("index.jsp.is_service"));
+                out.write(bundle.getString("index.jsp.is_service"));
                 out.write("</th>\r\n                ");
 
             }
@@ -233,13 +230,13 @@ public final class BindIndex extends HttpServlet
             {
                 out.write("\r\n");
                 out.write("<th class=\"memberArea\" width=\"5%\">");
-                out.write(sCustom.getStr("index.jsp.is_road"));
+                out.write(bundle.getString("index.jsp.is_road"));
                 out.write("</th>\r\n                ");
 
             }
             out.write("\r\n");
             out.write("<th class=\"memberArea\">");
-            out.write(sCustom.getStr("index.jsp.action"));
+            out.write(bundle.getString("index.jsp.action"));
             out.write("</th>\r\n");
             out.write("</tr>");
 
@@ -273,7 +270,7 @@ public final class BindIndex extends HttpServlet
                 {
                     out.write("\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_use_current_firm", false, bundle ));
                     out.write("</td>\r\n                    ");
 
                 }
@@ -282,7 +279,7 @@ public final class BindIndex extends HttpServlet
                 {
                     out.write("\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_service", false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_service", false, bundle ));
                     out.write("</td>\r\n                    ");
 
                 }
@@ -291,7 +288,7 @@ public final class BindIndex extends HttpServlet
                 {
                     out.write("\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_road", false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_road", false, bundle ));
                     out.write("</td>\r\n                    ");
 
                 }
@@ -302,22 +299,22 @@ public final class BindIndex extends HttpServlet
                 Long id_auth_user = RsetTools.getLong(rs, "id_auth_user");
 
                 out.write("<input type=\"button\" value=\"");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
+                out.write(bundle.getString("button.change"));
                 out.write("\" onclick=\"location.href='");
                 out.write(
 
-                    PortletTools.url("mill.auth.ch_bind", renderRequest, renderResponse ) + '&'
+                    PortletService.url("mill.auth.ch_bind", renderRequest, renderResponse ) + '&'
 
                 );
                 out.write("id_auth_user=");
                 out.write("" + id_auth_user);
                 out.write("';\">\r\n");
                 out.write("<input type=\"button\" value=\"");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.delete"));
+                out.write(bundle.getString("button.delete"));
                 out.write("\" onclick=\"location.href='");
                 out.write(
 
-                    PortletTools.url("mill.auth.del_bind", renderRequest, renderResponse ) + '&'
+                    PortletService.url("mill.auth.del_bind", renderRequest, renderResponse ) + '&'
 
                 );
                 out.write("id_auth_user=");
@@ -332,10 +329,10 @@ public final class BindIndex extends HttpServlet
             out.write("</table>\r\n");
             out.write("<p>");
             out.write("<a href=\"");
-            out.write( PortletTools.url("mill.auth.add_bind", renderRequest, renderResponse ) );
+            out.write( PortletService.url("mill.auth.add_bind", renderRequest, renderResponse ) );
             out.write("?");
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
+            out.write(bundle.getString("button.add"));
             out.write("</a>");
             out.write("</p>");
 
@@ -343,14 +340,14 @@ public final class BindIndex extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
+            out.write(bundle.getString("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("<p>");
             out.write("<a href=\"");
-            out.write(response.encodeURL(PortletTools.ctx( renderRequest )));
+            out.write(response.encodeURL(PortletService.ctx( renderRequest )));
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("page.main.4"));
+            out.write(bundle.getString("page.main.4"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("</td>\r\n");

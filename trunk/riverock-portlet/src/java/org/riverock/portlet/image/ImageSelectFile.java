@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 12:32:51 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.image;
 
 import java.io.IOException;
@@ -44,18 +35,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.RequestTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.container.tools.PortletService;
 
-
-import org.riverock.webmill.portlet.PortletTools;
-
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 12:32:51 PM
+ *
+ * $Id$
+ */
 public class ImageSelectFile extends HttpServlet
 {
-    private static Logger log = Logger.getLogger(ImageSelectFile.class);
+    private static Log log = LogFactory.getLog(ImageSelectFile.class);
 
     public ImageSelectFile()
     {
@@ -79,7 +79,7 @@ public class ImageSelectFile extends HttpServlet
             RenderRequest renderRequest = null;
             RenderResponse renderResponse= null;
 
-            ContextNavigator.setContentType(response);
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
 
             out = response.getWriter();
 
@@ -90,7 +90,7 @@ public class ImageSelectFile extends HttpServlet
                     return;
                 }
 
-                String index_page = PortletTools.url("mill.image.index", renderRequest, renderResponse );
+                String index_page = PortletService.url("mill.image.index", renderRequest, renderResponse );
 
                 if (auth_.isUserInRole("webmill.upload_image"))
                 {
@@ -103,16 +103,16 @@ public class ImageSelectFile extends HttpServlet
                         return;
                     }
 
-                    sess.setAttribute("MILL.IMAGE.DESC_IMAGE", PortletTools.getString(renderRequest, "d", "none"));
+                    sess.setAttribute("MILL.IMAGE.DESC_IMAGE", RequestTools.getString(renderRequest, "d", "none"));
 
                     out.write("\r\n            ");
-                    out.write("" + ((Long) sess.getAttribute("MILL.IMAGE.ID_MAIN")).longValue());
+                    out.write("" + ( ( Long ) sess.getAttribute( "MILL.IMAGE.ID_MAIN" ) ));
                     out.write("<br>\r\n            ");
                     out.write(((String) sess.getAttribute("MILL.IMAGE.DESC_IMAGE")));
                     out.write("<br>Выберите файл для загрузки");
                     out.write("<form method=\"post\" action=\"");
                     out.write(
-                        PortletTools.url("mill.image.upload_image", renderRequest, renderResponse )
+                        PortletService.url("mill.image.upload_image", renderRequest, renderResponse )
                     );
                     out.write("\" ENCTYPE=\"multipart/form-data\">\r\n");
                     out.write("<p>\r\n");

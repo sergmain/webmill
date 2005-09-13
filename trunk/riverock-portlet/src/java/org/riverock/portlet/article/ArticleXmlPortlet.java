@@ -26,24 +26,14 @@
 package org.riverock.portlet.article;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.Portlet;
-import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.GenericWebmillPortlet;
-import org.riverock.portlet.article.ArticleXml;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
 
 /**
  * Author: SergeMaslyukov
@@ -54,11 +44,9 @@ import org.apache.log4j.Logger;
  */
 public final class ArticleXmlPortlet extends GenericWebmillPortlet {
 
-    private final static Logger log = Logger.getLogger( ArticleXmlPortlet.class );
-
     public ArticleXmlPortlet(){}
 
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
     }
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {

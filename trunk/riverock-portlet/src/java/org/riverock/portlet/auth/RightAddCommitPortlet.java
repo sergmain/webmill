@@ -34,6 +34,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -41,9 +44,10 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
 
-import org.apache.log4j.Logger;
+
+
 
 /**
  * Author: mill
@@ -54,7 +58,7 @@ import org.apache.log4j.Logger;
  */
 public final class RightAddCommitPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( RightAddCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( RightAddCommitPortlet.class );
 
     public RightAddCommitPortlet() {
     }
@@ -89,7 +93,7 @@ public final class RightAddCommitPortlet implements Portlet {
 
             dbDyn = DatabaseAdapter.getInstance();
 
-            String rightUrl = PortletTools.url( "mill.auth.right", renderRequest, renderResponse );
+            String rightUrl = PortletService.url( "mill.auth.right", renderRequest, renderResponse );
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
             if ( authInfo.getRoot() != 1 ) {
@@ -101,7 +105,7 @@ public final class RightAddCommitPortlet implements Portlet {
             seq.setSequenceName( "seq_AUTH_RELATE_RIGHT_ARM" );
             seq.setTableName( "AUTH_RELATE_RIGHT_ARM" );
             seq.setColumnName( "ID_RELATE_RIGHT" );
-            Long id = new Long( dbDyn.getSequenceNextValue( seq ) );
+            Long id = dbDyn.getSequenceNextValue( seq );
 
             ps = dbDyn.prepareStatement( "insert into AUTH_RELATE_RIGHT_ARM (" +
                 "	ID_RELATE_RIGHT, " +
@@ -117,22 +121,22 @@ public final class RightAddCommitPortlet implements Portlet {
             );
 
             String right =
-                ( Boolean.TRUE.equals( PortletTools.getInt( renderRequest, "rs" ) ) ?"S" :"" ) +
-                ( Boolean.TRUE.equals( PortletTools.getInt( renderRequest, "ri" ) ) ?"I" :"" ) +
-                ( Boolean.TRUE.equals( PortletTools.getInt( renderRequest, "rd" ) ) ?"D" :"" ) +
-                ( Boolean.TRUE.equals( PortletTools.getInt( renderRequest, "ru" ) ) ?"U" :"" ) +
-                ( Boolean.TRUE.equals( PortletTools.getInt( renderRequest, "ra" ) ) ?"A" :"" );
+                ( Boolean.TRUE.equals( PortletService.getInt( renderRequest, "rs" ) ) ?"S" :"" ) +
+                ( Boolean.TRUE.equals( PortletService.getInt( renderRequest, "ri" ) ) ?"I" :"" ) +
+                ( Boolean.TRUE.equals( PortletService.getInt( renderRequest, "rd" ) ) ?"D" :"" ) +
+                ( Boolean.TRUE.equals( PortletService.getInt( renderRequest, "ru" ) ) ?"U" :"" ) +
+                ( Boolean.TRUE.equals( PortletService.getInt( renderRequest, "ra" ) ) ?"A" :"" );
 
 
             RsetTools.setLong( ps, 1, id );
-            RsetTools.setLong( ps, 2, PortletTools.getLong( renderRequest, "id_access_group" ) );
-            RsetTools.setLong( ps, 3, PortletTools.getLong( renderRequest, "id_object_arm" ) );
+            RsetTools.setLong( ps, 2, PortletService.getLong( renderRequest, "id_access_group" ) );
+            RsetTools.setLong( ps, 3, PortletService.getLong( renderRequest, "id_object_arm" ) );
 
             ps.setString( 4, right );
 
-            RsetTools.setLong( ps, 5, PortletTools.getLong( renderRequest, "is_road" ) );
-            RsetTools.setLong( ps, 6, PortletTools.getLong( renderRequest, "is_service" ) );
-            RsetTools.setLong( ps, 7, PortletTools.getLong( renderRequest, "is_firm" ) );
+            RsetTools.setLong( ps, 5, PortletService.getLong( renderRequest, "is_road" ) );
+            RsetTools.setLong( ps, 6, PortletService.getLong( renderRequest, "is_service" ) );
+            RsetTools.setLong( ps, 7, PortletService.getLong( renderRequest, "is_firm" ) );
 
 //                    ps.setString(8, auth_.getUserLogin());
 

@@ -8,7 +8,6 @@ import org.riverock.portlet.auth.dao.DAOFactory;
 import org.riverock.portlet.auth.dao.BindIndexDAO;
 import org.riverock.portlet.auth.bean.BindUserListBean;
 import org.riverock.portlet.main.Constants;
-import org.riverock.sso.a3.AuthSession;
 
 /**
  * @author SMaslyukov

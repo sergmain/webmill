@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.language;
 
 import java.sql.PreparedStatement;
@@ -38,13 +37,15 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.PortletTools;
-
-import org.apache.log4j.Logger;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: Admin
@@ -54,7 +55,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class SwitchLanguagePortlet implements Portlet {
-    private final static Logger log = Logger.getLogger( SwitchLanguagePortlet.class );
+    private final static Log log = LogFactory.getLog( SwitchLanguagePortlet.class );
     public final static String NAME_ID_LANGUAGE   = "mill.id_language";
 
     public SwitchLanguagePortlet() {
@@ -84,7 +85,7 @@ public final class SwitchLanguagePortlet implements Portlet {
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, idSiteLanguage);
 
@@ -118,10 +119,10 @@ public final class SwitchLanguagePortlet implements Portlet {
             if ( log.isDebugEnabled() ) {
                 for ( Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
                     String s = (String)e.nextElement();
-                    log.debug( "PortletRequest attr - "+s+", value - "+PortletTools.getString( actionRequest, s ) );
+                    log.debug( "PortletRequest attr - "+s+", value - "+RequestTools.getString( actionRequest, s ) );
                 }
             }
-            Long id_lang = PortletTools.getLong( actionRequest, NAME_ID_LANGUAGE );
+            Long id_lang = PortletService.getLong( actionRequest, NAME_ID_LANGUAGE );
 
             String s = getLanguageName( id_lang );
 
@@ -130,18 +131,18 @@ public final class SwitchLanguagePortlet implements Portlet {
 
             String newUrl = null;
             if (s == null || s.length() == 0) {
-                newUrl = actionResponse.encodeURL(PortletTools.ctx( actionRequest ));
+                newUrl = actionResponse.encodeURL(PortletService.ctx( actionRequest ));
             }
             else {
 
                 StringBuffer b = null;
 //                if (GenericConfig.getContextName() == null) {
                 if (actionRequest.getContextPath().equals("/"))
-                    b = new StringBuffer( org.riverock.webmill.main.Constants.URI_CTX_MANAGER );
+                    b = new StringBuffer( ContainerConstants.URI_CTX_MANAGER );
                 else
-                    b = new StringBuffer(actionRequest.getContextPath()).append( org.riverock.webmill.main.Constants.URI_CTX_MANAGER );
+                    b = new StringBuffer(actionRequest.getContextPath()).append( ContainerConstants.URI_CTX_MANAGER );
 
-                b.append( '?' ).append( Constants.NAME_LANG_PARAM ).append( '=' ).append( s );
+                b.append( '?' ).append( ContainerConstants.NAME_LANG_PARAM ).append( '=' ).append( s );
                 newUrl = b.toString();
             }
 

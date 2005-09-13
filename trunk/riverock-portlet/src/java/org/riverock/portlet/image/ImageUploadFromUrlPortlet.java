@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 1:31:13 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.image;
 
 import java.io.File;
@@ -49,24 +40,32 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.common.config.PropertiesProvider;
-import org.riverock.common.tools.MainTools;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.utils.DateUtils;
-import org.riverock.portlet.main.Constants;
+
+import org.riverock.portlet.shop.upload.UploadFileException;
+import org.riverock.portlet.tools.RequestTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.main.UploadFileException;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
-import org.apache.log4j.Logger;
-
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 1:31:13 PM
+ *
+ * $Id$
+ */
 public final class ImageUploadFromUrlPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( ImageUploadFromUrlPortlet.class );
+    private final static Log log = LogFactory.getLog( ImageUploadFromUrlPortlet.class );
 
     public ImageUploadFromUrlPortlet() {
     }
@@ -101,7 +100,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
                 throw new PortletSecurityException( "You have not enough right" );
             }
 
-            dbDyn = DatabaseAdapter.getInstance( true );
+            dbDyn = DatabaseAdapter.getInstance();
 
             if ( log.isDebugEnabled() )
                 log.debug( "urlString - " + renderRequest.getParameter( "url_download" ) );
@@ -125,14 +124,14 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
 
             if ( log.isDebugEnabled() )
-                log.debug( "id_main - " + PortletTools.getLong( renderRequest, "id_main" ) );
+                log.debug( "id_main - " + PortletService.getLong( renderRequest, "id_main" ) );
 
-            Long id_main = PortletTools.getLong( renderRequest, "id_main" );
+            Long id_main = PortletService.getLong( renderRequest, "id_main" );
             if ( id_main == null )
                 throw new IllegalArgumentException( "id_firm not initialized" );
 
 
-            String desc = PortletTools.getString( renderRequest, "d" );
+            String desc = RequestTools.getString( renderRequest, "d" );
 
 
             // Todo этот сиквенс просто заглушка, сейчас не работает.
@@ -141,10 +140,9 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             seq.setSequenceName( "seq_image_number_file" );
             seq.setTableName( "MAIN_FORUM_THREADS" );
             seq.setColumnName( "ID_THREAD" );
-            Long currID = new Long( dbDyn.getSequenceNextValue( seq ) );
+            Long currID = dbDyn.getSequenceNextValue( seq );
 
-            // Todo check was need PropertiesProvider.getApplicationPath(), not PropertiesProvider.getConfigPath()
-            String storage_ = PropertiesProvider.getApplicationPath() + File.separatorChar + "image";
+            String storage_ = portletConfig.getPortletContext().getRealPath("/") + File.separatorChar + "image";
             String fileName = storage_ + File.separatorChar;
 
             if ( log.isDebugEnabled() )
@@ -181,7 +179,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             is = null;
             url = null;
 
-            out.write( DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", MainTools.RUlocale() ) + "<br>" );
+            out.write( DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale() ) + "<br>" );
 
             ps = dbDyn.prepareStatement( "insert into image_dir " +
                 "( id_image_dir, ID_FIRM, is_group, id, id_main, name_file, description )" +
@@ -199,11 +197,11 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
             out.write( "Загрузка данных прошла без ошибок<br>" +
                 "Загружен файл " + newFileName + "<br>" +
-                DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", MainTools.RUlocale() ) + "<br>" +
+                DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale() ) + "<br>" +
                 "<br>" +
-                "<p><a href=\"" + PortletTools.url( "mill.image.index", renderRequest, renderResponse ) +
+                "<p><a href=\"" + PortletService.url( "mill.image.index", renderRequest, renderResponse ) +
                 "\">Загрузить данные повторно</a></p><br>" +
-                "<p><a href=\"" + PortletTools.url( Constants.CTX_TYPE_INDEX, renderRequest, renderResponse ) +
+                "<p><a href=\"" + PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse ) +
                 "\">На главную страницу</a></p>" );
 
         }

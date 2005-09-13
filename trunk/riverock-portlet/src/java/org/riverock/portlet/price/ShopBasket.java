@@ -30,11 +30,12 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.portlet.shop.CurrentBasketType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.invoice.InvoicePortlet;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
+
 
 /**
  *
@@ -44,7 +45,6 @@ import org.riverock.webmill.portlet.PortletTools;
  *
  */
 public final class ShopBasket {
-//    private static Logger log = Logger.getLogger( ShopBasket.class );
 
     public static CurrentBasketType getInstance(
         final OrderType order, final ShopPageParam shopParam,
@@ -58,21 +58,14 @@ public final class ShopBasket {
 
         basket.setCurrentBasketName( bundle.getString( "price.invoice" ) );
 
-        basket.setItemInBasket( new Integer(OrderLogic.getCountItem(order)) );
+        basket.setItemInBasket( OrderLogic.getCountItem(order) );
 
         PortletURL portletURL = renderResponse.createRenderURL();
-        portletURL.setParameter( org.riverock.webmill.main.Constants.NAME_TYPE_CONTEXT_PARAM, InvoicePortlet.CTX_TYPE_INVOICE );
-        portletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, PortletTools.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, new Integer(0) ).toString() );
+        portletURL.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, InvoicePortlet.CTX_TYPE_INVOICE );
+        portletURL.setParameter( ShopPortlet.NAME_ID_GROUP_SHOP, PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ).toString() );
         portletURL.setParameters( shopParam.currencyURL );
         portletURL.setParameter( ShopPortlet.NAME_ID_SHOP_PARAM, shopParam.id_shop.toString() );
 
-//            basket.setCurrentBasketUrl(
-//                PortletTools.url(Constants.CTX_TYPE_INVOICE) + '&' +
-//                Constants.NAME_ID_CURRENCY_SHOP + '=' +
-//                PortletTools.getInt( renderRequest, Constants.NAME_ID_CURRENCY_SHOP ) + '&' +
-//                Constants.NAME_ID_GROUP_SHOP + '=' +
-//                PortletTools.getInt( renderRequest, Constants.NAME_ID_GROUP_SHOP )
-//            );
         basket.setCurrentBasketUrl( portletURL.toString() );
         return basket;
     }
