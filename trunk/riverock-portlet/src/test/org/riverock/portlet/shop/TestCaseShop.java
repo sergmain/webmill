@@ -51,10 +51,6 @@ import org.riverock.portlet.test.cases.TestCaseInterface;
 import org.riverock.portlet.test.cases.TestCaseSiteAbstract;
 import org.riverock.portlet.test.cases.TestSite;
 import org.riverock.portlet.test.independent.TestCaseTimestamp;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.schema.site.TemplateItemType;
-import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
-import org.riverock.webmill.site.WebmillNamespace;
 
 import junit.framework.TestCase;
 import org.exolab.castor.xml.Unmarshaller;
@@ -133,13 +129,16 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
             ", valid count - " + countItems );
         testAbstract.db_.commit();
 
+/*
         byte[] bytes = XmlTools.getXml( shopListData, "Prices", WebmillNamespace.getWebmillNamespace() );
+/
 
         InputSource inSrc = new InputSource( new ByteArrayInputStream( bytes ) );
         PricesType prices = (PricesType)Unmarshaller.unmarshal( PricesType.class, inSrc );
+
         testAbstract.initRequestSession();
         ImportPriceList.process(prices, TestCaseSiteAbstract.testSite.idSite, testAbstract.db_ );
-
+*/
         testAbstract.db_.commit();
 
         PriceListListType price = GetPriceListWithIdShopList.getInstance( testAbstract.db_, TestSite.idShop ).item;
@@ -155,10 +154,10 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
         shopParam.isProcessInvoice = true;
         shopParam.idSite = TestCaseSiteAbstract.testSite.idSite;
 
-        TemplateItemType templateItem = new TemplateItemType();
-        templateItem.setType( TemplateItemTypeTypeType.PORTLET );
-        templateItem.setCode( TestSite.shopCode );
-        templateItem.setValue( "mill.shop" );
+//        TemplateItemType templateItem = new TemplateItemType();
+//        templateItem.setType( TemplateItemTypeTypeType.PORTLET );
+//        templateItem.setCode( TestSite.shopCode );
+//        templateItem.setValue( "mill.shop" );
 
         // Todo write test of data which stored in DB after import price-list
 /*
@@ -240,10 +239,12 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
             {"mill-core", "http://webmill.askmore.info/mill/xsd/mill-core.xsd"}
         };
 
+/*
         XmlTools.writeToFile( resultItem,
-            WebmillConfig.getWebmillDebugDir() + "test-site_virtual_host-item.xml",
+            SiteUtils.getTempDir() + "test-site_virtual_host-item.xml",
             "utf-8",
             null,
             ns );
+*/
     }
 }

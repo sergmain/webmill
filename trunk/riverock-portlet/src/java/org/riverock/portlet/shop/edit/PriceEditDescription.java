@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 2:41:04 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.shop.edit;
 
 import java.io.IOException;
@@ -45,249 +36,226 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.price.ShopPortlet;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.RequestTools;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.container.tools.PortletService;
 
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 2:41:04 PM
+ * <p/>
+ * $Id$
+ */
+public class PriceEditDescription extends HttpServlet {
+    private static Log log = LogFactory.getLog( PriceEditDescription.class );
 
-import org.riverock.webmill.portlet.PortletTools;
-
-
-public class PriceEditDescription extends HttpServlet
-{
-    private static Logger log = Logger.getLogger(PriceEditDescription.class);
-
-    public PriceEditDescription()
-    {
+    public PriceEditDescription() {
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
-    {
-        if (log.isDebugEnabled())
-            log.debug("method is POST");
+    public void doPost( HttpServletRequest request, HttpServletResponse response )
+        throws IOException, ServletException {
+        if( log.isDebugEnabled() )
+            log.debug( "method is POST" );
 
 
-        doGet(request, response);
+        doGet( request, response );
     }
 
-    public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
-    {
+    public void doGet( HttpServletRequest request_, HttpServletResponse response )
+        throws IOException, ServletException {
         Writer out = null;
         DatabaseAdapter dbDyn = null;
         PreparedStatement st = null;
-        try
-        {
+        try {
             RenderRequest renderRequest = null;
-            RenderResponse renderResponse= null;
+            RenderResponse renderResponse = null;
 
-            ContextNavigator.setContentType(response);
+            ContentTypeTools.setContentType( response, ContentTypeTools.CONTENT_TYPE_UTF8 );
 
             out = response.getWriter();
 
-                AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
-                if ( auth_==null )
-                {
-                    WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
+            AuthSession auth_ = ( AuthSession ) renderRequest.getUserPrincipal();
+            if( auth_ == null ) {
+                WebmillErrorPage.process( out, null, "You have not enough right to execute this operation", "/", "continue" );
+                return;
+            }
+
+            PortletSession session = renderRequest.getPortletSession();
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            String index_page = PortletService.url( "mill.price.index", renderRequest, renderResponse );
+
+            Long id_shop = null;
+            if( renderRequest.getParameter( ShopPortlet.NAME_ID_SHOP_PARAM ) != null ) {
+                id_shop = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM );
+            }
+            else {
+                Long id_ = ( Long ) session.getAttribute( ShopPortlet.ID_SHOP_SESSION );
+                if( id_ == null ) {
+                    response.sendRedirect( index_page );
                     return;
                 }
+                id_shop = id_;
+            }
 
-                PortletSession session = renderRequest.getPortletSession();
+            session.removeAttribute( ShopPortlet.ID_SHOP_SESSION );
+            session.setAttribute( ShopPortlet.ID_SHOP_SESSION, id_shop );
 
-                dbDyn = DatabaseAdapter.getInstance(true);
+            if( auth_.isUserInRole( "webmill.edit_price_list" ) ) {
 
-                    String index_page = PortletTools.url("mill.price.index", renderRequest, renderResponse );
+                Long id_item = PortletService.getLong( renderRequest, "id_item" );
+                if( id_item == null )
+                    throw new IllegalArgumentException( "id_item not initialized" );
 
-                    Long id_shop = null;
-                    if (renderRequest.getParameter(ShopPortlet.NAME_ID_SHOP_PARAM) != null)
-                    {
-                        id_shop = PortletTools.getLong(renderRequest, ShopPortlet.NAME_ID_SHOP_PARAM);
+                if( RequestTools.getString( renderRequest, "action" ).equals( "update" ) ) {
+                    dbDyn.conn.setAutoCommit( false );
+                    String sql_ =
+                        "delete from PRICE_ITEM_DESCRIPTION a " +
+                        "where exists " +
+                        " ( select null from price_list b " +
+                        "where b.id_shop = ? and b.id_item = ? and " +
+                        "a.id_item=b.id_item ) ";
+
+                    try {
+                        st = dbDyn.prepareStatement( sql_ );
+                        RsetTools.setLong( st, 1, id_shop );
+                        RsetTools.setLong( st, 2, id_item );
+                        st.executeUpdate();
                     }
-                    else
-                    {
-                        Long id_ = (Long) session.getAttribute(ShopPortlet.ID_SHOP_SESSION);
-                        if (id_ == null)
-                        {
-                            response.sendRedirect(index_page);
-                            return;
-                        }
-                        id_shop = id_;
+                    catch( Exception e0001 ) {
+                        dbDyn.rollback();
+                        out.write( "Error #1 - " + ExceptionTools.getStackTrace( e0001, 20, "<br>" ) );
+                        return;
+                    }
+                    finally {
+                        DatabaseManager.close( st );
+                        st = null;
                     }
 
-                    session.removeAttribute(ShopPortlet.ID_SHOP_SESSION);
-                    session.setAttribute(ShopPortlet.ID_SHOP_SESSION, id_shop);
 
-                    if (auth_.isUserInRole("webmill.edit_price_list"))
-                    {
+                    sql_ =
+                        "insert into PRICE_ITEM_DESCRIPTION " +
+                        "(ID_PRICE_ITEM_DESCRIPTION, ID_ITEM, TEXT)" +
+                        "(select seq_PRICE_ITEM_DESCRIPTION.nextval, ID_ITEM, ? " +
+                        " from price_list b where b.ID_SHOP = ? and b.ID_ITEM = ? )";
 
-                        Long id_item = PortletTools.getLong(renderRequest, "id_item");
-                        if (id_item==null)
-                            throw new IllegalArgumentException("id_item not initialized");
+                    try {
 
-                        if (PortletTools.getString(renderRequest, "action").equals("update"))
-                        {
-                            dbDyn.conn.setAutoCommit(false);
-                            String sql_ =
-                                    "delete from PRICE_ITEM_DESCRIPTION a " +
-                                    "where exists " +
-                                    " ( select null from price_list b " +
-                                    "where b.id_shop = ? and b.id_item = ? and " +
-                                    "a.id_item=b.id_item ) ";
+                        int idx = 0;
+                        int offset = 0;
+                        int j = 0;
 
-                            try
-                            {
-                                st = dbDyn.prepareStatement(sql_);
-                                RsetTools.setLong(st, 1, id_shop);
-                                RsetTools.setLong(st, 2, id_item);
-                                st.executeUpdate();
-                            }
-                            catch (Exception e0001)
-                            {
-                                dbDyn.rollback();
-                                out.write("Error #1 - " + ExceptionTools.getStackTrace(e0001, 20, "<br>"));
-                                return;
-                            }
-                            finally
-                            {
-                                DatabaseManager.close(st);
-                                st = null;
-                            }
+                        byte[] b = StringTools.getBytesUTF( RequestTools.getString( renderRequest, "n" ) );
+                        st = dbDyn.prepareStatement( sql_ );
+                        while( ( idx = StringTools.getStartUTF( b, 2000, offset ) ) != -1 ) {
+                            st.setString( 1, new String( b, offset, idx - offset, "utf-8" ) );
+                            RsetTools.setLong( st, 2, id_shop );
+                            RsetTools.setLong( st, 3, id_item );
+                            st.addBatch();
 
-
-                            sql_ =
-                                    "insert into PRICE_ITEM_DESCRIPTION " +
-                                    "(ID_PRICE_ITEM_DESCRIPTION, ID_ITEM, TEXT)" +
-                                    "(select seq_PRICE_ITEM_DESCRIPTION.nextval, ID_ITEM, ? " +
-                                    " from price_list b where b.ID_SHOP = ? and b.ID_ITEM = ? )";
-
-                            try
-                            {
-
-                                int idx = 0;
-                                int offset = 0;
-                                int j = 0;
-
-                                byte[] b = StringTools.getBytesUTF(PortletTools.getString(renderRequest, "n"));
-                                st = dbDyn.prepareStatement(sql_);
-                                while ((idx = StringTools.getStartUTF(b, 2000, offset)) != -1)
-                                {
-                                    st.setString(1, new String(b, offset, idx - offset, "utf-8"));
-                                    RsetTools.setLong(st, 2, id_shop);
-                                    RsetTools.setLong(st, 3, id_item);
-                                    st.addBatch();
-
-                                    offset = idx;
-                                    if (j > 10)
-                                        break;
-                                    j++;
-                                }
-
-                                int[] updateCounts = st.executeBatch();
-                                if (log.isDebugEnabled())
-                                    log.debug("Number of updated records - " + updateCounts);
-
-                                dbDyn.commit();
-                            }
-                            catch (Exception e0)
-                            {
-                                dbDyn.rollback();
-                                out.write("Error #2 - " + ExceptionTools.getStackTrace(e0, 20, "<br>"));
-//                    out.write("Error 2: "+  e0.toString() );
-                                return;
-                            }
-                            finally
-                            {
-                                dbDyn.conn.setAutoCommit(true);
-                                if (st != null)
-                                {
-                                    DatabaseManager.close(st);
-                                    st = null;
-                                }
-                            }
+                            offset = idx;
+                            if( j > 10 )
+                                break;
+                            j++;
                         }
 
-                        if (PortletTools.getString(renderRequest, "action").equals("new_image") &&
-                                renderRequest.getParameter("id_image") != null
-                        )
-                        {
-                            Long id_image = PortletTools.getLong(renderRequest, "id_image");
-                            dbDyn.conn.setAutoCommit(false);
+                        int[] updateCounts = st.executeBatch();
+                        if( log.isDebugEnabled() )
+                            log.debug( "Number of updated records - " + updateCounts );
 
-                            String sql_ =
-                                    "delete from IMAGE_PRICE_ITEMS a " +
-                                    "where exists " +
-                                    " ( select null from price_list b " +
-                                    "where b.id_shop = ? and b.id_item = ? and " +
-                                    "a.id_item=b.id_item ) ";
-
-                            try
-                            {
-                                st = dbDyn.prepareStatement(sql_);
-                                RsetTools.setLong(st, 1, id_shop);
-                                RsetTools.setLong(st, 2, id_item);
-                                st.executeUpdate();
-                            }
-                            catch (Exception e0001)
-                            {
-                                dbDyn.rollback();
-                                out.write("Error #3 - " + ExceptionTools.getStackTrace(e0001, 20, "<br>"));
-//                    out.write("Error 1: "+ e0001.getMessage() );
-                                return;
-                            }
-                            finally
-                            {
-                                DatabaseManager.close(st);
-                                st = null;
-                            }
-
-
-                            sql_ =
-                                    "insert into IMAGE_PRICE_ITEMS " +
-                                    "(id_IMAGE_PRICE_ITEMS, id_item, ID_IMAGE_DIR)" +
-                                    "(select seq_IMAGE_PRICE_ITEMS.nextval, id_item, ? " +
-                                    " from price_list b where b.id_shop = ? and b.id_item = ? )";
-
-                            try
-                            {
-
-                                st = dbDyn.prepareStatement(sql_);
-                                RsetTools.setLong(st, 1, id_image);
-                                RsetTools.setLong(st, 2, id_shop);
-                                RsetTools.setLong(st, 3, id_item);
-
-                                int updateCounts = st.executeUpdate();
-                                if (log.isDebugEnabled())
-                                    log.debug("Number of updated records - " + updateCounts);
-
-                                dbDyn.commit();
-                            }
-                            catch (Exception e0)
-                            {
-                                dbDyn.rollback();
-                                log.error( "Error insert image", e0 );
-                                out.write("Error #4 - " + ExceptionTools.getStackTrace(e0, 20, "<br>"));
-//                    out.write("Error 2: "+  e0.getMessage() );
-                                return;
-                            }
-                            finally
-                            {
-                                dbDyn.conn.setAutoCommit(true);
-                                DatabaseManager.close(st);
-                                st = null;
-                            }
+                        dbDyn.commit();
+                    }
+                    catch( Exception e0 ) {
+                        dbDyn.rollback();
+                        out.write( "Error #2 - " + ExceptionTools.getStackTrace( e0, 20, "<br>" ) );
+                        return;
+                    }
+                    finally {
+                        dbDyn.conn.setAutoCommit( true );
+                        if( st != null ) {
+                            DatabaseManager.close( st );
+                            st = null;
                         }
+                    }
+                }
 
-                        if (true)
-                            throw new Exception("Need refactoring");
+                if( RequestTools.getString( renderRequest, "action" ).equals( "new_image" ) &&
+                    renderRequest.getParameter( "id_image" ) != null
+                ) {
+                    Long id_image = PortletService.getLong( renderRequest, "id_image" );
+                    dbDyn.conn.setAutoCommit( false );
+
+                    String sql_ =
+                        "delete from IMAGE_PRICE_ITEMS a " +
+                        "where exists " +
+                        " ( select null from price_list b " +
+                        "where b.id_shop = ? and b.id_item = ? and " +
+                        "a.id_item=b.id_item ) ";
+
+                    try {
+                        st = dbDyn.prepareStatement( sql_ );
+                        RsetTools.setLong( st, 1, id_shop );
+                        RsetTools.setLong( st, 2, id_item );
+                        st.executeUpdate();
+                    }
+                    catch( Exception e0001 ) {
+                        dbDyn.rollback();
+                        out.write( "Error #3 - " + ExceptionTools.getStackTrace( e0001, 20, "<br>" ) );
+                        return;
+                    }
+                    finally {
+                        DatabaseManager.close( st );
+                        st = null;
+                    }
+
+
+                    sql_ =
+                        "insert into IMAGE_PRICE_ITEMS " +
+                        "(id_IMAGE_PRICE_ITEMS, id_item, ID_IMAGE_DIR)" +
+                        "(select seq_IMAGE_PRICE_ITEMS.nextval, id_item, ? " +
+                        " from price_list b where b.id_shop = ? and b.id_item = ? )";
+
+                    try {
+
+                        st = dbDyn.prepareStatement( sql_ );
+                        RsetTools.setLong( st, 1, id_image );
+                        RsetTools.setLong( st, 2, id_shop );
+                        RsetTools.setLong( st, 3, id_item );
+
+                        int updateCounts = st.executeUpdate();
+                        if( log.isDebugEnabled() )
+                            log.debug( "Number of updated records - " + updateCounts );
+
+                        dbDyn.commit();
+                    }
+                    catch( Exception e0 ) {
+                        dbDyn.rollback();
+                        log.error( "Error insert image", e0 );
+                        out.write( "Error #4 - " + ExceptionTools.getStackTrace( e0, 20, "<br>" ) );
+                        return;
+                    }
+                    finally {
+                        dbDyn.conn.setAutoCommit( true );
+                        DatabaseManager.close( st );
+                        st = null;
+                    }
+                }
+
+                if( true )
+                    throw new Exception( "Need refactoring" );
 
 /*
                         PriceListItemExtend item =
@@ -303,7 +271,7 @@ public class PriceEditDescription extends HttpServlet
                         out.write("<form action=\"");
                         out.write(
 
-                                PortletTools.url(renderRequest, response, ctxInstance.page, "mill.price.description")
+                                PortletService.url(renderRequest, response, ctxInstance.page, "mill.price.description")
 
                         );
                         out.write("\" method=\"POST\">\r\n");
@@ -350,7 +318,7 @@ public class PriceEditDescription extends HttpServlet
                         out.write("<form action=\"");
                         out.write(
 
-                                PortletTools.url(renderRequest, response, ctxInstance.page, "mill.price.image")
+                                PortletService.url(renderRequest, response, ctxInstance.page, "mill.price.image")
 
                         );
                         out.write("\" method=\"POST\">\r\n");
@@ -364,20 +332,16 @@ public class PriceEditDescription extends HttpServlet
                         out.write("</form>\r\n                ");
 */
 
-                    } // auth_
+            } // auth_
 
         }
-        catch (Exception e)
-        {
-            log.error(e);
-            out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
+        catch( Exception e ) {
+            log.error( e );
+            out.write( ExceptionTools.getStackTrace( e, 20, "<br>" ) );
         }
-        finally
-        {
-            DatabaseManager.close(st);
+        finally {
+            DatabaseManager.close( dbDyn, st );
             st = null;
-
-            DatabaseAdapter.close(dbDyn);
             dbDyn = null;
         }
 

@@ -23,14 +23,6 @@
  *
  */
 
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 3:15:51 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.shop.special;
 
 import java.io.IOException;
@@ -43,20 +35,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.main.Constants;
-import org.riverock.portlet.price.BasketShopSession;
 import org.riverock.portlet.price.PriceSpecialItems;
 import org.riverock.portlet.price.Shop;
 import org.riverock.portlet.price.ShopPortlet;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.schema.price.OrderType;
 
 
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 3:15:51 PM
+ *
+ * $Id$
+ */
 public class ShopSpecial extends HttpServlet
 {
-    private static Logger cat = Logger.getLogger(ShopSpecial.class);
+    private static Log cat = LogFactory.getLog(ShopSpecial.class);
 
     public ShopSpecial()
     {
@@ -78,31 +79,32 @@ public class ShopSpecial extends HttpServlet
         DatabaseAdapter db_ = null;
         try
         {
-//            CtxInstance ctxInstance =
-//                (CtxInstance)request_.getSession().getAttribute( org.riverock.webmill.main.Constants.PORTLET_REQUEST_SESSION );
             RenderRequest renderRequest = null;
 
-            ContextNavigator.setContentType(response);
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
 
             out = response.getWriter();
 
             out.write("\r\n");
-            out.write("<!-- $Id$ -->\r\n");
-            out.write("\r\n");
 
-            db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance();
 
             PortletSession session = renderRequest.getPortletSession();
 
-            BasketShopSession b = (BasketShopSession) session.getAttribute(ShopPortlet.BASKET_SHOP_SESSION);
+            OrderType b = (OrderType) session.getAttribute(ShopPortlet.ORDER_SESSION);
             if (cat.isDebugEnabled())
                 cat.debug("BasketShopSession - " + b);
 
             if (b != null)
             {
 
+                if (true) throw new IllegalStateException("not implemented");
+
                 Long currencyID = null;
-                Shop shop = Shop.getInstance(db_, b.id_shop);
+                Shop shop = null;
+// !!!!!!!
+// Этот кусок надо. Закоментарен для текущей компиляции
+//                Shop shop = Shop.getInstance(db_, b.id_shop);
 
                 String currencyForm = "<input type=\"hidden\" name=\"c\" value=\"" + currencyID + "\">";
                 String currencyURL = "&c=" + currencyID;

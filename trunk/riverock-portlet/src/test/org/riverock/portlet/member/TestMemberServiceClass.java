@@ -23,6 +23,48 @@
  *
  */
 
+package org.riverock.portlet.member;
+
+import java.sql.DatabaseMetaData;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import junit.framework.TestCase;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.config.PropertiesProvider;
+import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.MainTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.structure.DbFieldType;
+import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.startup.StartupApplication;
+import org.riverock.portlet.schema.member.ClassQueryType;
+import org.riverock.portlet.schema.member.ContentType;
+import org.riverock.portlet.schema.member.FieldsType;
+import org.riverock.portlet.schema.member.ModuleType;
+import org.riverock.portlet.schema.member.QueryAreaType;
+import org.riverock.portlet.schema.member.RelateClassType;
+import org.riverock.portlet.schema.member.RestrictType;
+import org.riverock.portlet.schema.member.TableType;
+import org.riverock.portlet.schema.member.TargetModuleType;
+import org.riverock.portlet.schema.member.types.ContentTypeActionType;
+import org.riverock.portlet.schema.member.types.FieldsTypeDbTypeType;
+import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
+import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
+import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
+import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.parser.Parser;
+
 /**
  * User: serg_main
  * Date: 29.10.2003
@@ -30,57 +72,10 @@
  * @author Serge Maslyukov
  * $Id$
  */
+public class TestMemberServiceClass extends TestCase {
+    private static Log log = LogFactory.getLog( TestMemberServiceClass.class );
 
-package org.riverock.portlet.member;
-
-import org.apache.log4j.Logger;
-import junit.framework.TestCase;
-
-import java.util.Enumeration;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.DatabaseMetaData;
-import java.sql.Types;
-
-import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbFieldType;
-import org.riverock.generic.schema.db.structure.DbViewType;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.startup.StartupServlet;
-import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
-import org.riverock.portlet.schema.member.ModuleType;
-import org.riverock.portlet.schema.member.ContentType;
-import org.riverock.portlet.schema.member.QueryAreaType;
-import org.riverock.portlet.schema.member.TableType;
-import org.riverock.portlet.schema.member.FieldsType;
-import org.riverock.portlet.schema.member.RelateClassType;
-import org.riverock.portlet.schema.member.ClassQueryType;
-import org.riverock.portlet.schema.member.TargetModuleType;
-import org.riverock.portlet.schema.member.RestrictType;
-import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
-import org.riverock.portlet.schema.member.types.ContentTypeActionType;
-import org.riverock.portlet.schema.member.types.FieldsTypeDbTypeType;
-import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
-import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
-import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
-import org.riverock.sql.parser.Parser;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.MainTools;
-import org.riverock.webmill.portlet.wrapper.RenderRequestImpl;
-
-import javax.portlet.PortletRequest;
-
-public class TestMemberServiceClass extends TestCase
-{
     private static boolean isUseAssertion = true;
-    private static Logger log = Logger.getLogger( TestMemberServiceClass.class );
-
 
     public TestMemberServiceClass(String testName)
     {
@@ -107,19 +102,16 @@ public class TestMemberServiceClass extends TestCase
             throws Exception
     {
         StartupApplication.init();
-        ModuleManager.init();
-
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
+        MemberFile[] member = moduleManager.getMemberFileArray();
         DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
 //                System.out.println("Module "+mod.getName());
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
 //                if (!"currency.currency".equals(mod.getName()))
@@ -127,59 +119,44 @@ public class TestMemberServiceClass extends TestCase
 
 //                System.out.println("Start check module "+mod.getName());
 
-                if (mod.getType()!=null && mod.getType().getType()==ModuleTypeTypeType.LOOKUP_TYPE)
+                if( mod.getType() != null && mod.getType().getType() == ModuleTypeTypeType.LOOKUP_TYPE )
                     continue;
 
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
-                    if (content.getAction().getType()==ContentTypeActionType.INSERT_TYPE)
-                    {
-                        QueryAreaType qa = content.getQueryArea();
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
+                    if( content.getAction().getType() == ContentTypeActionType.INSERT_TYPE ) {
 
-                        String sql =
-                            MemberServiceClass.buildInsertSQL(
-                                content,null,mod,db_, "remote-user", "server-name"
-                            );
+                        String sql = MemberServiceClass.buildInsertSQL( content, null, mod, db_, "remote-user", "server-name", moduleManager );
                         Throwable th = null;
                         Parser parser = null;
-                        try
-                        {
+                        try {
                             parser = Parser.getInstance( sql );
                         }
-                        catch(Throwable thr)
-                        {
+                        catch( Throwable thr ) {
                             th = thr;
                         }
-                        if (isUseAssertion)
-                            assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                        if( isUseAssertion )
+                            assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                 "module '" + mod.getName() +
-                                "', Exception while parser result SQL\n"+sql,
-                                th!=null
-                            );
-                        else
-                        {
-                            if (th!=null)
-                            System.out.println(
-                                "\nMember file '"+mf.getFile()+"'\n" +
-                                "module '" + mod.getName() +
-                                "', Exception while parser result SQL\n"+sql
-                            );
+                                "', Exception while parser result SQL\n" + sql,
+                                th != null );
+                        else {
+                            if( th != null )
+                                System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                    "module '" + mod.getName() +
+                                    "', Exception while parser result SQL\n" + sql );
                         }
-                        if (th==null)
-                        {
-                            if (isUseAssertion)
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                            "module '" + mod.getName() +
-                                            "', result SQL not 'INSERT'\n"+sql,
-                                            parser.typeStatement!=Parser.INSERT
-                                );
-                            else
-                            {
-                                if (parser.typeStatement!=Parser.INSERT)
-                                    System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                       "module '" + mod.getName() +
-                                                       "', result SQL not 'INSERT'\n"+sql);
+                        if( th == null ) {
+                            if( isUseAssertion )
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                    "module '" + mod.getName() +
+                                    "', result SQL not 'INSERT'\n" + sql,
+                                    parser.typeStatement != Parser.INSERT );
+                            else {
+                                if( parser.typeStatement != Parser.INSERT )
+                                    System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                        "module '" + mod.getName() +
+                                        "', result SQL not 'INSERT'\n" + sql );
                             }
                         }
                     }
@@ -193,6 +170,9 @@ public class TestMemberServiceClass extends TestCase
         throws Exception
     {
         StartupApplication.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
+
 //        DBconnect db_ = DBconnect.getInstance(false, "ORACLE");
 //
 //        System.out.println("Get schema of DB");
@@ -201,166 +181,139 @@ public class TestMemberServiceClass extends TestCase
 //        System.out.println("Write schema to file");
 //        XmlTools.writeToFile(schema, InitParam.getMillDebugDir()+"-validate-field.xml");
 
-        ModuleManager.init();
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
 //                System.out.println("Module "+mod.getName());
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
 //                if (!"currency.currency".equals(mod.getName()))
 //                    continue;
 
 //                System.out.println("Start check module "+mod.getName());
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
 
-                    for (int t = 0; t < qa.getTableCount(); t++)
-                    {
-                        TableType table = qa.getTable(t);
-                        DbTableType dbTable = DatabaseManager.getTableFromStructure(schema, table.getTable());
-                        if (dbTable != null)
-                        {
-                            for (int k = 0; k < qa.getFieldsCount(); k++)
-                            {
-                                FieldsType field = qa.getFields(k);
+                    for( int t = 0; t < qa.getTableCount(); t++ ) {
+                        TableType table = qa.getTable( t );
+                        DbTableType dbTable = DatabaseManager.getTableFromStructure( schema, table.getTable() );
+                        if( dbTable != null ) {
+                            for( int k = 0; k < qa.getFieldsCount(); k++ ) {
+                                FieldsType field = qa.getFields( k );
                                 DbFieldType dbField = null;
-                                for (int qq=0; qq<dbTable.getFieldsCount(); qq++)
-                                {
-                                    DbFieldType dbFieldType = dbTable.getFields(qq);
-                                    if ( dbFieldType.getName().equals(field.getName()))
-                                    {
+                                for( int qq = 0; qq < dbTable.getFieldsCount(); qq++ ) {
+                                    DbFieldType dbFieldType = dbTable.getFields( qq );
+                                    if( dbFieldType.getName().equals( field.getName() ) ) {
 
 //                                        System.out.println("field "+field.getName());
-                                        if ((content.getAction().getType()==ContentTypeActionType.CHANGE_TYPE ||
-                                            content.getAction().getType()==ContentTypeActionType.INSERT_TYPE
+                                        if( ( content.getAction().getType() == ContentTypeActionType.CHANGE_TYPE ||
+                                            content.getAction().getType() == ContentTypeActionType.INSERT_TYPE
                                             ) &&
-                                            new Integer(DatabaseMetaData.columnNoNulls).equals(dbFieldType.getNullable()) )
-                                        {
+                                            DatabaseMetaData.columnNoNulls == dbFieldType.getNullable() ) {
 
-                                            if (isUseAssertion)
-                                            {
-                                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                                    "Checked table '"+table.getTable()+"'\n" +
-                                                    "Sturctured table '"+dbTable.getName()+"'\n" +
+                                            if( isUseAssertion ) {
+                                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                                    "Checked table '" + table.getTable() + "'\n" +
+                                                    "Sturctured table '" + dbTable.getName() + "'\n" +
                                                     "module '" + mod.getName() +
                                                     "', content action '" + content.getAction().toString() +
-                                                    "' field '"+field.getName()+"' can not be null, need change IsNotNull to 'true'",
-                                                    Boolean.TRUE.equals(field.getIsShow()) &&
-                                                    Boolean.TRUE.equals(field.getIsEdit()) &&
-                                                    Boolean.FALSE.equals(field.getIsNotNull())
-                                                );
+                                                    "' field '" + field.getName() + "' can not be null, need change IsNotNull to 'true'",
+                                                    Boolean.TRUE.equals( field.getIsShow() ) &&
+                                                    Boolean.TRUE.equals( field.getIsEdit() ) &&
+                                                    Boolean.FALSE.equals( field.getIsNotNull() ) );
 
                                             }
-                                            else
-                                            {
+                                            else {
 
-                                                if (Boolean.TRUE.equals(field.getIsShow()) &&
-                                                    Boolean.TRUE.equals(field.getIsEdit()) &&
-                                                    Boolean.FALSE.equals(field.getIsNotNull())
+                                                if( Boolean.TRUE.equals( field.getIsShow() ) &&
+                                                    Boolean.TRUE.equals( field.getIsEdit() ) &&
+                                                    Boolean.FALSE.equals( field.getIsNotNull() )
                                                 )
-                                                    System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                        "Checked table '"+table.getTable()+"'\n" +
-                                                        "Sturctured table '"+dbTable.getName()+"'\n" +
+                                                    System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                        "Checked table '" + table.getTable() + "'\n" +
+                                                        "Sturctured table '" + dbTable.getName() + "'\n" +
                                                         "module '" + mod.getName() +
                                                         "', content action '" + content.getAction().toString() +
-                                                        "' field '"+field.getName()+"' can not be null, need change IsNotNull to 'true'"
-
-                                                    );
+                                                        "' field '" + field.getName() + "' can not be null, need change IsNotNull to 'true'" );
                                             }
                                         }
 
-                                        switch(dbFieldType.getJavaType().intValue())
-                                        {
+                                        final int type = dbFieldType.getJavaType();
+                                        switch( type ) {
                                             case Types.DECIMAL:
                                             case Types.NUMERIC:
                                             case Types.DOUBLE:
                                             case Types.INTEGER:
                                             case Types.REAL:
                                             case Types.TINYINT:
-                                                if (isUseAssertion)
-                                                {
-                                                    assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                                        "Checked table '"+table.getTable()+"'\n" +
-                                                        "Sturctured table '"+dbTable.getName()+"'\n" +
+                                                if( isUseAssertion ) {
+                                                    assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                                        "Checked table '" + table.getTable() + "'\n" +
+                                                        "Sturctured table '" + dbTable.getName() + "'\n" +
                                                         "module '" + mod.getName() +
                                                         "', content action '" + content.getAction().toString() +
-                                                        "' field '"+field.getName()+"' has wrong type",
-                                                        field.getDbType().getType()!=FieldsTypeDbTypeType.NUMBER_TYPE
-                                                    );
+                                                        "' field '" + field.getName() + "' has wrong type",
+                                                        field.getDbType().getType() != FieldsTypeDbTypeType.NUMBER_TYPE );
                                                 }
-                                                else
-                                                {
-                                                    if (field.getDbType().getType()!=FieldsTypeDbTypeType.NUMBER_TYPE )
-                                                        System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                            "Checked table '"+table.getTable()+"'\n" +
-                                                            "Sturctured table '"+dbTable.getName()+"'\n" +
+                                                else {
+                                                    if( field.getDbType().getType() != FieldsTypeDbTypeType.NUMBER_TYPE )
+                                                        System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                            "Checked table '" + table.getTable() + "'\n" +
+                                                            "Sturctured table '" + dbTable.getName() + "'\n" +
                                                             "module '" + mod.getName() +
                                                             "', content action '" + content.getAction().toString() +
-                                                            "' field '"+field.getName()+"' has wrong type"
-                                                        );
+                                                            "' field '" + field.getName() + "' has wrong type" );
                                                 }
                                                 break;
 
                                             case Types.VARCHAR:
                                             case Types.CHAR:
-                                                if (isUseAssertion)
-                                                {
-                                                    assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                                        "Checked table '"+table.getTable()+"'\n" +
-                                                        "Sturctured table '"+dbTable.getName()+"'\n" +
+                                                if( isUseAssertion ) {
+                                                    assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                                        "Checked table '" + table.getTable() + "'\n" +
+                                                        "Sturctured table '" + dbTable.getName() + "'\n" +
                                                         "module '" + mod.getName() +
                                                         "', content action '" + content.getAction().toString() +
-                                                        "' field '"+field.getName()+"' has wrong type",
-                                                        field.getDbType().getType()!=FieldsTypeDbTypeType.VARCHAR_TYPE
-                                                    );
+                                                        "' field '" + field.getName() + "' has wrong type",
+                                                        field.getDbType().getType() != FieldsTypeDbTypeType.VARCHAR_TYPE );
                                                 }
-                                                else
-                                                {
-                                                    if (field.getDbType().getType()!=FieldsTypeDbTypeType.VARCHAR_TYPE )
-                                                        System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                            "Checked table '"+table.getTable()+"'\n" +
-                                                            "Sturctured table '"+dbTable.getName()+"'\n" +
+                                                else {
+                                                    if( field.getDbType().getType() != FieldsTypeDbTypeType.VARCHAR_TYPE )
+                                                        System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                            "Checked table '" + table.getTable() + "'\n" +
+                                                            "Sturctured table '" + dbTable.getName() + "'\n" +
                                                             "module '" + mod.getName() +
                                                             "', content action '" + content.getAction().toString() +
-                                                            "' field '"+field.getName()+"' has wrong type"
-                                                        );
+                                                            "' field '" + field.getName() + "' has wrong type" );
                                                 }
                                                 break;
 
                                             case Types.DATE:
                                             case Types.TIME:
                                             case Types.TIMESTAMP:
-                                                if (isUseAssertion)
-                                                {
-                                                    assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                                        "Checked table '"+table.getTable()+"'\n" +
-                                                        "Sturctured table '"+dbTable.getName()+"'\n" +
+                                                if( isUseAssertion ) {
+                                                    assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                                        "Checked table '" + table.getTable() + "'\n" +
+                                                        "Sturctured table '" + dbTable.getName() + "'\n" +
                                                         "module '" + mod.getName() +
                                                         "', content action '" + content.getAction().toString() +
-                                                        "' field '"+field.getName()+"' has wrong type",
-                                                        field.getDbType().getType()!=FieldsTypeDbTypeType.DATE_TYPE
-                                                    );
+                                                        "' field '" + field.getName() + "' has wrong type",
+                                                        field.getDbType().getType() != FieldsTypeDbTypeType.DATE_TYPE );
                                                 }
-                                                else
-                                                {
-                                                    if (field.getDbType().getType()!=FieldsTypeDbTypeType.DATE_TYPE )
-                                                        System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                            "Checked table '"+table.getTable()+"'\n" +
-                                                            "Sturctured table '"+dbTable.getName()+"'\n" +
+                                                else {
+                                                    if( field.getDbType().getType() != FieldsTypeDbTypeType.DATE_TYPE )
+                                                        System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                            "Checked table '" + table.getTable() + "'\n" +
+                                                            "Sturctured table '" + dbTable.getName() + "'\n" +
                                                             "module '" + mod.getName() +
                                                             "', content action '" + content.getAction().toString() +
-                                                            "' field '"+field.getName()+"' has wrong type"
-                                                        );
+                                                            "' field '" + field.getName() + "' has wrong type" );
                                                 }
                                                 break;
                                         }
@@ -373,42 +326,36 @@ public class TestMemberServiceClass extends TestCase
 //                                byte[] fieldByte = XmlTools.getXml( field, null);
 //                                MainTools.writeToFile(InitParam.getMillDebugDir()+"bytes-structure-field.xml", fieldByte);
 
-                                if (isUseAssertion)
-                                {
-                                    assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                        "Checked table '"+table.getTable()+"'\n" +
-                                        "Sturctured table '"+dbTable.getName()+"'\n" +
+                                if( isUseAssertion ) {
+                                    assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                        "Checked table '" + table.getTable() + "'\n" +
+                                        "Sturctured table '" + dbTable.getName() + "'\n" +
                                         "module '" + mod.getName() +
                                         "', content action '" + content.getAction().toString() +
-                                        "' containt unknown field '"+field.getName()+"' ",
-                                        dbField==null
-                                    );
+                                        "' containt unknown field '" + field.getName() + "' ",
+                                        dbField == null );
                                 }
-                                else
-                                {
-                                    if (dbField==null)
-                                        System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                            "Checked table '"+table.getTable()+"'\n" +
-                                            "Sturctured table '"+dbTable.getName()+"'\n" +
+                                else {
+                                    if( dbField == null )
+                                        System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                            "Checked table '" + table.getTable() + "'\n" +
+                                            "Sturctured table '" + dbTable.getName() + "'\n" +
                                             "module '" + mod.getName() +
                                             "', content action '" + content.getAction().toString() +
-                                            "' containt unknown field '"+field.getName()+"' "
-                                        );
+                                            "' containt unknown field '" + field.getName() + "' " );
                                 }
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "' containt field 'IS_CURRENT' with wrong type '"+field.getJspType().toString()+"' ",
-                                    "IS_CURRENT".equalsIgnoreCase( field.getName()) &&
-                                    field.getJspType().getType()!=FieldsTypeJspTypeType.YES_1_NO_N_TYPE
-                                );
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                                    "' containt field 'IS_CURRENT' with wrong type '" + field.getJspType().toString() + "' ",
+                                    "IS_CURRENT".equalsIgnoreCase( field.getName() ) &&
+                                    field.getJspType().getType() != FieldsTypeJspTypeType.YES_1_NO_N_TYPE );
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "' containt field 'IS_CURRENT' with wrong type '"+field.getJspType().toString()+"' ",
-                                    field.getDbType().getType()==FieldsTypeDbTypeType.NUMBER_TYPE &&
-                                    field.getJspType().getType()==FieldsTypeJspTypeType.TEXT_TYPE
-                                );
+                                    "' containt field 'IS_CURRENT' with wrong type '" + field.getJspType().toString() + "' ",
+                                    field.getDbType().getType() == FieldsTypeDbTypeType.NUMBER_TYPE &&
+                                    field.getJspType().getType() == FieldsTypeJspTypeType.TEXT_TYPE );
                             }
                         }
                     }
@@ -423,152 +370,118 @@ public class TestMemberServiceClass extends TestCase
         StartupApplication.init();
         DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
 
-        ModuleManager.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
 //                System.out.println("Module "+mod.getName());
 
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
 //                if (!mod.getName().equals("content.copyright"))
 //                    continue;
 
                 // assumed not empty type is 'lookup'
-                if (mod.getType()!=null)
+                if( mod.getType() != null )
                     continue;
 
-                System.out.println("Start check module "+mod.getName());
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                System.out.println( "Start check module " + mod.getName() );
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
 
 //                    if (content.getAction().getDefaultPortletType()==ContentTypeActionType.INSERT_TYPE)
 //                        continue;
 
-                    if (content.getAction().getType()==ContentTypeActionType.INSERT_TYPE)
-                    {
+                    if( content.getAction().getType() == ContentTypeActionType.INSERT_TYPE ) {
                         Exception ee = null;
-                        try
-                        {
-                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "remote-user", "server-name");
-                            Parser parser = SqlStatement.parseSql(sql);
+                        try {
+                            String sql = MemberServiceClass.buildInsertSQL( content, null, mod, db_, "remote-user", "server-name", moduleManager );
+                            SqlStatement.parseSql( sql );
                         }
-                        catch(Exception exc)
-                        {
+                        catch( Exception exc ) {
                             ee = exc;
                         }
 
-                        if (ee!=null)
-                        {
-                            if (isUseAssertion)
-                            {
+                        if( ee != null ) {
+                            if( isUseAssertion ) {
 //                            System.out.println("#1.1 "+mod.getName());
 //                            System.out.println("#1.2 "+mf.getFile());
 //                            System.out.println("#1.5 "+content.getAction().toString());
-                                fail(
-                                    "\nMember file '"+mf.getFile()+"'\n" +
+                                fail( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "'\nError build insert SQL: "+(ee!=null?ee.toString():"")+"\n"+
-                                    ExceptionTools.getStackTrace(ee, 100)
-                                );
+                                    "'\nError build insert SQL: " + ( ee != null ? ee.toString() : "" ) + "\n" +
+                                    ExceptionTools.getStackTrace( ee, 100 ) );
 
                             }
-                            else
-                            {
-                                System.out.println(
-                                    "\nMember file '"+mf.getFile()+"'\n" +
+                            else {
+                                System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "'\nError build insert SQL: "+ee.toString()+"\n"+
-                                    ExceptionTools.getStackTrace(ee, 100)
-                                );
+                                    "'\nError build insert SQL: " + ee.toString() + "\n" +
+                                    ExceptionTools.getStackTrace( ee, 100 ) );
                             }
                         }
                     }
-                    else if (content.getAction().getType()==ContentTypeActionType.CHANGE_TYPE)
-                    {
+                    else if( content.getAction().getType() == ContentTypeActionType.CHANGE_TYPE ) {
                         Exception ee = null;
-                        try
-                        {
-//                            PortletRequest portletRequest = new RenderRequestImpl();
+                        try {
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name" );
-                            Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql);
+                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", moduleManager );
+                            SqlStatement.parseSql( sql );
                         }
-                        catch(Exception exc)
-                        {
+                        catch( Exception exc ) {
                             ee = exc;
                         }
-                        if (ee!=null)
-                        {
-                            if (isUseAssertion)
-                            {
-                                fail(
-                                    "\nMember file '"+mf.getFile()+"'\n" +
+                        if( ee != null ) {
+                            if( isUseAssertion ) {
+                                fail( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "'\nError build update SQL: "+(ee!=null?ee.toString():"")+"\n"+
-                                    ExceptionTools.getStackTrace(ee, 100)
-                                );
+                                    "'\nError build update SQL: " + ( ee != null ? ee.toString() : "" ) + "\n" +
+                                    ExceptionTools.getStackTrace( ee, 100 ) );
 
                             }
-                            else
-                            {
-                                System.out.println(
-                                        "\nMember file '"+mf.getFile()+"'\n" +
-                                        "module '" + mod.getName() +
-                                        "', content action '" + content.getAction().toString() +
-                                        "'\nError build update SQL "+ee.toString()+"\n"+
-                                        ExceptionTools.getStackTrace(ee, 100)
-                                );
+                            else {
+                                System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                    "module '" + mod.getName() +
+                                    "', content action '" + content.getAction().toString() +
+                                    "'\nError build update SQL " + ee.toString() + "\n" +
+                                    ExceptionTools.getStackTrace( ee, 100 ) );
                             }
                         }
                     }
-                    else if (content.getAction().getType()==ContentTypeActionType.DELETE_TYPE)
-                    {
+                    else if( content.getAction().getType() == ContentTypeActionType.DELETE_TYPE ) {
                         Exception ee = null;
-                        try
-                        {
+                        try {
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name" );
-                            Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql);
+                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", moduleManager );
+                            SqlStatement.parseSql( sql );
                         }
-                        catch(Exception exc)
-                        {
+                        catch( Exception exc ) {
                             ee = exc;
                         }
-                        if (ee!=null)
-                        {
-                            if (isUseAssertion)
-                            {
-                                fail(
-                                    "\nMember file '"+mf.getFile()+"'\n" +
+                        if( ee != null ) {
+                            if( isUseAssertion ) {
+                                fail( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "'\nError build delete SQL: "+(ee!=null?ee.toString():"")+"\n"+
-                                    ExceptionTools.getStackTrace(ee, 100)
-                                );
+                                    "'\nError build delete SQL: " + ( ee != null ? ee.toString() : "" ) + "\n" +
+                                    ExceptionTools.getStackTrace( ee, 100 ) );
 
                             }
-                            else
-                            {
-                                System.out.println(
-                                    "\nMember file '"+mf.getFile()+"'\n" +
+                            else {
+                                System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "'\nError build delete SQL: "+ee.toString()+"\n"+
-                                    ExceptionTools.getStackTrace(ee, 100)
-                                );
+                                    "'\nError build delete SQL: " + ee.toString() + "\n" +
+                                    ExceptionTools.getStackTrace( ee, 100 ) );
                             }
                         }
                     }
@@ -582,52 +495,45 @@ public class TestMemberServiceClass extends TestCase
             throws Exception
     {
         StartupApplication.init();
-        ModuleManager.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
 //                System.out.println("Module "+mod.getName());
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
 //                if (!"currency.currency".equals(mod.getName()))
 //                    continue;
 
 //                System.out.println("Start check module "+mod.getName());
-                for (int i = 0; i < mod.getRelateClassCount(); i++)
-                {
-                    RelateClassType relateClass = mod.getRelateClass(i);
+                for( int i = 0; i < mod.getRelateClassCount(); i++ ) {
+                    RelateClassType relateClass = mod.getRelateClass( i );
                     String className = relateClass.getClassName();
 
                     boolean isException = false;
                     Object obj = null;
-                    try
-                    {
-                        obj = MainTools.createCustomObject(className);
+                    try {
+                        obj = MainTools.createCustomObject( className );
                     }
-                    catch(Exception ex)
-                    {
+                    catch( Exception ex ) {
                         isException = true;
                     }
 
-                    if (isUseAssertion)
-                        assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                    if( isUseAssertion )
+                        assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                             "module '" + mod.getName() +
-                            "', RelateClass '"+className+"' not exists",
-                            isException || obj==null
-                        );
-                    else
-                    {
-                        if (isException || obj==null)
-                        System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                            "module '" + mod.getName() +
-                            "', RelateClass '"+className+"' not exists");
+                            "', RelateClass '" + className + "' not exists",
+                            isException || obj == null );
+                    else {
+                        if( isException || obj == null )
+                            System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                "module '" + mod.getName() +
+                                "', RelateClass '" + className + "' not exists" );
                     }
                 }
             }
@@ -639,6 +545,8 @@ public class TestMemberServiceClass extends TestCase
         throws Exception
     {
         StartupApplication.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 //        DBconnect db_ = DBconnect.getInstance(false, "ORACLE");
 //
 //        System.out.println("Get schema of DB");
@@ -646,114 +554,98 @@ public class TestMemberServiceClass extends TestCase
         DbSchemaType schema = getDbSchema();
 
 
-        ModuleManager.init();
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
 
-                    for (int t = 0; t < qa.getTableCount(); t++)
-                    {
-                        TableType table = qa.getTable(t);
+                    for( int t = 0; t < qa.getTableCount(); t++ ) {
+                        TableType table = qa.getTable( t );
 //                        if (!"SITE_PORTLET_FAQ".equals(table.getTable()))
 //                            continue;
 
                         DbFieldType dbFieldTemp = null;
-                        if (qa.getRestrict()!=null)
-                        {
-                            switch (qa.getRestrict().getType().getType())
-                            {
+                        if( qa.getRestrict() != null ) {
+                            switch( qa.getRestrict().getType().getType() ) {
                                 case RestrictTypeTypeType.FIRM_TYPE:
-                                    if (DatabaseManager.getTableFromStructure(schema, table.getTable())!=null)
-                                    {
-                                        dbFieldTemp = DatabaseManager.getFieldFromStructure(schema, table.getTable(), "ID_FIRM");
-                                        assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                            "Checked table '"+table.getTable()+"'\n" +
+                                    if( DatabaseManager.getTableFromStructure( schema, table.getTable() ) != null ) {
+                                        dbFieldTemp = DatabaseManager.getFieldFromStructure( schema, table.getTable(), "ID_FIRM" );
+                                        assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                            "Checked table '" + table.getTable() + "'\n" +
                                             "module '" + mod.getName() +
                                             "', content action '" + content.getAction().toString() +
                                             "' wrong restriction, field 'ID_FIRM' not in DB",
-                                            dbFieldTemp==null
-                                        );
+                                            dbFieldTemp == null );
                                     }
-                                    else
-                                    {
-                                        DbViewType dbViewTemp = DatabaseManager.getViewFromStructure(schema, table.getTable());
-                                        if ( dbViewTemp!=null)
-                                            System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                "Checked table '"+table.getTable()+"'\n" +
+                                    else {
+                                        DbViewType dbViewTemp = DatabaseManager.getViewFromStructure( schema, table.getTable() );
+                                        if( dbViewTemp != null )
+                                            System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                "Checked table '" + table.getTable() + "'\n" +
                                                 "module '" + mod.getName() +
-                                                "', content action '" + content.getAction().toString() +"'\ncheck restrict '"+qa.getRestrict().getType().toString()+"' impossible - table '"+dbViewTemp.getName()+"' type is 'view'");
+                                                "', content action '" + content.getAction().toString() + "'\ncheck restrict '" + qa.getRestrict().getType().toString() + "' impossible - table '" + dbViewTemp.getName() + "' type is 'view'" );
                                         else
-                                            System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                "Checked table '"+table.getTable()+"'\n" +
+                                            System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                "Checked table '" + table.getTable() + "'\n" +
                                                 "module '" + mod.getName() +
-                                                "', content action '" + content.getAction().toString() +"'\ncheck restrict '"+qa.getRestrict().getType().toString()+"' impossible - table '"+table.getTable()+"' not found");
+                                                "', content action '" + content.getAction().toString() + "'\ncheck restrict '" + qa.getRestrict().getType().toString() + "' impossible - table '" + table.getTable() + "' not found" );
                                     }
                                     break;
                                 case RestrictTypeTypeType.SITE_TYPE:
-                                    if (DatabaseManager.getTableFromStructure(schema, table.getTable())!=null)
-                                    {
-                                        dbFieldTemp = DatabaseManager.getFieldFromStructure(schema, table.getTable(), "ID_SITE");
-                                        assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                            "Checked table '"+table.getTable()+"'\n" +
+                                    if( DatabaseManager.getTableFromStructure( schema, table.getTable() ) != null ) {
+                                        dbFieldTemp = DatabaseManager.getFieldFromStructure( schema, table.getTable(), "ID_SITE" );
+                                        assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                            "Checked table '" + table.getTable() + "'\n" +
                                             "module '" + mod.getName() +
                                             "', content action '" + content.getAction().toString() +
                                             "' wrong restriction, field 'ID_SITE' not in DB",
-                                            dbFieldTemp==null
-                                        );
+                                            dbFieldTemp == null );
                                     }
-                                    else
-                                    {
-                                        DbViewType dbViewTemp = DatabaseManager.getViewFromStructure(schema, table.getTable());
-                                        if ( dbViewTemp!=null)
-                                            System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                "Checked table '"+table.getTable()+"'\n" +
+                                    else {
+                                        DbViewType dbViewTemp = DatabaseManager.getViewFromStructure( schema, table.getTable() );
+                                        if( dbViewTemp != null )
+                                            System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                "Checked table '" + table.getTable() + "'\n" +
                                                 "module '" + mod.getName() +
-                                                "', content action '" + content.getAction().toString() +"'\ncheck restrict '"+qa.getRestrict().getType().toString()+"' impossible - table '"+dbViewTemp.getName()+"' type is 'view'");
+                                                "', content action '" + content.getAction().toString() + "'\ncheck restrict '" + qa.getRestrict().getType().toString() + "' impossible - table '" + dbViewTemp.getName() + "' type is 'view'" );
                                         else
-                                            System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                "Checked table '"+table.getTable()+"'\n" +
+                                            System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                "Checked table '" + table.getTable() + "'\n" +
                                                 "module '" + mod.getName() +
-                                                "', content action '" + content.getAction().toString() +"'\ncheck restrict '"+qa.getRestrict().getType().toString()+"' impossible - table '"+table.getTable()+"' not found");
+                                                "', content action '" + content.getAction().toString() + "'\ncheck restrict '" + qa.getRestrict().getType().toString() + "' impossible - table '" + table.getTable() + "' not found" );
                                     }
                                     break;
                                 case RestrictTypeTypeType.USER_TYPE:
-                                    if (DatabaseManager.getTableFromStructure(schema, table.getTable())!=null)
-                                    {
-                                        dbFieldTemp = DatabaseManager.getFieldFromStructure(schema, table.getTable(), "ID_USER");
-                                        assertFalse("\nMember file '"+mf.getFile()+"'\n" +
-                                            "Checked table '"+table.getTable()+"'\n" +
+                                    if( DatabaseManager.getTableFromStructure( schema, table.getTable() ) != null ) {
+                                        dbFieldTemp = DatabaseManager.getFieldFromStructure( schema, table.getTable(), "ID_USER" );
+                                        assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
+                                            "Checked table '" + table.getTable() + "'\n" +
                                             "module '" + mod.getName() +
                                             "', content action '" + content.getAction().toString() +
                                             "' wrong restriction, field 'ID_USER' not in DB",
-                                            dbFieldTemp==null
-                                        );
+                                            dbFieldTemp == null );
                                     }
-                                    else
-                                    {
-                                        DbViewType dbViewTemp = DatabaseManager.getViewFromStructure(schema, table.getTable());
-                                        if ( dbViewTemp!=null)
-                                            System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                "Checked table '"+table.getTable()+"'\n" +
+                                    else {
+                                        DbViewType dbViewTemp = DatabaseManager.getViewFromStructure( schema, table.getTable() );
+                                        if( dbViewTemp != null )
+                                            System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                "Checked table '" + table.getTable() + "'\n" +
                                                 "module '" + mod.getName() +
-                                                "', content action '" + content.getAction().toString() +"'\ncheck restrict '"+qa.getRestrict().getType().toString()+"' impossible - table '"+dbViewTemp.getName()+"' type is 'view'");
+                                                "', content action '" + content.getAction().toString() + "'\ncheck restrict '" + qa.getRestrict().getType().toString() + "' impossible - table '" + dbViewTemp.getName() + "' type is 'view'" );
                                         else
-                                            System.out.println("\nMember file '"+mf.getFile()+"'\n" +
-                                                "Checked table '"+table.getTable()+"'\n" +
+                                            System.out.println( "\nMember file '" + mf.getFile() + "'\n" +
+                                                "Checked table '" + table.getTable() + "'\n" +
                                                 "module '" + mod.getName() +
-                                                "', content action '" + content.getAction().toString() +"'\ncheck restrict '"+qa.getRestrict().getType().toString()+"' impossible - table '"+table.getTable()+"' not found");
+                                                "', content action '" + content.getAction().toString() + "'\ncheck restrict '" + qa.getRestrict().getType().toString() + "' impossible - table '" + table.getTable() + "' not found" );
                                     }
                                     break;
                             }
@@ -770,38 +662,33 @@ public class TestMemberServiceClass extends TestCase
         throws Exception
     {
         StartupApplication.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 //        DBconnect db_ = DBconnect.getInstance(false, "ORACLE");
 //
 //        DbSchemaType schema = DbService.getDbStructure(db_ );
         DbSchemaType schema = getDbSchema();
 
-        ModuleManager.init();
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
 
-                    for (int t = 0; t < qa.getTableCount(); t++)
-                    {
-                        TableType table = qa.getTable(t);
-                        DbTableType dbTable = DatabaseManager.getTableFromStructure(schema, table.getTable());
-                        if (dbTable != null)
-                        {
-                            for (int k = 0; k < qa.getFieldsCount(); k++)
-                            {
-                                FieldsType field = qa.getFields(k);
+                    for( int t = 0; t < qa.getTableCount(); t++ ) {
+                        TableType table = qa.getTable( t );
+                        DbTableType dbTable = DatabaseManager.getTableFromStructure( schema, table.getTable() );
+                        if( dbTable != null ) {
+                            for( int k = 0; k < qa.getFieldsCount(); k++ ) {
+                                FieldsType field = qa.getFields( k );
 /*
                                 if (field.getDbType().getDefaultPortletType()==FieldsTypeDbTypeType.NUMBER_TYPE &&
                                     field.getJspType().getDefaultPortletType()==FieldsTypeJspTypeType.TEXT_TYPE)
@@ -812,13 +699,12 @@ public class TestMemberServiceClass extends TestCase
                                         "' containt field '"+field.getName()+"' with wrong type '"+field.getJspType().toString()+"' ");
                                 }
 */
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "' containt field 'IS_CURRENT' with wrong type '"+field.getJspType().toString()+"' ",
-                                    field.getDbType().getType()==FieldsTypeDbTypeType.NUMBER_TYPE &&
-                                    field.getJspType().getType()==FieldsTypeJspTypeType.TEXT_TYPE
-                                );
+                                    "' containt field 'IS_CURRENT' with wrong type '" + field.getJspType().toString() + "' ",
+                                    field.getDbType().getType() == FieldsTypeDbTypeType.NUMBER_TYPE &&
+                                    field.getJspType().getType() == FieldsTypeJspTypeType.TEXT_TYPE );
 /*
                                 if (field.getJspType().getDefaultPortletType()==FieldsTypeJspTypeType.LOOKUP_TYPE &&
                                     field.getQueryArea()==null)
@@ -837,44 +723,37 @@ public class TestMemberServiceClass extends TestCase
                                         "' field '"+field.getName()+"' has null ClassQuery element");
                                 }
 */
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "' field '"+field.getName()+"' has null QueryArea element",
-                                    field.getJspType().getType()==FieldsTypeJspTypeType.LOOKUP_TYPE &&
-                                    field.getQueryArea()==null
-                                );
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                                    "' field '" + field.getName() + "' has null QueryArea element",
+                                    field.getJspType().getType() == FieldsTypeJspTypeType.LOOKUP_TYPE &&
+                                    field.getQueryArea() == null );
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                     "module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "' field '"+field.getName()+"' has null ClassQuery element",
-                                    field.getJspType().getType()==FieldsTypeJspTypeType.LOOKUPCLASS_TYPE &&
-                                    field.getClassQuery()==null
-                                );
+                                    "' field '" + field.getName() + "' has null ClassQuery element",
+                                    field.getJspType().getType() == FieldsTypeJspTypeType.LOOKUPCLASS_TYPE &&
+                                    field.getClassQuery() == null );
 
-                                if (field.getJspType().getType()==FieldsTypeJspTypeType.LOOKUPCLASS_TYPE&&
-                                    field.getClassQuery()!=null)
-                                {
+                                if( field.getJspType().getType() == FieldsTypeJspTypeType.LOOKUPCLASS_TYPE &&
+                                    field.getClassQuery() != null ) {
 
                                     ClassQueryType cq = field.getClassQuery();
-                                    for (int kk=0; kk<cq.getParametersCount(); kk++)
-                                    {
+                                    for( int kk = 0; kk < cq.getParametersCount(); kk++ ) {
                                         boolean isExists = false;
-                                        String paramField = cq.getParameters(kk).getField();
-                                        for (int ii=0; ii<qa.getFieldsCount(); ii++)
-                                        {
-                                            if (paramField.equals(qa.getFields(ii).getName()))
-                                            {
+                                        String paramField = cq.getParameters( kk ).getField();
+                                        for( int ii = 0; ii < qa.getFieldsCount(); ii++ ) {
+                                            if( paramField.equals( qa.getFields( ii ).getName() ) ) {
                                                 isExists = true;
                                                 break;
                                             }
                                         }
-                                        assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                                        assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                             "module '" + mod.getName() +
                                             "', content action '" + content.getAction().toString() +
-                                            "' parameter '"+paramField+"' not exists in fields list",
-                                            !isExists
-                                        );
+                                            "' parameter '" + paramField + "' not exists in fields list",
+                                            !isExists );
 /*
                                         if (!isExists)
                                         {
@@ -899,92 +778,77 @@ public class TestMemberServiceClass extends TestCase
         throws Exception
     {
         StartupApplication.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        ModuleManager.init();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
-
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
-                String lookupField =mod.getLookupPK();
-                if (lookupField==null)
+                String lookupField = mod.getLookupPK();
+                if( lookupField == null )
                     continue;
 
-                MemberFile mf1 = member[k1];
+                MemberFile mf1 = mf;
                 int countLookup = 0;
                 List v = new ArrayList();
-                for (Enumeration e1 = member[k1].getMemberModules(); e1.hasMoreElements();)
-                {
-                    ModuleType mod1 = (ModuleType)e1.nextElement();
+                for( Enumeration e1 = mf.getMemberModules(); e1.hasMoreElements(); ) {
+                    ModuleType mod1 = ( ModuleType ) e1.nextElement();
 
-                    if (mod1.getName().toLowerCase().startsWith("f_d_"))
+                    if( mod1.getName().toLowerCase().startsWith( "f_d_" ) )
                         continue;
 
-                    for (int i = 0; i < mod1.getContentCount(); i++)
-                    {
-                        ContentType content = mod1.getContent(i);
+                    for( int i = 0; i < mod1.getContentCount(); i++ ) {
+                        ContentType content = mod1.getContent( i );
                         QueryAreaType qa = content.getQueryArea();
 
-                        for (int j=0; j<content.getTargetModuleCount(); j++)
-                        {
-                            try
-                            {
-                                TargetModuleType target = content.getTargetModule(j);
-                                if (target.getAction().getType()== TargetModuleTypeActionType.LOOKUP_TYPE )
-                                {
-                                    assertTrue("\nName of lookup module not specified, file '"+mf.getFile()+"'\n" +
+                        for( int j = 0; j < content.getTargetModuleCount(); j++ ) {
+                            try {
+                                TargetModuleType target = content.getTargetModule( j );
+                                if( target.getAction().getType() == TargetModuleTypeActionType.LOOKUP_TYPE ) {
+                                    assertTrue( "\nName of lookup module not specified, file '" + mf.getFile() + "'\n" +
                                         "' module '" + mod1.getName() +
                                         "', content action '" + content.getAction().toString() +
                                         "'",
-                                        target.getModule()!=null || target.getModule().length()>0
-                                    );
+                                        target.getModule() != null || target.getModule().length() > 0 );
                                 }
 
-                                if (target.getAction().getType()== TargetModuleTypeActionType.LOOKUP_TYPE &&
-                                    target.getModule().equals(mod.getName()))
-                                {
-                                    assertTrue("\nPK not equals FK in lookup module, file '"+mf.getFile()+"'\n" +
+                                if( target.getAction().getType() == TargetModuleTypeActionType.LOOKUP_TYPE &&
+                                    target.getModule().equals( mod.getName() ) ) {
+                                    assertTrue( "\nPK not equals FK in lookup module, file '" + mf.getFile() + "'\n" +
                                         "FK module '" + mod.getName() +
                                         "', content action '" + content.getAction().toString() +
                                         "' PK module '" + mod1.getName() +
                                         "', content action '" + content.getAction().toString() +
                                         "'",
-                                        mod.getLookupPK().equals(qa.getPrimaryKey())
-                                    );
+                                        mod.getLookupPK().equals( qa.getPrimaryKey() ) );
                                     countLookup++;
-                                    v.add("module - '"+mod1.getName() +"', action '" + content.getAction().toString() );
+                                    v.add( "module - '" + mod1.getName() + "', action '" + content.getAction().toString() );
                                 }
                             }
-                            catch(NullPointerException e11)
-                            {
-                                System.out.println("\nNPE in file '"+mf.getFile()+"'\n" +
+                            catch( NullPointerException e11 ) {
+                                System.out.println( "\nNPE in file '" + mf.getFile() + "'\n" +
                                     "FK module '" + mod.getName() +
                                     "', content action '" + content.getAction().toString() +
                                     "PK module '" + mod1.getName() +
                                     "', content action '" + content.getAction().toString() +
-                                    "'"
-                                );
+                                    "'" );
                                 throw e11;
                             }
                         }
                     }
                     String mainModule = "";
-                    for (int t=0; t<v.size(); t++)
-                    {
-                        mainModule += ((String)v.get(t)+"\n");
+                    for( int t = 0; t < v.size(); t++ ) {
+                        mainModule += ( ( String ) v.get( t ) + "\n" );
                     }
-                    assertTrue("\nToo many lookup to module, file '"+mf.getFile()+"'\n" +
+                    assertTrue( "\nToo many lookup to module, file '" + mf.getFile() + "'\n" +
                         "FK module '" + mod.getName() + "'" +
                         "\n" + mainModule,
-                        countLookup<2
-                    );
+                        countLookup < 2 );
                 }
             }
         }
@@ -999,46 +863,40 @@ public class TestMemberServiceClass extends TestCase
 
 //        DbSchemaType schema = DbService.getDbStructure(db_, "MILLENNIUM");
 
-        ModuleManager.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
                     RestrictType restrict = qa.getRestrict();
-                    if (restrict!=null)
-                    {
+                    if( restrict != null ) {
                         boolean isFound = false;
-                        for (int t=0; t<qa.getFieldsCount(); t++)
-                        {
-                            FieldsType field = qa.getFields(t);
-                            switch (restrict.getType().getType())
-                            {
+                        for( int t = 0; t < qa.getFieldsCount(); t++ ) {
+                            FieldsType field = qa.getFields( t );
+                            switch( restrict.getType().getType() ) {
                                 case RestrictTypeTypeType.FIRM_TYPE:
-                                    if ( field.getName().equalsIgnoreCase("ID_FIRM"))
+                                    if( field.getName().equalsIgnoreCase( "ID_FIRM" ) )
                                         isFound = true;
 
                                     continue;
 
                                 case RestrictTypeTypeType.SITE_TYPE:
-                                    if ( field.getName().equalsIgnoreCase("ID_SITE"))
+                                    if( field.getName().equalsIgnoreCase( "ID_SITE" ) )
                                         isFound = true;
 
                                     continue;
 
                                 case RestrictTypeTypeType.USER_TYPE:
-                                    if ( field.getName().equalsIgnoreCase("ID_USER"))
+                                    if( field.getName().equalsIgnoreCase( "ID_USER" ) )
                                         isFound = true;
 
                                     continue;
@@ -1046,12 +904,11 @@ public class TestMemberServiceClass extends TestCase
                                 default:
                             }
                         }
-                        assertTrue("\nMember file '"+mf.getFile()+"'\n" +
+                        assertTrue( "\nMember file '" + mf.getFile() + "'\n" +
                             "module '" + mod.getName() +
                             "', content action '" + content.getAction().toString() +
                             "' containt invalid restriction, restriction field not found",
-                            isFound
-                        );
+                            isFound );
                     }
                 }
             }
@@ -1067,16 +924,17 @@ public class TestMemberServiceClass extends TestCase
         System.out.println("info Xerces version - " + org.apache.xerces.impl.Version.getVersion());
         System.out.println("info Castor version - " + org.exolab.castor.util.Version.getBuildVersion());
 
-        ModuleManager.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        ModuleType module = ModuleManager.getModule(TemplateMemberClassQuery.nameModule);
+        ModuleType module = moduleManager.getModule(TemplateMemberClassQuery.nameModule);
         assertFalse("Module '" + TemplateMemberClassQuery.nameModule + "' not found",
             module == null
         );
 
-        ContentType content = ModuleManager.getContent(
+        ContentType content = moduleManager.getContent(
             TemplateMemberClassQuery.nameModule, ContentTypeActionType.INDEX_TYPE);
 
         assertFalse("Content 'index' in '" + TemplateMemberClassQuery.nameModule + "' module not found",
@@ -1120,52 +978,45 @@ TargetModuleType target = null;
         throws Exception
     {
         StartupApplication.init();
-        ModuleManager.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
 
                     String pk = qa.getPrimaryKey();
-                    assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                    assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                         "Primary key in module '" + mod.getName() + "', content '" +
                         content.getAction().toString() +
-                        "' not specified", (pk == null || pk.length() == 0));
+                        "' not specified", ( pk == null || pk.length() == 0 ) );
 
                     boolean isPkNotFound = true;
-                    for (int k = 0; k < qa.getFieldsCount(); k++)
-                    {
-                        FieldsType field = qa.getFields(k);
-                        if (pk.equalsIgnoreCase(field.getName()))
-                        {
-                            assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                    for( int k = 0; k < qa.getFieldsCount(); k++ ) {
+                        FieldsType field = qa.getFields( k );
+                        if( pk.equalsIgnoreCase( field.getName() ) ) {
+                            assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                 "Primary key in module '" + mod.getName() +
                                 "', content '" + content.getAction().toString() +
                                 "' not equal to name of field in fields list",
-                                (!pk.equals(field.getName()))
-                            );
+                                ( !pk.equals( field.getName() ) ) );
                             isPkNotFound = false;
                         }
                     }
 
-                    assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                    assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                         "Primary key in module '" + mod.getName() +
                         "', content '" + content.getAction().toString() +
                         "' not present in fields list",
-                        isPkNotFound
-                    );
+                        isPkNotFound );
                 }
             }
         }
@@ -1176,39 +1027,32 @@ TargetModuleType target = null;
         throws Exception
     {
         StartupApplication.init();
-        ModuleManager.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
 
                     String pk = qa.getPrimaryKey();
-                    if (pk != null && pk.length()>0)
-                    {
-                        for (int k = 0; k < qa.getFieldsCount(); k++)
-                        {
-                            FieldsType field = qa.getFields(k);
-                            if (pk.equalsIgnoreCase(field.getName()))
-                            {
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                    if( pk != null && pk.length() > 0 ) {
+                        for( int k = 0; k < qa.getFieldsCount(); k++ ) {
+                            FieldsType field = qa.getFields( k );
+                            if( pk.equalsIgnoreCase( field.getName() ) ) {
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                     "Primary key in module '" + mod.getName() +
                                     "', content '" + content.getAction().toString() +
                                     "' can not be isShow=true",
-                                    Boolean.TRUE.equals(field.getIsShow()) &&
-                                    content.getAction().getType()== ContentTypeActionType.INSERT_TYPE
-                                );
+                                    Boolean.TRUE.equals( field.getIsShow() ) &&
+                                    content.getAction().getType() == ContentTypeActionType.INSERT_TYPE );
                             }
                         }
                     }
@@ -1222,40 +1066,33 @@ TargetModuleType target = null;
         throws Exception
     {
         StartupApplication.init();
-        ModuleManager.init();
+        ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
+        moduleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+        MemberFile[] member = moduleManager.getMemberFileArray();
 
-        for (int k1 = 0; k1 < member.length; k1++)
-        {
-            MemberFile mf = member[k1];
-            for (Enumeration e = member[k1].getMemberModules(); e.hasMoreElements();)
-            {
-                ModuleType mod = (ModuleType)e.nextElement();
-                if (mod.getName().toLowerCase().startsWith("f_d_"))
+        for( MemberFile mf : member ) {
+            for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
+                ModuleType mod = ( ModuleType ) e.nextElement();
+                if( mod.getName().toLowerCase().startsWith( "f_d_" ) )
                     continue;
 
-                for (int i = 0; i < mod.getContentCount(); i++)
-                {
-                    ContentType content = mod.getContent(i);
+                for( int i = 0; i < mod.getContentCount(); i++ ) {
+                    ContentType content = mod.getContent( i );
                     QueryAreaType qa = content.getQueryArea();
 
                     String pk = qa.getPrimaryKey();
-                    if (pk != null && pk.length()>0)
-                    {
+                    if( pk != null && pk.length() > 0 ) {
 
-                        for (int k = 0; k < qa.getFieldsCount(); k++)
-                        {
-                            FieldsType field = qa.getFields(k);
-                            if (pk.equalsIgnoreCase(field.getName()))
-                            {
-                                assertFalse("\nMember file '"+mf.getFile()+"'\n" +
+                        for( int k = 0; k < qa.getFieldsCount(); k++ ) {
+                            FieldsType field = qa.getFields( k );
+                            if( pk.equalsIgnoreCase( field.getName() ) ) {
+                                assertFalse( "\nMember file '" + mf.getFile() + "'\n" +
                                     "Primary key in module '" + mod.getName() +
                                     "', content '" + content.getAction().toString() +
                                     "' can not be (isEdit=true and isShow==true)",
-                                    Boolean.TRUE.equals(field.getIsShow()) &&
-                                    Boolean.TRUE.equals(field.getIsEdit()) && content.getAction().getType()== ContentTypeActionType.CHANGE_TYPE
-                                );
+                                    Boolean.TRUE.equals( field.getIsShow() ) &&
+                                    Boolean.TRUE.equals( field.getIsEdit() ) && content.getAction().getType() == ContentTypeActionType.CHANGE_TYPE );
                             }
                         }
                     }
@@ -1263,6 +1100,5 @@ TargetModuleType target = null;
             }
         }
     }
-
 }
 

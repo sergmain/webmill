@@ -1,12 +1,12 @@
 /*
- * org.riverock.portlet -- Portlet Library
- * 
+ * org.riverock.webmill -- Portal framework implementation
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
@@ -23,28 +23,34 @@
  *
  */
 
-package org.riverock.portlet.forum;
+package org.riverock.portlet.shop.upload;
 
-public class ForumException extends Exception{
+public class UploadFileException extends Exception
+{
+    public final static String FILE_NOT_FOUND_ERROR = "Data for storing in file not found. Error #20.01";
+    public final static String WRONG_FORMAT_ERROR = "Wrong format uploaded data. Error #20.02";
+    public final static String UNSUPPORTED_EXTENSION_ERROR = "Unsupported file extension. Error #20.03";
+    public final static String WRONG_REQUEST_HEADER_ERROR = "Bad request, header is wrong. Error #20.04";
 
-    public ForumException(){
+    public UploadFileException()
+    {
         super();
     }
 
-    public ForumException(String s){
+    public UploadFileException(String s)
+    {
         super(s);
     }
 
-    public ForumException(String s, Throwable cause){
-        super(s, cause);
-    }
-
-    public String toString(){
+    public String toString()
+    {
         return super.toString();
     }
 
-    public String getMessage(){
+    public String getMessage()
+    {
         return super.getMessage();
     }
+
 }
 
