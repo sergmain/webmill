@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource><pair key="str.name" value="Ваше имя"/><pair key="str.header" value="Заголовок"/><pair key="str.message" value="Сообщение"/><pair key="str.add" value="Добавить"/><pair key="str.date" value="Дата"/><pair key="str.from_who" value="От кого"/><pair key="str.top_forum" value="К началу форума"/><pair key="str.forum" value="Форум"/></resource>

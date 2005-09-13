@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource><pair key="yesno.yes" value="Ja"/><pair key="yesno.no" value="No"/><pair key="button.change" value="Change"/><pair key="button.delete" value="Delete"/><pair key="button.next" value="Next"/><pair key="button.add" value="Add"/><pair key="page.main.1" value="Homepage"/><pair key="page.main.3" value="To main page of current section"/><pair key="page.main.4" value="To top page"/><pair key="access_denied" value="This operation not permited for you."/><pair key="page.main.2" value="List of granted modules"/></resource>
