@@ -41,10 +41,11 @@
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
-        <pathelement location="${lib.dir}/${common-digister.lib}"/>
+        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
+        <pathelement location="${lib.dir}/${commons-digester.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>

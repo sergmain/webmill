@@ -1,6 +1,6 @@
 package org.riverock.module.web.request;
 
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.module.web.user.ModuleUser;
 import org.riverock.module.web.user.WebmillModuleUserImpl;
 import org.riverock.module.exception.ModuleException;
@@ -26,11 +26,11 @@ public class WebmillPortletModuleRequestImpl extends PortletModuleRequestImpl {
     }
 
     public String getRemoteAddr() {
-        return PortletTools.getRemoteAddr( portletRequest );
+        return PortletService.getRemoteAddr( portletRequest );
     }
 
     public String getUserAgent() {
-        return PortletTools.getUserAgent( portletRequest );
+        return PortletService.getUserAgent( portletRequest );
     }
 
     public Long getServerNameId() throws ModuleException{

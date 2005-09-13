@@ -1,6 +1,5 @@
 package org.riverock.module.factory;
 
-import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.factory.bean.ActionConfigurationBean;

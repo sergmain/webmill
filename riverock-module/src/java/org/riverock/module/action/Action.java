@@ -1,7 +1,6 @@
 package org.riverock.module.action;
 
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.factory.bean.ActionBean;
 
 /**
  * Action interface
