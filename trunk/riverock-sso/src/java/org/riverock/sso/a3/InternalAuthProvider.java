@@ -47,6 +47,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class InternalAuthProvider implements AuthProviderInterface, Serializable {
+    private static final long serialVersionUID = 20434672384237113L;
 
     private final static Logger log = Logger.getLogger( InternalAuthProvider.class );
 

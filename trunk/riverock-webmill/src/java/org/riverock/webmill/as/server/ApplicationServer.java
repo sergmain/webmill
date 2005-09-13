@@ -205,7 +205,7 @@ public class ApplicationServer extends HttpServlet
             }
 
             long mills = System.currentTimeMillis();
-            answer.setOriginLength( new Long(bytes.length) );
+            answer.setOriginLength( (long)bytes.length );
             ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
             byte[] bytesToEncrypt = null;
             int typeCompression = -1;
@@ -232,7 +232,7 @@ public class ApplicationServer extends HttpServlet
                     zip = null;
 
                     bytesToEncrypt = byteStream.toByteArray();
-                    answer.setCompressedLength( new Long(bytesToEncrypt.length) );
+                    answer.setCompressedLength( (long)bytesToEncrypt.length );
 
                     if (log.isDebugEnabled())
                     {
@@ -263,7 +263,7 @@ public class ApplicationServer extends HttpServlet
                     gzip = null;
 
                     bytesToEncrypt = byteStream.toByteArray();
-                    answer.setCompressedLength( new Long(bytesToEncrypt.length) );
+                    answer.setCompressedLength( (long)bytesToEncrypt.length );
 
                     if (log.isDebugEnabled())
                     {
@@ -287,8 +287,8 @@ public class ApplicationServer extends HttpServlet
                     compressionType.setTypeCompression(
                         ResourceCompressionTypeTypeCompressionType.NONE
                     );
-                    answer.setOriginLength( new Long(bytes.length) );
-                    answer.setCompressedLength( new Long(bytes.length) );
+                    answer.setOriginLength( (long)bytes.length );
+                    answer.setCompressedLength( (long)bytes.length );
                     b = Base64.encode( bytes );
             }
             answer.setCompression(compressionType);
@@ -443,9 +443,9 @@ public class ApplicationServer extends HttpServlet
             }
 
             response_.setContentType("text/html; charset=UTF-8");
-            res.setStartProcessing( new Long(startMills) );
+            res.setStartProcessing( startMills );
             long endprocessing = System.currentTimeMillis();
-            res.setEndProcessing( new Long(endprocessing) );
+            res.setEndProcessing( endprocessing );
 
             if (log.isDebugEnabled())
                 log.debug("Start unmarshal data");
@@ -464,7 +464,7 @@ public class ApplicationServer extends HttpServlet
             if (log.isDebugEnabled())
                 log.debug("Data successfully was sended to client");
 
-            Long maxMemory = MainTools.getMaxMemory();
+            Long maxMemory = Runtime.getRuntime().maxMemory();
 
             log.warn(
                 "free memory " + Runtime.getRuntime().freeMemory()+

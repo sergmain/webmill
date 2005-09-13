@@ -49,15 +49,22 @@
         <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
         <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
+        <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
+
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${secure.lib}"/>
         <pathelement location="${lib.dir}/${bcel.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+
+        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
+        <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
+        <pathelement location="${lib.dir}/${commons-digester.lib}"/>
+<!--        <pathelement location="${lib.dir}/${commons-collections.lib}"/>-->
+        <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
+
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${hypersonic.lib}"/>
-        <pathelement location="${lib.dir}/${common-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${xalan.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
@@ -67,6 +74,7 @@
     </path>
 
     <property name="www.dir" value="c:\opt2\_www"/>
+    <property name="context.war.name" value="mill.war"/>
 
     <fileset dir="${lib.dir}/" id="web-inf-lib" >
         <include name="${riverock-sso.lib}"/>
@@ -101,6 +109,14 @@
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
         <antcall target="copy_new_jars"/>
+        <antcall target="start.apache"/>
+    </target>
+
+    <target name="run_new_mill_war">
+        <antcall target="stop.apache"/>
+        <antcall target="war"/>
+        <copy file="${build.dir}\${context.war.name}" todir="c:/opt2/_www" overwrite="true" />
+        <delete dir="${tomcat-home}/webapps/ROOT" />
         <antcall target="start.apache"/>
     </target>
 
@@ -448,27 +464,18 @@ cd ..\..
 
     <target name="replace_properties">
         <property name="path-to-ctx" value="org/riverock/webmill"/>
-        <copy file="${src.java.dir}/${path-to-ctx}/portlet/ContextNavigator.java"
+        <copy file="${src.java.dir}/${path-to-ctx}/portal/PortalInstanceImpl.java"
             todir="${build.java}/${path-to-ctx}/portlet">
             <filterset>
               <filter token="WEBMILL_RELEASE" value="${release-version}"/>
               <filter token="WEBMILL_BUILD" value="${build.number}"/>
             </filterset>
         </copy>
-        <copy file="${src.java.dir}/${path-to-ctx}/portlet/impl/PortletContextImpl.java"
-            todir="${build.java}/${path-to-ctx}/portlet/impl">
-            <filterset>
-                <filter token="WEBMILL_RELEASE" value="${release-version}"/>
-                <filter token="WEBMILL_BUILD" value="${build.number}"/>
-            </filterset>
-        </copy>
     </target>
 
     <target name="delete_existing_files">
-        <property name="path-to-ctx" value="org/riverock/webmill/portlet"/>
-        <delete file="${build.dest}/${path-to-ctx}/ContextNavigator.class"/>
-        <delete file="${build.dest}/${path-to-ctx}/impl/PortletContextImpl.class"/>
-        <delete file="${build.dest}/${path-to-ctx}/impl/PortletContextImpl$PortalVersion.class"/>
+        <property name="path-to-ctx" value="org/riverock/webmill/portal"/>
+        <delete file="${build.dest}/${path-to-ctx}/PortalInstanceImpl.class"/>
     </target>
 
     <target name="prepare_local">
@@ -572,6 +579,50 @@ cd ..\..
                 <path location="${build.dest}"/>
             </classpath>
         </javac>
+    </target>
+
+    <patternset id="war.classes">
+        <include name="**"/>
+    </patternset>
+
+    <patternset id="war.lib">
+        <include name="${riverock-sso.lib}"/>
+        <include name="${riverock-sql-parser.lib}"/>
+        <include name="${riverock-interfaces.lib}"/>
+        <include name="${riverock-generic.lib}"/>
+        <include name="${riverock-common.lib}"/>
+        <include name="${riverock-cache.lib}"/>
+        <include name="${riverock-webmill.lib}"/>
+
+        <include name="${commons-logging.lib}"/>
+        <include name="${commons-digester.lib}"/>
+        <include name="${commons-collections.lib}"/>
+        <include name="${commons-beanutils.lib}"/>
+        <include name="${log4j.lib}"/>
+        <include name="${castor.lib}"/>
+    </patternset>
+
+    <target name="war" depends="jar" >
+        <property name="war-file-name" value="${build.dir}/${context.war.name}"/>
+        <delete file="${war-file-name}"/>
+        <war webxml="${web.dir}/WEB-INF/web.xml"
+            warfile="${war-file-name}"
+            update="false" duplicate="preserve">
+            <fileset dir="${web.dir}">
+                <exclude name="WEB-INF/classes/**/*.*"/>
+                <exclude name="WEB-INF/lib/*.*"/>
+                <exclude name="WEB-INF/web.xml"/>
+                <exclude name="**/*.*-*"/>
+            </fileset>
+<!--
+            <classes dir="${build.dest}">
+                <patternset refid="war.classes"/>
+            </classes>
+-->
+            <lib dir="${lib.dir}">
+                <patternset refid="war.lib"/>
+            </lib>
+        </war>
     </target>
 
     <target name="build_mill_context" >

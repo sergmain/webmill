@@ -34,17 +34,16 @@ import java.io.FileFilter;
 import org.riverock.generic.main.CacheDirectory;
 import org.riverock.generic.main.CacheFile;
 import org.riverock.generic.main.ExtensionFileFilter;
-import org.riverock.webmill.main.Constants;
+
 import org.riverock.webmill.schema.appl_server.ApplicationModuleType;
 import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.PropertiesProvider;
 
 import org.apache.log4j.Logger;
 
 public class ApplicationManager
 {
-    private static Logger log = Logger.getLogger( "org.riverock.webmill.as.server.ApplicationManager" );
+    private static Logger log = Logger.getLogger( ApplicationManager.class );
 
     private static FileFilter applFilter = new ExtensionFileFilter(".xml");
 
@@ -57,6 +56,7 @@ public class ApplicationManager
     private static boolean isUserDirectoryExists = true;
 
     private static boolean isInit = false;
+    private static final String MILL_APPL_DIR    = "appl";
 
     public static int getCountFile()
     {
@@ -70,18 +70,16 @@ public class ApplicationManager
         int count = 0;
         if (mainApplFile!=null)
         {
-            for (int i=0; i<mainApplFile.length; i++)
-            {
-                if (mainApplFile[i]!=null)
-                    count += mainApplFile[i].getApplicationCount();
+            for (final ApplicationFile newVar : mainApplFile) {
+                if (newVar != null)
+                    count += newVar.getApplicationCount();
             }
         }
         if (userApplFile!=null)
         {
-            for (int i=0; i<userApplFile.length; i++)
-            {
-                if (userApplFile[i]!=null)
-                    count += userApplFile[i].getApplicationCount();
+            for (final ApplicationFile newVar : userApplFile) {
+                if (newVar != null)
+                    count += newVar.getApplicationCount();
             }
         }
 
@@ -89,7 +87,6 @@ public class ApplicationManager
     }
 
     private static String getCustomDir()
-        throws ConfigException
     {
         String dir = null;
         dir = WebmillConfig.getCustomApplDir();
@@ -114,7 +111,7 @@ public class ApplicationManager
     {
         try
         {
-            File dir = new File(PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_APPL_DIR);
+            File dir = new File(PropertiesProvider.getConfigPath() + File.separator + MILL_APPL_DIR);
             if (!dir.exists())
             {
                 log.warn("Directory '"+dir+"' not exists");
@@ -123,14 +120,14 @@ public class ApplicationManager
 
             if (mainDir==null)
                 mainDir = new CacheDirectory(
-                    PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_APPL_DIR,
+                    PropertiesProvider.getConfigPath() + File.separator + MILL_APPL_DIR,
                     applFilter);
 
             if (mainApplFile == null || !mainDir.isUseCache())
             {
                 if (mainDir.isNeedReload())
                     mainDir = new CacheDirectory(
-                        PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_APPL_DIR,
+                        PropertiesProvider.getConfigPath() + File.separator + MILL_APPL_DIR,
                         applFilter
                     );
 
@@ -238,15 +235,13 @@ public class ApplicationManager
 
         init();
 
-        for (int k=0; k < mainApplFile.length; k++)
-        {
-            if (mainApplFile[k]==null)
+        for (final ApplicationFile newVar : mainApplFile) {
+            if (newVar == null)
                 continue;
 
-            ApplicationFile mf = mainApplFile[k];
+            ApplicationFile mf = newVar;
             ApplicationModuleType mod = mf.getApplModule(moduleName);
-            if (mod != null)
-            {
+            if (mod != null) {
                 if (log.isDebugEnabled())
                     log.debug("Module '" + moduleName + "' is found");
 
@@ -259,15 +254,13 @@ public class ApplicationManager
 
         if (userApplFile!=null)
         {
-            for (int k=0; k < userApplFile.length; k++)
-            {
-                if (userApplFile[k]==null)
+            for (final ApplicationFile newVar : userApplFile) {
+                if (newVar == null)
                     continue;
 
-                ApplicationFile mf = userApplFile[k];
+                ApplicationFile mf = newVar;
                 ApplicationModuleType desc = mf.getApplModule(moduleName);
-                if (desc != null)
-                {
+                if (desc != null) {
                     if (log.isDebugEnabled())
                         log.debug("Application '" + moduleName + "' is found in custom directory");
 

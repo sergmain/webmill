@@ -38,12 +38,11 @@
     <target name="gen_all_schema">
         <antcall target="delete_all_schema"/>
 
-        <antcall target="gen_site_schema"/>
-<!--        <antcall target="gen_tomcat_schema"/>-->
         <antcall target="gen_config_schema"/>
         <antcall target="gen_appl-server_schema"/>
         <antcall target="gen_types_schema"/>
         <antcall target="gen_core-extend_schema"/>
+        <antcall target="gen_test_schema"/>
     </target>
 
     <target name="gen_config_schema">
@@ -56,12 +55,6 @@
         <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/webmill/schema\javax\portlet"/>
         <property name="schema-file" value="${src-schema.xsd.dir}/portlet.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.javax.portlet"/>
-        <antcall target="gen_schema_from_schema"/>
-    </target>
-    <target name="gen_site_schema">
-        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/webmill/schema/site/"/>
-        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-webmill-site.xsd"/>
-        <property name="schema-package-java" value="org.riverock.webmill.schema.site"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
     <target name="gen_tomcat_schema">
@@ -89,7 +82,7 @@
         <antcall target="gen_schema_from_schema"/>
     </target>
     <target name="gen_test_schema">
-        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/webmill/schema\test\"/>
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/webmill/schema/test/"/>
         <property name="schema-file" value="${src-schema.xsd.dir}/riverock-test-schema.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.test"/>
         <antcall target="gen_schema_from_schema"/>

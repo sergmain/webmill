@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Revision$
- * $Date$
- * $RCSfile$
- *
- */
 package org.riverock.webmill.main;
 
 import java.sql.PreparedStatement;
@@ -39,13 +31,19 @@ import java.util.Calendar;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 
 import org.apache.log4j.Logger;
 
+/**
+ *
+ * $Revision$
+ * $Date$
+ * $RCSfile$
+ *
+ */
 public final class ContentCSS
 {
     private final static Logger log = Logger.getLogger( ContentCSS.class );
@@ -78,7 +76,7 @@ public final class ContentCSS
     public static ContentCSS getInstance(DatabaseAdapter db__, long id__)
             throws Exception
     {
-        return (ContentCSS) cache.getInstanceNew(db__, new Long(id__) );
+        return (ContentCSS) cache.getInstanceNew(db__, id__ );
     }
 
     public static ContentCSS getInstance(DatabaseAdapter db__, Long id__)

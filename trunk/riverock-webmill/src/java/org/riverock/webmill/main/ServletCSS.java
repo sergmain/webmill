@@ -24,24 +24,25 @@
  */
 package org.riverock.webmill.main;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Locale;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.RequestDispatcher;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portlet.ContextFactory;
+import org.riverock.common.html.Header;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.servlet.HttpServletRequestWrapperFromString;
-import org.riverock.common.tools.StringTools;
-import org.riverock.common.html.Header;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.ContextFactory;
 
 /**
  * Author: mill
@@ -80,7 +81,7 @@ public final class ServletCSS extends HttpServlet {
             out = response.getWriter();
 
             db_ = DatabaseAdapter.getInstance();
-            PortalInfo p = PortalInfo.getInstance( db_, request.getServerName() );
+            PortalInfoImpl p = PortalInfoImpl.getInstance( db_, request.getServerName() );
 
             if ( log.isDebugEnabled() )
                 log.debug( "Dynamic status " + p.getSites().getIsCssDynamic() );
@@ -89,12 +90,12 @@ public final class ServletCSS extends HttpServlet {
                 if ( log.isDebugEnabled() ) {
                     log.debug( "ID_SITE " + p.getSites().getIdSite() );
                     log.debug( "p.getDefaultLocale().toString() " + p.getDefaultLocale().toString() );
-                    log.debug( "request parameter " + Constants.NAME_LANG_PARAM + ": " + request.getParameter( Constants.NAME_LANG_PARAM ) );
+                    log.debug( "request parameter " + ContainerConstants.NAME_LANG_PARAM + ": " + request.getParameter( ContainerConstants.NAME_LANG_PARAM ) );
                     log.debug( "Referer: " + Header.getReferer( request ) );
                 }
 
                 Locale locale = null;
-                Object obj = request.getParameter( Constants.NAME_LANG_PARAM );
+                Object obj = request.getParameter( ContainerConstants.NAME_LANG_PARAM );
                 if (obj!=null) {
                     locale = StringTools.getLocale( obj.toString() );
                     if ( log.isDebugEnabled() ) {
@@ -120,7 +121,7 @@ public final class ServletCSS extends HttpServlet {
                     }
 
                     if (flag) {
-                        ContextFactory contextFactory = ContextFactory.initTypeContext( db_, wrapper, p, null );
+                        ContextFactory contextFactory = ContextFactory.initTypeContext( db_, wrapper, p, null, null );
                         locale = contextFactory.getRealLocale();
                         if (log.isDebugEnabled()) {
                             log.debug( "locale extracted from referer: " + locale.toString() );
@@ -136,7 +137,7 @@ public final class ServletCSS extends HttpServlet {
                     locale = p.getDefaultLocale();
                 }
 
-                Long siteSupportLanguageId = p.getIdSupportLanguage( locale );
+                Long siteSupportLanguageId = p.getSupportLanguageId( locale );
                 if ( log.isDebugEnabled() ) {
                     log.debug( "siteSupportLanguageId: " + siteSupportLanguageId );
                 }

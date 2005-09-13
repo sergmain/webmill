@@ -57,7 +57,6 @@
 	<DbTablePrefix>MAIN_NEWS</DbTablePrefix>
 	<DbTablePrefix>MAIN_LIST_NEWS</DbTablePrefix>
 	<DbTablePrefix>MAIN_LANGUAGE</DbTablePrefix>
-	<DbTablePrefix>MAIN_USER_METADATA</DbTablePrefix>
 
 	<TableToList>MAIN_NEWS</TableToList>
 	<TableToList>MAIN_LANGUAGE</TableToList>

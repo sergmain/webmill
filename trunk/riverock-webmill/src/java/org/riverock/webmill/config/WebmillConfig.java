@@ -30,7 +30,6 @@ import java.nio.charset.Charset;
 import org.riverock.webmill.schema.config.WebmillConfigType;
 import org.riverock.webmill.schema.config.CustomDirsType;
 import org.riverock.common.config.ConfigObject;
-import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.StringTools;
 
 import org.apache.log4j.Logger;
@@ -61,7 +60,7 @@ public class WebmillConfig {
 
     private static Object syncReadConfig = new Object();
 
-    private static void readConfig() throws ConfigException {
+    private static void readConfig() {
         if (isConfigProcessed)
             return;
 
@@ -87,7 +86,6 @@ public class WebmillConfig {
     private static Object syncTempDir = new Object();
 
     public static String getWebmillTempDir()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#15.937");
@@ -127,7 +125,7 @@ public class WebmillConfig {
 
     private static Object syncDebug = new Object();
 
-    public static String getWebmillDebugDir() throws ConfigException {
+    public static String getWebmillDebugDir() {
         if (log.isDebugEnabled()) log.debug("#15.937.1");
 
         if (!isConfigProcessed)
@@ -135,12 +133,12 @@ public class WebmillConfig {
 
         if (log.isDebugEnabled()) log.debug("#15.938.1");
 
-        if (getConfig().getIsDebugDirInit().booleanValue())
+        if (getConfig().getIsDebugDirInit())
             return getConfig().getWebmillDebugDir();
 
         synchronized (syncDebug)
         {
-            if (getConfig().getIsDebugDirInit().booleanValue())
+            if (getConfig().getIsDebugDirInit())
                 return getConfig().getWebmillDebugDir();
 
             String dir = getConfig().getWebmillDebugDir();
@@ -166,7 +164,6 @@ public class WebmillConfig {
     }
 
     public static String getMainLanguage()
-        throws ConfigException
     {
         if (log.isDebugEnabled()) log.debug("#15.903");
 
@@ -181,7 +178,7 @@ public class WebmillConfig {
 
         return StringTools.getLocale( getConfig().getMainLanguage() ).toString();
     }
-    public static String getServerCharset() throws ConfigException {
+    public static String getServerCharset() {
         if (log.isDebugEnabled()) log.debug("#15.905");
 
         if (!isConfigProcessed)
@@ -194,7 +191,6 @@ public class WebmillConfig {
 
 
     public static String getHtmlCharset()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#15.923");
@@ -209,7 +205,6 @@ public class WebmillConfig {
     }
 
     public static Charset getCharset()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#15.923");
@@ -224,7 +219,6 @@ public class WebmillConfig {
     }
 
     public static boolean getIsSafePage()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#Get isSafePage");
@@ -236,11 +230,10 @@ public class WebmillConfig {
             log.debug("#Done get isSafePage");
 
 
-        return (getConfig().getIsSafePage()!=null?getConfig().getIsSafePage().booleanValue():false);
+        return getConfig().getIsSafePage() == null ? false : getConfig().getIsSafePage();
     }
 
     public static String getMailSMTPHost()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#15.927");
@@ -255,7 +248,6 @@ public class WebmillConfig {
     }
 
     public static String getCustomPortletDir()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#16.927");
@@ -274,7 +266,6 @@ public class WebmillConfig {
     }
 
     public static String getCustomMemberDir()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#16.901");
@@ -293,7 +284,6 @@ public class WebmillConfig {
     }
 
     public static String getCustomApplDir()
-        throws ConfigException
     {
         if (log.isDebugEnabled())
             log.debug("#16.910");

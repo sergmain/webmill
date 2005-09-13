@@ -32,89 +32,82 @@
  */
 package org.riverock.sso.a3;
 
-import java.util.Hashtable;
 import java.io.Serializable;
+import java.util.Hashtable;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
-import javax.naming.directory.Attributes;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.sso.schema.config.AuthProviderParametersListType;
 import org.riverock.sso.schema.config.AuthProviderParametersType;
 import org.riverock.sso.schema.config.ParameterType;
 
-import org.apache.log4j.Logger;
-
 
 public final class LDAPAuthProvider implements AuthProviderInterface, Serializable {
-    private final static Logger log = Logger.getLogger( LDAPAuthProvider.class );
+    private static final long serialVersionUID = 20434672384237117L;
+    private final static Logger log = Logger.getLogger(LDAPAuthProvider.class);
 
     private static final String CANONICAL_NAME_MEMBEROF = "memberOf";
 
     private String providerUrl = null;
     private DirContext ctx = null;
 
-    protected void finalize() throws Throwable
-    {
-        if (ctx!=null)
-        {
-            try
-            {
+    protected void finalize() throws Throwable {
+        if (ctx != null) {
+            try {
                 ctx.close();
                 ctx = null;
             }
-            catch(Exception e){}
+            catch (Exception e) {
+            }
         }
         super.finalize();
     }
 
 
-    public boolean isUserInRole( final AuthSession authSession, final String role )
-        throws AuthException
-    {
-        if (ctx==null || role==null || role.trim().length()==0)
+    public boolean isUserInRole(final AuthSession authSession, final String role) {
+        if (ctx == null || role == null || role.trim().length() == 0)
             return false;
 
-        if (internalCheckRole( authSession, "webmill.root" ))
+        if (internalCheckRole(authSession, "webmill.root"))
             return true;
 
-        return internalCheckRole( authSession, role );
+        return internalCheckRole(authSession, role);
     }
 
-    private boolean internalCheckRole( final AuthSession authSession, final String role ) {
-        String[] attrs = new String[]{ CANONICAL_NAME_MEMBEROF };
+    private boolean internalCheckRole(final AuthSession authSession, final String role) {
+        String[] attrs = new String[]{CANONICAL_NAME_MEMBEROF};
 
         try {
             Attributes result =
-                ctx.getAttributes("CN="+authSession.getUserLogin()+",CN=Users", attrs);
+                ctx.getAttributes("CN=" + authSession.getUserLogin() + ",CN=Users", attrs);
 
             javax.naming.directory.Attribute attr =
-                result.get( CANONICAL_NAME_MEMBEROF );
+                result.get(CANONICAL_NAME_MEMBEROF);
 
-            if (attr != null)
-            {
+            if (attr != null) {
                 NamingEnumeration vals = attr.getAll();
-                while (vals.hasMoreElements())
-                {
-                    String m = parseCanonicalName( (String)vals.nextElement() );
+                while (vals.hasMoreElements()) {
+                    String m = parseCanonicalName((String) vals.nextElement());
                     if (role.equals(m))
                         return true;
                 }
             }
         }
-        catch(Exception e)
-        {
-            log.error("Exception check role '"+role+"'", e);
+        catch (Exception e) {
+            log.error("Exception check role '" + role + "'", e);
             return false;
         }
 
         return false;
     }
 
-    public static String parseCanonicalName( final String m_ )
-    {
+    public static String parseCanonicalName(final String m_) {
         String cn = m_;
         if (!cn.startsWith("CN="))
             return null;
@@ -122,16 +115,14 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         cn = cn.substring(3);
 
         int idx = cn.indexOf(',');
-        if (idx!=-1)
+        if (idx != -1)
             cn = cn.substring(0, idx);
 
         return cn;
     }
 
-    public boolean checkAccess( final AuthSession authSession, final String serverName ) throws AuthException
-    {
-        if (ctx==null)
-        {
+    public boolean checkAccess(final AuthSession authSession, final String serverName) {
+        if (ctx == null) {
             Hashtable env = new Hashtable(5, 1.1f);
             /*
             * Specify the initial context implementation to use.
@@ -146,12 +137,11 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
 //    env.put(Context.PROVIDER_URL, Env.MY_SERVICE);
             env.put(Context.PROVIDER_URL, providerUrl);
 
-            env.put(Context.SECURITY_PRINCIPAL, authSession.getUserLogin() );
-            env.put(Context.SECURITY_CREDENTIALS, authSession.getUserPassword() );
+            env.put(Context.SECURITY_PRINCIPAL, authSession.getUserLogin());
+            env.put(Context.SECURITY_CREDENTIALS, authSession.getUserPassword());
 
-            try
-            {
-                ctx = new InitialDirContext( env );
+            try {
+                ctx = new InitialDirContext(env);
             }
 //            catch(javax.naming.AuthenticationException e)
 //            {
@@ -161,11 +151,10 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
 //                log.error("Exception create InitialDirContext", e);
 //                return false;
 //            }
-            catch(Throwable e)
-            {
+            catch (Throwable e) {
                 ctx = null;
-                log.error("providerUrl "+providerUrl );
-                log.error("authSession.getUserLogin() "+authSession.getUserLogin() );
+                log.error("providerUrl " + providerUrl);
+                log.error("authSession.getUserLogin() " + authSession.getUserLogin());
                 log.error("Exception create InitialDirContext", e);
                 return false;
             }
@@ -173,16 +162,13 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         return true;
     }
 
-    public void setParameters( final AuthProviderParametersListType parametersList ) throws Exception
-    {
-        if (parametersList==null)
+    public void setParameters(final AuthProviderParametersListType parametersList) throws Exception {
+        if (parametersList == null)
             return;
 
-        for (int i=0; i<parametersList.getParametersListCount(); i++)
-        {
+        for (int i = 0; i < parametersList.getParametersListCount(); i++) {
             AuthProviderParametersType params = parametersList.getParametersList(i);
-            for (int k=0; k<params.getParameterCount(); k++)
-            {
+            for (int k = 0; k < params.getParameterCount(); k++) {
                 ParameterType p = params.getParameter(k);
                 if ("provider-url".equals(p.getName()))
                     providerUrl = p.getValue();
@@ -190,8 +176,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         }
     }
 
-    public void initUserInfo( AuthSession authSession ) throws AuthException
-    {
+    public void initUserInfo(AuthSession authSession) {
     }
 
 }
