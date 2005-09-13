@@ -1,5 +1,5 @@
 /*
- * org.riverock.webmill -- Portal framework implementation
+ * org.riverock.webmill -- Portlet Library
  *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
  *
@@ -22,27 +22,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.portlet.menu;
+
+import java.io.IOException;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
+
 
 /**
- * User: Admin
- * Date: Sep 20, 2003
- * Time: 1:00:05 AM
- *
+ * User: SergeMaslyukov
+ * Date: 07.12.2004
+ * Time: 15:54:17
  * $Id$
  */
-package org.riverock.webmill.portlet.wrapper;
+public final class MenuPortlet extends GenericWebmillPortlet {
 
-import java.util.Map;
+    public MenuPortlet(){}
 
-import javax.portlet.RenderRequest;
-import javax.servlet.ServletContext;
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
+    }
 
-import org.riverock.webmill.portlet.PortalRequestInstance;
-
-public final class RenderRequestImpl extends WebmillPortletRequestV2 implements RenderRequest {
-
-    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes) {
-        super( servletContext, portalRequestInstance.getHttpRequest() );
-        prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes);
+    public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
+        MenuSimple menuSimple = new MenuSimple();
+        doRender(renderRequest, renderResponse, menuSimple);
     }
 }

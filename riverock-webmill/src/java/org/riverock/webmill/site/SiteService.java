@@ -22,6 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.site;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.webmill.core.*;
+import org.riverock.webmill.schema.core.*;
+
 
 /**
  * Author: mill
@@ -30,17 +36,8 @@
  *
  * $Id$
  */
-
-package org.riverock.webmill.site;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.core.*;
-import org.riverock.webmill.schema.core.*;
-
-public final class SiteService
-{
-    public SiteService()
-    {
+public final class SiteService {
+    public SiteService() {
     }
 
     public static void dropSiteLanguageData( DatabaseAdapter db_, Long idSiteLanguageForDrop )
@@ -56,9 +53,9 @@ public final class SiteService
             for (int j=0; j<newsList.getMainNewsCount(); j++)
             {
                 MainNewsItemType newsItem = newsList.getMainNews(j);
-                DeleteMainNewsTextWithId.processData(db_, newsItem.getId().longValue());
+                DeleteMainNewsTextWithId.processData(db_, newsItem.getId());
             }
-            DeleteMainNewsWithIdNews.processData(db_, newsGroupList.getIdNews().longValue() );
+            DeleteMainNewsWithIdNews.processData(db_, newsGroupList.getIdNews() );
         }
         DeleteMainListNewsWithIdSiteSupportLanguage.process( db_, idSiteLanguageForDrop );
         db_.commit();
