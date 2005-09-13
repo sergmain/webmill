@@ -24,9 +24,9 @@
  */
 package org.riverock.common.tools;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import java.util.Locale;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.List;
  * $Id$
  */
 public class StringTools {
-    private static final Log log = LogFactory.getLog(StringTools.class);
+    private final static Log log = LogFactory.getLog(StringTools.class);
 
     public static String getUserName(String firstName, String middleName, String lastName) {
         if (log.isDebugEnabled()) {
@@ -66,7 +66,7 @@ public class StringTools {
             return "unknown";
         }
         else {
-            return StringTools.encodeXml(s);
+            return StringEscapeUtils.escapeXml(s);
         }
     }
 
@@ -132,7 +132,7 @@ public class StringTools {
     }
 
     /**
-     * Build Locale from string. jdk1.4 have bug
+     * Build Locale from string.
      * @param locale with locale
      * @return java.util.Locale
      */
@@ -174,48 +174,26 @@ public class StringTools {
      * @return
      */
     public static String toOrigin( final String s) {
-        return decodeXml( s );
+        return StringEscapeUtils.unescapeXml( s );
     }
 
 
+    /**
+     * @deprecated use StringEscapeUtils.escapeXml( s )
+     * @param s
+     * @return
+     */
     public static String encodeXml( final String s ) {
-        if (isEmpty(s)) {
-            return s;
-        }
-
-        StringBuffer buf = new StringBuffer();
-        char ch = ' ';
-        for (int i = 0; i < s.length(); i++) {
-            ch = s.charAt(i);
-            if (ch == '<')
-                buf.append("&lt;");
-            else if (ch == '>')
-                buf.append("&gt;");
-            else if (ch == '&')
-                buf.append("&amp;");
-            else if (ch == '"')
-                buf.append("&quot;");
-            else
-                buf.append(ch);
-        }
-        return buf.toString();
+        return StringEscapeUtils.escapeXml( s );
     }
 
+    /**
+     * @deprecated use StringEscapeUtils.unescapeXml( s )
+     * @param s
+     * @return
+     */
     public static String decodeXml( final String s ) {
-        if (isEmpty(s)) {
-            return s;
-        }
-
-        return StringTools.replaceStringArray(
-                s,
-                new String[][]
-                {
-                    { "&gt;", ">"},
-                    { "&lt;", "<"},
-                    { "&quot;", "\""},
-                    { "&amp;", "&"}
-                }
-        );
+        return StringEscapeUtils.unescapeXml( s );
     }
 
     /**
@@ -224,7 +202,7 @@ public class StringTools {
      * @return
      */
     public static String prepareEditForm( final String s) {
-        return encodeXml( s );
+        return StringEscapeUtils.escapeXml( s );
     }
 
     public static String prepareToParsingSimple( final String s)
@@ -614,7 +592,7 @@ public class StringTools {
         for (int i=0; i<list.size(); i++)
         {
             if (r.length()!=0)
-                r=r+',';
+                r += ',';
 
             r += list.get(i).toString();
         }

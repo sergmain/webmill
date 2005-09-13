@@ -24,11 +24,11 @@
  */
 package org.riverock.common.tools;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 import java.util.List;
@@ -37,9 +37,8 @@ import java.util.LinkedList;
 /**
  * $Id$
  */
-public final class MainTools
-{
-    private final static Logger log = Logger.getLogger( MainTools.class );
+public final class MainTools {
+    private final static Log log = LogFactory.getLog(MainTools.class);
 
     public static void putKey( final Map map, final Object key, final Object value )
     {
@@ -210,41 +209,11 @@ public final class MainTools
         return obj;
     }
 
-    public static Locale RUlocale()
-    {
-        return new Locale("ru", "RU");
-    }
-
     /**
-     * @deprecated use StringTools.getLocale()
-     */
-    public static Locale getLocale( final String locale ) {
-        return StringTools.getLocale( locale );
-    }
-
-    /**
-     * Wrapper for Runtime.getRuntime().maxMemory()
-     * in JDK 1.3 this method not implemented
+     * @deprecated
      * @return
      */
-    public static Long getMaxMemory()
-    {
-        Long maxMemory = null;
-        try
-        {
-            Method method1 = Runtime.getRuntime().getClass().getMethod("maxMemory", null);
-            if (method1 != null)
-            {
-                Object obj = method1.invoke(Runtime.getRuntime(), null);
-                if (log.isDebugEnabled())
-                    log.debug("return value - "+obj);
-                maxMemory = (Long)obj;
-            }
-        }
-        catch(Exception exc)
-        {
-            log.warn("Exception in getMaxMemory()", exc);
-        }
-        return maxMemory;
+    public static Locale RUlocale() {
+        return new Locale("ru", "RU");
     }
 }
