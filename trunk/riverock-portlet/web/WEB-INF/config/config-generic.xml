@@ -1,12 +1,14 @@
+<?xml version="1.0"?>
+<!--
 /*
- * org.riverock.portlet -- Portlet Library
- *
+ * org.riverock.portlet - Portlet Library
+ * 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- *
- * Riverock -- The Open-source Java Development Community
+ * 
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- *
- *
+ * 
+ * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
@@ -22,32 +24,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
-package org.riverock.portlet.forum;
-
-import junit.framework.TestCase;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import org.riverock.common.collections.TreeUtils;
-import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.db.DatabaseAdapter;
-
-/**
- * User: smaslyukov
- * Date: 16.08.2004
- * Time: 17:46:25
- * $Id$
- */
-public class TestForumMessageTreeRebuild extends TestCase {
-
-    public void testRebuildTree()
-        throws Exception
-    {
-    }
-
-}
+-->
+<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-generic\src-schema\xsd\riverock-generic-config.xsd">
+	<DTS>
+		<TimeZoneName>Europe/Moscow</TimeZoneName>
+	</DTS>
+	<MailHost>localhost</MailHost>
+	<DefaultConnectionName>MYSQL_JNDI</DefaultConnectionName>
+    <DatabaseConnection name="MYSQL_JNDI">
+        <ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>
+                <DataSourceType>JNDI</DataSourceType>
+                <DataSourceName>jdbc/webmill</DataSourceName>
+    </DatabaseConnection>
+</WebmillConfig>
