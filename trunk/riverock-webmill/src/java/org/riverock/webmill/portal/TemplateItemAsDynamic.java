@@ -24,14 +24,31 @@
  */
 package org.riverock.webmill.portal;
 
+import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+
+import org.apache.log4j.Logger;
+
 /**
- * User: serg_main
- * Date: 14.05.2004
- * Time: 17:35:15
- * @author Serge Maslyukov
+ * User: SergeMaslyukov
+ * Date: 25.11.2004
+ * Time: 1:47:43
  * $Id$
  */
-public class PortalConstants {
-    public static final String PORTAL_NAMESPACE_PARAMETER = "mill.ns";
-    public static final String WEBMILL_GUEST_ROLE = "webmill.guest";
+public final class TemplateItemAsDynamic extends TemplateItemBaseClass{
+    private final static Logger log = Logger.getLogger( TemplateItemAsDynamic.class );
+
+    void getData( PageElement pageElement ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug( "renderPortlet()");
+        }
+        pageElement.renderPortlet();
+    }
+
+    void processAction( PageElement pageElement ) {
+        pageElement.processActionPortlet();
+    }
+
+    TemplateItemTypeTypeType getType() {
+        return TemplateItemTypeTypeType.DYNAMIC;
+    }
 }

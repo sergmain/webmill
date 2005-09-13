@@ -34,13 +34,9 @@ package org.riverock.webmill.test;
 
 import java.util.List;
 
-import org.riverock.interfaces.schema.javax.portlet.InitParamType;
-import org.riverock.interfaces.schema.javax.portlet.NameType;
-import org.riverock.interfaces.schema.javax.portlet.ValueType;
-
 public class TestRestructurePortletXml
 {
-
+  /*
     static void addInitParam(List v, String name_, String value_)
     {
         if (value_==null)
@@ -56,7 +52,7 @@ public class TestRestructurePortletXml
 
         v.add( init );
     }
-
+*/
 
     public static void main(String args[])
         throws Exception

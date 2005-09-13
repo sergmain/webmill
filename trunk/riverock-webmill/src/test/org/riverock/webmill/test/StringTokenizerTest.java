@@ -16,5 +16,10 @@ public class StringTokenizerTest {
             System.out.println(">"+st.nextToken()+"<");
 
         }
+        st = new StringTokenizer(s, ",");
+        while (st.hasMoreElements()) {
+            System.out.println(">"+st.nextElement()+"<");
+
+        }
     }
 }

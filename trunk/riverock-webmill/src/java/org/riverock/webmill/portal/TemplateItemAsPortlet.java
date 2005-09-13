@@ -24,14 +24,25 @@
  */
 package org.riverock.webmill.portal;
 
+import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+
 /**
- * User: serg_main
- * Date: 14.05.2004
- * Time: 17:35:15
- * @author Serge Maslyukov
+ * User: SergeMaslyukov
+ * Date: 25.11.2004
+ * Time: 1:47:25
  * $Id$
  */
-public class PortalConstants {
-    public static final String PORTAL_NAMESPACE_PARAMETER = "mill.ns";
-    public static final String WEBMILL_GUEST_ROLE = "webmill.guest";
+public final class TemplateItemAsPortlet extends TemplateItemBaseClass {
+
+    void getData( PageElement pageElement ) {
+        pageElement.renderPortlet();
+    }
+
+    void processAction( PageElement pageElement ) {
+        pageElement.processActionPortlet();
+    }
+
+    TemplateItemTypeTypeType getType() {
+        return TemplateItemTypeTypeType.PORTLET;
+    }
 }
