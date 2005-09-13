@@ -26,7 +26,8 @@ import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.web.response.PortletModuleResponseImpl;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.tools.PortletMetadataService;
 
 /**
  * @author SMaslyukov
@@ -34,13 +35,13 @@ import org.riverock.webmill.portlet.PortletTools;
  *         Time: 16:03:52
  *         $Id$
  */
-public class ForumPortletv2 extends AbstractForumPortlet {
-    private final static Logger log = Logger.getLogger(ForumPortletv2.class);
+public class ForumPortlet extends AbstractForumPortlet {
+    private final static Logger log = Logger.getLogger(ForumPortlet.class);
 
     public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
         long timeStart = System.currentTimeMillis();
 
-        Long forumId = PortletTools.getLong(actionRequest, Constants.NAME_FORUM_ID);
+        Long forumId = PortletService.getLong(actionRequest, Constants.NAME_FORUM_ID);
         if (log.isDebugEnabled()) {
             log.debug("forumId: "+forumId);
             Enumeration en = actionRequest.getParameterNames();
@@ -97,19 +98,19 @@ public class ForumPortletv2 extends AbstractForumPortlet {
 
         actionRequest.setAttribute(Constants.FORWARD_PAGE_ACTION, forwardPage);
 
-        Long processTime = new Long( System.currentTimeMillis() - timeStart );
+        Long processTime = System.currentTimeMillis() - timeStart;
         actionRequest.setAttribute(Constants.PAGE_PROCESS_TIME_ATTRIBUTE, processTime);
     }
 
     private GenericBean initGenericBean(ModuleActionRequest forumActionBean, WmForumItemType forum) {
         GenericBean genericBean = new GenericBean();
 
-        genericBean.setLoginUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGIN_URL_METADATA ) );
-        genericBean.setLogoutUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
-        genericBean.setRegisterUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
-        genericBean.setMembersUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
+        genericBean.setLoginUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGIN_URL_METADATA ) );
+        genericBean.setLogoutUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
+        genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
+        genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setForumHomeUrl(
-            PortletTools.ctxStringBuffer((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_PORTLET_NAME).
+            PortletService.ctxStringBuffer((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_PORTLET_NAME).
             append('?').
             append(Constants.NAME_FORUM_ID).
             append('=').
@@ -125,14 +126,14 @@ public class ForumPortletv2 extends AbstractForumPortlet {
     }
 
     public static int getMessagesPerPage(ModuleConfig moduleConfig) {
-        return moduleConfig.getInitParameterInt(Constants.MESSAGES_PER_PAGE_INIT_PARAM, new Integer(20)).intValue();
+        return moduleConfig.getInitParameterInt(Constants.MESSAGES_PER_PAGE_INIT_PARAM, 20);
     }
 
     public static int getTopicsPerPage(ModuleConfig moduleConfig) {
-        return moduleConfig.getInitParameterInt(Constants.TOPICS_PER_PAGE_INIT_PARAM, new Integer(50)).intValue();
+        return moduleConfig.getInitParameterInt(Constants.TOPICS_PER_PAGE_INIT_PARAM, 50);
     }
 
     public static int getFloodTime(ModuleConfig moduleConfig) {
-        return moduleConfig.getInitParameterInt(Constants.FLOOD_TIME_INIT_PARAM, new Integer(5)).intValue();
+        return moduleConfig.getInitParameterInt(Constants.FLOOD_TIME_INIT_PARAM, 5);
     }
 }

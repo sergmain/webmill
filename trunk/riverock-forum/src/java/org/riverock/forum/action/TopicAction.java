@@ -5,7 +5,7 @@ import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.ForumError;
-import org.riverock.forum.ForumPortletv2;
+import org.riverock.forum.ForumPortlet;
 import org.riverock.forum.util.Constants;
 import org.riverock.forum.bean.TopicBean;
 import org.riverock.forum.dao.DAOFactory;
@@ -25,7 +25,7 @@ public class TopicAction implements Action {
         TopicDAO topicDAO = daof.getTopicDAO();
         TopicBean topicBean = topicDAO.execute(
             t_id.intValue(), start,
-            ForumPortletv2.getMessagesPerPage(forumActionBean.getConfig()),
+            ForumPortlet.getMessagesPerPage(forumActionBean.getConfig()),
             moduleActionRequest.getUrlProvider(),
             forumActionBean.getForumId(),
             moduleActionRequest.getRequest().getUser()

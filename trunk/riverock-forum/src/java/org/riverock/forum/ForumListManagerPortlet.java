@@ -23,7 +23,8 @@ import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.web.response.PortletModuleResponseImpl;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.tools.PortletMetadataService;
 
 /**
  * @author SMaslyukov
@@ -85,12 +86,12 @@ public class ForumListManagerPortlet extends AbstractForumPortlet {
     private GenericBean initGenericBean(ModuleActionRequest forumActionBean) {
         GenericBean genericBean = new GenericBean();
 
-        genericBean.setLoginUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGIN_URL_METADATA ) );
-        genericBean.setLogoutUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
-        genericBean.setRegisterUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
-        genericBean.setMembersUrl( PortletTools.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
+        genericBean.setLoginUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGIN_URL_METADATA ) );
+        genericBean.setLogoutUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
+        genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
+        genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setForumHomeUrl(
-            PortletTools.ctxStringBuffer((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_LIST_MANAGER_PORTLET_NAME).
+            PortletService.ctxStringBuffer((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_LIST_MANAGER_PORTLET_NAME).
             append('?').
             append("a=1")
         );

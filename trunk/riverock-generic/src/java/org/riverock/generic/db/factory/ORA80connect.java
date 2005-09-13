@@ -98,6 +98,10 @@ public class ORA80connect extends ORAconnect
 
     }
 
+    public String getDriverClass() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public ORA80connect()
     {
         super();

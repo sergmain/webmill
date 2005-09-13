@@ -5,7 +5,7 @@ import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.ForumDAO;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
-import org.riverock.forum.ForumPortletv2;
+import org.riverock.forum.ForumPortlet;
 import org.riverock.forum.ForumError;
 import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.util.Constants;
@@ -28,8 +28,8 @@ public class ForumAction implements Action {
         ForumDAO forumDAO = daof.getForumDAO();
         ForumConcreteBean forumConcreteBean = forumDAO.execute(
             f_id.intValue(),
-            ForumPortletv2.getMessagesPerPage(forumActionBean.getConfig()),
-            ForumPortletv2.getTopicsPerPage(forumActionBean.getConfig()),
+            ForumPortlet.getMessagesPerPage(forumActionBean.getConfig()),
+            ForumPortlet.getTopicsPerPage(forumActionBean.getConfig()),
             start, keyword,
             forumActionBean.getForumId(),
             moduleActionRequest.getUrlProvider()

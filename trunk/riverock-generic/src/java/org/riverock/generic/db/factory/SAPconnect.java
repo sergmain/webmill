@@ -41,9 +41,10 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.sql.DataSource;
+
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.DbDataFieldDataType;
 import org.riverock.generic.schema.db.structure.DbFieldType;
@@ -57,7 +58,7 @@ import org.apache.log4j.Logger;
 
 public class SAPconnect extends DatabaseAdapter
 {
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.factory.SAPconnect" );
+    private static Logger log = Logger.getLogger( SAPconnect.class );
 
     public boolean getIsClosed()
             throws SQLException
@@ -70,6 +71,14 @@ public class SAPconnect extends DatabaseAdapter
     public int getMaxLengthStringField()
     {
         return 2000;
+    }
+
+    protected DataSource createDataSource() throws SQLException {
+        return null;
+    }
+
+    public String getDriverClass() {
+        return "com.sap.dbtech.jdbc.DriverSapDB";
     }
 
     protected void finalize() throws Throwable
@@ -414,44 +423,6 @@ public class SAPconnect extends DatabaseAdapter
     public boolean testExceptionConstraintExists(Exception e)
     {
         return false;
-    }
-
-    /**
-     Этот метод создает коннект к серверу с указанным объектом типа ConnectionData.<br>
-
-     Параметры:
-     <blockquote>
-     cd - объект типа org.riverock.generic.db.ConnectionData<br>
-     </blockquote>
-     */
-    protected void init(DatabaseConnectionType dc_)
-            throws SQLException, ClassNotFoundException
-    {
-        dc = dc_;
-
-        if (dc == null)
-            throw new SQLException("#21.001: ConnectionData data not initialized.");
-
-        log.debug("Status isDriverLoaded - "+isDriverLoaded);
-        if (!isDriverLoaded)
-        {
-            Class cl_ = Class.forName("com.sap.dbtech.jdbc.DriverSapDB");
-            isDriverLoaded = true;
-        }
-
-        if (log.isDebugEnabled())
-        {
-            log.debug("ConnectString - "+dc.getConnectString());
-            log.debug("username - "+dc.getUsername());
-            log.debug("password - "+dc.getPassword());
-            log.debug("isAutoCommit - "+dc.getIsAutoCommit());
-        }
-
-        conn = DriverManager.getConnection
-                (dc.getConnectString(),  dc.getUsername(), dc.getPassword());
-
-        conn.setAutoCommit(dc.getIsAutoCommit().booleanValue());
-
     }
 
     public int getFamaly()

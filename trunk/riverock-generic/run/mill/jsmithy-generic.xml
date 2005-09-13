@@ -25,7 +25,7 @@
  *
  */
 -->
-<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\jsmithy-generic\src-schema\xsd\jsmithy-generic-config.xsd">
+<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverco\riverock-generic\src-schema\xsd\jsmithy-generic-config.xsd">
 	<GenericTempDir>c:\opt1\mill\temp</GenericTempDir>
 	<DTS>
 		<TimeZoneName>Europe/Moscow</TimeZoneName>

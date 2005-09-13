@@ -20,7 +20,7 @@ public class ClassQueryItemImpl implements ClassQueryItem {
     }
     public ClassQueryItemImpl(long idx, String val)
     {
-        setIndex(new Long(idx));
+        setIndex(idx);
         setValue(val);
     }
 
