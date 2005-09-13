@@ -37,16 +37,23 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.portlet.main.Constants;
-import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.PortletTools;
 
-import org.apache.log4j.Logger;
+import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.main.Constants;
+import org.riverock.sso.a3.AuthSession;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
+
+
+
 
 /**
  * Author: mill
@@ -57,7 +64,7 @@ import org.apache.log4j.Logger;
  */
 public final class FirmAddCommitPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( FirmAddCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( FirmAddCommitPortlet.class );
 
     public FirmAddCommitPortlet() {
     }
@@ -80,7 +87,7 @@ public final class FirmAddCommitPortlet implements Portlet {
         Writer out = renderResponse.getWriter();
         WebmillErrorPage.processPortletError(out, null,
             (String)renderRequest.getAttribute( ERROR_TEXT ),
-            PortletTools.url(Constants.CTX_TYPE_INDEX, renderRequest, renderResponse ),
+            PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse ),
             (String)renderRequest.getAttribute( ERROR_URL ));
 
         out.flush();
@@ -98,15 +105,15 @@ public final class FirmAddCommitPortlet implements Portlet {
                 throw new PortletSecurityException( "You have not enough right" );
             }
 
-                dbDyn = DatabaseAdapter.getInstance( true );
+                dbDyn = DatabaseAdapter.getInstance();
 
-                String index_page = PortletTools.url( "mill.firm.index", actionRequest, actionResponse );
+                String index_page = PortletService.url( "mill.firm.index", actionRequest, actionResponse );
 
                 CustomSequenceType seq = new CustomSequenceType();
                 seq.setSequenceName( "seq_MAIN_LIST_FIRM" );
                 seq.setTableName( "MAIN_LIST_FIRM" );
                 seq.setColumnName( "ID_FIRM" );
-                Long sequenceValue = new Long( dbDyn.getSequenceNextValue( seq ) );
+                Long sequenceValue = dbDyn.getSequenceNextValue( seq );
 
 
                 ps = dbDyn.prepareStatement( "insert into MAIN_LIST_FIRM (" +
@@ -157,23 +164,23 @@ public final class FirmAddCommitPortlet implements Portlet {
 
                 int num = 1;
                 RsetTools.setLong( ps, num++, sequenceValue );
-                ps.setString( num++, PortletTools.getString( actionRequest, "full_name" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "short_name" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "address" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "telefon_buh" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "telefon_chief" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "chief" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "buh" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "fax" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "email" ) );
-                RsetTools.setLong( ps, num++, PortletTools.getLong( actionRequest, "icq" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "short_client_info" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "url" ) );
-                ps.setString( num++, PortletTools.getString( actionRequest, "short_info" ) );
-                RsetTools.setLong( ps, num++, PortletTools.getLong( actionRequest, "is_work" ) );
-                RsetTools.setLong( ps, num++, PortletTools.getLong( actionRequest, "is_need_recvizit" ) );
-                RsetTools.setLong( ps, num++, PortletTools.getLong( actionRequest, "is_need_person" ) );
-                RsetTools.setLong( ps, num++, PortletTools.getLong( actionRequest, "is_search" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "full_name" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "short_name" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "address" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "telefon_buh" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "telefon_chief" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "chief" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "buh" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "fax" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "email" ) );
+                RsetTools.setLong( ps, num++, PortletService.getLong( actionRequest, "icq" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "short_client_info" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "url" ) );
+                ps.setString( num++, RequestTools.getString( actionRequest, "short_info" ) );
+                RsetTools.setLong( ps, num++, PortletService.getLong( actionRequest, "is_work" ) );
+                RsetTools.setLong( ps, num++, PortletService.getLong( actionRequest, "is_need_recvizit" ) );
+                RsetTools.setLong( ps, num++, PortletService.getLong( actionRequest, "is_need_person" ) );
+                RsetTools.setLong( ps, num++, PortletService.getLong( actionRequest, "is_search" ) );
                 ps.setString( num++, auth_.getUserLogin() );
 
                 int i1 = ps.executeUpdate();

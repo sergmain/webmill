@@ -27,13 +27,17 @@ package org.riverock.portlet.member;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.riverock.webmill.portlet.PortletTools;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
-import org.apache.log4j.Logger;
+
 
 
 /**
@@ -43,9 +47,9 @@ import org.apache.log4j.Logger;
  *
  * $Id$
  */
-public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
+public class ArticlePlainTemplateClassQuery extends BaseClassQuery
 {
-    private static Logger log = Logger.getLogger(ArticlePlainTemplateClassQuery.class);
+    private static Log log = LogFactory.getLog(ArticlePlainTemplateClassQuery.class);
 
     public ArticlePlainTemplateClassQuery()
     {
@@ -54,9 +58,9 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
     /**
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest ) throws Exception
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception
     {
-        String value = PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes");
+        String value = bundle.getString("yesno.yes");
 
         if (log.isDebugEnabled())
             log.debug( "ArticlePlainTemplateClassQuery value - " + value );
@@ -68,7 +72,7 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
      *  Возвращает список возможных значений для построения <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         if (log.isDebugEnabled())
@@ -76,7 +80,7 @@ public class ArticlePlainTemplateClassQuery  extends BaseClassQuery
 
         List v = new LinkedList();
         {
-            ClassQueryItem item = new ClassQueryItemImpl(new Long(1), PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes") );
+            ClassQueryItem item = new ClassQueryItemImpl( 1, bundle.getString("yesno.yes") );
 
             item.setSelected(true);
 

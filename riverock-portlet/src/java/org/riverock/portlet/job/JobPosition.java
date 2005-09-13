@@ -32,7 +32,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -40,7 +42,7 @@ import org.riverock.generic.site.SiteListSite;
 import org.riverock.common.tools.RsetTools;
 
 public final class JobPosition {
-    private final static Logger log = Logger.getLogger( JobPosition.class );
+    private final static Log log = LogFactory.getLog( JobPosition.class );
 
     private static String sqlJobPosition =
         "select a.id_job_position, a.date_post, (a.date_post + a.period_activity) date_end, " +
@@ -159,11 +161,11 @@ return (JobPosition) dummy.getInstanceNew( db__, id__);
                 namePosition = RsetTools.getString(rs, "name_position", "&nbsp;");
                 datePost = RsetTools.getCalendar(rs, "date_post");
                 dateEnd = RsetTools.getCalendar(rs, "date_end");
-                ageFrom = RsetTools.getInt(rs, "age_from", new Integer(16) ).intValue();
-                ageTill = RsetTools.getInt(rs, "age_to", new Integer(65) ).intValue();
+                ageFrom = RsetTools.getInt( rs, "age_from", 16 );
+                ageTill = RsetTools.getInt( rs, "age_to", 65 );
                 gender = RsetTools.getString(rs, "sex_name");
                 nameEducation = RsetTools.getString(rs, "name_education");
-                salary = RsetTools.getFloat(rs, "salary", new Float(0)).floatValue();
+                salary = RsetTools.getFloat( rs, "salary", 0f );
                 salaryComment = RsetTools.getString(rs, "salary_comment");
                 cityPosition = RsetTools.getString(rs, "city_position");
                 testPeriod = RsetTools.getString(rs, "test_period");

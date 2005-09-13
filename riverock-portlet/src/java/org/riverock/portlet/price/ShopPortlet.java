@@ -8,9 +8,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.webmill.portlet.GenericWebmillPortlet;
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
 
-import org.apache.log4j.Logger;
+
 
 /**
  * User: SergeMaslyukov
@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 public final class ShopPortlet extends GenericWebmillPortlet {
     public final static String CTX_TYPE_SHOP = "mill.shop";
     public final static String CURRENT_SHOP = "MILL.CURRENT_SHOP";
-    public final static String BASKET_SHOP_SESSION = "MILL.BASKET_SHOP_SESSION";
     public final static String ORDER_SESSION = "MILL.ORDER_SESSION";
     public final static String ID_SHOP_SESSION = "MILL.ID_SHOP_SESSION";
     public final static String NAME_INVOICE_NEW_COUNT_PARAM = "mill.invoice.count";
@@ -33,11 +32,9 @@ public final class ShopPortlet extends GenericWebmillPortlet {
     public final static String NAME_ADD_ID_ITEM = "mill.add_id";
     public final static String NAME_ID_SHOP_PARAM = "mill.id_shop";
 
-//    private final static Logger log = Logger.getLogger( ShopPortlet.class );
-
     public ShopPortlet(){}
 
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
     }
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {

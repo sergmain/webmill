@@ -39,16 +39,20 @@ import org.riverock.cache.impl.CacheException;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.sql.cache.SqlStatement;
 
-import org.apache.log4j.Logger;
+
 
 import javax.portlet.PortletException;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
  * $Id$
  */
 public final class NewsItem {
-    private final static Logger log = Logger.getLogger( NewsItem.class );
+    private final static Log log = LogFactory.getLog( NewsItem.class );
 
     public NewsItemType newsItem = new NewsItemType();
 
@@ -71,7 +75,7 @@ public final class NewsItem {
     public static NewsItem getInstance(DatabaseAdapter db__, long id__)
         throws Exception
     {
-        return getInstance(db__, new Long(id__) );
+        return getInstance(db__, id__ );
     }
 
     public static NewsItem getInstance(DatabaseAdapter db__, Long id__)
@@ -132,8 +136,8 @@ public final class NewsItem {
                 newsItem.setNewsTime(
                     DateUtils.getStringDate(newsItem.getNewsDateTime(), "HH:mm", locale)
                 );
-                newsItem.setNewsHeader( StringTools.decodeXml( RsetTools.getString(rs, "HEADER")) );
-                newsItem.setNewsAnons( StringTools.decodeXml(RsetTools.getString(rs, "ANONS")) );
+                newsItem.setNewsHeader( StringEscapeUtils.unescapeXml( RsetTools.getString(rs, "HEADER")) );
+                newsItem.setNewsAnons( StringEscapeUtils.unescapeXml(RsetTools.getString(rs, "ANONS")) );
 
                 initTextField(db_);
 

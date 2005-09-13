@@ -22,14 +22,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.main;
 
 /**
  *
  * $Id$
  *
  */
-package org.riverock.portlet.main;
-
 public class Constants {
 
     public static final String FORWARD_PAGE_ACTION = "forward-page";
@@ -44,13 +43,4 @@ public class Constants {
     public static final String LOGOUT_URL_METADATA = "logout-url";
     public static final String REGISTER_URL_METADATA = "register-url";
     public static final String MEMBERS_URL_METADATA = "members-url";
-
-
-    public final static String NAME_LANG_PARAM = "mill.lang";
-    public final static String NAME_TYPE_CONTEXT_PARAM    = "mill.context";
-    public static final String NAME_TOURL_PARAM     = "mill.tourl";
-    public final static String CTX_TYPE_MENU = "mill.menu";
-    public final static String CTX_TYPE_INDEX = "mill.index";
-    public final static String AUTH_SESSION = "MILL.AUTH_SESSION";
-
 }

@@ -35,6 +35,9 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletConfig;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.cache.impl.CacheException;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
@@ -45,17 +48,17 @@ import org.riverock.generic.main.CacheFactory;
 import org.riverock.portlet.core.GetSiteCtxArticleItem;
 import org.riverock.portlet.member.ClassQueryItemImpl;
 import org.riverock.portlet.schema.core.SiteCtxArticleItemType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletResultContent;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
 
-import org.apache.log4j.Logger;
+
 
 /**
  * Author: mill
@@ -66,7 +69,7 @@ import org.apache.log4j.Logger;
  */
 
 public final class ArticleXml implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Logger log = Logger.getLogger( ArticleXml.class );
+    private final static Log log = LogFactory.getLog( ArticleXml.class );
 
     private static final CacheFactory cache = new CacheFactory( ArticleXml.class.getName() );
     private static final String DEFAULT_ROOT_NAME = "Article";
@@ -127,7 +130,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         if (log.isDebugEnabled())
             log.debug( "ArticleXml. getXml - "+xml );
 
-        return xml.getBytes( WebmillConfig.getHtmlCharset() );
+        return xml.getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 
     public byte[] getXml() throws Exception {
@@ -145,13 +148,15 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     }
 
     public PortletResultContent getInstance(DatabaseAdapter db__, long id__) throws Exception {
-        return getInstance(db__, new Long(id__) );
+        return getInstance(db__, id__ );
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__, Long id__)
+    public PortletResultContent getInstance( Long id__ )
             throws PortletException
     {
+        DatabaseAdapter db__ = null;
         try {
+            db__ = DatabaseAdapter.getInstance();
             PortletResultContent portletObject = (PortletResultContent) cache.getInstanceNew(db__, id__);
             return portletObject;
         }
@@ -159,6 +164,10 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             String es = "Error get instance of ArticleXml";
             log.error(es, e);
             throw new PortletException(es, e);
+        }
+        finally {
+            DatabaseManager.close(db__);
+            db__ = null;
         }
     }
 
@@ -179,18 +188,20 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String articleCode_)
+    public PortletResultContent getInstanceByCode( String articleCode_ )
         throws PortletException
     {
         if (log.isDebugEnabled())
             log.debug("#10.01.01 " + articleCode_);
 
-        PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
-        Long idSupportLanguageCurrent = portalInfo.getIdSupportLanguage( renderRequest.getLocale() );
+        PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+        Long idSupportLanguageCurrent = portalInfo.getSupportLanguageId( renderRequest.getLocale() );
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        DatabaseAdapter db__ = null;
         try {
+            db__ = DatabaseAdapter.getInstance();
             ps = db__.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, idSupportLanguageCurrent );
             ps.setString(2, articleCode_);
@@ -215,9 +226,10 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
             throw new PortletException(es, e);
         }
         finally {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db__, rs, ps);
             rs = null;
             ps = null;
+            db__ = null;
         }
     }
 

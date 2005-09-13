@@ -46,7 +46,7 @@ import org.riverock.portlet.schema.core.CashCurrencyItemType;
 
 public class CurrencyItem extends CustomCurrencyItemType
 {
-//    private static Logger cat = Logger.getLogger("org.riverock.portlet.price.CurrencyItem");
+//    private static Log cat = LogFactory.getLog("org.riverock.portlet.price.CurrencyItem");
 
     public void fillRealCurrencyData(StandardCurrencyType stdCurrency)
             throws Exception

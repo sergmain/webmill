@@ -34,21 +34,22 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletConfig;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletResultContent;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
 /**
  * $Id$
  */
 public final class FaqItem implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Logger log = Logger.getLogger( FaqItem.class );
+    private final static Log log = LogFactory.getLog( FaqItem.class );
 
     public String question = null;
     public String answer = null;
@@ -99,19 +100,25 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
         return null;
     }
 
-    public PortletResultContent getInstance( DatabaseAdapter db_, Long id ) {
+    public PortletResultContent getInstance( Long id ) {
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             return new FaqItem( db_, id );
         } catch (Exception e) {
+        }
+        finally {
+            DatabaseManager.close(db_);
+            db_ = null;
         }
         return null;
     }
 
-    public PortletResultContent getInstanceByCode( DatabaseAdapter db__, String portletCode_ ) throws PortletException {
+    public PortletResultContent getInstanceByCode( String portletCode_ ) {
         return null;
     }
 
-    public FaqItem(DatabaseAdapter db_, Long id) throws PortletException {
+    public FaqItem( DatabaseAdapter db_, Long id) throws PortletException {
         if ( id==null)
             return;
 

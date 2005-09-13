@@ -30,19 +30,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.interfaces.schema.javax.portlet.PortletType;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.portlet.PortletManager;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.bean.PortletDefinition;
+import org.riverock.webmill.container.tools.PortletService;
+
 
 /**
  * User: Admin
@@ -51,17 +53,13 @@ import org.riverock.webmill.portlet.PortletTools;
  *
  * $Id$
  */
-public class ContextDataClassQuery extends BaseClassQuery
-{
-    private static Logger log = Logger.getLogger( ContextDataClassQuery.class );
+public class ContextDataClassQuery extends BaseClassQuery {
+    private static Log log = LogFactory.getLog( ContextDataClassQuery.class );
 
-    // ID_SITE_CTX_TYPE
     private Long idSiteCtxType = null;
 
-    // ID_CONTEXT
     private Long idContext = null;
 
-    // ID_SITE_CTX_LANG_CATALOG
     private Long idSiteCtxLangCatalog = null;
 
     public void setIdSiteCtxLangCatalog(Long param)
@@ -92,7 +90,7 @@ public class ContextDataClassQuery extends BaseClassQuery
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -128,7 +126,7 @@ public class ContextDataClassQuery extends BaseClassQuery
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest )
+    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -165,7 +163,12 @@ public class ContextDataClassQuery extends BaseClassQuery
         if (log.isDebugEnabled())
             log.debug("namePortlet "+namePortlet);
 
-        PortletType portlet = PortletManager.getPortletDescription( namePortlet );
+        PortletDefinition portlet = null;
+
+        if (true) throw new IllegalStateException("not implemented");
+/*
+        portlet = PortletManager.getPortletDescription( namePortlet );
+*/
 
         if (log.isDebugEnabled())
             log.debug("portlet "+portlet);
@@ -174,8 +177,8 @@ public class ContextDataClassQuery extends BaseClassQuery
             return v;
 
         String classNameTemp =
-            PortletTools.getStringParam(
-                portlet, PortletTools.class_name_get_list
+            PortletService.getStringParam(
+                portlet, ContainerConstants.class_name_get_list
             );
 
         if (classNameTemp==null)
@@ -184,7 +187,7 @@ public class ContextDataClassQuery extends BaseClassQuery
         Constructor constructor = null;
         try
         {
-            constructor = Class.forName(classNameTemp).getConstructor(null);
+            constructor = Class.forName(classNameTemp).getConstructor(new Class[]{});
         }
         catch (Exception e)
         {
@@ -199,7 +202,7 @@ public class ContextDataClassQuery extends BaseClassQuery
             PortletGetList obj = null;
             Object o = null;
             try {
-                o = constructor.newInstance(null);
+                o = constructor.newInstance(new Object[]{});
                 obj = (PortletGetList)o;
             }
             catch (InvocationTargetException e) {
@@ -220,8 +223,8 @@ public class ContextDataClassQuery extends BaseClassQuery
             {
                 log.debug("#12.12.008 object " + obj);
                 log.debug("#12.12.009 localePack  " +
-                    PortletTools.getStringParam(
-                        portlet, PortletTools.locale_name_package
+                    PortletService.getStringParam(
+                        portlet, ContainerConstants.locale_name_package
                     )
                 );
             }

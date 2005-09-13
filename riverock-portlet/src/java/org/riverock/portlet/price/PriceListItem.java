@@ -22,26 +22,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.portlet.price;
 
 import java.io.PrintStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.site.SiteListSite;
 
-import org.apache.log4j.Logger;
-
+/**
+ * $Id$
+ */
 public class PriceListItem
 {
-    private static Logger log = Logger.getLogger( PriceListItem.class );
+    private static Log log = LogFactory.getLog( PriceListItem.class );
 
     public Long id_shop = null;
     public int isGroup = 0;
@@ -131,11 +131,11 @@ public class PriceListItem
 
         try {
             id_shop = RsetTools.getLong(rs, "ID_SHOP");
-            isGroup = RsetTools.getInt(rs, "IS_GROUP", new Integer(0)).intValue();
+            isGroup = RsetTools.getInt( rs, "IS_GROUP", 0 );
             itemID = RsetTools.getLong(rs, "ID");
             id_group = RsetTools.getLong(rs, "ID_MAIN");
             nameItem = RsetTools.getString(rs, "ITEM");
-            priceItem = RsetTools.getDouble(rs, "PRICE", new Double(0)).doubleValue();
+            priceItem = RsetTools.getDouble(rs, "PRICE", 0.0);
 
             if ( log.isDebugEnabled() ) {
                 log.debug("RSET priceItem "+ RsetTools.getDouble(rs, "PRICE"));
@@ -145,11 +145,10 @@ public class PriceListItem
             id_currency = RsetTools.getLong( rs, "ID_CURRENCY");
             codeCurrency = RsetTools.getString(rs, "CURRENCY");
             nameCurrency = RsetTools.getString(rs, "NAME_CURRENCY");
-            isLoad = new Integer(1).equals(RsetTools.getInt(rs, "ABSOLETE"))? "YES" : "NO";
-            isSpecial = RsetTools.getInt(rs, "IS_SPECIAL", new Integer(0)).intValue();
-            isManual = RsetTools.getInt(rs, "IS_MANUAL", new Integer(0)).intValue();
-
-            quantity = RsetTools.getInt(rs, "QUANTITY", new Integer(0)).intValue();
+            isLoad = RsetTools.getInt(rs, "ABSOLETE", 0)==1? "YES" : "NO";
+            isSpecial = RsetTools.getInt(rs, "IS_SPECIAL", 0);
+            isManual = RsetTools.getInt(rs, "IS_MANUAL", 0);
+            quantity = RsetTools.getInt(rs, "QUANTITY", 0);
             idPK = RsetTools.getLong(rs, "ID_ITEM");
         }
         catch (Exception e) {

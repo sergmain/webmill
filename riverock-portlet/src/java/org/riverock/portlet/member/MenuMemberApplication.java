@@ -22,24 +22,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.member;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Vector;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.sso.a3.AuthInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.portlet.PortletException;
 
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.sso.a3.AuthInfo;
+
 /**
- * Класс Application прденазначен для хранения описания приложений.
  *
  * Project millengine
  * Copyright Serg Maslyukov, 1999-2002
@@ -48,7 +49,7 @@ import javax.portlet.PortletException;
  */
 public class MenuMemberApplication
 {
-    private static Logger cat = Logger.getLogger( MenuMemberApplication.class );
+    private static Log cat = LogFactory.getLog( MenuMemberApplication.class );
 
     /**
      * название приложения
@@ -67,8 +68,8 @@ public class MenuMemberApplication
 
     public int applRecordNumber = 0;
 
-    public Vector subMenu = new Vector(0);
-    public Long applicationID;
+    public List subMenu = new ArrayList();
+    public Long applicationID = null;
 
     protected void finalize() throws Throwable
     {
@@ -90,7 +91,7 @@ public class MenuMemberApplication
     {
     }
 
-    public Vector getModuleList()
+    public List getModuleList()
     {
         return subMenu;
     }
@@ -171,23 +172,19 @@ public class MenuMemberApplication
         PreparedStatement ps = null;
         ResultSet rset = null;
         DatabaseAdapter db_ = null;
-        Vector vv = new Vector();
+        List vv = new ArrayList();
 
         try
         {
             applicationName = RsetTools.getString(rs, "NAME_ARM" );
             applicationCode = RsetTools.getString(rs, "CODE_ARM" );
 
-//            url = ""; //RsetTools.getString(rs, "JSP_METHOD" );
-            order = RsetTools.getInt(rs, "ORDER_FIELD" , new Integer(0)).intValue();
+            order = RsetTools.getInt(rs, "ORDER_FIELD" , 0);
 
             applicationID = RsetTools.getLong(rs, "ID_ARM");
             applRecordNumber = recordNumber_;
 
-            db_ = DatabaseAdapter.getInstance(false);
-
-//            if (cat.isDebugEnabled())
-//                cat.debug("SQL: \n" + sql_);
+            db_ = DatabaseAdapter.getInstance();
 
             ps = db_.prepareStatement(sql_);
 
@@ -201,7 +198,7 @@ public class MenuMemberApplication
                 MenuMemberModule mod = new MenuMemberModule(rset, applicationCode);
                 mod.modRecordNumber = moduleRecordNumber++;
                 mod.applRecordNumber = applRecordNumber;
-                vv.addElement(mod);
+                vv.add( mod );
             }
         }
         catch (Exception e1)
@@ -211,7 +208,7 @@ public class MenuMemberApplication
         }
         finally
         {
-            DatabaseManager.close(rset, ps);
+            DatabaseManager.close(db_, rset, ps);
             rset = null;
             ps = null;
         }

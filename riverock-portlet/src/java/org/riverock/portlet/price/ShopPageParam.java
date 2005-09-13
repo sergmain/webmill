@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.price;
 
 import java.util.Map;
@@ -42,12 +41,10 @@ import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 public class ShopPageParam {
     public Long id_shop = null;
     public Long id_group = null;
-//    public String nameTemplate = null;
     private String serverName = null;
     public Long idSite = null;
     public Long id_currency;
     public Map currencyURL = new HashMap();
-//    public StringManager sm = null;
     public boolean  isProcessInvoice =  false;
 
     public CurrencyPrecisionType precision = null;
@@ -58,14 +55,12 @@ public class ShopPageParam {
     protected void finalize() throws Throwable {
         id_shop = null;
         id_group = null;
-//        nameTemplate = null;
         serverName = null;
         if (currencyURL!=null){
             currencyURL.clear();
         }
         currencyURL = null;
         precision = null;
-//        sm  = null;
 
         super.finalize();
     }

@@ -29,14 +29,17 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.portlet.PortletResultContent;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletTools;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import org.apache.log4j.Logger;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.tools.PortletMetadataService;
 
 /**
  *
@@ -46,7 +49,7 @@ import org.apache.log4j.Logger;
  *
  */
 public final class NewsItemSimple implements PortletResultObject, PortletResultContent {
-    private final static Logger log = Logger.getLogger( NewsItemSimple.class );
+    private final static Log log = LogFactory.getLog( NewsItemSimple.class );
 
     private NewsItemSimpleType newsItem = new NewsItemSimpleType();
 
@@ -65,11 +68,12 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
     {
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db_) throws PortletException
+    public PortletResultContent getInstance() throws PortletException
     {
-        Long id__ = PortletTools.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
-        try
-        {
+        Long id__ = PortletService.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
             NewsItem item = NewsItem.getInstance(db_, id__);
 
             newsItem.setNewsAnons( item.newsItem.getNewsAnons() );
@@ -84,15 +88,19 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
             log.error(es, e);
             throw new PortletException( es, e );
         }
+        finally {
+            DatabaseManager.close(db_);
+            db_ = null;
+        }
         return this;
     }
 
-    public PortletResultContent getInstance( DatabaseAdapter db__, Long id ) throws PortletException {
-        return getInstance( db__ );
+    public PortletResultContent getInstance( Long id ) throws PortletException {
+        return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode( DatabaseAdapter db__, String portletCode_ ) throws PortletException {
-        return getInstance( db__ );
+    public PortletResultContent getInstanceByCode( String portletCode_ ) throws PortletException {
+        return getInstance();
     }
 
     public byte[] getPlainHTML() throws Exception {
@@ -109,14 +117,12 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
             append( "</td>\n" ).
             append( "<td width=\"100%\" class=\"newstitle\">\n<h6> " ).
             append( newsItem.getNewsAnons() ).
-//            append( StringTools.replaceString(newsItem.getNewsAnons(), "\n", "<br>\n") ).
             append( "</h6>\n" ).
             append( newsItem.getNewsText() ).
-//            append( StringTools.replaceString(newsItem.getNewsText(), "\n", "<br>\n") ).
             append( "\n</td></tr>\n" ).
             append( "</table>\n" );
 
-        return s.toString().getBytes( WebmillConfig.getHtmlCharset() );
+        return s.toString().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 
     public byte[] getXml()
@@ -127,7 +133,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
 
     public byte[] getXml( final String rootElement) throws Exception {
 
-        String root = PortletTools.getMetadata( renderRequest, "xml-root-name", rootElement );
+        String root = PortletMetadataService.getMetadata( renderRequest, "xml-root-name", rootElement );
 
         String xml = new StringBuffer().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
@@ -143,6 +149,6 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
             log.debug( "NewsXml. getXml: "+xml );
         }
 
-        return xml.getBytes( WebmillConfig.getHtmlCharset() );
+        return xml.getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 }

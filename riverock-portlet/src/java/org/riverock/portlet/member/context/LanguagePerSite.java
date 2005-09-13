@@ -22,20 +22,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Jan 12, 2003
- * Time: 8:11:48 PM
- *
- * $Id$
- */
 package org.riverock.portlet.member.context;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -45,11 +40,18 @@ import org.riverock.portlet.member.ClassQueryItemImpl;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
-import org.apache.log4j.Logger;
 
+
+/**
+ * User: Admin
+ * Date: Jan 12, 2003
+ * Time: 8:11:48 PM
+ *
+ * $Id$
+ */
 public class LanguagePerSite implements PortletGetList
 {
-    private static Logger log = Logger.getLogger( LanguagePerSite.class );
+    private static Log log = LogFactory.getLog( LanguagePerSite.class );
 
     public LanguagePerSite(){}
 
@@ -64,7 +66,7 @@ public class LanguagePerSite implements PortletGetList
 
         List v = new ArrayList();
         try {
-            db_ = DatabaseAdapter.getInstance( false );
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                 "SELECT d.ID_SITE_SUPPORT_LANGUAGE, d.CUSTOM_LANGUAGE, d.NAME_CUSTOM_LANGUAGE "+
                 "FROM SITE_CTX_LANG_CATALOG a, " +

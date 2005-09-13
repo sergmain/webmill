@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.firm;
 
 import java.io.IOException;
@@ -37,16 +36,18 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.utils.AuthHelper;
-import org.riverock.webmill.portlet.PortletTools;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * Author: mill
@@ -57,7 +58,7 @@ import org.apache.log4j.Logger;
  */
 public final class FirmDeleteCommitPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( FirmDeleteCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( FirmDeleteCommitPortlet.class );
 
     public FirmDeleteCommitPortlet() {
     }
@@ -81,7 +82,7 @@ public final class FirmDeleteCommitPortlet implements Portlet {
         Writer out = renderResponse.getWriter();
         WebmillErrorPage.processPortletError(out, null,
             (String)renderRequest.getAttribute( ERROR_TEXT ),
-            PortletTools.url(Constants.CTX_TYPE_INDEX, renderRequest, renderResponse ),
+            PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse ),
             (String)renderRequest.getAttribute( ERROR_URL ));
 
         out.flush();
@@ -98,11 +99,11 @@ public final class FirmDeleteCommitPortlet implements Portlet {
                 throw new PortletSecurityException( "You have not enough right" );
             }
 
-            dbDyn = DatabaseAdapter.getInstance( true );
+            dbDyn = DatabaseAdapter.getInstance();
 
-            String index_page = PortletTools.url( "mill.firm.index", actionRequest, actionResponse );
+            String index_page = PortletService.url( "mill.firm.index", actionRequest, actionResponse );
 
-            Long id_firm = PortletTools.getLong( actionRequest, "id_firm" );
+            Long id_firm = PortletService.getLong( actionRequest, "id_firm" );
             if ( id_firm == null )
                 throw new IllegalArgumentException( "id_firm not initialized" );
 

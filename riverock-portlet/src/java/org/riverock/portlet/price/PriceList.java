@@ -22,15 +22,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.portlet.price;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
@@ -42,11 +41,12 @@ import org.riverock.portlet.schema.price.ShopOrderType;
 import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.sso.a3.AuthSession;
 
-import org.apache.log4j.Logger;
-
+/**
+ * $Id$
+ */
 public class PriceList
 {
-    private static Logger log = Logger.getLogger( PriceList.class );
+    private static Log log = LogFactory.getLog( PriceList.class );
 
     public PriceList(){
     }
@@ -85,7 +85,7 @@ public class PriceList
                 if (log.isDebugEnabled())
                     log.debug("Redefine default value of precision");
 
-                precision = ((CurrencyPrecisionType) obj).getPrecision().intValue();
+                precision = ((CurrencyPrecisionType) obj).getPrecision();
             }
         }
 
@@ -94,7 +94,7 @@ public class PriceList
                 log.debug("calc price: user discount=" + auth.getUserInfo().getDiscount());
 
             if (auth.getUserInfo().getDiscount()!=null)
-                price = price * (100 - auth.getUserInfo().getDiscount().doubleValue()) / 100;
+                price = price * (100 - auth.getUserInfo().getDiscount()) / 100;
         }
 
         // производим округление
@@ -148,7 +148,7 @@ public class PriceList
                 if (log.isDebugEnabled())
                     log.debug("Redefine default value of precision");
 
-                precision = ((CurrencyPrecisionType) obj).getPrecision().intValue();
+                precision = ((CurrencyPrecisionType) obj).getPrecision();
             }
         }
 
@@ -157,7 +157,7 @@ public class PriceList
                 log.debug("calc price: user discount=" + auth.getUserInfo().getDiscount());
 
             if (auth.getUserInfo().getDiscount()!=null)
-                discountUser = (100 - auth.getUserInfo().getDiscount().doubleValue()) / 100;
+                discountUser = (100 - auth.getUserInfo().getDiscount()) / 100;
         }
 
         double discountShop = 0;

@@ -35,15 +35,19 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
 
-import org.apache.log4j.Logger;
+
+
 
 /**
  * Author: mill
@@ -53,7 +57,7 @@ import org.apache.log4j.Logger;
  */
 public final class RightDeleteCommitPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( RightDeleteCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( RightDeleteCommitPortlet.class );
 
     public RightDeleteCommitPortlet() {
     }
@@ -86,7 +90,7 @@ public final class RightDeleteCommitPortlet implements Portlet {
 
             dbDyn = DatabaseAdapter.getInstance();
 
-            String index_page = PortletTools.url( "mill.auth.right", actionRequest, actionResponse );
+            String index_page = PortletService.url( "mill.auth.right", actionRequest, actionResponse );
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
             if ( authInfo.getRoot() != 1 ) {
@@ -94,7 +98,7 @@ public final class RightDeleteCommitPortlet implements Portlet {
                 return;
             }
 
-            Long id_relate_right = PortletTools.getLong( actionRequest, "id_relate_right" );
+            Long id_relate_right = PortletService.getLong( actionRequest, "id_relate_right" );
             if ( id_relate_right == null )
                 throw new IllegalArgumentException( "id_relate_right not initialized" );
 

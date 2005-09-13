@@ -29,6 +29,7 @@ import java.io.Writer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -39,21 +40,22 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.ServletException;
 
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.schema.member.RelateClassType;
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
 import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.portlet.PortletTools;
-
-import org.apache.log4j.Logger;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: Admin
@@ -64,12 +66,12 @@ import org.apache.log4j.Logger;
  */
 public final class MemberCommitPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( MemberCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( MemberCommitPortlet.class );
+    protected PortletConfig portletConfig = null;
 
     public MemberCommitPortlet() {
     }
 
-    protected PortletConfig portletConfig = null;
     public void init( PortletConfig portletConfig ) {
         this.portletConfig = portletConfig;
     }
@@ -117,11 +119,13 @@ public final class MemberCommitPortlet implements Portlet {
         MemberProcessing mp = null;
         try {
 
-            mp = new MemberProcessing( actionRequest, actionResponse );
+            ResourceBundle bundle = portletConfig.getResourceBundle( actionRequest.getLocale() );
+            ModuleManager moduleManager = ModuleManager.getInstance( portletConfig.getPortletContext().getRealPath( "/" ) );
+            mp = new MemberProcessing( actionRequest, actionResponse, bundle, moduleManager );
 
-            String moduleName = PortletTools.getString(actionRequest, MemberConstants.MEMBER_MODULE_PARAM);
-            String actionName = PortletTools.getString(actionRequest, MemberConstants.MEMBER_ACTION_PARAM);
-            String subActionName = PortletTools.getString(actionRequest, MemberConstants.MEMBER_SUBACTION_PARAM).trim();
+            String moduleName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_MODULE_PARAM);
+            String actionName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_ACTION_PARAM);
+            String subActionName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_SUBACTION_PARAM).trim();
 
             if ( log.isDebugEnabled() ) {
                 Enumeration e = actionRequest.getParameterNames();
@@ -133,9 +137,6 @@ public final class MemberCommitPortlet implements Portlet {
                 else {
                     log.debug("Request map is empty" );
                 }
-
-                log.debug("Total of MemberFile  - " + ModuleManager.getCountFile());
-                log.debug("Total of Module - " + ModuleManager.getCountModule());
                 log.debug("Point #2.1 module '" + moduleName + "'");
                 log.debug("Point #2.2 action '" + actionName + "'");
                 log.debug("Point #2.3 subAction '" + subActionName + "'");
@@ -174,7 +175,7 @@ public final class MemberCommitPortlet implements Portlet {
                 synchronized(syncFile)
                 {
                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                        WebmillConfig.getWebmillDebugDir()+"member-content-site-start-0.xml",
+                        SiteUtils.getTempDir()+"member-content-site-start-0.xml",
                         "windows-1251");
                 }
             }
@@ -189,7 +190,7 @@ public final class MemberCommitPortlet implements Portlet {
                 synchronized(syncFile)
                 {
                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                        WebmillConfig.getWebmillDebugDir()+"member-content-site-start-2.xml",
+                        SiteUtils.getTempDir()+"member-content-site-start-2.xml",
                         "windows-1251");
                 }
             }
@@ -203,7 +204,6 @@ public final class MemberCommitPortlet implements Portlet {
 
                 try
                 {
-//                    dbDyn = DatabaseAdapter.getInstance(true);
                     dbDyn = mp.getDatabaseAdapter();
 
 
@@ -246,7 +246,7 @@ public final class MemberCommitPortlet implements Portlet {
                                 synchronized(syncFile)
                                 {
                                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                                        WebmillConfig.getWebmillDebugDir()+"member-content-before-yesno.xml",
+                                        SiteUtils.getTempDir()+"member-content-before-yesno.xml",
                                         "windows-1251");
                                 }
                             }
@@ -267,7 +267,7 @@ public final class MemberCommitPortlet implements Portlet {
                                     log.debug("Field with type "+FieldsTypeJspTypeType.YES_1_NO_N.toString()+" not found");
                             }
 
-                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.getFromParam(), mp.mod, dbDyn, actionRequest.getRemoteUser(), actionRequest.getServerName());
+                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.getFromParam(), mp.mod, dbDyn, actionRequest.getRemoteUser(), actionRequest.getServerName(), mp.getModuleManager());
 
                             if (log.isDebugEnabled())
                             {
@@ -276,7 +276,7 @@ public final class MemberCommitPortlet implements Portlet {
                                 synchronized(syncFile)
                                 {
                                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                                        WebmillConfig.getWebmillDebugDir()+"member-content.xml",
+                                        SiteUtils.getTempDir()+"member-content.xml",
                                         "windows-1251");
                                 }
                             }
@@ -327,7 +327,7 @@ public final class MemberCommitPortlet implements Portlet {
                                     switch (mp.content.getQueryArea().getPrimaryKeyType().getType())
                                     {
                                         case PrimaryKeyTypeType.NUMBER_TYPE:
-                                            psTest.setLong(1, ((Long) idNewRec).longValue());
+                                            psTest.setLong(1, (Long)idNewRec);
                                             break;
                                         case PrimaryKeyTypeType.STRING_TYPE:
                                             psTest.setString(1, (String) idNewRec);
@@ -411,12 +411,12 @@ public final class MemberCommitPortlet implements Portlet {
                                 case PrimaryKeyTypeType.NUMBER_TYPE:
                                     log.debug("PrimaryKeyType - 'number'");
 
-                                    idCurrRec = PortletTools.getLong(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idCurrRec = PortletService.getLong(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                                     break;
                                 case PrimaryKeyTypeType.STRING_TYPE:
                                     log.debug("PrimaryKeyType - 'string'");
 
-                                    idCurrRec = PortletTools.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idCurrRec = RequestTools.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                                     break;
 /*
                         case PrimaryKeyTypeType.DATE_TYPE :
@@ -442,7 +442,7 @@ public final class MemberCommitPortlet implements Portlet {
                             {
                                 log.debug("start build SQL");
 
-                                sql_ = MemberServiceClass.buildUpdateSQL( dbDyn, mp.content, mp.getFromParam(), mp.mod, true, actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName() );
+                                sql_ = MemberServiceClass.buildUpdateSQL( dbDyn, mp.content, mp.getFromParam(), mp.mod, true, actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName(), mp.getModuleManager() );
 
                                 if (log.isDebugEnabled())
                                     log.debug("update SQL:"+sql_);
@@ -491,11 +491,11 @@ public final class MemberCommitPortlet implements Portlet {
 
                             if (mp.content.getQueryArea().getPrimaryKeyType().getType() ==
                                 PrimaryKeyTypeType.NUMBER_TYPE) {
-                                idRec = PortletTools.getLong(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                idRec = PortletService.getLong(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                             }
                             else if ( mp.content.getQueryArea().getPrimaryKeyType().getType() ==
                                 PrimaryKeyTypeType.STRING_TYPE) {
-                                idRec = PortletTools.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                idRec = RequestTools.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                             }
 /*
 else if ( content.getQueryArea().getPrimaryKeyType().equals("date"))
@@ -518,7 +518,7 @@ content.getQueryArea().primaryKeyMask, "error", Locale.ENGLISH);
                             if (dbDyn.getFamaly()==DatabaseManager.MYSQL_FAMALY)
                                 mp.deleteBigtextData(dbDyn, idRec);
 
-                            sql_ = MemberServiceClass.buildDeleteSQL( dbDyn, mp.mod, mp.content, mp.getFromParam(), actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName() );
+                            sql_ = MemberServiceClass.buildDeleteSQL( dbDyn, mp.mod, mp.content, mp.getFromParam(), actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName(), moduleManager );
 
                             if (log.isDebugEnabled())
                                 log.debug("delete SQL: "+sql_+"<br>\n");
@@ -594,10 +594,9 @@ content.getQueryArea().primaryKeyMask, "error", Locale.ENGLISH);
                 }
                 finally
                 {
-                    DatabaseManager.close(ps);
-//                    DatabaseManager.close(dbDyn, ps);
+                    DatabaseManager.close(dbDyn, ps);
                     ps = null;
-//                    dbDyn = null;
+                    dbDyn = null;
                 }
 
             } // if ("commit" ...

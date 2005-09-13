@@ -26,18 +26,19 @@ package org.riverock.portlet.news;
 
 import java.util.Date;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortletConfig;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.portlet.PortletResultContent;
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.apache.log4j.Logger;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
 /**
  *
@@ -45,7 +46,7 @@ import org.apache.log4j.Logger;
  *
  */
 public final class NewsBlock implements PortletResultContent {
-    private final static Logger log = Logger.getLogger( NewsBlock.class );
+    private final static Log log = LogFactory.getLog( NewsBlock.class );
 
     private NewsBlockType newsBlockType = null;
 
@@ -113,7 +114,7 @@ public final class NewsBlock implements PortletResultContent {
             }
         }
         s.append( "</table>\n" );
-        return s.toString().getBytes( WebmillConfig.getHtmlCharset() );
+        return s.toString().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 
     public byte[] getXml(String rootElement) throws Exception

@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 11:55:59 AM
- *
- * $Id$
- */
-
 package org.riverock.portlet.auth;
 
 import java.sql.PreparedStatement;
@@ -44,6 +35,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -52,15 +46,23 @@ import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.a3.InternalAuthProviderTools;
 import org.riverock.sso.utils.AuthHelper;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.portlet.tools.RequestTools;
 
-import org.apache.log4j.Logger;
 
+
+
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 11:55:59 AM
+ *
+ * $Id$
+ */
 public final class BindChangeCommitPortlet implements Portlet {
-    private final static Logger log = Logger.getLogger( BindChangeCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( BindChangeCommitPortlet.class );
 
-    public BindChangeCommitPortlet()
-    {
+    public BindChangeCommitPortlet() {
     }
 
     protected PortletConfig portletConfig = null;
@@ -96,9 +98,9 @@ public final class BindChangeCommitPortlet implements Portlet {
             }
 
                     dbDyn = DatabaseAdapter.getInstance();
-                    index_page = PortletTools.url("mill.auth.bind", actionRequest, actionResponse );
+                    index_page = PortletService.url("mill.auth.bind", actionRequest, actionResponse );
 
-                    Long id_auth_user = PortletTools.getLong(actionRequest, "id_auth_user");
+                    Long id_auth_user = PortletService.getLong(actionRequest, "id_auth_user");
                     if (id_auth_user==null)
                         throw new IllegalArgumentException("id_auth_user not initialized");
 
@@ -118,15 +120,15 @@ public final class BindChangeCommitPortlet implements Portlet {
                     {
                         idFirm = InternalAuthProviderTools.initIdFirm(
                             dbDyn,
-                            PortletTools.getLong(actionRequest, InternalAuthProviderTools.firmIdParam),
+                            PortletService.getLong(actionRequest, InternalAuthProviderTools.firmIdParam),
                             authInfo.getUserLogin());
                         idService = InternalAuthProviderTools.initIdService(
                             dbDyn,
-                            PortletTools.getLong(actionRequest, InternalAuthProviderTools.serviceIdParam),
+                            PortletService.getLong(actionRequest, InternalAuthProviderTools.serviceIdParam),
                             authInfo.getUserLogin());
                         idRoad = InternalAuthProviderTools.initIdRoad(
                             dbDyn,
-                            PortletTools.getLong(actionRequest, InternalAuthProviderTools.roadIdParam),
+                            PortletService.getLong(actionRequest, InternalAuthProviderTools.roadIdParam),
                             authInfo.getUserLogin());
 
                         if (log.isDebugEnabled())
@@ -135,21 +137,21 @@ public final class BindChangeCommitPortlet implements Portlet {
                             log.debug("idService "+idService);
                             log.debug("idRoad " + idRoad);
 
-                            log.debug("user_login "+ PortletTools.getString(actionRequest, "user_login"));
-                            log.debug("user_password "+ PortletTools.getString(actionRequest, "user_password"));
+                            log.debug("user_login "+ RequestTools.getString(actionRequest, "user_login"));
+                            log.debug("user_password "+ RequestTools.getString(actionRequest, "user_password"));
 
                             log.debug("is_service "+ (authInfo.getService()==1?
-                                    PortletTools.getInt(actionRequest, "is_service", new Integer(0)).intValue():
+                                PortletService.getInt( actionRequest, "is_service", 0 ):
                                     0
                                     )
                             );
                             log.debug("is_road "+ (authInfo.getRoad()==1?
-                                    PortletTools.getInt(actionRequest, "is_road", new Integer(0)).intValue():
+                                PortletService.getInt( actionRequest, "is_road", 0 ):
                                     0
                                     )
                             );
                             log.debug("is_use_current_firm "+ (authInfo.getUseCurrentFirm()==1?
-                                    PortletTools.getInt(actionRequest, "is_use_current_firm", new Integer(0)).intValue():
+                                PortletService.getInt( actionRequest, "is_use_current_firm", 0 ):
                                     0
                                     )
                             );
@@ -175,23 +177,24 @@ public final class BindChangeCommitPortlet implements Portlet {
                                     "ID_FIRM  in ("+AuthHelper.getGrantedFirmId(dbDyn, auth_.getUserLogin())+") "
                                 );
 
-                                ps.setString(1, PortletTools.getString(actionRequest, "user_login"));
-                                ps.setString(2, PortletTools.getString(actionRequest, "user_password"));
+                                ps.setString(1, RequestTools.getString(actionRequest, "user_login"));
+                                ps.setString(2, RequestTools.getString(actionRequest, "user_password"));
 
-                                RsetTools.setInt(ps,3, (authInfo.getService()==1?
-                                        PortletTools.getInt(actionRequest, "is_service"):
-                                        null
-                                        )
+                                ps.setInt( 3,
+                                    authInfo.getService() == 1
+                                    ?PortletService.getInt( actionRequest, "is_service", 0 )==1 ?1 :0
+                                    :0
+
                                 );
-                                RsetTools.setInt(ps, 4, (authInfo.getRoad()==1?
-                                        PortletTools.getInt(actionRequest, "is_road"):
-                                        null
-                                        )
+                                ps.setInt( 4,
+                                    authInfo.getRoad() == 1
+                                    ?PortletService.getInt( actionRequest, "is_road", 0 )==1 ?1 :0
+                                    :0
                                 );
-                                RsetTools.setInt(ps, 5, (authInfo.getUseCurrentFirm()==1?
-                                        PortletTools.getInt(actionRequest, "is_use_current_firm"):
-                                        null
-                                        )
+                                ps.setInt( 5,
+                                    authInfo.getUseCurrentFirm() == 1
+                                    ?PortletService.getInt( actionRequest, "is_use_current_firm", 0 )==1?1:0
+                                    :0
                                 );
 
                                 if (idFirm != null)
@@ -228,23 +231,24 @@ public final class BindChangeCommitPortlet implements Portlet {
                                     "(select z.ID_FIRM from v$_read_list_firm z where z.user_login = ? )"
                                 );
 
-                                ps.setString(1, PortletTools.getString(actionRequest, "user_login"));
-                                ps.setString(2, PortletTools.getString(actionRequest, "user_password"));
+                                ps.setString(1, RequestTools.getString(actionRequest, "user_login"));
+                                ps.setString(2, RequestTools.getString(actionRequest, "user_password"));
 
-                                RsetTools.setInt(ps,3, (authInfo.getService()==1?
-                                        PortletTools.getInt(actionRequest, "is_service"):
-                                        null
-                                        )
+                                ps.setInt( 3,
+                                    authInfo.getService() == 1
+                                    ?PortletService.getInt( actionRequest, "is_service", 0 )==1 ?1 :0
+                                    :0
+
                                 );
-                                RsetTools.setInt(ps, 4, (authInfo.getRoad()==1?
-                                        PortletTools.getInt(actionRequest, "is_road"):
-                                        null
-                                        )
+                                ps.setInt( 4,
+                                    authInfo.getRoad() == 1
+                                    ?PortletService.getInt( actionRequest, "is_road", 0 )==1 ?1 :0
+                                    :0
                                 );
-                                RsetTools.setInt(ps, 5, (authInfo.getUseCurrentFirm()==1?
-                                        PortletTools.getInt(actionRequest, "is_use_current_firm"):
-                                        null
-                                        )
+                                ps.setInt( 5,
+                                    authInfo.getUseCurrentFirm() == 1
+                                    ?PortletService.getInt( actionRequest, "is_use_current_firm", 0 )==1?1:0
+                                    :0
                                 );
 
                                 if (idFirm != null)

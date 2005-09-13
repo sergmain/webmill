@@ -22,6 +22,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.auth;
+
+import java.io.Writer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ResourceBundle;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.HtmlTools;
+import org.riverock.sso.a3.AuthInfo;
+import org.riverock.sso.a3.AuthSession;
+import org.riverock.sso.a3.InternalAuthProvider;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -30,39 +58,9 @@
  *
  * $Id$
  */
-
-package org.riverock.portlet.auth;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.StringManager;
-import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.webmill.tools.HtmlTools;
-import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
-
-
 public final class RightIndex extends HttpServlet
 {
-    private final static Logger log = Logger.getLogger(RightIndex.class);
+    private final static Log log = LogFactory.getLog(RightIndex.class);
 
     static String AUTH_RIGHT_ROLE = "webmill.auth_right";
 
@@ -71,7 +69,7 @@ public final class RightIndex extends HttpServlet
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException
+        throws ServletException
     {
         if (log.isDebugEnabled())
             log.debug("method is POST");
@@ -80,7 +78,7 @@ public final class RightIndex extends HttpServlet
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-        throws IOException, ServletException
+        throws ServletException
     {
         Writer out = null;
         DatabaseAdapter db_ = null;
@@ -90,8 +88,8 @@ public final class RightIndex extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-
-            ContextNavigator.setContentType(response);
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
@@ -101,13 +99,6 @@ public final class RightIndex extends HttpServlet
             }
 
             db_ = DatabaseAdapter.getInstance();
-
-            StringManager sCustom = null;
-            String nameLocaleBundle = null;
-            nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
-            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
-            // end
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
             boolean isRootLevel = (authInfo.getRoot() == 1);
@@ -149,57 +140,57 @@ public final class RightIndex extends HttpServlet
             {
                 out.write("\r\n");
                 out.write("<b>");
-                out.write(sCustom.getStr("index.jsp.title"));
+                out.write(bundle.getString("index.jsp.title"));
                 out.write("</b>\r\n");
                 out.write("<p>");
                 out.write("<a href=\"");
                 out.write(
 
-                    PortletTools.url("mill.auth.add_right", renderRequest, renderResponse )
+                    PortletService.url("mill.auth.add_right", renderRequest, renderResponse )
 
                 );
                 out.write("\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
+                out.write(bundle.getString("button.add"));
                 out.write("</a>");
                 out.write("</p>\r\n");
                 out.write("<table border=\"0\">\r\n");
                 out.write("<tr>\r\n");
                 out.write("<th class=\"memberArea\">");
-                out.write(sCustom.getStr("index.jsp.id_access_group"));
+                out.write(bundle.getString("index.jsp.id_access_group"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\">");
-                out.write(sCustom.getStr("index.jsp.id_object_arm"));
+                out.write(bundle.getString("index.jsp.id_object_arm"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\">");
-                out.write(sCustom.getStr("index.jsp.code_right_s"));
+                out.write(bundle.getString("index.jsp.code_right_s"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\">");
-                out.write(sCustom.getStr("index.jsp.code_right_u"));
+                out.write(bundle.getString("index.jsp.code_right_u"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\">");
-                out.write(sCustom.getStr("index.jsp.code_right_i"));
+                out.write(bundle.getString("index.jsp.code_right_i"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\">");
-                out.write(sCustom.getStr("index.jsp.code_right_d"));
+                out.write(bundle.getString("index.jsp.code_right_d"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\">");
-                out.write(sCustom.getStr("index.jsp.code_right_a"));
+                out.write(bundle.getString("index.jsp.code_right_a"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\" width=\"5%\">");
-                out.write(sCustom.getStr("index.jsp.is_road"));
+                out.write(bundle.getString("index.jsp.is_road"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\" width=\"5%\">");
-                out.write(sCustom.getStr("index.jsp.is_service"));
+                out.write(bundle.getString("index.jsp.is_service"));
                 out.write("</th>\r\n");
                 out.write("<th class=\"memberArea\" width=\"5%\">");
-                out.write(sCustom.getStr("index.jsp.is_firm"));
+                out.write(bundle.getString("index.jsp.is_firm"));
                 out.write("</th>\r\n        ");
 
                 if (isRootLevel)
                 {
                     out.write("\r\n");
                     out.write("<th class=\"memberArea\">");
-                    out.write(sCustom.getStr("index.jsp.action"));
+                    out.write(bundle.getString("index.jsp.action"));
                     out.write("</th>\r\n            ");
 
                 }
@@ -237,30 +228,30 @@ public final class RightIndex extends HttpServlet
                     int A1 = (right.indexOf('A')==-1?0:1);
 
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(S1, false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(S1, false, bundle ));
                     out.write("</td>\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(U1, false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(U1, false, bundle ));
                     out.write("</td>\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(I1, false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(I1, false, bundle ));
                     out.write("</td>\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(D1, false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(D1, false, bundle ));
                     out.write("</td>\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(A1, false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(A1, false, bundle ));
                     out.write("</td>\r\n");
 
 
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_road", false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_road", false, bundle ));
                     out.write("</td>\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_service", false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_service", false, bundle ));
                     out.write("</td>\r\n");
                     out.write("<td class=\"memberArea\">");
-                    out.write(HtmlTools.printYesNo(rs, "is_firm", false, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "is_firm", false, bundle ));
                     out.write("</td>\r\n            ");
 
                     Long id_relate_right = RsetTools.getLong(rs, "id_relate_right");
@@ -269,22 +260,22 @@ public final class RightIndex extends HttpServlet
                         out.write("\r\n");
                         out.write("<td class=\"memberAreaAction\">\r\n");
                         out.write("<input type=\"button\" value=\"");
-                        out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
+                        out.write(bundle.getString("button.change"));
                         out.write("\" onclick=\"location.href='");
                         out.write(
 
-                            PortletTools.url("mill.auth.ch_right", renderRequest, renderResponse ) + '&'
+                            PortletService.url("mill.auth.ch_right", renderRequest, renderResponse ) + '&'
 
                         );
                         out.write("id_relate_right=");
                         out.write("" + id_relate_right);
                         out.write("';\">\r\n");
                         out.write("<input type=\"button\" value=\"");
-                        out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.delete"));
+                        out.write(bundle.getString("button.delete"));
                         out.write("\" onclick=\"location.href='");
                         out.write(
 
-                            PortletTools.url("mill.auth.del_right", renderRequest, renderResponse ) + '&'
+                            PortletService.url("mill.auth.del_right", renderRequest, renderResponse ) + '&'
 
                         );
                         out.write("id_relate_right=");
@@ -304,18 +295,18 @@ public final class RightIndex extends HttpServlet
                 out.write("<a href=\"");
                 out.write(
 
-                    PortletTools.url("mill.auth.add_right", renderRequest, renderResponse )
+                    PortletService.url("mill.auth.add_right", renderRequest, renderResponse )
 
                 );
                 out.write("\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
+                out.write(bundle.getString("button.add"));
                 out.write("</a>");
                 out.write("</p>\r\n");
 
             }
             else
             {
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("access_denied"));
+                out.write(bundle.getString("access_denied"));
             }
 
             out.write("\r\n");

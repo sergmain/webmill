@@ -26,18 +26,22 @@ package org.riverock.portlet.member;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.core.GetSiteTemplateItem;
-import org.riverock.webmill.core.GetSiteTemplateWithIdSiteSupportLanguageList;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
-import org.riverock.webmill.schema.core.SiteTemplateListType;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
-import org.apache.log4j.Logger;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.portlet.schema.core.SiteTemplateItemType;
+import org.riverock.portlet.schema.core.SiteTemplateListType;
+import org.riverock.portlet.core.GetSiteTemplateItem;
+import org.riverock.portlet.core.GetSiteTemplateWithIdSiteSupportLanguageList;
+import org.riverock.webmill.container.tools.PortletService;
+
+
 
 
 /**
@@ -48,7 +52,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class TemplateMemberClassQuery extends BaseClassQuery {
-    private final static Logger log = Logger.getLogger( TemplateMemberClassQuery.class );
+    private final static Log log = LogFactory.getLog( TemplateMemberClassQuery.class );
 
     private Long idSiteTemplate = null;
 
@@ -61,27 +65,26 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
     {
         idSiteTemplate = param;
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             if (idSiteTemplate!=null)
-                log.debug("idSiteTemplate - "+idSiteTemplate.longValue());
+                log.debug("idSiteTemplate - "+idSiteTemplate);
             else
                 log.debug("idSiteTemplate is null");
+        }
     }
 
     /**
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest )
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(false);
-            SiteTemplateItemType templateItem =
-                GetSiteTemplateItem.getInstance(db_, idSiteTemplate).item;
-
+            db_ = DatabaseAdapter.getInstance();
+            SiteTemplateItemType templateItem = GetSiteTemplateItem.getInstance(db_, idSiteTemplate).item;
             if (templateItem!=null)
                 return templateItem.getNameSiteTemplate();
 
@@ -98,15 +101,15 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
      *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
      * @return List of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest ) throws Exception
+    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception
     {
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance();
             List v = new ArrayList();
 
-            Long id = PortletTools.getLong(renderRequest, nameModule+'.'+nameField);
+            Long id = PortletService.getLong(renderRequest, nameModule+'.'+nameField);
             SiteTemplateListType templateList = GetSiteTemplateWithIdSiteSupportLanguageList.getInstance(db_, id).item;
 
             if (log.isDebugEnabled())

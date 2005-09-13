@@ -22,35 +22,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Id$
- *
- */
-
 package org.riverock.portlet.price;
 
 import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.portlet.schema.portlet.shop.CurrencyItemType;
 import org.riverock.portlet.schema.portlet.shop.CurrencyListType;
 import org.riverock.portlet.schema.portlet.shop.HiddenParamType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
 
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
 
+/**
+ *
+ * $Id$
+ *
+ */
 public class PriceCurrency
 {
-    private static Logger log = Logger.getLogger(PriceCurrency.class);
+    private static Log log = LogFactory.getLog(PriceCurrency.class);
 
     private static HiddenParamType getHidden(String name, String value)
     {
@@ -67,15 +67,10 @@ public class PriceCurrency
 
         CurrencyListType currency = new CurrencyListType();
 
-//        if (true) throw new PriceException("not imnplemented");
-        // TODO uncomment and fix
-
         try {
 //            currency.setNoCurrencyName(shopParam_.sm.getStr("price.wo-recalc"));
             currency.setNoCurrencyName( resourceBundle.getString( "price.wo-recalc" ) );
         }
-//        catch (UnsupportedEncodingException e) {
-//        }
         catch (java.util.MissingResourceException e) {
             currency.setNoCurrencyName( "error get string, price.wo-recalc" );
         }
@@ -84,9 +79,6 @@ public class PriceCurrency
 //            currency.setCurrencyNameSwitch(shopParam_.sm.getStr("price.recalculate"));
             currency.setCurrencyNameSwitch( resourceBundle.getString( "price.recalculate" ) );
         }
-//        catch (UnsupportedEncodingException e) {
-//            log.error("Error executing setCurrencyNameSwitch(shopParam_.sm.getStr(\"price.recalculate\")) ", e);
-//        }
         catch (java.util.MissingResourceException e) {
             currency.setNoCurrencyName( "error get string, price.recalculate" );
         }
@@ -97,10 +89,10 @@ public class PriceCurrency
 
         currency.setCurrencySelectParam(ShopPortlet.NAME_ID_CURRENCY_SHOP);
 
-        currency.addHiddenParam( getHidden(org.riverock.webmill.main.Constants.NAME_LANG_PARAM, portletRequest.getLocale().toString()) );
+        currency.addHiddenParam( getHidden(ContainerConstants.NAME_LANG_PARAM, portletRequest.getLocale().toString()) );
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + shopParam_.id_group));
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam_.id_shop));
-        currency.addHiddenParam( getHidden(Constants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
+        currency.addHiddenParam( getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
 //        currency.addHiddenParam( getHidden(Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam_.nameTemplate));
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy));
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam_.sortDirect));
@@ -109,9 +101,9 @@ public class PriceCurrency
 
         DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance(false);
-            PortalInfo portalInfo = (PortalInfo)portletRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
-            list = CurrencyManager.getInstance(db_, portalInfo.getSites().getIdSite()).getCurrencyList();
+            db_ = DatabaseAdapter.getInstance();
+            PortalInfo portalInfo = (PortalInfo)portletRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+            list = CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList();
         }
         catch(Throwable e){
             String es = "Error in getCurrencyList()";

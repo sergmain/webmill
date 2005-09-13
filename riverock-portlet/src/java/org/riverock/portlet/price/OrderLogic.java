@@ -29,9 +29,13 @@ import java.sql.PreparedStatement;
 import java.sql.Types;
 import java.util.ArrayList;
 
+import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
-import javax.portlet.PortletException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.Marshaller;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.NumberTools;
@@ -40,19 +44,16 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.portlet.core.GetPriceListItem;
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portlet.PortletTools;
-
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * Author: mill
@@ -62,7 +63,7 @@ import org.exolab.castor.xml.Marshaller;
  * $Id$
  */
 public final class OrderLogic {
-    private final static Logger log = Logger.getLogger( OrderLogic.class );
+    private final static Log log = LogFactory.getLog( OrderLogic.class );
 
     public OrderLogic() {
     }
@@ -70,17 +71,17 @@ public final class OrderLogic {
     public static void process( final RenderRequest renderRequest ) throws PortletException {
         DatabaseAdapter dbDyn = null;
         try {
-            dbDyn = DatabaseAdapter.getInstance(true);
+            dbDyn = DatabaseAdapter.getInstance();
 
             PortletSession session = renderRequest.getPortletSession(true);
-
-            Long idShop = PortletTools.getIdPortlet(ShopPortlet.NAME_ID_SHOP_PARAM, renderRequest);
+            Long idShop = PortletService.getIdPortlet(ShopPortlet.NAME_ID_SHOP_PARAM, renderRequest);
+            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
 
 
             if (log.isDebugEnabled())
             {
                 if (idShop != null)
-                    log.debug("idShop " + idShop.longValue());
+                    log.debug("idShop " + idShop);
                 else
                     log.debug("idShop is null");
             }
@@ -120,7 +121,7 @@ public final class OrderLogic {
 // заменяем магаз в сессии на магаз с вызываемым кодом
             else if (tempShop != null && idShop != null && !idShop.equals(tempShop.id_shop)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("#11.22.09 create shop instance with idShop - " + idShop.longValue());
+                    log.debug("#11.22.09 create shop instance with idShop - " + idShop );
                 }
 
                 shop = Shop.getInstance(dbDyn, idShop);
@@ -176,8 +177,8 @@ public final class OrderLogic {
                     }
                 }
 
-                Long id_item = PortletTools.getLong(renderRequest, ShopPortlet.NAME_ADD_ID_ITEM);
-                int count = PortletTools.getInt(renderRequest, ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP, new Integer(0)).intValue();
+                Long id_item = PortletService.getLong(renderRequest, ShopPortlet.NAME_ADD_ID_ITEM);
+                int count = PortletService.getInt(renderRequest, ShopPortlet.NAME_COUNT_ADD_ITEM_SHOP, 0);
 
 // если при вызове было указано какое либо количество определенного наименования,
 // то помещаем это наименование в заказ
@@ -192,7 +193,7 @@ public final class OrderLogic {
                         log.debug("count " + count);
                     }
 
-                    addItem(dbDyn, order, id_item, count);
+                    addItem(dbDyn, order, id_item, count, portalInfo.getSiteId());
                 }
                 session.removeAttribute(ShopPortlet.ORDER_SESSION);
                 session.setAttribute(ShopPortlet.ORDER_SESSION, order);
@@ -229,7 +230,7 @@ public final class OrderLogic {
             seq.setTableName("PRICE_RELATE_USER_ORDER_V2");
             seq.setColumnName("ID_ORDER_V2");
 
-            order.setIdOrder(new Long(dbDyn.getSequenceNextValue(seq)));
+            order.setIdOrder( dbDyn.getSequenceNextValue(seq) );
 
             sql_ =
                 "insert into PRICE_RELATE_USER_ORDER_V2 " +
@@ -380,7 +381,7 @@ public final class OrderLogic {
         return false;
     }
 
-    public static void addItem( final DatabaseAdapter dbDyn, final OrderType order, final Long idItem, final int count)
+    public static void addItem( final DatabaseAdapter dbDyn, final OrderType order, final Long idItem, final int count, long siteId)
         throws Exception
     {
         if (!dbDyn.isDynamic())
@@ -396,11 +397,11 @@ public final class OrderLogic {
             ShopOrderType shopOrder = null;
 
 // в методе initItem выводится дополнительная информация в DEBUG
-            OrderItemType item = initItem(dbDyn, idItem, order.getServerName());
+            OrderItemType item = initItem(dbDyn, idItem, order.getServerName(), siteId);
             if (log.isDebugEnabled())
                 log.debug("idShop of created item - " + item.getIdShop());
 
-            item.setCountItem(new Integer(count));
+            item.setCountItem( count );
             boolean isNotInOrder = true;
             // если в заказе есть магазин и наименование, то изменяем количество
             for (int i = 0; i < order.getShopOrdertListCount(); i++)
@@ -423,7 +424,7 @@ public final class OrderLogic {
                             if (log.isDebugEnabled())
                                 log.debug("Нужное наименвание найдено, old count "+orderItem.getCountItem()+". Устанавливаем новое количество "+count);
 
-                            orderItem.setCountItem(new Integer(count));
+                            orderItem.setCountItem( count );
                             isNotInOrder = false;
                             break;
                         }
@@ -524,7 +525,7 @@ public final class OrderLogic {
             seq.setSequenceName("seq_price_order");
             seq.setTableName("PRICE_ORDER_V2");
             seq.setColumnName("ID_PRICE_ORDER_V2");
-            Long seqValue = new Long(dbDyn.getSequenceNextValue(seq));
+            Long seqValue = dbDyn.getSequenceNextValue(seq);
 
             sql_ =
                 "insert into PRICE_ORDER_V2 " +
@@ -578,7 +579,7 @@ public final class OrderLogic {
         }
     }
 
-    public static void setItem(DatabaseAdapter dbDyn, OrderType order, Long idItem, int count)
+    public static void setItem(DatabaseAdapter dbDyn, OrderType order, Long idItem, int count, long siteId)
         throws Exception
     {
         if (!dbDyn.isDynamic())
@@ -596,7 +597,7 @@ public final class OrderLogic {
                 OrderItemType item = shopOrder.getOrderItemList(k);
                 if (idItem.equals(item.getIdItem()))
                 {
-                    item.setCountItem(new Integer(count));
+                    item.setCountItem( count );
                     isNotInOrder = false;
                     break;
                 }
@@ -604,7 +605,7 @@ public final class OrderLogic {
         }
 
         if (isNotInOrder)
-            addItem(dbDyn, order, idItem, count);
+            addItem(dbDyn, order, idItem, count, siteId);
 
         String sql_ =
             "update PRICE_ORDER_V2 " +
@@ -737,7 +738,7 @@ public final class OrderLogic {
 
     private static Object syncInitItemObj = new Object();
 
-    public static OrderItemType initItem(DatabaseAdapter db_, Long idItem, String serverName)
+    public static OrderItemType initItem(DatabaseAdapter db_, Long idItem, String serverName, long siteId)
         throws Exception
     {
         OrderItemType item = new OrderItemType();
@@ -749,12 +750,11 @@ public final class OrderLogic {
 
                 GetPriceListItem.copyItem(itemTemp.item, item);
 
-                PortalInfo p = PortalInfo.getInstance(db_, serverName);
                 CurrencyItem currencyItem =
                     (CurrencyItem) CurrencyService.getCurrencyItemByCode(
-                        CurrencyManager.getInstance(db_, p.getSites().getIdSite()).getCurrencyList(), item.getCurrency()
+                        CurrencyManager.getInstance(db_, siteId).getCurrencyList(), item.getCurrency()
                     );
-                currencyItem.fillRealCurrencyData(CurrencyManager.getInstance(db_, p.getSites().getIdSite()).getCurrencyList().getStandardCurrencyList());
+                currencyItem.fillRealCurrencyData(CurrencyManager.getInstance(db_, siteId).getCurrencyList().getStandardCurrencyList());
 
                 item.setCurrencyItem(currencyItem);
 
@@ -799,11 +799,11 @@ public final class OrderLogic {
 
                         precision = getPrecisionValue(shop.precisionList, currencyItem.getIdCurrency());
                         if (precision != null && precision.getPrecision() != null)
-                            precisionValue = precision.getPrecision().intValue();
+                            precisionValue = precision.getPrecision();
 
                         if (item.getPrice() != null)
                             resultPrice = NumberTools.truncate(
-                                item.getPrice().doubleValue(), precisionValue
+                                item.getPrice(), precisionValue
                             );
                         else {
                             if (log.isDebugEnabled()) {
@@ -815,10 +815,10 @@ public final class OrderLogic {
                     {
                         precision = getPrecisionValue(shop.precisionList, shop.idOrderCurrency);
                         if (precision != null && precision.getPrecision() != null)
-                            precisionValue = precision.getPrecision().intValue();
+                            precisionValue = precision.getPrecision();
 
                         CustomCurrencyItemType defaultCurrency =
-                            CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, p.getSites().getIdSite()).getCurrencyList(), shop.idOrderCurrency);
+                            CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, siteId).getCurrencyList(), shop.idOrderCurrency);
 
                         item.setResultCurrency(defaultCurrency);
 
@@ -826,8 +826,8 @@ public final class OrderLogic {
                         {
                             synchronized (syncInitItemObj)
                             {
-                                FileWriter w = new FileWriter(WebmillConfig.getWebmillDebugDir() + "schema-currency-item.xml");
-                                FileWriter w1 = new FileWriter(WebmillConfig.getWebmillDebugDir() + "schema-currency-default.xml");
+                                FileWriter w = new FileWriter(SiteUtils.getTempDir() + "schema-currency-item.xml");
+                                FileWriter w1 = new FileWriter(SiteUtils.getTempDir() + "schema-currency-default.xml");
 
                                 Marshaller.marshal(item.getCurrencyItem(), w);
                                 Marshaller.marshal(defaultCurrency, w1);
@@ -845,16 +845,16 @@ public final class OrderLogic {
                         }
                         double crossCurs = 0;
 
-                        crossCurs = item.getCurrencyItem().getRealCurs().doubleValue() / defaultCurrency.getRealCurs().doubleValue();
+                        crossCurs = item.getCurrencyItem().getRealCurs() / defaultCurrency.getRealCurs();
 
                         if (item.getPrice()!=null) {
                             resultPrice =
-                                NumberTools.truncate(item.getPrice().doubleValue(), precisionValue) *
+                                NumberTools.truncate(item.getPrice(), precisionValue) *
                                 crossCurs;
 
                             if (log.isDebugEnabled()) {
                                 log.debug("crossCurs - " + crossCurs + " price - " +
-                                    NumberTools.truncate(item.getPrice().doubleValue(), precisionValue) +
+                                    NumberTools.truncate(item.getPrice(), precisionValue) +
                                     " result price - " + resultPrice);
                             }
                         }
@@ -865,9 +865,9 @@ public final class OrderLogic {
                         }
                     }
                     item.setPriceItemResult(
-                        new Double(NumberTools.truncate(resultPrice, precisionValue))
+                        NumberTools.truncate( resultPrice, precisionValue )
                     );
-                    item.setPrecisionResult(new Integer(precisionValue));
+                    item.setPrecisionResult(precisionValue);
                 }
                 else
                 {

@@ -27,7 +27,6 @@ package org.riverock.portlet.member;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Enumeration;
-import java.io.OutputStream;
 import java.io.Writer;
 
 import javax.portlet.ActionRequest;
@@ -39,14 +38,15 @@ import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.main.Constants;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.wrapper.StreamWrapper;
+import org.riverock.portlet.tools.RequestTools;
 
-import org.apache.log4j.Logger;
+
 
 /**
  * User: Admin
@@ -57,7 +57,7 @@ import org.apache.log4j.Logger;
  */
 public final class MemberPortlet  implements Portlet {
 
-    private final static Logger log = Logger.getLogger( MemberPortlet.class );
+    private final static Log log = LogFactory.getLog( MemberPortlet.class );
 
     public MemberPortlet() {
     }
@@ -77,8 +77,8 @@ public final class MemberPortlet  implements Portlet {
 
         try {
 
-            String applicationCode = PortletTools.getString(renderRequest, MemberConstants.MEMBER_NAME_APPL_PARAM);
-            String moduleCode = PortletTools.getString(renderRequest, MemberConstants.MEMBER_NAME_MOD_PARAM);
+            String applicationCode = RequestTools.getString(renderRequest, MemberConstants.MEMBER_NAME_APPL_PARAM);
+            String moduleCode = RequestTools.getString(renderRequest, MemberConstants.MEMBER_NAME_MOD_PARAM);
 
             if (log.isDebugEnabled())
             {
@@ -91,7 +91,7 @@ public final class MemberPortlet  implements Portlet {
             DatabaseAdapter db_ = null;
             try
             {
-                db_ = DatabaseAdapter.getInstance(false);
+                db_ = DatabaseAdapter.getInstance();
                 ps = db_.prepareStatement(
                     "select a.is_new, a.url " +
                     "from auth_object_arm a, auth_arm b " +
@@ -104,7 +104,7 @@ public final class MemberPortlet  implements Portlet {
                 {
 
                     String url = RsetTools.getString(rs, "URL");
-                    int isNew = RsetTools.getInt( rs, "IS_NEW" , new Integer(0)).intValue();
+                    int isNew = RsetTools.getInt( rs, "IS_NEW", 0);
                     String fullUrl = null;
 //                    Map parameterMap = null;
                     if  (isNew==1)
@@ -152,7 +152,7 @@ public final class MemberPortlet  implements Portlet {
                             log.debug("renderRequest session - "+renderRequest.getPortletSession());
                             for (Enumeration e = renderRequest.getParameterNames(); e.hasMoreElements();) {
                                 String s = (String) e.nextElement();
-                                log.debug("Request attr - " + s + ", value - " + PortletTools.getString(renderRequest, s));
+                                log.debug("Request attr - " + s + ", value - " + RequestTools.getString(renderRequest, s));
                             }
                         }
                         dispatcher.include( renderRequest, renderResponse );

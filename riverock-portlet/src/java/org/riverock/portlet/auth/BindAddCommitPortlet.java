@@ -35,6 +35,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -43,9 +46,11 @@ import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.a3.InternalAuthProviderTools;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.portlet.tools.RequestTools;
 
-import org.apache.log4j.Logger;
+
+
 
 /**
  * Author: mill
@@ -56,7 +61,7 @@ import org.apache.log4j.Logger;
  */
 public final class BindAddCommitPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( BindAddCommitPortlet.class );
+    private final static Log log = LogFactory.getLog( BindAddCommitPortlet.class );
 
     public BindAddCommitPortlet() {
     }
@@ -90,9 +95,9 @@ public final class BindAddCommitPortlet implements Portlet {
 
             dbDyn = DatabaseAdapter.getInstance();
             String index_page = null;
-            index_page = PortletTools.url( "mill.auth.bind", actionRequest, actionResponse );
+            index_page = PortletService.url( "mill.auth.bind", actionRequest, actionResponse );
 
-            Long id_user = PortletTools.getLong( actionRequest, "id_user" );
+            Long id_user = PortletService.getLong( actionRequest, "id_user" );
             if ( id_user == null )
                 throw new IllegalArgumentException( "id_user not initialized" );
 
@@ -100,7 +105,7 @@ public final class BindAddCommitPortlet implements Portlet {
             seq.setSequenceName( "seq_AUTH_USER" );
             seq.setTableName( "AUTH_USER" );
             seq.setColumnName( "ID_AUTH_USER" );
-            Long id = new Long( dbDyn.getSequenceNextValue( seq ) );
+            Long id = dbDyn.getSequenceNextValue( seq );
 
             ps = dbDyn.prepareStatement( "insert into AUTH_USER " +
                 "( ID_AUTH_USER, ID_FIRM, ID_SERVICE, ID_ROAD, " +
@@ -113,16 +118,7 @@ public final class BindAddCommitPortlet implements Portlet {
                 "?, " + //b3.id_road, "+
                 "?, ?, ?, ?, ?, ? " +
                 ")"
-/*
-                        "  from "+
-                        "    (select USER_LOGIN from AUTH_USER where USER_LOGIN=? ) a, "+
-                        "    (select ID_FIRM, USER_LOGIN from v$_read_list_firm where USER_LOGIN=? and ID_FIRM=?) b1, "+
-                        "    (select id_service, USER_LOGIN from v$_read_list_service where USER_LOGIN = ? and id_service=?) b2, "+
-                        "    (select id_road, USER_LOGIN from v$_read_list_road where USER_LOGIN = ? and id_road=?) b3 "+
-                        " where  a.USER_LOGIN = b1.USER_LOGIN(+) and "+
-                        "    a.USER_LOGIN = b2.USER_LOGIN(+) and "+
-                        "    a.USER_LOGIN = b3.USER_LOGIN(+) "
-*/ );
+            );
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
 
@@ -131,13 +127,13 @@ public final class BindAddCommitPortlet implements Portlet {
             Long idRoad = null;
 
             idFirm = InternalAuthProviderTools.initIdFirm( dbDyn,
-                PortletTools.getLong( actionRequest, InternalAuthProviderTools.firmIdParam ),
+                PortletService.getLong( actionRequest, InternalAuthProviderTools.firmIdParam ),
                 authInfo.getUserLogin() );
             idService = InternalAuthProviderTools.initIdService( dbDyn,
-                PortletTools.getLong( actionRequest, InternalAuthProviderTools.serviceIdParam ),
+                PortletService.getLong( actionRequest, InternalAuthProviderTools.serviceIdParam ),
                 authInfo.getUserLogin() );
             idRoad = InternalAuthProviderTools.initIdRoad( dbDyn,
-                PortletTools.getLong( actionRequest, InternalAuthProviderTools.roadIdParam ),
+                PortletService.getLong( actionRequest, InternalAuthProviderTools.roadIdParam ),
                 authInfo.getUserLogin() );
 
             if ( log.isDebugEnabled() ) {
@@ -164,21 +160,25 @@ public final class BindAddCommitPortlet implements Portlet {
 
 
             RsetTools.setLong( ps, 5, id_user );
-            ps.setString( 6, PortletTools.getString( actionRequest, "user_login" ) );
-            ps.setString( 7, PortletTools.getString( actionRequest, "user_password" ) );
+            ps.setString( 6, RequestTools.getString( actionRequest, "user_login" ) );
+            ps.setString( 7, RequestTools.getString( actionRequest, "user_password" ) );
 
-            RsetTools.setInt( ps, 8, ( authInfo.getUseCurrentFirm() == 1 ?
-                PortletTools.getInt( actionRequest, "is_use_current_firm" ) :
-                null
-                ) );
-            RsetTools.setInt( ps, 9, ( authInfo.getService() == 1 ?
-                PortletTools.getInt( actionRequest, "is_service" ) :
-                null
-                ) );
-            RsetTools.setInt( ps, 10, ( authInfo.getRoad() == 1 ?
-                PortletTools.getInt( actionRequest, "is_road" ) :
-                null
-                ) );
+            ps.setInt( 8,
+                authInfo.getUseCurrentFirm() == 1
+                ?PortletService.getInt( actionRequest, "is_use_current_firm", 0 )==1?1:0
+                :0
+            );
+            ps.setInt( 9,
+                authInfo.getService() == 1
+                ?PortletService.getInt( actionRequest, "is_service", 0 )==1 ?1 :0
+                :0
+
+            );
+            ps.setInt( 10,
+                authInfo.getRoad() == 1
+                ?PortletService.getInt( actionRequest, "is_road", 0 )==1 ?1 :0
+                :0
+            );
             int i1 = ps.executeUpdate();
 
             if ( log.isDebugEnabled() )

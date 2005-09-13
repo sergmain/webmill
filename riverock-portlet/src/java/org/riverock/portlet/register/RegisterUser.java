@@ -22,6 +22,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.register;
+
+import java.util.ResourceBundle;
+
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.tools.MainTools;
+import org.riverock.common.tools.ServletTools;
+import org.riverock.generic.tools.XmlTools;
+
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
 /**
  * Author: mill
@@ -30,57 +52,9 @@
  *
  * $Id$
  */
-
-package org.riverock.portlet.register;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.sql.SQLException;
-import java.util.ResourceBundle;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.Portlet;
-import javax.portlet.PortletConfig;
-
-import javax.mail.internet.InternetAddress;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.PortletConfig;
-import javax.portlet.RenderResponse;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.riverock.common.mail.MailMessage;
-import org.riverock.common.tools.ServletTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.main.Constants;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.sso.a3.InternalAuthProviderTools;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.config.WebmillConfig;
-
-import org.riverock.common.config.ConfigException;
-import org.riverock.common.tools.MainTools;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.portlet.PortletTools;
-
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletResultContent;
-
 public final class RegisterUser implements PortletResultObject, PortletResultContent {
 
-    private final static Logger log = Logger.getLogger(RegisterUser.class);
+    private final static Log log = LogFactory.getLog(RegisterUser.class);
 
     public RegisterUser()
     {
@@ -96,16 +70,12 @@ public final class RegisterUser implements PortletResultObject, PortletResultCon
         this.bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
     }
 
-    public PortletResultContent getInstance( final DatabaseAdapter db_ , final Long id )
-        throws PortletException {
-        return getInstance( db_ );
+    public PortletResultContent getInstance( final Long id ) throws PortletException {
+        return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode( final DatabaseAdapter db__, final String portletCode_ )
-        throws PortletException {
-
+    public PortletResultContent getInstanceByCode( final String portletCode_ ) throws PortletException {
         try {
-//            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
             return this;
         }
         catch(Exception e) {
@@ -115,11 +85,10 @@ public final class RegisterUser implements PortletResultObject, PortletResultCon
         }
     }
 
-    public PortletResultContent getInstance( DatabaseAdapter db_ )
+    public PortletResultContent getInstance()
         throws PortletException {
 
         try {
-//            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
             return this;
         }
         catch(Exception e) {
@@ -155,7 +124,7 @@ public final class RegisterUser implements PortletResultObject, PortletResultCon
         if (log.isDebugEnabled()) {
             log.debug("end get XmlByte array. length of array - " + b.length);
 
-            final String testFile = WebmillConfig.getWebmillDebugDir()+"regiser-item.xml";
+            final String testFile = SiteUtils.getTempDir()+"regiser-item.xml";
             log.debug("Start output test data to file " + testFile );
             synchronized(syncDebug){
                 MainTools.writeToFile(testFile, b);
@@ -174,24 +143,29 @@ public final class RegisterUser implements PortletResultObject, PortletResultCon
         StringBuffer out = new StringBuffer();
         try {
 
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(PortalConstants.PORTAL_INFO_ATTRIBUTE);
+//            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
 // Todo write method which return 'index' template and replace "" to name of 'index' template
-            String indexPage = PortletTools.url(Constants.CTX_TYPE_INDEX, renderRequest, renderResponse, "" );
+            String indexPage = PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse, "" );
 
             printSendPasswordForm( out );
 
+            boolean isRegisterAllowed = false;
+            //Todo uncomment and implement
+/*
+            boolean isRegisterAllowed = portalInfo.getSites().getIsRegisterAllowed();
+*/
             if (log.isDebugEnabled()) {
-                log.debug("getIsRegisterAllowed " + portalInfo.getSites().getIsRegisterAllowed());
+                log.debug("getIsRegisterAllowed " + isRegisterAllowed);
             }
 
-            if (Boolean.TRUE.equals( portalInfo.getSites().getIsRegisterAllowed()) ) {
+            if ( isRegisterAllowed ) {
                 printNewRegisterForm( out );
             }
             else {
                 printMessageRegistrationDisabled( out, indexPage );
             }
             
-            return out.toString().getBytes( WebmillConfig.getHtmlCharset() );
+            return out.toString().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
         }
         catch (Exception e) {
             final String es = "Erorr processing RegisterUser page";
@@ -205,8 +179,8 @@ public final class RegisterUser implements PortletResultObject, PortletResultCon
                 bundle.getString( "reg.forgot_password" ) + "\n" +
                 "<table>\n" +
 
-                "<form method=\"POST\" action=\"" + PortletTools.ctx( renderRequest ) + "\" >\n" +
-                ServletTools.getHiddenItem( Constants.NAME_TYPE_CONTEXT_PARAM, RegisterPortlet.REGISTER_PROCESS_PORTLET ) +
+                "<form method=\"POST\" action=\"" + PortletService.ctx( renderRequest ) + "\" >\n" +
+                ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, RegisterPortlet.REGISTER_PROCESS_PORTLET ) +
                 ServletTools.getHiddenItem( RegisterPortlet.NAME_REGISTER_ACTION_PARAM, "send_pass") +
                 "<tr>\n" +
                 "<td witdh=\"25%\">" + bundle.getString( "reg.member_email" ) + ":</td>\n" +
@@ -236,8 +210,8 @@ public final class RegisterUser implements PortletResultObject, PortletResultCon
             out.append( bundle.getString( "reg.need_register" ) );
             out.append(
                 "<table>\n" +
-                "<form method=\"POST\" action=\"" + PortletTools.ctx( renderRequest ) + "\" >\n" +
-                ServletTools.getHiddenItem( Constants.NAME_TYPE_CONTEXT_PARAM, RegisterPortlet.REGISTER_PROCESS_PORTLET ) +
+                "<form method=\"POST\" action=\"" + PortletService.ctx( renderRequest ) + "\" >\n" +
+                ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, RegisterPortlet.REGISTER_PROCESS_PORTLET ) +
                 ServletTools.getHiddenItem( RegisterPortlet.NAME_REGISTER_ACTION_PARAM, "reg_new") 
             );
             out.append("<tr>\n");

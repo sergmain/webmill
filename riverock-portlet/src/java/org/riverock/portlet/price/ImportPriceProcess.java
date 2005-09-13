@@ -22,6 +22,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.price;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.common.tools.DateTools;
+import org.riverock.common.tools.RsetTools;
 
 /**
  * User: Admin
@@ -30,22 +43,9 @@
  *
  * $Id$
  */
-package org.riverock.portlet.price;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.RsetTools;
-
-import org.apache.log4j.Logger;
-
 public class ImportPriceProcess
 {
-    private static Logger log = Logger.getLogger( ImportPriceProcess.class );
+    private static Log log = LogFactory.getLog( ImportPriceProcess.class );
 
     private static void moveItemToPrice(DatabaseAdapter dbDyn, Long idSite)
         throws Exception

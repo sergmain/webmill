@@ -30,28 +30,29 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortletConfig;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.schema.portlet.job.JobItemType;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletResultContent;
+import org.riverock.portlet.schema.portlet.job.JobItemType;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
 /**
  * $Id$
  */
 public final class JobItemSimple implements PortletResultObject, PortletResultContent {
-    private final static Logger log = Logger.getLogger( JobItemSimple.class );
+    private final static Log log = LogFactory.getLog( JobItemSimple.class );
 
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
@@ -67,7 +68,7 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
         super.finalize();
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__) throws PortletException {
+    public PortletResultContent getInstance(DatabaseAdapter db__) {
         return null;
     }
 
@@ -227,15 +228,16 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
 //Проффесиональные навыки:
     public String textJob = "";
 
-    public PortletResultContent getInstance(DatabaseAdapter db_, Long id_) throws PortletException{
+    public PortletResultContent getInstance(Long id_) throws PortletException{
         if (log.isDebugEnabled()) log.debug("Create job item");
 
         this.idPosition = id_;
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
             if (log.isDebugEnabled())
                 log.debug("query db for job item");
 
@@ -254,12 +256,12 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
                 this.jobName = RsetTools.getString(rs, "name_position");
                 this.datePost = RsetTools.getCalendar(rs, "date_post");
 
-                this.periodActivity = RsetTools.getInt(rs, "period_activity", new Integer(30));
+                this.periodActivity = RsetTools.getInt(rs, "period_activity", 30);
                 this.dateEnd = this.datePost;
-                this.dateEnd.add( Calendar.HOUR_OF_DAY,  this.periodActivity.intValue()*24 );
+                this.dateEnd.add( Calendar.HOUR_OF_DAY,  this.periodActivity *24 );
 
-                this.ageFrom = RsetTools.getInt(rs, "age_from", new Integer(16));
-                this.ageTill = RsetTools.getInt(rs, "age_to", new Integer(65));
+                this.ageFrom = RsetTools.getInt(rs, "age_from", 16);
+                this.ageTill = RsetTools.getInt(rs, "age_to", 65);
                 this.gender = RsetTools.getString(rs, "sex_name");
                 this.nameEducation = RsetTools.getString(rs, "name_education");
                 this.salary = RsetTools.getFloat(rs, "salary");
@@ -304,14 +306,14 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
             throw new PortletException(es,e);
         }
         finally{
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
+            db_ = null;
         }
     }
 
-    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_)
-        throws PortletException {
+    public PortletResultContent getInstanceByCode( String portletCode_) {
         return null;
     }
 

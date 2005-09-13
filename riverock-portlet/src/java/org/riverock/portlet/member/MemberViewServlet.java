@@ -26,22 +26,24 @@ package org.riverock.portlet.member;
 
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.ServletException;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.riverock.portlet.main.Constants;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.generic.exception.GenericException;
-
-import org.apache.log4j.Logger;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: Admin
@@ -52,7 +54,12 @@ import org.apache.log4j.Logger;
  */
 public final class MemberViewServlet extends HttpServlet
 {
-    private final static Logger log = Logger.getLogger(MemberViewServlet.class);
+    private final static Log log = LogFactory.getLog(MemberViewServlet.class);
+
+    private ServletConfig servletConfig = null;
+    public void init(ServletConfig servletConfig) {
+        this.servletConfig = servletConfig;
+    }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException {
@@ -74,8 +81,9 @@ public final class MemberViewServlet extends HttpServlet
         try {
             RenderRequest renderRequest = (RenderRequest)request;
             RenderResponse renderResponse = (RenderResponse)response;
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
 
-            ContextNavigator.setContentType( response );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             if (!renderRequest.isUserInRole("webmill.member")) {
@@ -83,12 +91,8 @@ public final class MemberViewServlet extends HttpServlet
                 return;
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Total of MemberFile  - " + ModuleManager.getCountFile());
-                log.debug("Total of Module - " + ModuleManager.getCountModule());
-            }
-
-            mp = new MemberProcessing( renderRequest, renderResponse );
+            ModuleManager moduleManager = ModuleManager.getInstance( servletConfig.getServletContext().getRealPath( "/" ) );
+            mp = new MemberProcessing( renderRequest, renderResponse, bundle, moduleManager );
 
             if (log.isDebugEnabled()) {
                 log.debug("MemberProcessing - " + mp);
@@ -98,15 +102,15 @@ public final class MemberViewServlet extends HttpServlet
                 for (Enumeration e = renderRequest.getParameterNames(); e.hasMoreElements();)
                 {
                     String s = (String) e.nextElement();
-                    log.debug("Request param: " + s + ", value: " + PortletTools.getString(renderRequest, s));
+                    log.debug("Request param: " + s + ", value: " + RequestTools.getString(renderRequest, s));
                 }
             }
 
 ///////////////
 
-            String moduleName = PortletTools.getString(renderRequest, MemberConstants.MEMBER_MODULE_PARAM);
-            String actionName = PortletTools.getString(renderRequest, MemberConstants.MEMBER_ACTION_PARAM);
-            String subActionName = PortletTools.getString(renderRequest, MemberConstants.MEMBER_SUBACTION_PARAM, "").trim();
+            String moduleName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_MODULE_PARAM);
+            String actionName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_ACTION_PARAM);
+            String subActionName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_SUBACTION_PARAM, "").trim();
 
             if (log.isDebugEnabled())
             {
@@ -284,19 +288,19 @@ public final class MemberViewServlet extends HttpServlet
         out.println("Access to module '"+moduleName+"' is denied");
     }
 
-    private static void putInsertButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest ) throws GenericException {
+    private static void putInsertButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest ) {
         putButton( out, mp, renderRequest, "Add" );
     }
 
-    private static void putChangeButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest ) throws GenericException {
+    private static void putChangeButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest ) {
         putButton( out, mp, renderRequest, "Change" );
     }
 
-    private static void putDeleteButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest ) throws GenericException {
+    private static void putDeleteButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest ) {
         putButton( out, mp, renderRequest, "Delete" );
     }
 
-    private static void putButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest, String name ) throws GenericException {
+    private static void putButton( PrintWriter out, MemberProcessing mp, RenderRequest renderRequest, String name ) {
         out.println("<input type=\"submit\" class=\"par\" value=\"" +
             MemberServiceClass.getString(
                 mp.content.getActionButtonName(),

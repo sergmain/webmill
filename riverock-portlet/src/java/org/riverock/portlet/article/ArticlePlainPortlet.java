@@ -25,25 +25,14 @@
 package org.riverock.portlet.article;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.Portlet;
-import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.portlet.PortletResultObject;
-import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.portlet.GenericWebmillPortlet;
-import org.riverock.portlet.price.ShopPage;
-import org.riverock.portlet.article.ArticlePlain;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
 
 /**
  * Author: SergeMaslyukov
@@ -54,8 +43,6 @@ import org.apache.log4j.Logger;
  */
 
 public class ArticlePlainPortlet extends GenericWebmillPortlet {
-
-    private static Logger log = Logger.getLogger( ArticlePlainPortlet.class );
 
     public ArticlePlainPortlet(){}
 

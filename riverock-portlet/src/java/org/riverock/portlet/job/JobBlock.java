@@ -34,6 +34,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.RsetTools;
@@ -43,18 +46,16 @@ import org.riverock.generic.site.SiteListSite;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.job.JobBlockType;
 import org.riverock.portlet.schema.portlet.job.JobItemType;
-import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.portlet.PortletResultContent;
-import org.riverock.webmill.portlet.PortletResultObject;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 
 /**
  * $Id$
  */
 public class JobBlock implements PortletResultObject, PortletGetList, PortletResultContent {
-    private static Logger log = Logger.getLogger( JobBlock.class );
+    private static Log log = LogFactory.getLog( JobBlock.class );
 
     private List v = new ArrayList();
     private RenderRequest renderRequest = null;
@@ -73,12 +74,12 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
         this.renderResponse = renderResponse;
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__, Long id) throws PortletException {
-        return getInstance(db__);
+    public PortletResultContent getInstance( Long id) throws PortletException {
+        return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode(DatabaseAdapter db__, String portletCode_) throws PortletException {
-        return getInstance(db__);
+    public PortletResultContent getInstanceByCode( String portletCode_) throws PortletException {
+        return getInstance();
     }
 
     public List getJobItem() {
@@ -88,8 +89,7 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
     public JobBlock() {
     }
 
-    public PortletResultContent getInstance( DatabaseAdapter db_ )
-        throws PortletException {
+    public PortletResultContent getInstance() throws PortletException {
 
         final String sql_ =
             "select	a.ID_JOB_POSITION " +
@@ -99,7 +99,9 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
 
         PreparedStatement ps = null;
         ResultSet rs = null;
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             Long idSite = SiteListSite.getIdSite( renderRequest.getServerName());
 
             ps = db_.prepareStatement(sql_);
@@ -127,9 +129,10 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
         }
         finally
         {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
+            db_ = null;
         }
         return this;
     }
@@ -191,12 +194,12 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
         if (log.isDebugEnabled()) {
             synchronized(syncDebug) {
                 try {
-                    XmlTools.writeToFile(block, WebmillConfig.getWebmillDebugDir()+"test-job-block.xml", "utf-8", rootElement);
+                    XmlTools.writeToFile(block, SiteUtils.getTempDir()+"test-job-block.xml", "utf-8", rootElement);
                     byte bDebug[] = XmlTools.getXml( block, rootElement );
                     String sDebug = new String(bDebug);
 
-                    MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-1.xml", sDebug.getBytes());
-                    MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"test-job-block-2.xml", sDebug.getBytes("utf-8"));
+                    MainTools.writeToFile(SiteUtils.getTempDir()+"test-job-block-1.xml", sDebug.getBytes());
+                    MainTools.writeToFile(SiteUtils.getTempDir()+"test-job-block-2.xml", sDebug.getBytes("utf-8"));
                 }
                 catch (Throwable exception) {
                     log.error("Exception in ", exception);

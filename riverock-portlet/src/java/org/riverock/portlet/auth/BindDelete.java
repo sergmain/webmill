@@ -23,18 +23,11 @@
  *
  */
 
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 11:55:24 AM
- *
- * $Id$
- */
-
 package org.riverock.portlet.auth;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,25 +36,32 @@ import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.tools.StringManager;
 import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.webmill.tools.HtmlTools;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.a3.InternalAuthProviderTools;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
-
-import org.riverock.webmill.portlet.PortletTools;
-
-
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 11:55:24 AM
+ *
+ * $Id$
+ */
 public class BindDelete extends HttpServlet
 {
-    private static Logger cat = Logger.getLogger(BindDelete.class);
+    private static Log cat = LogFactory.getLog(BindDelete.class);
 
     public BindDelete()
     {
@@ -85,14 +85,14 @@ public class BindDelete extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-
-            ContextNavigator.setContentType(response);
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( BindIndex.AUTH_BIND_ROLE ) )
             {
-                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/"+PortletTools.ctx( renderRequest ), "continue");
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/"+PortletService.ctx( renderRequest ), "continue");
                 return;
             }
 
@@ -100,16 +100,9 @@ public class BindDelete extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance();
 
-            StringManager sCustom = null;
-            String nameLocaleBundle = null;
-            nameLocaleBundle = "mill.locale.AUTH_USER";
-            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
-            // end where
+            String index_page = PortletService.url("mill.auth.bind", renderRequest, renderResponse );
 
-            String index_page = PortletTools.url("mill.auth.bind", renderRequest, renderResponse );
-
-            Long id_auth_user = PortletTools.getLong(renderRequest, "id_auth_user");
+            Long id_auth_user = PortletService.getLong(renderRequest, "id_auth_user");
             if (id_auth_user==null)
                 throw new IllegalArgumentException("id_auth_user not initialized");
 
@@ -127,13 +120,13 @@ public class BindDelete extends HttpServlet
             {
 
                 out.write("\r\n");
-                out.write(sCustom.getStr("del_bind.jsp.confirm"));
+                out.write(bundle.getString("del_bind.jsp.confirm"));
                 out.write("\r\n");
                 out.write("<BR>\r\n");
                 out.write("<FORM ACTION=\"");
                 out.write(
 
-                    PortletTools.url("mill.auth.commit_del_bind", renderRequest, renderResponse )
+                    PortletService.url("mill.auth.commit_del_bind", renderRequest, renderResponse )
 
                 );
                 out.write("\" METHOD=\"POST\">\r\n");
@@ -141,15 +134,14 @@ public class BindDelete extends HttpServlet
                 out.write("" + id_auth_user);
                 out.write("\">\r\n");
                 out.write("<INPUT TYPE=\"submit\" VALUE=\"");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.delete"));
+                out.write(bundle.getString("button.delete"));
                 out.write("\">\n");
-//                out.write(ctxInstance.getAsForm());
                 out.write("\n");
                 out.write("</FORM>\n");
                 out.write("<TABLE  border=\"1\" width=\"100%\" class=\"l\">\n");
                 out.write("<!--tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write("<%=sCustom.getStr(\"del_bind.jsp.name_firm\")%\\>");
+                out.write("<%=bundle.getString(\"del_bind.jsp.name_firm\")%\\>");
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<%= RsetTools.getString(rs, \"name_firm\", \"&nbsp;\")%\\>\r\n");
@@ -157,7 +149,7 @@ public class BindDelete extends HttpServlet
                 out.write("</tr-->\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("del_bind.jsp.user_login"));
+                out.write(bundle.getString("del_bind.jsp.user_login"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
                 out.write(authInfoUser.getUserLogin());
@@ -166,28 +158,28 @@ public class BindDelete extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("del_bind.jsp.is_service"));
+                out.write(bundle.getString("del_bind.jsp.is_service"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
-                out.write(HtmlTools.printYesNo(authInfoUser.getService(), false, renderRequest.getLocale()));
+                out.write(HtmlTools.printYesNo(authInfoUser.getService(), false, bundle ));
                 out.write("\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("del_bind.jsp.is_road"));
+                out.write(bundle.getString("del_bind.jsp.is_road"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
-                out.write(HtmlTools.printYesNo(authInfoUser.getRoad(), false, renderRequest.getLocale()));
+                out.write(HtmlTools.printYesNo(authInfoUser.getRoad(), false, bundle ));
                 out.write("\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("del_bind.jsp.is_use_current_firm"));
+                out.write(bundle.getString("del_bind.jsp.is_use_current_firm"));
                 out.write("</td>\r\n");
                 out.write("<td align=\"left\">\r\n");
-                out.write(HtmlTools.printYesNo(authInfoUser.getUseCurrentFirm(), false, renderRequest.getLocale()));
+                out.write(HtmlTools.printYesNo(authInfoUser.getUseCurrentFirm(), false, bundle ));
                 out.write("\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
@@ -202,7 +194,7 @@ public class BindDelete extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
+            out.write(bundle.getString("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
 

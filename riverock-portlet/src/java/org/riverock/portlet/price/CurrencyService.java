@@ -33,6 +33,9 @@ import java.util.TimeZone;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -43,8 +46,6 @@ import org.riverock.portlet.schema.price.StandardCurrencyItemType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
 
-import org.apache.log4j.Logger;
-
 /**
  * Author: mill
  * Date: Dec 9, 2002
@@ -53,7 +54,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class CurrencyService {
-    private final static Logger log = Logger.getLogger( CurrencyService.class );
+    private final static Log log = LogFactory.getLog( CurrencyService.class );
 
     public static CurrencyCurrentCursType getCurrentCurs(DatabaseAdapter db_, Long idCurrency, Long idSite)
         throws PriceException

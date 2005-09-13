@@ -27,9 +27,12 @@ package org.riverock.portlet.member;
 
 import java.sql.ResultSet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 
-import org.apache.log4j.Logger;
+
 
 /**
  *
@@ -40,7 +43,7 @@ import org.apache.log4j.Logger;
  */
 public final class MenuMemberModule
 {
-    private final static Logger log = Logger.getLogger( MenuMemberModule.class );
+    private final static Log log = LogFactory.getLog( MenuMemberModule.class );
 
     /**
      * module - название модуля
@@ -81,8 +84,8 @@ public final class MenuMemberModule
         {
             moduleName = RsetTools.getString(rs, "NAME_OBJECT_ARM");
             moduleCode = RsetTools.getString(rs, "CODE_OBJECT_ARM");
-            order = RsetTools.getInt(rs, "ORDER_FIELD", new Integer(0)).intValue();
-            isNew = RsetTools.getInt(rs, "IS_NEW", new Integer(-1)).intValue();
+            order = RsetTools.getInt( rs, "ORDER_FIELD", 0 );
+            isNew = RsetTools.getInt( rs, "IS_NEW", -1 );
         }
         catch (Exception e)
         {

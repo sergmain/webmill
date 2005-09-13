@@ -37,13 +37,19 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.ServletTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.main.Constants;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
+
 
 /**
  * Author: mill
@@ -53,7 +59,7 @@ import org.riverock.webmill.portlet.PortletTools;
  * $Id$
  */
 public final class LoginPlainPortlet implements Portlet {
-    private final static Logger log = Logger.getLogger( LoginPlainPortlet.class );
+    private final static Log log = LogFactory.getLog( LoginPlainPortlet.class );
 
     public LoginPlainPortlet() {
     }
@@ -93,25 +99,25 @@ public final class LoginPlainPortlet implements Portlet {
                 return;
             }
 
-            out.write( "<form method=\"POST\" action=\"" + PortletTools.ctx( renderRequest ) + "\" >\n" );
+            out.write( "<form method=\"POST\" action=\"" + PortletService.ctx( renderRequest ) + "\" >\n" );
 
-            out.write( ServletTools.getHiddenItem( Constants.NAME_TYPE_CONTEXT_PARAM,
+            out.write( ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM,
                 LoginUtils.CTX_TYPE_LOGIN_PLAIN ) );
 
             String srcURL = null;
-            if ( renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) != null ) {
-                srcURL = PortletTools.getString( renderRequest, Constants.NAME_TOURL_PARAM );
+            if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
+                srcURL = RequestTools.getString( renderRequest, LoginUtils.NAME_TOURL_PARAM );
             } else {
-                srcURL = PortletTools.url( Constants.CTX_TYPE_INDEX, renderRequest, renderResponse );
+                srcURL = PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse );
             }
 
             srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
             srcURL = StringTools.replaceString( srcURL, "%26", "&" );
 
-            out.write( ServletTools.getHiddenItem( Constants.NAME_TOURL_PARAM, srcURL ) );
+            out.write( ServletTools.getHiddenItem( LoginUtils.NAME_TOURL_PARAM, srcURL ) );
 
             if ( log.isDebugEnabled() ) {
-                log.debug( "reqeust parameter  mill.tourl: " + renderRequest.getParameter( Constants.NAME_TOURL_PARAM ) );
+                log.debug( "reqeust parameter  mill.tourl: " + renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) );
                 log.debug( "toURL: " + srcURL );
                 log.debug( "encoded toURL - " + srcURL );
                 log.debug( "Header string - " + bundle.getString( "auth.check.header" ) );

@@ -1,10 +1,17 @@
 package org.riverock.portlet.news;
 
-import org.riverock.webmill.portlet.GenericWebmillPortlet;
-import org.apache.log4j.Logger;
-
-import javax.portlet.*;
 import java.io.IOException;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
 
 /**
  * User: SMaslyukov
@@ -12,9 +19,9 @@ import java.io.IOException;
  * Time: 15:03:05
  * $Id$
  */
-public final class NewsSubscribePortlet  extends GenericWebmillPortlet {
+public final class NewsSubscribePortlet extends GenericWebmillPortlet {
 
-    private final static Logger log = Logger.getLogger( NewsSubscribePortlet.class );
+    private final static Log log = LogFactory.getLog( NewsSubscribePortlet.class );
 
     static final String PORTLET_NAME = "mill.news_subscribe";
     static final String META_SUBSCRIBED_ON_NEWS = "subscribed-on-news";

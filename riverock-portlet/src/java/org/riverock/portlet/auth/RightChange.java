@@ -22,21 +22,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 12:11:58 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.auth;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,33 +37,41 @@ import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.ExceptionTools;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.StringManager;
+
 import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.webmill.tools.HtmlTools;
+import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.portlet.tools.Client;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.webmill.portlet.ContextNavigator;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
-
-import org.riverock.webmill.portlet.PortletTools;
-
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 12:11:58 PM
+ *
+ * $Id$
+ */
 public final class RightChange extends HttpServlet
 {
-    private final static Logger log = Logger.getLogger(RightChange.class);
+    private final static Log log = LogFactory.getLog(RightChange.class);
 
     public RightChange()
     {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException
+        throws ServletException
     {
         if (log.isDebugEnabled())
             log.debug("method is POST");
@@ -80,7 +80,7 @@ public final class RightChange extends HttpServlet
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-        throws IOException, ServletException
+        throws ServletException
     {
         Writer out = null;
         DatabaseAdapter db_ = null;
@@ -90,8 +90,8 @@ public final class RightChange extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-
-            ContextNavigator.setContentType(response);
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
@@ -102,14 +102,7 @@ public final class RightChange extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance();
 
-            StringManager sCustom = null;
-            String nameLocaleBundle = null;
-            nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
-            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
-            // end
-
-            String index_page = PortletTools.url("mill.auth.right", renderRequest, renderResponse );
+            String index_page = PortletService.url("mill.auth.right", renderRequest, renderResponse );
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
             if (authInfo.getRoot() != 1)
@@ -118,10 +111,7 @@ public final class RightChange extends HttpServlet
                 return;
             }
 
-//            if (ServletTools.isNotInit(request, response, "id_relate_right", index_page))
-//                return;
-
-            Long id_relate_right = PortletTools.getLong(renderRequest, "id_relate_right");
+            Long id_relate_right = PortletService.getLong(renderRequest, "id_relate_right");
             if (id_relate_right==null)
                 throw new IllegalArgumentException("id_relate_right not initialized");
 
@@ -151,12 +141,12 @@ public final class RightChange extends HttpServlet
                     out.write("\r\n");
                     out.write("<FORM ACTION=\"");
                     out.write(
-                        PortletTools.url("mill.auth.commit_ch_right", renderRequest, renderResponse )
+                        PortletService.url("mill.auth.commit_ch_right", renderRequest, renderResponse )
 
                     );
                     out.write("\" METHOD=\"POST\">\r\n");
                     out.write("<input type=\"submit\" value=\"");
-                    out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
+                    out.write(bundle.getString("button.change"));
                     out.write("\">\r\n");
                     out.write("<INPUT TYPE=\"hidden\" NAME=\"id_relate_right\" VALUE=\"");
                     out.write("" + id_relate_right);
@@ -164,7 +154,7 @@ public final class RightChange extends HttpServlet
                     out.write("<TABLE  border=\"0\" width=\"100%\" class=\"l\">                                  \r\n\t");
                     out.write("<tr>\r\n\t\t");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.id_access_group"));
+                    out.write(bundle.getString("ch_right.jsp.id_access_group"));
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"id_access_group\">\r\n");
@@ -175,7 +165,7 @@ public final class RightChange extends HttpServlet
                     out.write("</tr>\r\n\t");
                     out.write("<tr>\r\n\t\t");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.id_object_arm"));
+                    out.write(bundle.getString("ch_right.jsp.id_object_arm"));
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"id_object_arm\">\r\n");
@@ -248,88 +238,88 @@ public final class RightChange extends HttpServlet
 
                     out.write("<tr>\n");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.code_right_s"));
+                    out.write(bundle.getString("ch_right.jsp.code_right_s"));
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"rs\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(S1, true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(S1, true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n");
                     out.write("</td>\r\n\t");
                     out.write("</tr>\r\n\r\n\r\n\t");
                     out.write("<tr>\r\n            ");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.code_right_u"));
+                    out.write(bundle.getString("ch_right.jsp.code_right_u"));
                     out.write("</td>\n");
                     out.write("<td align=\"left\">\n");
                     out.write("<SELECT NAME=\"ru\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(U1, true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(U1, true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n\t    ");
                     out.write("</td>\r\n\t");
                     out.write("</tr>\r\n\r\n\r\n\t");
                     out.write("<tr>\r\n            ");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.code_right_i"));
+                    out.write(bundle.getString("ch_right.jsp.code_right_i"));
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"ri\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(I1, true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(I1, true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n            ");
                     out.write("</td>\r\n\t");
                     out.write("</tr>\r\n\r\n\r\n\t");
                     out.write("<tr>\r\n            ");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.code_right_d"));
+                    out.write(bundle.getString("ch_right.jsp.code_right_d"));
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"rd\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(D1, true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(D1, true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n            ");
                     out.write("</td>\r\n\t");
                     out.write("</tr>\r\n\r\n\r\n\t");
                     out.write("<tr>\r\n            ");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.code_right_a"));
+                    out.write(bundle.getString("ch_right.jsp.code_right_a"));
                     out.write("</td>\r\n            ");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<SELECT NAME=\"ra\" SIZE=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(A1, true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(A1, true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</SELECT>\r\n            ");
                     out.write("</td>\r\n\t");
                     out.write("</tr>\r\n\r\n\t");
                     out.write("<tr>\r\n\t\t");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.is_road"));
+                    out.write(bundle.getString("ch_right.jsp.is_road"));
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<select name=\"is_road\" size=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(rs, "IS_ROAD", true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "IS_ROAD", true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</select>\r\n\t\t");
                     out.write("</td>\r\n\t");
                     out.write("</tr>\r\n\t");
                     out.write("<tr>\r\n\t\t");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.is_service"));
+                    out.write(bundle.getString("ch_right.jsp.is_service"));
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<select name=\"is_service\" size=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(rs, "IS_SERVICE", true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "IS_SERVICE", true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</select>\r\n\t\t");
                     out.write("</td>\r\n\t");
                     out.write("</tr>\r\n\t");
                     out.write("<tr>\r\n\t\t");
                     out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                    out.write(sCustom.getStr("ch_right.jsp.is_firm"));
+                    out.write(bundle.getString("ch_right.jsp.is_firm"));
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n\t\t");
                     out.write("<select name=\"is_firm\" size=\"1\">\r\n\t\t");
-                    out.write(HtmlTools.printYesNo(rs, "IS_FIRM", true, renderRequest.getLocale()));
+                    out.write(HtmlTools.printYesNo(rs, "IS_FIRM", true, bundle ));
                     out.write("\r\n\t\t");
                     out.write("</select>\r\n\t\t");
                     out.write("</td>\r\n\t");
@@ -337,7 +327,7 @@ public final class RightChange extends HttpServlet
                     out.write("</TABLE>                                                              \r\n");
                     out.write("<BR>                                                                  \r\n");
                     out.write("<INPUT TYPE=\"submit\" VALUE=\"");
-                    out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.change"));
+                    out.write(bundle.getString("button.change"));
                     out.write("\">                            \r\n");
                     out.write("</FORM>                                                               \r\n");
                     out.write("<BR>                                                                  \r\n                                                                       \r\n");
@@ -351,7 +341,7 @@ public final class RightChange extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
+            out.write(bundle.getString("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
             out.write("</td>\r\n");

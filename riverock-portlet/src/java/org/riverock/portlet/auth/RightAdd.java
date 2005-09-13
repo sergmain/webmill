@@ -22,6 +22,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.auth;
+
+import java.io.Writer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ResourceBundle;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.portlet.portlets.WebmillErrorPage;
+import org.riverock.portlet.tools.Client;
+import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.sso.a3.AuthInfo;
+import org.riverock.sso.a3.AuthSession;
+import org.riverock.sso.a3.InternalAuthProvider;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -30,48 +58,16 @@
  *
  * $Id$
  */
-
-package org.riverock.portlet.auth;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.PortletException;
-
-import org.apache.log4j.Logger;
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.StringManager;
-import org.riverock.portlet.portlets.WebmillErrorPage;
-import org.riverock.portlet.tools.Client;
-import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.webmill.portlet.ContextNavigator;
-import org.riverock.webmill.portlet.PortletTools;
-
-
-
 public final class RightAdd extends HttpServlet
 {
-    private final static Logger log = Logger.getLogger(RightAdd.class);
+    private final static Log log = LogFactory.getLog(RightAdd.class);
 
     public RightAdd()
     {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException
+        throws ServletException
     {
         if (log.isDebugEnabled())
             log.debug("method is POST");
@@ -80,7 +76,7 @@ public final class RightAdd extends HttpServlet
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-        throws IOException, ServletException
+        throws ServletException
     {
         Writer out = null;
         DatabaseAdapter db_ = null;
@@ -88,8 +84,8 @@ public final class RightAdd extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-
-            ContextNavigator.setContentType(response);
+            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
@@ -100,18 +96,10 @@ public final class RightAdd extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance();
 
-            StringManager sCustom = null;
-            String nameLocaleBundle = null;
-            nameLocaleBundle = "mill.locale.AUTH_RELATE_RIGHT_ARM";
-            if ((nameLocaleBundle != null) && (nameLocaleBundle.trim().length() != 0))
-                sCustom = StringManager.getManager(nameLocaleBundle, renderRequest.getLocale());
-            // end
-
-            String index_page = PortletTools.url("mill.auth.right", renderRequest, renderResponse );
+            String index_page = PortletService.url("mill.auth.right", renderRequest, renderResponse );
 
             AuthInfo authInfo = InternalAuthProvider.getAuthInfo( auth_ );
-            if (authInfo.getRoot() != 1)
-            {
+            if (authInfo.getRoot() != 1) {
                 response.sendRedirect(index_page);
                 return;
             }
@@ -125,18 +113,18 @@ public final class RightAdd extends HttpServlet
                 out.write("\r\n");
                 out.write("<form method=\"POST\" action=\"");
                 out.write(
-                    PortletTools.url("mill.auth.commit_add_right", renderRequest, renderResponse )
+                    PortletService.url("mill.auth.commit_add_right", renderRequest, renderResponse )
                 );
                 out.write("\">\r\n");
                 out.write("<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"1\">\r\n");
                 out.write("<tr>\r\n");
                 out.write("<th colspan=\"2\">");
-                out.write(sCustom.getStr("add_right.jsp.new_rec"));
+                out.write(bundle.getString("add_right.jsp.new_rec"));
                 out.write("</th>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.id_access_group"));
+                out.write(bundle.getString("add_right.jsp.id_access_group"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"id_access_group\">\r\n");
@@ -147,7 +135,7 @@ public final class RightAdd extends HttpServlet
                 out.write("</tr>\r\n");
                 out.write("<tr>\n");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.id_object_arm"));
+                out.write(bundle.getString("add_right.jsp.id_object_arm"));
                 out.write("</td>\n");
                 out.write("<td align=\"left\">\n"+
                     "<select name=\"id_object_arm\">\n"
@@ -212,120 +200,120 @@ public final class RightAdd extends HttpServlet
                 );
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.is_road"));
+                out.write(bundle.getString("add_right.jsp.is_road"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"is_road\">\r\n\t");
                 out.write("<option value=\"0\" selected>");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.is_service"));
+                out.write(bundle.getString("add_right.jsp.is_service"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"is_service\">\r\n\t");
                 out.write("<option value=\"0\" selected>");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"25%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.is_firm"));
+                out.write(bundle.getString("add_right.jsp.is_firm"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"is_firm\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\" selected>");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.code_right_s"));
+                out.write(bundle.getString("add_right.jsp.code_right_s"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"rs\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.code_right_i"));
+                out.write(bundle.getString("add_right.jsp.code_right_i"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"ri\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.code_right_u"));
+                out.write(bundle.getString("add_right.jsp.code_right_u"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"ru\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.code_right_d"));
+                out.write(bundle.getString("add_right.jsp.code_right_d"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"rd\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
                 out.write("<tr>\r\n\t");
                 out.write("<td align=\"right\" width=\"33%\" class=\"par\">");
-                out.write(sCustom.getStr("add_right.jsp.code_right_a"));
+                out.write(bundle.getString("add_right.jsp.code_right_a"));
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n\t");
                 out.write("<select name=\"ra\">\r\n\t");
                 out.write("<option value=\"0\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.no"));
+                out.write(bundle.getString("yesno.no"));
                 out.write("</option>\r\n\t");
                 out.write("<option value=\"1\">");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("yesno.yes"));
+                out.write(bundle.getString("yesno.yes"));
                 out.write("</option>\r\n\t");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -336,7 +324,7 @@ public final class RightAdd extends HttpServlet
                 out.write("<tr align=\"center\">\r\n");
                 out.write("<td>\r\n");
                 out.write("<input type=\"submit\" class=\"par\" value=\"");
-                out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("button.add"));
+                out.write(bundle.getString("button.add"));
                 out.write("\">\r\n");
                 out.write("</td>\r\n");
                 out.write("</tr>\r\n");
@@ -344,8 +332,6 @@ public final class RightAdd extends HttpServlet
                 out.write("</form>\r\n");
 
             }
-
-// <p><a href="%= index_page %">%=PortletTools.getStringManager().getStr("page.main.3")></a></p>
 
             out.write("\r\n");
             out.write("<br>\r\n");
@@ -356,7 +342,7 @@ public final class RightAdd extends HttpServlet
             out.write("<a href=\"");
             out.write(index_page);
             out.write("\">");
-            out.write(PortletTools.getStringManager( renderRequest.getLocale() ).getStr("page.main.3"));
+            out.write(bundle.getString("page.main.3"));
             out.write("</a>");
             out.write("</p>\r\n");
 

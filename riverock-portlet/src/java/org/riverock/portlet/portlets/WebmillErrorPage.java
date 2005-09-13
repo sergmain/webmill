@@ -22,6 +22,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.portlets;
+
+import java.io.IOException;
+import java.io.Writer;
+
+import javax.portlet.ActionResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.tools.ExceptionTools;
 
 /**
  * User: Admin
@@ -30,23 +41,9 @@
  *
  * $Id$
  */
-package org.riverock.portlet.portlets;
-
-import java.io.Writer;
-import java.io.IOException;
-
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-
-import org.riverock.common.tools.ExceptionTools;
-
-import org.apache.log4j.Logger;
-
 public class WebmillErrorPage
 {
-    private static Logger log = Logger.getLogger( WebmillErrorPage.class );
+    private static Log log = LogFactory.getLog( WebmillErrorPage.class );
 
     public static void processPortletError( Writer out, Throwable th, String errorMessage, String url, String urlMessage ) throws IOException {
 

@@ -39,7 +39,9 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.riverock.common.config.PropertiesProvider;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -48,10 +50,9 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.schema.MainUserInfoType;
-import org.riverock.webmill.main.UploadFileException;
-import org.riverock.webmill.portlet.PortletTools;
 
-import org.apache.log4j.Logger;
+import org.riverock.portlet.shop.upload.UploadFileException;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -62,7 +63,7 @@ import org.apache.log4j.Logger;
  */
 public final class ImageUploadPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( ImageUploadPortlet.class );
+    private final static Log log = LogFactory.getLog( ImageUploadPortlet.class );
 
     public ImageUploadPortlet() {
     }
@@ -97,8 +98,8 @@ public final class ImageUploadPortlet implements Portlet {
             if ( log.isDebugEnabled() )
                 log.debug( "Start commit new image from file" );
 
-            dbDyn = DatabaseAdapter.getInstance( true );
-            String index_page = PortletTools.url( "mill.image.index", renderRequest, renderResponse );
+            dbDyn = DatabaseAdapter.getInstance();
+            String index_page = PortletService.url( "mill.image.index", renderRequest, renderResponse );
 
             if ( log.isDebugEnabled() )
                 log.debug( "right to commit image - " + auth_.isUserInRole( "webmill.upload_image" ) );
@@ -124,14 +125,12 @@ public final class ImageUploadPortlet implements Portlet {
             seq.setSequenceName( "seq_image_number_file" );
             seq.setTableName( "MAIN_FORUM_THREADS" );
             seq.setColumnName( "ID_THREAD" );
-            Long currID = new Long( dbDyn.getSequenceNextValue( seq ) );
+            Long currID = dbDyn.getSequenceNextValue( seq );
 
             // Todo xxx work around with hacked URL - "../../.."
-            // Todo check was need PropertiesProvider.getApplicationPath(), not PropertiesProvider.getConfigPath()
-            String storage_ = PropertiesProvider.getApplicationPath() + File.separatorChar + "image";
+            String storage_ = portletConfig.getPortletContext().getRealPath("/") + File.separatorChar + "image";
             String fileName =
-                storage_ + File.separator +
-                StringTools.appendString( "" + currID, '0', 7, true ) + "-";
+                storage_ + File.separator + StringTools.appendString( "" + currID, '0', 7, true ) + "-";
 
             if ( log.isDebugEnabled() )
                 log.debug( "image fileName " + fileName );
@@ -165,7 +164,7 @@ public final class ImageUploadPortlet implements Portlet {
             seqImageDir.setSequenceName( "seq_image_dir" );
             seqImageDir.setTableName( "IMAGE_DIR" );
             seqImageDir.setColumnName( "ID_IMAGE_DIR" );
-            Long seqValue = new Long( dbDyn.getSequenceNextValue( seqImageDir ) );
+            Long seqValue = dbDyn.getSequenceNextValue( seqImageDir );
 
             ps = dbDyn.prepareStatement( "insert into IMAGE_DIR " +
                 "( ID_IMAGE_DIR, ID_FIRM, is_group, id, id_main, name_file, description )" +

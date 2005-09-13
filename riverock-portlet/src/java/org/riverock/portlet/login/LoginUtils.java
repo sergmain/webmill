@@ -29,12 +29,17 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 
-import org.apache.log4j.Logger;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.portlet.main.Constants;
+
 import org.riverock.sso.a3.AuthSession;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.main.Constants;
+
 
 /**
  * Author: mill
@@ -44,12 +49,14 @@ import org.riverock.webmill.portlet.PortletTools;
  * $Id$
  */
 public final class LoginUtils {
-    private final static Logger log = Logger.getLogger( LoginUtils.class );
+    private final static Log log = LogFactory.getLog( LoginUtils.class );
 
     static final String CTX_TYPE_LOGIN_PLAIN  = "mill.login_plain";
     static final String CTX_TYPE_LOGIN_XML  = "mill.login_xml";
     public static final String NAME_USERNAME_PARAM     = "mill.username";
     public static final String NAME_PASSWORD_PARAM     = "mill.password";
+    public static final String NAME_TOURL_PARAM = "mill.tourl";
+    public static final String LOGIN_CHECK_PORTLET = "mill.login_check";
 
     public static void check(final ActionRequest actionRequest, final ActionResponse actionResponse)
         throws PortletException {
@@ -81,9 +88,9 @@ public final class LoginUtils {
                     " is " + checkAccess + ", auth: " + auth_ );
             }
             if (checkAccess) {
-                session.setAttribute( Constants.AUTH_SESSION, auth_);
+                session.setAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, auth_);
 
-                String url = PortletTools.getString( actionRequest, Constants.NAME_TOURL_PARAM );
+                String url = RequestTools.getString( actionRequest, NAME_TOURL_PARAM );
                 if(log.isDebugEnabled()) {
                     log.debug("URL #2: "+url);
                 }
@@ -102,7 +109,7 @@ public final class LoginUtils {
 
             // User not correctly input authorization data
             // remove all objects from session
-            PortletTools.cleanSession( session );
+            PortletService.cleanSession( session );
 
             long currentTimeMills = System.currentTimeMillis();
 

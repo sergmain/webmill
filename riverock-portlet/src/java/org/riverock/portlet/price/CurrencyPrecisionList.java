@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Dec 12, 2002
- * Time: 5:27:47 PM
- *
- * $Id$
- */
 package org.riverock.portlet.price;
 
 import org.riverock.common.tools.RsetTools;
@@ -40,11 +32,19 @@ import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+/**
+ * User: Admin
+ * Date: Dec 12, 2002
+ * Time: 5:27:47 PM
+ *
+ * $Id$
+ */
 public class CurrencyPrecisionList extends CurrencyPrecisionListType
 {
-    private static Logger log = Logger.getLogger("org.riverock.portlet.price.CurrencyPrecisionList");
+    private static Log log = LogFactory.getLog( CurrencyPrecisionList.class );
 
     public void initCurrencyPrecision(DatabaseAdapter db_, Long idShop)
     {

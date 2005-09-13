@@ -33,8 +33,8 @@
 package org.riverock.portlet.member;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
-import javax.portlet.RenderRequest;
 import javax.portlet.PortletRequest;
 
 public abstract class BaseClassQuery {
@@ -42,13 +42,13 @@ public abstract class BaseClassQuery {
  * ¬озвращает текущее значение дл€ отображени€ на веб-странице
  * @return String
  */
-    public abstract String getCurrentValue( PortletRequest renderRequest ) throws Exception;
+    public abstract String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception;
 
 /**
  * ¬озвращает список возможных значений дл€ построени€ <select> элемента
  * @return List of org.riverock.member.ClassQueryItem
  */
-    public abstract List getSelectList( PortletRequest renderRequest ) throws Exception;
+    public abstract List getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception;
 
     public abstract void setQueryParameter(MemberQueryParameter parameter) throws Exception;
 }
