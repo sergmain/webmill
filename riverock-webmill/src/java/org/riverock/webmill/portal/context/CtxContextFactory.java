@@ -22,31 +22,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-package org.riverock.webmill.portlet.context;
+package org.riverock.webmill.portal.context;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.FileManagerException;
 import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
+import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.main.Constants;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portlet.ContextFactory;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portal.ContextFactory;
 
 /**
  * $Id$
@@ -54,18 +50,18 @@ import org.apache.log4j.Logger;
 public final class CtxContextFactory extends ContextFactory {
     private final static Logger log = Logger.getLogger(CtxContextFactory.class);
 
-    private CtxContextFactory(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
-        super(adapter, request, portalInfo);
+    private CtxContextFactory(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+        super(factoryParameter);
     }
 
-    public static ContextFactory getInstance(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
-        CtxContextFactory factory = new CtxContextFactory(adapter, request, portalInfo);
+    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+        CtxContextFactory factory = new CtxContextFactory(factoryParameter);
         if (factory.getDefaultCtx()!=null) {
             return factory;
         }
 
         // If not found context, processing as 'index_page'
-        MenuLanguageInterface menu = portalInfo.getMenu(factory.realLocale.toString());
+        MenuLanguageInterface menu = factoryParameter.getPortalInfo().getMenu(factory.realLocale.toString());
         if (menu==null){
             log.error( "menu is null, locale: "+factory.realLocale.toString() );
             return factory;
@@ -84,8 +80,8 @@ public final class CtxContextFactory extends ContextFactory {
             }
 
             // Todo what doing if index not found???
-            factory.defaultCtx = DefaultCtx.getInstance( adapter, portalInfo, menu.getIndexMenuItem().getId() );
-            factory.initFromContext(adapter);
+            factory.defaultCtx = DefaultCtx.getInstance( factoryParameter, menu.getIndexMenuItem().getId() );
+            factory.initFromContext(factoryParameter.getAdapter());
             factory.setPortletInfo( menu.getIndexMenuItem().getNameTemplate() );
 
             return factory;
@@ -97,13 +93,13 @@ public final class CtxContextFactory extends ContextFactory {
         }
     }
 
-    protected Long initPortalParameters(DatabaseAdapter db, HttpServletRequest request) throws PortalException {
+    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) throws PortalException {
 
         try {
             log.debug( "Start process as page, format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/ctx?" );
             // format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME[,PORTLET_NAME]>/<PARAMETER_OF_OTHER_PORTLET>/ctx?
 
-            String path = request.getPathInfo();
+            String path = factoryParameter.getRequest().getPathInfo();
             if ( path == null || path.equals( "/" ) ) {
                 return null;
             }
@@ -124,7 +120,7 @@ public final class CtxContextFactory extends ContextFactory {
 
 
             realLocale = StringTools.getLocale( st.nextToken() );
-            String localeNameTemp = request.getParameter( Constants.NAME_LANG_PARAM );
+            String localeNameTemp = factoryParameter.getRequest().getParameter( ContainerConstants.NAME_LANG_PARAM );
             if ( localeNameTemp != null ) {
                 realLocale = StringTools.getLocale( localeNameTemp );
             }
@@ -134,11 +130,11 @@ public final class CtxContextFactory extends ContextFactory {
             if ( st.hasMoreTokens() )
                 ctxType = st.nextToken();
             else
-                ctxType = request.getParameter( Constants.NAME_TYPE_CONTEXT_PARAM );
+                ctxType = factoryParameter.getRequest().getParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM );
 
             // Todo parse request for parameters of others portlets
 
-//        PortletType portlet = null;
+//        PortletDefinition portlet = null;
 //        try {
 //            portlet = PortletManager.getPortletDescription( ctxType );
 //        } catch (FileManagerException e) {
@@ -146,7 +142,7 @@ public final class CtxContextFactory extends ContextFactory {
 //        }
 //        String namePortletId = null;
 //        if (portlet!=null){
-//            namePortletId = PortletTools.getStringParam(portlet, PortletTools.name_portlet_id);
+//            namePortletId = PortletService.getStringParam(portlet, ContainerConstants.name_portlet_id);
 //        }
 //
 //        Long id = null;
@@ -164,7 +160,7 @@ public final class CtxContextFactory extends ContextFactory {
 
 
             Long ctxId = null;
-            ctxId = DatabaseManager.getLongValue( db,
+            ctxId = DatabaseManager.getLongValue( factoryParameter.getAdapter(),
                 "select a.ID_SITE_CTX_CATALOG " +
                 "from   SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b, SITE_SUPPORT_LANGUAGE c, " +
                 "       SITE_CTX_TYPE d, SITE_TEMPLATE e " +
@@ -174,12 +170,12 @@ public final class CtxContextFactory extends ContextFactory {
                 "       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and " +
                 "       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and " +
                 "       d.TYPE=? and e.NAME_SITE_TEMPLATE=? ",
-                new Object[]{portalInfo.getSiteId(), realLocale.toString().toLowerCase(), ctxType, ctxTemplate} );
+                new Object[]{factoryParameter.getPortalInfo().getSiteId(), realLocale.toString().toLowerCase(), ctxType, ctxTemplate} );
             if ( ctxId != null ) {
                 return ctxId;
             }
 
-            defaultCtx = DefaultCtx.getInstance( ctxType );
+            defaultCtx = DefaultCtx.getInstance( factoryParameter, ctxType );
             return null;
         }
         catch( Exception e ) {

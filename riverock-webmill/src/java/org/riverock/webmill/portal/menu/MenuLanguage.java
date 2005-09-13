@@ -27,7 +27,6 @@ package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
