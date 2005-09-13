@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+/*
+ * org.riverock.webmill.container - Webmill portlet container implementation
+ *
+ * Copyright (C) 2005, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+ -->
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>Tags for portlets</short-name>
+	<tag>
+		<name>defineObjects</name>
+		<tag-class>org.riverock.webmill.container.tags.DefineObjectsTag</tag-class>
+		<tei-class>org.riverock.webmill.container.tags.DefineObjectsTag$TEI</tei-class>
+		<body-content>empty</body-content>
+	</tag>
+	<tag>
+		<name>param</name>
+		<tag-class>org.riverock.webmill.container.tags.ParamTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>actionURL</name>
+		<tag-class>org.riverock.webmill.container.tags.ActionURLTag</tag-class>
+		<tei-class>org.riverock.webmill.container.tags.BasicURLTag$TEI</tei-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>windowState</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>portletMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>secure</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>renderURL</name>
+		<tag-class>org.riverock.webmill.container.tags.RenderURLTag</tag-class>
+		<tei-class>org.riverock.webmill.container.tags.BasicURLTag$TEI</tei-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>windowState</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>portletMode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>secure</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>namespace</name>
+		<tag-class>org.riverock.webmill.container.tags.NamespaceTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+</taglib>
