@@ -32,6 +32,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.commons.lang.time.DateFormatUtils;
+
 /**
  *
  * $Id$
@@ -135,28 +137,26 @@ public final class DateTools
         return true;
     }
 
-    public static String getStringDate( final Calendar c, final String mask )
-    {
-        return getStringDate(c, mask, Locale.ENGLISH);
+    public static String getStringDate( final Calendar c, final String mask ) {
+        return DateFormatUtils.format(c.getTimeInMillis(), mask, c.getTimeZone(), Locale.ENGLISH);
+//        return getStringDate(c, mask, Locale.ENGLISH);
     }
 
-    public static String getStringDate( final Calendar c, final String mask, final Locale loc )
-    {
+    public static String getStringDate( final Calendar c, final String mask, final Locale loc ) {
         if (c == null) return null;
-
-        SimpleDateFormat df = new SimpleDateFormat(mask, loc);
-        df.setTimeZone(c.getTimeZone());
-        return df.format(c.getTime());
+        return DateFormatUtils.format(c.getTimeInMillis(), mask, c.getTimeZone(), loc);
+//        SimpleDateFormat df = new SimpleDateFormat(mask, loc);
+//        df.setTimeZone(c.getTimeZone());
+//        return df.format(c.getTime());
     }
 
-    public static String getCurrentDate( final String mask, final Locale loc, final TimeZone timeZone )
-    {
-        return getStringDate(new GregorianCalendar(timeZone), mask, loc);
+    public static String getCurrentDate( final String mask, final Locale loc, final TimeZone timeZone ) {
+        return DateFormatUtils.format(System.currentTimeMillis(), mask, timeZone, loc);
+//        return getStringDate(new GregorianCalendar(timeZone), mask, loc);
     }
 
-    public static String getCurrentDate( final String mask, final TimeZone timeZone )
-    {
-        return getStringDate(new GregorianCalendar(timeZone), mask, Locale.ENGLISH);
+    public static String getCurrentDate( final String mask, final TimeZone timeZone ) {
+        return DateFormatUtils.format(System.currentTimeMillis(), mask, timeZone, Locale.ENGLISH);
+//        return getStringDate(new GregorianCalendar(timeZone), mask, Locale.ENGLISH);
     }
-
 }

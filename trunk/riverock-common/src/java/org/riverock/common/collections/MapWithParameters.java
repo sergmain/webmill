@@ -2,7 +2,7 @@ package org.riverock.common.collections;
 
 import java.util.Map;
 import java.util.List;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * User: SergeMaslyukov
@@ -12,7 +12,7 @@ import java.util.LinkedList;
  */
 public final class MapWithParameters {
 
-    public static void put( final Map map, final String key, final String value ) {
+    public static void put( final Map map, final String key, final Object value ) {
         Object obj = map.get( key );
         if (obj==null) {
             map.put( key, value );
@@ -22,7 +22,7 @@ public final class MapWithParameters {
         }
         else {
             map.remove( key );
-            List list = new LinkedList();
+            List list = new ArrayList();
             list.add( obj );
             list.add( value );
             map.put( key, list );

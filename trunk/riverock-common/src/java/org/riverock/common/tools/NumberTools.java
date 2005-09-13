@@ -72,10 +72,10 @@ public class NumberTools
                 return 0;
 
             return new Double(
-                    StringTools.appendString(
-                            s.substring(0, pos - truncPos), '0', pos, false
-                    )
-            ).doubleValue();
+                StringTools.appendString(
+                    s.substring(0, pos - truncPos), '0', pos, false
+                )
+            );
         }
         else if (countChar > 0)
 // Окургление вправо от запятой
@@ -120,7 +120,7 @@ public class NumberTools
         BigDecimal big = new BigDecimal(val);
         big = big.add( new BigDecimal( new BigInteger("1"), newScale) );
 //        big = big.add( movePrecisionLeft(1, newScale) );
-        int i = 0;
+//        int i = 0;
         return big;
     }
 
