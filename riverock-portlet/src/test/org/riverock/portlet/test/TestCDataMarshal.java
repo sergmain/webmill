@@ -37,16 +37,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
-import org.apache.log4j.Logger;
+
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class TestCDataMarshal
 {
     public String text = "";
 
-    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestCDataMarshal" );
+    private static Log cat = LogFactory.getLog( "org.riverock.portlet.test.TestCDataMarshal" );
 
     public TestCDataMarshal()
     {

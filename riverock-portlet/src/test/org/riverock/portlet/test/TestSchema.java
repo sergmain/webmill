@@ -43,7 +43,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
-import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.portlet.tools.SiteUtils;
 
 public class TestSchema
 {
@@ -51,7 +51,7 @@ public class TestSchema
         throws Exception
     {
         InputSource inSrc = new InputSource(
-            new FileInputStream( WebmillConfig.getWebmillDebugDir()+"mill-auth.xsd" )
+            new FileInputStream( SiteUtils.getTempDir()+"mill-auth.xsd" )
         );
 
         SchemaReader reader = new SchemaReader(inSrc);
@@ -89,7 +89,7 @@ public class TestSchema
         a.addComplexType( cType );
 
 
-        FileOutputStream fos = new FileOutputStream( WebmillConfig.getWebmillDebugDir()+"test-schema.xml" );
+        FileOutputStream fos = new FileOutputStream( SiteUtils.getTempDir()+"test-schema.xml" );
         SchemaWriter writer = new SchemaWriter(new OutputStreamWriter(fos, "utf-8") );
         writer.write( a );
     }

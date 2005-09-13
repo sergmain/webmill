@@ -39,32 +39,19 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.menu.MenuInterface;
 import org.riverock.interfaces.portlet.menu.MenuItemInterface;
 import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
-import org.riverock.portlet.core.GetCashCurrencyStdFullList;
-import org.riverock.portlet.core.GetSiteCtxTypeFullList;
-import org.riverock.portlet.core.InsertCashCurrValueItem;
-import org.riverock.portlet.core.InsertCashCurrencyItem;
-import org.riverock.portlet.core.InsertPriceShopTableItem;
-import org.riverock.portlet.core.InsertSiteCtxCatalogItem;
-import org.riverock.portlet.core.InsertSiteCtxLangCatalogItem;
-import org.riverock.portlet.core.InsertSiteSupportLanguageItem;
+import org.riverock.portlet.core.*;
 import org.riverock.portlet.price.CurrencyList;
 import org.riverock.portlet.price.CurrencyService;
 import org.riverock.portlet.schema.core.*;
 import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.webmill.core.InsertSiteListSiteItem;
-import org.riverock.webmill.core.InsertSiteTemplateItem;
-import org.riverock.webmill.core.InsertSiteVirtualHostItem;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portal.menu.SiteMenu;
-import org.riverock.webmill.portlet.PortletManager;
-import org.riverock.webmill.schema.core.SiteListSiteItemType;
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
-import org.riverock.webmill.schema.core.SiteVirtualHostItemType;
-import org.riverock.webmill.site.SiteService;
+
+import org.riverock.webmill.container.portal.PortalInfo;
 
 import junit.framework.Assert;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 /**
  * User: Admin
@@ -75,7 +62,7 @@ import org.apache.log4j.Logger;
  */
 public class TestSite {
 
-    private static Logger log = Logger.getLogger( TestSite.class );
+    private static Log log = LogFactory.getLog( TestSite.class );
 
     public final static String TEST_SERVER_NAME = "test-host";
     public final static String TEST_LANGUAGE = "ru_RU";
@@ -83,7 +70,7 @@ public class TestSite {
 
     public final static String NAME_DEFAULT_MENU = "DEFAULT_MENU";
 
-    public final static String indexPortletType = "mill.index";
+    public final static String indexPortletDefinition = "mill.index";
 
     public Long idSite;
     public Long idVirtualHost;
@@ -102,20 +89,20 @@ public class TestSite {
     public Long idCurrencyEURO = null;
     public static Long idCurrencyStdEURO = null;
     public static final String nameEURO = "EURO";
-    public static Double cursEURO = new Double(34.51);
+    public static Double cursEURO = 34.51;
 
 
     public Long idCurrencyRUB = null;
     public static final String nameRUB = "Руб";
     public static Long idCurrencyStdRUB = null;
-    public static Double cursRUB = new Double(1.01);
+    public static Double cursRUB = 1.01;
 
     public final static int COUNT_TOP_LEVEL_MENU = 4;
     public final static int COUNT_SUB_MENU = 3;
     public final static String menuItem = "Menu item ";
 
     public static Long idShop = null;
-
+/*
     TestSite( DatabaseAdapter dbTemp_)
         throws Exception
     {
@@ -149,7 +136,7 @@ public class TestSite {
         for (int i=0; i<currList.list.getCurrencyListCount(); i++)
         {
             CustomCurrencyItemType item = currList.list.getCurrencyList(i);
-            Assert.assertFalse("Error init current curs of currency", item.getRealCurs().doubleValue()==0);
+            Assert.assertFalse("Error init current curs of currency", item.getRealCurs()==0);
         }
 
         SiteListSiteItemType site = p.getSites();
@@ -170,7 +157,7 @@ public class TestSite {
         seqSite.setSequenceName("SEQ_SITE_TEMPLATE");
         seqSite.setTableName( "SITE_TEMPLATE");
         seqSite.setColumnName( "ID_SITE_TEMPLATE" );
-        Long idTemplate = new Long(db_.getSequenceNextValue( seqSite ));
+        Long idTemplate = db_.getSequenceNextValue( seqSite );
 
         SiteTemplateItemType template = new SiteTemplateItemType();
         template.setNameSiteTemplate( nameTemplate );
@@ -179,7 +166,7 @@ public class TestSite {
         template.setTemplateData( templateData );
 
         countRec = InsertSiteTemplateItem.processData( db_, template );
-        Assert.assertFalse("Error insert new template", countRec.longValue()==0);
+        Assert.assertFalse("Error insert new template", countRec==0);
 
         return idTemplate;
     }
@@ -199,11 +186,11 @@ public class TestSite {
         for (int i=0; i<ctxList.getSiteCtxTypeCount(); i++)
         {
             SiteCtxTypeItemType ctx = ctxList.getSiteCtxType(i);
-            if (indexPortletType.equals(ctx.getType()))
+            if (indexPortletDefinition.equals(ctx.getType()))
                 idCtx = ctx.getIdSiteCtxType();
         }
 
-        Assert.assertFalse("ID for context '"+indexPortletType+"' not found", idCtx==null);
+        Assert.assertFalse("ID for context '"+indexPortletDefinition+"' not found", idCtx==null);
 
 
         SiteCtxLangCatalogItemType langCatalog = new SiteCtxLangCatalogItemType();
@@ -216,7 +203,7 @@ public class TestSite {
         seqSite.setSequenceName( "SEQ_SITE_CTX_LANG_CATALOG" );
         seqSite.setTableName( "SITE_CTX_LANG_CATALOG" );
         seqSite.setColumnName( "ID_SITE_CTX_LANG_CATALOG" );
-        idRuLangCatalog = new Long(db_.getSequenceNextValue( seqSite ));
+        idRuLangCatalog = db_.getSequenceNextValue( seqSite );
         langCatalog.setIdSiteCtxLangCatalog( idRuLangCatalog );
 
         System.out.println("idRuLangCatalog - "+idRuLangCatalog);
@@ -224,7 +211,7 @@ public class TestSite {
         Long countRec = null;
         countRec = InsertSiteCtxLangCatalogItem.processData(db_, langCatalog);
 
-        Assert.assertFalse("Error insert new lang menu", countRec.longValue()==0);
+        Assert.assertFalse("Error insert new lang menu", countRec==0);
 
         for (int i=0; i<COUNT_TOP_LEVEL_MENU; i++)
         {
@@ -242,12 +229,12 @@ public class TestSite {
             seqSite.setTableName( "SITE_CTX_CATALOG" );
             seqSite.setColumnName( "ID_SITE_CTX_CATALOG" );
 
-            Long idMenu = new Long(db_.getSequenceNextValue( seqSite ));
+            Long idMenu = db_.getSequenceNextValue( seqSite );
             menu.setIdSiteCtxCatalog( idMenu );
-            menu.setIdTopCtxCatalog( new Long(0) );
+            menu.setIdTopCtxCatalog( 0L );
 
             countRec = InsertSiteCtxCatalogItem.processData(db_, menu);
-            Assert.assertFalse("Error insert new menu item", countRec.longValue()==0);
+            Assert.assertFalse("Error insert new menu item", countRec==0);
 
             for (int k=0; k<COUNT_SUB_MENU; k++)
             {
@@ -265,11 +252,11 @@ public class TestSite {
                 seqSite.setTableName( "SITE_CTX_CATALOG" );
                 seqSite.setColumnName( "ID_SITE_CTX_CATALOG" );
 
-                Long idSubMenu = new Long(db_.getSequenceNextValue( seqSite ));
+                Long idSubMenu = db_.getSequenceNextValue( seqSite );
                 subMenu.setIdSiteCtxCatalog( idSubMenu );
 
                 countRec = InsertSiteCtxCatalogItem.processData(db_, subMenu);
-                Assert.assertFalse("Error insert new sub menu item", countRec.longValue()==0);
+                Assert.assertFalse("Error insert new sub menu item", countRec==0);
             }
         }
         SiteMenu catalog = SiteMenu.getInstance(db_, idSite);
@@ -327,7 +314,7 @@ public class TestSite {
         seqSite.setSequenceName("SEQ_CASH_CURRENCY");
         seqSite.setTableName( "CASH_CURRENCY");
         seqSite.setColumnName( "ID_CURRENCY" );
-        idCurrencyRUB = new Long(db_.getSequenceNextValue( seqSite ));
+        idCurrencyRUB = db_.getSequenceNextValue( seqSite );
         Assert.assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), idCurrencyRUB==null);
         currencyItem = new  CashCurrencyItemType();
         currencyItem.setCurrency(nameRUB);
@@ -337,7 +324,7 @@ public class TestSite {
         currencyItem.setIsUsed( Boolean.TRUE );
         currencyItem.setIsUseStandart( Boolean.FALSE );
         currencyItem.setNameCurrency( nameRUB );
-        currencyItem.setPercentValue( new Double(0) );
+        currencyItem.setPercentValue( 0.0 );
         InsertCashCurrencyItem.processData( db_, currencyItem);
         db_.commit();
 
@@ -345,7 +332,7 @@ public class TestSite {
         seqSite.setSequenceName("SEQ_CASH_CURRENCY");
         seqSite.setTableName( "CASH_CURRENCY");
         seqSite.setColumnName( "ID_CURRENCY" );
-        idCurrencyEURO = new Long(db_.getSequenceNextValue( seqSite ));
+        idCurrencyEURO = db_.getSequenceNextValue( seqSite );
         Assert.assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), idCurrencyEURO==null);
         currencyItem = new  CashCurrencyItemType();
         currencyItem.setCurrency(nameEURO);
@@ -355,7 +342,7 @@ public class TestSite {
         currencyItem.setIsUsed( Boolean.TRUE );
         currencyItem.setIsUseStandart( Boolean.FALSE );
         currencyItem.setNameCurrency( nameEURO );
-        currencyItem.setPercentValue( new Double(0) );
+        currencyItem.setPercentValue( 0.0 );
         InsertCashCurrencyItem.processData(db_, currencyItem);
         db_.commit();
 
@@ -371,7 +358,7 @@ public class TestSite {
         seqSite.setSequenceName("SEQ_CASH_CURR_VALUE");
         seqSite.setTableName( "CASH_CURR_VALUE");
         seqSite.setColumnName( "ID_CURVAL" );
-        id = new Long(db_.getSequenceNextValue( seqSite ));
+        id = db_.getSequenceNextValue( seqSite );
         Assert.assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), id==null);
         curs.setIdCurval( id );
         InsertCashCurrValueItem.processData(db_, curs);
@@ -385,7 +372,7 @@ public class TestSite {
         seqSite.setSequenceName("SEQ_CASH_CURR_VALUE");
         seqSite.setTableName( "CASH_CURR_VALUE");
         seqSite.setColumnName( "ID_CURVAL" );
-        id = new Long(db_.getSequenceNextValue( seqSite ));
+        id = db_.getSequenceNextValue( seqSite );
         Assert.assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), id==null);
         curs.setIdCurval( id );
         InsertCashCurrValueItem.processData(db_, curs);
@@ -419,7 +406,7 @@ public class TestSite {
         seqSite.setTableName( "PRICE_SHOP_TABLE");
         seqSite.setColumnName( "ID_SHOP" );
 
-        idShop = new Long(db_.getSequenceNextValue( seqSite ));
+        idShop = db_.getSequenceNextValue( seqSite );
         Assert.assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), idShop==null);
 
         shop.setIdShop( idShop );
@@ -431,8 +418,8 @@ public class TestSite {
         shop.setIsNeedRecalc( Boolean.TRUE );
         shop.setIsActivateEmailOrder( Boolean.TRUE );
         shop.setIsNeedProcessing( Boolean.TRUE );
-        shop.setCommasCount( new Integer(2) );
-        shop.setDiscount( new Double(0) );
+        shop.setCommasCount( 2 );
+        shop.setDiscount( 0.0 );
 
         InsertPriceShopTableItem.processData( db_, shop);
         db_.commit();
@@ -459,7 +446,7 @@ public class TestSite {
                 seqSite.setSequenceName("SEQ_SITE_LIST_SITE");
                 seqSite.setTableName( "SITE_LIST_SITE");
                 seqSite.setColumnName( "ID_SITE" );
-                idSite = new Long(db_.getSequenceNextValue( seqSite ));
+                idSite = db_.getSequenceNextValue( seqSite );
 
                 System.out.println("new ID of site - "+idSite);
 
@@ -467,13 +454,13 @@ public class TestSite {
 
                 SiteListSiteItemType siteItem = new SiteListSiteItemType();
                 siteItem.setIdSite( idSite );
-                siteItem.setIdFirm( new Long(1) );
+                siteItem.setIdFirm( 1 );
                 siteItem.setDefLanguage( "ru" );
                 siteItem.setDefCountry( "RU" );
                 siteItem.setNameSite( NAME_TEST_SITE );
                 countRec = InsertSiteListSiteItem.processData( db_, siteItem );
 
-                Assert.assertFalse("Error insert new site", countRec.longValue()==0);
+                Assert.assertFalse("Error insert new site", countRec==0);
 
                 db_.commit();
             }
@@ -483,7 +470,7 @@ public class TestSite {
                 seqVirtualHost.setTableName( "SITE_VIRTUAL_HOST");
                 seqVirtualHost.setColumnName( "ID_SITE_VIRTUAL_HOST" );
 
-                idVirtualHost = new Long(db_.getSequenceNextValue( seqVirtualHost ));
+                idVirtualHost = db_.getSequenceNextValue( seqVirtualHost );
 
                 Assert.assertFalse("Error get new value of sequence for table "+seqVirtualHost.getTableName(), idVirtualHost==null);
 
@@ -493,7 +480,7 @@ public class TestSite {
                 hostItem.setNameVirtualHost( TEST_SERVER_NAME );
                 countRec = InsertSiteVirtualHostItem.processData(db_, hostItem);
 
-                Assert.assertFalse("Error insert new site", countRec.longValue()==0);
+                Assert.assertFalse("Error insert new site", countRec==0);
 
                 db_.commit();
             }
@@ -503,7 +490,7 @@ public class TestSite {
                 seqSupportLanguage.setTableName( "SITE_SUPPORT_LANGUAGE");
                 seqSupportLanguage.setColumnName( "ID_SITE_SUPPORT_LANGUAGE" );
 
-                idRuSiteLanguage = new Long(db_.getSequenceNextValue( seqSupportLanguage ));
+                idRuSiteLanguage = db_.getSequenceNextValue( seqSupportLanguage );
 
                 Assert.assertFalse("Error get new value of sequence for table "+seqSupportLanguage.getTableName(), idVirtualHost==null);
 
@@ -514,7 +501,7 @@ public class TestSite {
                 supportLangItem.setCustomLanguage( TEST_LANGUAGE );
                 supportLangItem.setNameCustomLanguage( TEST_LANGUAGE );
                 countRec = InsertSiteSupportLanguageItem.processData(db_, supportLangItem);
-                Assert.assertFalse("Error insert new site_support_language", countRec.longValue()==0);
+                Assert.assertFalse("Error insert new site_support_language", countRec==0);
 
                 db_.commit();
             }
@@ -642,5 +629,5 @@ public class TestSite {
         }
     }
 
-
+*/
 }

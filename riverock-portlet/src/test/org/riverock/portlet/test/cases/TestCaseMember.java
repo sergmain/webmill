@@ -65,7 +65,6 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.sql.parser.Parser;
 import org.riverock.sql.cache.SqlStatement;
-import org.riverock.webmill.portlet.wrapper.RenderRequestImpl;
 
 import javax.portlet.PortletRequest;
 
@@ -106,11 +105,12 @@ public class TestCaseMember extends TestCase
         DbSchemaType schema = getDbSchema();
 
 //        System.out.println("Write schema to file");
-//        XmlTools.writeToFile(schema, WebmillConfig.getWebmillDebugDir()+"-validate-field.xml");
+//        XmlTools.writeToFile(schema, SiteUtils.getTempDir()+"-validate-field.xml");
 
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -274,9 +274,9 @@ public class TestCaseMember extends TestCase
                                     }
                                 }
 //                                byte[] originByte = XmlTools.getXml( dbTable, null);
-//                                MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"bytes-structure-table.xml", originByte);
+//                                MainTools.writeToFile(SiteUtils.getTempDir()+"bytes-structure-table.xml", originByte);
 //                                byte[] fieldByte = XmlTools.getXml( field, null);
-//                                MainTools.writeToFile(WebmillConfig.getWebmillDebugDir()+"bytes-structure-field.xml", fieldByte);
+//                                MainTools.writeToFile(SiteUtils.getTempDir()+"bytes-structure-field.xml", fieldByte);
 
                                 if (isUseAssertion)
                                 {
@@ -328,9 +328,10 @@ public class TestCaseMember extends TestCase
         org.riverock.generic.startup.StartupApplication.init();
         DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
 
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -363,7 +364,7 @@ public class TestCaseMember extends TestCase
                         Exception ee = null;
                         try
                         {
-                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "remote-user", "server-name");
+                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "remote-user", "server-name", null);
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -408,7 +409,7 @@ public class TestCaseMember extends TestCase
 //                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name" );
+                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", null );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -449,7 +450,7 @@ public class TestCaseMember extends TestCase
                         {
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name" );
+                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", null );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -491,9 +492,10 @@ public class TestCaseMember extends TestCase
     public void testMemberRelateClassExists()
             throws Exception
     {
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -555,9 +557,10 @@ public class TestCaseMember extends TestCase
         DbSchemaType schema = getDbSchema();
 
 
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -684,9 +687,10 @@ public class TestCaseMember extends TestCase
 //        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
         DbSchemaType schema = getDbSchema();
 
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -809,9 +813,10 @@ public class TestCaseMember extends TestCase
     {
         org.riverock.generic.startup.StartupApplication.init();
 
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -908,9 +913,10 @@ public class TestCaseMember extends TestCase
 
 //        DbSchemaType schema = DatabaseManager.getDbStructure(db_, "MILLENNIUM");
 
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -971,15 +977,17 @@ public class TestCaseMember extends TestCase
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        ModuleManager.init();
 
-        ModuleType module = ModuleManager.getModule(TemplateMemberClassQuery.nameModule);
+
+        ModuleType module = null;
+//        module = ModuleManager.getModule(TemplateMemberClassQuery.nameModule);
         assertFalse("Module '" + TemplateMemberClassQuery.nameModule + "' not found",
             module == null
         );
 
-        ContentType content = ModuleManager.getContent(
-            TemplateMemberClassQuery.nameModule, ContentTypeActionType.INDEX_TYPE);
+        ContentType content = null;
+//        content = ModuleManager.getContent(
+//                    TemplateMemberClassQuery.nameModule, ContentTypeActionType.INDEX_TYPE);
 
         assertFalse("Content 'index' in '" + TemplateMemberClassQuery.nameModule + "' module not found",
             content == null
@@ -1022,9 +1030,10 @@ TargetModuleType target = null;
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -1078,9 +1087,10 @@ TargetModuleType target = null;
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {
@@ -1123,9 +1133,10 @@ TargetModuleType target = null;
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        ModuleManager.init();
 
-        MemberFile[] member = ModuleManager.getMemberFileArray();
+
+        MemberFile[] member = null;
+//        member = ModuleManager.getMemberFileArray();
 
         for (int k1 = 0; k1 < member.length; k1++)
         {

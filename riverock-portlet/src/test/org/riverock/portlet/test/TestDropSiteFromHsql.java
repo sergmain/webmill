@@ -22,6 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.portlet.test;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Author: mill
@@ -30,14 +34,9 @@
  *
  * $Id$
  */
-
-package org.riverock.portlet.test;
-
-import org.apache.log4j.Logger;
-
 public class TestDropSiteFromHsql
 {
-    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestDropSiteFromHsql" );
+    private static Log cat = LogFactory.getLog( TestDropSiteFromHsql.class );
 
     private final static String nameConnection = "HSQLDB";
     private final static String  nameVirtualHost = "localhost";
@@ -59,7 +58,7 @@ public class TestDropSiteFromHsql
 
         conf = InitParam.getWebmillConfig();
         conf.setDefaultConnectionName( "ORACLE_WEBMILL" );
-        db_ = DatabaseAdapter.getInstance(false);
+        db_ = DatabaseAdapter.getInstance();
         System.out.println("db conn - "+db_.conn.getClass().getName());
 
         idSite = SiteListSite.getInstance().getLongIdSite( "webmill.askmore.info" );
@@ -68,7 +67,7 @@ public class TestDropSiteFromHsql
 
         XmlTools.writeToFile(
             site,
-            WebmillConfig.getWebmillDebugDir()+"test-site-extend-data.xml",
+            SiteUtils.getTempDir()+"test-site-extend-data.xml",
             "utf-8",
             null,
             org.riverock.webmill.site.WebmillNamespace.webmillNamespace
@@ -89,7 +88,9 @@ public class TestDropSiteFromHsql
 
 //        if (true)return;
 
-        System.out.println("db conn - "+DatabaseAdapter.getInstance(false).conn.getClass().getName());
+        DatabaseAdapter adapter = DatabaseAdapter.getInstance();
+        System.out.println("db conn - "+adapter.conn.getClass().getName());
+        DatabaseAdapter.close(adapter);
 
         CustomSequenceType seq = new CustomSequenceType();
         seq.setSequenceName("SEQ_SITE_LIST_SITE");
@@ -284,7 +285,7 @@ public class TestDropSiteFromHsql
         db_.commit();
         site = SiteService.getExtendData(db_, idSite);
         XmlTools.writeToFile(
-            site, WebmillConfig.getWebmillDebugDir()+"result-webmill.xml", "utf-8", null,
+            site, SiteUtils.getTempDir()+"result-webmill.xml", "utf-8", null,
             WebmillNamespace.webmillNamespace
         );
         */

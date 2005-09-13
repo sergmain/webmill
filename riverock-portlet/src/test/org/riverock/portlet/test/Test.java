@@ -26,7 +26,7 @@
 package org.riverock.portlet.test;
 
 import org.riverock.common.tools.MainTools;
-import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.portlet.tools.SiteUtils;
 
 
 import java.io.OutputStreamWriter;
@@ -119,7 +119,7 @@ public class Test
     private Test()
         throws Exception
     {
-        String file_name = WebmillConfig.getWebmillDebugDir()+"Test.constructor.log";
+        String file_name = SiteUtils.getTempDir()+"Test.constructor.log";
 
         OutputStreamWriter prn_ = new OutputStreamWriter(
             new FileOutputStream(file_name, true)
@@ -136,7 +136,7 @@ public class Test
 
     protected void finalize() throws java.lang.Throwable
     {
-        String file_name = WebmillConfig.getWebmillDebugDir()+"Test.finalize.log";
+        String file_name = SiteUtils.getTempDir()+"Test.finalize.log";
 
         OutputStreamWriter prn_ = new OutputStreamWriter(
             new FileOutputStream(file_name, true)

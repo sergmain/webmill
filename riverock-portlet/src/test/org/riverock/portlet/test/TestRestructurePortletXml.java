@@ -34,10 +34,6 @@ package org.riverock.portlet.test;
 
 import java.util.List;
 
-import org.riverock.interfaces.schema.javax.portlet.InitParamType;
-import org.riverock.interfaces.schema.javax.portlet.NameType;
-import org.riverock.interfaces.schema.javax.portlet.ValueType;
-
 public class TestRestructurePortletXml
 {
 
@@ -46,6 +42,7 @@ public class TestRestructurePortletXml
         if (value_==null)
             return;
 
+/*
         InitParamType init = new InitParamType();
         NameType name = new NameType();
         name.setContent( name_ );
@@ -55,6 +52,7 @@ public class TestRestructurePortletXml
         init.setValue( value );
 
         v.add( init );
+*/
     }
 
 

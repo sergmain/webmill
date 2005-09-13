@@ -25,7 +25,7 @@
 package org.riverock.portlet.test.cases;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.main.Constants;
+
 
 import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.generic.tools.servlet.HttpServletResponseApplWrapper;
@@ -34,6 +34,7 @@ import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.startup.StartupApplication;
 import org.riverock.cache.impl.CacheArray;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: Admin
@@ -70,11 +71,11 @@ public class TestCaseSiteAbstract {
 
         initDatabaseConnection();
 
-        testSite = new TestSite(db_);
+//        testSite = new TestSite(db_);
 
         testCase.insertTestData();
         testCase.doTest();
-        testSite.dropTestSite();
+//        testSite.dropTestSite();
     }
 
     public void testWithOracleConnection( TestCaseInterface testCase )
@@ -127,7 +128,7 @@ public class TestCaseSiteAbstract {
         request = null;
         request = new HttpServletRequestApplWrapper();
         request.setServerName( TestSite.TEST_SERVER_NAME );
-        request.setParameter( Constants.NAME_LANG_PARAM, TestSite.TEST_LANGUAGE  );
+        request.setParameter( ContainerConstants.NAME_LANG_PARAM, TestSite.TEST_LANGUAGE  );
 
         response = null;
         response = new HttpServletResponseApplWrapper();
