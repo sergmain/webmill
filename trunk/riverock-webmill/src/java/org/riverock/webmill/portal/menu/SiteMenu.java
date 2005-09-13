@@ -35,7 +35,7 @@ import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.port.PortalInfo;
+import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 
 import org.apache.log4j.Logger;
@@ -52,8 +52,8 @@ public final class SiteMenu {
     static {
         try {
             Class c = new SiteMenu().getClass();
-            SqlStatement.registerRelateClass( c, new MenuLanguage().getClass() );
-            SqlStatement.registerRelateClass( c, new GetSiteSupportLanguageWithIdSiteList().getClass() );
+            SqlStatement.registerRelateClass( c, MenuLanguage.class );
+            SqlStatement.registerRelateClass( c, GetSiteSupportLanguageWithIdSiteList.class );
         }
         catch( Exception exception ) {
             final String es = "Exception in ";
@@ -135,7 +135,7 @@ public final class SiteMenu {
         }
 
         try {
-            SiteSupportLanguageListType list = PortalInfo.processSupportLanguage( db_, idSite );
+            SiteSupportLanguageListType list = PortalInfoImpl.processSupportLanguage( db_, idSite );
 
             if (log.isDebugEnabled()) {
                 log.debug("Count of language for this site is "+list.getSiteSupportLanguageCount());
@@ -154,7 +154,7 @@ public final class SiteMenu {
     }
 
     public static SiteMenu getInstance( final DatabaseAdapter db_, final long id_) throws Exception {
-        return getInstance(db_, new Long(id_) );
+        return getInstance(db_, id_ );
     }
 
     public void reinit()

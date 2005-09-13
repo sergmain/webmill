@@ -33,10 +33,11 @@ import org.riverock.interfaces.portlet.menu.MenuInterface;
 import org.riverock.interfaces.portlet.menu.MenuItemInterface;
 import org.riverock.webmill.core.GetSiteCtxCatalogWithIdSiteCtxLangCatalogList;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.main.Constants;
+
 import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
 import org.riverock.webmill.schema.core.SiteCtxCatalogListType;
 import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
+import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 
@@ -145,7 +146,7 @@ public final class Menu implements MenuInterface {
             if (log.isDebugEnabled()) {
                 log.debug("Menu item type: " + ctxItem.getType());
             }
-            if (Constants.CTX_TYPE_INDEX.equals(ctxItem.getType())) {
+            if (ContainerConstants.CTX_TYPE_INDEX.equals(ctxItem.getType())) {
                 return ctxItem;
             }
 
@@ -162,7 +163,7 @@ public final class Menu implements MenuInterface {
     }
 
 
-    public static boolean checkCurrentTread(List items, MenuItemInterface find)
+    public static boolean checkCurrentThread(List items, MenuItemInterface find)
     {
         if (find == null || items == null)
             return false;
@@ -174,7 +175,7 @@ public final class Menu implements MenuInterface {
             if (ctxItem == find)
                 return true;
 
-            if (checkCurrentTread(ctxItem.getCatalogItems(), find))
+            if (checkCurrentThread(ctxItem.getCatalogItems(), find))
                 return true;
         }
         return false;
@@ -186,7 +187,7 @@ public final class Menu implements MenuInterface {
             throw new PortalException("Item of menu is null");
         }
 
-        isDefault = item_.getIsDefault().booleanValue();
+        isDefault = item_.getIsDefault();
         catalogCode = item_.getCatalogCode();
 
         if (log.isDebugEnabled()) log.debug("#33.70.00 ");

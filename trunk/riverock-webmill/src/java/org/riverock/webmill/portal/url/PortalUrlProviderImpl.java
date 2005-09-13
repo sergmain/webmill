@@ -24,10 +24,10 @@
  */
 package org.riverock.webmill.portal.url;
 
-import org.riverock.webmill.portlet.PortletTools;
-
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * @author Serge Maslyukov
@@ -44,10 +44,10 @@ public class PortalUrlProviderImpl implements PortalUrlProvider {
     }
 
     public String getUrl(String portletName) {
-        return PortletTools.url( portletName, portletRequest, portletResponse );
+        return PortletService.url( portletName, portletRequest, portletResponse );
     }
 
     public StringBuffer getUrlStrigBuffer(String portletName) {
-        return PortletTools.urlStringBuffer( portletName, portletRequest, portletResponse );
+        return PortletService.urlStringBuffer( portletName, portletRequest, portletResponse );
     }
 }

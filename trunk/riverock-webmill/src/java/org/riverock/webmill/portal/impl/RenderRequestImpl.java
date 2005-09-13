@@ -22,27 +22,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portlet;
-
-import org.riverock.webmill.schema.site.types.TemplateItemTypeTypeType;
 
 /**
- * User: SergeMaslyukov
- * Date: 25.11.2004
- * Time: 1:47:25
+ * User: Admin
+ * Date: Sep 20, 2003
+ * Time: 1:00:05 AM
+ *
  * $Id$
  */
-public final class TemplateItemAsPortlet extends TemplateItemBaseClass {
+package org.riverock.webmill.portal.impl;
 
-    void getData( PageElement pageElement ) {
-        pageElement.renderPortlet();
-    }
+import java.util.Map;
 
-    void processAction( PageElement pageElement ) {
-        pageElement.processActionPortlet();
-    }
+import javax.portlet.RenderRequest;
+import javax.servlet.ServletContext;
 
-    TemplateItemTypeTypeType getType() {
-        return TemplateItemTypeTypeType.PORTLET;
+import org.riverock.webmill.portal.PortalRequestInstance;
+
+public final class RenderRequestImpl extends WebmillPortletRequestV2 implements RenderRequest {
+
+    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath) {
+        super( servletContext, portalRequestInstance.getHttpRequest() );
+        prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes, contextPath);
     }
 }

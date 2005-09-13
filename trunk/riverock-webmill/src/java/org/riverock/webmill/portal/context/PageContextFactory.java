@@ -23,21 +23,19 @@
  *
  */
 
-package org.riverock.webmill.portlet.context;
+package org.riverock.webmill.portal.context;
 
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.port.PortalInfo;
-import org.riverock.webmill.portlet.ContextFactory;
-import org.riverock.common.tools.StringTools;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portal.ContextFactory;
 
 /**
  * $Id$
@@ -45,28 +43,28 @@ import org.apache.log4j.Logger;
 public final class PageContextFactory extends ContextFactory {
     private final static Logger log = Logger.getLogger(PageContextFactory.class);
 
-    private PageContextFactory(DatabaseAdapter adapter, HttpServletRequest request, PortalInfo portalInfo) throws PortalException, PortalPersistenceException {
-        super(adapter, request, portalInfo);
+    private PageContextFactory(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+        super(factoryParameter);
     }
 
-    public static ContextFactory getInstance(DatabaseAdapter db, HttpServletRequest request, PortalInfo portalInfo)
+    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter)
         throws PortalException, PortalPersistenceException {
 
-        PageContextFactory factory = new PageContextFactory(db, request, portalInfo);
+        PageContextFactory factory = new PageContextFactory(factoryParameter);
         if (factory.getDefaultCtx()!=null)
             return factory;
         else
             return null;
     }
 
-    protected Long initPortalParameters(DatabaseAdapter db, HttpServletRequest request) throws PortalException {
+    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) throws PortalException {
 
         log.debug(
             "Start process as 'page', format request: " +
             "/<CONTEXT>/page/<LOCALE>[/<num_of_portlet,portlet_param>]/name/<PAGE_NAME>[?<portlet_param>]..."
         );
         try {
-            String path = request.getPathInfo();
+            String path = factoryParameter.getRequest().getPathInfo();
             if (path==null || path.equals("/")) {
                 return null;
             }
@@ -83,7 +81,7 @@ public final class PageContextFactory extends ContextFactory {
             }
 
             Long ctxId = DatabaseManager.getLongValue(
-                    db,
+                    factoryParameter.getAdapter(),
                     "select a.ID_SITE_CTX_CATALOG " +
                     "from   SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b, SITE_SUPPORT_LANGUAGE c " +
                     "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
@@ -91,13 +89,13 @@ public final class PageContextFactory extends ContextFactory {
                     "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +
                     "       a.CTX_PAGE_URL=?",
                     new Object[]{
-                        portalInfo.getSiteId(),
+                        factoryParameter.getPortalInfo().getSiteId(),
                         StringTools.getLocale( localeFromUrl ).toString().toLowerCase(),
                         pageName}
             );
 
             if (log.isDebugEnabled())  {
-                log.debug("siteId: " + portalInfo.getSiteId() );
+                log.debug("siteId: " + factoryParameter.getPortalInfo().getSiteId() );
                 log.debug("locale: " + StringTools.getLocale( localeFromUrl ).toString().toLowerCase());
                 log.debug("pageName: " + pageName);
                 log.debug("ctxId: " + ctxId);
