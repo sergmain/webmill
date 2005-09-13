@@ -36,7 +36,8 @@
     <import file="../riverock-include.xml"/>
 
     <path id="classpath-base">
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
+        <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
@@ -79,13 +80,26 @@
             >
             <classpath refid="classpath-base"/>
         </javac>
-<!--        <copy todir="${build.dest}" overwrite="true">-->
-<!--            <fileset dir="${build.src.java}">-->
-<!--                <patternset refid="jar.resources"/>-->
-<!--            </fileset>-->
-<!--        </copy>-->
+
+        <patternset id="locale.resources">
+            <include name="*.properties"/>
+        </patternset>
         <property name="locale-path" value="/org/riverock/common/locale"/>
-        <copydir src="${src.java.dir}${locale-path}" dest="${build.dest}${locale-path}" />
+        <copy todir="${build.dest}${locale-path}" overwrite="true">
+            <fileset dir="${src.java.dir}${locale-path}">
+                <patternset refid="locale.resources"/>
+            </fileset>
+        </copy>
+
+        <property name="dtd-path" value="/org/riverock/common/xml/dtd"/>
+        <patternset id="dtd.resources">
+            <include name="*.dtd"/>
+        </patternset>
+        <copy todir="${build.dest}${dtd-path}" overwrite="true">
+            <fileset dir="${src.java.dir}${dtd-path}">
+                <patternset refid="dtd.resources"/>
+            </fileset>
+        </copy>
     </target>
 
     <target name="full_build_module">
