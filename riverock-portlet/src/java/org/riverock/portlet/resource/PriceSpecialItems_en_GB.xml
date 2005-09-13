@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource><pair key="index.jsp.title" value="List if special items"/><pair key="index.jsp.action" value="Action"/><pair key="index.jsp.price" value="Price"/><pair key="index.jsp.currency" value="Currency"/><pair key="add_special.jsp.new_rec" value="New record"/><pair key="add_special.jsp.id_item" value="id_item"/><pair key="ch_special.jsp.id_item" value="id_item"/><pair key="del_special.jsp.confirm" value="Confirm of delete:"/><pair key="del_special.jsp.id_item" value="id_item"/><pair key="index.jsp.id_item" value="id_item"/></resource>
