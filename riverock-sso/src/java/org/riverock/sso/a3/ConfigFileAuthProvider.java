@@ -22,6 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sso.a3;
+
+import java.io.Serializable;
+
+import org.riverock.sso.schema.config.AuthProviderParametersListType;
 
 /**
  * User: Admin
@@ -30,27 +35,20 @@
  *
  * $Id$
  */
-package org.riverock.sso.a3;
-
-import java.io.Serializable;
-
-import org.riverock.sso.schema.config.AuthProviderParametersListType;
-
-
 public final class ConfigFileAuthProvider implements AuthProviderInterface, Serializable {
-    public boolean isUserInRole( final AuthSession authSession, String role ) throws AuthException {
+    private static final long serialVersionUID = 20434672384237105L;
+
+    public boolean isUserInRole(final AuthSession authSession, String role) {
         return false;
     }
 
-    public boolean checkAccess( final AuthSession authSession, final String serverName ) throws AuthException {
+    public boolean checkAccess(final AuthSession authSession, final String serverName) {
         return false;
     }
 
-    public void setParameters( final AuthProviderParametersListType params ) throws Exception
-    {
+    public void setParameters(final AuthProviderParametersListType params) throws Exception {
     }
 
-    public void initUserInfo( final AuthSession authSession ) throws AuthException
-    {
+    public void initUserInfo(final AuthSession authSession) {
     }
 }

@@ -43,6 +43,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class AuthSession extends AuthSessionType implements Serializable, Principal {
+    private static final long serialVersionUID = 20434672384237876L;
     private final static Logger log = Logger.getLogger(AuthSession.class);
 
     private transient static List authProviderList = null;

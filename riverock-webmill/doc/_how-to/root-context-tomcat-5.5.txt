@@ -1,0 +1,1 @@
+to deploy context as root in Tomcat 5.5 you must rename context xml file to ROOT.xml and set path to "/"
