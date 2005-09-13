@@ -51,8 +51,9 @@
         <pathelement location="${lib.dir}/${log4j.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${hypersonic.lib}"/>
-        <pathelement location="${lib.dir}/${common-httpclient.lib}"/>
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
+        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
+        <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${xalan.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
