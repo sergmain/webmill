@@ -41,8 +41,8 @@ import org.riverock.webmill.portal.PortalRequestInstance;
 
 public final class RenderRequestImpl extends WebmillPortletRequestV2 implements RenderRequest {
 
-    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath) {
+    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath) {
         super( servletContext, portalRequestInstance.getHttpRequest() );
-        prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes, contextPath);
+        prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes, contextPath, portalContextPath);
     }
 }

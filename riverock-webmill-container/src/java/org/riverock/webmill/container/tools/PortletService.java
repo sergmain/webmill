@@ -96,9 +96,6 @@ public final class PortletService {
             }
             catch (Exception e) {
                 // not rethrow exception 'cos this method return def value in this case
-/*
-                log.warn("Exception in getString(), def value will be return", e);
-*/
             }
         }
         return s_;
@@ -276,32 +273,15 @@ public final class PortletService {
 
         Object obj = session.getAttribute(attr);
         try {
-/*
-            if (log.isDebugEnabled())
-                log.debug("#12.12.001 search method 'clearObject'");
-*/
 
             Class cl = obj.getClass();
             Method m = cl.getMethod("destroy", new Class[]{});
 
-/*
-            if (log.isDebugEnabled())
-                log.debug( "#12.12.002 invoke method 'clearObject'" );
-*/
-
             if (m != null)
                 m.invoke(obj, new Object[]{});
 
-/*
-            if (log.isDebugEnabled())
-                log.debug( "#12.12.003 complete invoke method 'clearObject'" );
-*/
         }
         catch (Exception e) {
-/*
-            if (log.isInfoEnabled())
-                log.info("#12.12.003  method 'clearObject' not found. Error " + e.toString());
-*/
         }
 
         session.removeAttribute(attr);
@@ -325,9 +305,6 @@ public final class PortletService {
             }
             catch (Exception e) {
                 // not rethrow exception 'cos this method return def value in this case
-/*
-                log.warn("Exception in getString(), def value will be return", e);
-*/
             }
         }
 /*
@@ -474,16 +451,25 @@ public final class PortletService {
     }
 
     public static StringBuffer ctxStringBuffer( final PortletRequest renderRequest, final String portletName, final String templateName ) {
+        return ctxStringBuffer( renderRequest, portletName, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ), renderRequest.getLocale() );
+    }
+
+    public static StringBuffer ctxStringBuffer( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale ) {
         StringBuffer b = null;
-        if (renderRequest.getContextPath().equals("/"))
+        String portalContextPath = (String)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
+        if (portalContextPath.equals("/"))
             b = new StringBuffer( ContainerConstants.URI_CTX_MANAGER );
         else
-            b = new StringBuffer(renderRequest.getContextPath()).append( ContainerConstants.URI_CTX_MANAGER );
+            b = new StringBuffer( portalContextPath ).append( ContainerConstants.URI_CTX_MANAGER );
 
-        b.append( '/' ).append( renderRequest.getLocale().toString() );
-        b.append( ',' ).append( templateName );
+        b.append( '/' ).append( locale.toString() );
+	b.append( ',' );
+        if (templateName!=null) 
+           b.append( templateName );
+
+	b.append( ',' );
         if (portletName!=null)
-            b.append( ',' ).append( portletName );
+            b.append( portletName );
 
         b.append( "/ctx" );
 

@@ -109,6 +109,18 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
     public PortletResultContent getInstanceByCode( final String portletCode_ ) throws PortletException {
 
         try {
+            if (log.isDebugEnabled()) {
+                Object obj = renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+                if (obj!=null) {                            
+                    log.debug( "PortalInfo class name: " + obj.getClass().getName() );
+                    log.debug( "PortalInfo class: " + obj.getClass() );
+
+                    log.debug( "PortalInfo class loader: " + obj.getClass().getClassLoader() );
+                    log.debug( "Current class loader: " + this.getClass().getClassLoader() );
+                }
+                else
+                    log.debug( "PortalInfo is null" );
+            }
             PortalInfoImpl portalInfo = (PortalInfoImpl)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
             MenuInterface catalog =
                 portalInfo.getMenu( renderRequest.getLocale().toString() ).
@@ -127,7 +139,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
             return this;
         }
-        catch(Exception e) {
+        catch(Throwable e) {
             final String es = "Error create MenuSimple object";
             log.error(es, e);
             throw new PortletException( es, e );
@@ -454,7 +466,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         if (log.isDebugEnabled()) {
             synchronized(objSync3)
             {
-                String fileName = WebmillConfig.getWebmillDebugDir()+"menu-simple-result-" + tempLong + ".xml";
+                String fileName = WebmillConfig.getWebmillDebugDir()+File.separatorChar+"menu-simple-result-" + tempLong + ".xml";
                 log.debug("Write menu to "+fileName);
                 try {
                     XmlTools.writeToFile(menuSimple, fileName);
@@ -511,8 +523,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 // format request: /<CONTEXT>/url/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page/<URL_TO_PAGE>
                 // URL_TO_PAGE: [/CONTEXT_NAME]/page-url (page-url is html, jsp or other page)
 
-                PortletURL portletUrl = renderResponse.createRenderURL();
-                portletUrl.setParameter();
+//                PortletURL portletUrl = renderResponse.createRenderURL();
+//                portletUrl.setParameter();
 
                 m.setModuleUrl(
                     renderResponse.encodeURL( new StringBuffer().
@@ -614,7 +626,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         if (log.isDebugEnabled()) {
             log.debug("end get XmlByte array. length of array - " + b.length);
 
-            final String testFile = WebmillConfig.getWebmillDebugDir()+"menu-simple-url.xml";
+            final String testFile = WebmillConfig.getWebmillDebugDir()+File.separatorChar+"menu-simple-url.xml";
             log.debug("Start output test data to file " + testFile );
             synchronized(syncDebug){
                 MainTools.writeToFile(testFile, b);

@@ -252,6 +252,7 @@ public final class PortletContainer implements Serializable {
             }
             catch (Exception e) {
                 String es = "Erorr create instance of portlet '" + portletName + "'";
+                e.printStackTrace( System.out );
                 throw new PortletContainerException(es, e);
             }
             PortletService.put( portletInstanceUniqueNameMap, newPortlet.getUniqueName(), newPortlet );
