@@ -41,6 +41,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.tools.RequestTools;
@@ -136,12 +137,12 @@ public final class SwitchLanguagePortlet implements Portlet {
             else {
 
                 StringBuffer b = null;
-//                if (GenericConfig.getContextName() == null) {
-                if (actionRequest.getContextPath().equals("/"))
-                    b = new StringBuffer( ContainerConstants.URI_CTX_MANAGER );
-                else
-                    b = new StringBuffer(actionRequest.getContextPath()).append( ContainerConstants.URI_CTX_MANAGER );
-
+                b = PortletService.ctxStringBuffer( actionRequest, null, null, StringTools.getLocale(s) );
+//                if (actionRequest.getContextPath().equals("/"))
+//                    b = new StringBuffer( ContainerConstants.URI_CTX_MANAGER );
+//                else
+//                    b = new StringBuffer(actionRequest.getContextPath()).append( ContainerConstants.URI_CTX_MANAGER );
+//
                 b.append( '?' ).append( ContainerConstants.NAME_LANG_PARAM ).append( '=' ).append( s );
                 newUrl = b.toString();
             }
