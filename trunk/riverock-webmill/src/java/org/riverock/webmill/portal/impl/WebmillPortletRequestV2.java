@@ -34,7 +34,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.io.File;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
@@ -82,7 +81,12 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
     private Map renderParameters = null;
     private Map portletAttributes = null;
     private ServletContext servletContext = null;
+
+    // context path of current portlet
     private String contextPath = null;
+
+    // context path of portal servlet
+    private String portalContextPath = null;
 
     public void destroy() {
         httpRequest = null;
@@ -505,8 +509,13 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
         return new RequestDispatcherImpl( rd );
     }
 
-    protected void prepareRequest(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, Map portletAttributes, String contextPath) {
+    protected void prepareRequest(
+        final Map parameters, final PortalRequestInstance portalRequestInstance,
+        final Map renderParameters, Map portletAttributes,
+        String contextPath, String portalContextPath) {
+
         this.contextPath = contextPath;
+        this.portalContextPath = portalContextPath;
         this.parameters = Collections.unmodifiableMap( parameters );
         this.renderParameters = renderParameters;
         this.portletAttributes = portletAttributes;
@@ -533,6 +542,7 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
         this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );
         this.setAttribute( ContainerConstants.PORTAL_URL_RESOURCE_ATTRIBUTE, portalRequestInstance.getUrlResource() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequestInstance.getCookieManager() );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH, this.portalContextPath );
 
         this.setAttribute( ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE, httpRequest.getRemoteAddr() );
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );

@@ -114,16 +114,28 @@ public final class CtxContextFactory extends ContextFactory {
             String localeFromUrl = null;
             localeFromUrl = path.substring( 1, idxSlash );
             StringTokenizer st = new StringTokenizer( localeFromUrl, ",", false );
-            if ( log.isDebugEnabled() ) log.debug( "st.countTokens(): " + st.countTokens() );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "st.countTokens(): " + st.countTokens() );
+            }
+
             if ( st.countTokens()<2 )
                 return null;
 
 
             realLocale = StringTools.getLocale( st.nextToken() );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "token with locale: " + realLocale );
+            }
+
             String localeNameTemp = factoryParameter.getRequest().getParameter( ContainerConstants.NAME_LANG_PARAM );
             if ( localeNameTemp != null ) {
                 realLocale = StringTools.getLocale( localeNameTemp );
             }
+
+            if ( log.isDebugEnabled() ) {
+                log.debug( "real locale: " + realLocale );
+            }
+
 
             String ctxTemplate = st.nextToken();
             String ctxType = null;

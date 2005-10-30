@@ -349,7 +349,7 @@ containing the portlet is restarted.
             }
             renderRequest = new RenderRequestImpl(map, portalRequestInstance, renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes, contextPath);
+                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath());
 
             // if current portlet is dynamic - set metadata
             if (templateItemType.getTypeObject().getType() == TemplateItemTypeTypeType.DYNAMIC_TYPE) {
@@ -379,7 +379,7 @@ containing the portlet is restarted.
 
             actionRequest = new ActionRequestImpl(map, portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes, contextPath);
+                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath() );
             // set portlet specific attribute
 //            portalRequestInstance.actionRequest.setAttribute(
 //                ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, templateItem.getParameterAsReference());
