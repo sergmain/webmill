@@ -1,5 +1,30 @@
+/*
+ * org.riverock.portlet -- Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock -- The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
 package org.riverock.portlet.news;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
@@ -23,8 +48,8 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.register.RegisterUser;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.sso.a3.AuthException;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
@@ -100,7 +125,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
         if (log.isDebugEnabled()) {
             log.debug("end get XmlByte array. length of array - " + b.length);
 
-            final String testFile = SiteUtils.getTempDir()+"regiser-item.xml";
+            final String testFile = SiteUtils.getTempDir()+File.separatorChar+"regiser-item.xml";
             log.debug("Start output test data to file " + testFile );
             synchronized(syncDebug){
                 MainTools.writeToFile(testFile, b);
@@ -216,7 +241,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
                 meta = new MainUserMetadataItemType();
                 meta.setIdMainUserMetadata( id );
-                meta.setIdUser( auth_.getUserInfo().getIdUser() );
+                meta.setIdUser( auth_.getUserInfo().getUserId() );
                 meta.setIdSite( portalInfo.getSiteId() );
                 meta.setMeta( NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS );
                 meta.setIntValue( isSubscribe?1L:0L );
