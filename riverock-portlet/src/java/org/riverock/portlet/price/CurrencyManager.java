@@ -24,6 +24,8 @@
  */
 package org.riverock.portlet.price;
 
+import java.io.File;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -78,7 +80,7 @@ public class CurrencyManager {
                 try
                 {
                     byte[] originByte = XmlTools.getXml( currency.currencyList, null );
-                    MainTools.writeToFile(SiteUtils.getTempDir()+"debug-custom-currency-type.xml", originByte);
+                    MainTools.writeToFile(SiteUtils.getTempDir()+File.separatorChar+"debug-custom-currency-type.xml", originByte);
                 }
                 catch(Exception e)
                 {
