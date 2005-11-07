@@ -24,6 +24,7 @@
  */
 package org.riverock.portlet.job;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -194,12 +195,12 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
         if (log.isDebugEnabled()) {
             synchronized(syncDebug) {
                 try {
-                    XmlTools.writeToFile(block, SiteUtils.getTempDir()+"test-job-block.xml", "utf-8", rootElement);
+                    XmlTools.writeToFile(block, SiteUtils.getTempDir()+File.separatorChar+"test-job-block.xml", "utf-8", rootElement);
                     byte bDebug[] = XmlTools.getXml( block, rootElement );
                     String sDebug = new String(bDebug);
 
-                    MainTools.writeToFile(SiteUtils.getTempDir()+"test-job-block-1.xml", sDebug.getBytes());
-                    MainTools.writeToFile(SiteUtils.getTempDir()+"test-job-block-2.xml", sDebug.getBytes("utf-8"));
+                    MainTools.writeToFile(SiteUtils.getTempDir()+File.separatorChar+"test-job-block-1.xml", sDebug.getBytes());
+                    MainTools.writeToFile(SiteUtils.getTempDir()+File.separatorChar+"test-job-block-2.xml", sDebug.getBytes("utf-8"));
                 }
                 catch (Throwable exception) {
                     log.error("Exception in ", exception);

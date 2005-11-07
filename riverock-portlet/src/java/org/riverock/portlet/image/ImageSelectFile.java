@@ -43,7 +43,7 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**

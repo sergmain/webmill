@@ -35,11 +35,10 @@ import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.StringTools;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.portlet.main.Constants;
-
+import org.riverock.sso.a3.AuthSessionImpl;
 
 /**
  * Author: mill
@@ -78,7 +77,7 @@ public final class LoginUtils {
             }
 
             if (auth_==null) {
-                auth_ = new AuthSession( l_, p_ );
+                auth_ = new AuthSessionImpl( l_, p_ );
             }
 
             final boolean checkAccess = auth_.checkAccess( actionRequest.getServerName() );

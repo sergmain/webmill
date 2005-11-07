@@ -48,8 +48,8 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.sso.schema.MainUserInfoType;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.UserInfo;
 
 import org.riverock.portlet.shop.upload.UploadFileException;
 import org.riverock.webmill.container.tools.PortletService;
@@ -158,7 +158,7 @@ public final class ImageUploadPortlet implements Portlet {
                 log.debug( "newFileName " + newFileName );
 
 
-            MainUserInfoType userInfo = auth_.getUserInfo();
+            UserInfo userInfo = auth_.getUserInfo();
 
             CustomSequenceType seqImageDir = new CustomSequenceType();
             seqImageDir.setSequenceName( "seq_image_dir" );
@@ -171,7 +171,7 @@ public final class ImageUploadPortlet implements Portlet {
                 "(?, ?, 0, ?, ?, ?, ?" );
 
             RsetTools.setLong( ps, 1, seqValue );
-            RsetTools.setLong( ps, 2, userInfo.getIdFirm() );
+            RsetTools.setLong( ps, 2, userInfo.getCompanyId() );
             RsetTools.setLong( ps, 3, currID );
             RsetTools.setLong( ps, 4, id_main );
             ps.setString( 5, "/image/" + newFileName );
