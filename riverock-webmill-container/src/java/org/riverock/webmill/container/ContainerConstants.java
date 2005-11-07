@@ -58,6 +58,7 @@ public class ContainerConstants {
     public static final String PORTAL_DEFAULT_CTX_ATTRIBUTE = "javax.portlet.webmill.PORTAL_DEFAULT_CTX_ID_ATTRIBUTE";
     public static final String PORTAL_PORTLET_CONFIG_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_CONFIG_ATTRIBUTE";
     public static final String PORTAL_PORTAL_CONTEXT_PATH = "javax.portlet.webmill.PORTAL_PORTAL_CONTEXT_PATH";
+    public static final String PORTAL_CURRENT_CONTAINER = "javax.portlet.webmill.PORTAL_CURRENT_CONTAINER";
 
 
     public static final String PORTAL_REMOTE_ADDRESS_ATTRIBUTE = "javax.portlet.webmill.PORTAL_REMOTE_ADDRESS_ATTRIBUTE";
