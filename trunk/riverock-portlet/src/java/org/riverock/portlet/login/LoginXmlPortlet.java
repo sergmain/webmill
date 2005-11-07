@@ -46,7 +46,7 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.login.LoginType;
 import org.riverock.portlet.schema.portlet.login.types.LoginTypeIsLoggedType;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 

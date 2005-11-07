@@ -25,6 +25,7 @@
 
 package org.riverock.portlet.invoice;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.MessageFormat;
@@ -56,15 +57,14 @@ import org.riverock.portlet.price.PriceList;
 import org.riverock.portlet.price.Shop;
 import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.schema.price.OrderItemType;
-import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.portlet.login.LoginUtils;
-import org.riverock.sso.a3.AuthSession;
-import org.riverock.sso.schema.AuthSessionType;
-import org.riverock.sso.schema.MainUserInfoType;
+import org.riverock.portlet.shop.bean.ShopOrder;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.UserInfo;
 
 import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
@@ -116,7 +116,7 @@ public final class InvoicePortlet implements Portlet {
             db_ = DatabaseAdapter.getInstance();
 
             PortletSession session = renderRequest.getPortletSession();
-            OrderType order = (OrderType)session.getAttribute( ShopPortlet.ORDER_SESSION );
+            ShopOrder order = (ShopOrder)session.getAttribute( ShopPortlet.ORDER_SESSION );
 
             if ( order == null )
                 return;
@@ -156,10 +156,6 @@ public final class InvoicePortlet implements Portlet {
                             log.debug( "Update order with new authSession" );
 
                         OrderLogic.updateAuthSession( dbDyn, order, authSession );
-                        AuthSessionType orderAuthSession =
-                            new AuthSessionType();
-
-                        orderAuthSession.setUserInfo( authSession.getUserInfo() );
                         order.setAuthSession( authSession );
                     }
                     catch( Exception e1 ) {
@@ -314,7 +310,7 @@ public final class InvoicePortlet implements Portlet {
                 String orderCustomString =
                     MessageFormat.format( s, new Object[]{"" + order.getIdOrder()} );
 
-                MainUserInfoType ui = authSession.getUserInfo();
+                UserInfo ui = authSession.getUserInfo();
                 String orderAdminString =
                     "Заказчик: " + ui.getLastName() + ' ' + ui.getFirstName() + ' ' + ui.getMiddleName() + "\n\n" +
                     orderCustomString;
@@ -371,7 +367,7 @@ public final class InvoicePortlet implements Portlet {
                 if ( Boolean.TRUE.equals( isActivateEmailOrder ) ) {
                     if ( log.isDebugEnabled() ) {
                         synchronized (syncObj) {
-                            XmlTools.writeToFile( order, SiteUtils.getTempDir() + "order.xml" );
+                            XmlTools.writeToFile( order, SiteUtils.getTempDir() + File.separatorChar + "order.xml" );
                         }
                     }
                     String currentCurrency = "";

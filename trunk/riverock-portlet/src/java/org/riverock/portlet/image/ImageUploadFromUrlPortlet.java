@@ -52,7 +52,7 @@ import org.riverock.generic.utils.DateUtils;
 
 import org.riverock.portlet.shop.upload.UploadFileException;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 

@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
 import org.riverock.common.tools.ServletTools;
 import org.riverock.common.tools.StringTools;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.main.Constants;
 import org.riverock.webmill.container.tools.PortletService;
