@@ -41,7 +41,7 @@ import org.riverock.common.mail.MailMessage;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProviderTools;
 import org.riverock.webmill.container.portal.PortalInfo;
 
