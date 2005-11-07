@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serge (Home) -->
 <!--
 /*
  * org.riverock.portlet - Portlet Library
@@ -402,6 +401,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
+        <resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
@@ -426,6 +426,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
+        <resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
