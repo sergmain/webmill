@@ -15,7 +15,7 @@ public class PortletDefinitionProcessorTest {
     public static void main(String[] args) throws Exception {
         PortletDefinitionProcessor processor = new PortletDefinitionProcessorImpl();
 
-        File file = new File("portlet.xml");
+        File file = new File("portlet.1.xml");
 
         PortletApplication application = processor.digest( file );
 
