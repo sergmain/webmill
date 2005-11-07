@@ -45,7 +45,7 @@ import org.riverock.generic.db.DatabaseManager;
 
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.utils.AuthHelper;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;

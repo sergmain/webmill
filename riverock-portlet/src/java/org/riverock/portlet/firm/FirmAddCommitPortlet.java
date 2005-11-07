@@ -48,7 +48,7 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.main.Constants;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 

@@ -58,7 +58,7 @@ import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.utils.AuthHelper;
 import org.riverock.webmill.container.ContainerConstants;
