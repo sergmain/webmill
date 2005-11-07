@@ -37,6 +37,7 @@
     <import file="../riverock-include.xml"/>
 
     <path id="classpath-base">
+        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
