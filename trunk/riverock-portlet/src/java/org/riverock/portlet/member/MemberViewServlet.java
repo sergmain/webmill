@@ -44,6 +44,7 @@ import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.common.config.PropertiesProvider;
 
 /**
  * User: Admin
@@ -91,7 +92,8 @@ public final class MemberViewServlet extends HttpServlet
                 return;
             }
 
-            ModuleManager moduleManager = ModuleManager.getInstance( servletConfig.getServletContext().getRealPath( "/" ) );
+//            ModuleManager moduleManager = ModuleManager.getInstance( servletConfig.getServletContext().getRealPath( "/" ) );
+            ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getConfigPath() );
             mp = new MemberProcessing( renderRequest, renderResponse, bundle, moduleManager );
 
             if (log.isDebugEnabled()) {
