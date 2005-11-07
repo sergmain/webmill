@@ -50,7 +50,7 @@ import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.portlet.tools.Client;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
