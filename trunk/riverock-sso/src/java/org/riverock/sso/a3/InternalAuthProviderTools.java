@@ -48,6 +48,7 @@ import org.riverock.sso.schema.core.AuthUserItemType;
 import org.riverock.sso.schema.core.AuthRelateAccgroupItemType;
 import org.riverock.sso.core.GetAuthUserItem;
 import org.riverock.sso.core.InsertAuthRelateAccgroupItem;
+import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
 
@@ -124,7 +125,7 @@ public class InternalAuthProviderTools
             seq.setSequenceName("seq_auth_access_group");
             seq.setTableName( "AUTH_ACCESS_GROUP");
             seq.setColumnName( "ID_ACCESS_GROUP" );
-            Long id = new Long(db_.getSequenceNextValue( seq ));
+            Long id = db_.getSequenceNextValue(seq);
 
             ps = db_.prepareStatement(sql_);
 
@@ -245,7 +246,7 @@ public class InternalAuthProviderTools
             seq.setColumnName( "ID_RELATE_ACCGROUP" );
             long id = ora_.getSequenceNextValue( seq );
 
-        item.setIdRelateAccgroup( new Long(id) );
+        item.setIdRelateAccgroup( id );
         item.setIdAuthUser( id_auth_user );
         item.setIdAccessGroup( id_role );
         InsertAuthRelateAccgroupItem.process( ora_, item );
@@ -339,7 +340,7 @@ public class InternalAuthProviderTools
             if (log.isDebugEnabled())
                 log.debug("Count of added role - "+i);
 
-            return new Long(id_auth_user);
+            return id_auth_user;
         }
         catch (Exception e)
         {
@@ -485,7 +486,7 @@ public class InternalAuthProviderTools
             if (log.isDebugEnabled())
                 log.debug("Count of added role - "+i);
 
-            return new Long(id);
+            return id;
         }
         catch (Exception e)
         {
@@ -534,7 +535,7 @@ public class InternalAuthProviderTools
             if (log.isDebugEnabled())
                 log.debug("Count of added role - "+i);
 
-            return new Long(ID);
+            return ID;
         }
         catch (Exception e)
         {
@@ -583,7 +584,7 @@ public class InternalAuthProviderTools
             if (log.isDebugEnabled())
                 log.debug("Count of added role - "+i);
 
-            return new Long(ID);
+            return ID;
         }
         catch (Exception e)
         {

@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.sso.main;
 
 import java.sql.PreparedStatement;
@@ -33,16 +29,18 @@ import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.RsetTools;
+import org.riverock.sso.bean.UserInfoImpl;
 
-public class MainUserInfo extends org.riverock.sso.schema.MainUserInfoType
-{
-    private static Logger log = Logger.getLogger( "org.riverock.main.MainUserInfo" );
+/**
+ * $Id$
+ */
+public class MainUserInfo extends UserInfoImpl {
+    private static Logger log = Logger.getLogger( MainUserInfo.class );
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         setFirstName(null);
         setMiddleName(null);
         setLastName(null);
@@ -57,43 +55,37 @@ public class MainUserInfo extends org.riverock.sso.schema.MainUserInfoType
         super.finalize();
     }
 
-    public MainUserInfo()
-    {
+    public MainUserInfo() {
     }
 
 
     private MainUserInfo(String userLogin)
-            throws Exception
-    {
+        throws Exception {
         String sql_ = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         sql_ =
             "select a.* " +
-            "from 	main_user_info a, auth_user b " +
+            "from 	MAIN_USER_INFO a, AUTH_USER b " +
             "where	a.id_user = b.id_user and b.user_login = ? ";
         DatabaseAdapter db_ = null;
-        try
-        {
-            db_ = DatabaseAdapter.getInstance( false );
+        try {
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(sql_);
             ps.setString(1, userLogin);
 
             rs = ps.executeQuery();
 
-            if (rs.next())
-            {
+            if (rs.next()) {
                 set(rs);
             }
         }
-        catch(Exception e)
-        {
+        catch (Exception e) {
             log.error("Error get user info", e);
             throw e;
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
@@ -102,52 +94,39 @@ public class MainUserInfo extends org.riverock.sso.schema.MainUserInfoType
     }
 
 
-//    public MainUserInfo(ResultSet rs)
-//            throws Exception
-//    {
-//        set(rs);
-//    }
-
-
-    private void set(ResultSet rs)
-        throws Exception
-    {
-        try
-        {
-            setIdUser(RsetTools.getLong(rs, "ID_USER"));
-            setIdFirm(RsetTools.getLong(rs, "ID_FIRM"));
+    private void set(ResultSet rs) throws Exception {
+        try {
+            setUserId(RsetTools.getLong(rs, "ID_USER"));
+            setCompanyId(RsetTools.getLong(rs, "ID_FIRM"));
             setFirstName(RsetTools.getString(rs, "FIRST_NAME"));
             setMiddleName(RsetTools.getString(rs, "MIDDLE_NAME"));
             setLastName(RsetTools.getString(rs, "LAST_NAME"));
 
-            setDateStartWork( RsetTools.getTimestamp(rs, "DATE_START_WORK" ) );
+            setDateStartWork(RsetTools.getTimestamp(rs, "DATE_START_WORK"));
 
-            setDateFire( RsetTools.getTimestamp(rs, "DATE_FIRE" ) );
+            setDateFire(RsetTools.getTimestamp(rs, "DATE_FIRE"));
 
             setAddress(RsetTools.getString(rs, "ADDRESS"));
             setTelephone(RsetTools.getString(rs, "TELEPHONE"));
 
-            setDateBindProff( RsetTools.getTimestamp(rs, "DATE_BIND_PROFF" ) );
+            setDateBindProff(RsetTools.getTimestamp(rs, "DATE_BIND_PROFF"));
 
             setHomeTelephone(RsetTools.getString(rs, "HOME_TELEPHONE"));
             setEmail(RsetTools.getString(rs, "EMAIL"));
             setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
 
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Error set user info from ResultSet", e);
             throw e;
         }
     }
 
-    public static MainUserInfo getInstance( String userLogin )
-        throws Exception
-    {
-        if (userLogin == null || userLogin.trim().length()==0)
+    public static MainUserInfo getInstance(String userLogin) throws Exception {
+        if (userLogin == null || userLogin.trim().length() == 0)
             return null;
 
-        return new MainUserInfo( userLogin);
+        return new MainUserInfo(userLogin);
     }
 
 }
