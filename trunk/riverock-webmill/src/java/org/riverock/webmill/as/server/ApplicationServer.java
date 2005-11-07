@@ -57,8 +57,9 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
 import org.riverock.sso.a3.AccessDeniedException;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
+import org.riverock.sso.a3.AuthSessionImpl;
 import org.riverock.webmill.as.ApplicationInterface;
 import org.riverock.webmill.schema.appl_server.ApplicationModuleType;
 import org.riverock.webmill.schema.appl_server.ResourceCompressionType;
@@ -384,12 +385,12 @@ public class ApplicationServer extends HttpServlet
 
             AuthSession authSession = null;
             if (session==null)
-                authSession = new AuthSession( null, null );
+                authSession = new AuthSessionImpl( null, null );
             else
                 authSession = AuthTools.getAuthSession( request_ );
 
             if (authSession==null)
-                authSession = new AuthSession( null, null );
+                authSession = new AuthSessionImpl( null, null );
 
             if (log.isDebugEnabled())
             {
@@ -592,7 +593,7 @@ public class ApplicationServer extends HttpServlet
         param.setValueParameter("me.askmore");
         req.addParameters( param );
 
-        AuthSession authSession = new AuthSession();
+        AuthSession authSession = new AuthSessionImpl();
         HttpServletRequestApplWrapper request = new HttpServletRequestApplWrapper();
         ResourceResponseType res = getData( req, authSession, request );
 
