@@ -349,7 +349,8 @@ containing the portlet is restarted.
             }
             renderRequest = new RenderRequestImpl(map, portalRequestInstance, renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath());
+                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath(),
+                portletEntry.getPortletDefinition().getPortletPreferences() );
 
             // if current portlet is dynamic - set metadata
             if (templateItemType.getTypeObject().getType() == TemplateItemTypeTypeType.DYNAMIC_TYPE) {
@@ -368,6 +369,7 @@ containing the portlet is restarted.
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, templateItemType.getXmlRoot());
             renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE, portletEntry.getPortletDefinition().getPortletName());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
+            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
 
             if (portalRequestInstance.getDefaultCtx() != null) {
                 renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CTX_ATTRIBUTE, portalRequestInstance.getDefaultCtx());
@@ -379,7 +381,9 @@ containing the portlet is restarted.
 
             actionRequest = new ActionRequestImpl(map, portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath() );
+                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath(),
+                portletEntry.getPortletDefinition().getPortletPreferences() );
+            
             // set portlet specific attribute
 //            portalRequestInstance.actionRequest.setAttribute(
 //                ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, templateItem.getParameterAsReference());
