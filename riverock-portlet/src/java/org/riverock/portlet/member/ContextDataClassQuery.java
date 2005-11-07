@@ -28,9 +28,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.ArrayList;
 
 import javax.portlet.PortletRequest;
 
@@ -42,9 +42,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.bean.PortletDefinition;
+import org.riverock.webmill.container.bean.PortletItem;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.tools.PortletService;
-
 
 /**
  * User: Admin
@@ -132,7 +132,7 @@ public class ContextDataClassQuery extends BaseClassQuery {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        List v = new LinkedList();
+        List v = new ArrayList();
         String namePortlet = null;
         DatabaseAdapter db_ = null;
         try {
@@ -163,22 +163,18 @@ public class ContextDataClassQuery extends BaseClassQuery {
         if (log.isDebugEnabled())
             log.debug("namePortlet "+namePortlet);
 
-        PortletDefinition portlet = null;
-
-        if (true) throw new IllegalStateException("not implemented");
-/*
-        portlet = PortletManager.getPortletDescription( namePortlet );
-*/
+        PortletContainer portletContainer = (PortletContainer)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CONTAINER );
+        PortletItem portletItem = portletContainer.searchPortletItem( namePortlet );
 
         if (log.isDebugEnabled())
-            log.debug("portlet "+portlet);
+            log.debug("portletItem "+portletItem);
 
-        if (portlet==null)
+        if ( portletItem==null )
             return v;
 
         String classNameTemp =
             PortletService.getStringParam(
-                portlet, ContainerConstants.class_name_get_list
+                portletItem.getPortletDefinition(), ContainerConstants.class_name_get_list
             );
 
         if (classNameTemp==null)
@@ -224,7 +220,7 @@ public class ContextDataClassQuery extends BaseClassQuery {
                 log.debug("#12.12.008 object " + obj);
                 log.debug("#12.12.009 localePack  " +
                     PortletService.getStringParam(
-                        portlet, ContainerConstants.locale_name_package
+                        portletItem.getPortletDefinition(), ContainerConstants.locale_name_package
                     )
                 );
             }
@@ -232,7 +228,7 @@ public class ContextDataClassQuery extends BaseClassQuery {
             v = obj.getList( idSiteCtxLangCatalog, idContext);
 
             if (v==null)
-                return new LinkedList();
+                return new ArrayList();
 
         }
 
