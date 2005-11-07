@@ -39,7 +39,7 @@ import javax.servlet.ServletConfig;
 
 import org.riverock.common.html.Header;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;

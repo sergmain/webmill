@@ -39,7 +39,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.schema.site.TemplateItemType;
 import org.riverock.webmill.container.bean.SitePortletData;
-import org.riverock.sso.a3.AuthException;
+import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
 
