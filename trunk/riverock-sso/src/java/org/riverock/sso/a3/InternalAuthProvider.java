@@ -31,11 +31,13 @@ import java.io.Serializable;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.site.SiteListSite;
-import org.riverock.sso.main.MainUserInfo;
 import org.riverock.sso.schema.config.AuthProviderParametersListType;
 import org.riverock.sso.schema.core.AuthUserItemType;
 import org.riverock.sso.core.GetAuthUserItem;
+import org.riverock.sso.main.MainUserInfo;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.interfaces.sso.a3.AuthException;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 import org.apache.log4j.Logger;
 
@@ -54,7 +56,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
     public InternalAuthProvider() {
     }
 
-    boolean checkAccess( final DatabaseAdapter adapter, final AuthSession authSession, final String serverName ) throws AuthException {
+    boolean checkAccess( final DatabaseAdapter adapter, final AuthSessionImpl authSession, final String serverName ) throws AuthException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean isValid = false;
@@ -104,7 +106,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
         return isValid;
     }
 
-    boolean checkAccessMySql( final DatabaseAdapter adapter, final AuthSession authSession, final String serverName ) throws AuthException {
+    boolean checkAccessMySql( final DatabaseAdapter adapter, final AuthSessionImpl authSession, final String serverName ) throws AuthException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         boolean isValid = false;
@@ -204,7 +206,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
         return isValid;
     }
 
-    public boolean checkAccess( final AuthSession authSession, final String serverName ) throws AuthException {
+    public boolean checkAccess( final AuthSessionImpl authSession, final String serverName ) throws AuthException {
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
@@ -230,7 +232,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
     public void setParameters( final AuthProviderParametersListType params ) throws Exception {
     }
 
-    public boolean isUserInRole( final AuthSession authSession, final String role_ )
+    public boolean isUserInRole( final AuthSessionImpl authSession, final String role_ )
         throws AuthException {
         if ( log.isDebugEnabled() )
             log.debug( "role '" + role_ + "', user login '" + authSession.getUserLogin() + "'  " );
@@ -286,7 +288,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
             throw new AuthException( es, e );
         }
         finally {
-            org.riverock.generic.db.DatabaseManager.close( db_, rset, ps );
+            DatabaseManager.close( db_, rset, ps );
             rset = null;
             ps = null;
             db_ = null;
@@ -314,7 +316,7 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
         }
     }
 
-    public void initUserInfo( final AuthSession authSession ) throws AuthException {
+    public void initUserInfo( final AuthSessionImpl authSession ) throws AuthException {
         try {
             MainUserInfo info = MainUserInfo.getInstance( authSession.getUserLogin() );
             authSession.setUserInfo( info );

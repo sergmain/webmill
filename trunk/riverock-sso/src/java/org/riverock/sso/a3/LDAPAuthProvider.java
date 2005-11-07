@@ -70,7 +70,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
     }
 
 
-    public boolean isUserInRole(final AuthSession authSession, final String role) {
+    public boolean isUserInRole(final AuthSessionImpl authSession, final String role) {
         if (ctx == null || role == null || role.trim().length() == 0)
             return false;
 
@@ -80,7 +80,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         return internalCheckRole(authSession, role);
     }
 
-    private boolean internalCheckRole(final AuthSession authSession, final String role) {
+    private boolean internalCheckRole(final AuthSessionImpl authSession, final String role) {
         String[] attrs = new String[]{CANONICAL_NAME_MEMBEROF};
 
         try {
@@ -121,7 +121,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         return cn;
     }
 
-    public boolean checkAccess(final AuthSession authSession, final String serverName) {
+    public boolean checkAccess(final AuthSessionImpl authSession, final String serverName) {
         if (ctx == null) {
             Hashtable env = new Hashtable(5, 1.1f);
             /*
@@ -176,7 +176,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         }
     }
 
-    public void initUserInfo(AuthSession authSession) {
+    public void initUserInfo(AuthSessionImpl authSession) {
     }
 
 }
