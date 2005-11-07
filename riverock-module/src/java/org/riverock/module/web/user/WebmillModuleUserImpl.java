@@ -5,11 +5,11 @@ import java.security.Principal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.riverock.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.sso.a3.AuthException;
 import org.riverock.module.exception.ModuleException;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthException;
 
 /**
  * @author SMaslyukov
@@ -48,7 +48,7 @@ public class WebmillModuleUserImpl implements ModuleUser {
             return null;
         }
         else {
-            return authSession.getUserInfo().getIdUser();
+            return authSession.getUserInfo().getUserId();
         }
     }
 
