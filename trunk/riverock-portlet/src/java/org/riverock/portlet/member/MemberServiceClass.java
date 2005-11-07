@@ -24,6 +24,7 @@
  */
 package org.riverock.portlet.member;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -96,12 +97,18 @@ public final class MemberServiceClass {
     }
 
     public static String getString(MultiLangStringType str, Locale loc, String defaultString) {
-        if (str==null)
-            return defaultString;
+        if ( log.isDebugEnabled() ) {
+            log.debug( "str: " + str );
+            log.debug( "loc: " + loc );
+            log.debug( "defaultString: " + defaultString );
+        }
 
-        if ( str.getIsUseProperties() ) {
-            StringManager strMan =
-                    StringManager.getManager( str.getStorage(), loc);
+        if ( str==null ) {
+            return defaultString;
+        }
+
+        if ( str.getIsUseProperties()!=null && Boolean.TRUE.equals(  str.getIsUseProperties() ) ) {
+            StringManager strMan = StringManager.getManager( str.getStorage(), loc);
 
             try {
                 return strMan.getStr( str.getStringData() );
@@ -111,8 +118,9 @@ public final class MemberServiceClass {
             }
         }
         else {
-            if ( str.getIsInit() )
+            if ( str.getIsInit()!=null && Boolean.TRUE.equals( str.getIsInit() ) ) {
                 return str.getStringData();
+            }
 
             str.setStringData( str.getStringData() == null?defaultString:str.getStringData() );
             str.setIsInit( Boolean.TRUE );
@@ -192,7 +200,7 @@ public final class MemberServiceClass {
                 try
                 {
                 XmlTools.writeToFile(content1.getQueryArea().getSqlCache(),
-                    SiteUtils.getTempDir()+"member-content-site-start.xml",
+                    SiteUtils.getTempDir()+File.separatorChar+"member-content-site-start.xml",
                     "windows-1251");
                 }
                 catch(Exception ee){}
@@ -280,7 +288,7 @@ public final class MemberServiceClass {
                     synchronized(syncDebug)
                     {
                         XmlTools.writeToFile(content1.getQueryArea().getSqlCache(),
-                            SiteUtils.getTempDir()+"member-content-site-from-"+module.getName()+".xml",
+                            SiteUtils.getTempDir()+File.separatorChar+"member-content-site-from-"+module.getName()+".xml",
                             "windows-1251");
                     }
                 }
@@ -493,7 +501,7 @@ public final class MemberServiceClass {
                 try
                 {
                 XmlTools.writeToFile(content1.getQueryArea().getSqlCache(),
-                    SiteUtils.getTempDir()+"member-content-site.xml",
+                    SiteUtils.getTempDir()+File.separatorChar+"member-content-site.xml",
                     "windows-1251");
                 }
                 catch(Exception ee){}
