@@ -24,6 +24,7 @@
  */
 package org.riverock.portlet.price;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ResourceBundle;
 
@@ -44,9 +45,9 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.shop.ShopPageType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
-import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.portlet.shop.bean.ShopOrder;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.tools.PortletService;
@@ -92,7 +93,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         if ( log.isDebugEnabled() ) {
             synchronized(syncDebug) {
                 log.debug( "Unmarshal ShopPage object" );
-                FileWriter w = new FileWriter( SiteUtils.getTempDir()+"portlet-shop.xml" );
+                FileWriter w = new FileWriter( SiteUtils.getTempDir()+File.separatorChar+"portlet-shop.xml" );
                 Marshaller marsh = new Marshaller( w );
                 marsh.setMarshalAsDocument( true );
                 marsh.setEncoding( "utf-8" );
@@ -120,7 +121,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         try {
             db_ = DatabaseAdapter.getInstance();
             PortletSession session = renderRequest.getPortletSession();
-            OrderType order = (OrderType) session.getAttribute( ShopPortlet.ORDER_SESSION );
+            ShopOrder order = (ShopOrder) session.getAttribute( ShopPortlet.ORDER_SESSION );
 
             shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP );
 
