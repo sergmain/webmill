@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
+import javax.portlet.PortletPreferences;
+
 /**
  * @author Serge Maslyukov
  *         Created 06.08.2005
