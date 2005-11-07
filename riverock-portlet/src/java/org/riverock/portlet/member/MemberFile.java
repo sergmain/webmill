@@ -187,7 +187,7 @@ public final class MemberFile extends CacheFile {
             if (log.isDebugEnabled()) {
                 synchronized(syncObj) {
                     try {
-                        FileWriter w = new FileWriter(SiteUtils.getTempDir() + System.currentTimeMillis()+'-'+getFile().getName() );
+                        FileWriter w = new FileWriter(SiteUtils.getTempDir() + File.separatorChar+ System.currentTimeMillis()+'-'+getFile().getName() );
                         Marshaller.marshal(ma, w);
                     }
                     catch (Exception e)
