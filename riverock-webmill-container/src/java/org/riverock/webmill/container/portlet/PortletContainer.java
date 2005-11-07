@@ -48,6 +48,7 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.resource.PortletResourceBundle;
 import org.riverock.webmill.container.resource.PortletResourceBundleProvider;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: serg_main
@@ -238,8 +239,16 @@ public final class PortletContainer implements Serializable {
 
         PortletEntry obj = portletInstanceMap.get(portletName);
         System.out.println("portlet name: "+portletName+", instance in map: " + obj);
-        if (obj!=null && (obj.getPortlet()!=null || obj.getIsWait() ) ) {
-            return obj;
+        if (obj!=null) {
+            boolean isNotUrl = !PortletService.getBooleanParam(obj.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
+            if (isNotUrl) {
+                if( obj.getPortlet()!=null || obj.getIsWait() ) {
+                    return obj;
+                }
+            }
+            else {
+                return obj;
+            }
         }
         synchronized (syncObect) {
             digestWaitedPortletFile();
@@ -281,27 +290,12 @@ public final class PortletContainer implements Serializable {
             System.out.println("oldLoader = " + oldLoader);
             System.out.println("classLoader = " + classLoader);
 
+            boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
+
             Thread.currentThread().setContextClassLoader( classLoader );
 
-            Constructor constructor = null;
-            try {
-                final Class<?> aClass = classLoader.loadClass(portletDefinition.getPortletClass());
-                constructor = aClass.getConstructor(new Class[]{});
-            }
-            catch (ClassNotFoundException e) {
-                throw e;
-            }
-            catch (NoClassDefFoundError e) {
-                throw e;
-            }
-
             Portlet object = null;
-            final Object[] initargs = new Object[]{};
-            if (constructor != null) {
-                object = (Portlet) constructor.newInstance(initargs);
-            }
-            else
-                throw new PortletContainerException("Error get constructor for " + portletDefinition.getPortletClass());
+            PortletConfig portletConfig = null;
 
             PortletContext portletContext =
                 new PortletContextImpl(portletItem.getServletConfig().getServletContext(), portalInstance.getPortalName(), portalInstance.getPortalMajorVersion(), portalInstance.getPortalMinorVersion());
@@ -309,21 +303,47 @@ public final class PortletContainer implements Serializable {
             PortletResourceBundle resourceBundle =
                 PortletResourceBundleProvider.getInstance( portletDefinition, portalInstance.getSupportedLocales() );
 
-            PortletConfig portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
+            portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
 
-            try {
-                object.init(portletConfig);
-            }
-            catch (PortletException e) {
-                if (e instanceof UnavailableException) {
-                    return new PortletEntry((UnavailableException) e);
+
+            if ( isNotUrl ) {
+                Constructor constructor = null;
+                try {
+                    final Class<?> aClass = classLoader.loadClass(portletDefinition.getPortletClass());
+                    constructor = aClass.getConstructor(new Class[]{});
                 }
-                else
+                catch (ClassNotFoundException e) {
                     throw e;
+                }
+                catch (NoClassDefFoundError e) {
+                    throw e;
+                }
+
+                final Object[] initargs = new Object[]{};
+                if (constructor != null) {
+                    object = (Portlet) constructor.newInstance(initargs);
+                }
+                else {
+                    throw new PortletContainerException("Error get constructor for " + portletDefinition.getPortletClass());
+                }
+
+                try {
+                    object.init(portletConfig);
+                }
+                catch (PortletException e) {
+                    if (e instanceof UnavailableException) {
+                        return new PortletEntry((UnavailableException) e);
+                    }
+                    else
+                        throw e;
+                }
+                catch (RuntimeException e) {
+                    String es = "Error init portlet '" + portletName + "'";
+                    throw new PortletException(es, e);
+                }
             }
-            catch (RuntimeException e) {
-                String es = "Error init portlet '" + portletName + "'";
-                throw new PortletException(es, e);
+            else {
+
             }
 
             final PortletEntry entry = new PortletEntry(portletDefinition, portletConfig, object, portletItem.getServletConfig(), portletItem.getClassLoader(), portletItem.getUniqueName() );
@@ -332,6 +352,7 @@ public final class PortletContainer implements Serializable {
         }
         catch (Exception e) {
             String es = "Error create instance of portlet "+ portletName + ".";
+            e.printStackTrace( System.out );
             throw new PortletContainerException(es, e);
         }
         finally {
@@ -339,7 +360,7 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    private PortletItem searchPortletItem(String portletName) {
+    public PortletItem searchPortletItem(String portletName) {
         if (portletName == null) {
             return null;
         }
