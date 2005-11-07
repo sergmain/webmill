@@ -53,7 +53,7 @@ import org.riverock.portlet.price.Shop;
 import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.schema.import_price.PricesType;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.portal.PortalInfo;
