@@ -34,6 +34,7 @@ import org.riverock.common.config.ConfigException;
 import org.riverock.generic.main.CacheDirectory;
 import org.riverock.generic.main.CacheFile;
 import org.riverock.generic.main.ExtensionFileFilter;
+import org.riverock.generic.startup.StartupServlet;
 
 import org.riverock.portlet.schema.member.ContentType;
 import org.riverock.portlet.schema.member.ModuleType;
@@ -49,6 +50,9 @@ public final class ModuleManager {
 
     private final static FileFilter memberFilter = new ExtensionFileFilter( ".xml" );
 
+    private static final int REREAD_DELAY = 1000 * 30;  // scan every 30 seconds
+    private final String MILL_MEMBER_DIR = "xml";
+
     private CacheDirectory mainDir = null;
     private CacheDirectory userDir = null;
 
@@ -56,7 +60,6 @@ public final class ModuleManager {
     private MemberFile userMemberFile[] = null;
 
     private boolean isUserDirectoryExists = true;
-    private final String MILL_MEMBER_DIR = "xml";
     private String rootDir = null;
 
     private static ModuleManager moduleManager = null;
@@ -163,14 +166,22 @@ public final class ModuleManager {
     }
 
     public void init() throws Exception {
-        if( mainDir == null )
-            mainDir = new CacheDirectory( rootDir + File.separator + MILL_MEMBER_DIR,
-                memberFilter );
-
+        if( mainDir == null ) {
+            final String cacheDirectory = rootDir + File.separatorChar + MILL_MEMBER_DIR;
+            if (log.isDebugEnabled()) {
+                log.debug( "Create cached directory: " + cacheDirectory );
+            }
+            mainDir = new CacheDirectory( cacheDirectory, memberFilter );
+        }
+        StartupServlet.test();
         if( mainMemberFile == null || !mainDir.isUseCache() ) {
-            if( mainDir.isNeedReload() )
-                mainDir = new CacheDirectory( rootDir + File.separator + MILL_MEMBER_DIR,
-                    memberFilter );
+            if( mainDir.isNeedReload() ) {
+                final String cacheDirectory = rootDir + File.separatorChar + MILL_MEMBER_DIR;
+                if (log.isDebugEnabled()) {
+                    log.debug( "Reinit cached directory: " + cacheDirectory );
+                }
+                mainDir = new CacheDirectory( cacheDirectory, memberFilter );
+            }
 
             if( log.isDebugEnabled() )
                 log.debug( "#2.001 read list file" );
@@ -194,7 +205,7 @@ public final class ModuleManager {
                 if( customMemberDir != null && customMemberDir.length() != 0 ) {
                     userDir = new CacheDirectory( customMemberDir,
                         memberFilter,
-                        1000 * 30 // scan every 30 seconds
+                        REREAD_DELAY // scan every 30 seconds
                     );
                 }
                 else
@@ -207,7 +218,7 @@ public final class ModuleManager {
                     if( customMemberDir != null && customMemberDir.length() != 0 ) {
                         userDir = new CacheDirectory( customMemberDir,
                             memberFilter,
-                            1000 * 30 // scan every 30 seconds
+                            REREAD_DELAY
                         );
                     }
                 }
