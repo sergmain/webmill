@@ -32,6 +32,7 @@ import java.sql.SQLException;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
 
@@ -75,10 +76,10 @@ public class AuthInfo {
         userLogin = RsetTools.getString(rs, "USER_LOGIN");
         userPassword = RsetTools.getString(rs, "USER_PASSWORD");
 
-        int isUseCurrentFirmTemp = RsetTools.getInt(rs, "IS_USE_CURRENT_FIRM", new Integer(0)).intValue();
-        int isServiceTemp = RsetTools.getInt(rs, "IS_SERVICE", new Integer(0)).intValue();
-        int isRoadTemp = RsetTools.getInt(rs, "IS_ROAD", new Integer(0)).intValue();
-        int isRootTemp = RsetTools.getInt(rs, "IS_ROOT", new Integer(0)).intValue();
+        int isUseCurrentFirmTemp = RsetTools.getInt(rs, "IS_USE_CURRENT_FIRM", 0);
+        int isServiceTemp = RsetTools.getInt(rs, "IS_SERVICE", 0);
+        int isRoadTemp = RsetTools.getInt(rs, "IS_ROAD", 0);
+        int isRootTemp = RsetTools.getInt(rs, "IS_ROOT", 0);
 
         isUseCurrentFirm = ((isUseCurrentFirmTemp+isServiceTemp+isRoadTemp+isRootTemp)>0?1:0);
         isService = ((isServiceTemp+isRoadTemp+isRootTemp)>0?1:0);
