@@ -24,6 +24,7 @@
  */
 package org.riverock.portlet.register;
 
+import java.io.File;
 import java.util.ResourceBundle;
 
 import javax.portlet.PortletConfig;
@@ -124,7 +125,7 @@ public final class RegisterUser implements PortletResultObject, PortletResultCon
         if (log.isDebugEnabled()) {
             log.debug("end get XmlByte array. length of array - " + b.length);
 
-            final String testFile = SiteUtils.getTempDir()+"regiser-item.xml";
+            final String testFile = SiteUtils.getTempDir()+File.separatorChar+"regiser-item.xml";
             log.debug("Start output test data to file " + testFile );
             synchronized(syncDebug){
                 MainTools.writeToFile(testFile, b);
