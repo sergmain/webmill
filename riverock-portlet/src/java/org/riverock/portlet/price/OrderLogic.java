@@ -24,6 +24,7 @@
  */
 package org.riverock.portlet.price;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.sql.PreparedStatement;
 import java.sql.Types;
@@ -50,7 +51,8 @@ import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.portlet.shop.bean.ShopOrder;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
@@ -142,11 +144,11 @@ public final class OrderLogic {
                     log.debug("shop.id_shop " + shop.id_shop);
             }
 
-            OrderType order = null;
+            ShopOrder order = null;
 // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
 // если заказа в сессии нет, то создаем
             if (shop != null && shop.id_shop != null) {
-                order = (OrderType) session.getAttribute(ShopPortlet.ORDER_SESSION);
+                order = (ShopOrder) session.getAttribute(ShopPortlet.ORDER_SESSION);
 
                 if (log.isDebugEnabled())
                     log.debug("order object - " + order);
@@ -155,7 +157,7 @@ public final class OrderLogic {
                     if (log.isDebugEnabled())
                         log.debug("Create new order");
 
-                    order = new OrderType();
+                    order = new ShopOrder();
                     order.setServerName(renderRequest.getServerName());
 
                     ShopOrderType shopOrder = new ShopOrderType();
@@ -245,7 +247,7 @@ public final class OrderLogic {
 
             if (authSession != null && authSession.getUserInfo() != null)
             {
-                RsetTools.setLong(ps, 3, authSession.getUserInfo().getIdUser());
+                RsetTools.setLong(ps, 3, authSession.getUserInfo().getUserId());
             }
             else
                 ps.setNull(3, Types.NUMERIC);
@@ -259,7 +261,7 @@ public final class OrderLogic {
             log.error("order.getIdOrder() " + order.getIdOrder());
             log.error("authSession " + authSession);
             if (authSession != null && authSession.getUserInfo() != null)
-                log.error("authSession.getUserInfo().getIdUser() " + authSession.getUserInfo().getIdUser());
+                log.error("authSession.getUserInfo().getIdUser() " + authSession.getUserInfo().getUserId());
 
             log.error("Error init AuthSession", e1);
             throw e1;
@@ -826,8 +828,8 @@ public final class OrderLogic {
                         {
                             synchronized (syncInitItemObj)
                             {
-                                FileWriter w = new FileWriter(SiteUtils.getTempDir() + "schema-currency-item.xml");
-                                FileWriter w1 = new FileWriter(SiteUtils.getTempDir() + "schema-currency-default.xml");
+                                FileWriter w = new FileWriter(SiteUtils.getTempDir() + File.separatorChar + "schema-currency-item.xml");
+                                FileWriter w1 = new FileWriter(SiteUtils.getTempDir() + File.separatorChar + "schema-currency-default.xml");
 
                                 Marshaller.marshal(item.getCurrencyItem(), w);
                                 Marshaller.marshal(defaultCurrency, w1);
