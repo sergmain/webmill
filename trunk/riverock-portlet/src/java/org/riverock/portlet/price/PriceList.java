@@ -39,7 +39,7 @@ import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
 import org.riverock.portlet.schema.price.OrderItemType;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * $Id$
@@ -58,7 +58,7 @@ public class PriceList
             log.debug("calc price: len=" + object.length);
         }
 
-        // »щем MainUserInfo дл€ расчета скидки пользовател€
+        // search object of AuthSession for calculate discount
         double price = priceItem;
 
         Object obj = null;
@@ -125,7 +125,7 @@ public class PriceList
         if (log.isDebugEnabled())
             log.debug("calc price: len=" + object.length);
 
-        // »щем MainUserInfo дл€ расчета скидки пользовател€
+        // search object of AuthSession for calculate discount
         Object obj = null;
         double discountUser = 0;
         AuthSession auth = null;
