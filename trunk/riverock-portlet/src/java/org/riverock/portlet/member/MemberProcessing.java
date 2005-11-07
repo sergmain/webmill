@@ -72,7 +72,7 @@ import org.riverock.portlet.schema.member.types.TypeFieldType;
 import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.utils.AuthHelper;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
@@ -3738,8 +3738,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         if (auth==null)
             throw new Exception("UserPrincipal not initialized");
 
-        this.firmId = auth.getUserInfo().getIdFirm();
-        this.userId = auth.getUserInfo().getIdUser();
+        this.firmId = auth.getUserInfo().getCompanyId();
+        this.userId = auth.getUserInfo().getUserId();
 
         fromParam = RequestTools.getString(this.renderRequest, MemberConstants.MEMBER_FROM_PARAM, "").trim();
         db_ = DatabaseAdapter.getInstance();
