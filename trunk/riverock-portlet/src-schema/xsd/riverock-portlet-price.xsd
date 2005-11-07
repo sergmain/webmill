@@ -32,7 +32,9 @@
 	<xs:annotation>
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
 	</xs:annotation>
+<!--
 	<xs:import namespace="http://sso.riverock.org/xsd/riverock-sso.xsd" schemaLocation="riverock-sso.xsd"/>
+-->
 	<xs:import namespace="http://portlet.riverock.org/xsd/riverock-portlet-schema-core.xsd" schemaLocation="riverock-portlet-schema-core.xsd"/>
 	<xs:complexType name="OrderType">
 		<xs:annotation>
@@ -40,7 +42,9 @@
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="ShopOrdertList" type="ShopOrderType" minOccurs="0" maxOccurs="unbounded"/>
+<!--
 			<xs:element name="AuthSession" type="riverock-sso:AuthSessionType" minOccurs="0"/>
+-->
 		</xs:sequence>
 		<xs:attribute name="idOrder" type="xs:long"/>
 		<xs:attribute name="serverName" type="xs:string"/>
