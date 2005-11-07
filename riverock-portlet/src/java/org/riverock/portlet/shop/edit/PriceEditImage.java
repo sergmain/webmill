@@ -55,7 +55,7 @@ import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.schema.portlet.shop.PositionItemType;
 import org.riverock.portlet.schema.portlet.shop.PricePositionType;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
