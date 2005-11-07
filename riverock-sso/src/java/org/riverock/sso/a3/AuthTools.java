@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.portlet.PortletRequest;
 
 import org.riverock.sso.main.Constants;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
 
