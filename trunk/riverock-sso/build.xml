@@ -37,6 +37,7 @@
     <import file="../riverock-include.xml"/>
 
     <path id="classpath-base">
+        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
@@ -45,7 +46,6 @@
         <pathelement location="${lib.dir}/${secure.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
