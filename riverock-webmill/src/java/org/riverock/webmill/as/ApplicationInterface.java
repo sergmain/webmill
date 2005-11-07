@@ -33,7 +33,7 @@
 package org.riverock.webmill.as;
 
 import org.riverock.webmill.schema.appl_server.ResourceRequestType;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 public interface ApplicationInterface
 {
