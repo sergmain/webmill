@@ -39,10 +39,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
-import org.riverock.sso.a3.AuthException;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthException;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.impl.PortletSessionImpl;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
 
