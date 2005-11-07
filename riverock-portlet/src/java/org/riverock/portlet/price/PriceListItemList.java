@@ -24,6 +24,7 @@
  */
 package org.riverock.portlet.price;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,8 +50,8 @@ import org.riverock.portlet.schema.portlet.shop.PriceFieldNameType;
 import org.riverock.portlet.schema.portlet.shop.PriceItemType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.tools.SiteUtils;
+import org.riverock.portlet.shop.bean.ShopOrder;
 import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -131,7 +132,7 @@ public final class PriceListItemList
             rs = ps.executeQuery();
 
             PortletSession session = renderRequest.getPortletSession();
-            OrderType order = (OrderType) session.getAttribute(ShopPortlet.ORDER_SESSION);
+            ShopOrder order = (ShopOrder) session.getAttribute(ShopPortlet.ORDER_SESSION);
             Shop shop = Shop.getInstance(db_, shopParam.id_shop);
             while (rs.next()) {
                 Long idPk = RsetTools.getLong(rs, "ID_ITEM");
@@ -199,7 +200,7 @@ public final class PriceListItemList
                     if (log.isDebugEnabled()) {
                         synchronized(syncObj) {
                             try {
-                                XmlTools.writeToFile(targetCurrency, SiteUtils.getTempDir()+"schema-currency-default.xml");
+                                XmlTools.writeToFile(targetCurrency, SiteUtils.getTempDir()+File.separatorChar+"schema-currency-default.xml");
                             }
                             catch(Exception e) {
                                 log.error("Exception write targetCurrency to file", e);
@@ -248,7 +249,7 @@ public final class PriceListItemList
                 if (log.isDebugEnabled()) {
                     synchronized(syncObj) {
                         try {
-                            XmlTools.writeToFile(item, SiteUtils.getTempDir()+"schema-currency-item.xml");
+                            XmlTools.writeToFile(item, SiteUtils.getTempDir()+File.separatorChar+"schema-currency-item.xml");
                         }
                         catch(Exception e) {
                             log.error("Exception write item to file", e);
