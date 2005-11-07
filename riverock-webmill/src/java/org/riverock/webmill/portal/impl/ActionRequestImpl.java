@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.PortletPreferences;
 import javax.servlet.ServletContext;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
@@ -46,8 +47,8 @@ public final class ActionRequestImpl extends WebmillPortletRequestV2 implements 
         super.destroy();
     }
 
-    public ActionRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath) {
-        super( servletContext, portalRequestInstance.getHttpRequest() );
+    public ActionRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath, PortletPreferences portletPreferences) {
+        super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences);
         prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContextPath);
     }
 

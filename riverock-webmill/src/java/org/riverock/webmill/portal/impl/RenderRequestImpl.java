@@ -35,14 +35,15 @@ package org.riverock.webmill.portal.impl;
 import java.util.Map;
 
 import javax.portlet.RenderRequest;
+import javax.portlet.PortletPreferences;
 import javax.servlet.ServletContext;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
 
 public final class RenderRequestImpl extends WebmillPortletRequestV2 implements RenderRequest {
 
-    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath) {
-        super( servletContext, portalRequestInstance.getHttpRequest() );
+    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath, PortletPreferences portletPreferences) {
+        super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences );
         prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes, contextPath, portalContextPath);
     }
 }
