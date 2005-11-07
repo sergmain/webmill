@@ -24,6 +24,7 @@
  */
 package org.riverock.portlet.member;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.PreparedStatement;
@@ -56,6 +57,7 @@ import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.common.config.PropertiesProvider;
 
 /**
  * User: Admin
@@ -120,7 +122,8 @@ public final class MemberCommitPortlet implements Portlet {
         try {
 
             ResourceBundle bundle = portletConfig.getResourceBundle( actionRequest.getLocale() );
-            ModuleManager moduleManager = ModuleManager.getInstance( portletConfig.getPortletContext().getRealPath( "/" ) );
+//            ModuleManager moduleManager = ModuleManager.getInstance( portletConfig.getPortletContext().getRealPath( "/" ) );
+            ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getConfigPath() );
             mp = new MemberProcessing( actionRequest, actionResponse, bundle, moduleManager );
 
             String moduleName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_MODULE_PARAM);
@@ -175,7 +178,7 @@ public final class MemberCommitPortlet implements Portlet {
                 synchronized(syncFile)
                 {
                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                        SiteUtils.getTempDir()+"member-content-site-start-0.xml",
+                        SiteUtils.getTempDir()+File.separatorChar+"member-content-site-start-0.xml",
                         "windows-1251");
                 }
             }
@@ -190,7 +193,7 @@ public final class MemberCommitPortlet implements Portlet {
                 synchronized(syncFile)
                 {
                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                        SiteUtils.getTempDir()+"member-content-site-start-2.xml",
+                        SiteUtils.getTempDir()+File.separatorChar+"member-content-site-start-2.xml",
                         "windows-1251");
                 }
             }
@@ -246,7 +249,7 @@ public final class MemberCommitPortlet implements Portlet {
                                 synchronized(syncFile)
                                 {
                                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                                        SiteUtils.getTempDir()+"member-content-before-yesno.xml",
+                                        SiteUtils.getTempDir()+File.separatorChar+"member-content-before-yesno.xml",
                                         "windows-1251");
                                 }
                             }
@@ -276,7 +279,7 @@ public final class MemberCommitPortlet implements Portlet {
                                 synchronized(syncFile)
                                 {
                                     XmlTools.writeToFile(mp.content.getQueryArea().getSqlCache(),
-                                        SiteUtils.getTempDir()+"member-content.xml",
+                                        SiteUtils.getTempDir()+File.separatorChar+"member-content.xml",
                                         "windows-1251");
                                 }
                             }
