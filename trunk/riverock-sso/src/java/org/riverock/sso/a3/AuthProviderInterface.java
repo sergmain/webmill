@@ -33,14 +33,15 @@
 package org.riverock.sso.a3;
 
 import org.riverock.sso.schema.config.AuthProviderParametersListType;
+import org.riverock.interfaces.sso.a3.AuthException;
 
 
 public interface AuthProviderInterface
 {
-    public boolean isUserInRole( AuthSession authSession, String role ) throws AuthException;
-    public boolean checkAccess( AuthSession authSession, String serverName ) throws AuthException;
+    public boolean isUserInRole( AuthSessionImpl authSession, String role ) throws AuthException;
+    public boolean checkAccess( AuthSessionImpl authSession, String serverName ) throws AuthException;
     public void setParameters( AuthProviderParametersListType params ) throws Exception;
 
-    void initUserInfo( AuthSession authSession ) throws AuthException;
+    void initUserInfo( AuthSessionImpl authSession ) throws AuthException;
 
 }
