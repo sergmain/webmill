@@ -18,7 +18,7 @@ public class TestInternalAuthProvider {
 
         DatabaseAdapter db = DatabaseAdapter.getInstance(true, "MYSQL");
         InternalAuthProvider auth = new InternalAuthProvider();
-        AuthSession authSession = new AuthSession("login", "password");
+        AuthSessionImpl authSession = new AuthSessionImpl("login", "password");
         auth.checkAccessMySql(db, authSession, "localhost");
     }
 }

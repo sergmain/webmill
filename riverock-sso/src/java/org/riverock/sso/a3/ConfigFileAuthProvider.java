@@ -38,17 +38,17 @@ import org.riverock.sso.schema.config.AuthProviderParametersListType;
 public final class ConfigFileAuthProvider implements AuthProviderInterface, Serializable {
     private static final long serialVersionUID = 20434672384237105L;
 
-    public boolean isUserInRole(final AuthSession authSession, String role) {
+    public boolean isUserInRole(final AuthSessionImpl authSession, String role) {
         return false;
     }
 
-    public boolean checkAccess(final AuthSession authSession, final String serverName) {
+    public boolean checkAccess(final AuthSessionImpl authSession, final String serverName) {
         return false;
     }
 
     public void setParameters(final AuthProviderParametersListType params) throws Exception {
     }
 
-    public void initUserInfo(final AuthSession authSession) {
+    public void initUserInfo(final AuthSessionImpl authSession) {
     }
 }
