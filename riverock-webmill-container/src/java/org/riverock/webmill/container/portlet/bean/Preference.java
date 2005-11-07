@@ -1,7 +1,8 @@
 package org.riverock.webmill.container.portlet.bean;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
 import java.io.Serializable;
 
 /**
@@ -28,7 +29,7 @@ public class Preference implements Serializable {
     /**
      * Field _valueList
      */
-    private List<String> _valueList;
+    private Collection<String> _valueList;
 
     /**
      * Field _readOnly
@@ -41,6 +42,26 @@ public class Preference implements Serializable {
         _valueList = new ArrayList<String>();
     }
 
+
+    public void setValue(Collection<String> values) {
+        this._valueList = values;
+    }
+
+    public Iterator<String> getValue() {
+        if (_valueList == null) {
+            setValue(new ArrayList<String>());
+        }
+
+        return _valueList.iterator();
+    }
+
+    public Collection<String> getValueAsRef() {
+        if (_valueList == null) {
+            setValue(new ArrayList<String>());
+        }
+
+        return _valueList;
+    }
 
     /**
      * Method addValue
@@ -57,9 +78,9 @@ public class Preference implements Serializable {
      * @param index
      * @param vValue
      */
-    public void addValue(int index, String vValue) {
-        _valueList.add(index, vValue);
-    }
+//    public void addValue(int index, String vValue) {
+//        _valueList.add(index, vValue);
+//    }
 
     /**
      * Method clearValue
@@ -100,6 +121,7 @@ public class Preference implements Serializable {
      *
      * @param index
      */
+/*
     public String getValue(int index) {
         //-- check bounds for index
         if ((index < 0) || (index > _valueList.size())) {
@@ -108,10 +130,12 @@ public class Preference implements Serializable {
 
         return _valueList.get(index);
     }
+*/
 
     /**
      * Method getValue
      */
+/*
     public String[] getValue() {
         int size = _valueList.size();
         String[] mArray = new String[size];
@@ -120,6 +144,7 @@ public class Preference implements Serializable {
         }
         return mArray;
     }
+*/
 
     /**
      * Method getValueCount
@@ -171,6 +196,7 @@ public class Preference implements Serializable {
      * @param index
      * @param vValue
      */
+/*
     public void setValue(int index, String vValue) {
         //-- check bounds for index
         if ((index < 0) || (index > _valueList.size())) {
@@ -178,6 +204,7 @@ public class Preference implements Serializable {
         }
         _valueList.set(index, vValue);
     }
+*/
 
     /**
      * Method setValue
