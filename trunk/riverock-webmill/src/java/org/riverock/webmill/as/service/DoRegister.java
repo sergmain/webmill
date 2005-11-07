@@ -42,7 +42,7 @@ import org.riverock.webmill.schema.appl_server.ResourceRequestType;
 import org.riverock.webmill.schema.core.SiteListSiteItemType;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 import org.apache.log4j.Logger;
 

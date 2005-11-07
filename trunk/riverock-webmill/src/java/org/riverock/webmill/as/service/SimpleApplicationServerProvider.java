@@ -35,7 +35,7 @@ package org.riverock.webmill.as.service;
 
 import org.riverock.webmill.as.ApplicationInterface;
 import org.riverock.webmill.schema.appl_server.ResourceRequestType;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 
 public class SimpleApplicationServerProvider implements ApplicationInterface

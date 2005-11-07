@@ -33,7 +33,7 @@
 
 package org.riverock.webmill.as.service;
 
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.as.ApplicationInterface;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.webmill.core.GetSiteListSiteItem;
