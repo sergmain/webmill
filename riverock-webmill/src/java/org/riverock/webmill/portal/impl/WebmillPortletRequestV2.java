@@ -25,15 +25,7 @@
 package org.riverock.webmill.portal.impl;
 
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
@@ -53,8 +45,8 @@ import org.apache.commons.logging.Log;
 
 import org.riverock.common.html.Header;
 import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
-import org.riverock.sso.a3.AuthException;
-import org.riverock.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthException;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalRequestInstance;
@@ -82,6 +74,8 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
     private Map portletAttributes = null;
     private ServletContext servletContext = null;
 
+    private PortletPreferences portletPreferences = null;
+
     // context path of current portlet
     private String contextPath = null;
 
@@ -100,9 +94,10 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
         renderParameters = null;
     }
 
-    public WebmillPortletRequestV2( ServletContext servletContext, HttpServletRequest httpServletRequest ) {
+    public WebmillPortletRequestV2(ServletContext servletContext, HttpServletRequest httpServletRequest, PortletPreferences portletPreferences) {
         super( httpServletRequest );
         this.servletContext = servletContext;
+        this.portletPreferences = portletPreferences;
     }
 
     public boolean isWindowStateAllowed( WindowState windowState ) {
@@ -122,7 +117,7 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
     }
 
     public PortletPreferences getPreferences() {
-        return null;
+        return portletPreferences;
     }
 
     public PortletSession getPortletSession() {
@@ -335,21 +330,37 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
         if ( parameters==null && renderParameters==null  )
             return null;
 
-        List list = new LinkedList();
+        List<String> list = new ArrayList<String>();
 
-        List temp = null;
+        List<String> temp = null;
         temp = getParameterArray( parameters, key );
-        if (temp!=null)
+        if (temp!=null) {
             list.addAll( temp );
+            temp.clear();
+            temp = null;
+        }
 
         temp = getParameterArray( renderParameters, key );
-        if (temp!=null)
+        if (temp!=null) {
             list.addAll( temp );
+            temp.clear();
+            temp = null;
+        }
 
-        return (String[])list.toArray();
+        String[] values = new String[list.size()];
+        int i=0;
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            String es = it.next();
+            values[i++] = es;
+        }
+        list.clear();
+        list = null;
+
+        return values;
     }
 
-    private static List getParameterArray( Map map, String key ) {
+    private static List<String> getParameterArray( Map map, String key ) {
 
         if (map==null || key==null )
             return null;
@@ -358,7 +369,7 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
         if ( obj==null )
             return null;
 
-        List list = new LinkedList();
+        List<String> list = new ArrayList<String>();
         if ( obj instanceof List ) {
             list.addAll( (List)obj );
         } else if (obj instanceof String[] ) {
