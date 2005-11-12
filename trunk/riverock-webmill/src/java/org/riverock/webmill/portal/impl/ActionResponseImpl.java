@@ -34,6 +34,7 @@ package org.riverock.webmill.portal.impl;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -61,6 +62,7 @@ public final class ActionResponseImpl implements ActionResponse {
     private boolean isRedirected = false;
     private String redirectUrl = null;
     private Map renderParameters = null;
+    private Map<String, List<String>> portletProperties = null;
 
     public void destroy() {
         httpResponse = null;
@@ -74,12 +76,15 @@ public final class ActionResponseImpl implements ActionResponse {
         }
     }
 
-    public ActionResponseImpl( final PortalRequestInstance portalRequestInstance, final ActionRequest renderRequest, final HttpServletResponse response, final String namespace, final Map renderParameters ) {
+    public ActionResponseImpl( final PortalRequestInstance portalRequestInstance, final ActionRequest renderRequest, 
+        final HttpServletResponse response, final String namespace, final Map renderParameters,
+        Map<String, List<String>> portletProperties) {
 //        this.portalRequestInstance = portalRequestInstance;
 //        this.portletRequest = renderRequest;
         this.namespace = namespace;
         this.httpResponse = response;
         this.renderParameters = renderParameters;
+        this.portletProperties = portletProperties;
     }
 
     public boolean getIsRedirected() {
