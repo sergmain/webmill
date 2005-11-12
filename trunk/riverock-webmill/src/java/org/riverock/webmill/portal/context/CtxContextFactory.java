@@ -50,6 +50,9 @@ import org.riverock.webmill.portal.ContextFactory;
 public final class CtxContextFactory extends ContextFactory {
     private final static Logger log = Logger.getLogger(CtxContextFactory.class);
 
+    // add for compatible with jsr168 TCK
+    private static final String INVOKE_PORTLET_NAME = "portletName";
+
     private CtxContextFactory(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
         super(factoryParameter);
     }
@@ -139,10 +142,16 @@ public final class CtxContextFactory extends ContextFactory {
 
             String ctxTemplate = st.nextToken();
             String ctxType = null;
-            if ( st.hasMoreTokens() )
+            if ( st.hasMoreTokens() ) {
                 ctxType = st.nextToken();
-            else
+            }
+
+            if ( StringTools.isEmpty(ctxType) ) {
                 ctxType = factoryParameter.getRequest().getParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM );
+                if (ctxType==null) {
+                    ctxType = factoryParameter.getRequest().getParameter( INVOKE_PORTLET_NAME );
+                }
+            }
 
             // Todo parse request for parameters of others portlets
 
