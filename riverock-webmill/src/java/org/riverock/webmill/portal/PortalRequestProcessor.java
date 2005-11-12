@@ -39,6 +39,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.schema.site.TemplateItemType;
 import org.riverock.webmill.container.bean.SitePortletData;
+import org.riverock.webmill.portlet.PortletTools;
 import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
@@ -179,15 +180,15 @@ public final class PortalRequestProcessor {
     private static void buildPage(PortalRequestInstance portalRequestInstance) throws Exception {
 
         ByteArrayOutputStream outputStream = null;
-        Iterator iterator = portalRequestInstance.getPageElementList().iterator();
+        Iterator<PageElement> iterator = portalRequestInstance.getPageElementList().iterator();
 
         if (!iterator.hasNext()) {
             return;
         }
-        PageElement pageElement = (PageElement)iterator.next();
+        PageElement pageElement = iterator.next();
         PageElement pageElementNext = null;
         if (iterator.hasNext())
-            pageElementNext = (PageElement)iterator.next();
+            pageElementNext = iterator.next();
 
         int i=0;
         while( pageElement!=null ) {
@@ -219,13 +220,17 @@ public final class PortalRequestProcessor {
                 log.debug( "Value of template item: "+ pageElement.getTemplateItemType().getValue() );
                 log.debug( "portlet result data: " + item );
                 log.debug( "getIsError(): " + item.getIsError()+", getIsXml() - "+item.getIsXml() );
-            }
-
-            if (log.isDebugEnabled()) {
                 log.debug("#30.1-"+i);
             }
 
-            if ( Boolean.TRUE.equals(item.getIsError()) || !Boolean.TRUE.equals(item.getIsXml()) ) {
+            boolean isXml = false;
+            if (pageElement!=null && pageElement.getTemplateItemType()!=null && pageElement.getTemplateItemType().getParameterAsReference()!=null) {
+                String isXmlString = PortletTools.getString(pageElement.getTemplateItemType().getParameterAsReference(), "is-xml", "false");
+                isXml = Boolean.parseBoolean( isXmlString );
+            } 
+            boolean isElementXml = item.getIsXml() || isXml; 
+
+            if ( Boolean.TRUE.equals(item.getIsError()) || !isElementXml ) {
 
                 // transform and output previous page elements
                 if (outputStream!=null) {
@@ -252,15 +257,24 @@ public final class PortalRequestProcessor {
 
                     outputStream.write( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<SiteTemplate language=\"".getBytes() );
                     outputStream.write( portalRequestInstance.getLocale().toString().getBytes() );
-                    outputStream.write( "\" type=\"".getBytes() );
-//                    outputStream.write( portalRequestInstance.getDefaultPortletName().getBytes() );
                     outputStream.write( "\">".getBytes() );
                 }
 
                 outputStream.write( item.getData() );
 
+
+                boolean isNextXml = false;
+                boolean isNextElementXml = false;
+                if (pageElementNext!=null) {
+                    if ( pageElementNext.getTemplateItemType()!=null && pageElementNext.getTemplateItemType().getParameterAsReference()!=null) {
+                        String isXmlString = PortletTools.getString(pageElementNext.getTemplateItemType().getParameterAsReference(), "is-xml", "false");
+                        isNextXml = Boolean.parseBoolean( isXmlString );
+                    }
+                    isNextElementXml = pageElementNext.getIsXml() || isNextXml; 
+                } 
+
                 // if next portlet not xml's portlet, then transform current part and continue
-                if ( pageElementNext==null || !pageElementNext.getIsXml() ) {
+                if ( pageElementNext==null || !isNextElementXml ) {
                     if ( log.isDebugEnabled() ) {
                         log.debug("#1.4 pageElementNext: " + pageElementNext);
                         if (pageElementNext!=null) {
@@ -274,12 +288,12 @@ public final class PortalRequestProcessor {
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("#30.1-"+i);
+                log.debug("#30.2-"+i);
             }
 
             pageElement = pageElementNext;
             if (iterator.hasNext())
-                pageElementNext = (PageElement)iterator.next();
+                pageElementNext = iterator.next();
             else
                 pageElementNext = null;
         }
