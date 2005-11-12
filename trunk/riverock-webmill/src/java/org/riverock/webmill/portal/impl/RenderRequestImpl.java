@@ -22,6 +22,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.portal.impl;
+
+import java.util.Map;
+import java.util.List;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.PortletPreferences;
+import javax.servlet.ServletContext;
+
+import org.riverock.webmill.portal.PortalRequestInstance;
 
 /**
  * User: Admin
@@ -30,20 +40,10 @@
  *
  * $Id$
  */
-package org.riverock.webmill.portal.impl;
-
-import java.util.Map;
-
-import javax.portlet.RenderRequest;
-import javax.portlet.PortletPreferences;
-import javax.servlet.ServletContext;
-
-import org.riverock.webmill.portal.PortalRequestInstance;
-
 public final class RenderRequestImpl extends WebmillPortletRequestV2 implements RenderRequest {
 
-    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath, PortletPreferences portletPreferences) {
-        super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences );
+    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties) {
+        super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties );
         prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes, contextPath, portalContextPath);
     }
 }
