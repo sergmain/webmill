@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
@@ -38,8 +41,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.impl.PortletURLImpl;
 import org.riverock.generic.tools.servlet.ServletResponseWrapperIncludeV3;
 
 import org.apache.log4j.Logger;
@@ -66,6 +67,8 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     // global parameters for page
     private PortalRequestInstance portalRequestInstance = null;
     private RenderRequest renderRequest = null;
+
+    private Map<String, List<String>> portletProperties = null;
 
     private HttpServletResponse httpServletResponse = null;
     private ServletResponse servletResponse = null;
@@ -100,10 +103,13 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         title = null;
     }
 
-    public RenderResponseImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest, HttpServletResponse response, String namespace ) {
+    public RenderResponseImpl( PortalRequestInstance portalRequestInstance, 
+        RenderRequest renderRequest, HttpServletResponse response, String namespace, 
+        Map<String, List<String>> portletProperties) {
         super(response);
         this.portalRequestInstance = portalRequestInstance;
         this.renderRequest = renderRequest;
+        this.portletProperties = portletProperties;
         this.namespace = namespace;
         this.httpServletResponse = response;
         this.servletResponse = new ServletResponseWrapperIncludeV3( portalRequestInstance.getLocale() );
@@ -117,12 +123,31 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         return redirectUrl;
     }
 
-    public void addProperty( String s, String s1 ) {
-        throw new IllegalStateException("not implemented");
+    public void addProperty( String key, String value ) {
+        if (key==null) {
+            throw new IllegalArgumentException("key can't be null");
+        }
+        List<String> values = portletProperties.get( key.toLowerCase() );
+        if (values==null) {
+            values = new ArrayList<String>();
+            portletProperties.put( key.toLowerCase(), values );
+        }
+        values.add( value );
     }
 
-    public void setProperty( String s, String s1 ) {
-        throw new IllegalStateException("not implemented");
+    public void setProperty( String key, String value ) {
+        if (key==null) {
+            throw new IllegalArgumentException("key can't be null");
+        }
+        List<String> values = portletProperties.get( key.toLowerCase() );
+        if (values==null) {
+            values = new ArrayList<String>();
+            portletProperties.put( key.toLowerCase(), values );
+        }
+        else {
+            values.clear();
+        }
+        values.add( value );
     }
 
     public String encodeURL( String url ) {
