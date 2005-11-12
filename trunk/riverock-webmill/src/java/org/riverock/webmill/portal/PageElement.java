@@ -155,7 +155,8 @@ public final class PageElement {
             }
         }
         catch( Throwable e ) {
-            exception = e;
+            log.error("Exception: ", e);
+//            exception = e;
         }
     }
 
@@ -350,7 +351,8 @@ containing the portlet is restarted.
             renderRequest = new RenderRequestImpl(map, portalRequestInstance, renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
                 portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath(),
-                portletEntry.getPortletDefinition().getPortletPreferences() );
+                portletEntry.getPortletDefinition().getPortletPreferences(),
+                portletEntry.getPortletProperties() );
 
             // if current portlet is dynamic - set metadata
             if (templateItemType.getTypeObject().getType() == TemplateItemTypeTypeType.DYNAMIC_TYPE) {
@@ -376,14 +378,15 @@ containing the portlet is restarted.
             }
 
 
-            renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace);
+            renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );
             ContextNavigator.setContentType(renderResponse);
 
             actionRequest = new ActionRequestImpl(map, portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
                 portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath(),
-                portletEntry.getPortletDefinition().getPortletPreferences() );
-            
+                portletEntry.getPortletDefinition().getPortletPreferences(),
+                portletEntry.getPortletProperties() );
+
             // set portlet specific attribute
 //            portalRequestInstance.actionRequest.setAttribute(
 //                ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, templateItem.getParameterAsReference());
@@ -391,7 +394,7 @@ containing the portlet is restarted.
 //                PortalConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, templateItem.getCode() );
 //            portalRequestInstance.actionRequest.setAttribute(
 //                ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, templateItem.getXmlRoot() );
-            actionResponse = new ActionResponseImpl(portalRequestInstance, actionRequest, portalRequestInstance.getHttpResponse(), namespace, renderParameters);
+            actionResponse = new ActionResponseImpl(portalRequestInstance, actionRequest, portalRequestInstance.getHttpResponse(), namespace, renderParameters, portletEntry.getPortletProperties() );
 
             if (log.isDebugEnabled()) {
 
