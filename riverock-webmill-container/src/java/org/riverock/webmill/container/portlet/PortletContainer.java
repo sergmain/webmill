@@ -61,6 +61,8 @@ import org.riverock.webmill.container.ContainerConstants;
 public final class PortletContainer implements Serializable {
     private static final long serialVersionUID = 50434672384237805L;
 
+    private static final boolean DEBUG = true;
+
     // List with portlet.xml files which waiting for digest
     private static List<WaitDigestFile> digestWaitList = new ArrayList<WaitDigestFile>();
 
@@ -236,6 +238,11 @@ public final class PortletContainer implements Serializable {
     // instance methods
 
     public PortletEntry getPortletInstance(final String portletName) throws PortletContainerException {
+        if (portletName==null) {
+            String es = "Parameter 'portletName' cant be null.";
+            System.out.println( es );
+            throw new PortletContainerException(es);
+        }
 
         PortletEntry obj = portletInstanceMap.get(portletName);
         System.out.println("portlet name: "+portletName+", instance in map: " + obj);
@@ -257,13 +264,20 @@ public final class PortletContainer implements Serializable {
             try {
                 newPortlet = createPortletInstance(portletName);
                 String s = (newPortlet!=null? ""+newPortlet.getPortlet(): "null");
-                System.out.println( "Result of create new portlet entry: " + newPortlet+", portlet: " + s );
+                System.out.println( "Result of create new portlet entry: " + portletName + ", portlet: " + s );
             }
             catch (Exception e) {
                 String es = "Erorr create instance of portlet '" + portletName + "'";
                 e.printStackTrace( System.out );
                 throw new PortletContainerException(es, e);
             }
+
+            if (newPortlet==null) {
+                String es = "Erorr create instance of portlet '" + portletName + "'. Result is null";
+                System.out.println( es );
+                throw new PortletContainerException(es);
+            }
+
             PortletService.put( portletInstanceUniqueNameMap, newPortlet.getUniqueName(), newPortlet );
             portletInstanceMap.put( portletName, newPortlet );
             return newPortlet;
@@ -273,7 +287,9 @@ public final class PortletContainer implements Serializable {
     private PortletEntry createPortletInstance(final String portletName) throws Exception {
         PortletItem portletItem = searchPortletItem(portletName);
         if (portletItem == null) {
-            return null;
+            String es = "Portlet '"+ portletName + "' not registered.";
+            System.out.println( es );
+            throw new PortletContainerException(es);
         }
 
         PortletDefinition portletDefinition = portletItem.getPortletDefinition();
@@ -363,6 +379,14 @@ public final class PortletContainer implements Serializable {
     public PortletItem searchPortletItem(String portletName) {
         if (portletName == null) {
             return null;
+        }
+
+        if (DEBUG) {
+            Iterator<PortletItem> it = portletItems.iterator();
+            while (it.hasNext()) {
+                PortletItem portletItem = it.next();
+                System.out.println("portletName = " + portletItem.getPortletDefinition().getPortletName()+ ", portlet context: " + portletItem.getUniqueName() );
+            }
         }
 
         Iterator<PortletItem> it = portletItems.iterator();
