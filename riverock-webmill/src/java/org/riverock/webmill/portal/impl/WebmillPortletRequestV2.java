@@ -32,6 +32,7 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletSession;
 import javax.portlet.WindowState;
+import javax.portlet.PortletRequest;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestWrapper;
@@ -57,7 +58,7 @@ import org.riverock.webmill.portal.PortalRequestInstance;
  * Time: 1:07:18
  * $Id$
  */
-public class WebmillPortletRequestV2 extends ServletRequestWrapper implements HttpServletRequest {
+public class WebmillPortletRequestV2 extends ServletRequestWrapper implements HttpServletRequest, PortletRequest {
     private final static Log log = LogFactory.getLog( WebmillPortletRequestV2.class );
 
     protected HttpServletRequest httpRequest = null;
@@ -82,6 +83,8 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
     // context path of portal servlet
     private String portalContextPath = null;
 
+    private Map<String, List<String>> portletProperties = null;
+
     public void destroy() {
         httpRequest = null;
         httpResponse = null;
@@ -94,10 +97,11 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
         renderParameters = null;
     }
 
-    public WebmillPortletRequestV2(ServletContext servletContext, HttpServletRequest httpServletRequest, PortletPreferences portletPreferences) {
+    public WebmillPortletRequestV2(ServletContext servletContext, HttpServletRequest httpServletRequest, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties) {
         super( httpServletRequest );
         this.servletContext = servletContext;
         this.portletPreferences = portletPreferences;
+        this.portletProperties = portletProperties;
     }
 
     public boolean isWindowStateAllowed( WindowState windowState ) {
@@ -133,11 +137,27 @@ public class WebmillPortletRequestV2 extends ServletRequestWrapper implements Ht
     }
 
     public String getProperty( String key ) {
-        return null;
+        if (key==null) {
+            throw new IllegalArgumentException("key can't be null");
+        }
+        List<String> values = portletProperties.get( key.toLowerCase() );
+        if (values!=null) {
+            return values.get(0);
+        }
+        else {
+            return null;
+        }
     }
 
     public Enumeration getProperties( String key ) {
-        return null;
+        if (key==null) {
+            throw new IllegalArgumentException("key can't be null");
+        }
+        List<String> values = portletProperties.get( key.toLowerCase() );
+        if (values==null) {
+            values = new ArrayList<String>();
+        }
+        return Collections.enumeration( values );
     }
 
     public Enumeration getPropertyNames() {
