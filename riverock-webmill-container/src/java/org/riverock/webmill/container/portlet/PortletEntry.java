@@ -24,6 +24,10 @@
  */
 package org.riverock.webmill.container.portlet;
 
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 import javax.portlet.Portlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.UnavailableException;
@@ -47,6 +51,15 @@ public final class PortletEntry {
     private ServletConfig servletConfig = null;
     private ClassLoader classLoader = null;
     private String uniqueName = null;
+    private Map<String, List<String>> portletProperties = new HashMap<String, List<String>>();
+
+    public Map<String, List<String>> getPortletProperties() {
+        return portletProperties;
+    }
+
+//    public void setPortletProperties(Map<String, List<String>> portletProperties) {
+//        this.portletProperties = portletProperties;
+//    }
 
     public void destroy() {
         if (portlet!=null) {
