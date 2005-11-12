@@ -28,10 +28,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +63,7 @@ import org.apache.log4j.Logger;
 public final class PortalRequestInstance {
     private final static Logger log = Logger.getLogger(PortalRequestInstance.class);
 
-    private List pageElementList = new LinkedList();
+    private List<PageElement> pageElementList = new ArrayList<PageElement>();
 
     private static final int WEBPAGE_BUFFER_SIZE = 15000;
 
@@ -251,7 +251,7 @@ public final class PortalRequestInstance {
         }
     }
 
-    public List getPageElementList() {
+    public List<PageElement> getPageElementList() {
         return pageElementList;
     }
 
