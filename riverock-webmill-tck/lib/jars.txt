@@ -1,0 +1,54 @@
+The jar files in this directories are organized according to following principles:
+
+lib/runtime/
+    for a (small) ant runtime.
+    This is used by both developers and webtest users.
+    The files are referenced from the startup scripts (webtest, webtest.bat)
+lib/build/
+    for jar files that belongs to a developer's run-time but not to an end-user's runtime.
+    The files are referenced from the startup scripts (webtest.sh, webtets.cmd), if absolutely necessary,
+    or from ant's build.xml.
+lib/base/
+    for the original versions of 3rd party libraries that need patching.
+    In the best case, this directory may be empty.
+lib/optional/
+    for 3rd party libraries that may be omitted inspecial circumstances, such as the groovy thing.
+lib/
+    for all the libraries that a webtest user needs
+
+
+
+Jars used:
+
+htmlunit-2005XXXX.jar
+
+---- runtime (nested jars are drawn in via manifest)
+webtest.jar
+    dom4j-1.4.jar
+    jakarta-oro-2.0.4.jar
+    pdfUnit-1.0.jar
+        pdfbox.jar           0.6.6 (local patch applied)
+        log4j.jar
+        log4j-1.2.8.jar      (whatever is available first in cp)
+    ant.jar	                    1.5.4
+        xalan.jar	            (from ant 1.5.4)
+        optional.jar 	            (from ant 1.5.4)
+
+---- JSSE 1.0.2 for use with https before jdk1.4
+
+jcert.jar
+jnet.jar
+jsse.jar
+
+---- for build only
+
+junit                   3.8.1
+easymock                1.0
+servlet                 2.3
+clover                  1.2		(license only covers webtest itself!)
+
+---- for testing HttpUnit only
+mail            (javamail 1.2)
+activation      (jaf 1.0.1)
+
+
