@@ -228,7 +228,7 @@ public final class PortalRequestProcessor {
                 String isXmlString = PortletTools.getString(pageElement.getTemplateItemType().getParameterAsReference(), "is-xml", "false");
                 isXml = Boolean.parseBoolean( isXmlString );
             } 
-            boolean isElementXml = item.getIsXml() || isXml; 
+            boolean isElementXml = Boolean.TRUE.equals(item.getIsXml()) || isXml; 
 
             if ( Boolean.TRUE.equals(item.getIsError()) || !isElementXml ) {
 

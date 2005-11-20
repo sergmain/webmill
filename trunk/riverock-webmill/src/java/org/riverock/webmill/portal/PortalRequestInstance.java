@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletConfig;
+import javax.portlet.PortalContext;
 
 import org.riverock.common.html.Header;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -61,7 +62,7 @@ import org.apache.log4j.Logger;
  * $Id$
  */
 public final class PortalRequestInstance {
-    private final static Logger log = Logger.getLogger(PortalRequestInstance.class);
+    private final static Logger log = Logger.getLogger( PortalRequestInstance.class );
 
     private List<PageElement> pageElementList = new ArrayList<PageElement>();
 
@@ -88,6 +89,8 @@ public final class PortalRequestInstance {
 
     private String errorString = null;
     private String redirectUrl = null;
+
+    private PortalContext portalContext = null;
 
     public void destroy() {
         Iterator iterator = getPageElementList().iterator();
@@ -122,6 +125,7 @@ public final class PortalRequestInstance {
         errorString = null;
         redirectUrl = null;
         mimeType = null;
+        portalContext = null;
     }
 
     public PortalRequestInstance() {
@@ -129,7 +133,12 @@ public final class PortalRequestInstance {
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
     }
 
-    PortalRequestInstance(HttpServletRequest request_, HttpServletResponse response_, ServletConfig portalServletConfig, PortletContainer portletContainer)
+    PortalRequestInstance(
+        HttpServletRequest request_, 
+        HttpServletResponse response_, 
+        ServletConfig portalServletConfig, 
+        PortletContainer portletContainer,
+        PortalContext portalContext)
         throws Throwable {
 
         startMills = System.currentTimeMillis();
@@ -142,6 +151,7 @@ public final class PortalRequestInstance {
         this.httpRequest = request_;
         this.httpResponse = response_;
         this.portalServletConfig = portalServletConfig;
+        this.portalContext = portalContext;
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
@@ -249,6 +259,10 @@ public final class PortalRequestInstance {
                 log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - startMills) + " milliseconds");
             }
         }
+    }
+
+    public PortalContext getPortalContext() {
+        return portalContext;
     }
 
     public List<PageElement> getPageElementList() {

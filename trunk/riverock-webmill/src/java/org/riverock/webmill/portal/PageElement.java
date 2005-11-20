@@ -155,7 +155,11 @@ public final class PageElement {
             }
         }
         catch( Throwable e ) {
-            log.error("Exception: ", e);
+            final String notImpl = "processAction method not implemented";
+
+            if ( !e.getMessage().contains(notImpl) ) {
+                log.error("Exception: ", e);
+            }
 //            exception = e;
         }
     }
@@ -348,11 +352,17 @@ containing the portlet is restarted.
             if (params != null && params.getParameters() != null) {
                 map.putAll(params.getParameters());
             }
-            renderRequest = new RenderRequestImpl(map, portalRequestInstance, renderParameters,
+            renderRequest = new RenderRequestImpl(
+                map,
+                portalRequestInstance,
+                renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath(),
+                portletAttributes,
+                contextPath,
+                portalRequestInstance.getHttpRequest().getContextPath(),
                 portletEntry.getPortletDefinition().getPortletPreferences(),
-                portletEntry.getPortletProperties() );
+                portletEntry.getPortletProperties(),
+                portalRequestInstance.getPortalContext() );
 
             // if current portlet is dynamic - set metadata
             if (templateItemType.getTypeObject().getType() == TemplateItemTypeTypeType.DYNAMIC_TYPE) {
@@ -381,11 +391,17 @@ containing the portlet is restarted.
             renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );
             ContextNavigator.setContentType(renderResponse);
 
-            actionRequest = new ActionRequestImpl(map, portalRequestInstance,
+            actionRequest = new ActionRequestImpl(
+                map,
+                portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes, contextPath, portalRequestInstance.getHttpRequest().getContextPath(),
+                portletAttributes,
+                contextPath,
+                portalRequestInstance.getHttpRequest().getContextPath(),
                 portletEntry.getPortletDefinition().getPortletPreferences(),
-                portletEntry.getPortletProperties() );
+                portletEntry.getPortletProperties(),
+                portalRequestInstance.getPortalContext()
+            );
 
             // set portlet specific attribute
 //            portalRequestInstance.actionRequest.setAttribute(

@@ -96,7 +96,11 @@ public final class PortletURLImpl implements PortletURL {
             mode = portletMode;
             return;
         }
-        throw new PortletModeException( "unsupported Portlet Mode used: " + portletMode, portletMode );
+        throw new PortletModeException( "Unsupported portlet mode. Used: " + portletMode, portletMode );
+    }
+
+    public void  addParameter( String name, String value) {
+        setParameter(name, value);
     }
 
     public void setParameter( String name, String value ) {
@@ -215,6 +219,8 @@ public final class PortletURLImpl implements PortletURL {
 
     // internal methods ---------------------------------------------------------------------------
     private boolean isPortletModeSupported( PortletMode requestedPortletMode ) {
+// Todo need implement
+//
 //        PortletDefinition portletDefinition = referencedPortletWindow.getPortletEntity().getPortletDefinition();
 //        ContentTypeSet contentTypes = portletDefinition.getContentTypeSet();
 //        ContentType contentType = contentTypes.get("text/html");
@@ -230,7 +236,7 @@ public final class PortletURLImpl implements PortletURL {
 //                }
 //            }
 //        }
-        return false;
+        return true;
     }
     // --------------------------------------------------------------------------------------------
 

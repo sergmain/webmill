@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortalContext;
 import javax.servlet.ServletContext;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
@@ -40,10 +41,21 @@ import org.riverock.webmill.portal.PortalRequestInstance;
  *
  * $Id$
  */
-public final class RenderRequestImpl extends WebmillPortletRequestV2 implements RenderRequest {
+public final class RenderRequestImpl extends WebmillPortletRequest implements RenderRequest {
 
-    public RenderRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties) {
+    public RenderRequestImpl( 
+        final Map parameters, 
+        final PortalRequestInstance portalRequestInstance, 
+        final Map renderParameters, 
+        final ServletContext servletContext, 
+        final Map portletAttributes, 
+        final String contextPath, 
+        final String portalContextPath, 
+        final PortletPreferences portletPreferences, 
+        final Map<String, List<String>> portletProperties,
+        final PortalContext portalContext ) {
+        
         super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties );
-        prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes, contextPath, portalContextPath);
+        prepareRequest( parameters, portalRequestInstance, renderParameters, portletAttributes, contextPath, portalContextPath, portalContext);
     }
 }
