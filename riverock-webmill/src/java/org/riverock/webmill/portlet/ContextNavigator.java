@@ -52,6 +52,14 @@ public final class ContextNavigator extends HttpServlet {
         portalInstance = PortalInstanceImpl.getInstance( portalServletConfig );
     }
 
+    public void destroy() {
+        portalServletConfig = null;
+        if (portalInstance!=null) {
+            portalInstance.destroy();
+            portalInstance = null;
+        }
+    }
+
     public ContextNavigator() {
     }
 

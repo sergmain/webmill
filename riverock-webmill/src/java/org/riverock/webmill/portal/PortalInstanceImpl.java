@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
+import javax.portlet.PortalContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,6 +62,7 @@ import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.schema.core.MainLanguageItemType;
 import org.riverock.webmill.schema.core.MainLanguageListType;
 import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.portal.impl.PortalContextImpl;
 
 /**
  * @author smaslyukov
@@ -71,10 +73,11 @@ import org.riverock.webmill.utils.ServletUtils;
 public class PortalInstanceImpl implements PortalInstance  {
     private final static Log log = LogFactory.getLog(PortalInstanceImpl.class);
 
-     static final String copyright =
+    public static final String PORTAL_INFO = "WebMill/@WEBMILL_RELEASE@";
+
+    static final String copyright =
         "<!--\n" +
-        "  Portal: WebMill\n" +
-        " Release: @WEBMILL_RELEASE@\n" +
+        "  Portal: "+ PORTAL_INFO +"\n" +
         "   Build: @WEBMILL_BUILD@\n" +
         "Homepage: http://webmill.riverock.org\n" +
         "-->\n";
@@ -82,10 +85,21 @@ public class PortalInstanceImpl implements PortalInstance  {
     private static final int NUM_LINES = 300;
 
     private static final String PORTAL_VERSION_INFO = "@WEBMILL_RELEASE@";
-    private static PortalVersion portalVersion = new PortalVersion( PORTAL_VERSION_INFO );
+    private static final PortalVersion portalVersion = new PortalVersion( PORTAL_VERSION_INFO );
     private ServletConfig portalServletConfig = null;
     private PortletContainer portletContainer = null;
     private Collection<String> supportedList = null;
+    private PortalContext portalContext = null;
+
+    public void destroy() {
+        portalServletConfig = null;
+        portletContainer = null;
+        if (supportedList!=null) {
+            supportedList.clear();
+            supportedList = null;
+        }
+        portalContext = null;
+    }
 
     private static class PortalVersion {
         int major;
@@ -93,17 +107,21 @@ public class PortalInstanceImpl implements PortalInstance  {
 
         PortalVersion( String version ) {
             StringTokenizer st = new StringTokenizer( version, "." );
-            major = new Integer(st.nextToken());
-            minor = new Integer(st.nextToken());
+            major = new Integer( st.nextToken() );
+            minor = new Integer( st.nextToken() );
         }
     }
 
     public String getPortalName() {
-        return "WebMill";
+        return PORTAL_INFO;
     }
 
     public static PortalInstanceImpl getInstance( ServletConfig servletConfig ) {
         return new PortalInstanceImpl( servletConfig );
+    }
+
+    public PortalContext getPortalContext() {
+        return portalContext;
     }
 
     public int getPortalMajorVersion() {
@@ -186,6 +204,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         this.portalServletConfig = servletConfig;
         this.portletContainer = PortletContainerFactory.getContainerInstance( this );
         this.supportedList = initSupportedLocales();
+        this.portalContext = new PortalContextImpl( PORTAL_INFO );
     }
 
     private static Object syncCounter = new Object();
@@ -292,7 +311,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 log.debug("#100.0");
             }
 
-            portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig, portletContainer );
+            portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig, portletContainer, portalContext );
             if (!portalRequestInstance.getIsTextMimeType()) {
                 return;
             }
@@ -421,9 +440,9 @@ public class PortalInstanceImpl implements PortalInstance  {
                 throw new ServletException( es, th );
             }
             finally{
-            if (log.isDebugEnabled()) {
-                log.debug("Start finally-finally block");
-            }
+                if (log.isDebugEnabled()) {
+                    log.debug("Start finally-finally block");
+                }
                 try {
                     if ( portalRequestInstance!=null ) {
                         portalRequestInstance.destroy();
@@ -431,8 +450,6 @@ public class PortalInstanceImpl implements PortalInstance  {
                 }
                 catch( Throwable e ) {
                     log.error("Error destroy portalRequestInstance object", e);
-                }
-                if (log.isDebugEnabled()){
                 }
                 NDC.pop();
             }

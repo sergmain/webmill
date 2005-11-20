@@ -32,20 +32,25 @@ import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletSession;
 import javax.portlet.PortalContext;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpSession;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequestWrapper;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthException;
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
+import org.riverock.common.html.Header;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * User: SergeMaslyukov
@@ -53,8 +58,8 @@ import org.apache.log4j.Logger;
  * Time: 1:47:18
  * $Id$
  */
-public class WebmillPortletRequest extends HttpServletRequestWrapper {
-    private final static Logger log = Logger.getLogger( WebmillPortletRequest.class );
+public class WebmillPortletRequest extends ServletRequestWrapper implements HttpServletRequest, PortletRequest {
+    private final static Log log = LogFactory.getLog( WebmillPortletRequest.class );
 
     protected HttpServletRequest httpRequest = null;
     protected HttpServletResponse httpResponse = null;
@@ -67,8 +72,19 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     protected Locale[] preferredLocale = null;
     protected Cookie[] cookies = null;
     private Map renderParameters = null;
-    private Map attributes = new HashMap();
+    private Map portletAttributes = null;
     private ServletContext servletContext = null;
+
+    private PortletPreferences portletPreferences = null;
+
+    // context path of current portlet
+    private String contextPath = null;
+
+    // context path of portal servlet
+    private String portalContextPath = null;
+    private PortalContext portalContext = null;
+
+    private Map<String, List<String>> portletProperties = null;
 
     public void destroy() {
         httpRequest = null;
@@ -80,11 +96,14 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         preferredLocale = null;
         cookies = null;
         renderParameters = null;
+        portalContext = null;
     }
 
-    public WebmillPortletRequest( ServletContext servletContext, HttpServletRequest httpServletRequest ) {
+    public WebmillPortletRequest(ServletContext servletContext, HttpServletRequest httpServletRequest, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties) {
         super( httpServletRequest );
         this.servletContext = servletContext;
+        this.portletPreferences = portletPreferences;
+        this.portletProperties = portletProperties;
     }
 
     public boolean isWindowStateAllowed( WindowState windowState ) {
@@ -104,7 +123,7 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     }
 
     public PortletPreferences getPreferences() {
-        return null;
+        return portletPreferences;
     }
 
     public PortletSession getPortletSession() {
@@ -120,11 +139,27 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     }
 
     public String getProperty( String key ) {
-        return null;
+        if (key==null) {
+            throw new IllegalArgumentException("key can't be null");
+        }
+        List<String> values = portletProperties.get( key.toLowerCase() );
+        if (values!=null) {
+            return values.get(0);
+        }
+        else {
+            return null;
+        }
     }
 
     public Enumeration getProperties( String key ) {
-        return null;
+        if (key==null) {
+            throw new IllegalArgumentException("key can't be null");
+        }
+        List<String> values = portletProperties.get( key.toLowerCase() );
+        if (values==null) {
+            values = new ArrayList<String>();
+        }
+        return Collections.enumeration( values );
     }
 
     public Enumeration getPropertyNames() {
@@ -132,15 +167,47 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     }
 
     public PortalContext getPortalContext() {
-        return null;
+        return portalContext;
     }
 
     public String getAuthType() {
         return null;
     }
 
+    public Cookie[] getCookies() {
+        return httpRequest.getCookies();
+    }
+
+    public long getDateHeader( String name ) {
+        return httpRequest.getDateHeader( name );
+    }
+
+    public String getHeader( String name ) {
+        return httpRequest.getHeader( name );
+    }
+
+    public Enumeration getHeaders( String name ) {
+        return httpRequest.getHeaders( name );
+    }
+
+    public Enumeration getHeaderNames() {
+        return httpRequest.getHeaderNames();
+    }
+
+    public int getIntHeader( String name ) {
+        return httpRequest.getIntHeader( name );
+    }
+
+    public String getMethod() {
+        return httpRequest.getMethod();
+    }
+
     public String getContextPath() {
-        return httpRequest.getContextPath();
+        return contextPath;
+//        final String realPath = servletContext.getRealPath("/");
+//        File dir = new File(realPath);
+//        return dir.getName();
+//        return super.getContextPath();
     }
 
     public String getRemoteUser() {
@@ -158,8 +225,17 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     }
 
     public boolean isUserInRole( String role ) {
-        if ( httpRequest.getServerName() == null || auth == null )
+        if (role==null) {
             return false;
+        }
+
+        if (role.equals(PortalConstants.WEBMILL_GUEST_ROLE)) {
+            return true;
+        }
+
+        if ( httpRequest.getServerName() == null || auth == null ) {
+            return false;
+        }
 
         try {
             boolean status = auth.checkAccess( httpRequest.getServerName() );
@@ -177,46 +253,63 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     public Object getAttribute( String key ) {
         if (key==null)
             return null;
-        return attributes.get( key );
+        return portletAttributes.get( key );
     }
 
     public Enumeration getAttributeNames() {
-        return Collections.enumeration( attributes.keySet() );
+        return Collections.enumeration( portletAttributes.keySet() );
     }
 
     public void setAttribute( String key, Object value ) {
         if (key==null || value==null )
             return;
 
-        attributes.put( key, value );
+        portletAttributes.put( key, value );
     }
 
     public void removeAttribute( String key ) {
         if ( key==null )
             return;
 
-        attributes.remove( key );
+        portletAttributes.remove( key );
     }
 
     public String getParameter( String key ) {
         if (key==null)
             return null;
 
-        if ( parameters==null && renderParameters==null )
-//            return null;
+        if (log.isDebugEnabled()) {
+            log.debug("key: "+key);
+        }
+
+        if ( parameters==null && renderParameters==null ) {
+            if (log.isDebugEnabled()) {
+                log.debug("parameters: "+parameters+", renderParameters: " +renderParameters);
+            }
             return super.getParameter( key );
+        }
 
         String value = null;
         value = getParameterInternal( renderParameters, key );
-        if ( value!=null )
+        if ( value!=null ) {
+            if (log.isDebugEnabled()) {
+                log.debug("value #1: "+value);
+            }
             return value;
+        }
 
         value = getParameterInternal( parameters, key );
-        if ( value!=null )
+        if ( value!=null ) {
+            if (log.isDebugEnabled()) {
+                log.debug("value #2: "+value);
+            }
             return value;
+        }
 
+        if (log.isDebugEnabled()) {
+            log.debug("value #3: "+super.getParameter( key ));
+        }
         return super.getParameter( key );
-
     }
 
     private String getParameterInternal( Map map, String key ) {
@@ -259,21 +352,37 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         if ( parameters==null && renderParameters==null  )
             return null;
 
-        List list = new LinkedList();
+        List<String> list = new ArrayList<String>();
 
-        List temp = null;
+        List<String> temp = null;
         temp = getParameterArray( parameters, key );
-        if (temp!=null)
+        if (temp!=null) {
             list.addAll( temp );
+            temp.clear();
+            temp = null;
+        }
 
         temp = getParameterArray( renderParameters, key );
-        if (temp!=null)
+        if (temp!=null) {
             list.addAll( temp );
+            temp.clear();
+            temp = null;
+        }
 
-        return (String[])list.toArray();
+        String[] values = new String[list.size()];
+        int i=0;
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            String es = it.next();
+            values[i++] = es;
+        }
+        list.clear();
+        list = null;
+
+        return values;
     }
 
-    private static List getParameterArray( Map map, String key ) {
+    private static List<String> getParameterArray( Map map, String key ) {
 
         if (map==null || key==null )
             return null;
@@ -282,13 +391,12 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         if ( obj==null )
             return null;
 
-        List list = new LinkedList();
+        List<String> list = new ArrayList<String>();
         if ( obj instanceof List ) {
             list.addAll( (List)obj );
         } else if (obj instanceof String[] ) {
             String values[] = (String[])obj;
-            for (final String newVar : values)
-                list.add(newVar.toString());
+            for (final String newVar : values) list.add(newVar.toString());
         }
         else
             list.add( obj.toString() );
@@ -323,6 +431,18 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         return httpRequest.isRequestedSessionIdValid();
     }
 
+    public boolean isRequestedSessionIdFromCookie() {
+        return httpRequest.isRequestedSessionIdFromCookie();
+    }
+
+    public boolean isRequestedSessionIdFromURL() {
+        return httpRequest.isRequestedSessionIdFromURL();
+    }
+
+    public boolean isRequestedSessionIdFromUrl() {
+        return httpRequest.isRequestedSessionIdFromURL();
+    }
+
     public String getResponseContentType() {
         return null;
     }
@@ -351,11 +471,12 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         return httpRequest.getServerPort();
     }
 
+
     public String getPathInfo() {
         String attr = (String)super.getAttribute( "javax.servlet.include.path_info" );
         if (log.isDebugEnabled()) {
             log.debug( "path_info in attr: "+attr );
-            log.debug( "super.path_info: "+super.getPathInfo() );
+            log.debug( "super.path_info: "+httpRequest.getPathInfo() );
         }
         return attr;
 //        return ( attr != null ) ?attr
@@ -365,7 +486,7 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     public String getQueryString() {
         String attr = (String)super.getAttribute( "javax.servlet.include.query_string" );
         return ( attr != null ) ?attr
-            :super.getQueryString();
+            :httpRequest.getQueryString();
     }
 
     public String getPathTranslated() {
@@ -376,10 +497,10 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         String attr = (String)super.getAttribute( "javax.servlet.include.request_uri" );
         if (log.isDebugEnabled()) {
             log.debug( "request_uri in attr: "+attr );
-            log.debug( "super.request_uri: "+super.getRequestURI() );
+            log.debug( "super.request_uri: "+httpRequest.getRequestURI() );
         }
         return ( attr != null ) ?attr
-            :super.getRequestURI();
+            :httpRequest.getRequestURI();
     }
 
     public StringBuffer getRequestURL() {
@@ -390,13 +511,21 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         String attr = (String)super.getAttribute( "javax.servlet.include.servlet_path" );
         if (log.isDebugEnabled()) {
             log.debug( "servlet_path in attr: "+attr );
-            log.debug( "super.servlet_path: "+super.getServletPath() );
+            log.debug( "super.servlet_path: "+httpRequest.getServletPath() );
         }
         return ( attr != null ) ?attr
-            :super.getServletPath();
+            :httpRequest.getServletPath();
     }
 
-    public RequestDispatcher getRequestDispatcher(java.lang.String path) {
+    public HttpSession getSession( boolean create ) {
+        return httpRequest.getSession( create );
+    }
+
+    public HttpSession getSession() {
+        return httpRequest.getSession();
+    }
+
+    public RequestDispatcher getRequestDispatcher(String path) {
 /*
         RequestDispatcher rd = super.getRequestDispatcher( path );
         if (log.isDebugEnabled()) {
@@ -414,10 +543,17 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
     }
 
     protected void prepareRequest(
-        final Map parameters, final PortalRequestInstance portalRequestInstance, final Map renderParameters ) {
+        final Map parameters, final PortalRequestInstance portalRequestInstance,
+        final Map renderParameters, final Map portletAttributes,
+        final String contextPath, final String portalContextPath,
+        final PortalContext portalContext) {
 
+        this.portalContext = portalContext;
+        this.contextPath = contextPath;
+        this.portalContextPath = portalContextPath;
         this.parameters = Collections.unmodifiableMap( parameters );
         this.renderParameters = renderParameters;
+        this.portletAttributes = portletAttributes;
         this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true));
         this.httpRequest = portalRequestInstance.getHttpRequest();
         this.auth = portalRequestInstance.getAuth();
@@ -438,9 +574,12 @@ public class WebmillPortletRequest extends HttpServletRequestWrapper {
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
         this.setAttribute( ContainerConstants.PORTAL_QUERY_STRING_ATTRIBUTE, httpRequest.getQueryString() );
+        this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );
         this.setAttribute( ContainerConstants.PORTAL_URL_RESOURCE_ATTRIBUTE, portalRequestInstance.getUrlResource() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequestInstance.getCookieManager() );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH, this.portalContextPath );
 
         this.setAttribute( ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE, httpRequest.getRemoteAddr() );
+        this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
     }
 }

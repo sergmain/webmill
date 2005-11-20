@@ -31,6 +31,7 @@ import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortalContext;
 import javax.servlet.ServletContext;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
@@ -42,15 +43,15 @@ import org.riverock.webmill.portal.PortalRequestInstance;
  *
  * $Id$
  */
-public final class ActionRequestImpl extends WebmillPortletRequestV2 implements ActionRequest {
+public final class ActionRequestImpl extends WebmillPortletRequest implements ActionRequest {
 
     public void destroy() {
         super.destroy();
     }
 
-    public ActionRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, ServletContext servletContext, Map portletAttributes, String contextPath, String portalContextPath, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties) {
+    public ActionRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map portletAttributes, final String contextPath, final String portalContextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext ) {
         super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties);
-        prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContextPath);
+        prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContextPath, portalContext );
     }
 
     public InputStream getPortletInputStream() {
