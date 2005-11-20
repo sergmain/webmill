@@ -40,9 +40,8 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
 
     private Map<String, String> properties = null;
     private ResourceBundle resourceBundle = null;
-//    private ResourceBundle resourceBundleWebmill = null;
     private String resourceBundleClassName = null;
-    private String localeName = null;
+    private Locale locale = null;
 
     private static final String PORTLET_TITLE = "javax.portlet.title";
     private static final String PORTLET_SHORT_TITLE = "javax.portlet.short-title";
@@ -53,54 +52,41 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
     }
 
     public String getLocaleName() {
-        return localeName;
+        return locale.toString();
     }
 
-    protected static PortletResourceBundleWithLocale getInstance( final PortletDefinition portletDefinition, final String locale ) {
-        PortletResourceBundleWithLocale a = new PortletResourceBundleWithLocale( portletDefinition, locale );
+    protected static PortletResourceBundleWithLocale getInstance(
+        final PortletDefinition portletDefinition, final Locale locale, final ClassLoader classLoader  ) {
+
+        PortletResourceBundleWithLocale a = new PortletResourceBundleWithLocale( portletDefinition, locale, classLoader );
         return a;
     }
 
-    private PortletResourceBundleWithLocale( final PortletDefinition portletDefinition, final String localeName ) {
+    private PortletResourceBundleWithLocale( final PortletDefinition portletDefinition, final Locale locale, final ClassLoader classLoader ) {
         this.properties = new HashMap<String, String>();
-        this.resourceBundleClassName = portletDefinition.getResourceBundle();
-        this.localeName = localeName;
+        properties.put( PORTLET_KEYWORDS, "" );
+        properties.put( PORTLET_SHORT_TITLE, "" );
+        properties.put( PORTLET_TITLE, "" );
 
-        initPropertiesFromResourceBundle(resourceBundleClassName, localeName);
+        this.resourceBundleClassName = portletDefinition.getResourceBundle();
+        this.locale = locale;
+
+        initPropertiesFromResourceBundle( resourceBundleClassName, classLoader );
         initPropertiesFromPortletInfo(portletDefinition.getPortletInfo());
     }
 
-    private void initPropertiesFromResourceBundle(String resourceBundleClass, String localeName) {
+    private void initPropertiesFromResourceBundle( final String resourceBundleClass, final ClassLoader classLoader ) {
         if (PortletService.isEmpty(resourceBundleClass)) {
             return;
         }
-        Locale locale = PortletService.getLocale( localeName );
-        ClassLoader classLoader = null;
         try {
-            System.out.println( "Create resource bundle for class " + resourceBundleClass + ", locale: " + locale.toString() );
+            System.out.println(
+                "Create resource bundle for class: " + resourceBundleClass + ", locale: " + locale.toString() +
+                ", class loader: " + classLoader );
 
-            classLoader = Thread.currentThread().getContextClassLoader();
             resourceBundle = ResourceBundle.getBundle( resourceBundleClass, locale, classLoader );
         }
         catch (MissingResourceException e) {
-/*
-            String className = resourceBundleClass+"_"+ locale;
-            System.out.println("className = " + className);
-            try {
-                Class test = Class.forName( className );
-            }
-            catch (ClassNotFoundException e1) {
-                e1.printStackTrace();
-            }
-            try {
-                System.out.println("ClassLoader: " + classLoader );
-                final Class<?> aClass = classLoader.loadClass( className );
-                System.out.println("aClass = " + aClass);
-            }
-            catch (ClassNotFoundException e1) {
-                e1.printStackTrace();
-            }
-*/
             System.out.println("Error create resource bundle");
             e.printStackTrace( System.out );
         }
@@ -112,10 +98,19 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
 
             if ( portletInfo.getKeywords() != null ) {
                 Iterator<String> iterator = portletInfo.getKeywords();
+                StringBuffer keywords = new StringBuffer();
+                boolean isFirst = true;
                 while (iterator.hasNext()) {
-                    String keyword = iterator.next();
-                    properties.put( PORTLET_KEYWORDS, keyword );
+                    if ( isFirst ) {
+                        isFirst = false;
+                    }
+                    else {
+                        keywords.append( ',' );
+                    }
+                    keywords.append( iterator.next() );
+
                 }
+                properties.put( PORTLET_KEYWORDS, keywords.toString() );
             }
 
             if ( portletInfo.getShortTitle() != null )
@@ -147,21 +142,23 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
 
     protected Object handleGetObject( final String key ) {
 
-        Object obj = null;
-        if ( properties != null ) {
-            obj = properties.get( key );
-
-            if ( obj != null )
-                return obj;
+        if (key==null) {
+            throw new NullPointerException("Key is null");
         }
-
+        Object obj = null;
         if (resourceBundle!=null) {
-            obj = resourceBundle.getObject( key );
+            try {
+                obj = resourceBundle.getObject( key );
+            }
+            catch (MissingResourceException e) {
+                // not throw java.util.MissingResourceException, search in properties
+            }
             if (obj!=null) {
                 return obj;
             }
         }
 
-        return null;
+        obj = properties.get( key );
+        return obj;
     }
 }
