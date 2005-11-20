@@ -25,14 +25,11 @@
 package org.riverock.webmill.container.resource;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Collection;
 
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: SergeMaslyukov
@@ -42,35 +39,47 @@ import org.riverock.webmill.container.tools.PortletService;
  */
 public final class PortletResourceBundle {
 
-    private Map portletLocales = new HashMap();
+    private Map<String, ResourceBundle> portletLocales = new HashMap<String, ResourceBundle>();
+    private PortletDefinition portletDefinition = null;
+    private ClassLoader classLoader = null;
 
-    static PortletResourceBundle getInstance(final PortletDefinition portletDefinition, Collection<String> supportedLocales) {
-        return new PortletResourceBundle(portletDefinition, supportedLocales);
+    public static PortletResourceBundle getInstance(final PortletDefinition portletDefinition, ClassLoader classLoader) {
+        return new PortletResourceBundle( portletDefinition, classLoader );
     }
 
-    private PortletResourceBundle( final PortletDefinition portletDefinition, Collection<String> supportedLocales ) {
-
-        Iterator it = supportedLocales.iterator();
-        while (it.hasNext()) {
-            String locale = (String)it.next();
-
-            portletLocales.put(
-                locale,
-                PortletResourceBundleWithLocale.getInstance( portletDefinition, locale )
-            );
-        }
+    private PortletResourceBundle( final PortletDefinition portletDefinition, ClassLoader classLoader ) {
+        this.portletDefinition = portletDefinition;
+        this.classLoader = classLoader;
     }
 
     public ResourceBundle getResourceBundle( final Locale locale ){
-        if (locale==null)
+
+        if (locale==null) {
+            System.out.println("Locale for resource bundle is null");
             return null;
+        }
+
+        System.out.println("Get resource bundle for locale " + locale);
 
         ResourceBundle resourceBundle = null;
         resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
 
-        if (resourceBundle!=null)
+        if (resourceBundle!=null) {
             return resourceBundle;
-
+        }
+        else {
+            //Todo check correction of usage of syncronization
+            synchronized(this) {
+                resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
+                if (resourceBundle!=null) {
+                    return resourceBundle;
+                }
+                resourceBundle = PortletResourceBundleWithLocale.getInstance( portletDefinition, locale, classLoader );
+                portletLocales.put( locale.toString(), resourceBundle );
+            }
+            return resourceBundle;
+        }
+/*
         Locale temp = null;
         if (!PortletService.isEmpty( locale.getVariant()) ) {
             temp = new Locale( locale.getLanguage(), locale.getCountry() );
@@ -91,5 +100,6 @@ public final class PortletResourceBundle {
         }
 
         return new PortletResourceBundleEmpty();
+*/
     }
 }

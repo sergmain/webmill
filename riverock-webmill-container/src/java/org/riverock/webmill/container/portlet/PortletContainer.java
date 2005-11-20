@@ -46,7 +46,6 @@ import org.riverock.webmill.container.impl.PortletContextImpl;
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.resource.PortletResourceBundle;
-import org.riverock.webmill.container.resource.PortletResourceBundleProvider;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -317,10 +316,9 @@ public final class PortletContainer implements Serializable {
                 new PortletContextImpl(portletItem.getServletConfig().getServletContext(), portalInstance.getPortalName(), portalInstance.getPortalMajorVersion(), portalInstance.getPortalMinorVersion());
 
             PortletResourceBundle resourceBundle =
-                PortletResourceBundleProvider.getInstance( portletDefinition, portalInstance.getSupportedLocales() );
+                PortletResourceBundle.getInstance( portletDefinition, classLoader );
 
             portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
-
 
             if ( isNotUrl ) {
                 Constructor constructor = null;
@@ -380,7 +378,7 @@ public final class PortletContainer implements Serializable {
         if (portletName == null) {
             return null;
         }
-
+/*
         if (DEBUG) {
             Iterator<PortletItem> it = portletItems.iterator();
             while (it.hasNext()) {
@@ -388,7 +386,7 @@ public final class PortletContainer implements Serializable {
                 System.out.println("portletName = " + portletItem.getPortletDefinition().getPortletName()+ ", portlet context: " + portletItem.getUniqueName() );
             }
         }
-
+*/
         Iterator<PortletItem> it = portletItems.iterator();
         while (it.hasNext()) {
             PortletItem portletItem = it.next();
