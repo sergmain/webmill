@@ -411,6 +411,16 @@ public class PortletDefinition implements Serializable {
     }
 
     /**
+     * Method getInitParam
+     */
+    public List<InitParam> getInitParamAsRef() {
+        if (_initParamList==null) {
+             _initParamList = new ArrayList<InitParam>();
+        }
+        return _initParamList;
+    }
+
+    /**
      * Method getInitParamCount
      */
     public int getInitParamCount() {
