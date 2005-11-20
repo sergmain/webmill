@@ -49,18 +49,12 @@ public final class PortletContextImpl implements PortletContext {
     }
 
     public String getServerInfo() {
-        return portalName + '/' + portalMajorVersion + '.' + portalMinorVersion;
+        return portalName;
+//        return portalName + '/' + portalMajorVersion + '.' + portalMinorVersion;
     }
 
     public PortletRequestDispatcher getRequestDispatcher( final String path ) {
         RequestDispatcher rd = servletContext.getRequestDispatcher( path );
-/*
-        if ( log.isDebugEnabled() ) {
-            log.debug( "ServletContext: " + servletContext );
-            log.debug( "RequestDispatcher: " + rd ); 
-        }
-*/
-
         return new PortletRequestDispatcherImpl( rd );
     }
 
