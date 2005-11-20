@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="me.askmore (Sergey Maslyukov)" basedir="." default="all">
+
+    <property name="host-name" value="me.askmore"/>
+    <property name="server-port" value="80"/>
+    <property name="test-url" value="/ctx/ru_RU,me.askmore-dynamic,/ctx?mill.context="/>
+    <property name="login-url" value="/page/ru_RU/login"/>
+    <property name="username" value="qqq"/>
+    <property name="password" value="www"/>
+
+    <property name="accept-language" value="en"/>
+    <property name="user-agent" value="Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)"/>
+
+    <import file="webtest-abstract.xml"/>
+</project>

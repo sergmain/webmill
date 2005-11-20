@@ -1,0 +1,5 @@
+        <enableJavaScript description="Enable JavaScript" enable="true"/>
+        <storeDynamicProperty description="Set portletName property" name="portletName" value="${portletName}"/>
+        <storeDynamicProperty description="Set blackMagicNumber property" name="blackMagicNumber" value="${black-magic-number}"/>
+
+

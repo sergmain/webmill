@@ -1,0 +1,2 @@
+                <!-- Log out -->
+                <clicklink description="Click on 'Log out'" label="Log out" save="logout-page-"/>

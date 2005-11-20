@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project SYSTEM "../portal.dtd">
+
+<project name="Portlet TCK webtest" basedir="../..">
+
+    <import file="../../webtest-constants.xml" />
+
+    <property name="portletName" value="portlet-tck-action-requet"/>
+    <property file="webtest/webtest-regexp.properties"/>
+
+    <import file="../../global-properties.xml" />
+
+    <target name="all">
+        <echo message="Start all action requet tests"/>
+        <antcall target="clean-prepare"/>
+        <antcall target="GetAttributeNamesTest"/>
+        <antcall target="GetAttributeTest"/>
+        <antcall target="GetAttributeInvalidTest"/>
+        <antcall target="GetAuthTypeWithoutProtectionTest"/>
+        <antcall target="GetContextPathSyntaxTest"/>
+
+        <antcall target="GetLocaleTest"/>
+        <antcall target="GetPortletModeTest"/>
+        <antcall target="GetPreferencesTest"/>
+        <antcall target="GetPortletSessionTest"/>
+    </target>
+
+    <target name="GetAttributeNamesTest">
+        <echo message="Start GetAttributeNamesTest test"/>
+        <testSpec name="GetAttributeNamesTest">
+            &configDeclare;
+            <steps description="GetAttributeNamesTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetAttributeNamesTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetAttributeNamesTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetAttributeTest">
+        <echo message="Start GetAttributeTest test"/>
+        <testSpec name="GetAttributeTest">
+            &configDeclare;
+            <steps description="GetAttributeTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetAttributeTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetAttributeTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetAttributeInvalidTest">
+        <echo message="Start GetAttributeInvalidTest test"/>
+        <testSpec name="GetAttributeInvalidTest">
+            &configDeclare;
+            <steps description="GetAttributeInvalidTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetAttributeInvalidTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetAttributeInvalidTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetAuthTypeWithoutProtectionTest">
+        <echo message="Start GetAuthTypeWithoutProtectionTest test"/>
+        <testSpec name="GetAuthTypeWithoutProtectionTest">
+            &configDeclare;
+            <steps description="GetAuthTypeWithoutProtectionTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetAuthTypeWithoutProtectionTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetAuthTypeWithoutProtectionTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetContextPathSyntaxTest">
+        <echo message="Start GetContextPathSyntaxTest test"/>
+        <testSpec name="GetContextPathSyntaxTest">
+            &configDeclare;
+            <steps description="GetContextPathSyntaxTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetContextPathSyntaxTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetContextPathSyntaxTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetLocaleTest">
+        <echo message="Start GetLocaleTest test"/>
+        <testSpec name="GetLocaleTest">
+            &configDeclare;
+            <steps description="GetLocaleTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetLocaleTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetLocaleTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetPreferencesTest">
+        <echo message="Start GetPreferencesTest test"/>
+        <testSpec name="GetPreferencesTest">
+            &configDeclare;
+            <steps description="GetPreferencesTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetPreferencesTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetPreferencesTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetPortletSessionTest">
+        <echo message="Start GetPortletSessionTest test"/>
+        <testSpec name="GetPortletSessionTest">
+            &configDeclare;
+            <steps description="GetPortletSessionTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetPortletSessionTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetPortletSessionTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetPortletModeTest">
+        <echo message="Start GetPortletModeTest test"/>
+        <testSpec name="GetPortletModeTest">
+            &configDeclare;
+            <steps description="GetPortletModeTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetPortletModeTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetPortletModeTest Test PASSED."/>
+                &testWithClickOnLink;
+            </steps>
+        </testSpec>
+    </target>
+
+</project>

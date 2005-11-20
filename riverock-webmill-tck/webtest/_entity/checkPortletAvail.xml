@@ -1,0 +1,1 @@
+                <not description="Check what portlet error is not present"><verifytext description="Check what portlet error is not present" text="${portlet-error}"/></not>

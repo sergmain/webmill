@@ -1,0 +1,9 @@
+        <storeDynamicProperty description="Set isNotLoggin flag to true" name="isNotLoggin" value="true"/>
+        <invoke description="get Login Page" url="${login-url}" save="login-"/>
+
+        <setinputfield description="set user name" name="${username-form-name}" value="${username}"/>
+        <setinputfield description="set password" name="${password-form-name}" value="${password}"/>
+        <enableJavaScript enable="false"/>
+        <clickbutton label="Log in" description="Click the login button" save="after-login-"/>
+        <enableJavaScript enable="true"/>
+

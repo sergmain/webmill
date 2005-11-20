@@ -1,0 +1,3 @@
+        <invoke description="Invoke welcome frame" url="${portlets-page}" save="welcome-page-"/>
+        &checkPortletAvail;
+<!--        <verifytext description="Home Page follows if login ok" text="#{portletName}"/>-->

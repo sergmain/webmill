@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!ENTITY configDeclare     			    SYSTEM "_entity/configDeclare.xml">
+<!ENTITY loginProcess     			    SYSTEM "_entity/loginProcess.xml">
+<!ENTITY logoutProcess     			    SYSTEM "_entity/logoutProcess.xml">
+<!ENTITY invokeStartPage     		    SYSTEM "_entity/invokeStartPage.xml">
+<!ENTITY checkPortletAvail     		    SYSTEM "_entity/checkPortletAvail.xml">
+<!ENTITY initGlobalProperties     	    SYSTEM "_entity/initGlobalProperties.xml">
+
+<!ENTITY testWithoutClickLink     	    SYSTEM "_entity/testWithoutClickLink.xml">
+<!ENTITY testWithClickOnLink     	    SYSTEM "_entity/testWithClickOnLink.xml">
+<!ENTITY invokePortlet                      SYSTEM "_entity/invokePortlet.xml">
+
+
+
