@@ -32,7 +32,9 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
 public final class PortletContextImpl implements PortletContext {
-//    private final static Logger log = Logger.getLogger( PortletContextImpl.class );
+
+    private final static int PORTLET_API_MAJOR_VERSION = 1;
+    private final static int PORTLET_API_MINOR_VERSION = 0;
 
     private ServletContext servletContext;
     private String portalName;
@@ -72,11 +74,11 @@ public final class PortletContextImpl implements PortletContext {
     }
 
     public int getMajorVersion() {
-        return portalMajorVersion;
+        return PORTLET_API_MAJOR_VERSION;
     }
 
     public int getMinorVersion() {
-        return portalMinorVersion;
+        return PORTLET_API_MINOR_VERSION;
     }
 
     public String getMimeType( final String file ) {
