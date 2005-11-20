@@ -27,7 +27,9 @@ package org.riverock.webmill.container.impl;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Collections;
-import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
@@ -79,7 +81,12 @@ public final class PortletConfigImpl implements PortletConfig {
         return PortletService.getStringParam(portletDefinition, name);
     }
 
-    public java.util.Enumeration<InitParam> getInitParameterNames(){
-        return Collections.enumeration( Arrays.asList( portletDefinition.getInitParam() ) );
+    public java.util.Enumeration getInitParameterNames(){
+        Iterator<InitParam> iterator = portletDefinition.getInitParamAsRef().iterator();
+        Set<String> names = new HashSet<String>();
+        while(iterator.hasNext()) {
+            names.add( iterator.next().getName() );
+        }
+        return Collections.enumeration( names );
     }
 }
