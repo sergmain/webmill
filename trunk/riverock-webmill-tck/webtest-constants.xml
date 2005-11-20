@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="BCPertal webtest constants" basedir=".">
+
+    <property name="task-list-portlet-name"         value="GRW Task List Portlet"/>
+    <property name="plans-portlet-name"             value="GRW Plans Portlet"/>
+    <property name="forms-management-portlet-name"  value="GRW Forms Management Portlet"/>
+    <property name="plans-builder-portlet-name"     value="GRW Plans Builder Portlet"/>
+    <property name="bia-list-manager-portlet-name"     value="GRW BIA List Manager Portlet"/>
+
+</project>

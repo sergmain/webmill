@@ -1,0 +1,14 @@
+            <config description="Process config"
+                host="${host-name}"
+                protocol="http"
+                port="${server-port}"
+                basepath=""
+                saveresponse="false"
+                resultpath="${build-webtest-result.dir}"
+                showhtmlparseroutput="true"
+                autorefresh=""
+
+                >
+                <header name="User-Agent" value="${user-agent}"/>
+                <header name="Accept-Language" value="${accept-language}"/>
+            </config>

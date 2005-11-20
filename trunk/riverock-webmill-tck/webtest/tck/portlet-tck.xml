@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project SYSTEM "../portal.dtd">
+
+<project name="Portlet TCK webtest" basedir="../..">
+
+    <target name="all">
+        <echo message="Start all tests"/>
+        <ant antfile="webtest/tck/action-request-test.xml" target="all" inheritall="true" />
+        <ant antfile="webtest/tck/class-loader-test.xml" target="all" inheritall="true" />
+        <ant antfile="webtest/tck/portlet-config-test.xml" target="all" inheritall="true" />
+        <ant antfile="webtest/tck/portlet-context-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="action-request">
+        <echo message="Start all tests"/>
+        <ant antfile="webtest/tck/action-request-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="class-loader">
+        <echo message="Start all tests"/>
+        <ant antfile="webtest/tck/class-loader-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="portlet-config">
+        <echo message="Start all tests"/>
+        <ant antfile="webtest/tck/portlet-config-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="portlet-context">
+        <echo message="Start all tests"/>
+        <ant antfile="webtest/tck/portlet-context-test.xml" target="all" inheritall="true" />
+    </target>
+
+</project>

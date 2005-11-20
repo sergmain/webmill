@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE project SYSTEM "../portal.dtd">
+
+<project name="Portlet TCK webtest" basedir="../..">
+
+    <import file="../../webtest-constants.xml" />
+
+    <property name="portletName" value="portlet-tck-class-loader"/>
+    <property file="webtest/webtest-regexp.properties"/>
+
+    <import file="../../global-properties.xml" />
+
+    <target name="all">
+        <echo message="Start all class loader tests"/>
+        <antcall target="clean-prepare"/>
+        <antcall target="GetResourceInJarTest"/>
+    </target>
+
+    <target name="GetResourceInJarTest">
+        <echo message="Start GetResourceInJarTest test"/>
+        <testSpec name="GetResourceInJarTest">
+            &configDeclare;
+            <steps description="GetResourceInJarTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetResourceInJarTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetResourceInJarTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+</project>

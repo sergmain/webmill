@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="webtest for abstract host" basedir="." default="">
+
+    <target name="all" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="all" inheritall="true" />
+    </target>
+    <target name="action-request" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="action-request" inheritall="true" />
+    </target>
+    <target name="class-loader" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="class-loader" inheritall="true" />
+    </target>
+    <target name="portlet-context" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="portlet-context" inheritall="true" />
+    </target>
+    <target name="portlet-config" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="portlet-config" inheritall="true" />
+    </target>
+</project>

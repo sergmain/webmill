@@ -1,0 +1,4 @@
+    <storeDynamicProperty description="Portlet test url" name="portlet-test-url"
+        value="${test-url}#{portlet-test-name}"/>
+
+    <invoke description="Test portlet" url="#{portlet-test-url}" save="portlet-#{portlet-test-name}-"/>
