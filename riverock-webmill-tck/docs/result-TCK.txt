@@ -309,20 +309,6 @@ java.lang.NullPointerException
 Total: 20.  Passed: 8.
 
 
-PortletException
-=========================================================================
-- PortletExceptionCtr1Test Test PASSED. 
-- PortletExceptionCtr2Test Test PASSED. 
-- PortletExceptionCtr3Test Test PASSED. 
-- PortletExceptionCtr4Test Test PASSED. 
-- PrintStackTraceTest Test PASSED. 
-- PrintStackTraceStreamTest Test PASSED. 
-- PrintStackTraceWriterTest Test PASSED. 
-
-
-Total: 7.  Passed: 7.
-
-
 
 PortletMode
 =========================================================================
@@ -598,15 +584,6 @@ Actual Values:
 
 
 Total: 12.  Passed: 10.
-
-
-
-PortletSession_distributableapp
-=========================================================================
-- CheckPortletInDistributeAppTest Test PASSED.
-
-
-Total: 1.  Passed: 1.
 
 
 
@@ -921,38 +898,6 @@ taglib
 
 Total: 13.  Passed: 2.
 
-
-
-UnavailableException
-=========================================================================
-- UnavailableExceptionCtr1Test Test PASSED.
-- UnavailableExceptionCtr2Test Test PASSED. 
-- IsPermanentTest Test PASSED. 
-
-
-Total: 3.  Passed: 3.
-
-
-
-UnmodifiableException
-=========================================================================
-- UnmodifiableExceptionCtr1Test Test PASSED. 
-- UnmodifiableExceptionCtr2Test Test PASSED. 
-- UnmodifiableExceptionCtr3Test Test PASSED. 
-
-
-Total: 3.  Passed: 3.
-
-
-
-ValidatorException
-=========================================================================
-- ValidatorExceptionCtr1Test Test PASSED. 
-- ValidatorExceptionCtr2Test Test PASSED.
-- ValidatorExceptionCtr3Test Test PASSED. 
-
-
-Total: 3.  Passed: 3.
 
 
 WindowState

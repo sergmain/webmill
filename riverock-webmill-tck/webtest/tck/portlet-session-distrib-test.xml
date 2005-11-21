@@ -31,28 +31,31 @@
 
     <import file="../../webtest-constants.xml" />
 
-    <property name="portletName" value="portlet-tck-class-loader"/>
+    <property name="portletName" value="portlet-tck-portlet-session-distrib"/>
     <property file="webtest/webtest-regexp.properties"/>
 
     <import file="../../global-properties.xml" />
 
     <target name="all">
-        <echo message="Start all class loader tests"/>
+        <echo message="Start all portlet session distributable tests"/>
         <antcall target="clean-prepare"/>
-        <antcall target="GetResourceInJarTest"/>
+        <antcall target="CheckPortletInDistributeAppTest"/>
     </target>
 
-    <target name="GetResourceInJarTest">
-        <echo message="Start GetResourceInJarTest test"/>
-        <testSpec name="GetResourceInJarTest">
+    <target name="CheckPortletInDistributeAppTest">
+        <echo message="Start CheckPortletInDistributeAppTest test"/>
+        <testSpec name="CheckPortletInDistributeAppTest">
             &configDeclare;
             <steps description="GetResourceInJarTest">
                 &initGlobalProperties;
                 <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
-                    value="GetResourceInJarTestPortlet"/>
+                    value="CheckPortletInDistributeAppTestPortlet"/>
                 <storeDynamicProperty description="Success test result" name="success-test-result"
-                    value="GetResourceInJarTest Test PASSED."/>
-                &testWithoutClickLink;
+                    value="CheckPortletInDistributeAppTest Test PASSED."/>
+
+                &testWithClickOnLink;   
+<!--                &testWithoutClickLink; -->
+
             </steps>
         </testSpec>
     </target>

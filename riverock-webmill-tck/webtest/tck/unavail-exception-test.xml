@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+/*
+ * webmill-TCK - webtest based tests for jsr168 TCK
+ *
+ * Copyright (C) 2005, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!DOCTYPE project SYSTEM "../portal.dtd">
+
+<project name="Portlet TCK webtest" basedir="../..">
+
+    <import file="../../webtest-constants.xml" />
+
+    <property name="portletName" value="portlet-tck-unavail-exception"/>
+    <property file="webtest/webtest-regexp.properties"/>
+
+    <import file="../../global-properties.xml" />
+
+    <target name="all">
+        <echo message="Start all class loader tests"/>
+        <antcall target="clean-prepare"/>
+        <antcall target="UnavailableExceptionCtr1Test"/>
+        <antcall target="UnavailableExceptionCtr2Test"/>
+        <antcall target="IsPermanentTest"/>
+    </target>
+
+    <target name="UnavailableExceptionCtr1Test">
+        <echo message="Start UnavailableExceptionCtr1Test test"/>
+        <testSpec name="UnavailableExceptionCtr1Test">
+            &configDeclare;
+            <steps description="UnavailableExceptionCtr1Test">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="UnavailableExceptionCtr1TestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="UnavailableExceptionCtr1Test Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="UnavailableExceptionCtr2Test">
+        <echo message="Start UnavailableExceptionCtr2Test test"/>
+        <testSpec name="UnavailableExceptionCtr2Test">
+            &configDeclare;
+            <steps description="UnavailableExceptionCtr2Test">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="UnavailableExceptionCtr2TestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="UnavailableExceptionCtr2Test Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="IsPermanentTest">
+        <echo message="Start IsPermanentTest test"/>
+        <testSpec name="IsPermanentTest">
+            &configDeclare;
+            <steps description="IsPermanentTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="IsPermanentTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="IsPermanentTest Test PASSED."/>
+                &testWithoutClickLink;
+            </steps>
+        </testSpec>
+    </target>
+
+</project>
