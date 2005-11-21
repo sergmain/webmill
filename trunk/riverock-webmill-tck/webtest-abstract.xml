@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+/*
+ * webmill-TCK - webtest based tests for jsr168 TCK
+ *
+ * Copyright (C) 2005, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!-- $Id$ -->
 <project name="webtest for abstract host" basedir="." default="">
 
     <target name="all" description="run portlet's TCK for specific host" >
@@ -15,5 +42,20 @@
     </target>
     <target name="portlet-config" description="run portlet's TCK for specific host" >
         <ant antfile="webtest/tck/portlet-tck.xml" target="portlet-config" inheritall="true" />
+    </target>
+    <target name="portlet-exception" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="portlet-exception" inheritall="true" />
+    </target>
+    <target name="portlet-session-distrib" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="portlet-session-distrib" inheritall="true" />
+    </target>
+    <target name="unavail-exception" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="unavail-exception" inheritall="true" />
+    </target>
+    <target name="unmodif-exception" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="unmodif-exception" inheritall="true" />
+    </target>
+    <target name="validator-exception" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="validator-exception" inheritall="true" />
     </target>
 </project>
