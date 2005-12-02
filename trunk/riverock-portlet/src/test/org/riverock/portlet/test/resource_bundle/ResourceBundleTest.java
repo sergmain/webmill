@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 
-import org.riverock.webmill.container.resource.XmlResourceBundle;
+import org.riverock.webmill.container.resource.CustomXmlResourceBundle;
 
 /**
  * @author smaslyukov
@@ -27,18 +27,18 @@ public class ResourceBundleTest {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream stream = ResourceBundleTest.class.getResourceAsStream( "/org/riverock/portlet/resource/SiteHamradio_ru_RU.xml" );
 
-        XmlResourceBundle.PairList pairList;
+        CustomXmlResourceBundle.PairList pairList;
         Digester digester = new Digester();
         digester.setValidating(false);
 
-        digester.addObjectCreate("resource", XmlResourceBundle.PairList.class);
+        digester.addObjectCreate("resource", CustomXmlResourceBundle.PairList.class);
 
-        digester.addObjectCreate("resource/pair", XmlResourceBundle.Pair.class);
+        digester.addObjectCreate("resource/pair", CustomXmlResourceBundle.Pair.class);
         digester.addSetProperties("resource/pair", "key", "key");
         digester.addSetProperties("resource/pair", "value", "value");
         digester.addSetNext("resource/pair", "addPair");
 
-        pairList = (XmlResourceBundle.PairList)digester.parse(stream);
+        pairList = (CustomXmlResourceBundle.PairList)digester.parse(stream);
 
         ResourceBundle bundle = ResourceBundle.getBundle( "org.riverock.portlet.resource.SiteHamradio", locale );
 
