@@ -93,8 +93,14 @@ public abstract class ActionFactoryImpl implements ActionFactory {
 
         forward = getForwardPath(actionBean, forwardName);
         if (forward == null) {
-            throw new IllegalStateException("Forward with name '"+forwardName+"' not found");
+            if (actionBean.getDefaultForward()==null) {
+                throw new IllegalStateException("Forward with name '"+forwardName+"' not found");
+            }
+            else {
+                return actionBean.getDefaultForward();
+            }
         }
+
         if (log.isDebugEnabled()) {
             log.debug("Forward path: " + forward.getPath());
         }
