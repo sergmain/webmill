@@ -518,27 +518,16 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<name>locale-name-package</name>
 			<value>mill.locale._price_list</value>
 		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.register_process</portlet-name>
-		<portlet-class>org.riverock.portlet.register.RegisterProcessPortlet</portlet-class>
 		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale._price_list</value>
+			<name>action-config</name>
+			<value>/WEB-INF/action/register-action.xml</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
+		<resource-bundle>org.riverock.portlet.register.i18n.Register</resource-bundle>
 		<portlet-info>
-			<title>Portlet title</title>
+			<title>Registration portlet</title>
 		</portlet-info>
 	</portlet>
 	<portlet>
