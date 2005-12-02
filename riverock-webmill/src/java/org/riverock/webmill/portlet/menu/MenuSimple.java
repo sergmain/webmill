@@ -33,7 +33,6 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortletURL;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,21 +81,17 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
-//    private ResourceBundle bundle = null;
 
     public void setParameters( final RenderRequest renderRequest, final RenderResponse renderResponse, final PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;
-//        this.bundle = bundle;
     }
 
-    protected void finalize() throws Throwable {
+    protected void destroy() {
         renderRequest = null;
         renderResponse = null;
         menuSimple = null;
         currentMenuModule = null;
-
-        super.finalize();
     }
 
     public MenuSimple() {
@@ -186,10 +181,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private void processInstance( MenuInterface menu,  Long currentCtxId )
-        throws PortletException
-    {
-        initMenuSimple( menu, currentCtxId );
+    private void processInstance(MenuInterface menu, Long currentCtxId) throws PortletException {
+        initMenuSimple(menu, currentCtxId);
         processPortletParameters();
     }
 
