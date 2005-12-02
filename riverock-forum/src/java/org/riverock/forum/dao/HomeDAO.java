@@ -101,8 +101,14 @@ public class HomeDAO {
                     forumConcrete.setModeratorName(
                         StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME"), RsetTools.getString(rs, "MIDDLE_NAME"), RsetTools.getString(rs, "LAST_NAME") )
                     );
+                    String firstName = RsetTools.getString(rs, "FIRST_NAME2");
+                    String middleName = RsetTools.getString(rs, "MIDDLE_NAME2");
+                    String lastName = RsetTools.getString(rs, "LAST_NAME2");
+                    if (log.isDebugEnabled()) {
+                        log.debug("first: " + firstName + ", middle: " + middleName + ", last; " + lastName );
+                    } 
                     forumConcrete.setLastPosterName(
-                        StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME2"), RsetTools.getString(rs, "MIDDLE_NAME2"), RsetTools.getString(rs, "LAST_NAME2") )
+                        StringTools.getUserName( firstName, middleName, lastName )
                     );
 
                     if (forumConcrete.getF_topics()!=0) {
