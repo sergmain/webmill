@@ -9,7 +9,7 @@
 			<TR>
 				<TD>
 <%--                          <a href="<c:out value='${genericBean.forumHomeUrl}'/>">--%>
-<%--                             <IMG SRC="/riverock/forum/img/lb_logo.gif" WIDTH="253" HEIGHT="32" BORDER="0" ALT="">--%>
+<%--                             <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lb_logo.gif" WIDTH="253" HEIGHT="32" BORDER="0" ALT="">--%>
 <%--                          </a>--%>
                 </TD>
 				<TD align="right">
