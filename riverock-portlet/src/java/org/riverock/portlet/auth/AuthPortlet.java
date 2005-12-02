@@ -1,3 +1,27 @@
+/*
+ * org.riverock.portlet -- Portlet Library
+ *
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock -- The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
 package org.riverock.portlet.auth;
 
 import java.io.IOException;
@@ -9,15 +33,13 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.portlet.portlets.AbstractPortlet;
 import org.riverock.portlet.portlets.PortletErrors;
 import org.riverock.portlet.portlets.bean.GenericBean;
 import org.riverock.portlet.main.Constants;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.request.WebmillPortletModuleRequestImpl;
 import org.riverock.module.web.response.ModuleResponse;
@@ -39,7 +61,7 @@ import org.riverock.webmill.container.tools.PortletService;
  *         $Id$
  */
 public class AuthPortlet extends AbstractPortlet {
-    private static final Log log = LogFactory.getLog(AuthPortlet.class);
+    private static final Logger log = Logger.getLogger(AuthPortlet.class);
 
     public String processSystemError(ModuleRequest request, ResourceBundle resourceBundle) {
         return PortletErrors.systemError(request, resourceBundle);
@@ -55,10 +77,7 @@ public class AuthPortlet extends AbstractPortlet {
             }
         }
         String forwardPage = null;
-        DatabaseAdapter adapter = null;
         try {
-            adapter = DatabaseAdapter.getInstance();
-
             ModuleRequest request = new WebmillPortletModuleRequestImpl(actionRequest);
             ModuleResponse response = new PortletModuleResponseImpl(actionResponse);
             UrlProvider urlProvider = new WebmillPortletUrlProviderImpl(request, response);
@@ -91,8 +110,6 @@ public class AuthPortlet extends AbstractPortlet {
             throw new PortletException(es, e);
         }
         finally {
-            DatabaseAdapter.close( adapter );
-            adapter = null;
         }
 
         if (forwardPage == null) {

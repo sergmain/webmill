@@ -4,7 +4,7 @@ import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.action.Action;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.user.ModuleUser;
-import org.riverock.portlet.auth.dao.DAOFactory;
+import org.riverock.portlet.auth.dao.AuthDAOFactory;
 import org.riverock.portlet.auth.dao.BindIndexDAO;
 import org.riverock.portlet.auth.bean.BindUserListBean;
 import org.riverock.portlet.main.Constants;
@@ -18,7 +18,7 @@ import org.riverock.portlet.main.Constants;
 public class BindChangeAction implements Action {
 
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {
-        DAOFactory daof = DAOFactory.getDAOFactory();
+        AuthDAOFactory daof = AuthDAOFactory.getDAOFactory();
 
         ModuleUser auth = moduleActionRequest.getRequest().getUser();
 
