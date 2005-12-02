@@ -61,12 +61,14 @@ public class StringTools {
         if (!StringTools.isEmpty(lastName)) {
             s += lastName;
         }
-
+        
         if (StringTools.isEmpty(s)) {
-            return "unknown";
+//            return "unknown";
+            return null;
         }
         else {
-            return StringEscapeUtils.escapeXml(s);
+            return s;
+//            return StringEscapeUtils.escapeXml(s);
         }
     }
 
