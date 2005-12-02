@@ -34,23 +34,19 @@ package org.riverock.interfaces.portlet.menu;
  * $Id$
  */
 public interface MenuLanguageInterface{
-    int getMenuCount();
+    public String getIndexTemplate();
 
-    MenuInterface getMenu(int index)throws IndexOutOfBoundsException;
+    public MenuItemInterface getIndexMenuItem();
 
-    String getIndexTemplate();
+    public MenuInterface getDefault();
 
-    MenuItemInterface getIndexMenuItem();
+    public MenuInterface getCatalogByCode( String code );
 
-    MenuInterface getDefault();
+    public MenuItemInterface searchMenuItem(Long id);
 
-    MenuInterface getCatalogByCode( String code );
+    public String getLocaleStr();
 
-    MenuItemInterface searchMenuItem(Long id);
+    public String getLang();
 
-    String getLocaleStr();
-
-    String getLang();
-
-    void reinit();
+    public void reinit();
 }
