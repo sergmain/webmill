@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-module\src-schema\xsd\riverock-module-action.xsd">
+	<default-action>home</default-action>
+	<role>webmill.guest</role>
+	<role>webmill.forum-user</role>
+	<role>webmill.forum-admin</role>
+	<role>webmill.root</role>
+	<default-forward name="access-denied" path="/riverock/forum/jsp/access-denied.jsp"/>
+	<default-forward name="not-logged" path="/riverock/forum/jsp/not-logged.jsp"/>
+	<default-forward name="error" path="/riverock/forum/jsp/action-message.jsp"/>
+	<default-forward name="system-error" path="/riverock/forum/jsp/action-message.jsp"/>
+	<action name="Help action" path="help" default-forward="/riverock/forum/jsp/help.jsp" type="org.riverock.forum.action.HelpAction"/>
+	<action name="Home action" path="home" type="org.riverock.forum.action.HomeAction">
+		<forward name="ok" path="/riverock/forum/jsp/home.jsp"/>
+	</action>
+	<action name="Forum list action" path="forum" type="org.riverock.forum.action.ForumAction">
+		<forward name="ok" path="/riverock/forum/jsp/forum.jsp"/>
+	</action>
+	<action name="Topic action" path="topic" type="org.riverock.forum.action.TopicAction">
+		<forward name="ok" path="/riverock/forum/jsp/topic.jsp"/>
+	</action>
+	<action name="Post action" path="post" type="org.riverock.forum.action.PostAction">
+		<role>webmill.foum-user</role>
+		<role>webmill.forum-admin</role>
+		<forward name="ok" path="/riverock/forum/jsp/post.jsp"/>
+	</action>
+	<action name="Edit action" path="edit-message" type="org.riverock.forum.action.EditMessageAction">
+		<role>webmill.foum-user</role>
+		<role>webmill.forum-admin</role>
+		<forward name="ok" path="/riverock/forum/jsp/edit-message.jsp"/>
+	</action>
+	<action name="Commit edit action" path="commit-edit-message" type="org.riverock.forum.action.CommitEditMessageAction" is-redirect="true">
+		<role>webmill.foum-user</role>
+		<role>webmill.forum-admin</role>
+	</action>
+	<action name="Post process action" path="postp" type="org.riverock.forum.action.PostPAction" is-redirect="true">
+		<role>webmill.foum-user</role>
+		<role>webmill.forum-admin</role>
+	</action>
+	<action name="Admin forum action" path="admin-forum" type="org.riverock.forum.action.AdminForumAction">
+		<role>webmill.forum-admin</role>
+		<role>webmill.root</role>
+		<forward name="ok" path="/riverock/forum/jsp/admin-forum.jsp"/>
+	</action>
+</action-config>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<action-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-module\src-schema\xsd\riverock-module-action.xsd">
+	<default-action>manage-forum-list</default-action>
+	<role>webmill.forum-admin</role>
+	<role>webmill.root</role>
+	<default-forward name="access-denied" path="/riverock/forum/jsp/access-denied.jsp"/>
+	<default-forward name="not-logged" path="/riverock/forum/jsp/not-logged.jsp"/>
+	<default-forward name="error" path="/riverock/forum/jsp/action-message.jsp"/>
+    <action name="Manage forum list" path="manage-forum-list" type="org.riverock.forum.action.ManageForumListAction">
+        <forward name="ok" path="/riverock/forum/jsp/manage-forum-list.jsp"/>
+    </action>
+</action-config>
