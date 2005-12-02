@@ -74,7 +74,7 @@
     </path>
 
     <property name="www.dir" value="c:\opt2\_www"/>
-    <property name="context.war.name" value="mill.war"/>
+    <property name="context.war.name" value="webmill-portal.war"/>
 
     <fileset dir="${lib.dir}/" id="web-inf-lib" >
         <include name="${riverock-sso.lib}"/>
