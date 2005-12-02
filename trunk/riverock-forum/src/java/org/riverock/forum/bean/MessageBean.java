@@ -25,7 +25,8 @@ public class MessageBean {
     }
 
     public void setContent(String content) {
-        this.content = StringTools.encodeXml(content);
+//        this.content = StringTools.encodeXml(content);
+        this.content = content;
     }
 
     public long getMessageId() {
