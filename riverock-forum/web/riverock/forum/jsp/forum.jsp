@@ -12,7 +12,7 @@
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
 	<tr>
 		<td>
-			<b><IMG SRC="/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">&nbsp;
+			<b><IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">&nbsp;
           <a href="<c:out value='${genericBean.forumHomeUrl}'/>"><c:out value="${genericBean.forumName}"/></A>
           &nbsp;&gt;&nbsp;<c:out value="${forumBean.f_name}"/></b>
 		</td>
@@ -28,7 +28,7 @@
 		</td>
 		<td align="right">
 			<A HREF="<c:out value="${forumBean.urlToPostThread}"/>">
-              <IMG SRC="/riverock/forum/img/post.gif" WIDTH="110" HEIGHT="26" BORDER=0 ALT="post">
+              <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/post.gif" WIDTH="110" HEIGHT="26" BORDER=0 ALT="post">
            </A>
 		</td>
 	</tr>
@@ -51,31 +51,31 @@
 		<td class="forum-td">
             <c:choose>
                  <c:when test="${topic.t_order > 0 && topic.t_locked > 0}">
-                    <IMG SRC="/riverock/forum/img/lockedSticky.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
+                    <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lockedSticky.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
                  </c:when>
                  <c:when test="${topic.t_order > 0}">
-                    <IMG SRC="/riverock/forum/img/sticky.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
+                    <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/sticky.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
                  </c:when>
                  <c:when test="${topic.t_locked > 0}">
-                    <IMG SRC="/riverock/forum/img/locked.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
+                    <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/locked.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
                  </c:when>
                  <c:when test="${topic.t_replies > 20}">
-                    <IMG SRC="/riverock/forum/img/hotTopic.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
+                    <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/hotTopic.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
                  </c:when>
                  <c:otherwise>
-                    <IMG SRC="/riverock/forum/img/topic.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
+                    <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/topic.gif" WIDTH="16" HEIGHT="16" BORDER="0" />
                  </c:otherwise>
             </c:choose>
 		</td>
 
 		<td class="forum-td" width="70%">
             <c:if test="${topic.t_iconid > 0}">
-                <img src="/riverock/forum/img/icons/<c:out value='${topic.t_iconid}'/>.gif" width="15" height="15" border="0">
+                <img src="<%= application.getRealPath("/") %>/riverock/forum/img/icons/<c:out value='${topic.t_iconid}'/>.gif" width="15" height="15" border="0">
             </c:if>
 			<A HREF="<c:out value='${genericBean.forumHomeUrl}'/>&action=topic&t_id=<c:out value='${topic.t_id}'/>"><c:out value="${topic.t_name}"/></A>
             <c:if test="${topic.countPages > 1}">
                 <br>
-                [ <IMG SRC="/riverock/forum/img/multipage.gif" WIDTH="10" HEIGHT="12" BORDER="0"> to page:
+                [ <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/multipage.gif" WIDTH="10" HEIGHT="12" BORDER="0"> to page:
                 <c:set var="isNotFirst" value="false"/>
                 <c:forEach begin="1" end="${topic.countPages}" var="index" >
                     <c:if test="${isNotFirst}">,</c:if>
@@ -114,7 +114,7 @@
 				<TD width="20%" ALIGN="right">
                     <c:if test="${forumBean.countPages > 1}">
                         <br>
-                        [ <IMG SRC="/riverock/forum/img/multipage.gif" WIDTH="10" HEIGHT="12" BORDER="0"> to page:
+                        [ <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/multipage.gif" WIDTH="10" HEIGHT="12" BORDER="0"> to page:
                         <c:set var="isNotFirst" value="false"/>
                         <c:forEach begin="1" end="${forumBean.countPages}" var="index" >
                             <c:if test="${isNotFirst}">,</c:if>
@@ -165,9 +165,9 @@
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
 	<tr>
 		<td>
-		 <IMG SRC="/riverock/forum/img/topic.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Topic&nbsp;&nbsp;<IMG SRC="/riverock/forum/img/hotTopic.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Hot Topic (More than 20 replies)<BR>
-      <IMG SRC="/riverock/forum/img/sticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Sticky Topic&nbsp;&nbsp;<IMG SRC="/riverock/forum/img/locked.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Locked Topic<BR>
-	  <IMG SRC="/riverock/forum/img/lockedSticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Locked Sticky Topic
+		 <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/topic.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Topic&nbsp;&nbsp;<IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/hotTopic.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Hot Topic (More than 20 replies)<BR>
+      <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/sticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Sticky Topic&nbsp;&nbsp;<IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/locked.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Locked Topic<BR>
+	  <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lockedSticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 >&nbsp;Locked Sticky Topic
 		</td>
 	</tr>
 </table>

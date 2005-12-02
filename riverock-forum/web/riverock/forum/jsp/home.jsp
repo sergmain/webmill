@@ -13,7 +13,7 @@
 	<tr>
 		<td>
 			<b>
-                <IMG SRC="/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">
+                <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">
                 <c:out value="${genericBean.forumName}"/>
             </b>
 		</td>

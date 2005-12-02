@@ -12,7 +12,7 @@
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
 	<tr>
 		<td>
-			<b><IMG SRC="/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER="0" valign="middle">
+			<b><IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER="0" valign="middle">
                  &nbsp;
                  <a href="<c:out value='${genericBean.forumHomeUrl}'/>"><c:out value="${genericBean.forumName}"/></A>
                  &nbsp;&gt;&nbsp;
@@ -89,7 +89,7 @@ function sCheck(){
 		<td>		
 			 <c:forEach begin="1" end="14" var="index">
 				<INPUT  name="tm_iconid" type="radio" value="<c:out value='${index}'/>">
-				<IMG border="0" height="15" width="15" src="/riverock/forum/img/icons/<c:out value='${index}'/>.gif">&nbsp;
+				<IMG border="0" height="15" width="15" src="<%= application.getRealPath("/") %>/riverock/forum/img/icons/<c:out value='${index}'/>.gif">&nbsp;
                 <c:if test="${ index == 7}">
                     <br>
                 </c:if>
