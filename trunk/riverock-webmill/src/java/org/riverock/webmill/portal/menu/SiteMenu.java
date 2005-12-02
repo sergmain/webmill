@@ -27,6 +27,8 @@ package org.riverock.webmill.portal.menu;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.Iterator;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
@@ -51,7 +53,7 @@ public final class SiteMenu {
 
     static {
         try {
-            Class c = new SiteMenu().getClass();
+            Class c = SiteMenu.class;
             SqlStatement.registerRelateClass( c, MenuLanguage.class );
             SqlStatement.registerRelateClass( c, GetSiteSupportLanguageWithIdSiteList.class );
         }
@@ -62,28 +64,11 @@ public final class SiteMenu {
         }
     }
 
-    private ArrayList menuLanguage = new ArrayList(2);  //List of MenuLanguage
-    private static Map siteMenuLaguage = new HashMap();
+    private List<MenuLanguageInterface> menuLanguage = new ArrayList<MenuLanguageInterface>();
+    private static Map<Long, SiteMenu> siteMenuLaguage = new HashMap<Long, SiteMenu>();
 
-    public int getMenuLanguageCount()
-    {
-        if (menuLanguage==null)
-            return 0;
-
-        return menuLanguage.size();
-    }
-
-    public MenuLanguageInterface getMenuLanguage( final int index )
-            throws java.lang.IndexOutOfBoundsException
-    {
-        if ((index < 0) || (index > menuLanguage.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-         if (menuLanguage==null)
-            return null;
-
-        return (MenuLanguageInterface)menuLanguage.get(index);
+    public List<MenuLanguageInterface> getMenuLanguage() {
+        return menuLanguage;
     }
 
     protected void finalize() throws Throwable
@@ -99,8 +84,22 @@ public final class SiteMenu {
 
     public SiteMenu(){}
 
+
+//    private static long lastReadData = 0;
+//    private final static long LENGTH_TIME_PERIOD = 10000;
+
     public static SiteMenu getInstance( final DatabaseAdapter db_, final Long idSite_) throws PortalException {
-        SiteMenu tempLangMenu = (SiteMenu)siteMenuLaguage.get( idSite_ );
+
+//        if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD ) {
+//            log.debug("#15.01.03 reinit cached value ");
+//
+//            synchronized(siteMenuLaguage) {
+//                siteMenuLaguage.clear();
+//                lastReadData = System.currentTimeMillis();
+//            }
+//        }
+
+        SiteMenu tempLangMenu = siteMenuLaguage.get( idSite_ );
 
         if (tempLangMenu!=null)
             return tempLangMenu;
@@ -114,9 +113,10 @@ public final class SiteMenu {
     }
 
     public MenuLanguageInterface getMenuLanguage( final String localeName) {
-        for (int i = 0; i < getMenuLanguageCount(); i++)
-        {
-            MenuLanguageInterface tempCat = getMenuLanguage(i);
+
+        Iterator<MenuLanguageInterface> it = menuLanguage.iterator();
+        while (it.hasNext()) {
+            MenuLanguageInterface tempCat = it.next();
 
             if (tempCat==null || tempCat.getLocaleStr()==null)
                 continue;
@@ -154,7 +154,7 @@ public final class SiteMenu {
     }
 
     public static SiteMenu getInstance( final DatabaseAdapter db_, final long id_) throws Exception {
-        return getInstance(db_, id_ );
+        return getInstance(db_, (Long)id_ );
     }
 
     public void reinit()
