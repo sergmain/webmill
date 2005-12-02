@@ -56,7 +56,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</init-param>
 		<init-param>
 			<name>wm-forum-action-config</name>
-			<value>/WEB-INF/config/forum-action.xml</value>
+			<value>/WEB-INF/action/forum-action.xml</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -75,7 +75,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</init-param>
 		<init-param>
 			<name>wm-forum-action-config</name>
-			<value>/WEB-INF/config/forum-action-manage-list.xml</value>
+			<value>/WEB-INF/action/forum-action-manage-list.xml</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
