@@ -188,7 +188,7 @@
     </patternset>
 
     <target name="war" depends="jar" >
-        <property name="war-file-name" value="${build.dir}/webmillportlet.war"/>
+        <property name="war-file-name" value="${build.dir}/riverock-portlets.war"/>
         <delete file="${war-file-name}"/>
         <war webxml="${web.dir}/WEB-INF/web.xml"
             warfile="${war-file-name}"
