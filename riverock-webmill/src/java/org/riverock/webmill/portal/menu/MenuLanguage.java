@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
@@ -60,38 +61,20 @@ public final class MenuLanguage implements MenuLanguageInterface {
         }
     }
 
-    private List menu = new ArrayList();  // List of Menu
+    private List<MenuInterface> menu = new ArrayList<MenuInterface>();
     private SiteSupportLanguageItemType item = null;
 
     public MenuLanguage(){}
-
-    public int getMenuCount(){
-        if (menu==null)
-            return 0;
-
-        return menu.size();
-    }
-
-    public MenuInterface getMenu(int index)throws java.lang.IndexOutOfBoundsException{
-        if ((index < 0) || (index > menu.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-         if (menu==null)
-            return null;
-
-        return (MenuInterface)menu.get(index);
-    }
 
     // return name of template for 'index' page
     public MenuItemInterface getIndexMenuItem(){
         if (log.isDebugEnabled()){
             log.debug("menu: "+menu);
-            log.debug( "getMenuCount(): "+getMenuCount() );
         }
 
-        for (int i = 0; i < menu.size(); i++){
-            MenuInterface catalog = (MenuInterface) menu.get(i);
+        Iterator<MenuInterface> iterator = menu.iterator();
+        while (iterator.hasNext()) {
+            MenuInterface catalog = iterator.next();
             MenuItemInterface item = catalog.getIndexMenuItem();
             if (item != null)
                 return item;
@@ -108,25 +91,23 @@ public final class MenuLanguage implements MenuLanguageInterface {
         return null;
     }
 
-    public MenuInterface getDefault()
-    {
-        for (int i = 0; i < menu.size(); i++)
-        {
-            MenuInterface catalog = (MenuInterface) menu.get(i);
+    public MenuInterface getDefault() {
+        Iterator<MenuInterface> iterator = menu.iterator();
+        while (iterator.hasNext()) {
+            MenuInterface catalog = iterator.next();
             if (catalog.getIsDefault())
                 return catalog;
         }
         return null;
     }
 
-    public MenuInterface getCatalogByCode( String code )
-    {
+    public MenuInterface getCatalogByCode( String code ) {
         if (code==null)
             return null;
 
-        for (int i = 0; i < menu.size(); i++)
-        {
-            MenuInterface catalog = (MenuInterface) menu.get(i);
+        Iterator<MenuInterface> iterator = menu.iterator();
+        while (iterator.hasNext()) {
+            MenuInterface catalog = iterator.next();
             if (code.equals( catalog.getCatalogCode()) )
                 return catalog;
         }
@@ -138,79 +119,70 @@ public final class MenuLanguage implements MenuLanguageInterface {
         if (id==null)
             return null;
 
-        for (int i = 0; i < getMenuCount(); i++)
-        {
-            MenuInterface menuTemp = getMenu(i);
-            MenuItemInterface ci = menuTemp.searchMenuItem(id);
-            if (ci!=null)
+        Iterator<MenuInterface> iterator = menu.iterator();
+        while (iterator.hasNext()) {
+            MenuInterface menu = iterator.next();
+            MenuItemInterface ci = menu.searchMenuItem(id);
+            if (ci!=null) {
                 return ci;
+            }
         }
         return null;
     }
 
-    public MenuLanguage(DatabaseAdapter db_, SiteSupportLanguageItemType item_)
-        throws Exception
-    {
-        if (item_==null)
+    public MenuLanguage(DatabaseAdapter db_, SiteSupportLanguageItemType item_) throws Exception {
+        if (item_ == null)
             return;
 
         this.item = item_;
 
-        if (log.isDebugEnabled())
-        {
+        if (log.isDebugEnabled()) {
             log.debug("#33.07.00 ");
             log.debug("ID_SITE_SUPPORT_LANGUAGE -  " + item_.getIdSiteSupportLanguage());
             log.debug("locale - " + getLocaleStr());
             log.debug("language - " + getLang());
         }
 
-        try
-        {
+        try {
             SiteCtxLangCatalogListType list =
-                    GetSiteCtxLangCatalogWithIdSiteSupportLanguageList.
-                    getInstance(db_, item_.getIdSiteSupportLanguage())
-                    .item;
+                GetSiteCtxLangCatalogWithIdSiteSupportLanguageList.
+                getInstance(db_, item_.getIdSiteSupportLanguage())
+                .item;
 
             if (log.isDebugEnabled())
-                log.debug("Count of SiteCtxLangCatalogListType: "+list.getSiteCtxLangCatalogCount());
+                log.debug("Count of SiteCtxLangCatalogListType: " + list.getSiteCtxLangCatalogCount());
 
-            for (int i=0; i<list.getSiteCtxLangCatalogCount(); i++)
-            {
-                SiteCtxLangCatalogItemType ic = list.getSiteCtxLangCatalog(i);
-
-                MenuInterface catalog = new Menu(db_, ic );
-
+            Iterator iterator = list.getSiteCtxLangCatalogAsReference().iterator();
+            while (iterator.hasNext()) {
+                SiteCtxLangCatalogItemType ic = (SiteCtxLangCatalogItemType) iterator.next();
+                MenuInterface catalog = new Menu(db_, ic);
                 menu.add(catalog);
             }
         }
-        catch(Exception e)
-        {
+        catch (Exception e) {
             log.error("Exception in MenuLanguage(....", e);
             throw e;
         }
-        catch(Error e)
-        {
+        catch (Error e) {
             log.error("Error in MenuLanguage(....", e);
             throw e;
         }
     }
 
-    public String getLocaleStr()
-    {
-        if (item==null)
+    public String getLocaleStr() {
+        if (item == null)
             return null;
 
         return item.getCustomLanguage();
     }
 
-    public String getLang()
-    {
-        if (item==null)
+    public String getLang() {
+        if (item == null)
             return null;
 
         return item.getNameCustomLanguage();
     }
 
-    public void reinit(){}
-
+    public void reinit() {
+    }
 }
