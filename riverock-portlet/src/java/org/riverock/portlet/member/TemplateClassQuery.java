@@ -32,9 +32,7 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -42,7 +40,7 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 /**
- * User: Admin
+ * User: Serge Maslyukov
  * Date: Nov 24, 2002
  * Time: 3:58:34 PM
  *
@@ -50,7 +48,7 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
  */
 public class TemplateClassQuery extends BaseClassQuery
 {
-    private static Log cat = LogFactory.getLog( TemplateClassQuery.class );
+    private static Logger log = Logger.getLogger( TemplateClassQuery.class );
 
     private Long idSiteCtxLangCatalog = null;
 
@@ -60,20 +58,20 @@ public class TemplateClassQuery extends BaseClassQuery
     {
         idSiteCtxLangCatalog = param;
 
-        if (cat.isDebugEnabled())
-            cat.debug("idSiteCtxLangCatalog - "+idSiteCtxLangCatalog);
+        if (log.isDebugEnabled())
+            log.debug("idSiteCtxLangCatalog - "+idSiteCtxLangCatalog);
     }
 
     public void setIdSiteTemplate(Long param)
     {
         idSiteTemplate = param;
 
-        if (cat.isDebugEnabled())
-            cat.debug("idSiteTemplate - "+idSiteTemplate);
+        if (log.isDebugEnabled())
+            log.debug("idSiteTemplate - "+idSiteTemplate);
     }
 
     /**
-     * ¬озвращает текущее значение дл€ отображени€ на веб-странице
+     * Return current value for output on web page
      * @return String
      */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
@@ -107,8 +105,8 @@ public class TemplateClassQuery extends BaseClassQuery
     }
 
     /**
-     *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
-     * @return Vector of org.riverock.member.ClassQueryItem
+     * Return list of possible values for create 'select' html-element
+     * @return List of org.riverock.member.ClassQueryItem
      */
     public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
@@ -143,8 +141,7 @@ public class TemplateClassQuery extends BaseClassQuery
                 v.add( item );
             }
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
@@ -156,8 +153,7 @@ public class TemplateClassQuery extends BaseClassQuery
 
     MemberQueryParameter param = null;
 
-    public void setQueryParameter(MemberQueryParameter parameter) throws Exception
-    {
+    public void setQueryParameter(MemberQueryParameter parameter) throws Exception {
         this.param = parameter;
     }
 }
