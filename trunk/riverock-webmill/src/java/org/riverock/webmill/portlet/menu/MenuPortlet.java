@@ -34,7 +34,6 @@ import javax.portlet.RenderResponse;
 
 import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
 
-
 /**
  * User: SergeMaslyukov
  * Date: 07.12.2004
@@ -51,5 +50,6 @@ public final class MenuPortlet extends GenericWebmillPortlet {
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
         MenuSimple menuSimple = new MenuSimple();
         doRender(renderRequest, renderResponse, menuSimple);
+        menuSimple.destroy();
     }
 }
