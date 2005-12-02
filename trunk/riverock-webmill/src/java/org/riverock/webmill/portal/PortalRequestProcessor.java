@@ -240,7 +240,10 @@ public final class PortalRequestProcessor {
 
                 if ( log.isDebugEnabled() ) {
                     synchronized(syncCtxDebug) {
-                        MainTools.writeToFile( WebmillConfig.getWebmillDebugDir()+"ctx-from-url.xml", item.getData() );
+                        MainTools.writeToFile( 
+                          WebmillConfig.getWebmillDebugDir()+
+                          System.currentTimeMillis()+
+			  "ctx-from-url-"+i+".xml", item.getData() );
                     }
                 }
 
