@@ -170,9 +170,8 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     public ArticlePlain() {
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__, long id__)
-            throws Exception {
-        return getInstance(db__, id__ );
+    public PortletResultContent getInstance(DatabaseAdapter db__, long id__) throws Exception {
+        return getInstance(db__, (Long)id__ );
     }
 
     public PortletResultContent getInstance(Long id__)
