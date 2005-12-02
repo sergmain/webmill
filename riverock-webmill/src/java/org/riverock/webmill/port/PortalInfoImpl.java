@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Iterator;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -84,7 +85,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private transient SiteTemplateList templates = null;
 
     private transient Map supportLanguageMap = null;
-    private transient Map languageMenuMap = null;
+    private transient Map<String, MenuLanguageInterface> languageMenuMap = null;
 
     private transient Long siteId = null;
 
@@ -92,10 +93,12 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         if (idSiteSupportLanguage == null)
             return false;
 
-        for (int i = 0; i < getSupportLanguage().getSiteSupportLanguageCount(); i++) {
-            SiteSupportLanguageItemType item = getSupportLanguage().getSiteSupportLanguage(i);
-            if (idSiteSupportLanguage.equals(item.getIdSiteSupportLanguage()))
+        Iterator it = supportLanguage.getSiteSupportLanguageAsReference().iterator();
+        while (it.hasNext()) {
+            SiteSupportLanguageItemType item = (SiteSupportLanguageItemType) it.next();
+            if (idSiteSupportLanguage.equals(item.getIdSiteSupportLanguage())) {
                 return true;
+            }
         }
         return false;
     }
@@ -287,10 +290,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
         // Build menu
         SiteMenu sc = SiteMenu.getInstance(db_, siteId);
-        languageMenuMap = new HashMap(sc.getMenuLanguageCount());
-        for (int i = 0; i < sc.getMenuLanguageCount(); i++) {
-            MenuLanguageInterface tempCat = sc.getMenuLanguage(i);
-            languageMenuMap.put(tempCat.getLocaleStr(), tempCat);
+        languageMenuMap = new HashMap<String, MenuLanguageInterface>();
+        Iterator<MenuLanguageInterface> iterator = sc.getMenuLanguage().iterator();
+        while (iterator.hasNext()) {
+            MenuLanguageInterface menuLanguageInterface = iterator.next();
+            languageMenuMap.put(menuLanguageInterface.getLocaleStr(), menuLanguageInterface);
         }
     }
 
