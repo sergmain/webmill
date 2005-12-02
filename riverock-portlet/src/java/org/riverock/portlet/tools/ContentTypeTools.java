@@ -18,7 +18,7 @@ public class ContentTypeTools {
     private final static Log log = LogFactory.getLog(PortletContainerFactory.class);
 
     public static final String CONTENT_TYPE_UTF8 = "utf-8";
-    public static final String CONTENT_TYPE_8859_1 = "utf-8";
+    public static final String CONTENT_TYPE_8859_1 = "8859_1";
 
     public static void setContentType(HttpServletResponse response, String charset) throws PortletException {
 
