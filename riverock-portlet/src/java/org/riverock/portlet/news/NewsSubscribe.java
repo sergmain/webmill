@@ -45,7 +45,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.tools.XmlTools;
 
-import org.riverock.portlet.register.RegisterUser;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -68,7 +67,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultContent;
  *         $Id$
  */
 public class NewsSubscribe implements PortletResultObject, PortletResultContent {
-    private final static Log log = LogFactory.getLog(RegisterUser.class);
+    private final static Log log = LogFactory.getLog( NewsSubscribe.class );
 
     public NewsSubscribe()
     {
@@ -167,7 +166,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
             return prepareReturn( out );
         }
         catch (Exception e) {
-            final String es = "Erorr processing RegisterUser page";
+            final String es = "Erorr processing news subscribe page";
             log.error(es, e);
             throw new PortletException( es, e );
         }
