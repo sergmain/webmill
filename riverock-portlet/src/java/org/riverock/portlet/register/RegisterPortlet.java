@@ -25,14 +25,33 @@
 package org.riverock.portlet.register;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
+import javax.portlet.PortletRequest;
 
-import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
+import org.apache.log4j.Logger;
+
+import org.riverock.module.action.ActionNameProvider;
+import org.riverock.module.action.ModuleActionRequest;
+import org.riverock.module.action.ModuleActionRequestImpl;
+import org.riverock.module.action.WebmillPortletActionNameProviderImpl;
+import org.riverock.module.exception.ActionException;
+import org.riverock.module.web.request.ModuleRequest;
+import org.riverock.module.web.request.WebmillPortletModuleRequestImpl;
+import org.riverock.module.web.response.ModuleResponse;
+import org.riverock.module.web.response.PortletModuleResponseImpl;
+import org.riverock.module.web.url.UrlProvider;
+import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
+import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.portlets.AbstractPortlet;
+import org.riverock.portlet.portlets.PortletErrors;
+import org.riverock.portlet.portlets.bean.GenericBean;
+import org.riverock.webmill.container.tools.PortletMetadataService;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: SergeMaslyukov
@@ -40,31 +59,81 @@ import org.riverock.webmill.container.portlet.extend.GenericWebmillPortlet;
  * Time: 18:21:10
  * $Id$
  */
-public final class RegisterPortlet extends GenericWebmillPortlet {
-    public static final String NAME_REGISTER_ACTION_PARAM = "mill.register.action";
-    public static final String REGISTER_PROCESS_PORTLET = "mill.register_process";
-    public static final String REGISTER_PORTLET = "mill.register";
-    public static final String DEFAULT_ROLE_METADATA = "register-default-role";
-    static final String FIRST_NAME_PARAM = "first_name";
-    static final String LAST_NAME_PARAM = "last_name";
-    static final String MIDDLE_NAME_PARAM = "middle_name";
-    static final String USERNAME_PARAM = "username";
-    static final String PASSWORD1_PARAM = "password1";
-    static final String PASSWORD2_PARAM = "password2";
-    static final String EMAIL_PARAM = "email";
-    static final String ADDRESS_PARAM = "addr";
-    static final String PHONE_PARAM = "phone";
-    static final String ERROR_TEXT = "REGISTER.ERROR_TEXT";
-    static final String ERROR_URL_NAME = "REGISTER.ERROR_URL_NAME";
-    static final String ERROR_URL = "REGISTER.ERROR_URL";
+public class RegisterPortlet extends AbstractPortlet {
+    private static final Logger log = Logger.getLogger( RegisterPortlet.class );
 
-    public RegisterPortlet(){}
-
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) {
+    public String processSystemError(ModuleRequest request, ResourceBundle resourceBundle) {
+        return PortletErrors.systemError(request, resourceBundle);
     }
 
-    public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
-        RegisterUser registerUser = new RegisterUser();
-        doRender( renderRequest, renderResponse, registerUser );
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+
+        if (log.isDebugEnabled()) {
+            Enumeration en = actionRequest.getParameterNames();
+            while(en.hasMoreElements()){
+                String key = (String)en.nextElement();
+                log.debug("key: "+key+", value: "+actionRequest.getParameter(key));
+            }
+        }
+        String forwardPage = null;
+        try {
+            ModuleRequest request = new WebmillPortletModuleRequestImpl(actionRequest);
+            ModuleResponse response = new PortletModuleResponseImpl(actionResponse);
+            UrlProvider urlProvider = new WebmillPortletUrlProviderImpl(request, response);
+            ActionNameProvider actionNameProvider = new WebmillPortletActionNameProviderImpl(request);
+
+            ModuleActionRequest moduleActionRequest = new ModuleActionRequestImpl(
+                request, response, moduleConfig, urlProvider, actionNameProvider
+            );
+
+            initGenericBean( moduleActionRequest );
+
+//            if (request.getUser()==null){
+//                forwardPage = RegisterError.notLoggedError(moduleActionRequest);
+//            }
+//            else {
+                try {
+                    forwardPage = actionFactory.doAction(moduleActionRequest);
+                } catch (ActionException ex) {
+                    log.error("error execute action", ex);
+                    forwardPage = PortletErrors.systemError(moduleActionRequest.getRequest(), moduleActionRequest.getResourceBundle());
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("forwardPage: "+forwardPage);
+                }
+//            }
+        }
+        catch (Exception e) {
+            String es = "error process action request";
+            log.error(es, e);
+            throw new PortletException(es, e);
+        }
+        finally {
+        }
+
+        if (forwardPage == null) {
+            forwardPage = "";
+        }
+
+        actionRequest.setAttribute(Constants.FORWARD_PAGE_ACTION, forwardPage);
+    }
+
+    private GenericBean initGenericBean(ModuleActionRequest moduleActionRequest ) {
+        GenericBean genericBean = new GenericBean();
+
+        genericBean.setLoginUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.LOGIN_URL_METADATA ) );
+        genericBean.setLogoutUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
+        genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
+        genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
+        genericBean.setBaseModuleUrl(
+            PortletService.ctxStringBuffer((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "riverock.auth" ).
+            append("?a=1")
+        );
+        genericBean.setRemoteAddr( moduleActionRequest.getRequest().getRemoteAddr() );
+        genericBean.setUserAgent( moduleActionRequest.getRequest().getUserAgent() );
+
+        moduleActionRequest.getRequest().setAttribute( Constants.GENERIC_BEAN, genericBean );
+        moduleActionRequest.getRequest().setAttribute( RegisterConstants.REQUEST_LOCALE_VALUE, moduleActionRequest.getRequest().getLocale() );
+        return genericBean;
     }
 }
