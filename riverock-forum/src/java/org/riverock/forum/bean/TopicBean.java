@@ -98,7 +98,8 @@ public class TopicBean implements Serializable {
     }
 
     public void setT_name(String t_name) {
-        this.t_name = StringTools.encodeXml(t_name);
+//        this.t_name = StringTools.encodeXml(t_name);
+        this.t_name = t_name;
     }
 
     public String getT_name() {
