@@ -41,7 +41,7 @@
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>
+<!--        <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>-->
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
