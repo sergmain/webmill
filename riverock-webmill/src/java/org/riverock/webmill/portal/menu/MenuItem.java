@@ -56,7 +56,7 @@ public final class MenuItem implements MenuItemInterface{
     private String type = "";
 
     private LocalizedStringInterface str = null;
-    private List catalogItems = new LinkedList();  // List of MenuItem
+    private List catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
 
     protected void finalize() throws Throwable{
         str = null;
