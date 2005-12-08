@@ -293,10 +293,16 @@ public final class PortletService {
     }
 
     public static String getString( final PortletRequest request, final String f, String serverCharset, String htmlCharset ) {
+        if (f==null) {
+            return null;
+        }
         return getString(request, f, null, serverCharset, htmlCharset);
     }
 
     public static String getString(final PortletRequest request, final String f, final String def, String serverCharset, String htmlCharset) {
+        if (f==null) {
+            return def;
+        }
         String s_ = def;
         final String parameter = request.getParameter(f);
         if (parameter != null) {
@@ -307,22 +313,20 @@ public final class PortletService {
                 // not rethrow exception 'cos this method return def value in this case
             }
         }
-/*
-        if (log.isDebugEnabled()){
-            log.debug("parameter: "+parameter);
-            log.debug("serverCharset: "+serverCharset);
-            log.debug("htmlCharset: "+htmlCharset);
-            log.debug("result string: "+s_);
-        }
-*/
         return s_;
     }
 
     public static Long getLong( final PortletRequest request, final String f ) {
+        if (f==null) {
+            return null;
+        }
         return getLong(request, f, null);
     }
 
     public static Long getLong( final PortletRequest request, final String f, final Long def) {
+        if (f==null) {
+            return def;
+        }
         Long s_ = def;
         final String parameter = request.getParameter(f);
         if (parameter != null)
@@ -334,19 +338,22 @@ public final class PortletService {
             catch (Exception e)
             {
                 // not rethrow exception 'cos this method return def value in this case
-/*
-                log.warn("Exception in getLong(), def value will be return", e);
-*/
             }
         }
         return s_;
     }
 
     public static Integer getInt( final PortletRequest request, final String f ) {
+        if (f==null) {
+            return null;
+        }
         return getInt(request, f, null);
     }
 
     public static Integer getInt( final PortletRequest request, final String f, final Integer def ) {
+        if (f==null) {
+            return def;
+        }
         Integer s_ = def;
         final String parameter = request.getParameter(f);
         if (parameter != null) {
@@ -355,19 +362,22 @@ public final class PortletService {
             }
             catch (Exception e) {
                 // not rethrow exception 'cos this method return def value in this case
-/*
-                log.warn("Exception in getInteger(), def value will be return", e);
-*/
             }
         }
         return s_;
     }
 
     public static Double getDouble( final PortletRequest request, final String f ) {
+        if (f==null) {
+            return null;
+        }
         return getDouble(request, f, null);
     }
 
     public static Double getDouble( final PortletRequest request, final String f, final Double def ) {
+        if (f==null) {
+            return def;
+        }
         Double s_ = def;
         final String parameter = request.getParameter(f);
         if (parameter != null)
@@ -379,19 +389,22 @@ public final class PortletService {
             catch (Exception e)
             {
                 // not rethrow exception 'cos this method return def value in this case
-/*
-                log.warn("Exception in getDouble(), def value will be return", e);
-*/
             }
         }
         return s_;
     }
 
     public static Float getFloat( final PortletRequest request, final String f ) {
+        if (f==null) {
+            return null;
+        }
         return getFloat(request, f, null);
     }
 
     public static Float getFloat( final PortletRequest request, final String f, final Float def ) {
+        if (f==null) {
+            return def;
+        }
         Float s_ = def;
         final String parameter = request.getParameter(f);
         if (parameter != null) {
@@ -400,9 +413,6 @@ public final class PortletService {
             }
             catch (Exception e) {
                 // not rethrow exception 'cos this method return def value in this case
-/*
-                log.warn("Exception in getFloat(), def value will be return", e);
-*/
             }
         }
         return s_;
