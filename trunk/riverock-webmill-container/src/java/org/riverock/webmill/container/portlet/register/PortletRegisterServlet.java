@@ -62,7 +62,7 @@ public class PortletRegisterServlet extends HttpServlet {
         if (portletFile.exists()) {
             try {
                 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                System.out.println("PortletRegisterServlet classLoader = " + classLoader);
+                System.out.println("PortletRegisterServlet classLoader\n" + classLoader + "\nhashCode: " + classLoader.hashCode() );
 
                 PortletContainer.registerPortletFile( uniqueName, portletFile, servletConfig, classLoader );
             }
