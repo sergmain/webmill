@@ -141,22 +141,22 @@ public final class StartupServlet extends HttpServlet {
         }
 
         try {
-            System.out.println("info Xalan version - " + org.apache.xalan.Version.getVersion());
+            log.error("info Xalan version - " + org.apache.xalan.Version.getVersion());
         }
-        catch (Exception e) {
-            System.out.println("Error get version of xalan " + e.getMessage());
+        catch (Throwable e) {
+            log.error("Error get version of xalan " + e.getMessage());
         }
         try {
             System.out.println("info Xerces version - " + org.apache.xerces.impl.Version.getVersion());
         }
-        catch (Exception e) {
-            System.out.println("Error get version of xerces " + e.getMessage());
+        catch (Throwable e) {
+            log.error("Error get version of xerces " + e.getMessage());
         }
         try {
             System.out.println("info Castor version - " + org.exolab.castor.util.Version.getBuildVersion());
         }
-        catch (Exception e) {
-            System.out.println("Error get version of Castor " + e.getMessage());
+        catch (Throwable e) {
+            log.error("Error get version of Castor " + e.getMessage());
         }
     }
 
