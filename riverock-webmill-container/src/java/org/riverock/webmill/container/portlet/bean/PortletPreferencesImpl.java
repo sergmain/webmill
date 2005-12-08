@@ -201,6 +201,10 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
     }
 
     public boolean isReadOnly(String key) {
+        if (key==null) {
+           throw new IllegalArgumentException("Can't get value of preference. Key is null");
+        }
+
         Iterator<Preference> iterator = _preferenceList.iterator();
         while (iterator.hasNext()) {
             Preference preference = iterator.next();
@@ -217,6 +221,10 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
     }
 
     public String getValue(String key, String def) {
+        if (key==null) {
+           throw new IllegalArgumentException("Can't get value of preference. Key is null");
+        }
+
         String[] values = userPreferences.get( key );
         if (values!=null) {
             if (values.length>0) {
@@ -245,6 +253,10 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
     }
 
     public String[] getValues(String key, String[] def) {
+        if (key==null) {
+           throw new IllegalArgumentException("Can't get value of preference. Key is null");
+        }
+
         String[] values = userPreferences.get( key );
         if (values!=null) {
             return values;
@@ -273,20 +285,12 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
     }
 
     // Todo need optimize
-    public void setValues(String name, String[] values) throws ReadOnlyException {
-        if (_preferenceList!=null && !_preferenceList.isEmpty() ) {
-            Iterator<Preference> iterator = _preferenceList.iterator();
-            while (iterator.hasNext()) {
-                Preference preference = iterator.next();
-                if (preference.getName().equals( name )) {
-                    if (preference.getReadOnly()!=null && preference.getReadOnly()==true ) {
-                        throw new ReadOnlyException("Preference '"+name+"' is read only");
-                    }
-                    break;
-                }
-            }
+    public void setValues(String key, String[] values) throws ReadOnlyException {
+        if ( isReadOnly( key ) ) {
+            throw new ReadOnlyException( "Preference '"+key+"' is read only" );
         }
-        userPreferences.put( name, values );
+
+        userPreferences.put( key, values );
     }
 
     public Enumeration getNames() {
@@ -342,6 +346,14 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
     }
 
     public void reset(String key) throws ReadOnlyException {
+        if (key==null) {
+           throw new IllegalArgumentException("Can't reset preference. Key is null");
+        }
+
+        if ( isReadOnly( key ) ) {
+            throw new ReadOnlyException( "Preference '"+key+"' is read only" );
+        }
+
         userPreferences.remove( key );
     }
 
