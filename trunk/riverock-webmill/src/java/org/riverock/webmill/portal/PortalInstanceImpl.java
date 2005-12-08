@@ -29,10 +29,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
@@ -44,25 +42,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
-import javax.portlet.PortalContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 import org.riverock.common.tools.ExceptionTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
-import org.riverock.webmill.core.GetMainLanguageFullList;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.schema.core.MainLanguageItemType;
-import org.riverock.webmill.schema.core.MainLanguageListType;
+import org.riverock.webmill.portal.dao.PortalDAO;
+import org.riverock.webmill.portal.dao.PortalDAOFactory;
 import org.riverock.webmill.utils.ServletUtils;
-import org.riverock.webmill.portal.impl.PortalContextImpl;
 
 /**
  * @author smaslyukov
@@ -71,7 +63,7 @@ import org.riverock.webmill.portal.impl.PortalContextImpl;
  *         $Id$
  */
 public class PortalInstanceImpl implements PortalInstance  {
-    private final static Log log = LogFactory.getLog(PortalInstanceImpl.class);
+    private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);
 
     public static final String PORTAL_INFO = "WebMill/@WEBMILL_RELEASE@";
 
@@ -89,7 +81,6 @@ public class PortalInstanceImpl implements PortalInstance  {
     private ServletConfig portalServletConfig = null;
     private PortletContainer portletContainer = null;
     private Collection<String> supportedList = null;
-    private PortalContext portalContext = null;
 
     public void destroy() {
         portalServletConfig = null;
@@ -98,7 +89,6 @@ public class PortalInstanceImpl implements PortalInstance  {
             supportedList.clear();
             supportedList = null;
         }
-        portalContext = null;
     }
 
     private static class PortalVersion {
@@ -118,10 +108,6 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     public static PortalInstanceImpl getInstance( ServletConfig servletConfig ) {
         return new PortalInstanceImpl( servletConfig );
-    }
-
-    public PortalContext getPortalContext() {
-        return portalContext;
     }
 
     public int getPortalMajorVersion() {
@@ -203,8 +189,9 @@ public class PortalInstanceImpl implements PortalInstance  {
     private PortalInstanceImpl( ServletConfig servletConfig ) {
         this.portalServletConfig = servletConfig;
         this.portletContainer = PortletContainerFactory.getContainerInstance( this );
-        this.supportedList = initSupportedLocales();
-        this.portalContext = new PortalContextImpl( PORTAL_INFO );
+        PortalDAO portalDAO = PortalDAOFactory.getDAOFactory().getPortalDAO();
+
+        this.supportedList = portalDAO.getSupportedLocales();
     }
 
     private static Object syncCounter = new Object();
@@ -239,7 +226,6 @@ public class PortalInstanceImpl implements PortalInstance  {
 
         if (log.isDebugEnabled()) {
             log.debug("counter #6 " + counter);
-            log.debug("this " + this);
             log.debug("request_ " + request_);
             log.debug("response_ " + response_);
             log.debug("Request methos type - " + request_.getMethod() );
@@ -311,7 +297,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 log.debug("#100.0");
             }
 
-            portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig, portletContainer, portalContext );
+            portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig, portletContainer, getPortalName() );
             if (!portalRequestInstance.getIsTextMimeType()) {
                 return;
             }
@@ -363,8 +349,6 @@ public class PortalInstanceImpl implements PortalInstance  {
                     portalRequestInstance.byteArrayOutputStream.close();
                     portalRequestInstance.byteArrayOutputStream = null;
                     httpResponse.sendRedirect( portalRequestInstance.getUrlResource() );
-//                    RequestDispatcher rd = request_.getRequestDispatcher( portalRequestInstance.getUrlResource() );
-//                    rd.forward( request_, httpResponse );
                     return;
                 }
 
@@ -456,7 +440,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
     }
 
-    private StringBuffer getTimeString( int counter, long startMills ) {
+    private static StringBuffer getTimeString( int counter, long startMills ) {
         return new StringBuffer( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
     }
 
@@ -496,26 +480,4 @@ public class PortalInstanceImpl implements PortalInstance  {
         return supportedList;
     }
 
-    private Collection<String> initSupportedLocales(){
-        Set<String> list = new HashSet<String>();
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            MainLanguageListType languages = GetMainLanguageFullList.getInstance( adapter, 1 ).item;
-            for (int i=0; i<languages.getMainLanguageCount(); i++){
-                MainLanguageItemType item = languages.getMainLanguage( i );
-                list.add( item.getShortNameLanguage() );
-            }
-        }
-        catch (Exception e) {
-            String es = "Error get list";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-        return list;
-    }
 }
