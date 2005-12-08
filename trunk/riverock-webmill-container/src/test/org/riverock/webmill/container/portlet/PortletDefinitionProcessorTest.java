@@ -48,13 +48,13 @@ public class PortletDefinitionProcessorTest {
 
         PortletDefinition definition = application.getPortlet(0);
         PortletPreferences portletPreferences = definition.getPortletPreferences();
-        String[] values = portletPreferences.getValues(
-            "RssXml",
-            new String[]
-            {
-                "http://www.theserverside.com/rss/theserverside-0.9.rdf"
-            }
-        );
+//        String[] values = portletPreferences.getValues(
+//            "RssXml",
+//            new String[]
+//            {
+//                "http://www.theserverside.com/rss/theserverside-0.9.rdf"
+//            }
+//        );
 
         int i = 0;
 

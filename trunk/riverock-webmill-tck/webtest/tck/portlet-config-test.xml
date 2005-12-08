@@ -33,6 +33,7 @@
 
     <property name="portletName" value="portlet-tck-portlet-config"/>
     <property file="webtest/webtest-regexp.properties"/>
+    <property name="applicationName" value="portlet_jp_PortletConfig_web"/>
 
     <import file="../../global-properties.xml" />
 

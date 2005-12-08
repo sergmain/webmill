@@ -21,6 +21,8 @@
     <entry key="reg.address">Адресс</entry>
     <entry key="reg.email">E-Mail</entry>
     <entry key="reg.register">Регистрация</entry>
+    <entry key="reg.send-password.your-password">Ваш пароль</entry>
+    <entry key="reg.send-password.info">Запрошенная информация</entry>
 </properties>
 
 
