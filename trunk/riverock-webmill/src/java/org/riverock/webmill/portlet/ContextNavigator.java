@@ -25,6 +25,9 @@
 package org.riverock.webmill.portlet;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -37,6 +40,8 @@ import org.apache.log4j.Logger;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.PortalInstanceImpl;
+import org.riverock.generic.site.SiteListSite;
+import org.riverock.generic.exception.GenericException;
 
 /**
  * $Id$
@@ -44,19 +49,24 @@ import org.riverock.webmill.portal.PortalInstanceImpl;
 public final class ContextNavigator extends HttpServlet {
     private final static Logger log = Logger.getLogger(ContextNavigator.class);
 
-    private PortalInstanceImpl portalInstance = null;
+    private Map<Long, PortalInstanceImpl> portalInstanceMap = new HashMap<Long, PortalInstanceImpl>();
 
     static ServletConfig portalServletConfig = null;
     public void init( ServletConfig servletConfig ) {
         portalServletConfig = servletConfig;
-        portalInstance = PortalInstanceImpl.getInstance( portalServletConfig );
     }
 
     public void destroy() {
         portalServletConfig = null;
-        if (portalInstance!=null) {
-            portalInstance.destroy();
-            portalInstance = null;
+
+        if (portalInstanceMap!=null) {
+            Iterator<Map.Entry<Long,PortalInstanceImpl>> iterator = portalInstanceMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<Long, PortalInstanceImpl> entry = iterator.next();
+                entry.getValue().destroy();
+            }
+            portalInstanceMap.clear();
+            portalInstanceMap = null;
         }
     }
 
@@ -73,7 +83,30 @@ public final class ContextNavigator extends HttpServlet {
 
     public void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse )
         throws IOException, ServletException {
+        Long siteId = null;
+        try {
+            siteId = SiteListSite.getIdSite( httpRequest.getServerName() );
+        }
+        catch (GenericException e) {
+            String es = "Erorr get siteId";
+            log.error( es, e);
+            throw new IllegalStateException( es, e );
+        }
+        PortalInstanceImpl portalInstance = portalInstanceMap.get( siteId );
+        if (portalInstance==null) {
+            portalInstance = createNewPortalInsance( siteId );
+        }
         portalInstance.process(httpRequest, httpResponse );
+    }
+
+    private synchronized PortalInstanceImpl createNewPortalInsance(Long siteId) {
+        PortalInstanceImpl portalInstance = portalInstanceMap.get( siteId );
+        if (portalInstance!=null) {
+            return portalInstance;
+        }
+        portalInstance = PortalInstanceImpl.getInstance( portalServletConfig );
+        portalInstanceMap.put( siteId, portalInstance );
+        return portalInstance;
     }
 
     public static void setContentType(HttpServletResponse response) throws PortalException {
