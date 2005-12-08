@@ -26,8 +26,8 @@ package org.riverock.webmill.portal.impl;
 
 import java.util.Enumeration;
 import java.util.Collections;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
@@ -40,18 +40,21 @@ import javax.portlet.WindowState;
  *         $Id$
  */
 public class PortalContextImpl implements PortalContext {
-    private String portalInfo = null;
 
-    public PortalContextImpl(String portalInfo) {
+    private String portalInfo = null;
+    private Map<String, String> map = null;
+
+    public PortalContextImpl(String portalInfo, Map<String, String> map) {
         this.portalInfo = portalInfo;
+        this.map = map;
     }
 
-    public String getProperty(String s) {
-        return null;
+    public String getProperty(String key) {
+        return map.get( key );
     }
 
     public Enumeration getPropertyNames() {
-        return Collections.enumeration( new ArrayList() );
+        return Collections.enumeration( map.keySet() );
     }
 
     public Enumeration getSupportedPortletModes() {
