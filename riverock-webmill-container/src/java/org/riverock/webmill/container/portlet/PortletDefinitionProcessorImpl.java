@@ -109,22 +109,19 @@ public class PortletDefinitionProcessorImpl implements PortletDefinitionProcesso
 
             digester.addObjectCreate("portlet-app/portlet/portlet-preferences", PortletPreferencesImpl.class);
             digester.addSetProperties("portlet-app/portlet/portlet-preferences", "id", "id");
-//            digester.addBeanPropertySetter("portlet-app/portlet/portlet-preferences", "portletPreferences");
             digester.addBeanPropertySetter("portlet-app/portlet/portlet-preferences/preferences-validator", "preferencesValidator");
             digester.addSetNext("portlet-app/portlet/portlet-preferences", "setPortletPreferences");
 
             digester.addObjectCreate("portlet-app/portlet/portlet-preferences/preference", Preference.class);
             digester.addSetProperties("portlet-app/portlet/portlet-preferences/preference", "id", "id");
             digester.addBeanPropertySetter("portlet-app/portlet/portlet-preferences/preference/name", "name");
-//            digester.addCallMethod("portlet-app/portlet/portlet-preferences/preference/value", "addValue");
             digester.addCallMethod("portlet-app/portlet/portlet-preferences/preference/value", "addValue", 0, new Class[]{String.class});
             digester.addCallMethod(
                 "portlet-app/portlet/portlet-preferences/preference/read-only",
                 "setReadOnly",
                 0,
                 new Class[] { Boolean.class });
-            digester.addSetNext("portlet-app/portlet/portlet-preferences/preference", "addPreference");
-
+            digester.addBeanPropertySetter("portlet-app/portlet/portlet-preferences/preference/modifiable", "modifiable");
 
             digester.addObjectCreate("portlet-app/user-attribute", UserAttribute.class);
             digester.addSetProperties("portlet-app/user-attribute", "id", "id");

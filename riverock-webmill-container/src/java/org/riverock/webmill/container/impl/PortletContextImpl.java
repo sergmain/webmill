@@ -50,7 +50,6 @@ public final class PortletContextImpl implements PortletContext {
 
     public String getServerInfo() {
         return portalName;
-//        return portalName + '/' + portalMajorVersion + '.' + portalMinorVersion;
     }
 
     public PortletRequestDispatcher getRequestDispatcher( final String path ) {

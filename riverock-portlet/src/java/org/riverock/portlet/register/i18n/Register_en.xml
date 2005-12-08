@@ -21,6 +21,8 @@
     <entry key="reg.address">Delivery address</entry>
     <entry key="reg.email">E-Mail</entry>
     <entry key="reg.register">Register</entry>
+    <entry key="reg.send-password.your-password">Your password is</entry>
+    <entry key="reg.send-password.info">Requested info</entry>
 </properties>
 
 

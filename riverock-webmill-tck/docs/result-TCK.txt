@@ -19,8 +19,6 @@ ActionRequest
   PortletRequest.getParameterValues(LANGUAGES returned unexpected results. 
   Expected size of the list:2 Actual size of the list:0 Expected Values: XML JAVA Actual Values: 
 
-- GetPortalContextTest Test FAILED. Request.getPortalContext() returned null
-
 - Portlet 'GetPortletSessionParamTestPortlet' unavailable.
 
 - GetWindowStateTest Test PASSED. 
@@ -174,12 +172,12 @@ http://jcp.org/aboutJava/communityprocess/maintenance/jsr168/Portlet1.0-ERRATA.h
 
 - InitPortletExceptionTestPortlet Test FAILED.
 530603 ERROR org.riverock.webmill.portal.PageElement 30 - Portlet 'null' unavailable.
-java.lang.NullPointerException
-	at org.riverock.webmill.container.portlet.PortletContainer.getPortletInstance(PortletContainer.java:267)
-	at org.riverock.webmill.portal.PageElement.initPortlet(PageElement.java:290)
-	at org.riverock.webmill.portal.PortalRequestInstance.<init>(PortalRequestInstance.java:224)
-	at org.riverock.webmill.portal.PortalInstanceImpl.process(PortalInstanceImpl.java:295)
-	at org.riverock.webmill.portlet.ContextNavigator.doGet(ContextNavigator.java:68)
+Caused by: javax.portlet.PortletException
+	at com.sun.ts.tests.portlet.api.javax_portlet.GenericPortlet.InitPortletExceptionTestPortlet.init(InitPortletExceptionTestPortlet.java:25)
+	at javax.portlet.GenericPortlet.init(GenericPortlet.java:98)
+	at org.riverock.webmill.container.portlet.PortletContainer.createPortletInstance(PortletContainer.java:358)
+в этом тесте в методе init бросается исключение. должно быть выведено что портлет не дступен
+
 
 - InitTest Test PASSED. 
 - InitUnavailableExceptionTestPortlet Test FAILED.
@@ -190,6 +188,7 @@ java.lang.NullPointerException
 	at org.riverock.webmill.portal.PortalRequestInstance.<init>(PortalRequestInstance.java:224)
 	at org.riverock.webmill.portal.PortalInstanceImpl.process(PortalInstanceImpl.java:295)
 	at org.riverock.webmill.portlet.ContextNavigator.doGet(ContextNavigator.java:68)
+в этом тесте в методе init бросается исключение. должно быть выведено что портлет не дступен
 
 - InitWithConfigParamTest Test PASSED. 
 - ProcessActionTest Test PASSED. 
@@ -204,9 +203,14 @@ PortalContext
 =========================================================================
 - GetPortalInfoTest Test PASSED. 
 
-- GetSupportedPortletModesTest Test FAILED. Request.getPortalContext() returned null 
+- GetSupportedPortletModesTest Test FAILED. 
+PortalContext.getSupportedPortletModes() returned unexpected results. 
+Actual Values don't include expected: 
+Expected Values: help view edit Actual Values: view 
 
-- GetSupportedWindowStatesTest Test FAILED. Request.getPortalContext() returned null 
+- GetSupportedWindowStatesTest Test FAILED. 
+PortalContext.getSupportedWindowStates() returned unexpected results. 
+Actual Values don't include expected: Expected Values: normal minimized maximized Actual Values: normal 
 
 
 Total: 3.  Passed: 1.
@@ -214,7 +218,6 @@ Total: 3.  Passed: 1.
 
 Portlet
 =========================================================================
-- RefreshPortlet ????
 
 - DestroyTest Test PASSED. 
 - InitFailedDestroyNotCalledTest Test PASSED. 
@@ -284,6 +287,7 @@ java.lang.NullPointerException
 - InitUnavailableExceptionTestPortlet Test FAILES. (same error)
 
 - NoActionProcessActionTest Test FAILED. processAction() was called in a request using a render URL.
+этот тест идет через PortletURL
 
 - OnePortletObjectPerJVMTest Test PASSED. 
 - PermanentlyUnavailableTest Test FAILED. Expected result = PermanentlyUnavailableTest Actual result = null 
@@ -331,10 +335,10 @@ PortletPreferences
   PortletPreference.getValues() did notreturn expected results 
   Expected size of the list:2 Actual size of the list:0 Expected Values: Java Oracle Actual Values: 
 
-- GetValuesIllegalArgumentExceptionTest Test FAILED. 
-  Expected a IllegalArgumentException() to be thrown as the key was null 
+- GetValuesIllegalArgumentExceptionTest Test PASSED.
 
 - GetNamesTest Test PASSED. 
+
 - Portlet 'IsModifiableTestPortlet' unavailable. 
 4002685 ERROR org.riverock.webmill.portal.PageElement 128 - Portlet 'IsModifiableTestPortlet' unavailable.
 java.lang.NoSuchMethodError: javax.portlet.PortletPreferences.isModifiable(Ljava/lang/String;)Z
@@ -347,17 +351,7 @@ java.lang.NoSuchMethodError: javax.portlet.PortletPreferences.isModifiable(Ljava
 	at com.sun.ts.tests.portlet.api.javax_portlet.PortletPreferences.IsModifiableTestPortlet.render(IsModifiableTestPortlet.java:38)
 	at org.riverock.webmill.portal.PageElement.renderPortlet(PageElement.java:195)
 
-- Portlet 'ResetIllegalArgumentExceptionTestPortlet' unavailable.
-4101047 ERROR org.riverock.webmill.portal.PageElement 130 - Portlet 'ResetIllegalArgumentExceptionTestPortlet' unavailable.
-java.lang.NullPointerException
-	at com.sun.ts.tests.portlet.api.javax_portlet.PortletPreferences.ResetIllegalArgumentExceptionTestPortlet.render(ResetIllegalArgumentExceptionTestPortlet.java:34)
-	at org.riverock.webmill.portal.PageElement.renderPortlet(PageElement.java:195)
-	at org.riverock.webmill.portal.TemplateItemAsDynamic.getData(TemplateItemAsDynamic.java:44)
-	at org.riverock.webmill.portal.TemplateItemBaseClass.renderTemplateItem(TemplateItemBaseClass.java:60)
-	at org.riverock.webmill.portal.PortalRequestProcessor.render(PortalRequestProcessor.java:165)
-	at org.riverock.webmill.portal.PortalRequestProcessor.processPortalRequest(PortalRequestProcessor.java:90)
-	at org.riverock.webmill.portal.PortalInstanceImpl.process(PortalInstanceImpl.java:304)
-	at org.riverock.webmill.portlet.ContextNavigator.doGet(ContextNavigator.java:68)
+- ResetIllegalArgumentExceptionTest Test PASSED.
 
 - Portlet 'ResetTestPortlet' unavailable. 
 4182323 ERROR org.riverock.webmill.portal.PageElement 131 - Portlet 'ResetTestPortlet' unavailable.
@@ -366,9 +360,12 @@ java.lang.IllegalStateException: not implemented
 	at com.sun.ts.tests.portlet.api.javax_portlet.PortletPreferences.ResetTestPortlet.render(ResetTestPortlet.java:43)
 	at org.riverock.webmill.portal.PageElement.renderPortlet(PageElement.java:195)
 
+
 - ResetUnmodifiableExceptionTest Test FAILED. 
   Expected UnmodifiableException() to be thrown as the method reset() 
   was invoked for a non-modifiable preference entity 
+этот портлет из той же серии что и портлеты которые требуют метод isModifiable() 
+
 
 - Portlet 'SetValueTestPortlet' unavailable.
 4288346 ERROR org.riverock.webmill.portal.PageElement 133 - Portlet 'SetValueTestPortlet' unavailable.
@@ -386,8 +383,7 @@ java.lang.IllegalStateException: not implemented
 - Portlet 'SetValueUnmodifiableExceptionTestPortlet' unavailable. 
 
 - SetValuesTest Test PASSED. 
-- SetValuesIllegalArgumentExceptionTest Test FAILED. 
-  Expected a IllegalArgumentException() as the setValues() was invoked for a null preference key 
+- SetValuesIllegalArgumentExceptionTest Test PASSED.
 
 - SetValuesUnmodifiableExceptionTest Test FAILED. 
   Expected a UnmodifiableException() as the setValues() was invoked for a non-modifiable preference entity 
@@ -411,7 +407,7 @@ java.lang.IllegalStateException: not implemented
 
 
 
-Total: 25.  Passed: 6.
+Total: 25.  Passed: 9.
 
 
 
@@ -478,6 +474,9 @@ java.lang.NullPointerException
 	at org.riverock.webmill.portal.PortalRequestProcessor.processPortalRequest(PortalRequestProcessor.java:90)
 	at org.riverock.webmill.portal.PortalInstanceImpl.process(PortalInstanceImpl.java:304)
 	at org.riverock.webmill.portlet.ContextNavigator.doGet(ContextNavigator.java:68)
+в сервлете InputStream и Reader должеы быть равны null
+
+
 
 - RequestMethodsReturnPathInfoTest Test PASSED. 
 - RequestMethodsLocaleMiscTest Test FAILED. 
@@ -497,22 +496,7 @@ java.lang.NullPointerException
 - SameThreadTest Test PASSED. 
 - ServletCannotChangeStatusCodeTest Test PASSED. 
 - Portlet 'RequestMethodsParameterMiscTestPortlet' unavailable. 
-5752932 ERROR org.riverock.webmill.portal.PageElement 168 - Portlet 'RequestMethodsParameterMiscTestPortlet' unavailable.
-java.lang.ClassCastException: java.lang.String
-	at com.sun.ts.tests.portlet.common.util.MapCompare.<init>(MapCompare.java:67)
-	at com.sun.ts.tests.portlet.api.javax_portlet.PortletRequestDispatcher.RequestMethodsParameterMiscTestServlet.checkGetParameterMap(RequestMethodsParameterMiscTestServlet.java:110)
-	at com.sun.ts.tests.portlet.api.javax_portlet.PortletRequestDispatcher.RequestMethodsParameterMiscTestServlet.service(RequestMethodsParameterMiscTestServlet.java:41)
-	at javax.servlet.http.HttpServlet.service(HttpServlet.java:802)
-	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:252)
-	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:173)
-	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:672)
-	at org.apache.catalina.core.ApplicationDispatcher.doInclude(ApplicationDispatcher.java:574)
-	at org.apache.catalina.core.ApplicationDispatcher.include(ApplicationDispatcher.java:499)
-	at org.riverock.webmill.container.impl.PortletRequestDispatcherImpl.include(PortletRequestDispatcherImpl.java:57)
-	at com.sun.ts.tests.portlet.api.javax_portlet.PortletRequestDispatcher.RequestMethodsParameterMiscTestPortlet.includeTestServlet(RequestMethodsParameterMiscTestPortlet.java:96)
-	at com.sun.ts.tests.portlet.api.javax_portlet.PortletRequestDispatcher.RequestMethodsParameterMiscTestPortlet.render(RequestMethodsParameterMiscTestPortlet.java:49)
-	at org.riverock.webmill.portal.PageElement.renderPortlet(PageElement.java:195)
-	at org.riverock.webmill.portal.TemplateItemAsDynamic.getData(TemplateItemAsDynamic.java:44)
+java.lang.NoSuchMethodError: javax.portlet.PortletURL.addParameter(Ljava/lang/String;Ljava/lang/String;)
 
 - GetRequestDispatcherWithQueryStringTest Test FAILED. 
   Expected size of the list:2 Actual size of the list:0 
@@ -634,9 +618,9 @@ PortletSession
 - SetAttributeIllegalStateTest Test PASSED. 
 - GetCreationTimeTest Test PASSED. 
 - GetIdTest Test PASSED. 
-- GetLastAccessedTimeTest Test FAILED. PortletSession.getLastAccessedTime() returned 0 
-
+- GetLastAccessedTimeTest Test PASSED.
 - GetMaxInactiveIntervalTest Test PASSED. 
+
 - Portlet 'GetMaxInactiveIntervalTimeoutTestPortlet' unavailable. 
 8405166 ERROR org.riverock.webmill.portal.PageElement 246 - Portlet 'GetMaxInactiveIntervalTimeoutTestPortlet' unavailable.
 java.lang.NoSuchMethodError: javax.portlet.PortletURL.addParameter(Ljava/lang/String;Ljava/lang/String;)V
@@ -647,10 +631,8 @@ java.lang.NoSuchMethodError: javax.portlet.PortletURL.addParameter(Ljava/lang/St
 - GetPortletContextTest Test PASSED.
 - InvalidateTest Test PASSED. 
 - IsNewTest Test PASSED. 
-- IsNewIllegalStateTest Test PASSED. 
-- GetCreationTimeIllegalStateTest Test FAILED. 
-  The exception IllegalStateException should have been thrown. 
-
+- IsNewIllegalStateTest Test PASSED.
+- GetCreationTimeIllegalStateTest Test PASSED.  
 - InvalidateIllegalStateTest Test PASSED. 
 - SetMaxInactiveIntervalTest Test PASSED. 
 - CheckSessionValueForPortletsInSameAppTestPortlet ?????? nothing outputed
@@ -734,8 +716,7 @@ RenderRequest
 - GetContextPathSyntaxTest Test PASSED. 
 - GetLocaleTest Test PASSED. 
 - GetLocalesTest Test PASSED. 
-- GetParameterIllegalArgumentExceptionTest Test FAILED. 
-  IllegalArgumentException was not thrown when name was null. 
+- GetParameterIllegalArgumentExceptionTest Test PASSED
 
 - GetParameterNamesTest Test FAILED. 
   PortletRequest.getParameterNames() returned unexpected results. 
@@ -753,11 +734,13 @@ RenderRequest
   Expected Values: XML JAVA Actual Values: 
 
 - GetPortletModeTest Test PASSED. 
-- GetPortalContextTest Test FAILED. Request.getPortalContext() returned null 
-
+- GetPortalContextTest Test PASSED. 
 - GetPreferencesTest Test PASSED.
 - GetPortletSessionTest Test PASSED. 
-- Portlet 'GetPortletSessionParamTestPortlet' unavailable. 
+- GetPortletSessionParamTest Test FAILED. 
+  Session is created even when getPortletSession is invoked with a false parameter 
+Недочет теста. не учитывается ситуация когда потал автоматически содает сессию.
+
 
 - GetWindowStateTest Test PASSED. 
 - GetParameterMapTest Test FAILED. 
@@ -773,6 +756,7 @@ RenderRequest
 
 - GetRequestedSessionIdNullTest Test FAILED. 
   Expected session id = null Actual session id = 2C4C3783E2029635A53B8DD00F639C1C 
+Недочет теста. не учитывается ситуация когда потал автоматически содает сессию.
 
 - GetResponseContentTypeTest Test FAILED. 
   PortletRequest.getResponseContentType() returned a null result 

@@ -25,7 +25,7 @@
  */
 -->
     <storeDynamicProperty description="Portlet test url" name="portlet-test-url"
-        value="${test-url}#{portlet-test-name}"/>
+        value="${test-url}${applicationName}::#{portlet-test-name}"/>
 
     <invoke description="Test portlet" url="#{portlet-test-url}" save="portlet-#{portlet-test-name}-"/>
     <clickLink description="Click on link" label="PortletURL" save="after-click-link-#{portlet-test-name}-"/>

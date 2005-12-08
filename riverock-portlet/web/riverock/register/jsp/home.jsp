@@ -76,3 +76,17 @@
 </tr>
 </form>
 </table>
+
+
+
+
+
+
+Registration Requirements
+Username:  
+Display Name:  
+E-mail Address:  
+Password:  
+Retype Password:  
+
+ I agree to be bound by this website's Terms of Use and Privacy Policy. 
