@@ -35,8 +35,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.NumberTools;
@@ -44,19 +43,14 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-
 import org.riverock.portlet.schema.portlet.shop.ItemListType;
 import org.riverock.portlet.schema.portlet.shop.PriceFieldNameType;
 import org.riverock.portlet.schema.portlet.shop.PriceItemType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.portlet.shop.bean.ShopOrder;
-import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
-
-
-
 
 /**
  *
@@ -67,7 +61,7 @@ import org.riverock.webmill.container.ContainerConstants;
  */
 public final class PriceListItemList
 {
-    private final static Log log = LogFactory.getLog( PriceListItemList.class );
+    private final static Logger log = Logger.getLogger( PriceListItemList.class );
 
     // dont edit return type - name must be with package
     private static org.riverock.portlet.schema.portlet.shop.HiddenParamType getHidden(String name, String value)
@@ -100,7 +94,8 @@ public final class PriceListItemList
         items.setPriceFieldName(fieldName);
         try
         {
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+
             fieldName.setNameToInvoice(
                 bundle.getString("price.to_invoice")
             );
@@ -161,14 +156,14 @@ public final class PriceListItemList
 
                 CurrencyItem currencyItem =
                     (CurrencyItem) CurrencyService.getCurrencyItemByCode(
-                        CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList(), currencyCode
+                        CurrencyManager.getInstance(db_, siteId ).getCurrencyList(), currencyCode
                     );
 
                 if (log.isDebugEnabled())
                     log.debug("currencyItem "+currencyItem);
 
                 currencyItem.fillRealCurrencyData(
-                    CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList().getStandardCurrencyList()
+                    CurrencyManager.getInstance(db_, siteId ).getCurrencyList().getStandardCurrencyList()
                 );
 
                 double resultPrice = 0;
@@ -188,7 +183,7 @@ public final class PriceListItemList
                     precisionValue = getPrecisionValue( shop, shopParam.id_currency );
 
                     CustomCurrencyItemType targetCurrency =
-                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList(), shopParam.id_currency);
+                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, siteId ).getCurrencyList(), shopParam.id_currency);
 
                     if (log.isDebugEnabled()) {
                         log.debug("targetCurrency "+targetCurrency);

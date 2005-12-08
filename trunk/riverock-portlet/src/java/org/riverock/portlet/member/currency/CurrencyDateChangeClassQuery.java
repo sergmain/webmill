@@ -30,9 +30,7 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.utils.DateUtils;
@@ -42,7 +40,6 @@ import org.riverock.portlet.price.CurrencyManager;
 import org.riverock.portlet.price.CurrencyService;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portal.PortalInfo;
 
 /**
  * User: Admin
@@ -53,7 +50,7 @@ import org.riverock.webmill.container.portal.PortalInfo;
  */
 public class CurrencyDateChangeClassQuery extends BaseClassQuery
 {
-    private static Log cat = LogFactory.getLog( CurrencyDateChangeClassQuery.class );
+    private static Logger log = Logger.getLogger( CurrencyDateChangeClassQuery.class );
 
     // ID_CURRENCY
     private Long idCurrency = null;
@@ -62,8 +59,8 @@ public class CurrencyDateChangeClassQuery extends BaseClassQuery
     {
         idCurrency = param;
 
-        if (cat.isDebugEnabled())
-            cat.debug("idCurrency - "+idCurrency);
+        if (log.isDebugEnabled())
+            log.debug("idCurrency - "+idCurrency);
     }
 
     /**
@@ -77,9 +74,11 @@ public class CurrencyDateChangeClassQuery extends BaseClassQuery
         try
         {
             db_ = DatabaseAdapter.getInstance();
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
 
-            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList() , idCurrency );
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+            CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
+                CurrencyManager.getInstance(db_, siteId ).getCurrencyList() , idCurrency
+            );
 
             if (item==null || item.getCurrentCurs()==null)
                 return "";

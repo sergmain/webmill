@@ -29,9 +29,7 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -41,18 +39,16 @@ import org.riverock.portlet.price.CurrencyManager;
 import org.riverock.portlet.price.CurrencyService;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portal.PortalInfo;
-
 
 /**
- * User: Admin
+ * User: Serge Maslyukov
  * Date: Jan 5, 2003
  * Time: 2:50:24 PM
  * <p/>
  * $Id$
  */
 public final class CurrencyCurrentCursClassQuery extends BaseClassQuery {
-    private final static Log cat = LogFactory.getLog( CurrencyCurrentCursClassQuery.class );
+    private final static Logger log = Logger.getLogger( CurrencyCurrentCursClassQuery.class );
 
     // ID_CURRENCY
     private Long idCurrency = null;
@@ -60,8 +56,8 @@ public final class CurrencyCurrentCursClassQuery extends BaseClassQuery {
     public void setIdCurrency( Long param ) {
         idCurrency = param;
 
-        if( cat.isDebugEnabled() )
-            cat.debug( "idCurrency - " + idCurrency );
+        if( log.isDebugEnabled() )
+            log.debug( "idCurrency - " + idCurrency );
     }
 
     /**
@@ -73,9 +69,11 @@ public final class CurrencyCurrentCursClassQuery extends BaseClassQuery {
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
 
-            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance( db_, portalInfo.getSiteId() ).getCurrencyList(), idCurrency );
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+            CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
+                CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), idCurrency
+            );
 
             if( item == null || item.getCurrentCurs() == null )
                 return "";

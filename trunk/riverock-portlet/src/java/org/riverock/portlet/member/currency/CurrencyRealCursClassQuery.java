@@ -29,8 +29,7 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.portlet.member.BaseClassQuery;
@@ -39,7 +38,6 @@ import org.riverock.portlet.price.CurrencyManager;
 import org.riverock.portlet.price.CurrencyService;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portal.PortalInfo;
 
 /**
  * User: Admin
@@ -50,7 +48,7 @@ import org.riverock.webmill.container.portal.PortalInfo;
  */
 public class CurrencyRealCursClassQuery extends BaseClassQuery
 {
-    private static Log cat = LogFactory.getLog( CurrencyRealCursClassQuery.class );
+    private static Logger log = Logger.getLogger( CurrencyRealCursClassQuery.class );
 
     // ID_CURRENCY
     private Long idCurrency = null;
@@ -59,8 +57,8 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
     {
         idCurrency = param;
 
-        if (cat.isDebugEnabled())
-            cat.debug("idCurrency - "+idCurrency);
+        if (log.isDebugEnabled())
+            log.debug("idCurrency - "+idCurrency);
     }
 
     /**
@@ -75,11 +73,10 @@ public class CurrencyRealCursClassQuery extends BaseClassQuery
         {
             db_ = DatabaseAdapter.getInstance();
 
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
             CustomCurrencyItemType item =
                 CurrencyService.getCurrencyItem(
-                    CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList() , idCurrency
+                    CurrencyManager.getInstance(db_, siteId ).getCurrencyList() , idCurrency
                 );
 
             if (item==null)

@@ -28,19 +28,15 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-
 import org.riverock.portlet.schema.portlet.shop.CurrencyItemType;
 import org.riverock.portlet.schema.portlet.shop.CurrencyListType;
 import org.riverock.portlet.schema.portlet.shop.HiddenParamType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
-
-import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -50,7 +46,7 @@ import org.riverock.webmill.container.ContainerConstants;
  */
 public class PriceCurrency
 {
-    private static Log log = LogFactory.getLog(PriceCurrency.class);
+    private static Logger log = Logger.getLogger(PriceCurrency.class);
 
     private static HiddenParamType getHidden(String name, String value)
     {
@@ -68,7 +64,6 @@ public class PriceCurrency
         CurrencyListType currency = new CurrencyListType();
 
         try {
-//            currency.setNoCurrencyName(shopParam_.sm.getStr("price.wo-recalc"));
             currency.setNoCurrencyName( resourceBundle.getString( "price.wo-recalc" ) );
         }
         catch (java.util.MissingResourceException e) {
@@ -76,7 +71,6 @@ public class PriceCurrency
         }
 
         try {
-//            currency.setCurrencyNameSwitch(shopParam_.sm.getStr("price.recalculate"));
             currency.setCurrencyNameSwitch( resourceBundle.getString( "price.recalculate" ) );
         }
         catch (java.util.MissingResourceException e) {
@@ -93,7 +87,6 @@ public class PriceCurrency
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_GROUP_SHOP, "" + shopParam_.id_group));
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_ID_SHOP_PARAM, "" + shopParam_.id_shop));
         currency.addHiddenParam( getHidden(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP));
-//        currency.addHiddenParam( getHidden(Constants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam_.nameTemplate));
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_BY, shopParam_.sortBy));
         currency.addHiddenParam( getHidden(ShopPortlet.NAME_SHOP_SORT_DIRECT, "" + shopParam_.sortDirect));
 
@@ -102,8 +95,8 @@ public class PriceCurrency
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            PortalInfo portalInfo = (PortalInfo)portletRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-            list = CurrencyManager.getInstance(db_, portalInfo.getSiteId()).getCurrencyList();
+            Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+            list = CurrencyManager.getInstance(db_, siteId ).getCurrencyList();
         }
         catch(Throwable e){
             String es = "Error in getCurrencyList()";
