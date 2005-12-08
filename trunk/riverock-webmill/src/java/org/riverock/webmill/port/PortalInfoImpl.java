@@ -24,11 +24,16 @@
  */
 package org.riverock.webmill.port;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Iterator;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -38,6 +43,8 @@ import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.core.GetSiteListSiteItem;
 import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
 import org.riverock.webmill.exception.PortalException;
@@ -46,9 +53,6 @@ import org.riverock.webmill.schema.core.SiteListSiteItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
 import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.site.SiteTemplateList;
-import org.riverock.webmill.container.portal.PortalInfo;
-
-import org.apache.log4j.Logger;
 
 /**
  * $Id$
@@ -60,12 +64,12 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     static {
         try {
-            Class p = new PortalInfoImpl().getClass();
-            SqlStatement.registerRelateClass(p, new GetSiteListSiteItem().getClass());
-            SqlStatement.registerRelateClass(p, new PortalXsltList().getClass());
-            SqlStatement.registerRelateClass(p, new SiteTemplateList().getClass());
-            SqlStatement.registerRelateClass(p, new GetSiteSupportLanguageWithIdSiteList().getClass());
-            SqlStatement.registerRelateClass(p, new SiteMenu().getClass());
+            Class p = PortalInfoImpl.class;
+            SqlStatement.registerRelateClass(p, GetSiteListSiteItem.class);
+            SqlStatement.registerRelateClass(p, PortalXsltList.class);
+            SqlStatement.registerRelateClass(p, SiteTemplateList.class);
+            SqlStatement.registerRelateClass(p, GetSiteSupportLanguageWithIdSiteList.class);
+            SqlStatement.registerRelateClass(p, SiteMenu.class);
         }
         catch (Exception exception) {
             final String es = "Exception in ";
@@ -88,6 +92,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private transient Map<String, MenuLanguageInterface> languageMenuMap = null;
 
     private transient Long siteId = null;
+    private transient Map<String, String> meta = null;
+
+    public Map<String, String> getMeta() {
+        return meta;
+    }
 
     public boolean isCurrentSite(Long idSiteSupportLanguage) {
         if (idSiteSupportLanguage == null)
@@ -163,17 +172,23 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         }
         if (log.isDebugEnabled()) log.debug("ServerName:" + serverName + ", siteId: " + id);
 
+        return getInstance(db_, id);
+    }
+
+    public synchronized static PortalInfoImpl getInstance(DatabaseAdapter db_, Long siteId)
+        throws PortalException {
+
         synchronized (syncObject) {
 
             PortalInfoImpl p = null;
-            if (id != null)
-                p = (PortalInfoImpl) portatInfoMap.get(id);
+            if (siteId != null)
+                p = (PortalInfoImpl) portatInfoMap.get(siteId);
 
             if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD || p == null) {
                 log.debug("#15.01.03 reinit cached value ");
 
-                p = new PortalInfoImpl(db_, id);
-                portatInfoMap.put(id, p);
+                p = new PortalInfoImpl(db_, siteId);
+                portatInfoMap.put(siteId, p);
             }
             lastReadData = System.currentTimeMillis();
             return p;
@@ -186,15 +201,15 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         try {
             sites = GetSiteListSiteItem.getInstance(db_, siteId).item;
 
-            if (getSites().getDefLanguage() == null)
-                getSites().setDefLanguage("");
+            if (sites.getDefLanguage() == null)
+                sites.setDefLanguage("");
 
-            if (!StringTools.isEmpty(getSites().getDefLanguage()) &&
-                !StringTools.isEmpty(getSites().getDefCountry())) {
+            if (!StringTools.isEmpty(sites.getDefLanguage()) &&
+                !StringTools.isEmpty(sites.getDefCountry())) {
 
-                defaultLocale = new Locale(getSites().getDefLanguage().toLowerCase(),
-                    getSites().getDefCountry(),
-                    (getSites().getDefVariant() == null ? "" : getSites().getDefVariant()).toLowerCase());
+                defaultLocale = new Locale(sites.getDefLanguage().toLowerCase(),
+                    sites.getDefCountry(),
+                    (sites.getDefVariant() == null ? "" : sites.getDefVariant()).toLowerCase());
 
                 if (log.isDebugEnabled())
                     log.debug("Main language 1.1: " + getDefaultLocale().toString());
@@ -207,6 +222,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
                     log.debug("Language, default locale: " + getDefaultLocale().toString());
                 }
             }
+            initPortalProperties();
 
             mills = 0;
 
@@ -232,6 +248,18 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         initMenu(db_);
     }
 
+    private void initPortalProperties() throws IOException {
+        meta = new HashMap<String, String>();
+        Properties properties = new Properties();
+        properties.load( new ByteArrayInputStream( "".getBytes() ) );
+        Iterator<Map.Entry<Object,Object>> iterator = properties.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Object, Object> entry = iterator.next();
+            meta.put( entry.getKey().toString(), entry.getValue().toString() );
+        }
+        meta.put( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL, sites.getAdminEmail() );
+    }
+
     public static SiteSupportLanguageListType processSupportLanguage(DatabaseAdapter db_, Long siteId) throws org.riverock.webmill.exception.PortalPersistenceException {
         SiteSupportLanguageListType langs = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
 
@@ -244,11 +272,6 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     }
 
     public PortalInfoImpl() {
-    }
-
-    // this method for support of reiniting cache
-    public static PortalInfo getInstance(DatabaseAdapter db_, java.lang.Long id_) {
-        return new PortalInfoImpl();
     }
 
     public void reinit() {

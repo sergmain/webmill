@@ -26,33 +26,36 @@ package org.riverock.webmill.portal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ArrayList;
 
+import javax.portlet.PortalContext;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletConfig;
-import javax.portlet.PortalContext;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
+import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.container.schema.site.SiteTemplate;
+import org.riverock.webmill.container.schema.site.TemplateItemType;
+import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.port.PortalXslt;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
+import org.riverock.webmill.portal.impl.PortalContextImpl;
 import org.riverock.webmill.portlet.PortletTools;
-import org.riverock.webmill.container.schema.site.SiteTemplate;
-import org.riverock.webmill.container.schema.site.TemplateItemType;
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
-import org.riverock.webmill.container.portlet.PortletContainer;
-
-import org.apache.log4j.Logger;
 
 /**
  * User: Admin
@@ -138,7 +141,8 @@ public final class PortalRequestInstance {
         HttpServletResponse response_, 
         ServletConfig portalServletConfig, 
         PortletContainer portletContainer,
-        PortalContext portalContext)
+        String portalName
+        )
         throws Throwable {
 
         startMills = System.currentTimeMillis();
@@ -151,7 +155,6 @@ public final class PortalRequestInstance {
         this.httpRequest = request_;
         this.httpResponse = response_;
         this.portalServletConfig = portalServletConfig;
-        this.portalContext = portalContext;
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
@@ -162,6 +165,7 @@ public final class PortalRequestInstance {
                 log.debug("auth: " + this.auth);
             }
             this.portalInfo = PortalInfoImpl.getInstance(db, httpRequest.getServerName());
+            this.portalContext = createPortalContext(portalName, portalInfo);
 
             this.contextFactory = ContextFactory.initTypeContext(db, httpRequest, portalInfo, httpRequestParameter, portletContainer);
             if (contextFactory.getUrlResource() != null) {
@@ -259,6 +263,16 @@ public final class PortalRequestInstance {
                 log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - startMills) + " milliseconds");
             }
         }
+    }
+
+    private PortalContextImpl createPortalContext(String portalName, PortalInfoImpl portalInfo ) {
+        Map<String,String> map = new HashMap<String, String>();
+
+        map.put( ContainerConstants.PORTAL_PROP_SITE_ID, portalInfo.getSiteId().toString() );
+        map.put( ContainerConstants.PORTAL_PROP_COMPANY_ID, portalInfo.getCompanyId().toString() );
+        map.putAll( portalInfo.getMeta() );
+
+        return new PortalContextImpl( portalName, map );
     }
 
     public PortalContext getPortalContext() {
