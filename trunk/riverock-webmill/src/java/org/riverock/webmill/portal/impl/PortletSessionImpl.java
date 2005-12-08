@@ -28,7 +28,9 @@ import java.util.Enumeration;
 
 import javax.portlet.PortletContext;
 import javax.portlet.PortletSession;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 import org.apache.log4j.Logger;
 
@@ -39,7 +41,7 @@ import org.apache.log4j.Logger;
  * @author Serge Maslyukov
  * $Id$
  */
-public final class PortletSessionImpl implements PortletSession {
+public final class PortletSessionImpl implements PortletSession, HttpSession {
     private final static Logger log = Logger.getLogger( PortletSessionImpl.class );
 
     private HttpSession session = null;
@@ -50,7 +52,7 @@ public final class PortletSessionImpl implements PortletSession {
 
     private long creationTime;
     public long getCreationTime(){
-        return creationTime;
+        return session.getCreationTime();
     }
 
     public String getId(){
@@ -60,7 +62,8 @@ public final class PortletSessionImpl implements PortletSession {
 
     private long accessTime;
     public long getLastAccessedTime(){
-        return accessTime;
+//        return accessTime;
+        return session.getLastAccessedTime();
     }
 
     public void setMaxInactiveInterval(int i){
@@ -123,8 +126,6 @@ public final class PortletSessionImpl implements PortletSession {
         {
             log.error("session.removeAttribute() ", e);
             throw e;
-//            session.invalidate();
-//            session = null;
         }
     }
 
@@ -136,5 +137,31 @@ public final class PortletSessionImpl implements PortletSession {
     public boolean isNew(){
         accessTime = System.currentTimeMillis();
         return session.isNew();
+    }
+
+    // HttpSession methods implementation
+
+    public ServletContext getServletContext() {
+        return session.getServletContext();
+    }
+
+    public HttpSessionContext getSessionContext() {
+        return session.getSessionContext();
+    }
+
+    public Object getValue(String s) {
+        return session.getValue( s );
+    }
+
+    public String[] getValueNames() {
+        return session.getValueNames();
+    }
+
+    public void putValue(String s, Object o) {
+        session.putValue( s, o );
+    }
+
+    public void removeValue(String s) {
+        session.removeValue( s );
     }
 }
