@@ -43,7 +43,6 @@ import org.riverock.portlet.register.bean.CreateAccountBean;
 import org.riverock.portlet.register.dao.CreateAccountDAO;
 import org.riverock.portlet.register.dao.RegisterDAOFactory;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.tools.PortletMetadataService;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -59,8 +58,6 @@ public class CreateAccountAction implements Action {
     public String execute( ModuleActionRequest moduleActionRequest ) throws ActionException {
 
         PortletRequest portletRequet = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
-        PortalInfo portalInfo = ( PortalInfo ) portletRequet.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
-
 
         CreateAccountBean bean = new CreateAccountBean();
         bean.setUsername( moduleActionRequest.getRequest().getString( RegisterConstants.USERNAME_PARAM ) );
@@ -79,8 +76,8 @@ public class CreateAccountAction implements Action {
         bean.setRole( role );
         // Todo rewrite with portal property
 //        bean.setAdminEmail( portalInfo.getSiteId() );
-        bean.setAdminEmail( "webmill@askmore.info" );
-        bean.setCompanyId( portalInfo.getCompanyId() );
+        bean.setAdminEmail( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL ) );
+        bean.setCompanyId( new Long( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID ) ) );
 
         try {
             int status = checkRegisterData( bean );
