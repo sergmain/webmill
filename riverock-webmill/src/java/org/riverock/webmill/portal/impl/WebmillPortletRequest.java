@@ -162,7 +162,9 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         return Collections.enumeration( values );
     }
 
+    // Todo need implement
     public Enumeration getPropertyNames() {
+
         return null;
     }
 
@@ -251,8 +253,10 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public Object getAttribute( String key ) {
-        if (key==null)
-            return null;
+        if (key==null) {
+            throw new IllegalArgumentException("Call getAttribute() with key==null");
+        }
+
         return portletAttributes.get( key );
     }
 
@@ -261,22 +265,29 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public void setAttribute( String key, Object value ) {
-        if (key==null || value==null )
-            return;
+        if (key==null) {
+            throw new IllegalArgumentException("Call setAttribute() with key==null");
+        }
+
+        if ( value==null ) {
+            removeAttribute( key );
+        }
 
         portletAttributes.put( key, value );
     }
 
     public void removeAttribute( String key ) {
-        if ( key==null )
-            return;
+        if (key==null) {
+            throw new IllegalArgumentException("Call removeAttribute() with null");
+        }
 
         portletAttributes.remove( key );
     }
 
     public String getParameter( String key ) {
-        if (key==null)
-            return null;
+        if (key==null) {
+            throw new IllegalArgumentException("Call getParameter() with null");
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("key: "+key);
@@ -349,6 +360,10 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public String[] getParameterValues( String key ) {
+        if (key==null) {
+            throw new IllegalArgumentException("Call getParameterValues() with null");
+        }
+
         if ( parameters==null && renderParameters==null  )
             return null;
 
