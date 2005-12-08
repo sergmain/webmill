@@ -30,6 +30,8 @@ import java.io.Serializable;
 
 import javax.portlet.PortletPreferences;
 
+import org.riverock.webmill.container.portlet.PortletContainer;
+
 /**
  * @author Serge Maslyukov
  *         Created 06.08.2005
@@ -97,6 +99,13 @@ public class PortletDefinition implements Serializable {
      */
     private List<SecurityRoleRef> _securityRoleRefList;
 
+    /**
+     * value of portlet-app.id attribute
+     */
+    private String applicationName = null;
+
+    private String fullPortletName = null;
+
     public PortletDefinition() {
         super();
         _descriptionList = new ArrayList<Description>();
@@ -126,6 +135,7 @@ public class PortletDefinition implements Serializable {
         if (_securityRoleRefList!=null) {
             _securityRoleRefList.clear();
         }
+        applicationName = null;
     }
 
     public String getResourceBundle() {
@@ -728,6 +738,12 @@ public class PortletDefinition implements Serializable {
      */
     public void setPortletName(String portletName) {
         this.portletName = portletName;
+        if (applicationName!=null) {
+            this.fullPortletName = applicationName + PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+        }
+        else {
+            this.fullPortletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+        }
     }
 
     /**
@@ -820,4 +836,28 @@ public class PortletDefinition implements Serializable {
             _supportsList.add(newVar);
         }
     }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        if (applicationName==null) {
+            throw new IllegalStateException( "portlet aplication name can not be null");
+        }
+
+        this.applicationName = applicationName;
+        if (portletName!=null) {
+            this.fullPortletName = applicationName + PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+        }
+    }
+
+    public String getFullPortletName() {
+        return fullPortletName;
+    }
+
+    public void setFullPortletName(String fullPortletName) {
+        this.fullPortletName = fullPortletName;
+    }
+
 }

@@ -85,12 +85,12 @@ portlet.
         if (expire==0)
             return null;
 
-        CacheEntry entry = (CacheEntry)contentCache.get( portletDefinition.getPortletName() );
+        CacheEntry entry = (CacheEntry)contentCache.get( portletDefinition.getFullPortletName() );
         if (entry==null)
             return null;
 
         if (expire<((System.currentTimeMillis()-entry.lastInitTime)/1000) )  {
-            contentCache.remove( portletDefinition.getPortletName() );
+            contentCache.remove( portletDefinition.getFullPortletName() );
             return null;
         }
         return entry.data;
@@ -108,17 +108,11 @@ portlet.
                 expirationTime = Integer.parseInt( exp );
         }
         catch( NumberFormatException e ) {
-/*
-            log.error(
-                "Portlet '" + portletDefinition.getPortletName() + "' " +
-                "set invalid value for RenderResponse.EXPIRATION_CACHE: "+exp+". " +
-                "Will be used value from portlet definition: " + expirationTime
-            );
-*/
+            //Todo decide - throw or not exception?
         }
 
         if (expirationTime<0) {
-            contentCache.remove( portletDefinition.getPortletName() );
+            contentCache.remove( portletDefinition.getFullPortletName() );
             return;
         }
         contentCache.put( portletDefinition.getPortletName(), new CacheEntry( data ) );
