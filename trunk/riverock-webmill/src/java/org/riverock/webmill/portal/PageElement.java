@@ -148,7 +148,17 @@ public final class PageElement {
             return;
         }
         try {
-            portletEntry.getPortlet().processAction( actionRequest, actionResponse );
+            ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                final ClassLoader classLoader = portletEntry.getClassLoader();
+                Thread.currentThread().setContextClassLoader( classLoader );
+
+                portletEntry.getPortlet().processAction( actionRequest, actionResponse );
+            }
+            finally {
+                Thread.currentThread().setContextClassLoader( oldLoader );
+            }
+
             if ( actionResponse.getIsRedirected() ) {
                 isRedirected = actionResponse.getIsRedirected();
                 redirectUrl = actionResponse.getRedirectUrl();
@@ -196,38 +206,48 @@ public final class PageElement {
             }
 
             if ( !isUrl ){
-                portletEntry.getPortlet().render( renderRequest, renderResponse );
+                ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+                try {
+                    final ClassLoader classLoader = portletEntry.getClassLoader();
+                    Thread.currentThread().setContextClassLoader( classLoader );
+
+                    portletEntry.getPortlet().render( renderRequest, renderResponse );
+                }
+                finally {
+                    Thread.currentThread().setContextClassLoader( oldLoader );
+                }
             }
             else {
                 renderRequest.setAttribute(
                     ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
-                RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher( portletEntry.getPortletDefinition().getPortletClass() );
+                ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+                try {
+                    final ClassLoader classLoader = portletEntry.getClassLoader();
+                    Thread.currentThread().setContextClassLoader( classLoader );
 
-                if (log.isDebugEnabled()) {
-                    log.debug("#91.1");
-                }
+                    RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher( portletEntry.getPortletDefinition().getPortletClass() );
 
-                if ( log.isDebugEnabled() ) {
-                    log.debug( "process url: " + portletEntry.getPortletDefinition().getPortletClass() );
-                    log.debug( "ServletContext: " + portletEntry.getServletConfig().getServletContext() );
-                    log.debug( "RequestDispatcher: " + rd );
-                }
+                    if (log.isDebugEnabled()) {
+                        log.debug("#91.1");
+                        log.debug( "process url: " + portletEntry.getPortletDefinition().getPortletClass() );
+                        log.debug( "ServletContext: " + portletEntry.getServletConfig().getServletContext() );
+                        log.debug( "RequestDispatcher: " + rd );
+                    }
 
-                if (log.isDebugEnabled()) {
-                    log.debug("#91.2");
-                }
+                    PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl( rd );
 
-                if (log.isDebugEnabled()) {
-                    log.debug("#91.3");
+                    if (log.isDebugEnabled()) {
+                        log.debug("#91.4");
+                    }
+                    dispatcher.include( renderRequest, renderResponse );
+
+                    if (log.isDebugEnabled()) {
+                        log.debug("#91.5");
+                    }
                 }
-                PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl( rd );
-                if (log.isDebugEnabled()) {
-                    log.debug("#91.4");
-                }
-                dispatcher.include( renderRequest, renderResponse );
-                if (log.isDebugEnabled()) {
-                    log.debug("#91.5");
+                finally {
+                    Thread.currentThread().setContextClassLoader( oldLoader );
                 }
             }
             renderResponse.flushBuffer();
@@ -279,17 +299,18 @@ public final class PageElement {
         }
         catch ( Throwable e ) {
             errorString = "Portlet '" + portletEntry.getPortletDefinition().getPortletName() + "' unavailable.";
-//            errorString = "Error process portlet '" + portletEntry.getPortletDefinition().getPortletName() + "'";
             log.error( errorString, e );
-//            exception = e;
             return;
         }
     }
 
     void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance ) {
         try {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
+                log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
                 log.debug("Start init page element. Portlet name: '" + portletName + "'");
+            }
+
 
             portletEntry = portletContainer.getPortletInstance(portletName);
 
@@ -379,7 +400,7 @@ containing the portlet is restarted.
             renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, templateItemType.getParameterAsReference());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, templateItemType.getCode());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, templateItemType.getXmlRoot());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE, portletEntry.getPortletDefinition().getPortletName());
+            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE, portletEntry.getPortletDefinition().getFullPortletName());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
             renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
 
@@ -389,6 +410,7 @@ containing the portlet is restarted.
 
 
             renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );
+
             ContextNavigator.setContentType(renderResponse);
 
             actionRequest = new ActionRequestImpl(
@@ -403,13 +425,6 @@ containing the portlet is restarted.
                 portalRequestInstance.getPortalContext()
             );
 
-            // set portlet specific attribute
-//            portalRequestInstance.actionRequest.setAttribute(
-//                ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, templateItem.getParameterAsReference());
-//            portalRequestInstance.actionRequest.setAttribute(
-//                PortalConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, templateItem.getCode() );
-//            portalRequestInstance.actionRequest.setAttribute(
-//                ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, templateItem.getXmlRoot() );
             actionResponse = new ActionResponseImpl(portalRequestInstance, actionRequest, portalRequestInstance.getHttpResponse(), namespace, renderParameters, portletEntry.getPortletProperties() );
 
             if (log.isDebugEnabled()) {
