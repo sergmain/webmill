@@ -121,7 +121,7 @@ public final class SiteTemplateList {
             "where b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
         try {
-            SqlStatement.registerSql( sql_, new SiteTemplateList().getClass() );
+            SqlStatement.registerSql( sql_, SiteTemplateList.class );
         }
         catch( Throwable exception ) {
             final String es = "Exception in SqlStatement.registerSql()";
