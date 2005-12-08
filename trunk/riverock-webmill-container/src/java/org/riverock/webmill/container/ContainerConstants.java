@@ -79,4 +79,7 @@ public class ContainerConstants {
     public static final String is_direct_request = "is-direct-request";
 
 
+    public static final String PORTAL_PROP_SITE_ID = "webmill.site-id";
+    public static final String PORTAL_PROP_COMPANY_ID = "webmill.company-id";
+    public static final String PORTAL_PROP_ADMIN_EMAIL = "webmill.admin-email";
 }

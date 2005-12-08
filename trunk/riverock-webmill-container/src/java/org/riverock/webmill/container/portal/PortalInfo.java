@@ -33,7 +33,7 @@ import java.util.Locale;
  *         $Id$
  */
 public interface PortalInfo {
-    public Long getSiteId();
-    public Long getCompanyId();
+//    public Long getSiteId();
+//    public Long getCompanyId();
     public Long getSupportLanguageId( Locale locale );
 }

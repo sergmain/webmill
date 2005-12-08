@@ -66,6 +66,14 @@ public class Preference implements Serializable {
         _valueList = new ArrayList<String>();
     }
 
+    public void setModifiable(String value) {
+        if (value.equalsIgnoreCase("true") || value.equals("1") ) {
+            _readOnly = Boolean.FALSE;
+        }
+        else {
+            _readOnly = Boolean.TRUE;
+        }
+    }
 
     public void setValue(Collection<String> values) {
         this._valueList = values;
