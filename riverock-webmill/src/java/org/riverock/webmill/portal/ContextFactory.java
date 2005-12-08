@@ -291,7 +291,7 @@ public abstract class ContextFactory {
         if (defaultCtx==null || defaultCtx.portlet==null)
             return null;
 
-        return defaultCtx.portlet.getPortletName();
+        return defaultCtx.portlet.getFullPortletName();
     }
 
     public String getNameTemplate() {
