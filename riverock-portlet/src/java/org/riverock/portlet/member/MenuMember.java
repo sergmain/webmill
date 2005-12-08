@@ -33,35 +33,30 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortalContext;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortletConfig;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.exception.DatabaseException;
+import org.riverock.generic.tools.XmlTools;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
 import org.riverock.sso.a3.AuthInfo;
 import org.riverock.sso.a3.AuthTools;
-
-
-import org.riverock.interfaces.portlet.member.PortletGetList;
-import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.schema.site.SiteTemplate;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-
-
 
 /**
  *
@@ -71,7 +66,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultContent;
  *
  */
 public final class MenuMember implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Log log = LogFactory.getLog( MenuMember.class );
+    private final static Logger log = Logger.getLogger( MenuMember.class );
 
     private MenuMemberType menu = new MenuMemberType();
     private RenderRequest renderRequest = null;
@@ -86,11 +81,10 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 //        this.bundle = portletConfig.getResourceBundle()
     }
 
-    protected void finalize() throws Throwable {
+    protected void destroy() {
         menu = null;
-//        param = null;
-//        renderRequest = null;
-        super.finalize();
+        renderRequest = null;
+        renderResponse = null;
     }
 
     public MenuMember(){}
@@ -117,8 +111,16 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             if (authInfo == null)
                 return this;
 
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-            memberTemplates = SiteTemplateMember.getInstance(db_, portalInfo.getSiteId());
+            PortalContext portalContext = renderRequest.getPortalContext();
+            if ( log.isDebugEnabled() ) {
+                log.debug( "portalContext: " + portalContext ); 
+            }
+            String siteIdString = portalContext.getProperty( ContainerConstants.PORTAL_PROP_SITE_ID );
+            if ( log.isDebugEnabled() ) {
+                log.debug( "siteId: " + siteIdString ); 
+            }
+            Long siteId = new Long( siteIdString );
+            memberTemplates = SiteTemplateMember.getInstance( db_, siteId );
 
 
             String sql_ =

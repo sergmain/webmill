@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -38,25 +37,21 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.interfaces.portlet.menu.MenuInterface;
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.price.ImportPriceList;
 import org.riverock.portlet.price.Shop;
-import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.schema.import_price.PricesType;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: Admin
@@ -99,8 +94,6 @@ public final class UploadPriceControllerPortlet implements Portlet {
 
         DatabaseAdapter db_ = null;
         InputStream priceData = null;
-
-        PortalInfo portalInfo = (PortalInfo)actionRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
 
         try  {
             if ( log.isDebugEnabled() ) {
@@ -145,13 +138,6 @@ public final class UploadPriceControllerPortlet implements Portlet {
             }
 
             db_ = DatabaseAdapter.getInstance();
-            boolean isSiteWithShop = isSiteWithShop( db_, portalInfo, actionResponse );
-            if (!isSiteWithShop) {
-                return;
-            }
-
-            if ( log.isDebugEnabled() )
-                log.debug( "#55.01.15 idSite -  "+portalInfo.getSiteId() );
 
             if ( log.isDebugEnabled() )
                 log.debug( "#55.01.15 start import price in db " );
@@ -174,7 +160,12 @@ public final class UploadPriceControllerPortlet implements Portlet {
             }
 
             try{
-                ImportPriceList.process( prices, portalInfo.getSiteId(), db_);
+                Long siteId = new Long( actionRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+                if ( log.isDebugEnabled() ) {
+                    log.debug( "#55.01.15 idSite -  "+siteId );
+                }
+
+                ImportPriceList.process( prices, siteId, db_);
                 // reinit Shop in cache. need for correct output date/time of upload price
                 Shop.reinit();
             }
@@ -213,61 +204,5 @@ public final class UploadPriceControllerPortlet implements Portlet {
             DatabaseAdapter.close( db_ );
             db_ = null;
         }
-    }
-
-    private boolean isSiteWithShop( DatabaseAdapter db_, PortalInfo portalInfo, ActionResponse actionResponse ) {
-
-        return true;
-
-        // Todo need implement
-/*
-        SiteMenu siteMenu = SiteMenu.getInstance( db_, portalInfo.getSiteId() );
-        boolean isSiteWithShop = false;
-
-        if (siteMenu!=null) {
-            for (int i = 0; i < siteMenu.getMenuLanguageCount(); i++) {
-                MenuLanguageInterface c = siteMenu.getMenuLanguage(i);
-
-                for (int j = 0; j < c.getMenuCount(); j++) {
-                    MenuInterface item = c.getMenu( j );
-
-                    if (checkShopContext(item)) {
-                        isSiteWithShop =  true;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if ( !isSiteWithShop ) {
-            actionResponse.setRenderParameter(
-                ERROR_TEXT, "Данный сайт не поддерживает ни одного прайса. Код ошибки #10.04");
-            actionResponse.setRenderParameter(
-                ERROR_URL, "загрузить повторно");
-        }
-        return isSiteWithShop;
-*/
-    }
-
-    private boolean checkShopContext(MenuInterface menu) {
-        return checkShopContext(menu.getMenuItem());
-    }
-
-    private boolean checkShopContext(List v)
-    {
-        if (v == null)
-            return false;
-
-        for (int j = 0; j < v.size(); j++) {
-            MenuItemInterface ctxItem =
-                (MenuItemInterface) v.get(j);
-
-            if (ShopPortlet.CTX_TYPE_SHOP.equals(ctxItem.getType()))
-                return true;
-
-            if (checkShopContext(ctxItem.getCatalogItems()))
-                return true;
-        }
-        return false;
     }
 }

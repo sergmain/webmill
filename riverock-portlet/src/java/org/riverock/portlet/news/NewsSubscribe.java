@@ -34,9 +34,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
@@ -44,21 +42,18 @@ import org.riverock.common.tools.ServletTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.tools.XmlTools;
-
+import org.riverock.interfaces.sso.a3.AuthException;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.AuthException;
-
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
 import org.riverock.webmill.container.core.InsertMainUserMetadataItem;
 import org.riverock.webmill.container.core.UpdateMainUserMetadataItem;
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.tools.PortalUserMetadata;
-import org.riverock.webmill.container.portal.PortalInfo;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
+import org.riverock.webmill.container.tools.PortalUserMetadata;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * @author SMaslyukov
@@ -67,7 +62,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultContent;
  *         $Id$
  */
 public class NewsSubscribe implements PortletResultObject, PortletResultContent {
-    private final static Log log = LogFactory.getLog( NewsSubscribe.class );
+    private final static Logger log = Logger.getLogger( NewsSubscribe.class );
 
     public NewsSubscribe()
     {
@@ -227,7 +222,8 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
             db_ = DatabaseAdapter.getInstance();
 
-            PortalInfo portalInfo = (PortalInfo)portletRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+            Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+
             AuthSession auth_ = (AuthSession)portletRequest.getUserPrincipal();
             MainUserMetadataItemType meta = PortalUserMetadata.getMetadata( db_, auth_.getUserLogin(), portletRequest.getServerName(), NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS);
 
@@ -241,7 +237,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
                 meta = new MainUserMetadataItemType();
                 meta.setIdMainUserMetadata( id );
                 meta.setIdUser( auth_.getUserInfo().getUserId() );
-                meta.setIdSite( portalInfo.getSiteId() );
+                meta.setIdSite( siteId );
                 meta.setMeta( NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS );
                 meta.setIntValue( isSubscribe?1L:0L );
                 InsertMainUserMetadataItem.process(db_, meta);

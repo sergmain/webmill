@@ -34,8 +34,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Marshaller;
 
 import org.riverock.common.tools.DateTools;
@@ -44,18 +43,17 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.core.GetPriceListItem;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
-import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.portlet.shop.bean.ShopOrder;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -65,7 +63,7 @@ import org.riverock.webmill.container.ContainerConstants;
  * $Id$
  */
 public final class OrderLogic {
-    private final static Log log = LogFactory.getLog( OrderLogic.class );
+    private final static Logger log = Logger.getLogger( OrderLogic.class );
 
     public OrderLogic() {
     }
@@ -77,7 +75,7 @@ public final class OrderLogic {
 
             PortletSession session = renderRequest.getPortletSession(true);
             Long idShop = PortletService.getIdPortlet(ShopPortlet.NAME_ID_SHOP_PARAM, renderRequest);
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
 
             if (log.isDebugEnabled())
@@ -195,7 +193,7 @@ public final class OrderLogic {
                         log.debug("count " + count);
                     }
 
-                    addItem(dbDyn, order, id_item, count, portalInfo.getSiteId());
+                    addItem(dbDyn, order, id_item, count, siteId );
                 }
                 session.removeAttribute(ShopPortlet.ORDER_SESSION);
                 session.setAttribute(ShopPortlet.ORDER_SESSION, order);

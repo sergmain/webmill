@@ -40,8 +40,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.mail.MailMessage;
 import org.riverock.common.tools.ExceptionTools;
@@ -51,25 +50,22 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
-
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.portlet.login.LoginUtils;
 import org.riverock.portlet.price.OrderLogic;
 import org.riverock.portlet.price.PriceList;
 import org.riverock.portlet.price.Shop;
 import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.ShopOrderType;
+import org.riverock.portlet.shop.bean.ShopOrder;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.portlet.login.LoginUtils;
-import org.riverock.portlet.shop.bean.ShopOrder;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.UserInfo;
-
-import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.StreamWrapper;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.tools.StreamWrapper;
 
 /**
  * Author: mill
@@ -80,8 +76,8 @@ import org.riverock.webmill.container.tools.PortletService;
  */
 
 public final class InvoicePortlet implements Portlet {
+    private final static Logger log = Logger.getLogger( InvoicePortlet.class );
 
-    private final static Log log = LogFactory.getLog( InvoicePortlet.class );
     public final static String CTX_TYPE_INVOICE = "mill.invoice";
 
     public InvoicePortlet() {
@@ -111,7 +107,6 @@ public final class InvoicePortlet implements Portlet {
         try {
             outputStream = renderResponse.getPortletOutputStream();
             StreamWrapper out = new StreamWrapper(outputStream, ContentTypeTools.CONTENT_TYPE_UTF8);
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
 
             db_ = DatabaseAdapter.getInstance();
 
@@ -218,7 +213,8 @@ public final class InvoicePortlet implements Portlet {
                     DatabaseAdapter dbDyn = null;
                     try {
                         dbDyn = DatabaseAdapter.getInstance();
-                        OrderLogic.setItem( dbDyn, order, id_item, count, portalInfo.getSiteId() );
+                        Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+                        OrderLogic.setItem( dbDyn, order, id_item, count, siteId );
                     }
                     catch( Exception e1 ) {
                         try {
