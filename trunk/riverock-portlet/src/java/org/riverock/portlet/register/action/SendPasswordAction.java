@@ -27,6 +27,7 @@ package org.riverock.portlet.register.action;
 import java.util.ResourceBundle;
 
 import javax.mail.MessagingException;
+import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -42,6 +43,7 @@ import org.riverock.portlet.register.RegisterError;
 import org.riverock.portlet.register.bean.RegisterPasswordInfoBean;
 import org.riverock.portlet.register.dao.RegisterDAOFactory;
 import org.riverock.portlet.register.dao.RegisterPasswordInfoDAO;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * @author SergeMaslyukov
@@ -54,6 +56,7 @@ public class SendPasswordAction implements Action {
 
     public String execute( ModuleActionRequest moduleActionRequest ) throws ActionException {
 
+        PortletRequest portletRequet = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
         String email = moduleActionRequest.getRequest().getString( RegisterConstants.NAME_EMAIL );
 
         if( StringTools.isEmpty( email ) ) {
@@ -71,8 +74,7 @@ public class SendPasswordAction implements Action {
             }
 
             // Todo rewrite with portal property
-//            bean.setAdminEmail( portalInfo.getSiteId() );
-            bean.setAdminEmail( "webmill@askmore.info" );
+            bean.setAdminEmail( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL ) );
 
             return sendPassword( bean, moduleActionRequest.getResourceBundle() );
 
@@ -86,8 +88,8 @@ public class SendPasswordAction implements Action {
 
     private String sendPassword( RegisterPasswordInfoBean bean, ResourceBundle bundle ) throws MessagingException {
 
-        String message = "Your password is";
-        String subj = "Requested info";
+        String message = bundle.getString( "reg.send-password.your-password" );
+        String subj = bundle.getString( "reg.send-password.info" );
 
         MailMessage.sendMessage( message,
             bean.getEmail(),
