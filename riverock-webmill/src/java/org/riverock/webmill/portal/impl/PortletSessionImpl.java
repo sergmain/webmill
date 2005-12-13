@@ -46,8 +46,11 @@ public final class PortletSessionImpl implements PortletSession, HttpSession {
 
     private HttpSession session = null;
     public PortletSessionImpl(HttpSession session){
+        if (session==null) {
+            throw new NullPointerException("session object is null");
+        }
         this.session = session;
-        creationTime = System.currentTimeMillis();
+//        creationTime = System.currentTimeMillis();
     }
 
     private long creationTime;
