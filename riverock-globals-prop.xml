@@ -36,9 +36,9 @@
     <property name="tomcat-service-name" value="Tomcat5"/>
     <property name="tomcat-home" value="c:/opt/Tomcat5.5"/>
 
-    <property name="castor.lib" value="castor-0.9.9-xml.jar"/>
-    <property name="castor-core.lib" value="castor-0.9.9-xml.jar"/>
-    <property name="castor-schema.lib" value="castor-0.9.9-xml.jar"/>
+    <property name="castor.lib" value="castor-0.9.9.1-xml.jar"/>
+    <property name="castor-core.lib" value="castor-0.9.9.1-xml.jar"/>
+    <property name="castor-schema.lib" value="castor-0.9.9.1-xml.jar"/>
 
 
     <property name="xerces.lib" value="xercesImpl-2.6.2.jar"/>
