@@ -33,7 +33,6 @@ import java.util.StringTokenizer;
 import java.nio.charset.Charset;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -172,7 +171,7 @@ public final class ServletTools {
 
     public static String getHiddenItem(final String name, final Long value)
     {
-        return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value!=null?value.longValue():0) + "\">\n");
+        return ("<input type=\"hidden\" name=\"" + name + "\" value=\"" + (value!=null?value:0) + "\">\n");
     }
 
     public static void immediateRemoveAttribute(final HttpSession session,
@@ -185,13 +184,13 @@ public final class ServletTools {
                 log.debug("#12.12.001 search method 'clearObject'");
 
             Class cl = obj.getClass();
-            Method m = cl.getMethod("clearObject", null);
+            Method m = cl.getMethod("clearObject", (Class[])null);
 
             if (log.isDebugEnabled())
                 log.debug("#12.12.002 invoke method 'clearObject'");
 
             if (m != null)
-                m.invoke(obj, null);
+                m.invoke(obj, (Object[])null);
 
             if (log.isDebugEnabled())
                 log.debug("#12.12.003 complete invoke method 'clearObject'");
@@ -204,52 +203,6 @@ public final class ServletTools {
 
         session.removeAttribute(attr);
         obj = null;
-    }
-
-    /**
-     * @deprecated
-     * Если при вызове текущего URL переменная не инициализирована, то перенаправление на
-     * страницу index.jsp
-     * Параметры:
-     * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * HttpServletResponse response	- обычно это response из окружения JSP<br>
-     * String f - имя переменной для проверки<br>
-     * </blockquote>
-     */
-    public static boolean isNotInit(final HttpServletRequest request, final HttpServletResponse response, final String f)
-    {
-        return isNotInit(request, response, f, "index.jsp");
-    }
-
-    /**
-     * @deprecated
-     * Если при вызове текущего URL переменная не инициализирована, то перенаправление на
-     * страницу index.jsp
-     * Параметры:
-     * <blockquote>
-     * HttpServletRequest request	- обычно это request из окружения JSP<br>
-     * HttpServletResponse response	- обычно это response из окружения JSP<br>
-     * String f - имя переменной для проверки<br>
-     * String defURL - URL для перенаправления, если переменная отсутствует
-     * </blockquote>
-     */
-    public static boolean isNotInit(final HttpServletRequest request, final HttpServletResponse response, final String f, final String defURL)
-    {
-
-        if (request.getParameter(f) == null)
-        {
-            try
-            {
-                response.sendRedirect(defURL);
-            }
-            catch (Exception e)
-            {
-            }
-
-            return true;
-        }
-        return false;
     }
 
     /**
