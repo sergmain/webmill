@@ -78,7 +78,7 @@ import org.xml.sax.InputSource;
 
 public class ApplicationServer extends HttpServlet
 {
-    private static Logger log = Logger.getLogger("org.riverock.webmill.as.server.ApplicationServer");
+    private static Logger log = Logger.getLogger( "org.riverock.webmill.as.server.ApplicationServer" );
 
     public ApplicationServer()
     {
@@ -489,97 +489,6 @@ public class ApplicationServer extends HttpServlet
             }
         }
     }
-
-/*
-    public void doGetTest(HttpServletRequest request_, HttpServletResponse response_)
-        throws IOException, ServletException
-    {
-        long startMills = System.currentTimeMillis();
-
-        try
-        {
-            boolean status = (request_.getParameter( Constants.NAME_APPL_PARAM )!=null);
-
-            ResourceRequestType str = null;
-            if (status)
-            {
-                if (log.isDebugEnabled())
-                    log.debug("Parameter is present");
-
-                String p = ServletTools.getString(request_, Constants.NAME_APPL_PARAM );
-
-                if (log.isDebugEnabled())
-                    log.debug("Parameter - "+p);
-
-//                String decode = URIUtil.decode( p );
-                String decode = p;
-
-                if (log.isDebugEnabled())
-                    log.debug("Decoded parameter - "+decode);
-
-                InputSource inSrc = new InputSource( new StringReader(decode) );
-                str = (ResourceRequestType) Unmarshaller.unmarshal(ResourceRequestType.class, inSrc);
-
-                if (log.isDebugEnabled())
-                    log.debug("XML Parameter - "+str);
-            }
-
-            out = response_.getWriter();
-
-            ResourceResponseType res = new ResourceResponseType();
-            response_.setContentType("text/html; charset=UTF-8");
-
-            SiteData data = new SiteData();
-            if (log.isDebugEnabled())
-                log.debug("get SiteListSite");
-            SiteListSiteType site = data.getSiteData("me.askmore");
-            if (log.isDebugEnabled())
-                log.debug("SiteListSite site - "+site);
-
-            res.setIsError( false );
-
-            String xmlStr = XmlTools.getXml(site, "SiteListSite");
-            if (log.isDebugEnabled())
-                log.debug("XML SiteListSite site - "+xmlStr);
-
-            String strData = xmlStr + 111;
-//            String strData = URIUtil.encode( xmlStr );
-//          strData =  StringTools.encodeXml( xmlStr );
-
-            if (log.isDebugEnabled())
-                log.debug("strData - "+strData);
-
-            res.setData( strData );
-
-
-//            res.setIsError( true );
-//            res.setErrorText( "GET method not allowed in application server" );
-//            if(str != null)
-//            {
-//                res.setErrorText( res.getErrorText() + str.getCodeResource() );
-//            }
-
-            res.setStartProcessing( startMills );
-            res.setEndProcessing( System.currentTimeMillis() );
-
-            out.write( XmlTools.getXml(res, "ResourceResponse") );
-        }
-        catch(Exception e)
-        {
-            log.error("Error process answer to client", e);
-            throw new ServletException(e);
-        }
-        finally
-        {
-            if (out != null)
-            {
-                out.flush();
-                out.close();
-                out = null;
-            }
-        }
-    }
-*/
 
     public static void main(String args[])
         throws Exception
