@@ -416,9 +416,8 @@ public class StringTools {
     public static String replaceStringArray( final String str_, final String repl[][])
     {
         String qqq = str_;
-        for (int i = 0; i < repl.length; i++)
-        {
-            qqq = StringTools.replaceString(qqq, repl[i][0], repl[i][1]);
+        for (final String[] newVar : repl) {
+            qqq = StringTools.replaceString(qqq, newVar[0], newVar[1]);
         }
         return qqq;
 
@@ -545,10 +544,9 @@ public class StringTools {
     {
 
         StringBuffer sb = new StringBuffer(bytes.length * 2);
-        for (int i = 0; i < bytes.length; i++)
-        {
-            sb.append(convertDigit((int) (bytes[i] >> 4)));
-            sb.append(convertDigit((int) (bytes[i] & 0x0f)));
+        for (final byte newVar : bytes) {
+            sb.append(convertDigit((int) (newVar >> 4)));
+            sb.append(convertDigit((int) (newVar & 0x0f)));
         }
         return (sb.toString());
 
