@@ -2,7 +2,6 @@ package org.riverock.forum.action;
 
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
-import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.util.Constants;
 import org.riverock.module.exception.ActionException;
 
