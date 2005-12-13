@@ -57,6 +57,8 @@ public class CreateAccountAction implements Action {
 
     public String execute( ModuleActionRequest moduleActionRequest ) throws ActionException {
 
+        log.debug("Start createAccountAction");
+
         PortletRequest portletRequet = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
 
         CreateAccountBean bean = new CreateAccountBean();
@@ -69,19 +71,20 @@ public class CreateAccountAction implements Action {
         bean.setEmail( moduleActionRequest.getRequest().getString( RegisterConstants.EMAIL_PARAM ) );
 
         if( StringTools.isEmpty( bean.getEmail() ) ) {
+            log.warn( "email is empty" ); 
             return RegisterError.emailIsEmpty( moduleActionRequest );
         }
 
+        // register-default-role
         String role = PortletMetadataService.getMetadata( portletRequet, RegisterConstants.DEFAULT_ROLE_METADATA );
         bean.setRole( role );
-        // Todo rewrite with portal property
-//        bean.setAdminEmail( portalInfo.getSiteId() );
         bean.setAdminEmail( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL ) );
         bean.setCompanyId( new Long( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID ) ) );
 
         try {
             int status = checkRegisterData( bean );
             if( status != RegisterConstants.OK_STATUS ) {
+                log.warn( "checking status is not OK, value: " + status ); 
                 return sendStatus( bean, moduleActionRequest, status );
             }
 
@@ -104,6 +107,7 @@ public class CreateAccountAction implements Action {
         switch( status ) {
             case RegisterConstants.ROLE_IS_NULL_STATUS:
                 // "Can not add new user because default role not specified in metadata"
+                log.error("default role is null");
                 return RegisterError.roleIsNull( moduleActionRequest );
 
             case RegisterConstants.USERNAME_ALREADY_EXISTS_STATUS:
@@ -120,7 +124,7 @@ public class CreateAccountAction implements Action {
 
                 String s = moduleActionRequest.getResourceBundle().getString( "reg.mail_body" );
                 String mailMessage =
-                    MessageFormat.format( s, new Object[]{bean.getUsername(), bean.getPassword1(), bean.getServerName()} );
+                    MessageFormat.format( s, new Object[]{bean.getUsername(), bean.getPassword1() } );
 
                 MailMessage.sendMessage( mailMessage + "\n\nProcess of registration was made from IP ",
                     bean.getEmail(),
@@ -131,7 +135,7 @@ public class CreateAccountAction implements Action {
                 return RegisterConstants.OK_EXECUTE_STATUS;
 
             default:
-                return RegisterConstants.OK_EXECUTE_STATUS;
+                throw new IllegalStateException("unknown action status: " + status);
         }
     }
 
@@ -159,10 +163,6 @@ public class CreateAccountAction implements Action {
 
         if( !bean.getPassword1().equals( bean.getPassword2() ) ) {
             return RegisterConstants.PASSWORD_NOT_EQUALS_STATUS;
-        }
-
-        if( bean.getServerName() == null ) {
-            return RegisterConstants.SERVER_NAME_IS_NULL_STATUS;
         }
 
         return RegisterConstants.OK_STATUS;

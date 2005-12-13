@@ -39,7 +39,6 @@ public class CreateAccountBean {
     private String lastName = null;
     private String middleName = null;
     private String role = null;
-    private String serverName = null;
     private String adminEmail = null;
     private Long companyId = null;
 
@@ -123,11 +122,4 @@ public class CreateAccountBean {
         this.role = role;
     }
 
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName( String serverName ) {
-        this.serverName = serverName;
-    }
 }

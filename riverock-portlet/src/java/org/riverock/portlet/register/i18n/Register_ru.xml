@@ -23,6 +23,7 @@
     <entry key="reg.register">Регистрация</entry>
     <entry key="reg.send-password.your-password">Ваш пароль</entry>
     <entry key="reg.send-password.info">Запрошенная информация</entry>
+    <entry key="reg.mail_body">You succesfully registered.\nUse your username and password for process invoice:\n\n\nUserame: {0}\nPassword: {1}\n</entry>
 </properties>
 
 
