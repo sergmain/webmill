@@ -49,6 +49,7 @@
         <pathelement location="${lib.dir}/${secure.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
+        <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
@@ -164,6 +165,8 @@
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-cache.lib}"/>
+        <include name="${commons-lang.lib}"/>
+
 <!--        <include name="${riverock-webmill.lib}"/>-->
 
 <!--        <include name="${commons-logging.lib}"/>-->
