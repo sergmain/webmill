@@ -50,6 +50,8 @@ public class CreateAccountDAO {
 
     public int execute( ModuleActionRequest moduleActionRequest, CreateAccountBean bean ) throws Exception {
 
+        log.debug("start createAccountDAO"); 
+
         DatabaseAdapter dbDyn = null;
         try {
 
@@ -69,6 +71,10 @@ public class CreateAccountDAO {
                 "where  USER_LOGIN=?",
                 new Object[]{ bean.getUsername() }
             );
+
+            if( log.isDebugEnabled() ) {
+                log.debug( "User exists: " + (countRecord!=0) );
+            }
 
             if (countRecord!=0) {
                 return RegisterConstants.USERNAME_ALREADY_EXISTS_STATUS;
@@ -126,7 +132,9 @@ public class CreateAccountDAO {
 
             }
 
-            log.error( "Error register new user", e );
+            String es = "Error register new user";
+            log.error( es, e );
+            throw new Exception( es, e );
 
         }
         finally {

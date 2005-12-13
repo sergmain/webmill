@@ -126,13 +126,13 @@ public class RegisterPortlet extends AbstractPortlet {
         genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
         genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setBaseModuleUrl(
-            PortletService.ctxStringBuffer((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "riverock.auth" ).
+            PortletService.ctxStringBuffer((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "mill.register" ).
             append("?a=1")
         );
         genericBean.setRemoteAddr( moduleActionRequest.getRequest().getRemoteAddr() );
         genericBean.setUserAgent( moduleActionRequest.getRequest().getUserAgent() );
 
-        moduleActionRequest.getRequest().setAttribute( Constants.GENERIC_BEAN, genericBean );
+        moduleActionRequest.getRequest().setAttribute( RegisterConstants.REGISTER_BEAN, genericBean );
         moduleActionRequest.getRequest().setAttribute( RegisterConstants.REQUEST_LOCALE_VALUE, moduleActionRequest.getRequest().getLocale() );
         return genericBean;
     }

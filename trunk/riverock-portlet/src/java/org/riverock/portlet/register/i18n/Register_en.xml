@@ -23,6 +23,7 @@
     <entry key="reg.register">Register</entry>
     <entry key="reg.send-password.your-password">Your password is</entry>
     <entry key="reg.send-password.info">Requested info</entry>
+    <entry key="reg.mail_body">You succesfully registered.\nUse your username and password for process invoice:\n\n\nUserame: {0}\nPassword: {1}\n</entry>
 </properties>
 
 

@@ -32,6 +32,9 @@ package org.riverock.portlet.register;
  */
 public class RegisterConstants {
 
+    public static final String REGISTER_BEAN = "registerBean";
+
+
     public static final String REQUEST_LOCALE_VALUE = "request-locale";
 
     public static final String NOT_LOGGED = "not_logged";
@@ -68,7 +71,6 @@ public class RegisterConstants {
     public final static int EMAIL_IS_WRONG_STATUS = 6;
     public final static int ROLE_IS_NULL_STATUS = 7;
     public final static int USERNAME_ALREADY_EXISTS_STATUS = 8;
-    public final static int SERVER_NAME_IS_NULL_STATUS = 9;
 
     public static final String REGISTER_PORTLET = "mill.register";
     public static final String DEFAULT_ROLE_METADATA = "register-default-role";
