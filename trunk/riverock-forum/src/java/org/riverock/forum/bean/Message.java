@@ -45,7 +45,6 @@ public class Message implements Serializable {
     }
 
     public void setU_address(String u_address) {
-//        this.u_address = StringTools.encodeXml(u_address);
         this.u_address = u_address;
     }
 
@@ -70,7 +69,6 @@ public class Message implements Serializable {
     }
 
     public void setU_name(String u_name) {
-//        this.u_name = StringTools.encodeXml(u_name);
         this.u_name = u_name;
     }
 

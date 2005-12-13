@@ -3,8 +3,6 @@ package org.riverock.forum.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import org.riverock.common.tools.StringTools;
-
 public class TopicBean implements Serializable {
     private java.util.Collection messages;
     private String f_name;
@@ -98,7 +96,6 @@ public class TopicBean implements Serializable {
     }
 
     public void setT_name(String t_name) {
-//        this.t_name = StringTools.encodeXml(t_name);
         this.t_name = t_name;
     }
 

@@ -1,7 +1,5 @@
 package org.riverock.forum.bean;
 
-import org.riverock.common.tools.StringTools;
-
 /**
  * @author SMaslyukov
  *         Date: 29.04.2005
@@ -25,7 +23,6 @@ public class MessageBean {
     }
 
     public void setContent(String content) {
-//        this.content = StringTools.encodeXml(content);
         this.content = content;
     }
 
