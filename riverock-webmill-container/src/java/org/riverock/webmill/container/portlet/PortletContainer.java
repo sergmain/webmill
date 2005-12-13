@@ -320,10 +320,12 @@ public final class PortletContainer implements Serializable {
         try {
             final ClassLoader classLoader = portletItem.getClassLoader();
 
+            boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
+
             System.out.println("oldLoader\n" + oldLoader+"\nhashCode: " + oldLoader.hashCode() );
             System.out.println("classLoader\n" + classLoader+"\nhashCode: " + oldLoader.hashCode() );
+            System.out.println("isNotUrl portlet: " + isNotUrl );
 
-            boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
 
             Thread.currentThread().setContextClassLoader( classLoader );
 
@@ -375,7 +377,7 @@ public final class PortletContainer implements Serializable {
                 }
             }
             else {
-
+        	System.out.println("Portlet is url, resourceBundle: " + resourceBundle );
             }
 
             final PortletEntry entry = new PortletEntry(portletDefinition, portletConfig, object, portletItem.getServletConfig(), portletItem.getClassLoader(), portletItem.getUniqueName() );
@@ -391,10 +393,16 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    private PortletItem searchPortletItem(String portletName) {
-        if (portletName == null) {
+    public PortletItem searchPortletItem(final String queryPortletName) {
+        if (queryPortletName == null) {
             return null;
         }
+
+        String portletName = queryPortletName;
+        if ( portletName.indexOf( PORTLET_ID_NAME_SEPARATOR )==-1 ) {
+            portletName = PORTLET_ID_NAME_SEPARATOR + queryPortletName;
+        }
+
 /*
         if (DEBUG) {
             Iterator<PortletItem> it = portletItems.iterator();
