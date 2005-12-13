@@ -33,7 +33,6 @@ public class Topic implements Serializable {
     }
 
     public void setT_name(String t_name) {
-//        this.t_name = StringTools.encodeXml(t_name);
         this.t_name = t_name;
     }
 
@@ -50,7 +49,6 @@ public class Topic implements Serializable {
     }
 
     public void setU_name(String u_name) {
-//        this.u_name = StringTools.encodeXml(u_name);
         this.u_name = u_name;
     }
 
@@ -59,7 +57,6 @@ public class Topic implements Serializable {
     }
 
     public void setU_name2(String u_name2) {
-//        this.u_name2 = StringTools.encodeXml(u_name2);
         this.u_name2 = u_name2;
     }
 

@@ -1,5 +1,7 @@
 package org.riverock.forum.util;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import org.riverock.common.tools.StringTools;
 
 /**
@@ -41,7 +43,7 @@ public class StringUtils {
         }
         String str = input;
         str = createBreaks(str, 80);
-        str = StringTools.encodeXml(str);
+        str = StringEscapeUtils.escapeXml(str);
         str = convertURL(str);
         str = convertNewlines(str);
         return str;
