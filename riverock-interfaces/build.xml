@@ -45,8 +45,7 @@
     </path>
 
     <target name="full_build_module">
-        <antcall target="full_clean"/>
-        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
+        <antcall target="clean"/>
         <antcall target="jar"/>
     </target>
 
@@ -60,7 +59,6 @@
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
@@ -73,23 +71,6 @@
         </delete>
         <mkdir dir="${build.java}" />
 
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            memoryInitialSize="128m"
-            memoryMaximumSize="256m"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-        </javac>
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
