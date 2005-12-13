@@ -30,7 +30,7 @@ public class CommitEditMessageAction  implements Action {
         ModuleUser auth_ = forumActionBean.getRequest().getUser();
 
         Long u_id = auth_.getId();
-        int tm_iconid = forumActionBean.getRequest().getInt( "tm_iconid", new Integer(0)).intValue();
+        int tm_iconid = forumActionBean.getRequest().getInt("tm_iconid", 0);
 
         Integer t_id = forumActionBean.getRequest().getInt( Constants.NAME_FORUM_TOPIC_ID );
         Integer m_id = forumActionBean.getRequest().getInt( Constants.NAME_FORUM_MESSAGE_ID );

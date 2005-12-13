@@ -20,14 +20,14 @@ public class ForumAction implements Action {
         if (f_id==null) {
             return ForumError.noSuchForumError(forumActionBean);
         }
-        int start = forumActionBean.getRequest().getInt( "start", new Integer(0)).intValue();
+        int start = forumActionBean.getRequest().getInt("start", 0);
         String keyword = forumActionBean.getRequest().getString("keyword", "");
         keyword = keyword.trim();
 
         DAOFactory daof = DAOFactory.getDAOFactory();
         ForumDAO forumDAO = daof.getForumDAO();
         ForumConcreteBean forumConcreteBean = forumDAO.execute(
-            f_id.intValue(),
+            f_id,
             ForumPortlet.getMessagesPerPage(forumActionBean.getConfig()),
             ForumPortlet.getTopicsPerPage(forumActionBean.getConfig()),
             start, keyword,
