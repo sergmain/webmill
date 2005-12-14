@@ -93,7 +93,9 @@ public final class BindIndex extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ResourceBundle bundle = ResourceBundle.getBundle("org.riverock.portlet.resource.AuthUser", renderRequest.getLocale() );
+
+
             if (bundle==null) {
                 log.warn("bundle is null");
             }
@@ -201,10 +203,6 @@ public final class BindIndex extends HttpServlet
             out.write(bundle.getString("index.jsp.fio"));
             out.write("</th>\r\n");
 
-//                    out.write("<th class=\"memberArea\">");
-//                    out.write(bundle.getString("index.jsp.code_proff"));
-//                    out.write("</th>\r\n");
-
             out.write("<th class=\"memberArea\">");
             out.write(bundle.getString("index.jsp.user_login"));
             out.write("</th>\r\n            ");
@@ -214,10 +212,10 @@ public final class BindIndex extends HttpServlet
                 out.write("\r\n");
                 out.write("<th class=\"memberArea\" width=\"5%\">");
                 out.write(bundle.getString("index.jsp.is_use_current_firm"));
-                out.write("</th>\r\n                ");
+                out.write("</th>\r\n");
 
             }
-            out.write("\r\n            ");
+            out.write("\r\n");
 
             if (authInfo.getService() == 1)
             {

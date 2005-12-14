@@ -152,7 +152,16 @@ public final class MemberPortlet  implements Portlet {
                             log.debug("renderRequest session - "+renderRequest.getPortletSession());
                             for (Enumeration e = renderRequest.getParameterNames(); e.hasMoreElements();) {
                                 String s = (String) e.nextElement();
-                                log.debug("Request attr - " + s + ", value - " + RequestTools.getString(renderRequest, s));
+                                log.debug("Request param: " + s + ", value: " + RequestTools.getString(renderRequest, s));
+                            }
+                            boolean isFound = false;
+                            for (Enumeration e = renderRequest.getAttributeNames(); e.hasMoreElements();) {
+                                String key = (String) e.nextElement();
+                                log.debug("Request attr: " + key + ", value: " + renderRequest.getAttribute( key ));
+                                isFound = true;
+                            }
+                            if (!isFound) {
+                                log.debug("Count of attr in request is: "+isFound);  
                             }
                         }
                         dispatcher.include( renderRequest, renderResponse );

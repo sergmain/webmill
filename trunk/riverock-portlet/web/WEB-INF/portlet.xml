@@ -401,7 +401,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-        <resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
+        <resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
+<!--        <resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle> -->
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
@@ -426,7 +427,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-        <resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
+        	<resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
