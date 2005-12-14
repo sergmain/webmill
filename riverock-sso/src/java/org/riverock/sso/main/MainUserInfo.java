@@ -30,6 +30,7 @@ import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sso.bean.UserInfoImpl;
@@ -39,6 +40,8 @@ import org.riverock.sso.bean.UserInfoImpl;
  */
 public class MainUserInfo extends UserInfoImpl {
     private static Logger log = Logger.getLogger( MainUserInfo.class );
+
+    private static final long serialVersionUID = 3043770876L;
 
     protected void finalize() throws Throwable {
         setFirstName(null);
@@ -59,8 +62,7 @@ public class MainUserInfo extends UserInfoImpl {
     }
 
 
-    private MainUserInfo(String userLogin)
-        throws Exception {
+    private MainUserInfo(String userLogin) throws Exception {
         String sql_ = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -123,8 +125,9 @@ public class MainUserInfo extends UserInfoImpl {
     }
 
     public static MainUserInfo getInstance(String userLogin) throws Exception {
-        if (userLogin == null || userLogin.trim().length() == 0)
+        if ( StringTools.isEmpty(userLogin) ) {
             return null;
+        }
 
         return new MainUserInfo(userLogin);
     }
