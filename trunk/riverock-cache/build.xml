@@ -87,8 +87,6 @@
             deprecation="${deprecation}"
             optimize="${optimize}"
             failonerror="true"
-            memoryInitialSize="128m"
-            memoryMaximumSize="256m"
             >
             <classpath refid="classpath-base"/>
             <classpath>
