@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Sep 23, 2003
- * Time: 7:36:36 PM
- *
- * $Id$
- */
 package org.riverock.sso.a3;
 
 import java.sql.PreparedStatement;
@@ -52,6 +44,13 @@ import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
 
+/**
+ * User: Admin
+ * Date: Sep 23, 2003
+ * Time: 7:36:36 PM
+ *
+ * $Id$
+ */
 public class InternalAuthProviderTools
 {
     private static Logger log = Logger.getLogger(InternalAuthProviderTools.class);
@@ -145,17 +144,8 @@ public class InternalAuthProviderTools
         }
         finally
         {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+            DatabaseManager.close( ps );
+            ps = null;
         }
     }
 
@@ -220,7 +210,6 @@ public class InternalAuthProviderTools
     public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user, String role_name)
         throws Exception
     {
-//        Long id_role = checkWithCreateRole(ora_, role_name);
         Long roleId = getIDRole(ora_, role_name);
         if (roleId==null) {
              return false;
@@ -251,52 +240,6 @@ public class InternalAuthProviderTools
         item.setIdAccessGroup( id_role );
         InsertAuthRelateAccgroupItem.process( ora_, item );
         return true;
-/*
-        PreparedStatement ps = null;
-        try
-        {
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_auth_relate_accgroup");
-            seq.setTableName( "AUTH_RELATE_ACCGROUP");
-            seq.setColumnName( "ID_RELATE_ACCGROUP" );
-            long id = ora_.getSequenceNextValue( seq );
-
-            ps = ora_.prepareStatement(
-                "insert into AUTH_RELATE_ACCGROUP " +
-                "(ID_RELATE_ACCGROUP, ID_AUTH_USER, ID_ACCESS_GROUP) " +
-                "values "+
-                "(?, ?, ? )"
-            );
-            ps.setLong(1, id);
-            ps.setObject(2, id_auth_user);
-            ps.setObject(3, id_role);
-            int i = ps.executeUpdate();
-
-            if (log.isDebugEnabled()) {
-                log.debug("Count of added role - "+i);
-            }
-        }
-        catch (Exception e)
-        {
-            log.error("Error bind user role", e);
-            throw e;
-        }
-        finally
-        {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
-        }
-        return true;
-*/
     }
 
     public static Long addUserAuth(DatabaseAdapter db_, Long id_user,
@@ -349,17 +292,8 @@ public class InternalAuthProviderTools
         }
         finally
         {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+            DatabaseManager.close( ps );
+            ps = null;
         }
     }
 
@@ -399,17 +333,8 @@ public class InternalAuthProviderTools
         }
         finally
         {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+            DatabaseManager.close( ps );
+            ps = null;
         }
 
     }
@@ -495,17 +420,8 @@ public class InternalAuthProviderTools
         }
         finally
         {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+            DatabaseManager.close( ps );
+            ps = null;
         }
     }
 
@@ -544,17 +460,8 @@ public class InternalAuthProviderTools
         }
         finally
         {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+            DatabaseManager.close( ps );
+            ps = null;
         }
     }
 
@@ -593,17 +500,8 @@ public class InternalAuthProviderTools
         }
         finally
         {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+            DatabaseManager.close( ps );
+            ps = null;
         }
     }
 
@@ -642,17 +540,8 @@ public class InternalAuthProviderTools
         }
         finally
         {
-            if (ps != null)
-            {
-                try
-                {
-                    ps.close();
-                    ps = null;
-                }
-                catch (Exception e02)
-                {
-                }
-            }
+            DatabaseManager.close( ps );
+            ps = null;
         }
     }
 
@@ -966,5 +855,4 @@ public class InternalAuthProviderTools
             ps = null;
         }
     }
-
 }
