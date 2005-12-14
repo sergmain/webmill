@@ -89,7 +89,7 @@ public final class BindAdd extends HttpServlet
         try {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
+            ResourceBundle bundle = ResourceBundle.getBundle("org.riverock.portlet.resource.AuthUser", renderRequest.getLocale() );
 
             ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
             out = response.getWriter();
@@ -230,7 +230,7 @@ public final class BindAdd extends HttpServlet
                 case DatabaseManager.MYSQL_FAMALY:
 
                     String sql_ =
-                        "select b.id_firm id, concat(b.id_firm, ', ', b.full_name) NAME_FIRM "+
+                        "select b.id_firm id, b.full_name NAME_FIRM "+
                         "from   main_LIST_FIRM b "+
                         "where  b.ID_FIRM in ("+AuthHelper.getGrantedFirmId(db_, auth_.getUserLogin())+") and b.is_deleted=0 "+
                         "order  by b.ID_FIRM ASC ";
@@ -244,7 +244,7 @@ public final class BindAdd extends HttpServlet
                     break;
                 default:
                     ps = db_.prepareStatement(
-                        "select b.ID_FIRM id, ''||b.id_firm||', '||B.full_name NAME_FIRM "+
+                        "select b.ID_FIRM id, B.FULL_NAME NAME_FIRM "+
                         "from   v$_read_list_firm a, main_LIST_FIRM b "+
                         "where  a.ID_FIRM = b.ID_FIRM and b.is_deleted=0 and a.user_login=? "+
                         "order  by b.ID_FIRM ASC "
@@ -418,13 +418,13 @@ public final class BindAdd extends HttpServlet
         while (rs.next())
         {
 
-            v_val = rs.getString(1);
+            v_val = ""+new Double( rs.getString(1) ).intValue();
             v_str = rs.getString(2);
             if (v_str==null)
                 v_str = ""+v_val+", unknown value";
 
             out.write( "<option value=\"" +
-                v_val + "\">" + v_str.replace('\"', '\'') +
+                v_val + "\">" + v_val + ", " + v_str.replace('\"', '\'') +
                 "</option>\n");
 
         }
