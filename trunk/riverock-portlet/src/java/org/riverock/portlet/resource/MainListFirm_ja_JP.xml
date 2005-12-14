@@ -1,2 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resource><pair key="index.jsp.title" value="Список данных в таблице фирмы, UTF8 OK"/><pair key="index.jsp.number_reestr" value="number_reestr"/><pair key="index.jsp.zip" value="zip"/><pair key="index.jsp.okpo" value="okpo"/><pair key="index.jsp.okonh" value="okonh"/><pair key="index.jsp.short_name" value="short_name"/><pair key="index.jsp.chief" value="chief"/><pair key="index.jsp.buh" value="buh"/><pair key="index.jsp.account" value="account"/><pair key="index.jsp.bank" value="bank"/><pair key="index.jsp.kor_account" value="kor_account"/><pair key="index.jsp.url" value="url"/><pair key="index.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/><pair key="index.jsp.action" value="Действие"/><pair key="add_firm.jsp.registr_date" value="Дата регистрации"/><pair key="add_firm.jsp.new_rec" value="Новая запись"/><pair key="add_firm.jsp.number_reestr" value="number_reestr"/><pair key="add_firm.jsp.zip" value="zip"/><pair key="add_firm.jsp.okpo" value="okpo"/><pair key="add_firm.jsp.okonh" value="okonh"/><pair key="add_firm.jsp.full_name" value="full_name"/><pair key="add_firm.jsp.short_name" value="short_name"/><pair key="add_firm.jsp.telefon_buh" value="telefon_buh"/><pair key="add_firm.jsp.telefon_chief" value="telefon_chief"/><pair key="add_firm.jsp.chief" value="chief"/><pair key="add_firm.jsp.buh" value="buh"/><pair key="add_firm.jsp.fax" value="fax"/><pair key="add_firm.jsp.icq" value="icq"/><pair key="add_firm.jsp.account" value="account"/><pair key="add_firm.jsp.bank" value="bank"/><pair key="add_firm.jsp.kor_account" value="kor_account"/><pair key="add_firm.jsp.inn_bank" value="inn_bank"/><pair key="add_firm.jsp.url" value="url"/><pair key="add_firm.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/><pair key="add_firm.jsp.is_work" value="Запись действительна?"/><pair key="add_firm.jsp.is_need_person" value="Нужно ли в информации о предприятии показывать персоналии - дир, бух"/><pair key="add_firm.jsp.fio" value="fio"/><pair key="add_firm.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/><pair key="ch_firm.jsp.soato" value="Соато"/><pair key="ch_firm.jsp.ustav_fond" value="Уставный фонд"/><pair key="ch_firm.jsp.registr_date" value="Дата регистрации"/><pair key="ch_firm.jsp.number_reestr" value="number_reestr"/><pair key="ch_firm.jsp.okpo" value="okpo"/><pair key="ch_firm.jsp.okonh" value="okonh"/><pair key="ch_firm.jsp.full_name" value="full_name"/><pair key="ch_firm.jsp.address" value="address"/><pair key="ch_firm.jsp.telefon_buh" value="telefon_buh"/><pair key="ch_firm.jsp.telefon_chief" value="telefon_chief"/><pair key="ch_firm.jsp.telefon_io" value="telefon_io"/><pair key="ch_firm.jsp.registr_number" value="registr_number"/><pair key="ch_firm.jsp.chief" value="chief"/><pair key="ch_firm.jsp.buh" value="buh"/><pair key="ch_firm.jsp.fax" value="fax"/><pair key="ch_firm.jsp.email" value="email"/><pair key="ch_firm.jsp.account" value="account"/><pair key="ch_firm.jsp.bank" value="bank"/><pair key="ch_firm.jsp.kor_account" value="kor_account"/><pair key="ch_firm.jsp.bik" value="bik"/><pair key="ch_firm.jsp.url" value="url"/><pair key="ch_firm.jsp.is_work" value="Запись действительна?"/><pair key="ch_firm.jsp.is_need_recvizit" value="Нужно ли в информации о предприятии показывать платежные реквизиты"/><pair key="ch_firm.jsp.is_need_person" value="Нужно ли в информации о предприятии показывать персоналии - дир, бух"/><pair key="ch_firm.jsp.fio" value="fio"/><pair key="del_firm.jsp.soato" value="Соато"/><pair key="del_firm.jsp.ustav_fond" value="Уставный фонд"/><pair key="del_firm.jsp.registr_date" value="Дата регистрации"/><pair key="delete.title" value="Удаление данных из таблицы фирмы, UTF8 OK"/><pair key="del_firm.jsp.zip" value="zip"/><pair key="del_firm.jsp.okpo" value="okpo"/><pair key="del_firm.jsp.okonh" value="okonh"/><pair key="del_firm.jsp.full_name" value="full_name"/><pair key="del_firm.jsp.short_name" value="short_name"/><pair key="del_firm.jsp.address" value="address"/><pair key="del_firm.jsp.telefon_buh" value="telefon_buh"/><pair key="del_firm.jsp.telefon_chief" value="telefon_chief"/><pair key="del_firm.jsp.registr_number" value="registr_number"/><pair key="del_firm.jsp.chief" value="chief"/><pair key="del_firm.jsp.buh" value="buh"/><pair key="del_firm.jsp.email" value="email"/><pair key="del_firm.jsp.icq" value="icq"/><pair key="del_firm.jsp.account" value="account"/><pair key="del_firm.jsp.kor_account" value="kor_account"/><pair key="del_firm.jsp.url" value="url"/><pair key="del_firm.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/><pair key="del_firm.jsp.is_work" value="Запись действительна?"/><pair key="del_firm.jsp.is_need_recvizit" value="Нужно ли в информации о предприятии показывать платежные реквизиты"/><pair key="del_firm.jsp.fio" value="fio"/><pair key="del_firm.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/><pair key="index.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/><pair key="add_firm.jsp.telefon_io" value="telefon_io"/><pair key="ch_firm.jsp.short_name" value="short_name"/><pair key="ch_firm.jsp.short_client_info" value="Краткая информация о клиенте для администратора системы"/><pair key="del_firm.jsp.inn_bank" value="inn_bank"/><pair key="index.jsp.full_name" value="full_name"/><pair key="index.jsp.is_work" value="Запись действительна?"/><pair key="add_firm.jsp.soato" value="Соато"/><pair key="add.title" value="Добавление в таблицу фирмы, UTF8 OK"/><pair key="add_firm.jsp.email" value="email"/><pair key="add_firm.jsp.short_client_info" value="Краткая информация о клиенте для администратора системы"/><pair key="add_firm.jsp.is_need_recvizit" value="Нужно ли в информации о предприятии показывать платежные реквизиты"/><pair key="change.title" value="Внесение изменений в таблицу фирмы, UTF8 OK"/><pair key="ch_firm.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/><pair key="ch_firm.jsp.type_client" value="тип клиента - 0-не определен, 1-юрлицо, 2-частник,предприниматель."/><pair key="ch_firm.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/><pair key="del_firm.jsp.confirm" value="Подтвердите удаление:"/><pair key="del_firm.jsp.telefon_io" value="telefon_io"/><pair key="del_firm.jsp.short_client_info" value="Краткая информация о клиенте для администратора системы"/><pair key="del_firm.jsp.type_client" value="тип клиента - 0-не определен, 1-юрлицо, 2-частник,предприниматель."/><pair key="del_firm.jsp.is_need_person" value="Нужно ли в информации о предприятии показывать персоналии - дир, бух"/><pair key="del_firm.jsp.bank" value="bank"/><pair key="index.jsp.address" value="address"/><pair key="index.jsp.bik" value="bik"/><pair key="add_firm.jsp.ustav_fond" value="Уставный фонд"/><pair key="add_firm.jsp.address" value="address"/><pair key="add_firm.jsp.registr_number" value="registr_number"/><pair key="add_firm.jsp.bik" value="bik"/><pair key="add_firm.jsp.type_client" value="тип клиента - 0-не определен, 1-юрлицо, 2-частник,предприниматель."/><pair key="ch_firm.jsp.zip" value="zip"/><pair key="ch_firm.jsp.icq" value="icq"/><pair key="ch_firm.jsp.inn_bank" value="inn_bank"/><pair key="del_firm.jsp.number_reestr" value="number_reestr"/><pair key="del_firm.jsp.bik" value="bik"/><pair key="del_firm.jsp.fax" value="fax"/></resource>
+<resource>
+	<pair key="yesno.yes" value="Yes"/>
+	<pair key="yesno.no" value="No"/>
+	<pair key="button.add" value="Add"/>
+	<pair key="button.change" value="Change"/>
+	<pair key="button.delete" value="Delete"/>
+	<pair key="button.next" value="Next"/>
+	<pair key="access_denied" value="This operation not permited for you."/>
+
+	<pair key="page.main.1" value="Homepage"/>
+	<pair key="page.main.3" value="To main page of current section"/>
+	<pair key="page.main.4" value="To top page"/>
+
+	<pair key="index.jsp.title" value="Список данных в таблице фирмы, UTF8 OK"/>
+	<pair key="index.jsp.number_reestr" value="number_reestr"/>
+	<pair key="index.jsp.zip" value="zip"/>
+	<pair key="index.jsp.okpo" value="okpo"/>
+	<pair key="index.jsp.okonh" value="okonh"/>
+	<pair key="index.jsp.short_name" value="short_name"/>
+	<pair key="index.jsp.chief" value="chief"/>
+	<pair key="index.jsp.buh" value="buh"/>
+	<pair key="index.jsp.account" value="account"/>
+	<pair key="index.jsp.bank" value="bank"/>
+	<pair key="index.jsp.kor_account" value="kor_account"/>
+	<pair key="index.jsp.url" value="url"/>
+	<pair key="index.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/>
+	<pair key="index.jsp.action" value="Действие"/>
+	<pair key="add_firm.jsp.registr_date" value="Дата регистрации"/>
+	<pair key="add_firm.jsp.new_rec" value="Новая запись"/>
+	<pair key="add_firm.jsp.number_reestr" value="number_reestr"/>
+	<pair key="add_firm.jsp.zip" value="zip"/>
+	<pair key="add_firm.jsp.okpo" value="okpo"/>
+	<pair key="add_firm.jsp.okonh" value="okonh"/>
+	<pair key="add_firm.jsp.full_name" value="full_name"/>
+	<pair key="add_firm.jsp.short_name" value="short_name"/>
+	<pair key="add_firm.jsp.telefon_buh" value="telefon_buh"/>
+	<pair key="add_firm.jsp.telefon_chief" value="telefon_chief"/>
+	<pair key="add_firm.jsp.chief" value="chief"/>
+	<pair key="add_firm.jsp.buh" value="buh"/>
+	<pair key="add_firm.jsp.fax" value="fax"/>
+	<pair key="add_firm.jsp.icq" value="icq"/>
+	<pair key="add_firm.jsp.account" value="account"/>
+	<pair key="add_firm.jsp.bank" value="bank"/>
+	<pair key="add_firm.jsp.kor_account" value="kor_account"/>
+	<pair key="add_firm.jsp.inn_bank" value="inn_bank"/>
+	<pair key="add_firm.jsp.url" value="url"/>
+	<pair key="add_firm.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/>
+	<pair key="add_firm.jsp.is_work" value="Запись действительна?"/>
+	<pair key="add_firm.jsp.is_need_person" value="Нужно ли в информации о предприятии показывать персоналии - дир, бух"/>
+	<pair key="add_firm.jsp.fio" value="fio"/>
+	<pair key="add_firm.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/>
+	<pair key="ch_firm.jsp.soato" value="Соато"/>
+	<pair key="ch_firm.jsp.ustav_fond" value="Уставный фонд"/>
+	<pair key="ch_firm.jsp.registr_date" value="Дата регистрации"/>
+	<pair key="ch_firm.jsp.number_reestr" value="number_reestr"/>
+	<pair key="ch_firm.jsp.okpo" value="okpo"/>
+	<pair key="ch_firm.jsp.okonh" value="okonh"/>
+	<pair key="ch_firm.jsp.full_name" value="full_name"/>
+	<pair key="ch_firm.jsp.address" value="address"/>
+	<pair key="ch_firm.jsp.telefon_buh" value="telefon_buh"/>
+	<pair key="ch_firm.jsp.telefon_chief" value="telefon_chief"/>
+	<pair key="ch_firm.jsp.telefon_io" value="telefon_io"/>
+	<pair key="ch_firm.jsp.registr_number" value="registr_number"/>
+	<pair key="ch_firm.jsp.chief" value="chief"/>
+	<pair key="ch_firm.jsp.buh" value="buh"/>
+	<pair key="ch_firm.jsp.fax" value="fax"/>
+	<pair key="ch_firm.jsp.email" value="email"/>
+	<pair key="ch_firm.jsp.account" value="account"/>
+	<pair key="ch_firm.jsp.bank" value="bank"/>
+	<pair key="ch_firm.jsp.kor_account" value="kor_account"/>
+	<pair key="ch_firm.jsp.bik" value="bik"/>
+	<pair key="ch_firm.jsp.url" value="url"/>
+	<pair key="ch_firm.jsp.is_work" value="Запись действительна?"/>
+	<pair key="ch_firm.jsp.is_need_recvizit" value="Нужно ли в информации о предприятии показывать платежные реквизиты"/>
+	<pair key="ch_firm.jsp.is_need_person" value="Нужно ли в информации о предприятии показывать персоналии - дир, бух"/>
+	<pair key="ch_firm.jsp.fio" value="fio"/>
+	<pair key="del_firm.jsp.soato" value="Соато"/>
+	<pair key="del_firm.jsp.ustav_fond" value="Уставный фонд"/>
+	<pair key="del_firm.jsp.registr_date" value="Дата регистрации"/>
+	<pair key="delete.title" value="Удаление данных из таблицы фирмы, UTF8 OK"/>
+	<pair key="del_firm.jsp.zip" value="zip"/>
+	<pair key="del_firm.jsp.okpo" value="okpo"/>
+	<pair key="del_firm.jsp.okonh" value="okonh"/>
+	<pair key="del_firm.jsp.full_name" value="full_name"/>
+	<pair key="del_firm.jsp.short_name" value="short_name"/>
+	<pair key="del_firm.jsp.address" value="address"/>
+	<pair key="del_firm.jsp.telefon_buh" value="telefon_buh"/>
+	<pair key="del_firm.jsp.telefon_chief" value="telefon_chief"/>
+	<pair key="del_firm.jsp.registr_number" value="registr_number"/>
+	<pair key="del_firm.jsp.chief" value="chief"/>
+	<pair key="del_firm.jsp.buh" value="buh"/>
+	<pair key="del_firm.jsp.email" value="email"/>
+	<pair key="del_firm.jsp.icq" value="icq"/>
+	<pair key="del_firm.jsp.account" value="account"/>
+	<pair key="del_firm.jsp.kor_account" value="kor_account"/>
+	<pair key="del_firm.jsp.url" value="url"/>
+	<pair key="del_firm.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/>
+	<pair key="del_firm.jsp.is_work" value="Запись действительна?"/>
+	<pair key="del_firm.jsp.is_need_recvizit" value="Нужно ли в информации о предприятии показывать платежные реквизиты"/>
+	<pair key="del_firm.jsp.fio" value="fio"/>
+	<pair key="del_firm.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/>
+	<pair key="index.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/>
+	<pair key="add_firm.jsp.telefon_io" value="telefon_io"/>
+	<pair key="ch_firm.jsp.short_name" value="short_name"/>
+	<pair key="ch_firm.jsp.short_client_info" value="Краткая информация о клиенте для администратора системы"/>
+	<pair key="del_firm.jsp.inn_bank" value="inn_bank"/>
+	<pair key="index.jsp.full_name" value="full_name"/>
+	<pair key="index.jsp.is_work" value="Запись действительна?"/>
+	<pair key="add_firm.jsp.soato" value="Соато"/>
+	<pair key="add.title" value="Добавление в таблицу фирмы, UTF8 OK"/>
+	<pair key="add_firm.jsp.email" value="email"/>
+	<pair key="add_firm.jsp.short_client_info" value="Краткая информация о клиенте для администратора системы"/>
+	<pair key="add_firm.jsp.is_need_recvizit" value="Нужно ли в информации о предприятии показывать платежные реквизиты"/>
+	<pair key="change.title" value="Внесение изменений в таблицу фирмы, UTF8 OK"/>
+	<pair key="ch_firm.jsp.short_info" value="Краткая информация о фирме. Вводит сама фирма"/>
+	<pair key="ch_firm.jsp.type_client" value="тип клиента - 0-не определен, 1-юрлицо, 2-частник,предприниматель."/>
+	<pair key="ch_firm.jsp.is_search" value="Можно ли найти при поиске данное предприятие"/>
+	<pair key="del_firm.jsp.confirm" value="Подтвердите удаление:"/>
+	<pair key="del_firm.jsp.telefon_io" value="telefon_io"/>
+	<pair key="del_firm.jsp.short_client_info" value="Краткая информация о клиенте для администратора системы"/>
+	<pair key="del_firm.jsp.type_client" value="тип клиента - 0-не определен, 1-юрлицо, 2-частник,предприниматель."/>
+	<pair key="del_firm.jsp.is_need_person" value="Нужно ли в информации о предприятии показывать персоналии - дир, бух"/>
+	<pair key="del_firm.jsp.bank" value="bank"/>
+	<pair key="index.jsp.address" value="address"/>
+	<pair key="index.jsp.bik" value="bik"/>
+	<pair key="add_firm.jsp.ustav_fond" value="Уставный фонд"/>
+	<pair key="add_firm.jsp.address" value="address"/>
+	<pair key="add_firm.jsp.registr_number" value="registr_number"/>
+	<pair key="add_firm.jsp.bik" value="bik"/>
+	<pair key="add_firm.jsp.type_client" value="тип клиента - 0-не определен, 1-юрлицо, 2-частник,предприниматель."/>
+	<pair key="ch_firm.jsp.zip" value="zip"/>
+	<pair key="ch_firm.jsp.icq" value="icq"/>
+	<pair key="ch_firm.jsp.inn_bank" value="inn_bank"/>
+	<pair key="del_firm.jsp.number_reestr" value="number_reestr"/>
+	<pair key="del_firm.jsp.bik" value="bik"/>
+	<pair key="del_firm.jsp.fax" value="fax"/>
+</resource>

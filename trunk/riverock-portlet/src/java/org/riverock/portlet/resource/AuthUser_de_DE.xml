@@ -1,2 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resource><pair key="index.jsp.title" value="Список данных в таблице id_auth_user"/><pair key="index.jsp.id_user" value="id_user"/><pair key="index.jsp.user_login" value="user_login"/><pair key="index.jsp.is_service" value="is_service"/><pair key="index.jsp.is_use_current_firm" value="is_use_current_firm"/><pair key="index.jsp.is_root" value="is_root"/><pair key="index.jsp.id_road" value="id_road"/><pair key="index.jsp.id_service" value="id_service"/><pair key="add_bind.jsp.new_rec" value="Новая запись"/><pair key="add_bind.jsp.user_login" value="user_login"/><pair key="add_bind.jsp.user_password" value="user_password"/><pair key="add_bind.jsp.is_road" value="is_road"/><pair key="add_bind.jsp.is_use_current_firm" value="is_use_current_firm"/><pair key="add_bind.jsp.is_root" value="is_root"/><pair key="add_bind.jsp.id_road" value="id_road"/><pair key="add_bind.jsp.id_service" value="id_service"/><pair key="ch_bind.jsp.user_login" value="user_login"/><pair key="ch_bind.jsp.is_road" value="is_road"/><pair key="ch_bind.jsp.is_use_current_firm" value="is_use_current_firm"/><pair key="ch_bind.jsp.is_root" value="is_root"/><pair key="ch_bind.jsp.id_service" value="id_service"/><pair key="delete.title" value="Удаление данных из таблицы id_auth_user"/><pair key="del_bind.jsp.id_user" value="id_user"/><pair key="del_bind.jsp.user_login" value="user_login"/><pair key="del_bind.jsp.user_password" value="user_password"/><pair key="del_bind.jsp.is_service" value="is_service"/><pair key="del_bind.jsp.is_road" value="is_road"/><pair key="del_bind.jsp.is_root" value="is_root"/><pair key="del_bind.jsp.id_road" value="id_road"/><pair key="del_bind.jsp.id_service" value="id_service"/><pair key="list_bind.jsp.action" value="Действие"/><pair key="add_list_bind.jsp.new_rec" value="Новая запись"/><pair key="ch_list_bind.jsp.id_access_group" value="id_access_group"/><pair key="del_list_bind.jsp.confirm" value="Подтвердите удаление:"/><pair key="del_list_bind.jsp.id_access_group" value="id_access_group"/><pair key="index.jsp.action" value="Действие"/><pair key="ch_bind.jsp.id_user" value="id_user"/><pair key="ch_bind.jsp.is_service" value="is_service"/><pair key="ch_bind.jsp.id_road" value="id_road"/><pair key="add_list_bind.jsp.id_access_group" value="id_access_group"/><pair key="index.jsp.is_road" value="is_road"/><pair key="add.title" value="Добавление в таблицу id_auth_user"/><pair key="add_bind.jsp.is_service" value="is_service"/><pair key="change.title" value="Внесение изменений в таблицу id_auth_user"/><pair key="del_bind.jsp.confirm" value="Подтвердите удаление:"/><pair key="del_bind.jsp.is_use_current_firm" value="is_use_current_firm"/><pair key="list_bind.jsp.id_access_group" value="id_access_group"/><pair key="index.jsp.user_password" value="user_password"/><pair key="add_bind.jsp.id_user" value="id_user"/><pair key="ch_bind.jsp.user_password" value="user_password"/><pair key="list_bind.jsp.title" value="Список данных в таблице id_relate_accgroup"/></resource>
+<resource>
+	<pair key="yesno.yes" value="Yes"/>
+	<pair key="yesno.no" value="No"/>
+	<pair key="button.add" value="Add"/>
+	<pair key="button.change" value="Change"/>
+	<pair key="button.delete" value="Delete"/>
+	<pair key="button.next" value="Next"/>
+	<pair key="access_denied" value="This operation not permited for you."/>
+
+	<pair key="page.main.1" value="Homepage"/>
+	<pair key="page.main.3" value="To main page of current section"/>
+	<pair key="page.main.4" value="To top page"/>
+
+	<pair key="index.jsp.title" value="Список данных в таблице id_auth_user"/>
+	<pair key="index.jsp.id_user" value="id_user"/>
+	<pair key="index.jsp.user_login" value="user_login"/>
+	<pair key="index.jsp.is_service" value="is_service"/>
+	<pair key="index.jsp.is_use_current_firm" value="is_use_current_firm"/>
+	<pair key="index.jsp.is_root" value="is_root"/>
+	<pair key="index.jsp.id_road" value="id_road"/>
+	<pair key="index.jsp.id_service" value="id_service"/>
+	<pair key="add_bind.jsp.new_rec" value="Новая запись"/>
+	<pair key="add_bind.jsp.user_login" value="user_login"/>
+	<pair key="add_bind.jsp.user_password" value="user_password"/>
+	<pair key="add_bind.jsp.is_road" value="is_road"/>
+	<pair key="add_bind.jsp.is_use_current_firm" value="is_use_current_firm"/>
+	<pair key="add_bind.jsp.is_root" value="is_root"/>
+	<pair key="add_bind.jsp.id_road" value="id_road"/>
+	<pair key="add_bind.jsp.id_service" value="id_service"/>
+	<pair key="ch_bind.jsp.user_login" value="user_login"/>
+	<pair key="ch_bind.jsp.is_road" value="is_road"/>
+	<pair key="ch_bind.jsp.is_use_current_firm" value="is_use_current_firm"/>
+	<pair key="ch_bind.jsp.is_root" value="is_root"/>
+	<pair key="ch_bind.jsp.id_service" value="id_service"/>
+	<pair key="delete.title" value="Удаление данных из таблицы id_auth_user"/>
+	<pair key="del_bind.jsp.id_user" value="id_user"/>
+	<pair key="del_bind.jsp.user_login" value="user_login"/>
+	<pair key="del_bind.jsp.user_password" value="user_password"/>
+	<pair key="del_bind.jsp.is_service" value="is_service"/>
+	<pair key="del_bind.jsp.is_road" value="is_road"/>
+	<pair key="del_bind.jsp.is_root" value="is_root"/>
+	<pair key="del_bind.jsp.id_road" value="id_road"/>
+	<pair key="del_bind.jsp.id_service" value="id_service"/>
+	<pair key="list_bind.jsp.action" value="Действие"/>
+	<pair key="add_list_bind.jsp.new_rec" value="Новая запись"/>
+	<pair key="ch_list_bind.jsp.id_access_group" value="id_access_group"/>
+	<pair key="del_list_bind.jsp.confirm" value="Подтвердите удаление:"/>
+	<pair key="del_list_bind.jsp.id_access_group" value="id_access_group"/>
+	<pair key="index.jsp.action" value="Действие"/>
+	<pair key="ch_bind.jsp.id_user" value="id_user"/>
+	<pair key="ch_bind.jsp.is_service" value="is_service"/>
+	<pair key="ch_bind.jsp.id_road" value="id_road"/>
+	<pair key="add_list_bind.jsp.id_access_group" value="id_access_group"/>
+	<pair key="index.jsp.is_road" value="is_road"/>
+	<pair key="add.title" value="Добавление в таблицу id_auth_user"/>
+	<pair key="add_bind.jsp.is_service" value="is_service"/>
+	<pair key="change.title" value="Внесение изменений в таблицу id_auth_user"/>
+	<pair key="del_bind.jsp.confirm" value="Подтвердите удаление:"/>
+	<pair key="del_bind.jsp.is_use_current_firm" value="is_use_current_firm"/>
+	<pair key="list_bind.jsp.id_access_group" value="id_access_group"/>
+	<pair key="index.jsp.user_password" value="user_password"/>
+	<pair key="add_bind.jsp.id_user" value="id_user"/>
+	<pair key="ch_bind.jsp.user_password" value="user_password"/>
+	<pair key="list_bind.jsp.title" value="Список данных в таблице id_relate_accgroup"/>
+</resource>
