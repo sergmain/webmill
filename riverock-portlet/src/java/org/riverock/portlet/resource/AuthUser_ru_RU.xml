@@ -1,2 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resource><pair key="index.jsp.title" value="Авторизационные данные пользователей"/><pair key="index.jsp.name_firm" value="Предприятие"/><pair key="index.jsp.fio" value="ФИО"/><pair key="index.jsp.user_login" value="Логин"/><pair key="index.jsp.is_road" value="Уровень дороги"/><pair key="index.jsp.is_use_current_firm" value="Уровень предприятия"/><pair key="index.jsp.id_road" value="Уровень дороги"/><pair key="index.jsp.id_service" value="Уровень службы"/><pair key="index.jsp.action" value="Действие"/><pair key="add_bind.jsp.new_rec" value="Новая запись"/><pair key="add_bind.jsp.fio" value="Пользователь"/><pair key="add_bind.jsp.user_login" value="Логин"/><pair key="add_bind.jsp.password_check" value="Проверка пароля"/><pair key="add_bind.jsp.is_service" value="Уровень службы"/><pair key="add_bind.jsp.is_road" value="Уровень дороги"/><pair key="add_bind.jsp.id_road" value="Дорога"/><pair key="add_bind.jsp.id_service" value="Служба"/><pair key="change_bind.title" value="Внесение в авторизационные данные пользователей"/><pair key="ch_bind.jsp.fio" value="Пользователь"/><pair key="ch_bind.jsp.is_service" value="Уровень службы"/><pair key="ch_bind.jsp.is_road" value="Уровень дороги"/><pair key="ch_bind.jsp.is_use_current_firm" value="Уровень предприятия"/><pair key="ch_bind.jsp.id_service" value="Служба"/><pair key="ch_bind.jsp.list_firm" value="Предприятие"/><pair key="del_bind.jsp.confirm" value="Подтвердите удаление:"/><pair key="del_bind.jsp.fio" value="ФИО"/><pair key="del_bind.jsp.user_login" value="Логин"/><pair key="del_bind.jsp.is_road" value="Уровень дороги"/><pair key="del_bind.jsp.is_use_current_firm" value="Уровень предприятия"/><pair key="del_bind.jsp.id_road" value="Дорога"/><pair key="del_bind.jsp.id_service" value="Служба"/><pair key="list_bind.jsp.title" value="Список разрешенных групп доступа"/><pair key="list_bind.jsp.name_access_group" value="Название группы доступа"/><pair key="add_list_bind.title" value="Добавление разрешенной группы доступа"/><pair key="add_list_bind.jsp.new_rec" value="Новая запись"/><pair key="delete_list_bind.title" value="Удаление групп доступа"/><pair key="del_list_bind.jsp.name_access_group" value="Группа доступа"/><pair key="add_bind.jsp.list_firm" value="Список предприятий"/><pair key="ch_bind.jsp.user_password_check" value="Подтверждение пароля"/><pair key="del_bind.jsp.is_service" value="Уровень слудбы"/><pair key="index.jsp.code_proff" value="Код должности"/><pair key="add_bind.title" value="Добавление данных по авторизации пользователя"/><pair key="add_bind.jsp.is_use_current_firm" value="Уровень предприятия"/><pair key="ch_bind.jsp.user_login" value="Логин"/><pair key="ch_bind.jsp.id_road" value="Дорога"/><pair key="delete_bind.title" value="Удаление авторизационных данных пользователей"/><pair key="del_bind.jsp.name_firm" value="Предприятие"/><pair key="list_bind.jsp.action" value="Действие"/><pair key="add_list_bind.jsp.id_access_group" value="Группа доступа"/><pair key="del_list_bind.jsp.fio_access_group" value="Пользователь"/><pair key="index.jsp.is_service" value="Уровень службы"/><pair key="add_bind.jsp.password" value="Пароль"/><pair key="ch_bind.jsp.user_password" value="Пароль"/><pair key="del_list_bind.jsp.confirm" value="Подтвердите удаление:"/></resource>
+<resource>
+	<pair key="yesno.no" value="Нет"/>
+	<pair key="yesno.yes" value="Да"/>
+	<pair key="button.add" value="Добавить"/>
+	<pair key="button.change" value="Изменить"/>
+	<pair key="button.delete" value="Удалить"/>
+	<pair key="button.next" value="Далее"/>
+	<pair key="access_denied" value="Данная операция для Вас запрещена"/>
+
+	<pair key="page.main.1" value="Начальная страница"/>
+	<pair key="page.main.3" value="На главную в текущем разделе"/>
+	<pair key="page.main.4" value="На начальную страницу"/>
+
+	<pair key="index.jsp.title" value="Авторизационные данные пользователей"/>
+	<pair key="index.jsp.name_firm" value="Предприятие"/>
+	<pair key="index.jsp.fio" value="ФИО"/>
+	<pair key="index.jsp.user_login" value="Логин"/>
+	<pair key="index.jsp.is_road" value="Уровень дороги"/>
+	<pair key="index.jsp.is_use_current_firm" value="Уровень предприятия"/>
+	<pair key="index.jsp.id_road" value="Уровень дороги"/>
+	<pair key="index.jsp.id_service" value="Уровень службы"/>
+	<pair key="index.jsp.action" value="Действие"/>
+	<pair key="add_bind.jsp.new_rec" value="Новая запись"/>
+	<pair key="add_bind.jsp.fio" value="Пользователь"/>
+	<pair key="add_bind.jsp.user_login" value="Логин"/>
+	<pair key="add_bind.jsp.password_check" value="Проверка пароля"/>
+	<pair key="add_bind.jsp.is_service" value="Уровень службы"/>
+	<pair key="add_bind.jsp.is_road" value="Уровень дороги"/>
+	<pair key="add_bind.jsp.id_road" value="Дорога"/>
+	<pair key="add_bind.jsp.id_service" value="Служба"/>
+	<pair key="change_bind.title" value="Внесение в авторизационные данные пользователей"/>
+	<pair key="ch_bind.jsp.fio" value="Пользователь"/>
+	<pair key="ch_bind.jsp.is_service" value="Уровень службы"/>
+	<pair key="ch_bind.jsp.is_road" value="Уровень дороги"/>
+	<pair key="ch_bind.jsp.is_use_current_firm" value="Уровень предприятия"/>
+	<pair key="ch_bind.jsp.id_service" value="Служба"/>
+	<pair key="ch_bind.jsp.list_firm" value="Предприятие"/>
+	<pair key="del_bind.jsp.confirm" value="Подтвердите удаление:"/>
+	<pair key="del_bind.jsp.fio" value="ФИО"/>
+	<pair key="del_bind.jsp.user_login" value="Логин"/>
+	<pair key="del_bind.jsp.is_road" value="Уровень дороги"/>
+	<pair key="del_bind.jsp.is_use_current_firm" value="Уровень предприятия"/>
+	<pair key="del_bind.jsp.id_road" value="Дорога"/>
+	<pair key="del_bind.jsp.id_service" value="Служба"/>
+	<pair key="list_bind.jsp.title" value="Список разрешенных групп доступа"/>
+	<pair key="list_bind.jsp.name_access_group" value="Название группы доступа"/>
+	<pair key="add_list_bind.title" value="Добавление разрешенной группы доступа"/>
+	<pair key="add_list_bind.jsp.new_rec" value="Новая запись"/>
+	<pair key="delete_list_bind.title" value="Удаление групп доступа"/>
+	<pair key="del_list_bind.jsp.name_access_group" value="Группа доступа"/>
+	<pair key="add_bind.jsp.list_firm" value="Список предприятий"/>
+	<pair key="ch_bind.jsp.user_password_check" value="Подтверждение пароля"/>
+	<pair key="del_bind.jsp.is_service" value="Уровень слудбы"/>
+	<pair key="index.jsp.code_proff" value="Код должности"/>
+	<pair key="add_bind.title" value="Добавление данных по авторизации пользователя"/>
+	<pair key="add_bind.jsp.is_use_current_firm" value="Уровень предприятия"/>
+	<pair key="ch_bind.jsp.user_login" value="Логин"/>
+	<pair key="ch_bind.jsp.id_road" value="Дорога"/>
+	<pair key="delete_bind.title" value="Удаление авторизационных данных пользователей"/>
+	<pair key="del_bind.jsp.name_firm" value="Предприятие"/>
+	<pair key="list_bind.jsp.action" value="Действие"/>
+	<pair key="add_list_bind.jsp.id_access_group" value="Группа доступа"/>
+	<pair key="del_list_bind.jsp.fio_access_group" value="Пользователь"/>
+	<pair key="index.jsp.is_service" value="Уровень службы"/>
+	<pair key="add_bind.jsp.password" value="Пароль"/>
+	<pair key="ch_bind.jsp.user_password" value="Пароль"/>
+	<pair key="del_list_bind.jsp.confirm" value="Подтвердите удаление:"/>
+</resource>

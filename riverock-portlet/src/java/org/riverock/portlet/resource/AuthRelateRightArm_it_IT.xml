@@ -1,2 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resource><pair key="index.jsp.title" value="Список данных в таблице id_relate_right"/><pair key="index.jsp.id_access_group" value="id_access_group"/><pair key="index.jsp.code_right" value="code_right"/><pair key="index.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/><pair key="index.jsp.action" value="Действие"/><pair key="add.title" value="Добавление в таблицу id_relate_right"/><pair key="add_right.jsp.new_rec" value="Новая запись"/><pair key="add_right.jsp.id_access_group" value="id_access_group"/><pair key="add_right.jsp.id_object_arm" value="UTF8 is OK"/><pair key="add_right.jsp.code_right" value="code_right"/><pair key="add_right.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/><pair key="add_right.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/><pair key="ch_right.jsp.id_object_arm" value="UTF8 is OK"/><pair key="ch_right.jsp.code_right" value="code_right"/><pair key="ch_right.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/><pair key="ch_right.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/><pair key="del_right.jsp.confirm" value="Подтвердите удаление:"/><pair key="del_right.jsp.id_access_group" value="id_access_group"/><pair key="del_right.jsp.id_object_arm" value="UTF8 is OK"/><pair key="del_right.jsp.code_right" value="code_right"/><pair key="del_right.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/><pair key="index.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/><pair key="index.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/><pair key="add_right.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/><pair key="ch_right.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/><pair key="delete.title" value="Удаление данных из таблицы id_relate_right"/><pair key="del_right.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/><pair key="del_right.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/><pair key="index.jsp.id_object_arm" value="UTF8 is OK"/><pair key="ch_right.jsp.id_access_group" value="id_access_group"/><pair key="change.title" value="Внесение изменений в таблицу id_relate_right"/></resource>
+<resource>
+	<pair key="yesno.yes" value="Yes"/>
+	<pair key="yesno.no" value="No"/>
+	<pair key="button.add" value="Add"/>
+	<pair key="button.change" value="Change"/>
+	<pair key="button.delete" value="Delete"/>
+	<pair key="button.next" value="Next"/>
+	<pair key="access_denied" value="This operation not permited for you."/>
+
+	<pair key="page.main.1" value="Homepage"/>
+	<pair key="page.main.3" value="To main page of current section"/>
+	<pair key="page.main.4" value="To top page"/>
+
+	<pair key="index.jsp.title" value="Список данных в таблице id_relate_right"/>
+	<pair key="index.jsp.id_access_group" value="id_access_group"/>
+	<pair key="index.jsp.code_right" value="code_right"/>
+	<pair key="index.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/>
+	<pair key="index.jsp.action" value="Действие"/>
+	<pair key="add.title" value="Добавление в таблицу id_relate_right"/>
+	<pair key="add_right.jsp.new_rec" value="Новая запись"/>
+	<pair key="add_right.jsp.id_access_group" value="id_access_group"/>
+	<pair key="add_right.jsp.id_object_arm" value="UTF8 is OK"/>
+	<pair key="add_right.jsp.code_right" value="code_right"/>
+	<pair key="add_right.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/>
+	<pair key="add_right.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/>
+	<pair key="ch_right.jsp.id_object_arm" value="UTF8 is OK"/>
+	<pair key="ch_right.jsp.code_right" value="code_right"/>
+	<pair key="ch_right.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/>
+	<pair key="ch_right.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/>
+	<pair key="del_right.jsp.confirm" value="Подтвердите удаление:"/>
+	<pair key="del_right.jsp.id_access_group" value="id_access_group"/>
+	<pair key="del_right.jsp.id_object_arm" value="UTF8 is OK"/>
+	<pair key="del_right.jsp.code_right" value="code_right"/>
+	<pair key="del_right.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/>
+	<pair key="index.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/>
+	<pair key="index.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/>
+	<pair key="add_right.jsp.is_service" value="Определяет уровень выполнения модуля. is_service=1 - только на уровне службы"/>
+	<pair key="ch_right.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/>
+	<pair key="delete.title" value="Удаление данных из таблицы id_relate_right"/>
+	<pair key="del_right.jsp.is_road" value="Определяет уровень выполнения модуля. is_road=1 - только на уровне дороги"/>
+	<pair key="del_right.jsp.is_firm" value="Определяет уровень выполнения модуля. is_firm=1 - только на уровне предприятия"/>
+	<pair key="index.jsp.id_object_arm" value="UTF8 is OK"/>
+	<pair key="ch_right.jsp.id_access_group" value="id_access_group"/>
+	<pair key="change.title" value="Внесение изменений в таблицу id_relate_right"/>
+</resource>
