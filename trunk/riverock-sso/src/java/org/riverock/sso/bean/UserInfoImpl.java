@@ -1,5 +1,7 @@
 package org.riverock.sso.bean;
 
+import java.io.Serializable;
+
 import org.riverock.interfaces.sso.a3.UserInfo;
 
 /**
@@ -8,7 +10,8 @@ import org.riverock.interfaces.sso.a3.UserInfo;
  *         Time: 15:54:55
  *         $Id$
  */
-public class UserInfoImpl implements UserInfo {
+public class UserInfoImpl implements UserInfo, Serializable {
+    private static final long serialVersionUID = 3043770851L;
 
 
     //--------------------------/
