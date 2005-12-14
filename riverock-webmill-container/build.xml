@@ -97,8 +97,6 @@
             deprecation="${deprecation}"
             optimize="${optimize}"
             failonerror="true"
-            memoryInitialSize="128m"
-            memoryMaximumSize="256m"
             >
             <classpath>
                 <path refid="classpath-base"/>
@@ -114,8 +112,6 @@
             deprecation="${deprecation}"
             optimize="${optimize}"
             failonerror="true"
-            memoryInitialSize="128m"
-            memoryMaximumSize="256m"
             >
             <classpath>
                 <path refid="classpath-base"/>
@@ -132,8 +128,6 @@
             deprecation="${deprecation}"
             optimize="${optimize}"
             failonerror="true"
-            memoryInitialSize="128m"
-            memoryMaximumSize="256m"
             >
             <classpath>
                 <path refid="classpath-base"/>
