@@ -1,0 +1,14 @@
+$Id$
+
+#1
+При отсылке заказа возникает 'исключение': 
+javax.activation.UnsupportedDataTypeException: 
+no object DCH for MIME type text/html 
+
+Одной из причин возникновения данного исключения является то, что файлы 
+activation.jar и mail.jar находятся в разных директориях.
+Например activation.jar в %TOMCAT_HOME%\common\lib\, 
+а mail.jar в WEB-INF\lib\
+Решением данной проблемы является помещение обоих файлов в один директорий
+
+
