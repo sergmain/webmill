@@ -218,8 +218,6 @@ public final class PageElement {
                 }
             }
             else {
-                renderRequest.setAttribute(
-                    ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
                 ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
                 try {
@@ -408,6 +406,8 @@ containing the portlet is restarted.
                 renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CTX_ATTRIBUTE, portalRequestInstance.getDefaultCtx());
             }
 
+            // Todo after remove all member module, you can delete next line
+            renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
             renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );
 
