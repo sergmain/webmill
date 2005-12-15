@@ -1,0 +1,1425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<DataDefinitionList xmlns:mill-db-stuct="http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="E:\sandbox\millengine\src\xsd\mill-database.xsd">
+	<Definition isPatch="false">
+		<NameDef>webmill.definition</NameDef>
+		<IsAutoProcessTable>true</IsAutoProcessTable>
+		<TableList>
+			<Table schema="MILLENNIUM" name="AUTH_ACCESS_GROUP" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="AUTH_ACCESS_GROUP" columnName="ID_ACCESS_GROUP" keySeq="1" pkName="ID_AG_AAG_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_ACCESS_GROUP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_ARM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="AUTH_ARM" columnName="ID_ARM" keySeq="1" pkName="ID_ARM_AA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="CODE_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="1"/>
+				<Fields name="STRING_KEY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_IP" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="AUTH_IP" columnName="ID_IP" keySeq="1" pkName="ID_IP_AI_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_IP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="IP1" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IP2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IP3" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IP4" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="M1" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="M2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="M3" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="M4" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_OBJECT_ARM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="AUTH_OBJECT_ARM" columnName="ID_OBJECT_ARM" keySeq="1" pkName="ID_OBJECT_ARM_AOA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_OBJECT_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_OBJECT_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="CODE_OBJECT_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" decimalDigit="0" nullable="1"/>
+				<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="STRING_KEY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_NEW" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="AUTH_ARM" pkColumnName="ID_ARM" fkTableName="AUTH_OBJECT_ARM" fkColumnName="ID_ARM" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_RELATE_ACCGROUP" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="AUTH_RELATE_ACCGROUP" columnName="ID_RELATE_ACCGROUP" keySeq="1" pkName="ID_RELATE_ACCGROUP_ARA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_RELATE_ACCGROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_AUTH_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="AUTH_ACCESS_GROUP" pkColumnName="ID_ACCESS_GROUP" fkTableName="AUTH_RELATE_ACCGROUP" fkColumnName="ID_ACCESS_GROUP" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="AUTH_USER" pkColumnName="ID_AUTH_USER" fkTableName="AUTH_RELATE_ACCGROUP" fkColumnName="ID_AUTH_USER" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_RELATE_IP" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_RELATE_IP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_IP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_RELATE_RIGHT_ARM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="AUTH_RELATE_RIGHT_ARM" columnName="ID_RELATE_RIGHT" keySeq="1" pkName="ID_RELATE_RIGHT_ARRA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_RELATE_RIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_OBJECT_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="CODE_RIGHT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<ImportedKeys pkTableName="AUTH_ACCESS_GROUP" pkColumnName="ID_ACCESS_GROUP" fkTableName="AUTH_RELATE_RIGHT_ARM" fkColumnName="ID_ACCESS_GROUP" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="AUTH_OBJECT_ARM" pkColumnName="ID_OBJECT_ARM" fkTableName="AUTH_RELATE_RIGHT_ARM" fkColumnName="ID_OBJECT_ARM" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_RELATE_TIME" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_RELATE_TIME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_TIME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_TIME" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_RESTRICT_TIME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="RESTRICT_TIME_1" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="48" decimalDigit="0" nullable="1"/>
+				<Fields name="RESTRICT_TIME_2" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="48" decimalDigit="0" nullable="1"/>
+				<Fields name="RESTRICT_TIME_3" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="48" decimalDigit="0" nullable="1"/>
+				<Fields name="RESTRICT_TIME_4" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="48" decimalDigit="0" nullable="1"/>
+				<Fields name="RESTRICT_TIME_5" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="48" decimalDigit="0" nullable="1"/>
+				<Fields name="RESTRICT_TIME_6" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="48" decimalDigit="0" nullable="1"/>
+				<Fields name="RESTRICT_TIME_7" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="48" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_TIME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="AUTH_USER" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="AUTH_USER" columnName="ID_AUTH_USER" keySeq="1" pkName="ID_AUTH_USER_AUN_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_AUTH_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="USER_LOGIN" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="USER_PASSWORD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_USE_CURRENT_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+				<Fields name="ID_USER_CREATED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_ROOT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_LIST_FIRM" pkColumnName="ID_FIRM" fkTableName="AUTH_USER" fkColumnName="ID_FIRM" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="MAIN_USER_INFO" pkColumnName="ID_USER" fkTableName="AUTH_USER" fkColumnName="ID_USER" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="CASH_CURRENCY" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="CASH_CURRENCY" columnName="ID_CURRENCY" keySeq="1" pkName="PK_CURRENCY"/>
+				</PrimaryKey>
+				<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_USED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_USE_STANDART" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="PERCENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="ID_STANDART_CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_LIST_SITE" pkColumnName="ID_SITE" fkTableName="CASH_CURRENCY" fkColumnName="ID_SITE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="CASH_CURRENCY_STD" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="CASH_CURRENCY_STD" columnName="ID_STD_CURR" keySeq="1" pkName="ID_STD_CURR_CS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_STD_CURR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_STD_CURR" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="CONVERT_CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="CASH_CURR_VALUE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="CASH_CURR_VALUE" columnName="ID_CURVAL" keySeq="1" pkName="PK_IDCURVAL_CURVALUE"/>
+				</PrimaryKey>
+				<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="DATE_CHANGE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="7" nullable="1"/>
+				<Fields name="ID_CURVAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<ImportedKeys pkTableName="CASH_CURRENCY" pkColumnName="ID_CURRENCY" fkTableName="CASH_CURR_VALUE" fkColumnName="ID_CURRENCY" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="CASH_CURS_STD" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="CASH_CURS_STD" columnName="ID_STD_CURS" keySeq="1" pkName="ID_STD_CURS_CS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_STD_CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="DATE_CHANGE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="VALUE_CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="7" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_STD_CURR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="CASH_CURRENCY_STD" pkColumnName="ID_STD_CURR" fkTableName="CASH_CURS_STD" fkColumnName="ID_STD_CURR" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="CASH_LIST" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="CASH_LIST" columnName="ID_PAY_LIST" keySeq="1" pkName="ID_PAY_LIST_PL_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_PAY_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_PAY" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="SUMM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NUMBER_DOCUMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="1"/>
+				<Fields name="INFO_DOCUMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<ImportedKeys pkTableName="MAIN_LIST_FIRM" pkColumnName="ID_FIRM" fkTableName="CASH_LIST" fkColumnName="ID_CLIENT" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="IMAGE_DIR" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_IMAGE_DIR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_MAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_FILE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" decimalDigit="0" nullable="1"/>
+				<Fields name="DESCRIPTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="500" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="IMAGE_PRICE_ITEMS" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_IMAGE_PRICE_ITEMS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_IMAGE_DIR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="JOB_POSITION" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="JOB_POSITION" columnName="ID_JOB_POSITION" keySeq="1" pkName="ID_JOB_POSITION_JP_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_JOB_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+				<Fields name="DATE_POST" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="PERIOD_ACTIVITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1" defaultValue="90"/>
+				<Fields name="AGE_FROM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="1"/>
+				<Fields name="AGE_TO" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_JOB_SEX_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_JOB_TYPE_EDUCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+				<Fields name="SALARY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="3" nullable="1"/>
+				<Fields name="SALARY_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" decimalDigit="0" nullable="1"/>
+				<Fields name="CITY_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_CONTACT_PERSON" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="TEST_PERIOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_JOB_TYPE_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="CONTACT_PERSON" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="TYPE_JOB" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="JOB_SEX_LIST" pkColumnName="ID_JOB_SEX_LIST" fkTableName="JOB_POSITION" fkColumnName="ID_JOB_SEX_LIST" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="JOB_TYPE_EDUCATION" pkColumnName="ID_JOB_TYPE_EDUCATION" fkTableName="JOB_POSITION" fkColumnName="ID_JOB_TYPE_EDUCATION" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="JOB_TYPE_POSITION" pkColumnName="ID_JOB_TYPE_POSITION" fkTableName="JOB_POSITION" fkColumnName="ID_JOB_TYPE_POSITION" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="JOB_POSITION_DATA" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="JOB_POSITION_DATA" columnName="ID_JOB_POSITION_DATA" keySeq="1" pkName="ID_JOB_POSITION_DATA_JPD_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_JOB_POSITION_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="11" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_JOB_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="JOB_POSITION" pkColumnName="ID_JOB_POSITION" fkTableName="JOB_POSITION_DATA" fkColumnName="ID_JOB_POSITION" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="JOB_RESUME" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_JOB_RESUME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="JOB_RESUME_DATA" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_JOB_RESUME_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_JOB_RESUME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT_RESUME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="JOB_SEX_LIST" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="JOB_SEX_LIST" columnName="ID_JOB_SEX_LIST" keySeq="1" pkName="ID_JOB_SEX_LIST_JSL_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_JOB_SEX_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="0"/>
+				<Fields name="SEX_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="JOB_TYPE_EDUCATION" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="JOB_TYPE_EDUCATION" columnName="ID_JOB_TYPE_EDUCATION" keySeq="1" pkName="ID_JOB_TYPE_EDUCATION_JTE_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_JOB_TYPE_EDUCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_EDUCATION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="JOB_TYPE_POSITION" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="JOB_TYPE_POSITION" columnName="ID_JOB_TYPE_POSITION" keySeq="1" pkName="ID_JOB_TYPE_POSITION_JTP_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_JOB_TYPE_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_FORUM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_FORUM" columnName="ID_FORUM" keySeq="1" pkName="ID_FORUM_MF_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_FORUM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="IS_ALL_THREAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+				<Fields name="IS_USE_LOCALE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="NAME_FORUM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_USE_PROPERTIES" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_LIST_SITE" pkColumnName="ID_SITE" fkTableName="MAIN_FORUM" fkColumnName="ID_SITE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_FORUM_THREADS" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_FORUM_THREADS" columnName="ID" keySeq="1" pkName="ID_MFT_PK"/>
+				</PrimaryKey>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_MAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_FORUM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_POST" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="HEADER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" decimalDigit="0" nullable="1"/>
+				<Fields name="FIO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" decimalDigit="0" nullable="1"/>
+				<Fields name="EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_THREAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="18" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_FORUM" pkColumnName="ID_FORUM" fkTableName="MAIN_FORUM_THREADS" fkColumnName="ID_FORUM" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_I18N_ITEM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_I18N_ITEM" columnName="ID_MAIN_I18N_ITEM" keySeq="1" pkName="ID_MAIN_I18N_ITEM_MII_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_MAIN_I18N_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_MAIN_I18N_STORAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_ITEM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_I18N_STORAGE" pkColumnName="ID_MAIN_I18N_STORAGE" fkTableName="MAIN_I18N_ITEM" fkColumnName="ID_MAIN_I18N_STORAGE" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_I18N_MESSAGE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_I18N_MESSAGE" columnName="ID_MAIN_I18N_MESSAGE" keySeq="1" pkName="ID_MAIN_I18N_MESSAGE_MIM_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_MAIN_I18N_MESSAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_MAIN_I18N_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+				<Fields name="MESSAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_I18N_ITEM" pkColumnName="ID_MAIN_I18N_ITEM" fkTableName="MAIN_I18N_MESSAGE" fkColumnName="ID_MAIN_I18N_ITEM" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="MAIN_LANGUAGE" pkColumnName="ID_LANGUAGE" fkTableName="MAIN_I18N_MESSAGE" fkColumnName="ID_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_I18N_STORAGE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_I18N_STORAGE" columnName="ID_MAIN_I18N_STORAGE" keySeq="1" pkName="ID_MAIN_I18N_STORAGE_MIS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_MAIN_I18N_STORAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_STORAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_LANGUAGE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_LANGUAGE" columnName="ID_LANGUAGE" keySeq="1" pkName="ID_LANGUAGE_MN_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="SHORT_NAME_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="1"/>
+				<Fields name="CODEPAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_LIST_FIRM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_LIST_FIRM" columnName="ID_FIRM" keySeq="1" pkName="ID_FIRM_MLF_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="0"/>
+				<Fields name="ID_FORM_PROPERTY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="ID_LAW" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="ID_SOOGU" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="ID_REESTR_IN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="ID_REESTR_OUT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="NUMBER_REESTR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="SOATO" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="ZIP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="USTAV_FOND" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="REGISTR_DATE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="OKPO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="9" decimalDigit="0" nullable="1"/>
+				<Fields name="OKONH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="69" decimalDigit="0" nullable="1"/>
+				<Fields name="FULL_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="500" decimalDigit="0" nullable="1"/>
+				<Fields name="SHORT_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="125" decimalDigit="0" nullable="1"/>
+				<Fields name="ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="TELEFON_BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="TELEFON_CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="TELEFON_IO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="1"/>
+				<Fields name="REGISTR_NUMBER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="FAX" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="ICQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ACCOUNT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="BANK" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" decimalDigit="0" nullable="1"/>
+				<Fields name="KOR_ACCOUNT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="BIK" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="INN_BANK" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="SHORT_CLIENT_INFO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1500" decimalDigit="0" nullable="1"/>
+				<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="SHORT_INFO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1500" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_WORK" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="1"/>
+				<Fields name="TYPE_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_NEED_RECVIZIT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="IS_NEED_PERSON" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="FIO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_SEARCH" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_LIST_NEWS" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_LIST_NEWS" columnName="ID_NEWS" keySeq="1" pkName="ID_NEWS_MLN_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_NEWS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="1"/>
+				<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="CODE_NEWS_GROUP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_SUPPORT_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkTableName="MAIN_LIST_NEWS" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_LIST_ROAD" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_LIST_ROAD" columnName="ID_ROAD" keySeq="1" pkName="ID_ROAD_MLR_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="FULL_NAME_ROAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_ROAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_JSP_METHOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_LIST_SERVICE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_LIST_SERVICE" columnName="ID_SERVICE" keySeq="1" pkName="ID_SERVICE_MLS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="0"/>
+				<Fields name="FULL_NAME_SERVICE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" decimalDigit="0" nullable="0"/>
+				<Fields name="SHORT_NAME_SERVICE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="DATE_START" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_STOP" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="ASCII_CODE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_VIRTUAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_NEWS" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_NEWS" columnName="ID" keySeq="1" pkName="ID_MN_PK"/>
+				</PrimaryKey>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="EDATE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="HEADER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ANONS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="500" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_LIST_NEWS" pkColumnName="ID_NEWS" fkTableName="MAIN_NEWS" fkColumnName="ID_NEWS" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_NEWS_IMAGE" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_MAIN_NEWS_IMAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="120" decimalDigit="0" nullable="1"/>
+				<Fields name="ALT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_MAIN_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_NEWS_TEXT" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_NEWS_TEXT" columnName="ID_MAIN_NEWS_TEXT" keySeq="1" pkName="ID_NEWS_TEXT_MNT_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_MAIN_NEWS_TEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_NEWS" pkColumnName="ID" fkTableName="MAIN_NEWS_TEXT" fkColumnName="ID" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_RELATE_ROAD_SERVICE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_RELATE_ROAD_SERVICE" columnName="ID_REL_ROAD" keySeq="1" pkName="ID_REL_ROAD_MRRS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_REL_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+				<ImportedKeys pkTableName="MAIN_LIST_ROAD" pkColumnName="ID_ROAD" fkTableName="MAIN_RELATE_ROAD_SERVICE" fkColumnName="ID_ROAD" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="MAIN_LIST_SERVICE" pkColumnName="ID_SERVICE" fkTableName="MAIN_RELATE_ROAD_SERVICE" fkColumnName="ID_SERVICE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_RELATE_SERVICE_FIRM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_RELATE_SERVICE_FIRM" columnName="ID_REL_SERVICE" keySeq="1" pkName="ID_REL_SERVICE_MRSF_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_REL_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
+				<ImportedKeys pkTableName="MAIN_LIST_FIRM" pkColumnName="ID_FIRM" fkTableName="MAIN_RELATE_SERVICE_FIRM" fkColumnName="ID_FIRM" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="MAIN_LIST_SERVICE" pkColumnName="ID_SERVICE" fkTableName="MAIN_RELATE_SERVICE_FIRM" fkColumnName="ID_SERVICE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="MAIN_USER_INFO" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="MAIN_USER_INFO" columnName="ID_USER" keySeq="1" pkName="ID_USER_MUI_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="FIRST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="MIDDLE_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="LAST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_START_WORK" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="DATE_FIRE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="TELEPHONE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_BIND_PROFF" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="HOME_TELEPHONE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="3" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_LIST_FIRM" pkColumnName="ID_FIRM" fkTableName="MAIN_USER_INFO" fkColumnName="ID_FIRM" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="NSI_LIST_HOLIDAY" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="NSI_LIST_HOLIDAY" columnName="ID_HOLIDAY" keySeq="1" pkName="ID_HOLIDAY_LH_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_HOLIDAY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="DATE_HOLIDAY" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_HOLIDAY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="NSI_LIST_WORKDAY" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="NSI_LIST_WORKDAY" columnName="ID_WORKDAY" keySeq="1" pkName="ID_WORKDAY"/>
+				</PrimaryKey>
+				<Fields name="ID_WORKDAY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="DATE_WORKDAY" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_WORKDAY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="NSI_TYPE_CLIENT" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="NSI_TYPE_CLIENT" columnName="ID_TYPE_CLIENT" keySeq="1" pkName="ID_TYPE_CLIENT_TC_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_TYPE_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_TYPE_CLIENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="NSI_TYPE_LOCATION" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_TYPE_LOCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_TYPE_LOCATION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="35" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="NSI_TYPE_QUANTITY" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_QUANTITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_QUANTITY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_EXCHANGE" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_PRICE_EXCHANGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_TYPE_LOCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_GROUP_PRODUCT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_LOCATION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="25" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="VALUE_MIN_PART" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="VALUE_MAX_PART" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_INPUT" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="DATE_CHANGE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT_ACTIVATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="90"/>
+				<Fields name="DATE_OPERATE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="CONDITION_PAYMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="ADD_CONDITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_CLOSED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="IS_SELL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1" defaultValue="1"/>
+				<Fields name="NAME_PRODUCT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_QUANTITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_GROUP_PRODUCT" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_GROUP_PRODUCT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_GROUP_PRODUCT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="35" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_MAIN_GROUP_PRODUCT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_IMPORT_TABLE" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="IS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_MAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="250" decimalDigit="0" nullable="1"/>
+				<Fields name="PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="15" decimalDigit="5" nullable="1"/>
+				<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_TO_LOAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="FOR_DELETE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="ARTIKUL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_NEW" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="SHOP_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_UPLOAD_PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_ITEM_DESC_DATA" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_PRICE_ITEM_DESC_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_PRICE_ITEM_DESCRIPTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="PRICE_ITEM_DESCRIPTION" pkColumnName="ID_PRICE_ITEM_DESCRIPTION" fkTableName="PRICE_ITEM_DESC_DATA" fkColumnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_ITEM_DESCRIPTION" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_ITEM_DESCRIPTION" columnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1" pkName="ID_PRICE_ITEM_DESC_PID_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_PRICE_ITEM_DESCRIPTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_LIST" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_LIST" columnName="ID_ITEM" keySeq="1" pkName="ID_ITEM_PL_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_MAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ITEM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="250" decimalDigit="0" nullable="1"/>
+				<Fields name="ABSOLETE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="QUANTITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="ADD_DATE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="IS_SPECIAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_MANUAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_STORAGE_STATUS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="15" decimalDigit="5" nullable="1"/>
+				<ImportedKeys pkTableName="PRICE_SHOP_TABLE" pkColumnName="ID_SHOP" fkTableName="PRICE_LIST" fkColumnName="ID_SHOP" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_LIST_ACCESS" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_LIST_ACCESS" columnName="ID_ACCESS" keySeq="1" pkName="ID_ACCESS_LAP_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ACCESS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_LIST_SCHET_ITEM" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_SCHET" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="WHOM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_LIST_SERVER" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="SERVER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="PRICE_QUERY_TYPE" pkColumnName="ID_TYPE" fkTableName="PRICE_LIST_SERVER" fkColumnName="ID_TYPE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_LOCATION_GOODS" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_LOCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_LOCATION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="25" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_MAIN_GROUP_PRODUCT" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_MAIN_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_MAIN_GROUP_PRODUC" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_ORDER_V2" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_ORDER_V2" columnName="ID_PRICE_ORDER_V2" keySeq="1" pkName="ID_PRICE_ORDER_POV2_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_PRICE_ORDER_V2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_ORDER_V2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ITEM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" decimalDigit="0" nullable="1"/>
+				<Fields name="PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="6" nullable="1"/>
+				<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" decimalDigit="0" nullable="1"/>
+				<Fields name="ARTIKUL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="PRICE_RESULT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="6" nullable="1"/>
+				<Fields name="CODE_CURRENCY_RESULT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_CURRENCY_RESULT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="PRECISION_CURRENCY_RESULT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="PRICE_RELATE_USER_ORDER_V2" pkColumnName="ID_ORDER_V2" fkTableName="PRICE_ORDER_V2" fkColumnName="ID_ORDER_V2" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_QUERY_FIRM" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_QUERY_FIRM" columnName="ID_QUERY" keySeq="1" pkName="ID_QUERY_QF_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="QUERY_TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_QUERY" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="CLIENT_IP_ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="18" decimalDigit="0" nullable="1"/>
+				<Fields name="CLIENT_HOST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT_EXIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_QUERY_LIST" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_QUERY_TABLE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_QUERY_TABLE" columnName="ID_QUERY" keySeq="1" pkName="ID_QUERY_QT_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_TYPE_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_QUERY" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="QUERY_TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="CLIENT_IP_ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="18" decimalDigit="0" nullable="1"/>
+				<Fields name="CLIENT_HOST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT_EXIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="PRICE_QUERY_TYPE" pkColumnName="ID_TYPE" fkTableName="PRICE_QUERY_TABLE" fkColumnName="ID_TYPE_QUERY" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_QUERY_TYPE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_QUERY_TYPE" columnName="ID_TYPE" keySeq="1" pkName="ID_TYPE_QT_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="TYPE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="ORDER_VALUE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="SERVER_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_RELATE_USER_ORDER_V2" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_RELATE_USER_ORDER_V2" columnName="ID_ORDER_V2" keySeq="1" pkName="ID_ORDER_PRUOV2_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ORDER_V2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_CREATE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_PAYED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_DELIVERED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_SHOP_CONFIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_USER_CONFIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+				<ImportedKeys pkTableName="MAIN_USER_INFO" pkColumnName="ID_USER" fkTableName="PRICE_RELATE_USER_ORDER_V2" fkColumnName="ID_USER" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_SCHET" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_SCHET" columnName="ID_SCHET" keySeq="1" pkName="PK_SCHET"/>
+				</PrimaryKey>
+				<Fields name="ID_SCHET" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="0"/>
+				<Fields name="WHOM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="NEED_SEND_FAX" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="INN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="SOATO" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="ZIP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+				<Fields name="OKPO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="9" decimalDigit="0" nullable="1"/>
+				<Fields name="FULL_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="254" decimalDigit="0" nullable="1"/>
+				<Fields name="ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="TELEFON_IO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="1"/>
+				<Fields name="CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="TELEFON_CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="TELEFON_BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="FAX" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="ICQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ACCOUNT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="BANK" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" decimalDigit="0" nullable="1"/>
+				<Fields name="KOR_ACCOUNT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="BIK" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="OKONH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="69" decimalDigit="0" nullable="1"/>
+				<Fields name="NUMBER_SCHET" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_SHOP_PRECISION" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_SHOP_PRECISION" columnName="ID_PRICE_SHOP_PRECISION" keySeq="1" pkName="ID_PRICE_SHOP_PRECISION_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_PRICE_SHOP_PRECISION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="8" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="PRECISION_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1" defaultValue="2"/>
+				<ImportedKeys pkTableName="CASH_CURRENCY" pkColumnName="ID_CURRENCY" fkTableName="PRICE_SHOP_PRECISION" fkColumnName="ID_CURRENCY" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="PRICE_SHOP_TABLE" pkColumnName="ID_SHOP" fkTableName="PRICE_SHOP_PRECISION" fkColumnName="ID_SHOP" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_SHOP_TABLE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_SHOP_TABLE" columnName="ID_SHOP" keySeq="1" pkName="ID_SHOP_PST_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_SHOP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" decimalDigit="0" nullable="0"/>
+				<Fields name="IS_CLOSE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_PROCESS_INVOICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_TYPE_SHOP_1" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_TYPE_SHOP_2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_SHOP_FOR_PRICE_LIST" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_NEED_RECALC" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ORDER_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="CODE_SHOP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="0"/>
+				<Fields name="LAST_DATE_UPLOAD" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="DATE_CALC_QUANTITY" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="NEW_ITEM_DAYS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_ACTIVATE_EMAIL_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_DEFAULT_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_NEED_PROCESSING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="COMMAS_COUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0" defaultValue="2"/>
+				<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="3" nullable="0" defaultValue="0"/>
+				<Fields name="HEADER_STRING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<Fields name="FOOTER_STRING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ORDER_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="PRICE_QUERY_TYPE" pkColumnName="ID_TYPE" fkTableName="PRICE_SHOP_TABLE" fkColumnName="ID_TYPE_SHOP_1" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="PRICE_QUERY_TYPE" pkColumnName="ID_TYPE" fkTableName="PRICE_SHOP_TABLE" fkColumnName="ID_TYPE_SHOP_2" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_STAT_UPLOAD" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_UPLOAD" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="UPLOADED_BYTE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_PROCESSED" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="STATUS_PROCESS_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="OID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_TYPE_OBJECT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_STORAGE_ORDER" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_STORAGE_ORDER" columnName="ID_PRICE_STORAGE_ORDER" keySeq="1" pkName="ID_PRICE_STORAGE_ORDER_PSO_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_PRICE_STORAGE_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_ORDER" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="NUMBER_ORDER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="ORDER_ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_PROCESSED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_STORAGE_ORDER_ITEMS" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_PRICE_STORAGE_ORDER_ITEMS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="QUANTITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_PRICE_STORAGE_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="PRICE_STORAGE_ORDER" pkColumnName="ID_PRICE_STORAGE_ORDER" fkTableName="PRICE_STORAGE_ORDER_ITEMS" fkColumnName="ID_PRICE_STORAGE_ORDER" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_TYPE_PAYMENT" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_TYPE_PAYMENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="TYPE_PAYMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_STD_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="METHOD_PAYMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="PRICE_USER_SHOP_DISCOUNT" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="PRICE_USER_SHOP_DISCOUNT" columnName="ID_PRICE_USER_SHOP_DISCOUNT" keySeq="1" pkName="ID_PRICE_USER_SHOP_PUSD_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_PRICE_USER_SHOP_DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="3" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_USER_INFO" pkColumnName="ID_USER" fkTableName="PRICE_USER_SHOP_DISCOUNT" fkColumnName="ID_USER" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="PRICE_SHOP_TABLE" pkColumnName="ID_SHOP" fkTableName="PRICE_USER_SHOP_DISCOUNT" fkColumnName="ID_SHOP" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_ACCOUNT_PLAN" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_ACCOUNT_PLAN" columnName="ID_ACCPLAN" keySeq="1" pkName="ID_ACCPLAN_AP_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ACCPLAN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_ACCPLAN" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="MIN_COUNT_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="PRICE_MIN_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_CALC_MONTH_SERVICE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_CALC_MONTH_SERVICE" columnName="ID_CALC_SERVICE" keySeq="1" pkName="ID_CALC_SERVICE_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_CALC_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_PAY" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="SUMM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_HISTORY_ACCPLAN" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_HISTORY_ACCPLAN" columnName="ID_HISTORY_ACCPLAN" keySeq="1" pkName="ID_HISTORY_ACCPLAN_LHA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_HISTORY_ACCPLAN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_ACCPLAN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_STOP" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SERV_ACCOUNT_PLAN" pkColumnName="ID_ACCPLAN" fkTableName="SERV_HISTORY_ACCPLAN" fkColumnName="ID_ACCPLAN" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="SERV_SERVICE_TYPE" pkColumnName="ID_SERVICE" fkTableName="SERV_HISTORY_ACCPLAN" fkColumnName="ID_SERVICE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_INET_IP_ADDRESS" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_INET_IP_ADDRESS" columnName="ID_LIST_IP" keySeq="1" pkName="ID_LIST_IP_LIA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_LIST_IP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="18" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_INET_TACACS_LOG" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_INET_TACACS_LOG" columnName="ID_TACACS_LOG" keySeq="1" pkName="ID_TACACS_LOG_TL_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_LOGIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_STAT" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="HOUR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="1"/>
+				<Fields name="COUNT_MIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_TACACS_LOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<ImportedKeys pkTableName="SERV_INET_USER_TACACS" pkColumnName="ID_USER" fkTableName="SERV_INET_TACACS_LOG" fkColumnName="ID_LOGIN" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_INET_USER_TACACS" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_INET_USER_TACACS" columnName="ID_USER" keySeq="1" pkName="ID_USER_UT_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="LOGIN" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="0"/>
+				<Fields name="PASSWORD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_TYPE_PAYMENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_ACCOUNT_OPEN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_LIST_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_LIST_ACCPLAN" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_LIST_ACCPLAN" columnName="ID_LIST_ACCPLAN" keySeq="1" pkName="ID_LIST_ACCPLAN_LA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_ACCPLAN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="START_VALUE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="VALUE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_LIST_ACCPLAN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<ImportedKeys pkTableName="SERV_ACCOUNT_PLAN" pkColumnName="ID_ACCPLAN" fkTableName="SERV_LIST_ACCPLAN" fkColumnName="ID_ACCPLAN" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_LIST_LOGIN_SERVICE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_LIST_LOGIN_SERVICE" columnName="ID_LLS" keySeq="1" pkName="ID_LLS_LLS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_USER_TACACS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_LIST_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_LLS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<ImportedKeys pkTableName="SERV_INET_USER_TACACS" pkColumnName="ID_USER" fkTableName="SERV_LIST_LOGIN_SERVICE" fkColumnName="ID_USER_TACACS" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="SERV_LIST_SERVICE" pkColumnName="ID_LIST_SERVICE" fkTableName="SERV_LIST_LOGIN_SERVICE" fkColumnName="ID_LIST_SERVICE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_LIST_SERVICE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_LIST_SERVICE" columnName="ID_LIST_SERVICE" keySeq="1" pkName="ID_LIST_SERVICE"/>
+				</PrimaryKey>
+				<Fields name="ID_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="DATE_START" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="DATE_STOP" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="REG_PAYMENT_IS_PAYED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_WHO_PAY_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_LIST_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_AGENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="SHOR_INFO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="SHORT_INFO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="NUMBER_DOGOVOR" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_DOGOVOR" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<ImportedKeys pkTableName="SERV_SERVICE_TYPE" pkColumnName="ID_SERVICE" fkTableName="SERV_LIST_SERVICE" fkColumnName="ID_SERVICE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_REGISTER_PAYMENT" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_REGISTER_PAYMENT" columnName="ID_REGPAY" keySeq="1" pkName="ID_REGPAY_RP_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_REGPAY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_REGPAY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="SUMM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="PERIOD_EXPIRATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_SERVICE_TYPE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_SERVICE_TYPE" columnName="ID_SERVICE" keySeq="1" pkName="ID_SERVICE_ST_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_REGPAY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="ID_TYPE_ACCOUNTING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1" defaultValue="0"/>
+				<Fields name="NAME_SERVICE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="CALC_SERVICE_METHOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="INIT_METHOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="SHOW_STAT_METHOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SERV_REGISTER_PAYMENT" pkColumnName="ID_REGPAY" fkTableName="SERV_SERVICE_TYPE" fkColumnName="ID_REGPAY" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="SERV_TYPE_ACCOUNTING" pkColumnName="ID_TYPE_ACCOUNTING" fkTableName="SERV_SERVICE_TYPE" fkColumnName="ID_TYPE_ACCOUNTING" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_TYPE_ACCOUNTING" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_TYPE_ACCOUNTING" columnName="ID_TYPE_ACCOUNTING" keySeq="1" pkName="ID_TYPE_ACCOUNTING_TA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_TYPE_ACCOUNTING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_TYPE_ACCOUNTING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="SHORT_TYPE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SERV_TYPE_INTERNET" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SERV_TYPE_INTERNET" columnName="ID_TYPE_PAYMENT" keySeq="1" pkName="ID_TYPEPAYMENT_TP_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_TYPE_PAYMENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_PAYMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_ACCESS_STAT" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_ACCESS_STAT" columnName="ID_SITE_ACCESS_STAT" keySeq="1" pkName="ID_SITE_ACCESS_STAT_SAS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_ACCESS_STAT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+				<Fields name="IP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="16" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_REFER_TOO_BIG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ACCESS_DATE" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="0" defaultValue="sysdate"/>
+				<Fields name="REFER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_ACCESS_USER_AGENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+				<Fields name="PARAMETERS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_ACCESS_URL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_PARAM_TOO_BIG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_ACCESS_URL" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_ACCESS_URL" columnName="ID_SITE_ACCESS_URL" keySeq="1" pkName="ID_ACCESS_URL_SAU_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_ACCESS_URL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+				<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_ACCESS_USER_AGENT" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_ACCESS_USER_AGENT" columnName="ID_SITE_USER_AGENT" keySeq="1" pkName="ID_ACCESS_USER_AGENT_SAUA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_USER_AGENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
+				<Fields name="USER_AGENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CONTENT_CSS" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_CONTENT_CSS" columnName="ID_SITE_CONTENT_CSS" keySeq="1" pkName="ID_SITE_CONTENT_CSS_SCC_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_CONTENT_CSS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="IS_CURRENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="DATE_POST" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="TEXT_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="CSS_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_LIST_SITE" pkColumnName="ID_SITE" fkTableName="SITE_CONTENT_CSS" fkColumnName="ID_SITE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CONTENT_CSS_DATA" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_CONTENT_CSS_DATA" columnName="ID_SITE_CONTENT_CSS_DATA" keySeq="1" pkName="ID_CONTENT_CSS_DATA_SCCD_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_CONTENT_CSS_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_CONTENT_CSS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="CSS_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_CONTENT_CSS" pkColumnName="ID_SITE_CONTENT_CSS" fkTableName="SITE_CONTENT_CSS_DATA" fkColumnName="ID_SITE_CONTENT_CSS" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CTX_ARTICLE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_CTX_ARTICLE" columnName="ID_SITE_CTX_ARTICLE" keySeq="1" pkName="ID_SITE_CTX_ARTICLE_SCA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_CTX_ARTICLE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_CTX_OWNER_COPYRIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_POST" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_EDITOR_CONFIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_ARTICLE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_TRANSLATE_CR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="IS_PLAIN_HTML" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ARTICLE_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_SIMPLE_TEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="ARTICLE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_SUPPORT_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkTableName="SITE_CTX_ARTICLE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CTX_ARTICLE_DATA" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_CTX_ARTICLE_DATA" columnName="ID_SITE_CTX_ARTICLE_DATA" keySeq="1" pkName="ID_ARTICLE_DATA_SCAD_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_CTX_ARTICLE_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_CTX_ARTICLE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ARTICLE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_CTX_ARTICLE" pkColumnName="ID_SITE_CTX_ARTICLE" fkTableName="SITE_CTX_ARTICLE_DATA" fkColumnName="ID_SITE_CTX_ARTICLE" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CTX_CATALOG" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_CTX_CATALOG" columnName="ID_SITE_CTX_CATALOG" keySeq="1" pkName="ID_SITE_CTX_CATALOG_SCC_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_CTX_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_TOP_CTX_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_CTX_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+				<Fields name="STORAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="KEY_MESSAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_CONTEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_USE_PROPERTIES" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_CTX_LANG_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_CTX_LANG_CATALOG" pkColumnName="ID_SITE_CTX_LANG_CATALOG" fkTableName="SITE_CTX_CATALOG" fkColumnName="ID_SITE_CTX_LANG_CATALOG" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="SITE_CTX_TYPE" pkColumnName="ID_SITE_CTX_TYPE" fkTableName="SITE_CTX_CATALOG" fkColumnName="ID_SITE_CTX_TYPE" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="SITE_TEMPLATE" pkColumnName="ID_SITE_TEMPLATE" fkTableName="SITE_CTX_CATALOG" fkColumnName="ID_SITE_TEMPLATE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CTX_LANG_CATALOG" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_CTX_LANG_CATALOG" columnName="ID_SITE_CTX_LANG_CATALOG" keySeq="1" pkName="ID_LANG_CATALOG_ISCLC_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_CTX_LANG_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="CATALOG_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1" defaultValue="'DEFAULT'"/>
+				<Fields name="IS_DEFAULT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_SUPPORT_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkTableName="SITE_CTX_LANG_CATALOG" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CTX_OWNER_COPYRIGHT" type="TABLE">
+				<PrimaryKey/>
+				<Fields name="ID_SITE_CTX_OWNER_COPYRIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<Fields name="OWNER_COPYRIGHT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_CTX_TYPE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_CTX_TYPE" columnName="ID_SITE_CTX_TYPE" keySeq="1" pkName="ID_SITE_CTX_TYPE_SCT_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_CTX_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
+				<Fields name="TYPE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="0"/>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_LIST_SITE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_LIST_SITE" columnName="ID_SITE" keySeq="1" pkName="ID_SITE_SLS_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="DEF_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" decimalDigit="0" nullable="0"/>
+				<Fields name="DEF_COUNTRY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" decimalDigit="0" nullable="0"/>
+				<Fields name="DEF_VARIANT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_SITE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="0"/>
+				<Fields name="ADMIN_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_CSS_DYNAMIC" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="CSS_FILE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1" defaultValue="'/front_styles.css'"/>
+				<Fields name="IS_REGISTER_ALLOWED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+				<Fields name="ORDER_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="IS_ACTIVATE_EMAIL_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<ImportedKeys pkTableName="MAIN_LIST_FIRM" pkColumnName="ID_FIRM" fkTableName="SITE_LIST_SITE" fkColumnName="ID_FIRM" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_PORTLET_FAQ" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_PORTLET_FAQ" columnName="ID_SITE_PORTLET_FAQ" keySeq="1" pkName="ID_SITE_PORTLET_FAQ_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_PORTLET_FAQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+				<Fields name="FAQ_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_FAQ" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_SUPPORT_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkTableName="SITE_PORTLET_FAQ" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_PORTLET_FAQ_ANSWER" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_PORTLET_FAQ_ANSWER" columnName="ID_SITE_PORTLET_FAQ_ANSWER" keySeq="1" pkName="ID_SPFA_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_PORTLET_FAQ_ANSWER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="ANSWER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_PORTLET_FAQ_LIST" pkColumnName="ID_SITE_PORTLET_FAQ_LIST" fkTableName="SITE_PORTLET_FAQ_ANSWER" fkColumnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_PORTLET_FAQ_LIST" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_PORTLET_FAQ_LIST" columnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1" pkName="ID_SITE_PORTLET_FAQ_LIST_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_PORTLET_FAQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="QUESTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="ANSWER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="DATE_POST" dataType="DATE" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="7" decimalDigit="0" nullable="1" defaultValue="sysdate"/>
+				<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_PORTLET_FAQ" pkColumnName="ID_SITE_PORTLET_FAQ" fkTableName="SITE_PORTLET_FAQ_LIST" fkColumnName="ID_SITE_PORTLET_FAQ" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_PORTLET_FAQ_QUESTION" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_PORTLET_FAQ_QUESTION" columnName="ID_SITE_PORTLET_FAQ_QUESTION" keySeq="1" pkName="ID_SPFQ_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_PORTLET_FAQ_QUESTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+				<Fields name="QUESTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_PORTLET_FAQ_LIST" pkColumnName="ID_SITE_PORTLET_FAQ_LIST" fkTableName="SITE_PORTLET_FAQ_QUESTION" fkColumnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_SUPPORT_LANGUAGE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_SUPPORT_LANGUAGE" columnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" pkName="ID_SITE_LANGUAGE_SSL_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" decimalDigit="0" nullable="1"/>
+				<Fields name="NAME_CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="MAIN_LANGUAGE" pkColumnName="ID_LANGUAGE" fkTableName="SITE_SUPPORT_LANGUAGE" fkColumnName="ID_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="SITE_LIST_SITE" pkColumnName="ID_SITE" fkTableName="SITE_SUPPORT_LANGUAGE" fkColumnName="ID_SITE" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_TEMPLATE" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_TEMPLATE" columnName="ID_SITE_TEMPLATE" keySeq="1" pkName="ID_SITE_TEMPLATE_ST_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_SITE_TEMPLATE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="1"/>
+				<Fields name="TEMPLATE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_SUPPORT_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkTableName="SITE_TEMPLATE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_TEMPLATE_MEMBER" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_TEMPLATE_MEMBER" columnName="ID_SITE_TEMPLATE_MEMBER" keySeq="1" pkName="ID_TEMPLATE_MEMBER_STM_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_TEMPLATE_MEMBER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_SUPPORT_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkTableName="SITE_TEMPLATE_MEMBER" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+				<ImportedKeys pkTableName="SITE_TEMPLATE" pkColumnName="ID_SITE_TEMPLATE" fkTableName="SITE_TEMPLATE_MEMBER" fkColumnName="ID_SITE_TEMPLATE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_VIRTUAL_HOST" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_VIRTUAL_HOST" columnName="ID_SITE_VIRTUAL_HOST" keySeq="1" pkName="ID_SITE_VIRTUAL_HOST_SVH_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_VIRTUAL_HOST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="NAME_VIRTUAL_HOST" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" decimalDigit="0" nullable="0"/>
+				<ImportedKeys pkTableName="SITE_LIST_SITE" pkColumnName="ID_SITE" fkTableName="SITE_VIRTUAL_HOST" fkColumnName="ID_SITE" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_XSLT" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_XSLT" columnName="ID_SITE_XSLT" keySeq="1" pkName="ID_SITE_XSLT_SX_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_XSLT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="IS_CURRENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+				<Fields name="TEXT_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="1"/>
+				<Fields name="XSLT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" decimalDigit="0" nullable="1"/>
+				<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_SUPPORT_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkTableName="SITE_XSLT" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1">
+					<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+			<Table schema="MILLENNIUM" name="SITE_XSLT_DATA" type="TABLE">
+				<PrimaryKey>
+					<columns schemaName="MILLENNIUM" tableName="SITE_XSLT_DATA" columnName="ID_SITE_XSLT_DATA" keySeq="1" pkName="ID_XSLT_DATA_SXD_PK"/>
+				</PrimaryKey>
+				<Fields name="ID_SITE_XSLT_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="0"/>
+				<Fields name="ID_SITE_XSLT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" decimalDigit="0" nullable="1"/>
+				<Fields name="XSLT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" decimalDigit="0" nullable="1"/>
+				<ImportedKeys pkTableName="SITE_XSLT" pkColumnName="ID_SITE_XSLT" fkTableName="SITE_XSLT_DATA" fkColumnName="ID_SITE_XSLT" keySeq="1">
+					<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+					<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+				</ImportedKeys>
+			</Table>
+		</TableList>
+	</Definition>
+</DataDefinitionList>

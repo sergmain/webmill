@@ -60,14 +60,10 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-<!--        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />-->
-<!--        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />-->
         <antcall target="jar"/>
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-core.xml" target="clean"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
@@ -86,39 +82,6 @@
     </target>
 
     <target name="compile" depends="set_build_number, prepare">
-
-<!--
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-core.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-        </javac>
--->
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
