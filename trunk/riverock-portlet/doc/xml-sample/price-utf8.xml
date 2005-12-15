@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*
- * org.riverock.portlet - Portlet Library
+ * org.riverock.webmill - Portal framework implementation
  * 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
  * 
@@ -63,6 +63,9 @@ curr: код валюты, символьный 10 байт, русский си
 NameItem:  символьный, 250 байт, русский символ занимает 2 байта, английский - 1 байт-->
 		<!-- пример со всеми инициализированными атрибутами -->
 		<Item itemID="2618" parentID="0" isGroup="0" isLoad="YES" price="198.99" curr="p.">
+			<NameItem>2-Наименование №01</NameItem>
+		</Item>
+		<Item itemID="2711" parentID="0" isGroup="0" isLoad="YES" price="517.95" curr="p.">
 			<NameItem>2-Наименование №01</NameItem>
 		</Item>
 		<!-- То же самое, но с использованием значений по умолчанию -->
