@@ -45,16 +45,21 @@ public class ContainerConstants {
 
     public static final String PORTAL_QUERY_METHOD_ATTRIBUTE = "javax.portlet.webmill.PORTAL_QUERY_METHOD_ATTRIBUTE";
     public static final String PORTAL_COOKIE_MANAGER_ATTRIBUTE = "javax.portlet.webmill.PORTAL_COOKIE_MANAGER_ATTRIBUTE";
-    public static final String PORTAL_URL_RESOURCE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_URL_RESOURCE_ATTRIBUTE";
+
+//    public static final String PORTAL_URL_RESOURCE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_URL_RESOURCE_ATTRIBUTE";
+//    public static final String PORTAL_DEFAULT_PORTLET_TYPE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_DEFAULT_PORTLET_TYPE_ATTRIBUTE";
+
     public static final String PORTAL_QUERY_STRING_ATTRIBUTE = "javax.portlet.webmill.PORTAL_QUERY_STRING_ATTRIBUTE";
     public static final String PORTAL_COOKIES_ATTRIBUTE = "javax.portlet.webmill.PORTAL_COOKIES_ATTRIBUTE";
     public static final String PORTAL_AUTH_ATTRIBUTE = "javax.portlet.webmill.PORTAL_AUTH_ATTRIBUTE";
     public static final String PORTAL_RESOURCE_BUNDLE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE";
     public static final String PORTAL_TEMPLATE_NAME_ATTRIBUTE = "javax.portlet.webmill.PORTAL_TEMPLATE_NAME_ATTRIBUTE";
-    public static final String PORTAL_DEFAULT_PORTLET_TYPE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_DEFAULT_PORTLET_TYPE_ATTRIBUTE";
+
     public static final String PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE = "javax.portlet.webmill.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE";
     public static final String PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE = "javax.portlet.webmill.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE";
     public static final String PORTAL_PORTLET_METADATA_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_METADATA_ATTRIBUTE";
+
+    // PORTAL_DEFAULT_CTX_ATTRIBUTE used in MenuPortlet
     public static final String PORTAL_DEFAULT_CTX_ATTRIBUTE = "javax.portlet.webmill.PORTAL_DEFAULT_CTX_ID_ATTRIBUTE";
     public static final String PORTAL_PORTLET_CONFIG_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_CONFIG_ATTRIBUTE";
     public static final String PORTAL_PORTAL_CONTEXT_PATH = "javax.portlet.webmill.PORTAL_PORTAL_CONTEXT_PATH";
