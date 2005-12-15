@@ -75,6 +75,12 @@ public class PortletRegisterServlet extends HttpServlet {
 
     public final void destroy() {
         System.out.println("#1. Undeploy uniqueName: " + uniqueName);
-        PortletContainer.destroy( uniqueName );
+        try {
+            PortletContainer.destroy( uniqueName );
+        }
+        catch(Throwable th) {
+            th.printStackTrace( System.out );
+            throw new IllegalStateException( "Eror destroy portlet" );
+        }
     }
 }
