@@ -97,6 +97,9 @@ public final class PortletEntry {
     }
 
     PortletEntry(PortletDefinition portletDefinition, PortletConfig portletConfig, Portlet portlet,ServletConfig servletConfig, ClassLoader classLoader, String uniqueName ) {
+        if (portletDefinition==null) {
+            throw new IllegalArgumentException("Portlet definition is null");
+        } 
         this.portletDefinition = portletDefinition;
         this.portletConfig = portletConfig;
         this.portlet = portlet;
@@ -105,7 +108,12 @@ public final class PortletEntry {
         this.uniqueName = uniqueName;
     }
 
-    PortletEntry(UnavailableException e) {
+    PortletEntry(PortletDefinition portletDefinition, UnavailableException e) {
+        if (portletDefinition==null) {
+            throw new IllegalArgumentException("Portlet definition is null");
+        } 
+        this.portletDefinition = portletDefinition;
+
         this.lastInitTime = System.currentTimeMillis();
         this.interval = e.getUnavailableSeconds();
         this.isPermanent = e.isPermanent();
