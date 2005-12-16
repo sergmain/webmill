@@ -57,10 +57,7 @@ public class MenuMemberApplication
     public String applicationName = "";
 
     public String applicationCode = null;
-    /**
-     * url доступа к приложениям
-     */
-//    public String url = "";
+
     /**
      значение для порядка вывода приложений
      */
@@ -99,8 +96,7 @@ public class MenuMemberApplication
     private final static String sql_ =
             "select distinct z.CODE_ARM,a.CODE_OBJECT_ARM,  a.NAME_OBJECT_ARM, "+
             "a.url, a.order_field, a.is_new  " +
-
-            "from   AUTH_OBJECT_ARM a," +
+            "from   WM_AUTH_MODULEa," +
             "(" +
             "select " +
             "        a.user_login, " +
@@ -109,53 +105,23 @@ public class MenuMemberApplication
             "	 e.id_arm, " +
             "	 e.is_new  " +
             "from    auth_user a, " +
-            "        auth_relate_accgroup b, " +
-            "        auth_relate_right_arm d, " +
-            "        auth_object_arm e, " +
-            "        auth_arm f " +
+            "        WM_AUTH_RELATE_ACCGROUP b, " +
+            "        WM_AUTH_RELATE_RIGHT_ARM d, " +
+            "        WM_AUTH_MODULE e, " +
+            "        WM_AUTH_APPLICATION f " +
             "where   a.id_auth_user=b.id_auth_user and " +
             "        b.id_access_group = d.id_access_group and " +
             "        d.id_object_arm = e.id_object_arm and " +
             "        e.id_arm = f.id_arm " +
             "union " +
             "select  a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm, d1.is_new   " +
-            "from    auth_user a1, auth_object_arm d1,  auth_arm f1 " +
+            "from    WM_AUTH_USER a1, WM_AUTH_MODULE d1,  WM_AUTH_APPLICATION f1 " +
             "where   a1.is_root=1 and d1.id_arm = f1.id_arm " +
             ") z " +
             "where  z.user_login=? and " +
             "       a.id_object_arm = z.id_object_arm and " +
             "       z.id_arm=? and a.url is not null " +
             "order by ORDER_FIELD ASC";
-/*
-            "select distinct z.CODE_ARM,a.CODE_OBJECT_ARM,  a.NAME_OBJECT_ARM, "+
-            "a.url, a.order_field, a.is_new , z.JSP_METHOD " +
-            "from   AUTH_OBJECT_ARM a," +
-            "(" +
-            "select " +
-            "        a.user_login, " +
-            "        f.code_arm, " +
-            "        d.id_object_arm, " +
-            "	 e.id_arm, " +
-            "	 e.is_new, f.JSP_METHOD  " +
-            "from    auth_user a, " +
-            "        auth_relate_accgroup b, " +
-            "        auth_relate_right_arm d, " +
-            "        auth_object_arm e, " +
-            "        auth_arm f " +
-            "where   a.id_auth_user=b.id_auth_user and " +
-            "        b.id_access_group = d.id_access_group and " +
-            "        d.id_object_arm = e.id_object_arm and " +
-            "        e.id_arm = f.id_arm " +
-            "union " +
-            "select  a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm, d1.is_new , f1.JSP_METHOD " +
-            "from    auth_user a1, auth_object_arm d1,  auth_arm f1 " +
-            "where   a1.is_root=1 and d1.id_arm = f1.id_arm " +
-            ") z " +
-            "where  z.user_login=? and " +
-            "       a.id_object_arm = z.id_object_arm and " +
-            "       z.id_arm=? and a.url is not null " +
-            "order by ORDER_FIELD ASC";
-*/
 
     public MenuMemberApplication(AuthInfo authInfo, ResultSet rs)
             throws PortletException
@@ -216,22 +182,4 @@ public class MenuMemberApplication
         if (vv.size() > 0)
             subMenu = vv;
     }
-
-/*
-    public byte[] getPlainHTML()
-    {
-        return null;
-    }
-
-    public byte[] getXml(String rootElement) throws Exception
-    {
-        return "".getBytes();
-    }
-    public byte[] getXml(){ return "".getBytes(); }
-
-    public Vector getList(Long idSiteCtxLangCatalog, Long idContext)
-    {
-        return null;
-    }
-*/
 }

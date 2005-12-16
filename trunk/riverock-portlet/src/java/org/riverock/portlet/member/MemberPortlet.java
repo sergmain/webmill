@@ -94,8 +94,8 @@ public final class MemberPortlet  implements Portlet {
                 db_ = DatabaseAdapter.getInstance();
                 ps = db_.prepareStatement(
                     "select a.is_new, a.url " +
-                    "from auth_object_arm a, auth_arm b " +
-                    "where a.id_arm = b.id_arm and b.CODE_ARM=? and a.CODE_OBJECT_ARM=? "
+                    "from   WM_AUTH_MODULE a, WM_AUTH_APPLICATION b " +
+                    "where  a.id_arm = b.id_arm and b.CODE_ARM=? and a.CODE_OBJECT_ARM=? "
                 );
                 ps.setString(1, applicationCode);
                 ps.setString(2, moduleCode);
@@ -106,34 +106,14 @@ public final class MemberPortlet  implements Portlet {
                     String url = RsetTools.getString(rs, "URL");
                     int isNew = RsetTools.getInt( rs, "IS_NEW", 0);
                     String fullUrl = null;
-//                    Map parameterMap = null;
                     if  (isNew==1)
                     {
                         fullUrl = "/member_view?" + url.substring( url.indexOf('?')+1)+ '&';
-//                        parameterMap = ServletTools.getParameterMap(fullUrl);
                     }
                     else
                     {
                         fullUrl = url+'?';
-//                        parameterMap = new HashMap();
                     }
-
-/*
-                    if (cat.isDebugEnabled() && isNew==0)
-                    {
-                        String nameFile = InitParam.millApplPath + fullUrl;
-
-
-                        cat.debug("Full url - " + fullUrl);
-                        cat.debug("millApplPath - " + InitParam.millApplPath);
-                        cat.debug("nameFile - " + nameFile);
-
-                        if (nameFile.indexOf('?') != -1)
-                            nameFile = nameFile.substring(0, nameFile.indexOf('?'));
-
-                        cat.debug("end nameFile - " + nameFile);
-                    }
-*/
 
                     PortletRequestDispatcher dispatcher = portletConfig.getPortletContext().getRequestDispatcher( fullUrl );
 

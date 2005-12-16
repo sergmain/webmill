@@ -184,7 +184,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
             ps = dbDyn.prepareStatement( "insert into image_dir " +
                 "( id_image_dir, ID_FIRM, is_group, id, id_main, name_file, description )" +
                 "(select seq_image_dir.nextval, ID_FIRM, 0, ?, ?, ?, ? " +
-                " from auth_user where user_login = ? )" );
+                " from WM_AUTH_USER where user_login = ? )" );
 
             RsetTools.setLong( ps, 1, currID );
             RsetTools.setLong( ps, 2, id_main );

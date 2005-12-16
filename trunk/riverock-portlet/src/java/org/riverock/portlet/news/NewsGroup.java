@@ -84,7 +84,7 @@ public final class NewsGroup
     static
     {
         sql_ =
-            "select a.* from MAIN_LIST_NEWS a where a.IS_DELETED=0 and a.ID_NEWS=?";
+            "select a.* from WM_NEWS_LIST a where a.IS_DELETED=0 and a.ID_NEWS=?";
 
         try
         {
@@ -151,7 +151,7 @@ public final class NewsGroup
     static
     {
         sql1_ =
-            "select a.ID from MAIN_NEWS a, MAIN_LIST_NEWS b " +
+            "select a.ID from WM_NEWS_ITEM a, WM_NEWS_LIST b " +
             "where b.ID_NEWS=? and a.ID_NEWS=b.ID_NEWS and a.IS_DELETED=0 " +
             "order by EDATE desc ";
 

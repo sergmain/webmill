@@ -52,7 +52,6 @@ import org.riverock.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.InternalAuthProvider;
 import org.riverock.sso.utils.AuthHelper;
-import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**

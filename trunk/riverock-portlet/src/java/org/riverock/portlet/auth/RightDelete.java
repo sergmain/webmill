@@ -122,24 +122,15 @@ public final class RightDelete extends HttpServlet
             if (auth_.isUserInRole("webmill.auth_right"))
             {
 
-//                String sql_ =
-//                    "select b.FULL_NAME_MODULE NAME_ARM_MODULE, c.NAME_ACCESS_GROUP, " +
-//                    "a.CODE_RIGHT, a.ID_RELATE_RIGHT, a.ID_ACCESS_GROUP, " +
-//                    "a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM, a.ID_OBJECT_ARM "+
-//                    "from AUTH_RELATE_RIGHT_ARM a, V_AUTH_MODULE_FULL b, AUTH_ACCESS_GROUP c "+
-//                    "where a.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and " +
-//                    "a.ID_OBJECT_ARM=b.ID_OBJECT_ARM and "+
-//                    "a.ID_RELATE_RIGHT=?";
-
                 String sql_ =
                     "select b1.name_arm, a1.name_object_arm, b1.code_arm, a1.code_object_arm, c.NAME_ACCESS_GROUP, "+
-                    "a.CODE_RIGHT, a.ID_RELATE_RIGHT, a.ID_ACCESS_GROUP, "+
-                    "a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM "+
-                    "from AUTH_RELATE_RIGHT_ARM a, auth_object_arm a1, auth_arm b1, AUTH_ACCESS_GROUP c "+
-                    "where a.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and "+
-                    "a.ID_OBJECT_ARM=a1.ID_OBJECT_ARM and "+
-                    "a1.id_arm = b1.id_arm and "+
-                    "a.ID_RELATE_RIGHT=?";
+                    "       a.CODE_RIGHT, a.ID_RELATE_RIGHT, a.ID_ACCESS_GROUP, "+
+                    "       a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM "+
+                    "from   WM_AUTH_RELATE_RIGHT_ARM a, WM_AUTH_MODULE a1, WM_AUTH_APPLICATION b1, WM_AUTH_ACCESS_GROUP c "+
+                    "where  a.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and "+
+                    "       a.ID_OBJECT_ARM=a1.ID_OBJECT_ARM and "+
+                    "       a1.id_arm = b1.id_arm and "+
+                    "       a.ID_RELATE_RIGHT=?";
 
                 PreparedStatement ps = null;
                 ResultSet rs = null;

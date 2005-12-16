@@ -130,7 +130,7 @@ public final class RightAdd extends HttpServlet
                 out.write("</td>\r\n\t");
                 out.write("<td align=\"left\">\r\n");
                 out.write("<select name=\"id_access_group\">\r\n");
-                out.write(Client.make_list_prn(null, null, db_, "auth_access_group", "id_access_group", "name_access_group", null, "name_access_group"));
+                out.write(Client.make_list_prn(null, null, db_, "WM_auth_access_group", "id_access_group", "name_access_group", null, "name_access_group"));
                 out.write("\r\n");
                 out.write("</select>\r\n\t");
                 out.write("</td>\r\n");
@@ -145,10 +145,10 @@ public final class RightAdd extends HttpServlet
 
                 String sql =
                     "select distinct a.id_object_arm, a.name_object_arm, a.code_object_arm, " +
-                    "name_arm, a.name_object_arm, b.code_arm, a.code_object_arm, " +
-                    "a.url, a.order_field, a.string_key, a.is_new " +
-                    "from auth_object_arm a, auth_arm b " +
-                    "where a.id_arm = b.id_arm ";
+                    "       name_arm, a.name_object_arm, b.code_arm, a.code_object_arm, " +
+                    "       a.url, a.order_field, a.string_key, a.is_new " +
+                    "from   WM_AUTH_MODULE a, WM_AUTH_APPLICATION b " +
+                    "where  a.id_arm = b.id_arm ";
 
                 PreparedStatement ps = null;
                 ResultSet rs = null;

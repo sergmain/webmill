@@ -170,7 +170,7 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
             "a.id_contact_person, a.test_period, " +
             "a.name_position, a.contact_person " +
 
-            "from	job_position a, job_sex_list b, job_type_education c  " +
+            "from	WM_JOB_POSITION a, WM_JOB_GENDER_LIST b, WM_JOB_TYPE_EDUCATION c  " +
 
             "where	a.id_job_position = ? and " +
             "	a.id_job_sex_list = b.id_job_sex_list and " +
@@ -178,8 +178,8 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
 
     private static String sqlJobPositionData =
             "select TEXT_POSITION " +
-            "from  JOB_POSITION_DATA " +
-            "where ID_JOB_POSITION=? " +
+            "from   WM_JOB_POSITION_DATA " +
+            "where  ID_JOB_POSITION=? " +
             "order by ID_JOB_POSITION_DATA asc";
 
     public boolean isFound = false;

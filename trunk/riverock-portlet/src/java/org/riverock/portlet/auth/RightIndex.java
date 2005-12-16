@@ -88,7 +88,6 @@ public final class RightIndex extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-//            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
             ResourceBundle bundle = ResourceBundle.getBundle("org.riverock.portlet.resource.AuthRelateRightArm", renderRequest.getLocale() );
 
             ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
@@ -107,12 +106,12 @@ public final class RightIndex extends HttpServlet
 
             String v_str =
                 "select b1.name_arm, a1.name_object_arm, b1.code_arm, a1.code_object_arm, c.NAME_ACCESS_GROUP, "+
-                "a.CODE_RIGHT, a.ID_RELATE_RIGHT, a.ID_ACCESS_GROUP, "+
-                "a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM "+
-                "from AUTH_RELATE_RIGHT_ARM a, auth_object_arm a1, auth_arm b1, AUTH_ACCESS_GROUP c "+
-                "where a.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and "+
-                "a.ID_OBJECT_ARM=a1.ID_OBJECT_ARM and "+
-                "a1.id_arm = b1.id_arm ";
+                "       a.CODE_RIGHT, a.ID_RELATE_RIGHT, a.ID_ACCESS_GROUP, "+
+                "       a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM "+
+                "from   WM_AUTH_RELATE_RIGHT_ARM a, WM_AUTH_MODULE a1, WM_AUTH_APPLICATION b1, WM_AUTH_ACCESS_GROUP c "+
+                "where  a.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and "+
+                "       a.ID_OBJECT_ARM=a1.ID_OBJECT_ARM and "+
+                "       a1.id_arm = b1.id_arm ";
 
             if (!isRootLevel)
             {
@@ -120,7 +119,7 @@ public final class RightIndex extends HttpServlet
                     " and  a.ID_ACCESS_GROUP in " +
                     "	( " +
                     "	select  b1.ID_ACCESS_GROUP " +
-                    "	from    AUTH_USER a1, AUTH_RELATE_ACCGROUP b1 " +
+                    "	from    WM_AUTH_USER a1, WM_AUTH_RELATE_ACCGROUP b1 " +
                     "	where   a1.USER_LOGIN=? and a1.ID_AUTH_USER=b1.ID_AUTH_USER " +
                     "	) ";
             }

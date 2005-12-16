@@ -158,7 +158,7 @@ public final class FirmAddCommitPortlet implements Portlet {
                     "	?," +
                     "	?," +
                     "	?," +
-                    "	?,0 from AUTH_USER " +
+                    "	?,0 from WM_AUTH_USER " +
                     "where USER_LOGIN=? " +
                     ( dbDyn.getIsNeedUpdateBracket() ?")" :"" ) );
 

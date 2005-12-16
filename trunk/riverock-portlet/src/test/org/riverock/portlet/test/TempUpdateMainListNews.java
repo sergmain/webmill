@@ -48,7 +48,7 @@ public class TempUpdateMainListNews
         DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "HSQLDB");
 
         String sql_ =
-            "select ID_NEWS from MAIN_LIST_NEWS";
+            "select ID_NEWS from WM_NEWS_LIST";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -65,7 +65,7 @@ public class TempUpdateMainListNews
                     throw new Exception("ID_NEWS can not be null");
 
                 String sql_temp_ =
-                    "update MAIN_LIST_NEWS "+
+                    "update WM_NEWS_LIST "+
                     "set ID_SITE_SUPPORT_LANGUAGE = "+
                     "( select ID_SITE_SUPPORT_LANGUAGE "+
                     "from SITE_SUPPORT_LANGUAGE b "+
