@@ -34,8 +34,6 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
@@ -66,7 +64,7 @@ import org.riverock.webmill.schema.types.MenuSimpleType;
  *
  */
 public final class MenuSimple implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Log log = LogFactory.getLog( MenuSimple.class );
+    private final static Logger log = Logger.getLogger( MenuSimple.class );
 
     public final static int UNKNOWN_LEVEL = 0;
     public final static int EQUAL_LEVEL = 1;
@@ -500,13 +498,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 log.debug("isCurrent - "+ m.getIsCurrent() );
             }
 
-            try{
-                m.setModuleName( item.getStr().getString( renderRequest.getLocale() ) );
-            }
-            catch (Exception e){
-                log.warn("Error get localized message", e);
-                m.setModuleName( "error" );
-            }
+            m.setModuleName( item.getMenuName() );
 
             if (item.getUrlResource()!=null && item.getUrlResource().length()>0) {
                 if (log.isDebugEnabled()) {
