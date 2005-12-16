@@ -96,7 +96,7 @@ public class AuthInfo {
         try
         {
             ps = db_.prepareStatement(
-                "select * FROM AUTH_USER where USER_LOGIN=? and USER_PASSWORD=?"
+                "select * from WM_AUTH_USER where USER_LOGIN=? and USER_PASSWORD=?"
             );
 
             ps.setString(1, login_);
@@ -131,7 +131,7 @@ public class AuthInfo {
         ResultSet rs = null;
         AuthInfo auth_ = null;
         try{
-            ps = db_.prepareStatement( "select * FROM AUTH_USER where ID_AUTH_USER=?" );
+            ps = db_.prepareStatement( "select * from  WM_AUTH_USER where ID_AUTH_USER=?" );
             RsetTools.setLong(ps, 1, id_auth_user);
             rs = ps.executeQuery();
             if (rs.next()){
