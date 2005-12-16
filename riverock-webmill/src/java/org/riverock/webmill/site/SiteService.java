@@ -28,7 +28,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.webmill.core.*;
 import org.riverock.webmill.schema.core.*;
 
-
 /**
  * Author: mill
  * Date: Mar 18, 2003
@@ -44,20 +43,20 @@ public final class SiteService {
         throws Exception
     {
         System.out.println("drop news");
-        MainListNewsListType newsFullList =
-            new GetMainListNewsWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop ).item;
-        for (int i=0; i<newsFullList.getMainListNewsCount(); i++)
+        WmNewsListListType newsFullList =
+            new GetWmNewsListWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop ).item;
+        for (int i=0; i<newsFullList.getWmNewsListCount(); i++)
         {
-            MainListNewsItemType newsGroupList = newsFullList.getMainListNews(i);
-            MainNewsListType newsList = new GetMainNewsWithIdNewsList(db_, newsGroupList.getIdNews()).item;
-            for (int j=0; j<newsList.getMainNewsCount(); j++)
+            WmNewsListItemType newsGroupList = newsFullList.getWmNewsList(i);
+            WmNewsItemListType newsList = new GetWmNewsItemWithIdNewsList(db_, newsGroupList.getIdNews()).item;
+            for (int j=0; j<newsList.getWmNewsItemCount(); j++)
             {
-                MainNewsItemType newsItem = newsList.getMainNews(j);
-                DeleteMainNewsTextWithId.processData(db_, newsItem.getId());
+                WmNewsItemItemType newsItem = newsList.getWmNewsItem(j);
+                DeleteWmNewsItemTextWithId.processData(db_, newsItem.getId());
             }
-            DeleteMainNewsWithIdNews.processData(db_, newsGroupList.getIdNews() );
+            DeleteWmNewsItemWithIdNews.processData(db_, newsGroupList.getIdNews() );
         }
-        DeleteMainListNewsWithIdSiteSupportLanguage.process( db_, idSiteLanguageForDrop );
+        DeleteWmNewsListWithIdSiteSupportLanguage.process( db_, idSiteLanguageForDrop );
         db_.commit();
 
         System.out.println("drop articles");

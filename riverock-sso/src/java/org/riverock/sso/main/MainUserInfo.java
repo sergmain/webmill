@@ -69,8 +69,9 @@ public class MainUserInfo extends UserInfoImpl {
 
         sql_ =
             "select a.* " +
-            "from 	MAIN_USER_INFO a, AUTH_USER b " +
-            "where	a.id_user = b.id_user and b.user_login = ? ";
+            "from   MAIN_USER_INFO a, WM_AUTH_USER b " +
+            "where  a.id_user = b.id_user and b.user_login = ? ";
+
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();

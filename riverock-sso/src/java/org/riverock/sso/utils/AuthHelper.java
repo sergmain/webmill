@@ -78,7 +78,7 @@ public class AuthHelper {
         ResultSet rs = null;
         try {
             String sql_ =
-                "select ID_USER from AUTH_USER where USER_LOGIN=? ";
+                "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ";
 
             ps = adapter.prepareStatement(sql_);
             ps.setString(1, username);
@@ -133,20 +133,20 @@ public class AuthHelper {
         try {
             String sql_ =
                 "select  a01.id_firm " +
-                "from    auth_user a01 " +
+                "from    WM_AUTH_USER a01 " +
                 "where   a01.is_use_current_firm = 1 and a01.user_login=? " +
                 "union " +
                 "select  d02.id_firm " +
-                "from    auth_user a02, main_relate_service_firm d02 " +
+                "from    WM_AUTH_USER a02, main_relate_service_firm d02 " +
                 "where   a02.is_service = 1 and a02.id_service = d02.id_service and a02.user_login=? " +
                 "union " +
                 "select  e03.id_firm " +
-                "from    auth_user a03, main_relate_road_service d03, main_relate_service_firm e03 " +
+                "from    WM_AUTH_USER a03, main_relate_road_service d03, main_relate_service_firm e03 " +
                 "where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service and " +
                 "        a03.user_login=? " +
                 "union " +
                 "select  b04.id_firm " +
-                "from    auth_user a04, main_list_firm b04 " +
+                "from    WM_AUTH_USER a04, main_list_firm b04 " +
                 "where   a04.is_root = 1 and a04.user_login=? ";
 
             ps = adapter.prepareStatement(sql_);
@@ -205,15 +205,15 @@ public class AuthHelper {
         try {
             String sql_ =
                 "select  a01.id_service "+
-                "from    auth_user a01 "+
+                "from    WM_AUTH_USER a01 "+
                 "where   a01.is_service = 1 and a01.user_login=?  "+
                 "union "+
                 "select  b02.id_service "+
-                "from    auth_user a02, main_relate_road_service b02 "+
+                "from    WM_AUTH_USER a02, main_relate_road_service b02 "+
                 "where   a02.is_road = 1 and a02.id_road = b02.id_road and a02.user_login=?  "+
                 "union "+
                 "select  b04.id_service "+
-                "from    auth_user a04, main_list_service b04 "+
+                "from    WM_AUTH_USER a04, main_list_service b04 "+
                 "where   a04.is_root = 1 and a04.user_login=? ";
 
 
@@ -272,11 +272,11 @@ public class AuthHelper {
         try {
             String sql_ =
                 "select  a01.id_road "+
-                "from    auth_user a01 "+
+                "from    WM_AUTH_USER a01 "+
                 "where   a01.is_road=1 and a01.user_login=?  "+
                 "union "+
                 "select  b04.id_road "+
-                "from    auth_user a04, main_list_road b04 "+
+                "from    WM_AUTH_USER a04, main_list_road b04 "+
                 "where   a04.is_root=1 and a04.user_login=?";
 
             ps = adapter.prepareStatement(sql_);

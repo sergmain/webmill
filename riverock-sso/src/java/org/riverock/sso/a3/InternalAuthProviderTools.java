@@ -29,20 +29,20 @@ import java.sql.ResultSet;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.ServletTools;
-import org.riverock.sso.utils.AuthHelper;
-import org.riverock.sso.schema.core.AuthUserItemType;
-import org.riverock.sso.schema.core.AuthRelateAccgroupItemType;
-import org.riverock.sso.core.GetAuthUserItem;
-import org.riverock.sso.core.InsertAuthRelateAccgroupItem;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.interfaces.sso.a3.AuthException;
-
-import org.apache.log4j.Logger;
+import org.riverock.sso.core.GetWmAuthUserItem;
+import org.riverock.sso.core.InsertWmAuthRelateAccgroupItem;
+import org.riverock.sso.schema.core.WmAuthUserItemType;
+import org.riverock.sso.schema.core.WmAuthRelateAccgroupItemType;
+import org.riverock.sso.utils.AuthHelper;
 
 /**
  * User: Admin
@@ -66,15 +66,15 @@ public class InternalAuthProviderTools
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    AuthUserItemType auth = GetAuthUserItem.getInstance(db_, id_auth_user_owner).item;
+                    WmAuthUserItemType auth = GetWmAuthUserItem.getInstance(db_, id_auth_user_owner).item;
                     if (auth==null)
                         return false;
 
                     ps = db_.prepareStatement(
                         "select null " +
-                        "from AUTH_USER a, MAIN_USER_INFO b " +
-                        "where a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
-                        "b.ID_FIRM  in ("+AuthHelper.getGrantedFirmId(db_, auth.getUserLogin())+") "
+                        "from   WM_AUTH_USER a, MAIN_USER_INFO b " +
+                        "where  a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
+                        "       b.ID_FIRM  in ("+AuthHelper.getGrantedFirmId(db_, auth.getUserLogin())+") "
                     );
 
                     RsetTools.setLong(ps, 1, id_auth_user_check);
@@ -82,9 +82,9 @@ public class InternalAuthProviderTools
                 default:
                     ps = db_.prepareStatement(
                         "select null " +
-                        "from AUTH_USER a, MAIN_USER_INFO b, V$_READ_LIST_FIRM z1 " +
-                        "where a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
-                        "b.ID_FIRM = z1.ID_FIRM and z1.ID_AUTH_USER=? "
+                        "from   WM_AUTH_USER a, MAIN_USER_INFO b, V$_READ_LIST_FIRM z1 " +
+                        "where  a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
+                        "       b.ID_FIRM = z1.ID_FIRM and z1.ID_AUTH_USER=? "
                     );
 
                     RsetTools.setLong(ps, 1, id_auth_user_check);
@@ -115,14 +115,14 @@ public class InternalAuthProviderTools
         try
         {
             String sql_ =
-                "insert into AUTH_ACCESS_GROUP " +
+                "insert into WM_AUTH_ACCESS_GROUP " +
                 "( ID_ACCESS_GROUP, NAME_ACCESS_GROUP ) " +
                 "VALUES "+
                 "( ?, ? )";
 
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_auth_access_group");
-            seq.setTableName( "AUTH_ACCESS_GROUP");
+            seq.setSequenceName("seq_WM_auth_access_group");
+            seq.setTableName( "WM_AUTH_ACCESS_GROUP");
             seq.setColumnName( "ID_ACCESS_GROUP" );
             Long id = db_.getSequenceNextValue(seq);
 
@@ -170,8 +170,8 @@ public class InternalAuthProviderTools
         try
         {
             ps = ora_.prepareStatement(
-                "select id_relate_accgroup from auth_relate_accgroup " +
-                "where id_auth_user=? and id_access_group=?"
+                "select id_relate_accgroup from WM_AUTH_RELATE_ACCGROUP " +
+                "where  id_auth_user=? and id_access_group=?"
             );
             ps.setObject(1, id_auth_user);
             ps.setObject(2, id_role);
@@ -228,17 +228,17 @@ public class InternalAuthProviderTools
             throw new AuthException( "roleId argument must not be null" );
         }
 
-        AuthRelateAccgroupItemType item = new AuthRelateAccgroupItemType();
+        WmAuthRelateAccgroupItemType item = new WmAuthRelateAccgroupItemType();
              CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_auth_relate_accgroup");
-            seq.setTableName( "AUTH_RELATE_ACCGROUP");
+            seq.setSequenceName("SEQ_WM_AUTH_RELATE_ACCGROUP");
+            seq.setTableName( "WM_AUTH_RELATE_ACCGROUP");
             seq.setColumnName( "ID_RELATE_ACCGROUP" );
             long id = ora_.getSequenceNextValue( seq );
 
         item.setIdRelateAccgroup( id );
         item.setIdAuthUser( id_auth_user );
         item.setIdAccessGroup( id_role );
-        InsertAuthRelateAccgroupItem.process( ora_, item );
+        InsertWmAuthRelateAccgroupItem.process( ora_, item );
         return true;
     }
 
@@ -253,13 +253,13 @@ public class InternalAuthProviderTools
         try
         {
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_auth_user");
-            seq.setTableName( "AUTH_USER");
+            seq.setSequenceName("SEQ_WM_AUTH_USER");
+            seq.setTableName( "WM_AUTH_USER");
             seq.setColumnName( "ID_AUTH_USER" );
             long id_auth_user = db_.getSequenceNextValue( seq );
 
             ps = db_.prepareStatement(
-                "insert into AUTH_USER	" +
+                "insert into WM_AUTH_USER " +
                 "(ID_AUTH_USER, id_user, ID_FIRM, user_login, user_password, " +
                 "is_service, is_road, is_use_current_firm, is_root, id_road, id_service)" +
                 "values "+
@@ -677,7 +677,7 @@ public class InternalAuthProviderTools
         try
         {
             ps = db_.prepareStatement(
-                "select ID_ACCESS_GROUP from AUTH_ACCESS_GROUP where NAME_ACCESS_GROUP=?"
+                "select ID_ACCESS_GROUP from WM_AUTH_ACCESS_GROUP where NAME_ACCESS_GROUP=?"
             );
             ps.setString(1, role_name);
             rs = ps.executeQuery();

@@ -54,11 +54,11 @@
 	<DbTablePrefix>SITE_CTX_CATALOG</DbTablePrefix>
 	<DbTablePrefix>SITE_CTX_LANG_CATALOG</DbTablePrefix>
 	<DbTablePrefix>SITE_CTX_ARTICLE</DbTablePrefix>
-	<DbTablePrefix>MAIN_NEWS</DbTablePrefix>
-	<DbTablePrefix>MAIN_LIST_NEWS</DbTablePrefix>
 	<DbTablePrefix>MAIN_LANGUAGE</DbTablePrefix>
 
-	<TableToList>MAIN_NEWS</TableToList>
+	<DbTablePrefix>WM_NEWS</DbTablePrefix>
+
+	<TableToList>WM_NEWS_ITEM</TableToList>
 	<TableToList>MAIN_LANGUAGE</TableToList>
 	<TableToList>SITE_CTX_CATALOG</TableToList>
 	<TableToList>SITE_CTX_TYPE</TableToList>
