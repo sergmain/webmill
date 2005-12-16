@@ -39,7 +39,7 @@
             failonerror="true"
             classname="org.riverock.system.CreateSchemaFromDb">
             <arg value="../../../xml/gen-core-schema.xml"/>
-            <arg value="../../../xml/webmill-schema.xml"/>
+            <arg value="../../../../../riverock-webmill-db/xml/webmill-schema.xml"/>
             <classpath refid="classpath-core"/>
         </java>
     </target>
