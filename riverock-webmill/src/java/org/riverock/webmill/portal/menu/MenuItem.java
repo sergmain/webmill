@@ -25,23 +25,20 @@
 
 package org.riverock.webmill.portal.menu;
 
-import java.util.List;
-import java.util.Locale;
 import java.util.LinkedList;
-import java.io.IOException;
+import java.util.List;
 
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
-import org.riverock.interfaces.generic.LocalizedStringInterface;
+import org.apache.log4j.Logger;
+
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.port.LocalizedString;
-import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
-import org.riverock.webmill.schema.core.SiteCtxTypeItemType;
-import org.riverock.webmill.core.GetSiteTemplateItem;
+import org.riverock.interfaces.portlet.menu.MenuItemInterface;
 import org.riverock.webmill.core.GetSiteCtxTypeItem;
+import org.riverock.webmill.core.GetSiteTemplateItem;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.apache.log4j.Logger;
+import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
+import org.riverock.webmill.schema.core.SiteCtxTypeItemType;
+import org.riverock.webmill.schema.core.SiteTemplateItemType;
 
 /**
  *
@@ -55,11 +52,11 @@ public final class MenuItem implements MenuItemInterface{
     private String nameTemplate = null;
     private String type = "";
 
-    private LocalizedStringInterface str = null;
+    private String menuName = null;
     private List catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
 
     protected void finalize() throws Throwable{
-        str = null;
+        menuName = null;
         type = null;
         nameTemplate = null;
         if (getCatalogItems()!=null) {
@@ -75,18 +72,10 @@ public final class MenuItem implements MenuItemInterface{
     public List getSubTree() { return this.catalogItems;}
     public void setSubTree(List list){ this.catalogItems = list;}
 
-    public String toString()
-    {
-        String st;
-        try{
-            st = str.getString(Locale.ENGLISH);
-        }
-        catch (IOException e){
-            st = "error";
-        }
+    public String toString() {
         return
-            "[id:"+getId()+", idTop:"+getIdTop()+" type:"+type+", portletId:"+getIdPortlet()+", " +
-            "template:"+nameTemplate+", str:"+st+", url:"+getUrl()+"]";
+            "[id: "+getId()+",idTop: "+getIdTop()+",type: "+type+",portletId: "+getIdPortlet()+"," +
+            "template: "+nameTemplate+",name: "+menuName+",url: "+getUrl()+"]";
     }
 
     public MenuItem(DatabaseAdapter db_, SiteCtxCatalogItemType ctxItem) throws PortalException{
@@ -102,11 +91,7 @@ public final class MenuItem implements MenuItemInterface{
             }
         }
 
-        this.str = new LocalizedString(
-            Boolean.TRUE.equals(ctx.getIsUseProperties()),
-            ctx.getKeyMessage(),
-            ctx.getStorage()
-        );
+        this.menuName = ctx.getKeyMessage();
 
         try {
             if (db_!=null) {
@@ -150,8 +135,8 @@ public final class MenuItem implements MenuItemInterface{
         return this.type;
     }
 
-    public LocalizedStringInterface getStr(){
-        return this.str;
+    public String getMenuName(){
+        return this.menuName;
     }
 
     public List getCatalogItems(){
