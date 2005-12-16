@@ -83,7 +83,6 @@
 
     <target name="full_clean">
         <ant antfile="build-core.xml" target="clean"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
     </target>
 
