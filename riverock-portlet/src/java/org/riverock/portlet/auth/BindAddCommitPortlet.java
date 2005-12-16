@@ -102,12 +102,12 @@ public final class BindAddCommitPortlet implements Portlet {
                 throw new IllegalArgumentException( "id_user not initialized" );
 
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_AUTH_USER" );
-            seq.setTableName( "AUTH_USER" );
+            seq.setSequenceName( "seq_WM_AUTH_USER" );
+            seq.setTableName( "WM_AUTH_USER" );
             seq.setColumnName( "ID_AUTH_USER" );
             Long id = dbDyn.getSequenceNextValue( seq );
 
-            ps = dbDyn.prepareStatement( "insert into AUTH_USER " +
+            ps = dbDyn.prepareStatement( "insert into WM_AUTH_USER " +
                 "( ID_AUTH_USER, ID_FIRM, ID_SERVICE, ID_ROAD, " +
                 "  ID_USER, USER_LOGIN, USER_PASSWORD, " +
                 "IS_USE_CURRENT_FIRM, IS_SERVICE, IS_ROAD " +

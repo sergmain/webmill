@@ -286,7 +286,7 @@ public final class OrderLogic {
                 {
                     case DatabaseManager.MYSQL_FAMALY:
                         Long userId = DatabaseManager.getLongValue(
-                            dbDyn, "select ID_USER from AUTH_USER where USER_LOGIN=? ", new Object[]{authSession.getUserLogin()});
+                            dbDyn, "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ", new Object[]{authSession.getUserLogin()});
                         if (userId!=null)
                         {
                             sql_ =
@@ -304,7 +304,7 @@ public final class OrderLogic {
                         sql_ =
                             "update PRICE_RELATE_USER_ORDER_V2 " +
                             "set ID_USER = " +
-                            "(select ID_USER from AUTH_USER	where USER_LOGIN = ?) " +
+                            "(select ID_USER from WM_AUTH_USER where USER_LOGIN = ?) " +
                             "where ID_ORDER_V2 = ? ";
 
                         ps = dbDyn.prepareStatement(sql_);

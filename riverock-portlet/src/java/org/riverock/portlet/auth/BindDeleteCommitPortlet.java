@@ -112,14 +112,14 @@ public final class BindDeleteCommitPortlet implements Portlet {
 
                 switch( dbDyn.getFamaly() ) {
                     case DatabaseManager.MYSQL_FAMALY:
-                        ps = dbDyn.prepareStatement( "delete from AUTH_USER where id_auth_user=? " +
+                        ps = dbDyn.prepareStatement( "delete from WM_AUTH_USER where id_auth_user=? " +
                             "and ID_FIRM in " +
                             "(" + AuthHelper.getGrantedFirmId( dbDyn, auth_.getUserLogin() ) + ")" );
 
                         RsetTools.setLong( ps, 1, id_auth_user );
                         break;
                     default:
-                        ps = dbDyn.prepareStatement( "delete from AUTH_USER where id_auth_user=? " +
+                        ps = dbDyn.prepareStatement( "delete from WM_AUTH_USER where id_auth_user=? " +
                             "and ID_FIRM in " +
                             "(select z.ID_FIRM from v$_read_list_firm z where z.user_login = ? )" );
 

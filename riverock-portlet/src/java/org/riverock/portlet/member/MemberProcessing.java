@@ -671,15 +671,11 @@ public final class MemberProcessing {
                         ".ID_USER in " +
                         " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         '.' + "ID_USER " +
-                        "  from AUTH_USER " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        "  from WM_AUTH_USER " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         ".USER_LOGIN=?) ";
                     break;
             }
-//            fromSQL += ", auth_user " + prepareTableAlias(aliasUserRestrict) + ' ';
-//            whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
-//                ".id_user=" + prepareTableAlias(aliasUserRestrict) +
-//                ".id_user and " + prepareTableAlias(aliasUserRestrict) + ".user_login=? ";
         }
 
         if (whereSQL.length() > 0)

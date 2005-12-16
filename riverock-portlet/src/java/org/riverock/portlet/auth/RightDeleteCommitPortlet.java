@@ -103,7 +103,7 @@ public final class RightDeleteCommitPortlet implements Portlet {
                 throw new IllegalArgumentException( "id_relate_right not initialized" );
 
 
-            ps = dbDyn.prepareStatement( "delete from AUTH_RELATE_RIGHT_ARM " +
+            ps = dbDyn.prepareStatement( "delete from WM_AUTH_RELATE_RIGHT_ARM " +
                 "where id_relate_right = ? " );
 
             RsetTools.setLong( ps, 1, id_relate_right );

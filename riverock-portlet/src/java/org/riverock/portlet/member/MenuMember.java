@@ -71,14 +71,10 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
     private MenuMemberType menu = new MenuMemberType();
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
-//    private ResourceBundle bundle = null;
-//    private PortletConfig portletConfig = null;
 
     public void setParameters( final RenderRequest renderRequest, final RenderResponse renderResponse, final PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;
-//        this.portletConfig = portletConfig;
-//        this.bundle = portletConfig.getResourceBundle()
     }
 
     protected void destroy() {
@@ -125,13 +121,13 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
             String sql_ =
                 "select a.user_login, f.code_arm, f.order_field, f.id_arm, f.name_arm "+
-                "from auth_user a, auth_relate_accgroup b, auth_relate_right_arm d, auth_object_arm e, auth_arm f "+
-                "where a.id_auth_user=b.id_auth_user and b.id_access_group = d.id_access_group and " +
-                "d.id_object_arm = e.id_object_arm and e.id_arm = f.id_arm and a.USER_LOGIN=? "+
-                "union "+
+                "from   WM_AUTH_USER a, WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_RELATE_RIGHT_ARM d, WM_AUTH_MODULE e, WM_AUTH_APPLICATION f "+
+                "where  a.id_auth_user=b.id_auth_user and b.id_access_group = d.id_access_group and " +
+                "       d.id_object_arm = e.id_object_arm and e.id_arm = f.id_arm and a.USER_LOGIN=? "+
+                "union  "+
                 "select a1.user_login, f1.code_arm, f1.order_field, f1.id_arm, f1.name_arm "+
-                "from auth_user a1, auth_arm f1 "+
-                "where a1.is_root=1 and a1.USER_LOGIN=? ";
+                "from   WM_AUTH_USER a1, WM_AUTH_APPLICATION f1 "+
+                "where  a1.is_root=1 and a1.USER_LOGIN=? ";
 
             ps = db_.prepareStatement(sql_);
 
@@ -176,37 +172,6 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
     public byte[] getPlainHTML()
     {
-/*
-        String s = ("<br><FONT face=Arial size=-1>");
-
-
-        for (int i=0; i< v.size(); i++)
-        {
-            MenuMemberApplication ap = (MenuMemberApplication)v.elementAt(i);
-            s += ("<table width=\"100%\"><tr><th>"+ap.applicationName+"</th></tr></table>");
-            s += ("<table border=\"0\" cellPadding=\"0\" cellSpacing=\"0\"><tr><td>&nbsp;&nbsp;</td><td>");
-
-            for (int j=0; j<ap.subMenu.size(); j++)
-            {
-                MenuMemberModule mod = (MenuMemberModule)ap.subMenu.elementAt(j);
-                if (mod.isNew==1)
-                    s += ("<a class=\"linktoc\" "+
-                            "href=\""+param.response.encodeURL( mod.url )+
-                            "&"+param.jspPage.addURL+
-                            "\">"+mod.moduleName+"</a><br>");
-                else
-                    s += ("<a class=\"linktoc\" "+
-                            "href=\""+param.response.encodeURL( mod.url )+
-                            "?"+param.jspPage.addURL+
-                            "\">"+mod.moduleName+"</a><br>");
-
-            }
-            s += ("</td></tr></table>");
-        }
-        s += ("</font> ");
-
-        return s;
-*/
         return null;
     }
 
@@ -224,45 +189,42 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
     private final static String sql_ =
         "select distinct z.CODE_ARM,a.CODE_OBJECT_ARM,  a.NAME_OBJECT_ARM, "+
-        "a.url, a.order_field, a.is_new  " +
-        "from   AUTH_OBJECT_ARM a," +
+        "       a.url, a.order_field, a.is_new  " +
+        "from   WM_AUTH_MODULE a," +
         "(" +
-        "select " +
-        "    a.user_login, " +
-        "    f.code_arm, " +
-        "    d.id_object_arm, " +
-        "	 e.id_arm, " +
-        "	 e.is_new  " +
-        "from    auth_user a, " +
-        "    auth_relate_accgroup b, " +
-        "    auth_relate_right_arm d, " +
-        "    auth_object_arm e, " +
-        "    auth_arm f " +
-        "where   a.id_auth_user=b.id_auth_user and " +
-        "        b.id_access_group = d.id_access_group and " +
-        "        d.id_object_arm = e.id_object_arm and " +
-        "        e.id_arm = f.id_arm " +
+        "select a.user_login, " +
+        "       f.code_arm, " +
+        "       d.id_object_arm, " +
+        "	e.id_arm, " +
+        "	e.is_new  " +
+        "from   WM_AUTH_USER a, " +
+        "       WM_AUTH_RELATE_ACCGROUP b, " +
+        "       WM_AUTH_RELATE_RIGHT_ARM d, " +
+        "       WM_AUTH_MODULE e, " +
+        "       WM_AUTH_APPLICATION f " +
+        "where  a.id_auth_user=b.id_auth_user and " +
+        "       b.id_access_group = d.id_access_group and " +
+        "       d.id_object_arm = e.id_object_arm and " +
+        "       e.id_arm = f.id_arm " +
         "union " +
-        "select  a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm, d1.is_new   " +
-        "from    auth_user a1, auth_object_arm d1,  auth_arm f1 " +
-        "where   a1.is_root=1 and d1.id_arm = f1.id_arm " +
+        "select a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm, d1.is_new   " +
+        "from   WM_AUTH_USER a1, WM_AUTH_MODULE d1,  WM_AUTH_APPLICATION f1 " +
+        "where  a1.is_root=1 and d1.id_arm = f1.id_arm " +
         ") z " +
         "where  z.user_login=? and " +
         "       a.id_object_arm = z.id_object_arm and " +
         "       z.id_arm=? and a.url is not null ";
-//        "order by ORDER_FIELD ASC";
 
     String sql_mysql =
         "select distinct f.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.url, a1.order_field, a1.is_new "+
-        "from    AUTH_OBJECT_ARM a1, auth_user a, auth_relate_accgroup b, auth_relate_right_arm d, auth_object_arm e, auth_arm f "+
-        "where   a.id_auth_user=b.id_auth_user and b.id_access_group = d.id_access_group and d.id_object_arm = e.id_object_arm and "+
-        "        e.id_arm = f.id_arm and a.user_login=? and a1.id_object_arm = d.id_object_arm and e.id_arm=? and a1.url is not null "+
+        "from   WM_AUTH_MODULE a1, WM_AUTH_USER a, WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_RELATE_RIGHT_ARM d, WM_AUTH_MODULE e, WM_AUTH_APPLICATION f "+
+        "where  a.id_auth_user=b.id_auth_user and b.id_access_group = d.id_access_group and d.id_object_arm = e.id_object_arm and "+
+        "       e.id_arm = f.id_arm and a.user_login=? and a1.id_object_arm = d.id_object_arm and e.id_arm=? and a1.url is not null "+
         "union "+
         "select distinct f01.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.url, a1.order_field, a1.is_new "+
-        "from    AUTH_OBJECT_ARM a1, auth_user a01, auth_object_arm d01,  auth_arm f01 "+
-        "where   a01.is_root=1 and d01.id_arm = f01.id_arm and a01.user_login=? and a1.id_object_arm = d01.id_object_arm and "+
+        "from   WM_AUTH_MODULE a1, WM_AUTH_USER a01, WM_AUTH_MODULE d01,  WM_AUTH_APPLICATION f01 "+
+        "where  a01.is_root=1 and d01.id_arm = f01.id_arm and a01.user_login=? and a1.id_object_arm = d01.id_object_arm and "+
         "       f01.id_arm=? and a1.url is not null ";
-//        "order by ORDER_FIELD ASC ";
 
 
     private MenuMemberApplicationType getApplication(AuthInfo authInfo, ResultSet rs, int recordNumber_, DatabaseAdapter db_)

@@ -90,7 +90,6 @@ public final class RightChange extends HttpServlet
         {
             RenderRequest renderRequest = (RenderRequest)request_;
             RenderResponse renderResponse= (RenderResponse)response;
-//            ResourceBundle bundle = (ResourceBundle)renderRequest.getAttribute( ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE );
             ResourceBundle bundle = ResourceBundle.getBundle("org.riverock.portlet.resource.AuthRelateRightArm", renderRequest.getLocale() );
 
             ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
@@ -127,11 +126,11 @@ public final class RightChange extends HttpServlet
 
                 String v_str =
                     "select c.NAME_ACCESS_GROUP, a.CODE_RIGHT, a.ID_RELATE_RIGHT, a.ID_ACCESS_GROUP, " +
-                    "a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM, a.ID_OBJECT_ARM "+
-                    "from AUTH_RELATE_RIGHT_ARM a, AUTH_ACCESS_GROUP c "+
-                    "where a.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and " +
-                    "a.ID_RELATE_RIGHT=?";
-
+                    "       a.IS_ROAD, a.IS_SERVICE, a.IS_FIRM, a.ID_OBJECT_ARM "+
+                    "from   WM_AUTH_RELATE_RIGHT_ARMa, WM_AUTH_ACCESS_GROUP c "+
+                    "where a. ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and " +
+                    "       a.ID_RELATE_RIGHT=?";
+                             
                 ps = db_.prepareStatement(v_str);
                 RsetTools.setLong(ps, 1, id_relate_right);
 
@@ -160,7 +159,7 @@ public final class RightChange extends HttpServlet
                     out.write("</td>\r\n\t\t");
                     out.write("<td align=\"left\">\r\n");
                     out.write("<select name=\"id_access_group\">\r\n");
-                    out.write(Client.make_list_prn(rs, "ID_ACCESS_GROUP", db_, "AUTH_ACCESS_GROUP", "ID_ACCESS_GROUP", "NAME_ACCESS_GROUP"));
+                    out.write(Client.make_list_prn(rs, "ID_ACCESS_GROUP", db_, "WM_AUTH_ACCESS_GROUP", "ID_ACCESS_GROUP", "NAME_ACCESS_GROUP"));
                     out.write("\r\n");
                     out.write("</select>\r\n\t\t");
                     out.write("</td>\r\n\t");
@@ -175,10 +174,10 @@ public final class RightChange extends HttpServlet
 
                     String sql =
                         "select distinct a.id_object_arm, a.name_object_arm,  " +
-                        "name_arm, a.name_object_arm, b.code_arm, a.code_object_arm, " +
-                        "a.url, a.order_field, a.string_key, a.is_new " +
-                        "from auth_object_arm a, auth_arm b " +
-                        "where a.id_arm = b.id_arm ";
+                        "       name_arm, a.name_object_arm, b.code_arm, a.code_object_arm, " +
+                        "       a.url, a.order_field, a.string_key, a.is_new " +
+                        "from   WM_AUTH_MODULE a, WM_AUTH_APPLICATION b " +
+                        "where  a.id_arm = b.id_arm ";
 
                     PreparedStatement ps1 = null;
                     ResultSet rs1 = null;

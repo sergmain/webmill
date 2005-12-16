@@ -163,7 +163,7 @@ public final class BindChangeCommitPortlet implements Portlet {
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 ps = dbDyn.prepareStatement(
-                                    "UPDATE AUTH_USER "+
+                                    "UPDATE WM_AUTH_USER "+
                                     "SET "+
                                     "	user_login = ?, "+
                                     "	user_password = ?, "+
@@ -217,7 +217,7 @@ public final class BindChangeCommitPortlet implements Portlet {
                                 break;
                             default:
                                 ps = dbDyn.prepareStatement(
-                                    "UPDATE AUTH_USER "+
+                                    "UPDATE WM_AUTH_USER "+
                                     "SET "+
                                     "	user_login = ?, "+
                                     "	user_password = ?, "+

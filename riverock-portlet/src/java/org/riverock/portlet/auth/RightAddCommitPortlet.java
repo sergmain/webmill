@@ -102,12 +102,12 @@ public final class RightAddCommitPortlet implements Portlet {
             }
 
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_AUTH_RELATE_RIGHT_ARM" );
-            seq.setTableName( "AUTH_RELATE_RIGHT_ARM" );
+            seq.setSequenceName( "seq_WM_AUTH_RELATE_RIGHT_ARM" );
+            seq.setTableName( "WM_AUTH_RELATE_RIGHT_ARM" );
             seq.setColumnName( "ID_RELATE_RIGHT" );
             Long id = dbDyn.getSequenceNextValue( seq );
 
-            ps = dbDyn.prepareStatement( "insert into AUTH_RELATE_RIGHT_ARM (" +
+            ps = dbDyn.prepareStatement( "insert into WM_AUTH_RELATE_RIGHT_ARM (" +
                 "	ID_RELATE_RIGHT, " +
                 "	id_access_group, " +
                 "	id_object_arm, " +
@@ -117,7 +117,6 @@ public final class RightAddCommitPortlet implements Portlet {
                 "	is_firm)" +
                 "values " +
                 "(?, ?, ?, ?, ?, ?, ? )"
-//                            "from auth_user b where b.user_login=?"
             );
 
             String right =
@@ -137,8 +136,6 @@ public final class RightAddCommitPortlet implements Portlet {
             RsetTools.setLong( ps, 5, PortletService.getLong( renderRequest, "is_road" ) );
             RsetTools.setLong( ps, 6, PortletService.getLong( renderRequest, "is_service" ) );
             RsetTools.setLong( ps, 7, PortletService.getLong( renderRequest, "is_firm" ) );
-
-//                    ps.setString(8, auth_.getUserLogin());
 
             int i1 = ps.executeUpdate();
             if ( log.isDebugEnabled() )

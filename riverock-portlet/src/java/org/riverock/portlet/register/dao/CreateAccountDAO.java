@@ -67,7 +67,7 @@ public class CreateAccountDAO {
             Long countRecord = DatabaseManager.getLongValue(
                 dbDyn,
                 "select count(*) COUNT_RECORDS " +
-                "from   AUTH_USER " +
+                "from   WM_AUTH_USER " +
                 "where  USER_LOGIN=?",
                 new Object[]{ bean.getUsername() }
             );

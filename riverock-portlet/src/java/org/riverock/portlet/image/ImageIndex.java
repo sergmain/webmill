@@ -154,7 +154,7 @@ public final class ImageIndex extends HttpServlet {
 
                 sql_ =
                     "select is_group, id, id_main, name_file " +
-                    "from image_dir a, auth_user b \n" +
+                    "from image_dir a, WM_AUTH_USER b \n" +
                     "where a.id_main = ? and a.ID_FIRM = b.ID_FIRM and a.is_group = 1 " +
                     "	and b.user_login=? \n" +
                     "order by id asc ";

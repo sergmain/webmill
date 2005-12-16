@@ -191,8 +191,8 @@ public class TestDropSiteFromHsql
             for (int j=0; j<newsGroupList.getGroupCount(); j++)
             {
                 SiteExtendNewsGroupType newsGroup = newsGroupList.getGroup(j);
-                seq.setSequenceName("SEQ_MAIN_LIST_NEWS");
-                seq.setTableName( "MAIN_LIST_NEWS");
+                seq.setSequenceName("SEQ_WM_NEWS_LIST");
+                seq.setTableName( "WM_NEWS_LIST");
                 seq.setColumnName( "ID_NEWS" );
                 long idNewsGroupNew = db_.getSequenceNextValue( seq );
 
@@ -205,8 +205,8 @@ public class TestDropSiteFromHsql
                     MainNewsItemType newsItem = newsGroup.getNewsItem().getMainNews(k);
                     String newsText = newsItem.getText();
                     newsItem.setText( "" );
-                    seq.setSequenceName("SEQ_MAIN_NEWS");
-                    seq.setTableName( "MAIN_NEWS");
+                    seq.setSequenceName("SEQ_WM_NEWS_ITEM");
+                    seq.setTableName( "WM_NEWS_ITEM");
                     seq.setColumnName( "ID" );
                     long idNewsNew = db_.getSequenceNextValue( seq );
                     newsItem.setId( idNewsNew );
@@ -217,7 +217,7 @@ public class TestDropSiteFromHsql
                     DatabaseManager.insertBigText(db_, new Long(idNewsNew),
                         "ID",
                         PrimaryKeyTypeType.NUMBER_TYPE,
-                        "MAIN_NEWS_TEXT",
+                        "WM_NEWS_ITEM_TEXT",
                         "ID_MAIN_NEWS_TEXT",
                         "TEXT",
                         newsText,

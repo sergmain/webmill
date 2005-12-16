@@ -32,20 +32,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletException;
+import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.tools.StringManager;
-import org.riverock.generic.exception.GenericException;
 import org.riverock.portlet.schema.member.*;
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
@@ -67,8 +66,7 @@ import org.riverock.sso.utils.AuthHelper;
  * $Id$
  */
 public final class MemberServiceClass {
-
-    private final static Log log = LogFactory.getLog( MemberServiceClass.class );
+    private final static Logger log = Logger.getLogger( MemberServiceClass.class );
 
     private static class RestrictDescription
     {
@@ -441,7 +439,7 @@ public final class MemberServiceClass {
                 if (! Boolean.TRUE.equals(content1.getQueryArea().getSqlCache().getIsInit()) )
                 {
                     SqlFromType fromType = new SqlFromType();
-                    fromType.setTable( "AUTH_USER" );
+                    fromType.setTable( "SEQ_WM_AUTH_USER" );
                     fromType.setAlias( null );
                     content1.getQueryArea().getSqlCache().addFrom( fromType );
 
@@ -517,7 +515,7 @@ public final class MemberServiceClass {
             if (! Boolean.TRUE.equals(content1.getQueryArea().getSqlCache().getIsInit()) )
             {
                 SqlFromType fromType = new SqlFromType();
-                fromType.setTable( "AUTH_USER" );
+                fromType.setTable( "WM_AUTH_USER" );
                 fromType.setAlias( MemberProcessing.aliasUserRestrict );
                 content1.getQueryArea().getSqlCache().addFrom( fromType );
 
@@ -700,9 +698,6 @@ public final class MemberServiceClass {
                     break;
             }
 
-
-
-            //Todo logic of SqlCache not work. NEED REWRITE
             if (! Boolean.TRUE.equals(contentMain.getQueryArea().getSqlCache().getIsInit()) )
             {
                 addParameter(contentMain, "", SqlCheckParameterTypeTypeType.RESTRICT_FIRM );
@@ -773,7 +768,6 @@ public final class MemberServiceClass {
                     break;
             }
 
-            //Todo logic of SqlCache not work. NEED REWRITE
             if (! Boolean.TRUE.equals(contentMain.getQueryArea().getSqlCache().getIsInit()) )
             {
                 addParameter(contentMain, "", SqlCheckParameterTypeTypeType.RESTRICT_SITE );
@@ -825,13 +819,12 @@ public final class MemberServiceClass {
                 ".id_user=" + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) +
                 ".id_user and " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) + ".user_login=? ";
 
-            //Todo logic of SqlCache not work. NEED REWRITE
             if (! Boolean.TRUE.equals(contentMain.getQueryArea().getSqlCache().getIsInit()) )
             {
                 addParameter(contentMain, "", SqlCheckParameterTypeTypeType.RESTRICT_USER );
 
                 SqlFromType fromType = new SqlFromType();
-                fromType.setTable( "AUTH_USER" );
+                fromType.setTable( "WM_AUTH_USER" );
                 fromType.setAlias( MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) );
                 contentMain.getQueryArea().getSqlCache().addFrom( fromType );
 
@@ -1254,7 +1247,7 @@ public final class MemberServiceClass {
                         "id_user in " +
                         " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +'.' +
                         "id_user " +
-                        "  from auth_user " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        "  from  WM_AUTH_USER " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         ".user_login=? ) ";
                     break;
@@ -1530,7 +1523,7 @@ public final class MemberServiceClass {
                         "ID_USER in " +
                         " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         '.' + "ID_USER " +
-                        "  from AUTH_USER " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        "  from  WM_AUTH_USER" + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
                         ".USER_LOGIN=?) ";
                     break;

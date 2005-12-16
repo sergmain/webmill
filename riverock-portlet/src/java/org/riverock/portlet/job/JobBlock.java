@@ -93,9 +93,9 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
     public PortletResultContent getInstance() throws PortletException {
 
         final String sql_ =
-            "select	a.ID_JOB_POSITION " +
-            "from JOB_POSITION a, SITE_LIST_SITE c " +
-            "where a.ID_FIRM=c.ID_FIRM and c.ID_SITE=? " +
+            "select a.ID_JOB_POSITION " +
+            "from   WM_JOB_POSITION a, SITE_LIST_SITE c " +
+            "where  a.ID_FIRM=c.ID_FIRM and c.ID_SITE=? " +
             "order by a.DATE_POST desc";
 
         PreparedStatement ps = null;

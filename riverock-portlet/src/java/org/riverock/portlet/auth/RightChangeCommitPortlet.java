@@ -109,7 +109,7 @@ public final class RightChangeCommitPortlet implements Portlet {
                 ( one.equals( PortletService.getInt( actionRequest, "ra" ) ) ?"A" :"" );
 
             dbDyn = DatabaseAdapter.getInstance();
-            ps = dbDyn.prepareStatement( "UPDATE AUTH_RELATE_RIGHT_ARM " +
+            ps = dbDyn.prepareStatement( "update WM_AUTH_RELATE_RIGHT_ARM " +
                 "SET " +
                 "	id_access_group = ?, " +
                 "	id_object_arm = ?, " +

@@ -53,8 +53,7 @@
 	<DbTablePrefix>SITE_TEMPLATE</DbTablePrefix>
 	<DbTablePrefix>SITE_CTX_CATALOG</DbTablePrefix>
 
-	<DbTablePrefix>MAIN_NEWS</DbTablePrefix>
-	<DbTablePrefix>MAIN_LIST_NEWS</DbTablePrefix>
+	<DbTablePrefix>WM_NEWS_</DbTablePrefix>
 
 	<DbTablePrefix>PRICE_</DbTablePrefix>
 	<DbTablePrefix>CASH_</DbTablePrefix>

@@ -166,8 +166,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
             try
             {
                 CustomSequenceType seqSite = new CustomSequenceType();
-                seqSite.setSequenceName("SEQ_MAIN_LIST_NEWS");
-                seqSite.setTableName( "MAIN_LIST_NEWS");
+                seqSite.setSequenceName("SEQ_WM_NEWS_LIST");
+                seqSite.setTableName( "WM_NEWS_LIST");
                 seqSite.setColumnName( "ID_NEWS" );
 
                 Long seqValue = new Long(testAbstract.db_.getSequenceNextValue( seqSite ) );
@@ -180,7 +180,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                 assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), seqValue==null);
 
                 ps = testAbstract.db_.prepareStatement(
-                    "insert into MAIN_LIST_NEWS " +
+                    "insert into WM_NEWS_LIST " +
                     "(ID_NEWS, NAME_NEWS, COUNT_NEWS, ORDER_FIELD, CODE_NEWS_GROUP, ID_SITE_SUPPORT_LANGUAGE) "+
                     "values"+
                     "(?, ?, ?, ?, ?, ?)"
@@ -207,8 +207,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                     newsGroup.addNewsItem( newsItem );
 
                     CustomSequenceType seqNewsItem = new CustomSequenceType();
-                    seqNewsItem.setSequenceName("SEQ_MAIN_NEWS");
-                    seqNewsItem.setTableName( "MAIN_NEWS");
+                    seqNewsItem.setSequenceName("SEQ_WM_NEWS_ITEM");
+                    seqNewsItem.setTableName( "WM_NEWS_ITEM");
                     seqNewsItem.setColumnName( "ID" );
 
                     Long seqNewsItemValue = new Long(testAbstract.db_.getSequenceNextValue( seqNewsItem ));
@@ -240,7 +240,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                     assertFalse("Error get new value of sequence for table "+seqNewsItem.getTableName(), seqNewsItemValue==null);
 
                     ps = testAbstract.db_.prepareStatement(
-                        "insert into MAIN_NEWS " +
+                        "insert into WM_NEWS_ITEM " +
                         "(ID, ID_NEWS, EDATE, HEADER, ANONS) "+
                         "values"+
                         "(?, ?, "+testAbstract.db_.getNameDateBind()+", ?, ?)"
@@ -266,8 +266,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                     ps = null;
 
                     CustomSequenceType seqNewsItemText = new CustomSequenceType();
-                    seqNewsItemText.setSequenceName( "SEQ_MAIN_NEWS_TEXT" );
-                    seqNewsItemText.setTableName( "MAIN_NEWS_TEXT" );
+                    seqNewsItemText.setSequenceName( "SEQ_WM_NEWS_ITEM_TEXT" );
+                    seqNewsItemText.setTableName( "WM_NEWS_ITEM_TEXT" );
                     seqNewsItemText.setColumnName( "ID_MAIN_NEWS_TEXT" );
 
                     Long idNewsItemText = new Long(testAbstract.db_.getSequenceNextValue( seqNewsItemText ));
@@ -275,7 +275,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
                     assertFalse("Error get new value of sequence for table "+seqNewsItemText.getTableName(), idNewsItemText==null);
 
                     ps = testAbstract.db_.prepareStatement(
-                        "insert into MAIN_NEWS_TEXT " +
+                        "insert into WM_NEWS_ITEM_TEXT " +
                         "(ID_MAIN_NEWS_TEXT, ID, TEXT) "+
                         "values"+
                         "(?, ?, ?)"

@@ -89,9 +89,9 @@ public final class NewsItem {
     {
         sql_ =
             "select a.*, c.CUSTOM_LANGUAGE " +
-            "from MAIN_NEWS a, MAIN_LIST_NEWS b, SITE_SUPPORT_LANGUAGE c "+
-            "where a.ID=? and a.IS_DELETED=0 and a.ID_NEWS=b.ID_NEWS and " +
-            "b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE";
+            "from   WM_NEWS_ITEM a, WM_NEWS_LIST b, SITE_SUPPORT_LANGUAGE c "+
+            "where  a.ID=? and a.IS_DELETED=0 and a.ID_NEWS=b.ID_NEWS and " +
+            "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE";
 
         try
         {
@@ -159,7 +159,7 @@ public final class NewsItem {
     static
     {
         sql1_ =
-            "select TEXT from MAIN_NEWS_TEXT where ID=? order by ID_MAIN_NEWS_TEXT asc";
+            "select TEXT from WM_NEWS_ITEM_TEXT where ID=? order by ID_MAIN_NEWS_TEXT asc";
 
         try
         {
