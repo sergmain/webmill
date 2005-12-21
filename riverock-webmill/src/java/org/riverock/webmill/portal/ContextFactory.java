@@ -46,10 +46,6 @@ import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.core.GetSiteCtxCatalogItem;
-import org.riverock.webmill.core.GetSiteCtxLangCatalogItem;
-import org.riverock.webmill.core.GetSiteCtxTypeItem;
-import org.riverock.webmill.core.GetSiteSupportLanguageItem;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.port.PortalInfoImpl;
@@ -58,10 +54,14 @@ import org.riverock.webmill.portal.context.PageContextFactory;
 import org.riverock.webmill.portal.context.PageidContextFactory;
 import org.riverock.webmill.portal.context.UrlContextFactory;
 import org.riverock.webmill.portal.menu.MenuItem;
-import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
-import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
-import org.riverock.webmill.schema.core.SiteCtxTypeItemType;
-import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
+import org.riverock.webmill.schema.core.WmPortalPortletNameItemType;
+import org.riverock.webmill.core.GetWmPortalCatalogItem;
+import org.riverock.webmill.core.GetWmPortalCatalogLanguageItem;
+import org.riverock.webmill.core.GetWmPortalSiteLanguageItem;
+import org.riverock.webmill.core.GetWmPortalPortletNameItem;
 
 /**
  * $Id$
@@ -117,15 +117,15 @@ public abstract class ContextFactory {
     }
 
     public final static class DefaultCtx {
-        private SiteCtxCatalogItemType ctx = null;
-        private SiteCtxLangCatalogItemType langMenu = null;
-        private SiteSupportLanguageItemType siteLang = null;
+        private WmPortalCatalogItemType ctx = null;
+        private WmPortalCatalogLanguageItemType langMenu = null;
+        private WmPortalSiteLanguageItemType siteLang = null;
         private PortletDefinition portlet = null;
         private String namePortletId = null;
 
         private DefaultCtx(){}
 
-        public SiteCtxCatalogItemType getCtx() {
+        public WmPortalCatalogItemType getCtx() {
             return ctx;
         }
 
@@ -142,19 +142,19 @@ public abstract class ContextFactory {
 
             try {
                 DefaultCtx defaultCtx = new DefaultCtx();
-                defaultCtx.ctx = GetSiteCtxCatalogItem.getInstance(factoryParameter.adapter, ctxId).item;
+                defaultCtx.ctx = GetWmPortalCatalogItem.getInstance(factoryParameter.adapter, ctxId).item;
                 if (defaultCtx.ctx==null) {
                     log.error("Context with id "+ctxId+" not found. process as 'index' page");
                     return null;
                 }
 
-                defaultCtx.langMenu = GetSiteCtxLangCatalogItem.getInstance(factoryParameter.adapter, defaultCtx.ctx.getIdSiteCtxLangCatalog()).item;
+                defaultCtx.langMenu = GetWmPortalCatalogLanguageItem.getInstance(factoryParameter.adapter, defaultCtx.ctx.getIdSiteCtxLangCatalog()).item;
                 if (defaultCtx.langMenu==null){
                     log.error("Lang Catalog with id "+defaultCtx.ctx.getIdSiteCtxLangCatalog()+" not found. process as 'index' page");
                     return null;
                 }
 
-                defaultCtx.siteLang = GetSiteSupportLanguageItem.getInstance(factoryParameter.adapter, defaultCtx.langMenu.getIdSiteSupportLanguage()).item;
+                defaultCtx.siteLang = GetWmPortalSiteLanguageItem.getInstance(factoryParameter.adapter, defaultCtx.langMenu.getIdSiteSupportLanguage()).item;
                 if (defaultCtx.siteLang==null){
                     log.error("Site language with id "+defaultCtx.langMenu.getIdSiteSupportLanguage()+" not found. process as 'index' page");
                     return null;
@@ -182,7 +182,7 @@ public abstract class ContextFactory {
                     throw new PortalException("contextTypeId is null, unknown portlet");
                 }
 
-                SiteCtxTypeItemType ctxType = GetSiteCtxTypeItem.getInstance( factoryParameter.adapter, defaultCtx.ctx.getIdSiteCtxType() ).item;
+                WmPortalPortletNameItemType ctxType = GetWmPortalPortletNameItem.getInstance( factoryParameter.adapter, defaultCtx.ctx.getIdSiteCtxType() ).item;
                 if (ctxType==null) {
                     throw new PortalException("portletName for id "+defaultCtx.ctx.getIdSiteCtxType()+" not found");
                 }
@@ -309,7 +309,6 @@ public abstract class ContextFactory {
     protected ContextFactory( ContextFactoryParameter factoryParameter )
         throws PortalException, PortalPersistenceException {
 
-//        this.portalInfo = portalInfo;
         this.realLocale = ContextLocaleUtils.prepareLocale(factoryParameter);
 
         Long ctxId = initPortalParameters(factoryParameter);
@@ -412,8 +411,7 @@ public abstract class ContextFactory {
         setPortletInfo( menuItem.getNameTemplate() );
 
         if (defaultCtx.siteLang!=null) {
-        realLocale = StringTools.getLocale( defaultCtx.siteLang.getCustomLanguage() );
-}
-
+            realLocale = StringTools.getLocale( defaultCtx.siteLang.getCustomLanguage() );
+        }
     }
 }

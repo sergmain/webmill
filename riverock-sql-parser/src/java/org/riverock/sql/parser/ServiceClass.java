@@ -27,6 +27,7 @@ package org.riverock.sql.parser;
 
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.riverock.schema.sql.SelectType;
 import org.riverock.schema.sql.SqlNameType;
@@ -36,60 +37,60 @@ import org.riverock.schema.sql.TableType;
 public class ServiceClass
 {
     // lookup for types
-    private static HashMap hTypes;
+    private static Map<String, Integer> hTypes;
 
     static
     {
-        hTypes = new HashMap( 67, 1 );
+        hTypes = new HashMap<String, Integer>( 67, 1 );
 
-        hTypes.put( "INTEGER", new Integer( Types.INTEGER ) );
-        hTypes.put( "INT", new Integer( Types.INTEGER ) );
-        hTypes.put( "int", new Integer( Types.INTEGER ) );
-        hTypes.put( "java.lang.Integer", new Integer( Types.INTEGER ) );
-        hTypes.put( "IDENTITY", new Integer( Types.INTEGER ) );
-        hTypes.put( "DOUBLE", new Integer( Types.DOUBLE ) );
-        hTypes.put( "double", new Integer( Types.DOUBLE ) );
-        hTypes.put( "java.lang.Double", new Integer( Types.DOUBLE ) );
-        hTypes.put( "FLOAT", new Integer( Types.FLOAT ) );
-        hTypes.put( "REAL", new Integer( Types.REAL ) );
-        hTypes.put( "VARCHAR", new Integer( Types.VARCHAR ) );
-        hTypes.put( "java.lang.String", new Integer( Types.VARCHAR ) );
-        hTypes.put( "CHAR", new Integer( Types.CHAR ) );
-        hTypes.put( "CHARACTER", new Integer( Types.CHAR ) );
-        hTypes.put( "LONGVARCHAR", new Integer( Types.LONGVARCHAR ) );
-        hTypes.put( "VARCHAR_IGNORECASE", new Integer( ServiceClass.VARCHAR_IGNORECASE ) );
-        hTypes.put( "DATE", new Integer( Types.DATE ) );
-        hTypes.put( "java.sql.Date", new Integer( Types.DATE ) );
-        hTypes.put( "TIME", new Integer( Types.TIME ) );
-        hTypes.put( "java.sql.Time", new Integer( Types.TIME ) );
-        hTypes.put( "TIMESTAMP", new Integer( Types.TIMESTAMP ) );
-        hTypes.put( "java.sql.Timestamp", new Integer( Types.TIMESTAMP ) );
-        hTypes.put( "DATETIME", new Integer( Types.TIMESTAMP ) );
-        hTypes.put( "DECIMAL", new Integer( Types.DECIMAL ) );
-        hTypes.put( "java.math.BigDecimal", new Integer( Types.DECIMAL ) );
-        hTypes.put( "NUMERIC", new Integer( Types.NUMERIC ) );
-        hTypes.put( "BIT", new Integer( Types.BIT ) );
-        hTypes.put( "boolean", new Integer( Types.BIT ) );
-        hTypes.put( "java.lang.Boolean", new Integer( Types.BIT ) );
-        hTypes.put( "TINYINT", new Integer( Types.TINYINT ) );
-        hTypes.put( "byte", new Integer( Types.TINYINT ) );
-        hTypes.put( "java.lang.Byte", new Integer( Types.TINYINT ) );
-        hTypes.put( "SMALLINT", new Integer( Types.SMALLINT ) );
-        hTypes.put( "short", new Integer( Types.SMALLINT ) );
-        hTypes.put( "java.lang.Short", new Integer( Types.SMALLINT ) );
-        hTypes.put( "BIGINT", new Integer( Types.BIGINT ) );
-        hTypes.put( "long", new Integer( Types.BIGINT ) );
-        hTypes.put( "java.lang.Long", new Integer( Types.BIGINT ) );
-        hTypes.put( "BINARY", new Integer( Types.BINARY ) );
-        hTypes.put( "[B", new Integer( Types.BINARY ) );
-        hTypes.put( "VARBINARY", new Integer( Types.VARBINARY ) );
-        hTypes.put( "LONGVARBINARY", new Integer( Types.LONGVARBINARY ) );
-        hTypes.put( "OTHER", new Integer( Types.OTHER ) );
-        hTypes.put( "OBJECT", new Integer( Types.OTHER ) );
-        hTypes.put( "java.lang.Object", new Integer( Types.OTHER ) );
-        hTypes.put( "NULL", new Integer( Types.NULL ) );
-        hTypes.put( "void", new Integer( Types.NULL ) );
-        hTypes.put( "java.lang.Void", new Integer( Types.NULL ) );
+        hTypes.put( "INTEGER", Types.INTEGER );
+        hTypes.put( "INT", Types.INTEGER );
+        hTypes.put( "int", Types.INTEGER );
+        hTypes.put( "java.lang.Integer", Types.INTEGER );
+        hTypes.put( "IDENTITY", Types.INTEGER );
+        hTypes.put( "DOUBLE", Types.DOUBLE );
+        hTypes.put( "double", Types.DOUBLE );
+        hTypes.put( "java.lang.Double", Types.DOUBLE );
+        hTypes.put( "FLOAT", Types.FLOAT );
+        hTypes.put( "REAL", Types.REAL );
+        hTypes.put( "VARCHAR", Types.VARCHAR );
+        hTypes.put( "java.lang.String", Types.VARCHAR );
+        hTypes.put( "CHAR", Types.CHAR );
+        hTypes.put( "CHARACTER", Types.CHAR );
+        hTypes.put( "LONGVARCHAR", Types.LONGVARCHAR );
+        hTypes.put( "VARCHAR_IGNORECASE", ServiceClass.VARCHAR_IGNORECASE );
+        hTypes.put( "DATE", Types.DATE );
+        hTypes.put( "java.sql.Date", Types.DATE );
+        hTypes.put( "TIME", Types.TIME );
+        hTypes.put( "java.sql.Time", Types.TIME );
+        hTypes.put( "TIMESTAMP", Types.TIMESTAMP );
+        hTypes.put( "java.sql.Timestamp", Types.TIMESTAMP );
+        hTypes.put( "DATETIME", Types.TIMESTAMP );
+        hTypes.put( "DECIMAL", Types.DECIMAL );
+        hTypes.put( "java.math.BigDecimal", Types.DECIMAL );
+        hTypes.put( "NUMERIC", Types.NUMERIC );
+        hTypes.put( "BIT", Types.BIT );
+        hTypes.put( "boolean", Types.BIT );
+        hTypes.put( "java.lang.Boolean", Types.BIT );
+        hTypes.put( "TINYINT", Types.TINYINT );
+        hTypes.put( "byte", Types.TINYINT );
+        hTypes.put( "java.lang.Byte", Types.TINYINT );
+        hTypes.put( "SMALLINT", Types.SMALLINT );
+        hTypes.put( "short", Types.SMALLINT );
+        hTypes.put( "java.lang.Short", Types.SMALLINT );
+        hTypes.put( "BIGINT", Types.BIGINT );
+        hTypes.put( "long", Types.BIGINT );
+        hTypes.put( "java.lang.Long", Types.BIGINT );
+        hTypes.put( "BINARY", Types.BINARY );
+        hTypes.put( "[B", Types.BINARY );
+        hTypes.put( "VARBINARY", Types.VARBINARY );
+        hTypes.put( "LONGVARBINARY", Types.LONGVARBINARY );
+        hTypes.put( "OTHER", Types.OTHER );
+        hTypes.put( "OBJECT", Types.OTHER );
+        hTypes.put( "java.lang.Object", Types.OTHER );
+        hTypes.put( "NULL", Types.NULL );
+        hTypes.put( "void", Types.NULL );
+        hTypes.put( "java.lang.Void", Types.NULL );
     }
 
     // non-standard type not in JDBC
@@ -148,12 +149,12 @@ public class ServiceClass
     static int getTypeNr( String type ) throws Exception
     {
 
-        Integer i = (Integer)hTypes.get( type );
+        Integer i = hTypes.get( type );
 
         if ( i==null )
             throw new Exception( "WRONG_DATA_TYPE "+ type );
 
-        return i.intValue();
+        return i;
     }
 
     static SqlNameType getInstance( String name, boolean isquoted )

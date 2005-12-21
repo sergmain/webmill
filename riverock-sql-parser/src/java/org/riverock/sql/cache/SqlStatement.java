@@ -44,9 +44,9 @@ public class SqlStatement
 {
     private static Logger log = Logger.getLogger( SqlStatement.class );
 
-    private static Map sqlParserHash = new HashMap( 100 );
-    public static Map classHash = new HashMap();
-    public static Map classRelateHash = new HashMap();
+    private static Map<String,Object> sqlParserHash = new HashMap<String,Object>( 100 );
+    public static Map<String, Object> classHash = new HashMap<String, Object>();
+    public static Map<String, Object> classRelateHash = new HashMap<String, Object>();
 
     public synchronized static Parser parseSql( String sql )
         throws Exception
@@ -88,8 +88,8 @@ public class SqlStatement
                 String clone = new String( sql.toCharArray() );
                 Parser newParser = Parser.getInstance(clone);
 
-                List v = new ArrayList(4);
-                v.add(obj);
+                List<Parser> v = new ArrayList<Parser>(4);
+                v.add(tempParserObj);
                 v.add(newParser);
 
                 sqlParserHash.put( clone, v );
@@ -97,7 +97,7 @@ public class SqlStatement
             }
             else if (obj instanceof List)
             {
-                List arrayList = (List)obj;
+                List<Parser> arrayList = ((List<Parser>)obj);
                 for ( int i=0; i<arrayList.size(); i++)
                 {
                     Parser tempParser = (Parser)arrayList.get(i);
@@ -141,11 +141,12 @@ public class SqlStatement
             classRelateHash.put( classMain.getName(), classTarget.getName() );
         }
         else if ( obj instanceof List ) {
-            ( (List)obj ).add( classTarget.getName() );
+            ( (List<String>)obj ).add( classTarget.getName() );
         }
         else {
-            List v = new ArrayList();
-            v.add( obj );
+            String name = (String)obj;
+            List<String> v = new ArrayList<String>();
+            v.add( name );
             v.add( classTarget.getName() );
             classRelateHash.put( classMain.getName(), v );
         }
@@ -168,12 +169,13 @@ public class SqlStatement
             }
             else if ( obj instanceof List )
             {
-                ( (List)obj ).add( parser );
+                ( (List<Parser>)obj ).add( parser );
             }
             else
             {
-                List v = new ArrayList();
-                v.add( obj );
+                Parser tempParser = (Parser)obj;
+                List<Parser> v = new ArrayList<Parser>();
+                v.add( tempParser );
                 v.add( parser );
                 classHash.put( class_.getName(), v );
             }

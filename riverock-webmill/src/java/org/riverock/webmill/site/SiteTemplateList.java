@@ -116,9 +116,9 @@ public final class SiteTemplateList {
     {
         sql_ =
             "select a.ID_SITE_TEMPLATE, b.CUSTOM_LANGUAGE, a.NAME_SITE_TEMPLATE, " +
-            "a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE " +
-            "from SITE_TEMPLATE a, SITE_SUPPORT_LANGUAGE b " +
-            "where b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
+            "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE " +
+            "from   WM_PORTAL_TEMPLATE a, WM_PORTAL_SITE_LANGUAGE b " +
+            "where  b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
         try {
             SqlStatement.registerSql( sql_, SiteTemplateList.class );

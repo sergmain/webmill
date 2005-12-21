@@ -32,12 +32,10 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.webmill.schema.core.MainLanguageListType;
-import org.riverock.webmill.schema.core.MainLanguageItemType;
-import org.riverock.webmill.core.GetMainLanguageFullList;
+import org.riverock.webmill.schema.core.WmListLanguageListType;
+import org.riverock.webmill.schema.core.WmListLanguageItemType;
+import org.riverock.webmill.core.GetWmListLanguageFullList;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * @author SergeMaslyukov
@@ -74,9 +72,9 @@ public class PortalDAO {
 
     private Collection<String> initSupportedLocales( DatabaseAdapter adapter ) throws PortalPersistenceException {
         Set<String> list = new HashSet<String>();
-        MainLanguageListType languages = GetMainLanguageFullList.getInstance( adapter, 1 ).item;
-        for (int i=0; i<languages.getMainLanguageCount(); i++){
-            MainLanguageItemType item = languages.getMainLanguage( i );
+        WmListLanguageListType languages = GetWmListLanguageFullList.getInstance( adapter, 1 ).item;
+        for (int i=0; i<languages.getWmListLanguageCount(); i++){
+            WmListLanguageItemType item = languages.getWmListLanguage( i );
             list.add( item.getShortNameLanguage() );
         }
         return list;

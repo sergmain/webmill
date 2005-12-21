@@ -83,7 +83,7 @@ public class TestAntlr
         "order by year desc",
         "select * from \"Site_Vitual_Host\" where ID_SITE_VIRTUAL_HOST=?",
         "select ID_SITE_SUPPORT_LANGUAGE from SITE_SUPPORT_LANGUAGE where lower(CUSTOM_LANGUAGE) like 'ru_ru%' and ID_SITE = ?",
-        "select ID_LANGUAGE from MAIN_LANGUAGE where lower(SHORT_NAME_LANGUAGE) like 'ru_ru%'"
+        "select ID_LANGUAGE from WM_LIST_LANGUAGE where lower(SHORT_NAME_LANGUAGE) like 'ru_ru%'"
     };
 
     static String update[] = {
@@ -99,12 +99,12 @@ public class TestAntlr
     };
 
     static String insert[] = {
-        "insert into price_import_table " +
+        "insert into WM_PRICE_IMPORT_TABLE " +
         "( is_group, id ) " +
         "values " +
         "( ?, 'abc' )",
 
-        "insert into price_import_table " +
+        "insert into WM_PRICE_IMPORT_TABLE " +
         "( is_group, id ) " +
         "values " +
         "( ?, upper(?) )",

@@ -25,7 +25,6 @@
  *
  */
 -->
-
 <xs:schema xmlns:webmill-core="http://webmill.riverock.org/xsd/riverock-webmill-core.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
@@ -37,12 +36,12 @@
 	<xs:element name="SiteItem" type="SiteExtendItemType"/>
 	<xs:complexType name="SiteExtendItemType">
 		<xs:complexContent>
-			<xs:extension base="webmill-core:SiteListSiteItemType">
+			<xs:extension base="webmill-core:WmPortalListSiteItemType">
 				<xs:sequence>
-					<xs:element name="VirtualHost" type="webmill-core:SiteVirtualHostListType"/>
-					<xs:element name="Css" type="webmill-core:SiteContentCssListType"/>
+					<xs:element name="VirtualHost" type="webmill-core:WmPortalVirtualHostListType"/>
+					<xs:element name="Css" type="webmill-core:WmPortalCssListType"/>
 					<xs:element name="SiteLanguage" type="SiteExtendLanguageListType"/>
-					<xs:element name="CtxType" type="webmill-core:SiteCtxTypeListType"/>
+					<xs:element name="CtxType" type="webmill-core:WmPortalPortletNameListType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -54,13 +53,13 @@
 	</xs:complexType>
 	<xs:complexType name="SiteExtendLanguageType">
 		<xs:complexContent>
-			<xs:extension base="webmill-core:SiteSupportLanguageItemType">
+			<xs:extension base="webmill-core:WmPortalSiteLanguageItemType">
 				<xs:sequence>
 					<xs:element name="Context" type="SiteExtendCtxLangCatalogListType"/>
 					<xs:element name="NewsGroup" type="SiteExtendNewsGroupListType"/>
-					<xs:element name="Xslt" type="webmill-core:SiteXsltListType"/>
-					<xs:element name="Template" type="webmill-core:SiteTemplateListType"/>
-					<xs:element name="MemberTemplate" type="webmill-core:SiteTemplateMemberItemType" minOccurs="0"/>
+					<xs:element name="Xslt" type="webmill-core:WmPortalXsltListType"/>
+					<xs:element name="Template" type="webmill-core:WmPortalTemplateListType"/>
+					<xs:element name="MemberTemplate" type="webmill-core:WmPortalTemplateMemberItemType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -72,9 +71,9 @@
 	</xs:complexType>
 	<xs:complexType name="SiteExtendCtxLangCatalogType">
 		<xs:complexContent>
-			<xs:extension base="webmill-core:SiteCtxLangCatalogItemType">
+			<xs:extension base="webmill-core:WmPortalCatalogLanguageItemType">
 				<xs:sequence>
-					<xs:element name="ContextList" type="webmill-core:SiteCtxCatalogListType"/>
+					<xs:element name="ContextList" type="webmill-core:WmPortalCatalogListType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -86,11 +85,7 @@
 	</xs:complexType>
 	<xs:complexType name="SiteExtendNewsGroupType">
 		<xs:complexContent>
-			<xs:extension base="webmill-core:MainListNewsItemType">
-				<xs:sequence>
-					<xs:element name="NewsItem" type="webmill-core:MainNewsListType"/>
-				</xs:sequence>
-			</xs:extension>
+			<xs:extension base="webmill-core:WmNewsListItemType"/>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="SiteExtendNewsGroupListType">
@@ -100,7 +95,7 @@
 	</xs:complexType>
 	<xs:complexType name="SiteExtendCtxTypeListType">
 		<xs:sequence>
-			<xs:element name="CtxType" type="webmill-core:SiteCtxTypeItemType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="CtxType" type="webmill-core:WmPortalPortletNameItemType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>

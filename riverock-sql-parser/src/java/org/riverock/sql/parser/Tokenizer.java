@@ -28,6 +28,7 @@ package org.riverock.sql.parser;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Tokenizer
 {
@@ -56,7 +57,7 @@ public class Tokenizer
     private String sLongNameFirst;
     private String sLongNameLast;
     private boolean bWait;
-    private static HashMap hKeyword;
+    private static Map<String, Map> hKeyword;
 
     static
     {
@@ -71,11 +72,10 @@ public class Tokenizer
             "CALL", "HAVING"
         };
 
-        hKeyword = new HashMap( keyword.length );
+        hKeyword = new HashMap<String, Map>( keyword.length );
 
-        for ( int i = 0; i<keyword.length; i++ )
-        {
-            hKeyword.put( keyword[i], hKeyword );
+        for (final String newVar : keyword) {
+            hKeyword.put(newVar, hKeyword);
         }
     }
 

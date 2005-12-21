@@ -32,7 +32,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.lang.reflect.Method;
 
@@ -50,6 +49,7 @@ import org.riverock.schema.gen.*;
 import org.riverock.schema.gen.types.ExceptionDefinitionTypeExceptionTypeType;
 
 import org.exolab.castor.xml.Unmarshaller;
+import org.exolab.castor.xml.Namespaces;
 import org.exolab.castor.xml.schema.*;
 import org.exolab.castor.xml.schema.util.DatatypeHandler;
 import org.exolab.castor.xml.schema.writer.SchemaWriter;
@@ -132,9 +132,9 @@ public final class CreateSchemaFromDb {
 
                     case Types.DECIMAL:
 
-                        if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                        if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                         {
-                            if (field.getSize().intValue()<7)
+                            if (field.getSize()<7)
                                 s +=
                                     "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
                                     "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
@@ -151,7 +151,7 @@ public final class CreateSchemaFromDb {
                         break;
 
                     case Types.INTEGER:
-                        if (field.getSize().intValue()<7)
+                        if (field.getSize()<7)
                             s +=
                                 "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
                                 "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
@@ -194,8 +194,7 @@ public final class CreateSchemaFromDb {
         return s;
     }
 
-    private static String putCacheAndInstanceAccessor(
-        String className, String classNameItem, int cacheCountElement, int expiredPeriod,
+    private static String putCacheAndInstanceAccessor(String className, String classNameItem,
         boolean isResultCanBeNull)
     {
         return
@@ -828,7 +827,7 @@ public final class CreateSchemaFromDb {
                 "\n"+
                 "     public "+className+"(){}\n"+
                 "\n"+
-                putCacheAndInstanceAccessor(className, classNameItem, 300, 1000000, false) +
+                putCacheAndInstanceAccessor(className, classNameItem, false) +
                 "\n"+
                 initSql(
                     className, base,
@@ -986,7 +985,7 @@ public final class CreateSchemaFromDb {
             "\n"+
             "     public "+className+"(){}\n"+
             "\n"+
-            putCacheAndInstanceAccessor(className, classNameItem, 300, 1000000, false) +
+            putCacheAndInstanceAccessor(className, classNameItem, false) +
             "\n"+
             initSql(
                 className, base,
@@ -1206,9 +1205,9 @@ public final class CreateSchemaFromDb {
                     {
 
                         case Types.DECIMAL:
-                            if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                            if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                             {
-                                if (field.getSize().intValue()<7)
+                                if (field.getSize()<7)
                                     s +=  getIntField(i, field);
                                 else
                                     s += getLongField(i, field);
@@ -1219,7 +1218,7 @@ public final class CreateSchemaFromDb {
                             break;
 
                         case Types.INTEGER:
-                            if (field.getSize().intValue()<7)
+                            if (field.getSize()<7)
                                 s += getIntField(i, field);
                             else
                                 s += getLongField(i, field);
@@ -1427,9 +1426,9 @@ public final class CreateSchemaFromDb {
 
         if (isKeyField( field ) &&
             (
-            (field.getJavaType().intValue()==Types.DECIMAL) ||
-            (field.getJavaType().intValue()==Types.DOUBLE) ||
-            (field.getJavaType().intValue()==Types.INTEGER)
+            (field.getJavaType()==Types.DECIMAL) ||
+            (field.getJavaType()==Types.DOUBLE) ||
+            (field.getJavaType()==Types.INTEGER)
             )
         )
             return addNamespace( DatatypeHandler.LONG_TYPE );
@@ -1438,9 +1437,9 @@ public final class CreateSchemaFromDb {
         {
 
             case Types.DECIMAL:
-                if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                 {
-                    if (field.getSize().intValue()<7)
+                    if (field.getSize()<7)
                         type = DatatypeHandler.INTEGER_TYPE;
                     else
                         type = DatatypeHandler.LONG_TYPE;
@@ -1451,7 +1450,7 @@ public final class CreateSchemaFromDb {
                 break;
 
             case Types.INTEGER:
-                if (field.getSize().intValue()<7)
+                if (field.getSize()<7)
                     type = DatatypeHandler.INTEGER_TYPE;
                 else
                     type = DatatypeHandler.LONG_TYPE;
@@ -1541,13 +1540,10 @@ public final class CreateSchemaFromDb {
     private static Group createComplexTypeItem( DbTableType table )
         throws Exception
     {
-        List a = new ArrayList(); // vector of attributes
-        List e = new ArrayList(); // vector of elements
+        List<AttributeDecl> a = new ArrayList<AttributeDecl>(); // vector of attributes
+        List<ElementDecl> e = new ArrayList<ElementDecl>(); // vector of elements
 
         boolean flag = false;
-//        if (table.getName().equalsIgnoreCase("T_TASK"))
-//            flag = true;
-
         for (int i=0; i<table.getFieldsCount(); i++)
         {
             DbFieldType field = table.getFields(i);
@@ -1637,7 +1633,7 @@ public final class CreateSchemaFromDb {
             String typeElement = convertType( field );
             ElementDecl element = new ElementDecl(schema, nameElement );
 
-            if (field.getNullable().intValue()==1 || isOptionalField(table, field))
+            if (field.getNullable()==1 || isOptionalField(table, field))
                 element.setMinOccurs(0);
 
             element.setTypeReference( typeElement );
@@ -1651,7 +1647,7 @@ public final class CreateSchemaFromDb {
                 {
 
                     case Types.DECIMAL:
-                        if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                        if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                         {
                             element.setDefaultValue( field.getDefaultValue() );
                         }
@@ -2304,7 +2300,7 @@ public final class CreateSchemaFromDb {
             if (fk.getFkColumnName().equals(field.getName()) )
             {
                 if ( fk.getDeleteRule()!=null)
-                    return fk.getDeleteRule().getRuleType().intValue();
+                    return fk.getDeleteRule().getRuleType();
                 else
                     return java.sql.DatabaseMetaData.importedKeyNoAction;
             }
@@ -2386,7 +2382,7 @@ public final class CreateSchemaFromDb {
             DbFieldType field = table.getFields(i);
 
             // skip oracle column type ROWID (1111)
-            if (field.getJavaType().intValue()==1111)
+            if (field.getJavaType()==1111)
                 continue;
 
             if (!field.getName().equals(column.getColumnName()))
@@ -2420,7 +2416,7 @@ public final class CreateSchemaFromDb {
             DbFieldType field = table.getFields(i1);
 
             // skip oracle column type ROWID (1111)
-            if (field.getJavaType().intValue()==1111)
+            if (field.getJavaType()==1111)
                 continue;
 
             // PK field not bind
@@ -2434,7 +2430,7 @@ public final class CreateSchemaFromDb {
             {
                 s += storeBooleanField(
                     capitalizeName, numParam,
-                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls,
+                    field.getNullable()!=DatabaseMetaData.columnNoNulls,
                     field.getDefaultValue()
                 );
             }
@@ -2448,7 +2444,7 @@ public final class CreateSchemaFromDb {
                     // ref integrity rule not 'ON DELETE CASCADE' , then value can be null
                     s += storeLongField(
                         capitalizeName, numParam,
-                        field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls &&
+                        field.getNullable()!=DatabaseMetaData.columnNoNulls &&
                         getDeleteRule(table, field)!=java.sql.DatabaseMetaData.importedKeyCascade
                     );
                 }
@@ -2458,20 +2454,20 @@ public final class CreateSchemaFromDb {
                     {
 
                         case Types.DECIMAL:
-                            if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                            if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                             {
-                                if (field.getSize().intValue()<7)
+                                if (field.getSize()<7)
                                 {
                                     s += storeIntField(
                                         capitalizeName, numParam,
-                                        field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                        field.getNullable()!=DatabaseMetaData.columnNoNulls
                                     );
                                 }
                                 else
                                 {
                                     s += storeLongField(
                                         capitalizeName, numParam,
-                                        field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                        field.getNullable()!=DatabaseMetaData.columnNoNulls
                                     );
                                 }
                             }
@@ -2479,24 +2475,24 @@ public final class CreateSchemaFromDb {
                             {
                                 s += storeDoubleField(
                                     capitalizeName, numParam,
-                                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                    field.getNullable()!=DatabaseMetaData.columnNoNulls
                                 );
                             }
                             break;
 
                         case Types.INTEGER:
-                            if (field.getSize().intValue()<7)
+                            if (field.getSize()<7)
                             {
                                 s += storeIntField(
                                     capitalizeName, numParam,
-                                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                    field.getNullable()!=DatabaseMetaData.columnNoNulls
                                 );
                             }
                             else
                             {
                                 s += storeLongField(
                                     capitalizeName, numParam,
-                                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                    field.getNullable()!=DatabaseMetaData.columnNoNulls
                                 );
                             }
                             break;
@@ -2504,7 +2500,7 @@ public final class CreateSchemaFromDb {
                         case Types.DOUBLE:
                             s += storeDoubleField(
                                 capitalizeName, numParam,
-                                field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                field.getNullable()!=DatabaseMetaData.columnNoNulls
                             );
                             break;
 
@@ -2513,13 +2509,13 @@ public final class CreateSchemaFromDb {
                         case Types.LONGVARBINARY:
                             s += storeStringField(
                                 capitalizeName, numParam,
-                                field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                field.getNullable()!=DatabaseMetaData.columnNoNulls
                             );
                             break;
 
                         case Types.DATE:
                         case Types.TIMESTAMP:
-                            if (field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls )
+                            if (field.getNullable()!=DatabaseMetaData.columnNoNulls )
                             {
                                 s +=
                                     "             if (item.get"+capitalizeName+"!=null)\n"+
@@ -2529,7 +2525,7 @@ public final class CreateSchemaFromDb {
                             }
                             else
                             {
-                                if (field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls )
+                                if (field.getNullable()!=DatabaseMetaData.columnNoNulls )
                                 {
                                     s +=
                                         "             if (item.has"+capitalizeName+")\n"+
@@ -2646,7 +2642,7 @@ public final class CreateSchemaFromDb {
             DbFieldType field = table.getFields(i);
 
             // skip oracle column type ROWID (1111)
-            if (field.getJavaType().intValue()==1111)
+            if (field.getJavaType()==1111)
                 continue;
 
             if (isFirst)
@@ -2654,7 +2650,7 @@ public final class CreateSchemaFromDb {
             else
                 s += ", ";
 
-            if (field.getJavaType().intValue()!=Types.DATE && field.getJavaType().intValue()!=Types.TIMESTAMP )
+            if (field.getJavaType()!=Types.DATE && field.getJavaType()!=Types.TIMESTAMP )
                 s += " ?";
             else
                 s += " \"+ db_.getNameDateBind()+\"";
@@ -2686,7 +2682,7 @@ public final class CreateSchemaFromDb {
             {
                 s += storeBooleanField(
                     capitalizeName, numParam,
-                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls,
+                    field.getNullable()!=DatabaseMetaData.columnNoNulls,
                     field.getDefaultValue()
                 );
             }
@@ -2700,7 +2696,7 @@ public final class CreateSchemaFromDb {
                     // ref integrity rule not 'ON DELETE CASCADE' , then value can be null
                     s += storeLongField(
                         capitalizeName, numParam,
-                        field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls &&
+                        field.getNullable()!=DatabaseMetaData.columnNoNulls &&
                         getDeleteRule(table, field)!=java.sql.DatabaseMetaData.importedKeyCascade
                     );
                 }
@@ -2710,20 +2706,20 @@ public final class CreateSchemaFromDb {
                     {
 
                         case Types.DECIMAL:
-                            if (field.getDecimalDigit()==null || field.getDecimalDigit().intValue()==0)
+                            if (field.getDecimalDigit()==null || field.getDecimalDigit()==0)
                             {
-                                if (field.getSize().intValue()<7)
+                                if (field.getSize()<7)
                                 {
                                     s += storeIntField(
                                         capitalizeName, numParam,
-                                        field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                        field.getNullable()!=DatabaseMetaData.columnNoNulls
                                     );
                                 }
                                 else
                                 {
                                     s += storeLongField(
                                         capitalizeName, numParam,
-                                        field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                        field.getNullable()!=DatabaseMetaData.columnNoNulls
                                     );
                                 }
                             }
@@ -2731,24 +2727,24 @@ public final class CreateSchemaFromDb {
                             {
                                 s += storeDoubleField(
                                     capitalizeName, numParam,
-                                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                    field.getNullable()!=DatabaseMetaData.columnNoNulls
                                 );
                             }
                             break;
 
                         case Types.INTEGER:
-                            if (field.getSize().intValue()<7)
+                            if (field.getSize()<7)
                             {
                                 s += storeIntField(
                                     capitalizeName, numParam,
-                                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                    field.getNullable()!=DatabaseMetaData.columnNoNulls
                                 );
                             }
                             else
                             {
                                 s += storeLongField(
                                     capitalizeName, numParam,
-                                    field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                    field.getNullable()!=DatabaseMetaData.columnNoNulls
                                 );
                             }
                             break;
@@ -2756,14 +2752,14 @@ public final class CreateSchemaFromDb {
                         case Types.DOUBLE:
                             s += storeDoubleField(
                                 capitalizeName, numParam,
-                                field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls
+                                field.getNullable()!=DatabaseMetaData.columnNoNulls
                             );
                             break;
 
                         case Types.VARCHAR:
                         case Types.LONGVARCHAR:
                         case Types.LONGVARBINARY:
-                            if (field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls )
+                            if (field.getNullable()!=DatabaseMetaData.columnNoNulls )
                             {
                                 s +=
                                     "             if (item.get"+capitalizeName+"!=null)\n"+
@@ -2778,7 +2774,7 @@ public final class CreateSchemaFromDb {
 
                         case Types.DATE:
                         case Types.TIMESTAMP:
-                            if (field.getNullable().intValue()!=DatabaseMetaData.columnNoNulls )
+                            if (field.getNullable()!=DatabaseMetaData.columnNoNulls )
                             {
                                 s +=
                                     "             if (item.get"+capitalizeName+"!=null)\n"+
@@ -3023,7 +3019,7 @@ public final class CreateSchemaFromDb {
             DbFieldType field = table.getFields(i);
 
             // skip oracle column type ROWID (1111)
-            if (field.getJavaType().intValue()==1111)
+            if (field.getJavaType()==1111)
                 continue;
 
             if (isNotFirst){
@@ -3599,23 +3595,11 @@ public final class CreateSchemaFromDb {
         if (db==null)
             throw new IllegalArgumentException("Element 'Database' not initialized");
 
-        // remove default namespaces and set correct namespace
-        Method method =  schema.getClass().getMethod("getNamespaces", null);
-
         System.out.println("Castor build version: "+Version.getBuildVersion());
-        if (org.exolab.castor.util.Version.getBuildVersion().startsWith("0.9.4.3"))
-        {
-            Hashtable ns = (Hashtable)method.invoke(schema, null);
-            ns.clear();
-        }
-        else
-        {
-//            Namespaces ns = schema.getNamespaces();
 
-//            Object obj = (Hashtable)method.invoke(schema, null);
-//            Method clearMethod = obj.getClass().getMethod("clear", null);
-//            clearMethod.invoke(obj, null);
-        }
+        // remove default namespaces and set correct namespace
+        Namespaces ns = schema.getNamespaces();
+        ns.createNamespaces();
 
         schema.addNamespace(
             config.getDefaultNamespacePrefix(), Schema.DEFAULT_SCHEMA_NS
@@ -3629,8 +3613,8 @@ public final class CreateSchemaFromDb {
         Iterator it = config.getNamespaceAsReference().iterator();
         while (it.hasNext())
         {
-            NamespaceType ns = (NamespaceType)it.next();
-            schema.addNamespace( ns.getNamespaceAlias(), ns.getNamespace() );
+            NamespaceType namespace = (NamespaceType)it.next();
+            schema.addNamespace( namespace.getNamespaceAlias(), namespace.getNamespace() );
         }
 
         if (config.getImportSchema()!=null)
@@ -3657,8 +3641,15 @@ public final class CreateSchemaFromDb {
         if (s.length<2)
         {
             System.out.println("Create DbSchema from database");
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false);
-            dbSchema = DatabaseManager.getDbStructure(db_ );
+            DatabaseAdapter db_ = null;
+            try {
+                db_ = DatabaseAdapter.getInstance();
+                dbSchema = DatabaseManager.getDbStructure(db_ );
+            }
+            finally {
+                DatabaseManager.close( db_ );
+                db_ = null;
+            }
 
             XmlTools.writeToFile(
                 dbSchema, GenericConfig.getGenericTempDir()+"db-schema.xml", "utf-8", null,

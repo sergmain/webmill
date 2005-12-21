@@ -62,6 +62,7 @@
             failonerror="true"
             >
             <classpath refid="classpath-base"/>
+<!--            <compilerarg value="-Xlint:unchecked"/> -->
         </javac>
     </target>
 

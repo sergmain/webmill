@@ -1,10 +1,8 @@
 package org.riverock.webmill.test;
 
-import java.util.Iterator;
-
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.resource.XmlResourceBundle;
+import org.riverock.webmill.container.resource.CustomXmlResourceBundle;
 
 /**
  * @author smaslyukov
@@ -12,33 +10,10 @@ import org.riverock.webmill.container.resource.XmlResourceBundle;
  *         Time: 18:29:04
  *         $Id$
  */
-public class SampleXmlResourceBundleTest extends XmlResourceBundle {
+public class SampleXmlResourceBundleTest extends CustomXmlResourceBundle {
     private final static Logger log = Logger.getLogger( SampleXmlResourceBundleTest.class );
 
-    private Object[][] resource = null;
-    protected Object[][] getContents() {
-        if (resource!=null) {
-            return resource;
-        }
-
-        PairList list = null;
-        try {
-            list = digestXmlFile();
-        }
-        catch (Exception e) {
-            String es = "Error digest file " +getFileName();
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        resource = new Object[list.getPairs().size()][2];
-        Iterator<Pair> iterator = list.getPairs().iterator();
-        int i=0;
-        while (iterator.hasNext()) {
-            Pair pair = iterator.next();
-            resource[i][0] = pair.getKey();
-            resource[i][1] = pair.getValue();
-        }
-
-        return resource;
+    public void logError(String msg, Throwable th) {
+        log.error( msg, th );
     }
 }

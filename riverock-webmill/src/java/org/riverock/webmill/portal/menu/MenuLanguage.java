@@ -32,10 +32,10 @@ import java.util.Iterator;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.core.GetSiteCtxLangCatalogWithIdSiteSupportLanguageList;
-import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
-import org.riverock.webmill.schema.core.SiteCtxLangCatalogListType;
-import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
+import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
+import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogLanguageListType;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
 import org.riverock.interfaces.portlet.menu.MenuInterface;
 import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 import org.riverock.interfaces.portlet.menu.MenuItemInterface;
@@ -52,7 +52,7 @@ public final class MenuLanguage implements MenuLanguageInterface {
         Class c = new MenuLanguage().getClass();
         try{
             SqlStatement.registerRelateClass( c, new Menu().getClass() );
-            SqlStatement.registerRelateClass( c, new GetSiteCtxLangCatalogWithIdSiteSupportLanguageList().getClass() );
+            SqlStatement.registerRelateClass( c, new GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList().getClass() );
         }
         catch( Exception exception ) {
             final String es = "Exception in SqlStatement.registerRelateClass()";
@@ -62,7 +62,7 @@ public final class MenuLanguage implements MenuLanguageInterface {
     }
 
     private List<MenuInterface> menu = new ArrayList<MenuInterface>();
-    private SiteSupportLanguageItemType item = null;
+    private WmPortalSiteLanguageItemType item = null;
 
     public MenuLanguage(){}
 
@@ -130,7 +130,7 @@ public final class MenuLanguage implements MenuLanguageInterface {
         return null;
     }
 
-    public MenuLanguage(DatabaseAdapter db_, SiteSupportLanguageItemType item_) throws Exception {
+    public MenuLanguage(DatabaseAdapter db_, WmPortalSiteLanguageItemType item_) throws Exception {
         if (item_ == null)
             return;
 
@@ -144,17 +144,17 @@ public final class MenuLanguage implements MenuLanguageInterface {
         }
 
         try {
-            SiteCtxLangCatalogListType list =
-                GetSiteCtxLangCatalogWithIdSiteSupportLanguageList.
+            WmPortalCatalogLanguageListType list =
+                GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.
                 getInstance(db_, item_.getIdSiteSupportLanguage())
                 .item;
 
             if (log.isDebugEnabled())
-                log.debug("Count of SiteCtxLangCatalogListType: " + list.getSiteCtxLangCatalogCount());
+                log.debug("Count of WmPortalCatalogLanguageListType: " + list.getWmPortalCatalogLanguageCount());
 
-            Iterator iterator = list.getSiteCtxLangCatalogAsReference().iterator();
+            Iterator iterator = list.getWmPortalCatalogLanguageAsReference().iterator();
             while (iterator.hasNext()) {
-                SiteCtxLangCatalogItemType ic = (SiteCtxLangCatalogItemType) iterator.next();
+                WmPortalCatalogLanguageItemType ic = (WmPortalCatalogLanguageItemType) iterator.next();
                 MenuInterface catalog = new Menu(db_, ic);
                 menu.add(catalog);
             }

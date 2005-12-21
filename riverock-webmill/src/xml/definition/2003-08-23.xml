@@ -36,7 +36,7 @@
 				<ActionType>ADD_TABLE_COLUMN</ActionType>
 				<ActionParameters>
 					<Parameter name="table_name">
-						<Data>SITE_CTX_CATALOG</Data>
+						<Data>WM_PORTAL_CATALOG</Data>
 					</Parameter>
 					<Parameter name="column_name">
 						<Data>CTX_PAGE_URL</Data>

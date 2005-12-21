@@ -24,8 +24,9 @@
  */
 package org.riverock.webmill.container.portlet.bean.types;
 
-import java.util.Hashtable;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class TransportGuaranteeType.
@@ -69,7 +70,7 @@ public class TransportGuaranteeType implements Serializable {
     /**
      * Field _memberTable
      */
-    private static java.util.Hashtable _memberTable = init();
+    private static Map<String, TransportGuaranteeType> _memberTable = init();
 
     /**
      * Field type
@@ -88,15 +89,6 @@ public class TransportGuaranteeType implements Serializable {
         this.stringValue = value;
     }
 
-
-    /**
-     * Method enumerateReturns an enumeration of all possible
-     * instances of TransportGuaranteeType
-     */
-    public static java.util.Enumeration enumerate() {
-        return _memberTable.elements();
-    }
-
     /**
      * Method getTypeReturns the type of this TransportGuaranteeType
      */
@@ -107,8 +99,8 @@ public class TransportGuaranteeType implements Serializable {
     /**
      * Method init
      */
-    private static java.util.Hashtable init() {
-        Hashtable members = new Hashtable();
+    private static Map<String, TransportGuaranteeType> init() {
+        Map<String, TransportGuaranteeType> members = new HashMap<String, TransportGuaranteeType>();
         members.put("NONE", NONE);
         members.put("INTEGRAL", INTEGRAL);
         members.put("CONFIDENTIAL", CONFIDENTIAL);

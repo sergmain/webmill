@@ -72,9 +72,9 @@ public class InternalAuthProviderTools
 
                     ps = db_.prepareStatement(
                         "select null " +
-                        "from   WM_AUTH_USER a, MAIN_USER_INFO b " +
+                        "from   WM_AUTH_USER a, WM_LIST_USER b " +
                         "where  a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
-                        "       b.ID_FIRM  in ("+AuthHelper.getGrantedFirmId(db_, auth.getUserLogin())+") "
+                        "       b.ID_FIRM  in ("+AuthHelper.getGrantedCompanyId(db_, auth.getUserLogin())+") "
                     );
 
                     RsetTools.setLong(ps, 1, id_auth_user_check);
@@ -82,7 +82,7 @@ public class InternalAuthProviderTools
                 default:
                     ps = db_.prepareStatement(
                         "select null " +
-                        "from   WM_AUTH_USER a, MAIN_USER_INFO b, V$_READ_LIST_FIRM z1 " +
+                        "from   WM_AUTH_USER a, WM_LIST_USER b, V$_READ_LIST_FIRM z1 " +
                         "where  a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
                         "       b.ID_FIRM = z1.ID_FIRM and z1.ID_AUTH_USER=? "
                     );
@@ -306,13 +306,13 @@ public class InternalAuthProviderTools
             if (!getRelateServiceFirm(ora_, id_firm, id_service))
             {
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName("seq_main_relate_service_firm");
-                seq.setTableName( "MAIN_RELATE_SERVICE_FIRM");
+                seq.setSequenceName("seq_WM_LIST_R_GROUP_COMPANY_COMPANY");
+                seq.setTableName( "WM_LIST_R_GROUP_COMPANY_COMPANY");
                 seq.setColumnName( "ID_REL_SERVICE" );
                 long id = ora_.getSequenceNextValue( seq );
 
                 ps = ora_.prepareStatement(
-                    "insert into MAIN_RELATE_SERVICE_FIRM " +
+                    "insert into WM_LIST_R_GROUP_COMPANY_COMPANY " +
                     "(ID_REL_SERVICE, ID_SERVICE, ID_FIRM) " +
                     "values "+
                     "(?, ?, ?)"
@@ -385,13 +385,13 @@ public class InternalAuthProviderTools
         try
         {
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_main_user_info");
-            seq.setTableName( "MAIN_USER_INFO");
+            seq.setSequenceName("seq_WM_LIST_USER");
+            seq.setTableName( "WM_LIST_USER");
             seq.setColumnName( "ID_USER" );
             long id = db_.getSequenceNextValue( seq );
 
             ps = db_.prepareStatement(
-                "insert into MAIN_USER_INFO " +
+                "insert into WM_LIST_USER " +
                 "(ID_USER, FIRST_NAME, LAST_NAME, MIDDLE_NAME, " +
                 "ID_FIRM, EMAIL, ADDRESS, TELEPHONE, DATE_START_WORK ) " +
                 "values "+
@@ -432,13 +432,13 @@ public class InternalAuthProviderTools
         try
         {
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_main_list_firm");
-            seq.setTableName( "MAIN_LIST_FIRM");
+            seq.setSequenceName("seq_WM_LIST_COMPANY");
+            seq.setTableName( "WM_LIST_COMPANY");
             seq.setColumnName( "ID_FIRM" );
             long ID = db_.getSequenceNextValue( seq );
 
             ps = db_.prepareStatement(
-                "insert into MAIN_LIST_FIRM " +
+                "insert into WM_LIST_COMPANY " +
                 "(ID_FIRM, FULL_NAME, SHORT_NAME) " +
                 "values "+
                 "(?, ?, ?)"
@@ -472,13 +472,13 @@ public class InternalAuthProviderTools
         try
         {
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_main_list_service");
-            seq.setTableName( "MAIN_LIST_SERVICE");
+            seq.setSequenceName("seq_WM_LIST_GROUP_COMPANY");
+            seq.setTableName( "WM_LIST_GROUP_COMPANY");
             seq.setColumnName( "ID_SERVICE" );
             long ID = db_.getSequenceNextValue( seq );
 
             ps = db_.prepareStatement(
-                "insert into MAIN_LIST_SERVICE " +
+                "insert into WM_LIST_GROUP_COMPANY " +
                 "(ID_SERVICE, FULL_NAME_SERVICE, SHORT_NAME_SERVICE) " +
                 "values "+
                 "(?, ?, ? )"
@@ -512,13 +512,13 @@ public class InternalAuthProviderTools
         try
         {
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_main_list_road");
-            seq.setTableName( "MAIN_LIST_ROAD");
+            seq.setSequenceName("seq_WM_LIST_HOLDING");
+            seq.setTableName( "WM_LIST_HOLDING");
             seq.setColumnName( "ID_ROAD" );
             long ID = db_.getSequenceNextValue( seq );
 
             ps = db_.prepareStatement(
-                "insert into MAIN_LIST_ROAD " +
+                "insert into WM_LIST_HOLDING " +
                 "(ID_ROAD, FULL_NAME_ROAD, NAME_ROAD) " +
                 "values "+
                 "(?, ?, ? )"
@@ -553,7 +553,7 @@ public class InternalAuthProviderTools
         try
         {
             ps = db_.prepareStatement(
-                "select ID_FIRM from MAIN_LIST_FIRM where SHORT_NAME=?"
+                "select ID_FIRM from WM_LIST_COMPANY where SHORT_NAME=?"
             );
             ps.setString(1, nameFirm);
             rs = ps.executeQuery();
@@ -584,7 +584,7 @@ public class InternalAuthProviderTools
         try
         {
             ps = db_.prepareStatement(
-                "select ID_SERVICE from MAIN_LIST_SERVICE where SHORT_NAME_SERVICE=?"
+                "select ID_SERVICE from WM_LIST_GROUP_COMPANY where SHORT_NAME_SERVICE=?"
             );
             ps.setString(1, nameService);
             rs = ps.executeQuery();
@@ -615,7 +615,7 @@ public class InternalAuthProviderTools
         try
         {
             ps = db_.prepareStatement(
-                "select ID_ROAD from MAIN_LIST_ROAD where NAME_ROAD=?"
+                "select ID_ROAD from WM_LIST_HOLDING where NAME_ROAD=?"
             );
             ps.setString(1, nameRoad);
             rs = ps.executeQuery();
@@ -647,7 +647,7 @@ public class InternalAuthProviderTools
         try
         {
             ps = ora_.prepareStatement(
-                "select null COUNT_REC from MAIN_RELATE_SERVICE_FIRM " +
+                "select null COUNT_REC from WM_LIST_R_GROUP_COMPANY_COMPANY " +
                 "where ID_FIRM=? and ID_SERVICE=?"
             );
             ps.setObject(1, id_firm);
@@ -717,8 +717,8 @@ public class InternalAuthProviderTools
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     ps = db_.prepareStatement(
-                        "select ID_FIRM from main_list_firm " +
-                        "where ID_FIRM in ("+AuthHelper.getGrantedFirmId(db_, userLogin)+") and ID_FIRM=?"
+                        "select ID_FIRM from WM_LIST_COMPANY " +
+                        "where ID_FIRM in ("+AuthHelper.getGrantedCompanyId(db_, userLogin)+") and ID_FIRM=?"
                     );
                     ps.setObject(1, firmId);
                     break;
@@ -770,8 +770,8 @@ public class InternalAuthProviderTools
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     ps = db_.prepareStatement(
-                        "select ID_SERVICE from main_list_service " +
-                        "where ID_SERVICE in ("+AuthHelper.getGrantedServiceId(db_, userLogin)+") and ID_SERVICE=?"
+                        "select ID_SERVICE from WM_LIST_GROUP_COMPANY " +
+                        "where ID_SERVICE in ("+AuthHelper.getGrantedGroupCompanyId(db_, userLogin)+") and ID_SERVICE=?"
                     );
                     ps.setObject(1, serviceId);
                     break;
@@ -822,8 +822,8 @@ public class InternalAuthProviderTools
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     ps = db_.prepareStatement(
-                        "select ID_ROAD from main_list_road " +
-                        "where ID_ROAD in ("+AuthHelper.getGrantedRoadId(db_, userLogin)+") and ID_ROAD=?"
+                        "select ID_ROAD from WM_LIST_HOLDING " +
+                        "where ID_ROAD in ("+AuthHelper.getGrantedHoldingId(db_, userLogin)+") and ID_ROAD=?"
                     );
                     ps.setObject(1, roadId);
                     break;

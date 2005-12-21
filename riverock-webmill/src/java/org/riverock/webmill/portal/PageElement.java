@@ -55,7 +55,7 @@ import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
-import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
 
 /**
  * User: SergeMaslyukov
@@ -488,7 +488,7 @@ containing the portlet is restarted.
             }
 
             if (isAccessPermit) {
-                SiteCtxCatalogItemType item = portalRequestInstance.getDefaultCtx().getCtx();
+                WmPortalCatalogItemType item = portalRequestInstance.getDefaultCtx().getCtx();
                 if (item != null && item.getPortletRole() != null) {
                     isAccessPermit = false;
                     securityMessage = "Access disabled in context item";
@@ -534,7 +534,7 @@ containing the portlet is restarted.
         return contextPath;
     }
 
-    private Properties initMetadata( SiteCtxCatalogItemType defaultCtx ) throws PortalException {
+    private Properties initMetadata( WmPortalCatalogItemType defaultCtx ) throws PortalException {
         if (defaultCtx==null || defaultCtx.getMetadata()==null)
             return null;
 

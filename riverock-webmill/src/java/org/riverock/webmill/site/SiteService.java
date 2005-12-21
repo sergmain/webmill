@@ -60,36 +60,36 @@ public final class SiteService {
         db_.commit();
 
         System.out.println("drop articles");
-        SiteCtxArticleListType articleList =
-            new GetSiteCtxArticleWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
-        for (int i=0; i<articleList.getSiteCtxArticleCount(); i++)
+        WmPortletArticleListType articleList =
+            new GetWmPortletArticleWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
+        for (int i=0; i<articleList.getWmPortletArticleCount(); i++)
         {
-            SiteCtxArticleItemType articleItem  = articleList.getSiteCtxArticle(i);
-            DeleteSiteCtxArticleDataWithIdSiteCtxArticle.process(db_, articleItem.getIdSiteCtxArticle());
+            WmPortletArticleItemType articleItem = articleList.getWmPortletArticle(i);
+            DeleteWmPortletArticleDataWithIdSiteCtxArticle.process(db_, articleItem.getIdSiteCtxArticle());
         }
-        DeleteSiteCtxArticleWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
+        DeleteWmPortletArticleWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
         db_.commit();
 
         System.out.println("drop catalog context");
-        SiteCtxLangCatalogListType catalogList =
-            new GetSiteCtxLangCatalogWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
-        for (int i=0; i<catalogList.getSiteCtxLangCatalogCount(); i++)
+        WmPortalCatalogLanguageListType catalogList =
+            new GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
+        for (int i=0; i<catalogList.getWmPortalCatalogLanguageCount(); i++)
         {
-            SiteCtxLangCatalogItemType catalogItem = catalogList.getSiteCtxLangCatalog(i);
-            DeleteSiteCtxCatalogWithIdSiteCtxLangCatalog.process(db_, catalogItem.getIdSiteCtxLangCatalog());
+            WmPortalCatalogLanguageItemType catalogItem = catalogList.getWmPortalCatalogLanguage(i);
+            DeleteWmPortalCatalogWithIdSiteCtxLangCatalog.process(db_, catalogItem.getIdSiteCtxLangCatalog());
         }
-        DeleteSiteCtxLangCatalogWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
-        DeleteSiteTemplateMemberWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
-        DeleteSiteTemplateWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
+        DeleteWmPortalCatalogLanguageWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
+        DeleteWmPortalTemplateMemberWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
+        DeleteWmPortalTemplateWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
 
-        SiteXsltListType xsltList =
-            new GetSiteXsltWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
-        for (int i=0; i<xsltList.getSiteXsltCount(); i++)
+        WmPortalXsltListType xsltList =
+            new GetWmPortalXsltWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
+        for (int i=0; i<xsltList.getWmPortalXsltCount(); i++)
         {
-            SiteXsltItemType xsltItem = xsltList.getSiteXslt(i);
-            DeleteSiteXsltDataWithIdSiteXslt.process(db_, xsltItem.getIdSiteXslt());
+            WmPortalXsltItemType xsltItem = xsltList.getWmPortalXslt(i);
+            DeleteWmPortalXsltDataWithIdSiteXslt.process(db_, xsltItem.getIdSiteXslt());
         }
-        DeleteSiteXsltWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
+        DeleteWmPortalXsltWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
     }
 
     public static void dropSite( DatabaseAdapter DatabaseAdapter_, Long idSiteForDrop )
@@ -97,14 +97,14 @@ public final class SiteService {
     {
         System.out.println("drop data for site idSite - "+idSiteForDrop);
 
-        SiteSupportLanguageListType siteLanguageList =
-            new GetSiteSupportLanguageWithIdSiteList(DatabaseAdapter_, idSiteForDrop).item;
-        for (int i=0; i<siteLanguageList.getSiteSupportLanguageCount(); i++)
+        WmPortalSiteLanguageListType siteLanguageList =
+            new GetWmPortalSiteLanguageWithIdSiteList(DatabaseAdapter_, idSiteForDrop).item;
+        for (int i=0; i<siteLanguageList.getWmPortalSiteLanguageCount(); i++)
         {
-            SiteSupportLanguageItemType siteLanguageItem = siteLanguageList.getSiteSupportLanguage(i);
+            WmPortalSiteLanguageItemType siteLanguageItem = siteLanguageList.getWmPortalSiteLanguage(i);
             dropSiteLanguageData( DatabaseAdapter_, siteLanguageItem.getIdSiteSupportLanguage());
 
-            DeleteSiteSupportLanguageItem.processData( DatabaseAdapter_, siteLanguageItem );
+            DeleteWmPortalSiteLanguageItem.processData( DatabaseAdapter_, siteLanguageItem );
         }
         DatabaseAdapter_.commit();
 
@@ -125,12 +125,12 @@ public final class SiteService {
 //        deleteShopData(DatabaseAdapter_, idSiteForDrop);
 
         System.out.println("delete virtual host");
-        DeleteSiteVirtualHostWithIdSite.process(DatabaseAdapter_, idSiteForDrop);
+        DeleteWmPortalVirtualHostWithIdSite.process(DatabaseAdapter_, idSiteForDrop);
         DatabaseAdapter_.commit();
 
         System.out.println("delete test site description");
-        SiteListSiteItemType site = new GetSiteListSiteItem(DatabaseAdapter_, idSiteForDrop).item;
-        DeleteSiteListSiteItem.processData(DatabaseAdapter_, site);
+        WmPortalListSiteItemType site = new GetWmPortalListSiteItem(DatabaseAdapter_, idSiteForDrop).item;
+        DeleteWmPortalListSiteItem.processData(DatabaseAdapter_, site);
         DatabaseAdapter_.commit();
         System.out.println("Deleting test data is done.");
     }
@@ -167,12 +167,13 @@ public final class SiteService {
             {
                 ps=DatabaseAdapter_.conn.prepareStatement(
                     "select distinct b.ID_ORDER_V2 " +
-                    "from PRICE_LIST a, PRICE_ORDER_V2 b " +
-                    "where a.ID_ITEM=b.ID_ITEM and a.ID_SHOP=?");
+                    "from   WM_PRICE_LIST a, PRICE_ORDER_V2 b " +
+                    "where  a.ID_ITEM=b.ID_ITEM and a.ID_SHOP=?");
                 ps.setLong(1, shop.getIdShop());
                 rs = ps.executeQuery();
                 while(rs.next())
                 {
+//Todo boxing???
                     v.add( new Long(RsetTools.getLong(rs, "ID_ORDER_V2")) );
                 }
             }
@@ -237,7 +238,7 @@ public final class SiteService {
         }
 
         SiteExtendItemType site = new SiteExtendItemType();
-        GetSiteListSiteItem siteItem = GetSiteListSiteItem.getInstance(db_, idSite);
+        GetWmPortalListSiteItem siteItem = GetWmPortalListSiteItem.getInstance(db_, idSite);
         siteItem.copyItem( site );
         SiteContentCssListType cssList =
             GetSiteContentCssWithIdSiteList.getInstance(db_, idSite).item;
@@ -261,25 +262,25 @@ public final class SiteService {
 
         // получаем список языков поддерживаемых сайтом
         SiteExtendLanguageListType lang = new SiteExtendLanguageListType();
-        SiteSupportLanguageListType listLang = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, idSite).item;
-        for (int i=0; i<listLang.getSiteSupportLanguageCount(); i++)
+        WmPortalSiteLanguageListType listLang = GetWmPortalSiteLanguageWithIdSiteList.getInstance(db_, idSite).item;
+        for (int i=0; i<listLang.getWmPortalSiteLanguageCount(); i++)
         {
-            SiteSupportLanguageItemType itemLang = listLang.getSiteSupportLanguage(i);
+            WmPortalSiteLanguageItemType itemLang = listLang.getWmPortalSiteLanguage(i);
             SiteExtendLanguageType extendItemLang = new SiteExtendLanguageType();
             GetSiteSupportLanguageItem.copyItem( itemLang, extendItemLang);
 
             // получаем список статей
-            SiteCtxArticleListType articles =
-                GetSiteCtxArticleWithIdSiteSupportLanguageList.getInstance
+            WmPortletArticleListType articles =
+                GetWmPortletArticleWithIdSiteSupportLanguageList.getInstance
                 (
                     db_, extendItemLang.getIdSiteSupportLanguage()
                 ).item;
 
-            SiteCtxArticleListType articlesPlain = new SiteCtxArticleListType();
-            SiteCtxArticleListType articlesXml = new SiteCtxArticleListType();
-            for (int j=0; j<articles.getSiteCtxArticleCount(); j++)
+            WmPortletArticleListType articlesPlain = new WmPortletArticleListType();
+            WmPortletArticleListType articlesXml = new WmPortletArticleListType();
+            for (int j=0; j<articles.getWmPortletArticleCount(); j++)
             {
-                SiteCtxArticleItemType article = articles.getSiteCtxArticle(j);
+                WmPortletArticleItemType article = articles.getWmPortletArticle(j);
                 SiteCtxArticleDataListType articleDataList =
                     GetSiteCtxArticleDataWithIdSiteCtxArticleList.getInstance(db_, article.getIdSiteCtxArticle()).item;
                 String artcileData = "";
@@ -296,16 +297,16 @@ public final class SiteService {
             extendItemLang.setArticlePlain( articlesPlain );
             extendItemLang.setArticleXml( articlesXml );
 
-            SiteCtxLangCatalogListType langCatalog =
-                  GetSiteCtxLangCatalogWithIdSiteSupportLanguageList.getInstance(db_, extendItemLang.getIdSiteSupportLanguage()).item;
+            WmPortalCatalogLanguageListType langCatalog =
+                  GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.getInstance(db_, extendItemLang.getIdSiteSupportLanguage()).item;
             SiteExtendCtxLangCatalogListType extendLangCatalogList = new SiteExtendCtxLangCatalogListType();
-            for (int j=0; j<langCatalog.getSiteCtxLangCatalogCount(); j++)
+            for (int j=0; j<langCatalog.getWmPortalCatalogLanguageCount(); j++)
             {
-                SiteCtxLangCatalogItemType langCatalogItem = langCatalog.getSiteCtxLangCatalog(j);
+                WmPortalCatalogLanguageItemType langCatalogItem = langCatalog.getWmPortalCatalogLanguage(j);
                 SiteExtendCtxLangCatalogType extendLangCatalog = new SiteExtendCtxLangCatalogType();
                 GetSiteCtxLangCatalogItem.copyItem(langCatalogItem, extendLangCatalog);
                 extendLangCatalog.setContextList(
-                    GetSiteCtxCatalogWithIdSiteCtxLangCatalogList.getInstance(
+                    GetWmPortalCatalogWithIdSiteCtxLangCatalogList.getInstance(
                         db_, extendLangCatalog.getIdSiteCtxLangCatalog()
                     ).item
                 );
@@ -354,18 +355,18 @@ public final class SiteService {
             if (memberTemplaeList.getSiteTemplateMemberCount()>0)
                 extendItemLang.setMemberTemplate( memberTemplaeList.getSiteTemplateMember(0) );
 
-            SiteXsltListType xsltList =
-                GetSiteXsltWithIdSiteSupportLanguageList.getInstance(
+            WmPortalXsltListType xsltList =
+                GetWmPortalXsltWithIdSiteSupportLanguageList.getInstance(
                     db_, extendItemLang.getIdSiteSupportLanguage()
                 ).item;
-            for (int j=0; j<xsltList.getSiteXsltCount(); j++)
+            for (int j=0; j<xsltList.getWmPortalXsltCount(); j++)
             {
-                SiteXsltItemType xsltItem = xsltList.getSiteXslt(j);
-                SiteXsltDataListType xsltDataList =
-                    GetSiteXsltDataWithIdSiteXsltList.getInstance(db_, xsltItem.getIdSiteXslt()).item;
+                WmPortalXsltItemType xsltItem = xsltList.getWmPortalXslt(j);
+                WmPortalXsltDataListType xsltDataList =
+                    GetWmPortalXsltDataWithIdSiteXsltList.getInstance(db_, xsltItem.getIdSiteXslt()).item;
                 String xsltData = "";
-                for (int k=0; k<xsltDataList.getSiteXsltDataCount(); k++)
-                    xsltData += xsltDataList.getSiteXsltData(k).getXslt();
+                for (int k=0; k<xsltDataList.getWmPortalXsltDataCount(); k++)
+                    xsltData += xsltDataList.getWmPortalXsltData(k).getXslt();
                 xsltItem.setXslt( xsltData );
             }
             extendItemLang.setXslt( xsltList );
