@@ -27,7 +27,7 @@ package org.riverock.webmill.portlet.menu;
 import junit.framework.TestCase;
 import org.riverock.common.collections.TreeUtils;
 import org.riverock.webmill.portal.menu.MenuItem;
-import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
 import org.riverock.interfaces.common.TreeItemInterface;
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -43,8 +43,8 @@ import java.util.List;
 public class TestMenuTreeRebuild extends TestCase {
 
     private static class MenuItemTest {
-        static SiteCtxCatalogItemType get( Long idSiteCtxCatalog, Long idTopCtxCatalog ){
-            SiteCtxCatalogItemType item = new SiteCtxCatalogItemType();
+        static WmPortalCatalogItemType get( Long idSiteCtxCatalog, Long idTopCtxCatalog ){
+            WmPortalCatalogItemType item = new WmPortalCatalogItemType();
             item.setIdSiteCtxCatalog( idSiteCtxCatalog );
             item.setIdTopCtxCatalog( idTopCtxCatalog );
             item.setKeyMessage( "message_"+idSiteCtxCatalog+"-"+idTopCtxCatalog );

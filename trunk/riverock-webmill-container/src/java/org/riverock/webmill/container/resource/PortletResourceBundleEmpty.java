@@ -40,8 +40,8 @@ public class PortletResourceBundleEmpty extends ResourceBundle {
     public PortletResourceBundleEmpty() {
     }
 
-    public Enumeration getKeys() {
-        return Collections.enumeration( new ArrayList() );
+    public Enumeration<String> getKeys() {
+        return Collections.enumeration( new ArrayList<String>() );
     }
 
     protected Object handleGetObject( final String key ) {

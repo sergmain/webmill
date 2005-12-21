@@ -28,15 +28,15 @@ package org.riverock.sql.parser;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.log4j.Category;
 
 import org.riverock.schema.sql.*;
 import org.riverock.schema.sql.types.UnionTypeType;
 
-import org.apache.log4j.Category;
-
-public class Parser
-{
-    private static Category cat = Category.getInstance( "org.riverock.sql.parser.Parser" );
+public class Parser {
+    private static Category cat = Category.getInstance("org.riverock.sql.parser.Parser");
 
     private Tokenizer tTokenizer;
     private String sTable;
@@ -56,94 +56,85 @@ public class Parser
     public DependenceType depend = new DependenceType();
 
     private void getSourceTable()
-        throws Exception
-    {
-        switch ( typeStatement )
-        {
+        throws Exception {
+        switch (typeStatement) {
             case Parser.SELECT:
-                if ( select == null )
+                if (select == null)
                     return;
 
-                getSourceFromTable( select );
-                if ( select.getExpCondition() != null )
-                    getSourceFromExpression( select.getExpCondition() );
+                getSourceFromTable(select);
+                if (select.getExpCondition() != null)
+                    getSourceFromExpression(select.getExpCondition());
 
                 break;
             case Parser.INSERT:
-                if ( insert.getSelect() != null )
-                    getSourceFromTable( insert.getSelect() );
+                if (insert.getSelect() != null)
+                    getSourceFromTable(insert.getSelect());
 //                depend.getTarget().clearItem();
                 depend.getTarget().removeAllItem();
-                depend.getTarget().addItem( insert.getTable().getTableName() );
+                depend.getTarget().addItem(insert.getTable().getTableName());
                 break;
 
             case Parser.UPDATE:
-                if ( update.getExpression() != null )
-                    getSourceFromExpression( update.getExpression() );
+                if (update.getExpression() != null)
+                    getSourceFromExpression(update.getExpression());
 //                depend.getTarget().clearItem();
                 depend.getTarget().removeAllItem();
-                depend.getTarget().addItem( update.getTable().getTableName() );
+                depend.getTarget().addItem(update.getTable().getTableName());
                 break;
 
             case Parser.DELETE:
-                if ( delete.getExpression() != null )
-                    getSourceFromExpression( delete.getExpression() );
+                if (delete.getExpression() != null)
+                    getSourceFromExpression(delete.getExpression());
 //                depend.getTarget().clearItem();
                 depend.getTarget().removeAllItem();
-                depend.getTarget().addItem( delete.getTable().getTableName() );
+                depend.getTarget().addItem(delete.getTable().getTableName());
                 break;
 
             default:
-                throw new Exception( "Error parse sql" );
+                throw new Exception("Error parse sql");
         }
     }
 
-    private void getSourceFromExpression( ExpressionType expCondition )
-    {
-        if ( expCondition == null )
+    private void getSourceFromExpression(ExpressionType expCondition) {
+        if (expCondition == null)
             return;
 
-        if ( expCondition.getSelect() != null )
-            getSourceFromTable( expCondition.getSelect() );
+        if (expCondition.getSelect() != null)
+            getSourceFromTable(expCondition.getSelect());
 
-        if ( expCondition.getExpArg1() != null )
-            getSourceFromExpression( expCondition.getExpArg1() );
+        if (expCondition.getExpArg1() != null)
+            getSourceFromExpression(expCondition.getExpArg1());
 
-        if ( expCondition.getExpArg2() != null )
-            getSourceFromExpression( expCondition.getExpArg2() );
+        if (expCondition.getExpArg2() != null)
+            getSourceFromExpression(expCondition.getExpArg2());
 
     }
 
-    private boolean isExists( SqlNameListType list, SqlNameType name )
-    {
-        if ( name == null || list == null )
+    private boolean isExists(SqlNameListType list, SqlNameType name) {
+        if (name == null || list == null)
             return false;
 
-        for ( int j = 0; j < list.getItemCount(); j++ )
-        {
-            if ( name.getOriginName().equals( list.getItem( j ).getOriginName() ) )
+        for (int j = 0; j < list.getItemCount(); j++) {
+            if (name.getOriginName().equals(list.getItem(j).getOriginName()))
                 return true;
         }
         return false;
     }
 
-    private void getSourceFromTable( SelectType select_ )
-    {
-        for ( int i = 0; i < select_.getTableFilterCount(); i++ )
-        {
-            TableFilterType f = select_.getTableFilter( i );
+    private void getSourceFromTable(SelectType select_) {
+        for (int i = 0; i < select_.getTableFilterCount(); i++) {
+            TableFilterType f = select_.getTableFilter(i);
             TableType table = f.getTable();
-            if ( table == null )
+            if (table == null)
                 continue;
 
-            if ( table.getTableName() != null )
-            {
-                if ( !isExists( depend.getSource(), table.getTableName() ) )
-                    depend.getSource().addItem( table.getTableName() );
+            if (table.getTableName() != null) {
+                if (!isExists(depend.getSource(), table.getTableName()))
+                    depend.getSource().addItem(table.getTableName());
             }
-            else if ( table.getSubQuery() != null )
-            {
-                getSourceFromTable( table.getSubQuery().getSelect() );
+            else if (table.getSubQuery() != null) {
+                getSourceFromTable(table.getSubQuery().getSelect());
             }
             else
                 continue;
@@ -152,43 +143,37 @@ public class Parser
     }
 
     /**
-     *  Constructor declaration
+     * Constructor declaration
      *
-     * @param  statement
+     * @param statement
      */
-    private Parser( String statement )
-        throws Exception
-    {
-        depend.setSource( new SqlNameListType() );
-        depend.setTarget( new SqlNameListType() );
+    private Parser(String statement)
+        throws Exception {
+        depend.setSource(new SqlNameListType());
+        depend.setTarget(new SqlNameListType());
         sql = statement;
-        try
-        {
-            tTokenizer = new Tokenizer( statement );
-            while ( true )
-            {
+        try {
+            tTokenizer = new Tokenizer(statement);
+            while (true) {
                 tTokenizer.setPartMarker();
 
                 String sToken = tTokenizer.getString();
 
-                if ( sToken.length() == 0 )
-                {
+                if (sToken.length() == 0) {
                     break;
                 }
 
-                Integer command = (Integer) hCommands.get( sToken );
+                Integer command = (Integer) hCommands.get(sToken);
 
-                if ( command == null )
-                {
+                if (command == null) {
                     String errorString = "UNEXPECTED_TOKEN " + sToken;
-                    cat.error( errorString );
-                    throw new Exception( errorString );
+                    cat.error(errorString);
+                    throw new Exception(errorString);
                 }
 
                 typeStatement = command.intValue();
 
-                switch ( typeStatement )
-                {
+                switch (typeStatement) {
 
                     case SELECT:
                         select = parseSelect();
@@ -209,157 +194,142 @@ public class Parser
                 getSourceTable();
             }
         }
-        catch ( Exception e )
-        {
+        catch (Exception e) {
             e.printStackTrace();
 
             String s = "GENERAL_ERROR " + " " + e;
 
-            throw new Exception( s + " in statement [" + statement + "]" );
+            throw new Exception(s + " in statement [" + statement + "]");
         }
-        catch ( java.lang.OutOfMemoryError e )
-        {
+        catch (java.lang.OutOfMemoryError e) {
             e.printStackTrace();
 
-            throw new Exception( "out of memory GENERAL_ERROR" );
+            throw new Exception("out of memory GENERAL_ERROR");
         }
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
-     * @throws  Exception
+     * @throws Exception
      */
     UpdateType processUpdate()
-        throws Exception
-    {
+        throws Exception {
         UpdateType updateTemp = new UpdateType();
 
         String token = tTokenizer.getString();
-        TableType table = ServiceClass.getInstance( ServiceClass.getInstance( token, false ) );
-        updateTemp.setTable( table );
+        TableType table = ServiceClass.getInstance(ServiceClass.getInstance(token, false));
+        updateTemp.setTable(table);
 
-        TableFilterType filter = TableService.getInstance( table, null, false );
+        TableFilterType filter = TableService.getInstance(table, null, false);
 
-        tTokenizer.getThis( "SET" );
+        tTokenizer.getThis("SET");
 
         ArrayList vColumn = new ArrayList();
-        ArrayList eColumn = new ArrayList();
+        ArrayList<ExpressionType> eColumn = new ArrayList<ExpressionType>();
 
         token = null;
 
-        do
-        {
+        do {
             tTokenizer.getString();
 //            int i = ServiceClass.getColumnNr( table, tTokenizer.getString() );
 //            vColumn.add( new Integer( i ) );
 
-            tTokenizer.getThis( "=" );
+            tTokenizer.getThis("=");
 
             ExpressionType e = parseExpression();
 
-            ExpressionService.resolve( e, filter );
-            eColumn.add( e );
+            ExpressionService.resolve(e, filter);
+            eColumn.add(e);
 
             token = tTokenizer.getString();
         }
-        while ( token.equals( "," ) );
+        while (token.equals(","));
 
         ExpressionType eCondition = null;
 
-        if ( token.equals( "WHERE" ) )
-        {
+        if (token.equals("WHERE")) {
             eCondition = parseExpression();
 
-            ExpressionService.resolve( eCondition, filter );
-            TableService.setCondition( filter, eCondition );
+            ExpressionService.resolve(eCondition, filter);
+            TableService.setCondition(filter, eCondition);
         }
-        else
-        {
+        else {
             tTokenizer.back();
         }
-        updateTemp.setExpression( eCondition );
+        updateTemp.setExpression(eCondition);
 
         return updateTemp;
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
-     * @throws  Exception
+     * @throws Exception
      */
     DeleteType processDelete()
-        throws Exception
-    {
+        throws Exception {
         DeleteType deleteTemp = new DeleteType();
-        tTokenizer.getThis( "FROM" );
+        tTokenizer.getThis("FROM");
 
         String token = tTokenizer.getString();
-        TableType table = ServiceClass.getInstance( ServiceClass.getInstance( token, false ) );
-        deleteTemp.setTable( table );
+        TableType table = ServiceClass.getInstance(ServiceClass.getInstance(token, false));
+        deleteTemp.setTable(table);
 
-        TableFilterType filter = TableService.getInstance( table, null, false );
+        TableFilterType filter = TableService.getInstance(table, null, false);
 
         token = tTokenizer.getString();
 
         ExpressionType eCondition = null;
 
-        if ( token.equals( "WHERE" ) )
-        {
+        if (token.equals("WHERE")) {
             eCondition = parseExpression();
 
-            ExpressionService.resolve( eCondition, filter );
-            TableService.setCondition( filter, eCondition );
+            ExpressionService.resolve(eCondition, filter);
+            TableService.setCondition(filter, eCondition);
         }
-        else
-        {
+        else {
             tTokenizer.back();
         }
-        deleteTemp.setExpression( eCondition );
+        deleteTemp.setExpression(eCondition);
 
         return deleteTemp;
     }
 
     /**
-     *  Method declaration
-     *
+     * Method declaration
      */
-    InsertType processInsert() throws Exception
-    {
+    InsertType processInsert() throws Exception {
 
-        tTokenizer.getThis( "INTO" );
+        tTokenizer.getThis("INTO");
 
         InsertType insertTemp = new InsertType();
 
         String token = tTokenizer.getString();
-        TableType t = ServiceClass.getInstance( ServiceClass.getInstance( token, false ) );
-        insertTemp.setTable( t );
+        TableType t = ServiceClass.getInstance(ServiceClass.getInstance(token, false));
+        insertTemp.setTable(t);
 
         token = tTokenizer.getString();
 
-        ArrayList vcolumns = null;
+        ArrayList<String> vcolumns = null;
 
-        if ( token.equals( "(" ) )
-        {
-            vcolumns = new ArrayList();
+        if (token.equals("(")) {
+            vcolumns = new ArrayList<String>();
 
-            while ( true )
-            {
-                vcolumns.add( tTokenizer.getString() );
+            while (true) {
+                vcolumns.add(tTokenizer.getString());
 
                 token = tTokenizer.getString();
 
-                if ( token.equals( "," ) )
-                {
+                if (token.equals(",")) {
                     continue;
                 }
 
-                if ( token.equals( ")" ) )
-                {
+                if (token.equals(")")) {
                     break;
                 }
 
-                throw new Exception( "UNEXPECTED_TOKEN " + token );
+                throw new Exception("UNEXPECTED_TOKEN " + token);
             }
 
             token = tTokenizer.getString();
@@ -368,35 +338,29 @@ public class Parser
         int count = 0;
         int len;
 
-        if ( vcolumns == null )
-        {
+        if (vcolumns == null) {
             len = t.getVisibleColumns();
         }
-        else
-        {
+        else {
             len = vcolumns.size();
         }
 
-        if ( token.equals( "VALUES" ) )
-        {
-            tTokenizer.getThis( "(" );
+        if (token.equals("VALUES")) {
+            tTokenizer.getThis("(");
 
             Object row[] = new Object[t.getColumnCount()];
-            boolean check[] = ( vcolumns == null ) ? null
+            boolean check[] = (vcolumns == null) ? null
                 : new boolean[row.length];
             boolean enclosed = false;
             int i = 0;
 
-            for ( ; i < len; i++)
-            {
+            for (; i < len; i++) {
                 int colindex;
 
-                if ( vcolumns == null )
-                {
+                if (vcolumns == null) {
                     colindex = i;
                 }
-                else
-                {
+                else {
 //                    colindex = ServiceClass.getColumnNr( t, (String)vcolumns.get( i ) );
 //                    check[colindex] = true;
                 }
@@ -410,21 +374,18 @@ public class Parser
                 token = tTokenizer.getString();
                 tTokenizer.back();
 
-                if (!fieldValue.equals("?") && !token.equals(",") && !token.equals(")"))
-                {
+                if (!fieldValue.equals("?") && !token.equals(",") && !token.equals(")")) {
                     int countBrasket = 0;
-                    int countLoop=30;
-                    while ( --countLoop>0 )
-                    {
+                    int countLoop = 30;
+                    while (--countLoop > 0) {
                         token = tTokenizer.getString();
 
-                        if ( token.equals( "(" ) )
+                        if (token.equals("("))
                             countBrasket++;
 
-                        else if ( token.equals( ")" ) )
-                        {
+                        else if (token.equals(")")) {
                             countBrasket--;
-                            if (countBrasket==0)
+                            if (countBrasket == 0)
                                 break;
                         }
                     }
@@ -432,78 +393,67 @@ public class Parser
 
                 token = tTokenizer.getString();
 
-                if ( token.equals( "," ) )
-                {
+                if (token.equals(",")) {
                     continue;
                 }
 
-                if ( token.equals( ")" ) )
-                {
+                if (token.equals(")")) {
                     enclosed = true;
                     break;
                 }
 
 
-                    throw new Exception( "UNEXPECTED_TOKEN " + token );
+                throw new Exception("UNEXPECTED_TOKEN " + token);
             }
 
-            if ( !enclosed || i != len - 1 )
-            {
-                throw new Exception( "COLUMN_COUNT_DOES_NOT_MATCH" );
+            if (!enclosed || i != len - 1) {
+                throw new Exception("COLUMN_COUNT_DOES_NOT_MATCH");
             }
 
             count = 1;
         }
-        else
-        {
+        else {
             boolean isBrasket = false;
-            if ( token.equals( "(" ) )
-            {
+            if (token.equals("(")) {
                 isBrasket = true;
                 token = tTokenizer.getString();
             }
 
-            if ( token.equals( "SELECT" ) )
-            {
+            if (token.equals("SELECT")) {
                 SelectType selectResult = parseSelect();
-                insertTemp.setSelect( selectResult );
+                insertTemp.setSelect(selectResult);
             }
-            else
-            {
-                throw new Exception( "UNEXPECTED_TOKEN " + token );
+            else {
+                throw new Exception("UNEXPECTED_TOKEN " + token);
             }
 
-            if ( isBrasket )
+            if (isBrasket)
                 token = tTokenizer.getString();
         }
         return insertTemp;
     }
 
     /**
-     *  Pad or truncate a string to len size
+     * Pad or truncate a string to len size
      *
-     * @param  s    the string to pad to truncate
-     * @param  len  the len to make the string
-     * @param pad   pad the string
-     * @return      the string of size len
+     * @param s   the string to pad to truncate
+     * @param len the len to make the string
+     * @param pad pad the string
+     * @return the string of size len
      */
-    static String padOrTrunc( String s, int len, boolean pad )
-    {
+    static String padOrTrunc(String s, int len, boolean pad) {
 
-        if ( s.length() >= len )
-        {
-            return s.substring( 0, len );
+        if (s.length() >= len) {
+            return s.substring(0, len);
         }
 
-        StringBuffer b = new StringBuffer( len );
+        StringBuffer b = new StringBuffer(len);
 
-        b.append( s );
+        b.append(s);
 
-        if ( pad )
-        {
-            for ( int i = s.length(); i < len; i++ )
-            {
-                b.append( ' ' );
+        if (pad) {
+            for (int i = s.length(); i < len; i++) {
+                b.append(' ');
             }
         }
 
@@ -511,14 +461,13 @@ public class Parser
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     SelectType parseSelect()
-        throws Exception
-    {
+        throws Exception {
 
         SelectType selectResult = new SelectType();
 
@@ -532,151 +481,132 @@ public class Parser
 // fredt@users 20020225 - patch 456679 by hiep256 - TOP keyword
         String token = tTokenizer.getString();
 
-        if ( token.equals( "LIMIT" ) )
-        {
+        if (token.equals("LIMIT")) {
             String limStart = tTokenizer.getString();
             String limEnd = tTokenizer.getString();
 
-            try
-            {
-                selectResult.setLimitStart( new Integer( limStart ).intValue() );
-                selectResult.setLimitCount( new Integer( limEnd ).intValue() );
+            try {
+                selectResult.setLimitStart(new Integer(limStart).intValue());
+                selectResult.setLimitCount(new Integer(limEnd).intValue());
 
                 LimitType limit = new LimitType();
 
-                limit.setStart( new Integer( limStart ).intValue() );
-                limit.setCount( new Integer( limEnd ).intValue() );
+                limit.setStart(new Integer(limStart).intValue());
+                limit.setCount(new Integer(limEnd).intValue());
             }
-            catch ( NumberFormatException ex )
-            {
+            catch (NumberFormatException ex) {
 
                 String errorString = "WRONG_DATA_TYPE LIMIT n m";
-                cat.error( errorString );
-                throw new IllegalArgumentException( errorString );
+                cat.error(errorString);
+                throw new IllegalArgumentException(errorString);
             }
 
             token = tTokenizer.getString();
         }
-        else if ( token.equals( "TOP" ) )
-        {
+        else if (token.equals("TOP")) {
             String limEnd = tTokenizer.getString();
 
-            try
-            {
-                selectResult.setLimitStart( 0 );
-                selectResult.setLimitCount( new Integer( limEnd ).intValue() );
+            try {
+                selectResult.setLimitStart(0);
+                selectResult.setLimitCount(new Integer(limEnd).intValue());
 
                 LimitType limit = new LimitType();
 
-                limit.setStart( 0 );
-                limit.setCount( new Integer( limEnd ).intValue() );
+                limit.setStart(0);
+                limit.setCount(new Integer(limEnd).intValue());
             }
-            catch ( NumberFormatException ex )
-            {
+            catch (NumberFormatException ex) {
                 String errorString = "WRONG_DATA_TYPE TOP m";
-                cat.error( errorString );
-                throw new IllegalArgumentException( errorString );
+                cat.error(errorString);
+                throw new IllegalArgumentException(errorString);
             }
 
             token = tTokenizer.getString();
         }
 
-        if ( token.equals( "DISTINCT" ) )
-        {
-            selectResult.setIsDistinctSelect( true );
+        if (token.equals("DISTINCT")) {
+            selectResult.setIsDistinctSelect(true);
         }
-        else
-        {
+        else {
             tTokenizer.back();
         }
 
         // parse column list
-        ArrayList vcolumn = new ArrayList();
+        ArrayList<ExpressionType> vcolumn = new ArrayList<ExpressionType>();
 
-        do
-        {
+        do {
             ExpressionType e = parseExpression();
 
             token = tTokenizer.getString();
 
-            if ( token.equals( "AS" ) )
-            {
-                e.setAlias( tTokenizer.getName() );
+            if (token.equals("AS")) {
+                e.setAlias(tTokenizer.getName());
 
                 token = tTokenizer.getString();
             }
-            else if ( tTokenizer.wasName() )
-            {
-                e.setAlias( token );
+            else if (tTokenizer.wasName()) {
+                e.setAlias(token);
 
                 token = tTokenizer.getString();
             }
 
-            vcolumn.add( e );
+            vcolumn.add(e);
         }
-        while ( token.equals( "," ) );
+        while (token.equals(","));
 
-        if ( token.equals( "INTO" ) )
-        {
+        if (token.equals("INTO")) {
 
             token = tTokenizer.getString();
-            selectResult.setIntoTableName( ServiceClass.getInstance( token, tTokenizer.wasQuotedIdentifier() ) );
+            selectResult.setIntoTableName(ServiceClass.getInstance(token, tTokenizer.wasQuotedIdentifier()));
             token = tTokenizer.getString();
         }
 
-        if ( !token.equals( "FROM" ) )
-        {
-            throw new Exception( "UNEXPECTED_TOKEN " + token );
+        if (!token.equals("FROM")) {
+            throw new Exception("UNEXPECTED_TOKEN " + token);
         }
 
         ExpressionType condition = null;
 
         // parse table list
-        ArrayList vfilter = new ArrayList();
+        ArrayList<TableFilterType> vfilter = new ArrayList<TableFilterType>();
 
-        vfilter.add( parseTableFilter( false ) );
+        vfilter.add(parseTableFilter(false));
 
-        while ( true )
-        {
+        while (true) {
             token = tTokenizer.getString();
 
-            if ( token.equals( "LEFT" ) )
-            {
+            if (token.equals("LEFT")) {
                 token = tTokenizer.getString();
 
-                if ( token.equals( "OUTER" ) )
-                {
+                if (token.equals("OUTER")) {
                     token = tTokenizer.getString();
                 }
 
-                if ( !token.equals( "JOIN" ) )
-                    throw new Exception( "UNEXPECTED_TOKEN " + token );
+                if (!token.equals("JOIN"))
+                    throw new Exception("UNEXPECTED_TOKEN " + token);
 
-                vfilter.add( parseTableFilter( true ) );
-                tTokenizer.getThis( "ON" );
+                vfilter.add(parseTableFilter(true));
+                tTokenizer.getThis("ON");
 
 // thertz@users 20020320 - patch 473613 - outer join condition bug
 // we now call parseJoinCondition() because a limitation of HSQLDB results
 // in incorrect results for OUTER JOINS that have anything other than
 // tableA.colA=tableB.colB type expressions
                 //condition = addCondition(condition, parseExpression());
-                condition = addCondition( condition,
-                    parseOuterJoinCondition() );
+                condition = addCondition(condition,
+                    parseOuterJoinCondition());
             }
-            else if ( token.equals( "INNER" ) )
-            {
-                tTokenizer.getThis( "JOIN" );
-                vfilter.add( parseTableFilter( false ) );
-                tTokenizer.getThis( "ON" );
+            else if (token.equals("INNER")) {
+                tTokenizer.getThis("JOIN");
+                vfilter.add(parseTableFilter(false));
+                tTokenizer.getThis("ON");
 
-                condition = addCondition( condition, parseExpression() );
+                condition = addCondition(condition, parseExpression());
             }
-            else if ( token.equals( "," ) )
-            {
-                vfilter.add( parseTableFilter( false ) );
+            else if (token.equals(",")) {
+                vfilter.add(parseTableFilter(false));
             }
-            else
-            {
+            else {
                 break;
             }
         }
@@ -686,31 +616,27 @@ public class Parser
         int len = vfilter.size();
         TableFilterType filter[] = new TableFilterType[len];
 
-        vfilter.toArray( filter );
+        vfilter.toArray(filter);
 
-        selectResult.setTableFilter( filter );
+        selectResult.setTableFilter(filter);
 
         // expand [table.]* columns
         len = vcolumn.size();
 
-        for ( int i = 0; i < len; i++ )
-        {
-            ExpressionType e = (ExpressionType) ( vcolumn.get( i ) );
+        for (int i = 0; i < len; i++) {
+            ExpressionType e = (ExpressionType) (vcolumn.get(i));
 
-            if ( e.getType() == ExpressionService.ASTERIX )
-            {
+            if (e.getType() == ExpressionService.ASTERIX) {
                 int current = i;
                 TableType table = null;
-                String n = ExpressionService.getTableName( e );
+                String n = ExpressionService.getTableName(e);
 
-                for ( int t = 0; t < filter.length; t++ )
-                {
+                for (int t = 0; t < filter.length; t++) {
                     TableFilterType f = filter[t];
 
-                    ExpressionService.resolve( e, f );
+                    ExpressionService.resolve(e, f);
 
-                    if ( n != null && !n.equals( f.getAlias() ) )
-                    {
+                    if (n != null && !n.equals(f.getAlias())) {
                         continue;
                     }
 
@@ -718,13 +644,11 @@ public class Parser
 
                     int col = table.getVisibleColumns();
 
-                    for ( int c = 0; c < col; c++ )
-                    {
-                        ExpressionType ins = ExpressionService.getInstance(
-                            f.getAlias(), ( table.getColumns().getItem( c ) ).getColumnName().getOriginName(),
-                            ( table.getColumns().getItem( c ) ).getColumnName().getIsNameQuoted() );
+                    for (int c = 0; c < col; c++) {
+                        ExpressionType ins = ExpressionService.getInstance(f.getAlias(), (table.getColumns().getItem(c)).getColumnName().getOriginName(),
+                            (table.getColumns().getItem(c)).getColumnName().getIsNameQuoted());
 
-                        vcolumn.add( current++, ins );
+                        vcolumn.add(current++, ins);
 
                         // now there is one element more to parse
                         len++;
@@ -736,69 +660,62 @@ public class Parser
                 // minus the asterix element
                 len--;
 
-                vcolumn.remove( current );
+                vcolumn.remove(current);
             }
-            else if ( e.getType() == ExpressionService.COLUMN )
-            {
-                if ( ExpressionService.getTableName( e ) == null )
-                {
-                    for ( int filterIndex = 0; filterIndex < filter.length;
-                          filterIndex++ )
-                    {
-                        ExpressionService.resolve( e, filter[filterIndex] );
+            else if (e.getType() == ExpressionService.COLUMN) {
+                if (ExpressionService.getTableName(e) == null) {
+                    for (int filterIndex = 0; filterIndex < filter.length;
+                         filterIndex++) {
+                        ExpressionService.resolve(e, filter[filterIndex]);
                     }
                 }
             }
         }
 
-        selectResult.setResultLength( len );
+        selectResult.setResultLength(len);
 
         // where
         token = tTokenizer.getString();
 
-        if ( token.equals( "WHERE" ) )
-        {
-            condition = addCondition( condition, parseExpression() );
+        if (token.equals("WHERE")) {
+            condition = addCondition(condition, parseExpression());
             token = tTokenizer.getString();
         }
 
-        if ( condition == null )
-            selectResult.setExpCondition( new ExpressionType() );
+        if (condition == null)
+            selectResult.setExpCondition(new ExpressionType());
         else
-            selectResult.setExpCondition( condition );
+            selectResult.setExpCondition(condition);
 
 // fredt@users 20020215 - patch 1.7.0 by fredt
 // to support GROUP BY with more than one column
-        if ( token.equals( "GROUP" ) )
-        {
-            tTokenizer.getThis( "BY" );
+        if (token.equals("GROUP")) {
+            tTokenizer.getThis("BY");
 
             len = 0;
 
-            do
-            {
+            do {
                 ExpressionType e = parseExpression();
 
                 // tony_lai@users having support:
                 // "group by" does not allow refering to other columns alias.
                 //e = doOrderGroup(e, vcolumn);
-                vcolumn.add( e );
+                vcolumn.add(e);
 
                 token = tTokenizer.getString();
 
                 len++;
             }
-            while ( token.equals( "," ) );
+            while (token.equals(","));
 
-            selectResult.setGroupLength( len );
+            selectResult.setGroupLength(len);
         }
 
-        if ( token.equals( "START" ) )
-        {
-            tTokenizer.getThis( "WITH" );
+        if (token.equals("START")) {
+            tTokenizer.getThis("WITH");
 
             String fieldName = tTokenizer.getString();
-            tTokenizer.getThis( "=" );
+            tTokenizer.getThis("=");
             String startValue = tTokenizer.getString();
 //            vcolumn.add( selectResult.getExpHavingCondition() );
             token = tTokenizer.getString();
@@ -806,101 +723,89 @@ public class Parser
 
 //        "CONNECT BY PRIOR id=id_main " +
 
-        if ( token.equals( "CONNECT" ) )
-        {
-            tTokenizer.getThis( "BY" );
-            tTokenizer.getThis( "PRIOR" );
+        if (token.equals("CONNECT")) {
+            tTokenizer.getThis("BY");
+            tTokenizer.getThis("PRIOR");
 
             String fieldNameLeft = tTokenizer.getString();
-            tTokenizer.getThis( "=" );
+            tTokenizer.getThis("=");
             String fieldNameRight = tTokenizer.getString();
 //            vcolumn.add( selectResult.getExpHavingCondition() );
             token = tTokenizer.getString();
         }
 
         // tony_lai@users - having support
-        if ( token.equals( "HAVING" ) )
-        {
-            selectResult.setHavingIndex( vcolumn.size() );
-            selectResult.setExpHavingCondition( parseExpression() );
+        if (token.equals("HAVING")) {
+            selectResult.setHavingIndex(vcolumn.size());
+            selectResult.setExpHavingCondition(parseExpression());
             token = tTokenizer.getString();
 
-            vcolumn.add( selectResult.getExpHavingCondition() );
+            vcolumn.add(selectResult.getExpHavingCondition());
         }
 
-        if ( token.equals( "ORDER" ) )
-        {
-            tTokenizer.getThis( "BY" );
+        if (token.equals("ORDER")) {
+            tTokenizer.getThis("BY");
 
             len = 0;
 
-            do
-            {
+            do {
                 ExpressionType e = parseExpression();
 
-                e = checkOrderByColumns( e, vcolumn );
+                e = checkOrderByColumns(e, vcolumn);
                 token = tTokenizer.getString();
 
-                if ( token.equals( "DESC" ) )
-                {
-                    e.setIsDescending( true );
+                if (token.equals("DESC")) {
+                    e.setIsDescending(true);
 
                     token = tTokenizer.getString();
                 }
-                else if ( token.equals( "ASC" ) )
-                {
+                else if (token.equals("ASC")) {
                     token = tTokenizer.getString();
                 }
 
-                vcolumn.add( e );
+                vcolumn.add(e);
 
                 len++;
             }
-            while ( token.equals( "," ) );
+            while (token.equals(","));
 
-            selectResult.setOrderLength( len );
+            selectResult.setOrderLength(len);
         }
 
         len = vcolumn.size();
-        selectResult.setExpColumn( new ExpressionType[len] );
+        selectResult.setExpColumn(new ExpressionType[len]);
 
-        vcolumn.toArray( selectResult.getExpColumn() );
+        vcolumn.toArray(selectResult.getExpColumn());
 
-        if ( token.equals( "UNION" ) )
-        {
+        if (token.equals("UNION")) {
             token = tTokenizer.getString();
 
-            if ( token.equals( "ALL" ) )
-            {
-                selectResult.setUnionType( UnionTypeType.UNIONALL );
+            if (token.equals("ALL")) {
+                selectResult.setUnionType(UnionTypeType.UNIONALL);
             }
-            else
-            {
-                selectResult.setUnionType( UnionTypeType.UNION );
+            else {
+                selectResult.setUnionType(UnionTypeType.UNION);
 
                 tTokenizer.back();
             }
 
-            tTokenizer.getThis( "SELECT" );
+            tTokenizer.getThis("SELECT");
 
-            selectResult.setUnion( parseSelect() );
+            selectResult.setUnion(parseSelect());
         }
-        else if ( token.equals( "INTERSECT" ) )
-        {
-            tTokenizer.getThis( "SELECT" );
+        else if (token.equals("INTERSECT")) {
+            tTokenizer.getThis("SELECT");
 
-            selectResult.setUnionType( UnionTypeType.INTERSECT );
-            selectResult.setUnion( parseSelect() );
+            selectResult.setUnionType(UnionTypeType.INTERSECT);
+            selectResult.setUnion(parseSelect());
         }
-        else if ( token.equals( "EXCEPT" ) || token.equals( "MINUS" ) )
-        {
-            tTokenizer.getThis( "SELECT" );
+        else if (token.equals("EXCEPT") || token.equals("MINUS")) {
+            tTokenizer.getThis("SELECT");
 
-            selectResult.setUnionType( UnionTypeType.MINUS );
-            selectResult.setUnion( parseSelect() );
+            selectResult.setUnionType(UnionTypeType.MINUS);
+            selectResult.setUnion(parseSelect());
         }
-        else
-        {
+        else {
             tTokenizer.back();
         }
 
@@ -911,44 +816,38 @@ public class Parser
      * Checks Order By columns, and substitutes order by columns that is
      * refering to select columns by alias or column index.
      *
-     * @param  e                          Description of the Parameter
-     * @param  vcolumn                    Description of the Parameter
-     * @return                            Description of the Return Value
-     * @exception  Exception  Description of the Exception
+     * @param e       Description of the Parameter
+     * @param vcolumn Description of the Parameter
+     * @return Description of the Return Value
+     * @throws Exception Description of the Exception
      */
-    private ExpressionType checkOrderByColumns( ExpressionType e,
-        ArrayList vcolumn )
-        throws Exception
-    {
+    private ExpressionType checkOrderByColumns(ExpressionType e,
+        ArrayList vcolumn)
+        throws Exception {
 
-        if ( e.getType() == ExpressionService.VALUE )
-        {
+        if (e.getType() == ExpressionService.VALUE) {
 
             // order by 1,2,3
-            if ( e.getDataType() == Types.INTEGER )
-            {
-                int i = ( new Integer( e.getObjectData() ) ).intValue();
+            if (e.getDataType() == Types.INTEGER) {
+                int i = (new Integer(e.getObjectData())).intValue();
 
-                e = (ExpressionType) vcolumn.get( i - 1 );
+                e = (ExpressionType) vcolumn.get(i - 1);
             }
         }
-        else if ( e.getType() == ExpressionService.COLUMN
-            && ExpressionService.getTableName( e ) == null )
-        {
+        else if (e.getType() == ExpressionService.COLUMN
+            && ExpressionService.getTableName(e) == null) {
 
             // this could be an alias column
-            String s = ExpressionService.getColumnName( e );
+            String s = ExpressionService.getColumnName(e);
 
-            for ( int i = 0, size = vcolumn.size(); i < size; i++ )
-            {
-                ExpressionType ec = (ExpressionType) vcolumn.get( i );
+            for (int i = 0, size = vcolumn.size(); i < size; i++) {
+                ExpressionType ec = (ExpressionType) vcolumn.get(i);
 
                 // We can only substitute alias defined in the select clause,
                 // since there may be more that one result column with the
                 // same column name.  For example:
                 //   "select 500-column1, column1 from table 1 order by column2"
-                if ( s.equals( ec.getAlias() ) )
-                {
+                if (s.equals(ec.getAlias())) {
                     e = ec;
 
                     break;
@@ -960,77 +859,67 @@ public class Parser
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
-     * @param  outerjoin
+     * @param outerjoin
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
-    private TableFilterType parseTableFilter( boolean outerjoin )
-        throws Exception
-    {
+    private TableFilterType parseTableFilter(boolean outerjoin)
+        throws Exception {
 
         String token = tTokenizer.getString();
         TableType t = null;
 
-        if ( token.equals( "(" ) )
-        {
-            tTokenizer.getThis( "SELECT" );
+        if (token.equals("(")) {
+            tTokenizer.getThis("SELECT");
 
             SelectType s = parseSelect();
 //            t = ServiceClass.getInstance( ServiceClass.getInstance( "SYSTEM_SUBQUERY", false ) );
             t = new TableType();
-            t.setSubQuery( ExpressionService.getInstance( s ) );
+            t.setSubQuery(ExpressionService.getInstance(s));
 
-            tTokenizer.getThis( ")" );
+            tTokenizer.getThis(")");
 //            t.addColumns( r );
         }
-        else
-        {
-            t = ServiceClass.getInstance( ServiceClass.getInstance( token, false ) );
+        else {
+            t = ServiceClass.getInstance(ServiceClass.getInstance(token, false));
         }
 
         String sAlias = null;
 
         token = tTokenizer.getString();
 
-        if ( token.equals( "AS" ) )
-        {
+        if (token.equals("AS")) {
             sAlias = tTokenizer.getName();
         }
-        else if ( tTokenizer.wasName() )
-        {
+        else if (tTokenizer.wasName()) {
             sAlias = token;
         }
-        else
-        {
+        else {
             tTokenizer.back();
         }
 
-        return TableService.getInstance( t, sAlias, outerjoin );
+        return TableService.getInstance(t, sAlias, outerjoin);
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
-     * @param  e1
-     * @param  e2
+     * @param e1
+     * @param e2
      * @return
      */
-    private ExpressionType addCondition( ExpressionType e1, ExpressionType e2 )
-    {
+    private ExpressionType addCondition(ExpressionType e1, ExpressionType e2) {
 
-        if ( e1 == null )
-        {
+        if (e1 == null) {
             return e2;
         }
-        else if ( e2 == null )
-        {
+        else if (e2 == null) {
             return e1;
         }
-        else
-        {
-            return ExpressionService.getInstance( ExpressionService.AND, e1, e2 );
+        else {
+            return ExpressionService.getInstance(ExpressionService.AND, e1, e2);
         }
     }
 
@@ -1042,57 +931,53 @@ public class Parser
      * this method is used from the parseSelect method
      *
      * @return the expression
-     * @throws  Exception if the syntax was not correct
+     * @throws Exception if the syntax was not correct
      */
     private ExpressionType parseOuterJoinCondition()
-        throws Exception
-    {
+        throws Exception {
 
         boolean parens = false;
 
         read();
 
-        if ( iToken == ExpressionService.OPEN )
-        {
+        if (iToken == ExpressionService.OPEN) {
             parens = true;
 
             read();
         }
 
-        if ( iToken != ExpressionService.COLUMN )
-            throw new Exception( "OUTER_JOIN_CONDITION" );
+        if (iToken != ExpressionService.COLUMN)
+            throw new Exception("OUTER_JOIN_CONDITION");
 
-        ExpressionType left = ExpressionService.getInstance( sTable, sToken );
-
-        read();
-        if ( iToken != ExpressionService.EQUAL )
-            throw new Exception( "OUTER_JOIN_CONDITION" );
+        ExpressionType left = ExpressionService.getInstance(sTable, sToken);
 
         read();
-        if ( iToken != ExpressionService.COLUMN )
-            throw new Exception( "OUTER_JOIN_CONDITION" );
+        if (iToken != ExpressionService.EQUAL)
+            throw new Exception("OUTER_JOIN_CONDITION");
 
-        ExpressionType right = ExpressionService.getInstance( sTable, sToken );
+        read();
+        if (iToken != ExpressionService.COLUMN)
+            throw new Exception("OUTER_JOIN_CONDITION");
 
-        if ( parens )
-        {
+        ExpressionType right = ExpressionService.getInstance(sTable, sToken);
+
+        if (parens) {
             read();
-            if ( iToken != ExpressionService.CLOSE )
-                throw new Exception( "OUTER_JOIN_CONDITION" );
+            if (iToken != ExpressionService.CLOSE)
+                throw new Exception("OUTER_JOIN_CONDITION");
         }
 
-        return ExpressionService.getInstance( ExpressionService.EQUAL, left, right );
+        return ExpressionService.getInstance(ExpressionService.EQUAL, left, right);
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType parseExpression()
-        throws Exception
-    {
+        throws Exception {
 
         read();
 
@@ -1104,98 +989,89 @@ public class Parser
     }
 
     private ExpressionType readAggregate()
-        throws Exception
-    {
+        throws Exception {
 
         boolean distinct = false;
         int type = iToken;
 
         read();
 
-        if ( tTokenizer.getString().equals( "DISTINCT" ) )
-        {
+        if (tTokenizer.getString().equals("DISTINCT")) {
             distinct = true;
         }
-        else
-        {
+        else {
             tTokenizer.back();
         }
 
-        readThis( ExpressionService.OPEN );
+        readThis(ExpressionService.OPEN);
 
         ExpressionType s = readOr();
 
-        readThis( ExpressionService.CLOSE );
+        readThis(ExpressionService.CLOSE);
 
-        ExpressionType aggregateExp = ExpressionService.getInstance( type, s, null );
+        ExpressionType aggregateExp = ExpressionService.getInstance(type, s, null);
 
-        ExpressionService.setDistinctAggregate( aggregateExp, distinct );
+        ExpressionService.setDistinctAggregate(aggregateExp, distinct);
 
         return aggregateExp;
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType readOr()
-        throws Exception
-    {
+        throws Exception {
 
         ExpressionType r = readAnd();
 
-        while ( iToken == ExpressionService.OR )
-        {
+        while (iToken == ExpressionService.OR) {
             int type = iToken;
             ExpressionType a = r;
 
             read();
 
-            r = ExpressionService.getInstance( type, a, readAnd() );
+            r = ExpressionService.getInstance(type, a, readAnd());
         }
 
         return r;
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType readAnd()
-        throws Exception
-    {
+        throws Exception {
 
         ExpressionType r = readCondition();
 
-        while ( iToken == ExpressionService.AND )
-        {
+        while (iToken == ExpressionService.AND) {
             int type = iToken;
             ExpressionType a = r;
 
             read();
 
-            r = ExpressionService.getInstance( type, a, readCondition() );
+            r = ExpressionService.getInstance(type, a, readCondition());
         }
 
         return r;
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType readCondition()
-        throws Exception
-    {
+        throws Exception {
 
-        switch ( iToken )
-        {
+        switch (iToken) {
 
             case ExpressionService.NOT:
                 {
@@ -1203,38 +1079,36 @@ public class Parser
 
                     read();
 
-                    return ExpressionService.getInstance( type, readCondition(), null );
+                    return ExpressionService.getInstance(type, readCondition(), null);
                 }
             case ExpressionService.EXISTS:
                 {
                     int type = iToken;
 
                     read();
-                    readThis( ExpressionService.OPEN );
-                    if ( iToken != ExpressionService.SELECT )
-                        throw new Exception( "UNEXPECTED_TOKEN" );
+                    readThis(ExpressionService.OPEN);
+                    if (iToken != ExpressionService.SELECT)
+                        throw new Exception("UNEXPECTED_TOKEN");
 
-                    ExpressionType s = ExpressionService.getInstance( parseSelect() );
+                    ExpressionType s = ExpressionService.getInstance(parseSelect());
 
                     read();
-                    readThis( ExpressionService.CLOSE );
+                    readThis(ExpressionService.CLOSE);
 
-                    return ExpressionService.getInstance( type, s, null );
+                    return ExpressionService.getInstance(type, s, null);
                 }
             default :
                 {
                     ExpressionType a = readConcat();
                     boolean not = false;
 
-                    if ( iToken == ExpressionService.NOT )
-                    {
+                    if (iToken == ExpressionService.NOT) {
                         not = true;
 
                         read();
                     }
 
-                    switch ( iToken )
-                    {
+                    switch (iToken) {
 
                         case ExpressionService.LIKE:
                             {
@@ -1243,14 +1117,13 @@ public class Parser
                                 ExpressionType b = readConcat();
                                 String escape = "";
 
-                                if ( sToken.equals( "ESCAPE" ) )
-                                {
+                                if (sToken.equals("ESCAPE")) {
                                     read();
 
                                     ExpressionType c = readTerm();
 
-                                    if ( c.getType() != ExpressionService.VALUE )
-                                        throw new Exception( "INVALID_ESCAPE" );
+                                    if (c.getType() != ExpressionService.VALUE)
+                                        throw new Exception("INVALID_ESCAPE");
 
 /*
                                     String s = (String)c.getValue( Types.VARCHAR );
@@ -1264,9 +1137,9 @@ public class Parser
 */
                                 }
 
-                                a = ExpressionService.getInstance( ExpressionService.LIKE, a, b );
+                                a = ExpressionService.getInstance(ExpressionService.LIKE, a, b);
 
-                                a.setCharLikeEscape( escape );
+                                a.setCharLikeEscape(escape);
 
                                 break;
                             }
@@ -1274,16 +1147,16 @@ public class Parser
                             {
                                 read();
 
-                                ExpressionType l = ExpressionService.getInstance( ExpressionService.BIGGER_EQUAL,
-                                    a, readConcat() );
+                                ExpressionType l = ExpressionService.getInstance(ExpressionService.BIGGER_EQUAL,
+                                    a, readConcat());
 
-                                readThis( ExpressionService.AND );
+                                readThis(ExpressionService.AND);
 
                                 ExpressionType h =
-                                    ExpressionService.getInstance( ExpressionService.SMALLER_EQUAL, a,
-                                        readConcat() );
+                                    ExpressionService.getInstance(ExpressionService.SMALLER_EQUAL, a,
+                                        readConcat());
 
-                                a = ExpressionService.getInstance( ExpressionService.AND, l, h );
+                                a = ExpressionService.getInstance(ExpressionService.AND, l, h);
 
                                 break;
                             }
@@ -1292,64 +1165,57 @@ public class Parser
                                 int type = iToken;
 
                                 read();
-                                readThis( ExpressionService.OPEN );
+                                readThis(ExpressionService.OPEN);
 
                                 ExpressionType b = null;
 
-                                if ( iToken == ExpressionService.SELECT )
-                                {
-                                    b = ExpressionService.getInstance( parseSelect() );
+                                if (iToken == ExpressionService.SELECT) {
+                                    b = ExpressionService.getInstance(parseSelect());
 
                                     read();
                                 }
-                                else
-                                {
+                                else {
                                     tTokenizer.back();
 
-//                                    Vector v = new Vector();
-                                    ArrayList v = new ArrayList();
+                                    ArrayList<ExpressionType> v = new ArrayList<ExpressionType>();
 
-                                    while ( true )
-                                    {
-                                        v.add( getValue( Types.VARCHAR ) );
+                                    while (true) {
+                                        v.add(getValue(Types.VARCHAR));
                                         read();
 
-                                        if ( iToken != ExpressionService.COMMA )
-                                        {
+                                        if (iToken != ExpressionService.COMMA) {
                                             break;
                                         }
                                     }
 
-                                    b = ExpressionService.getInstance( v );
+                                    b = ExpressionService.getInstance(v);
                                 }
 
-                                readThis( ExpressionService.CLOSE );
+                                readThis(ExpressionService.CLOSE);
 
-                                a = ExpressionService.getInstance( type, a, b );
+                                a = ExpressionService.getInstance(type, a, b);
 
                                 break;
                             }
                         default :
                             {
-                                if ( not )
-                                    throw new Exception( "UNEXPECTED_TOKEN" );
+                                if (not)
+                                    throw new Exception("UNEXPECTED_TOKEN");
 
-                                if ( ExpressionService.isCompare( iToken ) )
-                                {
+                                if (ExpressionService.isCompare(iToken)) {
                                     int type = iToken;
 
                                     read();
 
-                                    return ExpressionService.getInstance( type, a, readConcat() );
+                                    return ExpressionService.getInstance(type, a, readConcat());
                                 }
 
                                 return a;
                             }
                     }
 
-                    if ( not )
-                    {
-                        a = ExpressionService.getInstance( ExpressionService.NOT, a, null );
+                    if (not) {
+                        a = ExpressionService.getInstance(ExpressionService.NOT, a, null);
                     }
 
                     return a;
@@ -1368,70 +1234,62 @@ public class Parser
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
-     * @param  type
-     * @throws  Exception
+     * @param type
+     * @throws Exception
      */
-    private void readThis( int type )
-        throws Exception
-    {
-        if ( iToken != type )
-            throw new Exception( "UNEXPECTED_TOKEN" );
+    private void readThis(int type)
+        throws Exception {
+        if (iToken != type)
+            throw new Exception("UNEXPECTED_TOKEN");
         read();
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType readConcat()
-        throws Exception
-    {
+        throws Exception {
 
         ExpressionType r = readSum();
 
-        while ( iToken == ExpressionService.STRINGCONCAT )
-        {
+        while (iToken == ExpressionService.STRINGCONCAT) {
             int type = ExpressionService.CONCAT;
             ExpressionType a = r;
 
             read();
 
-            r = ExpressionService.getInstance( type, a, readSum() );
+            r = ExpressionService.getInstance(type, a, readSum());
         }
 
         return r;
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType readSum()
-        throws Exception
-    {
+        throws Exception {
 
         ExpressionType r = readFactor();
 
-        while ( true )
-        {
+        while (true) {
             int type;
 
-            if ( iToken == ExpressionService.PLUS )
-            {
+            if (iToken == ExpressionService.PLUS) {
                 type = ExpressionService.ADD;
             }
-            else if ( iToken == ExpressionService.NEGATE )
-            {
+            else if (iToken == ExpressionService.NEGATE) {
                 type = ExpressionService.SUBTRACT;
             }
-            else
-            {
+            else {
                 break;
             }
 
@@ -1439,60 +1297,55 @@ public class Parser
 
             read();
 
-            r = ExpressionService.getInstance( type, a, readFactor() );
+            r = ExpressionService.getInstance(type, a, readFactor());
         }
 
         return r;
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType readFactor()
-        throws Exception
-    {
+        throws Exception {
 
         ExpressionType r = readTerm();
 
-        while ( iToken == ExpressionService.MULTIPLY || iToken == ExpressionService.DIVIDE )
-        {
+        while (iToken == ExpressionService.MULTIPLY || iToken == ExpressionService.DIVIDE) {
             int type = iToken;
             ExpressionType a = r;
 
             read();
 
-            r = ExpressionService.getInstance( type, a, readTerm() );
+            r = ExpressionService.getInstance(type, a, readTerm());
         }
 
         return r;
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
      * @return
-     * @throws  Exception
+     * @throws Exception
      */
     private ExpressionType readTerm()
-        throws Exception
-    {
+        throws Exception {
 
         ExpressionType r = null;
 
-        switch ( iToken )
-        {
+        switch (iToken) {
 
             case ExpressionService.COLUMN:
                 {
-                    r = ExpressionService.getInstance( sTable, sToken );
+                    r = ExpressionService.getInstance(sTable, sToken);
 
                     read();
 
-                    if ( iToken == ExpressionService.OPEN )
-                    {
+                    if (iToken == ExpressionService.OPEN) {
 //                        Function f = new Function(dDatabase.getAlias(name),
 //                            cSession);
 //                        int len = f.getArgCount();
@@ -1501,21 +1354,18 @@ public class Parser
                         read();
 
 // Todo work around recursive call of functions: to_number(to_char(month,'mm'))
-                        if ( iToken != ExpressionService.CLOSE )
-                        {
+                        if (iToken != ExpressionService.CLOSE) {
                             int countBrasket = 1;
-                            while ( true )
-                            {
+                            while (true) {
 //                                f.setArgument(i++, readOr());
                                 read();
 
-                                if ( iToken == ExpressionService.OPEN )
+                                if (iToken == ExpressionService.OPEN)
                                     countBrasket++;
 
-                                else if ( iToken == ExpressionService.CLOSE )
-                                {
+                                else if (iToken == ExpressionService.CLOSE) {
                                     countBrasket--;
-                                    if (countBrasket==0)
+                                    if (countBrasket == 0)
                                         break;
                                 }
 
@@ -1528,7 +1378,7 @@ public class Parser
                             }
                         }
 
-                        readThis( ExpressionService.CLOSE );
+                        readThis(ExpressionService.CLOSE);
                     }
 
                     break;
@@ -1539,7 +1389,7 @@ public class Parser
 
                     read();
 
-                    r = ExpressionService.getInstance( type, readTerm(), null );
+                    r = ExpressionService.getInstance(type, readTerm(), null);
 
                     break;
                 }
@@ -1557,9 +1407,8 @@ public class Parser
 
                     r = readOr();
 
-                    if ( iToken != ExpressionService.CLOSE )
-                    {
-                        throw new Exception( "UNEXPECTED_TOKEN " + sToken );
+                    if (iToken != ExpressionService.CLOSE) {
+                        throw new Exception("UNEXPECTED_TOKEN " + sToken);
                     }
 
                     read();
@@ -1568,7 +1417,7 @@ public class Parser
                 }
             case ExpressionService.VALUE:
                 {
-                    r = ExpressionService.getInstance( iType, oData );
+                    r = ExpressionService.getInstance(iType, oData);
 
                     read();
 
@@ -1576,7 +1425,7 @@ public class Parser
                 }
             case ExpressionService.SELECT:
                 {
-                    r = ExpressionService.getInstance( parseSelect() );
+                    r = ExpressionService.getInstance(parseSelect());
 
                     read();
 
@@ -1585,7 +1434,7 @@ public class Parser
             case ExpressionService.MULTIPLY:
             case ExpressionService.END:
                 {
-                    r = ExpressionService.getInstance( sTable, null );
+                    r = ExpressionService.getInstance(sTable, null);
 
                     read();
 
@@ -1597,15 +1446,15 @@ public class Parser
                     int type = iToken;
 
                     read();
-                    readThis( ExpressionService.OPEN );
+                    readThis(ExpressionService.OPEN);
 
                     r = readOr();
 
-                    readThis( ExpressionService.COMMA );
+                    readThis(ExpressionService.COMMA);
 
-                    r = ExpressionService.getInstance( type, r, readOr() );
+                    r = ExpressionService.getInstance(type, r, readOr());
 
-                    readThis( ExpressionService.CLOSE );
+                    readThis(ExpressionService.CLOSE);
 
                     break;
                 }
@@ -1614,21 +1463,21 @@ public class Parser
                     int type = iToken;
 
                     read();
-                    readThis( ExpressionService.OPEN );
+                    readThis(ExpressionService.OPEN);
 
                     r = readOr();
 
-                    readThis( ExpressionService.COMMA );
+                    readThis(ExpressionService.COMMA);
 
                     ExpressionType thenelse = readOr();
 
-                    readThis( ExpressionService.COMMA );
+                    readThis(ExpressionService.COMMA);
 
                     // thenelse part is never evaluated; only init
-                    thenelse = ExpressionService.getInstance( type, thenelse, readOr() );
-                    r = ExpressionService.getInstance( type, r, thenelse );
+                    thenelse = ExpressionService.getInstance(type, thenelse, readOr());
+                    r = ExpressionService.getInstance(type, r, thenelse);
 
-                    readThis( ExpressionService.CLOSE );
+                    readThis(ExpressionService.CLOSE);
 
                     break;
                 }
@@ -1637,53 +1486,51 @@ public class Parser
                     int type = iToken;
 
                     read();
-                    readThis( ExpressionService.OPEN );
+                    readThis(ExpressionService.OPEN);
 
                     r = readOr();
 
-                    readThis( ExpressionService.COMMA );
+                    readThis(ExpressionService.COMMA);
 
-                    int t = ServiceClass.getTypeNr( sToken );
+                    int t = ServiceClass.getTypeNr(sToken);
 
-                    r = ExpressionService.getInstance( type, r, null );
+                    r = ExpressionService.getInstance(type, r, null);
 
-                    r.setDataType( t );
+                    r.setDataType(t);
                     read();
-                    readThis( ExpressionService.CLOSE );
+                    readThis(ExpressionService.CLOSE);
 
                     break;
                 }
             case ExpressionService.CAST:
                 {
                     read();
-                    readThis( ExpressionService.OPEN );
+                    readThis(ExpressionService.OPEN);
 
                     r = readOr();
 
-                    if ( !sToken.equals( "AS" ) )
-                        throw new Exception( "UNEXPECTED_TOKEN " + sToken );
+                    if (!sToken.equals("AS"))
+                        throw new Exception("UNEXPECTED_TOKEN " + sToken);
 
                     read();
 
-                    int t = ServiceClass.getTypeNr( sToken );
+                    int t = ServiceClass.getTypeNr(sToken);
 
-                    r = ExpressionService.getInstance( ExpressionService.CONVERT, r, null );
+                    r = ExpressionService.getInstance(ExpressionService.CONVERT, r, null);
 
-                    r.setDataType( t );
+                    r.setDataType(t);
                     read();
-                    readThis( ExpressionService.CLOSE );
+                    readThis(ExpressionService.CLOSE);
 
                     break;
                 }
             default :
                 {
-                    if ( ExpressionService.isAggregate( iToken ) )
-                    {
+                    if (ExpressionService.isAggregate(iToken)) {
                         r = readAggregate();
                     }
-                    else
-                    {
-                        throw new Exception( "UNEXPECTED_TOKEN " + sToken+", iToken "+iToken );
+                    else {
+                        throw new Exception("UNEXPECTED_TOKEN " + sToken + ", iToken " + iToken);
                     }
 
                     break;
@@ -1694,63 +1541,52 @@ public class Parser
     }
 
     /**
-     *  Method declaration
+     * Method declaration
      *
-     * @throws  Exception
+     * @throws Exception
      */
 
 // fredt@users 20020130 - patch 497872 by Nitin Chauhan
 // reordering for speed
     private void read()
-        throws Exception
-    {
+        throws Exception {
 
         sToken = tTokenizer.getString();
 
-        if ( tTokenizer.wasValue() )
-        {
+        if (tTokenizer.wasValue()) {
             iToken = ExpressionService.VALUE;
             oData = tTokenizer.getAsValue();
             iType = tTokenizer.getType();
         }
-        else if ( tTokenizer.wasName() )
-        {
+        else if (tTokenizer.wasName()) {
             iToken = ExpressionService.COLUMN;
             sTable = null;
         }
-        else if ( tTokenizer.wasLongName() )
-        {
+        else if (tTokenizer.wasLongName()) {
             sTable = tTokenizer.getLongNameFirst();
             sToken = tTokenizer.getLongNameLast();
 
-            if ( sToken.equals( "*" ) )
-            {
+            if (sToken.equals("*")) {
                 iToken = ExpressionService.MULTIPLY;
             }
-            else
-            {
+            else {
                 iToken = ExpressionService.COLUMN;
             }
         }
-        else if ( sToken.length() == 0 )
-        {
+        else if (sToken.length() == 0) {
             iToken = ExpressionService.END;
         }
-        else
-        {
-            Integer n = (Integer) tokenTable.get( sToken );
+        else {
+            Integer n = (Integer) tokenTable.get(sToken);
 
-            if ( n != null )
-            {
+            if (n != null) {
                 iToken = n.intValue();
             }
-            else
-            {
+            else {
                 iToken = ExpressionService.END;
             }
 
-            switch ( iToken )
-            {
+            switch (iToken) {
 
                 case ExpressionService.COMMA:
                 case ExpressionService.EQUAL:
@@ -1793,12 +1629,10 @@ public class Parser
                 case ExpressionService.IS:
                     sToken = tTokenizer.getString();
 
-                    if ( sToken.equals( "NOT" ) )
-                    {
+                    if (sToken.equals("NOT")) {
                         iToken = ExpressionService.NOT_EQUAL;
                     }
-                    else
-                    {
+                    else {
                         iToken = ExpressionService.EQUAL;
 
                         tTokenizer.back();
@@ -1811,45 +1645,44 @@ public class Parser
         }
     }
 
-    private static java.util.Hashtable tokenTable =
-        new java.util.Hashtable( 37 );
+    private static java.util.Map<String, Integer> tokenTable =
+        new java.util.HashMap<String, Integer>(37);
 
-    static
-    {
-        tokenTable.put( ",", new Integer( ExpressionService.COMMA ) );
-        tokenTable.put( "=", new Integer( ExpressionService.EQUAL ) );
-        tokenTable.put( "!=", new Integer( ExpressionService.NOT_EQUAL ) );
-        tokenTable.put( "<>", new Integer( ExpressionService.NOT_EQUAL ) );
-        tokenTable.put( "<", new Integer( ExpressionService.SMALLER ) );
-        tokenTable.put( ">", new Integer( ExpressionService.BIGGER ) );
-        tokenTable.put( "<=", new Integer( ExpressionService.SMALLER_EQUAL ) );
-        tokenTable.put( ">=", new Integer( ExpressionService.BIGGER_EQUAL ) );
-        tokenTable.put( "AND", new Integer( ExpressionService.AND ) );
-        tokenTable.put( "NOT", new Integer( ExpressionService.NOT ) );
-        tokenTable.put( "OR", new Integer( ExpressionService.OR ) );
-        tokenTable.put( "IN", new Integer( ExpressionService.IN ) );
-        tokenTable.put( "EXISTS", new Integer( ExpressionService.EXISTS ) );
-        tokenTable.put( "BETWEEN", new Integer( ExpressionService.BETWEEN ) );
-        tokenTable.put( "+", new Integer( ExpressionService.PLUS ) );
-        tokenTable.put( "-", new Integer( ExpressionService.NEGATE ) );
-        tokenTable.put( "*", new Integer( ExpressionService.MULTIPLY ) );
-        tokenTable.put( "/", new Integer( ExpressionService.DIVIDE ) );
-        tokenTable.put( "||", new Integer( ExpressionService.STRINGCONCAT ) );
-        tokenTable.put( "(", new Integer( ExpressionService.OPEN ) );
-        tokenTable.put( ")", new Integer( ExpressionService.CLOSE ) );
-        tokenTable.put( "SELECT", new Integer( ExpressionService.SELECT ) );
-        tokenTable.put( "LIKE", new Integer( ExpressionService.LIKE ) );
-        tokenTable.put( "COUNT", new Integer( ExpressionService.COUNT ) );
-        tokenTable.put( "SUM", new Integer( ExpressionService.SUM ) );
-        tokenTable.put( "MIN", new Integer( ExpressionService.MIN ) );
-        tokenTable.put( "MAX", new Integer( ExpressionService.MAX ) );
-        tokenTable.put( "AVG", new Integer( ExpressionService.AVG ) );
-        tokenTable.put( "IFNULL", new Integer( ExpressionService.IFNULL ) );
-        tokenTable.put( "CONVERT", new Integer( ExpressionService.CONVERT ) );
-        tokenTable.put( "CAST", new Integer( ExpressionService.CAST ) );
-        tokenTable.put( "CASEWHEN", new Integer( ExpressionService.CASEWHEN ) );
-        tokenTable.put( "CONCATE", new Integer( ExpressionService.CONCAT ) );
-        tokenTable.put( "IS", new Integer( ExpressionService.IS ) );
+    static {
+        tokenTable.put(",", ExpressionService.COMMA);
+        tokenTable.put("=", ExpressionService.EQUAL);
+        tokenTable.put("!=", ExpressionService.NOT_EQUAL);
+        tokenTable.put("<>", ExpressionService.NOT_EQUAL);
+        tokenTable.put("<", ExpressionService.SMALLER);
+        tokenTable.put(">", ExpressionService.BIGGER);
+        tokenTable.put("<=", ExpressionService.SMALLER_EQUAL);
+        tokenTable.put(">=", ExpressionService.BIGGER_EQUAL);
+        tokenTable.put("AND", ExpressionService.AND);
+        tokenTable.put("NOT", ExpressionService.NOT);
+        tokenTable.put("OR", ExpressionService.OR);
+        tokenTable.put("IN", ExpressionService.IN);
+        tokenTable.put("EXISTS", ExpressionService.EXISTS);
+        tokenTable.put("BETWEEN", ExpressionService.BETWEEN);
+        tokenTable.put("+", ExpressionService.PLUS);
+        tokenTable.put("-", ExpressionService.NEGATE);
+        tokenTable.put("*", ExpressionService.MULTIPLY);
+        tokenTable.put("/", ExpressionService.DIVIDE);
+        tokenTable.put("||", ExpressionService.STRINGCONCAT);
+        tokenTable.put("(", ExpressionService.OPEN);
+        tokenTable.put(")", ExpressionService.CLOSE);
+        tokenTable.put("SELECT", ExpressionService.SELECT);
+        tokenTable.put("LIKE", ExpressionService.LIKE);
+        tokenTable.put("COUNT", ExpressionService.COUNT);
+        tokenTable.put("SUM", ExpressionService.SUM);
+        tokenTable.put("MIN", ExpressionService.MIN);
+        tokenTable.put("MAX", ExpressionService.MAX);
+        tokenTable.put("AVG", ExpressionService.AVG);
+        tokenTable.put("IFNULL", ExpressionService.IFNULL);
+        tokenTable.put("CONVERT", ExpressionService.CONVERT);
+        tokenTable.put("CAST", ExpressionService.CAST);
+        tokenTable.put("CASEWHEN", ExpressionService.CASEWHEN);
+        tokenTable.put("CONCATE", ExpressionService.CONCAT);
+        tokenTable.put("IS", ExpressionService.IS);
     }
 
 
@@ -1918,68 +1751,65 @@ public class Parser
     public static final int START = 1001;
 //    public static final int CONNECT = 1002;
 
-    public static final HashMap hCommands = new HashMap( 67, 1 );
+    public static final Map<String, Integer> hCommands = new HashMap<String, Integer>(67, 1);
 
-    public static Parser getInstance( String statement )
-        throws Exception
-    {
-        if (statement==null && statement.length()==0)
+    public static Parser getInstance(String statement)
+        throws Exception {
+        if (statement == null && statement.length() == 0)
             return null;
 
-        return new Parser( statement );
+        return new Parser(statement);
     }
 
-    static
-    {
-        hCommands.put( "ALTER", new Integer( ALTER ) );
-        hCommands.put( "CALL", new Integer( CALL ) );
-        hCommands.put( "CHECKPOINT", new Integer( CHECKPOINT ) );
-        hCommands.put( "COMMIT", new Integer( COMMIT ) );
-        hCommands.put( "CONNECT", new Integer( CONNECT ) );
-        hCommands.put( "CREATE", new Integer( CREATE ) );
-        hCommands.put( "DELETE", new Integer( DELETE ) );
-        hCommands.put( "DISCONNECT", new Integer( DISCONNECT ) );
-        hCommands.put( "DROP", new Integer( DROP ) );
-        hCommands.put( "GRANT", new Integer( GRANT ) );
-        hCommands.put( "INSERT", new Integer( INSERT ) );
-        hCommands.put( "REVOKE", new Integer( REVOKE ) );
-        hCommands.put( "ROLLBACK", new Integer( ROLLBACK ) );
-        hCommands.put( "SAVEPOINT", new Integer( SAVEPOINT ) );
-        hCommands.put( "SCRIPT", new Integer( SCRIPT ) );
-        hCommands.put( "SELECT", new Integer( SELECT ) );
-        hCommands.put( "SET", new Integer( SET ) );
-        hCommands.put( "SHUTDOWN", new Integer( SHUTDOWN ) );
-        hCommands.put( "UPDATE", new Integer( UPDATE ) );
-        hCommands.put( ";", new Integer( SEMICOLON ) );
+    static {
+        hCommands.put("ALTER", ALTER);
+        hCommands.put("CALL", CALL);
+        hCommands.put("CHECKPOINT", CHECKPOINT);
+        hCommands.put("COMMIT", COMMIT);
+        hCommands.put("CONNECT", CONNECT);
+        hCommands.put("CREATE", CREATE);
+        hCommands.put("DELETE", DELETE);
+        hCommands.put("DISCONNECT", DISCONNECT);
+        hCommands.put("DROP", DROP);
+        hCommands.put("GRANT", GRANT);
+        hCommands.put("INSERT", INSERT);
+        hCommands.put("REVOKE", REVOKE);
+        hCommands.put("ROLLBACK", ROLLBACK);
+        hCommands.put("SAVEPOINT", SAVEPOINT);
+        hCommands.put("SCRIPT", SCRIPT);
+        hCommands.put("SELECT", SELECT);
+        hCommands.put("SET", SET);
+        hCommands.put("SHUTDOWN", SHUTDOWN);
+        hCommands.put("UPDATE", UPDATE);
+        hCommands.put(";", SEMICOLON);
 
         //
-        hCommands.put( "TABLE", new Integer( TABLE ) );
-        hCommands.put( "INDEX", new Integer( INDEX ) );
-        hCommands.put( "RENAME", new Integer( RENAME ) );
-        hCommands.put( "ADD", new Integer( ADD ) );
-        hCommands.put( "CONSTRAINT", new Integer( CONSTRAINT ) );
-        hCommands.put( "FOREIGN", new Integer( FOREIGN ) );
-        hCommands.put( "COLUMN", new Integer( COLUMN ) );
-        hCommands.put( "UNIQUE", new Integer( UNIQUE ) );
-        hCommands.put( "TEXT", new Integer( TEXT ) );
-        hCommands.put( "MEMORY", new Integer( MEMORY ) );
-        hCommands.put( "CACHED", new Integer( CACHED ) );
-        hCommands.put( "VIEW", new Integer( VIEW ) );
-        hCommands.put( "TRIGGER", new Integer( TRIGGER ) );
-        hCommands.put( "USER", new Integer( USER ) );
-        hCommands.put( "ALIAS", new Integer( ALIAS ) );
-        hCommands.put( "PRIMARY", new Integer( PRIMARY ) );
-        hCommands.put( "PASSWORD", new Integer( PASSWORD ) );
-        hCommands.put( "READONLY", new Integer( READONLY ) );
-        hCommands.put( "LOGSIZE", new Integer( LOGSIZE ) );
-        hCommands.put( "LOGTYPE", new Integer( LOGTYPE ) );
-        hCommands.put( "IGNORECASE", new Integer( IGNORECASE ) );
-        hCommands.put( "MAXROWS", new Integer( MAXROWS ) );
-        hCommands.put( "AUTOCOMMIT", new Integer( AUTOCOMMIT ) );
-        hCommands.put( "SOURCE", new Integer( SOURCE ) );
-        hCommands.put( "WRITE_DELAY", new Integer( WRITE_DELAY ) );
-        hCommands.put( "REFERENTIAL_INTEGRITY",
-            new Integer( REFERENTIAL_INTEGRITY ) );
-        hCommands.put( "START", new Integer( START ) );
+        hCommands.put("TABLE", TABLE);
+        hCommands.put("INDEX", INDEX);
+        hCommands.put("RENAME", RENAME);
+        hCommands.put("ADD", ADD);
+        hCommands.put("CONSTRAINT", CONSTRAINT);
+        hCommands.put("FOREIGN", FOREIGN);
+        hCommands.put("COLUMN", COLUMN);
+        hCommands.put("UNIQUE", UNIQUE);
+        hCommands.put("TEXT", TEXT);
+        hCommands.put("MEMORY", MEMORY);
+        hCommands.put("CACHED", CACHED);
+        hCommands.put("VIEW", VIEW);
+        hCommands.put("TRIGGER", TRIGGER);
+        hCommands.put("USER", USER);
+        hCommands.put("ALIAS", ALIAS);
+        hCommands.put("PRIMARY", PRIMARY);
+        hCommands.put("PASSWORD", PASSWORD);
+        hCommands.put("READONLY", READONLY);
+        hCommands.put("LOGSIZE", LOGSIZE);
+        hCommands.put("LOGTYPE", LOGTYPE);
+        hCommands.put("IGNORECASE", IGNORECASE);
+        hCommands.put("MAXROWS", MAXROWS);
+        hCommands.put("AUTOCOMMIT", AUTOCOMMIT);
+        hCommands.put("SOURCE", SOURCE);
+        hCommands.put("WRITE_DELAY", WRITE_DELAY);
+        hCommands.put("REFERENTIAL_INTEGRITY", REFERENTIAL_INTEGRITY);
+        hCommands.put("START", START);
     }
 }

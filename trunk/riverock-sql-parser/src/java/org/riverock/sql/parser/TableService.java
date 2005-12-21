@@ -122,7 +122,7 @@ public class TableService
             addAndCondition( tableFilter, e );
 
             return;
-        }
+        }               
 
         int i = e1.getColumnNumber();
 

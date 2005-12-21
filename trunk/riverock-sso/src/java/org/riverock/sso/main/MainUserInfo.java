@@ -69,7 +69,7 @@ public class MainUserInfo extends UserInfoImpl {
 
         sql_ =
             "select a.* " +
-            "from   MAIN_USER_INFO a, WM_AUTH_USER b " +
+            "from   WM_LIST_USER a, WM_AUTH_USER b " +
             "where  a.id_user = b.id_user and b.user_login = ? ";
 
         DatabaseAdapter db_ = null;

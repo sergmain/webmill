@@ -47,24 +47,20 @@ import org.riverock.webmill.container.portlet.bean.InitParam;
  * $Id$
  */
 public final class PortletService {
-//    private final static Logger log = Logger.getLogger( PortletService.class );
 
-    public static void put( final Map map, final String key, final Object value ) {
-        Object obj = map.get( key );
+/*
+    public static void put( final Map<String, List<Object>> map, final String key, final Object value ) {
+        List<Object> obj = map.get( key );
         if (obj==null) {
-            map.put( key, value );
-        }
-        else if (obj instanceof List ) {
-            ((List)obj).add( value );
-        }
-        else {
-            map.remove( key );
-            List list = new ArrayList();
-            list.add( obj );
+            List<Object> list = new ArrayList<Object>();
             list.add( value );
             map.put( key, list );
         }
+        else {
+            obj.add( value );
+        }
     }
+*/
 
     public static boolean isEmpty( final String s) {
         if (s==null || s.trim().length()==0)

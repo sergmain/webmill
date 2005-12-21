@@ -39,33 +39,29 @@
 	<LogicPrefix>IS_</LogicPrefix>
 	<OrderField>ORDER_FIELD</OrderField>
 
-	<DbTablePrefix>SITE_LIST_SITE</DbTablePrefix>
-	<DbTablePrefix>SITE_SUPPORT_LANGUAGE</DbTablePrefix>
-	<DbTablePrefix>SITE_TEMPLATE</DbTablePrefix>
-	<DbTablePrefix>SITE_ACCESS_STAT</DbTablePrefix>
-	<DbTablePrefix>SITE_ACCESS_URL</DbTablePrefix>
-	<DbTablePrefix>SITE_ACCESS_STAT</DbTablePrefix>
-	<DbTablePrefix>SITE_ACCESS_USER_AGENT</DbTablePrefix>
-	<DbTablePrefix>SITE_XSLT</DbTablePrefix>
-	<DbTablePrefix>SITE_XSLT_DATA</DbTablePrefix>
-	<DbTablePrefix>SITE_VIRTUAL_HOST</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_TYPE</DbTablePrefix>
-	<DbTablePrefix>SITE_CONTENT_CSS</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_CATALOG</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_LANG_CATALOG</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_ARTICLE</DbTablePrefix>
-	<DbTablePrefix>MAIN_LANGUAGE</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_LIST_SITE</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_SITE_LANGUAGE</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_TEMPLATE</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_ACCESS</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_XSLT</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_VIRTUAL_HOST</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_PORTLET_NAME</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_CSS</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_CATALOG</DbTablePrefix>
+	<DbTablePrefix>WM_PORTAL_CATALOG_LANGUAGE</DbTablePrefix>
+	<DbTablePrefix>WM_PORTLET_ARTICLE</DbTablePrefix>
+	<DbTablePrefix>WM_LIST_LANGUAGE</DbTablePrefix>
 
 	<DbTablePrefix>WM_NEWS</DbTablePrefix>
 
 	<TableToList>WM_NEWS_ITEM</TableToList>
-	<TableToList>MAIN_LANGUAGE</TableToList>
-	<TableToList>SITE_CTX_CATALOG</TableToList>
-	<TableToList>SITE_CTX_TYPE</TableToList>
-	<TableToList>SITE_CONTENT_CSS</TableToList>
-	<TableToList>SITE_ACCESS_URL</TableToList>
-	<TableToList>SITE_ACCESS_USER_AGENT</TableToList>
-	<TableToList>SITE_VIRTUAL_HOST</TableToList>
+	<TableToList>WM_LIST_LANGUAGE</TableToList>
+	<TableToList>WM_PORTAL_CATALOG</TableToList>
+	<TableToList>WM_PORTAL_PORTLET_NAME</TableToList>
+	<TableToList>WM_PORTAL_CSS</TableToList>
+	<TableToList>WM_PORTAL_ACCESS_URL</TableToList>
+	<TableToList>WM_PORTAL_ACCESS_USER_AGENT</TableToList>
+	<TableToList>WM_PORTAL_VIRTUAL_HOST</TableToList>
 	<Logger>
 		<LogObjectClassName>org.apache.log4j.Logger</LogObjectClassName>
 		<LogFactoryMethod>org.apache.log4j.Logger.getLogger</LogFactoryMethod>

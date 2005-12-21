@@ -96,6 +96,7 @@
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
         <property name="tld-path" value="/org/riverock/webmill/container/tags"/>

@@ -78,7 +78,7 @@ public final class PortletContainer implements Serializable {
     private static PortletDefinitionProcessor portletDefinitionProcessor = new PortletDefinitionProcessorImpl();
 
     // in this map as key used unique name
-    private Map<String, PortletEntry> portletInstanceUniqueNameMap = new HashMap<String, PortletEntry>();
+    private Map<String, List<PortletEntry>> portletInstanceUniqueNameMap = new HashMap<String, List<PortletEntry>>();
     //
     private Map<String, PortletEntry> portletInstanceMap = new HashMap<String, PortletEntry>();
 
@@ -202,21 +202,13 @@ public final class PortletContainer implements Serializable {
                 PortletContainer container = it.next();
                 System.out.println( "Portlet container instance: " + container );
 
-                Object object = container.portletInstanceUniqueNameMap.get( uniqueName );
-                System.out.println( "Portlet entries for unique name '"+uniqueName+"': " + object );
-                if (object!=null) {
-                    if (object instanceof List) {
-                        Iterator listIterator = ((List)object).iterator();
-                        while (listIterator.hasNext()) {
-                            PortletEntry portletEntry = (PortletEntry) listIterator.next();
-                            destroyPortlet( container, portletEntry, uniqueName );
-                        }
-                    }
-                    else if ( object instanceof PortletEntry ) {
-                        destroyPortlet( container, (PortletEntry)object, uniqueName );
-                    }
-                    else {
-                        throw new IllegalStateException( "Unknown type of object: " + object.getClass().getName() );
+                List<PortletEntry> portletEntries = container.portletInstanceUniqueNameMap.get( uniqueName );
+                System.out.println( "Portlet entries for unique name '"+uniqueName+"': " + portletEntries );
+                if (portletEntries!=null) {
+                    Iterator<PortletEntry> listIterator = portletEntries.iterator();
+                    while (listIterator.hasNext()) {
+                        PortletEntry portletEntry = listIterator.next();
+                        destroyPortlet( container, portletEntry, uniqueName );
                     }
                     container.portletInstanceUniqueNameMap.remove( uniqueName );
                 }
@@ -301,7 +293,7 @@ public final class PortletContainer implements Serializable {
                 throw new PortletContainerException(es);
             }
 
-            PortletService.put( portletInstanceUniqueNameMap, newPortlet.getUniqueName(), newPortlet );
+            addPortletEntry( portletInstanceUniqueNameMap, newPortlet.getUniqueName(), newPortlet );
             portletInstanceMap.put( portletName, newPortlet );
             return newPortlet;
         }
@@ -433,6 +425,18 @@ public final class PortletContainer implements Serializable {
         }
 
         return null;
+    }
+
+    private static void addPortletEntry( Map<String, List<PortletEntry>> map, final String key, final PortletEntry value ) {
+        List<PortletEntry> list = map.get( key );
+        if (list==null) {
+            List<PortletEntry> portletEntries = new ArrayList<PortletEntry>();
+            portletEntries.add( value );
+            map.put( key, portletEntries );
+        }
+        else {
+            list.add( value );
+        }
     }
 
     public PortletContentCache getContentCache() {

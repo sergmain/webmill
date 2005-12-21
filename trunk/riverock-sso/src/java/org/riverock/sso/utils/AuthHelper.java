@@ -71,7 +71,7 @@ public class AuthHelper {
         return r;
     }
 
-    public static List getGrantedUserIdList(DatabaseAdapter adapter, String username)
+    public static List<Long> getGrantedUserIdList(DatabaseAdapter adapter, String username)
         throws SQLException
     {
         PreparedStatement ps = null;
@@ -85,7 +85,7 @@ public class AuthHelper {
 
             rs = ps.executeQuery();
 
-            List list = new ArrayList();
+            List<Long> list = new ArrayList<Long>();
             while(rs.next())
             {
                 Long id = RsetTools.getLong(rs, "ID_USER" );
@@ -107,10 +107,10 @@ public class AuthHelper {
         }
     }
 
-    public static String getGrantedFirmId(DatabaseAdapter adapter, String username)
+    public static String getGrantedCompanyId(DatabaseAdapter adapter, String username)
         throws SQLException
     {
-        List list = getGrantedFirmIdList(adapter, username);
+        List list = getGrantedCompanyIdList(adapter, username);
         if (list.size()==0)
             return "NULL";
 
@@ -125,7 +125,7 @@ public class AuthHelper {
         return r;
     }
 
-    public static List getGrantedFirmIdList(DatabaseAdapter adapter, String username)
+    public static List<Long> getGrantedCompanyIdList(DatabaseAdapter adapter, String username)
         throws SQLException
     {
         PreparedStatement ps = null;
@@ -137,16 +137,16 @@ public class AuthHelper {
                 "where   a01.is_use_current_firm = 1 and a01.user_login=? " +
                 "union " +
                 "select  d02.id_firm " +
-                "from    WM_AUTH_USER a02, main_relate_service_firm d02 " +
+                "from    WM_AUTH_USER a02, WM_LIST_R_GROUP_COMPANY_COMPANY d02 " +
                 "where   a02.is_service = 1 and a02.id_service = d02.id_service and a02.user_login=? " +
                 "union " +
                 "select  e03.id_firm " +
-                "from    WM_AUTH_USER a03, main_relate_road_service d03, main_relate_service_firm e03 " +
+                "from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GROUP_COMPANY d03, WM_LIST_R_GROUP_COMPANY_COMPANY e03 " +
                 "where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service and " +
                 "        a03.user_login=? " +
                 "union " +
                 "select  b04.id_firm " +
-                "from    WM_AUTH_USER a04, main_list_firm b04 " +
+                "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04 " +
                 "where   a04.is_root = 1 and a04.user_login=? ";
 
             ps = adapter.prepareStatement(sql_);
@@ -157,7 +157,7 @@ public class AuthHelper {
 
             rs = ps.executeQuery();
 
-            List list = new ArrayList();
+            List<Long> list = new ArrayList<Long>();
             while(rs.next())
             {
                 Long id = RsetTools.getLong(rs, "ID_FIRM" );
@@ -179,10 +179,10 @@ public class AuthHelper {
         }
     }
 
-    public static String getGrantedServiceId(DatabaseAdapter adapter, String username)
+    public static String getGrantedGroupCompanyId(DatabaseAdapter adapter, String username)
         throws SQLException
     {
-        List list = getGrantedServiceIdList(adapter, username);
+        List list = getGrantedGroupCompanyIdList(adapter, username);
         if (list.size()==0)
             return "NULL";
 
@@ -197,7 +197,7 @@ public class AuthHelper {
         return r;
     }
 
-    public static List getGrantedServiceIdList(DatabaseAdapter adapter, String username)
+    public static List<Long> getGrantedGroupCompanyIdList(DatabaseAdapter adapter, String username)
         throws SQLException
     {
         PreparedStatement ps = null;
@@ -209,11 +209,11 @@ public class AuthHelper {
                 "where   a01.is_service = 1 and a01.user_login=?  "+
                 "union "+
                 "select  b02.id_service "+
-                "from    WM_AUTH_USER a02, main_relate_road_service b02 "+
+                "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_GROUP_COMPANY b02 "+
                 "where   a02.is_road = 1 and a02.id_road = b02.id_road and a02.user_login=?  "+
                 "union "+
                 "select  b04.id_service "+
-                "from    WM_AUTH_USER a04, main_list_service b04 "+
+                "from    WM_AUTH_USER a04, WM_LIST_GROUP_COMPANY b04 "+
                 "where   a04.is_root = 1 and a04.user_login=? ";
 
 
@@ -224,7 +224,7 @@ public class AuthHelper {
 
             rs = ps.executeQuery();
 
-            List list = new ArrayList();
+            List<Long> list = new ArrayList<Long>();
             while(rs.next())
             {
                 Long id = RsetTools.getLong(rs, "id_service" );
@@ -246,10 +246,10 @@ public class AuthHelper {
         }
     }
 
-    public static String getGrantedRoadId(DatabaseAdapter adapter, String username)
+    public static String getGrantedHoldingId(DatabaseAdapter adapter, String username)
         throws SQLException
     {
-        List list = getGrantedRoadIdList(adapter, username);
+        List list = getGrantedHoldingIdList(adapter, username);
         if (list.size()==0)
             return "NULL";
 
@@ -264,7 +264,7 @@ public class AuthHelper {
         return r;
     }
 
-    public static List getGrantedRoadIdList(DatabaseAdapter adapter, String username)
+    public static List<Long> getGrantedHoldingIdList(DatabaseAdapter adapter, String username)
         throws SQLException
     {
         PreparedStatement ps = null;
@@ -276,7 +276,7 @@ public class AuthHelper {
                 "where   a01.is_road=1 and a01.user_login=?  "+
                 "union "+
                 "select  b04.id_road "+
-                "from    WM_AUTH_USER a04, main_list_road b04 "+
+                "from    WM_AUTH_USER a04, WM_LIST_HOLDING b04 "+
                 "where   a04.is_root=1 and a04.user_login=?";
 
             ps = adapter.prepareStatement(sql_);
@@ -285,7 +285,7 @@ public class AuthHelper {
 
             rs = ps.executeQuery();
 
-            List list = new ArrayList();
+            List<Long> list = new ArrayList<Long>();
             while(rs.next())
             {
                 Long id = RsetTools.getLong(rs, "id_road" );

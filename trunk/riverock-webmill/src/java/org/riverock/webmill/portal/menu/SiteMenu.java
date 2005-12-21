@@ -33,11 +33,11 @@ import java.util.Iterator;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
-import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
-import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
 import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
 
 import org.apache.log4j.Logger;
@@ -55,7 +55,7 @@ public final class SiteMenu {
         try {
             Class c = SiteMenu.class;
             SqlStatement.registerRelateClass( c, MenuLanguage.class );
-            SqlStatement.registerRelateClass( c, GetSiteSupportLanguageWithIdSiteList.class );
+            SqlStatement.registerRelateClass( c, GetWmPortalSiteLanguageWithIdSiteList.class );
         }
         catch( Exception exception ) {
             final String es = "Exception in ";
@@ -135,14 +135,14 @@ public final class SiteMenu {
         }
 
         try {
-            SiteSupportLanguageListType list = PortalInfoImpl.processSupportLanguage( db_, idSite );
+            WmPortalSiteLanguageListType list = PortalInfoImpl.processSupportLanguage( db_, idSite );
 
             if (log.isDebugEnabled()) {
-                log.debug("Count of language for this site is "+list.getSiteSupportLanguageCount());
+                log.debug("Count of language for this site is "+list.getWmPortalSiteLanguageCount());
             }
 
-            for (int i=0; i<list.getSiteSupportLanguageCount(); i++) {
-                SiteSupportLanguageItemType item = list.getSiteSupportLanguage(i);
+            for (int i=0; i<list.getWmPortalSiteLanguageCount(); i++) {
+                WmPortalSiteLanguageItemType item = list.getWmPortalSiteLanguage(i);
                 menuLanguage.add( new MenuLanguage(db_, item) );
             }
         }

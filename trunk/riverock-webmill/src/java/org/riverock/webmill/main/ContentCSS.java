@@ -90,9 +90,9 @@ public final class ContentCSS
 
     static String sql_ =
         "select a.date_post, b.css_data " +
-        "from SITE_CONTENT_CSS a, SITE_CONTENT_CSS_DATA b " +
-        "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.is_current=1 and " +
-        "a.id_site_content_css=b.id_site_content_css " +
+        "from   WM_PORTAL_CSS a, WM_PORTAL_CSS_DATA b " +
+        "where  a.ID_SITE_SUPPORT_LANGUAGE=? and a.is_current=1 and " +
+        "       a.id_site_content_css=b.id_site_content_css " +
         "order by ID_SITE_CONTENT_CSS_DATA asc";
     static {
         try {

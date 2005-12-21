@@ -35,16 +35,8 @@ package org.riverock.webmill.test.cases;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.webmill.config.WebmillConfig;
-
-import org.riverock.webmill.schema.core.SiteVirtualHostItemType;
-import org.riverock.webmill.container.schema.site.TemplateItemType;
-import org.riverock.webmill.container.schema.site.SiteTemplateParameterType;
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
-import org.riverock.webmill.core.GetSiteVirtualHostItem;
-import org.riverock.webmill.portlet.menu.InternalTestMenuSimple;
-import org.riverock.webmill.portlet.menu.MenuSimple;
-
-import junit.framework.TestCase;
+import org.riverock.webmill.core.GetWmPortalVirtualHostItem;
+import org.riverock.webmill.schema.core.WmPortalVirtualHostItemType;
 
 public class TestCaseMenu // extends TestCase implements TestCaseInterface
 {
@@ -241,7 +233,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
         org.riverock.generic.startup.StartupApplication.init();
 
         long id = 1;
-        SiteVirtualHostItemType resultItem = GetSiteVirtualHostItem.getInstance( DatabaseAdapter.getInstance( false ), id ).item;
+        WmPortalVirtualHostItemType resultItem = GetWmPortalVirtualHostItem.getInstance( DatabaseAdapter.getInstance(), id ).item;
 
         String[][] ns = new String[][]
         {
@@ -250,7 +242,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
 
         XmlTools.writeToFile(
             resultItem,
-            WebmillConfig.getWebmillDebugDir()+"test-site_virtual_host-item.xml",
+            WebmillConfig.getWebmillDebugDir()+"test-WM_PORTAL_VIRTUAL_HOST-item.xml",
             "utf-8",
             null,
             ns

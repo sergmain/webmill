@@ -131,7 +131,7 @@ public class TestParser
     {
 
         doProcess(
-            "insert into price_import_table " +
+            "insert into WM_PRICE_IMPORT_TABLE " +
             "( is_group, id ) " +
             "values " +
             "( ?, 'abc' )",
@@ -139,7 +139,7 @@ public class TestParser
             new String[]{""} );
 
         doProcess(
-            "insert into price_import_table " +
+            "insert into WM_PRICE_IMPORT_TABLE " +
             "( is_group, id ) " +
             "values " +
             "( ?, upper(?) )",
@@ -178,11 +178,11 @@ public class TestParser
     {
         doProcess(
             "select b.id_firm id, concat(b.id_firm, ', ', b.full_name) NAME_FIRM "+
-            "from   main_LIST_FIRM b "+
+            "from   WM_LIST_COMPANY b "+
             "where  b.ID_FIRM in (10,12) and b.is_deleted=0 "+
             "order  by b.ID_FIRM ASC ",
             "parser-select-22.xml",
-            new String[]{"main_LIST_FIRM"}
+            new String[]{"WM_LIST_COMPANY"}
     );
 /*
         doProcess(
@@ -217,7 +217,7 @@ public class TestParser
             "parser-select-4.xml"
         );
         parser = doProcess(
-            "select ID_LANGUAGE from MAIN_LANGUAGE where lower(SHORT_NAME_LANGUAGE) like 'ru_ru%'",
+            "select ID_LANGUAGE from WM_LIST_LANGUAGE where lower(SHORT_NAME_LANGUAGE) like 'ru_ru%'",
             "parser-select-5.xml"
         );
         parser = doProcess(

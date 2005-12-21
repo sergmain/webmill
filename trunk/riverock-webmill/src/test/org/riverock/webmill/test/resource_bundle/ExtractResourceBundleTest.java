@@ -39,7 +39,7 @@ public class ExtractResourceBundleTest {
             db_ = DatabaseAdapter.getInstance();
             String sql_ =
                 "select d.SHORT_NAME_LANGUAGE, d.ID_LANGUAGE " +
-                "from   main_language d ";
+                "from   WM_LIST_LANGUAGE d ";
 
             st = db_.prepareStatement(sql_);
             rs = st.executeQuery();
@@ -64,7 +64,7 @@ public class ExtractResourceBundleTest {
 
         String sql_ =
             "select distinct a.NAME_STORAGE, a.ID_MAIN_I18N_STORAGE " +
-            "from  main_i18n_storage a, main_i18n_item b, main_i18n_message c " +
+            "from  main_i18n_storage a, WM_I18N_ITEM b, WM_I18N_MESSAGE c " +
             "where a.ID_MAIN_I18N_STORAGE=b.ID_MAIN_I18N_STORAGE and " +
             "b.ID_MAIN_I18N_ITEM=c.ID_MAIN_I18N_ITEM and c.ID_LANGUAGE=? ";
 
@@ -89,9 +89,9 @@ public class ExtractResourceBundleTest {
 
         String sql_ =
             "select b.NAME_ITEM, c.MESSAGE " +
-            "from   main_i18n_item b, main_i18n_message c " +
+            "from   WM_I18N_ITEM b, WM_I18N_MESSAGE c " +
             "where  b.ID_MAIN_I18N_STORAGE=? and " +
-            "b.ID_MAIN_I18N_ITEM=c.ID_MAIN_I18N_ITEM and c.ID_LANGUAGE=? ";
+            "       b.ID_MAIN_I18N_ITEM=c.ID_MAIN_I18N_ITEM and c.ID_LANGUAGE=? ";
 
         st = db_.prepareStatement(sql_);
         st.setInt( 1, storageId );

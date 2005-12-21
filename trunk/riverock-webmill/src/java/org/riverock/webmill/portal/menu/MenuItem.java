@@ -32,13 +32,13 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portlet.menu.MenuItemInterface;
-import org.riverock.webmill.core.GetSiteCtxTypeItem;
-import org.riverock.webmill.core.GetSiteTemplateItem;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
-import org.riverock.webmill.schema.core.SiteCtxTypeItemType;
-import org.riverock.webmill.schema.core.SiteTemplateItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
+import org.riverock.webmill.schema.core.WmPortalTemplateItemType;
+import org.riverock.webmill.schema.core.WmPortalPortletNameItemType;
+import org.riverock.webmill.core.GetWmPortalTemplateItem;
+import org.riverock.webmill.core.GetWmPortalPortletNameItem;
 
 /**
  *
@@ -48,7 +48,7 @@ import org.riverock.webmill.schema.core.SiteTemplateItemType;
 public final class MenuItem implements MenuItemInterface{
     private final static Logger log = Logger.getLogger( MenuItem.class );
 
-    private SiteCtxCatalogItemType ctx = null;
+    private WmPortalCatalogItemType ctx = null;
     private String nameTemplate = null;
     private String type = "";
 
@@ -78,7 +78,7 @@ public final class MenuItem implements MenuItemInterface{
             "template: "+nameTemplate+",name: "+menuName+",url: "+getUrl()+"]";
     }
 
-    public MenuItem(DatabaseAdapter db_, SiteCtxCatalogItemType ctxItem) throws PortalException{
+    public MenuItem(DatabaseAdapter db_, WmPortalCatalogItemType ctxItem) throws PortalException{
 
         this.ctx = ctxItem;
         if (log.isDebugEnabled()){
@@ -95,11 +95,11 @@ public final class MenuItem implements MenuItemInterface{
 
         try {
             if (db_!=null) {
-                SiteTemplateItemType template = GetSiteTemplateItem.getInstance(db_, ctx.getIdSiteTemplate()).item;
+                WmPortalTemplateItemType template = GetWmPortalTemplateItem.getInstance(db_, ctx.getIdSiteTemplate()).item;
                 if (template!=null)
                     this.nameTemplate = template.getNameSiteTemplate();
 
-                SiteCtxTypeItemType ctxType = GetSiteCtxTypeItem.getInstance(db_, ctx.getIdSiteCtxType()).item;
+                WmPortalPortletNameItemType ctxType = GetWmPortalPortletNameItem.getInstance(db_, ctx.getIdSiteCtxType()).item;
                 if (ctxType!=null)
                     this.type = ctxType.getType();
             }

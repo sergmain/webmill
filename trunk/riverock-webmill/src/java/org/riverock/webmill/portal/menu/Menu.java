@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.webmill.portal.menu;
 
 import org.apache.log4j.Logger;
@@ -31,12 +30,12 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.menu.MenuInterface;
 import org.riverock.interfaces.portlet.menu.MenuItemInterface;
-import org.riverock.webmill.core.GetSiteCtxCatalogWithIdSiteCtxLangCatalogList;
+import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
 import org.riverock.webmill.exception.PortalException;
 
-import org.riverock.webmill.schema.core.SiteCtxCatalogItemType;
-import org.riverock.webmill.schema.core.SiteCtxCatalogListType;
-import org.riverock.webmill.schema.core.SiteCtxLangCatalogItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
+import org.riverock.webmill.schema.core.WmPortalCatalogListType;
+import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
@@ -52,9 +51,9 @@ public final class Menu implements MenuInterface {
     private final static Logger log = Logger.getLogger( Menu.class );
 
     static{
-        Class c = new Menu().getClass();
+        Class c = Menu.class;
         try{
-            SqlStatement.registerRelateClass( c, new GetSiteCtxCatalogWithIdSiteCtxLangCatalogList().getClass() );
+            SqlStatement.registerRelateClass( c, GetWmPortalCatalogWithIdSiteCtxLangCatalogList.class );
         }
         catch( Exception exception ) {
             final String es = "Exception in SqlStatement.registerRelateClass()";
@@ -181,7 +180,7 @@ public final class Menu implements MenuInterface {
         return false;
     }
 
-    public Menu(DatabaseAdapter db_, SiteCtxLangCatalogItemType item_) throws Exception {
+    public Menu(DatabaseAdapter db_, WmPortalCatalogLanguageItemType item_) throws Exception {
 
         if (item_==null){
             throw new PortalException("Item of menu is null");
@@ -195,15 +194,15 @@ public final class Menu implements MenuInterface {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try{
-            SiteCtxCatalogListType catalogList =
-                    GetSiteCtxCatalogWithIdSiteCtxLangCatalogList.getInstance(db_, item_.getIdSiteCtxLangCatalog()).item;
+            WmPortalCatalogListType catalogList =
+                    GetWmPortalCatalogWithIdSiteCtxLangCatalogList.getInstance(db_, item_.getIdSiteCtxLangCatalog()).item;
 
-            List list = catalogList.getSiteCtxCatalogAsReference();
+            List list = catalogList.getWmPortalCatalogAsReference();
             Collections.sort(list, new MenuItemComparator());
 
             Iterator it = list.iterator();
             while (it.hasNext()){
-                SiteCtxCatalogItemType item = (SiteCtxCatalogItemType)it.next();
+                WmPortalCatalogItemType item = (WmPortalCatalogItemType)it.next();
 
                 // Dont include menuitem with id_template==null to menu
                 if (item.getIdSiteTemplate()!=null)
@@ -242,24 +241,24 @@ public final class Menu implements MenuInterface {
                 return -1;
 
             // "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC ";
-            if (((SiteCtxCatalogItemType)o1).getIdTopCtxCatalog().equals(((SiteCtxCatalogItemType)o2).getIdTopCtxCatalog()))
+            if (((WmPortalCatalogItemType)o1).getIdTopCtxCatalog().equals(((WmPortalCatalogItemType)o2).getIdTopCtxCatalog()))
             {
-                if (((SiteCtxCatalogItemType)o1).getOrderField()==null &&
-                        ((SiteCtxCatalogItemType)o2).getOrderField()==null)
+                if (((WmPortalCatalogItemType)o1).getOrderField()==null &&
+                        ((WmPortalCatalogItemType)o2).getOrderField()==null)
                     return 0;
 
-                if (((SiteCtxCatalogItemType)o1).getOrderField()!=null &&
-                        ((SiteCtxCatalogItemType)o2).getOrderField()==null)
+                if (((WmPortalCatalogItemType)o1).getOrderField()!=null &&
+                        ((WmPortalCatalogItemType)o2).getOrderField()==null)
                     return -1;
 
-                if (((SiteCtxCatalogItemType)o1).getOrderField()==null &&
-                        ((SiteCtxCatalogItemType)o2).getOrderField()!=null)
+                if (((WmPortalCatalogItemType)o1).getOrderField()==null &&
+                        ((WmPortalCatalogItemType)o2).getOrderField()!=null)
                     return 1;
 
-                return ((SiteCtxCatalogItemType)o1).getOrderField().compareTo(((SiteCtxCatalogItemType)o2).getOrderField());
+                return ((WmPortalCatalogItemType)o1).getOrderField().compareTo(((WmPortalCatalogItemType)o2).getOrderField());
             }
             else
-                return ((SiteCtxCatalogItemType)o1).getIdTopCtxCatalog().compareTo(((SiteCtxCatalogItemType)o2).getIdTopCtxCatalog());
+                return ((WmPortalCatalogItemType)o1).getIdTopCtxCatalog().compareTo(((WmPortalCatalogItemType)o2).getIdTopCtxCatalog());
         }
     }
 }

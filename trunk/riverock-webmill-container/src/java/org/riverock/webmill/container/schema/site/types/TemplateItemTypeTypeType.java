@@ -7,7 +7,8 @@
 
 package org.riverock.webmill.container.schema.site.types;
 
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Class TemplateItemTypeTypeType.
@@ -60,7 +61,7 @@ public class TemplateItemTypeTypeType {
     /**
      * Field _memberTable
      */
-    private static java.util.Hashtable _memberTable = init();
+    private static Map<String, TemplateItemTypeTypeType> _memberTable = init();
 
     /**
      * Field type
@@ -79,19 +80,6 @@ public class TemplateItemTypeTypeType {
         this.stringValue = value;
     }
 
-
-    /**
-     * Method enumerate
-     * <p/>
-     * Returns an enumeration of all possible instances of
-     * TemplateItemTypeTypeType
-     *
-     * @return Enumeration
-     */
-    public static java.util.Enumeration enumerate() {
-        return _memberTable.elements();
-    }
-
     /**
      * Method getType
      * <p/>
@@ -108,26 +96,13 @@ public class TemplateItemTypeTypeType {
      *
      * @return Hashtable
      */
-    private static java.util.Hashtable init() {
-        Hashtable members = new Hashtable();
+    private static Map<String, TemplateItemTypeTypeType> init() {
+        Map<String, TemplateItemTypeTypeType> members = new HashMap<String, TemplateItemTypeTypeType>();
         members.put("custom", CUSTOM);
         members.put("portlet", PORTLET);
         members.put("dynamic", DYNAMIC);
         members.put("file", FILE);
         return members;
-    }
-
-    /**
-     * Method readResolve
-     * <p/>
-     * will be called during deserialization to replace the
-     * deserialized object with the correct constant instance.
-     * <br/>
-     *
-     * @return Object
-     */
-    private java.lang.Object readResolve() {
-        return valueOf(this.stringValue);
     }
 
     /**

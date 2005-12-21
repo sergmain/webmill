@@ -123,7 +123,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
 
     public boolean checkAccess(final AuthSessionImpl authSession, final String serverName) {
         if (ctx == null) {
-            Hashtable env = new Hashtable(5, 1.1f);
+            Hashtable<String, String> env = new Hashtable<String, String>(5, 1.1f);
             /*
             * Specify the initial context implementation to use.
             * For example,

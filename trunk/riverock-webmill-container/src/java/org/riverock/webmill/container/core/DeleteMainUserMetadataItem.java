@@ -1,3 +1,4 @@
+//Todo add copyright
 package org.riverock.webmill.container.core;
 
 import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
@@ -18,7 +19,7 @@ public class DeleteMainUserMetadataItem
      public static long process(org.riverock.generic.db.DatabaseAdapter db_, MainUserMetadataItemType item)  throws javax.portlet.PortletException      {
 
          String sql_ =
-             "delete from MAIN_USER_METADATA "+
+             "delete from WM_LIST_USER_METADATA "+
              "where ID_MAIN_USER_METADATA=?";
 
          PreparedStatement ps = null;

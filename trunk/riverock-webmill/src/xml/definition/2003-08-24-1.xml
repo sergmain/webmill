@@ -39,7 +39,7 @@
 						<Data>org.riverock.db.definition.AddRecordToList</Data>
 					</Parameter>
 					<Parameter name="name_table">
-						<Data>SITE_CTX_TYPE</Data>
+						<Data>WM_PORTAL_PORTLET_NAME</Data>
 					</Parameter>
 					<Parameter name="name_pk_field">
 						<Data>ID_SITE_CTX_TYPE</Data>
@@ -62,7 +62,7 @@
 						<Data>org.riverock.db.definition.AddRecordToList</Data>
 					</Parameter>
 					<Parameter name="name_table">
-						<Data>SITE_CTX_TYPE</Data>
+						<Data>WM_PORTAL_PORTLET_NAME</Data>
 					</Parameter>
 					<Parameter name="name_pk_field">
 						<Data>ID_SITE_CTX_TYPE</Data>

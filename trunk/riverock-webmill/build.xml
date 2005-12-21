@@ -483,6 +483,7 @@ cd ..\..
             <classpath>
                 <path refid="classpath-base"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
@@ -498,6 +499,7 @@ cd ..\..
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
 
         <javac
@@ -529,6 +531,7 @@ cd ..\..
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
         <antcall target="delete_existing_files"/>
@@ -547,6 +550,7 @@ cd ..\..
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 

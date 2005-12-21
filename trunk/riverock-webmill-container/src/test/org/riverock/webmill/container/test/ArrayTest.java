@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class ArrayTest {
     public static void main(String[] args) {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
 
         list.add("aaa");
         list.add("bbb");

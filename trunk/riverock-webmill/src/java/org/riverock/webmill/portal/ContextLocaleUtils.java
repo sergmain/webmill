@@ -37,12 +37,12 @@ import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
 import org.riverock.webmill.exception.PortalPersistenceException;
 
-import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
-import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.utils.ServletUtils;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
+import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
 
 /**
  * $Id$
@@ -74,8 +74,8 @@ public final class ContextLocaleUtils {
         // AcceptLanguageWithLevel[] accept =
         List acceptVector = Header.getAcceptLanguageAsList( request );
 
-        SiteSupportLanguageListType supportLanguageList =
-              GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
+        WmPortalSiteLanguageListType supportLanguageList =
+              GetWmPortalSiteLanguageWithIdSiteList.getInstance(db_, siteId).item;
 
         if (log.isDebugEnabled())
             log.debug("Start looking for preffered locale");
@@ -83,7 +83,7 @@ public final class ContextLocaleUtils {
         // Locale not queried in URL
         Locale tempLocale = null;
         AcceptLanguageWithLevel bestAccept = null;
-        SiteSupportLanguageItemType includedFromCookie = null;
+        WmPortalSiteLanguageItemType includedFromCookie = null;
 
         Cookie[] cookies_req = request.getCookies();
         if (cookies_req!=null) {
@@ -115,7 +115,7 @@ public final class ContextLocaleUtils {
                     if (log.isDebugEnabled())
                         log.debug("Accepted locale item, locale - "+ accept.locale+", level - "+ accept.level);
 
-                    SiteSupportLanguageItemType included = includedAccept(accept.locale, supportLanguageList );
+                    WmPortalSiteLanguageItemType included = includedAccept(accept.locale, supportLanguageList );
 
                     if (log.isDebugEnabled()) log.debug("included - "+included);
 
@@ -140,7 +140,7 @@ public final class ContextLocaleUtils {
         return tempLocale;
     }
 
-    private static SiteSupportLanguageItemType includedAccept( final Locale accept, final SiteSupportLanguageListType supportLanguageList ) {
+    private static WmPortalSiteLanguageItemType includedAccept( final Locale accept, final WmPortalSiteLanguageListType supportLanguageList ) {
 
         boolean hasVariant = (accept.getVariant()!=null && accept.getVariant().trim().length()>0);
         boolean hasCountry = (accept.getCountry()!=null && accept.getCountry().trim().length()>0);
@@ -149,21 +149,21 @@ public final class ContextLocaleUtils {
             log.debug("accept locale: "+accept.toString()+", hasVariant - "+hasVariant + ", hasCountry - "+hasCountry);
         }
 
-        SiteSupportLanguageItemType result = null;
+        WmPortalSiteLanguageItemType result = null;
         Locale rl = null;
-        SiteSupportLanguageItemType resultTemp = null;
+        WmPortalSiteLanguageItemType resultTemp = null;
         Locale rlTemp = null;
-        for (int i=0; i<supportLanguageList.getSiteSupportLanguageCount(); i++){
-            SiteSupportLanguageItemType sl = supportLanguageList.getSiteSupportLanguage(i);
+        for (int i=0; i<supportLanguageList.getWmPortalSiteLanguageCount(); i++){
+            WmPortalSiteLanguageItemType sl = supportLanguageList.getWmPortalSiteLanguage(i);
 
             Locale cl = StringTools.getLocale( sl.getCustomLanguage() );
 
             if (log.isDebugEnabled()) {
                 if (cl==null) {
-                    log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale is null");
+                    log.debug("WmPortalSiteLanguageItemType.getNameCustomLanguage locale is null");
                 }
                 else {
-                    log.debug("SiteSupportLanguageItemType.getNameCustomLanguage locale - "+cl.toString());
+                    log.debug("WmPortalSiteLanguageItemType.getNameCustomLanguage locale - "+cl.toString());
                 }
             }
 
@@ -217,9 +217,9 @@ public final class ContextLocaleUtils {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Result SiteSupportLanguageItemType: "+result);
+            log.debug("Result WmPortalSiteLanguageItemType: "+result);
             if (result!=null) {
-                log.debug("Result SiteSupportLanguageItemType.getCustomLanguage is: "+result.getCustomLanguage());
+                log.debug("Result WmPortalSiteLanguageItemType.getCustomLanguage is: "+result.getCustomLanguage());
             }
         }
         return result;

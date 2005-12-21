@@ -36,11 +36,11 @@ package org.riverock.webmill.as.service;
 import org.riverock.webmill.as.ApplicationInterface;
 import org.riverock.webmill.as.server.ApplicationTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.webmill.core.GetSiteListSiteItem;
 import org.riverock.webmill.schema.appl_server.ResourceRequestParameterType;
 import org.riverock.webmill.schema.appl_server.ResourceRequestType;
-import org.riverock.webmill.schema.core.SiteListSiteItemType;
+import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
 import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.webmill.core.GetWmPortalListSiteItem;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
@@ -102,7 +102,7 @@ public class DoRegister implements ApplicationInterface
 
         long id = 1;
         DatabaseAdapter adapter = DatabaseAdapter.getInstance();
-        SiteListSiteItemType resultItem = GetSiteListSiteItem.getInstance( adapter, id ).item;
+        WmPortalListSiteItemType resultItem = GetWmPortalListSiteItem.getInstance( adapter, id ).item;
 
         String[][] ns = new String[][]
         {
@@ -111,7 +111,7 @@ public class DoRegister implements ApplicationInterface
 
         XmlTools.writeToFile(
             resultItem,
-            WebmillConfig.getWebmillDebugDir() + "test-site_list_site-item.xml",
+            WebmillConfig.getWebmillDebugDir() + "test-WM_PORTAL_LIST_SITE-item.xml",
             "utf-8",
             null,
             ns

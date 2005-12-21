@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Apr 27, 2003
- * Time: 3:05:14 PM
- *
- * $Id$
- */
 package org.riverock.sql.parser;
 
 import java.sql.Types;
@@ -44,10 +36,17 @@ import org.riverock.schema.sql.TableType;
 import org.riverock.schema.sql.ValueItemType;
 import org.riverock.schema.sql.types.AggregateSpecType;
 
+/**
+ * User: Admin
+ * Date: Apr 27, 2003
+ * Time: 3:05:14 PM
+ *
+ * $Id$
+ */
 public class ExpressionService
 {
-    static final Integer INTEGER_0 = new Integer( 0 );
-    static final Integer INTEGER_1 = new Integer( 1 );
+    static final Integer INTEGER_0 = 0;
+    static final Integer INTEGER_1 = 1;
     // leaf types
     static final int VALUE = 1;
     static final int COLUMN = 2;

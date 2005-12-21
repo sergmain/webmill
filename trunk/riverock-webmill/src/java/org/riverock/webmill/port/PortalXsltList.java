@@ -96,10 +96,10 @@ public final class PortalXsltList {
 
         String sql_ =
                 "select a.CUSTOM_LANGUAGE, d.ID_SITE_XSLT " +
-                "from SITE_SUPPORT_LANGUAGE  a, SITE_XSLT d " +
-                "where a.ID_SITE=? and " +
-                "a.ID_SITE_SUPPORT_LANGUAGE=d.ID_SITE_SUPPORT_LANGUAGE and " +
-                "d.IS_CURRENT=1";
+                "from   WM_PORTAL_SITE_LANGUAGE a, WM_PORTAL_XSLT d " +
+                "where  a.ID_SITE=? and " +
+                "       a.ID_SITE_SUPPORT_LANGUAGE=d.ID_SITE_SUPPORT_LANGUAGE and " +
+                "       d.IS_CURRENT=1";
 
         PreparedStatement ps = null;
         ResultSet rset = null;

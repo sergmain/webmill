@@ -45,14 +45,14 @@ import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portal.PortalInfo;
-import org.riverock.webmill.core.GetSiteListSiteItem;
-import org.riverock.webmill.core.GetSiteSupportLanguageWithIdSiteList;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.menu.SiteMenu;
-import org.riverock.webmill.schema.core.SiteListSiteItemType;
-import org.riverock.webmill.schema.core.SiteSupportLanguageItemType;
-import org.riverock.webmill.schema.core.SiteSupportLanguageListType;
 import org.riverock.webmill.site.SiteTemplateList;
+import org.riverock.webmill.core.GetWmPortalListSiteItem;
+import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
+import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
+import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
 
 /**
  * $Id$
@@ -65,10 +65,10 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     static {
         try {
             Class p = PortalInfoImpl.class;
-            SqlStatement.registerRelateClass(p, GetSiteListSiteItem.class);
+            SqlStatement.registerRelateClass(p, GetWmPortalListSiteItem.class);
             SqlStatement.registerRelateClass(p, PortalXsltList.class);
             SqlStatement.registerRelateClass(p, SiteTemplateList.class);
-            SqlStatement.registerRelateClass(p, GetSiteSupportLanguageWithIdSiteList.class);
+            SqlStatement.registerRelateClass(p, GetWmPortalSiteLanguageWithIdSiteList.class);
             SqlStatement.registerRelateClass(p, SiteMenu.class);
         }
         catch (Exception exception) {
@@ -80,8 +80,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient static Map portatInfoMap = new HashMap();
 
-    private transient SiteListSiteItemType sites = new SiteListSiteItemType();
-    private transient SiteSupportLanguageListType supportLanguage = null;
+    private transient WmPortalListSiteItemType sites = new WmPortalListSiteItemType();
+    private transient WmPortalSiteLanguageListType supportLanguage = null;
 
     private transient Locale defaultLocale = null;
 
@@ -102,9 +102,9 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         if (idSiteSupportLanguage == null)
             return false;
 
-        Iterator it = supportLanguage.getSiteSupportLanguageAsReference().iterator();
+        Iterator it = supportLanguage.getWmPortalSiteLanguageAsReference().iterator();
         while (it.hasNext()) {
-            SiteSupportLanguageItemType item = (SiteSupportLanguageItemType) it.next();
+            WmPortalSiteLanguageItemType item = (WmPortalSiteLanguageItemType) it.next();
             if (idSiteSupportLanguage.equals(item.getIdSiteSupportLanguage())) {
                 return true;
             }
@@ -122,9 +122,9 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             return null;
 
         if (supportLanguageMap == null) {
-            supportLanguageMap = new HashMap(getSupportLanguage().getSiteSupportLanguageCount());
-            for (int i = 0; i < getSupportLanguage().getSiteSupportLanguageCount(); i++) {
-                SiteSupportLanguageItemType item = getSupportLanguage().getSiteSupportLanguage(i);
+            supportLanguageMap = new HashMap(getSupportLanguage().getWmPortalSiteLanguageCount());
+            for (int i = 0; i < getSupportLanguage().getWmPortalSiteLanguageCount(); i++) {
+                WmPortalSiteLanguageItemType item = getSupportLanguage().getWmPortalSiteLanguage(i);
                 supportLanguageMap.put(item.getCustomLanguage(), item.getIdSiteSupportLanguage());
             }
         }
@@ -199,7 +199,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         this.siteId = siteId;
         long mills = 0; // System.currentTimeMillis();
         try {
-            sites = GetSiteListSiteItem.getInstance(db_, siteId).item;
+            sites = GetWmPortalListSiteItem.getInstance(db_, siteId).item;
 
             if (sites.getDefLanguage() == null)
                 sites.setDefLanguage("");
@@ -260,11 +260,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         meta.put( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL, sites.getAdminEmail() );
     }
 
-    public static SiteSupportLanguageListType processSupportLanguage(DatabaseAdapter db_, Long siteId) throws org.riverock.webmill.exception.PortalPersistenceException {
-        SiteSupportLanguageListType langs = GetSiteSupportLanguageWithIdSiteList.getInstance(db_, siteId).item;
+    public static WmPortalSiteLanguageListType processSupportLanguage(DatabaseAdapter db_, Long siteId) throws org.riverock.webmill.exception.PortalPersistenceException {
+        WmPortalSiteLanguageListType langs = GetWmPortalSiteLanguageWithIdSiteList.getInstance(db_, siteId).item;
 
-        for (int i = 0; i < langs.getSiteSupportLanguageCount(); i++) {
-            SiteSupportLanguageItemType lang = langs.getSiteSupportLanguage(i);
+        for (int i = 0; i < langs.getWmPortalSiteLanguageCount(); i++) {
+            WmPortalSiteLanguageItemType lang = langs.getWmPortalSiteLanguage(i);
             lang.setCustomLanguage(StringTools.getLocale(lang.getCustomLanguage()).toString());
         }
 
@@ -334,11 +334,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return null;
     }
 
-    public SiteListSiteItemType getSites() {
+    public WmPortalListSiteItemType getSites() {
         return sites;
     }
 
-    public SiteSupportLanguageListType getSupportLanguage() {
+    public WmPortalSiteLanguageListType getSupportLanguage() {
         return supportLanguage;
     }
 }

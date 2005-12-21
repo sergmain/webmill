@@ -39,7 +39,7 @@
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${common-logging.lib}"/>
+        <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
@@ -81,6 +81,7 @@
             optimize="${optimize}"
             >
             <classpath refid="classpath-base"/>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
@@ -93,6 +94,7 @@
             optimize="${optimize}"
             >
             <classpath refid="classpath-base"/>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 </project>

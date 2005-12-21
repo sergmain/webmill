@@ -46,7 +46,7 @@ public final class AuthSessionImpl implements AuthSession {
     private static final long serialVersionUID = 20434672384237876L;
     private final static Logger log = Logger.getLogger(AuthSessionImpl.class);
 
-    private transient static List authProviderList = null;
+    private transient static List<AuthProviderInterface> authProviderList = null;
     private transient AuthProviderInterface activeProvider = null;
     private transient boolean isAccessChecked = false;
     private transient boolean isAccessDenied = true;
@@ -86,7 +86,7 @@ public final class AuthSessionImpl implements AuthSession {
                     }
 
 
-                    authProviderList = new ArrayList();
+                    authProviderList = new ArrayList<AuthProviderInterface>();
                     if ( auth!=null ){
                         for (int i=0; i<auth.getAuthProviderCount(); i++){
                             AuthProviderType provider = auth.getAuthProvider(i);

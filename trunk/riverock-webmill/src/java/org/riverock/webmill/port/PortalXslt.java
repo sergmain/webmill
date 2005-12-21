@@ -36,9 +36,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.webmill.core.GetSiteXsltDataWithIdSiteXsltList;
-import org.riverock.webmill.schema.core.SiteXsltDataItemType;
-import org.riverock.webmill.schema.core.SiteXsltDataListType;
+import org.riverock.webmill.core.GetWmPortalXsltDataWithIdSiteXsltList;
+import org.riverock.webmill.schema.core.WmPortalXsltDataItemType;
+import org.riverock.webmill.schema.core.WmPortalXsltDataListType;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.common.tools.StringTools;
 
@@ -90,7 +90,7 @@ public class PortalXslt
     {
         try
         {
-            org.riverock.sql.cache.SqlStatement.registerRelateClass( new PortalXslt().getClass(), new GetSiteXsltDataWithIdSiteXsltList().getClass());
+            org.riverock.sql.cache.SqlStatement.registerRelateClass( PortalXslt.class, GetWmPortalXsltDataWithIdSiteXsltList.class );
         }
         catch (Exception exception)
         {
@@ -104,10 +104,10 @@ public class PortalXslt
         try
         {
             xslt = "";
-            SiteXsltDataListType xsltList = GetSiteXsltDataWithIdSiteXsltList.getInstance(db_, id).item;
-            for (int i=0; i<xsltList.getSiteXsltDataCount(); i++)
+            WmPortalXsltDataListType xsltList = GetWmPortalXsltDataWithIdSiteXsltList.getInstance(db_, id).item;
+            for (int i=0; i<xsltList.getWmPortalXsltDataCount(); i++)
             {
-                SiteXsltDataItemType item = xsltList.getSiteXsltData(i);
+                WmPortalXsltDataItemType item = xsltList.getWmPortalXsltData(i);
                 xslt += item.getXslt();
             }
             if (!StringTools.isEmpty(xslt)) {

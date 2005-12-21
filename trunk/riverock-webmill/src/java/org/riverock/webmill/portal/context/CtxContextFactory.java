@@ -183,8 +183,8 @@ public final class CtxContextFactory extends ContextFactory {
             Long ctxId = null;
             ctxId = DatabaseManager.getLongValue( factoryParameter.getAdapter(),
                 "select a.ID_SITE_CTX_CATALOG " +
-                "from   SITE_CTX_CATALOG a, SITE_CTX_LANG_CATALOG b, SITE_SUPPORT_LANGUAGE c, " +
-                "       SITE_CTX_TYPE d, SITE_TEMPLATE e " +
+                "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c, " +
+                "       WM_PORTAL_PORTLET_NAME d, WM_PORTAL_TEMPLATE e " +
                 "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
                 "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
                 "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +

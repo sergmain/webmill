@@ -42,11 +42,9 @@ import org.riverock.webmill.container.core.GetMainUserMetadataItem;
  */
 public final class PortalUserMetadata {
 
-//    private final static Log log = LogFactory.getLog( PortalUserMetadata.class );
-
     private final static String sql =
             "select a.* " +
-            "from   MAIN_USER_METADATA a, SITE_VIRTUAL_HOST b, AUTH_USER c " +
+            "from   WM_LIST_USER_METADATA a, WM_PORTAL_VIRTUAL_HOST b, WM_AUTH_USER c " +
             "where  a.ID_SITE=b.ID_SITE and b.NAME_VIRTUAL_HOST=? and a.ID_USER=c.ID_USER and " +
             "       c.USER_LOGIN=? and META=?";
 
@@ -70,7 +68,6 @@ public final class PortalUserMetadata {
             return null;
         } catch (Exception e) {
             String es = "Error get metadata from DB";
-//            log.error(es, e);
             throw new PortletException(es, e);
         } finally {
             DatabaseManager.close(rs, ps);
