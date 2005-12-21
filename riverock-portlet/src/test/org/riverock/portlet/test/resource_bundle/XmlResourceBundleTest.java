@@ -1,7 +1,6 @@
 package org.riverock.portlet.test.resource_bundle;
 
 import java.util.Properties;
-import java.util.PropertyResourceBundle;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 
@@ -25,6 +24,5 @@ public class XmlResourceBundleTest {
         properties.storeToXML( stream, "test xml resource" );
         properties = null;
         stream.close();
-        PropertyResourceBundle bundle = new PropertyResourceBundle( );
     }
 }

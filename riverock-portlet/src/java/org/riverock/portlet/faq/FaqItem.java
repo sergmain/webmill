@@ -124,8 +124,8 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
 
         String sql_ =
             "select DATE_POST " +
-            "from SITE_PORTLET_FAQ_LIST " +
-            "where ID_SITE_PORTLET_FAQ_LIST=?";
+            "from   WM_PORTLET_FAQ_LIST " +
+            "where  ID_SITE_PORTLET_FAQ_LIST=?";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -137,8 +137,8 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
             if (rs.next()) {
                 datePost = RsetTools.getCalendar(rs, "DATE_POST");
             }
-            answer = DatabaseManager.getBigTextField(db_, id, "ANSWER", "SITE_PORTLET_FAQ_ANSWER", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_ANSWER");
-            question = DatabaseManager.getBigTextField(db_, id, "QUESTION", "SITE_PORTLET_FAQ_QUESTION", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_QUESTION");
+            answer = DatabaseManager.getBigTextField(db_, id, "ANSWER", "WM_PORTLET_FAQ_ANSWER", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_ANSWER");
+            question = DatabaseManager.getBigTextField(db_, id, "QUESTION", "WM_PORTLET_FAQ_QUESTION", "ID_SITE_PORTLET_FAQ_LIST", "ID_SITE_PORTLET_FAQ_QUESTION");
         }
         catch(Exception exc) {
             final String es = "Error create Faq item";

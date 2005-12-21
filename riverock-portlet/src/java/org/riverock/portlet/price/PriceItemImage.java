@@ -108,9 +108,9 @@ public class PriceItemImage
     {
         sql_ =
             "select c.ID_ITEM, c.ID_IMAGE_DIR, d.NAME_FILE IMAGE_FILE_NAME "+
-            "from PRICE_LIST a, PRICE_SHOP_TABLE b, IMAGE_PRICE_ITEMS c, IMAGE_DIR d "+
-            "where c.ID_IMAGE_DIR = d.ID_IMAGE_DIR and a.ID_SHOP=b.ID_SHOP and " +
-            "b.ID_SITE=? and a.ID_ITEM=c.ID_ITEM ";
+            "from   WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b, WM_IMAGE_PRICE_ITEMS c, WM_IMAGE_DIR d "+
+            "where  c.ID_IMAGE_DIR = d.ID_IMAGE_DIR and a.ID_SHOP=b.ID_SHOP and " +
+            "       b.ID_SITE=? and a.ID_ITEM=c.ID_ITEM ";
 
         try
         {

@@ -103,12 +103,12 @@ public final class FirmChange extends HttpServlet {
 
                 String v_str =
                     "select a.* " +
-                    "from 	MAIN_LIST_FIRM a " +
+                    "from   WM_LIST_COMPANY a " +
                     "where  a.ID_FIRM = ? and a.is_deleted=0 and a.ID_FIRM in ";
 
                 switch( db_.getFamaly() ) {
                     case DatabaseManager.MYSQL_FAMALY:
-                        String idList = AuthHelper.getGrantedFirmId( db_, renderRequest.getRemoteUser() );
+                        String idList = AuthHelper.getGrantedCompanyId( db_, renderRequest.getRemoteUser() );
 
                         v_str += " (" + idList + ") ";
 

@@ -78,8 +78,8 @@ public final class SiteUtils {
         try {
             String sql_ =
                 "select ID_SITE " +
-                "from SITE_VIRTUAL_HOST " +
-                "where lower(NAME_VIRTUAL_HOST)=lower(?)";
+                "from   WM_PORTAL_VIRTUAL_HOST " +
+                "where  lower(NAME_VIRTUAL_HOST)=lower(?)";
 
             ps = adapter.prepareStatement(sql_);
             ps.setString(1, serverName);

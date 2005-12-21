@@ -114,7 +114,7 @@ public final class BindDeleteCommitPortlet implements Portlet {
                     case DatabaseManager.MYSQL_FAMALY:
                         ps = dbDyn.prepareStatement( "delete from WM_AUTH_USER where id_auth_user=? " +
                             "and ID_FIRM in " +
-                            "(" + AuthHelper.getGrantedFirmId( dbDyn, auth_.getUserLogin() ) + ")" );
+                            "(" + AuthHelper.getGrantedCompanyId( dbDyn, auth_.getUserLogin() ) + ")" );
 
                         RsetTools.setLong( ps, 1, id_auth_user );
                         break;

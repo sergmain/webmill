@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
@@ -71,7 +72,7 @@ public class DbStructure
 //        schema.setViews( db_.getViewList( "SA", "%"));
 //        schema.setTables(db_.getTableList("SA", "%"));
 
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "ORACLE");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "IBM-DB2");
 
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
@@ -79,7 +80,7 @@ public class DbStructure
 
 //        schema.setViews( db_.getViewList( "MILLENNIUM", "%"));
 //        schema.setTables( db_.getTableList( "MILLENNIUM", "%"));
-//        schema.setTables(db_.getTableList("MILLENNIUM", "AUTH_ARM"));
+//        schema.setTables(db_.getTableList("MILLENNIUM", "WM_AUTH_APPLICATION"));
 
         int i = 0;
 /*
@@ -111,10 +112,10 @@ public class DbStructure
             DbTableType table = schema.getTables(i);
             System.out.println( "Table - " + table.getName() );
 
-            table.setFields(dbOra.getFieldsList(table.getSchema(), table.getName()));
-            table.setPrimaryKey(dbOra.getPrimaryKey(table.getSchema(), table.getName()));
-            table.setImportedKeys(dbOra.getImportedKeys(table.getSchema(), table.getName()));
-            table.setData(dbOra.getDataTable(table));
+            table.setFields(DatabaseStructureManager.getFieldsList(dbOra, dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table));
         }
 
         String encoding = "UTF-8";
@@ -147,7 +148,7 @@ public class DbStructure
         InputSource inSrc = new InputSource(new FileInputStream( GenericConfig.getGenericDebugDir()+"schema-mill.xml" ));
         millSchema = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
 
         if (!(db_ instanceof org.riverock.generic.db.factory.ORAconnect))
         {
@@ -175,7 +176,7 @@ public class DbStructure
                         else
                             throw e;
                     }
-                    db_.setDataTable(table);
+                    DatabaseStructureManager.setDataTable(db_, table);
                 }
                 else
                     System.out.println("skip table " + table.getName());
@@ -202,7 +203,7 @@ public class DbStructure
                     {
                         System.out.println("view " + view.getName() + " already exists");
                         System.out.println("drop view " + view.getName());
-                        db_.dropView(view);
+                        DatabaseStructureManager.dropView(db_, view);
                         System.out.println("create view " + view.getName());
                         try
                         {
@@ -222,6 +223,8 @@ public class DbStructure
             }
             DatabaseManager.createWithReplaceAllView(db_, millSchema);
         }
+        DatabaseAdapter.close( db_ );
+        DatabaseAdapter.close( dbOra );
     }
 
 }

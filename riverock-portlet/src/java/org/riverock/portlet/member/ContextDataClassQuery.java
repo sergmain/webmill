@@ -101,8 +101,8 @@ public class ContextDataClassQuery extends BaseClassQuery {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                 "select ID_SITE_CTX_TYPE, TYPE "+
-                "from SITE_CTX_TYPE "+
-                "where ID_SITE_CTX_TYPE=?"
+                "from   WM_PORTAL_PORTLET_NAME "+
+                "where  ID_SITE_CTX_TYPE=?"
             );
 
             RsetTools.setLong(ps, 1, idContext );
@@ -139,8 +139,8 @@ public class ContextDataClassQuery extends BaseClassQuery {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                     "select ID_SITE_CTX_TYPE, TYPE "+
-                    "from SITE_CTX_TYPE "+
-                    "where ID_SITE_CTX_TYPE=?"
+                    "from   WM_PORTAL_PORTLET_NAME "+
+                    "where  ID_SITE_CTX_TYPE=?"
             );
 
             RsetTools.setLong(ps, 1, idSiteCtxType );

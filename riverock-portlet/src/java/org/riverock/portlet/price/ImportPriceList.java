@@ -31,9 +31,9 @@ import java.sql.PreparedStatement;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.core.GetPriceShopTableWithIdSiteList;
-import org.riverock.portlet.schema.core.PriceShopTableItemType;
-import org.riverock.portlet.schema.core.PriceShopTableListType;
+import org.riverock.portlet.core.GetWmPriceShopListWithIdSiteList;
+import org.riverock.portlet.schema.core.WmPriceShopListItemType;
+import org.riverock.portlet.schema.core.WmPriceShopListListType;
 import org.riverock.portlet.schema.import_price.PriceListItemType;
 import org.riverock.portlet.schema.import_price.PriceListType;
 import org.riverock.portlet.schema.import_price.PricesType;
@@ -80,15 +80,15 @@ public class ImportPriceList {
             {
                 log.debug("dbDyn - "+dbDyn);
                 if (dbDyn!=null)
-                    log.debug("dbDyn.conn - "+dbDyn.conn);
+                    log.debug("dbDyn.conn - "+dbDyn.getConnection());
             }
-            dbDyn.conn.setAutoCommit(false);
+            dbDyn.getConnection().setAutoCommit(false);
 
             if (dbDyn.getFamaly()!=DatabaseManager.MYSQL_FAMALY)
             {
                 sql_ =
-                    "delete from price_import_table where shop_code in " +
-                    "( select shop_code from price_shop_table where ID_SITE=? )";
+                    "delete from WM_PRICE_IMPORT_TABLE where shop_code in " +
+                    "( select shop_code from WM_PRICE_SHOP_LIST where ID_SITE=? )";
 
                 ps = dbDyn.prepareStatement(sql_);
                 RsetTools.setLong(ps, 1, id_site);
@@ -101,13 +101,13 @@ public class ImportPriceList {
                 String sqlCheck = "";
                 boolean isFound = false;
 
-                PriceShopTableListType shops =
-                    GetPriceShopTableWithIdSiteList.getInstance(dbDyn, id_site).item;
+                WmPriceShopListListType shops =
+                    GetWmPriceShopListWithIdSiteList.getInstance(dbDyn, id_site).item;
 
                 boolean isFirst = true;
-                for (int i=0; i<shops.getPriceShopTableCount(); i++)
+                for (int i=0; i<shops.getWmPriceShopListCount(); i++)
                 {
-                    PriceShopTableItemType shop = shops.getPriceShopTable(i);
+                    WmPriceShopListItemType shop = shops.getWmPriceShopList(i);
 
                     isFound = true;
                     if (isFirst)
@@ -120,7 +120,7 @@ public class ImportPriceList {
                 if (isFound)
                 {
                     sql_ =
-                        "delete from price_import_table where shop_code in ( "+sqlCheck+" )";
+                        "delete from WM_PRICE_IMPORT_TABLE where shop_code in ( "+sqlCheck+" )";
 
                     if (log.isDebugEnabled())
                         log.debug("sql "+sql_);
@@ -142,7 +142,7 @@ public class ImportPriceList {
             int count = 0;
 
             sql_ =
-                    "insert into price_import_table " +
+                    "insert into WM_PRICE_IMPORT_TABLE " +
                     "(is_group, id, id_main, name, price, currency, is_to_load, shop_code, ID_UPLOAD_PRICE) " +
                     "values (?,?,?,?,?,?,?,?,?)";
 

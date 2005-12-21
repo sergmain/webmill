@@ -45,11 +45,11 @@ public class TestDbCatalog
     private static void doTest( String nameConnection )
         throws Exception
     {
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, nameConnection);
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
 
-        System.out.println(nameConnection + " Menu "+db_.conn.getCatalog());
+        System.out.println(nameConnection + " Menu "+db_.getConnection().getCatalog());
 
-        DatabaseMetaData db = db_.conn.getMetaData();
+        DatabaseMetaData db = db_.getConnection().getMetaData();
 
         System.out.println(nameConnection + " Schema term "+db.getSchemaTerm());
         System.out.println(nameConnection + " UserName term "+db.getUserName());

@@ -30,25 +30,23 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.portlet.schema.core.SiteTemplateItemType;
-import org.riverock.portlet.schema.core.SiteTemplateListType;
-import org.riverock.portlet.core.GetSiteTemplateItem;
-import org.riverock.portlet.core.GetSiteTemplateWithIdSiteSupportLanguageList;
+import org.riverock.portlet.core.GetWmPortalTemplateItem;
+import org.riverock.portlet.core.GetWmPortalTemplateWithIdSiteSupportLanguageList;
+import org.riverock.portlet.schema.core.WmPortalTemplateListType;
+import org.riverock.portlet.schema.core.WmPortalTemplateItemType;
 import org.riverock.webmill.container.tools.PortletService;
-
-
 
 
 /**
  * User: Admin
  * Date: Nov 24, 2002
  * Time: 3:58:34 PM
- *
+ * <p/>
  * $Id$
  */
 public final class TemplateMemberClassQuery extends BaseClassQuery {
@@ -61,84 +59,74 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
 
     MemberQueryParameter param = null;
 
-    public void setIdSiteTemplate(Long param)
-    {
+    public void setIdSiteTemplate( Long param ) {
         idSiteTemplate = param;
 
-        if (log.isDebugEnabled()) {
-            if (idSiteTemplate!=null)
-                log.debug("idSiteTemplate - "+idSiteTemplate);
+        if( log.isDebugEnabled() ) {
+            if( idSiteTemplate != null )
+                log.debug( "idSiteTemplate - " + idSiteTemplate );
             else
-                log.debug("idSiteTemplate is null");
+                log.debug( "idSiteTemplate is null" );
         }
     }
 
     /**
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
+     *
      * @return String
      */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception
-    {
+        throws Exception {
         DatabaseAdapter db_ = null;
-        try
-        {
+        try {
             db_ = DatabaseAdapter.getInstance();
-            SiteTemplateItemType templateItem = GetSiteTemplateItem.getInstance(db_, idSiteTemplate).item;
-            if (templateItem!=null)
+            WmPortalTemplateItemType templateItem = GetWmPortalTemplateItem.getInstance( db_, idSiteTemplate ).item;
+            if( templateItem != null )
                 return templateItem.getNameSiteTemplate();
 
             return "";
         }
-        finally
-        {
+        finally {
             DatabaseAdapter.close( db_ );
             db_ = null;
         }
     }
 
     /**
-     *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
+     * ¬озвращает список возможных значений дл€ построени€ <select> элемента
+     *
      * @return List of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception
-    {
+    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
         DatabaseAdapter db_ = null;
-        try
-        {
+        try {
             db_ = DatabaseAdapter.getInstance();
             List v = new ArrayList();
 
-            Long id = PortletService.getLong(renderRequest, nameModule+'.'+nameField);
-            SiteTemplateListType templateList = GetSiteTemplateWithIdSiteSupportLanguageList.getInstance(db_, id).item;
+            Long id = PortletService.getLong( renderRequest, nameModule + '.' + nameField );
+            WmPortalTemplateListType templateList = GetWmPortalTemplateWithIdSiteSupportLanguageList.getInstance( db_, id ).item;
 
-            if (log.isDebugEnabled())
-            {
-                log.debug("parameter "+nameModule+'.'+nameField+" is "+renderRequest.getParameter(nameModule+'.'+nameField));
-                log.debug("id "+id);
+            if( log.isDebugEnabled() ) {
+                log.debug( "parameter " + nameModule + '.' + nameField + " is " + renderRequest.getParameter( nameModule + '.' + nameField ) );
+                log.debug( "id " + id );
             }
-            for (int i=0; i<templateList.getSiteTemplateCount(); i++)
-            {
-                SiteTemplateItemType templateItem = templateList.getSiteTemplate(i);
-                ClassQueryItem item = new ClassQueryItemImpl(
-                    templateItem.getIdSiteTemplate(),
-                    templateItem.getNameSiteTemplate()
-                );
-                if (item.getIndex().equals(idSiteTemplate))
-                    item.setSelected(true);
+            for( int i = 0; i < templateList.getWmPortalTemplateCount(); i++ ) {
+                WmPortalTemplateItemType templateItem = templateList.getWmPortalTemplate( i );
+                ClassQueryItem item = new ClassQueryItemImpl( templateItem.getIdSiteTemplate(),
+                    templateItem.getNameSiteTemplate() );
+                if( item.getIndex().equals( idSiteTemplate ) )
+                    item.setSelected( true );
                 v.add( item );
             }
             return v;
         }
-        finally
-        {
-            DatabaseAdapter.close(db_);
+        finally {
+            DatabaseAdapter.close( db_ );
             db_ = null;
         }
     }
 
-    public void setQueryParameter(MemberQueryParameter parameter) throws Exception
-    {
+    public void setQueryParameter( MemberQueryParameter parameter ) throws Exception {
         this.param = parameter;
     }
 }

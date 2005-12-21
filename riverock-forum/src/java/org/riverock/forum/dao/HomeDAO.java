@@ -35,7 +35,7 @@ public class HomeDAO {
         "       a.f_lasttime, a.IS_DELETED, " +
         "       b.FIRST_NAME, b.MIDDLE_NAME, b.LAST_NAME, " +
         "       c.FIRST_NAME FIRST_NAME2 , c.MIDDLE_NAME MIDDLE_NAME2, c.LAST_NAME LAST_NAME2 " +
-        "from   WM_FORUM_CONCRETE a, MAIN_USER_INFO b, MAIN_USER_INFO c " +
+        "from   WM_FORUM_CONCRETE a, WM_LIST_USER b, WM_LIST_USER c " +
         "where  a.F_U_ID=b.ID_USER and a.F_U_ID2=c.ID_USER and a.FORUM_CATEGORY_ID=? ";
 
     private static String sqlFilterDeleted =

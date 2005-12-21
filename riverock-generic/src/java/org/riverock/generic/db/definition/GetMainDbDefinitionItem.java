@@ -98,7 +98,7 @@ public class GetMainDbDefinitionItem
     static
     {
          sql_ =
-             "select * from MAIN_DB_DEFINITION where ID_DB_DEFINITION=?";
+             "select * from WM_DB_DEFINITION where ID_DB_DEFINITION=?";
 
 
 

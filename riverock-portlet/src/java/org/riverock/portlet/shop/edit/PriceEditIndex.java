@@ -97,7 +97,7 @@ public final class PriceEditIndex extends HttpServlet {
                 db_ = DatabaseAdapter.getInstance();
 
                 String sql_ =
-                        "select a.* from price_shop_table a, site_virtual_host b "+
+                        "select a.* from WM_PRICE_SHOP_LIST a, WM_PORTAL_VIRTUAL_HOST b "+
                         "where a.ID_SITE = b.ID_SITE and b.NAME_VIRTUAL_HOST=? ";
 
                 PreparedStatement ps = null;

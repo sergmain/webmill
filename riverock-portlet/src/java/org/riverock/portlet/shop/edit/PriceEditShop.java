@@ -142,9 +142,9 @@ public class PriceEditShop extends HttpServlet
 
                         PreparedStatement st = null;
                         String sql_ =
-                                "update PRICE_LIST " +
-                                "set ITEM=?, PRICE=?, CURRENCY=?, IS_SPECIAL=? " +
-                                "where ID_ITEM=? and ID_SHOP=?";
+                                "update WM_PRICE_LIST " +
+                                "set    ITEM=?, PRICE=?, CURRENCY=?, IS_SPECIAL=? " +
+                                "where  ID_ITEM=? and ID_SHOP=?";
 
                         try
                         {

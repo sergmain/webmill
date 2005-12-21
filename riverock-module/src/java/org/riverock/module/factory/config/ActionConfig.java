@@ -54,7 +54,8 @@ public class ActionConfig {
             Iterator it = configBean.getActions().iterator();
             while (it.hasNext()) {
                 ActionBean actionBean = (ActionBean) it.next();
-                Action action = (Action) Class.forName(actionBean.getType()).newInstance();
+                final Object o = Class.forName(actionBean.getType()).newInstance();
+                Action action = (Action) o;
                 ActionConfigurationBean configurationBean = new ActionConfigurationBean();
                 configurationBean.setAction( action );
                 configurationBean.setActionBean( actionBean );
@@ -104,7 +105,21 @@ public class ActionConfig {
 
     private static ActionConfigBean digisterConfigFile(File configFile) throws IOException, SAXException {
 
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        if (log.isDebugEnabled()) {
+            log.debug("Start digest file: " + configFile.getName() );
+            try {
+                log.debug("classloader: " + cl +"\nhashCode: " + cl.hashCode() );
+                Class c = cl.loadClass("org.riverock.module.factory.bean.ActionConfigBean");
+                log.debug("result of loading class: " + c);
+            }
+            catch (ClassNotFoundException e) {
+                log.error("Error load class ActionConfigBean", e);
+            }
+        }
+
         Digester digester = new Digester();
+        digester.setClassLoader( cl );
         digester.setEntityResolver( new EntityResolverImpl() );
         digester.setValidating(false);
         ActionConfigBean bean = null;
@@ -158,6 +173,9 @@ public class ActionConfig {
     public static void main(String[] args) throws Exception {
         File file = new File("forum-action.xml");
         ActionConfigBean c = digisterConfigFile( file );
+
+        file = new File("forum-action-manage-list.xml ");
+        c = digisterConfigFile( file );
 
         boolean isFound = c!=null;
     }

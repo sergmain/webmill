@@ -45,7 +45,7 @@ public class TempUpdateMainListNews
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "HSQLDB");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "HSQLDB" );
 
         String sql_ =
             "select ID_NEWS from WM_NEWS_LIST";
@@ -68,7 +68,7 @@ public class TempUpdateMainListNews
                     "update WM_NEWS_LIST "+
                     "set ID_SITE_SUPPORT_LANGUAGE = "+
                     "( select ID_SITE_SUPPORT_LANGUAGE "+
-                    "from SITE_SUPPORT_LANGUAGE b "+
+                    "from WM_PORTAL_SITE_LANGUAGE b "+
                     "where ID_SITE = b.ID_SITE and "+
                     "ID_LANGUAGE =b.ID_LANGUAGE "+
                     ") where ID_NEWS=?";

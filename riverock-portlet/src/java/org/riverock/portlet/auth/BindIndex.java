@@ -126,10 +126,10 @@ public final class BindIndex extends HttpServlet
                         "             b.LAST_NAME, b.FIRST_NAME, b.MIDDLE_NAME, " +
                         "             c.id_firm, c.short_name " +
                         " " +
-                        "            from    WM_AUTH_USER a, main_user_info b, main_list_firm c " +
+                        "            from    WM_AUTH_USER a, WM_LIST_USER b, WM_LIST_COMPANY c " +
                         "            where   a.id_user = b.id_user and " +
                         "                    a.id_firm = c.id_firm and " +
-                        "                    b.ID_FIRM in ( " + AuthHelper.getGrantedFirmId(db_, auth_.getUserLogin())+ " ) " +
+                        "                    b.ID_FIRM in ( " + AuthHelper.getGrantedCompanyId(db_, auth_.getUserLogin())+ " ) " +
                         "            order by c.id_firm asc, c.short_name asc, b.LAST_NAME asc, b.FIRST_NAME asc, b.MIDDLE_NAME asc ";
 
                     ps = db_.prepareStatement(sql_);
@@ -141,7 +141,7 @@ public final class BindIndex extends HttpServlet
                         "             b.LAST_NAME, b.FIRST_NAME, b.MIDDLE_NAME, " +
                         "             c.id_firm, c.short_name " +
                         " " +
-                        "            from    WM_AUTH_USER a, main_user_info b, main_list_firm c " +
+                        "            from    WM_AUTH_USER a, WM_LIST_USER b, WM_LIST_COMPANY c " +
                         "            where   a.id_user = b.id_user and " +
                         "                    a.id_firm = c.id_firm and " +
                         "                    b.ID_FIRM in " +
@@ -149,20 +149,20 @@ public final class BindIndex extends HttpServlet
                         "            select  a01.id_firm " +
                         "            from    WM_AUTH_USER a01 " +
                         "            where   a01.is_use_current_firm = 1 " +
-                        "             and a01.user_login = ? " +
+                        "                    and a01.user_login = ? " +
                         "            union " +
                         "            select  d02.id_firm " +
-                        "            from    WM_AUTH_USER a02, main_relate_service_firm d02 " +
-                        "          where   a02.is_service = 1 and a02.id_service = d02.id_service " +
-                        "             and a02.user_login = ? " +
+                        "            from    WM_AUTH_USER a02, WM_LIST_R_GROUP_COMPANY_COMPANY d02 " +
+                        "            where   a02.is_service = 1 and a02.id_service = d02.id_service " +
+                        "                    and a02.user_login = ? " +
                         "            union " +
                         "            select  e03.id_firm " +
-                        "            from    WM_AUTH_USER a03, main_relate_road_service d03, main_relate_service_firm e03 " +
+                        "            from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GROUP_COMPANY d03, WM_LIST_R_GROUP_COMPANY_COMPANY e03 " +
                         "            where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service " +
-                        "             and a03.user_login = ? " +
+                        "                    and a03.user_login = ? " +
                         "            union " +
                         "            select  b04.id_firm " +
-                        "            from    WM_AUTH_USER a04, main_list_firm b04 " +
+                        "            from    WM_AUTH_USER a04, WM_LIST_COMPANY b04 " +
                         "            where   a04.is_root = 1 and a04.user_login = ? " +
                         "            ) " +
                         "            order by c.id_firm asc, c.short_name asc, b.LAST_NAME asc, b.FIRST_NAME asc, b.MIDDLE_NAME asc ";

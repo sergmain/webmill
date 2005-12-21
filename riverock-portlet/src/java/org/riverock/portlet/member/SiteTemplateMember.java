@@ -94,10 +94,10 @@ public class SiteTemplateMember {
     {
         sql_ =
             "select b.NAME_SITE_TEMPLATE, b.TEMPLATE_DATA, c.CUSTOM_LANGUAGE "+
-            "from SITE_TEMPLATE_MEMBER a, SITE_TEMPLATE b, SITE_SUPPORT_LANGUAGE c "+
-            "where a.ID_SITE_TEMPLATE=b.ID_SITE_TEMPLATE and "+
-            "a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
-            "c.ID_SITE=? ";
+            "from   WM_PORTAL_TEMPLATE_MEMBER a, WM_PORTAL_TEMPLATE b, WM_PORTAL_SITE_LANGUAGE c "+
+            "where  a.ID_SITE_TEMPLATE=b.ID_SITE_TEMPLATE and "+
+            "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
+            "       c.ID_SITE=? ";
 
         try
         {

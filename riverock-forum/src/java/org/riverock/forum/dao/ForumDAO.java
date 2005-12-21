@@ -27,7 +27,7 @@ public class ForumDAO {
     final static String sql =
         "select a.f_name, a.f_u_id, a.f_info, a.f_topics, a.f_messages, " +
         "       b.FIRST_NAME, b.MIDDLE_NAME, b.LAST_NAME " +
-        "from   WM_FORUM_CONCRETE a, MAIN_USER_INFO b " +
+        "from   WM_FORUM_CONCRETE a, WM_LIST_USER b " +
         "where  a.F_U_ID=b.ID_USER and a.F_ID=?";
 
     public ForumConcreteBean execute(int f_id, int messagesPerPage, int topicsPerPage, int start, String keyword, Long forumId, UrlProvider urlProvider)
@@ -97,7 +97,7 @@ public class ForumDAO {
                 "       a.t_replies, a.t_views, a.t_lasttime, a.t_u_id2, " +
                 "       b.FIRST_NAME, b.MIDDLE_NAME, b.LAST_NAME, " +
                 "       c.FIRST_NAME FIRST_NAME2 , c.MIDDLE_NAME MIDDLE_NAME2, c.LAST_NAME LAST_NAME2 " +
-                "from   WM_FORUM_TOPIC a, MAIN_USER_INFO b, MAIN_USER_INFO c  " +
+                "from   WM_FORUM_TOPIC a, WM_LIST_USER b, WM_LIST_USER c  " +
                 "where  a.T_U_ID=b.ID_USER AND a.T_U_ID2=c.ID_USER AND " + condition + " " +
                 "order by a.t_order DESC, a.t_lasttime DESC";
             ps = adapter.prepareStatement( sql1 );

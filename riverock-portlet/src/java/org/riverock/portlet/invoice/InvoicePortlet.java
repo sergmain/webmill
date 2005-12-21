@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.invoice;
 
 import java.io.File;
@@ -335,7 +334,7 @@ public final class InvoicePortlet implements Portlet {
 
                             double itemFullPrice =
                                 NumberTools.multiply(
-                                    item.getPriceItemResult(), item.getCountItem(), item.getPrecisionResult()
+                                    item.getWmPriceItemResult(), item.getCountItem(), item.getPrecisionResult()
                                 );
 
                             s = bundle.getString( "reg.send_order.2" );
@@ -345,7 +344,7 @@ public final class InvoicePortlet implements Portlet {
                                     {
                                         "" + ( i + 1 ),
                                         item.getItem(),
-                                        NumberTools.toString( item.getPriceItemResult(), item.getPrecisionResult() ),
+                                        NumberTools.toString( item.getWmPriceItemResult(), item.getPrecisionResult() ),
                                         item.getResultCurrency().getCurrencyName(),
                                         "" + item.getCountItem(),
                                         NumberTools.toString( itemFullPrice, item.getPrecisionResult() ),
@@ -396,7 +395,7 @@ public final class InvoicePortlet implements Portlet {
 
                             double itemFullPrice =
                                 NumberTools.multiply(
-                                    item.getPriceItemResult(), item.getCountItem(), item.getPrecisionResult()
+                                    item.getWmPriceItemResult(), item.getCountItem(), item.getPrecisionResult()
                                 );
 
                             orderSumm += itemFullPrice;
@@ -408,7 +407,7 @@ public final class InvoicePortlet implements Portlet {
                                     {
                                         "" + ( i + 1 ),
                                         item.getItem(),
-                                        NumberTools.toString( item.getPriceItemResult(), currentPrecision ),
+                                        NumberTools.toString( item.getWmPriceItemResult(), currentPrecision ),
                                         item.getResultCurrency().getCurrencyName(),
                                         "" + item.getCountItem(),
                                         NumberTools.toString( itemFullPrice, currentPrecision ),
@@ -571,7 +570,7 @@ public final class InvoicePortlet implements Portlet {
 
                         double itemFullPrice =
                             NumberTools.multiply(
-                                item.getPriceItemResult(), item.getCountItem(), item.getPrecisionResult()
+                                item.getWmPriceItemResult(), item.getCountItem(), item.getPrecisionResult()
                             );
 
                         orderSumm += itemFullPrice;
@@ -585,7 +584,7 @@ public final class InvoicePortlet implements Portlet {
                         out.write( ServletTools.getHiddenItem( "set_id_item", item.getIdItem() ) );
                         out.write( ServletTools.getHiddenItem( "action", "set" ) );
                         out.write( "<td class=\"priceData\" align=\"right\">" );
-                        out.write( NumberTools.toString( item.getPriceItemResult(), currentPrecision ) );
+                        out.write( NumberTools.toString( item.getWmPriceItemResult(), currentPrecision ) );
                         out.write( "</td>\n" );
                         out.write( "<td class=\"priceData\" align=\"center\">\n" );
                         out.write( "<input type=\"text\" size=\"3\" name=\"" +

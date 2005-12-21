@@ -93,11 +93,11 @@ public class TestCaseTimestamp extends TestCase
 
         createTestTable("CREATE TABLE "+nameTable+"(T DATE, id DECIMAL)");
         createTestTable("create table \"CASH_CURRENCY\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"ID_SITE\" DECIMAL )");
-        createTestTable("create table \"CASH_CURR_VALUE\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"DATE_CHANGE\" DATE DEFAULT sysdate, \"CURS\" DECIMAL, \"ID_CURVAL\" DECIMAL NOT NULL )");
+        createTestTable("create table \"WM_CASH_CURR_VALUE\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"DATE_CHANGE\" DATE DEFAULT sysdate, \"CURS\" DECIMAL, \"ID_CURVAL\" DECIMAL NOT NULL )");
         insertTestData();
 
-        conn.createStatement().executeUpdate("INSERT INTO \"CASH_CURR_VALUE\" VALUES(134, to_date('2003-09-04 16:42:58', 'yyyy-mm-dd hh24:mi:ss'),1.01,155)");
-        conn.createStatement().executeUpdate("INSERT INTO \"CASH_CURR_VALUE\" VALUES(135, to_date('"+checkTimestamp+"', 'yyyy-mm-dd hh24:mi:ss'),34.51,156)");
+        conn.createStatement().executeUpdate("INSERT INTO \"WM_CASH_CURR_VALUE\" VALUES(134, to_date('2003-09-04 16:42:58', 'yyyy-mm-dd hh24:mi:ss'),1.01,155)");
+        conn.createStatement().executeUpdate("INSERT INTO \"WM_CASH_CURR_VALUE\" VALUES(135, to_date('"+checkTimestamp+"', 'yyyy-mm-dd hh24:mi:ss'),34.51,156)");
 
 
         doTest();
@@ -130,18 +130,18 @@ public class TestCaseTimestamp extends TestCase
         }
 
 
-//        conn.createStatement().execute("create table \"SITE_LIST_SITE\" ( \"ID_SITE\" DECIMAL NOT NULL , \"ID_FIRM\" DECIMAL, \"DEF_LANGUAGE\" VARCHAR NOT NULL , \"DEF_COUNTRY\" VARCHAR NOT NULL , \"DEF_VARIANT\" VARCHAR, \"NAME_SITE\" VARCHAR NOT NULL , \"ADMIN_EMAIL\" VARCHAR, \"IS_CSS_DYNAMIC\" DECIMAL DEFAULT 0 NOT NULL , \"CSS_FILE\" VARCHAR DEFAULT '/front_styles.css', \"IS_REGISTER_ALLOWED\" DECIMAL DEFAULT 1 NOT NULL , \"ORDER_EMAIL\" VARCHAR, \"IS_ACTIVATE_EMAIL_ORDER\" DECIMAL DEFAULT 0 NOT NULL , CONSTRAINT ID_SITE_SLS_PK PRIMARY KEY ( ID_SITE ) )");
-//        conn.createStatement().execute("create table \"SITE_VIRTUAL_HOST\" ( \"ID_SITE_VIRTUAL_HOST\" DECIMAL NOT NULL , \"ID_SITE\" DECIMAL NOT NULL , \"NAME_VIRTUAL_HOST\" VARCHAR NOT NULL , CONSTRAINT ID_VIRT_HST_SVH_PK PRIMARY KEY ( ID_SITE_VIRTUAL_HOST ) )");
-//        conn.createStatement().execute("create table \"SITE_SUPPORT_LANGUAGE\" ( \"ID_SITE_SUPPORT_LANGUAGE\" DECIMAL NOT NULL , \"ID_SITE\" DECIMAL, \"ID_LANGUAGE\" DECIMAL, \"CUSTOM_LANGUAGE\" VARCHAR, \"NAME_CUSTOM_LANGUAGE\" VARCHAR, CONSTRAINT ID_SITE_LNG_SSL_PK PRIMARY KEY ( ID_SITE_SUPPORT_LANGUAGE ) )");
+//        conn.createStatement().execute("create table \"WM_PORTAL_LIST_SITE\" ( \"ID_SITE\" DECIMAL NOT NULL , \"ID_FIRM\" DECIMAL, \"DEF_LANGUAGE\" VARCHAR NOT NULL , \"DEF_COUNTRY\" VARCHAR NOT NULL , \"DEF_VARIANT\" VARCHAR, \"NAME_SITE\" VARCHAR NOT NULL , \"ADMIN_EMAIL\" VARCHAR, \"IS_CSS_DYNAMIC\" DECIMAL DEFAULT 0 NOT NULL , \"CSS_FILE\" VARCHAR DEFAULT '/front_styles.css', \"IS_REGISTER_ALLOWED\" DECIMAL DEFAULT 1 NOT NULL , \"ORDER_EMAIL\" VARCHAR, \"IS_ACTIVATE_EMAIL_ORDER\" DECIMAL DEFAULT 0 NOT NULL , CONSTRAINT ID_SITE_SLS_PK PRIMARY KEY ( ID_SITE ) )");
+//        conn.createStatement().execute("create table \"WM_PORTAL_VIRTUAL_HOST\" ( \"ID_SITE_VIRTUAL_HOST\" DECIMAL NOT NULL , \"ID_SITE\" DECIMAL NOT NULL , \"NAME_VIRTUAL_HOST\" VARCHAR NOT NULL , CONSTRAINT ID_VIRT_HST_SVH_PK PRIMARY KEY ( ID_SITE_VIRTUAL_HOST ) )");
+//        conn.createStatement().execute("create table \"WM_PORTAL_SITE_LANGUAGE\" ( \"ID_SITE_SUPPORT_LANGUAGE\" DECIMAL NOT NULL , \"ID_SITE\" DECIMAL, \"ID_LANGUAGE\" DECIMAL, \"CUSTOM_LANGUAGE\" VARCHAR, \"NAME_CUSTOM_LANGUAGE\" VARCHAR, CONSTRAINT ID_SITE_LNG_SSL_PK PRIMARY KEY ( ID_SITE_SUPPORT_LANGUAGE ) )");
 //        conn.createStatement().execute("create table \"CASH_CURRENCY\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"CURRENCY\" VARCHAR, \"IS_USED\" DECIMAL, \"NAME_CURRENCY\" VARCHAR, \"IS_USE_STANDART\" DECIMAL DEFAULT 0, \"ID_STANDART_CURS\" DECIMAL, \"ID_SITE\" DECIMAL, \"PERCENT_VALUE\" DECIMAL, CONSTRAINT PK_CURRENCY PRIMARY KEY ( ID_CURRENCY ) )");
-//        conn.createStatement().execute("create table \"CASH_CURR_VALUE\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"DATE_CHANGE\" TIMESTAMP DEFAULT sysdate, \"CURS\" DECIMAL, \"ID_CURVAL\" DECIMAL NOT NULL , CONSTRAINT ID_CURVAL_CCV_PK PRIMARY KEY ( ID_CURVAL ) )");
+//        conn.createStatement().execute("create table \"WM_CASH_CURR_VALUE\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"DATE_CHANGE\" TIMESTAMP DEFAULT sysdate, \"CURS\" DECIMAL, \"ID_CURVAL\" DECIMAL NOT NULL , CONSTRAINT ID_CURVAL_CCV_PK PRIMARY KEY ( ID_CURVAL ) )");
         createTestTable("create table \"CASH_CURRENCY\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"ID_SITE\" DECIMAL )");
-        createTestTable("create table \"CASH_CURR_VALUE\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"DATE_CHANGE\" TIMESTAMP DEFAULT sysdate, \"CURS\" DECIMAL, \"ID_CURVAL\" DECIMAL NOT NULL )");
+        createTestTable("create table \"WM_CASH_CURR_VALUE\" ( \"ID_CURRENCY\" DECIMAL NOT NULL , \"DATE_CHANGE\" TIMESTAMP DEFAULT sysdate, \"CURS\" DECIMAL, \"ID_CURVAL\" DECIMAL NOT NULL )");
 
 
         insertTestData();
-        conn.createStatement().executeUpdate("INSERT INTO \"CASH_CURR_VALUE\" VALUES(134,'2003-09-04 16:42:58.729',1.01,155)");
-        conn.createStatement().executeUpdate("INSERT INTO \"CASH_CURR_VALUE\" VALUES(135,'"+checkTimestamp+"',34.51,156)");
+        conn.createStatement().executeUpdate("INSERT INTO \"WM_CASH_CURR_VALUE\" VALUES(134,'2003-09-04 16:42:58.729',1.01,155)");
+        conn.createStatement().executeUpdate("INSERT INTO \"WM_CASH_CURR_VALUE\" VALUES(135,'"+checkTimestamp+"',34.51,156)");
 
 
         doTest();
@@ -154,11 +154,11 @@ public class TestCaseTimestamp extends TestCase
         throws Exception
     {
         dropTestTable( nameTable );
-        dropTestTable( "\"SITE_LIST_SITE\"");
-        dropTestTable( "\"SITE_VIRTUAL_HOST\"");
-        dropTestTable( "\"SITE_SUPPORT_LANGUAGE\"");
+        dropTestTable( "\"WM_PORTAL_LIST_SITE\"");
+        dropTestTable( "\"WM_PORTAL_VIRTUAL_HOST\"");
+        dropTestTable( "\"WM_PORTAL_SITE_LANGUAGE\"");
         dropTestTable( "\"CASH_CURRENCY\"");
-        dropTestTable( "\"CASH_CURR_VALUE\"");
+        dropTestTable( "\"WM_CASH_CURR_VALUE\"");
 
     }
 
@@ -213,9 +213,9 @@ public class TestCaseTimestamp extends TestCase
         throws Exception
     {
 
-//        conn.createStatement().executeUpdate("INSERT INTO \"SITE_LIST_SITE\" VALUES(23,1,'ru','RU',NULL,'\u041f\u0440\u043e\u0431\u043d\u044b\u0439 \u0441\u0430\u0439\u0442',NULL,0,'''/front_styles.css''',1,NULL,0)");
-//        conn.createStatement().executeUpdate("INSERT INTO \"SITE_VIRTUAL_HOST\" VALUES(36,23,'test-host')");
-//        conn.createStatement().executeUpdate("INSERT INTO \"SITE_SUPPORT_LANGUAGE\" VALUES(115,23,1,'ru_RU','ru_RU')");
+//        conn.createStatement().executeUpdate("INSERT INTO \"WM_PORTAL_LIST_SITE\" VALUES(23,1,'ru','RU',NULL,'\u041f\u0440\u043e\u0431\u043d\u044b\u0439 \u0441\u0430\u0439\u0442',NULL,0,'''/front_styles.css''',1,NULL,0)");
+//        conn.createStatement().executeUpdate("INSERT INTO \"WM_PORTAL_VIRTUAL_HOST\" VALUES(36,23,'test-host')");
+//        conn.createStatement().executeUpdate("INSERT INTO \"WM_PORTAL_SITE_LANGUAGE\" VALUES(115,23,1,'ru_RU','ru_RU')");
 
 //        conn.createStatement().executeUpdate("INSERT INTO \"CASH_CURRENCY\" VALUES(134,'\u0420\u0443\u0431',1,'\u0420\u0443\u0431',0,3,23,0.0)");
 //        conn.createStatement().executeUpdate("INSERT INTO \"CASH_CURRENCY\" VALUES(135,'EURO',1,'EURO',0,7,23,0.0)");
@@ -271,8 +271,8 @@ public class TestCaseTimestamp extends TestCase
 
         String sql_ =
             "select max(f.DATE_CHANGE) LAST_DATE " +
-            "from  CASH_CURR_VALUE f, CASH_CURRENCY b " +
-            "where f.ID_CURRENCY=b.ID_CURRENCY and b.ID_SITE=? and f.ID_CURRENCY=? ";
+            "from   WM_CASH_CURR_VALUE f, CASH_CURRENCY b " +
+            "where  f.ID_CURRENCY=b.ID_CURRENCY and b.ID_SITE=? and f.ID_CURRENCY=? ";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -318,11 +318,11 @@ public class TestCaseTimestamp extends TestCase
 
         sql_ =
             "select  a.ID_CURRENCY, a.DATE_CHANGE, a.CURS " +
-            "from CASH_CURR_VALUE a, CASH_CURRENCY b " +
-            "where a.ID_CURRENCY=b.ID_CURRENCY and " +
-            "b.ID_SITE=? and " +
-            "a.ID_CURRENCY=? and " +
-            "DATE_CHANGE = ?";
+            "from    WM_CASH_CURR_VALUE a, CASH_CURRENCY b " +
+            "where   a.ID_CURRENCY=b.ID_CURRENCY and " +
+            "        b.ID_SITE=? and " +
+            "        a.ID_CURRENCY=? and " +
+            "        DATE_CHANGE = ?";
 
         ps = null;
         rs = null;

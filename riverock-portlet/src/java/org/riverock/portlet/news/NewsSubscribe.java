@@ -229,8 +229,8 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
             if (meta==null) {
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName( "SEQ_MAIN_USER_METADATA" );
-                seq.setTableName( "MAIN_USER_METADATA" );
+                seq.setSequenceName( "SEQ_WM_LIST_USER_METADATA" );
+                seq.setTableName( "WM_LIST_USER_METADATA" );
                 seq.setColumnName( "ID_MAIN_USER_METADATA" );
                 Long id = db_.getSequenceNextValue( seq );
 

@@ -55,7 +55,7 @@ public class TestCaseSiteAbstract {
 
         System.out.println( "Start nameConnection with nameConnection "+nameConnection);
 
-        db_ = DatabaseAdapter.getInstance(true, nameConnection);
+        db_ = DatabaseAdapter.getInstance( nameConnection);
         if (db_==null)
             throw new Exception( "DatabaseAdapter not created, nameConnection - '"+nameConnection+"'" );
     }
@@ -90,7 +90,6 @@ public class TestCaseSiteAbstract {
     public void testWithHypersonicConnection( TestCaseInterface testCase )
         throws Exception
     {
-        DatabaseAdapter.isNeedValidateStructure = false;
         StartupApplication.init();
         nameConnection = "HSQLDB";
         testSiteStructure( testCase );

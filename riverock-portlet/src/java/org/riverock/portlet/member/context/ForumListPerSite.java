@@ -69,10 +69,10 @@ public class ForumListPerSite implements PortletGetList
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                     "SELECT b.ID_FORUM, b.NAME_FORUM, b.ID_SITE "+
-                    "FROM site_ctx_lang_catalog a, MAIN_FORUM b, site_support_language c "+
-                    "where a.ID_SITE_CTX_LANG_CATALOG=? and "+
-                    "a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
-                    "c.ID_SITE=b.ID_SITE"
+                    "FROM   WM_PORTAL_CATALOG_LANGUAGE a, MAIN_FORUM b, WM_PORTAL_SITE_LANGUAGE c "+
+                    "where  a.ID_SITE_CTX_LANG_CATALOG=? and "+
+                    "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
+                    "       c.ID_SITE=b.ID_SITE"
             );
 
             RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );

@@ -174,7 +174,7 @@ public final class BindChangeCommitPortlet implements Portlet {
                                     "	id_service = ?, "+
                                     "	id_road = ? "+
                                     "WHERE id_auth_user=? and " +
-                                    "ID_FIRM  in ("+AuthHelper.getGrantedFirmId(dbDyn, auth_.getUserLogin())+") "
+                                    "ID_FIRM  in ("+AuthHelper.getGrantedCompanyId(dbDyn, auth_.getUserLogin())+") "
                                 );
 
                                 ps.setString(1, RequestTools.getString(actionRequest, "user_login"));

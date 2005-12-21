@@ -49,7 +49,7 @@ import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
 /**
- * Заливаем данные из XML файла в БД
+ * Upload data from XML file to DB
  */
 public class DbStructureImportOrigin{
 

@@ -52,7 +52,7 @@ public class MakeWebmillStructure {
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(false, nameConnection);
+            db_ = DatabaseAdapter.getInstance( nameConnection );
             DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 
             String encoding = "UTF-8";

@@ -69,11 +69,10 @@ public class LanguagePerSite implements PortletGetList
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                 "SELECT d.ID_SITE_SUPPORT_LANGUAGE, d.CUSTOM_LANGUAGE, d.NAME_CUSTOM_LANGUAGE "+
-                "FROM SITE_CTX_LANG_CATALOG a, " +
-                "SITE_SUPPORT_LANGUAGE c, SITE_SUPPORT_LANGUAGE d "+
-                "where a.ID_SITE_CTX_LANG_CATALOG=? and " +
-                "a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
-                "c.ID_SITE=d.ID_SITE"
+                "FROM   WM_PORTAL_CATALOG_LANGUAGE a, WM_PORTAL_SITE_LANGUAGE c, WM_PORTAL_SITE_LANGUAGE d "+
+                "where  a.ID_SITE_CTX_LANG_CATALOG=? and " +
+                "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
+                "       c.ID_SITE=d.ID_SITE"
             );
             RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );
 

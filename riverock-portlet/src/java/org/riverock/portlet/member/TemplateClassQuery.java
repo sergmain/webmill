@@ -84,7 +84,7 @@ public class TemplateClassQuery extends BaseClassQuery
         try {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
-                "select NAME_SITE_TEMPLATE from SITE_TEMPLATE where ID_SITE_TEMPLATE = ?"
+                "select NAME_SITE_TEMPLATE from WM_PORTAL_TEMPLATE where ID_SITE_TEMPLATE = ?"
             );
 
             RsetTools.setLong(ps, 1, idSiteTemplate );
@@ -120,9 +120,9 @@ public class TemplateClassQuery extends BaseClassQuery
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                 "select a.ID_SITE_TEMPLATE, a.NAME_SITE_TEMPLATE "+
-                "from SITE_TEMPLATE a, SITE_CTX_LANG_CATALOG b "+
-                "where a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
-                "b.ID_SITE_CTX_LANG_CATALOG = ?"
+                "from   WM_PORTAL_TEMPLATE a, WM_PORTAL_CATALOG_LANGUAGE b "+
+                "where  a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
+                "       b.ID_SITE_CTX_LANG_CATALOG = ?"
             );
 
             RsetTools.setLong(ps, 1, idSiteCtxLangCatalog );

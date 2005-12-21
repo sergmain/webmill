@@ -161,12 +161,12 @@ public final class ImageUploadPortlet implements Portlet {
             UserInfo userInfo = auth_.getUserInfo();
 
             CustomSequenceType seqImageDir = new CustomSequenceType();
-            seqImageDir.setSequenceName( "seq_image_dir" );
-            seqImageDir.setTableName( "IMAGE_DIR" );
+            seqImageDir.setSequenceName( "seq_WM_image_dir" );
+            seqImageDir.setTableName( "WM_IMAGE_DIR" );
             seqImageDir.setColumnName( "ID_IMAGE_DIR" );
             Long seqValue = dbDyn.getSequenceNextValue( seqImageDir );
 
-            ps = dbDyn.prepareStatement( "insert into IMAGE_DIR " +
+            ps = dbDyn.prepareStatement( "insert into WM_IMAGE_DIR " +
                 "( ID_IMAGE_DIR, ID_FIRM, is_group, id, id_main, name_file, description )" +
                 "(?, ?, 0, ?, ?, ?, ?" );
 

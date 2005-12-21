@@ -55,7 +55,7 @@ public final class SimpleCacheFactory implements Cache {
     private int maxCountItems()
     {
         initClassDefinition();
-        return classDefinition.getMaxObjectCount().intValue();
+        return classDefinition.getMaxObjectCount();
     }
 
     private void initClassDefinition()
@@ -80,7 +80,7 @@ public final class SimpleCacheFactory implements Cache {
     private long maxTimePeriod()
     {
         initClassDefinition();
-        return classDefinition.getTtl().longValue();
+        return classDefinition.getTtl();
     }
 
     public String getClassName()
@@ -109,7 +109,7 @@ public final class SimpleCacheFactory implements Cache {
             throw new CacheException( es );
         }
 
-        long id__ = ((Long)key).longValue();
+        long id__ = ((Long) key);
         try
         {
             int idx = getIndexOfItem(id__);
@@ -176,7 +176,7 @@ public final class SimpleCacheFactory implements Cache {
             throw new CacheException( es );
         }
 
-        long id__ = ((Long)key).longValue();
+        long id__ = ((Long) key);
         try
         {
             int idx = getIndexOfItem( id__);
@@ -261,7 +261,7 @@ public final class SimpleCacheFactory implements Cache {
     /**
      * Clear the cache
      */
-    public void clear() throws CacheException
+    public void clear()
     {
         reinit();
     }
@@ -269,7 +269,7 @@ public final class SimpleCacheFactory implements Cache {
     /**
      * Clean up
      */
-    public void destroy() throws CacheException
+    public void destroy()
     {
         destroyCache();
     }
@@ -278,11 +278,11 @@ public final class SimpleCacheFactory implements Cache {
         return Timestamper.next();
     }
 
-    public void lock(Object key) throws CacheException {
+    public void lock(Object key) {
         //local cache, so we use synchronization
     }
 
-    public void unlock(Object key) throws CacheException {
+    public void unlock(Object key) {
         //local cache, so we use synchronization
     }
 
@@ -308,14 +308,14 @@ public final class SimpleCacheFactory implements Cache {
 
             if (isFullReinit)
             {
-                Method method1 = obj.getClass().getMethod("reinit", null);
+                Method method1 = obj.getClass().getMethod("reinit", (Class[])null);
 
                 if (log.isDebugEnabled())
                     log.debug("#12.12.009  method1 is " + method1);
 
                 if (method1 != null)
                 {
-                    method1.invoke(obj, null);
+                    method1.invoke(obj, (Object[])null);
 
                     if (log.isDebugEnabled())
                         log.debug("#12.12.010 ");
@@ -335,7 +335,7 @@ public final class SimpleCacheFactory implements Cache {
                 if (log.isDebugEnabled())
                     log.debug("#12.12.013  method1 is " + method1);
 
-                Object objArgs1[] = {new Long(id)};
+                Object objArgs1[] = {id};
                 method1.invoke(obj, objArgs1);
                 objArgs1 = null;
 
@@ -364,10 +364,10 @@ public final class SimpleCacheFactory implements Cache {
             log.debug("#12.17.001  id " + id);
 
         if (id != null)
-            terminate(id.longValue());
+            terminate(id);
     }
 
-    public synchronized void terminate(long id) throws CacheException {
+    public synchronized void terminate(long id) {
 
         int itemIdx = getIndexOfItem(id);
         if (itemIdx==-1)

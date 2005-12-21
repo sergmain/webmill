@@ -83,7 +83,7 @@ public class PriceListItem
         String sql_ =
                 "select a.id_item, a.id_shop, a.id, a.id_main, a.item, a.price, " +
                 "	a.currency, e.name_currency, a.quantity , e.ID_CURRENCY " +
-                "from 	PRICE_LIST a, cash_currency e " +
+                "from 	WM_PRICE_LIST a, cash_currency e " +
                 "where	e.ID_SITE=? and " +
                 "	a.currency = e.currency and a.id_shop = ? and " +
                 "	a.absolete = 0 and a.is_group=0 and a.id_item =?";

@@ -56,7 +56,7 @@ public class TestMarshal extends TestCase
     private DbSchemaType makeSchema(String nameConnection, String nameOutputFiel)
         throws Exception
     {
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, nameConnection);
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection);
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 
         String encoding = "UTF-8";

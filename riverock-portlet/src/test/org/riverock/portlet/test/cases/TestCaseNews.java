@@ -97,7 +97,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
         if (testAbstract!=null)
         {
-            if ( testAbstract.db_!=null && testAbstract.db_.conn != null)
+            if ( testAbstract.db_!=null && testAbstract.db_.getConnection() != null)
             {
                 testAbstract.db_.commit();
             }

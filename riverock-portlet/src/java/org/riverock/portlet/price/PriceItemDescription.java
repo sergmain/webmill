@@ -108,8 +108,8 @@ public class PriceItemDescription
     {
         sql_ =
             "select a.ID_ITEM, a.TEXT " +
-            "from PRICE_ITEM_DESCRIPTION a, PRICE_LIST b, PRICE_SHOP_TABLE c "+
-            "where a.ID_ITEM=b.ID_ITEM and b.ID_SHOP=c.ID_SHOP and c.ID_SITE=?";
+            "from   WM_PRICE_ITEM_DESCRIPTION a, WM_PRICE_LIST b, WM_PRICE_SHOP_LIST c "+
+            "where  a.ID_ITEM=b.ID_ITEM and b.ID_SHOP=c.ID_SHOP and c.ID_SITE=?";
 
         try
         {

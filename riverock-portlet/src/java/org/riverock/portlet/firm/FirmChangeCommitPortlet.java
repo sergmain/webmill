@@ -108,7 +108,7 @@ public final class FirmChangeCommitPortlet implements Portlet {
                 throw new IllegalArgumentException( "id_firm not initialized" );
 
             String sql =
-                "UPDATE MAIN_LIST_FIRM " +
+                "UPDATE WM_LIST_COMPANY " +
                 "SET " +
                 "	full_name = ?, " +
                 "	short_name = ?, " +
@@ -132,7 +132,7 @@ public final class FirmChangeCommitPortlet implements Portlet {
 
             switch( dbDyn.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId( dbDyn, actionRequest.getRemoteUser() );
+                    String idList = AuthHelper.getGrantedCompanyId( dbDyn, actionRequest.getRemoteUser() );
 
                     sql += " (" + idList + ") ";
 

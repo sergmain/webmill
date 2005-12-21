@@ -23,6 +23,8 @@
  *
  */
 
+package org.riverock.cache.impl;
+
 /**
  * User: serg_main
  * Date: 28.11.2003
@@ -30,10 +32,6 @@
  * @author Serge Maslyukov
  * $Id$
  */
-
-package org.riverock.cache.impl;
-
-public class Constants
-{
+public class Constants {
 
 }

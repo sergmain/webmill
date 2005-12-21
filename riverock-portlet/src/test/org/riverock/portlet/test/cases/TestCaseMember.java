@@ -85,7 +85,7 @@ public class TestCaseMember extends TestCase
 
         if (schemaObj==null)
         {
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+            DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE");
 
             System.out.println("Get schema of DB");
             schemaObj = DatabaseManager.getDbStructure(db_ );
@@ -326,7 +326,7 @@ public class TestCaseMember extends TestCase
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE");
 
 
 
@@ -579,7 +579,7 @@ public class TestCaseMember extends TestCase
                     for (int t = 0; t < qa.getTableCount(); t++)
                     {
                         TableType table = qa.getTable(t);
-//                        if (!"SITE_PORTLET_FAQ".equals(table.getTable()))
+//                        if (!"WM_PORTLET_FAQ".equals(table.getTable()))
 //                            continue;
 
                         DbFieldType dbFieldTemp = null;

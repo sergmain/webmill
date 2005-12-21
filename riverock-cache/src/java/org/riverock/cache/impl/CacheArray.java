@@ -22,24 +22,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.cache.impl;
+
+import java.lang.reflect.Method;
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.MainTools;
 
 /**
  * $Id$
  */
-package org.riverock.cache.impl;
-
-import org.riverock.common.tools.MainTools;
-import org.apache.log4j.Logger;
-
-import java.lang.reflect.Method;
-
-public abstract class CacheArray implements Cache
-{
+public abstract class CacheArray implements Cache {
     private static Logger log = Logger.getLogger( CacheArray.class );
 
     private final static float CACHE_INCREASE_PERCENT = 30;
 
-    protected static Integer CountClassInCache = new Integer(20);
+    protected static Integer CountClassInCache = 20;
     protected static String cacheClass[] = null;
     protected static int[] maxCount = null;
     protected static long[][] accessTime = null;
@@ -69,7 +68,7 @@ public abstract class CacheArray implements Cache
             throw new CacheException( es );
         }
 
-        long id__ = ((Long)key).longValue();
+        long id__ = ((Long) key);
         try
         {
             int cacheIndex = getIndex();
@@ -139,7 +138,7 @@ public abstract class CacheArray implements Cache
             throw new CacheException( es );
         }
 
-        long id__ = ((Long)key).longValue();
+        long id__ = ((Long) key);
         try
         {
             int cacheIndex = getIndex();
@@ -273,14 +272,14 @@ public abstract class CacheArray implements Cache
 
             if (isFullReinit)
             {
-                Method method1 = obj.getClass().getMethod("reinit", null);
+                Method method1 = obj.getClass().getMethod("reinit", (Class[])null);
 
                 if (log.isDebugEnabled())
                     log.debug("#12.12.009  method1 is " + method1);
 
                 if (method1 != null)
                 {
-                    method1.invoke(obj, null);
+                    method1.invoke(obj, (Object[])null);
 
                     if (log.isDebugEnabled())
                         log.debug("#12.12.010 ");
@@ -300,7 +299,7 @@ public abstract class CacheArray implements Cache
                 if (log.isDebugEnabled())
                     log.debug("#12.12.013  method1 is " + method1);
 
-                Object objArgs1[] = {new Long(id)};
+                Object objArgs1[] = {id};
                 method1.invoke(obj, objArgs1);
                 objArgs1 = null;
 
@@ -329,7 +328,7 @@ public abstract class CacheArray implements Cache
             log.debug("#12.17.001  id " + id);
 
         if (id != null)
-            terminate(id.longValue());
+            terminate(id);
     }
 
     public synchronized void terminate(long id)
@@ -344,9 +343,6 @@ public abstract class CacheArray implements Cache
         if (log.isDebugEnabled())
             log.debug("#12.02.001  " + cacheIdx + " " + itemIdx);
 
-//	accessTime[cacheIdx][itemIdx] = null;
-//	accessCount[cacheIdx][itemIdx] = null;
-//	indexValue[cacheIdx][itemIdx] = null;
         cache[cacheIdx][itemIdx] = null;
     }
 
@@ -354,17 +350,9 @@ public abstract class CacheArray implements Cache
     {
         checkWithInitArray();
 
-//            if(log.isInfoEnabled())
-//            {
-//                log.info("Start looking for cache index for class "+getNameClass());
-//                log.info("CountClassInCache - "+CountClassInCache.intValue()+
-//                    ", cacheClass length - "+cacheClass.length
-//                );
-//            }
-
         while (true)
         {
-            for (int i = 0; i < CountClassInCache.intValue(); i++)
+            for (int i = 0; i < CountClassInCache; i++)
             {
                 if (cacheClass[i] == null)
                 {
@@ -377,20 +365,18 @@ public abstract class CacheArray implements Cache
 
             }
 
-            int oldValue = CountClassInCache.intValue();
+            int oldValue = CountClassInCache;
             CountClassInCache =
-                new Integer(
-                    (int)(CountClassInCache.intValue() * ((CACHE_INCREASE_PERCENT+100)/100) )
-                );
+                (int) (CountClassInCache * ((CACHE_INCREASE_PERCENT + 100) / 100));
 
             if (log.isDebugEnabled())
                 log.debug("new value of CountClassInCache can't equals to oldValue, di increment");
 
-            if (oldValue==CountClassInCache.intValue())
-                CountClassInCache = new Integer(oldValue+1);
+            if (oldValue==CountClassInCache)
+                CountClassInCache = oldValue + 1;
 
             log.warn("Cache array is full");
-            log.warn("Old value of CountClassInCache "+oldValue+", new "+CountClassInCache.intValue());
+            log.warn("Old value of CountClassInCache "+oldValue+", new "+CountClassInCache);
 
             long mills = System.currentTimeMillis();
             if(log.isInfoEnabled())
@@ -399,24 +385,24 @@ public abstract class CacheArray implements Cache
             if (log.isDebugEnabled())
             {
                 log.debug("maxCount.length - "+maxCount.length);
-                log.debug("CountClassInCache.intValue() - "+CountClassInCache.intValue());
+                log.debug("CountClassInCache.intValue() - "+CountClassInCache);
             }
             {
-                int maxCountTemp[] = new int[ CountClassInCache.intValue() ];
+                int maxCountTemp[] = new int[ CountClassInCache ];
                 for (int i=0; i<maxCount.length; i++)
                     maxCountTemp[i] = maxCount[i];
                 maxCount = maxCountTemp;
             }
 
             {
-                String cacheClassTemp[] = new String[CountClassInCache.intValue()];
+                String cacheClassTemp[] = new String[CountClassInCache];
                 for (int i=0; i<cacheClass.length; i++)
                     cacheClassTemp[i] = cacheClass[i];
                 cacheClass = cacheClassTemp;
             }
 
             {
-                long accessTimeTemp[][] = new long[CountClassInCache.intValue()][];
+                long accessTimeTemp[][] = new long[CountClassInCache][];
                 for (int i=0; i<accessTime.length; i++)
                 {
                     accessTimeTemp[i] = new long[maxCount[i]];
@@ -427,95 +413,51 @@ public abstract class CacheArray implements Cache
                     }
                     if (accessTime[i]!=null)
                     {
-//                        for (int j=0; j<accessTime[i].length; j++)
                         for (int j=0; j<maxCount[i]; j++)
                             accessTimeTemp[i][j] = accessTime[i][j];
                     }
-//                    if (accessTime[i]==null)
-//                    {
-//                        accessTimeTemp[i] = new long[maxCount[i]];
-//                    }
-//                    else
-//                    {
-//                        accessTimeTemp[i] = new long[accessTime[i].length];
-//                        for (int j=0; j<accessTime[i].length; j++)
-//                            accessTimeTemp[i][j] = accessTime[i][j];
-//                    }
                 }
                 accessTime = accessTimeTemp;
             }
 
             {
-                long accessCountTemp[][] = new long[CountClassInCache.intValue()][];
+                long accessCountTemp[][] = new long[CountClassInCache][];
                 for (int i=0; i<accessCount.length; i++)
                 {
                     accessCountTemp[i] = new long[ maxCount[i] ];
                     if (accessCount[i]!=null)
                     {
-//                        for (int j=0; j<accessCount[i].length; j++)
                         for (int j=0; j<maxCount[i]; j++)
                             accessCountTemp[i][j] = accessCount[i][j];
                     }
-//                    if (accessCount[i]==null)
-//                    {
-//                        accessCountTemp[i] = new long[ maxCount[i] ];
-//                    }
-//                    else
-//                    {
-//                        accessCountTemp[i] = new long[accessCount[i].length];
-//                        for (int j=0; j<accessCount[i].length; j++)
-//                            accessCountTemp[i][j] = accessCount[i][j];
-//                    }
                 }
                 accessCount = accessCountTemp;
             }
 
             {
-                long indexValueTemp[][] = new long[CountClassInCache.intValue()][];
+                long indexValueTemp[][] = new long[CountClassInCache][];
                 for (int i=0; i<indexValue.length; i++)
                 {
                     indexValueTemp[i] = new long[ maxCount[i] ];
                     if (indexValue[i]!=null)
                     {
-//                        for (int j=0; j<indexValue[i].length; j++)
                         for (int j=0; j<maxCount[i]; j++)
                             indexValueTemp[i][j] = indexValue[i][j];
                     }
-//                    if (indexValue[i]==null)
-//                    {
-//                        indexValueTemp[i] = new long[ maxCount[i] ];
-//                    }
-//                    else
-//                    {
-//                        indexValueTemp[i] = new long[indexValue[i].length];
-//                        for (int j=0; j<indexValue[i].length; j++)
-//                            indexValueTemp[i][j] = indexValue[i][j];
-//                    }
                 }
                 indexValue = indexValueTemp;
             }
 
             {
-                Object cacheTemp[][] = new CacheArray[CountClassInCache.intValue()][];
+                Object cacheTemp[][] = new CacheArray[CountClassInCache][];
                 for (int i=0; i<cache.length; i++)
                 {
                     cacheTemp[i] = new CacheArray[ maxCount[i] ];
                     if (cache[i]!=null)
                     {
-//                        for (int j=0; j<cache[i].length; j++)
                         for (int j=0; j<maxCount[i]; j++)
                             cacheTemp[i][j] = cache[i][j];
                     }
-//                    if (cache[i]==null)
-//                    {
-//                        cacheTemp[i] = new SimpleCache[ maxCount[i] ];
-//                    }
-//                    else
-//                    {
-//                        cacheTemp[i] = new SimpleCache[cache[i].length];
-//                        for (int j=0; j<cache[i].length; j++)
-//                            cacheTemp[i][j] = cache[i][j];
-//                    }
                 }
                 cache = cacheTemp;
             }
@@ -542,12 +484,12 @@ public abstract class CacheArray implements Cache
         if(log.isInfoEnabled())
             log.info("Create new cache arrays");
 
-        accessTime = new long[CountClassInCache.intValue()][];
-        accessCount = new long[CountClassInCache.intValue()][];
-        indexValue = new long[CountClassInCache.intValue()][];
-        cache = new CacheArray[CountClassInCache.intValue()][];
-        maxCount = new int[ CountClassInCache.intValue() ];
-        cacheClass = new String[ CountClassInCache.intValue() ];
+        accessTime = new long[CountClassInCache][];
+        accessCount = new long[CountClassInCache][];
+        indexValue = new long[CountClassInCache][];
+        cache = new CacheArray[CountClassInCache][];
+        maxCount = new int[ CountClassInCache ];
+        cacheClass = new String[ CountClassInCache ];
 
         if(log.isInfoEnabled())
             log.info("Successfull create new cache arrays");
@@ -560,11 +502,11 @@ public abstract class CacheArray implements Cache
             (accessCount == null)
             || maxCount == null
             || cacheClass == null
-            || CountClassInCache.intValue()==0
+            || CountClassInCache==0
         )
         {
-            if (CountClassInCache.intValue()==0)
-                CountClassInCache = new Integer(1);
+            if (CountClassInCache==0)
+                CountClassInCache = 1;
 
             destroyCache();
         }
@@ -575,7 +517,6 @@ public abstract class CacheArray implements Cache
     {
         int countItem = maxCountItems();
         int cacheIndex = getIndex();
-        //int cacheIndex = getCacheIndex();
 
         if (log.isDebugEnabled())
             log.debug("#12.05.02 countItem " + countItem + ", cacheIndex " + cacheIndex);
@@ -610,7 +551,7 @@ public abstract class CacheArray implements Cache
                 (accessCount == null) ||
                 (maxCount == null) ||
                 (cacheClass == null) ||
-                (CountClassInCache.intValue()==0) )
+                (CountClassInCache==0) )
             );
             log.debug("accessTime "+accessTime);
             log.debug("cache "+cache);
@@ -618,7 +559,7 @@ public abstract class CacheArray implements Cache
             log.debug("accessCount "+accessCount);
             log.debug("maxCount "+maxCount);
             log.debug("cacheClass "+cacheClass);
-            log.debug("CountClassInCache.intValue() "+(CountClassInCache.intValue()) );
+            log.debug("CountClassInCache.intValue() "+(CountClassInCache) );
         }
         if ((accessTime == null) ||
             (cache == null) ||
@@ -626,10 +567,10 @@ public abstract class CacheArray implements Cache
             (accessCount == null) ||
             (maxCount == null) ||
             (cacheClass == null) ||
-            (CountClassInCache.intValue()==0)
+            (CountClassInCache==0)
         )
         {
-            if (CountClassInCache.intValue()==0)
+            if (CountClassInCache==0)
             {
                 if (log.isDebugEnabled())
                     log.debug("CountClassInCache == 0");
@@ -699,7 +640,6 @@ public abstract class CacheArray implements Cache
         int expiredId = 0;
         long tmp;
         int cacheIndex = getIndex();
-//        int cacheIndex = getCacheIndex();
 
         for (int j = 0; j < countItem; j++)
         {
@@ -744,5 +684,4 @@ public abstract class CacheArray implements Cache
     {
         return CountClassInCache;
     }
-
 }

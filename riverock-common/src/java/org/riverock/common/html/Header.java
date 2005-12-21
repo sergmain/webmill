@@ -111,8 +111,8 @@ public final class Header {
         return temp;
     }
 
-    public static List getAcceptLanguageAsList( final String accept ) {
-        List v = new ArrayList();
+    public static List<AcceptLanguageWithLevel> getAcceptLanguageAsList( final String accept ) {
+        List<AcceptLanguageWithLevel> v = new ArrayList<AcceptLanguageWithLevel>();
 
         if ( accept == null )
             return v;

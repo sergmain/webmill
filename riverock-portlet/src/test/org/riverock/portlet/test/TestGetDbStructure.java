@@ -50,7 +50,7 @@ public class TestGetDbStructure
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "HSQLDB");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "HSQLDB");
 
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 

@@ -69,43 +69,42 @@ import org.riverock.sql.parser.Parser;
  * User: serg_main
  * Date: 29.10.2003
  * Time: 22:43:25
+ *
  * @author Serge Maslyukov
- * $Id$
+ *         $Id$
  */
 public class TestMemberServiceClass extends TestCase {
     private static Log log = LogFactory.getLog( TestMemberServiceClass.class );
 
     private static boolean isUseAssertion = true;
 
-    public TestMemberServiceClass(String testName)
-    {
-        super(testName);
+    public TestMemberServiceClass( String testName ) {
+        super( testName );
     }
 
     private DbSchemaType schemaObj = null;
-    private DbSchemaType getDbSchema()
-        throws Exception
-    {
 
-        if (schemaObj==null)
-        {
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+    private DbSchemaType getDbSchema() throws Exception {
 
-            System.out.println("Get schema of DB");
-            schemaObj = DatabaseManager.getDbStructure(db_ );
+        if( schemaObj == null ) {
+            DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
+
+            System.out.println( "Get schema of DB" );
+            schemaObj = DatabaseManager.getDbStructure( db_ );
+            DatabaseManager.close(db_);
+            db_ = null;
         }
         return schemaObj;
     }
 
     // проверяем правильность построения SQL запросов, в первую очередь INSERT
     public void testBuildInsertSQLString()
-            throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
         MemberFile[] member = moduleManager.getMemberFileArray();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
 
         for( MemberFile mf : member ) {
             for( Enumeration e = mf.getMemberModules(); e.hasMoreElements(); ) {
@@ -163,12 +162,13 @@ public class TestMemberServiceClass extends TestCase {
                 }
             }
         }
+        DatabaseManager.close( db_ );
+        db_ = null;
     }
 
     // проверяем список полей в QueryArea на наличие в базе данных
     public void testMemberFields()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -365,10 +365,9 @@ public class TestMemberServiceClass extends TestCase {
     }
 
     public void testMemberBuildSQL()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE" );
 
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -488,12 +487,13 @@ public class TestMemberServiceClass extends TestCase {
                 }
             }
         }
+        DatabaseManager.close( db_ );
+        db_ = null;
     }
 
     // проверяем список полей в QueryArea на наличие в базе данных
     public void testMemberRelateClassExists()
-            throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -542,8 +542,7 @@ public class TestMemberServiceClass extends TestCase {
 
     // проверяем список полей в QueryArea на наличие в базе данных
     public void testRestrict()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -570,7 +569,7 @@ public class TestMemberServiceClass extends TestCase {
 
                     for( int t = 0; t < qa.getTableCount(); t++ ) {
                         TableType table = qa.getTable( t );
-//                        if (!"SITE_PORTLET_FAQ".equals(table.getTable()))
+//                        if (!"WM_PORTLET_FAQ".equals(table.getTable()))
 //                            continue;
 
                         DbFieldType dbFieldTemp = null;
@@ -659,8 +658,7 @@ public class TestMemberServiceClass extends TestCase {
 
     // проверяем список полей в QueryArea на наличие в базе данных
     public void testMemberTypeFields()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -775,8 +773,7 @@ public class TestMemberServiceClass extends TestCase {
 
     // проверяем структуру мембер модулей на совместимость со структурой в базе данных
     public void testLookup()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -856,8 +853,7 @@ public class TestMemberServiceClass extends TestCase {
 
     // проверяем структуру мембер модулей на совместимость со структурой в базе данных
     public void testRestrictFields()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
 //        DBconnect db_ = DBconnect.getInstance(false, "ORACLE");
 
@@ -916,30 +912,26 @@ public class TestMemberServiceClass extends TestCase {
     }
 
     public void testMemberTemplateQuery()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
 
-        System.out.println("info Xalan version - " + org.apache.xalan.Version.getVersion());
-        System.out.println("info Xerces version - " + org.apache.xerces.impl.Version.getVersion());
-        System.out.println("info Castor version - " + org.exolab.castor.util.Version.getBuildVersion());
+        System.out.println( "info Xalan version - " + org.apache.xalan.Version.getVersion() );
+        System.out.println( "info Xerces version - " + org.apache.xerces.impl.Version.getVersion() );
+        System.out.println( "info Castor version - " + org.exolab.castor.util.Version.getBuildVersion() );
 
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
 
         MemberFile[] member = moduleManager.getMemberFileArray();
 
-        ModuleType module = moduleManager.getModule(TemplateMemberClassQuery.nameModule);
-        assertFalse("Module '" + TemplateMemberClassQuery.nameModule + "' not found",
-            module == null
-        );
+        ModuleType module = moduleManager.getModule( TemplateMemberClassQuery.nameModule );
+        assertFalse( "Module '" + TemplateMemberClassQuery.nameModule + "' not found",
+            module == null );
 
-        ContentType content = moduleManager.getContent(
-            TemplateMemberClassQuery.nameModule, ContentTypeActionType.INDEX_TYPE);
+        ContentType content = moduleManager.getContent( TemplateMemberClassQuery.nameModule, ContentTypeActionType.INDEX_TYPE );
 
-        assertFalse("Content 'index' in '" + TemplateMemberClassQuery.nameModule + "' module not found",
-            content == null
-        );
+        assertFalse( "Content 'index' in '" + TemplateMemberClassQuery.nameModule + "' module not found",
+            content == null );
 
 /*
 TargetModuleType target = null;
@@ -958,25 +950,21 @@ TargetModuleType target = null;
 */
 
         boolean isFound = false;
-        for (int i = 0; i < content.getQueryArea().getFieldsCount(); i++)
-        {
-            FieldsType field = content.getQueryArea().getFields(i);
-            if (field.getName().equals(TemplateMemberClassQuery.nameField))
-            {
+        for( int i = 0; i < content.getQueryArea().getFieldsCount(); i++ ) {
+            FieldsType field = content.getQueryArea().getFields( i );
+            if( field.getName().equals( TemplateMemberClassQuery.nameField ) ) {
                 isFound = true;
                 break;
             }
         }
-        assertFalse("Field '" + TemplateMemberClassQuery.nameField +
+        assertFalse( "Field '" + TemplateMemberClassQuery.nameField +
             "' in module '" + TemplateMemberClassQuery.nameModule + "'not found",
-            !isFound
-        );
+            !isFound );
     }
 
     // имена первичных ключей должны совпадать с именами в QueryArea если они там указаны
     public void testPrimaryKeyFieldName()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -1024,8 +1012,7 @@ TargetModuleType target = null;
 
     // первичные ключи не могут показываться при выполнении вставки - action=='insert'
     public void testPrimaryKeyInsertIsShow()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();
@@ -1063,8 +1050,7 @@ TargetModuleType target = null;
 
     // имена первичных ключей на условие что они не могут редактироваться если поле isShow==true
     public void testPrimaryKeyIsEdit()
-        throws Exception
-    {
+        throws Exception {
         StartupApplication.init();
         ModuleManager moduleManager = ModuleManager.getInstance( PropertiesProvider.getApplicationPath() );
         moduleManager.init();

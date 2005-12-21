@@ -101,7 +101,7 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
         throws PortletException {
 
         String sql_ =
-            "select ID_SITE_PORTLET_FAQ from SITE_PORTLET_FAQ where ID_SITE_SUPPORT_LANGUAGE=?";
+            "select ID_SITE_PORTLET_FAQ from WM_PORTLET_FAQ where ID_SITE_SUPPORT_LANGUAGE=?";
 
         v = new ArrayList();
 

@@ -259,7 +259,7 @@ public final class MemberProcessing {
 
                                 if (nameFirmField!=null)
                                 {
-                                    List list = AuthHelper.getGrantedFirmIdList(db_, renderRequest.getRemoteUser());
+                                    List list = AuthHelper.getGrantedCompanyIdList(db_, renderRequest.getRemoteUser());
                                     Long id = PortletService.getLong(renderRequest,
                                         mod.getName() + '.' + nameFirmField);
 
@@ -610,7 +610,7 @@ public final class MemberProcessing {
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(db_, renderRequest.getRemoteUser());
+                    String idList = AuthHelper.getGrantedCompanyId(db_, renderRequest.getRemoteUser());
 
                     whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                         ".ID_FIRM in ("+idList+") ";
@@ -641,7 +641,7 @@ public final class MemberProcessing {
 
                     break;
                 default:
-                    fromSQL += ", SITE_VIRTUAL_HOST " + prepareTableAlias(aliasSiteRestrict) + ' ';
+                    fromSQL += ", WM_PORTAL_VIRTUAL_HOST " + prepareTableAlias(aliasSiteRestrict) + ' ';
 
                     whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                         ".ID_SITE=" + prepareTableAlias(aliasSiteRestrict) +
@@ -2548,7 +2548,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(db_, renderRequest.getRemoteUser());
+                    String idList = AuthHelper.getGrantedCompanyId(db_, renderRequest.getRemoteUser());
 
                     whereSQL += qa.getMainRefTable() +
                         ".ID_FIRM in ("+idList+") ";
@@ -2565,7 +2565,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         }
 
         if (qa.getRestrict()!=null && qa.getRestrict().getType().getType()==RestrictTypeTypeType.SITE_TYPE) {
-            fromSQL += ", SITE_VIRTUAL_HOST " + aliasSiteRestrict + ' ';
+            fromSQL += ", WM_PORTAL_VIRTUAL_HOST " + aliasSiteRestrict + ' ';
             if ("".equals(whereSQL))
                 whereSQL += " where ";
             else

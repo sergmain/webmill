@@ -33,25 +33,20 @@
 
 package org.riverock.common.tools;
 
-import junit.framework.TestCase;
-import org.apache.log4j.Logger;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class TestDateTools  extends TestCase
-{
-    private static Logger log = Logger.getLogger( "org.riverock.tools.common.TestDateTools" );
+import junit.framework.TestCase;
 
-    public TestDateTools(String msg)
-    {
+public class TestDateTools extends TestCase {
+
+    public TestDateTools(String msg) {
         super(msg);
     }
 
-    public static class InternalTestDate
-    {
+    public static class InternalTestDate {
         public String s = null;
         public String m = null;
         public int dd;
@@ -65,18 +60,17 @@ public class TestDateTools  extends TestCase
         public boolean isResultNull = false;
 
 
-        public InternalTestDate(){}
+        public InternalTestDate() {
+        }
 
-        public InternalTestDate(String s_, String m_, boolean isException_, boolean isResultNull_)
-        {
+        public InternalTestDate(String s_, String m_, boolean isException_, boolean isResultNull_) {
             this.s = s_;
             this.m = m_;
             this.isException = isException_;
             this.isResultNull = isResultNull_;
         }
 
-        public InternalTestDate(String s_, String m_, int dd_, int MM_, int yyyy_, int HH_, int mm_, int ss_, int SSS_,boolean isException_)
-        {
+        public InternalTestDate(String s_, String m_, int dd_, int MM_, int yyyy_, int HH_, int mm_, int ss_, int SSS_, boolean isException_) {
             this.s = s_;
             this.m = m_;
             this.dd = dd_;
@@ -90,9 +84,9 @@ public class TestDateTools  extends TestCase
         }
     }
 
+    @SuppressWarnings(value = {"deprecation"})
     public void testGetDateWithMask()
-     throws Exception
-    {
+        throws Exception {
         InternalTestDate[] testDateWithMaskArray =
             {
                 new InternalTestDate("18/12/1970 23:04:45", "dd/MM/yyyy HH:mm:ss", 18, 12, 1970, 23, 4, 45, 0, false),
@@ -104,38 +98,30 @@ public class TestDateTools  extends TestCase
             };
 
 
-
-        for (int i=0; i<testDateWithMaskArray.length; i++)
-        {
-            try
-            {
+        for (int i = 0; i < testDateWithMaskArray.length; i++) {
+            try {
                 Date d = DateTools.getDateWithMask(testDateWithMaskArray[i].s, testDateWithMaskArray[i].m);
                 if (testDateWithMaskArray[i].isResultNull)
-                    assertEquals(true, d==null);
-                else
-                {
-                    assertEquals(true, d!=null);
+                    assertEquals(true, d == null);
+                else {
+                    assertEquals(true, d != null);
 
-                    assertEquals(testDateWithMaskArray[i].yyyy-1900, d.getYear());
-                    assertEquals(testDateWithMaskArray[i].MM-1,d.getMonth());
-                    assertEquals(testDateWithMaskArray[i].dd,d.getDate());
-                    assertEquals(testDateWithMaskArray[i].HH,d.getHours());
-                    assertEquals(testDateWithMaskArray[i].mm,d.getMinutes());
-                    assertEquals(testDateWithMaskArray[i].ss,d.getSeconds());
+                    assertEquals(testDateWithMaskArray[i].yyyy - 1900, d.getYear());
+                    assertEquals(testDateWithMaskArray[i].MM - 1, d.getMonth());
+                    assertEquals(testDateWithMaskArray[i].dd, d.getDate());
+                    assertEquals(testDateWithMaskArray[i].HH, d.getHours());
+                    assertEquals(testDateWithMaskArray[i].mm, d.getMinutes());
+                    assertEquals(testDateWithMaskArray[i].ss, d.getSeconds());
                 }
 //            assertEquals(testDateWithMaskArray[i].SSS,d.get());
             }
-            catch(Exception exc)
-            {
+            catch (Exception exc) {
                 assertEquals(true, testDateWithMaskArray[i].isException);
 
-                if (!testDateWithMaskArray[i].isException)
-                {
-                    System.out.println(
-                        "array index - "+i+", string - "+
-                        testDateWithMaskArray[i].s+
-                        ",mask - "+testDateWithMaskArray[i].m
-                    );
+                if (!testDateWithMaskArray[i].isException) {
+                    System.out.println("array index - " + i + ", string - " +
+                        testDateWithMaskArray[i].s +
+                        ",mask - " + testDateWithMaskArray[i].m);
                     throw exc;
                 }
             }
@@ -143,8 +129,7 @@ public class TestDateTools  extends TestCase
     }
 
 
-    public static class IntGSD
-    {
+    public static class IntGSD {
         public Timestamp t = null;
         public String s = null;
         public String m = null;
@@ -153,10 +138,10 @@ public class TestDateTools  extends TestCase
         public boolean isException = false;
         public boolean isResultNull = false;
 
-        public IntGSD(){}
+        public IntGSD() {
+        }
 
-        public IntGSD(Timestamp t_, String s_, String m_, boolean isException_, boolean isResultNull_)
-        {
+        public IntGSD(Timestamp t_, String s_, String m_, boolean isException_, boolean isResultNull_) {
             this.t = t_;
             this.s = s_;
             this.m = m_;
@@ -164,8 +149,7 @@ public class TestDateTools  extends TestCase
             this.isResultNull = isResultNull_;
         }
 
-        public IntGSD(Timestamp t_, String s_, String m_, Locale l_, TimeZone tz_, boolean isException_)
-        {
+        public IntGSD(Timestamp t_, String s_, String m_, Locale l_, TimeZone tz_, boolean isException_) {
             this.t = t_;
             this.s = s_;
             this.m = m_;
@@ -175,67 +159,52 @@ public class TestDateTools  extends TestCase
         }
     }
 
+    @SuppressWarnings(value = {"deprecation"})
     public void testGetStringDate()
-        throws Exception
-    {
+        throws Exception {
         IntGSD[] testGetStringDateArray =
             {
-                new IntGSD(
-                    new Timestamp(70, 12-1, 18, 23, 4, 45, 0),
+                new IntGSD(new Timestamp(70, 12 - 1, 18, 23, 4, 45, 0),
                     "18/12/1970 23:04:45.000",
                     "dd/MM/yyyy HH:mm:ss.SSS",
                     Locale.ENGLISH,
                     TimeZone.getTimeZone("Europe/Moscow"),
-                    false
-                ),
-                new IntGSD(
-                    new Timestamp(70, 12-1, 18, 23, 4, 45, 0),
+                    false),
+                new IntGSD(new Timestamp(70, 12 - 1, 18, 23, 4, 45, 0),
                     "18/12/1970 23:04:45.000",
                     "dd/MM/yyyy HH:mm:ss.SSS",
                     Locale.ENGLISH,
                     TimeZone.getTimeZone("Europe/Moscow"),
-                    false
-                )
+                    false)
 
             };
 
-        for (int i=0; i<testGetStringDateArray.length; i++)
-        {
-            try
-            {
-                String result = DateTools.getStringDate(
-                    testGetStringDateArray[i].t,
+        for (int i = 0; i < testGetStringDateArray.length; i++) {
+            try {
+                String result = DateTools.getStringDate(testGetStringDateArray[i].t,
                     testGetStringDateArray[i].m,
                     testGetStringDateArray[i].l,
-                    testGetStringDateArray[i].tz
-                    );
+                    testGetStringDateArray[i].tz);
 
 //                System.out.println("result "+result);
 
                 if (testGetStringDateArray[i].isResultNull)
-                    assertEquals(true, result==null);
-                else
-                {
-                    assertEquals(true, result!=null);
+                    assertEquals(true, result == null);
+                else {
+                    assertEquals(true, result != null);
 
-                    assertTrue(
-                        "\nError, result "+result+", origin "+testGetStringDateArray[i].s,
-                        result.equals(testGetStringDateArray[i].s)
-                    );
+                    assertTrue("\nError, result " + result + ", origin " + testGetStringDateArray[i].s,
+                        result.equals(testGetStringDateArray[i].s));
                 }
             }
-            catch(Exception exc)
-            {
+            catch (Exception exc) {
                 assertEquals(true, testGetStringDateArray[i].isException);
 
-                if (!testGetStringDateArray[i].isException)
-                {
-                    System.out.println(
-                        "array index - "+i+", string - "+
-                        testGetStringDateArray[i].s+
-                        ",mask - "+testGetStringDateArray[i].m +
-                        ",timestamp - "+testGetStringDateArray[i].t
-                    );
+                if (!testGetStringDateArray[i].isException) {
+                    System.out.println("array index - " + i + ", string - " +
+                        testGetStringDateArray[i].s +
+                        ",mask - " + testGetStringDateArray[i].m +
+                        ",timestamp - " + testGetStringDateArray[i].t);
                     throw exc;
                 }
             }

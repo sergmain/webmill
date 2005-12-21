@@ -68,40 +68,7 @@ public final class ServletResponseWrapperInclude extends HttpServletResponseWrap
         this.outputStream = outputStream;
     }
 
-    private static class PrintWriterLogger extends PrintWriter {
-
-        public PrintWriterLogger( Writer out ) {
-            this( out, false );
-        }
-
-        public PrintWriterLogger( Writer out, boolean autoFlush ) {
-            super( out, autoFlush );
-        }
-
-        public PrintWriterLogger(OutputStream out) {
-            super(out, false);
-        }
-
-        public PrintWriterLogger(OutputStream out, boolean autoFlush) {
-            super(out, autoFlush);
-        }
-
-        public void flush() {
-            if ( log.isDebugEnabled() ) {
-                log.debug( "flush content" );
-            }
-            super.flush();
-        }
-
-        public void write(String s) {
-            if ( log.isDebugEnabled() ) {
-                log.debug( "write string: " + s );
-            }
-            super.write(s);
-        }
-    }
-
-    public java.io.PrintWriter getWriter() throws java.io.IOException {
+    public java.io.PrintWriter getWriter() {
         if (realOutputStream!=null) {
             throw new IllegalStateException( "getOutputStream() already invoked" );
         }
@@ -122,7 +89,7 @@ public final class ServletResponseWrapperInclude extends HttpServletResponseWrap
         return realWriter;
     }
 
-    public ServletOutputStream getOutputStream() throws java.io.IOException {
+    public ServletOutputStream getOutputStream() {
         if (realWriter!=null) {
             throw new IllegalStateException( "getWriter() already invoked" );
         }

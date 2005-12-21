@@ -24,8 +24,7 @@
  */
 package org.riverock.portlet.price;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -33,9 +32,9 @@ import org.riverock.generic.main.CacheFactory;
 import org.riverock.generic.site.SiteListSite;
 import org.riverock.generic.startup.StartupApplication;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.core.GetCashCurrencyWithIdSiteList;
-import org.riverock.portlet.schema.core.CashCurrencyItemType;
-import org.riverock.portlet.schema.core.CashCurrencyListType;
+import org.riverock.portlet.core.GetWmCashCurrencyWithIdSiteList;
+import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
+import org.riverock.portlet.schema.core.WmCashCurrencyListType;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
 
 /**
@@ -47,7 +46,7 @@ import org.riverock.portlet.schema.price.CustomCurrencyType;
  */
 public class CurrencyList
 {
-    private static Log log = LogFactory.getLog( CurrencyList.class );
+    private static Logger log = Logger.getLogger( CurrencyList.class );
 
     private static CacheFactory cache = new CacheFactory( CurrencyList.class.getName() );
 
@@ -98,7 +97,7 @@ public class CurrencyList
     {
         try
         {
-            org.riverock.sql.cache.SqlStatement.registerRelateClass( new CurrencyList().getClass(), new GetCashCurrencyWithIdSiteList().getClass());
+            org.riverock.sql.cache.SqlStatement.registerRelateClass( new CurrencyList().getClass(), new GetWmCashCurrencyWithIdSiteList().getClass());
         }
         catch (Exception exception)
         {
@@ -110,10 +109,10 @@ public class CurrencyList
     {
         try
         {
-            CashCurrencyListType currList = GetCashCurrencyWithIdSiteList.getInstance(db_, idSite).item;
-            for (int i=0; i<currList.getCashCurrencyCount(); i++)
+            WmCashCurrencyListType currList = GetWmCashCurrencyWithIdSiteList.getInstance(db_, idSite).item;
+            for (int i=0; i<currList.getWmCashCurrencyCount(); i++)
             {
-                CashCurrencyItemType item = currList.getCashCurrency(i);
+                WmCashCurrencyItemType item = currList.getWmCashCurrency(i);
                 CurrencyItem currency = new CurrencyItem(db_, item);
                 list.addCurrencyList(currency);
                 list.setStandardCurrencyList( CurrencyService.getStandardCurrencyList(db_) );

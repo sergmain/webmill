@@ -241,7 +241,7 @@ public final class PriceEditImage extends HttpServlet
 
                     String sql_ =
                             "select  a.id_main, a.name_file " +
-                            "from    image_dir a, WM_AUTH_USER b " +
+                            "from    WM_IMAGE_DIR a, WM_AUTH_USER b " +
                             "where   a.id = ? and a.is_group = 1 and " +
                             "        a.ID_FIRM = b.ID_FIRM and b.user_login = ?";
 
@@ -281,9 +281,9 @@ public final class PriceEditImage extends HttpServlet
 
                     sql_ =
                             "select id, id_main, name_file, description, ID_IMAGE_DIR " +
-                            "from image_dir a, WM_AUTH_USER b \n" +
-                            "where a.id_main = ? and a.ID_FIRM = b.ID_FIRM and a.is_group = 0 " +
-                            "	and b.user_login=? \n" +
+                            "from   WM_IMAGE_DIR a, WM_AUTH_USER b \n" +
+                            "where  a.id_main = ? and a.ID_FIRM = b.ID_FIRM and a.is_group = 0 " +
+                            "	    and b.user_login=? \n" +
                             "order by id asc ";
                     try
                     {

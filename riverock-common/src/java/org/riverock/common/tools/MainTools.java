@@ -40,7 +40,7 @@ import java.util.LinkedList;
 public final class MainTools {
     private final static Log log = LogFactory.getLog(MainTools.class);
 
-    public static void putKey( final Map map, final Object key, final Object value )
+    public static void putKey( final Map<String, Object> map, final String key, final Object value )
     {
         Object obj = map.get( key );
         if (obj==null)

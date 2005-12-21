@@ -33,6 +33,7 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.db.DatabaseAdapter;
 
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.config.GenericConfig;
 import org.apache.log4j.Logger;
 
@@ -225,8 +226,8 @@ public final class DefinitionService
                     log.debug("store info about processed definition");
 
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName( "SEQ_MAIN_DB_DEFINITION" );
-                seq.setTableName( "MAIN_DB_DEFINITION" );
+                seq.setSequenceName( "SEQ_WM_DB_DEFINITION" );
+                seq.setTableName( "WM_DB_DEFINITION" );
                 seq.setColumnName( "ID_DB_DEFINITION" );
 
                 MainDbDefinitionItemType item = new MainDbDefinitionItemType();
@@ -235,7 +236,7 @@ public final class DefinitionService
                 item.setAplayDate( new Timestamp( System.currentTimeMillis()) );
 
                 String sql_ =
-                    "insert into MAIN_DB_DEFINITION"+
+                    "insert into WM_DB_DEFINITION "+
                     "(ID_DB_DEFINITION, NAME_DEFINITION, APLAY_DATE)"+
                     "values"+
                     "( ?,  ?,  "+ db_.getNameDateBind()+")";
@@ -560,7 +561,7 @@ public final class DefinitionService
                             fkList.getKeys(0).getPkTableName()
                         );
 
-                    db_.createForeignKey( fkList );
+                    DatabaseStructureManager.createForeignKey(db_, fkList );
                 }
             }
             catch(Exception e)
@@ -669,7 +670,7 @@ public final class DefinitionService
                                     field.setDefaultValue( getString(action.getActionParameters(), "column_default_value" ) );
                                     field.setNullable( getInteger(action.getActionParameters(), "column_nullable", 0) );
 
-                                    db_.addColumn( getString(action.getActionParameters(), "table_name"), field);
+                                    DatabaseStructureManager.addColumn(db_, getString(action.getActionParameters(), "table_name"), field);
                                 }
                                 break;
 
@@ -888,7 +889,7 @@ public final class DefinitionService
         try
         {
             String sql_ =
-                "select ID_DB_DEFINITION from MAIN_DB_DEFINITION ";
+                "select ID_DB_DEFINITION from WM_DB_DEFINITION ";
 
             PreparedStatement ps = null;
             ResultSet rs = null;
@@ -910,14 +911,14 @@ public final class DefinitionService
             {
                 if (db_.testExceptionTableNotFound(e))
                 {
-                    log.warn("MAIN_DB_DEFINITION table not found. Assumed this first connect to empty DB schema. Start create new structure");
+                    log.warn("WM_DB_DEFINITION table not found. Assumed this first connect to empty DB schema. Start create new structure");
                     return;
                 }
 
                 if (e instanceof SQLException)
-                    log.error("Error get data from MAIN_DB_DEFINITION, sql code "+((SQLException)e).getErrorCode(), e);
+                    log.error("Error get data from WM_DB_DEFINITION, sql code "+((SQLException)e).getErrorCode(), e);
                 else
-                    log.error("Error get data from MAIN_DB_DEFINITION", e);
+                    log.error("Error get data from WM_DB_DEFINITION", e);
 
                 throw e;
             }

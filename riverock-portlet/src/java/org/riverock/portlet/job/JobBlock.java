@@ -94,7 +94,7 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
 
         final String sql_ =
             "select a.ID_JOB_POSITION " +
-            "from   WM_JOB_POSITION a, SITE_LIST_SITE c " +
+            "from   WM_JOB_POSITION a, WM_PORTAL_LIST_SITE c " +
             "where  a.ID_FIRM=c.ID_FIRM and c.ID_SITE=? " +
             "order by a.DATE_POST desc";
 

@@ -197,8 +197,8 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     static {
         sql_ =
             "select a.ID_SITE_CTX_ARTICLE " +
-            "from SITE_CTX_ARTICLE a " +
-            "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.ARTICLE_CODE=? and a.IS_DELETED=0";
+            "from   WM_PORTLET_ARTICLE a " +
+            "where  a.ID_SITE_SUPPORT_LANGUAGE=? and a.ARTICLE_CODE=? and a.IS_DELETED=0";
 
         try
         {
@@ -264,7 +264,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     static String sql1_ = null;
     static {
         sql1_ =
-            "select * from SITE_CTX_ARTICLE where ID_SITE_CTX_ARTICLE=? and IS_DELETED=0";
+            "select * from WM_PORTLET_ARTICLE where ID_SITE_CTX_ARTICLE=? and IS_DELETED=0";
 
         try {
             SqlStatement.registerSql( sql1_, ArticlePlain.class );
@@ -310,8 +310,8 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     {
         sql2_ =
             "select ARTICLE_DATA " +
-            "from SITE_CTX_ARTICLE_DATA " +
-            "where ID_SITE_CTX_ARTICLE = ? " +
+            "from   WM_PORTLET_ARTICLE " +
+            "where  ID_SITE_CTX_ARTICLE = ? " +
             "order by ID_SITE_CTX_ARTICLE_DATA ASC";
 
         try {
@@ -357,10 +357,10 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     static {
         sql3_ =
             "SELECT b.ID_SITE_CTX_ARTICLE, b.NAME_ARTICLE, b.ARTICLE_CODE "+
-            "FROM site_ctx_lang_catalog a, site_ctx_article b "+
-            "where a.ID_SITE_CTX_LANG_CATALOG=? and "+
-            "a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
-            "b.IS_PLAIN_HTML=1";
+            "FROM   WM_PORTAL_CATALOG_LANGUAGE a, WM_PORTLET_ARTICLE b "+
+            "where  a.ID_SITE_CTX_LANG_CATALOG=? and "+
+            "       a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
+            "       b.IS_PLAIN_HTML=1";
 
         try {
             SqlStatement.registerSql( sql3_, new ArticlePlain().getClass() );

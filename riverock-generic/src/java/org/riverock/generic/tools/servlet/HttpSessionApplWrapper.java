@@ -40,9 +40,7 @@ import org.apache.log4j.Logger;
  *
  * $Id$
 */
-public class HttpSessionApplWrapper implements HttpSession
-{
-    private static Logger cat = Logger.getLogger("org.riverock.generic.tools.servlet.HttpSessionApplWrapper");
+public class HttpSessionApplWrapper implements HttpSession {
 
     public HttpSessionApplWrapper()
     {

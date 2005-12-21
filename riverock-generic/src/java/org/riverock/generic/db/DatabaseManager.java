@@ -127,7 +127,7 @@ public final class DatabaseManager {
             return;
         }
 
-        DbPrimaryKeyType checkPk = db_.getPrimaryKey(table.getSchema(), table.getName());
+        DbPrimaryKeyType checkPk = DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName());
 
         if (checkPk!=null && checkPk.getColumnsCount()!=0)
         {
@@ -493,7 +493,7 @@ public final class DatabaseManager {
         DatabaseMetaData db = db_.getConnection().getMetaData();
         String dbSchema = db.getUserName();
 
-        ArrayList list = db_.getTableList( dbSchema, "%");
+        ArrayList list = DatabaseStructureManager.getTableList(db_, db_.conn, dbSchema, "%");
         final int initialCapacity = list.size();
         ArrayList target = new ArrayList(initialCapacity);
         for (int i = 0; i < initialCapacity; i++) {
@@ -519,9 +519,9 @@ public final class DatabaseManager {
             DbTableType table = schema.getTables(i);
 //            System.out.println( "Table - " + table.getName() );
 
-            table.setFields(db_.getFieldsList(table.getSchema(), table.getName()));
-            table.setPrimaryKey(db_.getPrimaryKey(table.getSchema(), table.getName()));
-            table.setImportedKeys( db_.getImportedKeys(table.getSchema(), table.getName()) );
+            table.setFields(DatabaseStructureManager.getFieldsList(db_, db_.conn, table.getSchema(), table.getName()));
+            table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName()));
+            table.setImportedKeys( DatabaseStructureManager.getImportedKeys(db_.conn, table.getSchema(), table.getName()) );
         }
 
         for (int i = 0; i < schema.getViewsCount(); i++)
@@ -563,7 +563,7 @@ public final class DatabaseManager {
                     {
                         try
                         {
-                            db_.dropView(view);
+                            DatabaseStructureManager.dropView(db_, view);
                         }
                         catch(Exception e1)
                         {
@@ -1080,13 +1080,9 @@ public final class DatabaseManager {
             }
         }
 
-//            boolean isContinue = true;
         for (i=0; i<millSchema.getTablesCount(); i++)
         {
             DbTableType table = millSchema.getTables(i);
-//                if (isContinue && !"MAIN_NEWS_TEXT".equalsIgnoreCase( table.getName() ))
-//                    continue;
-//                isContinue = false;
 
             fixBigTextTable(
                 table,
@@ -1127,7 +1123,7 @@ public final class DatabaseManager {
                         throw e;
                     }
                 }
-                db_.setDataTable(table, millSchema.getBigTextTableAsReference());
+                DatabaseStructureManager.setDataTable(db_, table, millSchema.getBigTextTableAsReference());
                 db_.commit();
             }
             else

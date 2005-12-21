@@ -61,8 +61,8 @@ public final class CurrencyService {
     {
         String sql_ =
             "select max(f.DATE_CHANGE) LAST_DATE " +
-            "from  CASH_CURR_VALUE f, CASH_CURRENCY b " +
-            "where f.ID_CURRENCY=b.ID_CURRENCY and b.ID_SITE=? and f.ID_CURRENCY=? ";
+            "from   WM_CASH_CURR_VALUE f, WM_CASH_CURRENCY b " +
+            "where  f.ID_CURRENCY=b.ID_CURRENCY and b.ID_SITE=? and f.ID_CURRENCY=? ";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -112,11 +112,11 @@ public final class CurrencyService {
         }
         sql_ =
             "select  a.ID_CURRENCY, a.DATE_CHANGE, a.CURS " +
-            "from CASH_CURR_VALUE a, CASH_CURRENCY b " +
-            "where a.ID_CURRENCY=b.ID_CURRENCY and " +
-            "b.ID_SITE=? and " +
-            "a.ID_CURRENCY=? and " +
-            "DATE_CHANGE = " + db_.getNameDateBind();
+            "from    WM_CASH_CURR_VALUE a, WM_CASH_CURRENCY b " +
+            "where   a.ID_CURRENCY=b.ID_CURRENCY and " +
+            "        b.ID_SITE=? and " +
+            "        a.ID_CURRENCY=? and " +
+            "        DATE_CHANGE = " + db_.getNameDateBind();
 
         ps = null;
         rs = null;
@@ -159,7 +159,7 @@ public final class CurrencyService {
     {
         String sql_ =
             "select max(z1.DATE_CHANGE) LAST_DATE " +
-            "from   CASH_CURS_STD z1, CASH_CURRENCY_STD a2 " +
+            "from   WM_CASH_CURS_STD z1, WM_CASH_CURRENCY_STD a2 " +
             "where  z1.IS_DELETED=0 and " +
             "       z1.ID_STD_CURR=a2.ID_STD_CURR and " +
             "       z1.ID_STD_CURR=?";
@@ -195,7 +195,7 @@ public final class CurrencyService {
 
         sql_ =
             "select  a2.*, a1.VALUE_CURS CURS, a1.DATE_CHANGE " +
-            "from    CASH_CURS_STD a1, CASH_CURRENCY_STD a2 " +
+            "from    WM_CASH_CURS_STD a1, WM_CASH_CURRENCY_STD a2 " +
             "where   a1.IS_DELETED=0 and " +
             "        a1.ID_STD_CURR=a2.ID_STD_CURR and " +
             "        a1.ID_STD_CURR=? and " +
@@ -242,7 +242,7 @@ public final class CurrencyService {
 
         String sql_ =
                 "SELECT ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED " +
-                "FROM CASH_CURRENCY_STD ";
+                "FROM   WM_CASH_CURRENCY_STD ";
 
         PreparedStatement ps = null;
         ResultSet rs = null;

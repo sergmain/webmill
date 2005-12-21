@@ -390,12 +390,12 @@ public final class ServletTools {
         return i_;
     }
 
-    public static Map getParameterMap(final String parameter)
+    public static Map<String, Object> getParameterMap(final String parameter)
     {
         if (parameter==null)
             return null;
 
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
 
         String s = parameter;
         if (parameter.indexOf('?')!=-1)

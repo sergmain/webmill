@@ -29,6 +29,7 @@ import java.sql.SQLException;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
@@ -69,7 +70,7 @@ public class DbStructureCreateTable
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(true, dbAlias );
+            db_ = DatabaseAdapter.getInstance( dbAlias );
             System.out.println("db connect - "+db_.getClass().getName());
 
             int i = 0;
@@ -105,7 +106,7 @@ public class DbStructureCreateTable
                         throw e;
                 }
                 if (isData)
-                    db_.setDataTable(table);
+                    DatabaseStructureManager.setDataTable(db_, table);
 
                 break;
             }

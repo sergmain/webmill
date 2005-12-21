@@ -39,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
@@ -55,7 +56,7 @@ public class TestForeignKeys
     {
         org.riverock.generic.startup.StartupApplication.init();
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE");
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
         DbTableType testTable = null;
 
@@ -148,7 +149,7 @@ public class TestForeignKeys
 
         DbImportedKeyListType fk = new DbImportedKeyListType();
         fk.setKeys( testTable.getImportedKeysAsReference() );
-        db_.createForeignKey( fk );
+        DatabaseStructureManager.createForeignKey( db_, fk );
 
     }
 }

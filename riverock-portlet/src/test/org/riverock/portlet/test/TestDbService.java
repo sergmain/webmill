@@ -46,15 +46,15 @@ public class TestDbService
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "MSSQL-JTDS");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "MSSQL-JTDS");
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "ORACLE");
         DbSchemaType schemaOracle = DatabaseManager.getDbStructure(dbOra );
 
         DbTableType sourceTableOracle =
-            DatabaseManager.getTableFromStructure( schemaOracle, "PRICE_SHOP_TABLE");
+            DatabaseManager.getTableFromStructure( schemaOracle, "WM_PRICE_SHOP_LIST");
 
-        DbTableType checkTable = DatabaseManager.getTableFromStructure( schema, "PRICE_SHOP_TABLE");
+        DbTableType checkTable = DatabaseManager.getTableFromStructure( schema, "WM_PRICE_SHOP_LIST");
         checkTable.setData( null );
 
 //        DatabaseManager.duplicateTable(db_, sourceTable, sourceTable.getName()+"_TEMP");

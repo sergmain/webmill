@@ -101,8 +101,8 @@ public final class PriceListItemList
             );
             sql_ =
                 "select a.* " +
-                "from PRICE_LIST a " +
-                "where a.ID_MAIN=? and a.ID_SHOP=? and a.ABSOLETE=0 and a.IS_GROUP=0 ";
+                "from   WM_PRICE_LIST a " +
+                "where  a.ID_MAIN=? and a.ID_SHOP=? and a.ABSOLETE=0 and a.IS_GROUP=0 ";
 
             if ("item".equals(shopParam.sortBy)) {
                 sql_ += ("order by a.ITEM " + (shopParam.sortDirect == 0 ? "ASC" : "DESC"));

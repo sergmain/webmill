@@ -68,7 +68,7 @@ public class ShopBasketItems
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        String sql_ = "select * from PRICE_LIST where ID_ITEM = ?";
+        String sql_ = "select * from WM_PRICE_LIST where ID_ITEM = ?";
 
         try
         {

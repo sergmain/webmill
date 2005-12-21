@@ -23,24 +23,22 @@
  *
  */
 
-/**
- * $Id$
- */
 package org.riverock.cache.impl;
 
 /**
  * Something went wrong in the cache
+ * <p/>
+ * $Id$
  */
 public class CacheException extends Exception {
-	
-	public CacheException(String s) {
-		super(s);
-	}
-	
-	public CacheException(Exception e) {
-		super(e);
-	}
-	
+
+    public CacheException(String s) {
+        super(s);
+    }
+
+    public CacheException(Exception e) {
+        super(e);
+    }
 }
 
 

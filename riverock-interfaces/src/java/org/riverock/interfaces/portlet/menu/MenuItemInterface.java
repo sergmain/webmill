@@ -28,7 +28,6 @@ package org.riverock.interfaces.portlet.menu;
 import java.util.List;
 
 import org.riverock.interfaces.common.TreeItemInterface;
-import org.riverock.interfaces.generic.LocalizedStringInterface;
 
 /**
  * User: serg_main
@@ -37,17 +36,16 @@ import org.riverock.interfaces.generic.LocalizedStringInterface;
  * @author Serge Maslyukov
  * $Id$
  */
-public interface MenuItemInterface extends TreeItemInterface
-{
-    Long getId();
-    Long getIdTop();
-    Long getIdPortlet();
-    Long getIdTemplate();
-    String getNameTemplate();
-    Long getIdType();
-    String getType();
-    LocalizedStringInterface getStr();
-    List getCatalogItems();
-    String getUrl();
-    String getUrlResource();
+public interface MenuItemInterface extends TreeItemInterface {
+    public Long getId();
+    public Long getIdTop();
+    public Long getIdPortlet();
+    public Long getIdTemplate();
+    public String getNameTemplate();
+    public Long getIdType();
+    public String getType();
+    public String getMenuName();
+    public List getCatalogItems();
+    public String getUrl();
+    public String getUrlResource();
 }

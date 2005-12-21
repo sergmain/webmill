@@ -33,7 +33,7 @@ public class UserDAO {
                 "SELECT a.u_avatar_id, a.u_sign, a.u_post, a.u_lasttime, a.u_lastip " +
                 "       b.DATE_START_WORK, b.ADDRESS, b.EMAIL, " +
                 "       b.FIRST_NAME, b.MIDDLE_NAME, b.LAST_NAME, " +
-                "FROM   WM_FORUM_USER a, MAIN_USER_INFO b " +
+                "FROM   WM_FORUM_USER a, WM_LIST_USER b " +
                 "where  a.U_ID=? and a.U_ID=b.ID_USER ";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, u_id.intValue());

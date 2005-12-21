@@ -63,9 +63,9 @@
 	</xs:complexType>
 	<xs:complexType name="OrderItemType">
 		<xs:complexContent>
-			<xs:extension base="riverock-portlet-schema-core:PriceListItemType">
+			<xs:extension base="riverock-portlet-schema-core:WmPriceListItemType">
 				<xs:sequence>
-					<xs:element name="PriceItemResult" type="xs:double"/>
+					<xs:element name="WmPriceItemResult" type="xs:double"/>
 					<xs:element name="PrecisionResult" type="xs:int"/>
 					<xs:element name="Discount" type="DiscountType" minOccurs="0"/>
 					<xs:element name="CurrencyItem" type="CustomCurrencyItemType"/>

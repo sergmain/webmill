@@ -93,8 +93,8 @@ public class TestDropSiteFromHsql
         DatabaseAdapter.close(adapter);
 
         CustomSequenceType seq = new CustomSequenceType();
-        seq.setSequenceName("SEQ_SITE_LIST_SITE");
-        seq.setTableName( "SITE_LIST_SITE");
+        seq.setSequenceName("SEQ_WM_PORTAL_LIST_SITE");
+        seq.setTableName( "WM_PORTAL_LIST_SITE");
         seq.setColumnName( "ID_SITE" );
         long idSiteNew = db_.getSequenceNextValue( seq );
 
@@ -121,8 +121,8 @@ public class TestDropSiteFromHsql
             css.setIdSite( idSiteNew );
             String cssData = css.getCssData();
             css.setCssData( "" );
-            seq.setSequenceName("SEQ_SITE_CONTENT_CSS");
-            seq.setTableName( "SITE_CONTENT_CSS");
+            seq.setSequenceName("SEQ_WM_PORTAL_CSS");
+            seq.setTableName( "WM_PORTAL_CSS");
             seq.setColumnName( "ID_SITE_CONTENT_CSS" );
             long idCssNew = db_.getSequenceNextValue( seq );
             css.setIdSiteContentCss( idCssNew );
@@ -132,7 +132,7 @@ public class TestDropSiteFromHsql
             DatabaseManager.insertBigText(db_, new Long(idCssNew),
                 "ID_SITE_CONTENT_CSS",
                 PrimaryKeyTypeType.NUMBER_TYPE,
-                "SITE_CONTENT_CSS_DATA",
+                "WM_PORTAL_CSS_DATA",
                 "ID_SITE_CONTENT_CSS_DATA",
                 "CSS_DATA",
                 cssData,
@@ -143,8 +143,8 @@ public class TestDropSiteFromHsql
         for (int i=0; i<site.getSiteLanguage().getItemCount(); i++)
         {
             SiteExtendLanguageType siteLangTemp = site.getSiteLanguage().getItem(i);
-            seq.setSequenceName("SEQ_SITE_SUPPORT_LANGUAGE");
-            seq.setTableName( "SITE_SUPPORT_LANGUAGE");
+            seq.setSequenceName("SEQ_WM_PORTAL_SITE_LANGUAGE");
+            seq.setTableName( "WM_PORTAL_SITE_LANGUAGE");
             seq.setColumnName( "ID_SITE_SUPPORT_LANGUAGE" );
             long idSiteLangNew = db_.getSequenceNextValue( seq );
             siteLangTemp.setIdSiteSupportLanguage( idSiteLangNew );
@@ -157,12 +157,12 @@ public class TestDropSiteFromHsql
 
             // вставляем шаблоны.
             // вставляем перед меню т.к. надо изменить ссылки в меню
-            SiteTemplateListType templateList = siteLangTemp.getTemplate();
-            for (int j=0; j<templateList.getSiteTemplateCount(); j++)
+            WmPortalTemplateListType templateList = siteLangTemp.getTemplate();
+            for (int j=0; j<templateList.getWmPortalTemplateCount(); j++)
             {
-                SiteTemplateItemType templateItem = templateList.getSiteTemplate(j);
-                seq.setSequenceName("SEQ_SITE_TEMPLATE");
-                seq.setTableName( "SITE_TEMPLATE");
+                WmPortalTemplateItemType templateItem = templateList.getWmPortalTemplate(j);
+                seq.setSequenceName("SEQ_WM_PORTAL_TEMPLATE");
+                seq.setTableName( "WM_PORTAL_TEMPLATE");
                 seq.setColumnName( "ID_SITE_TEMPLATE" );
                 long idTemplateNew = db_.getSequenceNextValue( seq );
 
@@ -178,8 +178,8 @@ public class TestDropSiteFromHsql
             if (memberTemplate!=null)
             {
                 memberTemplate.setIdSiteSupportLanguage( idSiteLangNew );
-                seq.setSequenceName("SEQ_SITE_TEMPLATE_MEMBER");
-                seq.setTableName( "SITE_TEMPLATE_MEMBER");
+                seq.setSequenceName("SEQ_WM_PORTAL_TEMPLATE_MEMBER");
+                seq.setTableName( "WM_PORTAL_TEMPLATE_MEMBER");
                 seq.setColumnName( "ID_SITE_TEMPLATE_MEMBER" );
                 long idMemberTemplateNew = db_.getSequenceNextValue( seq );
                 memberTemplate.setIdSiteTemplateMember( idMemberTemplateNew );
@@ -232,8 +232,8 @@ public class TestDropSiteFromHsql
             for (int j=0; j<catalogLangList.getItemCount();j++ )
             {
                 SiteExtendCtxLangCatalogType catalogLangItem = catalogLangList.getItem(j);
-                seq.setSequenceName("SEQ_SITE_CTX_LANG_CATALOG");
-                seq.setTableName( "SITE_CTX_LANG_CATALOG");
+                seq.setSequenceName("SEQ_WM_PORTAL_CATALOG_LANGUAGE");
+                seq.setTableName( "WM_PORTAL_CATALOG_LANGUAGE");
                 seq.setColumnName( "ID_SITE_CTX_LANG_CATALOG" );
                 long idCtxLangCatalogNew = db_.getSequenceNextValue( seq );
                 catalogLangItem.setIdSiteCtxLangCatalog( idCtxLangCatalogNew );
@@ -244,8 +244,8 @@ public class TestDropSiteFromHsql
                 for (int k=0; k<catalogList.getSiteCtxCatalogCount(); k++)
                 {
                     SiteCtxCatalogItemType catalogItem = catalogList.getSiteCtxCatalog(k);
-                    seq.setSequenceName("SEQ_SITE_CTX_CATALOG");
-                    seq.setTableName( "SITE_CTX_CATALOG");
+                    seq.setSequenceName("SEQ_WM_PORTAL_CATALOG");
+                    seq.setTableName( "WM_PORTAL_CATALOG");
                     seq.setColumnName( "ID_SITE_CTX_CATALOG" );
                     long idCtxCatalogNew = db_.getSequenceNextValue( seq );
 
@@ -263,8 +263,8 @@ public class TestDropSiteFromHsql
                 SiteXsltItemType xsltItem = xsltList.getSiteXslt(j);
                 String xsltData = xsltItem.getXslt();
                 xsltItem.setXslt("");
-                seq.setSequenceName("SEQ_SITE_XSLT");
-                seq.setTableName( "SITE_XSLT");
+                seq.setSequenceName("SEQ_WM_PORTAL_XSLT");
+                seq.setTableName( "WM_PORTAL_XSLT");
                 seq.setColumnName( "ID_SITE_XSLT" );
                 long idXsltNew = db_.getSequenceNextValue( seq );
                 xsltItem.setIdSiteXslt( idXsltNew );
@@ -274,7 +274,7 @@ public class TestDropSiteFromHsql
                 DatabaseManager.insertBigText(db_, new Long(idXsltNew),
                     "ID_SITE_XSLT",
                     PrimaryKeyTypeType.NUMBER_TYPE,
-                    "SITE_XSLT_DATA",
+                    "WM_PORTAL_XSLT_DATA",
                     "ID_SITE_XSLT_DATA",
                     "XSLT",
                     xsltData,
@@ -337,8 +337,8 @@ public class TestDropSiteFromHsql
                 {
                     // иначе нолучаем новый id и вставляем его в целевую базу
                     CustomSequenceType seq = new CustomSequenceType();
-                    seq.setSequenceName( "SEQ_SITE_CTX_TYPE" );
-                    seq.setTableName( "SITE_CTX_TYPE" );
+                    seq.setSequenceName( "SEQ_WM_PORTAL_PORTLET_NAME" );
+                    seq.setTableName( "WM_PORTAL_PORTLET_NAME" );
                     seq.setColumnName( "ID_SITE_CTX_TYPE" );
                     long idNew = db_.getSequenceNextValue( seq );
 
@@ -394,11 +394,11 @@ public class TestDropSiteFromHsql
     private static void insertVirtualHost(DatabaseAdapter db_, long idSiteNew, String serverName) throws Exception
     {
         CustomSequenceType seq = new CustomSequenceType();
-        seq.setSequenceName("SEQ_SITE_VIRTUAL_HOST");
-        seq.setTableName( "SITE_VIRTUAL_HOST");
+        seq.setSequenceName("SEQ_WM_PORTAL_VIRTUAL_HOST");
+        seq.setTableName( "WM_PORTAL_VIRTUAL_HOST");
         seq.setColumnName( "ID_SITE_VIRTUAL_HOST" );
         long idVirtualHostNew = db_.getSequenceNextValue( seq );
-        SiteVirtualHostItemType virtualHost = new SiteVirtualHostItemType();
+        WmPortalVirtualHostItemType virtualHost = new WmPortalVirtualHostItemType();
         virtualHost.setIdSite( idSiteNew );
         virtualHost.setIdSiteVirtualHost( idVirtualHostNew );
         virtualHost.setNameVirtualHost( serverName );
@@ -509,12 +509,12 @@ public class TestDropSiteFromHsql
         CustomSequenceType seq = new CustomSequenceType();
         for (int i=0; i<articleList.getSiteCtxArticleCount(); i++)
         {
-            seq.setSequenceName( "SEQ_SITE_CTX_ARTICLE" );
-            seq.setTableName( "SITE_CTX_ARTICLE");
+            seq.setSequenceName( "SEQ_WM_PORTLET_ARTICLE" );
+            seq.setTableName( "WM_PORTLET_ARTICLE");
             seq.setColumnName( "ID_SITE_CTX_ARTICLE" );
             long idArticleNew = db_.getSequenceNextValue( seq );
 
-            SiteCtxArticleItemType articleItem = articleList.getSiteCtxArticle(i);
+            WmPortletArticleItemType articleItem = articleList.getSiteCtxArticle(i);
             String articleData = articleItem.getArticleData();
             articleItem.setArticleData( "" );
             articleItem.setIdSiteCtxArticle( idArticleNew );
@@ -524,7 +524,7 @@ public class TestDropSiteFromHsql
             DatabaseManager.insertBigText(db_, new Long(idArticleNew),
                 "ID_SITE_CTX_ARTICLE",
                 PrimaryKeyTypeType.NUMBER_TYPE,
-                "SITE_CTX_ARTICLE_DATA",
+                "WM_PORTLET_ARTICLE_DATA",
                 "ID_SITE_CTX_ARTICLE_DATA",
                 "ARTICLE_DATA",
                 articleData,
@@ -541,10 +541,10 @@ public class TestDropSiteFromHsql
         CustomSequenceType seq = new CustomSequenceType();
         for (int i=0; i<articleList.getSiteCtxArticleCount(); i++)
         {
-            SiteCtxArticleItemType articleItem = articleList.getSiteCtxArticle(i);
+            WmPortletArticleItemType articleItem = articleList.getSiteCtxArticle(i);
 
-            seq.setSequenceName( "SEQ_SITE_CTX_ARTICLE" );
-            seq.setTableName( "SITE_CTX_ARTICLE");
+            seq.setSequenceName( "SEQ_WM_PORTLET_ARTICLE" );
+            seq.setTableName( "WM_PORTLET_ARTICLE");
             seq.setColumnName( "ID_SITE_CTX_ARTICLE" );
             long idArticleNew = db_.getSequenceNextValue( seq );
 
@@ -570,7 +570,7 @@ public class TestDropSiteFromHsql
             DatabaseManager.insertBigText(db_, new Long(idArticleNew),
                 "ID_SITE_CTX_ARTICLE",
                 PrimaryKeyTypeType.NUMBER_TYPE,
-                "SITE_CTX_ARTICLE_DATA",
+                "WM_PORTLET_ARTICLE_DATA",
                 "ID_SITE_CTX_ARTICLE_DATA",
                 "ARTICLE_DATA",
                 articleData,

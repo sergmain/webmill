@@ -78,7 +78,7 @@ public final class SwitchLanguagePortlet implements Portlet {
 
     private String getLanguageName( final Long idSiteLanguage ) throws Exception {
         final String sql_ =
-            "select CUSTOM_LANGUAGE from SITE_SUPPORT_LANGUAGE " +
+            "select CUSTOM_LANGUAGE from WM_PORTAL_SITE_LANGUAGE " +
             "where ID_SITE_SUPPORT_LANGUAGE=? ";
 
         PreparedStatement ps = null;

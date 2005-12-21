@@ -25,8 +25,9 @@
 
 package org.riverock.common.tools;
 
-import java.util.Hashtable;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A mapping to determine the (somewhat arbitrarily) preferred charset for
@@ -40,11 +41,11 @@ import java.util.Locale;
 public class LocaleCharset
 {
 
-    private static Hashtable map;
+    private static Map<String, String> map = null;
 
     static
     {
-        map = new Hashtable();
+        map = new HashMap<String, String>();
 
         map.put("ar", "ISO-8859-6");
         map.put("be", "ISO-8859-5");
