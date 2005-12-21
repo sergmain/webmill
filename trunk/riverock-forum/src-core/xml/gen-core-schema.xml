@@ -39,7 +39,6 @@
 	<LogicPrefix>IS_</LogicPrefix>
 	<OrderField>ORDER_FIELD</OrderField>
 	<DbTablePrefix>WM_FORUM</DbTablePrefix>
-	<!--	<TableToList>SITE_ACCESS_USER_AGENT</TableToList>  -->
 	<Logger>
 		<LogObjectClassName>org.apache.log4j.Logger</LogObjectClassName>
 		<LogFactoryMethod>org.apache.log4j.Logger.getLogger</LogFactoryMethod>

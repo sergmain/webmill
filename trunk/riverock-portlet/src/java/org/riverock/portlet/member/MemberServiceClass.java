@@ -473,7 +473,7 @@ public final class MemberServiceClass {
             {
                 addParameter(content1, "", SqlCheckParameterTypeTypeType.RESTRICT_SITE );
                 SqlFromType fromType = new SqlFromType();
-                fromType.setTable( "SITE_VIRTUAL_HOST" );
+                fromType.setTable( "WM_PORTAL_VIRTUAL_HOST" );
                 fromType.setAlias( MemberProcessing.aliasSiteRestrict );
                 content1.getQueryArea().getSqlCache().addFrom( fromType );
                 content1.getQueryArea().getSqlCache().addWhere(
@@ -677,7 +677,7 @@ public final class MemberServiceClass {
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(db_, remoteUser);
+                    String idList = AuthHelper.getGrantedCompanyId(db_, remoteUser);
 
                     sc.where +=
                         MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
@@ -758,7 +758,7 @@ public final class MemberServiceClass {
                     sc.where += " ID_SITE in ("+idSite+") ";
                     break;
                 default:
-                    sc.from += ", SITE_VIRTUAL_HOST " +
+                    sc.from += ", WM_PORTAL_VIRTUAL_HOST " +
                         MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()) + ' ';
 
                     sc.where += MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(), module.getName()) +
@@ -773,7 +773,7 @@ public final class MemberServiceClass {
                 addParameter(contentMain, "", SqlCheckParameterTypeTypeType.RESTRICT_SITE );
 
                 SqlFromType fromType = new SqlFromType();
-                fromType.setTable( "SITE_VIRTUAL_HOST" );
+                fromType.setTable( "WM_PORTAL_VIRTUAL_HOST " );
                 fromType.setAlias( MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()) );
                 contentMain.getQueryArea().getSqlCache().addFrom( fromType );
 
@@ -809,7 +809,7 @@ public final class MemberServiceClass {
             cnt.getQueryArea().getRestrict().getType().getType() ==
             RestrictTypeTypeType.USER_TYPE)
         {
-            sc.from += ", auth_user " +
+            sc.from += ", WM_AUTH_USER " +
                 MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) + ' ';
 
             if (sc.where.length() != 0)
@@ -1173,7 +1173,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(dbDyn, remoteUser);
+                    String idList = AuthHelper.getGrantedCompanyId(dbDyn, remoteUser);
 
                     where_ += " ID_FIRM in ("+idList+") ";
 
@@ -1219,7 +1219,7 @@ public final class MemberServiceClass {
                         "ID_SITE in " +
                         " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
                         '.' + "ID_SITE " +
-                        "  from site_virtual_host " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
+                        "  from WM_PORTAL_VIRTUAL_HOST " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
                         "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
                         ".NAME_VIRTUAL_HOST = lower(?) ) ";
                     break;
@@ -1468,7 +1468,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(dbDyn, remoteUser );
+                    String idList = AuthHelper.getGrantedCompanyId(dbDyn, remoteUser );
                     // do update without aliases
                     where_ += " and ID_FIRM in ("+idList+") ";
 
@@ -1501,7 +1501,7 @@ public final class MemberServiceClass {
                         "ID_SITE in " +
                         " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
                         '.' + "ID_SITE " +
-                        "  from site_virtual_host " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
+                        "  from WM_PORTAL_VIRTUAL_HOST " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
                         "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
                         ".NAME_VIRTUAL_HOST=lower(?) ) ";
                     break;

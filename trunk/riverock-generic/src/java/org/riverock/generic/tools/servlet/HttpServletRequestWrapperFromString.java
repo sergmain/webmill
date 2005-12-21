@@ -47,7 +47,7 @@ import org.riverock.common.tools.ServletTools;
  * $Id$
  */
 public final class HttpServletRequestWrapperFromString extends HttpServletRequestWrapper {
-    Map param = null;
+    Map<String, Object> param = null;
     URL url = null;
     public HttpServletRequestWrapperFromString(HttpServletRequest request, String url) throws MalformedURLException {
         super(request);
@@ -108,16 +108,16 @@ public final class HttpServletRequestWrapperFromString extends HttpServletReques
 
     public Map getParameterMap()
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
 
         if (param==null)
             return map;
 
-        Iterator iter = param.keySet().iterator();
+        Iterator<String> iter = param.keySet().iterator();
         while (iter.hasNext())
         {
-            Object obj = iter.next();
-            MainTools.putKey(map, obj, param.get(obj));
+            String key = iter.next();
+            MainTools.putKey(map, key, param.get(key));
         }
 
         return map;

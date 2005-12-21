@@ -76,8 +76,8 @@ public class PriceListPosition {
 
             sql_ =
                 "select ID, ID_MAIN, ITEM " +
-                "from PRICE_LIST " +
-                "where ID=? and ID_SHOP=? and ABSOLETE=0 and IS_GROUP=1";
+                "from   WM_PRICE_LIST " +
+                "where  ID=? and ID_SHOP=? and ABSOLETE=0 and IS_GROUP=1";
 
             while (true)
             {
@@ -94,7 +94,6 @@ public class PriceListPosition {
                     PortletURL portletURL = renderResponse.createRenderURL();
 
                     portletURL.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
-//                    portletURL.setParameter(ContainerConstants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam_.nameTemplate);
                     portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, id_curr.toString());
                     portletURL.setParameters(shopParam_.currencyURL);
                     portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam_.id_shop.toString() );

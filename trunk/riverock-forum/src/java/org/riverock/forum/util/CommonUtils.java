@@ -148,7 +148,7 @@ public final class CommonUtils {
         try {
             ps = adapter.prepareStatement(
                 "select a.* " +
-                "from   WM_FORUM a, SITE_VIRTUAL_HOST b " +
+                "from   WM_FORUM a, WM_PORTAL_VIRTUAL_HOST b " +
                 "where  a.FORUM_ID=? and a.SITE_ID=b.ID_SITE and b.NAME_VIRTUAL_HOST=? "
             );
             RsetTools.setLong(ps, 1, forumId);

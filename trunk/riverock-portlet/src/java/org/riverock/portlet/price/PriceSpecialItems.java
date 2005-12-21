@@ -71,7 +71,7 @@ public class PriceSpecialItems
         sql_ =
                 "select a.id_item, a.id_shop, a.id, a.id_main, a.item, a.price, " +
                 "	a.currency, e.name_currency, a.quantity " +
-                "from 	price_list a, cash_currency e " +
+                "from 	WM_PRICE_LIST a, cash_currency e " +
                 "where	e.ID_SITE=? and " +
                 "	a.currency = e.currency and a.id_shop = ? and a.is_special = 1 and " +
                 "	a.absolete = 0 and a.is_group=0";
@@ -79,7 +79,7 @@ public class PriceSpecialItems
 /*
                 "select a.id_item, a.id_shop, a.id, a.id_main, a.item, a.price, " +
                 "	a.currency, e.name_currency, a.quantity " +
-                "from 	price_list a, cash_currency e, site_virtual_host f " +
+                "from 	WM_PRICE_LIST a, cash_currency e, WM_PORTAL_VIRTUAL_HOST f " +
                 "where	f.name_virtual_host = lower(?) and e.ID_SITE=f.ID_SITE and " +
                 "	a.currency = e.currency and a.id_shop = ? and a.is_special = 1 and " +
                 "	a.absolete = 0 and a.is_group=0";
@@ -140,9 +140,9 @@ public class PriceSpecialItems
         try
         {
             ps = db_.prepareStatement(
-                    "update price_list a " +
-                    "set is_special = 1 " +
-                    "where a.id_shop=? and a.id_item=? "
+                    "update WM_PRICE_LIST a " +
+                    "set    is_special = 1 " +
+                    "where  a.id_shop=? and a.id_item=? "
             );
 
             RsetTools.setLong(ps, 1, id_shop);

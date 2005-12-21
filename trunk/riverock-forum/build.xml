@@ -151,14 +151,19 @@
     <patternset id="war.lib">
         <include name="${riverock-sso.lib}"/>
         <include name="${riverock-sql-parser.lib}"/>
-        <include name="${riverock-interfaces.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-cache.lib}"/>
         <include name="${riverock-forum.lib}"/>
         <include name="${riverock-module.lib}"/>
         <include name="${commons-lang.lib}"/>
+        <include name="${commons-logging.lib}"/>
         <include name="${log4j.lib}"/>
+        <include name="${jstl.lib}"/>
+        <include name="${standard.lib}"/>
+        <include name="${castor.lib}"/>
+        <include name="${taglibs-request.lib}"/>
+        <include name="${taglibs-session.lib}"/>
     </patternset>
 
     <target name="war" depends="jar" >

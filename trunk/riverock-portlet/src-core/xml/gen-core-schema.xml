@@ -38,36 +38,33 @@
 	<KeyPrefix>ID_</KeyPrefix>
 	<LogicPrefix>IS_</LogicPrefix>
 	<OrderField>ORDER_FIELD</OrderField>
-	<DbTablePrefix>MAIN_FORUM</DbTablePrefix>
-	<DbTablePrefix>MAIN_FORUM_THREADS</DbTablePrefix>
-	<DbTablePrefix>SITE_LIST_SITE</DbTablePrefix>
-	<DbTablePrefix>SITE_SUPPORT_LANGUAGE</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_LANG_CATALOG</DbTablePrefix>
-	<DbTablePrefix>SITE_XSLT</DbTablePrefix>
-	<DbTablePrefix>SITE_XSLT_DATA</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_ARTICLE</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_ARTICLE_DATA</DbTablePrefix>
-	<DbTablePrefix>SITE_VIRTUAL_HOST</DbTablePrefix>
-	<DbTablePrefix>SITE_CONTENT_CSS</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_TYPE</DbTablePrefix>
-	<DbTablePrefix>SITE_TEMPLATE</DbTablePrefix>
-	<DbTablePrefix>SITE_CTX_CATALOG</DbTablePrefix>
+<!--	<DbTablePrefix>WM_PORTAL_LIST_SITE</DbTablePrefix> -->
+<!--	<DbTablePrefix>WM_PORTAL_SITE_LANGUAGE</DbTablePrefix> -->
+<!--	<DbTablePrefix>WM_PORTAL_CATALOG_LANGUAGE</DbTablePrefix> -->
+<!--	<DbTablePrefix>WM_PORTAL_XSLT</DbTablePrefix> -->
+	<DbTablePrefix>WM_PORTLET_ARTICLE</DbTablePrefix>
+<!-- 	<DbTablePrefix>WM_PORTAL_VIRTUAL_HOST</DbTablePrefix> -->
+<!--	<DbTablePrefix>WM_PORTAL_CSS</DbTablePrefix> -->
+<!--	<DbTablePrefix>WM_PORTAL_PORTLET_NAME</DbTablePrefix> -->
+	<DbTablePrefix>WM_PORTAL_TEMPLATE</DbTablePrefix>
+<!--	<DbTablePrefix>WM_PORTAL_CATALOG</DbTablePrefix> -->
 
 	<DbTablePrefix>WM_NEWS_</DbTablePrefix>
 
-	<DbTablePrefix>PRICE_</DbTablePrefix>
-	<DbTablePrefix>CASH_</DbTablePrefix>
+	<DbTablePrefix>WM_PRICE</DbTablePrefix>
+	<DbTablePrefix>WM_CASH_</DbTablePrefix>
 
-	<TableToList>CASH_CURRENCY_STD</TableToList>
-	<TableToList>SITE_CONTENT_CSS</TableToList>
-	<TableToList>SITE_CTX_TYPE</TableToList>
-	<TableToList>SITE_TEMPLATE</TableToList>
-	<TableToList>SITE_CTX_CATALOG</TableToList>
-	<TableToList>MAIN_NEWS</TableToList>
+	<TableToList>WM_CASH_CURRENCY_STD</TableToList>
+	<TableToList>WM_PORTAL_CSS</TableToList>
+<!--	<TableToList>WM_PORTAL_PORTLET_NAME</TableToList> -->
+	<TableToList>WM_PORTAL_TEMPLATE</TableToList>
+<!--	<TableToList>WM_PORTAL_CATALOG</TableToList> -->
+
+<!--	<TableToList>MAIN_NEWS</TableToList>-->
 
 <!--
-	<TableToList>SITE_ACCESS_URL</TableToList>
-	<TableToList>SITE_ACCESS_USER_AGENT</TableToList>
+	<TableToList>WM_PORTAL_ACCESS_URL</TableToList>
+	<TableToList>WM_PORTAL_ACCESS_USER_AGENT</TableToList>
 -->
 	<Logger>
 		<LogObjectClassName>org.apache.log4j.Logger</LogObjectClassName>

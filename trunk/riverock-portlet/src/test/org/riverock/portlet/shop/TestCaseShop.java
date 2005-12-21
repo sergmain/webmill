@@ -32,17 +32,12 @@
  */
 package org.riverock.portlet.shop;
 
-import java.io.ByteArrayInputStream;
+import junit.framework.TestCase;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.portlet.core.GetPriceListWithIdShopList;
-import org.riverock.portlet.core.GetSiteVirtualHostItem;
-import org.riverock.portlet.price.ImportPriceList;
+import org.riverock.portlet.core.GetWmPriceListWithIdShopList;
 import org.riverock.portlet.price.ShopPageParam;
-import org.riverock.portlet.schema.core.PriceListListType;
-import org.riverock.portlet.schema.core.SiteVirtualHostItemType;
 import org.riverock.portlet.schema.import_price.PriceListItemType;
 import org.riverock.portlet.schema.import_price.PriceListType;
 import org.riverock.portlet.schema.import_price.PricesType;
@@ -50,11 +45,6 @@ import org.riverock.portlet.schema.import_price.types.PriceListItemTypeIsLoadTyp
 import org.riverock.portlet.test.cases.TestCaseInterface;
 import org.riverock.portlet.test.cases.TestCaseSiteAbstract;
 import org.riverock.portlet.test.cases.TestSite;
-import org.riverock.portlet.test.independent.TestCaseTimestamp;
-
-import junit.framework.TestCase;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 
 public class TestCaseShop extends TestCase implements TestCaseInterface {
 
@@ -141,7 +131,7 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
 */
         testAbstract.db_.commit();
 
-        PriceListListType price = GetPriceListWithIdShopList.getInstance( testAbstract.db_, TestSite.idShop ).item;
+        WmPriceListListType price = GetWmPriceListWithIdShopList.getInstance( testAbstract.db_, TestSite.idShop ).item;
         assertFalse( "Error insert items in price-list, count of items in price-list wrong",
             price.getPriceListCount() != countItems );
 
@@ -196,17 +186,6 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
         throws Exception {
         testAbstract = new TestCaseSiteAbstract();
         testAbstract.testWithHypersonicConnection( this );
-
-        try
-        {
-            TestCaseTimestamp t = new TestCaseTimestamp("aaa");
-            t.testHypersonic();
-        }
-        catch(Exception e)
-        {
-            System.out.println("Hsql exception "+e.toString());
-        }
-
     }
 
     public void testWithMySqlConnection()
@@ -232,7 +211,6 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
         StartupApplication.init();
 
         long id = 1;
-        SiteVirtualHostItemType resultItem = GetSiteVirtualHostItem.getInstance( DatabaseAdapter.getInstance( false ), id ).item;
 
         String[][] ns = new String[][]
         {
@@ -241,7 +219,7 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
 
 /*
         XmlTools.writeToFile( resultItem,
-            SiteUtils.getTempDir() + "test-site_virtual_host-item.xml",
+            SiteUtils.getTempDir() + "test-WM_PORTAL_VIRTUAL_HOST-item.xml",
             "utf-8",
             null,
             ns );

@@ -23,9 +23,9 @@ public class EntityResolverImpl implements EntityResolver {
     public static final String PORTLET_DTD = "portlet_1.1.dtd";
     public static final String WEBXML_23_DTD = "web-app_2_3.dtd";
 
-    public static Map entityMap = null;
+    public static Map<String, String> entityMap = null;
     static {
-        entityMap = new HashMap();
+        entityMap = new HashMap<String, String>();
         entityMap.put( IBM_PORTLET_DTD_PIBLIC_ID, DTD_PACKAGE+PORTLET_DTD);
         entityMap.put( SUN_WEBXML_23_DTD_PIBLIC_ID, DTD_PACKAGE+WEBXML_23_DTD);
     }

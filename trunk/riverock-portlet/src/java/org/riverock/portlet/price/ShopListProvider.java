@@ -42,10 +42,10 @@ public class ShopListProvider implements PortletGetList {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( 
                 "SELECT b.ID_SHOP, b.CODE_SHOP, b.NAME_SHOP " +
-                "FROM site_ctx_lang_catalog a, PRICE_SHOP_TABLE b, site_support_language c " +
-                "where a.ID_SITE_CTX_LANG_CATALOG=? and " +
-                "a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "c.ID_SITE=b.ID_SITE" 
+                "FROM   WM_PORTAL_CATALOG_LANGUAGE a, WM_PRICE_SHOP_LIST b, WM_PORTAL_SITE_LANGUAGE c " +
+                "where  a.ID_SITE_CTX_LANG_CATALOG=? and " +
+                "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
+                "       c.ID_SITE=b.ID_SITE" 
             );
 
             RsetTools.setLong( ps, 1, idSiteCtxLangCatalog );

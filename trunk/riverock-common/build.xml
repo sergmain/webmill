@@ -79,6 +79,7 @@
             failonerror="true"
             >
             <classpath refid="classpath-base"/>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
         <patternset id="locale.resources">

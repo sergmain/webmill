@@ -127,9 +127,9 @@ public final class BindAdd extends HttpServlet
                         case DatabaseManager.MYSQL_FAMALY:
                             String sql_ =
                                 "select a.ID_USER, a.LAST_NAME, a.FIRST_NAME, a.MIDDLE_NAME " +
-                                "from MAIN_USER_INFO a " +
-                                "where a.ID_FIRM in ("+AuthHelper.getGrantedFirmId(db_, auth_.getUserLogin())+") and " +
-                                "a.IS_DELETED=0 " +
+                                "from   WM_LIST_USER a " +
+                                "where  a.ID_FIRM in ("+AuthHelper.getGrantedCompanyId(db_, auth_.getUserLogin())+") and " +
+                                "       a.IS_DELETED=0 " +
                                 // Todo uncomment when will be fixed problem with default value of timestamp
                                 // Todo mysql create timestamp field with presseted value
                                 // Todo read 1.8.6.2 Constraint NOT NULL and DEFAULT Values 'mysql manual'
@@ -143,9 +143,9 @@ public final class BindAdd extends HttpServlet
                         default:
                             ps = db_.prepareStatement(
                                 "select a.ID_USER, a.LAST_NAME, a.FIRST_NAME, a.MIDDLE_NAME " +
-                                "from MAIN_USER_INFO a, V$_READ_LIST_FIRM b " +
-                                "where a.ID_FIRM=b.ID_FIRM and b.USER_LOGIN=? and " +
-                                "IS_DELETED=0 and ((a.DATE_FIRE>"+db_.getNameDateBind()+") or (DATE_FIRE is null)) " +
+                                "from   WM_LIST_USER a, V$_READ_LIST_FIRM b " +
+                                "where  a.ID_FIRM=b.ID_FIRM and b.USER_LOGIN=? and " +
+                                "       IS_DELETED=0 and ((a.DATE_FIRE>"+db_.getNameDateBind()+") or (DATE_FIRE is null)) " +
                                 "order by LAST_NAME ASC, FIRST_NAME ASC, MIDDLE_NAME ASC "
                             );
                             ps.setString(1, auth_.getUserLogin());
@@ -230,8 +230,8 @@ public final class BindAdd extends HttpServlet
 
                     String sql_ =
                         "select b.id_firm id, b.full_name NAME_FIRM "+
-                        "from   main_LIST_FIRM b "+
-                        "where  b.ID_FIRM in ("+AuthHelper.getGrantedFirmId(db_, auth_.getUserLogin())+") and b.is_deleted=0 "+
+                        "from   WM_LIST_COMPANY b "+
+                        "where  b.ID_FIRM in ("+AuthHelper.getGrantedCompanyId(db_, auth_.getUserLogin())+") and b.is_deleted=0 "+
                         "order  by b.ID_FIRM ASC ";
 
                     if (log.isDebugEnabled())
@@ -244,7 +244,7 @@ public final class BindAdd extends HttpServlet
                 default:
                     ps = db_.prepareStatement(
                         "select b.ID_FIRM id, B.FULL_NAME NAME_FIRM "+
-                        "from   v$_read_list_firm a, main_LIST_FIRM b "+
+                        "from   v$_read_list_firm a, WM_LIST_COMPANY b "+
                         "where  a.ID_FIRM = b.ID_FIRM and b.is_deleted=0 and a.user_login=? "+
                         "order  by b.ID_FIRM ASC "
                     );
@@ -290,8 +290,8 @@ public final class BindAdd extends HttpServlet
 
                             ps = db_.prepareStatement(
                                 "select  a.id_service, full_name_service "+
-                                "from    main_list_service a "+
-                                "where   a.id_service in ( "+AuthHelper.getGrantedServiceId(db_, auth_.getUserLogin())+")"+
+                                "from    WM_LIST_GROUP_COMPANY a "+
+                                "where   a.id_service in ( "+AuthHelper.getGrantedGroupCompanyId(db_, auth_.getUserLogin())+")"+
                                 "order   by id_service ASC "
                             );
                             break;
@@ -350,8 +350,8 @@ public final class BindAdd extends HttpServlet
 
                             ps = db_.prepareStatement(
                                 "select  a.id_road, full_name_road "+
-                                "from    main_list_road a "+
-                                "where   a.id_road in ( "+AuthHelper.getGrantedRoadId(db_, auth_.getUserLogin())+")"+
+                                "from    WM_LIST_HOLDING a "+
+                                "where   a.id_road in ( "+AuthHelper.getGrantedHoldingId(db_, auth_.getUserLogin())+")"+
                                 "order   by id_road ASC "
                             );
                             break;

@@ -46,7 +46,7 @@ public class TestOracleSequence
     private static void doTest( String nameConnection )
         throws Exception
     {
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, nameConnection);
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
 
         System.out.println(nameConnection + " Menu "+db_.getConnection().getCatalog());
 
@@ -71,7 +71,7 @@ public class TestOracleSequence
         String tablePattern = "%";
         try
         {
-            db_ = DatabaseAdapter.getInstance(true, "ORACLE");
+            db_ = DatabaseAdapter.getInstance("ORACLE");
 
             DatabaseMetaData db = db_.getConnection().getMetaData();
 

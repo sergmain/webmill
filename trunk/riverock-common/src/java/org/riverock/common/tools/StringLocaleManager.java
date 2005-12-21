@@ -27,10 +27,11 @@ package org.riverock.common.tools;
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
-import java.util.Hashtable;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * 
@@ -238,7 +239,7 @@ public class StringLocaleManager
     // --------------------------------------------------------------
 
 
-    private static Hashtable managers = new Hashtable();
+    private static Map<String, StringLocaleManager> managers = new HashMap<String, StringLocaleManager>();
 
 
     public synchronized static void clear()
@@ -248,9 +249,7 @@ public class StringLocaleManager
 
     public synchronized static StringLocaleManager getManager(String packageName, Locale loc)
     {
-//cat.debug("#11.001 "+packageName+"_"+currentLocale.toString());
         StringLocaleManager mgr = (StringLocaleManager) managers.get(packageName + "_" + loc.toString());
-//cat.debug("#11.004 "+mgr);
 
         if (mgr == null)
         {

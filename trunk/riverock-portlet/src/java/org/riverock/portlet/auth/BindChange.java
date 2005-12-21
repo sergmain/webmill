@@ -55,7 +55,6 @@ import org.riverock.sso.a3.InternalAuthProviderTools;
 import org.riverock.sso.main.MainUserInfo;
 import org.riverock.sso.utils.AuthHelper;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
 
 public class BindChange extends HttpServlet
 {
@@ -198,8 +197,8 @@ public class BindChange extends HttpServlet
 
                         String sql_ =
                             "select b.ID_FIRM id, b.FULL_NAME NAME_FIRM "+
-                            "from   MAIN_LIST_FIRM b "+
-                            "where  b.ID_FIRM in ("+AuthHelper.getGrantedFirmId(db_, auth_.getUserLogin())+") and b.is_deleted=0 "+
+                            "from   WM_LIST_COMPANY b "+
+                            "where  b.ID_FIRM in ("+AuthHelper.getGrantedCompanyId(db_, auth_.getUserLogin())+") and b.is_deleted=0 "+
                             "order  by b.ID_FIRM ASC ";
 
                         if (log.isDebugEnabled())
@@ -212,7 +211,7 @@ public class BindChange extends HttpServlet
                     default:
                         ps = db_.prepareStatement(
                             "select b.ID_FIRM id, b.FULL_NAME NAME_FIRM "+
-                            "from   v$_read_list_firm a, MAIN_LIST_FIRM b "+
+                            "from   v$_read_list_firm a, WM_LIST_COMPANY b "+
                             "where  a.ID_FIRM = b.ID_FIRM and b.is_deleted=0 and a.user_login=? "+
                             "order  by b.ID_FIRM ASC "
                         );
@@ -254,8 +253,8 @@ public class BindChange extends HttpServlet
 
                             ps = db_.prepareStatement(
                                 "select  a.id_service, full_name_service "+
-                                "from    main_list_service a "+
-                                "where   a.id_service in ( "+AuthHelper.getGrantedServiceId(db_, auth_.getUserLogin())+")"+
+                                "from    WM_LIST_GROUP_COMPANY a "+
+                                "where   a.id_service in ( "+AuthHelper.getGrantedGroupCompanyId(db_, auth_.getUserLogin())+")"+
                                 "order   by id_service ASC "
                             );
                             break;
@@ -308,8 +307,8 @@ public class BindChange extends HttpServlet
 
                             ps = db_.prepareStatement(
                                 "select  a.id_road, full_name_road "+
-                                "from    main_list_road a "+
-                                "where   a.id_road in ( "+AuthHelper.getGrantedRoadId(db_, auth_.getUserLogin())+")"+
+                                "from    WM_LIST_HOLDING a "+
+                                "where   a.id_road in ( "+AuthHelper.getGrantedHoldingId(db_, auth_.getUserLogin())+")"+
                                 "order   by id_road ASC "
                             );
                             break;

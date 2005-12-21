@@ -101,6 +101,7 @@
             failonerror="true"
             >
             <classpath refid="classpath-base"/>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
@@ -116,6 +117,7 @@
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
         <property name="locale-path" value="/org/riverock/generic/tools/servlet"/>
         <copy todir="${build.dest}${locale-path}">

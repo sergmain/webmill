@@ -51,10 +51,10 @@ public class TestCaseDbService extends TestCase
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE");
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 
-        DbTableType sourceTable = DatabaseManager.getTableFromStructure( schema, "PRICE_SHOP_TABLE");
+        DbTableType sourceTable = DatabaseManager.getTableFromStructure( schema, "WM_PRICE_SHOP_LIST");
         sourceTable.setData( null );
 
         DbTableType targetTable = DatabaseManager.cloneDescriptionTable( sourceTable );

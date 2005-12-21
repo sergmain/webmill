@@ -230,7 +230,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
     static {
         sql_ =
             "select a.*, c.CUSTOM_LANGUAGE " +
-            "from   WM_NEWS_LIST a, SITE_SUPPORT_LANGUAGE c " +
+            "from   WM_NEWS_LIST a, WM_PORTAL_SITE_LANGUAGE c " +
             "where  c.ID_SITE=? and a.IS_DELETED=0 and " +
             "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE " +
             "order by a.ORDER_FIELD ASC";

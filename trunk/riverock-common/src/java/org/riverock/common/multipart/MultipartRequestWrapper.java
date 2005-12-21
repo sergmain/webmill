@@ -42,6 +42,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -115,10 +116,7 @@ public class MultipartRequestWrapper extends Hashtable implements HttpServletReq
                 // might have changed since so check
                 // it again
                 if (!(workDir.isDirectory() && workDir.canWrite()))
-                    throw new
-                        IllegalArgumentException(
-                            "Bad work directory: " +
-                        workDir);
+                    throw new IllegalArgumentException( "Bad work directory: " + workDir);
             }
             // what we're being sent is not
             // ridiculously large...
@@ -131,7 +129,7 @@ public class MultipartRequestWrapper extends Hashtable implements HttpServletReq
             maxUpload = length;
 
             // decode the request
-            multipartHandler = new MultipartHandler(this, req.getInputStream(),
+            multipartHandler = new MultipartHandler( this, req.getInputStream(),
                 length, contentType,
                 workDir,
                 saveUploadedFilesToDisk,
@@ -223,8 +221,8 @@ public class MultipartRequestWrapper extends Hashtable implements HttpServletReq
 
             if (array != null)
             {
-                for (int i = 0; i < array.length; i++)
-                    vec.add(array[i]);
+                for (final String newVar : array)
+                    vec.add(newVar);
 
                 if (vec.size() == 1)
                     result = vec.get(0);
@@ -256,10 +254,10 @@ public class MultipartRequestWrapper extends Hashtable implements HttpServletReq
      *
      */
 
-    public Enumeration getParameterNames()
+    public Enumeration<?> getParameterNames()
     {
         if (isMultipart)
-            return multipartHandler.getValues().keys();
+            return Collections.enumeration( multipartHandler.getValues().keySet() );
         else
             return request.getParameterNames();
     }
@@ -763,7 +761,7 @@ public class MultipartRequestWrapper extends Hashtable implements HttpServletReq
      * 			use {@link ServletContext#getRealPath} instead.
      *
      */
-
+    @SuppressWarnings(value={"deprecation"})
     public String getRealPath(String path)
     {
         return request.getRealPath(path);

@@ -118,7 +118,7 @@ public final class ImageIndex extends HttpServlet {
 
                 String sql_ =
                     "select a.id_main, a.name_file " +
-                    "from   image_dir a, SITE_LIST_SITE b, SITE_VIRTUAL_HOST c " +
+                    "from   WM_IMAGE_DIR a, WM_PORTAL_LIST_SITE b, WM_PORTAL_VIRTUAL_HOSTc " +
                     "where  a.id=? and a.is_group=1 and a.ID_FIRM = b.ID_FIRM and " +
                     "b.ID_SITE = c.ID_SITE and NAME_VIRTUAL_HOST = lower(?) ";
 
@@ -154,9 +154,9 @@ public final class ImageIndex extends HttpServlet {
 
                 sql_ =
                     "select is_group, id, id_main, name_file " +
-                    "from image_dir a, WM_AUTH_USER b \n" +
-                    "where a.id_main = ? and a.ID_FIRM = b.ID_FIRM and a.is_group = 1 " +
-                    "	and b.user_login=? \n" +
+                    "from   WM_IMAGE_DIR a, WM_AUTH_USER b \n" +
+                    "where  a.id_main = ? and a.ID_FIRM = b.ID_FIRM and a.is_group = 1 " +
+                    "	    and b.user_login=? \n" +
                     "order by id asc ";
 
                 ps = db_.prepareStatement( sql_ );

@@ -77,6 +77,7 @@
             failonerror="true"
             >
             <classpath refid="classpath-base"/>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
@@ -93,6 +94,7 @@
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 </project>

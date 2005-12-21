@@ -56,7 +56,7 @@ public class TopicDAO {
                 "select b.T_F_ID, a.F_NAME, a.F_INFO, a.F_U_ID, a.F_TOPICS, " +
                 "       a.F_MESSAGES, b.T_NAME, b.T_REPLIES, b.T_VIEWS, b.T_ORDER, b.T_LOCKED, " +
                 "       c.FIRST_NAME, c.MIDDLE_NAME, c.LAST_NAME " +
-                "from   WM_FORUM_CONCRETE a, WM_FORUM_TOPIC b, MAIN_USER_INFO c " +
+                "from   WM_FORUM_CONCRETE a, WM_FORUM_TOPIC b, WM_LIST_USER c " +
                 "where  b.T_F_ID=a.F_ID and a.F_U_ID=c.ID_USER  and b.T_ID=? ";
             ps = adapter.prepareStatement(sql);
             ps.setInt(1, t_id);
@@ -118,7 +118,7 @@ public class TopicDAO {
                 "select a.m_id, a.m_iconid, a.m_content, a.m_time, a.m_u_id, " +
                 "       c.FIRST_NAME, c.MIDDLE_NAME, c.LAST_NAME, c.ADDRESS, c.DATE_START_WORK, " +
                 "       b.u_post, b.u_sign, b.u_avatar_id " +
-                "from   WM_FORUM_MESSAGE a, WM_FORUM_USER b, MAIN_USER_INFO c " +
+                "from   WM_FORUM_MESSAGE a, WM_FORUM_USER b, WM_LIST_USER c " +
                 "where  a.M_U_ID=b.U_ID and a.m_u_id=c.ID_USER and a.M_T_ID=? " +
                 "order by a.M_TIME ASC";
 

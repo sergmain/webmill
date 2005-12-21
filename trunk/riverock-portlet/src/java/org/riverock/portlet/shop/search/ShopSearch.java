@@ -391,7 +391,7 @@ public class ShopSearch extends HttpServlet
 
                 String v_str_ip = ""; //request.getRemoteAddr();
 
-                CallableStatement call = db_.conn.prepareCall(
+                CallableStatement call = db_.getConnection().prepareCall(
                         "begin ? := tools.process_request(?, ?, ?, ?, ?, ?, ?, ?); end;");
 
                 call.registerOutParameter(1, oracle.jdbc.driver.OracleTypes.VARCHAR);
@@ -425,13 +425,13 @@ public class ShopSearch extends HttpServlet
                 // Todo this is simple stub, current not work
                 // Todo because sequence was used to simple getting of next id of file
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName("seq_shop_query_table");
-                seq.setTableName( "MAIN_FORUM_THREADS");
+                seq.setSequenceName("SEQ_WM_PRICE_QUERY_TABLE");
+                seq.setTableName( "WM_PRICE_QUERY_TABLE");
                 seq.setColumnName( "ID_THREAD" );
                 Long v_id_query = db_.getSequenceNextValue( seq );
 
                 String sql_ =
-                        "insert into price_query_table " +
+                        "insert into WM_PRICE_QUERY_TABLE " +
                         "( id_query, id_type_query, query_text, client_ip_address, client_host_name, date_query, count_exist ) " +
                         "VALUES ( ?, ?, ?, ?, ?, SYSDATE, 0 ) ";
 
@@ -477,12 +477,12 @@ WHERE id_query = v_id_query;
 //<!--p align="center">Результат поиска: найдено '|| TO_CHAR(v_count_search)||'</p-->
 
                     sql_ =
-                            "select	distinct b.ID_FIRM, b.full_name, b.is_work " +
-                            "from	main_list_firm b, price_list a, price_shop_table c, " +
-                            "	SITE_LIST_SITE d " +
-                            "where	b.ID_FIRM = d.ID_FIRM and c.id_shop = c.id_shop and " +
-                            "	a.id_shop = c.id_shop and a.absolete = 0 and c.is_close = 0 " +
-                            "	and b.is_deleted = 0 and " + v_str + " order by b.full_name";
+                            "select distinct b.ID_FIRM, b.full_name, b.is_work " +
+                            "from   WM_LIST_COMPANY b, WM_PRICE_LIST a, WM_PRICE_SHOP_LIST c, " +
+                            "       WM_PORTAL_LIST_SITE d " +
+                            "where  b.ID_FIRM = d.ID_FIRM and c.id_shop = c.id_shop and " +
+                            "       a.id_shop = c.id_shop and a.absolete = 0 and c.is_close = 0 " +
+                            "       and b.is_deleted = 0 and " + v_str + " order by b.full_name";
 
                     ps = db_.prepareStatement(sql_);
                     ResultSet rs = ps.executeQuery();
@@ -506,7 +506,7 @@ WHERE id_query = v_id_query;
 
                         String sql_item =
                                 "select	distinct c.id_shop, c.name_shop_for_price_list " +
-                                "from   price_list a, price_shop_table c, site_virtual_host e " +
+                                "from   WM_PRICE_LIST a, WM_PRICE_SHOP_LIST c, WM_PORTAL_VIRTUAL_HOST e " +
                                 "where  a.id_shop = c.id_shop and c.ID_SITE=e.ID_SITE and " +
                                 "a.absolete=0 and c.is_close=0 and " +
                                 "e.name_virtual_host = lower(?) and " + v_str + " " +
@@ -523,7 +523,7 @@ WHERE id_query = v_id_query;
                         while (rs_item.next())
                         {
 
-                            sql_ = "insert into price_query_list (id_shop, id_query) values ( ?, ?) ";
+                            sql_ = "insert into WM_PRICE_QUERY_LIST (id_shop, id_query) values ( ?, ?) ";
 
                             PreparedStatement ps_tmp = db_.prepareStatement(sql_);
                             RsetTools.setLong(ps_tmp, 1, RsetTools.getLong(rs_item, "id_shop"));
@@ -548,8 +548,8 @@ WHERE id_query = v_id_query;
                                 "select	is_group, id, id_main, item, TO_CHAR( price, '999,999,999,990.99' ) price, absolete, a.id_shop, \n" +
                                 "	currency, d.ID_FIRM, name_shop, " +
                                 "	is_close " +
-                                "from	price_list a, price_shop_table b, main_list_firm d, 		\n" +
-                                "	SITE_LIST_SITE e 						" +
+                                "from	WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b, WM_LIST_COMPANY d, 		\n" +
+                                "	WM_PORTAL_LIST_SITE e 						" +
                                 "where  a.id_shop = e.id_shop and a.id_shop = b.id_shop and 		" +
                                 "	e.ID_FIRM = d.ID_FIRM and a.absolete = 0 and b.is_close = 0 	" +
                                 "	and d.is_deleted = 0 				 		" +

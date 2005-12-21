@@ -156,8 +156,8 @@ public class PriceListItemExtend extends PriceListItem
         try
         {
             ps = db_.conn.prepareCall(
-                "select a.text from PRICE_ITEM_DESCRIPTION a " +
-                "where a.id_item = ? " +
+                "select a.text from WM_PRICE_ITEM_DESCRIPTION a " +
+                "where  a.id_item = ? " +
                 "order by ID_PRICE_ITEM_DESCRIPTION asc"
             );
 
@@ -183,8 +183,8 @@ public class PriceListItemExtend extends PriceListItem
 
         final String sql_ =
             "select b.name_file image_name_file, a.id_image_dir " +
-            "from IMAGE_PRICE_ITEMS a, image_dir b " +
-            "where a.id_item = ? and a.id_image_dir = b.id_image_dir ";
+            "from   WM_IMAGE_PRICE_ITEMS a, WM_IMAGE_DIR b " +
+            "where  a.id_item = ? and a.id_image_dir = b.id_image_dir ";
 
         if (cat.isDebugEnabled())
             cat.debug("#3.0002");

@@ -29,6 +29,7 @@ import java.sql.SQLException;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
@@ -68,7 +69,7 @@ public class DbStructureImport
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(true, dbAlias );
+            db_ = DatabaseAdapter.getInstance( dbAlias );
             System.out.println("db connect - "+db_.getClass().getName());
 
             int i = 0;
@@ -77,16 +78,11 @@ public class DbStructureImport
             InputSource inSrc = new InputSource(new FileInputStream( fileName ));
             DbSchemaType millSchema = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
 
-//            boolean isContinue = true;
             for (i=0; i<millSchema.getTablesCount(); i++)
             {
                 DbTableType table = millSchema.getTables(i);
                 if (table.getName().toLowerCase().startsWith("tb_") )
                     continue;
-
-//                if (isContinue && !"MAIN_NEWS_TEXT".equalsIgnoreCase( table.getName() ))
-//                    continue;
-//                isContinue = false;
 
                 if (!DatabaseManager.isSkipTable(table.getName()))
                 {
@@ -97,7 +93,6 @@ public class DbStructureImport
                     }
                     catch (SQLException e)
                     {
-//                    System.out.println("Error code "+e.getErrorCode());
                         if (db_.testExceptionTableExists(e))
                         {
                             System.out.println("table " + table.getName() + " already exists");
@@ -110,7 +105,7 @@ public class DbStructureImport
                             throw e;
                     }
                     if (isData)
-                        db_.setDataTable(table);
+                        DatabaseStructureManager.setDataTable(db_, table);
                 }
                 else
                     System.out.println("skip table " + table.getName());
@@ -132,7 +127,7 @@ public class DbStructureImport
                     {
                         System.out.println("view " + view.getName() + " already exists");
                         System.out.println("drop view " + view.getName());
-                        db_.dropView(view);
+                        DatabaseStructureManager.dropView(db_, view);
                         System.out.println("create view " + view.getName());
                         try
                         {
@@ -146,7 +141,6 @@ public class DbStructureImport
                     else
                     {
                         System.out.println("Error create view - "+e.toString());
-//                        throw e;
                     }
                 }
             }
@@ -180,7 +174,6 @@ public class DbStructureImport
                     else
                     {
                         System.out.println("Error create sequence - "+e.toString());
-//                        throw e;
                     }
                 }
             }

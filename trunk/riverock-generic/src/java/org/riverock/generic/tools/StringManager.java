@@ -329,9 +329,9 @@ public final class StringManager {
             db_ = DatabaseAdapter.getInstance();
             String sql_ =
                 "select a.NAME_STORAGE, d.SHORT_NAME_LANGUAGE, b.NAME_ITEM, c.MESSAGE " +
-                "from main_i18n_storage a, main_i18n_item b, main_i18n_message c, main_language d " +
-                "where a.ID_MAIN_I18N_STORAGE=b.ID_MAIN_I18N_STORAGE and " +
-                "b.ID_MAIN_I18N_ITEM=c.ID_MAIN_I18N_ITEM and c.ID_LANGUAGE=d.ID_LANGUAGE ";
+                "from   WM_I18N_STORAGE a, WM_I18N_ITEM b, WM_I18N_MESSAGE c, WM_LIST_LANGUAGE d " +
+                "where  a.ID_MAIN_I18N_STORAGE=b.ID_MAIN_I18N_STORAGE and " +
+                "       b.ID_MAIN_I18N_ITEM=c.ID_MAIN_I18N_ITEM and c.ID_LANGUAGE=d.ID_LANGUAGE ";
 
             st = db_.prepareStatement(sql_);
             rs = st.executeQuery();

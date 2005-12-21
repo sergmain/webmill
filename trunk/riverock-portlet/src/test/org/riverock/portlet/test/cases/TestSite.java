@@ -154,12 +154,12 @@ public class TestSite {
     {
         Long countRec;
         CustomSequenceType seqSite = new CustomSequenceType();
-        seqSite.setSequenceName("SEQ_SITE_TEMPLATE");
-        seqSite.setTableName( "SITE_TEMPLATE");
+        seqSite.setSequenceName("SEQ_WM_PORTAL_TEMPLATE");
+        seqSite.setTableName( "WM_PORTAL_TEMPLATE");
         seqSite.setColumnName( "ID_SITE_TEMPLATE" );
         Long idTemplate = db_.getSequenceNextValue( seqSite );
 
-        SiteTemplateItemType template = new SiteTemplateItemType();
+        WmPortalTemplateItemType template = new WmPortalTemplateItemType();
         template.setNameSiteTemplate( nameTemplate );
         template.setIdSiteSupportLanguage( idRuSiteLanguage );
         template.setIdSiteTemplate( idTemplate );
@@ -200,8 +200,8 @@ public class TestSite {
 
         CustomSequenceType seqSite = null;
         seqSite =  new CustomSequenceType();
-        seqSite.setSequenceName( "SEQ_SITE_CTX_LANG_CATALOG" );
-        seqSite.setTableName( "SITE_CTX_LANG_CATALOG" );
+        seqSite.setSequenceName( "SEQ_WM_PORTAL_CATALOG_LANGUAGE" );
+        seqSite.setTableName( "WM_PORTAL_CATALOG_LANGUAGE" );
         seqSite.setColumnName( "ID_SITE_CTX_LANG_CATALOG" );
         idRuLangCatalog = db_.getSequenceNextValue( seqSite );
         langCatalog.setIdSiteCtxLangCatalog( idRuLangCatalog );
@@ -225,8 +225,8 @@ public class TestSite {
 
             seqSite = null;
             seqSite = new CustomSequenceType();
-            seqSite.setSequenceName( "SEQ_SITE_CTX_CATALOG" );
-            seqSite.setTableName( "SITE_CTX_CATALOG" );
+            seqSite.setSequenceName( "SEQ_WM_PORTAL_CATALOG" );
+            seqSite.setTableName( "WM_PORTAL_CATALOG" );
             seqSite.setColumnName( "ID_SITE_CTX_CATALOG" );
 
             Long idMenu = db_.getSequenceNextValue( seqSite );
@@ -248,8 +248,8 @@ public class TestSite {
 
                 seqSite = null;
                 seqSite =  new CustomSequenceType();
-                seqSite.setSequenceName( "SEQ_SITE_CTX_CATALOG" );
-                seqSite.setTableName( "SITE_CTX_CATALOG" );
+                seqSite.setSequenceName( "SEQ_WM_PORTAL_CATALOG" );
+                seqSite.setTableName( "WM_PORTAL_CATALOG" );
                 seqSite.setColumnName( "ID_SITE_CTX_CATALOG" );
 
                 Long idSubMenu = db_.getSequenceNextValue( seqSite );
@@ -355,8 +355,8 @@ public class TestSite {
         curs.setDateChange( stampTemp );
         curs.setIdCurrency( idCurrencyRUB );
         seqSite =  new CustomSequenceType();
-        seqSite.setSequenceName("SEQ_CASH_CURR_VALUE");
-        seqSite.setTableName( "CASH_CURR_VALUE");
+        seqSite.setSequenceName("SEQ_WM_CASH_CURR_VALUE");
+        seqSite.setTableName( "WM_CASH_CURR_VALUE");
         seqSite.setColumnName( "ID_CURVAL" );
         id = db_.getSequenceNextValue( seqSite );
         Assert.assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), id==null);
@@ -369,8 +369,8 @@ public class TestSite {
         curs.setDateChange( new Timestamp(System.currentTimeMillis() ));
         curs.setIdCurrency( idCurrencyEURO );
         seqSite =  new CustomSequenceType();
-        seqSite.setSequenceName("SEQ_CASH_CURR_VALUE");
-        seqSite.setTableName( "CASH_CURR_VALUE");
+        seqSite.setSequenceName("SEQ_WM_CASH_CURR_VALUE");
+        seqSite.setTableName( "WM_CASH_CURR_VALUE");
         seqSite.setColumnName( "ID_CURVAL" );
         id = db_.getSequenceNextValue( seqSite );
         Assert.assertFalse("Error get new value of sequence for table "+seqSite.getTableName(), id==null);
@@ -402,8 +402,8 @@ public class TestSite {
         shop.setIdSite( idSite );
 
         seqSite = new CustomSequenceType();
-        seqSite.setSequenceName("SEQ_PRICE_SHOP_TABLE");
-        seqSite.setTableName( "PRICE_SHOP_TABLE");
+        seqSite.setSequenceName("SEQ_WM_PRICE_SHOP_LIST");
+        seqSite.setTableName( "WM_PRICE_SHOP_LIST");
         seqSite.setColumnName( "ID_SHOP" );
 
         idShop = db_.getSequenceNextValue( seqSite );
@@ -443,8 +443,8 @@ public class TestSite {
         {
             {
                 CustomSequenceType seqSite = new CustomSequenceType();
-                seqSite.setSequenceName("SEQ_SITE_LIST_SITE");
-                seqSite.setTableName( "SITE_LIST_SITE");
+                seqSite.setSequenceName("SEQ_WM_PORTAL_LIST_SITE");
+                seqSite.setTableName( "WM_PORTAL_LIST_SITE");
                 seqSite.setColumnName( "ID_SITE" );
                 idSite = db_.getSequenceNextValue( seqSite );
 
@@ -466,15 +466,15 @@ public class TestSite {
             }
             {
                 CustomSequenceType seqVirtualHost = new CustomSequenceType();
-                seqVirtualHost.setSequenceName("SEQ_SITE_VIRTUAL_HOST");
-                seqVirtualHost.setTableName( "SITE_VIRTUAL_HOST");
+                seqVirtualHost.setSequenceName("SEQ_WM_PORTAL_VIRTUAL_HOST");
+                seqVirtualHost.setTableName( "WM_PORTAL_VIRTUAL_HOST");
                 seqVirtualHost.setColumnName( "ID_SITE_VIRTUAL_HOST" );
 
                 idVirtualHost = db_.getSequenceNextValue( seqVirtualHost );
 
                 Assert.assertFalse("Error get new value of sequence for table "+seqVirtualHost.getTableName(), idVirtualHost==null);
 
-                SiteVirtualHostItemType hostItem = new SiteVirtualHostItemType();
+                WmPortalVirtualHostItemType hostItem = new WmPortalVirtualHostItemType();
                 hostItem.setIdSiteVirtualHost( idVirtualHost );
                 hostItem.setIdSite( idSite );
                 hostItem.setNameVirtualHost( TEST_SERVER_NAME );
@@ -486,8 +486,8 @@ public class TestSite {
             }
             {
                 CustomSequenceType seqSupportLanguage = new CustomSequenceType();
-                seqSupportLanguage.setSequenceName("SEQ_SITE_SUPPORT_LANGUAGE");
-                seqSupportLanguage.setTableName( "SITE_SUPPORT_LANGUAGE");
+                seqSupportLanguage.setSequenceName("SEQ_WM_PORTAL_SITE_LANGUAGE");
+                seqSupportLanguage.setTableName( "WM_PORTAL_SITE_LANGUAGE");
                 seqSupportLanguage.setColumnName( "ID_SITE_SUPPORT_LANGUAGE" );
 
                 idRuSiteLanguage = db_.getSequenceNextValue( seqSupportLanguage );
@@ -521,7 +521,7 @@ public class TestSite {
         try
         {
             ps1 = db_.prepareStatement(
-                "select ID_SITE from SITE_LIST_SITE where NAME_SITE=?"
+                "select ID_SITE from WM_PORTAL_LIST_SITE where NAME_SITE=?"
             );
             ps1.setString(1, NAME_TEST_SITE );
 
@@ -544,7 +544,7 @@ public class TestSite {
         try
         {
             ps1 = db_.prepareStatement(
-                "select ID_SITE from SITE_VIRTUAL_HOST where NAME_VIRTUAL_HOST=?"
+                "select ID_SITE from WM_PORTAL_VIRTUAL_HOST where NAME_VIRTUAL_HOST=?"
             );
             ps1.setString(1, TEST_SERVER_NAME );
 
@@ -574,8 +574,8 @@ public class TestSite {
         {
             ps = db_.prepareStatement(
                 "select ID_LANGUAGE " +
-                "from MAIN_LANGUAGE " +
-                "where lower(SHORT_NAME_LANGUAGE) like '"+TEST_LANGUAGE.toLowerCase()+"%'"
+                "from   WM_LIST_LANGUAGE " +
+                "where  lower(SHORT_NAME_LANGUAGE) like '"+TEST_LANGUAGE.toLowerCase()+"%'"
             );
             rs = ps.executeQuery();
 
@@ -600,9 +600,9 @@ public class TestSite {
         {
             ps = db_.prepareStatement(
                 "select ID_SITE_SUPPORT_LANGUAGE " +
-                "from SITE_SUPPORT_LANGUAGE " +
-                "where lower(CUSTOM_LANGUAGE) like '"+TEST_LANGUAGE.toLowerCase()+"%' and " +
-                "ID_SITE = ?"
+                "from   WM_PORTAL_SITE_LANGUAGE " +
+                "where  lower(CUSTOM_LANGUAGE) like '"+TEST_LANGUAGE.toLowerCase()+"%' and " +
+                "       ID_SITE = ?"
             );
             RsetTools.setLong(ps, 1, idSite);
 

@@ -23,12 +23,6 @@
  *
  */
 
-/**
- * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
- *
- * $Id$
- */
-
 package org.riverock.generic.db.factory;
 
 import java.io.InputStream;
@@ -62,6 +56,11 @@ import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
 
+/**
+ *
+ *
+ * $Id$
+ */
 public class PostgreeSQLconnect extends DatabaseAdapter
 {
     private static Logger log = Logger.getLogger( PostgreeSQLconnect.class );
@@ -86,22 +85,6 @@ public class PostgreeSQLconnect extends DatabaseAdapter
     public String getDriverClass() {
         if (true) throw new IllegalStateException("Not implemented");
         return null;
-    }
-
-    protected void finalize() throws Throwable
-    {
-        if (isDynamicConnect)
-        {
-            try
-            {
-                conn.close();
-                conn = null;
-            }
-            catch (Exception e)
-            {
-            }
-        }
-        super.finalize();
     }
 
     public boolean getIsBatchUpdate()
@@ -584,7 +567,7 @@ DEFERRABLE INITIALLY DEFERRED
         if ( seq==null)
             return;
 /*
-        CREATE SEQUENCE MILLENNIUM.SEQ_SITE_XSLT
+        CREATE SEQUENCE MILLENNIUM.SEQ_WM_PORTAL_XSLT
          START WITH  1
          INCREMENT BY  1
          MINVALUE  1
@@ -771,148 +754,6 @@ DEFERRABLE INITIALLY DEFERRED
         }
 
         return id_;
-    }
-
-    public String getFirstValueString(String t, String f, String w, String o)
-            throws SQLException
-    {
-
-        String id_ = null;
-
-        String v_s = "select " + f + " from " + t;
-
-        if (o != null)
-        {
-            v_s += (w == null)? "": " " + w;
-            v_s += (" order by " + o);
-        }
-        else
-        {
-            v_s += (w == null)?
-                    "":
-                    " " + w + " and rownum<2 ";
-        }
-
-//		db.aM(v_s);
-
-
-        PreparedStatement prepStatement = null;
-        ResultSet rset = null;
-        try
-        {
-            prepStatement = this.conn.prepareStatement(v_s);
-
-            rset = prepStatement.executeQuery();
-
-            if (rset.next())
-                id_ = rset.getString(1);
-
-        }
-        finally
-        {
-            DatabaseManager.close( rset, prepStatement );
-            rset = null;
-            prepStatement = null;
-        }
-
-        return id_;
-
-//		return fromDB(id_);
-    }
-
-    public Calendar getFirstValueCalendar(String t, String f, String w, String o)
-            throws SQLException
-    {
-        Calendar id_ = null;
-
-        String v_s = "select " + f + " from " + t;
-
-        if (o != null)
-        {
-            v_s += (w == null)? "": " " + w;
-            v_s += (" order by " + o);
-        }
-        else
-        {
-            v_s += (w == null)?
-                    "":
-                    " " + w + " and rownum<2 ";
-        }
-
-//		db.aM(v_s);
-
-
-        PreparedStatement prepStatement = null;
-        ResultSet rset = null;
-        try
-        {
-            prepStatement = this.conn.prepareStatement(v_s);
-
-            rset = prepStatement.executeQuery();
-
-            if (rset.next())
-            {
-                String columnName = RsetTools.getColumnName(rset, 1);
-                id_ = RsetTools.getCalendar(rset, columnName);
-            }
-
-        }
-        finally
-        {
-            DatabaseManager.close( rset, prepStatement );
-            rset = null;
-            prepStatement = null;
-        }
-
-        return id_;
-    }
-
-    public long getFirstValue(String t, String f, String w, String o)
-            throws SQLException
-    {
-
-        long id_ = -1;
-
-        String v_s = "select " + f + " from " + t;
-
-        if (o != null)
-        {
-            v_s += (w == null)? "": " " + w;
-            v_s += (" order by " + o);
-        }
-        else
-        {
-            v_s += (w == null)?
-                    "":
-                    " " + w + " and rownum<2 ";
-        }
-
-//		db.aM(v_s);
-
-
-        PreparedStatement prepStatement = null;
-        ResultSet rset = null;
-        try
-        {
-            prepStatement = this.conn.prepareStatement(v_s);
-
-            rset = prepStatement.executeQuery();
-
-            if (rset.next())
-                id_ = rset.getLong(1);
-        }
-        finally
-        {
-            DatabaseManager.close( rset, prepStatement );
-            rset = null;
-            prepStatement = null;
-        }
-
-        return id_;
-    }
-
-    public Long getFirstLongValue(String t, String f, String w, String o) throws SQLException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public boolean testExceptionTableNotFound(Exception e)

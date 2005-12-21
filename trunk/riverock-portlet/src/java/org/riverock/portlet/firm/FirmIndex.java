@@ -104,15 +104,15 @@ public final class FirmIndex extends HttpServlet
 
             String v_str =
                 "select ID_FIRM, full_name, short_name,\n"+
-                "	    address, chief, buh, url, \n"+
-                "	    short_info, is_work, is_search "+
-                "from 	MAIN_LIST_FIRM "+
+                "	address, chief, buh, url, \n"+
+                "	short_info, is_work, is_search "+
+                "from 	WM_LIST_COMPANY "+
                 "where  is_deleted=0 and ID_FIRM in ";
 
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId(db_, renderRequest.getRemoteUser());
+                    String idList = AuthHelper.getGrantedCompanyId(db_, renderRequest.getRemoteUser());
 
                     v_str += " ("+idList+") ";
 

@@ -170,14 +170,14 @@ public class CacheFactory
 
             if (isFullReinit)
             {
-                Method method1 = obj.getClass().getMethod("reinit", null);
+                Method method1 = obj.getClass().getMethod("reinit", (Class[])null);
 
                 if (log.isDebugEnabled())
                     log.debug("#12.12.009  method1 is " + method1);
 
                 if (method1 != null)
                 {
-                    method1.invoke(obj, null);
+                    method1.invoke(obj, (Object[])null);
 
                     if (log.isDebugEnabled())
                         log.debug("#12.12.010 ");

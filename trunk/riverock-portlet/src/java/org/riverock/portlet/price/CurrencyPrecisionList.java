@@ -54,8 +54,8 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType
         {
             String sql_ =
                 "select ID_PRICE_SHOP_PRECISION,ID_CURRENCY,ID_SHOP, PRECISION_SHOP " +
-                "from PRICE_SHOP_PRECISION " +
-                "where ID_SHOP=?";
+                "from   WM_PRICE_SHOP_PRECISION " +
+                "where  ID_SHOP=?";
 
             ps = db_.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, idShop);

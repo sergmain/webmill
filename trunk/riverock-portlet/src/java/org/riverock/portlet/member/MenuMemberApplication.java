@@ -104,7 +104,7 @@ public class MenuMemberApplication
             "        d.id_object_arm, " +
             "	 e.id_arm, " +
             "	 e.is_new  " +
-            "from    auth_user a, " +
+            "from    WM_AUTH_USER a, " +
             "        WM_AUTH_RELATE_ACCGROUP b, " +
             "        WM_AUTH_RELATE_RIGHT_ARM d, " +
             "        WM_AUTH_MODULE e, " +

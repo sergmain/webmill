@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.cache.impl;
 
 import java.util.Properties;
@@ -34,6 +30,8 @@ import java.util.Properties;
  * Support for pluggable caches.
  * 
  * @author Gavin King
+ *
+ * $Id$
  */
 public interface CacheProvider {
 

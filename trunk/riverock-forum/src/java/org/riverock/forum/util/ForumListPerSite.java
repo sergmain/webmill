@@ -40,7 +40,7 @@ public class ForumListPerSite implements PortletGetList {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
                     "select b.FORUM_ID, b.FORUM_NAME, b.SITE_ID "+
-                    "from   SITE_CTX_LANG_CATALOG a, WM_FORUM b, SITE_SUPPORT_LANGUAGE c "+
+                    "from   WM_PORTAL_CATALOG_LANGUAGE a, WM_FORUM b, WM_PORTAL_SITE_LANGUAGE c "+
                     "where  a.ID_SITE_CTX_LANG_CATALOG=? and "+
                     "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
                     "       c.ID_SITE=b.SITE_ID"

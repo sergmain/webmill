@@ -214,7 +214,7 @@ public class JobItem
         "       a.id_contact_person, a.test_period, " +
         "       a.name_position, a.contact_person " +
         "from	WM_JOB_POSITION a, WM_JOB_GENDER_LIST b, WM_JOB_TYPE_EDUCATION c, " +
-        "       SITE_LIST_SITE e  " +
+        "       WM_PORTAL_LIST_SITE e  " +
         "where	a.id_job_position = ? and " +
         "	a.id_job_sex_list = b.id_job_sex_list and " +
         "	a.id_job_type_education=c.id_job_type_education and " +

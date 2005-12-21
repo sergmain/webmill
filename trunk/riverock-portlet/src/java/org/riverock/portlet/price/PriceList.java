@@ -35,27 +35,26 @@ import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
+import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.OrderType;
 import org.riverock.portlet.schema.price.ShopOrderType;
-import org.riverock.portlet.schema.price.OrderItemType;
-import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * $Id$
  */
-public class PriceList
-{
+public class PriceList {
     private static Log log = LogFactory.getLog( PriceList.class );
 
-    public PriceList(){
+    public PriceList() {
     }
 
-    public static double calcPrice(double priceItem, Object object[]) {
+    public static double calcPrice( double priceItem, Object object[] ) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("calc price. price for round " + priceItem);
-            log.debug("calc price: len=" + object.length);
+        if( log.isDebugEnabled() ) {
+            log.debug( "calc price. price for round " + priceItem );
+            log.debug( "calc price: len=" + object.length );
         }
 
         // search object of AuthSession for calculate discount
@@ -66,64 +65,61 @@ public class PriceList
         Shop shop = null;
         int precision = 2;
 
-        for (int i = 0; i < object.length; i++) {
+        for( int i = 0; i < object.length; i++ ) {
             obj = object[i];
 
-            if (log.isDebugEnabled())
-                log.debug("calc price #1: obj[" + i + "]=" + obj);
+            if( log.isDebugEnabled() )
+                log.debug( "calc price #1: obj[" + i + "]=" + obj );
 
-            if ((obj != null) && (obj instanceof AuthSession)) {
-                auth = (AuthSession) obj;
+            if( ( obj != null ) && ( obj instanceof AuthSession ) ) {
+                auth = ( AuthSession ) obj;
 
             }
-            else if ((obj != null) && (obj instanceof Shop))
-            {
-                shop = (Shop) obj;
+            else if( ( obj != null ) && ( obj instanceof Shop ) ) {
+                shop = ( Shop ) obj;
             }
-            else if ((obj != null) && (obj instanceof CurrencyPrecisionType))
-            {
-                if (log.isDebugEnabled())
-                    log.debug("Redefine default value of precision");
+            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionType ) ) {
+                if( log.isDebugEnabled() )
+                    log.debug( "Redefine default value of precision" );
 
-                precision = ((CurrencyPrecisionType) obj).getPrecision();
+                precision = ( ( CurrencyPrecisionType ) obj ).getPrecision();
             }
         }
 
-        if (auth != null) {
-            if (log.isDebugEnabled())
-                log.debug("calc price: user discount=" + auth.getUserInfo().getDiscount());
+        if( auth != null ) {
+            if( log.isDebugEnabled() )
+                log.debug( "calc price: user discount=" + auth.getUserInfo().getDiscount() );
 
-            if (auth.getUserInfo().getDiscount()!=null)
-                price = price * (100 - auth.getUserInfo().getDiscount()) / 100;
+            if( auth.getUserInfo().getDiscount() != null )
+                price = price * ( 100 - auth.getUserInfo().getDiscount() ) / 100;
         }
 
         // производим округление
-        if (shop != null) {
-            if (log.isDebugEnabled())
-            {
-                log.debug("calc price: shop comma=" + precision);
-                log.debug("calc price. shop.discount - " + shop.discount);
+        if( shop != null ) {
+            if( log.isDebugEnabled() ) {
+                log.debug( "calc price: shop comma=" + precision );
+                log.debug( "calc price. shop.discount - " + shop.discount );
 
             }
 
-            price = price * (100 - shop.discount) / 100;
-            if (log.isDebugEnabled())
-                log.debug("calc price. price - " + price + " shop.commas - " + precision);
+            price = price * ( 100 - shop.discount ) / 100;
+            if( log.isDebugEnabled() )
+                log.debug( "calc price. price - " + price + " shop.commas - " + precision );
 
-            price = NumberTools.truncate(price, precision);
+            price = NumberTools.truncate( price, precision );
 
-            if (log.isDebugEnabled())
-                log.debug("calc price. price - " + price);
+            if( log.isDebugEnabled() )
+                log.debug( "calc price. price - " + price );
 
         }
         return price;
     }
 
     // Расчет значения итоговой суммы для заказа
-    public static double calcSummPrice(Vector v, Object object[]) {
+    public static double calcSummPrice( Vector v, Object object[] ) {
 
-        if (log.isDebugEnabled())
-            log.debug("calc price: len=" + object.length);
+        if( log.isDebugEnabled() )
+            log.debug( "calc price: len=" + object.length );
 
         // search object of AuthSession for calculate discount
         Object obj = null;
@@ -132,63 +128,62 @@ public class PriceList
         Shop shop = null;
         int precision = 2;
 
-        for (int i = 0; i < object.length; i++) {
+        for( int i = 0; i < object.length; i++ ) {
             obj = object[i];
 
-            if (log.isDebugEnabled())
-                log.debug("calc price #1: obj[" + i + "]=" + obj);
+            if( log.isDebugEnabled() )
+                log.debug( "calc price #1: obj[" + i + "]=" + obj );
 
-            if ((obj != null) && (obj instanceof AuthSession)) {
-                auth = (AuthSession) obj;
+            if( ( obj != null ) && ( obj instanceof AuthSession ) ) {
+                auth = ( AuthSession ) obj;
             }
-            else if ((obj != null) && (obj instanceof Shop)) {
-                shop = (Shop) obj;
+            else if( ( obj != null ) && ( obj instanceof Shop ) ) {
+                shop = ( Shop ) obj;
             }
-            else if ((obj != null) && (obj instanceof CurrencyPrecisionType)) {
-                if (log.isDebugEnabled())
-                    log.debug("Redefine default value of precision");
+            else if( ( obj != null ) && ( obj instanceof CurrencyPrecisionType ) ) {
+                if( log.isDebugEnabled() )
+                    log.debug( "Redefine default value of precision" );
 
-                precision = ((CurrencyPrecisionType) obj).getPrecision();
+                precision = ( ( CurrencyPrecisionType ) obj ).getPrecision();
             }
         }
 
-        if (auth != null) {
-            if (log.isDebugEnabled())
-                log.debug("calc price: user discount=" + auth.getUserInfo().getDiscount());
+        if( auth != null ) {
+            if( log.isDebugEnabled() )
+                log.debug( "calc price: user discount=" + auth.getUserInfo().getDiscount() );
 
-            if (auth.getUserInfo().getDiscount()!=null)
-                discountUser = (100 - auth.getUserInfo().getDiscount()) / 100;
+            if( auth.getUserInfo().getDiscount() != null )
+                discountUser = ( 100 - auth.getUserInfo().getDiscount() ) / 100;
         }
 
         double discountShop = 0;
-        if (shop != null) {
+        if( shop != null ) {
             discountShop = shop.discount;
         }
 
         // производим округление
         double summOrder = 0;
-        for (int i = 0; i < v.size(); i++) {
-            obj = v.elementAt(i);
+        for( int i = 0; i < v.size(); i++ ) {
+            obj = v.elementAt( i );
 
-            if (log.isDebugEnabled())
-                log.debug("calc price #2: obj[" + i + "]=" + obj);
+            if( log.isDebugEnabled() )
+                log.debug( "calc price #2: obj[" + i + "]=" + obj );
 
-            if ((obj != null) && (obj instanceof PriceListItemOrder))
-            {
-                PriceListItemOrder item = (PriceListItemOrder) obj;
+            if( ( obj != null ) && ( obj instanceof PriceListItemOrder ) ) {
+                PriceListItemOrder item = ( PriceListItemOrder ) obj;
 
-                if (log.isDebugEnabled())
-                    log.debug("calc price: shop comma=" + precision);
+                if( log.isDebugEnabled() )
+                    log.debug( "calc price: shop comma=" + precision );
 
                 double itemPrice =
-                    NumberTools.truncate(item.priceItem, precision);
+                    NumberTools.truncate( item.priceItem, precision );
 
-                itemPrice = itemPrice * (100 - discountUser) / 100;
+                itemPrice = itemPrice * ( 100 - discountUser ) / 100;
 
-                itemPrice = itemPrice * (100 - discountShop) / 100;
+                itemPrice = itemPrice * ( 100 - discountShop ) / 100;
 
                 summOrder +=
-                    NumberTools.truncate(itemPrice, precision) *
+                    NumberTools.truncate( itemPrice, precision ) *
                     item.qty;
             }
         }
@@ -323,331 +318,200 @@ public class PriceList
     }
 */
 
-    private static void controllLoop( int idx, OrderType order) {
-        if (log.isDebugEnabled()) {
-            log.debug(" Контрольный цикл "+idx);
-            for (int i = 0; i < order.getShopOrdertListCount(); i++) {
-                ShopOrderType shopOrder = order.getShopOrdertList(i);
-                for (int k = 0; k < shopOrder.getOrderItemListCount(); k++) {
-                    OrderItemType item = shopOrder.getOrderItemList(k);
-                    log.debug("id_item - "+item.getIdItem()+", isInDb - " + item.getIsInDb());
+    private static void controllLoop( int idx, OrderType order ) {
+        if( log.isDebugEnabled() ) {
+            log.debug( " Контрольный цикл " + idx );
+            for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
+                ShopOrderType shopOrder = order.getShopOrdertList( i );
+                for( int k = 0; k < shopOrder.getOrderItemListCount(); k++ ) {
+                    OrderItemType item = shopOrder.getOrderItemList( k );
+                    log.debug( "id_item - " + item.getIdItem() + ", isInDb - " + item.getIsInDb() );
                 }
             }
-            log.debug("");
+            log.debug( "" );
         }
     }
 
-    public static void synchronizeOrderWithDb(DatabaseAdapter dbDyn, OrderType order)
+    public static void synchronizeOrderWithDb( DatabaseAdapter dbDyn, OrderType order )
         throws Exception {
-        if (!dbDyn.isDynamic())
-            throw new Exception("Error synchronize order with DB. DB connection is not dynamic");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             String sql_ =
-                "select a.* from PRICE_ORDER_V2 a where a.ID_ORDER_V2=?";
+                "select a.* from WM_PRICE_ORDER a where a.ID_ORDER_V2=?";
 
-            ps = dbDyn.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, order.getIdOrder());
+            ps = dbDyn.prepareStatement( sql_ );
+            RsetTools.setLong( ps, 1, order.getIdOrder() );
 
             rs = ps.executeQuery();
 
             // Перед проверкой устанавливаем все наименования как отсутствующие в базе
-            for (int i = 0; i < order.getShopOrdertListCount(); i++)
-            {
-                ShopOrderType shopOrder = order.getShopOrdertList(i);
-                for (int k = 0; k < shopOrder.getOrderItemListCount(); k++)
-                {
-                    OrderItemType item = shopOrder.getOrderItemList(k);
-                    item.setIsInDb( Boolean.FALSE );
+            for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
+                ShopOrderType shopOrder = order.getShopOrdertList( i );
+                for( int k = 0; k < shopOrder.getOrderItemListCount(); k++ ) {
+                    OrderItemType item = shopOrder.getOrderItemList( k );
+                    item.setIsInDb( false );
                 }
             }
 
-            while (rs.next())
-            {
-                if (log.isDebugEnabled())
-                    log.debug("do get from ResultSet ");
+            while( rs.next() ) {
+                if( log.isDebugEnabled() )
+                    log.debug( "do get from ResultSet " );
 
-                Long idItem = RsetTools.getLong(rs, "ID_ITEM");
+                Long idItem = RsetTools.getLong( rs, "ID_ITEM" );
 
-                if (log.isDebugEnabled())
-                    log.debug("Check item from DB with idItem - "+idItem);
+                if( log.isDebugEnabled() )
+                    log.debug( "Check item from DB with idItem - " + idItem );
 
                 // ищем в заказе из сессии товар, который есть в базе
-                for (int i = 0; i < order.getShopOrdertListCount(); i++)
-                {
-                    ShopOrderType shopOrder = order.getShopOrdertList(i);
+                for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
+                    ShopOrderType shopOrder = order.getShopOrdertList( i );
 
-                    if (log.isDebugEnabled())
-                        controllLoop( 1, order);
+                    if( log.isDebugEnabled() )
+                        controllLoop( 1, order );
 
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("check shop. idShop  - " + shopOrder.getIdShop());
-                        log.debug("Count of items in shopOrder  - " + shopOrder.getOrderItemListCount());
+                    if( log.isDebugEnabled() ) {
+                        log.debug( "check shop. idShop  - " + shopOrder.getIdShop() );
+                        log.debug( "Count of items in shopOrder  - " + shopOrder.getOrderItemListCount() );
                     }
 
-                    for (int k = 0; k < shopOrder.getOrderItemListCount(); k++)
-                    {
-                        OrderItemType item = shopOrder.getOrderItemList(k);
+                    for( int k = 0; k < shopOrder.getOrderItemListCount(); k++ ) {
+                        OrderItemType item = shopOrder.getOrderItemList( k );
 
-                        if (log.isDebugEnabled())
-                        {
-                            log.debug("item object - " + item);
-                            log.debug("item isInDb - " + item.getIsInDb());
-                            log.debug("check item with id - " + idItem);
-                            log.debug("status compare id_item - "+(item.getIdItem() == idItem));
+                        if( log.isDebugEnabled() ) {
+                            log.debug( "item object - " + item );
+                            log.debug( "item isInDb - " + item.getIsInDb() );
+                            log.debug( "check item with id - " + idItem );
+                            log.debug( "status compare id_item - " + ( item.getIdItem() == idItem ) );
                         }
 
-                        if (log.isDebugEnabled())
-                            controllLoop( 2, order);
+                        if( log.isDebugEnabled() )
+                            controllLoop( 2, order );
 
-                        if (item.getIdItem() == idItem)
-                        {
-                            item.setIsInDb( Boolean.TRUE );
+                        if( item.getIdItem() == idItem ) {
+                            item.setIsInDb( true );
 
-                            if (log.isDebugEnabled())
-                                controllLoop( 3, order);
+                            if( log.isDebugEnabled() )
+                                controllLoop( 3, order );
 
-                            if (log.isDebugEnabled())
-                            {
-                                log.debug("item in order. check values of order");
-                                log.debug("item price "+item.getPriceItemResult());
-                                log.debug("db price "+RsetTools.getDouble(rs, "PRICE_RESULT"));
-                                log.debug("init count "+item.getCountItem());
-                                log.debug("db count "+RsetTools.getInt(rs, "COUNT"));
-                                log.debug("item code "+item.getResultCurrency().getCurrencyCode());
-                                log.debug("db code "+RsetTools.getString(rs, "CODE_CURRENCY_RESULT"));
-                                log.debug("status of compare order item data "+(item.getPriceItemResult() != RsetTools.getDouble(rs, "PRICE_RESULT") ||
-                                    (item.getCountItem() != RsetTools.getInt(rs, "COUNT")) ||
-                                    !item.getResultCurrency().getCurrencyCode().equals(RsetTools.getString(rs, "CODE_CURRENCY_RESULT"))
-                                    )
-                                );
-                                log.debug("price "+(item.getPriceItemResult() != RsetTools.getDouble(rs, "PRICE_RESULT")));
-                                log.debug("count "+(item.getCountItem() != RsetTools.getInt(rs, "COUNT")));
-                                log.debug("currency "+!item.getResultCurrency().getCurrencyCode().equals(RsetTools.getString(rs, "CODE_CURRENCY_RESULT")));
+                            if( log.isDebugEnabled() ) {
+                                log.debug( "item in order. check values of order" );
+                                log.debug( "item price " + item.getWmPriceItemResult() );
+                                log.debug( "db price " + RsetTools.getDouble( rs, "PRICE_RESULT" ) );
+                                log.debug( "init count " + item.getCountItem() );
+                                log.debug( "db count " + RsetTools.getInt( rs, "COUNT" ) );
+                                log.debug( "item code " + item.getResultCurrency().getCurrencyCode() );
+                                log.debug( "db code " + RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) );
+                                log.debug( "status of compare order item data " + ( item.getWmPriceItemResult() != RsetTools.getDouble( rs, "PRICE_RESULT" ) ||
+                                    ( item.getCountItem() != RsetTools.getInt( rs, "COUNT" ) ) ||
+                                    !item.getResultCurrency().getCurrencyCode().equals( RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) )
+                                    ) );
+                                log.debug( "price " + ( item.getWmPriceItemResult() != RsetTools.getDouble( rs, "PRICE_RESULT" ) ) );
+                                log.debug( "count " + ( item.getCountItem() != RsetTools.getInt( rs, "COUNT" ) ) );
+                                log.debug( "currency " + !item.getResultCurrency().getCurrencyCode().equals( RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) ) );
                             }
 
-                            if (log.isDebugEnabled())
-                                controllLoop( 31, order);
+                            if( log.isDebugEnabled() )
+                                controllLoop( 31, order );
 
                             // Заказ найден, сравниваем данные
-                            if (item.getPriceItemResult() != RsetTools.getDouble(rs, "PRICE_RESULT") ||
-                                item.getCountItem() != RsetTools.getInt(rs, "COUNT") ||
-                                !item.getResultCurrency().getCurrencyCode().equals(RsetTools.getString(rs, "CODE_CURRENCY_RESULT"))
-                            )
-                            {
-                                if (log.isDebugEnabled())
-                                    controllLoop( 32, order);
+                            if( item.getWmPriceItemResult() != RsetTools.getDouble( rs, "PRICE_RESULT" ) ||
+                                item.getCountItem() != RsetTools.getInt( rs, "COUNT" ) ||
+                                !item.getResultCurrency().getCurrencyCode().equals( RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) )
+                            ) {
+                                if( log.isDebugEnabled() )
+                                    controllLoop( 32, order );
 
-                                if (log.isDebugEnabled())
-                                {
-                                    log.debug("item in order not equals with item in DB");
+                                if( log.isDebugEnabled() ) {
+                                    log.debug( "item in order not equals with item in DB" );
 
-                                    log.debug("item price " + item.getPriceItemResult());
-                                    log.debug("db price " + RsetTools.getDouble(rs, "PRICE_RESULT"));
-                                    log.debug("item count " + item.getCountItem());
-                                    log.debug("db count " + RsetTools.getInt(rs, "COUNT"));
-                                    log.debug("item currency code " + item.getResultCurrency().getCurrencyCode());
-                                    log.debug("item currency code " + RsetTools.getString(rs, "CODE_CURRENCY_RESULT"));
+                                    log.debug( "item price " + item.getWmPriceItemResult() );
+                                    log.debug( "db price " + RsetTools.getDouble( rs, "PRICE_RESULT" ) );
+                                    log.debug( "item count " + item.getCountItem() );
+                                    log.debug( "db count " + RsetTools.getInt( rs, "COUNT" ) );
+                                    log.debug( "item currency code " + item.getResultCurrency().getCurrencyCode() );
+                                    log.debug( "item currency code " + RsetTools.getString( rs, "CODE_CURRENCY_RESULT" ) );
                                 }
 
                                 PreparedStatement ps1 = null;
-                                try
-                                {
+                                try {
                                     String sqlDel =
-                                        "delete from PRICE_ORDER_V2 a where a.ID_ORDER_V2=?";
+                                        "delete from WM_PRICE_ORDER a where a.ID_ORDER_V2=?";
 
-                                    ps1 = dbDyn.prepareStatement(sqlDel);
-                                    RsetTools.setLong(ps1, 1, order.getIdOrder());
+                                    ps1 = dbDyn.prepareStatement( sqlDel );
+                                    RsetTools.setLong( ps1, 1, order.getIdOrder() );
 
                                     ps1.executeUpdate();
                                 }
-                                finally
-                                {
-                                    DatabaseManager.close(ps1);
+                                finally {
+                                    DatabaseManager.close( ps1 );
                                     ps1 = null;
                                 }
 
-                                if (log.isDebugEnabled())
-                                    controllLoop( 33, order);
+                                if( log.isDebugEnabled() )
+                                    controllLoop( 33, order );
 
-                                if (log.isDebugEnabled())
-                                    log.debug("success delete item from db");
+                                if( log.isDebugEnabled() )
+                                    log.debug( "success delete item from db" );
 
-                                OrderLogic.addItem(dbDyn, order.getIdOrder(), item);
+                                OrderLogic.addItem( dbDyn, order.getIdOrder(), item );
 
-                                if (log.isDebugEnabled())
-                                    controllLoop( 34, order);
+                                if( log.isDebugEnabled() )
+                                    controllLoop( 34, order );
 
                             }
 
-                            if (log.isDebugEnabled())
-                            {
-                                log.debug("do continue");
-                                log.debug("item idItem "+item.getIdItem()+" inDb "+item.getIsInDb());
+                            if( log.isDebugEnabled() ) {
+                                log.debug( "do continue" );
+                                log.debug( "item idItem " + item.getIdItem() + " inDb " + item.getIsInDb() );
                             }
 
-                            if (log.isDebugEnabled())
-                                controllLoop( 35, order);
+                            if( log.isDebugEnabled() )
+                                controllLoop( 35, order );
 
                             break;
                         }
 
-                        if (log.isDebugEnabled())
-                            controllLoop( 4, order);
+                        if( log.isDebugEnabled() )
+                            controllLoop( 4, order );
                     }
                 }
             }
 
-            if (log.isDebugEnabled())
-                controllLoop( 5, order);
+            if( log.isDebugEnabled() )
+                controllLoop( 5, order );
 
             // записываем в базу все наименования которых нет в базе
-            for (int i = 0; i < order.getShopOrdertListCount(); i++)
-            {
-                ShopOrderType shopOrder = order.getShopOrdertList(i);
-                for (int k = 0; k < shopOrder.getOrderItemListCount(); k++)
-                {
-                    OrderItemType item = shopOrder.getOrderItemList(k);
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("item object - " + item);
-                        log.debug("item idItem " + item.getIdItem());
-                        log.debug("item inDb - " + item.getIsInDb() );
+            for( int i = 0; i < order.getShopOrdertListCount(); i++ ) {
+                ShopOrderType shopOrder = order.getShopOrdertList( i );
+                for( int k = 0; k < shopOrder.getOrderItemListCount(); k++ ) {
+                    OrderItemType item = shopOrder.getOrderItemList( k );
+                    if( log.isDebugEnabled() ) {
+                        log.debug( "item object - " + item );
+                        log.debug( "item idItem " + item.getIdItem() );
+                        log.debug( "item inDb - " + item.getIsInDb() );
                     }
 
-                    if (! Boolean.TRUE.equals(item.getIsInDb()) )
-                    {
-                        if (log.isDebugEnabled())
-                            log.debug("item not in db " + item.getIdItem());
+                    if( !Boolean.TRUE.equals( item.getIsInDb() ) ) {
+                        if( log.isDebugEnabled() )
+                            log.debug( "item not in db " + item.getIdItem() );
 
-                        OrderLogic.addItem(dbDyn, order.getIdOrder(), item);
-                        item.setIsInDb( Boolean.TRUE );
+                        OrderLogic.addItem( dbDyn, order.getIdOrder(), item );
+                        item.setIsInDb( true );
                     }
                 }
             }
 
         }
-        catch (Exception e)
-        {
-            log.error("Error synchronize order with DB", e);
+        catch( Exception e ) {
+            log.error( "Error synchronize order with DB", e );
             throw e;
         }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
+        finally {
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }
     }
-
-/*
-    public static Vector getOrderItemsV2(DatabaseAdapter db_,
-        String serverName,
-        long id_order)
-        throws PriceException
-    {
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Vector retVector = null;
-
-        try
-        {
-            String sql_ =
-                "select a.*, c.count qty " +
-                "from   v_b2c_items_price_currency a, " +
-                " 	    price_relate_user_order b, price_order c  " +
-                "where  a.ID_SITE=? and " +
-                "       a.id_shop=? and a.id_shop=b.id_shop and " +
-                "       a.id_std_currency=? and " +
-                "       a.id_item=c.id_item and " +
-                "	    c.id_order=b.id_order and " +
-                "	    b.id_order=? " +
-                "order by a.ITEM asc ";
-
-            long idSite = SiteListSite.getIdSite(serverName);
-
-            ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSite);
-            RsetTools.setLong(ps, 4, id_order);
-
-            rs = ps.executeQuery();
-
-            retVector = new Vector(25, 10);
-            while (rs.next())
-                retVector.add(new PriceListItemOrder(rs));
-
-        }
-        catch (Exception e)
-        {
-            throw new PriceException(e.toString());
-        }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-        return retVector;
-    }
-
-    public static Vector getPriceList(DatabaseAdapter db_,
-        long id_shop,
-        long currencyID,
-        long id_main,
-        String serverName
-        )
-        throws PriceException
-    {
-
-        String sql_ = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Vector retVector = null;
-
-        if (currencyID == 0)
-            throw new PriceException("currency for this shop not defined");
-
-        try
-        {
-            sql_ =
-                "select * from v_b2c_items_price_currency " +
-                "where ID_SITE=? and " +
-                "       id_main = ? and id_shop = ? and " +
-                "       id_std_currency = ? " +
-                "order by id asc";
-
-            long idSite = SiteListSite.getIdSite(serverName);
-
-            ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSite);
-            RsetTools.setLong(ps, 2, id_main);
-            RsetTools.setLong(ps, 3, id_shop);
-            RsetTools.setLong(ps, 4, currencyID);
-
-            rs = ps.executeQuery();
-
-            retVector = new Vector(25, 10);
-            while (rs.next())
-                retVector.add(new PriceListItem(currencyID, rs));
-
-        }
-        catch (Exception e)
-        {
-            log.error("Error getPriceList", e);
-            throw new PriceException(e.toString());
-        }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-        return retVector;
-    }
-*/
 }

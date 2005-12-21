@@ -34,6 +34,7 @@ package org.riverock.generic.system;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.schema.db.structure.*;
@@ -69,7 +70,7 @@ public class ValidateStructure
                 {
                     System.out.println("view " + view.getName() + " already exists");
                     System.out.println("drop view " + view.getName());
-                    db_.dropView(view);
+                    DatabaseStructureManager.dropView(db_, view);
                     System.out.println("create view " + view.getName());
                     try
                     {
@@ -103,7 +104,7 @@ public class ValidateStructure
                         System.out.println("Create foreign key for table " + table.getName());
                         DbImportedKeyListType fk = new DbImportedKeyListType();
                         fk.setKeys( table.getImportedKeysAsReference() );
-                        db_.createForeignKey( fk );
+                        DatabaseStructureManager.createForeignKey(db_, fk );
                     }
                     catch (SQLException e)
                     {
@@ -121,7 +122,7 @@ public class ValidateStructure
     {
         System.out.println("Connection - "+nameConnection);
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, nameConnection);
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
         DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 
 //        String encoding = "UTF-8";
@@ -173,8 +174,7 @@ public class ValidateStructure
                             if (DatabaseManager.checkDefaultTimestamp(field.getDefaultValue()))
                             {
                                 System.out.println("Field recognized as default date field");
-                                db_.setDefaultValueTimestamp(
-                                    originTable,
+                                DatabaseStructureManager.setDefaultValueTimestamp(db_, originTable,
                                     field
                                 );
                             }
@@ -222,7 +222,7 @@ public class ValidateStructure
         DbSchemaType schemaResult = DatabaseManager.getDbStructure(db_ );
         System.out.println("Marshal data to file");
         XmlTools.writeToFile(schemaResult, GenericConfig.getGenericDebugDir()+"schema-result-"+nameConnection+".xml" );
-
+        DatabaseAdapter.close( db_ );
     }
 
     public static void main(String args[])

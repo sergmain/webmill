@@ -121,13 +121,13 @@ public class PriceEditDescription extends HttpServlet {
                     throw new IllegalArgumentException( "id_item not initialized" );
 
                 if( RequestTools.getString( renderRequest, "action" ).equals( "update" ) ) {
-                    dbDyn.conn.setAutoCommit( false );
+                    dbDyn.getConnection().setAutoCommit( false );
                     String sql_ =
-                        "delete from PRICE_ITEM_DESCRIPTION a " +
+                        "delete from WM_PRICE_ITEM_DESCRIPTION a " +
                         "where exists " +
-                        " ( select null from price_list b " +
-                        "where b.id_shop = ? and b.id_item = ? and " +
-                        "a.id_item=b.id_item ) ";
+                        " ( select null from WM_PRICE_LIST b " +
+                        "   where b.id_shop = ? and b.id_item = ? and " +
+                        "         a.id_item=b.id_item ) ";
 
                     try {
                         st = dbDyn.prepareStatement( sql_ );
@@ -147,10 +147,10 @@ public class PriceEditDescription extends HttpServlet {
 
 
                     sql_ =
-                        "insert into PRICE_ITEM_DESCRIPTION " +
+                        "insert into WM_PRICE_ITEM_DESCRIPTION " +
                         "(ID_PRICE_ITEM_DESCRIPTION, ID_ITEM, TEXT)" +
-                        "(select seq_PRICE_ITEM_DESCRIPTION.nextval, ID_ITEM, ? " +
-                        " from price_list b where b.ID_SHOP = ? and b.ID_ITEM = ? )";
+                        "(select seq_WM_PRICE_ITEM_DESCRIPTION.nextval, ID_ITEM, ? " +
+                        " from WM_PRICE_LIST b where b.ID_SHOP = ? and b.ID_ITEM = ? )";
 
                     try {
 
@@ -184,7 +184,7 @@ public class PriceEditDescription extends HttpServlet {
                         return;
                     }
                     finally {
-                        dbDyn.conn.setAutoCommit( true );
+                        dbDyn.getConnection().setAutoCommit( true );
                         if( st != null ) {
                             DatabaseManager.close( st );
                             st = null;
@@ -196,12 +196,12 @@ public class PriceEditDescription extends HttpServlet {
                     renderRequest.getParameter( "id_image" ) != null
                 ) {
                     Long id_image = PortletService.getLong( renderRequest, "id_image" );
-                    dbDyn.conn.setAutoCommit( false );
+                    dbDyn.getConnection().setAutoCommit( false );
 
                     String sql_ =
-                        "delete from IMAGE_PRICE_ITEMS a " +
+                        "delete from WM_IMAGE_PRICE_ITEMS a " +
                         "where exists " +
-                        " ( select null from price_list b " +
+                        " ( select null from WM_PRICE_LIST b " +
                         "where b.id_shop = ? and b.id_item = ? and " +
                         "a.id_item=b.id_item ) ";
 
@@ -223,10 +223,10 @@ public class PriceEditDescription extends HttpServlet {
 
 
                     sql_ =
-                        "insert into IMAGE_PRICE_ITEMS " +
+                        "insert into WM_IMAGE_PRICE_ITEMS " +
                         "(id_IMAGE_PRICE_ITEMS, id_item, ID_IMAGE_DIR)" +
-                        "(select seq_IMAGE_PRICE_ITEMS.nextval, id_item, ? " +
-                        " from price_list b where b.id_shop = ? and b.id_item = ? )";
+                        "(select seq_WM_IMAGE_PRICE_ITEMS.nextval, id_item, ? " +
+                        " from WM_PRICE_LIST b where b.id_shop = ? and b.id_item = ? )";
 
                     try {
 
@@ -248,7 +248,7 @@ public class PriceEditDescription extends HttpServlet {
                         return;
                     }
                     finally {
-                        dbDyn.conn.setAutoCommit( true );
+                        dbDyn.getConnection().setAutoCommit( true );
                         DatabaseManager.close( st );
                         st = null;
                     }

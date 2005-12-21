@@ -27,7 +27,6 @@ package org.riverock.generic.site;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -54,9 +53,8 @@ public final class SiteListSite{
         if (siteId==null){
             log.warn("site with serverName '"+serverName+"' not found");
             log.warn( "Dump map with current serverNames" );
-            for ( Iterator it = hashListSite.keySet().iterator(); it.hasNext(); ){
-                Object s = it.next();
-                log.warn( "Value in map - "+s.toString()+", value - "+ hashListSite.get(s) );
+            for (Object s : hashListSite.keySet()) {
+                log.warn("Value in map - " + s.toString() + ", value - " + hashListSite.get(s));
             }
         }
         return siteId;
@@ -135,7 +133,7 @@ public final class SiteListSite{
     static String sql_ = null;
     static {
         sql_ =
-            "select a.ID_SITE, a.NAME_VIRTUAL_HOST from site_virtual_host a";
+            "select a.ID_SITE, a.NAME_VIRTUAL_HOST from WM_PORTAL_VIRTUAL_HOST a";
 
         try {
             SqlStatement.registerSql( sql_, new SiteListSite().getClass() );
@@ -154,7 +152,7 @@ public final class SiteListSite{
         DatabaseAdapter db_ = null;
         try
         {
-            db_ = DatabaseAdapter.getInstance(false);
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql_ );
 
             rs = ps.executeQuery();

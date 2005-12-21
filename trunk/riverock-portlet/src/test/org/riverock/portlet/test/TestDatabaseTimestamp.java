@@ -71,7 +71,7 @@ public class TestDatabaseTimestamp
 
         org.riverock.generic.startup.StartupApplication.init();
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, "ORACLE_PORT");
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE_PORT" );
 
         System.out.println("#1 insert");
         String stringDate = DateUtils.getStringDate(t, "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH);

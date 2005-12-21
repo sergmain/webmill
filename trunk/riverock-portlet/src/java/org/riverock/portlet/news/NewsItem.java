@@ -89,7 +89,7 @@ public final class NewsItem {
     {
         sql_ =
             "select a.*, c.CUSTOM_LANGUAGE " +
-            "from   WM_NEWS_ITEM a, WM_NEWS_LIST b, SITE_SUPPORT_LANGUAGE c "+
+            "from   WM_NEWS_ITEM a, WM_NEWS_LIST b, WM_PORTAL_SITE_LANGUAGE c "+
             "where  a.ID=? and a.IS_DELETED=0 and a.ID_NEWS=b.ID_NEWS and " +
             "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE";
 

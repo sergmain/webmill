@@ -22,71 +22,63 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: serg_main
- * Date: 28.11.2003
- * Time: 22:01:57
- * @author Serge Maslyukov
- * $Id$
- */
-
 package org.riverock.cache.config;
 
 import java.io.File;
 import java.util.HashMap;
 
-import org.riverock.cache.impl.Constants;
-import org.riverock.cache.schema.config.CacheConfigType;
+import org.apache.log4j.Logger;
+
 import org.riverock.cache.schema.config.CacheClassItemType;
+import org.riverock.cache.schema.config.CacheConfigType;
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
 
-import org.apache.log4j.Logger;
-
-public final class CacheConfig
-{
-    private final static Logger log = Logger.getLogger( CacheConfig.class );
+/**
+ * User: serg_main
+ * Date: 28.11.2003
+ * Time: 22:01:57
+ *
+ * @author Serge Maslyukov
+ *         $Id$
+ */
+public final class CacheConfig {
+    private final static Logger log = Logger.getLogger(CacheConfig.class);
 
     // used in web.xml file
     public static final String CONFIG_FILE_PARAM_NAME = "cache-config-file";
     // name of local config file
     private static final String NAME_CONFIG_FILE = "jsmithy-cache.xml";
+
     // name of config file in JNDI
     public final static String JNDI_CACHE_CONFIG_FILE = "jsmithy/cache/ConfigFile";
 
-//    public static String contextName = "";
     private static ConfigObject configObject = null;
     private static boolean isConfigProcessed = false;
-    private static HashMap classMap = new HashMap();
+    private static HashMap<String, CacheClassItemType> classMap = new HashMap<String, CacheClassItemType>();
 
-    public static CacheConfigType getConfig()
-    {
-        return (CacheConfigType)configObject.getConfigObject();
+    public static CacheConfigType getConfig() {
+        return (CacheConfigType) configObject.getConfigObject();
     }
 
     private static Object syncReadConfig = new Object();
+
     private static void readConfig()
-        throws ConfigException
-    {
+        throws ConfigException {
         if (isConfigProcessed)
             return;
 
-        synchronized (syncReadConfig)
-        {
+        synchronized (syncReadConfig) {
             if (isConfigProcessed)
                 return;
 
-            configObject = ConfigObject.load(
-                JNDI_CACHE_CONFIG_FILE , CONFIG_FILE_PARAM_NAME, NAME_CONFIG_FILE, CacheConfigType.class);
+            configObject = ConfigObject.load(JNDI_CACHE_CONFIG_FILE, CONFIG_FILE_PARAM_NAME, NAME_CONFIG_FILE, CacheConfigType.class);
 
             if (log.isDebugEnabled())
                 log.debug("#15.006");
 
-            if (getConfig().getClassList()!=null)
-            {
-                for (int i=0; i<getConfig().getClassList().getClassItemCount(); i++)
-                {
+            if (getConfig().getClassList() != null) {
+                for (int i = 0; i < getConfig().getClassList().getClassItemCount(); i++) {
                     CacheClassItemType classItem = getConfig().getClassList().getClassItem(i);
                     classMap.put(classItem.getClassName(), classItem);
                 }
@@ -101,9 +93,9 @@ public final class CacheConfig
 //-----------------------------------------------------
 
     private static Object syncTempDir = new Object();
+
     public static String getCacheTempDir()
-        throws ConfigException
-    {
+        throws ConfigException {
         if (log.isDebugEnabled())
             log.debug("#15.937");
 
@@ -113,36 +105,33 @@ public final class CacheConfig
         if (log.isDebugEnabled())
             log.debug("#15.938");
 
-        synchronized(syncTempDir)
-        {
-            if (Boolean.FALSE.equals( getConfig().getIsTempDirInit() ) )
-            {
+        synchronized (syncTempDir) {
+            if (Boolean.FALSE.equals(getConfig().getIsTempDirInit())) {
                 String dir = getConfig().getCacheTempDir();
-                if (File.separatorChar=='\\')
-                    dir = dir.replace( '/', '\\');
+                if (File.separatorChar == '\\')
+                    dir = dir.replace('/', '\\');
                 else
-                    dir = dir.replace( '\\', '/');
+                    dir = dir.replace('\\', '/');
 
-                if (!dir.endsWith( File.separator ))
+                if (!dir.endsWith(File.separator))
                     dir += File.separator;
 
                 File dirTest = new File(dir);
-                if ( !dirTest.exists() )
-                {
-                    log.error("Specified temp directory '"+dir+"' not exists. Set to default java input/output temp directory");
+                if (!dirTest.exists()) {
+                    log.error("Specified temp directory '" + dir + "' not exists. Set to default java input/output temp directory");
                     dir = System.getProperty("java.io.tmpdir");
                 }
-                getConfig().setCacheTempDir( dir );
-                getConfig().setIsTempDirInit( Boolean.TRUE );
+                getConfig().setCacheTempDir(dir);
+                getConfig().setIsTempDirInit(Boolean.TRUE);
             }
             return getConfig().getCacheTempDir();
         }
     }
 
     private static Object syncDebug = new Object();
+
     public static String getMillDebugDir()
-        throws ConfigException
-    {
+        throws ConfigException {
         if (log.isDebugEnabled())
             log.debug("#15.937.1");
 
@@ -152,41 +141,38 @@ public final class CacheConfig
         if (log.isDebugEnabled())
             log.debug("#15.938.1");
 
-        if (getConfig().getIsDebugDirInit().booleanValue() )
+        if (getConfig().getIsDebugDirInit())
             return getConfig().getCacheDebugDir();
 
-        synchronized(syncDebug)
-        {
-            if (getConfig().getIsDebugDirInit().booleanValue())
+        synchronized (syncDebug) {
+            if (getConfig().getIsDebugDirInit())
                 return getConfig().getCacheDebugDir();
 
             String dir = getConfig().getCacheDebugDir();
-            if (File.separatorChar=='\\')
-                dir = dir.replace( '/', '\\');
+            if (File.separatorChar == '\\')
+                dir = dir.replace('/', '\\');
             else
-                dir = dir.replace( '\\', '/');
+                dir = dir.replace('\\', '/');
 
-            if (!dir.endsWith( File.separator ))
+            if (!dir.endsWith(File.separator))
                 dir += File.separator;
 
             File dirTest = new File(dir);
-            if ( !dirTest.exists() )
-            {
-                log.warn("Specified debug directory '"+dir+"' not exists. Set to default java input/output temp directory");
+            if (!dirTest.exists()) {
+                log.warn("Specified debug directory '" + dir + "' not exists. Set to default java input/output temp directory");
                 dir = System.getProperty("java.io.tmpdir");
             }
-            getConfig().setCacheDebugDir( dir );
-            getConfig().setIsDebugDirInit( Boolean.TRUE );
+            getConfig().setCacheDebugDir(dir);
+            getConfig().setIsDebugDirInit(Boolean.TRUE);
 
             return getConfig().getCacheDebugDir();
         }
     }
 
-    public static CacheClassItemType getClassDefinition(String className)
-    {
-        if (className==null)
+    public static CacheClassItemType getClassDefinition(String className) {
+        if (className == null)
             return null;
 
-        return (CacheClassItemType)classMap.get(className);
+        return (CacheClassItemType) classMap.get(className);
     }
 }

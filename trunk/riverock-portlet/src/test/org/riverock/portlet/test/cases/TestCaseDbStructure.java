@@ -81,7 +81,7 @@ public class TestCaseDbStructure extends TestCase
 
         if (schemaObj==null)
         {
-            DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE");
+            DatabaseAdapter db_ = DatabaseAdapter.getInstance( "ORACLE");
 
             System.out.println("Get schema of DB");
             schemaObj = DatabaseManager.getDbStructure(db_ );

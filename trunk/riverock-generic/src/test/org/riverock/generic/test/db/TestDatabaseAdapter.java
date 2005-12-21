@@ -48,7 +48,7 @@ public class TestDatabaseAdapter
     {
         org.riverock.generic.startup.StartupApplication.init();
 
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
+        DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "ORACLE" );
         DbSchemaType schemaOracle = DatabaseManager.getDbStructure(dbOra );
 
 

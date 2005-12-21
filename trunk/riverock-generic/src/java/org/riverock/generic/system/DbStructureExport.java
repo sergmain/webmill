@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
@@ -72,7 +73,7 @@ public class DbStructureExport {
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "HSQLDB");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE_TEST");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "MYSQL_CONTEST");
+        DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "MYSQL_CONTEST");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE-DART");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "IBM-DB2");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
@@ -98,12 +99,12 @@ public class DbStructureExport {
             }
             System.out.println( "Table - " + table.getName() );
 
-            table.setFields(dbOra.getFieldsList(table.getSchema(), table.getName()));
-            table.setPrimaryKey(dbOra.getPrimaryKey(table.getSchema(), table.getName()));
-            table.setImportedKeys(dbOra.getImportedKeys(table.getSchema(), table.getName()));
+            table.setFields(DatabaseStructureManager.getFieldsList(dbOra, dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
 
             if (isData)
-                table.setData(dbOra.getDataTable(table));
+                table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table));
         }
 
         String fileNameBigText =

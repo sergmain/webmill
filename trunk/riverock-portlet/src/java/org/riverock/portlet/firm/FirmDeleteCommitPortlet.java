@@ -108,12 +108,12 @@ public final class FirmDeleteCommitPortlet implements Portlet {
                 throw new IllegalArgumentException( "id_firm not initialized" );
 
             String sql =
-                "update MAIN_LIST_FIRM set is_deleted = 1 " +
-                "where ID_FIRM = ? and ID_FIRM in ";
+                "update WM_LIST_COMPANY set is_deleted = 1 " +
+                "where  ID_FIRM = ? and ID_FIRM in ";
 
             switch( dbDyn.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedFirmId( dbDyn, actionRequest.getRemoteUser() );
+                    String idList = AuthHelper.getGrantedCompanyId( dbDyn, actionRequest.getRemoteUser() );
 
                     sql += " (" + idList + ") ";
 

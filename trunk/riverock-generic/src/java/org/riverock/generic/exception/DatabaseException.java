@@ -22,31 +22,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.exception;
 
 /**
  * User: serg_main
  * Date: 26.01.2004
  * Time: 20:45:56
+ *
  * @author Serge Maslyukov
- * $Id$
+ *         $Id$
  */
-
-package org.riverock.generic.exception;
-
-
-public class DatabaseException extends Exception
-{
-    public DatabaseException()
-    {
+public class DatabaseException extends Exception {
+    public DatabaseException() {
         super();
     }
 
-    public DatabaseException(String s)
-    {
+    public DatabaseException(String s) {
         super(s);
     }
 
-    public DatabaseException(String s, Throwable cause){
+    public DatabaseException(String s, Throwable cause) {
         super(s, cause);
     }
 }

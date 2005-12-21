@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Dec 12, 2002
- * Time: 9:01:05 PM
- *
- * $Id$
- */
 package org.riverock.portlet.price;
 
 import java.sql.ResultSet;
@@ -42,10 +34,16 @@ import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.StandardCurrencyItemType;
 import org.riverock.portlet.schema.price.StandardCurrencyType;
-import org.riverock.portlet.schema.core.CashCurrencyItemType;
+import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
 
-public class CurrencyItem extends CustomCurrencyItemType
-{
+/**
+ * User: Admin
+ * Date: Dec 12, 2002
+ * Time: 9:01:05 PM
+ *
+ * $Id$
+ */
+public class CurrencyItem extends CustomCurrencyItemType {
 //    private static Log cat = LogFactory.getLog("org.riverock.portlet.price.CurrencyItem");
 
     public void fillRealCurrencyData(StandardCurrencyType stdCurrency)
@@ -54,11 +52,10 @@ public class CurrencyItem extends CustomCurrencyItemType
             if (!Boolean.TRUE.equals(this.getIsUseStandardCurrency()) &&
                 this.getCurrentCurs()==null)
             {
-                this.setRealCurs( new Double(0) );
+                this.setRealCurs( 0.0 );
                 this.setRealDateChange( DateTools.getCurrentTime() );
                 this.setIsRealInit( Boolean.FALSE );
                 return;
-//                throw new Exception("Curs for currency "+this.getCurrencyName()+" not entered");
             }
 
             if (Boolean.TRUE.equals(this.getIsUseStandardCurrency()) &&
@@ -94,7 +91,7 @@ public class CurrencyItem extends CustomCurrencyItemType
     {
     }
 
-    public CurrencyItem(DatabaseAdapter db_, CashCurrencyItemType item)
+    public CurrencyItem(DatabaseAdapter db_, WmCashCurrencyItemType item)
         throws PriceException
     {
         this.setCurrencyCode(item.getCurrency());
@@ -118,8 +115,8 @@ public class CurrencyItem extends CustomCurrencyItemType
         this.setIdCurrency(RsetTools.getLong(rs, "ID_CURRENCY"));
         this.setIdSite(RsetTools.getLong(rs, "ID_SITE"));
         this.setIdStandardCurrency(RsetTools.getLong(rs, "ID_STANDART_CURS"));
-        this.setIsUsed( new Boolean(  new Integer(1).equals(RsetTools.getInt(rs, "IS_USED"))) );
-        this.setIsUseStandardCurrency( new Boolean(  new Integer(1).equals(RsetTools.getInt(rs, "IS_USE_STANDART"))) );
+        this.setIsUsed( RsetTools.getInt( rs, "IS_USED", 0 )==1 );
+        this.setIsUseStandardCurrency( RsetTools.getInt( rs, "IS_USE_STANDART", 0 ) == 1 );
         this.setPercent(RsetTools.getDouble(rs, "PERCENT_VALUE"));
         this.setCurrentCurs(
             CurrencyService.getCurrentCurs(db_, this.getIdCurrency(), this.getIdSite())

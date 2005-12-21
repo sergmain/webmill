@@ -1,53 +1,41 @@
-<%@page
-contentType="text/html; charset=windows-1251"
-language="java"
-import="mill.db.DBconnect,
-        mill.a3.AuthSession,
-        mill.tools.TransferFile,
-        mill.tools.ExceptionTools,
-        org.apache.log4j.Category"
+package org.riverock.portlet.test;
 
-%><%!
-/**
- *  $Revision$ $Date$
- *
- */
-    private static Category cat = Category.getInstance( "member-sa-upload-upload.jsp");
+import javax.servlet.http.HttpServletRequest;
 
-%>
-<%
-    DBconnect dbDyn = DBconnect.getInstance( true );
-    try
-    {
-        AuthSession auth_ = AuthSession.check(request, response);
-        if ( auth_==null )
-            return;
+import org.apache.log4j.Logger;
 
-        if( auth_.getRight("SYSADMIN","UPLOAD_FILE_X509", "A") )
-        {
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.tools.TransferFile;
 
-            try
-            {
-                TransferFile.processData(request);
-                out.println( "Upload data is successfull<br>");
-            }
-            catch(Exception e)
-            {
-                cat .error("Error upload signed file.", e);
-                out.println( "Error uploading file<br>"+
-                        ExceptionTools.getStackTrace(e, 30, "<br>")
-                );
-            }
+
+public class TransferFileTest {
+    private static Logger log = Logger.getLogger( TransferFileTest.class );
+
+    public void procee( HttpServletRequest request ) throws Exception {
+
+        DatabaseAdapter dbDyn = null;
+        try {
+            dbDyn = DatabaseAdapter.getInstance();
+//            AuthSession auth_ = AuthSession.check( request, response );
+//            if( auth_ == null )
+//                return;
+
+//            if( auth_.getRight( "SYSADMIN", "UPLOAD_FILE_X509", "A" ) ) {
+
+                try {
+                    TransferFile.processData( request );
+                }
+                catch( Exception e ) {
+                    log.error( "Error upload signed file.", e );
+                    throw e;
+                }
+//            }
+
         }
-
-    }
-    finally
-    {
-        if (dbDyn != null)
-        {
-            DBconnect.close( dbDyn );
+        finally {
+            DatabaseManager.close( dbDyn );
             dbDyn = null;
         }
     }
-
-%>
+}

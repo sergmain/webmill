@@ -116,7 +116,7 @@ public final class Shop {
         if( codeShop == null )
             return null;
 
-        String sql_ = "select ID_SHOP from PRICE_SHOP_TABLE where CODE_SHOP = ?";
+        String sql_ = "select ID_SHOP from WM_PRICE_SHOP_LIST where CODE_SHOP = ?";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -144,7 +144,7 @@ public final class Shop {
 
         Long idSite = SiteListSite.getIdSite( portletRequest.getServerName() );
 
-        String sql_ = "select ID_SHOP from PRICE_SHOP_TABLE where ID_SITE=?";
+        String sql_ = "select ID_SHOP from WM_PRICE_SHOP_LIST where ID_SITE=?";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -183,7 +183,7 @@ public final class Shop {
 
     static {
         sql_ =
-            "select * from PRICE_SHOP_TABLE where ID_SHOP = ?";
+            "select * from WM_PRICE_SHOP_LIST where ID_SHOP = ?";
 
         try {
             SqlStatement.registerSql( sql_, new Shop().getClass() );

@@ -32,10 +32,24 @@
 
 package org.riverock.common.multipart;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PushbackInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
 import org.apache.log4j.Category;
 
-import java.io.*;
-import java.util.*;
+import org.riverock.common.tools.MainTools;
 
 // for unpacking content disposition headers
 
@@ -86,16 +100,14 @@ public class MultipartHandler
     private boolean silentlyRename = true;
 
     /** the boundaries I am currently watching */
-    private Stack boundaries = new Stack();
+    private Stack<String> boundaries = new Stack<String>();
 
     /**
      * the name-value pairs I have identified
-     *
-     * @deprecated use getValue()
      */
-    protected Hashtable values = null;
+    private Map<String, Object> values = null;
 
-    private Hashtable hashValue = null;
+    private Map<String, Object> hashValue = null;
 
     /** the stream I read from */
     private PushbackInputStream in;
@@ -143,7 +155,7 @@ public class MultipartHandler
     private final String simplePattern = "form-data; *name=\"([^\"]*)\"";
 
     /** Disallowed characters in filenames. Hashtable of Characters. */
-    protected Hashtable disallowedCharacters = new Hashtable();
+    protected Map<Character, Character> disallowedCharacters = new HashMap<Character, Character>();
 
     /** read multiple values from this RFC 1867 formatted input stream
      *  into this hashtable
@@ -154,7 +166,7 @@ public class MultipartHandler
      *  stream as multipart
      *  @param workdir a directory in which to save uploaded files
      */
-    MultipartHandler(Hashtable values, InputStream in, int length,
+    MultipartHandler(Map<String, Object> values, InputStream in, int length,
                      String cthdr, File workdir)
         throws IOException, UploadException
     {
@@ -171,7 +183,7 @@ public class MultipartHandler
      *  stream as multipart
      *  @param workdir a directory in which to save uploaded files
      */
-    public MultipartHandler(Hashtable values, InputStream in, int length,
+    public MultipartHandler(Map<String, Object> values, InputStream in, int length,
         String cthdr, File workdir,
         boolean saveUploadedFilesToDisk,
         boolean allowOverwrite,
@@ -182,7 +194,7 @@ public class MultipartHandler
         if (saveUploadedFilesToDisk && workdir==null)
             throw new IllegalArgumentException("Work dir is not specified");
 
-        this.hashValue = new Hashtable();
+        this.hashValue = new HashMap<String, Object>();
         this.in = new PushbackInputStream(in);
         this.expected = length;
         this.saveUploadedFilesToDisk = saveUploadedFilesToDisk;
@@ -285,7 +297,7 @@ public class MultipartHandler
     protected String handlePart(String line, String boundary)
         throws IOException, UploadException
     {
-        Hashtable headers = handlePartHeaders(line);
+        HashMap<String, String> headers = handlePartHeaders(line);
         // nicer if we could use a
         // uk.co.weft.dbutil.Context, but this
         // version is intended to be
@@ -350,7 +362,7 @@ public class MultipartHandler
     }
 
 
-    private void extractPartHeadersFromLine(String line, Hashtable headers)
+    private void extractPartHeadersFromLine(String line, HashMap<String, String> headers)
     {
         // OK, why not use StringTokenizer?
         // Well, because I tried that, and on
@@ -390,10 +402,10 @@ public class MultipartHandler
     }
 
 
-    private Hashtable handlePartHeaders(String line)
+    private HashMap<String, String> handlePartHeaders(String line)
         throws IOException
     {
-        Hashtable headers = new Hashtable();
+        HashMap<String, String> headers = new HashMap<String, String>();
         // nicer if we could use a
         // uk.co.weft.dbutil.Context, but this
         // version is intended to be
@@ -435,7 +447,7 @@ public class MultipartHandler
      *  @param headers the headers for this part
      *  @param boundary the boundary delimiting this part
      *  @return the last line read (should be boundary or null) */
-    private String handlePartData(Hashtable headers, String boundary)
+    private String handlePartData(HashMap<String, String> headers, String boundary)
         throws IOException, UploadException
     {
         String line = null;	// moderately safe default value...
@@ -445,7 +457,7 @@ public class MultipartHandler
 
         if (name == null)
         {
-            name = "unknown" + new Integer(anon++).toString();
+            name = "unknown" + (anon++);
             // if a name wasn't provided, invent
             // one (unlikely).
             headers.put("name", name);
@@ -485,7 +497,7 @@ public class MultipartHandler
      *
      *  @return the last line read- which should be the boundary...
      */
-    protected String handleInlinePart(Hashtable headers, char cte,
+    protected String handleInlinePart(HashMap<String, String> headers, char cte,
                                       String boundary)
         throws IOException
     {
@@ -499,10 +511,10 @@ public class MultipartHandler
 
         line = readPartData(out, boundary, cte);
 
-        String name = (String) headers.get("name");
+        String name = headers.get("name");
         String outString = out.toString();
         put(name, outString);
-        putValue( name, new ParameterPart(outString));
+        putValue( name, new ParameterPart(outString) );
 
         if (log.isDebugEnabled())
             log.debug("-- handled inline part, value was [" +
@@ -523,11 +535,11 @@ public class MultipartHandler
      *
      *  @return the last line read-which should be the boundary...
      */
-    protected String handleFilePart(Hashtable headers, char cte, String boundary)
+    protected String handleFilePart(HashMap<String, String> headers, char cte, String boundary)
         throws IOException, UploadException
     {
         String line = null;
-        String filename = (String) headers.get("filename");
+        String filename = headers.get("filename");
 
         String originName = null;
         String originFullName = null;
@@ -553,19 +565,15 @@ public class MultipartHandler
         }
 
         if (filename == null || filename.length() == 0)
-            filename = "unknown" + new Integer(anon++).toString();
+            filename = "unknown" + (anon++);
 
         // Replace disallowed characters from within the filename
-        Enumeration elements = disallowedCharacters.keys();
 
-        while (elements.hasMoreElements())
-        {
-            Character charToReplace =
-                (Character) elements.nextElement();
-            Character charToReplaceWith =
-                (Character) disallowedCharacters.get(charToReplace);
-            filename = filename.replace(charToReplace.charValue(),
-                charToReplaceWith.charValue());
+        Iterator<Character> it = disallowedCharacters.keySet().iterator();
+        while (it.hasNext()) {
+            Character charToReplace = it.next();
+            Character charToReplaceWith = (Character) disallowedCharacters.get(charToReplace);
+            filename = filename.replace(charToReplace.charValue(), charToReplaceWith.charValue());
         }
 
         if (log.isDebugEnabled())
@@ -593,10 +601,8 @@ public class MultipartHandler
                     for (int i = 1; uploadedFile.exists(); i++)
                     {
                         // generate a unique prefix
-                        String newFileName = workDir +
-                            File.separator +
-                            new Integer(i).toString() +
-                            "_" + filename;
+                        String newFileName =  workDir + File.separator + i + "_" + filename;
+
                         if (log.isDebugEnabled())
                             log.debug("new filename - "+newFileName);
 
@@ -717,13 +723,13 @@ public class MultipartHandler
 
         if (existing != null)
         {
-            List multival = null;
+            List<Object> multival = null;
 
             if (existing instanceof List)
-                multival = (List) existing;
+                multival = (List<Object>) existing;
             else
             {
-                multival = new ArrayList();
+                multival = new ArrayList<Object>();
 
                 multival.add(existing);
                 getValues().put(name, multival);
@@ -745,26 +751,29 @@ public class MultipartHandler
      */
     private synchronized void putValue(String name, Object value)
     {
+        MainTools.putKey( hashValue, name, value );
+/*
         Object existing = hashValue.get(name);
 
         if (existing != null)
         {
-            Vector multival = null;
+            List<Object> multival = null;
 
-            if (existing instanceof Vector)
-                multival = (Vector) existing;
+            if (existing instanceof List)
+                multival = (List<Object>) existing;
             else
             {
-                multival = new Vector();
+                multival = new ArrayList<Object>();
 
-                multival.addElement(existing);
+                multival.add( existing );
                 hashValue.put(name, multival);
             }
 
-            multival.addElement(value);
+            multival.add(value);
         }
         else
             hashValue.put(name, value);
+*/
     }
 
     /** extract a multipart boundary from this string, presumed to be
@@ -1176,12 +1185,12 @@ public class MultipartHandler
         this.saveUploadedFilesToDisk = saveUploadedFilesToDisk;
     }
 
-    public Hashtable getValues()
+    public Map<String, Object> getValues()
     {
         return values;
     }
 
-    public void setValues(Hashtable values)
+    public void setValues(Map<String, Object> values)
     {
         this.values = values;
     }
@@ -1191,7 +1200,7 @@ public class MultipartHandler
         return hashValue;
     }
 
-    public void setPartsHash( Hashtable hashValue )
+    public void setPartsHash( Map<String, Object> hashValue )
     {
         this.hashValue = hashValue;
     }

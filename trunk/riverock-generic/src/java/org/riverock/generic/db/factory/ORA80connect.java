@@ -35,66 +35,47 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Locale;
 
-import org.riverock.common.tools.DateTools;
-import org.riverock.generic.tools.CurrentTimeZone;
-import org.riverock.common.config.ConfigException;
-
 import org.apache.log4j.Logger;
 
-public class ORA80connect extends ORAconnect
-{
-    private static Logger log = Logger.getLogger( "org.riverock.generic.db.ORA80connect" );
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.tools.DateTools;
+import org.riverock.generic.tools.CurrentTimeZone;
 
-    public int getSubVersion()
-    {
+public class ORA80connect extends ORAconnect {
+    private static Logger log = Logger.getLogger("org.riverock.generic.db.ORA80connect");
+
+    public int getSubVersion() {
         return 0;
-    }
-
-    protected void finalize() throws Throwable
-    {
-        if (isDynamicConnect && conn!=null)
-        {
-            try
-            {
-                conn.close();
-                conn = null;
-            }
-            catch (Exception e)
-            {
-            }
-        }
-        super.finalize();
     }
 
     /**
      * in some DB (Oracle8.0) setTimestamp not work and we need work around
+     *
      * @return String
      */
-    public String getNameDateBind()
-    {
+    public String getNameDateBind() {
         return "to_date(?, 'dd.mm.yyyy hh24:mi:ss')";
     }
 
     /**
      * bind Timestamp value
+     *
      * @param ps
      * @param stamp @see java.sql.Timestamp
      * @throws SQLException
      */
-    public void bindDate( PreparedStatement ps, int idx, Timestamp stamp ) throws SQLException
-    {
-        try
-        {
+    public void bindDate(PreparedStatement ps, int idx, Timestamp stamp) throws SQLException {
+        try {
             String stringTimestamp =
                 DateTools.getStringDate(stamp, "yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH, CurrentTimeZone.getTZ());
             ps.setString(idx, stringTimestamp);
         }
-        catch(ConfigException exc)
-        {
+        catch (ConfigException exc) {
             String es = "Exception in CurrentTimeZone.getTZ()";
             log.error(es, exc);
             throw new SQLException(es);
-        };
+        }
+        ;
 
     }
 
@@ -102,8 +83,7 @@ public class ORA80connect extends ORAconnect
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public ORA80connect()
-    {
+    public ORA80connect() {
         super();
     }
 }

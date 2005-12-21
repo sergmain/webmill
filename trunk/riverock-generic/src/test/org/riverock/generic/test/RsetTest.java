@@ -60,12 +60,12 @@ public class RsetTest
     {
         System.out.println( "run test fro '"+nameConnect+"' connection" );
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( false, nameConnect );
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnect );
         String sql_ =
             "select a.*, c.CUSTOM_LANGUAGE " +
-            "from MAIN_NEWS a, MAIN_LIST_NEWS b, SITE_SUPPORT_LANGUAGE c "+
-            "where a.ID=? and a.IS_DELETED=0 and a.id_news=b.id_news and " +
-            "b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE";
+            "from   WM_NEWS_ITEM a, WM_NEWS_LIST b, WM_PORTAL_SITE_LANGUAGE c "+
+            "where  a.ID=? and a.IS_DELETED=0 and a.id_news=b.id_news and " +
+            "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE";
 
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -91,7 +91,8 @@ public class RsetTest
         }
         finally
         {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
+            db_ = null;
             rs = null;
             ps = null;
         }

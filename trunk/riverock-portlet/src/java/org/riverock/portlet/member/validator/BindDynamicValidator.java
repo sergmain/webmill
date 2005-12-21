@@ -29,8 +29,8 @@ public class BindDynamicValidator implements MemberValidator {
                         {
                             ps = dbDyn.prepareStatement(
                                 "select a.TYPE " +
-                                "from SITE_CTX_TYPE a, SITE_CTX_CATALOG b " +
-                                "where a.ID_SITE_CTX_TYPE=b.ID_SITE_CTX_TYPE and b.ID_SITE_CTX_CATALOG=?"
+                                "from   WM_PORTAL_PORTLET_NAME a, WM_PORTAL_CATALOG b " +
+                                "where  a.ID_SITE_CTX_TYPE=b.ID_SITE_CTX_TYPE and b.ID_SITE_CTX_CATALOG=?"
                             );
 
                             RsetTools.setLong(ps,  1, idCtxCatalog );
@@ -61,10 +61,10 @@ public class BindDynamicValidator implements MemberValidator {
                             return null;
 
                         SiteTemplate template = null;
-                        SiteTemplateItemType templateItem = null;
+                        WmPortalTemplateItemType templateItem = null;
                         try
                         {
-                            templateItem = GetSiteTemplateItem.getInstance(dbDyn, idTemplate).item;
+                            templateItem = GetWmPortalTemplateItem.getInstance(dbDyn, idTemplate).item;
                             template = (SiteTemplate)Unmarshaller.unmarshal(SiteTemplate.class,
                                     new InputSource(new StringReader( templateItem.getTemplateData() ) )
                             );

@@ -44,8 +44,8 @@ import org.riverock.common.tools.MainTools;
  * $Id$
  */
 public final class HttpServletRequestWrapperInclude extends HttpServletRequestWrapper {
-    Map param = null;
-    public HttpServletRequestWrapperInclude(HttpServletRequest request, Map param)
+    Map<String, Object> param = null;
+    public HttpServletRequestWrapperInclude(HttpServletRequest request, Map<String, Object> param)
     {
         super(request);
         this.param = param;
@@ -71,17 +71,21 @@ public final class HttpServletRequestWrapperInclude extends HttpServletRequestWr
 
     public Map getParameterMap()
     {
-        Map map = new HashMap();
-        map.putAll( super.getParameterMap());
+        Map<String, Object> map = new HashMap<String, Object>();
+        Iterator<Map.Entry> it = super.getParameterMap().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = it.next();
+            map.put( entry.getKey().toString(), entry.getValue() );
+        }
 
         if (param==null)
             return map;
 
-        Iterator iter = param.keySet().iterator();
+        Iterator<String> iter = param.keySet().iterator();
         while (iter.hasNext())
         {
-            Object obj = iter.next();
-            MainTools.putKey(map, obj, param.get(obj));
+            String key = iter.next();
+            MainTools.putKey(map, key, param.get(key) );
         }
 
         return map;

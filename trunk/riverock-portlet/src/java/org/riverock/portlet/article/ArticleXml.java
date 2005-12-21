@@ -45,9 +45,9 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.portlet.core.GetSiteCtxArticleItem;
+import org.riverock.portlet.core.GetWmPortletArticleItem;
 import org.riverock.portlet.member.ClassQueryItemImpl;
-import org.riverock.portlet.schema.core.SiteCtxArticleItemType;
+import org.riverock.portlet.schema.core.WmPortletArticleItemType;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.sql.cache.SqlStatement;
@@ -175,8 +175,8 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     static {
         sql_ =
             "select a.ID_SITE_CTX_ARTICLE " +
-            "from SITE_CTX_ARTICLE a " +
-            "where a.ID_SITE_SUPPORT_LANGUAGE=? and a.ARTICLE_CODE=? and a.IS_DELETED=0";
+            "from   WM_PORTLET_ARTICLE a " +
+            "where  a.ID_SITE_SUPPORT_LANGUAGE=? and a.ARTICLE_CODE=? and a.IS_DELETED=0";
 
         try {
             SqlStatement.registerSql( sql_, ArticleXml.class );
@@ -236,7 +236,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     static String sql1_ = null;
     static {
         sql1_ =
-            "select * from SITE_CTX_ARTICLE where ID_SITE_CTX_ARTICLE=? and IS_DELETED=0";
+            "select * from WM_PORTLET_ARTICLE where ID_SITE_CTX_ARTICLE=? and IS_DELETED=0";
 
         try {
             SqlStatement.registerSql( sql1_, new ArticleXml().getClass() );
@@ -249,7 +249,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     }
 
     public ArticleXml(DatabaseAdapter db_, Long id_) throws Exception {
-        SiteCtxArticleItemType article = GetSiteCtxArticleItem.getInstance(db_, id_).item;
+        WmPortletArticleItemType article = GetWmPortletArticleItem.getInstance(db_, id_).item;
 
         if (article==null || Boolean.TRUE.equals( article.getIsDeleted()) )
             return;
@@ -266,8 +266,8 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     {
         sql2_ =
             "select ARTICLE_DATA " +
-            "from SITE_CTX_ARTICLE_DATA " +
-            "where ID_SITE_CTX_ARTICLE = ? " +
+            "from   WM_PORTLET_ARTICLE " +
+            "where  ID_SITE_CTX_ARTICLE = ? " +
             "order by ID_SITE_CTX_ARTICLE_DATA ASC";
 
         try {
@@ -323,10 +323,10 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     static {
         sql3_ =
             "SELECT b.ID_SITE_CTX_ARTICLE, b.NAME_ARTICLE, b.ARTICLE_CODE "+
-            "FROM site_ctx_lang_catalog a, site_ctx_article b "+
-            "where a.ID_SITE_CTX_LANG_CATALOG=? and "+
-            "a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
-            "b.IS_PLAIN_HTML=0";
+            "FROM   WM_PORTAL_CATALOG_LANGUAGE a, WM_PORTLET_ARTICLE b "+
+            "where  a.ID_SITE_CTX_LANG_CATALOG=? and "+
+            "       a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE and "+
+            "       b.IS_PLAIN_HTML=0";
 
         try {
             SqlStatement.registerSql( sql3_, ArticleXml.class );

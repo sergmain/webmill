@@ -118,9 +118,9 @@ public final class PriceGroup {
         {
             sql_ =
                 "select a.ITEM, a.ID "+
-                "from PRICE_LIST a, PRICE_SHOP_TABLE b "+
-                "where a.ID_SHOP=b.ID_SHOP and a.ABSOLETE=0 and "+
-                "b.ID_SITE=? and a.ID_MAIN=? and a.ID_SHOP=? and a.IS_GROUP=1 "+
+                "from   WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b "+
+                "where  a.ID_SHOP=b.ID_SHOP and a.ABSOLETE=0 and "+
+                "       b.ID_SITE=? and a.ID_MAIN=? and a.ID_SHOP=? and a.IS_GROUP=1 "+
                 "order by a.ITEM asc ";
 
             ps = db_.prepareStatement(sql_);

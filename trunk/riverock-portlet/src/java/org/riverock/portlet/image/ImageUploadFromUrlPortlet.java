@@ -181,9 +181,9 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
 
             out.write( DateUtils.getCurrentDate( "dd-MMMM-yyyy HH:mm:ss:SS", renderRequest.getLocale() ) + "<br>" );
 
-            ps = dbDyn.prepareStatement( "insert into image_dir " +
+            ps = dbDyn.prepareStatement( "insert into WM_IMAGE_DIR " +
                 "( id_image_dir, ID_FIRM, is_group, id, id_main, name_file, description )" +
-                "(select seq_image_dir.nextval, ID_FIRM, 0, ?, ?, ?, ? " +
+                "(select seq_WM_IMAGE_DIR.nextval, ID_FIRM, 0, ?, ?, ?, ? " +
                 " from WM_AUTH_USER where user_login = ? )" );
 
             RsetTools.setLong( ps, 1, currID );

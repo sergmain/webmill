@@ -1,11 +1,11 @@
 package org.riverock.common.collections;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.riverock.interfaces.common.TreeItemInterface;
-
 import junit.framework.TestCase;
+
+import org.riverock.interfaces.common.TreeItemInterface;
 
 /**
  * User: smaslyukov
@@ -19,6 +19,7 @@ public class TestTreeUtils extends TestCase {
         Long id;
         Long topId;
         List subTree;
+
         public SimpleTreeItem(Long id, Long topId, List tree) {
             this.id=id;
             this.topId=topId;
@@ -45,26 +46,26 @@ public class TestTreeUtils extends TestCase {
     public void testRebuildTree()
         throws Exception
     {
-        LinkedList list = new LinkedList();
-        list.add( new SimpleTreeItem(new Long(1), new Long(0), null) );
-        list.add( new SimpleTreeItem(new Long(2), new Long(0), null) );
-        list.add( new SimpleTreeItem(new Long(3), new Long(0), null) );
-        list.add( new SimpleTreeItem(new Long(4), new Long(0), null) );
+        ArrayList<TreeItemInterface> list = new ArrayList<TreeItemInterface>();
+        list.add( new SimpleTreeItem(1L, 0L, null) );
+        list.add( new SimpleTreeItem(2L, 0L, null) );
+        list.add( new SimpleTreeItem(3L, 0L, null) );
+        list.add( new SimpleTreeItem(4L, 0L, null) );
 
-        list.add( new SimpleTreeItem(new Long(10), new Long(1), null) );
-        list.add( new SimpleTreeItem(new Long(11), new Long(1), null) );
-        list.add( new SimpleTreeItem(new Long(12), new Long(1), null) );
+        list.add( new SimpleTreeItem(10L, 1L, null) );
+        list.add( new SimpleTreeItem(11L, 1L, null) );
+        list.add( new SimpleTreeItem(12L, 1L, null) );
 
-        list.add( new SimpleTreeItem(new Long(100), new Long(10), null) );
-        list.add( new SimpleTreeItem(new Long(101), new Long(10), null) );
-        list.add( new SimpleTreeItem(new Long(102), new Long(10), null) );
-        list.add( new SimpleTreeItem(new Long(103), new Long(10), null) );
-        list.add( new SimpleTreeItem(new Long(104), new Long(10), null) );
+        list.add( new SimpleTreeItem(100L, 10L, null) );
+        list.add( new SimpleTreeItem(101L, 10L, null) );
+        list.add( new SimpleTreeItem(102L, 10L, null) );
+        list.add( new SimpleTreeItem(103L, 10L, null) );
+        list.add( new SimpleTreeItem(104L, 10L, null) );
 
-        list.add( new SimpleTreeItem(new Long(21), new Long(2), null) );
-        list.add( new SimpleTreeItem(new Long(21), new Long(2), null) );
+        list.add( new SimpleTreeItem(21L, 2L, null) );
+        list.add( new SimpleTreeItem(21L, 2L, null) );
 
-        list.add( new SimpleTreeItem(new Long(30), new Long(3), null) );
+        list.add( new SimpleTreeItem(30L, 3L, null) );
 
         List result = TreeUtils.rebuildTree(list);
 

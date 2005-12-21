@@ -55,7 +55,7 @@ public class FaqGroup implements PortletGetList {
     static String sql_ = null;
     static {
         sql_ =
-            "select FAQ_CODE, NAME_FAQ from SITE_PORTLET_FAQ where ID_SITE_PORTLET_FAQ=?";
+            "select FAQ_CODE, NAME_FAQ from WM_PORTLET_FAQ where ID_SITE_PORTLET_FAQ=?";
 
         try {
             SqlStatement.registerSql(sql_, FaqGroup.class);
@@ -69,7 +69,7 @@ public class FaqGroup implements PortletGetList {
     static String sql1_ = null;
     static {
         sql1_ =
-            "select * from SITE_PORTLET_FAQ_LIST where ID_SITE_PORTLET_FAQ=? " +
+            "select * from WM_PORTLET_FAQ_LIST where ID_SITE_PORTLET_FAQ=? " +
             "ORDER BY ORDER_FIELD asc, DATE_POST DESC";
 
         try {

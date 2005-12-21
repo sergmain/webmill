@@ -45,7 +45,7 @@ public class TestDefinitionProcessing
         String nameConnection = "ORACLE";
 //        String nameConnection = "HSQLDB";
 //        String nameConnection = "MSSQL-JTDS";
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance(true, nameConnection);
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
 
         DefinitionService.validateDatabaseStructure( db_ );
         db_.commit();

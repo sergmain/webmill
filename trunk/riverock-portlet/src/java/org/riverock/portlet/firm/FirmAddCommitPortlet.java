@@ -110,13 +110,13 @@ public final class FirmAddCommitPortlet implements Portlet {
                 String index_page = PortletService.url( "mill.firm.index", actionRequest, actionResponse );
 
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName( "seq_MAIN_LIST_FIRM" );
-                seq.setTableName( "MAIN_LIST_FIRM" );
+                seq.setSequenceName( "seq_WM_LIST_COMPANY" );
+                seq.setTableName( "WM_LIST_COMPANY" );
                 seq.setColumnName( "ID_FIRM" );
                 Long sequenceValue = dbDyn.getSequenceNextValue( seq );
 
 
-                ps = dbDyn.prepareStatement( "insert into MAIN_LIST_FIRM (" +
+                ps = dbDyn.prepareStatement( "insert into WM_LIST_COMPANY (" +
                     "	ID_FIRM, " +
                     "	full_name, " +
                     "	short_name, " +
