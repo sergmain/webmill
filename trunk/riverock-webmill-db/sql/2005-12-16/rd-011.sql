@@ -1,0 +1,7 @@
+rename sequence SEQ_ORDER to SEQ_WM_PRICE_RELATE_USER_ORDER
+/
+
+rename sequence SEQ_SHOP_QUERY_TABLE to SEQ_WM_PRICE_QUERY_TABLE
+/
+
+ 

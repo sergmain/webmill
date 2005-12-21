@@ -1,0 +1,1447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DbSchemaType xmlns="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
+	<Tables schema="TEST" name="WM_I18N_ITEM" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_I18N_ITEM" columnName="ID_MAIN_I18N_ITEM" keySeq="1" pkName="ID_I18N_ITM_MII_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_MAIN_I18N_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_MAIN_I18N_STORAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="NAME_ITEM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_I18N_STORAGE" pkColumnName="ID_MAIN_I18N_STORAGE" fkSchemaName="TEST" fkTableName="WM_I18N_ITEM" fkColumnName="ID_MAIN_I18N_STORAGE" keySeq="1" fkName="ID_MAIN_I18N_STORAGE_MII_FK" pkName="ID_I18N_STG_MIS_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_I18N_MESSAGE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_I18N_MESSAGE" columnName="ID_MAIN_I18N_MESSAGE" keySeq="1" pkName="ID_I18N_MSG_MIM_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_MAIN_I18N_MESSAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_MAIN_I18N_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+		<Fields name="MESSAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_I18N_ITEM" pkColumnName="ID_MAIN_I18N_ITEM" fkSchemaName="TEST" fkTableName="WM_I18N_MESSAGE" fkColumnName="ID_MAIN_I18N_ITEM" keySeq="1" fkName="ID_MAIN_I18N_ITEM_MIM_FK" pkName="ID_I18N_ITM_MII_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_LANGUAGE" pkColumnName="ID_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_I18N_MESSAGE" fkColumnName="ID_LANGUAGE" keySeq="1" fkName="ID_LANGUAGE_MIM_FK" pkName="ID_LANGUAGE_MN_PK">
+			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_I18N_STORAGE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_I18N_STORAGE" columnName="ID_MAIN_I18N_STORAGE" keySeq="1" pkName="ID_I18N_STG_MIS_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_MAIN_I18N_STORAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Fields name="NAME_STORAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+	</Tables>
+
+	<Tables schema="TEST" name="WM_AUTH_ACCESS_GROUP" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_AUTH_ACCESS_GROUP" columnName="ID_ACCESS_GROUP" keySeq="1" pkName="ID_AG_AAG_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_ACCESS_GROUP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_AUTH_APPLICATION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_AUTH_APPLICATION" columnName="ID_ARM" keySeq="1" pkName="ID_ARM_AA_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="0"/>
+		<Fields name="CODE_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="1"/>
+		<Fields name="STRING_KEY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_AUTH_MODULE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_AUTH_MODULE" columnName="ID_OBJECT_ARM" keySeq="1" pkName="ID_OBJECT_AOA_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_OBJECT_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_OBJECT_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="CODE_OBJECT_ARM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="ID_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" nullable="1"/>
+		<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="STRING_KEY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="IS_NEW" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_AUTH_APPLICATION" pkColumnName="ID_ARM" fkSchemaName="TEST" fkTableName="WM_AUTH_MODULE" fkColumnName="ID_ARM" keySeq="1" fkName="ID_ARM_AOA_FK" pkName="ID_ARM_AA_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_AUTH_RELATE_ACCGROUP" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_AUTH_RELATE_ACCGROUP" columnName="ID_RELATE_ACCGROUP" keySeq="1" pkName="ID_REL_AG_ARA_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_RELATE_ACCGROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_AUTH_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_AUTH_ACCESS_GROUP" pkColumnName="ID_ACCESS_GROUP" fkSchemaName="TEST" fkTableName="WM_AUTH_RELATE_ACCGROUP" fkColumnName="ID_ACCESS_GROUP" keySeq="1" fkName="ID_ACCESS_GROUP_ARA_FK" pkName="ID_AG_AAG_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_AUTH_USER" pkColumnName="ID_AUTH_USER" fkSchemaName="TEST" fkTableName="WM_AUTH_RELATE_ACCGROUP" fkColumnName="ID_AUTH_USER" keySeq="1" fkName="ID_AUTH_USER_ARA_FK" pkName="ID_AUTH_USR_AUN_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_AUTH_RELATE_RIGHT_ARM" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_AUTH_RELATE_RIGHT_ARM" columnName="ID_RELATE_RIGHT" keySeq="1" pkName="ID_REL_RI_ARRA_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_RELATE_RIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_ACCESS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_OBJECT_ARM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="CODE_RIGHT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="1"/>
+		<Fields name="IS_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_AUTH_ACCESS_GROUP" pkColumnName="ID_ACCESS_GROUP" fkSchemaName="TEST" fkTableName="WM_AUTH_RELATE_RIGHT_ARM" fkColumnName="ID_ACCESS_GROUP" keySeq="1" fkName="ID_ACCESS_GROUP_ARRA_FK" pkName="ID_AG_AAG_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_AUTH_MODULE" pkColumnName="ID_OBJECT_ARM" fkSchemaName="TEST" fkTableName="WM_AUTH_RELATE_RIGHT_ARM" fkColumnName="ID_OBJECT_ARM" keySeq="1" fkName="ID_OBJECT_ARM_ARRA_FK" pkName="ID_OBJECT_AOA_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_AUTH_USER" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_AUTH_USER" columnName="ID_AUTH_USER" keySeq="1" pkName="ID_AUTH_USR_AUN_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_AUTH_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="USER_LOGIN" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="USER_PASSWORD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="IS_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_USE_CURRENT_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+		<Fields name="ID_USER_CREATED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="IS_ROOT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_AUTH_USER" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_AUTH_USER_FK" pkName="ID_FIRM_MLF_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_USER" pkColumnName="ID_USER" fkSchemaName="TEST" fkTableName="WM_AUTH_USER" fkColumnName="ID_USER" keySeq="1" fkName="ID_USER_AU_FK" pkName="ID_USER_MUI_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_CASH_CURRENCY" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_CASH_CURRENCY" columnName="ID_CURRENCY" keySeq="1" pkName="PK_CURRENCY"/>
+		</PrimaryKey>
+		<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="IS_USED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NAME_CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="IS_USE_STANDART" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1" defaultValue="0"/>
+		<Fields name="ID_STANDART_CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="PERCENT_VALUE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="5" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_CASH_CURRENCY" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_CC_FK" pkName="ID_SITE_SLS_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_CASH_CURRENCY_STD" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_CASH_CURRENCY_STD" columnName="ID_STD_CURR" keySeq="1" pkName="ID_STD_CURR_CS_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_STD_CURR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_STD_CURR" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" nullable="1"/>
+		<Fields name="CONVERT_CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_CASH_CURR_VALUE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_CASH_CURR_VALUE" columnName="ID_CURVAL" keySeq="1" pkName="ID_CURVAL_CCV_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="DATE_CHANGE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="7" nullable="1"/>
+		<Fields name="ID_CURVAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_CASH_CURRENCY" pkColumnName="ID_CURRENCY" fkSchemaName="TEST" fkTableName="WM_CASH_CURR_VALUE" fkColumnName="ID_CURRENCY" keySeq="1" fkName="FK_IDCURRENCY_CURRVALUE" pkName="PK_CURRENCY">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_CASH_CURS_STD" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_CASH_CURS_STD" columnName="ID_STD_CURS" keySeq="1" pkName="ID_STD_CURS_CS_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_STD_CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="DATE_CHANGE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="VALUE_CURS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="7" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_STD_CURR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_CASH_CURRENCY_STD" pkColumnName="ID_STD_CURR" fkSchemaName="TEST" fkTableName="WM_CASH_CURS_STD" fkColumnName="ID_STD_CURR" keySeq="1" fkName="ID_STD_CURR_PCS_FK" pkName="ID_STD_CURR_CS_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_CASH_LIST" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_CASH_LIST" columnName="ID_PAY_LIST" keySeq="1" pkName="ID_PAY_LIST_PL_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_PAY_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_CLIENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DATE_PAY" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="SUMM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NUMBER_DOCUMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" nullable="1"/>
+		<Fields name="INFO_DOCUMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_CASH_LIST" fkColumnName="ID_CLIENT" keySeq="1" fkName="ID_CLIENT_PL_FK" pkName="ID_FIRM_MLF_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_IMAGE_DIR" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_IMAGE_DIR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="IS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_MAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NAME_FILE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="1"/>
+		<Fields name="DESCRIPTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="500" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_IMAGE_PRICE_ITEMS" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_IMAGE_PRICE_ITEMS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_IMAGE_DIR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_JOB_POSITION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_JOB_POSITION" columnName="ID_JOB_POSITION" keySeq="1" pkName="ID_JOB_POS_JP_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_JOB_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="PERIOD_ACTIVITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1" defaultValue="90"/>
+		<Fields name="AGE_FROM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="1"/>
+		<Fields name="AGE_TO" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_JOB_SEX_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_JOB_TYPE_EDUCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+		<Fields name="SALARY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="3" nullable="1"/>
+		<Fields name="SALARY_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" nullable="1"/>
+		<Fields name="CITY_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="TEXT_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="ID_CONTACT_PERSON" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="TEST_PERIOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="ID_JOB_TYPE_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NAME_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="CONTACT_PERSON" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="TYPE_JOB" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_JOB_GENDER_LIST" pkColumnName="ID_JOB_SEX_LIST" fkSchemaName="TEST" fkTableName="WM_JOB_POSITION" fkColumnName="ID_JOB_SEX_LIST" keySeq="1" fkName="ID_JOB_SEX_LIST_JP_FK" pkName="ID_JOB_SEX_JSL_PK">
+			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_JOB_TYPE_EDUCATION" pkColumnName="ID_JOB_TYPE_EDUCATION" fkSchemaName="TEST" fkTableName="WM_JOB_POSITION" fkColumnName="ID_JOB_TYPE_EDUCATION" keySeq="1" fkName="ID_JOB_TYPE_EDU_JP_FK" pkName="ID_JOB_EDU_JTE_PK">
+			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_JOB_TYPE_POSITION" pkColumnName="ID_JOB_TYPE_POSITION" fkSchemaName="TEST" fkTableName="WM_JOB_POSITION" fkColumnName="ID_JOB_TYPE_POSITION" keySeq="1" fkName="ID_JOB_TYPE_POS_JP_FK" pkName="ID_JOB__POS_JTP_PK">
+			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_JOB_POSITION_DATA" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_JOB_POSITION_DATA" columnName="ID_JOB_POSITION_DATA" keySeq="1" pkName="ID_JOB_POS_JPD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_JOB_POSITION_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="11" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_JOB_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+		<Fields name="TEXT_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_JOB_POSITION" pkColumnName="ID_JOB_POSITION" fkSchemaName="TEST" fkTableName="WM_JOB_POSITION_DATA" fkColumnName="ID_JOB_POSITION" keySeq="1" fkName="ID_JOB_POSITION_JPD_FK" pkName="ID_JOB_POS_JP_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_JOB_RESUME" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_JOB_RESUME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_JOB_RESUME_DATA" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_JOB_RESUME_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_JOB_RESUME" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="TEXT_RESUME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_JOB_GENDER_LIST" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_JOB_GENDER_LIST" columnName="ID_JOB_SEX_LIST" keySeq="1" pkName="ID_JOB_SEX_JSL_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_JOB_SEX_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="0"/>
+		<Fields name="SEX_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_JOB_TYPE_EDUCATION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_JOB_TYPE_EDUCATION" columnName="ID_JOB_TYPE_EDUCATION" keySeq="1" pkName="ID_JOB_EDU_JTE_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_JOB_TYPE_EDUCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="0"/>
+		<Fields name="NAME_EDUCATION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_JOB_TYPE_POSITION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_JOB_TYPE_POSITION" columnName="ID_JOB_TYPE_POSITION" keySeq="1" pkName="ID_JOB__POS_JTP_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_JOB_TYPE_POSITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_POSITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_DB_DEFINITION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_DB_DEFINITION" columnName="ID_DB_DEFINITION" keySeq="1" pkName="ID_DB_DEF_MDD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_DB_DEFINITION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Fields name="NAME_DEFINITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
+		<Fields name="APLAY_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="0" defaultValue="sysdate"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_LANGUAGE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_LANGUAGE" columnName="ID_LANGUAGE" keySeq="1" pkName="ID_LANGUAGE_MN_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="SHORT_NAME_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" nullable="1"/>
+		<Fields name="CODEPAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_COMPANY" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_COMPANY" columnName="ID_FIRM" keySeq="1" pkName="ID_FIRM_MLF_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="0" nullable="0"/>
+		<Fields name="FULL_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="500" nullable="1"/>
+		<Fields name="SHORT_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="125" nullable="1"/>
+		<Fields name="ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="TELEFON_BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="TELEFON_CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="FAX" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="ICQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="SHORT_CLIENT_INFO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="300" nullable="1"/>
+		<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="SHORT_INFO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="300" nullable="1"/>
+		<Fields name="IS_WORK" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+		<Fields name="IS_NEED_RECVIZIT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_NEED_PERSON" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_SEARCH" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_EXTERNAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="UNIQUE_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_NEWS_LIST" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_NEWS_LIST" columnName="ID_NEWS" keySeq="1" pkName="ID_NEWS_MLN_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_NEWS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="COUNT_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="1"/>
+		<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1" defaultValue="0"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="CODE_NEWS_GROUP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_NEWS_LIST" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SUPPORT_LANG_MLN_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_HOLDING" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_HOLDING" columnName="ID_ROAD" keySeq="1" pkName="ID_ROAD_MLR_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="FULL_NAME_ROAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
+		<Fields name="NAME_ROAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="NAME_JSP_METHOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_GROUP_COMPANY" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_GROUP_COMPANY" columnName="ID_SERVICE" keySeq="1" pkName="ID_SERVICE_MLS_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="0"/>
+		<Fields name="FULL_NAME_SERVICE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="0"/>
+		<Fields name="SHORT_NAME_SERVICE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" nullable="0"/>
+		<Fields name="DATE_START" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="DATE_STOP" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="ASCII_CODE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="IS_VIRTUAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_NEWS_ITEM" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_NEWS_ITEM" columnName="ID" keySeq="1" pkName="ID_MN_PK"/>
+		</PrimaryKey>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="EDATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="HEADER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ANONS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="500" nullable="1"/>
+		<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_NEWS_LIST" pkColumnName="ID_NEWS" fkSchemaName="TEST" fkTableName="WM_NEWS_ITEM" fkColumnName="ID_NEWS" keySeq="1" fkName="ID_NEWS_MN_FK" pkName="ID_NEWS_MLN_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_NEWS_ITEM_IMAGE" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_MAIN_NEWS_IMAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="120" nullable="1"/>
+		<Fields name="ALT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="ID_MAIN_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_NEWS_ITEM_TEXT" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_NEWS_ITEM_TEXT" columnName="ID_MAIN_NEWS_TEXT" keySeq="1" pkName="ID_NEWSTXT_MNT_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_MAIN_NEWS_TEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_NEWS_ITEM" pkColumnName="ID" fkSchemaName="TEST" fkTableName="WM_NEWS_ITEM_TEXT" fkColumnName="ID" keySeq="1" fkName="ID_MAIN_NEWS_TEXT_FK" pkName="ID_MN_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_R_HOLDING_GROUP_COMPANY" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_R_HOLDING_GROUP_COMPANY" columnName="ID_REL_ROAD" keySeq="1" pkName="ID_RELROAD_MRRS_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_REL_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_HOLDING" pkColumnName="ID_ROAD" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GROUP_COMPANY" fkColumnName="ID_ROAD" keySeq="1" fkName="ID_ROAD_MRRS_FK" pkName="ID_ROAD_MLR_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GROUP_COMPANY" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_FIRM_MRRS_FK" pkName="ID_SERVICE_MLS_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_R_GROUP_COMPANY_COMPANY" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_R_GROUP_COMPANY_COMPANY" columnName="ID_REL_SERVICE" keySeq="1" pkName="ID_REL_SRV_MRSF_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_REL_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_LIST_R_GROUP_COMPANY_COMPANY" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_MRSF_FK" pkName="ID_FIRM_MLF_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_GROUP_COMPANY_COMPANY" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_SERVICE_MRSF_FK" pkName="ID_SERVICE_MLS_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_USER" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_USER" columnName="ID_USER" keySeq="1" pkName="ID_USER_MUI_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="FIRST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="MIDDLE_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="LAST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="DATE_START_WORK" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="DATE_FIRE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="TELEPHONE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="DATE_BIND_PROFF" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="HOME_TELEPHONE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="3" nullable="1"/>
+		<Fields name="IS_EXTERNAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="UNIQUE_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_LIST_USER" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_MUI_FK" pkName="ID_FIRM_MLF_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_LIST_USER_METADATA" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_LIST_USER_METADATA" columnName="ID_MAIN_USER_METADATA" keySeq="1" pkName="ID_MAIN_USER_META_MUM_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_MAIN_USER_METADATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" nullable="0"/>
+		<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" nullable="0"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" nullable="0"/>
+		<Fields name="META" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="0"/>
+		<Fields name="STRING_VALUE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="INT_VALUE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+		<Fields name="DATE_VALUE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_USER" pkColumnName="ID_USER" fkSchemaName="TEST" fkTableName="WM_LIST_USER_METADATA" fkColumnName="ID_USER" keySeq="1" fkName="ID_USER_MUM_FK" pkName="ID_USER_MUI_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_LIST_USER_METADATA" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_MUM_FK" pkName="ID_SITE_SLS_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_LOG_ERROR" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_LOG_ERROR" columnName="ID_LOG_ERROR" keySeq="1" pkName="ID_LOG_ERR_MLE_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_LOG_ERROR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="TEXT_ERROR" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_LOG_ERROR_TEXT" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_LOG_ERROR_TEXT" columnName="ID_LOG_ERROR_TEXT" keySeq="1" pkName="ID_LGERRTXTXMLETPK"/>
+		</PrimaryKey>
+		<Fields name="ID_LOG_ERROR_TEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="12" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_LOG_ERROR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
+		<Fields name="TEXT_ERROR" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LOG_ERROR" pkColumnName="ID_LOG_ERROR" fkSchemaName="TEST" fkTableName="WM_PORTAL_LOG_ERROR_TEXT" fkColumnName="ID_LOG_ERROR" keySeq="1" fkName="ID_LG_ERR_MLET_FK" pkName="ID_LOG_ERR_MLE_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_GROUP_PRODUCT" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_GROUP_PRODUCT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NAME_GROUP_PRODUCT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="35" nullable="1"/>
+		<Fields name="ID_MAIN_GROUP_PRODUCT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_IMPORT_TABLE" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="IS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_MAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="250" nullable="1"/>
+		<Fields name="PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="15" decimalDigit="5" nullable="1"/>
+		<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" nullable="1"/>
+		<Fields name="IS_TO_LOAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="5" nullable="1"/>
+		<Fields name="FOR_DELETE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1" defaultValue="0"/>
+		<Fields name="ARTIKUL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="1"/>
+		<Fields name="IS_NEW" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="SHOP_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="ID_UPLOAD_PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="PRICE_ITEM_DESCRIPTION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="PRICE_ITEM_DESCRIPTION" columnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1" pkName="ID_ITEMDSC_PID_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_PRICE_ITEM_DESCRIPTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_ITEM_DESC_DATA" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_ITEM_DESC_DATA" columnName="ID_PRICE_ITEM_DESC_DATA" keySeq="1" pkName="ID_ITEMDSC_PIDD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_PRICE_ITEM_DESC_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_PRICE_ITEM_DESCRIPTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+		<Fields name="TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="PRICE_ITEM_DESCRIPTION" pkColumnName="ID_PRICE_ITEM_DESCRIPTION" fkSchemaName="TEST" fkTableName="WM_PRICE_ITEM_DESC_DATA" fkColumnName="ID_PRICE_ITEM_DESCRIPTION" keySeq="1" fkName="ID_PRICE_ITEM_DESC_PIDD_FK" pkName="ID_ITEMDSC_PID_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_LIST" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_LIST" columnName="ID_ITEM" keySeq="1" pkName="ID_ITEM_PL_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="IS_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_MAIN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0" defaultValue="0"/>
+		<Fields name="ITEM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="250" nullable="1"/>
+		<Fields name="ABSOLETE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" nullable="1"/>
+		<Fields name="QUANTITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+		<Fields name="ADD_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="IS_SPECIAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_MANUAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_STORAGE_STATUS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="2" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="15" decimalDigit="5" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_SHOP_LIST" pkColumnName="ID_SHOP" fkSchemaName="TEST" fkTableName="WM_PRICE_LIST" fkColumnName="ID_SHOP" keySeq="1" fkName="ID_SHOP_PL_FK" pkName="ID_SHOP_PST_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_LIST_ACCESS" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_LIST_ACCESS" columnName="ID_ACCESS" keySeq="1" pkName="ID_ACCESS_LAP_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_ACCESS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="COUNT_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_LIST_SCHET_ITEM" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_SCHET" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="WHOM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="COUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_LOCATION_GOODS" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_LOCATION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NAME_LOCATION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="25" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_MAIN_GROUP_PRODUCT" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_MAIN_GROUP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NAME_MAIN_GROUP_PRODUC" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_ORDER" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_ORDER" columnName="ID_PRICE_ORDER_V2" keySeq="1" pkName="ID_PRCORDR_POV2_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_PRICE_ORDER_V2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_ORDER_V2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="COUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ITEM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="1"/>
+		<Fields name="PRICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="6" nullable="1"/>
+		<Fields name="CURRENCY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="10" nullable="1"/>
+		<Fields name="ARTIKUL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="PRICE_RESULT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="6" nullable="1"/>
+		<Fields name="CODE_CURRENCY_RESULT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<Fields name="NAME_CURRENCY_RESULT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="PRECISION_CURRENCY_RESULT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_RELATE_USER_ORDER" pkColumnName="ID_ORDER_V2" fkSchemaName="TEST" fkTableName="WM_PRICE_ORDER" fkColumnName="ID_ORDER_V2" keySeq="1" fkName="ID_ORDER_POV2_FK" pkName="ID_ORDER_PRUOV2_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_QUERY_FIRM" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_QUERY_FIRM" columnName="ID_QUERY" keySeq="1" pkName="ID_QUERY_QF_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="QUERY_TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="DATE_QUERY" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="CLIENT_IP_ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="18" nullable="1"/>
+		<Fields name="CLIENT_HOST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="COUNT_EXIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_QUERY_LIST" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_QUERY_TABLE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_QUERY_TABLE" columnName="ID_QUERY" keySeq="1" pkName="ID_QUERY_QT_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_TYPE_QUERY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DATE_QUERY" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="QUERY_TEXT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="CLIENT_IP_ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="18" nullable="1"/>
+		<Fields name="CLIENT_HOST_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="COUNT_EXIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_QUERY_TYPE" pkColumnName="ID_TYPE" fkSchemaName="TEST" fkTableName="WM_PRICE_QUERY_TABLE" fkColumnName="ID_TYPE_QUERY" keySeq="1" fkName="ID_TYPE_QUERY_QT_FK" pkName="ID_TYPE_QT_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_QUERY_TYPE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_QUERY_TYPE" columnName="ID_TYPE" keySeq="1" pkName="ID_TYPE_QT_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="TYPE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="ORDER_VALUE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1" defaultValue="0"/>
+		<Fields name="SERVER_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_RELATE_USER_ORDER" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_RELATE_USER_ORDER" columnName="ID_ORDER_V2" keySeq="1" pkName="ID_ORDER_PRUOV2_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_ORDER_V2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DATE_CREATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_PAYED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_DELIVERED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_SHOP_CONFIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_USER_CONFIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_USER" pkColumnName="ID_USER" fkSchemaName="TEST" fkTableName="WM_PRICE_RELATE_USER_ORDER" fkColumnName="ID_USER" keySeq="1" fkName="ID_USER_PRUOV2_FK" pkName="ID_USER_MUI_PK">
+			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_SCHET" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_SCHET" columnName="ID_SCHET" keySeq="1" pkName="PK_SCHET"/>
+		</PrimaryKey>
+		<Fields name="ID_SCHET" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="0"/>
+		<Fields name="WHOM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="0"/>
+		<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="NEED_SEND_FAX" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="INN" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+		<Fields name="SOATO" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+		<Fields name="ZIP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="2" nullable="1"/>
+		<Fields name="OKPO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="9" nullable="1"/>
+		<Fields name="FULL_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="254" nullable="1"/>
+		<Fields name="ADDRESS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="TELEFON_IO" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" nullable="1"/>
+		<Fields name="CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="TELEFON_CHIEF" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="TELEFON_BUH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="FAX" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="ICQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ACCOUNT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" nullable="1"/>
+		<Fields name="BANK" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="80" nullable="1"/>
+		<Fields name="KOR_ACCOUNT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" nullable="1"/>
+		<Fields name="BIK" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" nullable="1"/>
+		<Fields name="OKONH" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="69" nullable="1"/>
+		<Fields name="NUMBER_SCHET" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_SHOP_PRECISION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_SHOP_PRECISION" columnName="ID_PRICE_SHOP_PRECISION" keySeq="1" pkName="ID_SHOP_PRCSN_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_PRICE_SHOP_PRECISION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="8" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="PRECISION_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1" defaultValue="2"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_CASH_CURRENCY" pkColumnName="ID_CURRENCY" fkSchemaName="TEST" fkTableName="WM_PRICE_SHOP_PRECISION" fkColumnName="ID_CURRENCY" keySeq="1" fkName="ID_CURRENCY_PSP_FK" pkName="PK_CURRENCY">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_SHOP_LIST" pkColumnName="ID_SHOP" fkSchemaName="TEST" fkTableName="WM_PRICE_SHOP_PRECISION" fkColumnName="ID_SHOP" keySeq="1" fkName="ID_SHOP_PSP_FK" pkName="ID_SHOP_PST_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_SHOP_LIST" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_SHOP_LIST" columnName="ID_SHOP" keySeq="1" pkName="ID_SHOP_PST_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
+		<Fields name="NAME_SHOP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="0"/>
+		<Fields name="IS_CLOSE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_PROCESS_INVOICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_TYPE_SHOP_1" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_TYPE_SHOP_2" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="20" decimalDigit="0" nullable="1"/>
+		<Fields name="NAME_SHOP_FOR_PRICE_LIST" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="60" nullable="1"/>
+		<Fields name="IS_NEED_RECALC" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ORDER_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="CODE_SHOP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="0"/>
+		<Fields name="LAST_DATE_UPLOAD" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="DATE_CALC_QUANTITY" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="NEW_ITEM_DAYS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+		<Fields name="IS_ACTIVATE_EMAIL_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="IS_DEFAULT_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_NEED_PROCESSING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="COMMAS_COUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0" defaultValue="2"/>
+		<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="3" nullable="0" defaultValue="0"/>
+		<Fields name="HEADER_STRING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" nullable="1"/>
+		<Fields name="FOOTER_STRING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" nullable="1"/>
+		<Fields name="ID_ORDER_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_QUERY_TYPE" pkColumnName="ID_TYPE" fkSchemaName="TEST" fkTableName="WM_PRICE_SHOP_LIST" fkColumnName="ID_TYPE_SHOP_2" keySeq="1" fkName="ID_TYPE_2_ST_FK" pkName="ID_TYPE_QT_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_QUERY_TYPE" pkColumnName="ID_TYPE" fkSchemaName="TEST" fkTableName="WM_PRICE_SHOP_LIST" fkColumnName="ID_TYPE_SHOP_1" keySeq="1" fkName="ID_TYPE_1" pkName="ID_TYPE_QT_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PRICE_SHOP_LIST" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_PST_FK" pkName="ID_SITE_SLS_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_STAT_UPLOAD" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DATE_UPLOAD" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="UPLOADED_BYTE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DATE_PROCESSED" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="STATUS_PROCESS_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="OID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_TYPE_OBJECT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="PRICE_STORAGE_ORDER" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="PRICE_STORAGE_ORDER" columnName="ID_PRICE_STORAGE_ORDER" keySeq="1" pkName="ID_SRG_ORD_PSO_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_PRICE_STORAGE_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DATE_ORDER" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
+		<Fields name="NUMBER_ORDER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="ORDER_ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="IS_PROCESSED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+	</Tables>
+	<Tables schema="TEST" name="PRICE_STORAGE_ORDER_ITEMS" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_PRICE_STORAGE_ORDER_ITEMS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="QUANTITY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_PRICE_STORAGE_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="PRICE_STORAGE_ORDER" pkColumnName="ID_PRICE_STORAGE_ORDER" fkSchemaName="TEST" fkTableName="PRICE_STORAGE_ORDER_ITEMS" fkColumnName="ID_PRICE_STORAGE_ORDER" keySeq="1" fkName="ID_PRICE_STORAGE_ORDER_PSOI_FK" pkName="ID_SRG_ORD_PSO_PK">
+			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_TYPE_PAYMENT" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_TYPE_PAYMENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="TYPE_PAYMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="ID_STD_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="METHOD_PAYMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PRICE_USER_SHOP_DISCOUNT" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PRICE_USER_SHOP_DISCOUNT" columnName="ID_PRICE_USER_SHOP_DISCOUNT" keySeq="1" pkName="ID_USRSHP_PUSD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_PRICE_USER_SHOP_DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="3" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_USER" pkColumnName="ID_USER" fkSchemaName="TEST" fkTableName="WM_PRICE_USER_SHOP_DISCOUNT" fkColumnName="ID_USER" keySeq="1" fkName="ID_USER_PUSD_FK" pkName="ID_USER_MUI_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_SHOP_LIST" pkColumnName="ID_SHOP" fkSchemaName="TEST" fkTableName="WM_PRICE_USER_SHOP_DISCOUNT" fkColumnName="ID_SHOP" keySeq="1" fkName="ID_SHOP_PUSD_FK" pkName="ID_SHOP_PST_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_ACCESS_STAT" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_ACCESS_STAT" columnName="ID_SITE_ACCESS_STAT" keySeq="1" pkName="ID_ACC_STAT_SAS_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_ACCESS_STAT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="IP" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="16" nullable="1"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+		<Fields name="IS_REFER_TOO_BIG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ACCESS_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="0" defaultValue="sysdate"/>
+		<Fields name="REFER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
+		<Fields name="ID_SITE_ACCESS_USER_AGENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+		<Fields name="PARAMETERS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
+		<Fields name="ID_SITE_ACCESS_URL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+		<Fields name="IS_PARAM_TOO_BIG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_ACCESS_URL" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_ACCESS_URL" columnName="ID_SITE_ACCESS_URL" keySeq="1" pkName="ID_ACCS_URL_SAU_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_ACCESS_URL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_ACCESS_USER_AGENT" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_ACCESS_USER_AGENT" columnName="ID_SITE_USER_AGENT" keySeq="1" pkName="ID_ACUSRAG_SAUA_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_USER_AGENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
+		<Fields name="USER_AGENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_CSS" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_CSS" columnName="ID_SITE_CONTENT_CSS" keySeq="1" pkName="ID_CNT_CSS_SCC_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_CONTENT_CSS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="IS_CURRENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="TEXT_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="CSS_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CSS" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPORT_LANG_SCC_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_CSS_DATA" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_CSS_DATA" columnName="ID_SITE_CONTENT_CSS_DATA" keySeq="1" pkName="ID_CNT_CSS_SCCD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_CONTENT_CSS_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SITE_CONTENT_CSS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="CSS_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_CSS" pkColumnName="ID_SITE_CONTENT_CSS" fkSchemaName="TEST" fkTableName="WM_PORTAL_CSS_DATA" fkColumnName="ID_SITE_CONTENT_CSS" keySeq="1" fkName="ID_CONTENT_CSS_SCCD_FK" pkName="ID_CNT_CSS_SCC_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTLET_ARTICLE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_ARTICLE" columnName="ID_SITE_CTX_ARTICLE" keySeq="1" pkName="ID_CTX_ATCL_SCA_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_CTX_ARTICLE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SITE_CTX_OWNER_COPYRIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_EDITOR_CONFIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="1"/>
+		<Fields name="NAME_ARTICLE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="IS_TRANSLATE_CR" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_PLAIN_HTML" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ARTICLE_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="IS_SIMPLE_TEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<Fields name="ARTICLE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTLET_ARTICLE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPORT_LANG_SCA_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTLET_ARTICLE_DATA" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_ARTICLE_DATA" columnName="ID_SITE_CTX_ARTICLE_DATA" keySeq="1" pkName="ID_ARTCDAT_SCAD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_CTX_ARTICLE_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SITE_CTX_ARTICLE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ARTICLE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTLET_ARTICLE" pkColumnName="ID_SITE_CTX_ARTICLE" fkSchemaName="TEST" fkTableName="WM_PORTLET_ARTICLE_DATA" fkColumnName="ID_SITE_CTX_ARTICLE" keySeq="1" fkName="ID_SITE_CTX_ARTICLE_SCAD_FK" pkName="ID_CTX_ATCL_SCA_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_CATALOG" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_CATALOG" columnName="ID_SITE_CTX_CATALOG" keySeq="1" pkName="ID_CTX_CAT_SCC_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_CTX_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_TOP_CTX_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_SITE_CTX_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="1"/>
+		<Fields name="STORAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="KEY_MESSAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="0"/>
+		<Fields name="ID_CONTEXT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="IS_USE_PROPERTIES" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_SITE_CTX_LANG_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="CTX_PAGE_URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="CTX_PAGE_TITLE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="CTX_PAGE_AUTHOR" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="CTX_PAGE_KEYWORD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="250" nullable="1"/>
+		<Fields name="URL_RESOURCE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<Fields name="METADATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="1"/>
+		<Fields name="PORTLET_ROLE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_CATALOG_LANGUAGE" pkColumnName="ID_SITE_CTX_LANG_CATALOG" fkSchemaName="TEST" fkTableName="WM_PORTAL_CATALOG" fkColumnName="ID_SITE_CTX_LANG_CATALOG" keySeq="1" fkName="ID_CTX_LANG_CATALOG_SCC_FK" pkName="ID_LNGCAT_ISCLC_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_PORTLET_NAME" pkColumnName="ID_SITE_CTX_TYPE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CATALOG" fkColumnName="ID_SITE_CTX_TYPE" keySeq="1" fkName="ID_SITE_CTX_TYPE_SCC_FK" pkName="ID_CTX_TYPE_SCT_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_TEMPLATE" pkColumnName="ID_SITE_TEMPLATE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CATALOG" fkColumnName="ID_SITE_TEMPLATE" keySeq="1" fkName="ID_SITE_TEMPLATE_SCC_FK" pkName="ID_SITETEMPL_ST_PK">
+			<DeleteRule ruleType="2" ruleName="java.sql.DatabaseMetaData.importedKeySetNull"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_CATALOG_LANGUAGE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_CATALOG_LANGUAGE" columnName="ID_SITE_CTX_LANG_CATALOG" keySeq="1" pkName="ID_LNGCAT_ISCLC_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_CTX_LANG_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="CATALOG_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1" defaultValue="'DEFAULT'"/>
+		<Fields name="IS_DEFAULT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CATALOG_LANGUAGE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPERT_LANG_FK_SCLC" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="SITE_CTX_OWNER_COPYRIGHT" type="TABLE">
+		<PrimaryKey/>
+		<Fields name="ID_SITE_CTX_OWNER_COPYRIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
+		<Fields name="OWNER_COPYRIGHT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_PORTLET_NAME" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_PORTLET_NAME" columnName="ID_SITE_CTX_TYPE" keySeq="1" pkName="ID_CTX_TYPE_SCT_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_CTX_TYPE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
+		<Fields name="TYPE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="0"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_LIST_SITE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_LIST_SITE" columnName="ID_SITE" keySeq="1" pkName="ID_SITE_SLS_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="DEF_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="0"/>
+		<Fields name="DEF_COUNTRY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="0"/>
+		<Fields name="DEF_VARIANT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="1"/>
+		<Fields name="NAME_SITE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="0"/>
+		<Fields name="ADMIN_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="IS_CSS_DYNAMIC" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="CSS_FILE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1" defaultValue="'/front_styles.css'"/>
+		<Fields name="IS_REGISTER_ALLOWED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
+		<Fields name="ORDER_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="IS_ACTIVATE_EMAIL_ORDER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_PORTAL_LIST_SITE" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_SLS_FK" pkName="ID_FIRM_MLF_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTLET_FAQ" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_FAQ" columnName="ID_SITE_PORTLET_FAQ" keySeq="1" pkName="ID_ST_PORT_FAQ_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_PORTLET_FAQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="FAQ_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
+		<Fields name="NAME_FAQ" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTLET_FAQ_ANSWER" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_FAQ_ANSWER" columnName="ID_SITE_PORTLET_FAQ_ANSWER" keySeq="1" pkName="ID_SPFA_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_PORTLET_FAQ_ANSWER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="ANSWER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTLET_FAQ_LIST" pkColumnName="ID_SITE_PORTLET_FAQ_LIST" fkSchemaName="TEST" fkTableName="WM_PORTLET_FAQ_ANSWER" fkColumnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1" fkName="ID_SPFA_SPFL_FK" pkName="ID_PORT_FAQ_LST_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTLET_FAQ_LIST" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_FAQ_LIST" columnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1" pkName="ID_PORT_FAQ_LST_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SITE_PORTLET_FAQ" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="QUESTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="ANSWER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
+		<Fields name="ORDER_FIELD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTLET_FAQ" pkColumnName="ID_SITE_PORTLET_FAQ" fkSchemaName="TEST" fkTableName="WM_PORTLET_FAQ_LIST" fkColumnName="ID_SITE_PORTLET_FAQ" keySeq="1" fkName="ID_SITE_PORTLET_FAQ_SPFL_FK" pkName="ID_ST_PORT_FAQ_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTLET_FAQ_QUESTION" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTLET_FAQ_QUESTION" columnName="ID_SITE_PORTLET_FAQ_QUESTION" keySeq="1" pkName="ID_SPFQ_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_PORTLET_FAQ_QUESTION" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SITE_PORTLET_FAQ_LIST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<Fields name="QUESTION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTLET_FAQ_LIST" pkColumnName="ID_SITE_PORTLET_FAQ_LIST" fkSchemaName="TEST" fkTableName="WM_PORTLET_FAQ_QUESTION" fkColumnName="ID_SITE_PORTLET_FAQ_LIST" keySeq="1" fkName="ID_SPFQ_SPFL_FK" pkName="ID_PORT_FAQ_LST_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_SITE_LANGUAGE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_SITE_LANGUAGE" columnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" pkName="ID_SITE_SUPPORT_LANG_SSL_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
+		<Fields name="NAME_CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_LANGUAGE" pkColumnName="ID_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_SITE_LANGUAGE" fkColumnName="ID_LANGUAGE" keySeq="1" fkName="ID_LANGUAGE_SSL_FK" pkName="ID_LANGUAGE_MN_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTAL_SITE_LANGUAGE" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_SSL_FK" pkName="ID_SITE_SLS_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_TEMPLATE" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_TEMPLATE" columnName="ID_SITE_TEMPLATE" keySeq="1" pkName="ID_SITETEMPL_ST_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<Fields name="NAME_SITE_TEMPLATE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
+		<Fields name="TEMPLATE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="0"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SUPPORT_LANG_ST_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_TEMPLATE_MEMBER" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_TEMPLATE_MEMBER" columnName="ID_SITE_TEMPLATE_MEMBER" keySeq="1" pkName="ID_TMPLMBER_STM_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_TEMPLATE_MEMBER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SITE_TEMPLATE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE_MEMBER" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SUPPORT_LANG_STM_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_TEMPLATE" pkColumnName="ID_SITE_TEMPLATE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE_MEMBER" fkColumnName="ID_SITE_TEMPLATE" keySeq="1" fkName="ID_SITE_TEMPLATE_STM_FK" pkName="ID_SITETEMPL_ST_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_VIRTUAL_HOST" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_VIRTUAL_HOST" columnName="ID_SITE_VIRTUAL_HOST" keySeq="1" pkName="ID_VIRT_HST_SVH_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_VIRTUAL_HOST" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="NAME_VIRTUAL_HOST" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTAL_VIRTUAL_HOST" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_SVH_FK" pkName="ID_SITE_SLS_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_XSLT" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_XSLT" columnName="ID_SITE_XSLT" keySeq="1" pkName="ID_SITE_XSLT_SX_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_XSLT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="IS_CURRENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="TEXT_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="0"/>
+		<Fields name="XSLT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_XSLT" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPORT_LANG_SX_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="TEST" name="WM_PORTAL_XSLT_DATA" type="TABLE">
+		<PrimaryKey>
+			<columns schemaName="TEST" tableName="WM_PORTAL_XSLT_DATA" columnName="ID_SITE_XSLT_DATA" keySeq="1" pkName="ID_XSLT_DAT_SXD_PK"/>
+		</PrimaryKey>
+		<Fields name="ID_SITE_XSLT_DATA" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID_SITE_XSLT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="XSLT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="4000" nullable="1"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_XSLT" pkColumnName="ID_SITE_XSLT" fkSchemaName="TEST" fkTableName="WM_PORTAL_XSLT_DATA" fkColumnName="ID_SITE_XSLT" keySeq="1" fkName="ID_SITE_XSLT_SXD_FK" pkName="ID_SITE_XSLT_SX_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="" name="WM_FORUM" type="TABLE">
+		<PrimaryKey>
+			<columns catalogName="" schemaName="" tableName="WM_FORUM" columnName="FORUM_ID" keySeq="1" pkName="FORUM_ID_WF_PK"/>
+		</PrimaryKey>
+		<Fields name="FORUM_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="SITE_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="FORUM_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="0"/>
+		<Fields name="IS_USE_LOCALE" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<ImportedKeys pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkTableName="WM_FORUM" fkColumnName="SITE_ID" keySeq="1" fkName="FORUM_ID_WF_FK" pkName="ID_SITE_SLS_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="" name="WM_FORUM_CATEGORY" type="TABLE">
+		<PrimaryKey>
+			<columns catalogName="" schemaName="" tableName="WM_FORUM_CATEGORY" columnName="FORUM_CATEGORY_ID" keySeq="1" pkName="FORUM_CATEGORY_ID_WFC_PK"/>
+		</PrimaryKey>
+		<Fields name="FORUM_CATEGORY_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="FORUM_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="FORUM_CATEGORY_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="0"/>
+		<Fields name="IS_USE_LOCALE" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<ImportedKeys pkTableName="WM_FORUM" pkColumnName="FORUM_ID" fkTableName="WM_FORUM_CATEGORY" fkColumnName="FORUM_ID" keySeq="1" fkName="FORUM_ID_WFC_FK" pkName="FORUM_ID_WF_PK">
+			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="" name="WM_FORUM_CONCRETE" type="TABLE">
+		<PrimaryKey>
+			<columns catalogName="" schemaName="" tableName="WM_FORUM_CONCRETE" columnName="F_ID" keySeq="1" pkName="F_ID_WFC_PK"/>
+		</PrimaryKey>
+		<Fields name="F_ORDER" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="F_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="F_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" decimalDigit="0" nullable="0"/>
+		<Fields name="F_INFO" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="0"/>
+		<Fields name="F_U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="1"/>
+		<Fields name="F_TOPICS" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="F_MESSAGES" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="F_U_ID2" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="1"/>
+		<Fields name="F_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="1"/>
+		<Fields name="FORUM_CATEGORY_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+	</Tables>
+	<Tables schema="" name="WM_FORUM_TOPIC" type="TABLE">
+		<PrimaryKey>
+			<columns catalogName="" schemaName="" tableName="WM_FORUM_TOPIC" columnName="T_ID" keySeq="1" pkName="WM_FORUM_TOPIC_PK"/>
+		</PrimaryKey>
+		<Fields name="T_ORDER" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_LOCKED" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_ICONID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_F_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_NAME" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="0"/>
+		<Fields name="T_U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_REPLIES" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_VIEWS" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_U_ID2" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="T_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkTableName="WM_FORUM_CONCRETE" pkColumnName="T_ID" fkTableName="WM_FORUM_TOPIC" fkColumnName="T_F_ID" keySeq="1" fkName="ID_FORUM_WFT_FK" pkName="WM_FORUM_PK_PK">
+			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
+			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
+		</ImportedKeys>
+	</Tables>
+	<Tables schema="" name="WM_FORUM_MESSAGE" type="TABLE">
+		<PrimaryKey>
+			<columns catalogName="" schemaName="" tableName="WM_FORUM_MESSAGE" columnName="M_ID" keySeq="1" pkName="WM_FORUM_MESSAGE_PK"/>
+		</PrimaryKey>
+		<Fields name="M_ICONID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="M_T_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="M_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="M_CONTENT" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" decimalDigit="0" nullable="0"/>
+		<Fields name="M_U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="M_TIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="0"/>
+	</Tables>
+	<Tables schema="" name="WM_FORUM_USER" type="TABLE">
+		<PrimaryKey>
+			<columns catalogName="" schemaName="" tableName="WM_FORUM_USER" columnName="U_ID" keySeq="1" pkName="WM_FORUM_USER_PK"/>
+		</PrimaryKey>
+		<Fields name="U_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="U_AVATAR_ID" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="U_SIGN" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" decimalDigit="0" nullable="0"/>
+		<Fields name="U_POST" dataType="INTEGER" javaType="4" javaStringType="java.sql.Types.INTEGER" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="U_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="U_LASTIP" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="0"/>
+	</Tables>
+	<Views schema="TEST" name="V$_READ_LIST_FIRM" type="VIEW">
+		<Text xmlns="">select distinct aa.id_firm, user_login, id_user, id_auth_user
+from (
+select  a01.id_firm, a01.user_login, a01.id_user, a01.id_auth_user
+from    auth_user a01
+where   a01.is_use_current_firm = 1
+union
+select  d02.id_firm, a02.user_login, a02.id_user, a02.id_auth_user
+from    WM_AUTH_USER a02, WM_LIST_R_GROUP_COMPANY_COMPANY d02
+where   a02.is_service = 1 and a02.id_service = d02.id_service
+union
+select  e03.id_firm, a03.user_login, a03.id_user, a03.id_auth_user
+from    auth_user a03, WM_LIST_R_HOLDING_GROUP_COMPANY d03, WM_LIST_R_GROUP_COMPANY_COMPANY e03
+where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service
+union
+select  b04.id_firm, a04.user_login, a04.id_user, a04.id_auth_user
+from    WM_AUTH_USER a04, WM_LIST_COMPANY b04
+where   a04.is_root = 1
+) aa
+</Text>
+	</Views>
+	<Views schema="TEST" name="V$_READ_LIST_ROAD" type="VIEW">
+		<Text xmlns="">select distinct aa.id_road, aa.user_login, aa.id_user, aa.id_auth_user
+from (
+select  a01.id_road, a01.user_login, a01.id_user, a01.id_auth_user
+from    WM_AUTH_USER auth_user a01
+where   a01.is_road = 1
+union
+select  b04.id_road, a04.user_login, a04.id_user, a04.id_auth_user
+from    WM_AUTH_USER a04, WM_LIST_HOLDING b04
+where   a04.is_root = 1
+) aa
+</Text>
+	</Views>
+	<Views schema="TEST" name="V$_READ_LIST_SERVICE" type="VIEW">
+		<Text xmlns="">select distinct aa.id_service, aa.user_login, aa.id_user, aa.id_auth_user
+from (
+select  a01.id_service, a01.user_login, a01.id_user, a01.id_auth_user
+from    WM_AUTH_USER a01
+where   a01.is_service = 1 
+union
+select  b02.id_service, a02.user_login, a02.id_user, a02.id_auth_user
+from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_GROUP_COMPANY b02
+where   a02.is_road = 1 and a02.id_road = b02.id_road
+union
+select  b04.id_service, a04.user_login, a04.id_user, a04.id_auth_user
+from    WM_AUTH_USER a04, WM_LIST_GROUP_COMPANY b04
+where   a04.is_root = 1
+) aa
+</Text>
+	</Views>
+	<Views schema="TEST" name="V_AUTH_RELATE_ROAD" type="VIEW">
+		<Text xmlns="">select  a.id_road, full_name_road, b.id_user, b.user_login
+from    WM_LIST_HOLDING a, v$_read_list_road b
+where   a.id_road = b.id_road
+</Text>
+	</Views>
+	<Views schema="TEST" name="V_AUTH_RELATE_SERVICE" type="VIEW">
+		<Text xmlns="">select  a.id_service, full_name_service, b.id_user, b.user_login
+from    WM_LIST_GROUP_COMPANY a, v$_read_list_service b
+where   a.id_service = b.id_service
+</Text>
+	</Views>
+	<Views schema="TEST" name="V_LIST_READ_FIRM" type="VIEW">
+		<Text xmlns="">select B.id_firm id, ''||b.id_firm||', '||B.full_name NAME_FIRM, user_login,
+b.is_deleted
+from v$_read_list_firm A, WM_LIST_COMPANY B
+where a.id_firm = b.id_firm and b.is_deleted = 0
+</Text>
+	</Views>
+	<Views schema="TEST" name="V_MILL_AUTH_USER_INFO" type="VIEW">
+		<Text xmlns="">select  
+ 	a.id_auth_user,
+
+  c.short_name name_firm,
+  b.LAST_NAME,
+  b.FIRST_NAME,
+  b.MIDDLE_NAME,
+  
+  a.user_login,
+  a.is_service,a.is_road,a.is_use_current_firm,b1.id_firm
+
+from   WM_AUTH_USER a, WM_LIST_USER b, WM_LIST_COMPANY c,
+       WM_LIST_USER b1  
+where  a.id_user = b1.id_user and a.id_user = b.id_user and a.id_firm = c.id_firm
+</Text>
+	</Views>
+
+	<Sequences name="SEQ_WM_PRICE_QUERY_TABLE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="29"/>
+	<Sequences name="SEQ_WM_PORTAL_XSLT_DATA" minValue="1" maxValue="9999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="270"/>
+	<Sequences name="SEQ_WM_PORTAL_XSLT" minValue="1" maxValue="99999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="28"/>
+
+
+	<Sequences name="SEQ_WM_DB_DEFINITION" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="15"/>
+	<Sequences name="SEQ_WM_PORTLET_ARTICLE" minValue="1" maxValue="999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="211"/>
+	<Sequences name="SEQ_WM_PORTAL_ACCESS_URL" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="58"/>
+	<Sequences name="SEQ_WM_PORTAL_ACCESS_STAT" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="17617"/>
+	<Sequences name="SEQ_WM_JOB_RESUME_DATA" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
+	<Sequences name="SEQ_WM_PORTAL_ACCESS_USER_AGENT" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="508"/>
+	<Sequences name="SEQ_WM_JOB_POSITION_DATA" minValue="1" maxValue="99999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="22"/>
+	<Sequences name="SEQ_WM_JOB_POSITION" minValue="1" maxValue="9999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="17"/>
+	<Sequences name="SEQ_WM_LIST_COMPANY" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="51"/>
+	<Sequences name="SEQ_WM_LIST_HOLDING" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
+	<Sequences name="SEQ_WM_LIST_USER" minValue="2" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="89"/>
+	<Sequences name="SEQ_WM_LIST_USER_METADATA" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="100"/>
+	<Sequences name="SEQ_WM_LIST_R_GROUP_COMPANY_COMPANY" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="31"/>
+	<Sequences name="SEQ_WM_LIST_R_HOLDING_GROUP_COMPANY" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
+	<Sequences name="SEQ_WM_NEWS_ITEM_TEXT" minValue="1" maxValue="99999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="4720"/>
+	<Sequences name="SEQ_WM_NEWS_ITEM_IMAGE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="true" isOrder="false" cacheSize="0" lastNumber="1"/>
+	<Sequences name="SEQ_WM_NEWS_ITEM" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="4714"/>
+	<Sequences name="SEQ_WM_LIST_GROUP_COMPANY" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="11"/>
+	<Sequences name="SEQ_WM_PORTAL_CSS_DATA" minValue="1" maxValue="999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="148"/>
+	<Sequences name="SEQ_WM_PORTAL_CSS" minValue="1" maxValue="9999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="63"/>
+	<Sequences name="SEQ_WM_AUTH_ACCESS_GROUP" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="84"/>
+	<Sequences name="SEQ_WM_CASH_CURR_VALUE" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="671"/>
+	<Sequences name="SEQ_WM_CASH_CURRENCY_STD" minValue="1" maxValue="9999999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="8"/>
+	<Sequences name="SEQ_WM_CASH_CURRENCY" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="651"/>
+	<Sequences name="SEQ_WM_PRICE_SHOP_LIST" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="281"/>
+	<Sequences name="SEQ_WM_PRICE_LIST" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="8318"/>
+	<Sequences name="SEQ_WM_PRICE_USER_SHOP_DISCOUNT" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
+	<Sequences name="SEQ_WM_PRICE_RELATE_USER_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
+	<Sequences name="SEQ_WM_PRICE_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
+	<Sequences name="SEQ_WM_PRICE_SHOP_PRECISION" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="94"/>
+	<Sequences name="SEQ_WM_PORTAL_TEMPLATE_MEMBER" minValue="1" maxValue="9999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="15"/>
+	<Sequences name="SEQ_WM_PORTAL_CATALOG_LANGUAGE" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="238"/>
+	<Sequences name="SEQ_WM_PORTAL_XSLT_DATA" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="514"/>
+	<Sequences name="SEQ_WM_PORTAL_XSLT" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="13"/>
+	<Sequences name="SEQ_WM_PORTAL_TEMPLATE_DATA" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="24"/>
+	<Sequences name="SEQ_WM_PORTAL_TEMPLATE" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="382"/>
+	<Sequences name="SEQ_WM_CASH_LIST" minValue="100" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="101"/>
+	<Sequences name="SEQ_WM_CASH_CURS_STD" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="20"/>
+	<Sequences name="SEQ_WM_PORTAL_VIRTUAL_HOST" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="463"/>
+	<Sequences name="SEQ_WM_PORTAL_SITE_LANGUAGE" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="358"/>
+	<Sequences name="SEQ_WM_PORTAL_LIST_SITE" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="389"/>
+	<Sequences name="SEQ_WM_PORTLET_ARTICLE_DATA" minValue="1" maxValue="999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="310"/>
+	<Sequences name="SEQ_WM_AUTH_USER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="322"/>
+	<Sequences name="SEQ_WM_AUTH_RELATE_RIGHT_ARM" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="138"/>
+	<Sequences name="SEQ_WM_AUTH_RELATE_ACCGROUP" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="577"/>
+	<Sequences name="SEQ_WM_AUTH_MODULE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="136"/>
+	<Sequences name="SEQ_WM_AUTH_APPLICATION" minValue="1" maxValue="99999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="47"/>
+	<Sequences name="SEQ_WM_PRICE_ITEM_DESC_DATA" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="7"/>
+	<Sequences name="SEQ_WM_PORTAL_CATALOG" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="2158"/>
+	<Sequences name="SEQ_WM_PORTAL_PORTLET_NAME" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="41"/>
+	<Sequences name="SEQ_WM_IMAGE_DIR" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1031"/>
+	<Sequences name="SEQ_WM_NEWS_LIST" minValue="1" maxValue="9999999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="425"/>
+	<Sequences name="SEQ_WM_LIST_LANGUAGE" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="11"/>
+	<Sequences name="SEQ_WM_JOB_GENDER_LIST" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="7"/>
+	<Sequences name="SEQ_WM_IMAGE_PRICE_ITEMS" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="20"/>
+
+	<Sequences name="SEQ_WM_PORTLET_FAQ" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="7"/>
+	<Sequences name="SEQ_WM_PORTLET_FAQ_ANSWER" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="9"/>
+	<Sequences name="SEQ_WM_PORTLET_FAQ_LIST" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="45"/>
+	<Sequences name="SEQ_WM_PORTLET_FAQ_QUESTION" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="9"/>
+
+	<Sequences name="SEQ_WM_I18N_ITEM" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1431"/>
+	<Sequences name="SEQ_WM_I18N_STORAGE" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="36"/>
+	<Sequences name="SEQ_WM_I18N_MESSAGE" minValue="1" maxValue="99999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="24258"/>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_JOB_POSITION</MasterTable>
+		<SlaveTable xmlns="">WM_JOB_POSITION_DATA</SlaveTable>
+		<MasterPkField xmlns="">ID_JOB_POSITION</MasterPkField>
+		<SlavePkField xmlns="">ID_JOB_POSITION_DATA</SlavePkField>
+		<SlaveFkField xmlns="">ID_JOB_POSITION</SlaveFkField>
+		<StorageField xmlns="">TEXT_POSITION</StorageField>
+		<SequenceName xmlns="">SEQ_WM_JOB_POSITION_DATA</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_JOB_RESUME</MasterTable>
+		<SlaveTable xmlns="">WM_JOB_RESUME_DATA</SlaveTable>
+		<MasterPkField xmlns="">ID_JOB_RESUME</MasterPkField>
+		<SlavePkField xmlns="">ID_JOB_RESUME_DATA</SlavePkField>
+		<SlaveFkField xmlns="">ID_JOB_RESUME</SlaveFkField>
+		<StorageField xmlns="">TEXT_RESUME</StorageField>
+		<SequenceName xmlns="">SEQ_WM_JOB_RESUME_DATA</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_NEWS_ITEM</MasterTable>
+		<SlaveTable xmlns="">WM_NEWS_ITEM_TEXT</SlaveTable>
+		<MasterPkField xmlns="">ID</MasterPkField>
+		<SlavePkField xmlns="">ID_MAIN_NEWS_TEXT</SlavePkField>
+		<SlaveFkField xmlns="">ID</SlaveFkField>
+		<StorageField xmlns="">TEXT</StorageField>
+		<SequenceName xmlns="">SEQ_WM_NEWS_ITEM_TEXT</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_PORTAL_CSS</MasterTable>
+		<SlaveTable xmlns="">WM_PORTAL_CSS_DATA</SlaveTable>
+		<MasterPkField xmlns="">ID_SITE_CONTENT_CSS</MasterPkField>
+		<SlavePkField xmlns="">ID_SITE_CONTENT_CSS_DATA</SlavePkField>
+		<SlaveFkField xmlns="">ID_SITE_CONTENT_CSS</SlaveFkField>
+		<StorageField xmlns="">CSS_DATA</StorageField>
+		<SequenceName xmlns="">SEQ_WM_PORTAL_CSS_DATA</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_PORTLET_ARTICLE</MasterTable>
+		<SlaveTable xmlns="">WM_PORTLET_ARTICLE_DATA</SlaveTable>
+		<MasterPkField xmlns="">ID_SITE_CTX_ARTICLE</MasterPkField>
+		<SlavePkField xmlns="">ID_SITE_CTX_ARTICLE_DATA</SlavePkField>
+		<SlaveFkField xmlns="">ID_SITE_CTX_ARTICLE</SlaveFkField>
+		<StorageField xmlns="">ARTICLE_DATA</StorageField>
+		<SequenceName xmlns="">SEQ_WM_PORTLET_ARTICLE_DATA</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_PORTLET_FAQ_LIST</MasterTable>
+		<SlaveTable xmlns="">WM_PORTLET_FAQ_ANSWER</SlaveTable>
+		<MasterPkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</MasterPkField>
+		<SlavePkField xmlns="">ID_SITE_PORTLET_FAQ_ANSWER</SlavePkField>
+		<SlaveFkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</SlaveFkField>
+		<StorageField xmlns="">ANSWER</StorageField>
+		<SequenceName xmlns="">SEQ_WM_PORTLET_FAQ_ANSWER</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_PORTLET_FAQ_LIST</MasterTable>
+		<SlaveTable xmlns="">WM_PORTLET_FAQ_QUESTION</SlaveTable>
+		<MasterPkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</MasterPkField>
+		<SlavePkField xmlns="">ID_SITE_PORTLET_FAQ_QUESTION</SlavePkField>
+		<SlaveFkField xmlns="">ID_SITE_PORTLET_FAQ_LIST</SlaveFkField>
+		<StorageField xmlns="">QUESTION</StorageField>
+		<SequenceName xmlns="">SEQ_WM_PORTLET_FAQ_QUESTION</SequenceName>
+	</BigTextTable>
+	<BigTextTable>
+		<MasterTable xmlns="">WM_PORTAL_XSLT</MasterTable>
+		<SlaveTable xmlns="">WM_PORTAL_XSLT_DATA</SlaveTable>
+		<MasterPkField xmlns="">ID_SITE_XSLT</MasterPkField>
+		<SlavePkField xmlns="">ID_SITE_XSLT_DATA</SlavePkField>
+		<SlaveFkField xmlns="">ID_SITE_XSLT</SlaveFkField>
+		<StorageField xmlns="">XSLT</StorageField>
+		<SequenceName xmlns="">SEQ_WM_PORTAL_XSLT_DATA</SequenceName>
+	</BigTextTable>
+</DbSchemaType>
