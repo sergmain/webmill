@@ -9,5 +9,5 @@ import java.util.List;
  *         $Id$
  */
 public interface PortletGetList {
-    public List getList(Long idSiteCtxLangCatalog, Long idContext);
+    public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext);
 }    
