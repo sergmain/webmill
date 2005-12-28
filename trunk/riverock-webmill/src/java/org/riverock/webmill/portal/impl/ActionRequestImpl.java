@@ -49,7 +49,7 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         super.destroy();
     }
 
-    public ActionRequestImpl(final Map parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map portletAttributes, final String contextPath, final String portalContextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext ) {
+    public ActionRequestImpl(final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map<String, Object> portletAttributes, final String contextPath, final String portalContextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext ) {
         super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties);
         prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContextPath, portalContext );
     }

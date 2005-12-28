@@ -44,7 +44,7 @@ public class ShopPageParam {
     private String serverName = null;
     public Long idSite = null;
     public Long id_currency;
-    public Map currencyURL = new HashMap();
+    public Map<String, String> currencyURL = new HashMap<String, String>();
     public boolean  isProcessInvoice =  false;
 
     public CurrencyPrecisionType precision = null;

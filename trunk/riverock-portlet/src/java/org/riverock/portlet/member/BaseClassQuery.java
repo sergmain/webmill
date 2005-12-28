@@ -37,6 +37,8 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+
 public abstract class BaseClassQuery {
 /**
  * Return current value for output on web page
@@ -48,7 +50,7 @@ public abstract class BaseClassQuery {
  * Return list of possible values for create 'select' html-element
  * @return List of org.riverock.member.ClassQueryItem
  */
-    public abstract List getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception;
+    public abstract List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception;
 
     public abstract void setQueryParameter(MemberQueryParameter parameter) throws Exception;
 }

@@ -49,16 +49,16 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.site.SiteListSite;
 import org.riverock.webmill.core.GetWmPortalAccessUrlFullList;
 import org.riverock.webmill.core.GetWmPortalAccessUrlItem;
-import org.riverock.webmill.core.GetWmPortalAccessUserAgentFullList;
-import org.riverock.webmill.core.GetWmPortalAccessUserAgentItem;
+import org.riverock.webmill.core.GetWmPortalAccessUseragentFullList;
+import org.riverock.webmill.core.GetWmPortalAccessUseragentItem;
 import org.riverock.webmill.core.InsertWmPortalAccessStatItem;
 import org.riverock.webmill.core.InsertWmPortalAccessUrlItem;
-import org.riverock.webmill.core.InsertWmPortalAccessUserAgentItem;
+import org.riverock.webmill.core.InsertWmPortalAccessUseragentItem;
 import org.riverock.webmill.schema.core.WmPortalAccessStatItemType;
 import org.riverock.webmill.schema.core.WmPortalAccessUrlItemType;
 import org.riverock.webmill.schema.core.WmPortalAccessUrlListType;
-import org.riverock.webmill.schema.core.WmPortalAccessUserAgentItemType;
-import org.riverock.webmill.schema.core.WmPortalAccessUserAgentListType;
+import org.riverock.webmill.schema.core.WmPortalAccessUseragentItemType;
+import org.riverock.webmill.schema.core.WmPortalAccessUseragentListType;
 
 /**
  * User: Admin
@@ -81,7 +81,7 @@ public final class RequestStatisticFilter implements Filter {
     private FilterConfig filterConfig = null;
 
     private static Map userAgent = null;
-    private static Map url = null;
+    private static Map<String, Long> url = null;
 
     private static Object userAgentSync = new Object();
     private static Object urlSync = new Object();
@@ -94,6 +94,14 @@ public final class RequestStatisticFilter implements Filter {
      */
     public void destroy() {
         this.filterConfig = null;
+        if (userAgent!=null) {
+            userAgent.clear();
+            userAgent = null;
+        }
+        if (url!=null) {
+            url.clear();
+            url = null;
+        }
     }
 
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -152,17 +160,17 @@ public final class RequestStatisticFilter implements Filter {
                                         if (log.isDebugEnabled())
                                             log.debug("userAgent is null");
 
-                                        WmPortalAccessUserAgentListType userAgentList =
-                                            GetWmPortalAccessUserAgentFullList.getInstance(db_, 0).item;
+                                        WmPortalAccessUseragentListType userAgentList =
+                                            GetWmPortalAccessUseragentFullList.getInstance(db_, 0).item;
 
                                         if (log.isDebugEnabled())
-                                            log.debug("count of userAgent " + userAgentList.getWmPortalAccessUserAgentCount());
+                                            log.debug("count of userAgent " + userAgentList.getWmPortalAccessUseragentCount());
 
-                                        userAgent = new HashMap(userAgentList.getWmPortalAccessUserAgentCount() + 10, 1.2f);
+                                        userAgent = new HashMap(userAgentList.getWmPortalAccessUseragentCount() + 10, 1.2f);
 
-                                        for (int i = 0; i < userAgentList.getWmPortalAccessUserAgentCount(); i++) {
-                                            WmPortalAccessUserAgentItemType userAgentItem =
-                                                userAgentList.getWmPortalAccessUserAgent(i);
+                                        for (int i = 0; i < userAgentList.getWmPortalAccessUseragentCount(); i++) {
+                                            WmPortalAccessUseragentItemType userAgentItem =
+                                                userAgentList.getWmPortalAccessUseragent(i);
                                             userAgent.put(userAgentItem.getUserAgent(),
                                                 userAgentItem.getIdSiteUserAgent());
                                         }
@@ -175,8 +183,8 @@ public final class RequestStatisticFilter implements Filter {
 
                                     if (idUserAgent == null) {
                                         isNeedInsertUserAgent = true;
-                                        seq.setSequenceName("SEQ_WM_PORTAL_ACCESS_USER_AGENT");
-                                        seq.setTableName("WM_PORTAL_ACCESS_USER_AGENT");
+                                        seq.setSequenceName("SEQ_WM_PORTAL_ACCESS_USERAGENT");
+                                        seq.setTableName("WM_PORTAL_ACCESS_USERAGENT");
                                         seq.setColumnName("ID_SITE_USER_AGENT");
                                         idUserAgent = db_.getSequenceNextValue(seq);
                                         userAgent.put(userAgentString, idUserAgent);
@@ -188,15 +196,15 @@ public final class RequestStatisticFilter implements Filter {
                                 if (log.isDebugEnabled())
                                     log.debug("save new userAgent, id " + idUserAgent);
 
-                                WmPortalAccessUserAgentItemType item =
-                                    new WmPortalAccessUserAgentItemType();
+                                WmPortalAccessUseragentItemType item =
+                                    new WmPortalAccessUseragentItemType();
                                 item.setIdSiteUserAgent(idUserAgent);
                                 item.setUserAgent(userAgentString);
                                 try {
                                     if (log.isDebugEnabled())
                                         log.debug("Call InsertSiteAccessUserAgentItem.processData(db_, item)");
 
-                                    InsertWmPortalAccessUserAgentItem.process(db_, item);
+                                    InsertWmPortalAccessUseragentItem.process(db_, item);
                                     db_.commit();
 
                                 }
@@ -213,8 +221,8 @@ public final class RequestStatisticFilter implements Filter {
                                     if (log.isDebugEnabled())
                                         log.debug("reinit classes");
 
-                                    GetWmPortalAccessUserAgentItem.reinit();
-                                    GetWmPortalAccessUserAgentFullList.reinit();
+                                    GetWmPortalAccessUseragentItem.reinit();
+                                    GetWmPortalAccessUseragentFullList.reinit();
                                     isLoop = true;
                                 }
                             }
@@ -239,7 +247,7 @@ public final class RequestStatisticFilter implements Filter {
                                     if (url == null) {
                                         WmPortalAccessUrlListType urlList =
                                             GetWmPortalAccessUrlFullList.getInstance(db_, 0).item;
-                                        url = new HashMap(urlList.getWmPortalAccessUrlCount() + 10, 1.2f);
+                                        url = new HashMap<String, Long>(urlList.getWmPortalAccessUrlCount() + 10, 1.2f);
                                         for (int i = 0; i < urlList.getWmPortalAccessUrlCount(); i++) {
                                             WmPortalAccessUrlItemType urlItem = urlList.getWmPortalAccessUrl(i);
                                             url.put(urlItem.getUrl(),
@@ -289,8 +297,10 @@ public final class RequestStatisticFilter implements Filter {
                     stat.setAccessDate(new Timestamp(System.currentTimeMillis()));
                     Long idSite = SiteListSite.getIdSite(request.getServerName());
 
-                    if (idSite == null)
-                        isPrintData = true;
+                    if (idSite == null) {
+                        stat.setServerName( request.getServerName() );
+//                        isPrintData = true;
+                    }
 
                     stat.setIdSite(idSite);
 

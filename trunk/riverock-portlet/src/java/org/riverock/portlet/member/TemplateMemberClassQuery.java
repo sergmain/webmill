@@ -97,11 +97,11 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
      *
      * @return List of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+    public List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            List v = new ArrayList();
+            List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
 
             Long id = PortletService.getLong( renderRequest, nameModule + '.' + nameField );
             WmPortalTemplateListType templateList = GetWmPortalTemplateWithIdSiteSupportLanguageList.getInstance( db_, id ).item;

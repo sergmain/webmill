@@ -109,7 +109,7 @@ public final class PageContextFactory extends ContextFactory {
         }
     }
 
-    protected void prepareParameters( HttpServletRequest httpRequest, Map httpRequestParameter ) {
+    protected void prepareParameters( HttpServletRequest httpRequest, Map<String, Object> httpRequestParameter ) {
 
     }
 }

@@ -42,7 +42,7 @@ public class TopicDAO {
         String sql = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            if (!CommonUtils.checkForumTopicId( adapter, forumId, new Integer( t_id ) )){
+            if (!CommonUtils.checkForumTopicId( adapter, forumId, t_id )){
                 log.error("Check for topicId was failed");
                 return null;
             }
@@ -134,7 +134,7 @@ public class TopicDAO {
 
             isNext = rs.next();
 
-            List messageList = new ArrayList( messagesPerPage+3 );
+            List<Message> messageList = new ArrayList<Message>( messagesPerPage+3 );
             boolean isFound = false;
             for (int i = 0; isNext && i<messagesPerPage && !rs.isAfterLast(); i++) {
                 isFound = true;
@@ -182,7 +182,7 @@ public class TopicDAO {
                 "update WM_FORUM_TOPIC " +
                 "set T_VIEWS=T_VIEWS+1 " +
                 "where T_ID=? ",
-                new Object[]{new Integer(t_id)},
+                new Object[]{ t_id },
                 new int[]{Types.INTEGER});
 //                dba.runSql("UPDATE lb_topic SET t_views=t_views+1 WHERE t_id=" + t_id);
 

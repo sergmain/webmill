@@ -57,8 +57,8 @@ public final class SiteTemplateList {
     private final static Logger log = Logger.getLogger( SiteTemplateList.class );
     private final static CacheFactory cache = new CacheFactory( SiteTemplateList.class.getName() );
 
-    public Map hash = new HashMap(10);
-    public Map hashId = new HashMap(10);
+    public Map<String, SiteTemplate> hash = new HashMap<String, SiteTemplate>(10);
+    public Map<Long, SiteTemplate> hashId = new HashMap<Long, SiteTemplate>(10);
 
     public SiteTemplateDescListType templateList = new SiteTemplateDescListType();
 

@@ -306,13 +306,13 @@ public class InternalAuthProviderTools
             if (!getRelateServiceFirm(ora_, id_firm, id_service))
             {
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName("seq_WM_LIST_R_GROUP_COMPANY_COMPANY");
-                seq.setTableName( "WM_LIST_R_GROUP_COMPANY_COMPANY");
+                seq.setSequenceName("seq_WM_LIST_R_GR_COMP_COMP");
+                seq.setTableName( "WM_LIST_R_GR_COMP_COMP");
                 seq.setColumnName( "ID_REL_SERVICE" );
                 long id = ora_.getSequenceNextValue( seq );
 
                 ps = ora_.prepareStatement(
-                    "insert into WM_LIST_R_GROUP_COMPANY_COMPANY " +
+                    "insert into WM_LIST_R_GR_COMP_COMP " +
                     "(ID_REL_SERVICE, ID_SERVICE, ID_FIRM) " +
                     "values "+
                     "(?, ?, ?)"
@@ -647,7 +647,7 @@ public class InternalAuthProviderTools
         try
         {
             ps = ora_.prepareStatement(
-                "select null COUNT_REC from WM_LIST_R_GROUP_COMPANY_COMPANY " +
+                "select null COUNT_REC from WM_LIST_R_GR_COMP_COMP " +
                 "where ID_FIRM=? and ID_SERVICE=?"
             );
             ps.setObject(1, id_firm);

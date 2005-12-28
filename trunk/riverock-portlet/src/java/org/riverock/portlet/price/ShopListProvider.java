@@ -28,7 +28,7 @@ public class ShopListProvider implements PortletGetList {
 
     private static Log log = LogFactory.getLog( ShopPage.class );
 
-    public List getList( Long idSiteCtxLangCatalog, Long idContext ) {
+    public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
 
         if (log.isDebugEnabled())
             log.debug( "Get list of Shop. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog );
@@ -37,7 +37,7 @@ public class ShopListProvider implements PortletGetList {
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
 
-        List v = new ArrayList();
+        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( 

@@ -1,7 +1,7 @@
 package org.riverock.webmill.portal;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.LinkedList;
 
 import javax.servlet.http.Cookie;
 
@@ -12,11 +12,13 @@ import javax.servlet.http.Cookie;
  * $Id$
  */
 public final class CookieManager {
-    private List list = new LinkedList();
+    private List<Cookie> list = new ArrayList<Cookie>();
 
     protected void finalize() throws Throwable {
-        list.clear();
-        list = null;
+        if (list!=null) {
+            list.clear();
+            list = null;
+        }
         super.finalize();
     }
 
@@ -25,7 +27,7 @@ public final class CookieManager {
             list.add( cookie );
     }
 
-    List getCookieList() {
+    List<Cookie> getCookieList() {
         return list;
     }
 }

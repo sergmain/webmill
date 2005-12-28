@@ -147,12 +147,12 @@ public final class InternalAuthProvider implements AuthProviderInterface, Serial
                 "        a01.user_login=? " +
                 "union " +
                 "select  d02.id_firm, a02.user_login, a02.id_user, a02.id_auth_user " +
-                "from    WM_AUTH_USER a02, WM_LIST_R_GROUP_COMPANY_COMPANY d02, WM_PORTAL_LIST_SITE f02 " +
+                "from    WM_AUTH_USER a02, WM_LIST_R_GR_COMP_COMP d02, WM_PORTAL_LIST_SITE f02 " +
                 "where   a02.is_service = 1 and a02.id_service = d02.id_service and " +
                 "        d02.id_firm= f02.ID_FIRM and f02.ID_SITE=? and a02.user_login=? " +
                 "union " +
                 "select  e03.id_firm, a03.user_login, a03.id_user, a03.id_auth_user " +
-                "from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GROUP_COMPANY d03, WM_LIST_R_GROUP_COMPANY_COMPANY e03, WM_PORTAL_LIST_SITE f03 " +
+                "from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GR_COMPANY d03, WM_LIST_R_GR_COMP_COMP e03, WM_PORTAL_LIST_SITE f03 " +
                 "where   a03.is_road = 1 and a03.id_road = d03.id_road and " +
                 "        d03.id_service = e03.id_service and e03.id_firm = f03.ID_FIRM and f03.ID_SITE=? and " +
                 "        a03.user_login=? " +

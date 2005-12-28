@@ -108,7 +108,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         super.finalize();
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__) throws PortletException {
+    public PortletResultContent getInstance(DatabaseAdapter db__) {
         return null;
     }
 
@@ -171,7 +171,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     }
 
     public PortletResultContent getInstance(DatabaseAdapter db__, long id__) throws Exception {
-        return getInstance(db__, (Long)id__ );
+        return getInstance( id__ );
     }
 
     public PortletResultContent getInstance(Long id__)
@@ -310,7 +310,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     {
         sql2_ =
             "select ARTICLE_DATA " +
-            "from   WM_PORTLET_ARTICLE " +
+            "from   WM_PORTLET_ARTICLE_DATA " +
             "where  ID_SITE_CTX_ARTICLE = ? " +
             "order by ID_SITE_CTX_ARTICLE_DATA ASC";
 
@@ -372,7 +372,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         }
     }
 
-    public List getList( Long idSiteCtxLangCatalog, Long idContext) {
+    public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext) {
         if (log.isDebugEnabled())
             log.debug("Get list of ArticlePlain. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
 
@@ -380,7 +380,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
 
-        List v = new ArrayList();
+        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql3_ );

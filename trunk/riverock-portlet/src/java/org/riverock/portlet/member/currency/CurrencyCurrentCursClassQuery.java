@@ -39,6 +39,7 @@ import org.riverock.portlet.price.CurrencyManager;
 import org.riverock.portlet.price.CurrencyService;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 /**
  * User: Serge Maslyukov
@@ -91,7 +92,7 @@ public final class CurrencyCurrentCursClassQuery extends BaseClassQuery {
      *
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+    public List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
         throw new Exception( "Not implemented" );
     }
 

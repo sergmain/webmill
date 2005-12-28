@@ -2,8 +2,8 @@ package org.riverock.forum.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -60,7 +60,7 @@ public class HomeDAO {
             forumBean.setForumId( forumId );
             int topicSum = 0;
             int messageSum = 0;
-            List categoriesList = new LinkedList();
+            List<ForumCategoryBean> categoriesList = new ArrayList<ForumCategoryBean>();
             forumBean.setForumCategories( categoriesList );
             for (int i=0; i<categories.getWmForumCategoryCount(); i++) {
                 WmForumCategoryItemType item = categories.getWmForumCategory(i);
@@ -68,7 +68,7 @@ public class HomeDAO {
                 ForumCategoryBean categoryBean = new ForumCategoryBean();
                 categoryBean.setForumCategoryId( item.getForumCategoryId() );
                 categoryBean.setCategoryName( item.getForumCategoryName() );
-                categoryBean.setDeleted( item.getIsDeleted().booleanValue() );
+                categoryBean.setDeleted( item.getIsDeleted() );
                 categoriesList.add(categoryBean);
 
                 String sql = sqlStart;
@@ -78,19 +78,17 @@ public class HomeDAO {
                 sql += sqlOrder;
 
                 ps = adapter.prepareStatement( sql );
-                ps.setInt(1, item.getForumCategoryId().intValue() );
+                ps.setInt(1, item.getForumCategoryId() );
                 rs = ps.executeQuery();;
 
 
-                List forums = new LinkedList();
+                List<ForumConcreteBean> forums = new ArrayList<ForumConcreteBean>();
                 categoryBean.setForums( forums );
                 while (rs.next()) {
                     ForumConcreteBean forumConcrete = new ForumConcreteBean();
                     forums.add( forumConcrete );
 
-                    forumConcrete.setDeleted(
-                        RsetTools.getInt(rs, "IS_DELETED", new Integer(0)).intValue()==1
-                    );
+                    forumConcrete.setDeleted( RsetTools.getInt(rs, "IS_DELETED", 0)==1 );
                     forumConcrete.setF_id(rs.getInt("f_id"));
                     forumConcrete.setF_name(rs.getString("f_name"));
                     forumConcrete.setF_info(rs.getString("f_info"));

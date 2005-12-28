@@ -27,42 +27,42 @@ package org.riverock.webmill.port;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.sql.cache.SqlStatement;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.exception.PortalException;
 
 /**
  * $Id$
  */
 public final class PortalXsltList {
-    private final static Logger log = Logger.getLogger( PortalXsltList.class );
+    private final static Logger log = Logger.getLogger(PortalXsltList.class);
 
-    public HashMap hash = new HashMap(4);
+    public Map<String, PortalXslt> hash = new HashMap<String, PortalXslt>();
 
-    static
-    {
-        try
-        {
-            SqlStatement.registerRelateClass( new PortalXsltList().getClass(), new PortalXslt().getClass());
+    static {
+        try {
+            SqlStatement.registerRelateClass(PortalXsltList.class, PortalXslt.class);
         }
-        catch (Exception exception)
-        {
-            log.error("Exception in ", exception);
+        catch (Throwable exception) {
+            final String es = "Exception in ";
+            log.error(es, exception);
+            throw new SqlStatementRegisterException(es, exception);
         }
     }
 
-    public void reinit(){}
+    public void reinit() {
+    }
 
-    protected void finalize() throws Throwable
-    {
-        if (hash != null)
-        {
+    protected void finalize() throws Throwable {
+        if (hash != null) {
             hash.clear();
             hash = null;
         }
@@ -70,12 +70,11 @@ public final class PortalXsltList {
         super.finalize();
     }
 
-    public PortalXsltList()
-    {
+    public PortalXsltList() {
     }
 
     public PortalXslt getXslt(String lang) {
-        if (lang==null) {
+        if (lang == null) {
             return null;
         }
 
@@ -83,7 +82,7 @@ public final class PortalXsltList {
             log.debug("XsltList.size - " + hash.size());
         }
 
-        return (PortalXslt) hash.get( lang );
+        return (PortalXslt) hash.get(lang);
     }
 
     public static PortalXsltList getInstance(DatabaseAdapter db_, Long idSite) throws PortalException {
@@ -95,38 +94,34 @@ public final class PortalXsltList {
         PortalXsltList list = new PortalXsltList();
 
         String sql_ =
-                "select a.CUSTOM_LANGUAGE, d.ID_SITE_XSLT " +
-                "from   WM_PORTAL_SITE_LANGUAGE a, WM_PORTAL_XSLT d " +
-                "where  a.ID_SITE=? and " +
-                "       a.ID_SITE_SUPPORT_LANGUAGE=d.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       d.IS_CURRENT=1";
+            "select a.CUSTOM_LANGUAGE, d.ID_SITE_XSLT " +
+            "from   WM_PORTAL_SITE_LANGUAGE a, WM_PORTAL_XSLT d " +
+            "where  a.ID_SITE=? and " +
+            "       a.ID_SITE_SUPPORT_LANGUAGE=d.ID_SITE_SUPPORT_LANGUAGE and " +
+            "       d.IS_CURRENT=1";
 
         PreparedStatement ps = null;
         ResultSet rset = null;
 
-        HashMap tempHash = new HashMap();
-        try
-        {
+        Map<String, PortalXslt> tempHash = new HashMap<String, PortalXslt>();
+        try {
             ps = db_.prepareStatement(sql_);
 
             ps.setObject(1, idSite);
             rset = ps.executeQuery();
-            while (rset.next())
-            {
-                String lang = StringTools.getLocale(
-                    RsetTools.getString(rset, "CUSTOM_LANGUAGE") ).toString();
+            while (rset.next()) {
+                String lang = StringTools.getLocale(RsetTools.getString(rset, "CUSTOM_LANGUAGE")).toString();
                 Long id = RsetTools.getLong(rset, "ID_SITE_XSLT");
 
-                if (log.isDebugEnabled())
-                {
+                if (log.isDebugEnabled()) {
                     log.debug("XsltList. lang - " + lang);
                     log.debug("XsltList. id - " + id);
                 }
 
-                PortalXslt item = PortalXslt.getInstance( db_, id );
+                PortalXslt item = PortalXslt.getInstance(db_, id);
                 item.xsltLang = lang;
 
-                tempHash.put(lang, item );
+                tempHash.put(lang, item);
             }
         }
         catch (Throwable e) {
@@ -141,10 +136,10 @@ public final class PortalXsltList {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug( "XsltList. count of templates - " + tempHash.size() );
+            log.debug("XsltList. count of templates - " + tempHash.size());
         }
 
-        if(tempHash.size() == 0)
+        if (tempHash.size() == 0)
             return null;
 
         list.hash = tempHash;

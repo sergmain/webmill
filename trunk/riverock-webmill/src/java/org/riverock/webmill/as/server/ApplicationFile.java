@@ -22,90 +22,64 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.webmill.as.server;
 
-import org.riverock.generic.main.CacheFile;
-import org.riverock.webmill.schema.appl_server.Application;
-import org.riverock.webmill.schema.appl_server.ApplicationModuleType;
-import org.riverock.webmill.config.WebmillConfig;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.util.Hashtable;
+import org.riverock.generic.main.CacheFile;
+import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.webmill.schema.appl_server.Application;
+import org.riverock.webmill.schema.appl_server.ApplicationModuleType;
 
-public class ApplicationFile extends CacheFile
-{
-    private static Logger log = Logger.getLogger("org.riverock.webmill.as.server.ApplicationFile");
+/**
+ * $Id$
+ */
+public class ApplicationFile extends CacheFile {
+    private static Logger log = Logger.getLogger(ApplicationFile.class);
 
-//    public Application appl = null;
-    private Hashtable applHash = null; // PortletDescriptionType
+    private Map<String, ApplicationModuleType> applHash = null;
 
-    protected void finalize() throws Throwable
-    {
-        if (applHash!=null)
-        {
+    protected void finalize() throws Throwable {
+        if (applHash != null) {
             applHash.clear();
             applHash = null;
         }
         super.finalize();
     }
 
-    public int getApplicationCount()
-    {
-        if (applHash==null)
+    public int getApplicationCount() {
+        if (applHash == null)
             return 0;
 
         return applHash.size();
     }
 
-/*
-    private ApplicationModuleType getApplModule(Application ma, String nameModule_)
-    {
-        if (applHash==null)
-            return null;
-
-        for(int i=0; i<ma.getApplicationModuleCount(); i++)
-        {
-            ApplicationModuleType m = ma.getApplicationModule(i);
-            if (nameModule_.equals(m.getCodeResource()))
-                return m;
-        }
-        return null;
-    }
-*/
-
-    public ApplicationModuleType getApplModule(String nameModule_)
-    {
+    public ApplicationModuleType getApplModule(String nameModule_) {
         if (applHash == null)
             return null;
 
         if (log.isDebugEnabled())
-            log.debug("Get application '" + nameModule_ + "' from file '" + getFile().getName()+"'");
+            log.debug("Get application '" + nameModule_ + "' from file '" + getFile().getName() + "'");
 
-        if ( isUseCache() )
-            return (ApplicationModuleType)applHash.get(nameModule_);
-//            return getApplModule(appl, nameModule_);
+        if (isUseCache())
+            return applHash.get(nameModule_);
 
-        try
-        {
-            if (log.isDebugEnabled())
-            {
-                log.debug("#7.00.01 " + getFile() );
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("#7.00.01 " + getFile());
                 log.debug("#7.01.00 check was file modified");
             }
 
-            if ( isNeedReload() )
-            {
+            if (isNeedReload()) {
 
                 if (log.isInfoEnabled())
                     log.info("Redeploy member file " + getFile().getName());
@@ -117,12 +91,10 @@ public class ApplicationFile extends CacheFile
                 if (log.isDebugEnabled())
                     log.debug("#7.01.02 Unmarshal done");
 
-                return (ApplicationModuleType)applHash.get(nameModule_);
-//                return getApplModule(appl, nameModule_);
+                return applHash.get(nameModule_);
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Exception while get module " + nameModule_, e);
             return null;
         }
@@ -130,30 +102,26 @@ public class ApplicationFile extends CacheFile
         if (log.isDebugEnabled())
             log.debug("#7.02 file not changed. Get module from cache");
 
-        return (ApplicationModuleType)applHash.get(nameModule_);
+        return (ApplicationModuleType) applHash.get(nameModule_);
 //        return getApplModule(appl, nameModule_);
     }
 
     public ApplicationFile(File tempFile)
-        throws Exception
-    {
-        super( tempFile, 1000*10 );
+        throws Exception {
+        super(tempFile, 1000 * 10);
 
         if (log.isDebugEnabled())
             log.debug("Start unmarshalling file " + tempFile);
 
-        try
-        {
+        try {
             if (log.isDebugEnabled())
                 log.debug("Unmarshal new file: " + tempFile.getName());
 
             processFile();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Exception while unmarshalling member file + " + getFile(), e);
-            if (applHash!=null)
-            {
+            if (applHash != null) {
                 applHash.clear();
                 applHash = null;
             }
@@ -182,41 +150,34 @@ public class ApplicationFile extends CacheFile
 //> > Hope that helps, if not...we'll probably need to see some sample
 
     private static Object syncObj = new Object();
+
     private void processFile()
-        throws Exception
-    {
-        try
-        {
-            InputSource inSrc = new InputSource(new FileInputStream( getFile() ));
+        throws Exception {
+        try {
+            InputSource inSrc = new InputSource(new FileInputStream(getFile()));
             Application appl = (Application) Unmarshaller.unmarshal(Application.class, inSrc);
             appl.validate();
 
-            applHash = new Hashtable();
-            for (int i=0; i<appl.getApplicationModuleCount(); i++)
-            {
+            applHash = new HashMap<String, ApplicationModuleType>();
+            for (int i = 0; i < appl.getApplicationModuleCount(); i++) {
                 ApplicationModuleType desc = appl.getApplicationModule(i);
-                applHash.put( desc.getCodeResource(), desc);
+                applHash.put(desc.getCodeResource(), desc);
             }
 
-            if (log.isDebugEnabled())
-            {
-                synchronized(syncObj)
-                {
-                try
-                {
-                    FileWriter w = new FileWriter(WebmillConfig.getWebmillDebugDir() + "application.xml");
-                    Marshaller.marshal(appl, w);
-                }
-                catch (Exception e)
-                {
-                }
+            if (log.isDebugEnabled()) {
+                synchronized (syncObj) {
+                    try {
+                        FileWriter w = new FileWriter(WebmillConfig.getWebmillDebugDir() + "application.xml");
+                        Marshaller.marshal(appl, w);
+                    }
+                    catch (Exception e) {
+                    }
                 }
             }
         }
-        catch(Exception e)
-        {
+        catch (Exception e) {
             String errorString = "Error processinf member file";
-            log.error( errorString, e);
+            log.error(errorString, e);
             throw e;
         }
     }

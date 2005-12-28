@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: serg_main
- * Date: 21.11.2003
- * Time: 19:50:58
- * @author Serge Maslyukov
- * $Id$
- */
-
 package org.riverock.webmill.utils;
 
 import java.io.Writer;
@@ -49,16 +40,21 @@ import org.riverock.webmill.config.WebmillConfig;
 
 import org.apache.log4j.Logger;
 
+
 /**
- * 
+ * User: serg_main
+ * Date: 21.11.2003
+ * Time: 19:50:58
+ * @author Serge Maslyukov
  * $Id$
+ *
  */
 public final class ServletUtils {
     private final static Logger log = Logger.getLogger( ServletUtils.class );
 
     public static void include(
         final HttpServletRequest request, final HttpServletResponse response,
-        final Map parameters,
+        final Map<String, Object> parameters,
         final String path, final Writer out_
         )
         throws IOException, ServletException {
@@ -73,7 +69,7 @@ public final class ServletUtils {
 
     public static void include(
         final HttpServletRequest request, final HttpServletResponse response,
-        final Map parameters,
+        final Map<String, Object> parameters,
         final String path, final OutputStream out_
         )
         throws IOException, ServletException {

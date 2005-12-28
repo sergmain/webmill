@@ -44,11 +44,11 @@ import org.riverock.webmill.portal.PortalRequestInstance;
 public final class RenderRequestImpl extends WebmillPortletRequest implements RenderRequest {
 
     public RenderRequestImpl( 
-        final Map parameters, 
+        final Map<String, Object> parameters,
         final PortalRequestInstance portalRequestInstance, 
-        final Map renderParameters, 
+        final Map<String, Object> renderParameters,
         final ServletContext servletContext, 
-        final Map portletAttributes, 
+        final Map<String, Object> portletAttributes, 
         final String contextPath, 
         final String portalContextPath, 
         final PortletPreferences portletPreferences, 

@@ -64,15 +64,15 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     protected HttpServletRequest httpRequest = null;
     protected HttpServletResponse httpResponse = null;
     // parameters for current portlet
-    protected Map parameters = null;
+    protected Map<String, Object> parameters = null;
     protected PortletSession session = null;
     protected AuthSession auth = null;
     // Locale of this request
     protected Locale locale = null;
     protected Locale[] preferredLocale = null;
     protected Cookie[] cookies = null;
-    private Map renderParameters = null;
-    private Map portletAttributes = null;
+    private Map<String, Object> renderParameters = null;
+    private Map<String, Object> portletAttributes = null;
     private ServletContext servletContext = null;
 
     private PortletPreferences portletPreferences = null;
@@ -349,7 +349,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if ( parameters == null && renderParameters==null )
             return new Hashtable().elements();
 
-        List set = new LinkedList();
+        List<String> set = new ArrayList<String>();
         if (parameters!=null)
             set.addAll( parameters.keySet() );
 
@@ -424,7 +424,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if ( parameters==null && renderParameters==null )
             return null;
 
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         if ( parameters!=null )
             map.putAll( parameters );
 
@@ -558,8 +558,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     protected void prepareRequest(
-        final Map parameters, final PortalRequestInstance portalRequestInstance,
-        final Map renderParameters, final Map portletAttributes,
+        final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance,
+        final Map<String, Object> renderParameters, final Map<String, Object> portletAttributes,
         final String contextPath, final String portalContextPath,
         final PortalContext portalContext) {
 

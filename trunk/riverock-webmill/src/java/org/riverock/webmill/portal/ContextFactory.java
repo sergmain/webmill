@@ -93,7 +93,7 @@ public abstract class ContextFactory {
         private HttpServletRequest request = null;
         private PortalInfoImpl portalInfo = null;
         private PortletContainer portletContainer = null;
-        private Map httpRequestParameter = null;
+        private Map<String, Object> httpRequestParameter = null;
 
         public DatabaseAdapter getAdapter() {
             return adapter;
@@ -111,7 +111,7 @@ public abstract class ContextFactory {
             return portletContainer;
         }
 
-        public Map getHttpRequestParameter() {
+        public Map<String, Object> getHttpRequestParameter() {
             return httpRequestParameter;
         }
     }
@@ -228,14 +228,13 @@ public abstract class ContextFactory {
 
     protected String nameTemplate = null;
     protected Locale realLocale = null;
-//    protected PortalInfo portalInfo = null;
-    protected Map dynamicParameter = null;
-    protected List portletsParameter = new LinkedList();
+    protected Map<String, Object> dynamicParameter = null;
+    protected List<PortletParameters> portletsParameter = new LinkedList<PortletParameters>();
     protected String urlResource = null;
     protected DefaultCtx defaultCtx = null;
 
     protected abstract Long initPortalParameters( ContextFactoryParameter factoryParameter) throws PortalException;
-    protected abstract void prepareParameters( final HttpServletRequest httpRequest, final Map httpRequestParameter ) throws PortalException;
+    protected abstract void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter ) throws PortalException;
 
     public PortletParameters getParameters( final String namespace, final TemplateItemTypeTypeType type ) {
         if (type!=null && type.getType()==TemplateItemTypeTypeType.DYNAMIC_TYPE) {
@@ -346,7 +345,7 @@ public abstract class ContextFactory {
      * init context type and name of template,
      * if type of context is null, set it to 'index_page'
      */
-    public static ContextFactory initTypeContext( final DatabaseAdapter db, final HttpServletRequest request, final PortalInfoImpl portalInfo, final Map httpRequestParameter, final PortletContainer portletContainer )
+    public static ContextFactory initTypeContext( final DatabaseAdapter db, final HttpServletRequest request, final PortalInfoImpl portalInfo, final Map<String, Object> httpRequestParameter, final PortletContainer portletContainer )
         throws PortalException, PortalPersistenceException {
 
         ContextFactory contextFactoryTemp = null;

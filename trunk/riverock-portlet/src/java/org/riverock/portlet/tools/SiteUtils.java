@@ -49,30 +49,28 @@ public final class SiteUtils {
     private final static Logger log = Logger.getLogger( SiteUtils.class );
 
     public static String getTempDir() {
-        return System.getProperty("java.io.tmpdir");
+        return System.getProperty( "java.io.tmpdir" );
     }
 
-    public static String getGrantedSiteId(DatabaseAdapter adapter, String username)
-        throws PortletException
-    {
-        List list = getGrantedSiteIdList(adapter, username);
-        if (list.size()==0)
+    public static String getGrantedSiteId( DatabaseAdapter adapter, String username )
+        throws PortletException {
+        List<Long> list = getGrantedSiteIdList( adapter, username );
+        if( list.size() == 0 )
             return "NULL";
 
-        Iterator it = list.iterator();
+        Iterator<Long> it = list.iterator();
         String r = "";
-        while (it.hasNext()) {
-            if (r.length()!=0) {
+        while( it.hasNext() ) {
+            if( r.length() != 0 ) {
                 r += ", ";
             }
-            r += it.next().toString();
+            r += it.next();
         }
         return r;
     }
 
-    public static List getGrantedSiteIdList(DatabaseAdapter adapter, String serverName)
-        throws PortletException
-    {
+    public static List<Long> getGrantedSiteIdList( DatabaseAdapter adapter, String serverName )
+        throws PortletException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -81,29 +79,27 @@ public final class SiteUtils {
                 "from   WM_PORTAL_VIRTUAL_HOST " +
                 "where  lower(NAME_VIRTUAL_HOST)=lower(?)";
 
-            ps = adapter.prepareStatement(sql_);
-            ps.setString(1, serverName);
+            ps = adapter.prepareStatement( sql_ );
+            ps.setString( 1, serverName );
 
             rs = ps.executeQuery();
 
-            List list = new ArrayList();
-            while(rs.next())
-            {
-                Long id = RsetTools.getLong(rs, "ID_SITE" );
-                if (id==null)
+            List<Long> list = new ArrayList<Long>();
+            while( rs.next() ) {
+                Long id = RsetTools.getLong( rs, "ID_SITE" );
+                if( id == null )
                     continue;
                 list.add( id );
             }
             return list;
         }
-        catch(Exception e)
-        {
+        catch( Exception e ) {
             final String es = "Exception get siteID";
-            log.error(es, e);
+            log.error( es, e );
             throw new PortletException( es, e );
         }
         finally {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }

@@ -78,7 +78,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         }
     }
 
-    private transient static Map portatInfoMap = new HashMap();
+    private transient static Map<Long, PortalInfoImpl> portatInfoMap = new HashMap<Long, PortalInfoImpl>();
 
     private transient WmPortalListSiteItemType sites = new WmPortalListSiteItemType();
     private transient WmPortalSiteLanguageListType supportLanguage = null;
@@ -88,7 +88,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private transient PortalXsltList xsltList = null;
     private transient SiteTemplateList templates = null;
 
-    private transient Map supportLanguageMap = null;
+    private transient Map<String, Long> supportLanguageMap = null;
     private transient Map<String, MenuLanguageInterface> languageMenuMap = null;
 
     private transient Long siteId = null;
@@ -122,7 +122,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             return null;
 
         if (supportLanguageMap == null) {
-            supportLanguageMap = new HashMap(getSupportLanguage().getWmPortalSiteLanguageCount());
+            supportLanguageMap = new HashMap<String, Long>(getSupportLanguage().getWmPortalSiteLanguageCount());
             for (int i = 0; i < getSupportLanguage().getWmPortalSiteLanguageCount(); i++) {
                 WmPortalSiteLanguageItemType item = getSupportLanguage().getWmPortalSiteLanguage(i);
                 supportLanguageMap.put(item.getCustomLanguage(), item.getIdSiteSupportLanguage());

@@ -60,7 +60,7 @@ public final class CommonDAO {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        List forums = new LinkedList();
+        List<ForumSmallBean> forums = new LinkedList<ForumSmallBean>();
         try {
             ps = adapter.prepareStatement(
                 "select a.F_ID, a.F_NAME " +
@@ -92,7 +92,7 @@ public final class CommonDAO {
             ps = adapter.prepareStatement(
                 "select a.T_ID from WM_FORUM_TOPIC a where T_F_ID=?"
             );
-            ps.setInt(1, forumConcreteId.intValue());
+            ps.setInt(1, forumConcreteId);
             rs = ps.executeQuery();
 
             while (rs.next()) {

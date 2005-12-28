@@ -76,10 +76,10 @@ public final class PortletTools {
     }
 
     private static final boolean saveUploadedFilesToDisk = false;
-    public static Map getParameters( final HttpServletRequest request )
+    public static Map<String, Object> getParameters( final HttpServletRequest request )
         throws IOException, UploadException, PortletException, MultipartRequestException {
 
-        Map p = new HashMap();
+        Map<String, Object> p = new HashMap<String, Object>();
         String contentType = request.getContentType();
 
         if (contentType != null &&
@@ -124,18 +124,18 @@ public final class PortletTools {
         else {
             Enumeration e = request.getParameterNames();
             for (; e.hasMoreElements() ;) {
-                Object obj = e.nextElement();
+                String key = (String)e.nextElement();
 
-                String value[] = request.getParameterValues( (String)obj );
+                String value[] = request.getParameterValues( key );
                 if (value!=null) {
                     if (value.length==1)
-                        p.put(obj, value[0]);
+                        p.put(key, value[0]);
                     else {
-                        List ee = new ArrayList();
+                        List<String> ee = new ArrayList<String>();
                         for (final String newVar : value)
                             ee.add(newVar);
 
-                        p.put(obj, ee);
+                        p.put(key, ee);
                     }
                 }
             }

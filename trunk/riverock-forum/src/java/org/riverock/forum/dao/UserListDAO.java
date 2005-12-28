@@ -2,8 +2,8 @@ package org.riverock.forum.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -51,7 +51,7 @@ public class UserListDAO {
             userListBean.setStart(start);
             userListBean.setRange(range);
             userListBean.setCount(count);
-            List userList = new LinkedList();
+            List<User> userList = new ArrayList<User>();
             if (count > 0) {
                 if (start > count) {
                     return null;

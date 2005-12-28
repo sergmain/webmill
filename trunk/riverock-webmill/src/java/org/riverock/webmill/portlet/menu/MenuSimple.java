@@ -42,6 +42,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.menu.MenuInterface;
 import org.riverock.interfaces.portlet.menu.MenuItemInterface;
 import org.riverock.webmill.config.WebmillConfig;
@@ -546,7 +547,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 log.debug("Size of catalogItems - "+item.getCatalogItems().size()    );
             }
 
-            ArrayList vv = new ArrayList(item.getCatalogItems().size());
+            ArrayList<MenuModuleType> vv = new ArrayList<MenuModuleType>(item.getCatalogItems().size());
             boolean isCurrentThread = false;
             for (int j = 0; j < item.getCatalogItems().size(); j++){
                 MenuItemInterface ci = (MenuItemInterface) item.getCatalogItems().get(j);
@@ -649,7 +650,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         return s;
     }
 
-    public List getList(Long idSiteCtxLangCatalog, Long idContext){
+    public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext){
         return null;
     }
 

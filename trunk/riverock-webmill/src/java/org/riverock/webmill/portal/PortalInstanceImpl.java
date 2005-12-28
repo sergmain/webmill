@@ -451,10 +451,10 @@ public class PortalInstanceImpl implements PortalInstance  {
             log.debug( "CookieManager: " + cookieManager );
         }
         if ( cookieManager!=null ) {
-            List cookieList = cookieManager.getCookieList();
-            Iterator iterator = cookieList.iterator();
+            List<Cookie> cookieList = cookieManager.getCookieList();
+            Iterator<Cookie> iterator = cookieList.iterator();
             while( iterator.hasNext() ) {
-                Cookie cookie = (Cookie)iterator.next();
+                Cookie cookie = iterator.next();
                 if (log.isDebugEnabled() ) {
                     log.debug( cookieToString( cookie) );
                 }

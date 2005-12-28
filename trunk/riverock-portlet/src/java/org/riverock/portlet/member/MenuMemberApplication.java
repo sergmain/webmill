@@ -31,7 +31,6 @@ import java.util.List;
 
 import javax.portlet.PortletException;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -41,14 +40,12 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sso.a3.AuthInfo;
 
 /**
- *
  * Project millengine
  * Copyright Serg Maslyukov, 1999-2002
- *
+ * <p/>
  * $Id$
  */
-public class MenuMemberApplication
-{
+public class MenuMemberApplication {
     private static Log cat = LogFactory.getLog( MenuMemberApplication.class );
 
     /**
@@ -59,21 +56,20 @@ public class MenuMemberApplication
     public String applicationCode = null;
 
     /**
-     значение для порядка вывода приложений
+     * значение для порядка вывода приложений
      */
     public int order = 0;
 
     public int applRecordNumber = 0;
 
-    public List subMenu = new ArrayList();
+    public List<MenuMemberModule> subMenu = new ArrayList<MenuMemberModule>();
     public Long applicationID = null;
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         applicationName = null;
         applicationCode = null;
 
-        if (subMenu != null) {
+        if( subMenu != null ) {
             subMenu.clear();
             subMenu = null;
         }
@@ -81,105 +77,103 @@ public class MenuMemberApplication
         super.finalize();
     }
 
-    public boolean isXml(){ return false; }
-    public boolean isHtml(){ return false; }
-
-    public MenuMemberApplication()
-    {
+    public boolean isXml() {
+        return false;
     }
 
-    public List getModuleList()
-    {
+    public boolean isHtml() {
+        return false;
+    }
+
+    public MenuMemberApplication() {
+    }
+
+    public List getModuleList() {
         return subMenu;
     }
 
     private final static String sql_ =
-            "select distinct z.CODE_ARM,a.CODE_OBJECT_ARM,  a.NAME_OBJECT_ARM, "+
-            "a.url, a.order_field, a.is_new  " +
-            "from   WM_AUTH_MODULEa," +
-            "(" +
-            "select " +
-            "        a.user_login, " +
-            "        f.code_arm, " +
-            "        d.id_object_arm, " +
-            "	 e.id_arm, " +
-            "	 e.is_new  " +
-            "from    WM_AUTH_USER a, " +
-            "        WM_AUTH_RELATE_ACCGROUP b, " +
-            "        WM_AUTH_RELATE_RIGHT_ARM d, " +
-            "        WM_AUTH_MODULE e, " +
-            "        WM_AUTH_APPLICATION f " +
-            "where   a.id_auth_user=b.id_auth_user and " +
-            "        b.id_access_group = d.id_access_group and " +
-            "        d.id_object_arm = e.id_object_arm and " +
-            "        e.id_arm = f.id_arm " +
-            "union " +
-            "select  a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm, d1.is_new   " +
-            "from    WM_AUTH_USER a1, WM_AUTH_MODULE d1,  WM_AUTH_APPLICATION f1 " +
-            "where   a1.is_root=1 and d1.id_arm = f1.id_arm " +
-            ") z " +
-            "where  z.user_login=? and " +
-            "       a.id_object_arm = z.id_object_arm and " +
-            "       z.id_arm=? and a.url is not null " +
-            "order by ORDER_FIELD ASC";
+        "select distinct z.CODE_ARM,a.CODE_OBJECT_ARM,  a.NAME_OBJECT_ARM, " +
+        "a.url, a.order_field, a.is_new  " +
+        "from   WM_AUTH_MODULEa," +
+        "(" +
+        "select " +
+        "        a.user_login, " +
+        "        f.code_arm, " +
+        "        d.id_object_arm, " +
+        "	 e.id_arm, " +
+        "	 e.is_new  " +
+        "from    WM_AUTH_USER a, " +
+        "        WM_AUTH_RELATE_ACCGROUP b, " +
+        "        WM_AUTH_RELATE_RIGHT_ARM d, " +
+        "        WM_AUTH_MODULE e, " +
+        "        WM_AUTH_APPLICATION f " +
+        "where   a.id_auth_user=b.id_auth_user and " +
+        "        b.id_access_group = d.id_access_group and " +
+        "        d.id_object_arm = e.id_object_arm and " +
+        "        e.id_arm = f.id_arm " +
+        "union " +
+        "select  a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm, d1.is_new   " +
+        "from    WM_AUTH_USER a1, WM_AUTH_MODULE d1,  WM_AUTH_APPLICATION f1 " +
+        "where   a1.is_root=1 and d1.id_arm = f1.id_arm " +
+        ") z " +
+        "where  z.user_login=? and " +
+        "       a.id_object_arm = z.id_object_arm and " +
+        "       z.id_arm=? and a.url is not null " +
+        "order by ORDER_FIELD ASC";
 
-    public MenuMemberApplication(AuthInfo authInfo, ResultSet rs)
-            throws PortletException
-    {
-        this(authInfo, rs, 0);
+    public MenuMemberApplication( AuthInfo authInfo, ResultSet rs )
+        throws PortletException {
+        this( authInfo, rs, 0 );
     }
 
-    public MenuMemberApplication(AuthInfo authInfo, ResultSet rs, int recordNumber_)
-            throws PortletException
-    {
-        if (authInfo == null)
+    public MenuMemberApplication( AuthInfo authInfo, ResultSet rs, int recordNumber_ )
+        throws PortletException {
+        if( authInfo == null )
             return;
 
         PreparedStatement ps = null;
         ResultSet rset = null;
         DatabaseAdapter db_ = null;
-        List vv = new ArrayList();
+        List<MenuMemberModule> vv = new ArrayList<MenuMemberModule>();
 
-        try
-        {
-            applicationName = RsetTools.getString(rs, "NAME_ARM" );
-            applicationCode = RsetTools.getString(rs, "CODE_ARM" );
+        try {
+            applicationName = RsetTools.getString( rs, "NAME_ARM" );
+            applicationCode = RsetTools.getString( rs, "CODE_ARM" );
 
-            order = RsetTools.getInt(rs, "ORDER_FIELD" , 0);
+            order = RsetTools.getInt( rs, "ORDER_FIELD", 0 );
 
-            applicationID = RsetTools.getLong(rs, "ID_ARM");
+            applicationID = RsetTools.getLong( rs, "ID_ARM" );
             applRecordNumber = recordNumber_;
 
             db_ = DatabaseAdapter.getInstance();
 
-            ps = db_.prepareStatement(sql_);
+            ps = db_.prepareStatement( sql_ );
 
-            ps.setString(1, authInfo.getUserLogin());
-            ps.setObject(2, applicationID);
+            ps.setString( 1, authInfo.getUserLogin() );
+            ps.setObject( 2, applicationID );
 
             rset = ps.executeQuery();
             int moduleRecordNumber = 0;
-            while (rset.next())
-            {
-                MenuMemberModule mod = new MenuMemberModule(rset, applicationCode);
+            while( rset.next() ) {
+                MenuMemberModule mod = new MenuMemberModule( rset, applicationCode );
                 mod.modRecordNumber = moduleRecordNumber++;
                 mod.applRecordNumber = applRecordNumber;
                 vv.add( mod );
             }
         }
-        catch (Exception e1)
-        {
-            cat.error("Error get member application", e1);
-            throw new PortletException(e1.toString());
+        catch( Exception e1 ) {
+            cat.error( "Error get member application", e1 );
+            throw new PortletException( e1.toString() );
         }
-        finally
-        {
-            DatabaseManager.close(db_, rset, ps);
+        finally {
+            DatabaseManager.close( db_, rset, ps );
             rset = null;
             ps = null;
+            db_ = null;
         }
 
-        if (vv.size() > 0)
+        if( vv.size() > 0 )
             subMenu = vv;
     }
 }
