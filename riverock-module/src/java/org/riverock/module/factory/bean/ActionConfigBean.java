@@ -13,15 +13,15 @@ import java.util.HashMap;
  */
 public class ActionConfigBean {
     private String defaultAction = null;
-    private List actions = new ArrayList();
-    private List roles = new ArrayList();
-    private Map forwards = new HashMap();
+    private List<ActionBean> actions = new ArrayList<ActionBean>();
+    private List<String> roles = new ArrayList<String>();
+    private Map<String, ForwardBean> forwards = new HashMap<String, ForwardBean>();
 
     public void addForwards( ForwardBean forwardBean ) {
         forwards.put( forwardBean.getName(), forwardBean );
     }
 
-    public Map getForwards() {
+    public Map<String, ForwardBean> getForwards() {
         return forwards;
     }
 
@@ -33,11 +33,11 @@ public class ActionConfigBean {
         this.defaultAction = defaultAction;
     }
 
-    public List getActions() {
+    public List<ActionBean> getActions() {
         return actions;
     }
 
-    public void setActions(List actions) {
+    public void setActions(List<ActionBean> actions) {
         this.actions = actions;
     }
 
@@ -45,7 +45,7 @@ public class ActionConfigBean {
         this.actions.add(action);
     }
 
-    public List getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
