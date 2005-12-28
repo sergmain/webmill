@@ -60,7 +60,6 @@
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-digester.lib}"/>
-<!--        <pathelement location="${lib.dir}/${commons-collections.lib}"/>-->
         <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
 
         <pathelement location="${lib.dir}/${castor.lib}"/>
@@ -516,6 +515,7 @@ cd ..\..
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
