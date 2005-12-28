@@ -30,7 +30,7 @@ public class ActionConfig {
 
     private ActionConfigBean configBean = null;
     private ActionConfigurationBean defaultAction = null;
-    private Map actions = new HashMap();
+    private Map<String, ActionConfigurationBean> actions = new HashMap<String, ActionConfigurationBean>();
 
     public void destroy() {
         configBean = null;
@@ -178,5 +178,6 @@ public class ActionConfig {
         c = digisterConfigFile( file );
 
         boolean isFound = c!=null;
+        System.out.println("isFound = " + isFound);
     }
 }

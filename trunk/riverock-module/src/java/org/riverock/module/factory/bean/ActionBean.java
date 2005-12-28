@@ -16,15 +16,15 @@ public class ActionBean {
     private String type;
     private String path;
     private String defaultForward;
-    private Map forwards = new HashMap();
-    private List roles = new ArrayList();
+    private Map<String, ForwardBean> forwards = new HashMap<String, ForwardBean>();
+    private List<String> roles = new ArrayList<String>();
     private boolean isRedirect = false;
 
     public void addForwards( ForwardBean forwardBean ) {
         forwards.put( forwardBean.getName(), forwardBean );
     }
 
-    public Map getForwards() {
+    public Map<String, ForwardBean> getForwards() {
         return forwards;
     }
 
@@ -60,7 +60,7 @@ public class ActionBean {
         this.defaultForward = defaultForward;
     }
 
-    public List getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
