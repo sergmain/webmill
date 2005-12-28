@@ -22,13 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Построение иерархии категорий товаров начиная от текущей и до корня вверх
- *
- * $Id$
- *
- */
 package org.riverock.portlet.price;
 
 import java.sql.PreparedStatement;
@@ -51,6 +44,12 @@ import org.riverock.portlet.schema.portlet.shop.PositionItemType;
 import org.riverock.portlet.schema.portlet.shop.PricePositionType;
 import org.riverock.webmill.container.ContainerConstants;
 
+/**
+ * Построение иерархии категорий товаров начиная от текущей и до корня вверх
+ *
+ * $Id$
+ *
+ */
 public class PriceListPosition {
     private static Log log = LogFactory.getLog( PriceListPosition.class );
 
@@ -134,7 +133,7 @@ public class PriceListPosition {
         if (position.getPositionItemCount() == 0)
             return null;
 
-        List v = new ArrayList( position.getPositionItemCount() );
+        List<PositionItemType> v = new ArrayList<PositionItemType>( position.getPositionItemCount() );
 
         if (log.isDebugEnabled())
             log.debug("Count of position  - " + position.getPositionItemCount());
@@ -167,8 +166,6 @@ public class PriceListPosition {
         PortletURL portletURL = renderResponse.createRenderURL();
 
         portletURL.setParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM, ShopPortlet.CTX_TYPE_SHOP);
-//        portletURL.setParameter(ContainerConstants.NAME_TEMPLATE_CONTEXT_PARAM, shopParam_.nameTemplate);
-
         portletURL.setParameter(ShopPortlet.NAME_ID_GROUP_SHOP, "0");
         portletURL.setParameters(shopParam_.currencyURL);
         portletURL.setParameter(ShopPortlet.NAME_ID_SHOP_PARAM, shopParam_.id_shop.toString());

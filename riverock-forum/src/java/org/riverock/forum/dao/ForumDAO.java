@@ -38,7 +38,7 @@ public class ForumDAO {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            if (!CommonUtils.checkForumConcreteId( adapter, forumId, new Integer( f_id ) )){
+            if (!CommonUtils.checkForumConcreteId( adapter, forumId, f_id )){
                 return null;
             }
 
@@ -80,7 +80,6 @@ public class ForumDAO {
                 condition += " and T_NAME like ? ";
             }
 
-            Long fId = new Long( f_id );
             final String keywordSearch = "'%"+keyword+"%'";
             Long countRecord = DatabaseManager.getLongValue(
                 adapter,
@@ -88,8 +87,8 @@ public class ForumDAO {
                 "FROM   WM_FORUM_TOPIC  " +
                 "WHERE  " + condition,
                 (!StringTools.isEmpty(keyword))
-                ?new Object[]{fId, keywordSearch}
-                :new Object[]{fId}
+                ?new Object[]{f_id, keywordSearch}
+                :new Object[]{f_id}
             );
 
             String sql1 =
@@ -118,7 +117,7 @@ public class ForumDAO {
             }
             forumConcreteBean.setCountPages( countPages );
 
-            List topicList = new ArrayList(topicsPerPage+3);
+            List<Topic> topicList = new ArrayList<Topic>(topicsPerPage+3);
 
             int j = 0;
             boolean isNext = true;

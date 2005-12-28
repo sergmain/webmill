@@ -25,12 +25,11 @@
 
 package org.riverock.portlet.member;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,65 +37,57 @@ import org.apache.commons.logging.LogFactory;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 
-
-
 /**
  * Author: mill
  * Date: Jan 10, 2003
  * Time: 2:20:21 PM
- *
+ * <p/>
  * $Id$
  */
-public class ArticlePlainTemplateClassQuery extends BaseClassQuery
-{
-    private static Log log = LogFactory.getLog(ArticlePlainTemplateClassQuery.class);
+public class ArticlePlainTemplateClassQuery extends BaseClassQuery {
+    private static Log log = LogFactory.getLog( ArticlePlainTemplateClassQuery.class );
 
-    public ArticlePlainTemplateClassQuery()
-    {
+    public ArticlePlainTemplateClassQuery() {
     }
 
     /**
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception
-    {
-        String value = bundle.getString("yesno.yes");
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+        String value = bundle.getString( "yesno.yes" );
 
-        if (log.isDebugEnabled())
+        if( log.isDebugEnabled() )
             log.debug( "ArticlePlainTemplateClassQuery value - " + value );
 
         return value;
     }
 
     /**
-     *  Возвращает список возможных значений для построения <select> элемента
+     * Возвращает список возможных значений для построения <select> элемента
+     *
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception
-    {
-        if (log.isDebugEnabled())
-            log.debug( "ArticlePlainTemplateClassQuery get select");
+    public List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
+        throws Exception {
+        if( log.isDebugEnabled() )
+            log.debug( "ArticlePlainTemplateClassQuery get select" );
 
-        List v = new LinkedList();
-        {
-            ClassQueryItem item = new ClassQueryItemImpl( 1, bundle.getString("yesno.yes") );
+        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
+        ClassQueryItem item = new ClassQueryItemImpl( 1, bundle.getString( "yesno.yes" ) );
 
-            item.setSelected(true);
+        item.setSelected( true );
 
-            v.add( item );
+        v.add( item );
 
-            if (log.isDebugEnabled())
-                log.debug( "ArticlePlainTemplateClassQuery get select. size of vector - "+v.size());
+        if( log.isDebugEnabled() )
+            log.debug( "ArticlePlainTemplateClassQuery get select. size of vector - " + v.size() );
 
-            return v;
-        }
+        return v;
     }
 
     MemberQueryParameter param = null;
 
-    public void setQueryParameter(MemberQueryParameter parameter) throws Exception
-    {
+    public void setQueryParameter( MemberQueryParameter parameter ) throws Exception {
         this.param = parameter;
     }
 }

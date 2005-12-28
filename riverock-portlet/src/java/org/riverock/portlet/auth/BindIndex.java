@@ -152,12 +152,12 @@ public final class BindIndex extends HttpServlet
                         "                    and a01.user_login = ? " +
                         "            union " +
                         "            select  d02.id_firm " +
-                        "            from    WM_AUTH_USER a02, WM_LIST_R_GROUP_COMPANY_COMPANY d02 " +
+                        "            from    WM_AUTH_USER a02, WM_LIST_R_GR_COMP_COMP d02 " +
                         "            where   a02.is_service = 1 and a02.id_service = d02.id_service " +
                         "                    and a02.user_login = ? " +
                         "            union " +
                         "            select  e03.id_firm " +
-                        "            from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GROUP_COMPANY d03, WM_LIST_R_GROUP_COMPANY_COMPANY e03 " +
+                        "            from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GR_COMPANY d03, WM_LIST_R_GR_COMP_COMP e03 " +
                         "            where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service " +
                         "                    and a03.user_login = ? " +
                         "            union " +

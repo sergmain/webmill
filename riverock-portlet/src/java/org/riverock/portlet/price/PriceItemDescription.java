@@ -40,33 +40,31 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.common.tools.RsetTools;
+import org.riverock.sql.cache.SqlStatement;
 
 
+public class PriceItemDescription {
+    private static Log log = LogFactory.getLog( PriceItemDescription.class );
 
-public class PriceItemDescription
-{
-    private static Log log = LogFactory.getLog(PriceItemDescription.class);
+    private static Map<Long, PriceItemDescription> descMap = new HashMap<Long, PriceItemDescription>();
+    private Map<Long, String> description = new HashMap<Long, String>();
 
-    private static Map descMap = new HashMap();
-    private Map description = new HashMap();
-
-    public String getItemDescription(long id) {
-        return (String)description.get( id );
+    public String getItemDescription( long id ) {
+        return ( String ) description.get( id );
     }
 
     public void reinit() {
-        synchronized(syncObject){
+        synchronized( syncObject ) {
             descMap.clear();
         }
         lastReadData = 0;
     }
 
-    public void terminate(java.lang.Long id_)
-    {
-        synchronized(syncObject){
+    public void terminate( java.lang.Long id_ ) {
+        synchronized( syncObject ) {
             descMap.clear();
         }
         lastReadData = 0;
@@ -78,25 +76,21 @@ public class PriceItemDescription
     private static Object syncObject = new Object();
 
     public static PriceItemDescription getInstance( Long siteId )
-        throws PriceException
-    {
+        throws PriceException {
         PriceItemDescription desc = null;
-        if (siteId!=null)
-            desc = (PriceItemDescription)descMap.get(siteId);
+        if( siteId != null )
+            desc = ( PriceItemDescription ) descMap.get( siteId );
 
 
-        synchronized(syncObject)
-        {
-            if (((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD)
-                || (desc == null))
-            {
-                if (log.isDebugEnabled())log.debug("#15.01.03 reinit cached value ");
+        synchronized( syncObject ) {
+            if( ( ( System.currentTimeMillis() - lastReadData ) > LENGTH_TIME_PERIOD )
+                || ( desc == null ) ) {
+                if( log.isDebugEnabled() ) log.debug( "#15.01.03 reinit cached value " );
 
                 desc = new PriceItemDescription( siteId );
-                descMap.put(siteId, desc);
+                descMap.put( siteId, desc );
             }
-            else
-                if (log.isDebugEnabled()) log.debug("Get from cache");
+            else if( log.isDebugEnabled() ) log.debug( "Get from cache" );
 
         }
         lastReadData = System.currentTimeMillis();
@@ -104,32 +98,26 @@ public class PriceItemDescription
     }
 
     static String sql_ = null;
-    static
-    {
+    static {
         sql_ =
             "select a.ID_ITEM, a.TEXT " +
-            "from   WM_PRICE_ITEM_DESCRIPTION a, WM_PRICE_LIST b, WM_PRICE_SHOP_LIST c "+
+            "from   WM_PRICE_ITEM_DESCRIPTION a, WM_PRICE_LIST b, WM_PRICE_SHOP_LIST c " +
             "where  a.ID_ITEM=b.ID_ITEM and b.ID_SHOP=c.ID_SHOP and c.ID_SITE=?";
 
-        try
-        {
-            org.riverock.sql.cache.SqlStatement.registerSql( sql_, new PriceItemDescription().getClass() );
+        try {
+            SqlStatement.registerSql( sql_, PriceItemDescription.class );
         }
-        catch(Exception e)
-        {
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-        }
-        catch(Error e)
-        {
-            log.error("Error in registerSql, sql\n"+sql_, e);
+        catch( Throwable e ) {
+            log.error( "Exception in registerSql, sql\n" + sql_, e );
+            //Todo throw RuntimeException
         }
     }
 
-    public PriceItemDescription(){}
+    public PriceItemDescription() {
+    }
 
     private PriceItemDescription( Long idSite )
-        throws PriceException
-    {
+        throws PriceException {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -138,20 +126,20 @@ public class PriceItemDescription
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql_ );
 
-            RsetTools.setLong(ps, 1, idSite);
+            RsetTools.setLong( ps, 1, idSite );
 
             rs = ps.executeQuery();
-            while (rs.next()){
-                description.put(RsetTools.getLong(rs, "ID_ITEM"),RsetTools.getString(rs, "TEXT"));
+            while( rs.next() ) {
+                description.put( RsetTools.getLong( rs, "ID_ITEM" ), RsetTools.getString( rs, "TEXT" ) );
             }
         }
-        catch(Throwable e){
+        catch( Throwable e ) {
             String es = "Exception in PriceItemDescription()";
-            log.error(es, e);
-            throw new PriceException(es, e);
+            log.error( es, e );
+            throw new PriceException( es, e );
         }
-        finally{
-            DatabaseManager.close(db_, rs, ps);
+        finally {
+            DatabaseManager.close( db_, rs, ps );
             rs = null;
             ps = null;
             db_ = null;

@@ -148,7 +148,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     }
 
     public PortletResultContent getInstance(DatabaseAdapter db__, long id__) throws Exception {
-        return getInstance(db__, id__ );
+        return getInstance( id__ );
     }
 
     public PortletResultContent getInstance( Long id__ )
@@ -266,7 +266,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     {
         sql2_ =
             "select ARTICLE_DATA " +
-            "from   WM_PORTLET_ARTICLE " +
+            "from   WM_PORTLET_ARTICLE_DATA " +
             "where  ID_SITE_CTX_ARTICLE = ? " +
             "order by ID_SITE_CTX_ARTICLE_DATA ASC";
 
@@ -338,7 +338,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    public List getList( final Long idSiteCtxLangCatalog, final Long idContext) {
+    public List<ClassQueryItem> getList( final Long idSiteCtxLangCatalog, final Long idContext) {
         if (log.isDebugEnabled())
             log.debug("Get list of ArticleXml. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
 
@@ -346,7 +346,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
 
-        List v = new ArrayList();
+        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try
         {
             db_ = DatabaseAdapter.getInstance();

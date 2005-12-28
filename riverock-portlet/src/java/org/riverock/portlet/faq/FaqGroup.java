@@ -38,6 +38,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.cache.impl.CacheException;
@@ -86,7 +87,7 @@ public class FaqGroup implements PortletGetList {
     public String faqGroupName = "";
     public Long id = null;
     public String faqCode = "";
-    public List v = new ArrayList(); // List of FaqItem
+    public List<FaqItem> v = new ArrayList<FaqItem>(); 
 
     protected void finalize() throws Throwable {
         faqGroupName = null;
@@ -202,7 +203,7 @@ public class FaqGroup implements PortletGetList {
         }
     }
 
-    public List getList(Long idSiteCtxLangCatalog, Long idContext) {
+    public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext) {
         return null;
     }
 }

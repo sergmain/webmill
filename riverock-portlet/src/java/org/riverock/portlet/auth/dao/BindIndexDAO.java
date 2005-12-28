@@ -106,12 +106,12 @@ public class BindIndexDAO {
                         "                    and a01.user_login = ? " +
                         "            union " +
                         "            select  d02.id_firm " +
-                        "            from    WM_AUTH_USER a02, WM_LIST_R_GROUP_COMPANY_COMPANY d02 " +
+                        "            from    WM_AUTH_USER a02, WM_LIST_R_GR_COMP_COMP d02 " +
                         "            where   a02.is_service = 1 and a02.id_service = d02.id_service " +
                         "                    and a02.user_login = ? " +
                         "            union " +
                         "            select  e03.id_firm " +
-                        "            from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GROUP_COMPANY d03, WM_LIST_R_GROUP_COMPANY_COMPANY e03 " +
+                        "            from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GR_COMPANY d03, WM_LIST_R_GR_COMP_COMP e03 " +
                         "            where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service " +
                         "                    and a03.user_login = ? " +
                         "            union " +
@@ -131,7 +131,7 @@ public class BindIndexDAO {
             }
             rs = ps.executeQuery();
 
-            List users = new ArrayList();
+            List<BindUserBean> users = new ArrayList<BindUserBean>();
             while( rs.next() ) {
 
                 BindUserBean userBean = new BindUserBean();
@@ -141,9 +141,9 @@ public class BindIndexDAO {
                 userBean.setCompanyName( RsetTools.getLong( rs, "ID_FIRM" ) + ", " +
                     RsetTools.getString( rs, "short_name", "&lt;not defined&gt;" ) );
                 userBean.setUserLogin( RsetTools.getString( rs, "user_login", "&nbsp;" ) );
-                userBean.setCompany( RsetTools.getInt( rs, "is_use_current_firm", new Integer( 0 ) ).intValue() == 1 );
-                userBean.setGroupCompany( RsetTools.getInt( rs, "is_service", new Integer( 0 ) ).intValue() == 1 );
-                userBean.setHolding( RsetTools.getInt( rs, "is_road", new Integer( 0 ) ).intValue() == 1 );
+                userBean.setCompany( RsetTools.getInt( rs, "is_use_current_firm", 0 ) == 1 );
+                userBean.setGroupCompany( RsetTools.getInt( rs, "is_service", 0 ) == 1 );
+                userBean.setHolding( RsetTools.getInt( rs, "is_road", 0 ) == 1 );
                 userBean.setCompanyLevel( moduleActionRequest.getResourceBundle().getString( userBean.isCompany() ? "yesno.yes" : "yesno.no" ) );
                 userBean.setGroupCompanyLevel( moduleActionRequest.getResourceBundle().getString( userBean.isGroupCompany() ? "yesno.yes" : "yesno.no" ) );
                 userBean.setHoldingLevel( moduleActionRequest.getResourceBundle().getString( userBean.isHolding() ? "yesno.yes" : "yesno.no" ) );

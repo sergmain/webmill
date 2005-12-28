@@ -32,15 +32,15 @@
  */
 package org.riverock.webmill.test;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestHashtable
 {
     public static void main(String args[])
         throws Exception
     {
-        Hashtable hash = new Hashtable(20);
+        Map<String, String> hash = new HashMap<String, String>(20);
 
         hash.put( "1", "Object 1");
         hash.put( "2", "Object 2");
@@ -49,9 +49,11 @@ public class TestHashtable
 
         hash.put( "2", "Object 222");
 
+/*
         for (Enumeration e = hash.elements() ; e.hasMoreElements() ;) {
-            System.out.println(e.nextElement());
+            System.out.println( e.nextElement() );
          }
+*/
 
         System.out.println("count element - "+hash.size());
         hash.put( "5", "Object 5");

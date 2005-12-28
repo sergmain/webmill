@@ -64,7 +64,7 @@
 
 <!--
 	<TableToList>WM_PORTAL_ACCESS_URL</TableToList>
-	<TableToList>WM_PORTAL_ACCESS_USER_AGENT</TableToList>
+	<TableToList>WM_PORTAL_ACCESS_USERAGENT</TableToList>
 -->
 	<Logger>
 		<LogObjectClassName>org.apache.log4j.Logger</LogObjectClassName>

@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Revision$
- * $Date$
- * $RCSfile$
- *
- */
 package org.riverock.portlet.member;
 
 import java.io.StringReader;
@@ -38,50 +30,49 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.webmill.container.schema.site.SiteTemplate;
 
-
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+/**
+ * $Revision$
+ * $Date$
+ * $RCSfile$
+ */
 public class SiteTemplateMember {
     private static Log log = LogFactory.getLog( SiteTemplateMember.class );
 
     private static CacheFactory cache = new CacheFactory( SiteTemplateMember.class.getName() );
 
-    public Map memberTemplate = new HashMap();
+    public Map<String, SiteTemplate> memberTemplate = new HashMap<String, SiteTemplate>();
 
-    public void reinit()
-    {
+    public void reinit() {
         cache.reinit();
     }
 
-    public SiteTemplateMember()
-    {
+    public SiteTemplateMember() {
     }
 
-    public static SiteTemplateMember getInstance(DatabaseAdapter db__, long id__) throws Exception {
-        return getInstance(db__, id__ );
+    public static SiteTemplateMember getInstance( DatabaseAdapter db__, long id__ ) throws Exception {
+        return getInstance( db__, id__ );
     }
 
-    public static SiteTemplateMember getInstance(DatabaseAdapter db__, Long id__)
-            throws Exception
-    {
-        return (SiteTemplateMember) cache.getInstanceNew(db__, id__);
+    public static SiteTemplateMember getInstance( DatabaseAdapter db__, Long id__ )
+        throws Exception {
+        return ( SiteTemplateMember ) cache.getInstanceNew( db__, id__ );
     }
 
-    protected void finalize() throws Throwable
-    {
-        if (memberTemplate != null)
-        {
+    protected void finalize() throws Throwable {
+        if( memberTemplate != null ) {
             memberTemplate.clear();
             memberTemplate = null;
         }
@@ -90,76 +81,59 @@ public class SiteTemplateMember {
     }
 
     static String sql_ = null;
-    static
-    {
+    static {
         sql_ =
-            "select b.NAME_SITE_TEMPLATE, b.TEMPLATE_DATA, c.CUSTOM_LANGUAGE "+
-            "from   WM_PORTAL_TEMPLATE_MEMBER a, WM_PORTAL_TEMPLATE b, WM_PORTAL_SITE_LANGUAGE c "+
-            "where  a.ID_SITE_TEMPLATE=b.ID_SITE_TEMPLATE and "+
-            "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and "+
+            "select b.NAME_SITE_TEMPLATE, b.TEMPLATE_DATA, c.CUSTOM_LANGUAGE " +
+            "from   WM_PORTAL_TEMPLATE_MEMBER a, WM_PORTAL_TEMPLATE b, WM_PORTAL_SITE_LANGUAGE c " +
+            "where  a.ID_SITE_TEMPLATE=b.ID_SITE_TEMPLATE and " +
+            "       a.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
             "       c.ID_SITE=? ";
 
-        try
-        {
+        try {
             SqlStatement.registerSql( sql_, new SiteTemplateMember().getClass() );
         }
-        catch(Exception e)
-        {
-            log.error("Exception in registerSql, sql\n"+sql_, e);
-        }
-        catch(Error e)
-        {
-            log.error("Error in registerSql, sql\n"+sql_, e);
+        catch( Throwable e ) {
+            log.error( "Exception in registerSql, sql\n" + sql_, e );
+            // Todo throw RuntimeException
         }
     }
 
-    public SiteTemplateMember(DatabaseAdapter db_, Long idSite)
-            throws Exception
-    {
+    public SiteTemplateMember( DatabaseAdapter db_, Long idSite )
+        throws Exception {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
-            ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSite );
+        try {
+            ps = db_.prepareStatement( sql_ );
+            RsetTools.setLong( ps, 1, idSite );
 
             rs = ps.executeQuery();
 
-            while (rs.next())
-            {
-                SiteTemplate st = (SiteTemplate) Unmarshaller.unmarshal(SiteTemplate.class,
-                    new InputSource(
-                        new StringReader( RsetTools.getString(rs, "TEMPLATE_DATA") )
-                    )
-                );
+            while( rs.next() ) {
+                SiteTemplate st = ( SiteTemplate ) Unmarshaller.unmarshal( SiteTemplate.class,
+                    new InputSource( new StringReader( RsetTools.getString( rs, "TEMPLATE_DATA" ) ) ) );
 
-                st.setNameTemplate( RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
+                st.setNameTemplate( RsetTools.getString( rs, "NAME_SITE_TEMPLATE" ) );
 
-                memberTemplate.put(
-                    StringTools.getLocale( RsetTools.getString(rs, "CUSTOM_LANGUAGE") ).toString(),
+                memberTemplate.put( StringTools.getLocale( RsetTools.getString( rs, "CUSTOM_LANGUAGE" ) ).toString(),
                     st );
             }
         }
-        catch(Exception e)
-        {
-            log.error("Exception process SiteTemplate Member", e);
+        catch( Exception e ) {
+            log.error( "Exception process SiteTemplate Member", e );
             throw e;
         }
-        catch(Error e)
-        {
-            log.error("Error process SiteTemplate Member", e);
+        catch( Error e ) {
+            log.error( "Error process SiteTemplate Member", e );
             throw e;
         }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
+        finally {
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }
 
-        if (log.isDebugEnabled())
-        {
-            Object[] obj = memberTemplate.entrySet() .toArray();
+        if( log.isDebugEnabled() ) {
+            Object[] obj = memberTemplate.entrySet().toArray();
 
             for( final Object newVar : obj ) {
                 Map.Entry entry = ( Map.Entry ) newVar;

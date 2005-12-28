@@ -85,7 +85,7 @@ public final class PortalRequestInstance {
     private ServletConfig portalServletConfig = null;
     private AuthSession auth = null;
     private ActionRequestImpl actionRequest = null;
-    private Map httpRequestParameter = null;
+    private Map<String, Object> httpRequestParameter = null;
     private CookieManager cookieManager = new CookieManager();
     private boolean isTextMimeType = true;
     private String mimeType = null;

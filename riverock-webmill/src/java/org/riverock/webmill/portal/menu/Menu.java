@@ -62,7 +62,7 @@ public final class Menu implements MenuInterface {
         }
     }
 
-    private List menuItem = new LinkedList();           // contains tree of menu
+    private LinkedList<MenuItem> menuItem = new LinkedList<MenuItem>();
     private boolean isDefault = false;
     private String catalogCode = null;
 
@@ -197,12 +197,12 @@ public final class Menu implements MenuInterface {
             WmPortalCatalogListType catalogList =
                     GetWmPortalCatalogWithIdSiteCtxLangCatalogList.getInstance(db_, item_.getIdSiteCtxLangCatalog()).item;
 
-            List list = catalogList.getWmPortalCatalogAsReference();
+            List<WmPortalCatalogItemType> list = catalogList.getWmPortalCatalogAsReference();
             Collections.sort(list, new MenuItemComparator());
 
-            Iterator it = list.iterator();
+            Iterator<WmPortalCatalogItemType> it = list.iterator();
             while (it.hasNext()){
-                WmPortalCatalogItemType item = (WmPortalCatalogItemType)it.next();
+                WmPortalCatalogItemType item = it.next();
 
                 // Dont include menuitem with id_template==null to menu
                 if (item.getIdSiteTemplate()!=null)
@@ -222,7 +222,7 @@ public final class Menu implements MenuInterface {
 
         if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
 
-        menuItem = TreeUtils.rebuildTree((LinkedList)menuItem);
+        menuItem = TreeUtils.rebuildTree(menuItem);
 
         if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
     }
@@ -230,8 +230,8 @@ public final class Menu implements MenuInterface {
     public void reinit(){}
 
 
-    private class MenuItemComparator implements Comparator {
-        public int compare(Object o1, Object o2) {
+    private class MenuItemComparator implements Comparator<WmPortalCatalogItemType> {
+        public int compare(WmPortalCatalogItemType o1, WmPortalCatalogItemType o2) {
 
             if (o1==null && o2==null)
                 return 0;
@@ -241,24 +241,21 @@ public final class Menu implements MenuInterface {
                 return -1;
 
             // "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC ";
-            if (((WmPortalCatalogItemType)o1).getIdTopCtxCatalog().equals(((WmPortalCatalogItemType)o2).getIdTopCtxCatalog()))
+            if ( o1.getIdTopCtxCatalog().equals( o2 .getIdTopCtxCatalog()))
             {
-                if (((WmPortalCatalogItemType)o1).getOrderField()==null &&
-                        ((WmPortalCatalogItemType)o2).getOrderField()==null)
+                if ( o1.getOrderField()==null && o2.getOrderField()==null)
                     return 0;
 
-                if (((WmPortalCatalogItemType)o1).getOrderField()!=null &&
-                        ((WmPortalCatalogItemType)o2).getOrderField()==null)
+                if ( o1.getOrderField()!=null && o2.getOrderField()==null )
                     return -1;
 
-                if (((WmPortalCatalogItemType)o1).getOrderField()==null &&
-                        ((WmPortalCatalogItemType)o2).getOrderField()!=null)
+                if ( o1.getOrderField()==null && o2.getOrderField()!=null)
                     return 1;
 
-                return ((WmPortalCatalogItemType)o1).getOrderField().compareTo(((WmPortalCatalogItemType)o2).getOrderField());
+                return o1.getOrderField().compareTo( o2.getOrderField() );
             }
             else
-                return ((WmPortalCatalogItemType)o1).getIdTopCtxCatalog().compareTo(((WmPortalCatalogItemType)o2).getIdTopCtxCatalog());
+                return o1.getIdTopCtxCatalog().compareTo( o2.getIdTopCtxCatalog() );
         }
     }
 }

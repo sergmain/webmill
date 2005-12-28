@@ -1,6 +1,6 @@
 package org.riverock.forum.dao;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,15 +30,15 @@ public class TopLevelForumDAO {
             adapter = DatabaseAdapter.getInstance();
             WmForumListType forumsCore = new GetWmForumWithSiteIdList(adapter, moduleRequest.getServerNameId()).item;
             ForumTopLevelBean forumTopLevelBean = new ForumTopLevelBean();
-            List forums = new LinkedList();
+            List<ForumBean> forums = new ArrayList<ForumBean>();
             forumTopLevelBean.setForums( forums );
             for (int i=0; i<forumsCore.getWmForumCount(); i++) {
                 WmForumItemType item = forumsCore.getWmForum(i);
 
                 ForumBean forum = new ForumBean();
-                forum.setForumId( new Long(item.getForumId().intValue()) );
+                forum.setForumId( (long)item.getForumId() );
                 forum.setForumName( item.getForumName() );
-                forum.setDeleted( item.getIsDeleted().booleanValue() );
+                forum.setDeleted( item.getIsDeleted() );
 
                 forums.add(forum);
             }

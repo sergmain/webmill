@@ -50,6 +50,7 @@ import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.site.SiteListSite;
 import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
@@ -75,8 +76,8 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
     static {
         Class c = new NewsSite().getClass();
         try {
-            SqlStatement.registerRelateClass( c, new NewsGroup().getClass() );
-            SqlStatement.registerRelateClass( c, new SiteListSite().getClass() );
+            SqlStatement.registerRelateClass( c, NewsGroup.class );
+            SqlStatement.registerRelateClass( c, SiteListSite.class );
         }
         catch( Throwable exception ) {
             final String es = "Exception in SqlStatement.registerRelateClass()";
@@ -85,7 +86,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         }
     }
 
-    private static Map newsMap = new HashMap(); // Map of NewsSiteType
+    private static Map<Long, NewsSiteType> newsMap = new HashMap<Long, NewsSiteType>();
     private Long siteId = null;
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
@@ -436,7 +437,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         return new NewsBlock( newsBlock );
     }
 
-    public List getList( Long idSiteCtxLangCatalog, Long idContext ) {
+    public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
         return null;
     }
 

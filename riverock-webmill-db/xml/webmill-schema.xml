@@ -414,34 +414,34 @@
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-	<Tables schema="TEST" name="WM_LIST_R_HOLDING_GROUP_COMPANY" type="TABLE">
+	<Tables schema="TEST" name="WM_LIST_R_HOLDING_GR_COMP" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_R_HOLDING_GROUP_COMPANY" columnName="ID_REL_ROAD" keySeq="1" pkName="ID_RELROAD_MRRS_PK"/>
+			<columns schemaName="TEST" tableName="WM_LIST_R_HOLDING_GR_COMP" columnName="ID_REL_ROAD" keySeq="1" pkName="ID_RELROAD_MRRS_PK"/>
 		</PrimaryKey>
 		<Fields name="ID_REL_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
 		<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_HOLDING" pkColumnName="ID_ROAD" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GROUP_COMPANY" fkColumnName="ID_ROAD" keySeq="1" fkName="ID_ROAD_MRRS_FK" pkName="ID_ROAD_MLR_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_HOLDING" pkColumnName="ID_ROAD" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GR_COMP" fkColumnName="ID_ROAD" keySeq="1" fkName="ID_ROAD_MRRS_FK" pkName="ID_ROAD_MLR_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GROUP_COMPANY" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_FIRM_MRRS_FK" pkName="ID_SERVICE_MLS_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GR_COMP" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_FIRM_MRRS_FK" pkName="ID_SERVICE_MLS_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-	<Tables schema="TEST" name="WM_LIST_R_GROUP_COMPANY_COMPANY" type="TABLE">
+	<Tables schema="TEST" name="WM_LIST_R_GR_COMP_COMP" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_R_GROUP_COMPANY_COMPANY" columnName="ID_REL_SERVICE" keySeq="1" pkName="ID_REL_SRV_MRSF_PK"/>
+			<columns schemaName="TEST" tableName="WM_LIST_R_GR_COMP_COMP" columnName="ID_REL_SERVICE" keySeq="1" pkName="ID_REL_SRV_MRSF_PK"/>
 		</PrimaryKey>
 		<Fields name="ID_REL_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
 		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_LIST_R_GROUP_COMPANY_COMPANY" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_MRSF_FK" pkName="ID_FIRM_MLF_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_LIST_R_GR_COMP_COMP" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_MRSF_FK" pkName="ID_FIRM_MLF_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_GROUP_COMPANY_COMPANY" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_SERVICE_MRSF_FK" pkName="ID_SERVICE_MLS_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_GR_COMP_COMP" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_SERVICE_MRSF_FK" pkName="ID_SERVICE_MLS_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
@@ -808,19 +808,19 @@
 		<Fields name="ID_STD_CURRENCY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
 		<Fields name="METHOD_PAYMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 	</Tables>
-	<Tables schema="TEST" name="WM_PRICE_USER_SHOP_DISCOUNT" type="TABLE">
+	<Tables schema="TEST" name="WM_PRICE_USER_DISCOUNT" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_PRICE_USER_SHOP_DISCOUNT" columnName="ID_PRICE_USER_SHOP_DISCOUNT" keySeq="1" pkName="ID_USRSHP_PUSD_PK"/>
+			<columns schemaName="TEST" tableName="WM_PRICE_USER_DISCOUNT" columnName="ID_PRICE_USER_SHOP_DISCOUNT" keySeq="1" pkName="ID_USRSHP_PUSD_PK"/>
 		</PrimaryKey>
 		<Fields name="ID_PRICE_USER_SHOP_DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_USER" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="1"/>
 		<Fields name="ID_SHOP" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
 		<Fields name="DISCOUNT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="3" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_USER" pkColumnName="ID_USER" fkSchemaName="TEST" fkTableName="WM_PRICE_USER_SHOP_DISCOUNT" fkColumnName="ID_USER" keySeq="1" fkName="ID_USER_PUSD_FK" pkName="ID_USER_MUI_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_USER" pkColumnName="ID_USER" fkSchemaName="TEST" fkTableName="WM_PRICE_USER_DISCOUNT" fkColumnName="ID_USER" keySeq="1" fkName="ID_USER_PUSD_FK" pkName="ID_USER_MUI_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_SHOP_LIST" pkColumnName="ID_SHOP" fkSchemaName="TEST" fkTableName="WM_PRICE_USER_SHOP_DISCOUNT" fkColumnName="ID_SHOP" keySeq="1" fkName="ID_SHOP_PUSD_FK" pkName="ID_SHOP_PST_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PRICE_SHOP_LIST" pkColumnName="ID_SHOP" fkSchemaName="TEST" fkTableName="WM_PRICE_USER_DISCOUNT" fkColumnName="ID_SHOP" keySeq="1" fkName="ID_SHOP_PUSD_FK" pkName="ID_SHOP_PST_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
@@ -839,6 +839,7 @@
 		<Fields name="PARAMETERS" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
 		<Fields name="ID_SITE_ACCESS_URL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="1"/>
 		<Fields name="IS_PARAM_TOO_BIG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="SERVER_NAME" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="1"/>
 	</Tables>
 	<Tables schema="TEST" name="WM_PORTAL_ACCESS_URL" type="TABLE">
 		<PrimaryKey>
@@ -847,9 +848,9 @@
 		<Fields name="ID_SITE_ACCESS_URL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
 		<Fields name="URL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 	</Tables>
-	<Tables schema="TEST" name="WM_PORTAL_ACCESS_USER_AGENT" type="TABLE">
+	<Tables schema="TEST" name="WM_PORTAL_ACCESS_USERAGENT" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_PORTAL_ACCESS_USER_AGENT" columnName="ID_SITE_USER_AGENT" keySeq="1" pkName="ID_ACUSRAG_SAUA_PK"/>
+			<columns schemaName="TEST" tableName="WM_PORTAL_ACCESS_USERAGENT" columnName="ID_SITE_USER_AGENT" keySeq="1" pkName="ID_ACUSRAG_SAUA_PK"/>
 		</PrimaryKey>
 		<Fields name="ID_SITE_USER_AGENT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="4" decimalDigit="0" nullable="0"/>
 		<Fields name="USER_AGENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="150" nullable="1"/>
@@ -961,12 +962,6 @@
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
-	</Tables>
-	<Tables schema="TEST" name="SITE_CTX_OWNER_COPYRIGHT" type="TABLE">
-		<PrimaryKey/>
-		<Fields name="ID_SITE_CTX_OWNER_COPYRIGHT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
-		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
-		<Fields name="OWNER_COPYRIGHT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 	</Tables>
 	<Tables schema="TEST" name="WM_PORTAL_PORTLET_NAME" type="TABLE">
 		<PrimaryKey>
@@ -1215,19 +1210,20 @@
 		<Fields name="U_LASTTIME" dataType="TIMESTAMP" javaType="93" javaStringType="java.sql.Types.TIMESTAMP" size="0" decimalDigit="0" nullable="0"/>
 		<Fields name="U_LASTIP" dataType="VARCHAR" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" decimalDigit="0" nullable="0"/>
 	</Tables>
+
 	<Views schema="TEST" name="V$_READ_LIST_FIRM" type="VIEW">
 		<Text xmlns="">select distinct aa.id_firm, user_login, id_user, id_auth_user
 from (
 select  a01.id_firm, a01.user_login, a01.id_user, a01.id_auth_user
-from    auth_user a01
+from    WM_AUTH_USER a01
 where   a01.is_use_current_firm = 1
 union
 select  d02.id_firm, a02.user_login, a02.id_user, a02.id_auth_user
-from    WM_AUTH_USER a02, WM_LIST_R_GROUP_COMPANY_COMPANY d02
+from    WM_AUTH_USER a02, WM_LIST_R_GR_COMP_COMP d02
 where   a02.is_service = 1 and a02.id_service = d02.id_service
 union
 select  e03.id_firm, a03.user_login, a03.id_user, a03.id_auth_user
-from    auth_user a03, WM_LIST_R_HOLDING_GROUP_COMPANY d03, WM_LIST_R_GROUP_COMPANY_COMPANY e03
+from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GR_COMP d03, WM_LIST_R_GR_COMP_COMP e03
 where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service
 union
 select  b04.id_firm, a04.user_login, a04.id_user, a04.id_auth_user
@@ -1236,11 +1232,12 @@ where   a04.is_root = 1
 ) aa
 </Text>
 	</Views>
+
 	<Views schema="TEST" name="V$_READ_LIST_ROAD" type="VIEW">
 		<Text xmlns="">select distinct aa.id_road, aa.user_login, aa.id_user, aa.id_auth_user
 from (
 select  a01.id_road, a01.user_login, a01.id_user, a01.id_auth_user
-from    WM_AUTH_USER auth_user a01
+from    WM_AUTH_USER a01
 where   a01.is_road = 1
 union
 select  b04.id_road, a04.user_login, a04.id_user, a04.id_auth_user
@@ -1257,7 +1254,7 @@ from    WM_AUTH_USER a01
 where   a01.is_service = 1 
 union
 select  b02.id_service, a02.user_login, a02.id_user, a02.id_auth_user
-from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_GROUP_COMPANY b02
+from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_GR_COMP b02
 where   a02.is_road = 1 and a02.id_road = b02.id_road
 union
 select  b04.id_service, a04.user_login, a04.id_user, a04.id_auth_user
@@ -1278,30 +1275,6 @@ from    WM_LIST_GROUP_COMPANY a, v$_read_list_service b
 where   a.id_service = b.id_service
 </Text>
 	</Views>
-	<Views schema="TEST" name="V_LIST_READ_FIRM" type="VIEW">
-		<Text xmlns="">select B.id_firm id, ''||b.id_firm||', '||B.full_name NAME_FIRM, user_login,
-b.is_deleted
-from v$_read_list_firm A, WM_LIST_COMPANY B
-where a.id_firm = b.id_firm and b.is_deleted = 0
-</Text>
-	</Views>
-	<Views schema="TEST" name="V_MILL_AUTH_USER_INFO" type="VIEW">
-		<Text xmlns="">select  
- 	a.id_auth_user,
-
-  c.short_name name_firm,
-  b.LAST_NAME,
-  b.FIRST_NAME,
-  b.MIDDLE_NAME,
-  
-  a.user_login,
-  a.is_service,a.is_road,a.is_use_current_firm,b1.id_firm
-
-from   WM_AUTH_USER a, WM_LIST_USER b, WM_LIST_COMPANY c,
-       WM_LIST_USER b1  
-where  a.id_user = b1.id_user and a.id_user = b.id_user and a.id_firm = c.id_firm
-</Text>
-	</Views>
 
 	<Sequences name="SEQ_WM_PRICE_QUERY_TABLE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="29"/>
 	<Sequences name="SEQ_WM_PORTAL_XSLT_DATA" minValue="1" maxValue="9999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="270"/>
@@ -1313,15 +1286,15 @@ where  a.id_user = b1.id_user and a.id_user = b.id_user and a.id_firm = c.id_fir
 	<Sequences name="SEQ_WM_PORTAL_ACCESS_URL" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="58"/>
 	<Sequences name="SEQ_WM_PORTAL_ACCESS_STAT" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="20" lastNumber="17617"/>
 	<Sequences name="SEQ_WM_JOB_RESUME_DATA" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
-	<Sequences name="SEQ_WM_PORTAL_ACCESS_USER_AGENT" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="508"/>
+	<Sequences name="SEQ_WM_PORTAL_ACCESS_USERAGENT" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="508"/>
 	<Sequences name="SEQ_WM_JOB_POSITION_DATA" minValue="1" maxValue="99999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="22"/>
 	<Sequences name="SEQ_WM_JOB_POSITION" minValue="1" maxValue="9999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="17"/>
 	<Sequences name="SEQ_WM_LIST_COMPANY" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="true" cacheSize="0" lastNumber="51"/>
 	<Sequences name="SEQ_WM_LIST_HOLDING" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
 	<Sequences name="SEQ_WM_LIST_USER" minValue="2" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="89"/>
 	<Sequences name="SEQ_WM_LIST_USER_METADATA" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="100"/>
-	<Sequences name="SEQ_WM_LIST_R_GROUP_COMPANY_COMPANY" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="31"/>
-	<Sequences name="SEQ_WM_LIST_R_HOLDING_GROUP_COMPANY" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
+	<Sequences name="SEQ_WM_LIST_R_GR_COMP_COMP" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="31"/>
+	<Sequences name="SEQ_WM_LIST_R_HOLDING_GR_COMP" minValue="1" maxValue="99999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="5"/>
 	<Sequences name="SEQ_WM_NEWS_ITEM_TEXT" minValue="1" maxValue="99999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="4720"/>
 	<Sequences name="SEQ_WM_NEWS_ITEM_IMAGE" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="true" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_NEWS_ITEM" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="4714"/>
@@ -1334,7 +1307,7 @@ where  a.id_user = b1.id_user and a.id_user = b.id_user and a.id_firm = c.id_fir
 	<Sequences name="SEQ_WM_CASH_CURRENCY" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="651"/>
 	<Sequences name="SEQ_WM_PRICE_SHOP_LIST" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="281"/>
 	<Sequences name="SEQ_WM_PRICE_LIST" minValue="1" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="8318"/>
-	<Sequences name="SEQ_WM_PRICE_USER_SHOP_DISCOUNT" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
+	<Sequences name="SEQ_WM_PRICE_USER_DISCOUNT" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PRICE_RELATE_USER_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PRICE_ORDER" minValue="1" maxValue="9999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1"/>
 	<Sequences name="SEQ_WM_PRICE_SHOP_PRECISION" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="94"/>

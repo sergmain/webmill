@@ -27,13 +27,14 @@ package org.riverock.portlet.faq;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.PortletConfig;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,15 +44,15 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.schema.portlet.faq.FaqBlockType;
 import org.riverock.portlet.schema.portlet.faq.FaqGroupType;
 import org.riverock.portlet.schema.portlet.faq.FaqItemType;
-
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
 /**
  * $Id$
@@ -59,7 +60,7 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
 public final class FaqBlock implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Log log = LogFactory.getLog( FaqBlock.class );
 
-    private List v = null;
+    private List<FaqGroup> v = null;
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
     private ResourceBundle bundle = null;
@@ -71,7 +72,7 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
     }
 
     protected void finalize() throws Throwable {
-        if (v != null) {
+        if( v != null ) {
             v.clear();
             v = null;
         }
@@ -85,8 +86,7 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
         return getInstance();
     }
 
-    public PortletResultContent getInstanceByCode( final String portletCode_ ) throws PortletException
-    {
+    public PortletResultContent getInstanceByCode( final String portletCode_ ) throws PortletException {
         return getInstance();
     }
 
@@ -103,33 +103,33 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
         String sql_ =
             "select ID_SITE_PORTLET_FAQ from WM_PORTLET_FAQ where ID_SITE_SUPPORT_LANGUAGE=?";
 
-        v = new ArrayList();
+        v = new ArrayList<FaqGroup>();
 
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            ps = db_.prepareStatement(sql_);
+            ps = db_.prepareStatement( sql_ );
 
-            PortalInfo portalInfo = (PortalInfo)renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+            PortalInfo portalInfo = ( PortalInfo ) renderRequest.getAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE );
             Long idSupportLanguageCurrent = portalInfo.getSupportLanguageId( renderRequest.getLocale() );
-            RsetTools.setLong(ps, 1, idSupportLanguageCurrent );
+            RsetTools.setLong( ps, 1, idSupportLanguageCurrent );
 
             rs = ps.executeQuery();
-            while (rs.next()) {
-                log.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_SITE_PORTLET_FAQ"));
-                v.add(FaqGroup.getInstance(db_, RsetTools.getLong(rs, "ID_SITE_PORTLET_FAQ")));
+            while( rs.next() ) {
+                log.debug( "#10.01.04 " + RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) );
+                v.add( FaqGroup.getInstance( db_, RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) ) );
             }
 
-            log.debug("#10.01.05 ");
+            log.debug( "#10.01.05 " );
         }
-        catch (Exception e) {
-            log.error("Error get faq block ", e);
-            throw new PortletException(e.toString());
+        catch( Exception e ) {
+            log.error( "Error get faq block ", e );
+            throw new PortletException( e.toString() );
         }
         finally {
-            DatabaseManager.close(db_, rs, ps);
+            DatabaseManager.close( db_, rs, ps );
             rs = null;
             ps = null;
             db_ = null;
@@ -137,45 +137,41 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
         return this;
     }
 
-    public byte[] getPlainHTML()
-    {
+    public byte[] getPlainHTML() {
         String s = "";
-        for (int i = 0; i < v.size(); i++) {
-            FaqGroup faqGroup = (FaqGroup) v.get(i);
+        Iterator<FaqGroup> it = v.iterator();
+        while( it.hasNext() ) {
+            FaqGroup faqGroup = it.next();
             s += faqGroup.faqGroupName + "<br>";
 
             s += "<table border=\"0\">";
 
-            for (int j = 0; j < faqGroup.v.size(); j++) {
-                FaqItem fi = (FaqItem) faqGroup.v.get(j);
+            Iterator<FaqItem> iter = faqGroup.v.iterator();
+            while( iter.hasNext() ) {
+                FaqItem faqItem = iter.next();
 
-                s += "<tr><td>" + fi.question + "</td><td>" + fi.answer + "</td></tr>";
+                s += "<tr><td>" + faqItem.question + "</td><td>" + faqItem.answer + "</td></tr>";
             }
             s += "</table>";
         }
         return s.getBytes();
     }
 
-    public byte[] getXml( final String rootElement ) throws Exception
-    {
+    public byte[] getXml( final String rootElement ) throws Exception {
         FaqBlockType faqBlock = new FaqBlockType();
 
-        for (int i = 0; i < v.size(); i++) {
-            FaqGroup faqGroup = (FaqGroup) v.get(i);
+        for( int i = 0; i < v.size(); i++ ) {
+            FaqGroup faqGroup = ( FaqGroup ) v.get( i );
             FaqGroupType group_ = new FaqGroupType();
             group_.setFaqGroupName( faqGroup.faqGroupName );
 
-            for (int j = 0; j < faqGroup.v.size(); j++) {
-                FaqItem fi = (FaqItem) faqGroup.v.get(j);
+            for( int j = 0; j < faqGroup.v.size(); j++ ) {
+                FaqItem fi = ( FaqItem ) faqGroup.v.get( j );
                 FaqItemType item_ = new FaqItemType();
                 item_.setFaqItemAnswer( fi.answer );
                 item_.setFaqItemQuestion( fi.question );
-                item_.setFaqItemDate(
-                    DateTools.getStringDate( fi.datePost, "dd.MMM.yyyy", renderRequest.getLocale())
-                );
-                item_.setFaqItemTime(
-                    DateTools.getStringDate( fi.datePost, "HH:mm", renderRequest.getLocale())
-                );
+                item_.setFaqItemDate( DateTools.getStringDate( fi.datePost, "dd.MMM.yyyy", renderRequest.getLocale() ) );
+                item_.setFaqItemTime( DateTools.getStringDate( fi.datePost, "HH:mm", renderRequest.getLocale() ) );
 
                 group_.addFaqItem( item_ );
             }
@@ -186,10 +182,10 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
     }
 
     public byte[] getXml() throws Exception {
-        return getXml("FaqBlock");
+        return getXml( "FaqBlock" );
     }
 
-    public List getList( final Long idSiteCtxLangCatalog, final Long idContext ) {
+    public List<ClassQueryItem> getList( final Long idSiteCtxLangCatalog, final Long idContext ) {
         return null;
     }
 }

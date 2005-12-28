@@ -58,7 +58,7 @@ public final class PortletURLImpl implements PortletURL {
 
     protected PortletMode mode = null;
 
-    private Map parameters = new HashMap();
+    private Map<String, Object> parameters = new HashMap<String, Object>();
 
 //    protected PortletWindow portletWindow;
 
@@ -121,17 +121,17 @@ public final class PortletURLImpl implements PortletURL {
     /* (non-Javadoc)
      * @see javax.portlet.PortletURL#setParameters(Map)
      */
-    public void setParameters( Map parameters ) {
+    public void setParameters( Map map ) {
+        Map<String, Object> parameters = (Map<String, Object>)map;
         if ( parameters == null ) {
             throw new IllegalArgumentException( "Parameters must not be null." );
         }
 
-        Map temp = new HashMap( 2*parameters.size() );
-        for (final Object newVar : parameters.entrySet()) {
-            Map.Entry entry = (Map.Entry) newVar;
-            if (!(entry.getKey() instanceof String)) {
-                throw new IllegalArgumentException("Key must not be null and of type java.lang.String.");
-            }
+        Map<String, Object> temp = new HashMap<String, Object>( 2*parameters.size() );
+        Iterator<Map.Entry<String, Object>> iterator = parameters.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Object> entry = iterator.next();
+
             Object obj = entry.getValue();
             if (obj == null) {
                 throw new IllegalArgumentException("Value must not be null");

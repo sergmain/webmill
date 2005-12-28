@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.MemberQueryParameter;
 import org.riverock.portlet.price.CurrencyManager;
@@ -55,60 +56,52 @@ public class CurrencyStdCursClassQuery extends BaseClassQuery {
     // ID_CURRENCY
     private Long idCurrency = null;
 
-    public void setIdCurrency(Long param)
-    {
+    public void setIdCurrency( Long param ) {
         idCurrency = param;
 
-        if (log.isDebugEnabled())
-            log.debug("idCurrency - "+idCurrency);
+        if( log.isDebugEnabled() )
+            log.debug( "idCurrency - " + idCurrency );
     }
 
     /**
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
+     *
      * @return String
      */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception
-    {
+        throws Exception {
         DatabaseAdapter db_ = null;
-        try
-        {
+        try {
             db_ = DatabaseAdapter.getInstance();
 
             Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-            CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
-                CurrencyManager.getInstance(db_, siteId ).getCurrencyList() , idCurrency
-            );
-            StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem(
-                CurrencyManager.getInstance(db_, siteId ).getCurrencyList() , item.getIdStandardCurrency()
-            );
+            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), idCurrency );
+            StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), item.getIdStandardCurrency() );
 
-            if (stdItem == null || stdItem.getCurrentCurs()==null)
+            if( stdItem == null || stdItem.getCurrentCurs() == null )
                 return "";
 
-            return ""+stdItem.getCurrentCurs().getCurs();
+            return "" + stdItem.getCurrentCurs().getCurs();
         }
-        finally
-        {
+        finally {
             DatabaseManager.close( db_ );
             db_ = null;
         }
     }
 
     /**
-     *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
+     * ¬озвращает список возможных значений дл€ построени€ <select> элемента
+     *
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception
-    {
-        throw new Exception("Not implemented");
+    public List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
+        throws Exception {
+        throw new Exception( "Not implemented" );
     }
 
     MemberQueryParameter param = null;
 
-    public void setQueryParameter(MemberQueryParameter parameter) throws Exception
-    {
+    public void setQueryParameter( MemberQueryParameter parameter ) throws Exception {
         this.param = parameter;
     }
 }

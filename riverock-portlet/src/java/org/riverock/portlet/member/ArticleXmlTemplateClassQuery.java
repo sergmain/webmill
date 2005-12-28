@@ -33,43 +33,40 @@
 
 package org.riverock.portlet.member;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-
 
 import javax.portlet.PortletRequest;
 
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
-public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
-{
+public class ArticleXmlTemplateClassQuery extends BaseClassQuery {
 //    private static Log cat = LogFactory.getLog(ArticleXmlTemplateClassQuery.class);
 
-    public ArticleXmlTemplateClassQuery()
-    {
+    public ArticleXmlTemplateClassQuery() {
     }
 
     /**
      * ¬озвращает текущее значение дл€ отображени€ на веб-странице
+     *
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception
-    {
-        return bundle.getString("yesno.no");
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+        return bundle.getString( "yesno.no" );
     }
 
     /**
-     *  ¬озвращает список возможных значений дл€ построени€ <select> элемента
+     * ¬озвращает список возможных значений дл€ построени€ <select> элемента
+     *
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception
-    {
-        List v = new ArrayList();
-        ClassQueryItem item = new ClassQueryItemImpl(0l, bundle.getString("yesno.no") );
+    public List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
+        throws Exception {
+        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
+        ClassQueryItem item = new ClassQueryItemImpl( 0l, bundle.getString( "yesno.no" ) );
 
-        item.setSelected(true);
+        item.setSelected( true );
 
         v.add( item );
         return v;
@@ -77,8 +74,7 @@ public class ArticleXmlTemplateClassQuery  extends BaseClassQuery
 
     MemberQueryParameter param = null;
 
-    public void setQueryParameter(MemberQueryParameter parameter) throws Exception
-    {
+    public void setQueryParameter( MemberQueryParameter parameter ) throws Exception {
         this.param = parameter;
     }
 }

@@ -85,6 +85,14 @@ public final class PageidContextFactory extends ContextFactory {
                     pageId = path.substring(idxSlash+1, idxLocale);
             }
 
+            Long id = null;
+            try {
+                id = new Long(pageId);  
+            catch( java.lang.NumberFormatException e ) {
+                log.warn("NumberFormatException error of parsing pageid: " + pageId);
+                return null;
+            }
+
             Long ctxId = DatabaseManager.getLongValue(
                 factoryParameter.getAdapter(),
                 "select a.ID_SITE_CTX_CATALOG " +
@@ -94,7 +102,7 @@ public final class PageidContextFactory extends ContextFactory {
                 "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and a.ID_SITE_CTX_CATALOG=?",
                 new Object[]{
                     factoryParameter.getPortalInfo().getSiteId(),
-                    StringTools.getLocale( localeFromUrl ).toString().toLowerCase(), new Long(pageId) }
+                    StringTools.getLocale( localeFromUrl ).toString().toLowerCase(), id }
             );
 
             return ctxId;
@@ -106,6 +114,6 @@ public final class PageidContextFactory extends ContextFactory {
         }
     }
 
-    protected void prepareParameters( HttpServletRequest httpRequest, Map httpRequestParameter ) {
+    protected void prepareParameters( HttpServletRequest httpRequest, Map<String, Object> httpRequestParameter ) {
     }
 }

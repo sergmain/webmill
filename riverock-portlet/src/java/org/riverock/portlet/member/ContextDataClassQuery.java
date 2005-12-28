@@ -41,6 +41,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.bean.PortletItem;
 import org.riverock.webmill.container.portlet.PortletContainer;
@@ -126,13 +127,13 @@ public class ContextDataClassQuery extends BaseClassQuery {
      *  Возвращает список возможных значений для построения <select> элемента
      * @return Vector of org.riverock.member.ClassQueryItem
      */
-    public List getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
+    public List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        List v = new ArrayList();
+        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         String namePortlet = null;
         DatabaseAdapter db_ = null;
         try {
@@ -228,7 +229,7 @@ public class ContextDataClassQuery extends BaseClassQuery {
             v = obj.getList( idSiteCtxLangCatalog, idContext);
 
             if (v==null)
-                return new ArrayList();
+                return new ArrayList<ClassQueryItem>();
 
         }
 

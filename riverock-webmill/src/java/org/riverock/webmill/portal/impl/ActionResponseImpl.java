@@ -32,23 +32,19 @@
  */
 package org.riverock.webmill.portal.impl;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
-import javax.portlet.PortletModeException;
-import javax.portlet.PortletRequest;
 import javax.portlet.WindowState;
-import javax.portlet.WindowStateException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.PortalRequestInstance;
-
 import org.apache.log4j.Logger;
+
+import org.riverock.webmill.portal.PortalRequestInstance;
 
 public final class ActionResponseImpl implements ActionResponse {
     private final static Logger log = Logger.getLogger( ActionResponseImpl.class );
@@ -61,7 +57,7 @@ public final class ActionResponseImpl implements ActionResponse {
     private WindowState windowState = WindowState.NORMAL;
     private boolean isRedirected = false;
     private String redirectUrl = null;
-    private Map renderParameters = null;
+    private Map<String, Object> renderParameters = null;
     private Map<String, List<String>> portletProperties = null;
 
     public void destroy() {
@@ -77,7 +73,7 @@ public final class ActionResponseImpl implements ActionResponse {
     }
 
     public ActionResponseImpl( final PortalRequestInstance portalRequestInstance, final ActionRequest renderRequest, 
-        final HttpServletResponse response, final String namespace, final Map renderParameters,
+        final HttpServletResponse response, final String namespace, final Map<String, Object> renderParameters,
         Map<String, List<String>> portletProperties) {
 //        this.portalRequestInstance = portalRequestInstance;
 //        this.portletRequest = renderRequest;
@@ -127,14 +123,36 @@ public final class ActionResponseImpl implements ActionResponse {
     }
 
     public void setRenderParameters( final Map map ) {
-        renderParameters.putAll( map );
+        // Todo implement of checking sendRedirect
+        if (map==null) {
+            throw new IllegalArgumentException("Map is null");
+        }
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry)it.next();
+            renderParameters.put( entry.getKey().toString(), entry.getValue() );
+        }
     }
 
     public void setRenderParameter( final String key, final String value ) {
+        // Todo implement of checking sendRedirect
+        if (key==null) {
+            throw new IllegalArgumentException("Key is null");
+        }
+        if (value==null) {
+            throw new IllegalArgumentException("Value is null");
+        }
         renderParameters.put( key, value );
     }
 
     public void setRenderParameter( final String key, final String[] value ) {
+        // Todo implement of checking sendRedirect
+        if (key==null) {
+            throw new IllegalArgumentException("Key is null");
+        }
+        if (value==null) {
+            throw new IllegalArgumentException("Value is null");
+        }
         renderParameters.put( key, value );
     }
 }

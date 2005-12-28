@@ -90,11 +90,11 @@ public final class PageElement {
     /*
      * renderParameter used for set parameters in action
      */
-    private Map renderParameters = new HashMap();
+    private Map<String, Object> renderParameters = new HashMap<String, Object>();
     /*
      *
      */
-    private Map portletAttributes = new HashMap();
+    private Map<String, Object> portletAttributes = new HashMap<String, Object>();
     private static final String ACCESS_DISABLED_FOR_PORTLET = "Access disabled in portlet.xml";
 
     private PortletContainer portletContainer = null;

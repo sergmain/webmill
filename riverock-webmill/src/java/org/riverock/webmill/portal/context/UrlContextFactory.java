@@ -111,7 +111,7 @@ public final class UrlContextFactory extends ContextFactory {
         return ctxId;
     }
 
-    protected void prepareParameters( HttpServletRequest httpRequest, Map httpRequestParameter ) {
+    protected void prepareParameters( HttpServletRequest httpRequest, Map<String, Object> httpRequestParameter ) {
         dynamicParameter = httpRequestParameter;
     }
 }

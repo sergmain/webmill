@@ -207,7 +207,7 @@ public final class CtxContextFactory extends ContextFactory {
 
     }
 
-    protected void prepareParameters( final HttpServletRequest httpRequest, final Map httpRequestParameter )  throws PortalException {
+    protected void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter )  throws PortalException {
         try {
             dynamicParameter = httpRequestParameter;
 
@@ -256,7 +256,7 @@ public final class CtxContextFactory extends ContextFactory {
             if ( p.hasMoreTokens() )
                 namespace = p.nextToken();
 
-            Map param = new HashMap();
+            Map<String, Object> param = new HashMap<String, Object>();
             while ( p.hasMoreTokens() ) {
                 String temp = p.nextToken();
 

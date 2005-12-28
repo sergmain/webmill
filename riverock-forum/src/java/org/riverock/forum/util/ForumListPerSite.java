@@ -1,7 +1,7 @@
 package org.riverock.forum.util;
 
 import java.util.List;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -25,7 +25,7 @@ public class ForumListPerSite implements PortletGetList {
 
     public ForumListPerSite(){}
 
-    public List getList(Long idSiteCtxLangCatalog, Long idContext)
+    public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext)
     {
         if (log.isDebugEnabled())
             log.debug("Get list of ForumInstance. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
@@ -35,7 +35,7 @@ public class ForumListPerSite implements PortletGetList {
         ResultSet rs = null;
         DatabaseAdapter db_ = null;
 
-        List v = new LinkedList();
+        List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
         try {
             db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(
