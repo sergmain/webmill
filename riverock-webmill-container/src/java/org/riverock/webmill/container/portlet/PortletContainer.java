@@ -251,7 +251,8 @@ public final class PortletContainer implements Serializable {
             throw new PortletContainerException(es);
         }
 
-        System.out.println("get portlet instance for name: " + queryPortletName );
+
+//        System.out.println("get portlet instance for name: " + queryPortletName );
 
 
         String portletName = queryPortletName;
@@ -260,7 +261,7 @@ public final class PortletContainer implements Serializable {
         }
 
         PortletEntry obj = portletInstanceMap.get( portletName );
-        System.out.println("portlet name: "+portletName+", instance in map: " + obj);
+//        System.out.println("portlet name: "+portletName+", instance in map: " + obj);
         if (obj!=null) {
             boolean isNotUrl = !PortletService.getBooleanParam(obj.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
             if (isNotUrl) {
@@ -279,7 +280,7 @@ public final class PortletContainer implements Serializable {
             try {
                 newPortlet = createPortletInstance(portletName);
                 String s = (newPortlet!=null? ""+newPortlet.getPortlet(): "null");
-                System.out.println( "Result of create new portlet entry: " + portletName + ", portlet: " + s );
+//                System.out.println( "Result of create new portlet entry: " + portletName + ", portlet: " + s );
             }
             catch (Throwable e) {
                 String es = "Erorr create instance of portlet '" + portletName + "'";
@@ -326,9 +327,9 @@ public final class PortletContainer implements Serializable {
 
             boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
 
-            System.out.println("oldLoader\n" + oldLoader+"\nhashCode: " + oldLoader.hashCode() );
-            System.out.println("classLoader\n" + classLoader+"\nhashCode: " + classLoader.hashCode() );
-            System.out.println("isNotUrl portlet: " + isNotUrl );
+//            System.out.println("oldLoader\n" + oldLoader+"\nhashCode: " + oldLoader.hashCode() );
+//            System.out.println("classLoader\n" + classLoader+"\nhashCode: " + classLoader.hashCode() );
+//            System.out.println("isNotUrl portlet: " + isNotUrl );
 
 
             Thread.currentThread().setContextClassLoader( classLoader );
@@ -381,7 +382,7 @@ public final class PortletContainer implements Serializable {
                 }
             }
             else {
-        	System.out.println("Portlet is url, resourceBundle: " + resourceBundle );
+//        	System.out.println("Portlet is url, resourceBundle: " + resourceBundle );
             }
 
             final PortletEntry entry = new PortletEntry(portletDefinition, portletConfig, object, portletItem.getServletConfig(), portletItem.getClassLoader(), portletItem.getUniqueName() );
