@@ -120,6 +120,7 @@
             <classpath>
                 <path refid="classpath-base"/>
             </classpath>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
@@ -135,6 +136,7 @@
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
@@ -150,6 +152,7 @@
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
         <property name="xml-path" value="/org/riverock/portlet/resource"/>

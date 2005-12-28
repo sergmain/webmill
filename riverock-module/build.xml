@@ -41,7 +41,6 @@
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
-<!--        <pathelement location="${lib.dir}/${riverock-webmill.lib}"/>-->
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
@@ -95,6 +94,7 @@
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:-unchecked"/>
         </javac>
         <javac
             target="${java.class.target}"
@@ -110,6 +110,7 @@
                 <path refid="classpath-base"/>
                 <path location="${build.dest}"/>
             </classpath>
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 </project>
