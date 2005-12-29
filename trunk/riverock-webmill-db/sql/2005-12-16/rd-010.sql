@@ -4,8 +4,8 @@ rename table image_dir to WM_IMAGE_DIR
 rename table image_price_items to WM_IMAGE_PRICE_ITEMS
 /
 
-rename table imagedb to WM_IMAGE_DB
-/
+-- rename table imagedb to WM_IMAGE_DB
+-- /
 
 
 rename table main_db_definition to WM_DB_DEFINITION
@@ -33,13 +33,10 @@ rename table main_list_road to WM_LIST_HOLDING
 rename table main_list_service to WM_LIST_GROUP_COMPANY
 /
 
-rename table main_relate_road_service to WM_LIST_R_HOLDING_GROUP_COMPANY
+rename table main_relate_road_service to WM_LIST_R_HOLDING_GR_COMPANY
 /
 
-rename table main_relate_service_firm to WM_LIST_R_GROUP_COMPANY_COMPANY
-/
-
-rename table main_user_info to WM_LIST_USER
+rename table main_relate_service_firm to WM_LIST_R_GR_COMPANY_COMPANY
 /
 
 rename table main_user_metadata  to WM_LIST_USER_METADATA
