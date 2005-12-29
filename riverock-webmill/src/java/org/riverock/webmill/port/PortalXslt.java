@@ -58,8 +58,11 @@ public class PortalXslt
     private Transformer transformer = null;
     private Object transformerSync = new Object();
 
-    public void reinit()
-    {
+    public void terminate(java.lang.Long id_) {
+        cache.reinit();
+    }
+
+    public void reinit() {
         cache.reinit();
     }
 
