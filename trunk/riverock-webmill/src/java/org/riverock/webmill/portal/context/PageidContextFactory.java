@@ -88,6 +88,7 @@ public final class PageidContextFactory extends ContextFactory {
             Long id = null;
             try {
                 id = new Long(pageId);  
+            }
             catch( java.lang.NumberFormatException e ) {
                 log.warn("NumberFormatException error of parsing pageid: " + pageId);
                 return null;
