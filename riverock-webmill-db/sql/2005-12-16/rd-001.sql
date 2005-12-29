@@ -1,11 +1,11 @@
-drop table main_i18n_message
-/
+-- drop table main_i18n_message
+-- /
 
-drop table main_i18n_item
-/
+-- drop table main_i18n_item
+-- /
 
-drop table main_i18n_storage
-/
+-- drop table main_i18n_storage
+-- /
 
 drop table auth_relate_time
 /
