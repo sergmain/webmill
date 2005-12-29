@@ -71,6 +71,7 @@ public final class CtxContextFactory extends ContextFactory {
         }
 
         try {
+/*
             if (log.isDebugEnabled()) {
                 log.debug("menu: "+menu);
                 log.debug("locale: "+factory.realLocale.toString());
@@ -81,10 +82,27 @@ public final class CtxContextFactory extends ContextFactory {
                     }
                 }
             }
+*/
+            if (menu==null || menu.getIndexMenuItem()==null) {
+                log.warn("menu: "+menu);
+                log.warn("locale: "+factory.realLocale.toString());
+                if (menu!=null) {
+                    log.warn("menu.getIndexMenuItem(): "+menu.getIndexMenuItem());
+                    if (menu.getIndexMenuItem()!=null) {
+                        log.warn("menu.getIndexMenuItem().getId(): "+menu.getIndexMenuItem().getId());
+                    }
+                    else {
+                        log.warn("menu.getIndexMenuItem() is null");
+                    }
+                }
+                else {
+                    log.warn("menu is null");
+                }
+                return factory;
+            }
 
-            // Todo what doing if index not found???
             factory.defaultCtx = DefaultCtx.getInstance( factoryParameter, menu.getIndexMenuItem().getId() );
-            factory.initFromContext(factoryParameter.getAdapter());
+            factory.initFromContext( factoryParameter.getAdapter() );
             factory.setPortletInfo( menu.getIndexMenuItem().getNameTemplate() );
 
             return factory;
