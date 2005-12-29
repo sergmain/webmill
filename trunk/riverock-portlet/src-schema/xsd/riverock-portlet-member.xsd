@@ -27,7 +27,7 @@
 -->
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
-		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+		<xs:documentation>Copyright 2002, riverock.org, http://www.riverock.org</xs:documentation>
 	</xs:annotation>
 	<xs:annotation>
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
@@ -83,16 +83,6 @@
 					<xs:enumeration value="insert"/>
 					<xs:enumeration value="change"/>
 					<xs:enumeration value="delete"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="authAccess" use="optional">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="D"/>
-					<xs:enumeration value="I"/>
-					<xs:enumeration value="S"/>
-					<xs:enumeration value="U"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
