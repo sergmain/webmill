@@ -864,8 +864,8 @@
 		<Fields name="DATE_POST" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
 		<Fields name="TEXT_COMMENT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 		<Fields name="CSS_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1" nullable="1"/>
-		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CSS" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPORT_LANG_SCC_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="7" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CSS" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_SCC_FK" pkName="ID_SITE_SLS_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
