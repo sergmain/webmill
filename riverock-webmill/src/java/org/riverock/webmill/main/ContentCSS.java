@@ -28,106 +28,98 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.common.tools.RsetTools;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 
-import org.apache.log4j.Logger;
-
 /**
+ * @author Serge Maslyukov
  *
- * $Revision$
- * $Date$
- * $RCSfile$
- *
+ * $Id$
  */
-public final class ContentCSS
-{
-    private final static Logger log = Logger.getLogger( ContentCSS.class );
+public final class ContentCSS {
+    private final static Logger log = Logger.getLogger(ContentCSS.class);
 
     private String css = "";
     private Calendar datePost = null;
 
-    private static CacheFactory cache = new CacheFactory( ContentCSS.class.getName() );
+    private static CacheFactory cache = new CacheFactory(ContentCSS.class.getName());
 
-    protected void finalize() throws Throwable
-    {
-        setCss( null );
-        setDatePost( null );
+    protected void finalize() throws Throwable {
+        css = null;
+        datePost = null;
 
         super.finalize();
     }
 
-    public ContentCSS(){}
+    public ContentCSS() {
+    }
 
-    public void terminate(Long id)
-    {
+    public void terminate(Long id) {
         cache.reinit();
     }
 
-    public void reinit()
-    {
+    public void reinit() {
         cache.reinit();
     }
 
     public static ContentCSS getInstance(DatabaseAdapter db__, long id__)
-            throws Exception
-    {
-        return (ContentCSS) cache.getInstanceNew(db__, id__ );
+        throws Exception {
+        return (ContentCSS) cache.getInstanceNew(db__, id__);
     }
 
     public static ContentCSS getInstance(DatabaseAdapter db__, Long id__)
-            throws Exception
-    {
-        if (id__==null)
+        throws Exception {
+        if (id__ == null)
             return null;
-        
+
         return (ContentCSS) cache.getInstanceNew(db__, id__);
     }
 
     static String sql_ =
         "select a.date_post, b.css_data " +
         "from   WM_PORTAL_CSS a, WM_PORTAL_CSS_DATA b " +
-        "where  a.ID_SITE_SUPPORT_LANGUAGE=? and a.is_current=1 and " +
+        "where  a.ID_SITE=? and a.is_current=1 and " +
         "       a.id_site_content_css=b.id_site_content_css " +
         "order by ID_SITE_CONTENT_CSS_DATA asc";
+
     static {
         try {
-            SqlStatement.registerSql( sql_, new ContentCSS().getClass() );
+            SqlStatement.registerSql(sql_, ContentCSS.class);
         }
-        catch( Throwable exception ) {
+        catch (Throwable exception) {
             final String es = "Exception in SqlStatement.registerSql()";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
+            log.error(es, exception);
+            throw new SqlStatementRegisterException(es, exception);
         }
     }
 
-    public ContentCSS(DatabaseAdapter db_, Long id_)
-            throws Exception
-    {
-        if (id_ == null)
+    public ContentCSS(DatabaseAdapter db_, Long siteId) throws Exception {
+        if (siteId == null)
             return;
 
         PreparedStatement ps = null;
         ResultSet rset = null;
         boolean isFirstRecord = true;
-        try
-        {
-            ps = db_.prepareStatement( sql_ );
+        try {
+            ps = db_.prepareStatement(sql_);
 
-            RsetTools.setLong(ps, 1, id_);
+            RsetTools.setLong(ps, 1, siteId);
             rset = ps.executeQuery();
-            setCss( "" );
-            while (rset.next()){
-                if (isFirstRecord){
-                    setDatePost( RsetTools.getCalendar(rset, "DATE_POST") );
+            css = "";
+            while (rset.next()) {
+                if (isFirstRecord) {
+                    datePost = RsetTools.getCalendar(rset, "DATE_POST");
                     isFirstRecord = false;
                 }
 
-                setCss( getCss() + RsetTools.getString(rset, "CSS_DATA") );
+                css += RsetTools.getString(rset, "CSS_DATA", "");
             }
         }
         catch (Exception e) {
@@ -145,7 +137,7 @@ public final class ContentCSS
         return css;
     }
 
-    public void setCss( String css ) {
+    public void setCss(String css) {
         this.css = css;
     }
 
@@ -153,14 +145,11 @@ public final class ContentCSS
         return datePost;
     }
 
-    public void setDatePost( Calendar datePost ) {
+    public void setDatePost(Calendar datePost) {
         this.datePost = datePost;
     }
 
     public boolean getIsEmpty() {
-        if (css==null || css.length()==0)
-            return true;
-        else
-            return false;
+        return StringTools.isEmpty(css);
     }
 }

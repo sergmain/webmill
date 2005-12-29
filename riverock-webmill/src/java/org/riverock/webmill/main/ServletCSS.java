@@ -26,7 +26,6 @@ package org.riverock.webmill.main;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Locale;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,29 +36,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.tools.servlet.HttpServletRequestWrapperFromString;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.portal.ContextFactory;
 
 /**
- * Author: mill
+ * @author Serge Maslyukov
  * Date: Nov 22, 2002
  * Time: 3:13:52 PM
- * <p/>
+ *
  * $Id$
  */
 public final class ServletCSS extends HttpServlet {
-
     private final static Logger log = Logger.getLogger( ServletCSS.class );
 
     public ServletCSS() {
-    }
-
-    protected void finalize() throws Throwable {
-        super.finalize();
     }
 
     public void doPost( final HttpServletRequest request, final HttpServletResponse response )
@@ -94,57 +86,14 @@ public final class ServletCSS extends HttpServlet {
                     log.debug( "Referer: " + Header.getReferer( request ) );
                 }
 
-                Locale locale = null;
-                Object obj = request.getParameter( ContainerConstants.NAME_LANG_PARAM );
-                if (obj!=null) {
-                    locale = StringTools.getLocale( obj.toString() );
-                    if ( log.isDebugEnabled() ) {
-                        log.debug( "locale from param: '" + locale.toString() + "'" );
-                    }
-                }
-
-                if (locale==null) {
-                    HttpServletRequestWrapperFromString wrapper =
-                        new HttpServletRequestWrapperFromString(request, Header.getReferer( request ) );
-
-                    final boolean flag = request.getServerName().equals( wrapper.getServerName()) &&
-                                            (request.getServerPort()!=-1?request.getServerPort():80 )==wrapper.getServerPort() &&
-                                            request.getContextPath().equals( wrapper.getContextPath());
-
-                    if (log.isDebugEnabled()) {
-                        log.debug( "locale not found in parameter and header. Start parse referer");
-                        log.debug( "Referer: " + Header.getReferer( request ) );
-                        log.debug( "Referer serverName: " +wrapper.getServerName()+", current serverName: " +request.getServerName());
-                        log.debug( "Referer contextPath: " +wrapper.getContextPath()+", current contextPath: " +request.getContextPath());
-                        log.debug( "Referer serverPort: " +wrapper.getServerPort()+", current serverPort: " +request.getServerPort());
-                        log.debug( "Referer is current context: " + flag);
-                    }
-
-                    if (flag) {
-                        ContextFactory contextFactory = ContextFactory.initTypeContext( db_, wrapper, p, null, null );
-                        locale = contextFactory.getRealLocale();
-                        if (log.isDebugEnabled()) {
-                            log.debug( "locale extracted from referer: " + locale.toString() );
-                        }
-                    }
-                }
-                if (locale==null) {
-                    if ( log.isDebugEnabled() ) {
-                        log.debug(
-                            "locale from ContextFactory is null. " +
-                            "Use default for this server locale: " + p.getDefaultLocale() );
-                    }
-                    locale = p.getDefaultLocale();
-                }
-
-                Long siteSupportLanguageId = p.getSupportLanguageId( locale );
+                Long siteId = p.getSiteId();
                 if ( log.isDebugEnabled() ) {
-                    log.debug( "siteSupportLanguageId: " + siteSupportLanguageId );
+                    log.debug( "siteId: " + siteId );
                 }
 
-                ContentCSS css = ContentCSS.getInstance( db_, siteSupportLanguageId );
+                ContentCSS css = ContentCSS.getInstance( db_, siteId );
                 if ( css == null || css.getIsEmpty() ) {
-                    out.write( "<style type=\"text/css\"><!-- -->" );
+                    out.write( "<style type=\"text/css\"><!-- --></style>" );
                 }
                 else {
                     out.write( css.getCss() );
@@ -178,6 +127,8 @@ public final class ServletCSS extends HttpServlet {
             throw new ServletException( es, e );
         }
         finally {
+            DatabaseManager.close( db_ );
+            db_ = null;
             if (out!=null) {
                 out.flush();
                 out.close();
