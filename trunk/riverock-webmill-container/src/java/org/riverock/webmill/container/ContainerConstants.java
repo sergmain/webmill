@@ -37,6 +37,8 @@ public class ContainerConstants {
     public final static String URL_SERVLET_NAME = "/url";
     public final static String URI_CTX_MANAGER = "/ctx";
 
+    public static final String URL_PAGE = "/page-";
+
     public final static String CTX_TYPE_INDEX = "mill.index";
     public final static String NAME_LANG_PARAM = "mill.lang";
     public final static String NAME_TYPE_CONTEXT_PARAM    = "mill.context";
@@ -59,8 +61,7 @@ public class ContainerConstants {
     public static final String PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE = "javax.portlet.webmill.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE";
     public static final String PORTAL_PORTLET_METADATA_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_METADATA_ATTRIBUTE";
 
-    // PORTAL_DEFAULT_CTX_ATTRIBUTE used in MenuPortlet
-    public static final String PORTAL_DEFAULT_CTX_ATTRIBUTE = "javax.portlet.webmill.PORTAL_DEFAULT_CTX_ID_ATTRIBUTE";
+    public static final String PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE = "javax.portlet.webmill.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE";
     public static final String PORTAL_PORTLET_CONFIG_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_CONFIG_ATTRIBUTE";
     public static final String PORTAL_PORTAL_CONTEXT_PATH = "javax.portlet.webmill.PORTAL_PORTAL_CONTEXT_PATH";
     public static final String PORTAL_CURRENT_CONTAINER = "javax.portlet.webmill.PORTAL_CURRENT_CONTAINER";
