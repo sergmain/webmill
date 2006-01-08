@@ -55,7 +55,7 @@ import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.schema.site.TemplateItemType;
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 

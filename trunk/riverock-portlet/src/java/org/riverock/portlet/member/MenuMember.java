@@ -48,6 +48,7 @@ import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
@@ -56,12 +57,11 @@ import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.schema.site.SiteTemplate;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
- * $Author$
- * <p/>
+ * @author Serge Maslyukov
+ *
  * $Id$
  */
 public final class MenuMember implements PortletResultObject, PortletGetList, PortletResultContent {
@@ -304,7 +304,11 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             return null;
 
         MenuMemberModuleType mod = new MenuMemberModuleType();
-        SiteTemplate siteTemplate = getMemberTemplate();
+        PortalTemplate portalTemplate = getMemberTemplate();
+        String templateName = null;
+        if (portalTemplate!=null) {
+            templateName = portalTemplate.getTemplateName();
+        }
         mod.setApplicationCode( applicationCode_ );
         try {
             mod.setModuleName( RsetTools.getString( rs, "NAME_OBJECT_ARM" ) );
@@ -316,14 +320,14 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
                 if( log.isDebugEnabled() ) {
                     log.debug( "PortletParam  getMemberTemplate - " + getMemberTemplate() );
-                    log.debug( "PortletParam  nameTemplate - " + getMemberTemplate().getNameTemplate() );
+                    log.debug( "PortletParam  nameTemplate - " + templateName );
 
-                    log.debug( "Module url - " + PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
+                    log.debug( "Module url - " + PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, templateName ) + '&' +
                         MemberConstants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
                         MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() );
                 }
 
-                mod.setModuleUrl( PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, siteTemplate.getNameTemplate() ) + '&' +
+                mod.setModuleUrl( PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, templateName ) + '&' +
                     MemberConstants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
                     MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() );
 
@@ -341,9 +345,9 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private SiteTemplate getMemberTemplate() {
+    private PortalTemplate getMemberTemplate() {
 
-        SiteTemplate st = null;
+        PortalTemplate st = null;
 
         if( log.isDebugEnabled() ) {
             log.debug( "Looking template for locale " + renderRequest.getLocale().toString() );
@@ -355,14 +359,14 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
         log.warn( "memberTemplate for Locale " + renderRequest.getLocale().toString() + " not initialized" );
 
-        return new SiteTemplate();
+        return null;
     }
 
-    private SiteTemplate getMemberTemplate( Locale locale ) {
+    private PortalTemplate getMemberTemplate( Locale locale ) {
         if( memberTemplates == null || memberTemplates.memberTemplate == null )
             return null;
 
-        return ( SiteTemplate ) memberTemplates.memberTemplate.get( locale.toString() );
+        return memberTemplates.memberTemplate.get( locale.toString() );
     }
 
     private final static class MenuMemberApplicationComparator implements Comparator<MenuMemberApplicationType> {

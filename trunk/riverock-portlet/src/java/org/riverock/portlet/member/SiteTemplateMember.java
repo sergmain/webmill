@@ -40,8 +40,10 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.sql.cache.SqlStatement;
-import org.riverock.webmill.container.schema.site.SiteTemplate;
+import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.container.portal.bean.PortalTemplateImpl;
 
 /**
  * $Revision$
@@ -53,7 +55,7 @@ public class SiteTemplateMember {
 
     private static CacheFactory cache = new CacheFactory( SiteTemplateMember.class.getName() );
 
-    public Map<String, SiteTemplate> memberTemplate = new HashMap<String, SiteTemplate>();
+    public Map<String, PortalTemplate> memberTemplate = new HashMap<String, PortalTemplate>();
 
     public void reinit() {
         cache.reinit();
@@ -81,6 +83,7 @@ public class SiteTemplateMember {
     }
 
     static String sql_ = null;
+
     static {
         sql_ =
             "select b.NAME_SITE_TEMPLATE, b.TEMPLATE_DATA, c.CUSTOM_LANGUAGE " +
@@ -90,11 +93,12 @@ public class SiteTemplateMember {
             "       c.ID_SITE=? ";
 
         try {
-            SqlStatement.registerSql( sql_, new SiteTemplateMember().getClass() );
+            SqlStatement.registerSql( sql_, SiteTemplateMember.class );
         }
         catch( Throwable e ) {
-            log.error( "Exception in registerSql, sql\n" + sql_, e );
-            // Todo throw RuntimeException
+            final String es = "Error in registerSql, sql\n" + sql_;
+            log.error( es, e );
+            throw new SqlStatementRegisterException( es, e );
         }
     }
 
@@ -109,10 +113,10 @@ public class SiteTemplateMember {
             rs = ps.executeQuery();
 
             while( rs.next() ) {
-                SiteTemplate st = ( SiteTemplate ) Unmarshaller.unmarshal( SiteTemplate.class,
+                PortalTemplateImpl st = ( PortalTemplateImpl ) Unmarshaller.unmarshal( PortalTemplateImpl.class,
                     new InputSource( new StringReader( RsetTools.getString( rs, "TEMPLATE_DATA" ) ) ) );
 
-                st.setNameTemplate( RsetTools.getString( rs, "NAME_SITE_TEMPLATE" ) );
+                st.setTemplateName( RsetTools.getString( rs, "NAME_SITE_TEMPLATE" ) );
 
                 memberTemplate.put( StringTools.getLocale( RsetTools.getString( rs, "CUSTOM_LANGUAGE" ) ).toString(),
                     st );

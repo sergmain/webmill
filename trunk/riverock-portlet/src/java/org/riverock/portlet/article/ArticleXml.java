@@ -55,7 +55,7 @@ import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
-import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.ContainerConstants;
 
 
