@@ -52,6 +52,9 @@
 	<DbTablePrefix>WM_PORTLET_ARTICLE</DbTablePrefix>
 	<DbTablePrefix>WM_LIST_LANGUAGE</DbTablePrefix>
 
+	<DbTablePrefix>WM_CASH</DbTablePrefix>
+	<DbTablePrefix>WM_PRICE</DbTablePrefix>
+
 	<DbTablePrefix>WM_NEWS</DbTablePrefix>
 
 	<TableToList>WM_NEWS_ITEM</TableToList>
@@ -62,6 +65,8 @@
 	<TableToList>WM_PORTAL_ACCESS_URL</TableToList>
 	<TableToList>WM_PORTAL_ACCESS_USERAGENT</TableToList>
 	<TableToList>WM_PORTAL_VIRTUAL_HOST</TableToList>
+	<TableToList>WM_PORTAL_LIST_SITE</TableToList>
+
 	<Logger>
 		<LogObjectClassName>org.apache.log4j.Logger</LogObjectClassName>
 		<LogFactoryMethod>org.apache.log4j.Logger.getLogger</LogFactoryMethod>
