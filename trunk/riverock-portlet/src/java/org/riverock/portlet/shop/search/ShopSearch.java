@@ -394,8 +394,8 @@ public class ShopSearch extends HttpServlet
                 CallableStatement call = db_.getConnection().prepareCall(
                         "begin ? := tools.process_request(?, ?, ?, ?, ?, ?, ?, ?); end;");
 
-                call.registerOutParameter(1, oracle.jdbc.driver.OracleTypes.VARCHAR);
-                call.registerOutParameter(9, oracle.jdbc.driver.OracleTypes.VARCHAR);
+                call.registerOutParameter(1, java.sql.Types.VARCHAR);
+                call.registerOutParameter(9, java.sql.Types.VARCHAR);
 
                 call.setString(2, RequestTools.getString(renderRequest, "s"));
                 call.setString(3, RequestTools.getString(renderRequest, "s1"));
