@@ -53,6 +53,12 @@
         <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-config.xsd"/>
         <property name="schema-package-java" value="${main-package}.schema.config"/>
         <antcall target="gen_schema_from_schema"/>
+    </target>         
+    <target name="gen_menu_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/menu/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-menu.xsd"/>
+        <property name="schema-package-java" value="${main-package}.schema.menu"/>
+        <antcall target="gen_schema_from_schema"/>
     </target>
     <target name="gen_shop_schema">
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/shop/"/>
@@ -99,6 +105,7 @@
         <antcall target="gen_portlet_menu_member_schema"/>
         <antcall target="gen_portlet_register_schema"/>
         <antcall target="gen_portlet_login_schema"/>
+        <antcall target="gen_menu_schema"/>
     </target>
     <target name="gen_portlet_register_schema">
         <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/register"/>
