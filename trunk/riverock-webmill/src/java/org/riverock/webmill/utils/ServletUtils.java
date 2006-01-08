@@ -52,6 +52,8 @@ import org.apache.log4j.Logger;
 public final class ServletUtils {
     private final static Logger log = Logger.getLogger( ServletUtils.class );
 
+/*
+
     public static void include(
         final HttpServletRequest request, final HttpServletResponse response,
         final Map<String, Object> parameters,
@@ -82,6 +84,8 @@ public final class ServletUtils {
         );
     }
 
+*/
+    
     public static String getString( final HttpServletRequest request, final String f) {
         return org.riverock.common.tools.ServletTools.getString(request, f, "", WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
     }

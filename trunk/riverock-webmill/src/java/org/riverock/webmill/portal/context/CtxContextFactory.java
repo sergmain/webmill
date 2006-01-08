@@ -38,7 +38,7 @@ import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
@@ -64,7 +64,7 @@ public final class CtxContextFactory extends ContextFactory {
         }
 
         // If not found context, processing as 'index_page'
-        MenuLanguageInterface menu = factoryParameter.getPortalInfo().getMenu(factory.realLocale.toString());
+        MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(factory.realLocale.toString());
         if (menu==null){
             log.error( "menu is null, locale: "+factory.realLocale.toString() );
             return factory;

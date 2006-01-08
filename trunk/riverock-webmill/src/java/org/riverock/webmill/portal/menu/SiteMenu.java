@@ -38,7 +38,7 @@ import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
-import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
 
 import org.apache.log4j.Logger;
 
@@ -54,7 +54,7 @@ public final class SiteMenu {
     static {
         try {
             Class c = SiteMenu.class;
-            SqlStatement.registerRelateClass( c, MenuLanguage.class );
+            SqlStatement.registerRelateClass( c, PortalMenuLanguage.class );
             SqlStatement.registerRelateClass( c, GetWmPortalSiteLanguageWithIdSiteList.class );
         }
         catch( Exception exception ) {
@@ -64,10 +64,10 @@ public final class SiteMenu {
         }
     }
 
-    private List<MenuLanguageInterface> menuLanguage = new ArrayList<MenuLanguageInterface>();
+    private List<MenuLanguage> menuLanguage = new ArrayList<MenuLanguage>();
     private static Map<Long, SiteMenu> siteMenuLaguage = new HashMap<Long, SiteMenu>();
 
-    public List<MenuLanguageInterface> getMenuLanguage() {
+    public List<MenuLanguage> getMenuLanguage() {
         return menuLanguage;
     }
 
@@ -112,11 +112,11 @@ public final class SiteMenu {
         }
     }
 
-    public MenuLanguageInterface getMenuLanguage( final String localeName) {
+    public MenuLanguage getMenuLanguage( final String localeName) {
 
-        Iterator<MenuLanguageInterface> it = menuLanguage.iterator();
+        Iterator<MenuLanguage> it = menuLanguage.iterator();
         while (it.hasNext()) {
-            MenuLanguageInterface tempCat = it.next();
+            MenuLanguage tempCat = it.next();
 
             if (tempCat==null || tempCat.getLocaleStr()==null)
                 continue;
@@ -126,7 +126,7 @@ public final class SiteMenu {
         }
 
         log.warn("Menu for locale "+localeName+" not found");
-        return new MenuLanguage();
+        return new PortalMenuLanguage();
     }
 
     private SiteMenu( final DatabaseAdapter db_, final Long idSite) throws PortalException {
@@ -143,7 +143,7 @@ public final class SiteMenu {
 
             for (int i=0; i<list.getWmPortalSiteLanguageCount(); i++) {
                 WmPortalSiteLanguageItemType item = list.getWmPortalSiteLanguage(i);
-                menuLanguage.add( new MenuLanguage(db_, item) );
+                menuLanguage.add( new PortalMenuLanguage(db_, item) );
             }
         }
         catch(Throwable e) {

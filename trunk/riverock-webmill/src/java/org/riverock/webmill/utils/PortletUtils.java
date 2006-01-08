@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portlet;
+package org.riverock.webmill.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +35,9 @@ import java.util.Map;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.common.multipart.AbstractPart;
 import org.riverock.common.multipart.FilePart;
@@ -44,12 +47,13 @@ import org.riverock.common.multipart.MultipartRequestWrapper;
 import org.riverock.common.multipart.UploadException;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.schema.site.SiteTemplateParameterType;
+import org.riverock.webmill.exception.PortalException;
 
 /**
  * $Id$
  */
-public final class PortletTools {
+public final class PortletUtils {
+    private final static Logger log = Logger.getLogger(PortletUtils.class);
 
     public static final String MIME_TYPE_TEXT_XML = "text/xml";
     public static final String MIME_TYPE_TEXT_HTML = "text/html";
@@ -57,22 +61,6 @@ public final class PortletTools {
 
     public static String getString(final PortletRequest request, final String f, final String def) {
         return PortletService.getString( request, f, def, WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
-    }
-
-    public static String getString( final List v, final String nameParam) throws IllegalArgumentException{
-        return getString(v, nameParam, null);
-    }
-
-    public synchronized static String getString( final List v, final String nameParam, final String defValue ) {
-        if (v == null || nameParam == null || nameParam.trim().length() == 0)
-            return defValue;
-
-        for (int i = 0; i < v.size(); i++) {
-            SiteTemplateParameterType item = (SiteTemplateParameterType) v.get(i);
-            if (item.getName().equals(nameParam))
-                return item.getValue();
-        }
-        return defValue;
     }
 
     private static final boolean saveUploadedFilesToDisk = false;
@@ -142,5 +130,27 @@ public final class PortletTools {
         }
 
         return p;
+    }
+
+    public static void setContentType(HttpServletResponse response) throws PortalException {
+        setContentType(response, WebmillConfig.getHtmlCharset());
+    }
+
+    public static void setContentType(HttpServletResponse response, String charset) throws PortalException {
+
+        final String type = "text/html; charset=" + charset;
+
+        if (log.isDebugEnabled()) {
+            log.debug("set new charset: " + type);
+            log.debug("response: " + response);
+        }
+
+        try {
+            response.setContentType(type);
+        } catch (Exception e) {
+            final String es = "Error set new content type to " + charset;
+            log.error(es, e);
+            throw new PortalException(es, e);
+        }
     }
 }

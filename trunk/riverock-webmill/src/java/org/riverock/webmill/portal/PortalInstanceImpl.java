@@ -122,7 +122,9 @@ public class PortalInstanceImpl implements PortalInstance  {
 
         // all methos in HttpServletResponse must invoked only from ContextNavigator
         // all others invokes are wrong
-        // 2005.05.24 - may be not wrong. need investigate
+        // 
+        // Some invoke was made directly to servletResponse,
+        // because not implemented ServletContextWrapper (and getRequestDispatcher() method)
         boolean isOk = false;
 
         public InternalServletResponseWrapper( HttpServletResponse httpServletResponse ) {
@@ -130,15 +132,30 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
 
         public ServletResponse getResponse(){
-            if ( !isOk )
-                log.error( "!!! Requested getResponse() from http response" );
+            if ( !isOk ) {
+                log.warn( "!!! Requested getResponse() from http response" );
+
+                try {
+                    throw new Exception("error");
+                }
+                catch(Exception e) {
+                    log.error("error", e);
+                }
+            }
 
             return super.getResponse();
         }
 
         public void setResponse(ServletResponse response){
-            if ( !isOk )
+            if ( !isOk ) {
                 log.warn( "!!! Requested setResponse() from http response" );
+                try {
+                    throw new Exception("error");
+                }
+                catch(Exception e) {
+                    log.error("error", e);
+                }
+            }
 
             super.setResponse( response );
         }
@@ -149,7 +166,7 @@ public class PortalInstanceImpl implements PortalInstance  {
 
             return super.getWriter();
         }
-
+                        
         public ServletOutputStream getOutputStream() throws IOException {
             if ( !isOk )
                 log.warn( "!!! Requested getOutputStream() from http response" );
@@ -205,23 +222,9 @@ public class PortalInstanceImpl implements PortalInstance  {
 
         // Prepare Nested D... Context
         synchronized (syncCounter) {
-            if (log.isDebugEnabled())
-                log.debug("counterNDC #1 " + counterNDC);
-
             counter = counterNDC;
             ++counterNDC;
-
-            if (log.isDebugEnabled()) {
-                log.debug("counterNDC #2 " + counterNDC);
-                log.debug("counter #3 " + counter);
-            }
-
             NDC.push("" + counter);
-
-            if (log.isDebugEnabled()) {
-                log.debug("counterNDC #4 " + counterNDC);
-                log.debug("counter #5 " + counter);
-            }
         }
 
         if (log.isDebugEnabled()) {

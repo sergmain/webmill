@@ -37,6 +37,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.RenderRequest;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
+import javax.servlet.ServletResponseWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
@@ -70,14 +71,15 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     private Map<String, List<String>> portletProperties = null;
 
-    private HttpServletResponse httpServletResponse = null;
-    private ServletResponse servletResponse = null;
+    private ServletResponseWrapper servletResponse = null;
 
     protected String title = null;
 
     public byte[] getBytes() {
-        if (servletResponse!=null && servletResponse instanceof ServletResponseWrapperIncludeV3 )
-            return ((ServletResponseWrapperIncludeV3)servletResponse).getBytes();
+        if (servletResponse!=null &&
+            servletResponse.getResponse()!=null &&
+            servletResponse.getResponse() instanceof ServletResponseWrapperIncludeV3 )
+            return ((ServletResponseWrapperIncludeV3)servletResponse.getResponse()).getBytes();
         else {
             log.warn(
                 "ServletResponce not instance of ServletResponseWrapperIncludeV3. " +
@@ -104,15 +106,22 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public RenderResponseImpl( PortalRequestInstance portalRequestInstance, 
-        RenderRequest renderRequest, HttpServletResponse response, String namespace, 
+        RenderRequest renderRequest, HttpServletResponse response, String namespace,
         Map<String, List<String>> portletProperties) {
         super(response);
         this.portalRequestInstance = portalRequestInstance;
         this.renderRequest = renderRequest;
         this.portletProperties = portletProperties;
         this.namespace = namespace;
-        this.httpServletResponse = response;
-        this.servletResponse = new ServletResponseWrapperIncludeV3( portalRequestInstance.getLocale() );
+        this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperIncludeV3( portalRequestInstance.getLocale() ) );
+    }
+
+    public ServletResponse getResponse() {
+        return servletResponse.getResponse();
+    }
+
+    public void setResponse(ServletResponse servletResponse) {
+        this.servletResponse.setResponse( servletResponse );
     }
 
     public boolean getIsRedirected() {

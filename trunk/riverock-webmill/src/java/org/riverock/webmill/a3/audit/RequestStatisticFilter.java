@@ -80,7 +80,7 @@ public final class RequestStatisticFilter implements Filter {
      */
     private FilterConfig filterConfig = null;
 
-    private static Map userAgent = null;
+    private static Map<String, Long> userAgent = null;
     private static Map<String, Long> url = null;
 
     private static Object userAgentSync = new Object();
@@ -109,6 +109,7 @@ public final class RequestStatisticFilter implements Filter {
         throws ServletException {
 
         String startInfo = null;
+
         //Todo uncomment for production
         if (log.isDebugEnabled()) {
             log.debug("enter into filter");
@@ -166,7 +167,7 @@ public final class RequestStatisticFilter implements Filter {
                                         if (log.isDebugEnabled())
                                             log.debug("count of userAgent " + userAgentList.getWmPortalAccessUseragentCount());
 
-                                        userAgent = new HashMap(userAgentList.getWmPortalAccessUseragentCount() + 10, 1.2f);
+                                        userAgent = new HashMap<String, Long>(userAgentList.getWmPortalAccessUseragentCount() + 10, 1.2f);
 
                                         for (int i = 0; i < userAgentList.getWmPortalAccessUseragentCount(); i++) {
                                             WmPortalAccessUseragentItemType userAgentItem =

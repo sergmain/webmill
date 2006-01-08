@@ -584,17 +584,16 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             this.cookies = new Cookie[0];
         }
 
-//        this.setAttribute( ContainerConstants.PORTAL_DEFAULT_PORTLET_TYPE_ATTRIBUTE, portalRequestInstance.getDefaultPortletDefinition() );
         this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getNameTemplate() );
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
 
         // PORTAL_QUERY_STRING_ATTRIBUTE constants can be deleted 
-        // after rewrite all member module with 'lookup' type
+        // after rewrite invoke method in member module with 'lookup' type
         this.setAttribute( ContainerConstants.PORTAL_QUERY_STRING_ATTRIBUTE, httpRequest.getQueryString() );
         this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );
 
-//        this.setAttribute( ContainerConstants.PORTAL_URL_RESOURCE_ATTRIBUTE, portalRequestInstance.getUrlResource() );
+        // Todo remove dependencies on org.riverock.webmill package
         this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequestInstance.getCookieManager() );
         this.setAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH, this.portalContextPath );
 

@@ -54,7 +54,7 @@ public final class ContextLocaleUtils {
     static Locale prepareLocale( ContextFactory.ContextFactoryParameter factoryParameter) throws PortalPersistenceException {
         // Todo - filter preferredLocale with locale defined for this site
         Locale tempLocale = null;
-        tempLocale = getPreferredLocale(factoryParameter.getAdapter(), factoryParameter.getRequest(), factoryParameter.getPortalInfo().getSites().getIdSite());
+        tempLocale = getPreferredLocale(factoryParameter.getAdapter(), factoryParameter.getRequest(), factoryParameter.getPortalInfo().getSiteId() );
         if (tempLocale==null)
             tempLocale = factoryParameter.getPortalInfo().getDefaultLocale();
 

@@ -46,16 +46,16 @@ import org.riverock.webmill.container.impl.PortletRequestDispatcherImpl;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
-import org.riverock.webmill.container.schema.site.TemplateItemType;
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portlet.ContextNavigator;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
+import org.riverock.webmill.utils.PortletUtils;
 
 /**
  * User: SergeMaslyukov
@@ -77,7 +77,7 @@ public final class PageElement {
     private SitePortletData data = null;
 
     private PortletEntry portletEntry = null;
-    private TemplateItemType templateItemType = null;
+    private PortalTemplateItem portalTemplateItem = null;
     private boolean isUrl = false;
     private boolean isXml = false;
     private ContextFactory.PortletParameters params = null;
@@ -123,7 +123,7 @@ public final class PageElement {
         namespace = null;
         data = null;
         portletEntry = null;
-        templateItemType = null;
+        portalTemplateItem = null;
         params = null;
         redirectUrl = null;
         if (log.isDebugEnabled()) {
@@ -167,10 +167,9 @@ public final class PageElement {
         catch( Throwable e ) {
             final String notImpl = "processAction method not implemented";
 
-            if ( !e.getMessage().contains(notImpl) ) {
+            if ( e.getMessage()==null || !e.getMessage().contains(notImpl) ) {
                 log.error("Exception: ", e);
-            }
-//            exception = e;
+	    }
         }
     }
 
@@ -265,7 +264,7 @@ public final class PageElement {
                 log.debug( "isXml() - "+isXml );
 
                 if ( isXml )
-                    log.debug( "XmlRoot - "+templateItemType.getXmlRoot() );
+                    log.debug( "XmlRoot - "+portalTemplateItem.getXmlRoot() );
 
                 log.debug( "portletBytes - " + portletBytes );
             }
@@ -361,7 +360,7 @@ containing the portlet is restarted.
             String contextPath = getContextPath(portalRequestInstance);
 
             Map<String, Object> map = null;
-            if (templateItemType.getTypeObject().getType() == TemplateItemTypeTypeType.DYNAMIC_TYPE) {
+            if (portalTemplateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                 map = preparePortletParameters(portalRequestInstance);
             }
             else {
@@ -384,7 +383,7 @@ containing the portlet is restarted.
                 portalRequestInstance.getPortalContext() );
 
             // if current portlet is dynamic - set metadata
-            if (templateItemType.getTypeObject().getType() == TemplateItemTypeTypeType.DYNAMIC_TYPE) {
+            if (portalTemplateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                 properties = initMetadata(portalRequestInstance.getDefaultCtx().getCtx());
             }
             else {
@@ -395,23 +394,23 @@ containing the portlet is restarted.
             }
 
             // set portlet specific attribute
-            renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, templateItemType.getParameterAsReference());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, templateItemType.getCode());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, templateItemType.getXmlRoot());
+            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, portalTemplateItem.getCode());
+            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
             renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE, portletEntry.getPortletDefinition().getFullPortletName());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
             renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
+            renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
 
-            if (portalRequestInstance.getDefaultCtx() != null) {
-                renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CTX_ATTRIBUTE, portalRequestInstance.getDefaultCtx());
+            if (portalRequestInstance.getDefaultCtx() != null && portalRequestInstance.getDefaultCtx().getCtx()!=null ) {
+                renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getIdSiteCtxCatalog() );
             }
 
-            // Todo after remove all member module, you can delete next line
+            // Todo after rewrite member portlet, you can delete next line
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
             renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );
 
-            ContextNavigator.setContentType(renderResponse);
+            PortletUtils.setContentType(renderResponse);
 
             actionRequest = new ActionRequestImpl(
                 map,
@@ -573,12 +572,12 @@ containing the portlet is restarted.
         return isUrl;
     }
 
-    public TemplateItemType getTemplateItemType() {
-        return templateItemType;
+    public PortalTemplateItem getPortalTemplateItem() {
+        return portalTemplateItem;
     }
 
-    public void setTemplateItemType( TemplateItemType templateItemType ) {
-        this.templateItemType = templateItemType;
+    public void setPortalTemplateItem( PortalTemplateItem portalTemplateItem ) {
+        this.portalTemplateItem = portalTemplateItem;
     }
 
     public SitePortletData getData() {

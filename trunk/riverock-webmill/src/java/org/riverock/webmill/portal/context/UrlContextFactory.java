@@ -36,6 +36,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.portal.ContextFactory;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * $Id$
@@ -55,7 +56,6 @@ public final class UrlContextFactory extends ContextFactory {
             return null;
     }
 
-    public static final String URL_PAGE = "/page-";
     protected Long initPortalParameters(ContextFactoryParameter factoryParameter) {
 
         log.debug("Start process as page, format request: /<CONTEXT>/url/<LOCALE>,<PORTLET_TYPE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page-/<ID_CONTEXT><URL_TO_RESOURCE>");
@@ -100,12 +100,12 @@ public final class UrlContextFactory extends ContextFactory {
             log.debug( "part: " + path.substring( idxSlash ) );
         }
 
-        idxSlash = path.indexOf( URL_PAGE, idxSlash );
-        if (log.isDebugEnabled()) log.debug("idx of '" + URL_PAGE + "': " + idxSlash);
+        idxSlash = path.indexOf( ContainerConstants.URL_PAGE, idxSlash );
+        if (log.isDebugEnabled()) log.debug("idx of '" + ContainerConstants.URL_PAGE + "': " + idxSlash);
         if (idxSlash==-1)
             return null;
 
-        urlResource = path.substring( idxSlash + URL_PAGE.length() );
+        urlResource = path.substring( idxSlash + ContainerConstants.URL_PAGE.length() );
 
         if (log.isDebugEnabled()) log.debug("urlResource: " + urlResource);
         return ctxId;

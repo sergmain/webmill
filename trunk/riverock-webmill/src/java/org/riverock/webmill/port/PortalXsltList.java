@@ -38,14 +38,16 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 
 /**
  * $Id$
  */
-public final class PortalXsltList {
+public final class PortalXsltList implements XsltTransformerManager {
     private final static Logger log = Logger.getLogger(PortalXsltList.class);
 
-    public Map<String, PortalXslt> hash = new HashMap<String, PortalXslt>();
+    public Map<String, XsltTransformer> hash = new HashMap<String, XsltTransformer>();
 
     static {
         try {
@@ -73,7 +75,7 @@ public final class PortalXsltList {
     public PortalXsltList() {
     }
 
-    public PortalXslt getXslt(String lang) {
+    public XsltTransformer getXslt(String lang) {
         if (lang == null) {
             return null;
         }
@@ -82,7 +84,7 @@ public final class PortalXsltList {
             log.debug("XsltList.size - " + hash.size());
         }
 
-        return (PortalXslt) hash.get(lang);
+        return hash.get(lang);
     }
 
     public static PortalXsltList getInstance(DatabaseAdapter db_, Long idSite) throws PortalException {
@@ -103,7 +105,7 @@ public final class PortalXsltList {
         PreparedStatement ps = null;
         ResultSet rset = null;
 
-        Map<String, PortalXslt> tempHash = new HashMap<String, PortalXslt>();
+        Map<String, XsltTransformer> tempHash = new HashMap<String, XsltTransformer>();
         try {
             ps = db_.prepareStatement(sql_);
 
@@ -118,9 +120,7 @@ public final class PortalXsltList {
                     log.debug("XsltList. id - " + id);
                 }
 
-                PortalXslt item = PortalXslt.getInstance(db_, id);
-                item.xsltLang = lang;
-
+                XsltTransformer item = PortalXslt.getInstance(db_, id);
                 tempHash.put(lang, item);
             }
         }

@@ -24,7 +24,7 @@
  */
 package org.riverock.webmill.portal;
 
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 
 /**
  * User: SergeMaslyukov
@@ -36,22 +36,22 @@ abstract class TemplateItemBaseClass {
 
     abstract void getData( PageElement pageElement );
     abstract void processAction( PageElement item );
-    abstract TemplateItemTypeTypeType getType();
+    abstract PortalTemplateItemType getType();
 
     static void renderTemplateItem( PageElement pageElement ) {
 
         TemplateItemBaseClass templateItem = null;
-        switch (pageElement.getTemplateItemType().getTypeObject().getType()) {
-            case TemplateItemTypeTypeType.PORTLET_TYPE:
+        switch (pageElement.getPortalTemplateItem().getTypeObject().getType()) {
+            case PortalTemplateItemType.PORTLET_TYPE:
                 templateItem = new TemplateItemAsPortlet();
                 break;
-            case TemplateItemTypeTypeType.DYNAMIC_TYPE:
+            case PortalTemplateItemType.DYNAMIC_TYPE:
                 templateItem =  new TemplateItemAsDynamic();
                 break;
-            case TemplateItemTypeTypeType.FILE_TYPE:
+            case PortalTemplateItemType.FILE_TYPE:
                 templateItem = new TemplateItemAsFile();
                 break;
-            case TemplateItemTypeTypeType.CUSTOM_TYPE:
+            case PortalTemplateItemType.CUSTOM_TYPE:
                 templateItem = new TemplateItemAsCustom();
                 break;
             default:
@@ -63,11 +63,11 @@ abstract class TemplateItemBaseClass {
     static void processActionTemplateItem( PageElement pageElement ) {
 
         TemplateItemBaseClass templateItem = null;
-        switch (pageElement.getTemplateItemType().getTypeObject().getType()) {
-            case TemplateItemTypeTypeType.PORTLET_TYPE:
+        switch (pageElement.getPortalTemplateItem().getTypeObject().getType()) {
+            case PortalTemplateItemType.PORTLET_TYPE:
                 templateItem = new TemplateItemAsPortlet();
                 break;
-            case TemplateItemTypeTypeType.DYNAMIC_TYPE:
+            case PortalTemplateItemType.DYNAMIC_TYPE:
                 templateItem =  new TemplateItemAsDynamic();
                 break;
             default:

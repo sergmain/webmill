@@ -43,22 +43,25 @@ import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.container.schema.site.SiteTemplate;
 import org.riverock.webmill.container.schema.site.SiteTemplateDescListType;
 import org.riverock.webmill.container.schema.site.SiteTemplateDescriptionType;
-import org.riverock.webmill.container.schema.site.SiteTemplateParameterType;
-import org.riverock.webmill.container.schema.site.TemplateItemType;
+import org.riverock.webmill.container.portal.bean.PortalTemplateImpl;
+import org.riverock.webmill.container.portal.bean.PortalTemplateItemImpl;
+import org.riverock.webmill.container.portal.bean.PortalTemplateParameterImpl;
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.interfaces.portal.template.PortalTemplateManager;
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
 
 /**
  * $Id$
  */
-public final class SiteTemplateList {
-    private final static Logger log = Logger.getLogger( SiteTemplateList.class );
-    private final static CacheFactory cache = new CacheFactory( SiteTemplateList.class.getName() );
+public final class PortalTemplateManagerImpl implements PortalTemplateManager {
+    private final static Logger log = Logger.getLogger( PortalTemplateManagerImpl.class );
+    private final static CacheFactory cache = new CacheFactory( PortalTemplateManagerImpl.class.getName() );
 
-    public Map<String, SiteTemplate> hash = new HashMap<String, SiteTemplate>(10);
-    public Map<Long, SiteTemplate> hashId = new HashMap<Long, SiteTemplate>(10);
+    public Map<String, PortalTemplate> hash = new HashMap<String, PortalTemplate>(10);
+    public Map<Long, PortalTemplate> hashId = new HashMap<Long, PortalTemplate>(10);
 
     public SiteTemplateDescListType templateList = new SiteTemplateDescListType();
 
@@ -66,15 +69,15 @@ public final class SiteTemplateList {
         cache.reinit();
     }
 
-    public SiteTemplateList(){}
+    public PortalTemplateManagerImpl(){}
 
-    public static SiteTemplateList getInstance(DatabaseAdapter db__, long id__) throws PortalException{
+    public static PortalTemplateManagerImpl getInstance(DatabaseAdapter db__, long id__) throws PortalException{
         return getInstance(db__, id__ );
     }
 
-    public static SiteTemplateList getInstance(DatabaseAdapter db__, Long id__) throws PortalException{
+    public static PortalTemplateManagerImpl getInstance(DatabaseAdapter db__, Long id__) throws PortalException{
         try {
-            return (SiteTemplateList) cache.getInstanceNew(db__, id__);
+            return (PortalTemplateManagerImpl) cache.getInstanceNew(db__, id__);
         } catch (GenericException e) {
             String es = "Error in getInstance(DatabaseAdapter db__, Long id__)";
             log.error(es, e);
@@ -94,13 +97,13 @@ public final class SiteTemplateList {
         super.finalize();
     }
 
-    public SiteTemplate getTemplate( final long id ) {
+    public PortalTemplate getTemplate( final long id ) {
         if (log.isDebugEnabled()) log.debug("search  template for id - "+ id);
 
-        return (SiteTemplate)hashId.get( id );
+        return hashId.get( id );
     }
 
-    public SiteTemplate getTemplate( final String nameTemplate, final String lang ) {
+    public PortalTemplate getTemplate( final String nameTemplate, final String lang ) {
         if ( log.isDebugEnabled() ) {
             log.debug( "search template for name: '" + nameTemplate + "', lang: '" + lang + "'" );
         }
@@ -108,7 +111,7 @@ public final class SiteTemplateList {
         if ( nameTemplate == null || lang == null )
             return null;
 
-        return (SiteTemplate)hash.get( nameTemplate + '_' + lang );
+        return hash.get( nameTemplate + '_' + lang );
     }
 
     static String sql_ = null;
@@ -121,7 +124,7 @@ public final class SiteTemplateList {
             "where  b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
         try {
-            SqlStatement.registerSql( sql_, SiteTemplateList.class );
+            SqlStatement.registerSql( sql_, PortalTemplateManagerImpl.class );
         }
         catch( Throwable exception ) {
             final String es = "Exception in SqlStatement.registerSql()";
@@ -130,7 +133,7 @@ public final class SiteTemplateList {
         }
     }
 
-    public SiteTemplateList(DatabaseAdapter db_, Long idSite) throws PortalException
+    public PortalTemplateManagerImpl(DatabaseAdapter db_, Long idSite) throws PortalException
     {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -147,14 +150,13 @@ public final class SiteTemplateList {
                 String templateData = null;
                 try {
                     templateData = RsetTools.getString(rs, "TEMPLATE_DATA");
-                    SiteTemplate st = null;
-                    st = digestSiteTemplate(templateData);
-                    st.setNameTemplate( RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
+                    PortalTemplate st = null;
+                    st = digestSiteTemplate(templateData, RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
                     Long idSiteTemplate = RsetTools.getLong(rs, "ID_SITE_TEMPLATE");
                     String lang = StringTools.getLocale(
                         RsetTools.getString(rs, "CUSTOM_LANGUAGE")
                     ).toString();
-                    hash.put( st.getNameTemplate()+'_'+lang, st);
+                    hash.put( st.getTemplateName()+'_'+lang, st);
                     hashId.put( idSiteTemplate, st );
 
                     SiteTemplateDescriptionType desc = new SiteTemplateDescriptionType();
@@ -183,34 +185,45 @@ public final class SiteTemplateList {
         }
     }
 
-    public static SiteTemplate digestSiteTemplate(String templateData) throws IOException, SAXException {
+    public static PortalTemplate digestSiteTemplate(String templateData, String templateName) throws IOException, SAXException {
         if (StringTools.isEmpty(templateData) ) {
-            return new SiteTemplate();
+            final PortalTemplateImpl portalTemplate = new PortalTemplateImpl();
+            portalTemplate.setTemplateName( templateName );
+            return portalTemplate;
         }
         if (log.isDebugEnabled()) {
             log.debug("Digest template:\n" + templateData);
         }
-        SiteTemplate st = null;
+        PortalTemplateImpl st = null;
 
         Digester digester = new Digester();
         digester.setValidating(false);
 
-        digester.addObjectCreate("SiteTemplate", SiteTemplate.class);
+        digester.addObjectCreate("SiteTemplate", PortalTemplateImpl.class);
         digester.addSetProperties("SiteTemplate", "role", "role");
 
-        digester.addObjectCreate("SiteTemplate/SiteTemplateItem", TemplateItemType.class);
+        digester.addObjectCreate("SiteTemplate/SiteTemplateItem", PortalTemplateItemImpl.class);
         digester.addSetProperties("SiteTemplate/SiteTemplateItem", "type", "type");
         digester.addSetProperties("SiteTemplate/SiteTemplateItem", "value", "value");
         digester.addSetProperties("SiteTemplate/SiteTemplateItem", "code", "code");
         digester.addSetProperties("SiteTemplate/SiteTemplateItem", "xmlRoot", "xmlRoot");
-        digester.addSetNext("SiteTemplate/SiteTemplateItem", "addSiteTemplateItem");
+        digester.addSetNext("SiteTemplate/SiteTemplateItem", "addSiteTemplateItem" );
+/*
+        digester.addCallMethod(
+            "SiteTemplate/SiteTemplateItem",
+            "addSiteTemplateItem",
+            1,
+            new Class[] { PortalTemplateItem.class }
+        );
+*/
 
-        digester.addObjectCreate("SiteTemplate/SiteTemplateItem/Parameter", SiteTemplateParameterType.class);
+        digester.addObjectCreate("SiteTemplate/SiteTemplateItem/Parameter", PortalTemplateParameterImpl.class);
         digester.addSetProperties("SiteTemplate/SiteTemplateItem/Parameter", "name", "name");
         digester.addSetProperties("SiteTemplate/SiteTemplateItem/Parameter", "value", "value");
         digester.addSetNext("SiteTemplate/SiteTemplateItem/Parameter", "addParameter");
 
-        st = (SiteTemplate) digester.parse( new ByteArrayInputStream( templateData.getBytes() ));
+        st = (PortalTemplateImpl) digester.parse( new ByteArrayInputStream( templateData.getBytes() ));
+        st.setTemplateName( templateName );
 
         return st;
     }

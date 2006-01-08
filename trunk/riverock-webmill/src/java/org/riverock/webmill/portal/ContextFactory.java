@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.webmill.portal;
 
 import java.util.HashMap;
@@ -38,22 +37,22 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.context.CtxContextFactory;
 import org.riverock.webmill.portal.context.PageContextFactory;
 import org.riverock.webmill.portal.context.PageidContextFactory;
 import org.riverock.webmill.portal.context.UrlContextFactory;
-import org.riverock.webmill.portal.menu.MenuItem;
+import org.riverock.webmill.portal.menu.PortalMenuItem;
 import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
 import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
@@ -91,7 +90,7 @@ public abstract class ContextFactory {
     public final static class ContextFactoryParameter {
         private DatabaseAdapter adapter = null;
         private HttpServletRequest request = null;
-        private PortalInfoImpl portalInfo = null;
+        private PortalInfo portalInfo = null;
         private PortletContainer portletContainer = null;
         private Map<String, Object> httpRequestParameter = null;
 
@@ -103,7 +102,7 @@ public abstract class ContextFactory {
             return request;
         }
 
-        public PortalInfoImpl getPortalInfo() {
+        public PortalInfo getPortalInfo() {
             return portalInfo;
         }
 
@@ -236,8 +235,8 @@ public abstract class ContextFactory {
     protected abstract Long initPortalParameters( ContextFactoryParameter factoryParameter) throws PortalException;
     protected abstract void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter ) throws PortalException;
 
-    public PortletParameters getParameters( final String namespace, final TemplateItemTypeTypeType type ) {
-        if (type!=null && type.getType()==TemplateItemTypeTypeType.DYNAMIC_TYPE) {
+    public PortletParameters getParameters( final String namespace, final PortalTemplateItemType type ) {
+        if (type!=null && type.getType()==PortalTemplateItemType.DYNAMIC_TYPE) {
             return new PortletParameters(namespace, dynamicParameter);
         }
 
@@ -345,7 +344,7 @@ public abstract class ContextFactory {
      * init context type and name of template,
      * if type of context is null, set it to 'index_page'
      */
-    public static ContextFactory initTypeContext( final DatabaseAdapter db, final HttpServletRequest request, final PortalInfoImpl portalInfo, final Map<String, Object> httpRequestParameter, final PortletContainer portletContainer )
+    public static ContextFactory initTypeContext( final DatabaseAdapter db, final HttpServletRequest request, final PortalInfo portalInfo, final Map<String, Object> httpRequestParameter, final PortletContainer portletContainer )
         throws PortalException, PortalPersistenceException {
 
         ContextFactory contextFactoryTemp = null;
@@ -406,7 +405,7 @@ public abstract class ContextFactory {
         if (defaultCtx.ctx==null)
             return;
 
-        MenuItemInterface menuItem = new MenuItem(db, defaultCtx.ctx);
+        MenuItem menuItem = new PortalMenuItem(db, defaultCtx.ctx);
         setPortletInfo( menuItem.getNameTemplate() );
 
         if (defaultCtx.siteLang!=null) {

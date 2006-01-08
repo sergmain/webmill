@@ -24,7 +24,8 @@
  */
 package org.riverock.webmill.portal;
 
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
 
 import org.apache.log4j.Logger;
 
@@ -40,7 +41,7 @@ public final class TemplateItemAsFile extends TemplateItemBaseClass {
     void getData( PageElement pageElement ) {
 
         if ( log.isDebugEnabled() )
-            log.debug( "include file - "+pageElement.getTemplateItemType().getValue());
+            log.debug( "include file - "+pageElement.getPortalTemplateItem().getValue());
 
         throw new IllegalArgumentException( "not implemented" );
 /*
@@ -57,7 +58,7 @@ public final class TemplateItemAsFile extends TemplateItemBaseClass {
     void processAction( PageElement item ) {
     }
 
-    TemplateItemTypeTypeType getType() {
-        return TemplateItemTypeTypeType.FILE;
+    PortalTemplateItemType getType() {
+        return PortalTemplateItemTypeImpl.FILE;
     }
 }

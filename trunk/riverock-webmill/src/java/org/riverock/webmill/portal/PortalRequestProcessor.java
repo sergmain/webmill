@@ -37,9 +37,10 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.container.schema.site.TemplateItemType;
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.webmill.container.bean.SitePortletData;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.exception.PortalException;
 import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
@@ -151,7 +152,7 @@ public final class PortalRequestProcessor {
         Iterator iterator = portalRequestInstance.getPageElementList().iterator();
         while( iterator.hasNext() ) {
             PageElement pageElement = (PageElement)iterator.next();
-            TemplateItemType templateItem = pageElement.getTemplateItemType();
+            PortalTemplateItem templateItem = pageElement.getPortalTemplateItem();
 
             if ( log.isDebugEnabled() ) {
                 log.debug(
@@ -217,15 +218,15 @@ public final class PortalRequestProcessor {
             }
 
             if ( log.isDebugEnabled() ) {
-                log.debug( "Value of template item: "+ pageElement.getTemplateItemType().getValue() );
+                log.debug( "Value of template item: "+ pageElement.getPortalTemplateItem().getValue() );
                 log.debug( "portlet result data: " + item );
                 log.debug( "getIsError(): " + item.getIsError()+", getIsXml() - "+item.getIsXml() );
                 log.debug("#30.1-"+i);
             }
 
             boolean isXml = false;
-            if (pageElement!=null && pageElement.getTemplateItemType()!=null && pageElement.getTemplateItemType().getParameterAsReference()!=null) {
-                String isXmlString = PortletTools.getString(pageElement.getTemplateItemType().getParameterAsReference(), "is-xml", "false");
+            if (pageElement!=null && pageElement.getPortalTemplateItem()!=null && pageElement.getPortalTemplateItem().getParameters()!=null) {
+                String isXmlString = PortletService.getString(pageElement.getPortalTemplateItem().getParameters(), "is-xml", "false");
                 isXml = Boolean.parseBoolean( isXmlString );
             } 
             boolean isElementXml = Boolean.TRUE.equals(item.getIsXml()) || isXml; 
@@ -269,8 +270,8 @@ public final class PortalRequestProcessor {
                 boolean isNextXml = false;
                 boolean isNextElementXml = false;
                 if (pageElementNext!=null) {
-                    if ( pageElementNext.getTemplateItemType()!=null && pageElementNext.getTemplateItemType().getParameterAsReference()!=null) {
-                        String isXmlString = PortletTools.getString(pageElementNext.getTemplateItemType().getParameterAsReference(), "is-xml", "false");
+                    if ( pageElementNext.getPortalTemplateItem()!=null && pageElementNext.getPortalTemplateItem().getParameters()!=null) {
+                        String isXmlString = PortletService.getString(pageElementNext.getPortalTemplateItem().getParameters(), "is-xml", "false");
                         isNextXml = Boolean.parseBoolean( isXmlString );
                     }
                     isNextElementXml = pageElementNext.getIsXml() || isNextXml; 
@@ -350,25 +351,9 @@ public final class PortalRequestProcessor {
             catch(Exception e2) {
                 log.error("Error get version of xerces", e2);
             }
-            log.error("TransformerException, try to recreate Transformer", e);
-
-            try {
-                portalRequestInstance.xslt.reinitTransformer();
-            }
-            catch(Exception e01) {
-                log.error("General exception reintTransformer()", e01);
-                throw e01;
-            }
-            catch(Error e02) {
-                log.error("General error reintTransformer()", e02);
-                throw e02;
-            }
-            portalRequestInstance.xslt.getTransformer().transform( xmlSource, new StreamResult( portalRequestInstance.byteArrayOutputStream ) );
-
-            if (log.isDebugEnabled()) {
-                log.debug("#40.3");
-            }
-
+            final String es = "TransformerException";
+            log.error(es, e);
+            throw new PortalException( es, e );
         }
     }
 

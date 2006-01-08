@@ -22,11 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.webmill.port;
 
-import java.io.StringReader;
 import java.io.FileOutputStream;
+import java.io.StringReader;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
@@ -34,26 +33,27 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.core.GetWmPortalXsltDataWithIdSiteXsltList;
 import org.riverock.webmill.schema.core.WmPortalXsltDataItemType;
 import org.riverock.webmill.schema.core.WmPortalXsltDataListType;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.common.tools.StringTools;
-
-import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-public class PortalXslt
-{
-    private static Logger log = Logger.getLogger( PortalXslt.class );
+public class PortalXslt implements XsltTransformer{
+    private static Logger log = Logger.getLogger(PortalXslt.class);
 
-    private static CacheFactory cache = new CacheFactory( PortalXslt.class.getName() );
+    private static CacheFactory cache = new CacheFactory(PortalXslt.class.getName());
 
-    public String xsltLang = null;
     private String xslt = null;
     private Transformer transformer = null;
     private Object transformerSync = new Object();
@@ -66,102 +66,88 @@ public class PortalXslt
         cache.reinit();
     }
 
-    protected void finalize() throws Throwable
-    {
-        xsltLang = null;
+    protected void finalize() throws Throwable {
         xslt = null;
         transformer = null;
 
         super.finalize();
     }
 
-    public PortalXslt(){}
+    public PortalXslt() {
+    }
 
     public static PortalXslt getInstance(DatabaseAdapter db__, long id__)
-        throws Exception
-    {
-        return getInstance(db__, new Long(id__) );
+        throws Exception {
+        return getInstance(db__, new Long(id__));
     }
 
     public static PortalXslt getInstance(DatabaseAdapter db__, Long id__)
-        throws Exception
-    {
+        throws Exception {
         return (PortalXslt) cache.getInstanceNew(db__, id__);
     }
 
-    static
-    {
-        try
-        {
-            org.riverock.sql.cache.SqlStatement.registerRelateClass( PortalXslt.class, GetWmPortalXsltDataWithIdSiteXsltList.class );
+    static {
+        try {
+            SqlStatement.registerRelateClass(PortalXslt.class, GetWmPortalXsltDataWithIdSiteXsltList.class);
         }
-        catch (Exception exception)
-        {
-            log.error("Exception in ", exception);
+        catch (Throwable exception) {
+            final String es = "Exception in ";
+            log.error(es, exception);
+            throw new SqlStatementRegisterException(es, exception);
         }
     }
 
     public PortalXslt(DatabaseAdapter db_, Long id)
-        throws Exception
-    {
-        try
-        {
+        throws Exception {
+        try {
             xslt = "";
             WmPortalXsltDataListType xsltList = GetWmPortalXsltDataWithIdSiteXsltList.getInstance(db_, id).item;
-            for (int i=0; i<xsltList.getWmPortalXsltDataCount(); i++)
-            {
+            for (int i = 0; i < xsltList.getWmPortalXsltDataCount(); i++) {
                 WmPortalXsltDataItemType item = xsltList.getWmPortalXsltData(i);
                 xslt += item.getXslt();
             }
             if (!StringTools.isEmpty(xslt)) {
                 createTransformer();
             }
+//            WmPortalXsltItemType xsltItem = GetWmPortalXsltItem.getInstance(db_, id).item;
+//            WmPortalSiteLanguageItemType langItem = GetWmPortalSiteLanguageItem.getInstance(db_, xsltItem.getIdSiteSupportLanguage()).item;
+//            xsltLang = StringTools.getLocale( langItem.getCustomLanguage() ).toString();
         }
-        catch(Exception e)
-        {
-            log.error("Xslt object id "+id);
+        catch (Exception e) {
+            log.error("Xslt object id " + id);
             log.error("Exception create new PortalXslt()", e);
             throw e;
         }
     }
 
     private static Object syncObj = new Object();
-    private void createTransformer() throws Exception
-    {
-        Source xslSource = new StreamSource(
-            new StringReader(xslt)
-        );
+
+    private void createTransformer() throws Exception {
+        Source xslSource = new StreamSource(new StringReader(xslt));
 
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Templates translet = null;
-        try
-        {
+        try {
             translet = tFactory.newTemplates(xslSource);
         }
-        catch (javax.xml.transform.TransformerConfigurationException e)
-        {
-            synchronized(syncObj)
-            {
-                FileOutputStream out = new FileOutputStream(WebmillConfig.getWebmillTempDir()+"\\xslt-with-error.xsl");
-                out.write(xslt.getBytes( WebmillConfig.getHtmlCharset()));
+        catch (javax.xml.transform.TransformerConfigurationException e) {
+            synchronized (syncObj) {
+                FileOutputStream out = new FileOutputStream(WebmillConfig.getWebmillTempDir() + "\\xslt-with-error.xsl");
+                out.write(xslt.getBytes(WebmillConfig.getHtmlCharset()));
                 out.flush();
                 out.close();
                 out = null;
             }
-            try
-            {
+            try {
                 log.error("Xalan version - " + org.apache.xalan.Version.getVersion());
             }
-            catch(Throwable e1)
-            {
+            catch (Throwable e1) {
                 log.error("Error get version of xalan", e1);
             }
-            try
-            {
-                log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion() );
+            try {
+                log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion());
             }
-            catch(Exception e2)
-            {
+            catch (Exception e2) {
                 log.error("Error get version of xerces", e2);
             }
             log.error("Error create TransformerFactory of XSLT", e);
@@ -169,57 +155,45 @@ public class PortalXslt
             throw e;
         }
 
-        if (log.isDebugEnabled())
-        {
-            log.debug("XsltList. translet - " + translet );
+        if (log.isDebugEnabled()) {
+            log.debug("XsltList. translet - " + translet);
             log.debug("Start create Transformer");
         }
 
-        synchronized(transformerSync)
-        {
-            try
-            {
+        synchronized (transformerSync) {
+            try {
                 transformer = translet.newTransformer();
             }
-            catch(javax.xml.transform.TransformerConfigurationException e)
-            {
-                try
-                {
+            catch (javax.xml.transform.TransformerConfigurationException e) {
+                try {
                     log.error("Xalan version - " + org.apache.xalan.Version.getVersion());
                 }
-                catch(Throwable e1)
-                {
+                catch (Throwable e1) {
                     log.error("Error get version of xalan", e1);
                 }
-                try
-                {
-                    log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion() );
+                try {
+                    log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion());
                 }
-                catch(Exception e2)
-                {
+                catch (Exception e2) {
                     log.error("Error get version of xerces", e2);
                 }
                 log.error("Error create transformer", e);
-                transformer =  null;
+                transformer = null;
                 throw e;
             }
         }
     }
 
     public void reinitTransformer()
-        throws Exception
-    {
-        synchronized(transformerSync)
-        {
+        throws Exception {
+        synchronized (transformerSync) {
             transformer = null;
             createTransformer();
         }
     }
 
-    public Transformer getTransformer()
-    {
-        synchronized(transformerSync)
-        {
+    public Transformer getTransformer() {
+        synchronized (transformerSync) {
             return transformer;
         }
     }
