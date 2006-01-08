@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portlet;
+package org.riverock.webmill.portal;
 
 import java.io.IOException;
 import java.util.Map;
@@ -107,27 +107,5 @@ public final class ContextNavigator extends HttpServlet {
         portalInstance = PortalInstanceImpl.getInstance( portalServletConfig );
         portalInstanceMap.put( siteId, portalInstance );
         return portalInstance;
-    }
-
-    public static void setContentType(HttpServletResponse response) throws PortalException {
-        setContentType(response, WebmillConfig.getHtmlCharset());
-    }
-
-    public static void setContentType(HttpServletResponse response, String charset) throws PortalException {
-
-        final String type = "text/html; charset=" + charset;
-
-        if (log.isDebugEnabled()) {
-            log.debug("set new charset: " + type);
-            log.debug("response: " + response);
-        }
-
-        try {
-            response.setContentType(type);
-        } catch (Exception e) {
-            final String es = "Error set new content type to " + charset;
-            log.error(es, e);
-            throw new PortalException(es, e);
-        }
     }
 }

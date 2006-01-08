@@ -39,15 +39,17 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.site.SiteListSite;
-import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
+import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.template.PortalTemplateManager;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.menu.SiteMenu;
-import org.riverock.webmill.site.SiteTemplateList;
+import org.riverock.webmill.site.PortalTemplateManagerImpl;
 import org.riverock.webmill.core.GetWmPortalListSiteItem;
 import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
 import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
@@ -67,7 +69,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             Class p = PortalInfoImpl.class;
             SqlStatement.registerRelateClass(p, GetWmPortalListSiteItem.class);
             SqlStatement.registerRelateClass(p, PortalXsltList.class);
-            SqlStatement.registerRelateClass(p, SiteTemplateList.class);
+            SqlStatement.registerRelateClass(p, PortalTemplateManagerImpl.class);
             SqlStatement.registerRelateClass(p, GetWmPortalSiteLanguageWithIdSiteList.class);
             SqlStatement.registerRelateClass(p, SiteMenu.class);
         }
@@ -85,16 +87,16 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient Locale defaultLocale = null;
 
-    private transient PortalXsltList xsltList = null;
-    private transient SiteTemplateList templates = null;
+    private transient XsltTransformerManager xsltTransformerManager = null;
+    private transient PortalTemplateManager portalTemplateManager = null;
 
     private transient Map<String, Long> supportLanguageMap = null;
-    private transient Map<String, MenuLanguageInterface> languageMenuMap = null;
+    private transient Map<String, MenuLanguage> languageMenuMap = null;
 
     private transient Long siteId = null;
     private transient Map<String, String> meta = null;
 
-    public Map<String, String> getMeta() {
+    public Map<String, String> getMetadata() {
         return meta;
     }
 
@@ -144,8 +146,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             log.debug("#15.09.01 finalize");
 
         defaultLocale = null;
-        xsltList = null;
-        templates = null;
+        xsltTransformerManager = null;
+        portalTemplateManager = null;
 
         super.finalize();
     }
@@ -227,12 +229,12 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             mills = 0;
 
             if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-            xsltList = PortalXsltList.getInstance(db_, siteId);
-            if (log.isInfoEnabled()) log.info("Init xsltList for " + (System.currentTimeMillis() - mills) + " milliseconds");
+            xsltTransformerManager = PortalXsltList.getInstance(db_, siteId);
+            if (log.isInfoEnabled()) log.info("Init xsltTransformerManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
 
             if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-            templates = SiteTemplateList.getInstance(db_, siteId);
-            if (log.isInfoEnabled()) log.info("Init templates for " + (System.currentTimeMillis() - mills) + " milliseconds");
+            portalTemplateManager = PortalTemplateManagerImpl.getInstance(db_, siteId);
+            if (log.isInfoEnabled()) log.info("Init portalTemplateManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
 
             if (log.isInfoEnabled()) mills = System.currentTimeMillis();
             supportLanguage = processSupportLanguage(db_, siteId);
@@ -300,12 +302,12 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return defaultLocale;
     }
 
-    public PortalXsltList getXsltList() {
-        return this.xsltList;
+    public XsltTransformerManager getXsltTransformerManager() {
+        return this.xsltTransformerManager;
     }
 
-    public SiteTemplateList getTemplates() {
-        return templates;
+    public PortalTemplateManager getPortalTemplateManager() {
+        return portalTemplateManager;
     }
 
     private void initMenu(DatabaseAdapter db_) throws PortalException {
@@ -313,18 +315,18 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
         // Build menu
         SiteMenu sc = SiteMenu.getInstance(db_, siteId);
-        languageMenuMap = new HashMap<String, MenuLanguageInterface>();
-        Iterator<MenuLanguageInterface> iterator = sc.getMenuLanguage().iterator();
+        languageMenuMap = new HashMap<String, MenuLanguage>();
+        Iterator<MenuLanguage> iterator = sc.getMenuLanguage().iterator();
         while (iterator.hasNext()) {
-            MenuLanguageInterface menuLanguageInterface = iterator.next();
+            MenuLanguage menuLanguageInterface = iterator.next();
             languageMenuMap.put(menuLanguageInterface.getLocaleStr(), menuLanguageInterface);
         }
     }
 
-    public MenuLanguageInterface getMenu(String locale) {
-        MenuLanguageInterface tempCat = null;
+    public MenuLanguage getMenu(String locale) {
+        MenuLanguage tempCat = null;
         if (locale != null)
-            tempCat = (MenuLanguageInterface) languageMenuMap.get(locale);
+            tempCat = languageMenuMap.get(locale);
 
         if (tempCat != null)
             return tempCat;

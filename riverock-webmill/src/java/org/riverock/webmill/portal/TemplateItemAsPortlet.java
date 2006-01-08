@@ -24,7 +24,8 @@
  */
 package org.riverock.webmill.portal;
 
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
 
 /**
  * User: SergeMaslyukov
@@ -42,7 +43,7 @@ public final class TemplateItemAsPortlet extends TemplateItemBaseClass {
         pageElement.processActionPortlet();
     }
 
-    TemplateItemTypeTypeType getType() {
-        return TemplateItemTypeTypeType.PORTLET;
+    PortalTemplateItemType getType() {
+        return PortalTemplateItemTypeImpl.PORTLET;
     }
 }

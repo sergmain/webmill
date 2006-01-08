@@ -31,7 +31,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
@@ -45,7 +45,7 @@ import org.riverock.webmill.core.GetWmPortalPortletNameItem;
  * $Id$
  *
  */
-public final class MenuItem implements MenuItemInterface{
+public final class PortalMenuItem implements MenuItem{
     private final static Logger log = Logger.getLogger( MenuItem.class );
 
     private WmPortalCatalogItemType ctx = null;
@@ -53,7 +53,7 @@ public final class MenuItem implements MenuItemInterface{
     private String type = "";
 
     private String menuName = null;
-    private List catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
+    private List<MenuItem> catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
 
     protected void finalize() throws Throwable{
         menuName = null;
@@ -78,7 +78,7 @@ public final class MenuItem implements MenuItemInterface{
             "template: "+nameTemplate+",name: "+menuName+",url: "+getUrl()+"]";
     }
 
-    public MenuItem(DatabaseAdapter db_, WmPortalCatalogItemType ctxItem) throws PortalException{
+    public PortalMenuItem(DatabaseAdapter db_, WmPortalCatalogItemType ctxItem) throws PortalException{
 
         this.ctx = ctxItem;
         if (log.isDebugEnabled()){
@@ -139,7 +139,7 @@ public final class MenuItem implements MenuItemInterface{
         return this.menuName;
     }
 
-    public List getCatalogItems(){
+    public List<MenuItem> getCatalogItems(){
         return this.catalogItems;
     }
 

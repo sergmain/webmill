@@ -24,7 +24,16 @@
  */
 package org.riverock.webmill.site;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+
+import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.startup.StartupApplication;
 import org.riverock.webmill.core.*;
 import org.riverock.webmill.schema.core.*;
 
@@ -32,38 +41,50 @@ import org.riverock.webmill.schema.core.*;
  * Author: mill
  * Date: Mar 18, 2003
  * Time: 11:09:59 AM
- *
+ * <p/>
  * $Id$
  */
 public final class SiteService {
     public SiteService() {
     }
 
-    public static void dropSiteLanguageData( DatabaseAdapter db_, Long idSiteLanguageForDrop )
-        throws Exception
-    {
+    public static void main(String[] args) throws Exception{
+        StartupApplication.init();
+        DatabaseAdapter a = DatabaseAdapter.getInstance();
+        WmPortalListSiteListType siteList = GetWmPortalListSiteFullList.getInstance(a, 1).item;
+
+        for (final WmPortalListSiteItemType site : siteList.getWmPortalListSite()) {
+            if (site.getIdSite()!=16) {
+                dropSite( a, site.getIdSite() );
+            }
+        }
+        a.commit();
+        DatabaseManager.close(a);
+        a = null;
+
+    }
+
+    public static void dropSiteLanguageData(DatabaseAdapter db_, Long idSiteLanguageForDrop)
+        throws Exception {
         System.out.println("drop news");
         WmNewsListListType newsFullList =
-            new GetWmNewsListWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop ).item;
-        for (int i=0; i<newsFullList.getWmNewsListCount(); i++)
-        {
+            new GetWmNewsListWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
+        for (int i = 0; i < newsFullList.getWmNewsListCount(); i++) {
             WmNewsListItemType newsGroupList = newsFullList.getWmNewsList(i);
             WmNewsItemListType newsList = new GetWmNewsItemWithIdNewsList(db_, newsGroupList.getIdNews()).item;
-            for (int j=0; j<newsList.getWmNewsItemCount(); j++)
-            {
+            for (int j = 0; j < newsList.getWmNewsItemCount(); j++) {
                 WmNewsItemItemType newsItem = newsList.getWmNewsItem(j);
                 DeleteWmNewsItemTextWithId.processData(db_, newsItem.getId());
             }
-            DeleteWmNewsItemWithIdNews.processData(db_, newsGroupList.getIdNews() );
+            DeleteWmNewsItemWithIdNews.processData(db_, newsGroupList.getIdNews());
         }
-        DeleteWmNewsListWithIdSiteSupportLanguage.process( db_, idSiteLanguageForDrop );
+        DeleteWmNewsListWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
         db_.commit();
 
         System.out.println("drop articles");
         WmPortletArticleListType articleList =
             new GetWmPortletArticleWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
-        for (int i=0; i<articleList.getWmPortletArticleCount(); i++)
-        {
+        for (int i = 0; i < articleList.getWmPortletArticleCount(); i++) {
             WmPortletArticleItemType articleItem = articleList.getWmPortletArticle(i);
             DeleteWmPortletArticleDataWithIdSiteCtxArticle.process(db_, articleItem.getIdSiteCtxArticle());
         }
@@ -73,8 +94,7 @@ public final class SiteService {
         System.out.println("drop catalog context");
         WmPortalCatalogLanguageListType catalogList =
             new GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
-        for (int i=0; i<catalogList.getWmPortalCatalogLanguageCount(); i++)
-        {
+        for (int i = 0; i < catalogList.getWmPortalCatalogLanguageCount(); i++) {
             WmPortalCatalogLanguageItemType catalogItem = catalogList.getWmPortalCatalogLanguage(i);
             DeleteWmPortalCatalogWithIdSiteCtxLangCatalog.process(db_, catalogItem.getIdSiteCtxLangCatalog());
         }
@@ -84,45 +104,43 @@ public final class SiteService {
 
         WmPortalXsltListType xsltList =
             new GetWmPortalXsltWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
-        for (int i=0; i<xsltList.getWmPortalXsltCount(); i++)
-        {
+        for (int i = 0; i < xsltList.getWmPortalXsltCount(); i++) {
             WmPortalXsltItemType xsltItem = xsltList.getWmPortalXslt(i);
             DeleteWmPortalXsltDataWithIdSiteXslt.process(db_, xsltItem.getIdSiteXslt());
         }
         DeleteWmPortalXsltWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
     }
 
-    public static void dropSite( DatabaseAdapter DatabaseAdapter_, Long idSiteForDrop )
-        throws Exception
-    {
-        System.out.println("drop data for site idSite - "+idSiteForDrop);
+    public static void dropSite(DatabaseAdapter DatabaseAdapter_, Long idSiteForDrop)
+        throws Exception {
+        if (idSiteForDrop == 16) {
+            throw new IllegalAccessException("Never drop site with id 16");
+        }
+
+        System.out.println("drop data for site idSite - " + idSiteForDrop);
 
         WmPortalSiteLanguageListType siteLanguageList =
             new GetWmPortalSiteLanguageWithIdSiteList(DatabaseAdapter_, idSiteForDrop).item;
-        for (int i=0; i<siteLanguageList.getWmPortalSiteLanguageCount(); i++)
-        {
-            WmPortalSiteLanguageItemType siteLanguageItem = siteLanguageList.getWmPortalSiteLanguage(i);
-            dropSiteLanguageData( DatabaseAdapter_, siteLanguageItem.getIdSiteSupportLanguage());
 
-            DeleteWmPortalSiteLanguageItem.processData( DatabaseAdapter_, siteLanguageItem );
+        for (int i = 0; i < siteLanguageList.getWmPortalSiteLanguageCount(); i++) {
+            WmPortalSiteLanguageItemType siteLanguageItem = siteLanguageList.getWmPortalSiteLanguage(i);
+            dropSiteLanguageData(DatabaseAdapter_, siteLanguageItem.getIdSiteSupportLanguage());
+
+            DeleteWmPortalSiteLanguageItem.processData(DatabaseAdapter_, siteLanguageItem);
         }
         DatabaseAdapter_.commit();
 
-        // Todo Fix acces to CSS with new structure
-/*
         System.out.println("delete CSS data");
-        SiteContentCssListType cssList = new GetSiteContentCssWithIdSiteList(DatabaseAdapter_, idSiteForDrop).item;
-        for (int i=0; i<cssList.getSiteContentCssCount(); i++)
-        {
-            SiteContentCssItemType cssItem = cssList.getSiteContentCss(i);
-            DeleteSiteContentCssDataWithIdSiteContentCss.process(DatabaseAdapter_, cssItem.getIdSiteContentCss());
+        WmPortalCssListType cssList = new GetWmPortalCssWithIdSiteList(DatabaseAdapter_, idSiteForDrop).item;
+        for (int i = 0; i < cssList.getWmPortalCssCount(); i++) {
+            WmPortalCssItemType cssItem = cssList.getWmPortalCss(i);
+            DeleteWmPortalCssDataWithIdSiteContentCss.process(DatabaseAdapter_, cssItem.getIdSiteContentCss());
         }
-        DeleteSiteContentCssWithIdSite.process(DatabaseAdapter_, idSiteForDrop);
-*/
+        DeleteWmPortalCssWithIdSite.process(DatabaseAdapter_, idSiteForDrop);
 
 
         System.out.println("delete shop data");
-//        deleteShopData(DatabaseAdapter_, idSiteForDrop);
+        deleteShopData(DatabaseAdapter_, idSiteForDrop);
 
         System.out.println("delete virtual host");
         DeleteWmPortalVirtualHostWithIdSite.process(DatabaseAdapter_, idSiteForDrop);
@@ -134,70 +152,63 @@ public final class SiteService {
         DatabaseAdapter_.commit();
         System.out.println("Deleting test data is done.");
     }
-/*
-    private static void deleteShopData( DatabaseAdapter DatabaseAdapter_, long idSiteForDrop )
-        throws Exception
-    {
-        CashCurrencyListType currencyList = GetCashCurrencyWithIdSiteList.getInstance( DatabaseAdapter_, idSiteForDrop ).item;
 
-        for (int i=0; i<currencyList.getCashCurrencyCount(); i++)
-            DeleteCashCurrValueWithIdCurrency.processData(DatabaseAdapter_, currencyList.getCashCurrency(i).getIdCurrency());
+    private static void deleteShopData(DatabaseAdapter DatabaseAdapter_, long idSiteForDrop)
+        throws Exception {
+        WmCashCurrencyListType currencyList = GetWmCashCurrencyWithIdSiteList.getInstance(DatabaseAdapter_, idSiteForDrop).item;
 
-        DeleteCashCurrencyWithIdSite.processData(DatabaseAdapter_, idSiteForDrop);
+        for (int i = 0; i < currencyList.getWmCashCurrencyCount(); i++)
+            DeleteWmCashCurrValueWithIdCurrency.processData(DatabaseAdapter_, currencyList.getWmCashCurrency(i).getIdCurrency());
+
+        DeleteWmCashCurrencyWithIdSite.processData(DatabaseAdapter_, idSiteForDrop);
         DatabaseAdapter_.commit();
 
-        PriceShopTableListType shopList = GetPriceShopTableWithIdSiteList.getInstance(DatabaseAdapter_,idSiteForDrop).item;
-        for (int i=0; i<shopList.getPriceShopTableCount(); i++)
-        {
-            PriceShopTableItemType shop = shopList.getPriceShopTable(i);
-            PriceListListType itemList = GetPriceListWithIdShopList.getInstance(DatabaseAdapter_, shop.getIdShop()).item;
+        WmPriceShopListListType shopList = GetWmPriceShopListWithIdSiteList.getInstance(DatabaseAdapter_, idSiteForDrop).item;
+        for (int i = 0; i < shopList.getWmPriceShopListCount(); i++) {
+            WmPriceShopListItemType shop = shopList.getWmPriceShopList(i);
+            WmPriceListListType itemList = GetWmPriceListWithIdShopList.getInstance(DatabaseAdapter_, shop.getIdShop()).item;
 
-            for (int k=0; k<itemList.getPriceListCount(); k++)
-            {
-                PriceListItemType shopItem = itemList.getPriceList(k);
-                PriceItemDescriptionItemType itemDesc = GetPriceItemDescriptionItem.getInstance(DatabaseAdapter_,shopItem.getIdItem()).item;
-                DeletePriceItemDescDataWithIdPriceItemDescription.processData(DatabaseAdapter_, itemDesc.getIdPriceItemDescription());
-                DeletePriceItemDescriptionWithIdPriceItemDescription.processData(DatabaseAdapter_, itemDesc.getIdPriceItemDescription() );
+            for (int k = 0; k < itemList.getWmPriceListCount(); k++) {
+                WmPriceListItemType shopItem = itemList.getWmPriceList(k);
+//                WmPriceItemDescriptionItemType itemDesc = GetWmPriceItemDescriptionItem.getInstance(DatabaseAdapter_, shopItem.getIdItem()).item;
+//                DeleteWmPriceItemDescDataWithIdPriceItemDescription.processData(DatabaseAdapter_, itemDesc.getIdPriceItemDescription());
+//                DeleteWmPriceItemDescDataDescWithIdPriceItemDescription.processData(DatabaseAdapter_, itemDesc.getIdPriceItemDescription());
             }
 
             PreparedStatement ps = null;
             ResultSet rs = null;
-            Vector v = new Vector();
-            try
-            {
-                ps=DatabaseAdapter_.conn.prepareStatement(
-                    "select distinct b.ID_ORDER_V2 " +
-                    "from   WM_PRICE_LIST a, PRICE_ORDER_V2 b " +
+            List<Long> v = new ArrayList<Long>();
+            try {
+                ps = DatabaseAdapter_.getConnection().prepareStatement("select distinct b.ID_ORDER_V2 " +
+                    "from   WM_PRICE_LIST a, WM_PRICE_ORDER b " +
                     "where  a.ID_ITEM=b.ID_ITEM and a.ID_SHOP=?");
                 ps.setLong(1, shop.getIdShop());
                 rs = ps.executeQuery();
-                while(rs.next())
-                {
-//Todo boxing???
-                    v.add( new Long(RsetTools.getLong(rs, "ID_ORDER_V2")) );
+                while (rs.next()) {
+                    v.add(RsetTools.getLong(rs, "ID_ORDER_V2"));
                 }
             }
-            finally
-            {
-                RsetTools.closeRsPs(rs, ps);
-                rs=null;
-                ps=null;
+            finally {
+                DatabaseManager.close(rs, ps);
+                rs = null;
+                ps = null;
             }
-            for (int j=0; j<v.size(); j++)
-            {
-                long idOrder = ((Long)v.elementAt(j)).longValue();
-                DeletePriceOrderV2WithIdOrderV2.processData(DatabaseAdapter_, idOrder);
-                DeletePriceRelateUserOrderV2WithIdOrderV2.processData(DatabaseAdapter_, idOrder);
+            Iterator<Long> iterator = v.iterator();
+            while (iterator.hasNext()) {
+                Long idOrder = iterator.next();
+                DeleteWmPriceOrderWithIdOrderV2.processData(DatabaseAdapter_, idOrder);
+                DeleteWmPriceRelateUserOrderWithIdOrderV2.processData(DatabaseAdapter_, idOrder);
             }
-            DeletePriceListWithIdShop.processData( DatabaseAdapter_, shop.getIdShop() );
-            DeletePriceUserShopDiscountWithIdShop.processData(DatabaseAdapter_, shop.getIdShop());
-            DeletePriceShopPrecisionWithIdShop.processData(DatabaseAdapter_, shop.getIdShop());
+            DeleteWmPriceListWithIdShop.processData(DatabaseAdapter_, shop.getIdShop());
+//            DeleteWmPriceUserShopDiscountWithIdShop.processData(DatabaseAdapter_, shop.getIdShop());
+            DeleteWmPriceShopPrecisionWithIdShop.processData(DatabaseAdapter_, shop.getIdShop());
         }
 
-        DeletePriceShopTableWithIdSite.processData( DatabaseAdapter_, idSiteForDrop );
+        DeleteWmPriceShopListWithIdSite.processData(DatabaseAdapter_, idSiteForDrop);
         DatabaseAdapter_.commit();
     }
 
+/*
     public static SiteExtendItemType getExtendData( String host )
         throws Exception
     {

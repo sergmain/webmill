@@ -44,18 +44,19 @@ import org.apache.log4j.Logger;
 import org.riverock.common.html.Header;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.container.schema.site.SiteTemplate;
-import org.riverock.webmill.container.schema.site.TemplateItemType;
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.port.PortalXslt;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
-import org.riverock.webmill.portlet.PortletTools;
+import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * User: Admin
@@ -72,13 +73,13 @@ public final class PortalRequestInstance {
     private static final int WEBPAGE_BUFFER_SIZE = 15000;
 
     ByteArrayOutputStream byteArrayOutputStream = null;
-    PortalXslt xslt = null;
-    SiteTemplate template = null;
+    XsltTransformer xslt = null;
+    PortalTemplate template = null;
 
     long startMills;
 
     private ContextFactory contextFactory = null;
-    private PortalInfoImpl portalInfo = null;
+    private PortalInfo portalInfo = null;
     private Locale[] preferredLocale = null;
     private HttpServletRequest httpRequest = null;
     private HttpServletResponse httpResponse = null;
@@ -158,7 +159,7 @@ public final class PortalRequestInstance {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
-            httpRequestParameter = Collections.unmodifiableMap(PortletTools.getParameters(httpRequest));
+            httpRequestParameter = Collections.unmodifiableMap(PortletUtils.getParameters(httpRequest));
 
             this.auth = AuthTools.getAuthSession(httpRequest);
             if (log.isDebugEnabled()) {
@@ -202,20 +203,23 @@ public final class PortalRequestInstance {
             }
 
             // init page element list
-            for (int i = 0; i < template.getSiteTemplateItemCount(); i++) {
+            Iterator<PortalTemplateItem> iterator = template.getPortalTemplateItems().iterator();
+            // i - number of namespace
+            int i = 0;
+            while (iterator.hasNext()) {
+                PortalTemplateItem templateItem = iterator.next();
 
+                i++;
                 if (log.isDebugEnabled()) {
                     log.debug("#5.1-" + i);
                 }
-
-                TemplateItemType templateItem = template.getSiteTemplateItem(i);
 
                 PageElement element = new PageElement(portletContainer);
                 // Todo: check structure namespace
                 // The getNamespace method must return a valid identifier as defined in the 3.8 Identifier
                 // Section of the Java Language Specification Second Edition.
                 element.setNamespace(templateItem.getNamespace() != null ? templateItem.getNamespace() : "p" + i);
-                element.setTemplateItemType(templateItem);
+                element.setPortalTemplateItem(templateItem);
                 element.setParams(getParameters(element.getNamespace(), templateItem.getTypeObject()));
 
                 if (log.isDebugEnabled()) {
@@ -231,14 +235,14 @@ public final class PortalRequestInstance {
                 }
 
                 switch (templateItem.getTypeObject().getType()) {
-                    case TemplateItemTypeTypeType.PORTLET_TYPE:
+                    case PortalTemplateItemType.PORTLET_TYPE:
                         element.initPortlet(templateItem.getValue(), this);
                         break;
-                    case TemplateItemTypeTypeType.DYNAMIC_TYPE:
+                    case PortalTemplateItemType.DYNAMIC_TYPE:
                         element.initPortlet(getDefaultPortletDefinition(), this);
                         break;
-                    case TemplateItemTypeTypeType.FILE_TYPE:
-                    case TemplateItemTypeTypeType.CUSTOM_TYPE:
+                    case PortalTemplateItemType.FILE_TYPE:
+                    case PortalTemplateItemType.CUSTOM_TYPE:
                         break;
                     default:
                 }
@@ -265,12 +269,12 @@ public final class PortalRequestInstance {
         }
     }
 
-    private PortalContextImpl createPortalContext(String portalName, PortalInfoImpl portalInfo ) {
+    private static PortalContextImpl createPortalContext(String portalName, PortalInfo portalInfo ) {
         Map<String,String> map = new HashMap<String, String>();
 
         map.put( ContainerConstants.PORTAL_PROP_SITE_ID, portalInfo.getSiteId().toString() );
         map.put( ContainerConstants.PORTAL_PROP_COMPANY_ID, portalInfo.getCompanyId().toString() );
-        map.putAll( portalInfo.getMeta() );
+        map.putAll( portalInfo.getMetadata() );
 
         return new PortalContextImpl( portalName, map );
     }
@@ -314,7 +318,7 @@ public final class PortalRequestInstance {
         return contextFactory.getNameTemplate();
     }
 
-    public ContextFactory.PortletParameters getParameters(String namespace, TemplateItemTypeTypeType type) {
+    public ContextFactory.PortletParameters getParameters(String namespace, PortalTemplateItemType type) {
         if (contextFactory == null)
             return null;
 
@@ -357,13 +361,13 @@ public final class PortalRequestInstance {
         return httpResponse;
     }
 
-    public PortalInfoImpl getPortalInfo() {
+    public PortalInfo getPortalInfo() {
         return portalInfo;
     }
 
     private void initTemplate() throws PortalException {
 
-        template = getPortalInfo().getTemplates().getTemplate(getNameTemplate(), getLocaleString());
+        template = getPortalInfo().getPortalTemplateManager().getTemplate( getNameTemplate(), getLocaleString() );
 
         if (template == null) {
             String errorString = "Template '" + getNameTemplate() + "', locale " + getLocaleString() + ", not found";
@@ -376,12 +380,12 @@ public final class PortalRequestInstance {
 
     private void initXslt() throws PortalException {
         // prepare Xsl objects
-        if (getPortalInfo().getXsltList() == null) {
+        if (getPortalInfo().getXsltTransformerManager() == null) {
             String errorString = "XSL template not defined";
             log.error(errorString);
             throw new PortalException(errorString);
         }
-        xslt = getPortalInfo().getXsltList().getXslt(getLocaleString());
+        xslt = getPortalInfo().getXsltTransformerManager().getXslt(getLocaleString());
         if (xslt == null) {
             String errorString = "XSLT for locale " + getLocaleString() + " not defined.";
             log.error(errorString);

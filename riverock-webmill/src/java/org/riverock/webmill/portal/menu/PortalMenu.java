@@ -28,8 +28,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.collections.TreeUtils;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.interfaces.portlet.menu.MenuInterface;
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.portlet.menu.Menu;
+import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
 import org.riverock.webmill.exception.PortalException;
 
@@ -47,11 +47,11 @@ import java.util.*;
 /**
  * $Id$
  */
-public final class Menu implements MenuInterface {
-    private final static Logger log = Logger.getLogger( Menu.class );
+public final class PortalMenu implements Menu {
+    private final static Logger log = Logger.getLogger( PortalMenu.class );
 
     static{
-        Class c = Menu.class;
+        Class c = PortalMenu.class;
         try{
             SqlStatement.registerRelateClass( c, GetWmPortalCatalogWithIdSiteCtxLangCatalogList.class );
         }
@@ -74,14 +74,14 @@ public final class Menu implements MenuInterface {
         return catalogCode;
     }
 
-    public MenuItemInterface searchMenuItem(Long id_)
+    public MenuItem searchMenuItem(Long id_)
     {
         if (id_==null || menuItem==null)
             return null;
 
         ListIterator it = menuItem.listIterator();
         while (it.hasNext()) {
-            MenuItemInterface ci = (MenuItemInterface)it.next();
+            MenuItem ci = (MenuItem)it.next();
             if (ci.getId().equals(id_))
                 return ci;
 
@@ -91,14 +91,14 @@ public final class Menu implements MenuInterface {
         return null;
     }
 
-    private MenuItemInterface searchMenuItemInternal(List v, Long id_)
+    private MenuItem searchMenuItemInternal(List v, Long id_)
     {
         if (v==null || id_==null)
             return null;
 
         ListIterator it = v.listIterator();
         while (it.hasNext()) {
-            MenuItemInterface ci = (MenuItemInterface)it.next();
+            MenuItem ci = (MenuItem)it.next();
             if (ci.getId().equals(id_))
                 return ci;
 
@@ -108,7 +108,7 @@ public final class Menu implements MenuInterface {
         return null;
     }
 
-    public List getMenuItem() {
+    public List<MenuItem> getMenuItem() {
         return menuItem;
     }
 
@@ -122,7 +122,7 @@ public final class Menu implements MenuInterface {
         super.finalize();
     }
 
-    public Menu()
+    public PortalMenu()
     {
     }
 
@@ -131,7 +131,7 @@ public final class Menu implements MenuInterface {
      * @param v
      * @return return name of template for 'index' page
      */
-    private MenuItemInterface getIndexTemplate(List v){
+    private MenuItem getIndexTemplate(List v){
         if (log.isDebugEnabled()) {
             log.debug("list for search index: " + v);
         }
@@ -140,7 +140,7 @@ public final class Menu implements MenuInterface {
 
         Iterator it = v.iterator();
         while (it.hasNext()) {
-            MenuItemInterface ctxItem = (MenuItemInterface)it.next();
+            MenuItem ctxItem = (MenuItem)it.next();
 
             if (log.isDebugEnabled()) {
                 log.debug("Menu item type: " + ctxItem.getType());
@@ -157,19 +157,18 @@ public final class Menu implements MenuInterface {
         return null;
     }
 
-    public MenuItemInterface getIndexMenuItem() {
+    public MenuItem getIndexMenuItem() {
         return getIndexTemplate(menuItem);
     }
 
-
-    public static boolean checkCurrentThread(List items, MenuItemInterface find)
+    public static boolean checkCurrentThread(List items, MenuItem find)
     {
         if (find == null || items == null)
             return false;
 
         ListIterator it = items.listIterator();
         while (it.hasNext()) {
-            MenuItemInterface ctxItem = (MenuItemInterface)it.next();
+            MenuItem ctxItem = (MenuItem)it.next();
 
             if (ctxItem == find)
                 return true;
@@ -180,7 +179,7 @@ public final class Menu implements MenuInterface {
         return false;
     }
 
-    public Menu(DatabaseAdapter db_, WmPortalCatalogLanguageItemType item_) throws Exception {
+    public PortalMenu(DatabaseAdapter db_, WmPortalCatalogLanguageItemType item_) throws Exception {
 
         if (item_==null){
             throw new PortalException("Item of menu is null");
@@ -206,7 +205,7 @@ public final class Menu implements MenuInterface {
 
                 // Dont include menuitem with id_template==null to menu
                 if (item.getIdSiteTemplate()!=null)
-                    menuItem.add(new MenuItem(db_, item));
+                    menuItem.add(new PortalMenuItem(db_, item));
             }
         }
         catch(Throwable e) {

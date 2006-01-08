@@ -24,8 +24,8 @@
  */
 package org.riverock.webmill.portal;
 
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
-import org.riverock.webmill.portal.PortalRequestProcessor;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
 
 import org.apache.log4j.Logger;
 
@@ -40,11 +40,11 @@ public final class TemplateItemAsCustom extends TemplateItemBaseClass {
 
     void getData( PageElement pageElement ) {
         if ( log.isDebugEnabled() )
-            log.debug( "Template item  type - "+pageElement.getTemplateItemType().getType()+"  value "+pageElement.getTemplateItemType().getValue() );
+            log.debug( "Template item  type - "+pageElement.getPortalTemplateItem().getType()+"  value "+pageElement.getPortalTemplateItem().getValue() );
 
         pageElement.setData(
             PortalRequestProcessor.setData(
-                new StringBuffer("<").append( pageElement.getTemplateItemType().getValue() ).append( "/>" ).toString().getBytes(),
+                new StringBuffer("<").append( pageElement.getPortalTemplateItem().getValue() ).append( "/>" ).toString().getBytes(),
                 false, true
             )
         );
@@ -53,7 +53,7 @@ public final class TemplateItemAsCustom extends TemplateItemBaseClass {
     void processAction( PageElement item ) {
     }
 
-    TemplateItemTypeTypeType getType() {
-        return TemplateItemTypeTypeType.CUSTOM;
+    PortalTemplateItemType getType() {
+        return PortalTemplateItemTypeImpl.CUSTOM;
     }
 }

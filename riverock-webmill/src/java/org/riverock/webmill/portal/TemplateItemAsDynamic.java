@@ -24,7 +24,8 @@
  */
 package org.riverock.webmill.portal;
 
-import org.riverock.webmill.container.schema.site.types.TemplateItemTypeTypeType;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
 
 import org.apache.log4j.Logger;
 
@@ -48,7 +49,7 @@ public final class TemplateItemAsDynamic extends TemplateItemBaseClass{
         pageElement.processActionPortlet();
     }
 
-    TemplateItemTypeTypeType getType() {
-        return TemplateItemTypeTypeType.DYNAMIC;
+    PortalTemplateItemType getType() {
+        return PortalTemplateItemTypeImpl.DYNAMIC;
     }
 }

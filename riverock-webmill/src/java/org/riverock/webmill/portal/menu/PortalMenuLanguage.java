@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
@@ -36,23 +35,23 @@ import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLang
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageListType;
 import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
-import org.riverock.interfaces.portlet.menu.MenuInterface;
-import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.portlet.menu.Menu;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
+import org.riverock.interfaces.portlet.menu.MenuItem;
 
 import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-public final class MenuLanguage implements MenuLanguageInterface {
-    private final static Logger log = Logger.getLogger( MenuLanguage.class );
+public final class PortalMenuLanguage implements MenuLanguage {
+    private final static Logger log = Logger.getLogger( PortalMenuLanguage.class );
 
     static{
-        Class c = new MenuLanguage().getClass();
+        Class c = PortalMenuLanguage.class;
         try{
-            SqlStatement.registerRelateClass( c, new Menu().getClass() );
-            SqlStatement.registerRelateClass( c, new GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList().getClass() );
+            SqlStatement.registerRelateClass( c, PortalMenu.class );
+            SqlStatement.registerRelateClass( c, GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.class );
         }
         catch( Exception exception ) {
             final String es = "Exception in SqlStatement.registerRelateClass()";
@@ -61,21 +60,21 @@ public final class MenuLanguage implements MenuLanguageInterface {
         }
     }
 
-    private List<MenuInterface> menu = new ArrayList<MenuInterface>();
+    private List<Menu> menu = new ArrayList<Menu>();
     private WmPortalSiteLanguageItemType item = null;
 
-    public MenuLanguage(){}
+    public PortalMenuLanguage(){}
 
     // return name of template for 'index' page
-    public MenuItemInterface getIndexMenuItem(){
+    public MenuItem getIndexMenuItem(){
         if (log.isDebugEnabled()){
             log.debug("menu: "+menu);
         }
 
-        Iterator<MenuInterface> iterator = menu.iterator();
+        Iterator<Menu> iterator = menu.iterator();
         while (iterator.hasNext()) {
-            MenuInterface catalog = iterator.next();
-            MenuItemInterface item = catalog.getIndexMenuItem();
+            Menu catalog = iterator.next();
+            MenuItem item = catalog.getIndexMenuItem();
             if (item != null)
                 return item;
         }
@@ -84,45 +83,45 @@ public final class MenuLanguage implements MenuLanguageInterface {
 
     // return name of template for 'index' page
     public String getIndexTemplate(){
-        MenuItemInterface indexTemplate = getIndexMenuItem();
+        MenuItem indexTemplate = getIndexMenuItem();
         if (indexTemplate != null)
             return indexTemplate.getNameTemplate();
 
         return null;
     }
 
-    public MenuInterface getDefault() {
-        Iterator<MenuInterface> iterator = menu.iterator();
+    public Menu getDefault() {
+        Iterator<Menu> iterator = menu.iterator();
         while (iterator.hasNext()) {
-            MenuInterface catalog = iterator.next();
+            Menu catalog = iterator.next();
             if (catalog.getIsDefault())
                 return catalog;
         }
         return null;
     }
 
-    public MenuInterface getCatalogByCode( String code ) {
+    public Menu getCatalogByCode( String code ) {
         if (code==null)
             return null;
 
-        Iterator<MenuInterface> iterator = menu.iterator();
+        Iterator<Menu> iterator = menu.iterator();
         while (iterator.hasNext()) {
-            MenuInterface catalog = iterator.next();
+            Menu catalog = iterator.next();
             if (code.equals( catalog.getCatalogCode()) )
                 return catalog;
         }
         return null;
     }
 
-    public MenuItemInterface searchMenuItem(Long id)
+    public MenuItem searchMenuItem(Long id)
     {
         if (id==null)
             return null;
 
-        Iterator<MenuInterface> iterator = menu.iterator();
+        Iterator<Menu> iterator = menu.iterator();
         while (iterator.hasNext()) {
-            MenuInterface menu = iterator.next();
-            MenuItemInterface ci = menu.searchMenuItem(id);
+            Menu menu = iterator.next();
+            MenuItem ci = menu.searchMenuItem(id);
             if (ci!=null) {
                 return ci;
             }
@@ -130,7 +129,7 @@ public final class MenuLanguage implements MenuLanguageInterface {
         return null;
     }
 
-    public MenuLanguage(DatabaseAdapter db_, WmPortalSiteLanguageItemType item_) throws Exception {
+    public PortalMenuLanguage(DatabaseAdapter db_, WmPortalSiteLanguageItemType item_) throws Exception {
         if (item_ == null)
             return;
 
@@ -155,7 +154,7 @@ public final class MenuLanguage implements MenuLanguageInterface {
             Iterator iterator = list.getWmPortalCatalogLanguageAsReference().iterator();
             while (iterator.hasNext()) {
                 WmPortalCatalogLanguageItemType ic = (WmPortalCatalogLanguageItemType) iterator.next();
-                MenuInterface catalog = new Menu(db_, ic);
+                Menu catalog = new PortalMenu(db_, ic);
                 menu.add(catalog);
             }
         }
