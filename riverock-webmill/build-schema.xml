@@ -40,7 +40,7 @@
 
         <antcall target="gen_config_schema"/>
         <antcall target="gen_appl-server_schema"/>
-        <antcall target="gen_types_schema"/>
+<!--        <antcall target="gen_types_schema"/> -->
         <antcall target="gen_core-extend_schema"/>
         <antcall target="gen_test_schema"/>
     </target>
