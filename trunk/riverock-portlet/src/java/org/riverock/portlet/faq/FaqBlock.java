@@ -50,7 +50,7 @@ import org.riverock.portlet.schema.portlet.faq.FaqBlockType;
 import org.riverock.portlet.schema.portlet.faq.FaqGroupType;
 import org.riverock.portlet.schema.portlet.faq.FaqItemType;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
