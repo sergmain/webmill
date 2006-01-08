@@ -30,12 +30,12 @@
  * $Id$
  *
  */
-package org.riverock.webmill.portlet.menu;
+package org.riverock.webmill.portal.menu;
 
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.schema.types.MenuModuleType;
-import org.riverock.interfaces.portlet.menu.MenuInterface;
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
+import org.riverock.interfaces.portlet.menu.Menu;
+import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.generic.tools.XmlTools;
 
 import org.apache.log4j.Logger;
@@ -52,7 +52,7 @@ public class  InternalTestMenuSimple
     private final static int COUNT_SUB_MENU = 3;
     private final static String menuItem = "Menu item ";
 /*
-    public static void testProcessInstance(MenuInterface defMenu, String PortletDefinition, PortletParameter param)
+    public static void testProcessInstance(Menu defMenu, String PortletDefinition, PortletParameter param)
             throws Exception
     {
         System.out.println("PortletDefinition "+PortletDefinition);
@@ -73,7 +73,7 @@ public class  InternalTestMenuSimple
 
         ListIterator it = defMenu.getMenuItem().listIterator();
         while (it.hasNext()) {
-            MenuItemInterface ci = (MenuItemInterface)it.next();
+            MenuItem ci = (MenuItem)it.next();
 
             MenuModuleType tempMenu = menu.getMenuModule(
                     ci, menu.param.getResponse(), 1, menu.getId(), desc, PortletDefinition
