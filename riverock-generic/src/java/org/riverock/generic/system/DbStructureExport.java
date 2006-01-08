@@ -70,10 +70,12 @@ public class DbStructureExport {
     {
 
 
+        DatabaseAdapter dbOra = null;
+        dbOra = DatabaseAdapter.getInstance("MYSQL");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "HSQLDB");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE_TEST");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE");
-        DatabaseAdapter dbOra = DatabaseAdapter.getInstance( "MYSQL_CONTEST");
+//        dbOra = DatabaseAdapter.getInstance( "MYSQL_CONTEST");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "ORACLE-DART");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "IBM-DB2");
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
@@ -112,6 +114,10 @@ public class DbStructureExport {
             File.separatorChar+"data-definition" +
             File.separatorChar+"data" +
             File.separatorChar+"big-text-table-def.xml";
+        
+        fileNameBigText =
+            "\\sandbox\\riverock\\riverock-webmill-db\\xml\\webmill-schema.xml";
+
         InputSource inSrc = new InputSource(new FileInputStream( fileNameBigText ));
         DbSchemaType schemaBigTable = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
 
