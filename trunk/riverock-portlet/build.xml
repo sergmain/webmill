@@ -63,7 +63,7 @@
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
 
-        <pathelement location="${lib.dir}/ojdbc14.jar"/>
+        <pathelement location="${lib.dir}/${myfaces.lib}"/>
     </path>
 
     <property name="build_context" value="${build.dir}/mill_context"/>
