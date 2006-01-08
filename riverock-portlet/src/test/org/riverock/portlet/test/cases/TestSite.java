@@ -46,7 +46,7 @@ import org.riverock.portlet.schema.core.*;
 import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 
-import org.riverock.webmill.container.portal.PortalInfo;
+import org.riverock.interfaces.portal.PortalInfo;
 
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
