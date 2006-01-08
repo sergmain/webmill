@@ -29,7 +29,7 @@
 package org.riverock.common.collections;
 
 import org.apache.log4j.Logger;
-import org.riverock.interfaces.common.TreeItemInterface;
+import org.riverock.interfaces.common.TreeItem;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -45,7 +45,7 @@ public final class TreeUtils {
         LinkedList menuItem = (LinkedList)source.clone();
         LinkedList result = null;
         LinkedList v = new LinkedList();
-        Long id = new Long(0);
+        Long id = 0L;
 
         if (log.isDebugEnabled()) log.debug("Before rebuid. Size of menuItem " + menuItem.size());
 
@@ -55,7 +55,7 @@ public final class TreeUtils {
 
             ListIterator it = menuItem.listIterator();
             while (it.hasNext()) {
-                TreeItemInterface item = (TreeItemInterface)it.next();
+                TreeItem item = (TreeItem)it.next();
                 if ( id.equals( item.getTopId() ) )
                     v.add(item);
             }
@@ -88,7 +88,7 @@ public final class TreeUtils {
             }
 
             if (menuItem.size() > 0)
-                id = ((TreeItemInterface) menuItem.get(0)).getTopId();
+                id = ((TreeItem) menuItem.get(0)).getTopId();
         }
         menuItem = null;
         if (result != null)
@@ -108,7 +108,7 @@ public final class TreeUtils {
 
         ListIterator it = target.listIterator();
         while (it.hasNext()) {
-            TreeItemInterface item = (TreeItemInterface)it.next();
+            TreeItem item = (TreeItem)it.next();
 
             if (id.equals(item.getId())) {
                 item.setSubTree( (LinkedList)data.clone() );
