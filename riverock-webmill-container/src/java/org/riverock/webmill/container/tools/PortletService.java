@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Map;
 import java.util.Locale;
-import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
@@ -42,25 +42,29 @@ import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Supports;
 import org.riverock.webmill.container.portlet.bean.InitParam;
+import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 
 /**
  * $Id$
  */
 public final class PortletService {
 
-/*
-    public static void put( final Map<String, List<Object>> map, final String key, final Object value ) {
-        List<Object> obj = map.get( key );
-        if (obj==null) {
-            List<Object> list = new ArrayList<Object>();
-            list.add( value );
-            map.put( key, list );
-        }
-        else {
-            obj.add( value );
-        }
+    public static String getString( final List<PortalTemplateParameter> v, final String nameParam) throws IllegalArgumentException{
+        return getString(v, nameParam, null);
     }
-*/
+
+    public synchronized static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
+        if ( templateParameters == null || isEmpty(nameParam) )
+            return defValue;
+
+        Iterator<PortalTemplateParameter> iterator = templateParameters.iterator();
+        while (iterator.hasNext()) {
+            PortalTemplateParameter portalTemplateParameter = iterator.next();
+            if (portalTemplateParameter.getName().equals(nameParam))
+                return portalTemplateParameter.getValue();
+        }
+        return defValue;
+    }
 
     public static boolean isEmpty( final String s) {
         if (s==null || s.trim().length()==0)
