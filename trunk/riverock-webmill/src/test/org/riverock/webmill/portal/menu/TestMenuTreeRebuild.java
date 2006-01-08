@@ -22,13 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portlet.menu;
+package org.riverock.webmill.portal.menu;
 
 import junit.framework.TestCase;
 import org.riverock.common.collections.TreeUtils;
-import org.riverock.webmill.portal.menu.MenuItem;
 import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
-import org.riverock.interfaces.common.TreeItemInterface;
+import org.riverock.interfaces.common.TreeItem;
 import org.riverock.generic.db.DatabaseAdapter;
 
 import java.util.LinkedList;
@@ -56,42 +55,41 @@ public class TestMenuTreeRebuild extends TestCase {
         throws Exception
     {
         org.riverock.generic.startup.StartupApplication.init();
-//        DatabaseAdapter db = DatabaseAdapter.getInstance(true);
         DatabaseAdapter db = null;
 
         LinkedList list = new LinkedList();
 
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(1), new Long(0)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(2), new Long(0)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(3), new Long(0)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(4), new Long(0)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(1), new Long(0)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(2), new Long(0)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(3), new Long(0)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(4), new Long(0)) ) );
 
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(10), new Long(1)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(11), new Long(1)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(12), new Long(1)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(10), new Long(1)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(11), new Long(1)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(12), new Long(1)) ) );
 
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(100), new Long(10)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(101), new Long(10)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(102), new Long(10)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(103), new Long(10)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(104), new Long(10)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(100), new Long(10)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(101), new Long(10)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(102), new Long(10)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(103), new Long(10)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(104), new Long(10)) ) );
 
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(21), new Long(2)) ) );
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(21), new Long(2)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(21), new Long(2)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(21), new Long(2)) ) );
 
-        list.add( new MenuItem( db, MenuItemTest.get(new Long(30), new Long(3)) ) );
+        list.add( new PortalMenuItem( db, MenuItemTest.get(new Long(30), new Long(3)) ) );
 
         List result = TreeUtils.rebuildTree(list);
 
         System.out.println("result.size() = " + result.size());
         assertFalse("Count items in top level wrong", result.size()!=4 );
-        assertFalse(((TreeItemInterface)result.get(0)).getSubTree().size()!=3 );
-        assertFalse(((TreeItemInterface)result.get(1)).getSubTree().size()!=2 );
-        assertFalse(((TreeItemInterface)result.get(2)).getSubTree().size()!=1 );
+        assertFalse(((TreeItem)result.get(0)).getSubTree().size()!=3 );
+        assertFalse(((TreeItem)result.get(1)).getSubTree().size()!=2 );
+        assertFalse(((TreeItem)result.get(2)).getSubTree().size()!=1 );
 
-        MenuItem tempItem = (MenuItem)((TreeItemInterface)result.get(0)).getSubTree().get(0);
+        PortalMenuItem tempItem = (PortalMenuItem)((TreeItem)result.get(0)).getSubTree().get(0);
 
-        assertFalse( ((TreeItemInterface)tempItem).getSubTree().size()!=5 );
+        assertFalse( ((TreeItem)tempItem).getSubTree().size()!=5 );
     }
 
 }

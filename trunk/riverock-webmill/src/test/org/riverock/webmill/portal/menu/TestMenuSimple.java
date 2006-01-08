@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portlet.menu;
+package org.riverock.webmill.portal.menu;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

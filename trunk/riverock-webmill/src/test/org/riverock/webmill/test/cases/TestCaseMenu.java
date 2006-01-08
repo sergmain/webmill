@@ -58,7 +58,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
 
         InternalTestMenuSimple.testDecodeLevel();
 
-//        MenuInterface defMenu = testAbstract.jspPage.menuLanguage.getDefault();
+//        Menu defMenu = testAbstract.jspPage.menuLanguage.getDefault();
 //
 //        Assert.assertEquals(true, defMenu!=null);
 //        Assert.assertEquals(TestSite.NAME_DEFAULT_MENU, defMenu.getCatalogCode());
