@@ -38,16 +38,12 @@
 	<KeyPrefix>ID_</KeyPrefix>
 	<LogicPrefix>IS_</LogicPrefix>
 	<OrderField>ORDER_FIELD</OrderField>
-<!--	<DbTablePrefix>WM_PORTAL_LIST_SITE</DbTablePrefix> -->
-<!--	<DbTablePrefix>WM_PORTAL_SITE_LANGUAGE</DbTablePrefix> -->
-<!--	<DbTablePrefix>WM_PORTAL_CATALOG_LANGUAGE</DbTablePrefix> -->
-<!--	<DbTablePrefix>WM_PORTAL_XSLT</DbTablePrefix> -->
 	<DbTablePrefix>WM_PORTLET_ARTICLE</DbTablePrefix>
-<!-- 	<DbTablePrefix>WM_PORTAL_VIRTUAL_HOST</DbTablePrefix> -->
-<!--	<DbTablePrefix>WM_PORTAL_CSS</DbTablePrefix> -->
-<!--	<DbTablePrefix>WM_PORTAL_PORTLET_NAME</DbTablePrefix> -->
 	<DbTablePrefix>WM_PORTAL_TEMPLATE</DbTablePrefix>
-<!--	<DbTablePrefix>WM_PORTAL_CATALOG</DbTablePrefix> -->
+    
+	<DbTablePrefix>WM_LIST_COMPANY</DbTablePrefix>
+	<DbTablePrefix>WM_LIST_GROUP_COMPANY</DbTablePrefix>
+	<DbTablePrefix>WM_LIST_HOLDING</DbTablePrefix>
 
 	<DbTablePrefix>WM_NEWS_</DbTablePrefix>
 
@@ -56,16 +52,12 @@
 
 	<TableToList>WM_CASH_CURRENCY_STD</TableToList>
 	<TableToList>WM_PORTAL_CSS</TableToList>
-<!--	<TableToList>WM_PORTAL_PORTLET_NAME</TableToList> -->
 	<TableToList>WM_PORTAL_TEMPLATE</TableToList>
-<!--	<TableToList>WM_PORTAL_CATALOG</TableToList> -->
 
-<!--	<TableToList>MAIN_NEWS</TableToList>-->
+	<TableToList>WM_LIST_COMPANY</TableToList>
+	<TableToList>WM_LIST_GROUP_COMPANY</TableToList>
+	<TableToList>WM_LIST_HOLDING</TableToList>
 
-<!--
-	<TableToList>WM_PORTAL_ACCESS_URL</TableToList>
-	<TableToList>WM_PORTAL_ACCESS_USERAGENT</TableToList>
--->
 	<Logger>
 		<LogObjectClassName>org.apache.log4j.Logger</LogObjectClassName>
 		<LogFactoryMethod>org.apache.log4j.Logger.getLogger</LogFactoryMethod>

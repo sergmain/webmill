@@ -28,6 +28,42 @@
 <portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
+		<portlet-name>mill.index</portlet-name>
+		<portlet-class>org.riverock.portlet.index.IndexPageStubPortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>mill.menu</portlet-name>
+		<portlet-class>org.riverock.portlet.menu.MenuPortlet</portlet-class>
+		<init-param>
+			<name>is-xml</name>
+			<value>true</value>
+		</init-param>
+		<init-param>
+			<name>locale-name-package</name>
+			<value>mill.locale.site_hamradio</value>
+		</init-param>
+		<init-param>
+			<name>name-portlet-code-string</name>
+			<value>mill.menu_code</value>
+		</init-param>
+		<init-param>
+			<name>class-name-get-list</name>
+			<value>org.riverock.portlet.menu.MenuSimple</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+		</supports>
+		<portlet-info>
+			<title>Portlet title</title>
+		</portlet-info>
+	</portlet>
+	<portlet>
 		<portlet-name>mill.job_block</portlet-name>
 		<portlet-class>org.riverock.portlet.job.JobBlockPortlet</portlet-class>
 		<init-param>
@@ -264,6 +300,27 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<security-role-ref>
 			<role-name>webmill.root</role-name>
 		</security-role-ref>
+	</portlet>
+	<portlet>
+        	<description>JSF auth portlet</description>
+        	<portlet-name>riverock.jsf-auth</portlet-name>
+        	<display-name>JSFAuthPortlet</display-name>
+            <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+            <init-param>
+                <name>default-view</name>
+                <value>/riverock/auth/jsp/binf-index.jsp</value>
+            </init-param>
+
+        	<expiration-cache>-1</expiration-cache>
+        	<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>JSF Portlet</title>
+			<short-title>JSF Portlet</short-title>
+			<keywords>JSF, Portlet</keywords>
+		</portlet-info>
 	</portlet>
 	<portlet>
 		<portlet-name>riverock.auth</portlet-name>
