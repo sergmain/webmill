@@ -22,12 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.interfaces.portlet.menu;
-
-import java.util.List;
-
-import org.riverock.interfaces.common.TreeItemInterface;
 
 /**
  * User: serg_main
@@ -36,16 +31,13 @@ import org.riverock.interfaces.common.TreeItemInterface;
  * @author Serge Maslyukov
  * $Id$
  */
-public interface MenuItemInterface extends TreeItemInterface {
-    public Long getId();
-    public Long getIdTop();
-    public Long getIdPortlet();
-    public Long getIdTemplate();
-    public String getNameTemplate();
-    public Long getIdType();
-    public String getType();
-    public String getMenuName();
-    public List getCatalogItems();
-    public String getUrl();
-    public String getUrlResource();
+public interface MenuLanguage{
+    public String getIndexTemplate();
+    public MenuItem getIndexMenuItem();
+    public Menu getDefault();
+    public Menu getCatalogByCode( String code );
+    public MenuItem searchMenuItem(Long id);
+    public String getLocaleStr();
+    public String getLang();
+    public void reinit();
 }

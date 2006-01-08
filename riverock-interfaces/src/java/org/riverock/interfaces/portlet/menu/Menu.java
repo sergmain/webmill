@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.interfaces.portlet.menu;
 
 import java.util.List;
@@ -34,17 +33,11 @@ import java.util.List;
  * @author Serge Maslyukov
  * $Id$
  */
-public interface MenuInterface
-{
-    MenuItemInterface searchMenuItem(Long id_);
-
-    List getMenuItem();
-
-    boolean getIsDefault();
-
-    String getCatalogCode();
-
-    MenuItemInterface getIndexMenuItem();
-
-    void reinit();
+public interface Menu {
+    public MenuItem searchMenuItem(Long id_);
+    public List<MenuItem> getMenuItem();
+    public boolean getIsDefault();
+    public String getCatalogCode();
+    public MenuItem getIndexMenuItem();
+    public void reinit();
 }
