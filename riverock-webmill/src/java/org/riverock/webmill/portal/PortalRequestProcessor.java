@@ -338,19 +338,6 @@ public final class PortalRequestProcessor {
             portalRequestInstance.xslt.getTransformer().transform( xmlSource, new StreamResult( portalRequestInstance.byteArrayOutputStream ) );
         }
         catch(javax.xml.transform.TransformerException e) {
-            try {
-                log.error("Xalan version - " + org.apache.xalan.Version.getVersion());
-            }
-            catch(Throwable e1) {
-                log.error("Error get version of xalan", e1);
-            }
-
-            try {
-                log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion() );
-            }
-            catch(Exception e2) {
-                log.error("Error get version of xerces", e2);
-            }
             final String es = "TransformerException";
             log.error(es, e);
             throw new PortalException( es, e );
