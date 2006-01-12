@@ -1,8 +1,9 @@
 package org.riverock.portlet.auth.bean;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author SMaslyukov
@@ -37,17 +38,41 @@ public class UserBean implements Serializable {
     private String groupCompanyName = null;
     private String holdingName = null;
 
-
     private String userLogin = null;
     private String userPassword = null;
+    private String userPassword2 = null;
 
+	private Long newRoleId = null;
 
+	public Long getNewRoleId() {
+		return newRoleId;
+	}
+
+	public void setNewRoleId( Long newRoleId ) {
+		this.newRoleId = newRoleId;
+	}
 
     public List<RoleBean> getRoles() {
+        List<RoleBean> resultRoles = new ArrayList<RoleBean>();
+        Iterator<RoleBean> iterator = roles.iterator();
+        while( iterator.hasNext() ) {
+            RoleBean roleBean = iterator.next();
+            if (!roleBean.isDelete() ) {
+                resultRoles.add( roleBean );
+            }
+        }
+        return resultRoles;
+    }
+
+    public List<RoleBean> getAllRoles() {
         return roles;
     }
 
     public void setRoles( List<RoleBean> roles) {
+//        this.roles = roles;
+    }
+
+    public void setAllRoles( List<RoleBean> roles) {
         this.roles = roles;
     }
 
@@ -79,7 +104,7 @@ public class UserBean implements Serializable {
 	return isDelete;
     }
 
-    public Long getUserd() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -168,11 +193,19 @@ public class UserBean implements Serializable {
     }
 
     public void setUserPassword( String userPassword ) {
-        this.userPassword= userPassword;
+        this.userPassword = userPassword;
     }
 
-    public String getUserLogin() {
-        return userLogin;
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword2( String userPassword2 ) {
+        this.userPassword2 = userPassword2;
+    }
+
+    public String getUserPassword2() {
+        return userPassword2;
     }
 
     public String getCompanyName() {

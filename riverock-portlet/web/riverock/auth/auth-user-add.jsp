@@ -6,33 +6,34 @@
 
     <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>
 
-<h:panelGroup id="add-user-panel"  rendered="#{treeBacker.currentUser.add}">
+<h:panelGroup id="add-user-panel" rendered="#{treeBacker.currentUser.add}">
 
         <t:messages id="messages" styleClass="error" summaryFormat="{0}" />
 
 <f:verbatim><table borser="0" width="100%" valign="top"><tr><td width="250"></f:verbatim>
+
 	<h:outputText value="User name:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-            <h:inputText id="input_user_name" value="#{treeBacker.currentUser.userName}" maxlength="20" size="20" required="true" />
-               <f:validateLength minimum="6" maximum="20" />
-            </h:inputText>
+        <h:selectOneMenu id="select-one-user" 
+	styleClass="selectOneMenu" required="true" value="#{treeBacker.currentUser.userId}"
+	>
+            <f:selectItems value="#{treeBacker.userList}" />
+        </h:selectOneMenu>
+
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="User login:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-            <h:inputText id="input_user_login" value="#{treeBacker.currentUser.userLogin}" maxlength="20" size="20" required="true" />
-               <f:validateLength minimum="6" maximum="20" />
+            <h:inputText id="input_user_login" value="#{treeBacker.currentUser.userLogin}" maxlength="20" size="20" required="true">
             </h:inputText>
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="User password:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-            <h:inputText id="input_user_password" value="#{treeBacker.currentUser.userPassword}" maxlength="20" size="20" required="true" />
-               <f:validateLength minimum="6" maximum="20" />
+            <h:inputText id="input_user_password" value="#{treeBacker.currentUser.userPassword}" maxlength="20" size="20" required="true">
             </h:inputText>
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
-	<h:outputText value="Repead user password:"/>
+	<h:outputText value="Repeat user password:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-            <h:inputText id="input_user_password2" value="#{treeBacker.currentUser.userPassword2}" maxlength="20" size="20" required="true" />
-               <f:validateLength minimum="6" maximum="20" />
+            <h:inputText id="input_user_password2" value="#{treeBacker.currentUser.userPassword2}" maxlength="20" size="20" required="true">
             </h:inputText>
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Company:"/>
@@ -64,7 +65,7 @@
 
 	<h:selectBooleanCheckbox id="select_holding_checkbox" value="#{treeBacker.currentUser.holding}"/>
 
-        <h:selectOneMenu id="select-one-holding" value="#{treeBacker.currentUser.holdingId}" 
+        <h:selectOneMenu id="select-one-holding" value="#{treeBacker.currentUser.holdingId}"
 	styleClass="selectOneMenu" required="true" 
 	>
             <f:selectItems value="#{treeBacker.holdingList}" />
@@ -73,7 +74,9 @@
 
 <f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
 
-    <h:outputText value="#{msg['role_list']}" styleClass="standard_bold" />
+        <f:subview id="add-role-list-subview">
+            <jsp:include page="auth-role-list.jsp"/>
+        </f:subview>
 
 <f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
 
@@ -82,7 +85,7 @@
 	>
         </h:commandButton>
         <h:commandButton id="cancel-add-user-action" action="#{treeBacker.cancelAddUserAction}" 
-		value="#{msg['cancel_add_user_action']}"
+		value="#{msg['cancel_add_user_action']}" immediate="true"
 	>
         </h:commandButton>
 

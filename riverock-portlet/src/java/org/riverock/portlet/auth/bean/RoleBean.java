@@ -13,6 +13,24 @@ public class RoleBean implements Serializable {
 
     private Long roleId = null;
     private String name = null;
+    private boolean isDelete = false;
+    private boolean isNew = false;
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+    public void setDelete( boolean delete ) {
+        isDelete = delete;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew( boolean aNew ) {
+        isNew = aNew;
+    }
 
     public String getName() {
         return name;
@@ -30,4 +48,14 @@ public class RoleBean implements Serializable {
         this.roleId = roleId;
     }
 
+    public boolean equals( RoleBean roleBean ) {
+	if (roleBean==null) {
+		return false;
+	}
+	return roleBean.getRoleId().equals( roleId );
+    }
+
+	public String toString() {
+		return "[name:"+name+",id:"+roleId+",deleted:"+isDelete+",new:"+isNew+"]";
+	}
 }
