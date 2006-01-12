@@ -52,14 +52,14 @@ public final class PortletResourceBundle {
         this.classLoader = classLoader;
     }
 
-    public ResourceBundle getResourceBundle( final Locale locale ){
+    public ResourceBundle getResourceBundle( final Locale locale ) {
 
         if (locale==null) {
             System.out.println("Locale for resource bundle is null");
             return null;
         }
 
-        System.out.println("Get resource bundle for locale " + locale);
+//        System.out.println("Get resource bundle for locale " + locale);
 
         ResourceBundle resourceBundle = null;
         resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
