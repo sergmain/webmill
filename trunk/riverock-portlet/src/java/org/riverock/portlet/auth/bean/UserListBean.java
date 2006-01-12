@@ -4,18 +4,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.el.VariableResolver;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
-import javax.faces.event.ValueChangeEvent;
 
 import org.apache.log4j.Logger;
+
 import org.apache.myfaces.custom.tree2.HtmlTree;
 import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
@@ -34,15 +33,6 @@ public class UserListBean implements Serializable {
     private final static Logger log = Logger.getLogger( UserListBean.class );
     private static final long serialVersionUID = 2043005500L;
 
-/*
-	<s:selectBooleanCheckboxAjax id="group_company_level_ajax" 
-	value="#{treeBacker.currentUser.groupCompany}"
-	onImage="/images/yes.gif"
-	offImage="/images/no.gif"
-	/>
-*/
-
-
 
     private UserBeanHolder userBeanHolder = null;
     private UserBeanManager userBeanManager = null;
@@ -60,10 +50,44 @@ public class UserListBean implements Serializable {
 
     }
 
+// Role actions
+    public void deleteRoleActionListener( ActionEvent event ) {
+        log.info( "Delete role action." );
+
+        Long roleId = FacesTools.getLong( event.getComponent(), "roleId" );
+	log.info( "delete role with id: " + roleId );
+
+
+	Iterator<RoleBean> iterator = null;
+
+        iterator = userBeanHolder.getUserBean().getAllRoles().iterator();
+        while( iterator.hasNext() ) {
+            RoleBean roleBean = iterator.next();
+
+            if( roleBean.getRoleId().equals( roleId ) ) {
+		log.info( "Role is found. set isDelete to true" );
+                roleBean.setDelete( true );
+                break;
+            }
+        }
+    }
+
+    public void addRoleAction() {
+        log.info( "Add role action." );
+
+	Long roleId = userBeanHolder.getUserBean().getNewRoleId();
+	;log.info("New id of role: " + roleId);
+	if ( roleId == null ) {
+		return;
+	}
+
+	userBeanHolder.getUserBean().getAllRoles().add( userBeanManager.getRole( roleId ) );
+    }
+
 // Add actions
     public void addUserAction() {
         log.info( "Add user action." );
-	userBeanHolder.setUserBean( new UserBean() );
+        userBeanHolder.setUserBean( new UserBean() );
         if( userBeanHolder.getUserBean() != null ) {
             userBeanHolder.getUserBean().setAdd( true );
             userBeanHolder.getUserBean().setEdit( false );
@@ -75,15 +99,15 @@ public class UserListBean implements Serializable {
     public void processAddUserAction() {
         log.info( "Procss add user action." );
         if( userBeanHolder.getUserBean() != null ) {
-        	userBeanManager.processAddUser( userBeanHolder.getUserBean() );
-        	userBeanHolder.setUserBean( null );
-        	userBeanManager.reinitCompanyBeans();
+            userBeanManager.processAddUser( userBeanHolder.getUserBean() );
+            userBeanHolder.setUserBean( null );
+            userBeanManager.reinitCompanyBeans();
         }
     }
 
     public void cancelAddUserAction() {
         log.info( "Cancel add action." );
-	userBeanHolder.setUserBean( null );
+        userBeanHolder.setUserBean( null );
     }
 
 // Edit actions
@@ -104,10 +128,10 @@ public class UserListBean implements Serializable {
             userBeanHolder.getUserBean().setEdit( false );
             userBeanHolder.getUserBean().setDelete( false );
 
-        	userBeanManager.processDeleteUser( userBeanHolder.getUserBean() );
-        	userBeanHolder.setUserBean( null );
-        	userBeanManager.reinitCompanyBeans();
-	}
+            userBeanManager.processSaveUser( userBeanHolder.getUserBean() );
+            userBeanHolder.setUserBean( null );
+            userBeanManager.reinitCompanyBeans();
+        }
     }
 
     public void cancelEditUserAction() {
@@ -116,6 +140,8 @@ public class UserListBean implements Serializable {
             userBeanHolder.getUserBean().setAdd( false );
             userBeanHolder.getUserBean().setEdit( false );
             userBeanHolder.getUserBean().setDelete( false );
+            userBeanHolder.setUserBean( null );
+            userBeanManager.reinitCompanyBeans();
         }
     }
 
@@ -140,14 +166,14 @@ public class UserListBean implements Serializable {
     public void processDeleteUserAction() {
         log.info( "Process delete user action." );
         if( userBeanHolder.getUserBean() != null ) {
-        	userBeanManager.processDeleteUser( userBeanHolder.getUserBean().getAuthUserId() );
-        	userBeanHolder.setUserBean( null );
-        	userBeanManager.reinitCompanyBeans();
+            userBeanManager.processDeleteUser( userBeanHolder.getUserBean() );
+            userBeanHolder.setUserBean( null );
+            userBeanManager.reinitCompanyBeans();
         }
     }
 
-	public void changeCompanyValueListener(ValueChangeEvent event) {
 /*
+    public void changeCompanyValueListener( ValueChangeEvent event ) {
         String selectedValues[] = (String[])evt.getNewValue();
         if(selectedValues.length == 0)
         {
@@ -164,9 +190,9 @@ public class UserListBean implements Serializable {
 
             selectedInfo = sb.toString();
         }
+        log.info( "new value: " + event.getNewValue() + ", old value: " + event.getOldValue() );
+    }
 */
-		log.info("new value: "+event.getNewValue() + ", old value: " +event.getOldValue() );		
-	}
 
     public void setUserBeanHolder( UserBeanHolder userBeanHolder ) {
         this.userBeanHolder = userBeanHolder;
@@ -177,7 +203,7 @@ public class UserListBean implements Serializable {
     }
 
     private UserBean lookupUserBean( Long authUserId ) {
-        log.info( "start search user bean for athUserId: " + authUserId );
+        log.info( "start search user bean for authUserId: " + authUserId );
 
         UserBean resultUserBean = null;
         Iterator<CompanyBean> iterator = userBeanManager.getCompanyBeans().iterator();
@@ -197,19 +223,48 @@ public class UserListBean implements Serializable {
         return resultUserBean;
     }
 
-    private ListProvider listProvider = null;
+    public List<SelectItem> getUserList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<UserItemBean> companies = userBeanManager.getUserList();
 
-    public void setListProvider( ListProvider listProvider ) {
-        this.listProvider = listProvider;
+        Iterator<UserItemBean> iterator = companies.iterator();
+        while( iterator.hasNext() ) {
+            UserItemBean user = iterator.next();
+
+            list.add( new SelectItem( user.getUserId(), user.getUserName() ) );
+        }
+        return list;
     }
 
-    public ListProvider getCompanyListProvider() {
-        return listProvider;
+    private boolean isAlreadyBinded( RoleBean roleBean ) {
+        Iterator<RoleBean> iterator = userBeanHolder.getUserBean().getRoles().iterator();
+        while( iterator.hasNext() ) {
+            RoleBean role = iterator.next();
+		if (role.equals( roleBean ) ) {
+			return true;
+		}
+        }
+	return false;
+    }
+
+    public List<SelectItem> getRoleList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<RoleBean> companies = userBeanManager.getRoleList();
+
+        Iterator<RoleBean> iterator = companies.iterator();
+        while( iterator.hasNext() ) {
+            RoleBean role = iterator.next();
+
+	     if (!isAlreadyBinded( role ) )  {
+            	list.add( new SelectItem( role.getRoleId(), role.getName() ) );
+	     }
+        }
+        return list;
     }
 
     public List<SelectItem> getCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<CompanyItemBean> companies = listProvider.getCompanyList();
+        List<CompanyItemBean> companies = userBeanManager.getCompanyList();
 
         Iterator<CompanyItemBean> iterator = companies.iterator();
         while( iterator.hasNext() ) {
@@ -222,7 +277,7 @@ public class UserListBean implements Serializable {
 
     public List<SelectItem> getGroupCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<GroupCompanyItemBean> groupCompanies = listProvider.getGroupCompanyList();
+        List<GroupCompanyItemBean> groupCompanies = userBeanManager.getGroupCompanyList();
 
         Iterator<GroupCompanyItemBean> iterator = groupCompanies.iterator();
         while( iterator.hasNext() ) {
@@ -235,7 +290,7 @@ public class UserListBean implements Serializable {
 
     public List<SelectItem> getHoldingList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<HoldingItemBean> holdings = listProvider.getHoldingList();
+        List<HoldingItemBean> holdings = userBeanManager.getHoldingList();
 
         Iterator<HoldingItemBean> iterator = holdings.iterator();
         while( iterator.hasNext() ) {
@@ -257,7 +312,7 @@ public class UserListBean implements Serializable {
         this.userBeanManager = userBeanManager;
     }
 
-    public TreeNode getUserList() {
+    public TreeNode getUserTree() {
         TreeNode treeData = new TreeNodeBase( "foo-folder", "Company list", false );
         Iterator<CompanyBean> iterator = userBeanManager.getCompanyBeans().iterator();
         while( iterator.hasNext() ) {
@@ -278,7 +333,7 @@ public class UserListBean implements Serializable {
     }
 
     public TreeModel getExpandedTreeData() {
-        return new TreeModelBase( getUserList() );
+        return new TreeModelBase( getUserTree() );
     }
 
     public void setTree( HtmlTree tree ) {
@@ -327,6 +382,7 @@ public class UserListBean implements Serializable {
     private HtmlTree _tree;
     private String _nodePath;
 
+/*
     private void logInfo( ActionEvent ev ) {
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -393,4 +449,5 @@ public class UserListBean implements Serializable {
 
 
     }
+*/
 }

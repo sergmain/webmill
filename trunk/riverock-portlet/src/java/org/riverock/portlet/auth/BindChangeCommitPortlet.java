@@ -82,9 +82,6 @@ public final class BindChangeCommitPortlet implements Portlet {
     public void processAction( ActionRequest actionRequest, ActionResponse actionResponse )
         throws PortletException {
 
-        Long idFirm = null;
-        Long idService = null;
-        Long idRoad = null;
 
         DatabaseAdapter dbDyn = null;
         String index_page = null;
@@ -96,6 +93,10 @@ public final class BindChangeCommitPortlet implements Portlet {
             if ( auth_ == null || !auth_.isUserInRole( BindIndex.AUTH_BIND_ROLE ) ) {
                 throw new PortletException( "You have not access right to bind right" );
             }
+
+            Long idFirm = null;
+            Long idService = null;
+            Long idRoad = null;
 
                     dbDyn = DatabaseAdapter.getInstance();
                     index_page = PortletService.url("mill.auth.bind", actionRequest, actionResponse );

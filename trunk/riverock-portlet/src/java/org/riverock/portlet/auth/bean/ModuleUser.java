@@ -107,4 +107,11 @@ public class ModuleUser {
         }
         return authInfo.getRoad() == 1;
     }
+
+    public AuthInfo getAuthInfo() throws AuthException {
+        if (authSession!=null) {
+            return InternalAuthProvider.getAuthInfo( authSession );
+        }
+        return null;
+    }
 }

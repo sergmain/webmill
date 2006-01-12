@@ -55,7 +55,9 @@
 
 <f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
 
-    <h:outputText value="#{msg['role_list']}" styleClass="standard_bold" />
+        <f:subview id="edit-role-list-subview">
+            <jsp:include page="auth-role-list.jsp"/>
+        </f:subview>
 
 <f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
 

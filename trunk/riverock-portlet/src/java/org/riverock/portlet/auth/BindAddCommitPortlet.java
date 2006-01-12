@@ -84,7 +84,6 @@ public final class BindAddCommitPortlet implements Portlet {
         throws PortletException {
 
         DatabaseAdapter dbDyn = null;
-
         PreparedStatement ps = null;
         try {
 
