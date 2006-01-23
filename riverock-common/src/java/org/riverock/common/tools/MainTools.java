@@ -24,15 +24,14 @@
  */
 package org.riverock.common.tools;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Locale;
-import java.util.Map;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
@@ -40,93 +39,81 @@ import java.util.LinkedList;
 public final class MainTools {
     private final static Log log = LogFactory.getLog(MainTools.class);
 
-    public static void putKey( final Map<String, Object> map, final String key, final Object value )
-    {
-        Object obj = map.get( key );
-        if (obj==null)
-        {
-            map.put( key, value );
+    public static void putKey(final Map<String, Object> map, final String key, final Object value) {
+        Object obj = map.get(key);
+        if (obj == null) {
+            map.put(key, value);
             return;
         }
 
-        if (obj instanceof List)
-        {
+        if (obj instanceof List) {
             if (value instanceof List)
-                ((List)obj).addAll((List)value);
+                ((List) obj).addAll((List) value);
             else
-                ((List)obj).add( value );
+                ((List) obj).add(value);
         }
-        else
-        {
+        else {
             List v = new LinkedList();
             v.add(obj);
 
             if (value instanceof List)
-                v.addAll( (List)value );
+                v.addAll((List) value);
             else
-                v.add( value );
+                v.add(value);
 
-            map.remove( key );
-            map.put( key, v );
+            map.remove(key);
+            map.put(key, v);
         }
     }
 
-    public static boolean compare( final byte[] array1, final byte[] array2 )
-    {
-        if (array1==null && array2==null)
+    public static boolean compare(final byte[] array1, final byte[] array2) {
+        if (array1 == null && array2 == null)
             return true;
 
-        if (array1==null && array2!=null)
+        if (array1 == null && array2 != null)
             return false;
 
-        if (array1!=null && array2==null)
+        if (array1 != null && array2 == null)
             return false;
 
-        if (array1.length!=array2.length)
-        {
-            System.out.println("diff length, array1 "+array1.length+", array2 "+array2.length);
+        if (array1.length != array2.length) {
+            System.out.println("diff length, array1 " + array1.length + ", array2 " + array2.length);
             return false;
         }
 
-        for (int i=0; i<array1.length; i++)
-        {
-            if (array1[i]!=array2[i])
-            {
-                System.out.println("diff byte at "+i);
+        for (int i = 0; i < array1.length; i++) {
+            if (array1[i] != array2[i]) {
+                System.out.println("diff byte at " + i);
                 return false;
             }
         }
         return true;
     }
 
-    public static int indexOf( final byte bytes[], final byte searchByte )
-    {
-        if (bytes==null || bytes.length==0)
+    public static int indexOf(final byte bytes[], final byte searchByte) {
+        if (bytes == null || bytes.length == 0)
             return -1;
 
-        for (int i=0; i<bytes.length; i++)
-        {
-            if (bytes[i]==searchByte)
+        for (int i = 0; i < bytes.length; i++) {
+            if (bytes[i] == searchByte)
                 return i;
         }
         return -1;
     }
 
-    public static byte[] getBytes( final byte bytes[], final int offset )
-    {
-        if (bytes == null || bytes.length<offset)
+    public static byte[] getBytes(final byte bytes[], final int offset) {
+        if (bytes == null || bytes.length < offset)
             return null;
 
         byte b[] = new byte[bytes.length - offset];
-        for (int i=0; i<b.length; i++)
-            b[i] = bytes[offset+i];
+        for (int i = 0; i < b.length; i++)
+            b[i] = bytes[offset + i];
 
         return b;
     }
 
-    public static String writeToFile( final String full_file_name, final byte bytes[] )
-            throws Exception
-    {
+    public static String writeToFile(final String full_file_name, final byte bytes[])
+        throws Exception {
 
         File file_ = new File(full_file_name);
         file_.delete();
@@ -143,27 +130,25 @@ public final class MainTools {
         return full_file_name + " создан успешно";
     }
 
-    public static boolean deleteFile( final String fileName )
-    {
+    public static boolean deleteFile(final String fileName) {
         return deleteFile(new File(fileName));
     }
 
-    public static boolean deleteFile( final File file_ )
-    {
-        if (file_.exists())
-        {
+    public static boolean deleteFile(final File file_) {
+        if (file_==null) {
+            return true;
+        }
+        if (file_.exists()) {
             return file_.delete();
         }
 
         return true;
     }
 
-    public static Object createCustomObject( final String s )
-        throws ClassNotFoundException, InstantiationException, IllegalAccessException
-    {
+    public static Object createCustomObject(final String s)
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Object obj = null;
-        try
-        {
+        try {
             if (log.isDebugEnabled())
                 log.debug("Starting create class object for name '" + s + "'");
 
@@ -191,29 +176,18 @@ public final class MainTools {
             if (log.isDebugEnabled())
                 log.debug("Object for name '" + s + "' is " + obj);
         }
-        catch(ClassNotFoundException e)
-        {
-            log.error("Error create reflection object for class name '"+s+"'", e);
+        catch (ClassNotFoundException e) {
+            log.error("Error create reflection object for class name '" + s + "'", e);
             throw e;
         }
-        catch(InstantiationException e)
-        {
-            log.error("Error create reflection object for class name '"+s+"'", e);
+        catch (InstantiationException e) {
+            log.error("Error create reflection object for class name '" + s + "'", e);
             throw e;
         }
-        catch(IllegalAccessException e)
-        {
-            log.error("Error create reflection object for class name '"+s+"'", e);
+        catch (IllegalAccessException e) {
+            log.error("Error create reflection object for class name '" + s + "'", e);
             throw e;
         }
         return obj;
-    }
-
-    /**
-     * @deprecated
-     * @return
-     */
-    public static Locale RUlocale() {
-        return new Locale("ru", "RU");
     }
 }
