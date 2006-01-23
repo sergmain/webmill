@@ -50,11 +50,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>ApplicationServer</servlet-name>
-		<servlet-class>org.riverock.webmill.as.server.ApplicationServer</servlet-class>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
-	<servlet>
 		<servlet-name>ContextNavigator</servlet-name>
 		<servlet-class>org.riverock.webmill.portal.ContextNavigator</servlet-class>
 		<load-on-startup>3</load-on-startup>
@@ -80,10 +75,6 @@
 	<servlet-mapping>
 		<servlet-name>ContextNavigator</servlet-name>
 		<url-pattern>/url/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>ApplicationServer</servlet-name>
-		<url-pattern>/mill.appl</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ServletCSS</servlet-name>
