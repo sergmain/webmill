@@ -28,6 +28,27 @@
 <portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
+        	<description>JSF company portlet</description>
+        	<portlet-name>riverock.jsf-company</portlet-name>
+        	<display-name>JSFCompanyPortlet</display-name>
+            <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+            <init-param>
+                <name>default-view</name>
+                <value>/riverock/company/company.jsp</value>
+            </init-param>
+
+        	<expiration-cache>-1</expiration-cache>
+        	<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>JSF Portlet</title>
+			<short-title>JSF Portlet</short-title>
+			<keywords>JSF, Portlet</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
 		<portlet-name>mill.index</portlet-name>
 		<portlet-class>org.riverock.portlet.index.IndexPageStubPortlet</portlet-class>
 		<supports>
@@ -599,116 +620,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<mime-type>text/html</mime-type>
 		</supports>
 		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.firm.commit_add_firm</portlet-name>
-		<portlet-class>org.riverock.portlet.firm.FirmAddCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.firm.commit_ch_firm</portlet-name>
-		<portlet-class>org.riverock.portlet.firm.FirmChangeCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.firm.commit_del_firm</portlet-name>
-		<portlet-class>org.riverock.portlet.firm.FirmDeleteCommitPortlet</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.firm.index</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.firm.del_firm</portlet-name>
-		<portlet-class>/firm_del</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.firm.index</value>
-		</init-param>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.FirmIndex</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.firm.ch_firm</portlet-name>
-		<portlet-class>/firm_ch</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.firm.index</value>
-		</init-param>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.FirmIndex</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.firm.add_firm</portlet-name>
-		<portlet-class>/firm_add</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.firm.index</value>
-		</init-param>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.FirmIndex</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.firm.index</portlet-name>
-		<portlet-class>/firm_index</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.firm.index</value>
-		</init-param>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.FirmIndex</resource-bundle>
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
