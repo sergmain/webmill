@@ -22,71 +22,137 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.generic.tools.servlet;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.io.OutputStream;
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
+
+import org.riverock.common.contenttype.ContentTypeManager;
 
 import org.apache.log4j.Logger;
 
-public final class ServletResponseWrapperInclude extends HttpServletResponseWrapper {
+public final class ServletResponseWrapperInclude implements ServletResponse {
 
     private final static Logger log = Logger.getLogger( ServletResponseWrapperInclude.class );
 
-    private Writer writer= null;
-    private OutputStream outputStream = null;
+    private final static int BUFFER_INITIAL_SIZE = 10000;
 
     private PrintWriter realWriter= null;
     private ServletOutputStream realOutputStream = null;
+    private ContentTypeManager contentTypeManager = null;
+    private boolean isCommited = false;
+    private Locale locale = null;
+    private ByteArrayOutputStream outputStream = new ByteArrayOutputStream( BUFFER_INITIAL_SIZE );
+
+    public byte[] getBytes() {
+        return outputStream.toByteArray();
+    }
+
+    public void setContentType(String contentTypeString ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug( "set new contentType: " + contentTypeString );
+        }
+
+        // if writer or stream returned, dont change contentType
+        if ( realWriter != null || realOutputStream != null || contentTypeString == null ) {
+            return;
+        }
+
+        contentTypeManager.setContentType( contentTypeString );
+    }
+
+    public void setCharacterEncoding( String charset ) {
+        // if writer or stream returned, dont change contentType
+        if (realWriter!=null || realOutputStream!=null )
+            return;
+
+        contentTypeManager.setCharacterEncoding( charset );
+    }
+
 
     protected void finalize() throws Throwable {
-        writer = null;
         super.finalize();
     }
 
-    public ServletResponseWrapperInclude( final ServletResponse response, final Writer writer) {
-        super( (HttpServletResponse)response );
-        if ( log.isDebugEnabled() ) {
-            log.debug( "ServletResponseWrapperInclude( ServletResponse response, Writer writer), " +
-                "writer; " + (writer==null?"is null":writer.getClass().getName())
-            );
+    public ServletResponseWrapperInclude( Locale locale) {
+        this.locale = locale;
+        this.contentTypeManager = ContentTypeManager.getInstance( locale );
+    }
+
+    private static class PrintWriterLogger extends PrintWriter {
+
+        public PrintWriterLogger( Writer out ) {
+            this( out, false );
         }
 
-        this.writer = writer;
+        public PrintWriterLogger( Writer out, boolean autoFlush ) {
+            super( out, autoFlush );
+        }
+
+        public PrintWriterLogger(OutputStream out) {
+            super(out, false);
+        }
+
+        public PrintWriterLogger(OutputStream out, boolean autoFlush) {
+            super(out, autoFlush);
+        }
+
+        public void flush() {
+            if ( log.isDebugEnabled() ) {
+                log.debug( "flush content" );
+            }
+            super.flush();
+        }
+
+        public void write(String s) {
+            if ( log.isDebugEnabled() ) {
+                log.debug( "write string: " + s );
+            }
+            super.write(s);
+        }
     }
 
-    public ServletResponseWrapperInclude( final ServletResponse response, final OutputStream outputStream) {
-        super( (HttpServletResponse)response );
-        this.outputStream = outputStream;
-    }
-
-    public java.io.PrintWriter getWriter() {
+    public PrintWriter getWriter() throws IOException {
         if (realOutputStream!=null) {
             throw new IllegalStateException( "getOutputStream() already invoked" );
         }
 
         if ( log.isDebugEnabled() ) {
-            log.debug( "getWriter(), writer; " +
-                (writer==null?"is null":writer.getClass().getName()) +
-                ", outputStream: " +
+            log.debug( "getWriter(), outputStream: " +
                 (outputStream==null?"is null":outputStream.getClass().getName())
             );
         }
-        if ( writer!=null ) {
-            realWriter = new PrintWriter( writer, true );
+
+        if ( log.isDebugEnabled() ) {
+            log.debug( "contentType: " + contentTypeManager );
+            if (contentTypeManager!=null)
+                log.debug( "charset: " + contentTypeManager.getCharacterEncoding() );
         }
-        else {
-            realWriter = new PrintWriter( outputStream, true );
-        }
+
+        realWriter = new PrintWriterLogger(
+            new OutputStreamWriter( outputStream, contentTypeManager.getCharacterEncoding() ), true
+        );
+
         return realWriter;
+    }
+
+    public void setContentLength( int i ) {
+    }
+
+    public String getCharacterEncoding() {
+        return contentTypeManager.getCharacterEncoding();
+    }
+
+    public String getContentType() {
+        return contentTypeManager.getContentType();
     }
 
     public ServletOutputStream getOutputStream() {
@@ -94,28 +160,15 @@ public final class ServletResponseWrapperInclude extends HttpServletResponseWrap
             throw new IllegalStateException( "getWriter() already invoked" );
         }
         if ( log.isDebugEnabled() ) {
-            log.debug( "getOutputStream(), writer; " +
-                (writer==null?"is null":writer.getClass().getName()) +
-                ", outputStream: " +
+            log.debug( "getOutputStream(), outputStream: " +
                 (outputStream==null?"is null":outputStream.getClass().getName())
             );
         }
 
-        if ( writer!=null ) {
-            realOutputStream = new ServletOutputStreamWithWriter( writer );
-        }
-        else {
-            realOutputStream = new ServletOutputStreamWithOutputStream( outputStream );
-        }
+        realOutputStream = new ServletOutputStreamWithOutputStream( outputStream );
 
         return realOutputStream;
     }
-
-    //Todo: uncomment and implement
-
-//    public int getBufferSize() {
-//        return response.getBufferSize();
-//    }
 
     public void flushBuffer() throws IOException {
         if ( log.isDebugEnabled() ) {
@@ -138,18 +191,40 @@ public final class ServletResponseWrapperInclude extends HttpServletResponseWrap
                 log.debug( "flushBuffer(). outputStream: "+realOutputStream.toString() );
             }
         }
+        isCommited = true;
     }
 
-//    public void resetBuffer() {
-//        response.resetBuffer();
-//    }
-//
-//    public boolean isCommitted() {
-//        return response.isCommitted();
-//    }
-//
-//    public void reset() {
-//        response.reset();
-//    }
+    public void resetBuffer() {
+        if (isCommited)
+            throw new IllegalStateException("response already commited");
+    }
+
+    public void reset() {
+        if (isCommited)
+            throw new IllegalStateException("response already commited");
+    }
+
+    public void setLocale( final Locale locale ) {
+        if (realWriter==null && realOutputStream==null ) {
+            this.locale = locale;
+            contentTypeManager = ContentTypeManager.getInstance( locale );
+        }
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public boolean isCommitted() {
+        return isCommited;
+    }
+
+    public int getBufferSize() {
+        return 0;
+    }
+
+    public void setBufferSize( int i ) {
+        throw new IllegalStateException("response already commited");
+    }
 
 }
