@@ -18,13 +18,13 @@
 <f:verbatim><table borser="0" width="100%"><tr><td width="300" valign="top"></f:verbatim>
 
 
-        <h:commandButton id="add-user-action" action="#{treeBacker.addUserAction}" 
+        <h:commandButton id="add-user-action" action="#{authUserAction.addUserAction}"
 		value="#{msg['add_user_action']}" 
-		rendered="#{!treeBacker.currentUser.add}"
+		rendered="#{!dataProvider.currentUser.add}"
 	>
         </h:commandButton>
 
-    <t:tree2 id="serverTree" value="#{treeBacker.userTree}" var="node" varNodeToggler="t" clientSideToggle="false" showRootNode="false">
+    <t:tree2 id="serverTree" value="#{auth.userTree}" var="node" varNodeToggler="t" clientSideToggle="false" showRootNode="false">
         <f:facet name="company">
             <h:panelGroup>
                 <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
@@ -42,7 +42,7 @@
         </f:facet>
         <f:facet name="user">
             <h:panelGroup>
-                <h:commandLink id="select-user-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}" actionListener="#{treeBacker.selectUserAction}">
+                <h:commandLink id="select-user-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}" actionListener="#{authUserAction.selectUserAction}">
                     <t:graphicImage value="/images/user.png" border="0"/>
                     <h:outputText value="#{node.description}"/>
                     <f:param name="authUserId" value="#{node.identifier}"/>
@@ -54,22 +54,22 @@
 <f:verbatim></td><td valign="top"></f:verbatim>
 
 
-<h:panelGroup rendered="#{!empty treeBacker.currentUser}">
+<h:panelGroup rendered="#{!empty dataProvider.currentUser}">
 
 
-        <f:subview id="select-user-subview" rendered="#{!treeBacker.currentUser.edit && !treeBacker.currentUser.delete && !treeBacker.currentUser.add}">
+        <f:subview id="select-user-subview" rendered="#{!dataProvider.currentUser.edit && !dataProvider.currentUser.delete && !dataProvider.currentUser.add}">
             <jsp:include page="auth-user-select.jsp"/>
         </f:subview>
 
-        <f:subview id="add-user-subview" rendered="#{treeBacker.currentUser.add}">
+        <f:subview id="add-user-subview" rendered="#{dataProvider.currentUser.add}">
             <jsp:include page="auth-user-add.jsp"/>
         </f:subview>
 
-        <f:subview id="edit-user-subview" rendered="#{treeBacker.currentUser.edit}">
+        <f:subview id="edit-user-subview" rendered="#{dataProvider.currentUser.edit}">
             <jsp:include page="auth-user-edit.jsp"/>
         </f:subview>
 
-        <f:subview id="delete-user-subview" rendered="#{treeBacker.currentUser.delete}">
+        <f:subview id="delete-user-subview" rendered="#{dataProvider.currentUser.delete}">
             <jsp:include page="auth-user-delete.jsp"/>
         </f:subview>
 

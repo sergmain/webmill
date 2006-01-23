@@ -6,50 +6,50 @@
 
     <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>
 
-<h:panelGroup id="edit-user-panel" rendered="#{treeBacker.currentUser.edit}">
+<h:panelGroup id="edit-user-panel" rendered="#{dataProvider.currentUser.edit}">
 
 <f:verbatim><table borser="0" width="100%" valign="top"><tr><td width="250"></f:verbatim>
 	<h:outputText value="User name:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<h:outputText value="#{treeBacker.currentUser.userName}" />
+	<h:outputText value="#{dataProvider.currentUser.userName}" />
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="User login:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<h:outputText value="#{treeBacker.currentUser.userLogin}" />
+	<h:outputText value="#{dataProvider.currentUser.userLogin}" />
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Company:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
 
-	<h:selectBooleanCheckbox id="select_company_checkbox" value="#{treeBacker.currentUser.company}"/>
+	<h:selectBooleanCheckbox id="select_company_checkbox" value="#{dataProvider.currentUser.company}"/>
 
-        <h:selectOneMenu id="select-one-company" value="#{treeBacker.currentUser.companyId}" 
+        <h:selectOneMenu id="select-one-company" value="#{dataProvider.currentUser.companyId}"
 	styleClass="selectOneMenu" required="true" 
 	>
-            <f:selectItems value="#{treeBacker.companyList}" />
+            <f:selectItems value="#{dataProvider.companyList}" />
         </h:selectOneMenu>
 
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Group of company:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
 
-	<h:selectBooleanCheckbox id="select_group_company_checkbox" value="#{treeBacker.currentUser.groupCompany}"/>
+	<h:selectBooleanCheckbox id="select_group_company_checkbox" value="#{dataProvider.currentUser.groupCompany}"/>
 
-        <h:selectOneMenu id="select-one-group-company" value="#{treeBacker.currentUser.groupCompanyId}" 
+        <h:selectOneMenu id="select-one-group-company" value="#{dataProvider.currentUser.groupCompanyId}"
 	styleClass="selectOneMenu" required="true" 
 	>
-            <f:selectItems value="#{treeBacker.groupCompanyList}" />
+            <f:selectItems value="#{dataProvider.groupCompanyList}" />
         </h:selectOneMenu>
 
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Holding:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
 
-	<h:selectBooleanCheckbox id="select_holding_checkbox" value="#{treeBacker.currentUser.holding}"/>
+	<h:selectBooleanCheckbox id="select_holding_checkbox" value="#{dataProvider.currentUser.holding}"/>
 
-        <h:selectOneMenu id="select-one-holding" value="#{treeBacker.currentUser.holdingId}" 
+        <h:selectOneMenu id="select-one-holding" value="#{dataProvider.currentUser.holdingId}"
 	styleClass="selectOneMenu" required="true" 
 	>
-            <f:selectItems value="#{treeBacker.holdingList}" />
+            <f:selectItems value="#{dataProvider.holdingList}" />
         </h:selectOneMenu>
 
 
@@ -61,11 +61,11 @@
 
 <f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
 
-        <h:commandButton id="save-user-action" action="#{treeBacker.saveUserAction}" 
+        <h:commandButton id="save-user-action" action="#{authUserAction.saveUserAction}"
 		value="#{msg['save_user_action']}"
 	>
         </h:commandButton>
-        <h:commandButton id="cancel-edit-user-action" action="#{treeBacker.cancelEditUserAction}" 
+        <h:commandButton id="cancel-edit-user-action" action="#{authUserAction.cancelEditUserAction}"
 		value="#{msg['cancel_edit_user_action']}"
 	>
         </h:commandButton>
