@@ -40,6 +40,10 @@
     <target name="all">
         <echo message="Start all action requet tests"/>
         <antcall target="clean-prepare"/>
+
+<!--        <antcall target="GetReaderIllegalStateAfterInputStreamTestPortlet"/> -->
+        <antcall target="GetContentTypeTest"/>
+        <antcall target="GetCharacterEncodingTest"/>
         <antcall target="GetAttributeNamesTest"/>
         <antcall target="GetAttributeTest"/>
         <antcall target="GetAttributeInvalidTest"/>
@@ -50,6 +54,53 @@
         <antcall target="GetPortletModeTest"/>
         <antcall target="GetPreferencesTest"/>
         <antcall target="GetPortletSessionTest"/>
+    </target>
+
+
+
+    <target name="GetReaderIllegalStateAfterInputStreamTestPortlet">
+        <echo message="Start GetReaderIllegalStateAfterInputStreamTestPortlet test"/>
+        <testSpec name="GetReaderIllegalStateAfterInputStreamTestPortlet">
+            &configDeclare;
+            <steps description="GetReaderIllegalStateAfterInputStreamTestPortlet">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetReaderIllegalStateAfterInputStreamTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetReaderIllegalStateAfterInputStreamTestPortlet Test PASSED."/>
+                &testWithClickOnLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetContentTypeTest">
+        <echo message="Start GetContentTypeTest test"/>
+        <testSpec name="GetContentTypeTest">
+            &configDeclare;
+            <steps description="GetContentTypeTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetContentTypeTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetContentTypeTest Test PASSED."/>
+                &testWithClickOnLink;
+            </steps>
+        </testSpec>
+    </target>
+
+    <target name="GetCharacterEncodingTest">
+        <echo message="Start GetCharacterEncodingTest test"/>
+        <testSpec name="GetCharacterEncodingTest">
+            &configDeclare;
+            <steps description="GetCharacterEncodingTest">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="GetCharacterEncodingTestPortlet"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="GetCharacterEncodingTest Test PASSED."/>
+                &testWithClickOnLink;
+            </steps>
+        </testSpec>
     </target>
 
     <target name="GetAttributeNamesTest">

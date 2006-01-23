@@ -2,7 +2,12 @@ ActionRequest
 ===========================================================================
 
 - GetCharacterEncodingTest Test FAILED. PortletRequest.getCharacterEncoding() returned a null result
+Specification says diferent: 
+a String containing the name of the chararacter encoding, 
+or null if the request does not specify a character encoding.
+
  
+
 - GetContentLengthTest Test FAILED. PortletRequest.getReader() returned a null 
 
 - GetContentTypeTest Test FAILED. PortletRequest.getContentType() returned a null 

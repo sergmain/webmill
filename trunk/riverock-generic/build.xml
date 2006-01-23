@@ -119,9 +119,5 @@
             </classpath>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
-        <property name="locale-path" value="/org/riverock/generic/tools/servlet"/>
-        <copy todir="${build.dest}${locale-path}">
-            <fileset file="${src.java.dir}${locale-path}/**.properties"/>
-        </copy>
     </target>
 </project>
