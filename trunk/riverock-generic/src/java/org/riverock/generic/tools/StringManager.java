@@ -271,7 +271,7 @@ public final class StringManager {
         {
             log.error("Error call getString(String key, Object[] args)", iae);
 
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append(value);
             for (int i = 0; i < args.length; i++)
             {

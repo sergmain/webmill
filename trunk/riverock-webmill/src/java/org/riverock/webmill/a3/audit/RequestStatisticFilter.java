@@ -484,7 +484,7 @@ public final class RequestStatisticFilter implements Filter {
     public String toString() {
         if (filterConfig == null)
             return ("RequestDumperFilter()");
-        StringBuffer sb = new StringBuffer("RequestDumperFilter(");
+        StringBuilder sb = new StringBuilder("RequestDumperFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());

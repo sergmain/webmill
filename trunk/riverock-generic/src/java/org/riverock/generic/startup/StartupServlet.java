@@ -182,7 +182,7 @@ public final class StartupServlet extends HttpServlet {
     private static String replacePattern(String str, String oldToken, String newToken) {
         if (str == null)
             return str;
-        StringBuffer result = new StringBuffer(str.length() + 100);
+        StringBuilder result = new StringBuilder(str.length() + 100);
         int i = str.indexOf(oldToken);
         int startOfIndex = 0;
         for (; i != -1; i = str.indexOf(oldToken, startOfIndex)) {

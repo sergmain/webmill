@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
  */
 public class ContentType {
 
-    private StringBuffer contentType = null;
+    private StringBuilder contentType = null;
     private Charset charset = null;
 
     public ContentType(final String contentType) {
@@ -21,20 +21,20 @@ public class ContentType {
         this.charset = Charset.forName(charset_);
     }
 
-    public ContentType(final StringBuffer contentType, final Charset charset) {
+    public ContentType(final StringBuilder contentType, final Charset charset) {
         this.contentType = contentType;
         this.charset = charset;
     }
 
     public ContentType(final String contentType, final Charset charset) {
-        this.contentType = new StringBuffer(contentType);
+        this.contentType = new StringBuilder(contentType);
         this.charset = charset;
     }
 
     public ContentType(final String contentType, final String defaultContentType) {
         parse(contentType);
         if (contentType == null)
-            this.contentType = new StringBuffer(defaultContentType);
+            this.contentType = new StringBuilder(defaultContentType);
     }
 
     // format: "text/html; charset=utf-8"
@@ -46,12 +46,12 @@ public class ContentType {
 
         int idx = contentTypeString.indexOf(';');
         if (idx == -1) {
-            this.contentType = new StringBuffer(contentTypeString);
+            this.contentType = new StringBuilder(contentTypeString);
             return;
         }
 
         this.charset = extractCharset(contentTypeString.substring(idx + 1));
-        this.contentType = new StringBuffer(contentTypeString.substring(0, idx).trim());
+        this.contentType = new StringBuilder(contentTypeString.substring(0, idx).trim());
     }
 
     private Charset extractCharset(final String contentType) {
@@ -73,7 +73,7 @@ public class ContentType {
         return contentType.toString();
     }
 
-    public StringBuffer getContentTypeStringBuffer() {
+    public StringBuilder getContentTypeStringBuilder() {
         return contentType;
     }
 

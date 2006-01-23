@@ -98,7 +98,7 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
 
             if ( portletInfo.getKeywords() != null ) {
                 Iterator<String> iterator = portletInfo.getKeywords();
-                StringBuffer keywords = new StringBuffer();
+                StringBuilder keywords = new StringBuilder();
                 boolean isFirst = true;
                 while (iterator.hasNext()) {
                     if ( isFirst ) {

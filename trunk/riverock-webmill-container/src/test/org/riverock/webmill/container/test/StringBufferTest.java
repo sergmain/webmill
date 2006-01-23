@@ -10,7 +10,7 @@ public class StringBufferTest {
 
     public static void main(String[] args) {
 
-        System.out.println("buffer: '"  + new StringBuffer().toString() + "'" );
+        System.out.println("buffer: '"  + new StringBuilder().toString() + "'" );
 
     }
 }

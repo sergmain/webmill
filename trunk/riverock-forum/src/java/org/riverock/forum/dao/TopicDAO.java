@@ -79,8 +79,8 @@ public class TopicDAO {
                 topicBean.setT_order(rs.getInt("T_ORDER"));
                 topicBean.setT_locked(rs.getInt("T_LOCKED"));
 
-                StringBuffer urlString =
-                    urlProvider.getUrlStringBuffer( Constants.WM_FORUM_PORTLET_NAME, Constants.POST_ACTION ).
+                StringBuilder urlString =
+                    urlProvider.getUrlStringBuilder( Constants.WM_FORUM_PORTLET_NAME, Constants.POST_ACTION ).
                     append(Constants.NAME_FORUM_ID).append('=').append(forumId);
 
                 topicBean.setPostTopicUrl(

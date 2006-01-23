@@ -15,7 +15,7 @@ public class GenericBean {
     private String registerUrl;
     private String membersUrl;
     private String helpUrl;
-    private StringBuffer baseModuleUrl;
+    private StringBuilder baseModuleUrl;
 
     public String getRemoteAddr() {
         return remoteAddr;
@@ -81,11 +81,11 @@ public class GenericBean {
         this.helpUrl = helpUrl;
     }
 
-    public void setBaseModuleUrl(StringBuffer baseModuleUrl) {
+    public void setBaseModuleUrl(StringBuilder baseModuleUrl) {
         this.baseModuleUrl = baseModuleUrl;
     }
 
-    public StringBuffer getBaseModuleUrl() {
+    public StringBuilder getBaseModuleUrl() {
         return baseModuleUrl;
     }
 }

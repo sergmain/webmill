@@ -44,9 +44,9 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
             WebmillPortletConstants.ACTION_NAME_PARAM + '=' + actionName + '&';
     }
 
-    public StringBuffer getUrlStringBuffer(String moduleName, String actionName) {
+    public StringBuilder getUrlStringBuilder(String moduleName, String actionName) {
         return
-            PortletService.urlStringBuffer( moduleName,  (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ).
+            PortletService.urlStringBuilder( moduleName,  (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ).
             append( WebmillPortletConstants.ACTION_NAME_PARAM ).
             append( '=' ).
             append( actionName ).

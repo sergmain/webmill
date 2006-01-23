@@ -135,7 +135,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
     }
 
     public byte[] getPlainHTML() throws Exception {
-        StringBuffer out = new StringBuffer();
+        StringBuilder out = new StringBuilder();
         DatabaseAdapter db_ = null;
         try {
 
@@ -172,7 +172,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
     }
 
-    private boolean emailIsValid(AuthSession auth_, StringBuffer out) {
+    private boolean emailIsValid(AuthSession auth_, StringBuilder out) {
         if ( auth_.getUserInfo().getEmail()==null ) {
             out.append( "You must setup your e-mail address before change of status of subscription");
 
@@ -182,14 +182,14 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
         return true;
     }
 
-    private void printToIndexPage(StringBuffer out, String indexPage) {
+    private void printToIndexPage(StringBuilder out, String indexPage) {
         out
             .append("<p class\"webmill.to-homepage\">\n<a href=\"")
             .append(indexPage)
             .append("\" >To homepage.</a>\n</p>\n");
     }
 
-    private void printSubscribeForm(StringBuffer out, boolean isSubscribed) {
+    private void printSubscribeForm(StringBuilder out, boolean isSubscribed) {
         out
             .append("\n<form method=\"POST\" action=\"")
             .append(PortletService.ctx(renderRequest))
@@ -264,7 +264,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
     }
 
-    private boolean userNotLogged(AuthSession auth_, StringBuffer out) throws AuthException {
+    private boolean userNotLogged(AuthSession auth_, StringBuilder out) throws AuthException {
         if ( auth_==null ) {
             out.append( "You must logging before subscribe to news on this site.");
             return true;
@@ -278,7 +278,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
         return false;
     }
 
-    private byte[] prepareReturn(StringBuffer out) throws ConfigException, UnsupportedEncodingException {
+    private byte[] prepareReturn(StringBuilder out) throws ConfigException, UnsupportedEncodingException {
         return out.toString().getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
 }

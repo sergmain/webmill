@@ -65,8 +65,8 @@ public final class NewsBlock implements PortletResultContent {
     }
 
     public byte[] getPlainHTML() throws Exception {
-        StringBuffer s =
-                new StringBuffer( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
+        StringBuilder s =
+                new StringBuilder( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
 
         for (int i = 0; i < newsBlockType.getNewsGroupCount(); i++)
         {

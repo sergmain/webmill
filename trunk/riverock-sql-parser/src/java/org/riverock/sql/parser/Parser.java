@@ -447,7 +447,7 @@ public class Parser {
             return s.substring(0, len);
         }
 
-        StringBuffer b = new StringBuffer(len);
+        StringBuilder b = new StringBuilder(len);
 
         b.append(s);
 

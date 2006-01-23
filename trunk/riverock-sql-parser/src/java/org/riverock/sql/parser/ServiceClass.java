@@ -124,7 +124,7 @@ public class ServiceClass
         }
 
         int l = s.length();
-        StringBuffer b = new StringBuffer( l+16 ).append( quotechar );
+        StringBuilder b = new StringBuilder( l+16 ).append( quotechar );
 
         for ( int i = 0; i<l; i++ )
         {

@@ -332,7 +332,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
             RsetTools.setLong( ps, 1, id );
             rset = ps.executeQuery();
-            StringBuffer sb = new StringBuffer( "" );
+            StringBuilder sb = new StringBuilder();
             while( rset.next() ) {
                 sb.append( RsetTools.getString( rset, "ARTICLE_DATA" ) );
             }

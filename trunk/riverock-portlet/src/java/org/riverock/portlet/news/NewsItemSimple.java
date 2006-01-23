@@ -105,7 +105,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
 
     public byte[] getPlainHTML() throws Exception {
 
-        StringBuffer s = new StringBuffer().
+        StringBuilder s = new StringBuilder().
             append( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n").
             append( "<tr><td colspan=\"2\" class=\"newshead\">" ).
             append( newsItem.getNewsHeader() ).
@@ -135,7 +135,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
 
         String root = PortletMetadataService.getMetadata( renderRequest, "xml-root-name", rootElement );
 
-        String xml = new StringBuffer().
+        String xml = new StringBuilder().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
             append( '<' ).append( root ).append( '>' ).
             append( "<NewsDate>" ).append( newsItem.getNewsDate() ).append( "</NewsDate>" ).

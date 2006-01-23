@@ -15,7 +15,7 @@ public class GenericBean {
     private String registerUrl;
     private String membersUrl;
     private String helpUrl;
-    private StringBuffer forumHomeUrl;
+    private StringBuilder forumHomeUrl;
     private String forumName = null;
     private Integer forumId;
 
@@ -59,7 +59,7 @@ public class GenericBean {
         this.membersUrl = membersUrl;
     }
 
-    public void setForumHomeUrl(StringBuffer forumHomeUrl) {
+    public void setForumHomeUrl(StringBuilder forumHomeUrl) {
         this.forumHomeUrl = forumHomeUrl;
     }
 
@@ -79,7 +79,7 @@ public class GenericBean {
         return membersUrl;
     }
 
-    public StringBuffer getForumHomeUrl() {
+    public StringBuilder getForumHomeUrl() {
         return forumHomeUrl;
     }
 

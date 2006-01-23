@@ -212,7 +212,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                     item.setToFullItem( nextNews );
 
 
-                    item.setUrlToFullNewsItem( PortletService.urlStringBuffer( portletConfig.getPortletName(), renderRequest, renderResponse ).
+                    item.setUrlToFullNewsItem( PortletService.urlStringBuilder( portletConfig.getPortletName(), renderRequest, renderResponse ).
                         append( NAME_ID_NEWS_PARAM ).append( '=' ).append( item.getNewsItemId() ).append( '&' ).
                         append( NEWS_TYPE ).append( "=item" ).
                         toString() );

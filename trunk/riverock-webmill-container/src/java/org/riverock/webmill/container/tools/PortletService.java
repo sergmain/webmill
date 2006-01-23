@@ -123,15 +123,15 @@ public final class PortletService {
     }
 
     public static String url( final String portletName, final PortletRequest renderRequest, final PortletResponse renderResponse ) {
-        return urlStringBuffer(
+        return urlStringBuilder(
             portletName,
             renderRequest,
             renderResponse
         ).toString();
     }
 
-    public static StringBuffer urlStringBuffer( final String portletName, final PortletRequest renderRequest, final PortletResponse renderResponse ) {
-        return urlStringBuffer( portletName, renderRequest, renderResponse, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ) );
+    public static StringBuilder urlStringBuilder( final String portletName, final PortletRequest renderRequest, final PortletResponse renderResponse ) {
+        return urlStringBuilder( portletName, renderRequest, renderResponse, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ) );
     }
 
     public static String url(
@@ -140,19 +140,19 @@ public final class PortletService {
         final PortletResponse renderResponse,
         final String templateName
         ) {
-        return urlStringBuffer(portletName,renderRequest,renderResponse,templateName).toString();
+        return urlStringBuilder(portletName,renderRequest,renderResponse,templateName).toString();
     }
 
-    public static StringBuffer urlStringBuffer(
+    public static StringBuilder urlStringBuilder(
         final String portletName,
         final PortletRequest renderRequest,
         final PortletResponse renderResponse,
         final String templateName
         ) {
 
-        StringBuffer b = new StringBuffer(
+        StringBuilder b = new StringBuilder(
             renderResponse.encodeURL(
-                PortletService.ctxStringBuffer( renderRequest, null, templateName ).toString() )
+                PortletService.ctxStringBuilder( renderRequest, null, templateName ).toString() )
         );
 
         return
@@ -161,7 +161,7 @@ public final class PortletService {
     }
 
     public static String ctx( final PortletRequest renderRequest ) {
-        return PortletService.ctxStringBuffer(renderRequest).toString();
+        return PortletService.ctxStringBuilder(renderRequest).toString();
     }
 
     public static Integer getInitParameterInt( final PortletConfig portletConfig, final String name, final Integer defValue ) {
@@ -452,25 +452,25 @@ public final class PortletService {
     }
 
 
-    public static StringBuffer ctxStringBuffer( final PortletRequest renderRequest ) {
-        return ctxStringBuffer( renderRequest, null );
+    public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest ) {
+        return ctxStringBuilder( renderRequest, null );
     }
 
-    public static StringBuffer ctxStringBuffer( final PortletRequest renderRequest, final String portletName ) {
-        return ctxStringBuffer( renderRequest, portletName, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ) );
+    public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest, final String portletName ) {
+        return ctxStringBuilder( renderRequest, portletName, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ) );
     }
 
-    public static StringBuffer ctxStringBuffer( final PortletRequest renderRequest, final String portletName, final String templateName ) {
-        return ctxStringBuffer( renderRequest, portletName, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ), renderRequest.getLocale() );
+    public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest, final String portletName, final String templateName ) {
+        return ctxStringBuilder( renderRequest, portletName, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ), renderRequest.getLocale() );
     }
 
-    public static StringBuffer ctxStringBuffer( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale ) {
-        StringBuffer b = null;
+    public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale ) {
+        StringBuilder b = null;
         String portalContextPath = (String)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
         if (portalContextPath.equals("/"))
-            b = new StringBuffer( ContainerConstants.URI_CTX_MANAGER );
+            b = new StringBuilder( ContainerConstants.URI_CTX_MANAGER );
         else
-            b = new StringBuffer( portalContextPath ).append( ContainerConstants.URI_CTX_MANAGER );
+            b = new StringBuilder( portalContextPath ).append( ContainerConstants.URI_CTX_MANAGER );
 
         b.append( '/' ).append( locale.toString() );
 	b.append( ',' );
