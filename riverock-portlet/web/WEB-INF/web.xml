@@ -29,9 +29,109 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
     version="2.4">
+
+    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/faces-auth-config.xml, /WEB-INF/faces-company-config.xml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>client</param-value>
+        <description>
+            State saving method: "client" or "server" (= default)
+            See JSF Specification 2.5.2
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>org.apache.myfaces.NUMBER_OF_VIEWS_IN_SESSION</param-name>
+        <param-value>20</param-value>
+        <description>
+            Only applicable if state saving method is "server" (= default).
+            Defines the amount (default = 20) of the latest views are stored in session.
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>org.apache.myfaces.SERIALIZE_STATE_IN_SESSION</param-name>
+        <param-value>true</param-value>
+        <description>
+            Only applicable if state saving method is "server" (= default).
+            If true (default) the state will be serialized to a byte stream before it 
+            is written to the session.
+            If false the state will not be serialized to a byte stream.
+        </description>
+    </context-param>
+    
+    <context-param>
+        <param-name>org.apache.myfaces.COMPRESS_STATE_IN_SESSION</param-name>
+        <param-value>true</param-value>
+        <description>
+            Only applicable if state saving method is "server" (= default) and if 
+            org.apache.myfaces.SERIALIZE_STATE_IN_SESSION is true (= default)
+            If true (default) the serialized state will be compressed before it 
+            is written to the session. If false the state will not be compressed.
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>org.apache.myfaces.ALLOW_JAVASCRIPT</param-name>
+        <param-value>true</param-value>
+        <description>
+            This parameter tells MyFaces if javascript code should be allowed in the
+            rendered HTML output.
+            If javascript is allowed, command_link anchors will have javascript code
+            that submits the corresponding form.
+            If javascript is not allowed, the state saving info and nested parameters
+            will be added as url parameters.
+            Default: "true"
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>org.apache.myfaces.DETECT_JAVASCRIPT</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>org.apache.myfaces.PRETTY_HTML</param-name>
+        <param-value>true</param-value>
+        <description>
+            If true, rendered HTML code will be formatted, so that it is "human readable".
+            i.e. additional line separators and whitespace will be written, that do not
+            influence the HTML code.
+            Default: "true"
+        </description>
+    </context-param>
+
+    <context-param>
+        <param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
+        <param-value>true</param-value>
+        <description>
+            If true, a javascript function will be rendered that is able to restore the
+            former vertical scroll on every request. Convenient feature if you have pages
+            with long lists and you do not want the browser page to always jump to the top
+            if you trigger a link or button action that stays on the same page.
+            Default: "false"
+        </description>
+    </context-param>
+
    <listener>
       <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
    </listener>
+
+    <filter-mapping>
+        <filter-name>extensionsFilter</filter-name>
+        <url-pattern>/faces/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
     <servlet>
         <servlet-name>WebMill engine startup servlet</servlet-name>
         <servlet-class>org.riverock.generic.startup.StartupServlet</servlet-class>
@@ -59,12 +159,6 @@
 			<param-name>sso-config-file</param-name>
 			<param-value>config\config-sso.xml</param-value>
 		</init-param>
-<!--
-		<init-param>
-			<param-name>webmill-config-file</param-name>
-			<param-value>config\config-webmill.xml</param-value>
-		</init-param>
--->
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
@@ -83,26 +177,6 @@
 		<servlet-name>Mill.UploadPrice</servlet-name>
 		<servlet-class>org.riverock.portlet.shop.upload.UploadPrice</servlet-class>
 		<load-on-startup>10</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>FirmIndex</servlet-name>
-		<servlet-class>org.riverock.portlet.firm.FirmIndex</servlet-class>
-		<load-on-startup>11</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>FirmAdd</servlet-name>
-		<servlet-class>org.riverock.portlet.firm.FirmAdd</servlet-class>
-		<load-on-startup>11</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>FirmChange</servlet-name>
-		<servlet-class>org.riverock.portlet.firm.FirmChange</servlet-class>
-		<load-on-startup>11</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>FirmDelete</servlet-name>
-		<servlet-class>org.riverock.portlet.firm.FirmDelete</servlet-class>
-		<load-on-startup>11</load-on-startup>
 	</servlet>
 	<servlet>
 		<servlet-name>Mill.ImageSelectFile</servlet-name>
@@ -129,69 +203,6 @@
 		<servlet-class>org.riverock.portlet.image.ImageList</servlet-class>
 		<load-on-startup>12</load-on-startup>
 	</servlet>
-	<!-- !!! -->
-	<servlet>
-		<servlet-name>Mill.PriceEditIndex</servlet-name>
-		<servlet-class>org.riverock.portlet.shop.edit.PriceEditIndex</servlet-class>
-		<load-on-startup>14</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.PriceEditDescription</servlet-name>
-		<servlet-class>org.riverock.portlet.shop.edit.PriceEditDescription</servlet-class>
-		<load-on-startup>14</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.PriceEditShop</servlet-name>
-		<servlet-class>org.riverock.portlet.shop.edit.PriceEditShop</servlet-class>
-		<load-on-startup>14</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.PriceEditImage</servlet-name>
-		<servlet-class>org.riverock.portlet.shop.edit.PriceEditIndex</servlet-class>
-		<load-on-startup>14</load-on-startup>
-	</servlet>
-	<!-- !!! -->
-	<servlet>
-		<servlet-name>Mill.AuthRightIndex</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.RightIndex</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.AuthRightDelete</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.RightDelete</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.AuthRightChange</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.RightChange</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.AuthRightAdd</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.RightAdd</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.AuthBindIndex</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.BindIndex</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.AuthBindDelete</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.BindDelete</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.AuthBindChange</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.BindChange</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.AuthBindAdd</servlet-name>
-		<servlet-class>org.riverock.portlet.auth.BindAdd</servlet-class>
-		<load-on-startup>15</load-on-startup>
-	</servlet>
-
 
 	<servlet-mapping>
 		<servlet-name>MemberViewServlet</servlet-name>
@@ -201,22 +212,7 @@
 		<servlet-name>Mill.UploadPrice</servlet-name>
 		<url-pattern>/mill.upload_price</url-pattern>
 	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>FirmIndex</servlet-name>
-		<url-pattern>/firm_index</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>FirmAdd</servlet-name>
-		<url-pattern>/firm_add</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>FirmChange</servlet-name>
-		<url-pattern>/firm_ch</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>FirmDelete</servlet-name>
-		<url-pattern>/firm_del</url-pattern>
-	</servlet-mapping>
+
 	<servlet-mapping>
 		<servlet-name>Mill.ImageSelectFile</servlet-name>
 		<url-pattern>/mill.image_select_file</url-pattern>
@@ -254,39 +250,7 @@
 		<servlet-name>Mill.PriceEditImage</servlet-name>
 		<url-pattern>/mill.price_edit_image</url-pattern>
 	</servlet-mapping>
-	<!-- !!! -->
-	<servlet-mapping>
-		<servlet-name>Mill.AuthRightIndex</servlet-name>
-		<url-pattern>/mill.auth_right_index</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.AuthRightDelete</servlet-name>
-		<url-pattern>/mill.auth_right_delete</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.AuthRightChange</servlet-name>
-		<url-pattern>/mill.auth_right_change</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.AuthRightAdd</servlet-name>
-		<url-pattern>/mill.auth_right_add</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.AuthBindIndex</servlet-name>
-		<url-pattern>/mill.auth_bind_index</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.AuthBindDelete</servlet-name>
-		<url-pattern>/mill.auth_bind_delete</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.AuthBindChange</servlet-name>
-		<url-pattern>/mill.auth_bind_change</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.AuthBindAdd</servlet-name>
-		<url-pattern>/mill.auth_bind_add</url-pattern>
-	</servlet-mapping>
+
 	<!-- Set the default session timeout (in minutes) -->
 	<session-config>
 		<session-timeout>15</session-timeout>
