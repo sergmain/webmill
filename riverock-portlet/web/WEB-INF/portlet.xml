@@ -49,6 +49,27 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</portlet-info>
 	</portlet>
 	<portlet>
+        	<description>JSF auth portlet</description>
+        	<portlet-name>riverock.jsf-auth</portlet-name>
+        	<display-name>JSFAuthPortlet</display-name>
+            <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+            <init-param>
+                <name>default-view</name>
+                <value>/riverock/auth/auth.jsp</value>
+            </init-param>
+
+        	<expiration-cache>-1</expiration-cache>
+        	<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>JSF Portlet</title>
+			<short-title>JSF Portlet</short-title>
+			<keywords>JSF, Portlet</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
 		<portlet-name>mill.index</portlet-name>
 		<portlet-class>org.riverock.portlet.index.IndexPageStubPortlet</portlet-class>
 		<supports>
@@ -323,106 +344,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</security-role-ref>
 	</portlet>
 	<portlet>
-        	<description>JSF auth portlet</description>
-        	<portlet-name>riverock.jsf-auth</portlet-name>
-        	<display-name>JSFAuthPortlet</display-name>
-            <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
-            <init-param>
-                <name>default-view</name>
-                <value>/riverock/auth/jsp/binf-index.jsp</value>
-            </init-param>
-
-        	<expiration-cache>-1</expiration-cache>
-        	<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>VIEW</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>JSF Portlet</title>
-			<short-title>JSF Portlet</short-title>
-			<keywords>JSF, Portlet</keywords>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>riverock.auth</portlet-name>
-		<portlet-class>org.riverock.portlet.auth.AuthPortlet</portlet-class>
-		<init-param>
-			<name>action-config</name>
-			<value>/WEB-INF/config/auth-action.xml</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_USER</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthUser</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.commit_add_bind</portlet-name>
-		<portlet-class>org.riverock.portlet.auth.BindAddCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.commit_ch_bind</portlet-name>
-		<portlet-class>org.riverock.portlet.auth.BindChangeCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.commit_del_bind</portlet-name>
-		<portlet-class>org.riverock.portlet.auth.BindDeleteCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.commit_add_right</portlet-name>
-		<portlet-class>org.riverock.portlet.auth.RightAddCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.commit_ch_right</portlet-name>
-		<portlet-class>org.riverock.portlet.auth.RightChangeCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.commit_del_right</portlet-name>
-		<portlet-class>org.riverock.portlet.auth.RightDeleteCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
 		<portlet-name>mill.upload_price</portlet-name>
 		<portlet-class>/mill.upload_price</portlet-class>
 		<init-param>
@@ -479,8 +400,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-        <resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
-<!--        <resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle> -->
+		<resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
+<!--		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle> -->
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
@@ -761,182 +682,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<portlet-class>/mill.price_edit_image</portlet-class>
 		<init-param>
 			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.right</portlet-name>
-		<portlet-class>/mill.auth_right_index</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_RELATE_RIGHT_ARM</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthRelateRightArm</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.add_right</portlet-name>
-		<portlet-class>/mill.auth_right_add</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_RELATE_RIGHT_ARM</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthRelateRightArm</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.ch_right</portlet-name>
-		<portlet-class>/mill.auth_right_change</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_RELATE_RIGHT_ARM</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthRelateRightArm</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.del_right</portlet-name>
-		<portlet-class>/mill.auth_right_delete</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_RELATE_RIGHT_ARM</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthRelateRightArm</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.bind</portlet-name>
-		<portlet-class>/mill.auth_bind_index</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_USER</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthUser</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.add_bind</portlet-name>
-		<portlet-class>/mill.auth_bind_add</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_USER</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthUser</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.ch_bind</portlet-name>
-		<portlet-class>/mill.auth_bind_change</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_USER</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthUser</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.auth.del_bind</portlet-name>
-		<portlet-class>/mill.auth_bind_delete</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale.AUTH_USER</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.AuthUser</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.direct_html</portlet-name>
-		<portlet-class>org.riverock.portlet.direct.DirectPlainPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.direct_xml</portlet-name>
-		<portlet-class>org.riverock.portlet.direct.DirectXmlPortlet</portlet-class>
-		<init-param>
-			<name>is-xml</name>
 			<value>true</value>
 		</init-param>
 		<supports>
