@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.generic.tools.servlet.ServletResponseWrapperIncludeV3;
+import org.riverock.generic.tools.servlet.ServletResponseWrapperInclude;
 
 import org.apache.log4j.Logger;
 
@@ -78,11 +78,11 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     public byte[] getBytes() {
         if (servletResponse!=null &&
             servletResponse.getResponse()!=null &&
-            servletResponse.getResponse() instanceof ServletResponseWrapperIncludeV3 )
-            return ((ServletResponseWrapperIncludeV3)servletResponse.getResponse()).getBytes();
+            servletResponse.getResponse() instanceof ServletResponseWrapperInclude )
+            return ((ServletResponseWrapperInclude)servletResponse.getResponse()).getBytes();
         else {
             log.warn(
-                "ServletResponce not instance of ServletResponseWrapperIncludeV3. " +
+                "ServletResponce not instance of ServletResponseWrapperInclude. " +
                 "current class name: " + servletResponse.getClass().getName()
             );
             return new byte[] {};
@@ -113,7 +113,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         this.renderRequest = renderRequest;
         this.portletProperties = portletProperties;
         this.namespace = namespace;
-        this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperIncludeV3( portalRequestInstance.getLocale() ) );
+        this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperInclude( portalRequestInstance.getLocale() ) );
     }
 
     public ServletResponse getResponse() {

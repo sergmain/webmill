@@ -26,6 +26,7 @@ package org.riverock.webmill.portal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
+import org.riverock.common.tools.MainTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
@@ -71,6 +73,7 @@ public final class PortalRequestInstance {
     private List<PageElement> pageElementList = new ArrayList<PageElement>();
 
     private static final int WEBPAGE_BUFFER_SIZE = 15000;
+    private static final int MAX_REQUEST_BODY_SIZE = 25*1024*1024; // 25Mb
 
     ByteArrayOutputStream byteArrayOutputStream = null;
     XsltTransformer xslt = null;
@@ -95,6 +98,10 @@ public final class PortalRequestInstance {
     private String redirectUrl = null;
 
     private PortalContext portalContext = null;
+
+    private File requestBodyFile = null;
+    private boolean isMultiPartRequest = false;
+    private int contentLength;
 
     public void destroy() {
         Iterator iterator = getPageElementList().iterator();
@@ -130,6 +137,8 @@ public final class PortalRequestInstance {
         redirectUrl = null;
         mimeType = null;
         portalContext = null;
+        MainTools.deleteFile( requestBodyFile );
+        requestBodyFile = null;
     }
 
     public PortalRequestInstance() {
@@ -158,13 +167,22 @@ public final class PortalRequestInstance {
         this.portalServletConfig = portalServletConfig;
         DatabaseAdapter db = null;
         try {
-            db = DatabaseAdapter.getInstance();
-            httpRequestParameter = Collections.unmodifiableMap(PortletUtils.getParameters(httpRequest));
+            contentLength = httpRequest.getContentLength();
+            isMultiPartRequest = PortletUtils.isMultiPart( httpRequest );
+            if (isMultiPartRequest) {
+                requestBodyFile = PortletUtils.storeBodyRequest( httpRequest, MAX_REQUEST_BODY_SIZE );
+                httpRequestParameter = new HashMap<String, Object>();
+            }
+            else {
+                httpRequestParameter = Collections.unmodifiableMap(PortletUtils.getParameters(httpRequest));
+            }
 
+            db = DatabaseAdapter.getInstance();
             this.auth = AuthTools.getAuthSession(httpRequest);
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
             }
+            
             this.portalInfo = PortalInfoImpl.getInstance(db, httpRequest.getServerName());
             this.portalContext = createPortalContext(portalName, portalInfo);
 
@@ -426,4 +444,17 @@ public final class PortalRequestInstance {
     public String getMimeType() {
         return mimeType;
     }
+
+    public File getRequestBodyFile() {
+        return requestBodyFile;
+    }
+
+    public boolean isMultiPartRequest() {
+        return isMultiPartRequest;
+    }
+
+    public int getContentLength() {
+        return contentLength;
+    }
+
 }

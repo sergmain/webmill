@@ -25,15 +25,22 @@
 package org.riverock.webmill.portal.impl;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Map;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
-import javax.portlet.PortletPreferences;
 import javax.portlet.PortalContext;
+import javax.portlet.PortletPreferences;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.riverock.common.contenttype.ContentTypeManager;
 import org.riverock.webmill.portal.PortalRequestInstance;
 
 /**
@@ -44,6 +51,15 @@ import org.riverock.webmill.portal.PortalRequestInstance;
  * $Id$
  */
 public final class ActionRequestImpl extends WebmillPortletRequest implements ActionRequest {
+    private final static Log log = LogFactory.getLog( ActionRequestImpl.class );
+
+    private File requestBodyFile = null;
+    private boolean isMultiPartRequest;
+    private int contentLength;
+
+    private BufferedReader realBufferedReader = null;
+    private InputStream realInputStream = null;
+    private ContentTypeManager contentTypeManager = null;
 
     public void destroy() {
         super.destroy();
@@ -52,31 +68,72 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
     public ActionRequestImpl(final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map<String, Object> portletAttributes, final String contextPath, final String portalContextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext ) {
         super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties);
         prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContextPath, portalContext );
+        requestBodyFile = portalRequestInstance.getRequestBodyFile();
+        isMultiPartRequest = portalRequestInstance.isMultiPartRequest();
+        contentLength = portalRequestInstance.getContentLength();
+
+        contentTypeManager = ContentTypeManager.getInstance(portalRequestInstance.getLocale(), false);
     }
 
-    public InputStream getPortletInputStream() {
-        throw new IllegalStateException( "not implemented. use request.getParameter() method" );
+    public InputStream getPortletInputStream() throws java.io.IOException {
+        if (!isMultiPartRequest) {
+            throw new IllegalStateException("Cant get portlet input stream for content type: " +httpRequest.getContentType() );
+        }
+        if (realBufferedReader!=null) {
+            throw new IllegalStateException( "getReader() already invoked" );
+        }
+        if ( log.isDebugEnabled() ) {
+            log.debug( "getPortletInputStream(), realInputStream: " +
+                (realInputStream==null?"is null":realInputStream.getClass().getName())
+            );
+        }
+
+        realInputStream = new FileInputStream( requestBodyFile );
+
+        return realInputStream;
     }
 
-    public BufferedReader getReader() {
-        return null;
+    public BufferedReader getReader() throws java.io.IOException {
+        if (!isMultiPartRequest) {
+            throw new IllegalStateException("Cant get portlet input stream for content type: " +httpRequest.getContentType() );
+        }
+        if (realInputStream!=null) {
+            throw new IllegalStateException( "getPortletInputStream() already invoked" );
+        }
+
+        if ( log.isDebugEnabled() ) {
+            log.debug( "getReader(), realInputStream: " +
+                (realInputStream==null?"is null":realInputStream.getClass().getName())
+            );
+        }
+
+        if ( log.isDebugEnabled() ) {
+            log.debug( "contentType: " + contentTypeManager );
+            if (contentTypeManager!=null)
+                log.debug( "charset: " + contentTypeManager.getCharacterEncoding() );
+        }
+
+        realBufferedReader = new BufferedReader(
+            new InputStreamReader( new FileInputStream(requestBodyFile), contentTypeManager.getCharacterEncoding() )
+        );
+
+        return realBufferedReader;
     }
 
-    public void setCharacterEncoding( String s ) {
-        throw new IllegalStateException( "not implemented" );
-//        httpResponse.setContent
+    public void setCharacterEncoding( String encoding ) {
+        contentTypeManager.setCharacterEncoding( encoding );
     }
 
     public String getCharacterEncoding() {
-        return httpRequest.getCharacterEncoding();
+        return contentTypeManager.getCharacterEncoding();
     }
 
     public String getContentType() {
-        return httpRequest.getContentType();
+        return contentTypeManager.getContentType();
     }
 
     public int getContentLength() {
-        return httpRequest.getContentLength();
+        return contentLength;
     }
 }
 
