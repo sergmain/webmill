@@ -101,6 +101,12 @@
                 <patternset refid="dtd.resources"/>
             </fileset>
         </copy>
+
+        <property name="contenttype-path" value="/org/riverock/common/contenttype"/>
+        <copy todir="${build.dest}${contenttype-path}">
+            <fileset file="${src.java.dir}${contenttype-path}/**.properties"/>
+        </copy>
+
     </target>
 
     <target name="full_build_module">
