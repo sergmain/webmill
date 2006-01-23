@@ -9,29 +9,29 @@
 <f:verbatim><table borser="0" width="100%" valign="top"><tr><td width="250"></f:verbatim>
 	<h:outputText value="User name:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<h:outputText value="#{treeBacker.currentUser.userName}" />
+	<h:outputText value="#{dataProvider.currentUser.userName}" />
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="User login:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<h:outputText value="#{treeBacker.currentUser.userLogin}" />
+	<h:outputText value="#{dataProvider.currentUser.userLogin}" />
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Company:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{treeBacker.currentUser.company}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!treeBacker.currentUser.company}" border="0"/>
-	<h:outputText value="#{treeBacker.currentUser.companyName}" />
+	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.company}" border="0"/>
+	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.company}" border="0"/>
+	<h:outputText value="#{dataProvider.currentUser.companyName}" />
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Group of company:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{treeBacker.currentUser.groupCompany}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!treeBacker.currentUser.groupCompany}" border="0"/>
-	<h:outputText value="#{treeBacker.currentUser.groupCompanyName}"/>
+	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.groupCompany}" border="0"/>
+	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.groupCompany}" border="0"/>
+	<h:outputText value="#{dataProvider.currentUser.groupCompanyName}"/>
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Holding:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{treeBacker.currentUser.holding}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!treeBacker.currentUser.holding}" border="0"/>
-	<h:outputText value="#{treeBacker.currentUser.holdingName}" />
+	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.holding}" border="0"/>
+	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.holding}" border="0"/>
+	<h:outputText value="#{dataProvider.currentUser.holdingName}" />
 
 
 <f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
@@ -40,7 +40,7 @@
     <t:dataList id="role-list"
         styleClass="standardList"
         var="role"
-        value="#{treeBacker.currentUser.roles}"
+        value="#{dataProvider.currentUser.roles}"
         layout="orderedList" forceId="true">
         <h:outputText value="#{role.name}" />
     </t:dataList>

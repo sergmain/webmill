@@ -6,7 +6,7 @@
 
     <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>
 
-<h:panelGroup id="delete-user-panel" rendered="#{treeBacker.currentUser.delete}">
+<h:panelGroup id="delete-user-panel" rendered="#{dataProvider.currentUser.delete}">
 
         <f:subview id="delete-user-info-subview" >
             <jsp:include page="auth-user-info.jsp"/>
@@ -15,11 +15,11 @@
 	<h:outputText value="#{msg['confirm_delete_action']}"/>
 	<f:verbatim><br/></f:verbatim>
 
-        <h:commandButton id="process-delete-user-action" action="#{treeBacker.processDeleteUserAction}" 
+        <h:commandButton id="process-delete-user-action" action="#{authUserAction.processDeleteUserAction}"
 		value="#{msg['process_delete_user_action']}"
 	>
         </h:commandButton>
-        <h:commandButton id="cancel-delete-user-action" action="#{treeBacker.cancelDeleteUserAction}" 
+        <h:commandButton id="cancel-delete-user-action" action="#{authUserAction.cancelDeleteUserAction}"
 		value="#{msg['cancel_delete_user_action']}"
 	>
         </h:commandButton>

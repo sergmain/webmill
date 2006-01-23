@@ -12,13 +12,13 @@
     <f:verbatim><br/></f:verbatim>
     <f:verbatim><br/></f:verbatim>
 
-        <h:selectOneMenu value="#{treeBacker.currentUser.newRoleId}" 
+    <h:selectOneMenu value="#{dataProvider.currentUser.newRoleId}"
 	styleClass="selectOneMenu" required="true" 
 	>
-            <f:selectItems value="#{treeBacker.roleList}" />
+            <f:selectItems value="#{dataProvider.roleList}" />
         </h:selectOneMenu>
 
-    <t:commandButton value="#{msg['add_role']}" action="#{treeBacker.addRoleAction}">
+    <t:commandButton value="#{msg['add_role']}" action="#{authUserAction.addRoleAction}">
     </t:commandButton>
 
     <f:verbatim><br/></f:verbatim>
@@ -29,7 +29,7 @@
                 rowClasses="standardTable_Row1,standardTable_Row2"
                 columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
                 var="role"
-                value="#{treeBacker.currentUser.roles}"
+                value="#{dataProvider.currentUser.roles}"
                 preserveDataModel="true">
 
            <h:column>
@@ -40,7 +40,7 @@
            </h:column>
 
            <h:column>
-                <t:commandButton value="#{msg['delete_role']}" actionListener="#{treeBacker.deleteRoleActionListener}">
+                <t:commandButton value="#{msg['delete_role']}" actionListener="#{authUserAction.deleteRoleActionListener}">
                     <f:param name="roleId" value="#{role.roleId}"/>
 		</t:commandButton>
            </h:column>
