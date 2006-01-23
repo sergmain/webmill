@@ -1,11 +1,11 @@
 package org.riverock.common.collections;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.riverock.interfaces.common.TreeItemInterface;
+import org.riverock.interfaces.common.TreeItem;
 
 /**
  * User: smaslyukov
@@ -15,7 +15,7 @@ import org.riverock.interfaces.common.TreeItemInterface;
  */
 public class TestTreeUtils extends TestCase {
 
-    class SimpleTreeItem implements TreeItemInterface {
+    class SimpleTreeItem implements TreeItem {
         Long id;
         Long topId;
         List subTree;
@@ -46,7 +46,7 @@ public class TestTreeUtils extends TestCase {
     public void testRebuildTree()
         throws Exception
     {
-        ArrayList<TreeItemInterface> list = new ArrayList<TreeItemInterface>();
+        LinkedList<TreeItem> list = new LinkedList<TreeItem>();
         list.add( new SimpleTreeItem(1L, 0L, null) );
         list.add( new SimpleTreeItem(2L, 0L, null) );
         list.add( new SimpleTreeItem(3L, 0L, null) );
