@@ -24,7 +24,7 @@
  */
 
 /**
- * 2003. Copyright (c) jSmithy. http:// multipart.jSmithy.com
+ * 2003. Copyright (c) riverock.org. http://www.riverock.org
  * 2001-2003. Copyright (c) Simon Brooke. http://www.weft.co.uk/library/maybeupload/
  *
  * $Id$
