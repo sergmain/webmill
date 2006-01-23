@@ -339,6 +339,38 @@ public class InternalAuthProviderTools
 
     }
 
+    public static void deleteRelateGroupCompanyCompany(DatabaseAdapter ora_, Long id_service, Long id_firm)
+    {
+        PreparedStatement ps = null;
+        try
+        {
+            if (!getRelateServiceFirm(ora_, id_firm, id_service))
+            {
+                ps = ora_.prepareStatement(
+                    "delete from WM_LIST_R_GR_COMP_COMP " +
+                    "where ID_SERVICE=? and ID_FIRM=? "
+                );
+                ps.setObject(2, id_service);
+                ps.setObject(3, id_firm);
+                int i = ps.executeUpdate();
+
+                if (log.isDebugEnabled())
+                    log.debug("Count of deleted record: "+i);
+            }
+        }
+        catch (Exception e)
+        {
+		String es = "Error setRelateServiceFirm";
+            log.error(es, e);
+            throw new IllegalStateException(es,e);
+        }
+        finally {
+            DatabaseManager.close( ps );
+            ps = null;
+        }
+
+    }
+
     public static void setRelateServiceFirm(DatabaseAdapter ora_, String service_name, String firm_name)
         throws Exception
     {
