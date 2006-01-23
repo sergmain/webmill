@@ -35,7 +35,6 @@ import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
 
 import org.riverock.generic.tools.servlet.HttpServletRequestWrapperInclude;
-import org.riverock.generic.tools.servlet.ServletResponseWrapperIncludeV2;
 import org.riverock.webmill.config.WebmillConfig;
 
 import org.apache.log4j.Logger;
@@ -52,40 +51,6 @@ import org.apache.log4j.Logger;
 public final class ServletUtils {
     private final static Logger log = Logger.getLogger( ServletUtils.class );
 
-/*
-
-    public static void include(
-        final HttpServletRequest request, final HttpServletResponse response,
-        final Map<String, Object> parameters,
-        final String path, final Writer out_
-        )
-        throws IOException, ServletException {
-
-        RequestDispatcher rd = request.getRequestDispatcher(path);
-
-        rd.include(
-            new HttpServletRequestWrapperInclude( request, parameters ),
-            new ServletResponseWrapperIncludeV2( response, out_ )
-        );
-    }
-
-    public static void include(
-        final HttpServletRequest request, final HttpServletResponse response,
-        final Map<String, Object> parameters,
-        final String path, final OutputStream out_
-        )
-        throws IOException, ServletException {
-
-        RequestDispatcher rd = request.getRequestDispatcher(path);
-
-        rd.include(
-            new HttpServletRequestWrapperInclude( request, parameters ),
-            new ServletResponseWrapperIncludeV2( response, out_ )
-        );
-    }
-
-*/
-    
     public static String getString( final HttpServletRequest request, final String f) {
         return org.riverock.common.tools.ServletTools.getString(request, f, "", WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
     }

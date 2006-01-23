@@ -25,6 +25,10 @@
 package org.riverock.webmill.utils;
 
 import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -63,72 +67,140 @@ public final class PortletUtils {
         return PortletService.getString( request, f, def, WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
     }
 
+    public static boolean isMultiPart( final HttpServletRequest request ) {
+        String contentType = request.getContentType();
+        return contentType!=null && contentType.toLowerCase().indexOf(MultipartRequestWrapper.MFDHEADER)>-1;
+    }
+
+    public static File storeBodyRequest( final HttpServletRequest request, int maxLength ) {
+        if (isMultiPart(request)) {
+            int length = request.getContentLength();
+            if (length>maxLength) {
+                throw new IllegalStateException("Can not process body request because content length exceed max length. " +
+                    "max length: "+maxLength + ", request content length: " + length);
+            }
+            File file = null;
+            try {
+                file = new File( WebmillConfig.getWebmillTempDir() + File.separatorChar + File.createTempFile("request", ".dat") );
+                OutputStream outputStream = new FileOutputStream( file );
+                InputStream inputStream = request.getInputStream();
+                copyData(inputStream, outputStream);
+                outputStream.flush();
+                outputStream.close();
+                outputStream = null;
+                inputStream.close();
+                inputStream = null;
+            }
+            catch (IOException e) {
+                String es = "Error store body of request";
+                log.error(es, e);
+                throw new IllegalStateException( es, e );
+            }
+
+            return file;
+        }
+        return null;
+    }
+
+    public static final int BUFFER_SIZE = 512;
+    public static void copyData(InputStream inputStream, OutputStream outputStream) throws IOException {
+        int count;
+        byte buffer[] = new byte[BUFFER_SIZE];
+
+        while ((count = inputStream.read(buffer))==BUFFER_SIZE) {
+            outputStream.write(buffer);
+        }
+
+        if (count!=-1) {
+            outputStream.write(buffer, 0, count);
+        }
+    }
+
     private static final boolean saveUploadedFilesToDisk = false;
-    public static Map<String, Object> getParameters( final HttpServletRequest request )
+    public static Map<String, Object> parseMultiPartRequest(
+        InputStream inputStream,
+        String contentType,
+        int contentLength
+        )
         throws IOException, UploadException, PortletException, MultipartRequestException {
 
         Map<String, Object> p = new HashMap<String, Object>();
+
+        if (contentType != null &&
+            contentType.toLowerCase().indexOf(MultipartRequestWrapper.MFDHEADER)== -1) {
+            // it's a multipart request
+
+            throw new IllegalStateException("Method parseMultiPartRequest() can process only MultiPart request.");
+        }
+
+        MultipartRequestWrapper reqWrapper =
+            new MultipartRequestWrapper(
+                inputStream,
+                contentType,
+                contentLength,
+                saveUploadedFilesToDisk,
+                null,
+                false,
+                false,
+                3*1024*1024
+            );
+
+        MultipartHandler handler = reqWrapper.getMultipartHandler();
+        if (handler == null)
+            throw new PortletException("MultipartHandler is null");
+
+        Iterator e = handler.getPartsHash().keySet().iterator();
+        AbstractPart part = null;
+        while (e.hasNext()) {
+            String key = (String) e.next();
+            part = (AbstractPart) handler.getPartsHash().get(key);
+            if (part instanceof List) {
+                throw new PortletException("Not implemented");
+            }
+            else {
+                if (part.getType()==AbstractPart.PARAMETER_TYPE) {
+                    p.put(key, part.getStringValue());
+                }
+                else if ( part instanceof FilePart ) {
+                    p.put(key, ((FilePart)part) );
+                }
+                else {
+                    throw new PortletException("Unknown type of parameter from multipartrequest: " + part.getClass().getName() );
+                }
+            }
+        }
+        return p;
+    }
+
+    public static Map<String, Object> getParameters( final HttpServletRequest request ) {
+
         String contentType = request.getContentType();
 
         if (contentType != null &&
             contentType.toLowerCase().indexOf(MultipartRequestWrapper.MFDHEADER) > -1) {
             // it's a multipart request
 
-            MultipartRequestWrapper reqWrapper =
-                new MultipartRequestWrapper(
-                    request,
-                    saveUploadedFilesToDisk,
-                    null,
-                    false,
-                    false,
-                    3*1024*1024
-                );
+            throw new IllegalStateException("MultiPart request must processed via parseMultiPartRequest() method");
+        }
+        Map<String, Object> p = new HashMap<String, Object>();
 
-            MultipartHandler handler = reqWrapper.getMultipartHandler();
-            if (handler == null)
-                throw new PortletException("MultipartHandler is null");
+        Enumeration e = request.getParameterNames();
+        for (; e.hasMoreElements() ;) {
+            String key = (String)e.nextElement();
 
-            Iterator e = handler.getPartsHash().keySet().iterator();
-            AbstractPart part = null;
-            while (e.hasNext()) {
-                String key = (String) e.next();
-                part = (AbstractPart) handler.getPartsHash().get(key);
-                if (part instanceof List) {
-                    throw new PortletException("Not implemented");
-                }
+            String value[] = request.getParameterValues( key );
+            if (value!=null) {
+                if (value.length==1)
+                    p.put(key, value[0]);
                 else {
-                    if (part.getType()==AbstractPart.PARAMETER_TYPE) {
-                        p.put(key, part.getStringValue());
-                    }
-                    else if ( part instanceof FilePart ) {
-                        p.put(key, ((FilePart)part) );
-                    }
-                    else {
-                        throw new PortletException("Unknown type of parameter from multipartrequest: " + part.getClass().getName() );
-                    }
+                    List<String> ee = new ArrayList<String>();
+                    for (final String newVar : value)
+                        ee.add(newVar);
+
+                    p.put(key, ee);
                 }
             }
         }
-        else {
-            Enumeration e = request.getParameterNames();
-            for (; e.hasMoreElements() ;) {
-                String key = (String)e.nextElement();
-
-                String value[] = request.getParameterValues( key );
-                if (value!=null) {
-                    if (value.length==1)
-                        p.put(key, value[0]);
-                    else {
-                        List<String> ee = new ArrayList<String>();
-                        for (final String newVar : value)
-                            ee.add(newVar);
-
-                        p.put(key, ee);
-                    }
-                }
-            }
-        }
-
         return p;
     }
 
