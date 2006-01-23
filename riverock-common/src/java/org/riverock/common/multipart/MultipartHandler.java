@@ -1044,7 +1044,7 @@ public class MultipartHandler
     private String readLine(char cte)
         throws IOException
     {
-        StringBuffer sbuf = new StringBuffer();
+        StringBuilder sbuf = new StringBuilder();
         String result = null;	// safe default
         int nread;
 

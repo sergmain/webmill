@@ -47,7 +47,7 @@ public class PortalUrlProviderImpl implements PortalUrlProvider {
         return PortletService.url( portletName, portletRequest, portletResponse );
     }
 
-    public StringBuffer getUrlStrigBuffer(String portletName) {
-        return PortletService.urlStringBuffer( portletName, portletRequest, portletResponse );
+    public StringBuilder getUrlStringBuilder(String portletName) {
+        return PortletService.urlStringBuilder( portletName, portletRequest, portletResponse );
     }
 }

@@ -590,8 +590,8 @@ public class Tokenizer
                         sLongNameLast = sToken;
                         iType = LONG_NAME;
 
-                        StringBuffer sb =
-                            new StringBuffer( sLongNameFirst.length()+1
+                        StringBuilder sb =
+                            new StringBuilder( sLongNameFirst.length()+1
                             +sLongNameLast.length() );
 
                         sb.append( sLongNameFirst );

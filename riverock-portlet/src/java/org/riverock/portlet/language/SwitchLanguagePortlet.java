@@ -136,12 +136,12 @@ public final class SwitchLanguagePortlet implements Portlet {
             }
             else {
 
-                StringBuffer b = null;
-                b = PortletService.ctxStringBuffer( actionRequest, null, null, StringTools.getLocale(s) );
+                StringBuilder b = null;
+                b = PortletService.ctxStringBuilder( actionRequest, null, null, StringTools.getLocale(s) );
 //                if (actionRequest.getContextPath().equals("/"))
-//                    b = new StringBuffer( ContainerConstants.URI_CTX_MANAGER );
+//                    b = new StringBuilder( ContainerConstants.URI_CTX_MANAGER );
 //                else
-//                    b = new StringBuffer(actionRequest.getContextPath()).append( ContainerConstants.URI_CTX_MANAGER );
+//                    b = new StringBuilder(actionRequest.getContextPath()).append( ContainerConstants.URI_CTX_MANAGER );
 //
                 b.append( '?' ).append( ContainerConstants.NAME_LANG_PARAM ).append( '=' ).append( s );
                 newUrl = b.toString();

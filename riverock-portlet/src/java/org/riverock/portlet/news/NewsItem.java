@@ -184,7 +184,7 @@ public final class NewsItem {
 
             RsetTools.setLong(ps, 1, newsItem.getNewsItemId());
             rset = ps.executeQuery();
-            StringBuffer text = new StringBuffer("");
+            StringBuilder text = new StringBuilder("");
             while (rset.next()) {
                 text.append( RsetTools.getString(rset, "TEXT") );
             }

@@ -497,7 +497,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 //                PortletURL portletUrl = renderResponse.createRenderURL();
 //                portletUrl.setParameter();
 
-                m.setModuleUrl(renderResponse.encodeURL(new StringBuffer().
+                m.setModuleUrl(renderResponse.encodeURL(new StringBuilder().
                     append(PortletService.urlPage(renderRequest)).append('/').
                     append(renderRequest.getLocale().toString()).append(',').
                     append(item.getType()).append(',').

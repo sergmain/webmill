@@ -163,7 +163,7 @@ public final class PortletURLImpl implements PortletURL {
     }
 
     public String toString() {
-        StringBuffer url = new StringBuffer( 50 );
+        StringBuilder url = new StringBuilder( 50 );
 
         String portletName = getParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM );
         if ( log.isDebugEnabled() ) {
@@ -182,7 +182,7 @@ public final class PortletURLImpl implements PortletURL {
             log.debug( "Result portlet name for insert into url: " + portletName );
         }
 
-        url.append( PortletService.ctxStringBuffer( portletRequest, portletName ) );
+        url.append( PortletService.ctxStringBuilder( portletRequest, portletName ) );
 
         if ( parameters != null ) {
             Iterator names = parameters.keySet().iterator();

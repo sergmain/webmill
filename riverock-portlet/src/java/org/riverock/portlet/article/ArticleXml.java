@@ -118,7 +118,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         dateText = DateTools.getStringDate( datePost, "dd.MMM.yyyy", renderRequest.getLocale() );
         timeText = DateTools.getStringDate( datePost, "HH:mm", renderRequest.getLocale() );
 
-        String xml = new StringBuffer().
+        String xml = new StringBuilder().
             append( "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" ).
             append( "<" ).append( rootName ).
             append( "><ArticleDate>" ).append( dateText ).append( "</ArticleDate>" ).
@@ -291,7 +291,7 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
 
             RsetTools.setLong(ps, 1, id);
             rset = ps.executeQuery();
-            StringBuffer sb = new StringBuffer("");
+            StringBuilder sb = new StringBuilder();
             while (rset.next()) {
                 sb.append( RsetTools.getString(rset, "ARTICLE_DATA") );
             }

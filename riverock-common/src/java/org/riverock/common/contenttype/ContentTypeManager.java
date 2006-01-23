@@ -71,7 +71,7 @@ public class ContentTypeManager {
 
     public String getContentType() {
 
-        StringBuffer content = contentType.getContentTypeStringBuffer();
+        StringBuilder content = contentType.getContentTypeStringBuilder();
         if (content==null)
             return null;
 
@@ -115,11 +115,11 @@ public class ContentTypeManager {
         if (type == null)
             return null;
 
-        StringBuffer contentTypeTemp = null;
+        StringBuilder contentTypeTemp = null;
         if (type.getContentType() != null)
-            contentTypeTemp = type.getContentTypeStringBuffer();
+            contentTypeTemp = type.getContentTypeStringBuilder();
         else
-            contentTypeTemp = new StringBuffer(DEFAULT_CONTENT_TYPE);
+            contentTypeTemp = new StringBuilder(DEFAULT_CONTENT_TYPE);
 
         Charset charsetTemp = null;
         if (type.getCharset() != null) {

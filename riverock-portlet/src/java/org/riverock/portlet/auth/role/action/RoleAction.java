@@ -30,7 +30,8 @@ public class RoleAction implements Serializable {
         Long roleId = FacesTools.getLong( event.getComponent(), "roleId" );
         log.info( "delete role with id: " + roleId );
 
-        Iterator<RoleBean> iterator = roleHolderBean.getUserBean().getAllRoles().iterator();
+/*
+        Iterator<RoleBean> iterator = roleHolderBean.getRoles().iterator();
         while( iterator.hasNext() ) {
             RoleBean roleBean = iterator.next();
 
@@ -40,11 +41,12 @@ public class RoleAction implements Serializable {
                 break;
             }
         }
+*/
     }
 
     public void addRoleAction() {
         log.info( "Add role action." );
-
+/*
         Long roleId = roleHolderBean.getUserBean().getNewRoleId();
 
         log.info( "New id of role: " + roleId );
@@ -52,7 +54,8 @@ public class RoleAction implements Serializable {
             return;
         }
 
-        roleHolderBean.getUserBean().getAllRoles().add(  );
+        roleHolderBean.getAllRoles().add(  );
+*/
     }
 
 }

@@ -44,7 +44,7 @@ public final class TemplateItemAsCustom extends TemplateItemBaseClass {
 
         pageElement.setData(
             PortalRequestProcessor.setData(
-                new StringBuffer("<").append( pageElement.getPortalTemplateItem().getValue() ).append( "/>" ).toString().getBytes(),
+                new StringBuilder("<").append( pageElement.getPortalTemplateItem().getValue() ).append( "/>" ).toString().getBytes(),
                 false, true
             )
         );

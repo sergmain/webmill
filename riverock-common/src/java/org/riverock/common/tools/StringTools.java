@@ -163,7 +163,7 @@ public class StringTools {
         if (str==null || multyple==0)
             return "";
 
-        StringBuffer s = new StringBuffer();
+        StringBuilder s = new StringBuilder();
         for (int i=0; i<multyple; i++)
             s.append( str );
 
@@ -543,7 +543,7 @@ public class StringTools {
     public static String convertByte( final byte bytes[])
     {
 
-        StringBuffer sb = new StringBuffer(bytes.length * 2);
+        StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (final byte newVar : bytes) {
             sb.append(convertDigit((int) (newVar >> 4)));
             sb.append(convertDigit((int) (newVar & 0x0f)));

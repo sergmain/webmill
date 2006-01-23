@@ -52,7 +52,7 @@ public class StringUtils {
     private static String createBreaks(String input, int maxLength) {
         char chars[] = input.toCharArray();
         int len = chars.length;
-        StringBuffer buf = new StringBuffer(len);
+        StringBuilder buf = new StringBuilder(len);
         int count = 0;
         int cur = 0;
         for (int i = 0; i < len; i++) {
@@ -93,7 +93,7 @@ public class StringUtils {
         if (StringTools.isEmpty(input)) {
             return "";
         }
-        StringBuffer buf = new StringBuffer(input.length() + 25);
+        StringBuilder buf = new StringBuilder(input.length() + 25);
         char chars[] = input.toCharArray();
         int len = input.length();
         int index = -1;

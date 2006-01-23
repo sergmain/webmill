@@ -110,7 +110,7 @@ public class ForumPortlet extends AbstractForumPortlet {
         genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
         genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
         genericBean.setForumHomeUrl(
-            PortletService.ctxStringBuffer((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_PORTLET_NAME).
+            PortletService.ctxStringBuilder((PortletRequest)forumActionBean.getRequest().getOriginRequest(), Constants.WM_FORUM_PORTLET_NAME).
             append('?').
             append(Constants.NAME_FORUM_ID).
             append('=').

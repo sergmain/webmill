@@ -121,7 +121,7 @@ public class CharsetMapper {
 
         // Second, try to match just the language and country
         charset = map.getProperty(
-            new StringBuffer(locale.getLanguage()).append( '_' ).append( locale.getCountry() ).toString()
+            new StringBuilder(locale.getLanguage()).append( '_' ).append( locale.getCountry() ).toString()
         );
         if (charset!=null)
             return (charset);

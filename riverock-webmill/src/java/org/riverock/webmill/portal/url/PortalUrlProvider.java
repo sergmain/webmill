@@ -32,5 +32,5 @@ package org.riverock.webmill.portal.url;
  */
 public interface PortalUrlProvider {
     public String getUrl(String portlet);
-    public StringBuffer getUrlStrigBuffer(String portletName);
+    public StringBuilder getUrlStringBuilder(String portletName);
 }

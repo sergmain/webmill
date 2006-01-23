@@ -378,7 +378,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 }
 
                 portalRequestInstance.byteArrayOutputStream.close();
-                StringBuffer timeString = getTimeString( counter, portalRequestInstance.startMills );
+                StringBuilder timeString = getTimeString( counter, portalRequestInstance.startMills );
                 final byte[] bytesCopyright = getCopyright().getBytes();
                 final byte[] bytes = portalRequestInstance.byteArrayOutputStream.toByteArray();
                 final byte[] bytesTimeString = timeString.toString().getBytes();
@@ -443,8 +443,8 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
     }
 
-    private static StringBuffer getTimeString( int counter, long startMills ) {
-        return new StringBuffer( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
+    private static StringBuilder getTimeString( int counter, long startMills ) {
+        return new StringBuilder( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
     }
 
     private static void setCookie( PortalRequestInstance portalRequestInstance, InternalServletResponseWrapper response_ ) {
