@@ -7,6 +7,7 @@
   <managed-bean-class>org.riverock.portlet.company.dao.CompanyDAOImpl</managed-bean-class>
   <managed-bean-scope>application</managed-bean-scope>
  </managed-bean>
+
  <managed-bean>
   <managed-bean-name>companySessionBean</managed-bean-name>
   <managed-bean-class>org.riverock.portlet.company.bean.CompanySessionBean</managed-bean-class>
@@ -16,6 +17,7 @@
    <value>#{companyDAO}</value>
   </managed-property>
  </managed-bean>
+
  <managed-bean>
   <managed-bean-name>companyBean</managed-bean-name>
   <managed-bean-class>org.riverock.portlet.company.bean.CompanyManagedBean</managed-bean-class>
@@ -26,9 +28,10 @@
   </managed-property>
   <managed-property>
    <property-name>companyModuleUser</property-name>
-   <value>#{companyModuleUserBean}</value>
+   <value>#{companyAuthSessionBean}</value>
   </managed-property>
  </managed-bean>
+
  <managed-bean>
   <managed-bean-name>action</managed-bean-name>
   <managed-bean-class>org.riverock.portlet.company.bean.CompanyAction</managed-bean-class>
@@ -39,14 +42,16 @@
   </managed-property>
   <managed-property>
    <property-name>companyModuleUser</property-name>
-   <value>#{companyModuleUserBean}</value>
+   <value>#{companyAuthSessionBean}</value>
   </managed-property>
  </managed-bean>
+
  <managed-bean>
-  <managed-bean-name>companyModuleUserBean</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.company.bean.CompanyModuleUserBean</managed-bean-class>
+  <managed-bean-name>companyAuthSessionBean</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.main.AuthSessionBean</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>
+
  <navigation-rule>
   <from-view-id>/riverock/company/company.jsp</from-view-id>
   <navigation-case>
@@ -95,5 +100,7 @@
   </locale-config>
   <message-bundle>org.riverock.portlet.company.resource.Company</message-bundle>
  </application>
+
  <factory/>
+
 </faces-config>
