@@ -32,7 +32,6 @@
  */
 package org.riverock.webmill.test;
 
-import java.net.URL;
 import java.net.URLEncoder;
 
 import org.apache.commons.httpclient.util.URIUtil;
