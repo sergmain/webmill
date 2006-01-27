@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthInfo;
 
 /**
  * Project millengine
@@ -75,14 +75,6 @@ public class MenuMemberApplication {
         }
 
         super.finalize();
-    }
-
-    public boolean isXml() {
-        return false;
-    }
-
-    public boolean isHtml() {
-        return false;
     }
 
     public MenuMemberApplication() {

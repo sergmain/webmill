@@ -125,7 +125,7 @@ public class TestMemberServiceClass extends TestCase {
                     ContentType content = mod.getContent( i );
                     if( content.getAction().getType() == ContentTypeActionType.INSERT_TYPE ) {
 
-                        String sql = MemberServiceClass.buildInsertSQL( content, null, mod, db_, "remote-user", "server-name", moduleManager );
+                        String sql = MemberServiceClass.buildInsertSQL( content, null, mod, db_, "server-name", moduleManager, authSession );
                         Throwable th = null;
                         Parser parser = null;
                         try {
@@ -399,7 +399,7 @@ public class TestMemberServiceClass extends TestCase {
                     if( content.getAction().getType() == ContentTypeActionType.INSERT_TYPE ) {
                         Exception ee = null;
                         try {
-                            String sql = MemberServiceClass.buildInsertSQL( content, null, mod, db_, "remote-user", "server-name", moduleManager );
+                            String sql = MemberServiceClass.buildInsertSQL( content, null, mod, db_, "server-name", moduleManager, authSession );
                             SqlStatement.parseSql( sql );
                         }
                         catch( Exception exc ) {
@@ -431,7 +431,7 @@ public class TestMemberServiceClass extends TestCase {
                         Exception ee = null;
                         try {
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", moduleManager );
+                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", moduleManager, authSession );
                             SqlStatement.parseSql( sql );
                         }
                         catch( Exception exc ) {
@@ -460,7 +460,7 @@ public class TestMemberServiceClass extends TestCase {
                         try {
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", moduleManager );
+                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", moduleManager, authSession );
                             SqlStatement.parseSql( sql );
                         }
                         catch( Exception exc ) {

@@ -17,9 +17,6 @@ import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
 import org.riverock.portlet.auth.user.logic.AuthManager;
-import org.riverock.portlet.auth.user.bean.CompanyBean;
-import org.riverock.portlet.auth.user.bean.UserBean;
-import org.riverock.portlet.auth.user.logic.AuthManager;
 
 /**
  * @author SergeMaslyukov

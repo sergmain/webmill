@@ -42,8 +42,6 @@ import org.riverock.common.tools.ServletTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.interfaces.sso.a3.AuthException;
-import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
@@ -54,6 +52,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
 import org.riverock.webmill.container.tools.PortalUserMetadata;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * @author SMaslyukov
@@ -264,7 +263,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
     }
 
-    private boolean userNotLogged(AuthSession auth_, StringBuilder out) throws AuthException {
+    private boolean userNotLogged(AuthSession auth_, StringBuilder out) {
         if ( auth_==null ) {
             out.append( "You must logging before subscribe to news on this site.");
             return true;
