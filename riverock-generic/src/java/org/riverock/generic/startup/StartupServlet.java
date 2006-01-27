@@ -25,11 +25,9 @@
 package org.riverock.generic.startup;
 
 import java.io.File;
-import java.security.Provider;
-import java.security.Security;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -40,16 +38,16 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.riverock.generic.main.Constants;
-import org.riverock.common.config.PropertiesProvider;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.common.config.ConfigService;
-import org.riverock.common.config.ConfigException;
-import org.riverock.common.config.ConfigObject;
-
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.LogManager;
+
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.config.ConfigObject;
+import org.riverock.common.config.ConfigService;
+import org.riverock.common.config.PropertiesProvider;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.main.Constants;
 
 /**
  * $Id$
@@ -115,7 +113,7 @@ public final class StartupServlet extends HttpServlet {
     }
 
     private void putAllConfigParameters(ServletConfig config) {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
         Enumeration en = config.getInitParameterNames();
         while(en.hasMoreElements()){
             String key = (String)en.nextElement();
@@ -126,57 +124,12 @@ public final class StartupServlet extends HttpServlet {
     }
 
     private static void checkClassPresent() {
-        Provider provider = Security.getProvider("BC");
-        if (provider != null) {
-            log.info("Security provider  present. " + provider.getInfo());
-            System.out.println("info Security provider  present. " + provider.getInfo());
-        }
-        else {
-            log.warn("'Bouncycastle' security provider not present. Check for class");
-
-            if (!checkClass("org.bouncycastle.jce.provider.BouncyCastleProvider")) {
-                log.error("Security provider BouncyCastle not present");
-                System.out.println("fatal Security provider BouncyCastle not present");
-            }
-        }
-
-        try {
-            log.error("info Xalan version - " + org.apache.xalan.Version.getVersion());
-        }
-        catch (Throwable e) {
-            log.error("Error get version of xalan " + e.getMessage());
-        }
-        try {
-            System.out.println("info Xerces version - " + org.apache.xerces.impl.Version.getVersion());
-        }
-        catch (Throwable e) {
-            log.error("Error get version of xerces " + e.getMessage());
-        }
         try {
             System.out.println("info Castor version - " + org.exolab.castor.util.Version.getBuildVersion());
         }
         catch (Throwable e) {
             log.error("Error get version of Castor " + e.getMessage());
         }
-    }
-
-    private static boolean checkClass(String name) {
-        try {
-            if (Class.forName(name) != null) {
-                log.info("class " + name + " present");
-                System.out.println("class " + name + " present");
-                return true;
-            }
-            else {
-                log.fatal("class " + name + " NOT present");
-                System.out.println("class " + name + " NOT present");
-            }
-        }
-        catch (Exception e) {
-            log.fatal("Exception create class " + name + " -  " + e.getMessage());
-            System.out.println("Exception create class " + name + " -  " + e.getMessage());
-        }
-        return false;
     }
 
     private static String replacePattern(String str, String oldToken, String newToken) {
@@ -331,7 +284,7 @@ public final class StartupServlet extends HttpServlet {
         }
 
         try {
-            Context envCtx = (Context) ctx.lookup("java:/comp/env/");
+//            Context envCtx = (Context) ctx.lookup("java:/comp/env/");
             System.out.println("list() on java:/comp/env Context : ");
             NamingEnumeration en = ctx.list("java:/comp/env/");
             while (en.hasMoreElements()) {
