@@ -25,21 +25,20 @@
 package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
-import org.riverock.generic.db.DatabaseAdapter;
+import org.apache.log4j.Logger;
+
+import org.riverock.interfaces.portlet.menu.Menu;
+import org.riverock.interfaces.portlet.menu.MenuItem;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
-import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
-import org.riverock.webmill.schema.core.WmPortalCatalogLanguageListType;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
-import org.riverock.interfaces.portlet.menu.Menu;
-import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.interfaces.portlet.menu.MenuItem;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.dao.PortalDaoFactory;
 
 /**
  * $Id$
@@ -61,7 +60,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
     }
 
     private List<Menu> menu = new ArrayList<Menu>();
-    private WmPortalSiteLanguageItemType item = null;
+    private SiteLanguageBean item = null;
 
     public PortalMenuLanguage(){}
 
@@ -129,42 +128,26 @@ public final class PortalMenuLanguage implements MenuLanguage {
         return null;
     }
 
-    public PortalMenuLanguage(DatabaseAdapter db_, WmPortalSiteLanguageItemType item_) throws Exception {
-        if (item_ == null)
+    public PortalMenuLanguage(SiteLanguageBean bean) {
+        if (bean == null)
             return;
 
-        this.item = item_;
+        this.item = bean;
 
         if (log.isDebugEnabled()) {
             log.debug("#33.07.00 ");
-            log.debug("ID_SITE_SUPPORT_LANGUAGE -  " + item_.getIdSiteSupportLanguage());
+            log.debug("ID_SITE_SUPPORT_LANGUAGE -  " + bean.getSiteLanguageId() );
             log.debug("locale - " + getLocaleStr());
             log.debug("language - " + getLang());
         }
 
-        try {
-            WmPortalCatalogLanguageListType list =
-                GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.
-                getInstance(db_, item_.getIdSiteSupportLanguage())
-                .item;
+        List<CatalogLanguageBean> list = PortalDaoFactory.getPortalDao().getCatalogLanguageList( bean.getSiteLanguageId() );
 
-            if (log.isDebugEnabled())
-                log.debug("Count of WmPortalCatalogLanguageListType: " + list.getWmPortalCatalogLanguageCount());
-
-            Iterator iterator = list.getWmPortalCatalogLanguageAsReference().iterator();
-            while (iterator.hasNext()) {
-                WmPortalCatalogLanguageItemType ic = (WmPortalCatalogLanguageItemType) iterator.next();
-                Menu catalog = new PortalMenu(db_, ic);
-                menu.add(catalog);
-            }
-        }
-        catch (Exception e) {
-            log.error("Exception in MenuLanguage(....", e);
-            throw e;
-        }
-        catch (Error e) {
-            log.error("Error in MenuLanguage(....", e);
-            throw e;
+        Iterator<CatalogLanguageBean> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            CatalogLanguageBean catalogLanguageBean = iterator.next();
+            Menu catalog = new PortalMenu( catalogLanguageBean );
+            menu.add(catalog);
         }
     }
 

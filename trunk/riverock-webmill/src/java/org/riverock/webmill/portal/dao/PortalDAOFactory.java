@@ -30,12 +30,10 @@ package org.riverock.webmill.portal.dao;
  *         Time: 20:21:34
  *         $Id$
  */
-public class PortalDAOFactory {
-    public static PortalDAOFactory getDAOFactory() {
-        return new PortalDAOFactory();
-    }
+public class PortalDaoFactory {
+	public static PortalDao portalDao = new PortalDaoImpl();
 
-    public PortalDAO getPortalDAO() {
-        return new PortalDAO();
+    public static PortalDao getPortalDao() {
+        return portalDao;
     }
 }

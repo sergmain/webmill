@@ -26,21 +26,18 @@ package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.Iterator;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
-import org.riverock.interfaces.portlet.menu.MenuLanguage;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.dao.PortalDaoFactory;
 
 /**
  * $Id$
@@ -84,20 +81,11 @@ public final class SiteMenu {
 
     public SiteMenu(){}
 
+//    public static SiteMenu getInstance( final long id_) throws Exception {
+//        return getInstance( (Long)id_ );
+//    }
 
-//    private static long lastReadData = 0;
-//    private final static long LENGTH_TIME_PERIOD = 10000;
-
-    public static SiteMenu getInstance( final DatabaseAdapter db_, final Long idSite_) throws PortalException {
-
-//        if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD ) {
-//            log.debug("#15.01.03 reinit cached value ");
-//
-//            synchronized(siteMenuLaguage) {
-//                siteMenuLaguage.clear();
-//                lastReadData = System.currentTimeMillis();
-//            }
-//        }
+    public static SiteMenu getInstance( final Long idSite_) {
 
         SiteMenu tempLangMenu = siteMenuLaguage.get( idSite_ );
 
@@ -106,7 +94,7 @@ public final class SiteMenu {
 
         synchronized(siteMenuLaguage)
         {
-            SiteMenu temp = new SiteMenu(db_, idSite_);
+            SiteMenu temp = new SiteMenu( idSite_ );
             siteMenuLaguage.put( idSite_,  temp);
             return temp;
         }
@@ -129,32 +117,22 @@ public final class SiteMenu {
         return new PortalMenuLanguage();
     }
 
-    private SiteMenu( final DatabaseAdapter db_, final Long idSite) throws PortalException {
+    private SiteMenu( final Long idSite) {
         if (log.isDebugEnabled()) {
             log.debug("#33.60.00 ");
         }
 
-        try {
-            WmPortalSiteLanguageListType list = PortalInfoImpl.processSupportLanguage( db_, idSite );
+        List<SiteLanguageBean> list = PortalDaoFactory.getPortalDao().getSiteLanguageList( idSite );
 
-            if (log.isDebugEnabled()) {
-                log.debug("Count of language for this site is "+list.getWmPortalSiteLanguageCount());
-            }
-
-            for (int i=0; i<list.getWmPortalSiteLanguageCount(); i++) {
-                WmPortalSiteLanguageItemType item = list.getWmPortalSiteLanguage(i);
-                menuLanguage.add( new PortalMenuLanguage(db_, item) );
-            }
+        if (log.isDebugEnabled()) {
+            log.debug("Count of language for this site is "+list.size());
         }
-        catch(Throwable e) {
-            String es = "Error in SiteMenu()";
-            log.error(es, e);
-            throw new PortalException(es, e);
-        }
-    }
 
-    public static SiteMenu getInstance( final DatabaseAdapter db_, final long id_) throws Exception {
-        return getInstance(db_, (Long)id_ );
+        Iterator<SiteLanguageBean> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            SiteLanguageBean bean = iterator.next();
+            menuLanguage.add( new PortalMenuLanguage( bean) );
+        }
     }
 
     public void reinit()

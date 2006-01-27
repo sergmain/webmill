@@ -25,10 +25,11 @@
 package org.riverock.webmill.port;
 
 import java.io.ByteArrayInputStream;
-import java.io.Serializable;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -36,25 +37,18 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.exception.GenericException;
-import org.riverock.generic.site.SiteListSite;
-import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
-import org.riverock.webmill.exception.PortalException;
+import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
+import org.riverock.interfaces.portlet.menu.MenuLanguage;
+import org.riverock.webmill.config.WebmillConfig;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.portal.bean.SiteBean;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.dao.PortalDaoFactory;
 import org.riverock.webmill.portal.menu.SiteMenu;
+import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.site.PortalTemplateManagerImpl;
-import org.riverock.webmill.core.GetWmPortalListSiteItem;
-import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
-import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
 
 /**
  * $Id$
@@ -64,26 +58,10 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient final static Logger log = Logger.getLogger(PortalInfoImpl.class);
 
-    static {
-        try {
-            Class p = PortalInfoImpl.class;
-            SqlStatement.registerRelateClass(p, GetWmPortalListSiteItem.class);
-            SqlStatement.registerRelateClass(p, PortalXsltList.class);
-            SqlStatement.registerRelateClass(p, PortalTemplateManagerImpl.class);
-            SqlStatement.registerRelateClass(p, GetWmPortalSiteLanguageWithIdSiteList.class);
-            SqlStatement.registerRelateClass(p, SiteMenu.class);
-        }
-        catch (Exception exception) {
-            final String es = "Exception in ";
-            log.error(es, exception);
-            throw new SqlStatementRegisterException(es, exception);
-        }
-    }
-
     private transient static Map<Long, PortalInfoImpl> portatInfoMap = new HashMap<Long, PortalInfoImpl>();
 
-    private transient WmPortalListSiteItemType sites = new WmPortalListSiteItemType();
-    private transient WmPortalSiteLanguageListType supportLanguage = null;
+    private transient SiteBean siteBean = new SiteBean();
+    private transient List<SiteLanguageBean> siteLanguageList = null;
 
     private transient Locale defaultLocale = null;
 
@@ -100,14 +78,14 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return meta;
     }
 
-    public boolean isCurrentSite(Long idSiteSupportLanguage) {
-        if (idSiteSupportLanguage == null)
+    public boolean isCurrentSite(Long siteLanguageId) {
+        if (siteLanguageId == null)
             return false;
 
-        Iterator it = supportLanguage.getWmPortalSiteLanguageAsReference().iterator();
+        Iterator<SiteLanguageBean> it = siteLanguageList.iterator();
         while (it.hasNext()) {
-            WmPortalSiteLanguageItemType item = (WmPortalSiteLanguageItemType) it.next();
-            if (idSiteSupportLanguage.equals(item.getIdSiteSupportLanguage())) {
+            SiteLanguageBean siteLanguageBean = it.next();
+            if (siteLanguageId.equals(siteLanguageBean.getSiteLanguageId())) {
                 return true;
             }
         }
@@ -117,21 +95,22 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     public Long getSupportLanguageId(Locale locale) {
         if (log.isDebugEnabled()) {
             log.debug("get idSupportLanguage for locale " + locale.toString());
-            log.debug("supportLanguage " + getSupportLanguage());
+            log.debug("siteLanguageList " + getSiteLanguageList());
         }
 
-        if (getSupportLanguage() == null)
+        if (getSiteLanguageList() == null)
             return null;
 
         if (supportLanguageMap == null) {
-            supportLanguageMap = new HashMap<String, Long>(getSupportLanguage().getWmPortalSiteLanguageCount());
-            for (int i = 0; i < getSupportLanguage().getWmPortalSiteLanguageCount(); i++) {
-                WmPortalSiteLanguageItemType item = getSupportLanguage().getWmPortalSiteLanguage(i);
-                supportLanguageMap.put(item.getCustomLanguage(), item.getIdSiteSupportLanguage());
+            supportLanguageMap = new HashMap<String, Long>();
+            Iterator<SiteLanguageBean> iterator = siteLanguageList.iterator();
+            while (iterator.hasNext()) {
+                SiteLanguageBean bean = iterator.next();
+                supportLanguageMap.put(bean.getCustomLanguage(), bean.getSiteLanguageId());
             }
         }
 
-        Long obj = (Long) supportLanguageMap.get(locale.toString());
+        Long obj = supportLanguageMap.get(locale.toString());
         if (log.isDebugEnabled())
             log.debug("result object " + obj);
 
@@ -157,8 +136,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private static Object syncObject = new Object();
 
     // Todo replace synchronized with synchronized(syncObject)
-    public synchronized static PortalInfoImpl getInstance(DatabaseAdapter db_, String serverName)
-        throws PortalException {
+    public synchronized static PortalInfoImpl getInstance(String serverName) {
         if (log.isDebugEnabled()) {
             log.debug("#15.01.01 lastReadData: " + lastReadData + ", current " + System.currentTimeMillis());
             log.debug("#15.01.02 LENGTH_TIME_PERIOD " + LENGTH_TIME_PERIOD + ", status " +
@@ -166,19 +144,13 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         }
 
         Long id = null;
-        try {
-            id = SiteListSite.getIdSite(serverName);
-        }
-        catch (GenericException e) {
-            throw new PortalException("Error get siteId for serverName '" + serverName + "'", e);
-        }
+        id = SiteList.getIdSite(serverName);
         if (log.isDebugEnabled()) log.debug("ServerName:" + serverName + ", siteId: " + id);
 
-        return getInstance(db_, id);
+        return getInstance(id);
     }
 
-    public synchronized static PortalInfoImpl getInstance(DatabaseAdapter db_, Long siteId)
-        throws PortalException {
+    public synchronized static PortalInfoImpl getInstance(Long siteId) {
 
         synchronized (syncObject) {
 
@@ -189,7 +161,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD || p == null) {
                 log.debug("#15.01.03 reinit cached value ");
 
-                p = new PortalInfoImpl(db_, siteId);
+                p = new PortalInfoImpl(siteId);
                 portatInfoMap.put(siteId, p);
             }
             lastReadData = System.currentTimeMillis();
@@ -197,80 +169,66 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         }
     }
 
-    private PortalInfoImpl(DatabaseAdapter db_, Long siteId) throws PortalException {
+    private PortalInfoImpl(Long siteId) {
         this.siteId = siteId;
         long mills = 0; // System.currentTimeMillis();
-        try {
-            sites = GetWmPortalListSiteItem.getInstance(db_, siteId).item;
+        siteBean = PortalDaoFactory.getPortalDao().getSiteBean( siteId );
 
-            if (sites.getDefLanguage() == null)
-                sites.setDefLanguage("");
+        if (!StringTools.isEmpty(siteBean.getDefLanguage()) &&
+            !StringTools.isEmpty(siteBean.getDefCountry())) {
 
-            if (!StringTools.isEmpty(sites.getDefLanguage()) &&
-                !StringTools.isEmpty(sites.getDefCountry())) {
+            defaultLocale = new Locale(siteBean.getDefLanguage().toLowerCase(),
+                siteBean.getDefCountry(),
+                (siteBean.getDefVariant() == null ? "" : siteBean.getDefVariant()).toLowerCase());
 
-                defaultLocale = new Locale(sites.getDefLanguage().toLowerCase(),
-                    sites.getDefCountry(),
-                    (sites.getDefVariant() == null ? "" : sites.getDefVariant()).toLowerCase());
-
-                if (log.isDebugEnabled())
-                    log.debug("Main language 1.1: " + getDefaultLocale().toString());
-
-            }
-            else {
-                defaultLocale = StringTools.getLocale(WebmillConfig.getMainLanguage());
-                if (log.isDebugEnabled()) {
-                    log.debug("Language, WebmillConfig.getMainLanguage(): " + WebmillConfig.getMainLanguage());
-                    log.debug("Language, default locale: " + getDefaultLocale().toString());
-                }
-            }
-            initPortalProperties();
-
-            mills = 0;
-
-            if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-            xsltTransformerManager = PortalXsltList.getInstance(db_, siteId);
-            if (log.isInfoEnabled()) log.info("Init xsltTransformerManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
-
-            if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-            portalTemplateManager = PortalTemplateManagerImpl.getInstance(db_, siteId);
-            if (log.isInfoEnabled()) log.info("Init portalTemplateManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
-
-            if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-            supportLanguage = processSupportLanguage(db_, siteId);
-            if (log.isInfoEnabled()) log.info("Init language listfor " + (System.currentTimeMillis() - mills) + " milliseconds");
+            if (log.isDebugEnabled())
+                log.debug("Main language 1.1: " + getDefaultLocale().toString());
 
         }
-        catch (Throwable e) {
-            String es = "Error in PortalInfoImpl(DatabaseAdapter db_, Long siteId)";
-            log.error(es, e);
-            throw new PortalException(es, e);
+        else {
+            defaultLocale = StringTools.getLocale(WebmillConfig.getMainLanguage());
+            if (log.isDebugEnabled()) {
+                log.debug("Language, WebmillConfig.getMainLanguage(): " + WebmillConfig.getMainLanguage());
+                log.debug("Language, default locale: " + getDefaultLocale().toString());
+            }
         }
+        initPortalProperties();
 
-        initMenu(db_);
+        mills = 0;
+
+        if (log.isInfoEnabled()) mills = System.currentTimeMillis();
+        xsltTransformerManager = PortalXsltList.getInstance(siteId);
+        if (log.isInfoEnabled()) log.info("Init xsltTransformerManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
+
+        if (log.isInfoEnabled()) mills = System.currentTimeMillis();
+        portalTemplateManager = PortalTemplateManagerImpl.getInstance(siteId);
+        if (log.isInfoEnabled()) log.info("Init portalTemplateManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
+
+        if (log.isInfoEnabled()) mills = System.currentTimeMillis();
+        siteLanguageList = PortalDaoFactory.getPortalDao().getSiteLanguageList( siteId );
+        if (log.isInfoEnabled()) log.info("Init language listfor " + (System.currentTimeMillis() - mills) + " milliseconds");
+
+        initMenu();
     }
 
-    private void initPortalProperties() throws IOException {
+    private void initPortalProperties() {
         meta = new HashMap<String, String>();
         Properties properties = new Properties();
-        properties.load( new ByteArrayInputStream( "".getBytes() ) );
+        try {
+            // Todo investigate what value must passed to ByteArrayInputStream
+            properties.load( new ByteArrayInputStream( "".getBytes() ) );
+        }
+        catch (IOException e) {
+            String es = "Error load properties from stream";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        }
         Iterator<Map.Entry<Object,Object>> iterator = properties.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Object, Object> entry = iterator.next();
             meta.put( entry.getKey().toString(), entry.getValue().toString() );
         }
-        meta.put( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL, sites.getAdminEmail() );
-    }
-
-    public static WmPortalSiteLanguageListType processSupportLanguage(DatabaseAdapter db_, Long siteId) throws org.riverock.webmill.exception.PortalPersistenceException {
-        WmPortalSiteLanguageListType langs = GetWmPortalSiteLanguageWithIdSiteList.getInstance(db_, siteId).item;
-
-        for (int i = 0; i < langs.getWmPortalSiteLanguageCount(); i++) {
-            WmPortalSiteLanguageItemType lang = langs.getWmPortalSiteLanguage(i);
-            lang.setCustomLanguage(StringTools.getLocale(lang.getCustomLanguage()).toString());
-        }
-
-        return langs;
+        meta.put( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL, siteBean.getAdminEmail() );
     }
 
     public PortalInfoImpl() {
@@ -295,7 +253,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     }
 
     public Long getCompanyId() {
-        return sites.getIdFirm();
+        return siteBean.getCompanyId();
     }
 
     public Locale getDefaultLocale() {
@@ -310,11 +268,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return portalTemplateManager;
     }
 
-    private void initMenu(DatabaseAdapter db_) throws PortalException {
+    private void initMenu() {
         if (log.isDebugEnabled()) log.debug("start get menu for site " + siteId);
 
         // Build menu
-        SiteMenu sc = SiteMenu.getInstance(db_, siteId);
+        SiteMenu sc = SiteMenu.getInstance(siteId);
         languageMenuMap = new HashMap<String, MenuLanguage>();
         Iterator<MenuLanguage> iterator = sc.getMenuLanguage().iterator();
         while (iterator.hasNext()) {
@@ -336,11 +294,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return null;
     }
 
-    public WmPortalListSiteItemType getSites() {
-        return sites;
+    public SiteBean getSite() {
+        return siteBean;
     }
 
-    public WmPortalSiteLanguageListType getSupportLanguage() {
-        return supportLanguage;
+    public List getSiteLanguageList() {
+        return siteLanguageList;
     }
 }

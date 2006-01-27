@@ -405,7 +405,7 @@ containing the portlet is restarted.
                 renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getIdSiteCtxCatalog() );
             }
 
-            // Todo after rewrite member portlet, you can delete next line
+            // Todo after rewrite(delete) member portlet, you can delete next line
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
             renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );

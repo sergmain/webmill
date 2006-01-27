@@ -30,15 +30,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portlet.menu.MenuItem;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
-import org.riverock.webmill.schema.core.WmPortalTemplateItemType;
-import org.riverock.webmill.schema.core.WmPortalPortletNameItemType;
-import org.riverock.webmill.core.GetWmPortalTemplateItem;
-import org.riverock.webmill.core.GetWmPortalPortletNameItem;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.PortletNameBean;
+import org.riverock.webmill.portal.bean.TemplateBean;
+import org.riverock.webmill.portal.dao.PortalDaoFactory;
 
 /**
  *
@@ -48,17 +44,17 @@ import org.riverock.webmill.core.GetWmPortalPortletNameItem;
 public final class PortalMenuItem implements MenuItem{
     private final static Logger log = Logger.getLogger( MenuItem.class );
 
-    private WmPortalCatalogItemType ctx = null;
-    private String nameTemplate = null;
-    private String type = "";
+    private CatalogBean ctx = null;
+    private TemplateBean templateBean = null;
+    private PortletNameBean portletNameBean = null;
 
     private String menuName = null;
     private List<MenuItem> catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
 
     protected void finalize() throws Throwable{
         menuName = null;
-        type = null;
-        nameTemplate = null;
+        portletNameBean = null;
+        templateBean = null;
         if (getCatalogItems()!=null) {
             getCatalogItems().clear();
             catalogItems = null;
@@ -67,87 +63,72 @@ public final class PortalMenuItem implements MenuItem{
         super.finalize();
     }
 
-    public Long getTopId() { return ctx.getIdTopCtxCatalog(); }
-    public Long getId() { return ctx.getIdSiteCtxCatalog(); }
+    public Long getTopId() { return ctx.getTopCatalogId(); }
+    public Long getId() { return ctx.getCatalogId(); }
     public List getSubTree() { return this.catalogItems;}
     public void setSubTree(List list){ this.catalogItems = list;}
 
     public String toString() {
         return
-            "[id: "+getId()+",idTop: "+getIdTop()+",type: "+type+",portletId: "+getIdPortlet()+"," +
-            "template: "+nameTemplate+",name: "+menuName+",url: "+getUrl()+"]";
+            "[id: "+getId()+",idTop: "+getIdTop()+",portletNameBean: "+portletNameBean+",portletId: "+getIdPortlet()+"," +
+            "template: "+templateBean+",name: "+menuName+",url: "+getUrl()+"]";
     }
 
-    public PortalMenuItem(DatabaseAdapter db_, WmPortalCatalogItemType ctxItem) throws PortalException{
+    public PortalMenuItem(CatalogBean catalogBean) {
 
-        this.ctx = ctxItem;
+        this.ctx = catalogBean;
         if (log.isDebugEnabled()){
             log.debug("ctxItem: "+ctx);
             if (ctx!=null){
-                log.debug("ctxItem.getIdSiteCtxCatalog(): "+ctx.getIdSiteCtxCatalog());
-                log.debug("ctxItem.getIdSiteCtxLangCatalog(): "+ctx.getIdSiteCtxLangCatalog());
-                log.debug("ctxItem.getIdSiteTemplate(): "+ctx.getIdSiteTemplate());
-                log.debug("ctxItem.getIdSiteCtxType(): "+ctx.getIdSiteCtxType());
+                log.debug("ctxItem.getCatalogId(): "+ctx.getCatalogId());
+                log.debug("ctxItem.getCatalogLanguageId(): "+ctx.getCatalogLanguageId() );
+                log.debug("ctxItem.getIdSiteTemplate(): "+ctx.getTemplateId() );
+                log.debug("ctxItem.getIdSiteCtxType(): "+ctx.getPortletId() );
             }
         }
 
         this.menuName = ctx.getKeyMessage();
-
-        try {
-            if (db_!=null) {
-                WmPortalTemplateItemType template = GetWmPortalTemplateItem.getInstance(db_, ctx.getIdSiteTemplate()).item;
-                if (template!=null)
-                    this.nameTemplate = template.getNameSiteTemplate();
-
-                WmPortalPortletNameItemType ctxType = GetWmPortalPortletNameItem.getInstance(db_, ctx.getIdSiteCtxType()).item;
-                if (ctxType!=null)
-                    this.type = ctxType.getType();
-            }
-
-        } catch (PortalPersistenceException e) {
-            String es = "Error create MenuItem object, db: "+db_;
-            log.error(es, e);
-            throw new PortalException(es, e);
-        }
+        this.templateBean = PortalDaoFactory.getPortalDao().getTemplateBean( ctx.getTemplateId() );
+        this.portletNameBean = PortalDaoFactory.getPortalDao().getPortletNameBean( ctx.getPortletId() );
     }
 
     public Long getIdTop(){
-        return ctx.getIdTopCtxCatalog();
+        return ctx.getTopCatalogId();
     }
 
     public Long getIdPortlet(){
-        return ctx.getIdContext();
+        return ctx.getContextId();
     }
 
     public Long getIdTemplate() {
-        return ctx.getIdSiteTemplate();
+        return ctx.getTemplateId();
     }
 
     public String getNameTemplate(){
-        return this.nameTemplate;
+        return templateBean!=null?templateBean.getTemplateName():null;
     }
 
     public Long getIdType() {
-        return ctx.getIdSiteCtxType();
+        return ctx.getPortletId();
     }
 
     public String getType(){
-        return this.type;
+        return portletNameBean.getName();
     }
 
     public String getMenuName(){
-        return this.menuName;
+        return menuName;
     }
 
     public List<MenuItem> getCatalogItems(){
-        return this.catalogItems;
+        return catalogItems;
     }
 
     public String getUrl(){
-        return ctx.getCtxPageUrl();
+        return ctx.getUrl();
     }
 
     public String getUrlResource() {
-        return ctx.getUrlResource();
+        throw new IllegalStateException("method not supported");
     }
 }
