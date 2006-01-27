@@ -27,22 +27,15 @@ package org.riverock.sso.a3;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.ServletTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.interfaces.sso.a3.AuthException;
-import org.riverock.sso.core.GetWmAuthUserItem;
 import org.riverock.sso.core.InsertWmAuthRelateAccgroupItem;
-import org.riverock.sso.schema.core.WmAuthUserItemType;
 import org.riverock.sso.schema.core.WmAuthRelateAccgroupItemType;
-import org.riverock.sso.utils.AuthHelper;
 
 /**
  * User: Admin
@@ -51,62 +44,8 @@ import org.riverock.sso.utils.AuthHelper;
  *
  * $Id$
  */
-public class InternalAuthProviderTools
-{
+public class InternalAuthProviderTools {
     private static Logger log = Logger.getLogger(InternalAuthProviderTools.class);
-
-    public static boolean checkRigthOnUser(DatabaseAdapter db_,
-        Long id_auth_user_check, Long id_auth_user_owner)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            switch (db_.getFamaly())
-            {
-                case DatabaseManager.MYSQL_FAMALY:
-                    WmAuthUserItemType auth = GetWmAuthUserItem.getInstance(db_, id_auth_user_owner).item;
-                    if (auth==null)
-                        return false;
-
-                    ps = db_.prepareStatement(
-                        "select null " +
-                        "from   WM_AUTH_USER a, WM_LIST_USER b " +
-                        "where  a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
-                        "       b.ID_FIRM  in ("+AuthHelper.getGrantedCompanyId(db_, auth.getUserLogin())+") "
-                    );
-
-                    RsetTools.setLong(ps, 1, id_auth_user_check);
-                    break;
-                default:
-                    ps = db_.prepareStatement(
-                        "select null " +
-                        "from   WM_AUTH_USER a, WM_LIST_USER b, V$_READ_LIST_FIRM z1 " +
-                        "where  a.ID_USER=b.ID_USER and a.ID_AUTH_USER=? and " +
-                        "       b.ID_FIRM = z1.ID_FIRM and z1.ID_AUTH_USER=? "
-                    );
-
-                    RsetTools.setLong(ps, 1, id_auth_user_check);
-                    RsetTools.setLong(ps, 2, id_auth_user_owner);
-                    break;
-            }
-            rs = ps.executeQuery();
-
-            return rs.next();
-        }
-        catch (Exception e)
-        {
-            log.error("Error check right on user", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
 
     public static Long addRole(DatabaseAdapter db_, String role_name)
         throws Exception
@@ -217,28 +156,33 @@ public class InternalAuthProviderTools
         return bindUserRole(ora_, id_auth_user, roleId );
     }
 
-    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user, Long id_role)
-        throws Exception
-    {
+    public static boolean bindUserRole(DatabaseAdapter ora_, Long id_auth_user, Long id_role) {
         if (id_auth_user==null)  {
-            throw new AuthException( "authUserId argument must not be null" );
+            throw new IllegalStateException( "authUserId argument must not be null" );
         }
 
         if (id_role==null)  {
-            throw new AuthException( "roleId argument must not be null" );
+            throw new IllegalStateException( "roleId argument must not be null" );
         }
 
         WmAuthRelateAccgroupItemType item = new WmAuthRelateAccgroupItemType();
-             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("SEQ_WM_AUTH_RELATE_ACCGROUP");
-            seq.setTableName( "WM_AUTH_RELATE_ACCGROUP");
-            seq.setColumnName( "ID_RELATE_ACCGROUP" );
+        CustomSequenceType seq = new CustomSequenceType();
+        seq.setSequenceName("SEQ_WM_AUTH_RELATE_ACCGROUP");
+        seq.setTableName( "WM_AUTH_RELATE_ACCGROUP");
+        seq.setColumnName( "ID_RELATE_ACCGROUP" );
+        try {
             long id = ora_.getSequenceNextValue( seq );
 
-        item.setIdRelateAccgroup( id );
-        item.setIdAuthUser( id_auth_user );
-        item.setIdAccessGroup( id_role );
-        InsertWmAuthRelateAccgroupItem.process( ora_, item );
+            item.setIdRelateAccgroup( id );
+            item.setIdAuthUser( id_auth_user );
+            item.setIdAccessGroup( id_role );
+            InsertWmAuthRelateAccgroupItem.process( ora_, item );
+        }
+        catch (Exception e) {
+            final String es = "error bind role to user";
+            log.error(es,e);
+            throw new IllegalStateException( es );
+        }
         return true;
     }
 
@@ -726,163 +670,6 @@ public class InternalAuthProviderTools
         finally
         {
             DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public static final String firmIdParam = "id_firm";
-    public static Long initIdFirm(DatabaseAdapter db_, HttpServletRequest request, String userLogin)
-        throws Exception
-    {
-        return initIdFirm(db_, ServletTools.getLong(request, firmIdParam), userLogin);
-    }
-
-    public static Long initIdFirm(DatabaseAdapter db_, Long firmId, String userLogin)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            switch (db_.getFamaly())
-            {
-                case DatabaseManager.MYSQL_FAMALY:
-                    ps = db_.prepareStatement(
-                        "select ID_FIRM from WM_LIST_COMPANY " +
-                        "where ID_FIRM in ("+AuthHelper.getGrantedCompanyId(db_, userLogin)+") and ID_FIRM=?"
-                    );
-                    ps.setObject(1, firmId);
-                    break;
-                default:
-                    ps = db_.prepareStatement(
-                        "select ID_FIRM from v$_read_list_firm where USER_LOGIN=? and ID_FIRM=?"
-                    );
-
-                    ps.setString(1, userLogin);
-                    ps.setObject(2, firmId);
-                    break;
-            }
-
-
-            rs = ps.executeQuery();
-            if (rs.next())
-                return RsetTools.getLong(rs, "ID_FIRM");
-
-            return null;
-        }
-        catch (Exception e)
-        {
-            log.error("Error get idFirm", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public static final String serviceIdParam = "id_service";
-    public static Long initIdService(DatabaseAdapter db_, HttpServletRequest request, String userLogin)
-        throws Exception
-    {
-        return initIdService(db_, ServletTools.getLong(request, serviceIdParam), userLogin);
-    }
-
-    public static Long initIdService(DatabaseAdapter db_, Long serviceId, String userLogin)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            switch (db_.getFamaly())
-            {
-                case DatabaseManager.MYSQL_FAMALY:
-                    ps = db_.prepareStatement(
-                        "select ID_SERVICE from WM_LIST_GROUP_COMPANY " +
-                        "where ID_SERVICE in ("+AuthHelper.getGrantedGroupCompanyId(db_, userLogin)+") and ID_SERVICE=?"
-                    );
-                    ps.setObject(1, serviceId);
-                    break;
-                default:
-                    ps = db_.prepareStatement(
-                        "select ID_SERVICE from v$_read_list_service where USER_LOGIN=? and ID_SERVICE=?"
-                    );
-
-                    ps.setString(1, userLogin);
-                    ps.setObject(2, serviceId);
-
-                    break;
-            }
-            rs = ps.executeQuery();
-            if (rs.next())
-                return RsetTools.getLong(rs, "ID_SERVICE");
-
-            return null;
-        }
-        catch (Exception e)
-        {
-            log.error("Error get idService", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public static final String roadIdParam = "id_road";
-    public static Long initIdRoad(DatabaseAdapter db_, HttpServletRequest request, String userLogin)
-        throws Exception
-    {
-        return initIdRoad(db_, ServletTools.getLong(request, roadIdParam), userLogin);
-    }
-
-    public static Long initIdRoad(DatabaseAdapter db_, Long roadId, String userLogin)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            switch (db_.getFamaly())
-            {
-                case DatabaseManager.MYSQL_FAMALY:
-                    ps = db_.prepareStatement(
-                        "select ID_ROAD from WM_LIST_HOLDING " +
-                        "where ID_ROAD in ("+AuthHelper.getGrantedHoldingId(db_, userLogin)+") and ID_ROAD=?"
-                    );
-                    ps.setObject(1, roadId);
-                    break;
-                default:
-                    ps = db_.prepareStatement(
-                        "select ID_ROAD from v$_read_list_road where USER_LOGIN = ? and ID_ROAD=?"
-                    );
-
-                    ps.setString(1, userLogin);
-                    ps.setObject(2, roadId);
-
-                    break;
-            }
-            rs = ps.executeQuery();
-            if (rs.next())
-                return RsetTools.getLong(rs, "ID_ROAD");
-
-            return null;
-        }
-        catch (Exception e)
-        {
-            log.error("Error get idRoad", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }

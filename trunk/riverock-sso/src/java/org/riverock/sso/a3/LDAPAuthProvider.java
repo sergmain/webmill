@@ -22,18 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Sep 6, 2003
- * Time: 10:27:42 PM
- *
- * $Id$
- */
 package org.riverock.sso.a3;
 
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -46,9 +39,18 @@ import org.apache.log4j.Logger;
 import org.riverock.sso.schema.config.AuthProviderParametersListType;
 import org.riverock.sso.schema.config.AuthProviderParametersType;
 import org.riverock.sso.schema.config.ParameterType;
+import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthInfo;
 
-
-public final class LDAPAuthProvider implements AuthProviderInterface, Serializable {
+/**
+ * User: Admin
+ * Date: Sep 6, 2003
+ * Time: 10:27:42 PM
+ *
+ * $Id$
+ */
+public final class LDAPAuthProvider implements AuthProvider, Serializable {
     private static final long serialVersionUID = 20434672384237117L;
     private final static Logger log = Logger.getLogger(LDAPAuthProvider.class);
 
@@ -70,7 +72,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
     }
 
 
-    public boolean isUserInRole(final AuthSessionImpl authSession, final String role) {
+    public boolean isUserInRole(final AuthSession authSession, final String role) {
         if (ctx == null || role == null || role.trim().length() == 0)
             return false;
 
@@ -80,7 +82,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         return internalCheckRole(authSession, role);
     }
 
-    private boolean internalCheckRole(final AuthSessionImpl authSession, final String role) {
+    private boolean internalCheckRole(final AuthSession authSession, final String role) {
         String[] attrs = new String[]{CANONICAL_NAME_MEMBEROF};
 
         try {
@@ -121,7 +123,7 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         return cn;
     }
 
-    public boolean checkAccess(final AuthSessionImpl authSession, final String serverName) {
+    public boolean checkAccess(final AuthSession authSession, final String serverName) {
         if (ctx == null) {
             Hashtable<String, String> env = new Hashtable<String, String>(5, 1.1f);
             /*
@@ -162,7 +164,15 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         return true;
     }
 
-    public void setParameters(final AuthProviderParametersListType parametersList) throws Exception {
+    public boolean isUserInRole(String userLogin, String userPassword, String role_) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public boolean checkAccess(String userLogin, String userPassword, String serverName) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void setParameters(final AuthProviderParametersListType parametersList) {
         if (parametersList == null)
             return;
 
@@ -176,7 +186,60 @@ public final class LDAPAuthProvider implements AuthProviderInterface, Serializab
         }
     }
 
-    public void initUserInfo(AuthSessionImpl authSession) {
+    public UserInfo initUserInfo( String userLogin ) {
+        return null;
+    }
+
+    public String getGrantedUserId(String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Long> getGrantedUserIdList(String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Long> getGrantedCompanyIdList(String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String getGrantedGroupCompanyId(String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Long> getGrantedGroupCompanyIdList(String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String getGrantedHoldingId(String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Long> getGrantedHoldingIdList(String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long checkCompanyId(Long companyId, String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long checkGroupCompanyId(Long groupCompanyId, String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long checkHoldingId(Long holdingId, String userLogin) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public boolean checkRigthOnUser(Long id_auth_user_check, Long id_auth_user_owner) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public AuthInfo getAuthInfo(String userLogin, String userPassword) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public AuthInfo getAuthInfo(Long authUserId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }

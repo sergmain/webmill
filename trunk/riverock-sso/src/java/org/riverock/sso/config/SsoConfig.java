@@ -28,7 +28,6 @@ import java.io.File;
 
 import org.riverock.common.config.ConfigObject;
 import org.riverock.common.config.ConfigException;
-import org.riverock.sso.main.Constants;
 import org.riverock.sso.schema.config.SsoConfigType;
 import org.riverock.sso.schema.config.AuthType;
 
@@ -133,12 +132,12 @@ public class SsoConfig {
         if (log.isDebugEnabled())
             log.debug("#15.938.1");
 
-        if (getConfig().getIsDebugDirInit().booleanValue() )
+        if (getConfig().getIsDebugDirInit() )
             return getConfig().getSsoDebugDir();
 
         synchronized(syncDebug)
         {
-            if (getConfig().getIsDebugDirInit().booleanValue())
+            if (getConfig().getIsDebugDirInit())
                 return getConfig().getSsoDebugDir();
 
             String dir = getConfig().getSsoDebugDir();

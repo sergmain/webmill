@@ -92,9 +92,8 @@ public class TestExtractLDAPCanonicalName extends TestCase
 
             };
 
-        for (int i=0; i<items.length; i++)
-        {
-            testExctractCanonicalName( items[i] );
+        for (final ItemCN newVar : items) {
+            testExctractCanonicalName(newVar);
         }
     }
 }

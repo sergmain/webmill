@@ -22,11 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.sso.a3;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.io.Serializable;
 
 import org.riverock.sso.schema.config.AuthType;
 import org.riverock.sso.schema.config.AuthProviderType;
@@ -34,35 +35,34 @@ import org.riverock.sso.config.SsoConfig;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.AuthException;
 import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.sso.a3.AuthInfo;
 
 import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-public final class AuthSessionImpl implements AuthSession {
+public final class AuthSessionImpl implements AuthSession, Serializable {
     private static final long serialVersionUID = 20434672384237876L;
     private final static Logger log = Logger.getLogger(AuthSessionImpl.class);
 
-    private transient static List<AuthProviderInterface> authProviderList = null;
-    private transient AuthProviderInterface activeProvider = null;
+    private transient static List<AuthProvider> authProviderList = null;
+    private transient AuthProvider activeProvider = null;
     private transient boolean isAccessChecked = false;
     private transient boolean isAccessDenied = true;
 
-
-    private java.lang.String userLogin;
+    private String userLogin;
 
     /**
      * Field _userPassword
      */
-    private java.lang.String userPassword;
+    private String userPassword;
 
     /**
      * Field _sessionId
      */
-    private java.lang.String sessionId;
+    private String sessionId;
 
     /**
      * Field _userInfo
@@ -71,7 +71,7 @@ public final class AuthSessionImpl implements AuthSession {
 
 
     private transient static Object syncObj = new Object();
-    public static List getAuthProviderList() throws AuthException {
+    public static List<AuthProvider> getAuthProviderList() {
         if (authProviderList==null){
             synchronized(syncObj){
                 if (authProviderList==null) {
@@ -82,11 +82,11 @@ public final class AuthSessionImpl implements AuthSession {
                     catch(Throwable e){
                         String es = "Error get parameter from SSO config file";
                         log.error(es, e);
-                        throw new AuthException(es, e);
+                        throw new IllegalStateException(es, e);
                     }
 
 
-                    authProviderList = new ArrayList<AuthProviderInterface>();
+                    authProviderList = new ArrayList<AuthProvider>();
                     if ( auth!=null ){
                         for (int i=0; i<auth.getAuthProviderCount(); i++){
                             AuthProviderType provider = auth.getAuthProvider(i);
@@ -95,14 +95,14 @@ public final class AuthSessionImpl implements AuthSession {
                                     log.info("Add new auth provider "+provider.getProviderName());
 
                                 try{
-                                    AuthProviderInterface obj = (AuthProviderInterface)MainTools.createCustomObject( provider.getProviderClass() );
+                                    AuthProvider obj = (AuthProvider)MainTools.createCustomObject( provider.getProviderClass() );
                                     obj.setParameters( provider.getProviderParameters() );
                                     authProviderList.add( obj );
                                 }
                                 catch(Throwable e){
                                     String es = "Error create auth provider, name '"+provider.getProviderName()+"', class "+provider.getProviderClass();
                                     log.error(es, e);
-                                    throw new AuthException(es, e);
+                                    throw new IllegalStateException(es, e);
                                 }
                             }
                         }
@@ -115,31 +115,24 @@ public final class AuthSessionImpl implements AuthSession {
 
     protected void finalize() throws Throwable
     {
-        setUserLogin(null);
-        setUserPassword(null);
-        setUserInfo(null);
-        setSessionId(null);
+        userLogin = null;
+        userPassword = null;
+        userInfo = null;
+        sessionId = null;
 
         super.finalize();
-    }
-
-    public AuthSessionImpl() {
     }
 
     public AuthSessionImpl( UserInfo userInfo ) {
         this.userInfo = userInfo;
     }
 
-    public AuthSessionImpl( final String l_, final String p_ ) {
-        setUserLogin(l_);
-        setUserPassword(p_);
-        if (log.isDebugEnabled()) {
-            log.debug("userLogin: " + (l_!=null? (l_.toString()+", class: "+l_.getClass().getName()) :"null") );
-            log.debug("userPassword: " + (p_!=null? (p_.toString()+", class: "+p_.getClass().getName()) :"null") );
-        }
+    public AuthSessionImpl( final String userLogin, final String userPassword ) {
+        this.userLogin = userLogin;
+        this.userPassword = userPassword;
     }
 
-    public boolean checkAccess( final String serverName ) throws AuthException {
+    public boolean checkAccess( final String serverName ) {
 
         isAccessChecked = true;
         isAccessDenied = true;
@@ -148,32 +141,29 @@ public final class AuthSessionImpl implements AuthSession {
         }
 
         boolean status = false;
-        for (int i=0; i<getAuthProviderList().size(); i++) {
-            AuthProviderInterface provider = (AuthProviderInterface)getAuthProviderList().get(i);
+        Iterator<AuthProvider> iterator = getAuthProviderList().iterator();
+        while (iterator.hasNext()) {
+            AuthProvider authProvider = iterator.next();
             if (log.isInfoEnabled())
-                log.info("Check role with provider named '"+provider+"'");
+                log.info("Check role with provider named '"+authProvider+"'");
 
-            try {
-                status = provider.checkAccess( this, serverName );
-            }
-            catch( AuthException e ) {
-                log.error( "Check with provider "+provider.getClass().getName()+" failed. ", e );
-            }
+            status = authProvider.checkAccess( userLogin, userPassword, serverName );
             if (status) {
-                activeProvider = provider;
+                activeProvider = authProvider;
                 break;
             }
+
         }
 
         if (status) {
-            activeProvider.initUserInfo( this );
+            userInfo = activeProvider.initUserInfo( userLogin );
         }
 
         isAccessDenied = !status;
         return status;
     }
 
-    public boolean isUserInRole( final String roleName ) throws AuthException {
+    public boolean isUserInRole( final String roleName ) {
         if (activeProvider==null) {
             log.warn("Access denied by all enabled auth providers");
             return false;
@@ -187,19 +177,16 @@ public final class AuthSessionImpl implements AuthSession {
         if (isAccessDenied)
             return false;
 
-        return activeProvider.isUserInRole( this, roleName );
+        return activeProvider.isUserInRole( userLogin, userPassword, roleName );
     }
 
     public String getName() {
-        if (this.getUserInfo()==null)
+        if (userInfo==null)
             return null;
 
-        String name =
-            (this.getUserInfo().getFirstName()!=null?this.getUserInfo().getFirstName()+' ':"")+
-            (this.getUserInfo().getMiddleName()!=null?this.getUserInfo().getMiddleName()+' ':"")+
-            (this.getUserInfo().getLastName()!=null?this.getUserInfo().getLastName()+' ':"");
+        String name = StringTools.getUserName( userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName() );
 
-        if (name.trim().length()==0)
+        if (StringTools.isEmpty(name))
             return null;
 
         return name;
@@ -209,31 +196,63 @@ public final class AuthSessionImpl implements AuthSession {
         return userLogin;
     }
 
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
-    }
-
     public String getUserPassword() {
         return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
     }
 
     public String getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
     public UserInfo getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public String getGrantedUserId() {
+        return activeProvider.getGrantedUserId( userLogin );
+    }
+
+    public List<Long> getGrantedUserIdList() {
+        return activeProvider.getGrantedUserIdList( userLogin );
+    }
+
+    public List<Long> getGrantedCompanyIdList() {
+        return activeProvider.getGrantedCompanyIdList( userLogin );
+    }
+
+    public String getGrantedGroupCompanyId() {
+        return activeProvider.getGrantedGroupCompanyId( userLogin );
+    }
+
+    public List<Long> getGrantedGroupCompanyIdList() {
+        return activeProvider.getGrantedGroupCompanyIdList( userLogin );
+    }
+
+    public String getGrantedHoldingId() {
+        return activeProvider.getGrantedHoldingId( userLogin );
+    }
+
+    public List<Long> getGrantedHoldingIdList() {
+        return activeProvider.getGrantedHoldingIdList( userLogin );
+    }
+
+    public Long checkCompanyId(Long companyId ) {
+        return activeProvider.checkCompanyId( companyId, userLogin );
+    }
+
+    public Long checkGroupCompanyId(Long groupCompanyId) {
+        return activeProvider.checkGroupCompanyId( groupCompanyId, userLogin );
+    }
+
+    public Long checkHoldingId(Long holdingId) {
+        return activeProvider.checkHoldingId( holdingId, userLogin );
+    }
+
+    public boolean checkRigthOnUser(Long id_auth_user_check, Long id_auth_user_owner) {
+        return activeProvider.checkRigthOnUser( id_auth_user_check, id_auth_user_owner );
+    }
+
+    public AuthInfo getAuthInfo() {
+        return activeProvider.getAuthInfo( userLogin, userPassword );
     }
 }
