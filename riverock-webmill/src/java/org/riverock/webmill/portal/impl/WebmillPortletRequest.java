@@ -42,7 +42,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestWrapper;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.AuthException;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.container.ContainerConstants;
@@ -239,17 +238,11 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             return false;
         }
 
-        try {
-            boolean status = auth.checkAccess( httpRequest.getServerName() );
-            if ( !status )
-                return false;
+        boolean status = auth.checkAccess( httpRequest.getServerName() );
+        if ( !status )
+            return false;
 
-            return auth.isUserInRole( role );
-        }
-        catch( AuthException authException ) {
-            log.error( "Exception in isUserInRole(), role - " + role, authException );
-        }
-        return false;
+        return auth.isUserInRole( role );
     }
 
     public Object getAttribute( String key ) {
@@ -584,6 +577,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             this.cookies = new Cookie[0];
         }
 
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DATA_MANAGER, portalRequestInstance.getPortalDataManager() );
+
         this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getNameTemplate() );
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
@@ -593,7 +588,6 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_QUERY_STRING_ATTRIBUTE, httpRequest.getQueryString() );
         this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );
 
-        // Todo remove dependencies on org.riverock.webmill package
         this.setAttribute( ContainerConstants.PORTAL_COOKIE_MANAGER_ATTRIBUTE, portalRequestInstance.getCookieManager() );
         this.setAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH, this.portalContextPath );
 

@@ -48,6 +48,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.CookieManager;
+import org.riverock.interfaces.portal.PortalDataManager;
 import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.ContainerConstants;
@@ -57,6 +59,7 @@ import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
+import org.riverock.webmill.portal.dao.PortalDataManagerImpl;
 import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.webmill.port.PortalInfoImpl;
 
@@ -90,7 +93,7 @@ public final class PortalRequestInstance {
     private AuthSession auth = null;
     private ActionRequestImpl actionRequest = null;
     private Map<String, Object> httpRequestParameter = null;
-    private CookieManager cookieManager = new CookieManager();
+    private CookieManager cookieManager = new CookieManagerImpl();
     private boolean isTextMimeType = true;
     private String mimeType = null;
 
@@ -102,6 +105,8 @@ public final class PortalRequestInstance {
     private File requestBodyFile = null;
     private boolean isMultiPartRequest = false;
     private int contentLength;
+
+    private PortalDataManager portalDataManager = null;
 
     public void destroy() {
         Iterator iterator = getPageElementList().iterator();
@@ -139,11 +144,16 @@ public final class PortalRequestInstance {
         portalContext = null;
         MainTools.deleteFile( requestBodyFile );
         requestBodyFile = null;
+        portalDataManager = null;
     }
 
     public PortalRequestInstance() {
         startMills = System.currentTimeMillis();
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
+    }
+
+    public PortalDataManager getPortalDataManager() {
+        return portalDataManager;
     }
 
     PortalRequestInstance(
@@ -179,6 +189,7 @@ public final class PortalRequestInstance {
 
             db = DatabaseAdapter.getInstance();
             this.auth = AuthTools.getAuthSession(httpRequest);
+            portalDataManager = new PortalDataManagerImpl( auth );
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
             }

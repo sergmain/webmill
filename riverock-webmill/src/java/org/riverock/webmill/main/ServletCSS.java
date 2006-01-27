@@ -36,8 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.port.PortalInfoImpl;
 
@@ -56,31 +54,25 @@ public final class ServletCSS extends HttpServlet {
 
     public void doPost( final HttpServletRequest request, final HttpServletResponse response )
         throws ServletException, IOException {
-        if ( log.isDebugEnabled() ) {
-            log.debug( "method is POST" );
-        }
-
         doGet( request, response );
     }
 
     public void doGet( final HttpServletRequest request, final HttpServletResponse response )
         throws ServletException, IOException {
 
-        DatabaseAdapter db_ = null;
         Writer out = null;
         try {
             response.setContentType( "text/css" );
             out = response.getWriter();
 
-            db_ = DatabaseAdapter.getInstance();
-            PortalInfoImpl p = PortalInfoImpl.getInstance( db_, request.getServerName() );
+            PortalInfoImpl p = PortalInfoImpl.getInstance( request.getServerName() );
 
             if ( log.isDebugEnabled() )
-                log.debug( "Dynamic status " + p.getSites().getIsCssDynamic() );
+                log.debug( "Dynamic status " + p.getSite().getCssDynamic() );
 
-            if ( Boolean.TRUE.equals( p.getSites().getIsCssDynamic() ) ) {
+            if ( Boolean.TRUE.equals( p.getSite().getCssDynamic() ) ) {
                 if ( log.isDebugEnabled() ) {
-                    log.debug( "ID_SITE " + p.getSites().getIdSite() );
+                    log.debug( "ID_SITE " + p.getSite().getSiteId() );
                     log.debug( "p.getDefaultLocale().toString() " + p.getDefaultLocale().toString() );
                     log.debug( "request parameter " + ContainerConstants.NAME_LANG_PARAM + ": " + request.getParameter( ContainerConstants.NAME_LANG_PARAM ) );
                     log.debug( "Referer: " + Header.getReferer( request ) );
@@ -91,7 +83,8 @@ public final class ServletCSS extends HttpServlet {
                     log.debug( "siteId: " + siteId );
                 }
 
-                ContentCSS css = ContentCSS.getInstance( db_, siteId );
+                // DatabaseAdapter is null, because not used in ContentCSS
+                ContentCSS css = ContentCSS.getInstance( null, siteId );
                 if ( css == null || css.getIsEmpty() ) {
                     out.write( "<style type=\"text/css\"><!-- --></style>" );
                 }
@@ -101,7 +94,7 @@ public final class ServletCSS extends HttpServlet {
                 return;
             }
 
-            String cssFile = ( p.getSites().getCssFile() != null ?p.getSites().getCssFile() :"//styles.css" );
+            String cssFile = ( p.getSite().getCssFile() != null ?p.getSite().getCssFile() :"//styles.css" );
 
             RequestDispatcher dispatcher = request.getRequestDispatcher( cssFile );
             if ( log.isDebugEnabled() ) {
@@ -127,8 +120,6 @@ public final class ServletCSS extends HttpServlet {
             throw new ServletException( es, e );
         }
         finally {
-            DatabaseManager.close( db_ );
-            db_ = null;
             if (out!=null) {
                 out.flush();
                 out.close();

@@ -1,83 +1,45 @@
-/*
- * org.riverock.webmill -- Portal framework implementation
- *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- *
- * Riverock -- The Open-source Java Development Community
- * http://www.riverock.org
- *
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
- */
 package org.riverock.webmill.portal.dao;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
-import org.apache.log4j.Logger;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.webmill.schema.core.WmListLanguageListType;
-import org.riverock.webmill.schema.core.WmListLanguageItemType;
-import org.riverock.webmill.core.GetWmListLanguageFullList;
-import org.riverock.webmill.exception.PortalPersistenceException;
+import org.riverock.webmill.a3.audit.RequestStatisticBean;
+import org.riverock.webmill.main.CssBean;
+import org.riverock.webmill.portal.bean.SiteBean;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.TemplateBean;
+import org.riverock.webmill.portal.bean.PortletNameBean;
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
 
 /**
  * @author SergeMaslyukov
- *         Date: 05.12.2005
- *         Time: 20:23:06
+ *         Date: 27.01.2006
+ *         Time: 0:59:51
  *         $Id$
  */
-public class PortalDAO {
-    private final static Logger log = Logger.getLogger(PortalDAO.class);
+public interface PortalDao {
+    public Collection<String> getSupportedLocales();
+    public ConcurrentMap<String, Long> getUserAgentList();
+    public ConcurrentMap<String, Long> getUrlList();
+    public Map<String, Long> getSiteIdMap();
 
-    private Collection<String> supportedLocales = null;
+    public CssBean getCssBean( Long siteId );
+    public SiteBean getSiteBean( Long siteId );
+    public List<SiteLanguageBean> getSiteLanguageList( Long siteId );
 
-    public PortalDAO() {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            supportedLocales = initSupportedLocales(adapter);
-        }
-        catch (Exception e) {
-            String es = "Error get list";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
+    public void saveRequestStatistic( ConcurrentMap<String, Long> userAgentList, ConcurrentMap<String, Long> urlList, RequestStatisticBean bean );
 
+    public List<CatalogLanguageBean> getCatalogLanguageList(Long siteLanguageId);
 
-    public Collection<String> getSupportedLocales() {
-        return supportedLocales;
-    }
+    public List<CatalogBean> getCatalogList(Long catalogLanguageId);
 
-    private Collection<String> initSupportedLocales( DatabaseAdapter adapter ) throws PortalPersistenceException {
-        Set<String> list = new HashSet<String>();
-        WmListLanguageListType languages = GetWmListLanguageFullList.getInstance( adapter, 1 ).item;
-        for (int i=0; i<languages.getWmListLanguageCount(); i++){
-            WmListLanguageItemType item = languages.getWmListLanguage( i );
-            list.add( item.getShortNameLanguage() );
-        }
-        return list;
-    }
+    public TemplateBean getTemplateBean(Long templateId);
 
+    public PortletNameBean getPortletNameBean(Long portletId);
+
+    public Map<String,XsltTransformer> getTransformerMap(Long siteId);
 }

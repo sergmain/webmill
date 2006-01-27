@@ -24,19 +24,12 @@
  */
 package org.riverock.webmill.main;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Calendar;
+import java.util.Date;
 
-import org.apache.log4j.Logger;
-
-import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.portal.dao.PortalDaoFactory;
 
 /**
  * @author Serge Maslyukov
@@ -44,17 +37,12 @@ import org.riverock.sql.cache.SqlStatementRegisterException;
  * $Id$
  */
 public final class ContentCSS {
-    private final static Logger log = Logger.getLogger(ContentCSS.class);
-
-    private String css = "";
-    private Calendar datePost = null;
+    private CssBean css = new CssBean();
 
     private static CacheFactory cache = new CacheFactory(ContentCSS.class.getName());
 
     protected void finalize() throws Throwable {
         css = null;
-        datePost = null;
-
         super.finalize();
     }
 
@@ -82,74 +70,30 @@ public final class ContentCSS {
         return (ContentCSS) cache.getInstanceNew(db__, id__);
     }
 
-    static String sql_ =
-        "select a.date_post, b.css_data " +
-        "from   WM_PORTAL_CSS a, WM_PORTAL_CSS_DATA b " +
-        "where  a.ID_SITE=? and a.is_current=1 and " +
-        "       a.id_site_content_css=b.id_site_content_css " +
-        "order by ID_SITE_CONTENT_CSS_DATA asc";
-
-    static {
-        try {
-            SqlStatement.registerSql(sql_, ContentCSS.class);
-        }
-        catch (Throwable exception) {
-            final String es = "Exception in SqlStatement.registerSql()";
-            log.error(es, exception);
-            throw new SqlStatementRegisterException(es, exception);
-        }
-    }
-
     public ContentCSS(DatabaseAdapter db_, Long siteId) throws Exception {
         if (siteId == null)
             return;
 
-        PreparedStatement ps = null;
-        ResultSet rset = null;
-        boolean isFirstRecord = true;
-        try {
-            ps = db_.prepareStatement(sql_);
-
-            RsetTools.setLong(ps, 1, siteId);
-            rset = ps.executeQuery();
-            css = "";
-            while (rset.next()) {
-                if (isFirstRecord) {
-                    datePost = RsetTools.getCalendar(rset, "DATE_POST");
-                    isFirstRecord = false;
-                }
-
-                css += RsetTools.getString(rset, "CSS_DATA", "");
-            }
-        }
-        catch (Exception e) {
-            log.error("Exception in ContentCSS()", e);
-            throw e;
-        }
-        finally {
-            DatabaseManager.close(rset, ps);
-            rset = null;
-            ps = null;
-        }
+        css = PortalDaoFactory.getPortalDao().getCssBean( siteId );
     }
 
     public String getCss() {
-        return css;
+        return css.getCss();
     }
 
     public void setCss(String css) {
-        this.css = css;
+        this.css.setCss( css );
     }
 
-    public Calendar getDatePost() {
-        return datePost;
+    public Date getDatePost() {
+        return css.getDate();
     }
 
-    public void setDatePost(Calendar datePost) {
-        this.datePost = datePost;
+    public void setDatePost(Date datePost) {
+        this.css.setDate( datePost );
     }
 
     public boolean getIsEmpty() {
-        return StringTools.isEmpty(css);
+        return StringTools.isEmpty(css.getCss());
     }
 }

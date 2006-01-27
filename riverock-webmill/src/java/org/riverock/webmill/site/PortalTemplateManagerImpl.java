@@ -39,8 +39,8 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.generic.exception.GenericException;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.container.schema.site.SiteTemplateDescListType;
@@ -51,7 +51,6 @@ import org.riverock.webmill.container.portal.bean.PortalTemplateParameterImpl;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
 
 /**
  * $Id$

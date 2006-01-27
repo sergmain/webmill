@@ -24,22 +24,16 @@
  */
 package org.riverock.webmill.port;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.exception.PortalException;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.portal.dao.PortalDaoFactory;
 
 /**
  * $Id$
@@ -75,6 +69,10 @@ public final class PortalXsltList implements XsltTransformerManager {
     public PortalXsltList() {
     }
 
+    private PortalXsltList(Map<String, XsltTransformer> map) {
+        this.hash = map;
+    }
+
     public XsltTransformer getXslt(String lang) {
         if (lang == null) {
             return null;
@@ -87,63 +85,13 @@ public final class PortalXsltList implements XsltTransformerManager {
         return hash.get(lang);
     }
 
-    public static PortalXsltList getInstance(DatabaseAdapter db_, Long idSite) throws PortalException {
+    public static PortalXsltList getInstance(Long siteId) {
 
         if (log.isDebugEnabled()) {
-            log.debug("XsltList. serverName  ID - " + idSite);
+            log.debug("XsltList. serverName  ID - " + siteId);
         }
 
-        PortalXsltList list = new PortalXsltList();
-
-        String sql_ =
-            "select a.CUSTOM_LANGUAGE, d.ID_SITE_XSLT " +
-            "from   WM_PORTAL_SITE_LANGUAGE a, WM_PORTAL_XSLT d " +
-            "where  a.ID_SITE=? and " +
-            "       a.ID_SITE_SUPPORT_LANGUAGE=d.ID_SITE_SUPPORT_LANGUAGE and " +
-            "       d.IS_CURRENT=1";
-
-        PreparedStatement ps = null;
-        ResultSet rset = null;
-
-        Map<String, XsltTransformer> tempHash = new HashMap<String, XsltTransformer>();
-        try {
-            ps = db_.prepareStatement(sql_);
-
-            ps.setObject(1, idSite);
-            rset = ps.executeQuery();
-            while (rset.next()) {
-                String lang = StringTools.getLocale(RsetTools.getString(rset, "CUSTOM_LANGUAGE")).toString();
-                Long id = RsetTools.getLong(rset, "ID_SITE_XSLT");
-
-                if (log.isDebugEnabled()) {
-                    log.debug("XsltList. lang - " + lang);
-                    log.debug("XsltList. id - " + id);
-                }
-
-                XsltTransformer item = PortalXslt.getInstance(db_, id);
-                tempHash.put(lang, item);
-            }
-        }
-        catch (Throwable e) {
-            final String es = "Error create PortalXsltList";
-            log.error(es, e);
-            throw new PortalException(es, e);
-        }
-        finally {
-            DatabaseManager.close(rset, ps);
-            rset = null;
-            ps = null;
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("XsltList. count of templates - " + tempHash.size());
-        }
-
-        if (tempHash.size() == 0)
-            return null;
-
-        list.hash = tempHash;
-
-        return list;
+        Map<String, XsltTransformer> map = PortalDaoFactory.getPortalDao().getTransformerMap( siteId );
+        return new PortalXsltList( map );
     }
 }

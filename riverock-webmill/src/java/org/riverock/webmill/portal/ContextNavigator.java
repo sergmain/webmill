@@ -25,9 +25,9 @@
 package org.riverock.webmill.portal;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -37,11 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portal.PortalInstanceImpl;
-import org.riverock.generic.site.SiteListSite;
-import org.riverock.generic.exception.GenericException;
+import org.riverock.webmill.portal.utils.SiteList;
 
 /**
  * $Id$
@@ -84,14 +80,7 @@ public final class ContextNavigator extends HttpServlet {
     public void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse )
         throws IOException, ServletException {
         Long siteId = null;
-        try {
-            siteId = SiteListSite.getIdSite( httpRequest.getServerName() );
-        }
-        catch (GenericException e) {
-            String es = "Erorr get siteId";
-            log.error( es, e);
-            throw new IllegalStateException( es, e );
-        }
+            siteId = SiteList.getIdSite( httpRequest.getServerName() );
         PortalInstanceImpl portalInstance = portalInstanceMap.get( siteId );
         if (portalInstance==null) {
             portalInstance = createNewPortalInsance( siteId );

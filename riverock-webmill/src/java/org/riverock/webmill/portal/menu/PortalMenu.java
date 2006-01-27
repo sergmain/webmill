@@ -24,43 +24,26 @@
  */
 package org.riverock.webmill.portal.menu;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
 import org.apache.log4j.Logger;
+
 import org.riverock.common.collections.TreeUtils;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
-import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
-import org.riverock.webmill.exception.PortalException;
-
-import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
-import org.riverock.webmill.schema.core.WmPortalCatalogListType;
-import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.*;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.dao.PortalDaoFactory;
 
 /**
  * $Id$
  */
 public final class PortalMenu implements Menu {
     private final static Logger log = Logger.getLogger( PortalMenu.class );
-
-    static{
-        Class c = PortalMenu.class;
-        try{
-            SqlStatement.registerRelateClass( c, GetWmPortalCatalogWithIdSiteCtxLangCatalogList.class );
-        }
-        catch( Exception exception ) {
-            final String es = "Exception in SqlStatement.registerRelateClass()";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
 
     private LinkedList<MenuItem> menuItem = new LinkedList<MenuItem>();
     private boolean isDefault = false;
@@ -179,44 +162,22 @@ public final class PortalMenu implements Menu {
         return false;
     }
 
-    public PortalMenu(DatabaseAdapter db_, WmPortalCatalogLanguageItemType item_) throws Exception {
+    public PortalMenu(CatalogLanguageBean bean) {
 
-        if (item_==null){
-            throw new PortalException("Item of menu is null");
+        if (bean==null){
+            throw new IllegalStateException("Item of menu is null");
         }
 
-        isDefault = item_.getIsDefault();
-        catalogCode = item_.getCatalogCode();
+        isDefault = bean.getDefault();
+        catalogCode = bean.getCatalogCode();
 
         if (log.isDebugEnabled()) log.debug("#33.70.00 ");
 
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try{
-            WmPortalCatalogListType catalogList =
-                    GetWmPortalCatalogWithIdSiteCtxLangCatalogList.getInstance(db_, item_.getIdSiteCtxLangCatalog()).item;
-
-            List<WmPortalCatalogItemType> list = catalogList.getWmPortalCatalogAsReference();
-            Collections.sort(list, new MenuItemComparator());
-
-            Iterator<WmPortalCatalogItemType> it = list.iterator();
-            while (it.hasNext()){
-                WmPortalCatalogItemType item = it.next();
-
-                // Dont include menuitem with id_template==null to menu
-                if (item.getIdSiteTemplate()!=null)
-                    menuItem.add(new PortalMenuItem(db_, item));
-            }
-        }
-        catch(Throwable e) {
-            final String es = "Exception in Menu(....";
-            log.error(es, e);
-            throw new PortalException( es, e );
-        }
-        finally {
-            DatabaseManager.close(rs, ps);
-            rs = null;
-            ps = null;
+        List<CatalogBean> list = PortalDaoFactory.getPortalDao().getCatalogList( bean.getCatalogLanguageId() );
+        Iterator<CatalogBean> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            CatalogBean catalogBean = iterator.next();
+            menuItem.add(new PortalMenuItem( catalogBean ));
         }
 
         if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
@@ -228,33 +189,4 @@ public final class PortalMenu implements Menu {
 
     public void reinit(){}
 
-
-    private class MenuItemComparator implements Comparator<WmPortalCatalogItemType> {
-        public int compare(WmPortalCatalogItemType o1, WmPortalCatalogItemType o2) {
-
-            if (o1==null && o2==null)
-                return 0;
-            if (o1==null)
-                return 1;
-            if (o2==null)
-                return -1;
-
-            // "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC ";
-            if ( o1.getIdTopCtxCatalog().equals( o2 .getIdTopCtxCatalog()))
-            {
-                if ( o1.getOrderField()==null && o2.getOrderField()==null)
-                    return 0;
-
-                if ( o1.getOrderField()!=null && o2.getOrderField()==null )
-                    return -1;
-
-                if ( o1.getOrderField()==null && o2.getOrderField()!=null)
-                    return 1;
-
-                return o1.getOrderField().compareTo( o2.getOrderField() );
-            }
-            else
-                return o1.getIdTopCtxCatalog().compareTo( o2.getIdTopCtxCatalog() );
-        }
-    }
 }

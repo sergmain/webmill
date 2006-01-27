@@ -2,8 +2,11 @@ package org.riverock.webmill.portal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import javax.servlet.http.Cookie;
+
+import org.riverock.interfaces.portal.CookieManager;
 
 /**
  * User: SergeMaslyukov
@@ -11,14 +14,12 @@ import javax.servlet.http.Cookie;
  * Time: 17:58:10
  * $Id$
  */
-public final class CookieManager {
+public final class CookieManagerImpl implements CookieManager {
     private List<Cookie> list = new ArrayList<Cookie>();
 
     protected void finalize() throws Throwable {
-        if (list!=null) {
-            list.clear();
-            list = null;
-        }
+        list.clear();
+        list = null;
         super.finalize();
     }
 
@@ -27,7 +28,7 @@ public final class CookieManager {
             list.add( cookie );
     }
 
-    List<Cookie> getCookieList() {
-        return list;
+    public List<Cookie> getCookieList() {
+        return Collections.unmodifiableList(list);
     }
 }
