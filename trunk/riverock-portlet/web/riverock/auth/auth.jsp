@@ -82,6 +82,9 @@
         </t:panelTab>
 
         <t:panelTab id="tab2" label="#{msg['tabbed_tab2']}">
+        <f:subview id="role-subview">
+            <jsp:include page="role/role.jsp"/>
+        </f:subview>
         </t:panelTab>
 
     </t:panelTabbedPane>
