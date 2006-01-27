@@ -52,8 +52,8 @@
 	<DbTablePrefix>WM_PORTLET_ARTICLE</DbTablePrefix>
 	<DbTablePrefix>WM_LIST_LANGUAGE</DbTablePrefix>
 
-	<DbTablePrefix>WM_CASH</DbTablePrefix>
-	<DbTablePrefix>WM_PRICE</DbTablePrefix>
+<!--	<DbTablePrefix>WM_CASH</DbTablePrefix>-->
+<!--	<DbTablePrefix>WM_PRICE</DbTablePrefix>-->
 
 	<DbTablePrefix>WM_NEWS</DbTablePrefix>
 
