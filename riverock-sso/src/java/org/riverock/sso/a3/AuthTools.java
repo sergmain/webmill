@@ -24,103 +24,26 @@
  */
 package org.riverock.sso.a3;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.portlet.PortletRequest;
 
 import org.riverock.sso.main.Constants;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.AuthException;
-
-import org.apache.log4j.Logger;
+import org.riverock.interfaces.sso.a3.AuthInfo;
 
 /**
  * $Id$
  */
-public final class AuthTools
-{
-    private static Logger log = Logger.getLogger(AuthTools.class);
+public final class AuthTools {
 
-    public static AuthSession check(PortletRequest request, HttpServletResponse response, String defURL)
-        throws AuthException{
-        return check(getAuthSession(request), response, defURL, request.getServerName());
-    }
-
-    public static AuthSession check(HttpServletRequest request, HttpServletResponse response, String defURL)
-        throws AuthException{
-        return check(getAuthSession(request), response, defURL, request.getServerName());
-    }
-
-    public static AuthSession check(AuthSession authSession, HttpServletResponse response, String defURL, String serverName)
-        throws AuthException{
-        if (log.isDebugEnabled())
-            log.debug("AUTH_SESSION - " + authSession);
-
-        if (authSession == null){
-
-            // work arounf java.lang.IllegalStateException
-            // XXX это исключение возникает из-за того что делается response.sendRedirect()
-            // не в оригиральном объекте, а в клоне.
-            // отследить какие объекты генерируют это исключение
-            long currentTimeMills = System.currentTimeMillis();
-            for (int i = 0; i < 5; i++){
-                try{
-                    response.sendRedirect(defURL);
-                    break;
-                }
-                catch (IOException e){
-                    final String es = "IOException auth check. Send redirect failed ";
-                    log.error(es, e);
-                    throw new AuthException( es, e );
-                }
-                catch (IllegalStateException e){
-                    if (i == 4) { // last loop
-                        final String es = "IllegalStateException auth check. Send redirect failed ";
-                        log.error(es, e);
-                        throw new AuthException( es, e );
-                    }
-                    else{
-                        if (log.isInfoEnabled())
-                            log.info("Exception  IllegalStateException processed. Loop - " + (i + 1));
-
-                        // wait for 3 second
-                        while ((System.currentTimeMillis() - currentTimeMills) < 3000)
-                            for (int j = 0; j < 50; j++) ;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        try{
-            if (!authSession.checkAccess( serverName )){
-                if (log.isDebugEnabled())
-                    log.debug("redirect to - " + defURL);
-
-                response.sendRedirect(defURL);
-                return null;
-            }
-        }
-        catch (Exception e){
-            final String es = "Exception auth check. Access denied.";
-            log.error(es, e);
-            throw new AuthException( es, e );
-        }
-        return authSession;
-    }
-
-    public static AuthInfo getAuthInfo(PortletRequest request)
-        throws AuthException {
+    public static AuthInfo getAuthInfo(PortletRequest request) {
 
         AuthSession authSession = getAuthSession(request);
         if (authSession == null)
             return null;
 
-        return InternalAuthProvider.getAuthInfo( authSession );
+        return authSession.getAuthInfo();
     }
 
     public static AuthSession getAuthSession(HttpSession session){

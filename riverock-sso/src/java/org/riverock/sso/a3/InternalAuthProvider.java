@@ -24,22 +24,17 @@
  */
 package org.riverock.sso.a3;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.io.Serializable;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.site.SiteListSite;
-import org.riverock.sso.schema.config.AuthProviderParametersListType;
-import org.riverock.sso.schema.core.WmAuthUserItemType;
-import org.riverock.sso.main.MainUserInfo;
-import org.riverock.sso.core.GetWmAuthUserItem;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.interfaces.sso.a3.AuthException;
-import org.riverock.interfaces.sso.a3.AuthSession;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.sso.dao.AuthDao;
+import org.riverock.sso.dao.AuthDaoImpl;
+import org.riverock.sso.main.MainUserInfo;
+import org.riverock.sso.schema.config.AuthProviderParametersListType;
 
 /**
  * User: Admin
@@ -48,273 +43,87 @@ import org.apache.log4j.Logger;
  *
  * $Id$
  */
-public final class InternalAuthProvider implements AuthProviderInterface, Serializable {
+public final class InternalAuthProvider implements AuthProvider, Serializable {
     private static final long serialVersionUID = 20434672384237113L;
 
     private final static Logger log = Logger.getLogger( InternalAuthProvider.class );
 
+    private AuthDao authDao = new AuthDaoImpl();
+
     public InternalAuthProvider() {
     }
 
-    boolean checkAccess( final DatabaseAdapter adapter, final AuthSessionImpl authSession, final String serverName ) throws AuthException {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        boolean isValid = false;
-
-        String sql_ =
-            "select a.ID_USER from WM_AUTH_USER a, WM_LIST_USER b, " +
-            "( " +
-            "select z1.USER_LOGIN from V$_READ_LIST_FIRM z1, WM_PORTAL_LIST_SITE x1 " +
-            "where x1.ID_SITE=? and z1.ID_FIRM = x1.ID_FIRM " +
-            "union " +
-            "select y1.USER_LOGIN from WM_AUTH_USER y1 where y1.IS_ROOT=1 " +
-            ") c " +
-            "where  a.USER_LOGIN=? and a.USER_PASSWORD=? and " +
-            "a.ID_USER = b.ID_USER and b.is_deleted=0 and a.USER_LOGIN=c.USER_LOGIN ";
-
-        try {
-
-            Long idSite = SiteListSite.getIdSite( serverName );
-            if ( log.isDebugEnabled() )
-                log.debug( "serverName " + serverName + ", idSite " + idSite );
-
-            ps = adapter.prepareStatement( sql_ );
-
-            RsetTools.setLong( ps, 1, idSite );
-            ps.setString( 2, authSession.getUserLogin() );
-            ps.setString( 3, authSession.getUserPassword() );
-
-            rs = ps.executeQuery();
-            if ( rs.next() )
-                isValid = true;
-
-        }
-        catch( Exception e1 ) {
-            log.error( "SQL:\n" + sql_ );
-            final String es = "Error check checkAccess()";
-            log.error( es, e1 );
-            throw new AuthException( es, e1 );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-        if ( log.isDebugEnabled() )
-            log.debug( "isValid " + isValid );
-
-        return isValid;
+    public boolean checkAccess( String userLogin, String userPassword, final String serverName ) {
+        return authDao.checkAccess( userLogin, userPassword, serverName );
     }
 
-    boolean checkAccessMySql( final DatabaseAdapter adapter, final AuthSessionImpl authSession, final String serverName ) throws AuthException {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        boolean isValid = false;
-
-        String sql_ =
-            "select a.* from WM_AUTH_USER a, WM_LIST_USER b " +
-            "where  a.USER_LOGIN=? and a.USER_PASSWORD=? and " +
-            "       a.ID_USER = b.ID_USER and b.is_deleted=0";
-
-        try {
-
-            Long idSite = SiteListSite.getIdSite( serverName );
-            if ( log.isDebugEnabled() )
-                log.debug( "serverName " + serverName + ", idSite " + idSite );
-
-            ps = adapter.prepareStatement( sql_ );
-
-            ps.setString( 1, authSession.getUserLogin() );
-            ps.setString( 2, authSession.getUserPassword() );
-
-            rs = ps.executeQuery();
-            if ( !rs.next() )
-                return false;
-
-            WmAuthUserItemType item = GetWmAuthUserItem.fillBean( rs );
-            rs.close();
-            rs = null;
-            ps.close();
-            ps = null;
-
-            if ( Boolean.TRUE.equals( item.getIsRoot() ) )
-                return true;
-
-            sql_ =
-                "select  a01.id_firm, a01.user_login, a01.id_user, a01.id_auth_user " +
-                "from    WM_AUTH_USER a01, WM_PORTAL_LIST_SITE f01 " +
-                "where   a01.is_use_current_firm = 1 and a01.ID_FIRM = f01.ID_FIRM and f01.ID_SITE=? and " +
-                "        a01.user_login=? " +
-                "union " +
-                "select  d02.id_firm, a02.user_login, a02.id_user, a02.id_auth_user " +
-                "from    WM_AUTH_USER a02, WM_LIST_R_GR_COMP_COMP d02, WM_PORTAL_LIST_SITE f02 " +
-                "where   a02.is_service = 1 and a02.id_service = d02.id_service and " +
-                "        d02.id_firm= f02.ID_FIRM and f02.ID_SITE=? and a02.user_login=? " +
-                "union " +
-                "select  e03.id_firm, a03.user_login, a03.id_user, a03.id_auth_user " +
-                "from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GR_COMPANY d03, WM_LIST_R_GR_COMP_COMP e03, WM_PORTAL_LIST_SITE f03 " +
-                "where   a03.is_road = 1 and a03.id_road = d03.id_road and " +
-                "        d03.id_service = e03.id_service and e03.id_firm = f03.ID_FIRM and f03.ID_SITE=? and " +
-                "        a03.user_login=? " +
-                "union " +
-                "select  b04.id_firm, a04.user_login, a04.id_user, a04.id_auth_user " +
-                "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04, WM_PORTAL_LIST_SITE f04 " +
-                "where   a04.is_root = 1 and b04.ID_FIRM = f04.ID_FIRM and f04.ID_SITE=? and " +
-                "        a04.user_login=? ";
-
-            ps = adapter.prepareStatement( sql_ );
-
-            RsetTools.setLong( ps, 1, idSite );
-            ps.setString( 2, authSession.getUserLogin() );
-            RsetTools.setLong( ps, 3, idSite );
-            ps.setString( 4, authSession.getUserLogin() );
-            RsetTools.setLong( ps, 5, idSite );
-            ps.setString( 6, authSession.getUserLogin() );
-            RsetTools.setLong( ps, 7, idSite );
-            ps.setString( 8, authSession.getUserLogin() );
-
-            rs = ps.executeQuery();
-
-            if ( rs.next() )
-                isValid = true;
-
-        }
-        catch( Exception e1 ) {
-            log.error( "SQL:\n" + sql_ );
-            final String es = "Error check checkAccess()";
-            log.error( es, e1 );
-            throw new AuthException( es, e1 );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-        if ( log.isDebugEnabled() )
-            log.debug( "isValid " + isValid );
-
-        return isValid;
+    public void setParameters( final AuthProviderParametersListType params ) {
     }
 
-    public boolean checkAccess( final AuthSessionImpl authSession, final String serverName ) throws AuthException {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            switch( db_.getFamaly() ) {
-                case DatabaseManager.MYSQL_FAMALY:
-                    return checkAccessMySql( db_, authSession, serverName );
-                default:
-                    return checkAccess( db_, authSession, serverName );
-            }
-        }
-        catch( Exception e1 ) {
-            final String es = "Error check checkAccess()";
-            log.error( es, e1 );
-            throw new AuthException( es, e1 );
-        }
-        finally {
-            DatabaseManager.close( db_ );
-            db_ = null;
-        }
+    public boolean isUserInRole( String userLogin, String userPassword, final String role_ ) {
+        return authDao.isUserInRole(userLogin, userPassword, role_);
     }
 
-
-    public void setParameters( final AuthProviderParametersListType params ) throws Exception {
-    }
-
-    public boolean isUserInRole( final AuthSessionImpl authSession, final String role_ )
-        throws AuthException {
-        if ( log.isDebugEnabled() )
-            log.debug( "role '" + role_ + "', user login '" + authSession.getUserLogin() + "'  " );
-
-        if ( authSession.getUserLogin() == null ||
-            authSession.getUserLogin().trim().length() == 0 ||
-            authSession.getUserPassword() == null ||
-            role_ == null ||
-            role_.trim().length() == 0 )
-            return false;
-
-        long startMills = 0;
-        if ( log.isInfoEnabled() )
-            startMills = System.currentTimeMillis();
-
-        PreparedStatement ps = null;
-        ResultSet rset = null;
-        DatabaseAdapter db_ = null;
-        AuthInfo authInfo = null;
+    public UserInfo initUserInfo( String userLogin ) {
         try {
-            db_ = DatabaseAdapter.getInstance();
-            authInfo = AuthInfo.getInstance( db_, authSession.getUserLogin(), authSession.getUserPassword() );
-
-            if ( authInfo == null )
-                return false;
-
-            if ( log.isDebugEnabled() )
-                log.debug( "userLogin " + authSession.getUserLogin() + " role " + role_ );
-
-            if ( authInfo.getRoot() == 1 )
-                return true;
-
-            if ( log.isDebugEnabled() )
-                log.debug( "#1.011" );
-
-            ps = db_.prepareStatement( "select null " +
-                "from   WM_AUTH_USER a, WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_ACCESS_GROUP c " +
-                "where  a.USER_LOGIN=? and " +
-                "       a.ID_AUTH_USER=b.ID_AUTH_USER and " +
-                "       b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP and " +
-                "       c.NAME_ACCESS_GROUP=?" );
-
-            ps.setString( 1, authSession.getUserLogin() );
-            ps.setString( 2, role_ );
-
-            rset = ps.executeQuery();
-
-            return rset.next();
+            return MainUserInfo.getInstance( userLogin );
         }
         catch( Exception e ) {
-            final String es = "Error getRigth(), role " + role_;
+            final String es = "Error user info for user login: " + userLogin;
             log.error( es, e );
-            throw new AuthException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db_, rset, ps );
-            rset = null;
-            ps = null;
-            db_ = null;
-
-            if ( log.isInfoEnabled() )
-                log.info( "right processed for " + ( System.currentTimeMillis() - startMills ) + " milliseconds" );
+            throw new IllegalStateException( es, e );
         }
     }
 
-    public static AuthInfo getAuthInfo( final AuthSession authSession )
-        throws AuthException {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            return AuthInfo.getInstance( db_, authSession.getUserLogin(), authSession.getUserPassword() );
-        }
-        catch( Exception e ) {
-            final String es = "Error getAuthInfo ";
-            log.error( es, e );
-            throw new AuthException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db_ );
-            db_ = null;
-        }
+    public String getGrantedUserId( String userLogin ) {
+        return authDao.getGrantedUserId( userLogin );
     }
 
-    public void initUserInfo( final AuthSessionImpl authSession ) throws AuthException {
-        try {
-            MainUserInfo info = MainUserInfo.getInstance( authSession.getUserLogin() );
-            authSession.setUserInfo( info );
-        }
-        catch( Exception e ) {
-            final String es = "Error MainUserInfo.getInstance(db_, getUserLogin())";
-            log.error( es, e );
-            throw new AuthException( es, e );
-        }
+    public List<Long> getGrantedUserIdList( String userLogin ) {
+        return authDao.getGrantedUserIdList( userLogin );
+    }
+
+    public List<Long> getGrantedCompanyIdList( String userLogin ) {
+        return authDao.getGrantedCompanyIdList( userLogin );
+    }
+
+    public String getGrantedGroupCompanyId( String userLogin ) {
+        return authDao.getGrantedGroupCompanyId( userLogin );
+    }
+
+    public List<Long> getGrantedGroupCompanyIdList( String userLogin ) {
+        return authDao.getGrantedGroupCompanyIdList( userLogin );
+    }
+
+    public String getGrantedHoldingId( String userLogin ) {
+        return authDao.getGrantedHoldingId( userLogin );
+    }
+
+    public List<Long> getGrantedHoldingIdList( String userLogin ) {
+        return authDao.getGrantedHoldingIdList( userLogin );
+    }
+
+    public Long checkCompanyId(Long companyId , String userLogin ) {
+        return authDao.checkCompanyId( companyId, userLogin );
+    }
+
+    public Long checkGroupCompanyId(Long groupCompanyId, String userLogin ) {
+        return authDao.checkGroupCompanyId( groupCompanyId, userLogin );
+    }
+
+    public Long checkHoldingId(Long holdingId, String userLogin ) {
+        return authDao.checkHoldingId( holdingId, userLogin );
+    }
+
+    public boolean checkRigthOnUser(Long id_auth_user_check, Long id_auth_user_owner) {
+        return authDao.checkRigthOnUser( id_auth_user_check, id_auth_user_owner );
+    }
+
+    public AuthInfo getAuthInfo(String userLogin, String userPassword) {
+        return authDao.getAuthInfo( userLogin, userPassword );
+    }
+
+    public AuthInfo getAuthInfo(Long authUserId) {
+        return authDao.getAuthInfo( authUserId );
     }
 }
