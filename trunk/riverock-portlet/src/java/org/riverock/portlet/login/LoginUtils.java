@@ -38,7 +38,6 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.sso.a3.AuthSessionImpl;
 
 /**
  * Author: mill
@@ -114,16 +113,13 @@ public final class LoginUtils {
 
             if(log.isDebugEnabled())
                 log.debug("mills "+currentTimeMills);
-/*
-            while ( (System.currentTimeMillis() - currentTimeMills)<3000)
-                for (int i=0; i<50; i++);
 
-*/
+            try {
+                Thread.sleep(3000);
+            }
+            catch(InterruptedException e){
 
-try {
-  Thread.sleep(3000);
-}
-catch(InterruptedException e){}
+            }
 
             if(log.isDebugEnabled())
                 log.debug("mills "+System.currentTimeMillis());

@@ -73,7 +73,6 @@ import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.sso.utils.AuthHelper;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -114,6 +113,7 @@ public final class MemberProcessing {
     private String commitURI = null;
     private Long firmId = null;
     private Long userId = null;
+    private AuthSession authSession = null;
 
     public void destroy()
     {
@@ -257,19 +257,16 @@ public final class MemberProcessing {
                                 if (log.isDebugEnabled())
                                     log.debug("nameFirmField: "+nameFirmField);
 
-                                if (nameFirmField!=null)
-                                {
-                                    List list = AuthHelper.getGrantedCompanyIdList(db_, renderRequest.getRemoteUser());
-                                    Long id = PortletService.getLong(renderRequest,
-                                        mod.getName() + '.' + nameFirmField);
+                                if (nameFirmField!=null) {
+                                    List list = authSession.getGrantedCompanyIdList();
+                                    Long id = PortletService.getLong(renderRequest, mod.getName() + '.' + nameFirmField);
 
                                     log.debug("id: "+id);
                                     if (id==null)
                                         return false;
 
                                     boolean isFound = false;
-                                    for (int k=0; k<list.size(); k++)
-                                    {
+                                    for (int k=0; k<list.size(); k++) {
                                         if (id.equals((Long)list.get(k)))
                                             isFound=true;
                                     }
@@ -535,7 +532,7 @@ public final class MemberProcessing {
                 ContentType cnt = MemberServiceClass.getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, renderRequest.getRemoteUser(), renderRequest.getServerName());
+                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, renderRequest.getServerName(), authSession );
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -607,10 +604,9 @@ public final class MemberProcessing {
             if (whereSQL.length() > 0)
                 whereSQL += " and ";
 
-            switch (db_.getFamaly())
-            {
+            switch (db_.getFamaly()) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId(db_, renderRequest.getRemoteUser());
+                    String idList = authSession.getGrantedCompanyId();
 
                     whereSQL += prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                         ".ID_FIRM in ("+idList+") ";
@@ -659,7 +655,7 @@ public final class MemberProcessing {
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = AuthHelper.getGrantedUserId(db_, renderRequest.getRemoteUser());
+                    String idUser = authSession.getGrantedUserId();
                     whereSQL +=
                         prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                         ".ID_USER in ("+idUser+") ";
@@ -726,7 +722,7 @@ public final class MemberProcessing {
                 ContentType cnt = MemberServiceClass.getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, renderRequest.getRemoteUser(), renderRequest.getServerName());
+                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, renderRequest.getServerName(), authSession );
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -777,7 +773,7 @@ public final class MemberProcessing {
 
         }
 
-        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, db_, renderRequest.getRemoteUser(), renderRequest.getServerName());
+        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, db_, renderRequest.getServerName(), authSession );
 
         if (sc.from.length() != 0)
         {
@@ -839,7 +835,7 @@ public final class MemberProcessing {
                 ContentType cnt = MemberServiceClass.getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, renderRequest.getRemoteUser(), renderRequest.getServerName());
+                    lookupSc = MemberServiceClass.buildSelectClause(content, cnt, module, db_, renderRequest.getServerName(), authSession );
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -886,7 +882,7 @@ public final class MemberProcessing {
                 '.' + prevPK;
         }
 
-        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, db_, renderRequest.getRemoteUser(), renderRequest.getServerName());
+        lookupSc = MemberServiceClass.buildSelectClause(content, content, mod, db_, renderRequest.getServerName(), authSession );
 
         if (sc.from.length() != 0) {
             if (lookupSc.from.length() != 0)
@@ -2548,7 +2544,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId(db_, renderRequest.getRemoteUser());
+                    String idList = authSession.getGrantedCompanyId();
 
                     whereSQL += qa.getMainRefTable() +
                         ".ID_FIRM in ("+idList+") ";
@@ -3730,12 +3726,12 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         if (this.renderResponse== null)
             throw new Exception("renderResponse must not null");
 
-        AuthSession auth = (AuthSession)this.renderRequest.getUserPrincipal();
-        if (auth==null)
+        authSession = (AuthSession)this.renderRequest.getUserPrincipal();
+        if (authSession==null)
             throw new Exception("UserPrincipal not initialized");
 
-        this.firmId = auth.getUserInfo().getCompanyId();
-        this.userId = auth.getUserInfo().getUserId();
+        this.firmId = authSession.getUserInfo().getCompanyId();
+        this.userId = authSession.getUserInfo().getUserId();
 
         fromParam = RequestTools.getString(this.renderRequest, MemberConstants.MEMBER_FROM_PARAM, "").trim();
         db_ = DatabaseAdapter.getInstance();
@@ -3792,7 +3788,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
     public void process_Yes_1_No_N_Fields(DatabaseAdapter dbDyn)
         throws Exception
     {
-        String sql_ = MemberServiceClass.buildUpdateSQL( dbDyn, content, fromParam, mod, false, renderRequest.getParameterMap(), renderRequest.getRemoteUser(), renderRequest.getServerName(), moduleManager );
+        String sql_ = MemberServiceClass.buildUpdateSQL( dbDyn, content, fromParam, mod, false, renderRequest.getParameterMap(), renderRequest.getRemoteUser(), renderRequest.getServerName(), moduleManager, authSession );
 
         log.info("sql for update yes1-noN\n" + sql_);
 
@@ -3856,5 +3852,9 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
     public String getFromParam() {
         return fromParam;
+    }
+
+    public AuthSession getAuthSession() {
+        return authSession;
     }
 }

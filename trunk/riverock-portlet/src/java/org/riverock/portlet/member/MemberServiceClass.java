@@ -27,7 +27,6 @@ package org.riverock.portlet.member;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -56,7 +55,7 @@ import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 import org.riverock.portlet.schema.member.types.TypeFieldType;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.sso.utils.AuthHelper;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * User: Admin
@@ -184,8 +183,8 @@ public final class MemberServiceClass {
         return null;
     }
 
-    public static String buildInsertSQL(ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn, 
-        String remoteUser, String serverName, ModuleManager moduleManager)
+    public static String buildInsertSQL( ContentType content1, String fromParam1, ModuleType mod1, DatabaseAdapter dbDyn,
+        String serverName, ModuleManager moduleManager, AuthSession authSession )
         throws Exception
     {
 
@@ -225,7 +224,7 @@ public final class MemberServiceClass {
 
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    SqlClause lookupSc = buildSelectClause(content1, cnt, module, dbDyn, remoteUser, serverName);
+                    SqlClause lookupSc = buildSelectClause(content1, cnt, module, dbDyn, serverName, authSession );
                     // из lookupSc берем только from (таблицы) и where(условия)
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
@@ -579,8 +578,8 @@ public final class MemberServiceClass {
         return false;
     }
 
-    public static SqlClause buildSelectClause(ContentType contentMain, ContentType cnt, ModuleType module, DatabaseAdapter db_, String remoteUser, String serverName)
-        throws SQLException, MemberException
+    public static SqlClause buildSelectClause( ContentType contentMain, ContentType cnt, ModuleType module, DatabaseAdapter db_, String serverName, AuthSession authSession )
+        throws MemberException
     {
         SqlClause sc = new SqlClause();
 
@@ -677,7 +676,7 @@ public final class MemberServiceClass {
             switch (db_.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId(db_, remoteUser);
+                    String idList = authSession.getGrantedCompanyId();
 
                     sc.where +=
                         MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
@@ -992,7 +991,7 @@ public final class MemberServiceClass {
     public static String buildUpdateSQL( DatabaseAdapter dbDyn, ContentType content, String fromParam,
         ModuleType mod,
         boolean isUsePrimaryKey, Map map, String remoteUser, String serverName,
-        ModuleManager moduleManager)
+        ModuleManager moduleManager, AuthSession authSession )
         throws Exception
     {
         if (content == null || content.getQueryArea() == null)
@@ -1068,7 +1067,7 @@ public final class MemberServiceClass {
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, remoteUser, serverName);
+                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, serverName, authSession );
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -1173,7 +1172,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId(dbDyn, remoteUser);
+                    String idList = authSession.getGrantedCompanyId();
 
                     where_ += " ID_FIRM in ("+idList+") ";
 
@@ -1238,7 +1237,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = AuthHelper.getGrantedUserId(dbDyn, remoteUser);
+                    String idUser = authSession.getGrantedUserId();
                     where_ += " ID_USER in ("+idUser+") ";
                     break;
 
@@ -1325,7 +1324,7 @@ public final class MemberServiceClass {
     }
 
     public static String buildDeleteSQL( DatabaseAdapter dbDyn, ModuleType mod, ContentType content, String fromParam,
-        Map map, String remoteUser, String serverName, ModuleManager moduleManager )
+        Map map, String remoteUser, String serverName, ModuleManager moduleManager, AuthSession authSession )
         throws Exception
     {
         String insTable = content.getQueryArea().getTable(0).getTable();
@@ -1365,7 +1364,7 @@ public final class MemberServiceClass {
                 ContentType cnt = getContent(module, ContentTypeActionType.INDEX_TYPE);
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
-                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, remoteUser, serverName );
+                    lookupSc = buildSelectClause(content, cnt, module, dbDyn, serverName, authSession );
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
@@ -1468,7 +1467,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId(dbDyn, remoteUser );
+                    String idList = authSession.getGrantedCompanyId();
                     // do update without aliases
                     where_ += " and ID_FIRM in ("+idList+") ";
 
@@ -1514,7 +1513,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idUser = AuthHelper.getGrantedUserId(dbDyn, remoteUser );
+                    String idUser = authSession.getGrantedUserId();
                     where_ += " and ID_USER in ("+idUser+") ";
                     break;
 

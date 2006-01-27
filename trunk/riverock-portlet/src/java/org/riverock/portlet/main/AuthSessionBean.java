@@ -1,18 +1,16 @@
-package org.riverock.portlet.auth.user.bean;
+package org.riverock.portlet.main;
+
+import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.FacesTools;
 
-/**
- * @author SergeMaslyukov
- *         Date: 02.01.2006
- *         Time: 9:26:35
- *         $Id$
- */
-public class ModuleUserBean {
+public class AuthSessionBean implements Serializable {
+    private static final long serialVersionUID = 2055005503L;
+
     private AuthSession authSession = null;
 
-    public ModuleUserBean() {
+    public AuthSessionBean() {
         this.authSession = ( AuthSession ) FacesTools.getUserPrincipal();
     }
 
@@ -47,4 +45,13 @@ public class ModuleUserBean {
     public boolean isHolding() {
         return authSession!=null?authSession.getAuthInfo().isHolding():false;
     }
+
+    public Long getGroupCompanyId() {
+        return authSession!=null?authSession.getAuthInfo().getGroupCompanyId():null;
+    }
+
+    public Long getHoldingId() {
+        return authSession!=null?authSession.getAuthInfo().getHoldingId():null;
+    }
+
 }

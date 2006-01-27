@@ -37,7 +37,6 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.portlet.register.bean.CreateAccountBean;
 import org.riverock.portlet.register.RegisterConstants;
-import org.riverock.sso.a3.InternalAuthProviderTools;
 
 /**
  * @author SergeMaslyukov

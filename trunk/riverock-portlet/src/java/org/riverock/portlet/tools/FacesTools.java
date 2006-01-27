@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.portlet.PortletRequest;
 
 /**
  * @author SergeMaslyukov
@@ -53,12 +54,34 @@ public class FacesTools {
         return ( HttpSession ) getFacesContext().getExternalContext().getSession( false );
     }
 
-    public static final HttpServletRequest getRequest() {
-        return ( HttpServletRequest ) getFacesContext().getExternalContext().getRequest();
+    public static Object getAttribute(String name) {
+        Object obj = getFacesContext().getExternalContext().getRequest();
+        if (obj instanceof PortletRequest) {
+            return ((PortletRequest)obj).getAttribute( name );
+        }
+        else if (obj instanceof HttpServletRequest) {
+            return ((HttpServletRequest)obj).getAttribute( name );
+        }
+
+        throw new IllegalStateException("request type is not HttpServletRequest and not PortletRequest. Type: " + obj.getClass().getName() );
     }
 
-    public static final HttpServletResponse getResponse() {
-        return ( HttpServletResponse ) getFacesContext().getExternalContext().getResponse();
+    public static final HttpServletRequest getRequest() {
+        Object obj = getFacesContext().getExternalContext().getRequest();
+        if (obj instanceof HttpServletRequest) {
+            return (HttpServletRequest)obj;
+        }
+
+        throw new IllegalStateException("request type is not HttpServletRequest");
+    }
+
+    public static final HttpServletResponse getHttpServletResponse() {
+        Object obj = getFacesContext().getExternalContext().getResponse();
+        if (obj instanceof HttpServletResponse) {
+            return (HttpServletResponse)obj;
+        }
+
+        throw new IllegalStateException("responce type is not HttpServletResponse");
     }
 
     public static final Principal getUserPrincipal() {

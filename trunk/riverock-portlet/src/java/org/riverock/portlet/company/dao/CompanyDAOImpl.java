@@ -1,48 +1,48 @@
 package org.riverock.portlet.company.dao;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.io.Serializable;
-import org.riverock.portlet.company.bean.CompanyBean;
-import org.riverock.generic.db.*;
-import org.riverock.sso.utils.AuthHelper;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.sso.a3.InternalAuthProviderTools;
+import org.riverock.portlet.company.bean.CompanyBean;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 public class CompanyDAOImpl implements CompanyDAO, Serializable {
     private static final long serialVersionUID = 2055005512L;
     private static final Logger log = Logger.getLogger( CompanyDAOImpl.class );
-	
-	/* (non-Javadoc)
-	 */
-	public CompanyBean loadCompany(Long companyId, String userLogin) {
-		if (companyId==null) {
-			return null;
-		}
-		DatabaseAdapter db = null;
-		ResultSet rs = null;
-		PreparedStatement ps = null;
-		try {
-			db = DatabaseAdapter.getInstance();
-			
+
+    /* (non-Javadoc)
+     */
+    public CompanyBean loadCompany( Long companyId, AuthSession authSession ) {
+        if( companyId == null ) {
+            return null;
+        }
+        DatabaseAdapter db = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+
             String sql =
-                "select ID_FIRM, full_name, short_name, "+
-                "	    address, chief, buh, url,  "+
-                "	    short_info, is_work, is_search "+
-                "from 	WM_LIST_COMPANY "+
+                "select ID_FIRM, full_name, short_name, " +
+                "	    address, chief, buh, url,  " +
+                "	    short_info, is_work, is_search " +
+                "from 	WM_LIST_COMPANY " +
                 "where  is_deleted=0 and ID_FIRM=? and ID_FIRM in ";
 
-            switch (db.getFamaly()) {
+            switch( db.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId(db, userLogin);
+                    String idList = authSession.getGrantedCompanyId();
 
-                    sql += " ("+idList+") ";
+                    sql += " (" + idList + ") ";
 
                     break;
                 default:
@@ -52,55 +52,54 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
             }
             ps = db.prepareStatement( sql );
             int idx = 1;
-            ps.setLong(idx++, companyId);
-            switch (db.getFamaly()) {
+            ps.setLong( idx++, companyId );
+            switch( db.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
-                    ps.setString(idx++, userLogin);
+                    ps.setString( idx++, authSession.getUserLogin() );
                     break;
             }
 
             rs = ps.executeQuery();
 
             CompanyBean company = null;
-            if ( rs.next() ) {
-            	company = loadCompanyFromResultSet( rs );
+            if( rs.next() ) {
+                company = loadCompanyFromResultSet( rs );
             }
             return company;
-		}
-		catch(Exception e) {
-			String es = "Error load company for id: " + companyId;
-			throw new IllegalStateException(es, e);
-		}
-		finally {
-			DatabaseManager.close( db, rs, ps);
-			db = null;
-			rs = null;
-			ps = null;
-		}
-	}
+        }
+        catch( Exception e ) {
+            String es = "Error load company for id: " + companyId;
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, rs, ps );
+            db = null;
+            rs = null;
+            ps = null;
+        }
+    }
 
-	public List<CompanyBean> getCompanyList( String userLogin ) {
-		DatabaseAdapter db = null;
-		ResultSet rs = null;
-		PreparedStatement ps = null;
-		try {
-			db = DatabaseAdapter.getInstance();
-			
+    public List<CompanyBean> getCompanyList( AuthSession authSession ) {
+        DatabaseAdapter db = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+
             String sql =
-                "select ID_FIRM, full_name, short_name,\n"+
-                "	address, chief, buh, url, \n"+
-                "	short_info, is_work, is_search "+
-                "from 	WM_LIST_COMPANY "+
+                "select ID_FIRM, full_name, short_name,\n" +
+                "	address, chief, buh, url, \n" +
+                "	short_info, is_work, is_search " +
+                "from 	WM_LIST_COMPANY " +
                 "where  is_deleted=0 and ID_FIRM in ";
 
-            switch (db.getFamaly())
-            {
+            switch( db.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId( db, userLogin );
+                    String idList = authSession.getGrantedCompanyId();
 
-                    sql += " ("+idList+") ";
+                    sql += " (" + idList + ") ";
                     break;
                 default:
                     sql += "(select z1.ID_FIRM from v$_read_list_firm z1 where z1.user_login = ?)";
@@ -108,131 +107,130 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
             }
 
             ps = db.prepareStatement( sql );
-            switch (db.getFamaly()) {
+            switch( db.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
-                    ps.setString(1, userLogin);
+                    ps.setString( 1, authSession.getUserLogin() );
                     break;
             }
 
             rs = ps.executeQuery();
 
-	    List<CompanyBean> list = new ArrayList<CompanyBean>();
-            while ( rs.next() ) {
-            	list.add( loadCompanyFromResultSet( rs ) );
+            List<CompanyBean> list = new ArrayList<CompanyBean>();
+            while( rs.next() ) {
+                list.add( loadCompanyFromResultSet( rs ) );
             }
             return list;
-		}
-		catch(Exception e) {
-			String es = "Error load company list for userLogin: " + userLogin;
-			throw new IllegalStateException(es, e);
-		}
-		finally {
-			DatabaseManager.close( db, rs, ps);
-			db = null;
-			rs = null;
-			ps = null;
-		}
-	}
+        }
+        catch( Exception e ) {
+            String es = "Error load company list for userLogin: " + authSession.getUserLogin();
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, rs, ps );
+            db = null;
+            rs = null;
+            ps = null;
+        }
+    }
 
-
-    public Long processAddCompany( CompanyBean companyBean, String userLogin, Long groupCompanyId, Long holdingId ) {
+    public Long processAddCompany( CompanyBean companyBean, String userLogin, Long groupCompanyId, Long holdingId, AuthSession authSession ) {
 
         PreparedStatement ps = null;
         DatabaseAdapter dbDyn = null;
         try {
 
-                dbDyn = DatabaseAdapter.getInstance();
+            dbDyn = DatabaseAdapter.getInstance();
 
-                CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName( "seq_WM_LIST_COMPANY" );
-                seq.setTableName( "WM_LIST_COMPANY" );
-                seq.setColumnName( "ID_FIRM" );
-                Long sequenceValue = dbDyn.getSequenceNextValue( seq );
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_LIST_COMPANY" );
+            seq.setTableName( "WM_LIST_COMPANY" );
+            seq.setColumnName( "ID_FIRM" );
+            Long sequenceValue = dbDyn.getSequenceNextValue( seq );
 
 
-                ps = dbDyn.prepareStatement( "insert into WM_LIST_COMPANY (" +
-                    "	ID_FIRM, " +
-                    "	full_name, " +
-                    "	short_name, " +
-                    "	address, " +
-                    "	telefon_buh, " +
-                    "	telefon_chief, " +
-                    "	chief, " +
-                    "	buh, " +
-                    "	fax, " +
-                    "	email, " +
-                    "	icq, " +
-                    "	short_client_info, " +
-                    "	url, " +
-                    "	short_info, " +
-                    "is_deleted" +
-                    ")" +
+            ps = dbDyn.prepareStatement( "insert into WM_LIST_COMPANY (" +
+                "	ID_FIRM, " +
+                "	full_name, " +
+                "	short_name, " +
+                "	address, " +
+                "	telefon_buh, " +
+                "	telefon_chief, " +
+                "	chief, " +
+                "	buh, " +
+                "	fax, " +
+                "	email, " +
+                "	icq, " +
+                "	short_client_info, " +
+                "	url, " +
+                "	short_info, " +
+                "is_deleted" +
+                ")" +
 
-                    ( dbDyn.getIsNeedUpdateBracket() ?"(" :"" ) +
+                ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" ) +
 
-                    " select " +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?," +
-                    "	?,0 from WM_AUTH_USER " +
-                    "where USER_LOGIN=? " +
-                    ( dbDyn.getIsNeedUpdateBracket() ?")" :"" ) );
+                " select " +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?,0 from WM_AUTH_USER " +
+                "where USER_LOGIN=? " +
+                ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" ) );
 
-                int num = 1;
-                RsetTools.setLong( ps, num++, sequenceValue );
-                ps.setString( num++, companyBean.getName() );
-                ps.setString( num++, companyBean.getShortName() );
-                ps.setString( num++, companyBean.getAddress() );
-                ps.setString( num++, "" );
-                ps.setString( num++, "" );
-                ps.setString( num++, companyBean.getCeo() );
-                ps.setString( num++, companyBean.getCfo() );
-                ps.setString( num++, "" );
-                ps.setString( num++, "" );
-                RsetTools.setLong( ps, num++, null );
-                ps.setString( num++, "" );
-                ps.setString( num++, companyBean.getWebsite() );
-                ps.setString( num++, companyBean.getInfo() );
-                ps.setString( num++, userLogin );
+            int num = 1;
+            RsetTools.setLong( ps, num++, sequenceValue );
+            ps.setString( num++, companyBean.getName() );
+            ps.setString( num++, companyBean.getShortName() );
+            ps.setString( num++, companyBean.getAddress() );
+            ps.setString( num++, "" );
+            ps.setString( num++, "" );
+            ps.setString( num++, companyBean.getCeo() );
+            ps.setString( num++, companyBean.getCfo() );
+            ps.setString( num++, "" );
+            ps.setString( num++, "" );
+            RsetTools.setLong( ps, num++, null );
+            ps.setString( num++, "" );
+            ps.setString( num++, companyBean.getWebsite() );
+            ps.setString( num++, companyBean.getInfo() );
+            ps.setString( num++, userLogin );
 
-                int i1 = ps.executeUpdate();
+            int i1 = ps.executeUpdate();
 
-                if ( log.isDebugEnabled() )
-                    log.debug( "Count of inserted records - " + i1 );
+            if( log.isDebugEnabled() )
+                log.debug( "Count of inserted records - " + i1 );
 
-		if (groupCompanyId!=null) {
-			InternalAuthProviderTools.setRelateServiceFirm(dbDyn, groupCompanyId, sequenceValue);
-		}
+            if( groupCompanyId != null ) {
+                authSession.setRelateGroupCompanyCompany( dbDyn, groupCompanyId, sequenceValue );
+            }
 //		if (groupCompanyId!=null && holdingId!=null) {
 //			InternalAuthProviderTools.setRelateServiceRoad(dbDyn, holdingId, groupCompanyId);
 //		}
 
-                dbDyn.commit();
-		return sequenceValue;
+            dbDyn.commit();
+            return sequenceValue;
         }
         catch( Exception e ) {
             try {
-                if (dbDyn!=null)
+                if( dbDyn != null )
                     dbDyn.rollback();
             }
             catch( Exception e001 ) {
             }
             String es = "Error add new company";
-		log.error(es, e);
-		throw new IllegalStateException( es, e ); 
-	
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+
         }
         finally {
             DatabaseManager.close( dbDyn, ps );
@@ -242,7 +240,7 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
     }
 
 
-    public void processSaveCompany( CompanyBean companyBean, String userLogin ) {
+    public void processSaveCompany( CompanyBean companyBean, AuthSession authSession ) {
         DatabaseAdapter dbDyn = null;
         PreparedStatement ps = null;
         try {
@@ -270,7 +268,7 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
 
             switch( dbDyn.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId( dbDyn, userLogin );
+                    String idList = authSession.getGrantedCompanyId();
 
                     sql += " (" + idList + ") ";
 
@@ -284,32 +282,32 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
             ps = dbDyn.prepareStatement( sql );
             int num = 1;
 
-                ps.setString( num++, companyBean.getName() );
-                ps.setString( num++, companyBean.getShortName() );
-                ps.setString( num++, companyBean.getAddress() );
-                ps.setString( num++, "" );
-                ps.setString( num++, "" );
-                ps.setString( num++, companyBean.getCeo() );
-                ps.setString( num++, companyBean.getCfo() );
-                ps.setString( num++, "" );
-                ps.setString( num++, "" );
-                RsetTools.setLong( ps, num++, null );
-                ps.setString( num++, "" );
-                ps.setString( num++, companyBean.getWebsite() );
-                ps.setString( num++, companyBean.getInfo() );
-            	RsetTools.setLong( ps, num++, companyBean.getId() );
+            ps.setString( num++, companyBean.getName() );
+            ps.setString( num++, companyBean.getShortName() );
+            ps.setString( num++, companyBean.getAddress() );
+            ps.setString( num++, "" );
+            ps.setString( num++, "" );
+            ps.setString( num++, companyBean.getCeo() );
+            ps.setString( num++, companyBean.getCfo() );
+            ps.setString( num++, "" );
+            ps.setString( num++, "" );
+            RsetTools.setLong( ps, num++, null );
+            ps.setString( num++, "" );
+            ps.setString( num++, companyBean.getWebsite() );
+            ps.setString( num++, companyBean.getInfo() );
+            RsetTools.setLong( ps, num++, companyBean.getId() );
 
             switch( dbDyn.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
-                    ps.setString( num++, userLogin );
+                    ps.setString( num++, authSession.getUserLogin() );
                     break;
             }
 
             int i1 = ps.executeUpdate();
 
-            if ( log.isDebugEnabled() )
+            if( log.isDebugEnabled() )
                 log.debug( "Count of updated record - " + i1 );
 
             dbDyn.commit();
@@ -322,8 +320,8 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
             }
 
             String es = "Error save company";
-		log.error(es, e);
-		throw new IllegalStateException( es, e ); 
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
         }
         finally {
             DatabaseManager.close( dbDyn, ps );
@@ -333,13 +331,13 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
     }
 
 
-    public void processDeleteCompany( CompanyBean companyBean, String userLogin ) {
+    public void processDeleteCompany( CompanyBean companyBean, AuthSession authSession ) {
         DatabaseAdapter dbDyn = null;
         PreparedStatement ps = null;
         try {
             dbDyn = DatabaseAdapter.getInstance();
 
-            if ( companyBean.getId()==null )
+            if( companyBean.getId() == null )
                 throw new IllegalArgumentException( "companyId is null" );
 
             String sql =
@@ -348,7 +346,7 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
 
             switch( dbDyn.getFamaly() ) {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idList = AuthHelper.getGrantedCompanyId( dbDyn, userLogin );
+                    String idList = authSession.getGrantedCompanyId();
 
                     sql += " (" + idList + ") ";
 
@@ -365,13 +363,13 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
-                    ps.setString( 2, userLogin );
+                    ps.setString( 2, authSession.getUserLogin() );
                     break;
             }
 
             int i1 = ps.executeUpdate();
 
-            if ( log.isDebugEnabled() )
+            if( log.isDebugEnabled() )
                 log.debug( "Count of deleted records - " + i1 );
 
             dbDyn.commit();
@@ -384,8 +382,8 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
             }
 
             String es = "Error delete company";
-		log.error(es, e);
-		throw new IllegalStateException( es, e ); 
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
         }
         finally {
             DatabaseManager.close( dbDyn, ps );
@@ -395,22 +393,20 @@ public class CompanyDAOImpl implements CompanyDAO, Serializable {
     }
 
 
+    private CompanyBean loadCompanyFromResultSet( ResultSet rs ) throws Exception {
 
-	private CompanyBean loadCompanyFromResultSet(ResultSet rs) throws Exception {
-	
-		CompanyBean company = new CompanyBean();
-		company.setId( RsetTools.getLong(rs, "ID_FIRM") );
-		company.setName( RsetTools.getString(rs, "full_name") );
-		company.setShortName( RsetTools.getString(rs, "short_name") );
-		company.setAddress( RsetTools.getString(rs, "address") );
-		company.setCeo( RsetTools.getString(rs, "chief") );
-		company.setCfo( RsetTools.getString(rs, "buh") );
-		company.setWebsite( RsetTools.getString(rs, "url") );
-		company.setInfo( RsetTools.getString(rs, "short_info") );
-		
-		return company;
-	}
+        CompanyBean company = new CompanyBean();
+        company.setId( RsetTools.getLong( rs, "ID_FIRM" ) );
+        company.setName( RsetTools.getString( rs, "full_name" ) );
+        company.setShortName( RsetTools.getString( rs, "short_name" ) );
+        company.setAddress( RsetTools.getString( rs, "address" ) );
+        company.setCeo( RsetTools.getString( rs, "chief" ) );
+        company.setCfo( RsetTools.getString( rs, "buh" ) );
+        company.setWebsite( RsetTools.getString( rs, "url" ) );
+        company.setInfo( RsetTools.getString( rs, "short_info" ) );
 
-	
-	
+        return company;
+    }
+
+
 }

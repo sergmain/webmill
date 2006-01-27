@@ -2,18 +2,11 @@ package org.riverock.portlet.company.bean;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
-
-import org.riverock.interfaces.sso.a3.AuthException;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.InternalAuthProvider;
 
 public class CompanyModuleUserBean implements Serializable {
     private static final long serialVersionUID = 2055005503L;
-
-    private static final Logger log = Logger.getLogger( CompanyModuleUserBean.class );
 
     private AuthSession authSession = null;
 
@@ -21,127 +14,44 @@ public class CompanyModuleUserBean implements Serializable {
         this.authSession = ( AuthSession ) FacesTools.getUserPrincipal();
     }
 
+    public AuthSession getAuthSession() {
+        return authSession;
+    }
+
     public String getName() {
-        if( authSession == null ) {
-            return null;
-        }
-        else {
-            return authSession.getName();
-        }
+        return authSession!=null?authSession.getName():null;
     }
 
     public String getAddress() {
-        if( authSession == null ) {
-            return null;
-        }
-        else {
-            return authSession.getUserInfo().getAddress();
-        }
+        return authSession!=null?authSession.getUserInfo().getAddress():null;
     }
 
-    public Long getUserId() {
-        if( authSession == null ) {
-            return null;
-        }
-        else {
-            return authSession.getUserInfo().getUserId();
-        }
+    public Long getId() {
+        return authSession!=null?authSession.getUserInfo().getUserId():null;
     }
 
     public String getUserLogin() {
-        if( authSession == null ) {
-            return null;
-        }
-        else {
-            return authSession.getUserLogin();
-        }
+        return authSession!=null?authSession.getUserLogin():null;
     }
 
     public boolean isCompany() {
-        if( authSession == null ) {
-            return false;
-        }
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo( authSession );
-        }
-        catch( AuthException e ) {
-            String es = "Error check access level";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        return authInfo.getUseCurrentFirm() == 1;
+        return authSession!=null?authSession.getAuthInfo().isCompany():false;
     }
 
     public boolean isGroupCompany() {
-        if( authSession == null ) {
-            return false;
-        }
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo( authSession );
-        }
-        catch( AuthException e ) {
-            String es = "Error check access level";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        return authInfo.getService() == 1;
+        return authSession!=null?authSession.getAuthInfo().isGroupCompany():false;
     }
 
     public boolean isHolding() {
-        if( authSession == null ) {
-            return false;
-        }
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo( authSession );
-        }
-        catch( AuthException e ) {
-            String es = "Error check access level";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        return authInfo.getRoad() == 1;
+        return authSession!=null?authSession.getAuthInfo().isHolding():false;
     }
 
     public Long getGroupCompanyId() {
-        if( authSession == null ) {
-            return null;
-        }
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo( authSession );
-        	return authInfo.getServiceID();
-        }
-        catch( AuthException e ) {
-            String es = "Error get group company Id";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
+        return authSession!=null?authSession.getAuthInfo().getGroupCompanyId():null;
     }
 
     public Long getHoldingId() {
-        if( authSession == null ) {
-            return null;
-        }
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo( authSession );
-        	return authInfo.getRoadID();
-        }
-        catch( AuthException e ) {
-            String es = "Error get holding Id";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-    }
-
-    public AuthInfo getAuthInfo() throws AuthException {
-        if (authSession!=null) {
-            return InternalAuthProvider.getAuthInfo( authSession );
-        }
-        return null;
+        return authSession!=null?authSession.getAuthInfo().getHoldingId():null;
     }
 
 }

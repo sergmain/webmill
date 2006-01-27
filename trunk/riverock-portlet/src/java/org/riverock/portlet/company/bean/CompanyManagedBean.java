@@ -2,10 +2,6 @@ package org.riverock.portlet.company.bean;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.ArrayList;
-import org.riverock.portlet.company.dao.CompanyDAO;
-
-import org.apache.log4j.Logger;
 
 /**
  * @author SergeMaslyukov
@@ -13,7 +9,6 @@ import org.apache.log4j.Logger;
  */
 public class CompanyManagedBean implements Serializable {
     private static final long serialVersionUID = 2055005505L;
-    private static final Logger log = Logger.getLogger( CompanyManagedBean.class );
 
 	private CompanySessionBean companySessionBean = null;
 	private CompanyModuleUserBean companyModuleUser = null;
@@ -38,8 +33,7 @@ public class CompanyManagedBean implements Serializable {
 	}
 	
 	public List<CompanyBean> getCompanyList() {
-		String userLogin = companyModuleUser.getUserLogin(); 
-		return companySessionBean.getCompanyDAO().getCompanyList( userLogin );
+		return companySessionBean.getCompanyDAO().getCompanyList( companyModuleUser.getAuthSession() );
 	}
 
 }

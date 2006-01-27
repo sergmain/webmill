@@ -30,11 +30,8 @@ import org.riverock.portlet.core.GetWmListHoldingItem;
 import org.riverock.portlet.schema.core.WmListCompanyItemType;
 import org.riverock.portlet.schema.core.WmListGroupCompanyItemType;
 import org.riverock.portlet.schema.core.WmListHoldingItemType;
-import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.InternalAuthProviderTools;
-import org.riverock.sso.core.GetWmAuthAccessGroupItem;
-import org.riverock.sso.schema.core.WmAuthAccessGroupItemType;
-import org.riverock.sso.utils.AuthHelper;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthInfo;
 
 /**
  * @author SergeMaslyukov
@@ -59,16 +56,16 @@ public class AuthManager implements Serializable {
 
     public List<CompanyBean> getCompanyBeans() {
         if( companyBeans == null ) {
-            companyBeans = initCompanyBeans();
+            companyBeans = initCompanyBeans( moduleUserBean.getAuthSession() );
         }
         return companyBeans;
     }
 
     public void reinitCompanyBeans() {
-        companyBeans = initCompanyBeans();
+        companyBeans = initCompanyBeans( moduleUserBean.getAuthSession() );
     }
 
-    private List<CompanyBean> initCompanyBeans() {
+    private List<CompanyBean> initCompanyBeans( AuthSession authSession ) {
         DatabaseAdapter db_ = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -86,7 +83,7 @@ public class AuthManager implements Serializable {
                         "from   WM_AUTH_USER a, WM_LIST_USER b, WM_LIST_COMPANY c " +
                         "where  a.id_user = b.id_user and " +
                         "       a.id_firm = c.id_firm and " +
-                        "       b.ID_FIRM in ( " + AuthHelper.getGrantedCompanyId( db_, userLogin ) + " ) " +
+                        "       b.ID_FIRM in ( " + authSession.getGrantedCompanyId() + " ) " +
                         "group by c.id_firm, c.short_name " +
                         "order by c.short_name asc, c.id_firm asc ";
 
@@ -340,15 +337,15 @@ public class AuthManager implements Serializable {
 
             Long authUserId = userBean.getAuthUserId();
 
-            AuthInfo authInfo = moduleUserBean.getAuthInfo();
+            AuthInfo authInfo = moduleUserBean.getAuthSession().getAuthInfo();
             AuthInfo authInfoUser = AuthInfo.getInstance( db, authUserId );
 
             boolean isRigthRelate = false;
 
             if( authInfoUser != null && authInfo != null ) {
-                isRigthRelate =
-                    InternalAuthProviderTools.checkRigthOnUser( db,
-                        authInfoUser.getAuthUserID(), authInfo.getAuthUserID() );
+                isRigthRelate = moduleUserBean.getAuthSession().checkRigthOnUser(
+                    authInfoUser.getAuthUserId(), authInfo.getAuthUserId()
+                );
             }
 
             if( isRigthRelate ) {
@@ -360,7 +357,7 @@ public class AuthManager implements Serializable {
                         ps = db.prepareStatement(
                             "delete from WM_AUTH_USER where id_auth_user=? " +
                             "and ID_FIRM in " +
-                            "(" + AuthHelper.getGrantedCompanyId( db, moduleUserBean.getUserLogin() ) + ")"
+                            "(" + moduleUserBean.getAuthSession().getGrantedCompanyId() + ")"
                         );
 
                         RsetTools.setLong( ps, 1, authUserId );
@@ -417,15 +414,14 @@ public class AuthManager implements Serializable {
             if( id_auth_user == null )
                 throw new IllegalArgumentException( "id_auth_user not initialized" );
 
-            AuthInfo authInfo = moduleUserBean.getAuthInfo();
+            AuthInfo authInfo = moduleUserBean.getAuthSession().getAuthInfo();
             AuthInfo authInfoUser = AuthInfo.getInstance( db, id_auth_user );
 
             boolean isRigthRelate = false;
 
             if( authInfoUser != null && authInfo != null ) {
-                isRigthRelate =
-                    InternalAuthProviderTools.checkRigthOnUser( db,
-                        authInfoUser.getAuthUserID(), authInfo.getAuthUserID() );
+                isRigthRelate = moduleUserBean.getAuthSession().checkRigthOnUser(
+                    authInfoUser.getAuthUserId(), authInfo.getAuthUserId() );
             }
 
             Long companyId = null;
@@ -437,28 +433,18 @@ public class AuthManager implements Serializable {
                 processDeletedRoles( db, userBean );
                 processNewRoles( db, userBean );
 
-                companyId = InternalAuthProviderTools.initIdFirm( db, userBean.getCompanyId(), authInfo.getUserLogin() );
-                groupCompanyId = InternalAuthProviderTools.initIdService( db, userBean.getGroupCompanyId(),
-                    authInfo.getUserLogin() );
-                holdingId = InternalAuthProviderTools.initIdRoad( db, userBean.getHoldingId(), authInfo.getUserLogin() );
+                companyId = moduleUserBean.getAuthSession().checkCompanyId( userBean.getCompanyId() );
+                groupCompanyId = moduleUserBean.getAuthSession().checkGroupCompanyId( userBean.getGroupCompanyId() );
+                holdingId = moduleUserBean.getAuthSession().checkHoldingId( userBean.getHoldingId() );
 
                 if( log.isDebugEnabled() ) {
                     log.debug( "companyId " + companyId );
                     log.debug( "groupCompanyId " + groupCompanyId );
                     log.debug( "holdingId " + holdingId );
 
-                    log.debug( "is_service " + ( authInfo.getService() == 1 ?
-                        userBean.isGroupCompany() :
-                        false
-                        ) );
-                    log.debug( "is_road " + ( authInfo.getRoad() == 1 ?
-                        userBean.isHolding() :
-                        false
-                        ) );
-                    log.debug( "is_use_current_firm " + ( authInfo.getUseCurrentFirm() == 1 ?
-                        userBean.isCompany() :
-                        false
-                        ) );
+                    log.debug( "is_service " + authInfo.isGroupCompany() );
+                    log.debug( "is_road " + authInfo.isHolding() );
+                    log.debug( "is_use_current_firm " + authInfo.isCompany() );
                     log.debug( "id_auth_user " + id_auth_user );
                     log.debug( "auth_.getUserLogin() " + moduleUserBean.getUserLogin() );
                 }
@@ -477,21 +463,21 @@ public class AuthManager implements Serializable {
                             "	id_service = ?, " +
                             "	id_road = ? " +
                             "WHERE id_auth_user=? and " +
-                            "ID_FIRM  in (" + AuthHelper.getGrantedCompanyId( db, moduleUserBean.getUserLogin() ) + ") " );
+                            "ID_FIRM  in (" + moduleUserBean.getAuthSession().getGrantedCompanyId() + ") " );
 
                         ps.setString( 1, userBean.getUserLogin() );
                         ps.setString( 2, userBean.getUserPassword() );
 
                         ps.setInt( 3,
-                            authInfo.getService() == 1
+                            authInfo.isGroupCompany()
                             ? userBean.isGroupCompany() ? 1 : 0
                             : 0 );
                         ps.setInt( 4,
-                            authInfo.getRoad() == 1
+                            authInfo.isHolding()
                             ? userBean.isHolding() ? 1 : 0
                             : 0 );
                         ps.setInt( 5,
-                            authInfo.getUseCurrentFirm() == 1
+                            authInfo.isCompany()
                             ? userBean.isCompany() ? 1 : 0
                             : 0 );
 
@@ -531,15 +517,15 @@ public class AuthManager implements Serializable {
                         ps.setString( 2, userBean.getUserPassword() );
 
                         ps.setInt( 3,
-                            authInfo.getService() == 1
+                            authInfo.isGroupCompany()
                             ? userBean.isGroupCompany() ? 1 : 0
                             : 0 );
                         ps.setInt( 4,
-                            authInfo.getRoad() == 1
+                            authInfo.isHolding()
                             ? userBean.isHolding() ? 1 : 0
                             : 0 );
                         ps.setInt( 5,
-                            authInfo.getUseCurrentFirm() == 1
+                            authInfo.isCompany()
                             ? userBean.isCompany() ? 1 : 0
                             : 0 );
 
@@ -625,12 +611,9 @@ public class AuthManager implements Serializable {
             Long groupCompanyId = null;
             Long holdingId = null;
 
-            companyId = InternalAuthProviderTools.initIdFirm( db, userBean.getCompanyId(),
-                moduleUserBean.getUserLogin() );
-            groupCompanyId = InternalAuthProviderTools.initIdService( db, userBean.getGroupCompanyId(),
-                moduleUserBean.getUserLogin() );
-            holdingId = InternalAuthProviderTools.initIdRoad( db, userBean.getHoldingId(),
-                moduleUserBean.getUserLogin() );
+            companyId = moduleUserBean.getAuthSession().checkCompanyId( userBean.getCompanyId() );
+            groupCompanyId = moduleUserBean.getAuthSession().checkGroupCompanyId( userBean.getGroupCompanyId() );
+            holdingId = moduleUserBean.getAuthSession().checkHoldingId( userBean.getHoldingId() );
 
             if( log.isDebugEnabled() ) {
                 log.debug( "companyId " + companyId );
@@ -752,7 +735,7 @@ public class AuthManager implements Serializable {
                     String sql_ =
                         "select b.ID_FIRM, b.full_name NAME_FIRM " +
                         "from   WM_LIST_COMPANY b " +
-                        "where  b.ID_FIRM in (" + AuthHelper.getGrantedCompanyId( db, moduleUserBean.getUserLogin() ) + ") and b.is_deleted=0 " +
+                        "where  b.ID_FIRM in (" + moduleUserBean.getAuthSession().getGrantedCompanyId() + ") and b.is_deleted=0 " +
                         "order  by b.ID_FIRM ASC ";
 
                     if( log.isDebugEnabled() )
@@ -807,8 +790,7 @@ public class AuthManager implements Serializable {
 
                     ps = db.prepareStatement( "select  a.id_service, full_name_service " +
                         "from    WM_LIST_GROUP_COMPANY a " +
-                        "where   a.id_service in ( " + AuthHelper.getGrantedGroupCompanyId( db,
-                            moduleUserBean.getUserLogin() ) + ")" +
+                        "where   a.id_service in ( " + moduleUserBean.getAuthSession().getGrantedGroupCompanyId() + ")" +
                         "order   by id_service ASC " );
                     break;
                 default:
@@ -859,7 +841,7 @@ public class AuthManager implements Serializable {
 
                     ps = db.prepareStatement( "select  a.id_road, full_name_road " +
                         "from    WM_LIST_HOLDING a " +
-                        "where   a.id_road in ( " + AuthHelper.getGrantedHoldingId( db, moduleUserBean.getUserLogin() ) + ")" +
+                        "where   a.id_road in ( " + moduleUserBean.getAuthSession().getGrantedHoldingId() + ")" +
                         "order   by id_road ASC " );
                     break;
                 default:
@@ -910,7 +892,7 @@ public class AuthManager implements Serializable {
                     String sql_ =
                         "select a.ID_USER, a.LAST_NAME, a.FIRST_NAME, a.MIDDLE_NAME " +
                         "from   WM_LIST_USER a " +
-                        "where  a.ID_FIRM in (" + AuthHelper.getGrantedCompanyId( db, moduleUserBean.getUserLogin() ) + ") and " +
+                        "where  a.ID_FIRM in (" + moduleUserBean.getAuthSession().getGrantedCompanyId() + ") and " +
                         "       a.IS_DELETED=0 " +
                         // Todo
                         // uncomment when will be fixed problem with default value of timestamp

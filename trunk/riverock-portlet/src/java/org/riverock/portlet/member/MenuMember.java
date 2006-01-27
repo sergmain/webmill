@@ -49,11 +49,10 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberType;
-import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -99,12 +98,12 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            AuthInfo authInfo = AuthTools.getAuthInfo( renderRequest );
+            AuthSession authSession = (AuthSession)this.renderRequest.getUserPrincipal();
 
             if( log.isDebugEnabled() )
-                log.debug( "MenuMember authInfo: " + authInfo );
+                log.debug( "MenuMember authInfo: " + authSession );
 
-            if( authInfo == null )
+            if( authSession == null )
                 return this;
 
             PortalContext portalContext = renderRequest.getPortalContext();
@@ -131,14 +130,14 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
             ps = db_.prepareStatement( sql_ );
 
-            ps.setString( 1, authInfo.getUserLogin() );
-            ps.setString( 2, authInfo.getUserLogin() );
+            ps.setString( 1, authSession.getUserLogin() );
+            ps.setString( 2, authSession.getUserLogin() );
 
             rset = ps.executeQuery();
             int recordNumber = 0;
             ArrayList<MenuMemberApplicationType> list = new ArrayList<MenuMemberApplicationType>();
             while( rset.next() ) {
-                MenuMemberApplicationType appl = getApplication( authInfo, rset, recordNumber++, db_ );
+                MenuMemberApplicationType appl = getApplication( rset, recordNumber++, db_, authSession.getUserLogin() );
                 if( appl != null )
                     list.add( appl );
             }
@@ -226,9 +225,9 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         "       f01.id_arm=? and a1.url is not null ";
 
 
-    private MenuMemberApplicationType getApplication( AuthInfo authInfo, ResultSet rs, int recordNumber_, DatabaseAdapter db_ )
+    private MenuMemberApplicationType getApplication( ResultSet rs, int recordNumber_, DatabaseAdapter db_, String userLogin )
         throws PortletException {
-        if( authInfo == null )
+        if( userLogin == null )
             return null;
 
         PreparedStatement ps = null;
@@ -244,7 +243,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             appl.setApplicationId( RsetTools.getLong( rs, "ID_ARM" ) );
             appl.setApplicationRecordNumber( recordNumber_ );
 
-            ps = makeStatement( db_, authInfo.getUserLogin(), appl.getApplicationId() );
+            ps = makeStatement( db_, userLogin, appl.getApplicationId() );
 
             rset = ps.executeQuery();
             int moduleRecordNumber = 0;

@@ -364,7 +364,7 @@ public class TestCaseMember extends TestCase
                         Exception ee = null;
                         try
                         {
-                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "remote-user", "server-name", null);
+                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "server-name", null, authSession );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -409,7 +409,7 @@ public class TestCaseMember extends TestCase
 //                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", null );
+                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", null, authSession );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -450,7 +450,7 @@ public class TestCaseMember extends TestCase
                         {
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", null );
+                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", null, authSession );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)

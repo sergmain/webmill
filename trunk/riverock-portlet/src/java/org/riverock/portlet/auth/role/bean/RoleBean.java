@@ -9,19 +9,10 @@ import java.io.Serializable;
  *         $Id$
  */
 public class RoleBean implements Serializable {
-    private static final long serialVersionUID = 2043005507L;
+    private static final long serialVersionUID = 2057005507L;
 
     private Long roleId = null;
     private String name = null;
-    private Integer internalRoleId = null;
-
-    public Integer getInternalRoleId() {
-        return internalRoleId;
-    }
-
-    public void setInternalRoleId( Integer internalRoleId ) {
-        this.internalRoleId = internalRoleId;
-    }
 
     public String getName() {
         return name;

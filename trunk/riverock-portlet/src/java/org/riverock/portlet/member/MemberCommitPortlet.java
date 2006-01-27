@@ -270,7 +270,7 @@ public final class MemberCommitPortlet implements Portlet {
                                     log.debug("Field with type "+FieldsTypeJspTypeType.YES_1_NO_N.toString()+" not found");
                             }
 
-                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.getFromParam(), mp.mod, dbDyn, actionRequest.getRemoteUser(), actionRequest.getServerName(), mp.getModuleManager());
+                            sql_ = MemberServiceClass.buildInsertSQL( mp.content, mp.getFromParam(), mp.mod, dbDyn, actionRequest.getServerName(), mp.getModuleManager(), mp.getAuthSession() );
 
                             if (log.isDebugEnabled())
                             {
@@ -445,7 +445,7 @@ public final class MemberCommitPortlet implements Portlet {
                             {
                                 log.debug("start build SQL");
 
-                                sql_ = MemberServiceClass.buildUpdateSQL( dbDyn, mp.content, mp.getFromParam(), mp.mod, true, actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName(), mp.getModuleManager() );
+                                sql_ = MemberServiceClass.buildUpdateSQL( dbDyn, mp.content, mp.getFromParam(), mp.mod, true, actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName(), mp.getModuleManager(), mp.getAuthSession() );
 
                                 if (log.isDebugEnabled())
                                     log.debug("update SQL:"+sql_);
@@ -521,7 +521,7 @@ content.getQueryArea().primaryKeyMask, "error", Locale.ENGLISH);
                             if (dbDyn.getFamaly()==DatabaseManager.MYSQL_FAMALY)
                                 mp.deleteBigtextData(dbDyn, idRec);
 
-                            sql_ = MemberServiceClass.buildDeleteSQL( dbDyn, mp.mod, mp.content, mp.getFromParam(), actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName(), moduleManager );
+                            sql_ = MemberServiceClass.buildDeleteSQL( dbDyn, mp.mod, mp.content, mp.getFromParam(), actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName(), moduleManager, mp.getAuthSession() );
 
                             if (log.isDebugEnabled())
                                 log.debug("delete SQL: "+sql_+"<br>\n");

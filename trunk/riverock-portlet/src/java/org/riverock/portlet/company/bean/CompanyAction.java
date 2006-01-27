@@ -1,11 +1,6 @@
-/**
- * 
- */
 package org.riverock.portlet.company.bean;
 
 import java.io.Serializable;
-
-import org.apache.log4j.Logger;
 
 /**
  * @author SergeMaslyukov
@@ -13,7 +8,6 @@ import org.apache.log4j.Logger;
  */
 public class CompanyAction implements Serializable {
     private static final long serialVersionUID = 2055005501L;
-    private static final Logger log = Logger.getLogger( CompanyAction.class );
 
 	private CompanySessionBean sessionBean = null;
 	private CompanyModuleUserBean companyModuleUser = null;
@@ -48,8 +42,8 @@ public class CompanyAction implements Serializable {
 			sessionBean.getCompany(), 
 			companyModuleUser.getUserLogin(),
 			companyModuleUser.getGroupCompanyId(),
-			companyModuleUser.getHoldingId()
-		);                  
+			companyModuleUser.getHoldingId(),
+            companyModuleUser.getAuthSession() );
 		sessionBean.setCurrentCompanyId( companyId );
 		return "company";
 	}
@@ -61,9 +55,7 @@ public class CompanyAction implements Serializable {
 
 	public String processEditCompany() {
 		sessionBean.getCompanyDAO().processSaveCompany(
-			sessionBean.getCompany(), 
-			companyModuleUser.getUserLogin()
-		);                  
+			sessionBean.getCompany(), companyModuleUser.getAuthSession() );
 		
 		return "company";
 	}
@@ -75,9 +67,7 @@ public class CompanyAction implements Serializable {
 
 	public String processDeleteCompany() {
 		sessionBean.getCompanyDAO().processDeleteCompany(
-			sessionBean.getCompany(), 
-			companyModuleUser.getUserLogin()
-		);                  
+			sessionBean.getCompany(), companyModuleUser.getAuthSession() );
 		sessionBean.setCompany( null );
 		return "company";
 	}
@@ -89,9 +79,7 @@ public class CompanyAction implements Serializable {
 
 	private void loadCurrentCompany() {
 		CompanyBean bean = sessionBean.getCompanyDAO().loadCompany(
-			sessionBean.getCurrentCompanyId(), 
-			companyModuleUser.getUserLogin()
-		);                  
+			sessionBean.getCurrentCompanyId(), companyModuleUser.getAuthSession() );
 		sessionBean.setCompany( bean );
 	}
 }
