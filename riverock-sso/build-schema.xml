@@ -37,7 +37,7 @@
 
     <target name="gen_all_schema">
         <antcall target="delete_all_schema"/>
-        <antcall target="get_sso_schema"/>
+<!--        <antcall target="get_sso_schema"/>-->
         <antcall target="gen_config_schema"/>
     </target>
     <target name="gen_config_schema">
@@ -46,10 +46,12 @@
         <property name="schema-package-java" value="org.riverock.sso.schema.config"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
+<!--
     <target name="get_sso_schema">
         <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/sso/schema/"/>
         <property name="schema-file" value="${src-schema.xsd.dir}/riverock-sso.xsd"/>
         <property name="schema-package-java" value="org.riverock.sso.schema"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
+-->    
 </project>
