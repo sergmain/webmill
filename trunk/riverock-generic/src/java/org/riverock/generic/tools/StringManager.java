@@ -53,7 +53,7 @@ public final class StringManager {
     private String currentLocaleBase = null;
     private boolean isVariant = false;
 
-    private static Map messages = new HashMap();
+    private static Map<String, String> messages = new HashMap<String, String>();
     private static boolean isInit = false;
 
     public static boolean isInit() {
@@ -315,10 +315,10 @@ public final class StringManager {
         return Collections.unmodifiableMap( messages );
     }
 
-    private static Map prepareMessages() throws GenericException {
+    private static Map<String, String> prepareMessages() throws GenericException {
         log.debug("Start prepare message hashtable");
 
-        Map messageMap = new HashMap(9000);
+        Map<String, String> messageMap = new HashMap<String, String>(9000);
 
         PreparedStatement st = null;
         ResultSet rs = null;
