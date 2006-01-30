@@ -34,7 +34,6 @@ import org.apache.commons.logging.LogFactory;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.site.SiteListSite;
 
 /**
  * $Id$
@@ -71,7 +70,7 @@ public class PriceListItem
     public PriceListItem(){
     }
 
-    public PriceListItem(DatabaseAdapter db_, Long id_shop, String serverName, Long id_item)
+    public PriceListItem(DatabaseAdapter db_, Long id_shop, Long siteId, Long id_item)
             throws PriceException
     {
         if ( log.isDebugEnabled() )
@@ -90,10 +89,8 @@ public class PriceListItem
 
         try
         {
-            Long idSite = SiteListSite.getIdSite(serverName);
-
             ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSite);
+            RsetTools.setLong(ps, 1, siteId);
             RsetTools.setLong(ps, 2, id_shop);
             RsetTools.setLong(ps, 3, id_item);
 

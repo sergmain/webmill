@@ -51,7 +51,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.UserInfo;
-import org.riverock.portlet.login.LoginUtils;
 import org.riverock.portlet.price.OrderLogic;
 import org.riverock.portlet.price.PriceList;
 import org.riverock.portlet.price.Shop;
@@ -460,7 +459,7 @@ public final class InvoicePortlet implements Portlet {
                 session.removeAttribute( ShopPortlet.ORDER_SESSION );
                 return;
             }
-
+/*
             if ( order.getAuthSession() == null ) {
 
                 String backURL = StringTools.rewriteURL( PortletService.url( "mill.invoice", renderRequest, renderResponse ) );
@@ -510,7 +509,7 @@ public final class InvoicePortlet implements Portlet {
                 out.write( "</table>\n" );
                 out.write( "<br>" );
             }
-
+*/
             out.write( "<table border=\"0\">\n<tr>\n<td align=\"left\">\n" );
             out.write( "<a href=\"" +
                 PortletService.url( ShopPortlet.CTX_TYPE_SHOP, renderRequest, renderResponse ) + '&' +

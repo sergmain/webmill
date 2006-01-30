@@ -44,7 +44,6 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
@@ -53,6 +52,7 @@ import org.riverock.portlet.schema.portlet.job.JobItemType;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * $Id$
@@ -105,18 +105,19 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            Long idSite = SiteListSite.getIdSite( renderRequest.getServerName() );
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
             ps = db_.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, idSite );
+            RsetTools.setLong( ps, 1, siteId );
             rs = ps.executeQuery();
 
             while( rs.next() ) {
                 if( log.isDebugEnabled() )
                     log.debug( "#10.01.04 " + RsetTools.getLong( rs, "ID_JOB_POSITION" ) );
 
-                JobItem item = JobItem.getInstance( db_, RsetTools.getLong( rs, "ID_JOB_POSITION" ),
-                    renderRequest.getServerName() );
+                JobItem item = JobItem.getInstance(
+                    db_, RsetTools.getLong( rs, "ID_JOB_POSITION" ), siteId
+                );
                 v.add( item );
             }
             if( log.isDebugEnabled() )

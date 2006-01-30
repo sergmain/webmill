@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.common.tools.RsetTools;
 
 /**
@@ -60,7 +59,7 @@ public class PriceSpecialItems
     {
     }
 
-    public PriceSpecialItems(DatabaseAdapter db_, Long id_shop, String serverName)
+    public PriceSpecialItems(DatabaseAdapter db_, Long id_shop, Long siteId)
             throws PriceException
     {
 
@@ -76,21 +75,10 @@ public class PriceSpecialItems
                 "	a.currency = e.currency and a.id_shop = ? and a.is_special = 1 and " +
                 "	a.absolete = 0 and a.is_group=0";
 
-/*
-                "select a.id_item, a.id_shop, a.id, a.id_main, a.item, a.price, " +
-                "	a.currency, e.name_currency, a.quantity " +
-                "from 	WM_PRICE_LIST a, cash_currency e, WM_PORTAL_VIRTUAL_HOST f " +
-                "where	f.name_virtual_host = lower(?) and e.ID_SITE=f.ID_SITE and " +
-                "	a.currency = e.currency and a.id_shop = ? and a.is_special = 1 and " +
-                "	a.absolete = 0 and a.is_group=0";
-*/
         try
         {
-            Long idSite = SiteListSite.getIdSite(serverName);
-
             ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSite);
-//            ps.setString(1, serverName);
+            RsetTools.setLong(ps, 1, siteId);
             RsetTools.setLong(ps, 2, id_shop);
 
             rs = ps.executeQuery();
@@ -148,7 +136,7 @@ public class PriceSpecialItems
             RsetTools.setLong(ps, 1, id_shop);
             RsetTools.setLong(ps, 2, id_item);
 
-            int i1 = ps.executeUpdate();
+            ps.executeUpdate();
 
         }
         catch (Exception e1)

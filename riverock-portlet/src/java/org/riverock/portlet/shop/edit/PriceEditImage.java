@@ -35,7 +35,6 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderResponse;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,6 +56,7 @@ import org.riverock.portlet.schema.portlet.shop.PricePositionType;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * Author: mill
@@ -74,7 +74,7 @@ public final class PriceEditImage extends HttpServlet
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
+            throws IOException
     {
         if (log.isDebugEnabled())
             log.debug("method is POST");
@@ -83,7 +83,7 @@ public final class PriceEditImage extends HttpServlet
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
+            throws IOException
     {
         Writer out = null;
         try {
@@ -117,7 +117,8 @@ public final class PriceEditImage extends HttpServlet
 
                 ShopPageParam shopParam = new ShopPageParam();
 
-                shopParam.setServerName(renderRequest.getServerName());
+                Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+                shopParam.setServerName( renderRequest.getServerName(), siteId );
 
                 if (renderRequest.getParameter(ShopPortlet.NAME_ID_SHOP_PARAM) != null)
                 {

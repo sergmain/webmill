@@ -46,9 +46,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.exception.DatabaseException;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
@@ -61,6 +59,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.resource.PortletResourceBundleWithLocale;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * $Id$
@@ -74,10 +73,9 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
     public final static String NEWS_TYPE_ITEM = "item";  // 'item' type
 
     static {
-        Class c = new NewsSite().getClass();
+        Class c = NewsSite.class;
         try {
             SqlStatement.registerRelateClass( c, NewsGroup.class );
-            SqlStatement.registerRelateClass( c, SiteListSite.class );
         }
         catch( Throwable exception ) {
             final String es = "Exception in SqlStatement.registerRelateClass()";
@@ -126,14 +124,10 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
 
     private NewsSiteType checkInit( DatabaseAdapter db_, PortletRequest portletRequest ) throws PortletException {
 
-        try {
-            siteId = SiteListSite.getIdSite( portletRequest.getServerName() );
+        siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        if( log.isDebugEnabled() ) {
+            log.debug( "serverName: '" + portletRequest.getServerName() + "', siteId: " + siteId + ", newsMap: " + newsMap );
         }
-        catch( GenericException e ) {
-            throw new PortletException( "Error get siteId for serverName '" + portletRequest.getServerName() + "'", e );
-        }
-        if( log.isDebugEnabled() ) log.debug( "serverName: '" + portletRequest.getServerName() + "', siteId: " + siteId + ", newsMap: " + newsMap );
-
 
         NewsSiteType news = null;
         if( siteId != null )

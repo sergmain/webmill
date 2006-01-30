@@ -263,7 +263,7 @@ public class PriceList {
 
 /*
     public static Vector getOrderItems(DatabaseAdapter db_,
-        long id_shop, int currencyID, String serverName,
+        long id_shop, int currencyID, Long siteId,
         long id_order)
         throws PriceException
     {
@@ -289,10 +289,8 @@ public class PriceList {
                 "	    b.id_order=? " +
                 "order by a.ITEM asc ";
 
-            long idSite = SiteListSite.getIdSite(serverName);
-
             ps = db_.prepareStatement(sql_);
-            RsetTools.setLong(ps, 1, idSite);
+            RsetTools.setLong(ps, 1, siteId);
             RsetTools.setLong(ps, 2, id_shop);
             ps.setInt(3, currencyID);
             RsetTools.setLong(ps, 4, id_order);

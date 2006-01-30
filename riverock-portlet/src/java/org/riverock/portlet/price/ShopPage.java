@@ -154,7 +154,8 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
 
             shopParam.id_group = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0L );
-            shopParam.setServerName( renderRequest.getServerName() );
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+            shopParam.setServerName( renderRequest.getServerName(), siteId );
             shopParam.id_currency = PortletService.getLong( renderRequest, ShopPortlet.NAME_ID_CURRENCY_SHOP);
 
             // If current currency not defined( page requested without concrete currency),

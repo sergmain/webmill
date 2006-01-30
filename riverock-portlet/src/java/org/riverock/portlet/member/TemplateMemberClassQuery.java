@@ -27,6 +27,7 @@ package org.riverock.portlet.member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Iterator;
 
 import javax.portlet.PortletRequest;
 
@@ -35,12 +36,9 @@ import org.apache.commons.logging.LogFactory;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.portlet.core.GetWmPortalTemplateItem;
-import org.riverock.portlet.core.GetWmPortalTemplateWithIdSiteSupportLanguageList;
-import org.riverock.portlet.schema.core.WmPortalTemplateListType;
-import org.riverock.portlet.schema.core.WmPortalTemplateItemType;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.bean.TemplateBean;
 import org.riverock.webmill.container.tools.PortletService;
-
 
 /**
  * User: Admin
@@ -75,21 +73,13 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
      *
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            WmPortalTemplateItemType templateItem = GetWmPortalTemplateItem.getInstance( db_, idSiteTemplate ).item;
-            if( templateItem != null )
-                return templateItem.getNameSiteTemplate();
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) {
+        PortalDaoProvider portalDaoProvider = MemberTools.getPortalDaoProvider(renderRequest);
+        TemplateBean templateBean = portalDaoProvider.getPortalCommonDao().getTemplateBean( idSiteTemplate );
+        if( templateBean != null )
+            return templateBean.getTemplateName();
 
-            return "";
-        }
-        finally {
-            DatabaseAdapter.close( db_ );
-            db_ = null;
-        }
+        return "";
     }
 
     /**
@@ -104,16 +94,19 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
             List<ClassQueryItem> v = new ArrayList<ClassQueryItem>();
 
             Long id = PortletService.getLong( renderRequest, nameModule + '.' + nameField );
-            WmPortalTemplateListType templateList = GetWmPortalTemplateWithIdSiteSupportLanguageList.getInstance( db_, id ).item;
+            PortalDaoProvider portalDaoProvider = MemberTools.getPortalDaoProvider(renderRequest);
+            List<TemplateBean> beans = portalDaoProvider.getPortalCommonDao().getTemplateLanguageList( id );
 
             if( log.isDebugEnabled() ) {
                 log.debug( "parameter " + nameModule + '.' + nameField + " is " + renderRequest.getParameter( nameModule + '.' + nameField ) );
                 log.debug( "id " + id );
             }
-            for( int i = 0; i < templateList.getWmPortalTemplateCount(); i++ ) {
-                WmPortalTemplateItemType templateItem = templateList.getWmPortalTemplate( i );
-                ClassQueryItem item = new ClassQueryItemImpl( templateItem.getIdSiteTemplate(),
-                    templateItem.getNameSiteTemplate() );
+            Iterator<TemplateBean> iterator = beans.iterator();
+            while( iterator.hasNext() ) {
+                TemplateBean templateBean = iterator.next();
+                ClassQueryItem item = new ClassQueryItemImpl(
+                    templateBean.getTemplateId(), templateBean.getTemplateName() );
+
                 if( item.getIndex().equals( idSiteTemplate ) )
                     item.setSelected( true );
                 v.add( item );

@@ -745,7 +745,7 @@ public final class MemberServiceClass {
 
                     String idSite = null;
                     try {
-                        idSite = SiteUtils.getGrantedSiteId(db_, serverName);
+                        idSite = MemberTools.getGrantedSiteId(db_, serverName);
                     } catch (PortletException e) {
                         log.error("Exception get siteId list");
                         throw new MemberException(e.getMessage());
@@ -1205,7 +1205,7 @@ public final class MemberServiceClass {
                         log.debug("get list of siteId for host "+serverName);
 
 
-                    String idSite = SiteUtils.getGrantedSiteId(dbDyn, serverName);
+                    String idSite = MemberTools.getGrantedSiteId(dbDyn, serverName);
 
                     if (log.isDebugEnabled())
                         log.debug("siteId list: "+idSite);
@@ -1490,7 +1490,7 @@ public final class MemberServiceClass {
             switch (dbDyn.getFamaly())
             {
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idSite = SiteUtils.getGrantedSiteId(dbDyn, serverName );
+                    String idSite = MemberTools.getGrantedSiteId(dbDyn, serverName );
 
                     where_ += " and ID_SITE in ("+idSite+") ";
 
