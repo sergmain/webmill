@@ -65,7 +65,7 @@ public final class Header {
         return array;
     }
 
-    public static List getAcceptLanguageAsList( final ServletRequest request ) {
+    public static List<AcceptLanguageWithLevel> getAcceptLanguageAsList( final ServletRequest request ) {
         if ( request == null || !( request instanceof HttpServletRequest ) )
             return null;
 
@@ -83,7 +83,7 @@ public final class Header {
         if ( headerLocale == null )
             return new Locale[]{};
 
-        List list = getAcceptLanguageAsList( headerLocale );
+        List<AcceptLanguageWithLevel> list = getAcceptLanguageAsList( headerLocale );
 
         Object array[] = list.toArray();
         if ( array.length == 0 )
