@@ -29,6 +29,7 @@ import java.util.List;
 import org.riverock.sso.schema.config.AuthProviderParametersListType;
 import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * User: Admin
@@ -38,26 +39,30 @@ import org.riverock.interfaces.sso.a3.AuthInfo;
  * $Id$
  */
 public interface AuthProvider {
-    public boolean isUserInRole( String userLogin, String userPassword, final String role_ );
-    public boolean checkAccess( String userLogin, String userPassword, final String serverName );
+    public boolean isUserInRole( AuthSession authSession, String role_ );
+    public boolean checkAccess( AuthSession authSession, String serverName );
     public void setParameters( AuthProviderParametersListType params );
 
-    public UserInfo initUserInfo( String userLogin );
+    public UserInfo initUserInfo( AuthSession authSession );
 
-    public String getGrantedUserId( String userLogin );
-    public List<Long> getGrantedUserIdList( String userLogin );
-    public List<Long> getGrantedCompanyIdList( String userLogin );
-    public String getGrantedGroupCompanyId( String userLogin );
-    public List<Long> getGrantedGroupCompanyIdList( String userLogin );
-    public String getGrantedHoldingId( String userLogin );
-    public List<Long> getGrantedHoldingIdList( String userLogin );
+    public String getGrantedUserId( AuthSession authSession );
+    public List<Long> getGrantedUserIdList( AuthSession authSession );
 
-    public Long checkCompanyId(Long companyId, String userLogin );
-    public Long checkGroupCompanyId(Long groupCompanyId, String userLogin );
-    public Long checkHoldingId(Long holdingId, String userLogin );
+    public String getGrantedCompanyId(AuthSession authSession);
+    public List<Long> getGrantedCompanyIdList( AuthSession authSession );
+
+    public String getGrantedGroupCompanyId( AuthSession authSession );
+    public List<Long> getGrantedGroupCompanyIdList( AuthSession authSession );
+
+    public String getGrantedHoldingId( AuthSession authSession );
+    public List<Long> getGrantedHoldingIdList( AuthSession authSession );
+
+    public Long checkCompanyId(Long companyId, AuthSession authSession );
+    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession );
+    public Long checkHoldingId(Long holdingId, AuthSession authSession );
 
     public boolean checkRigthOnUser( Long id_auth_user_check, Long id_auth_user_owner );
 
-    public AuthInfo getAuthInfo(String userLogin, String userPassword);
-    public AuthInfo getAuthInfo(Long authUserId);
+    public AuthInfo getAuthInfo(AuthSession authSession);
+    public AuthInfo getAuthInfo(AuthSession authSession, Long authUserId);
 }

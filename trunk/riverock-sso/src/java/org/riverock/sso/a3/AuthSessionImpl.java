@@ -147,7 +147,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
             if (log.isInfoEnabled())
                 log.info("Check role with provider named '"+authProvider+"'");
 
-            status = authProvider.checkAccess( userLogin, userPassword, serverName );
+            status = authProvider.checkAccess( this, serverName );
             if (status) {
                 activeProvider = authProvider;
                 break;
@@ -156,7 +156,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         }
 
         if (status) {
-            userInfo = activeProvider.initUserInfo( userLogin );
+            userInfo = activeProvider.initUserInfo( this );
         }
 
         isAccessDenied = !status;
@@ -177,7 +177,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         if (isAccessDenied)
             return false;
 
-        return activeProvider.isUserInRole( userLogin, userPassword, roleName );
+        return activeProvider.isUserInRole( this, roleName );
     }
 
     public String getName() {
@@ -209,43 +209,47 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     }
 
     public String getGrantedUserId() {
-        return activeProvider.getGrantedUserId( userLogin );
+        return activeProvider.getGrantedUserId( this );
     }
 
     public List<Long> getGrantedUserIdList() {
-        return activeProvider.getGrantedUserIdList( userLogin );
+        return activeProvider.getGrantedUserIdList( this );
+    }
+
+    public String getGrantedCompanyId() {
+        return activeProvider.getGrantedCompanyId( this );
     }
 
     public List<Long> getGrantedCompanyIdList() {
-        return activeProvider.getGrantedCompanyIdList( userLogin );
+        return activeProvider.getGrantedCompanyIdList( this );
     }
 
     public String getGrantedGroupCompanyId() {
-        return activeProvider.getGrantedGroupCompanyId( userLogin );
+        return activeProvider.getGrantedGroupCompanyId( this );
     }
 
     public List<Long> getGrantedGroupCompanyIdList() {
-        return activeProvider.getGrantedGroupCompanyIdList( userLogin );
+        return activeProvider.getGrantedGroupCompanyIdList( this );
     }
 
     public String getGrantedHoldingId() {
-        return activeProvider.getGrantedHoldingId( userLogin );
+        return activeProvider.getGrantedHoldingId( this );
     }
 
     public List<Long> getGrantedHoldingIdList() {
-        return activeProvider.getGrantedHoldingIdList( userLogin );
+        return activeProvider.getGrantedHoldingIdList( this );
     }
 
     public Long checkCompanyId(Long companyId ) {
-        return activeProvider.checkCompanyId( companyId, userLogin );
+        return activeProvider.checkCompanyId( companyId, this );
     }
 
     public Long checkGroupCompanyId(Long groupCompanyId) {
-        return activeProvider.checkGroupCompanyId( groupCompanyId, userLogin );
+        return activeProvider.checkGroupCompanyId( groupCompanyId, this );
     }
 
     public Long checkHoldingId(Long holdingId) {
-        return activeProvider.checkHoldingId( holdingId, userLogin );
+        return activeProvider.checkHoldingId( holdingId, this );
     }
 
     public boolean checkRigthOnUser(Long id_auth_user_check, Long id_auth_user_owner) {
@@ -253,6 +257,11 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     }
 
     public AuthInfo getAuthInfo() {
-        return activeProvider.getAuthInfo( userLogin, userPassword );
+        return activeProvider.getAuthInfo( this );
+    }
+
+    public AuthInfo getAuthInfo( Long authUserId ) {
+        final AuthInfo authInfo = activeProvider.getAuthInfo( this, authUserId );
+        return authInfo;
     }
 }
