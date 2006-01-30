@@ -41,7 +41,6 @@ import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.interfaces.sso.a3.AuthException;
 
 import org.apache.log4j.Logger;
 
@@ -105,7 +104,7 @@ public final class PortalRequestProcessor {
         }
     }
 
-    private static boolean checkTemplateRole(PortalRequestInstance portalRequestInstance) throws AuthException {
+    private static boolean checkTemplateRole(PortalRequestInstance portalRequestInstance) {
         if (portalRequestInstance.template==null ||
             StringTools.isEmpty( portalRequestInstance.template.getRole() ) ) {
             return true;

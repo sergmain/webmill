@@ -24,6 +24,7 @@
  */
 package org.riverock.webmill.portal;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,14 +36,10 @@ import org.apache.log4j.Logger;
 import org.riverock.common.html.AcceptLanguageWithLevel;
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.exception.PortalPersistenceException;
-
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.utils.ServletUtils;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
-import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
 
 /**
  * $Id$
@@ -51,10 +48,10 @@ public final class ContextLocaleUtils {
     private final static Logger log = Logger.getLogger( ContextLocaleUtils.class );
     private final static String NAME_LOCALE_COOKIE   = "webmill.lang.cookie";
 
-    static Locale prepareLocale( ContextFactory.ContextFactoryParameter factoryParameter) throws PortalPersistenceException {
+    static Locale prepareLocale( ContextFactory.ContextFactoryParameter factoryParameter) {
         // Todo - filter preferredLocale with locale defined for this site
         Locale tempLocale = null;
-        tempLocale = getPreferredLocale(factoryParameter.getAdapter(), factoryParameter.getRequest(), factoryParameter.getPortalInfo().getSiteId() );
+        tempLocale = getPreferredLocale( factoryParameter.getRequest(), factoryParameter.getPortalInfo().getSiteId() );
         if (tempLocale==null)
             tempLocale = factoryParameter.getPortalInfo().getDefaultLocale();
 
@@ -69,13 +66,12 @@ public final class ContextLocaleUtils {
         return realLocale;
     }
 
-    private static Locale getPreferredLocale( final DatabaseAdapter db_, final HttpServletRequest request, final Long siteId ) throws PortalPersistenceException {
+    private static Locale getPreferredLocale( final HttpServletRequest request, final Long siteId ) {
         // determinate preffered locale
         // AcceptLanguageWithLevel[] accept =
         List acceptVector = Header.getAcceptLanguageAsList( request );
 
-        WmPortalSiteLanguageListType supportLanguageList =
-              GetWmPortalSiteLanguageWithIdSiteList.getInstance(db_, siteId).item;
+        List<SiteLanguageBean> supportLanguageList = InternalDaoFactory.getInternalDao().getSiteLanguageList(siteId);
 
         if (log.isDebugEnabled())
             log.debug("Start looking for preffered locale");
@@ -83,7 +79,7 @@ public final class ContextLocaleUtils {
         // Locale not queried in URL
         Locale tempLocale = null;
         AcceptLanguageWithLevel bestAccept = null;
-        WmPortalSiteLanguageItemType includedFromCookie = null;
+        SiteLanguageBean includedFromCookie = null;
 
         Cookie[] cookies_req = request.getCookies();
         if (cookies_req!=null) {
@@ -115,7 +111,7 @@ public final class ContextLocaleUtils {
                     if (log.isDebugEnabled())
                         log.debug("Accepted locale item, locale - "+ accept.locale+", level - "+ accept.level);
 
-                    WmPortalSiteLanguageItemType included = includedAccept(accept.locale, supportLanguageList );
+                    SiteLanguageBean included = includedAccept(accept.locale, supportLanguageList );
 
                     if (log.isDebugEnabled()) log.debug("included - "+included);
 
@@ -140,7 +136,7 @@ public final class ContextLocaleUtils {
         return tempLocale;
     }
 
-    private static WmPortalSiteLanguageItemType includedAccept( final Locale accept, final WmPortalSiteLanguageListType supportLanguageList ) {
+    private static SiteLanguageBean includedAccept( final Locale accept, final List<SiteLanguageBean> supportLanguageList ) {
 
         boolean hasVariant = (accept.getVariant()!=null && accept.getVariant().trim().length()>0);
         boolean hasCountry = (accept.getCountry()!=null && accept.getCountry().trim().length()>0);
@@ -149,14 +145,16 @@ public final class ContextLocaleUtils {
             log.debug("accept locale: "+accept.toString()+", hasVariant - "+hasVariant + ", hasCountry - "+hasCountry);
         }
 
-        WmPortalSiteLanguageItemType result = null;
+        SiteLanguageBean result = null;
         Locale rl = null;
-        WmPortalSiteLanguageItemType resultTemp = null;
+        SiteLanguageBean resultTemp = null;
         Locale rlTemp = null;
-        for (int i=0; i<supportLanguageList.getWmPortalSiteLanguageCount(); i++){
-            WmPortalSiteLanguageItemType sl = supportLanguageList.getWmPortalSiteLanguage(i);
+        Iterator<SiteLanguageBean> iterator = supportLanguageList.iterator();
+        while (iterator.hasNext()) {
+            SiteLanguageBean bean = iterator.next();
+//            WmPortalSiteLanguageItemType sl = supportLanguageList.getWmPortalSiteLanguage(i);
 
-            Locale cl = StringTools.getLocale( sl.getCustomLanguage() );
+            Locale cl = StringTools.getLocale( bean.getCustomLanguage() );
 
             if (log.isDebugEnabled()) {
                 if (cl==null) {
@@ -172,7 +170,7 @@ public final class ContextLocaleUtils {
             }
 
             if (accept.toString().equalsIgnoreCase(cl.toString()))
-                return sl;
+                return bean;
 
             boolean hasCountryTemp = (cl.getCountry()!=null && cl.getCountry().trim().length()>0);
 
@@ -181,7 +179,7 @@ public final class ContextLocaleUtils {
                     accept.getLanguage().equalsIgnoreCase(cl.getLanguage()) )
                 {
                     if (log.isDebugEnabled()) log.debug("new resultTemp locale is: "+cl.toString());
-                    resultTemp = sl;
+                    resultTemp = bean;
                     rlTemp = cl;
                 }
             }
@@ -189,7 +187,7 @@ public final class ContextLocaleUtils {
                 if (log.isDebugEnabled()) {
                     log.debug("new resultTemp locale is: "+cl.toString());
                 }
-                resultTemp = sl;
+                resultTemp = bean;
                 rlTemp = cl;
             }
 

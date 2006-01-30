@@ -26,8 +26,7 @@ package org.riverock.webmill.portal;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.config.WebmillConfig;
@@ -39,7 +38,7 @@ import org.riverock.webmill.config.WebmillConfig;
  *         $Id$
  */
 public class PortalService {
-    private final static Log log = LogFactory.getLog(PortalService.class);
+    private final static Logger log = Logger.getLogger(PortalService.class);
 
     public static void setContentType(HttpServletResponse response) throws PortalException {
         setContentType(response, WebmillConfig.getHtmlCharset());

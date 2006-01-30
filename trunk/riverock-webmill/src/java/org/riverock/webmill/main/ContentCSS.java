@@ -29,7 +29,7 @@ import java.util.Date;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * @author Serge Maslyukov
@@ -74,7 +74,7 @@ public final class ContentCSS {
         if (siteId == null)
             return;
 
-        css = PortalDaoFactory.getPortalDao().getCssBean( siteId );
+        css = InternalDaoFactory.getInternalDao().getCssBean( siteId );
     }
 
     public String getCss() {

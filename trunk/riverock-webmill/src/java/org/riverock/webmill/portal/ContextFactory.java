@@ -36,31 +36,25 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.exception.PortalPersistenceException;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
+import org.riverock.webmill.portal.bean.PortletNameBean;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.context.CtxContextFactory;
 import org.riverock.webmill.portal.context.PageContextFactory;
 import org.riverock.webmill.portal.context.PageidContextFactory;
 import org.riverock.webmill.portal.context.UrlContextFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.PortalMenuItem;
-import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
-import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
-import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
-import org.riverock.webmill.schema.core.WmPortalPortletNameItemType;
-import org.riverock.webmill.core.GetWmPortalCatalogItem;
-import org.riverock.webmill.core.GetWmPortalCatalogLanguageItem;
-import org.riverock.webmill.core.GetWmPortalSiteLanguageItem;
-import org.riverock.webmill.core.GetWmPortalPortletNameItem;
 
 /**
  * $Id$
@@ -88,15 +82,10 @@ public abstract class ContextFactory {
     }
 
     public final static class ContextFactoryParameter {
-        private DatabaseAdapter adapter = null;
         private HttpServletRequest request = null;
         private PortalInfo portalInfo = null;
         private PortletContainer portletContainer = null;
         private Map<String, Object> httpRequestParameter = null;
-
-        public DatabaseAdapter getAdapter() {
-            return adapter;
-        }
 
         public HttpServletRequest getRequest() {
             return request;
@@ -116,15 +105,18 @@ public abstract class ContextFactory {
     }
 
     public final static class DefaultCtx {
-        private WmPortalCatalogItemType ctx = null;
-        private WmPortalCatalogLanguageItemType langMenu = null;
-        private WmPortalSiteLanguageItemType siteLang = null;
+//        private WmPortalCatalogItemType ctx = null;
+        private CatalogBean ctx = null;
+//        private WmPortalCatalogLanguageItemType langMenu = null;
+        private CatalogLanguageBean langMenu = null;
+//        private WmPortalSiteLanguageItemType siteLang = null;
+        private SiteLanguageBean siteLang = null;
         private PortletDefinition portlet = null;
         private String namePortletId = null;
 
         private DefaultCtx(){}
 
-        public WmPortalCatalogItemType getCtx() {
+        public CatalogBean getCtx() {
             return ctx;
         }
 
@@ -136,26 +128,30 @@ public abstract class ContextFactory {
             return namePortletId;
         }
 
-        public static DefaultCtx getInstance( ContextFactoryParameter factoryParameter, final Long ctxId )
-            throws PortalException {
+        public static DefaultCtx getInstance( ContextFactoryParameter factoryParameter, final Long ctxId ) {
 
-            try {
+//            try
+            {
                 DefaultCtx defaultCtx = new DefaultCtx();
-                defaultCtx.ctx = GetWmPortalCatalogItem.getInstance(factoryParameter.adapter, ctxId).item;
+                defaultCtx.ctx = InternalDaoFactory.getInternalDao().getCatalogBean( ctxId );
+
                 if (defaultCtx.ctx==null) {
-                    log.error("Context with id "+ctxId+" not found. process as 'index' page");
+                    log.error("Catalog record for id "+ctxId+" not found. process as 'index' page");
                     return null;
                 }
 
-                defaultCtx.langMenu = GetWmPortalCatalogLanguageItem.getInstance(factoryParameter.adapter, defaultCtx.ctx.getIdSiteCtxLangCatalog()).item;
+                defaultCtx.langMenu = InternalDaoFactory.getInternalDao().getCatalogLanguageBean(
+                    defaultCtx.ctx.getCatalogLanguageId());
+
                 if (defaultCtx.langMenu==null){
-                    log.error("Lang Catalog with id "+defaultCtx.ctx.getIdSiteCtxLangCatalog()+" not found. process as 'index' page");
+                    log.error("Lang Catalog with id "+defaultCtx.ctx.getCatalogLanguageId()+" not found. process as 'index' page");
                     return null;
                 }
 
-                defaultCtx.siteLang = GetWmPortalSiteLanguageItem.getInstance(factoryParameter.adapter, defaultCtx.langMenu.getIdSiteSupportLanguage()).item;
+                defaultCtx.siteLang = InternalDaoFactory.getInternalDao().getSiteLanguageBean(defaultCtx.langMenu.getSiteLanguageId());
+
                 if (defaultCtx.siteLang==null){
-                    log.error("Site language with id "+defaultCtx.langMenu.getIdSiteSupportLanguage()+" not found. process as 'index' page");
+                    log.error("Site language with id "+defaultCtx.langMenu.getSiteLanguageId()+" not found. process as 'index' page");
                     return null;
                 }
 
@@ -166,33 +162,35 @@ public abstract class ContextFactory {
                     }
                     log.debug("siteLang: "+defaultCtx.siteLang);
                     if (defaultCtx.siteLang!=null) {
-                        log.debug("siteLang.getIdSite(): "+defaultCtx.siteLang.getIdSite());
+                        log.debug("siteLang.getIdSite(): "+defaultCtx.siteLang.getSiteId());
                     }
                 }
 
-                if (!factoryParameter.portalInfo.getSiteId().equals(defaultCtx.siteLang.getIdSite())) {
-                    log.error("Requested context with id "+defaultCtx.ctx.getIdSiteCtxCatalog()+" is from others site. Process as 'index' page");
+                if (!factoryParameter.portalInfo.getSiteId().equals(defaultCtx.siteLang.getSiteId())) {
+                    log.error("Requested context with id "+defaultCtx.ctx.getCatalogId()+" is from others site. Process as 'index' page");
                     return null;
                 }
 
-                if (defaultCtx.ctx.getIdSiteCtxType()==null) {
-                    log.error( "idSiteCtxCatalog: " + defaultCtx.ctx.getIdSiteCtxCatalog() );
+                if (defaultCtx.ctx.getPortletId()==null) {
+                    log.error( "idSiteCtxCatalog: " + defaultCtx.ctx.getCatalogId() );
                     log.error( "ctxId: " + ctxId );
-                    throw new PortalException("contextTypeId is null, unknown portlet");
+                    return null;
+//                    throw new PortalException("contextTypeId is null, unknown portlet");
                 }
 
-                WmPortalPortletNameItemType ctxType = GetWmPortalPortletNameItem.getInstance( factoryParameter.adapter, defaultCtx.ctx.getIdSiteCtxType() ).item;
-                if (ctxType==null) {
-                    throw new PortalException("portletName for id "+defaultCtx.ctx.getIdSiteCtxType()+" not found");
+                PortletNameBean portletNameBean = InternalDaoFactory.getInternalDao().getPortletNameBean( defaultCtx.ctx.getPortletId() );
+                if (portletNameBean.getName()==null) {
+                    return null;
+//                    throw new PortalException("portletName for id "+defaultCtx.ctx.getPortletId()+" not found");
                 }
 
-                initPortletDefinition( factoryParameter, defaultCtx, ctxType.getType() );
+                initPortletDefinition( factoryParameter, defaultCtx, portletNameBean.getName() );
                 return defaultCtx;
             }
-            catch (Exception e) {
-                log.error("Error", e);
-                throw new PortalException("error", e);
-            }
+//            catch (Exception e) {
+//                log.error("Error", e);
+//                throw new PortalException("error", e);
+//            }
         }
 
         public static DefaultCtx getInstance( ContextFactoryParameter factoryParameter, final String portletName ) {
@@ -232,8 +230,8 @@ public abstract class ContextFactory {
     protected String urlResource = null;
     protected DefaultCtx defaultCtx = null;
 
-    protected abstract Long initPortalParameters( ContextFactoryParameter factoryParameter) throws PortalException;
-    protected abstract void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter ) throws PortalException;
+    protected abstract Long initPortalParameters( ContextFactoryParameter factoryParameter);
+    protected abstract void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter );
 
     public PortletParameters getParameters( final String namespace, final PortalTemplateItemType type ) {
         if (type!=null && type.getType()==PortalTemplateItemType.DYNAMIC_TYPE) {
@@ -274,7 +272,7 @@ public abstract class ContextFactory {
         if (defaultCtx==null || defaultCtx.ctx==null)
             return null;
 
-        return defaultCtx.ctx.getIdContext();
+        return defaultCtx.ctx.getContextId();
     }
 
 
@@ -304,8 +302,7 @@ public abstract class ContextFactory {
         return defaultCtx;
     }
 
-    protected ContextFactory( ContextFactoryParameter factoryParameter )
-        throws PortalException, PortalPersistenceException {
+    protected ContextFactory( ContextFactoryParameter factoryParameter ) {
 
         this.realLocale = ContextLocaleUtils.prepareLocale(factoryParameter);
 
@@ -319,11 +316,11 @@ public abstract class ContextFactory {
             return;
 
         defaultCtx = DefaultCtx.getInstance( factoryParameter, ctxId );
-        initFromContext(factoryParameter.adapter);
+        initFromContext();
 
     }
 
-    protected void setPortletInfo( final String nameTemplate ) {
+    protected void setTemplateName( final String nameTemplate ) {
         this.nameTemplate = nameTemplate;
     }
 
@@ -344,12 +341,10 @@ public abstract class ContextFactory {
      * init context type and name of template,
      * if type of context is null, set it to 'index_page'
      */
-    public static ContextFactory initTypeContext( final DatabaseAdapter db, final HttpServletRequest request, final PortalInfo portalInfo, final Map<String, Object> httpRequestParameter, final PortletContainer portletContainer )
-        throws PortalException, PortalPersistenceException {
+    public static ContextFactory initTypeContext( final HttpServletRequest request, final PortalInfo portalInfo, final Map<String, Object> httpRequestParameter, final PortletContainer portletContainer ) {
 
         ContextFactory contextFactoryTemp = null;
         ContextFactoryParameter factoryParameter = new ContextFactoryParameter();
-        factoryParameter.adapter = db;
         factoryParameter.request = request;
         factoryParameter.portalInfo = portalInfo;
         factoryParameter.httpRequestParameter = httpRequestParameter;
@@ -374,7 +369,7 @@ public abstract class ContextFactory {
                     contextFactoryTemp = UrlContextFactory.getInstance(factoryParameter);
                     break;
                 default:
-                    throw new PortalException("Unknown servlet path: "+servletPath);
+                    throw new IllegalStateException("Unknown servlet path: "+servletPath+". Check servelt mapping in WEB-INF/web.xml file");
             }
         }
 
@@ -400,13 +395,13 @@ public abstract class ContextFactory {
         return contextFactoryTemp;
     }
 
-    protected void initFromContext( final DatabaseAdapter db ) throws PortalException {
+    protected void initFromContext() {
 
         if (defaultCtx.ctx==null)
             return;
 
-        MenuItem menuItem = new PortalMenuItem(db, defaultCtx.ctx);
-        setPortletInfo( menuItem.getNameTemplate() );
+        MenuItem menuItem = new PortalMenuItem( defaultCtx.ctx );
+        setTemplateName( menuItem.getNameTemplate() );
 
         if (defaultCtx.siteLang!=null) {
             realLocale = StringTools.getLocale( defaultCtx.siteLang.getCustomLanguage() );

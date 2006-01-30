@@ -45,7 +45,7 @@ import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.site.PortalTemplateManagerImpl;
@@ -172,7 +172,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private PortalInfoImpl(Long siteId) {
         this.siteId = siteId;
         long mills = 0; // System.currentTimeMillis();
-        siteBean = PortalDaoFactory.getPortalDao().getSiteBean( siteId );
+        siteBean = InternalDaoFactory.getInternalDao().getSiteBean( siteId );
 
         if (!StringTools.isEmpty(siteBean.getDefLanguage()) &&
             !StringTools.isEmpty(siteBean.getDefCountry())) {
@@ -205,7 +205,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         if (log.isInfoEnabled()) log.info("Init portalTemplateManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
 
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-        siteLanguageList = PortalDaoFactory.getPortalDao().getSiteLanguageList( siteId );
+        siteLanguageList = InternalDaoFactory.getInternalDao().getSiteLanguageList( siteId );
         if (log.isInfoEnabled()) log.info("Init language listfor " + (System.currentTimeMillis() - mills) + " milliseconds");
 
         initMenu();

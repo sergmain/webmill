@@ -39,12 +39,8 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.core.GetWmPortalXsltDataWithIdSiteXsltList;
-import org.riverock.webmill.schema.core.WmPortalXsltDataItemType;
-import org.riverock.webmill.schema.core.WmPortalXsltDataListType;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
@@ -86,37 +82,21 @@ public class PortalXslt implements XsltTransformer{
         return (PortalXslt) cache.getInstanceNew(db__, id__);
     }
 
-    static {
-        try {
-            SqlStatement.registerRelateClass(PortalXslt.class, GetWmPortalXsltDataWithIdSiteXsltList.class);
-        }
-        catch (Throwable exception) {
-            final String es = "Exception in ";
-            log.error(es, exception);
-            throw new SqlStatementRegisterException(es, exception);
-        }
+    public PortalXslt(DatabaseAdapter db_, Long id) {
+        this( InternalDaoFactory.getInternalDao().getXslt( id ).toString() );
     }
 
-    public PortalXslt(DatabaseAdapter db_, Long id)
-        throws Exception {
-        try {
-            xslt = "";
-            WmPortalXsltDataListType xsltList = GetWmPortalXsltDataWithIdSiteXsltList.getInstance(db_, id).item;
-            for (int i = 0; i < xsltList.getWmPortalXsltDataCount(); i++) {
-                WmPortalXsltDataItemType item = xsltList.getWmPortalXsltData(i);
-                xslt += item.getXslt();
-            }
-            if (!StringTools.isEmpty(xslt)) {
+    public PortalXslt(String xslt) {
+        this.xslt = xslt;
+        if (!StringTools.isEmpty(xslt)) {
+            try {
                 createTransformer();
             }
-//            WmPortalXsltItemType xsltItem = GetWmPortalXsltItem.getInstance(db_, id).item;
-//            WmPortalSiteLanguageItemType langItem = GetWmPortalSiteLanguageItem.getInstance(db_, xsltItem.getIdSiteSupportLanguage()).item;
-//            xsltLang = StringTools.getLocale( langItem.getCustomLanguage() ).toString();
-        }
-        catch (Exception e) {
-            log.error("Xslt object id " + id);
-            log.error("Exception create new PortalXslt()", e);
-            throw e;
+            catch (Exception e) {
+                String es = "Error create transformer";
+                log.error(es, e);
+                throw new IllegalStateException(es,e );
+            }
         }
     }
 
@@ -181,14 +161,6 @@ public class PortalXslt implements XsltTransformer{
                 transformer = null;
                 throw e;
             }
-        }
-    }
-
-    public void reinitTransformer()
-        throws Exception {
-        synchronized (transformerSync) {
-            transformer = null;
-            createTransformer();
         }
     }
 

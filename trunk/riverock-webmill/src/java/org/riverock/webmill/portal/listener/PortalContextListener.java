@@ -4,8 +4,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * @author smaslyukov
@@ -14,7 +13,7 @@ import org.apache.commons.logging.LogFactory;
  *         $Id$
  */
 public class PortalContextListener implements ServletContextListener {
-    private final static Log log = LogFactory.getLog(PortalContextListener.class);
+    private final static Logger log = Logger.getLogger(PortalContextListener.class);
 
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();

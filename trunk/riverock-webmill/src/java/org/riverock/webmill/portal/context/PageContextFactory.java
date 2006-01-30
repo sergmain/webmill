@@ -32,10 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.portal.ContextFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
@@ -43,12 +42,11 @@ import org.riverock.webmill.portal.ContextFactory;
 public final class PageContextFactory extends ContextFactory {
     private final static Logger log = Logger.getLogger(PageContextFactory.class);
 
-    private PageContextFactory(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+    private PageContextFactory(ContextFactoryParameter factoryParameter) {
         super(factoryParameter);
     }
 
-    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter)
-        throws PortalException, PortalPersistenceException {
+    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) {
 
         PageContextFactory factory = new PageContextFactory(factoryParameter);
         if (factory.getDefaultCtx()!=null)
@@ -57,56 +55,39 @@ public final class PageContextFactory extends ContextFactory {
             return null;
     }
 
-    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) throws PortalException {
+    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) {
 
         log.debug(
             "Start process as 'page', format request: " +
             "/<CONTEXT>/page/<LOCALE>[/<num_of_portlet,portlet_param>]/name/<PAGE_NAME>[?<portlet_param>]..."
         );
-        try {
-            String path = factoryParameter.getRequest().getPathInfo();
-            if (path==null || path.equals("/")) {
-                return null;
-            }
 
-            int idxSlash = path.indexOf('/', 1);
-            String localeFromUrl = null;
-            String pageName = null;
-            if (idxSlash==-1) {
-                return null;
-            }
-            else {
-                localeFromUrl = path.substring(1, idxSlash);
-                pageName = path.substring( idxSlash+1 );
-            }
-
-            Long ctxId = DatabaseManager.getLongValue(
-                    factoryParameter.getAdapter(),
-                    "select a.ID_SITE_CTX_CATALOG " +
-                    "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c " +
-                    "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
-                    "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                    "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +
-                    "       a.CTX_PAGE_URL=?",
-                    new Object[]{
-                        factoryParameter.getPortalInfo().getSiteId(),
-                        StringTools.getLocale( localeFromUrl ).toString().toLowerCase(),
-                        pageName}
-            );
-
-            if (log.isDebugEnabled())  {
-                log.debug("siteId: " + factoryParameter.getPortalInfo().getSiteId() );
-                log.debug("locale: " + StringTools.getLocale( localeFromUrl ).toString().toLowerCase());
-                log.debug("pageName: " + pageName);
-                log.debug("ctxId: " + ctxId);
-            }
-            return ctxId;
-
-        } catch (Exception e) {
-            String es = "Error get ID of context from DB";
-            log.error(es, e);
-            throw new PortalException(es, e);
+        String path = factoryParameter.getRequest().getPathInfo();
+        if (path==null || path.equals("/")) {
+            return null;
         }
+
+        int idxSlash = path.indexOf('/', 1);
+        String localeFromUrl = null;
+        String pageName = null;
+        if (idxSlash==-1) {
+            return null;
+        }
+        else {
+            localeFromUrl = path.substring(1, idxSlash);
+            pageName = path.substring( idxSlash+1 );
+        }
+        Long ctxId = InternalDaoFactory.getInternalDao().getCatalogId(
+            factoryParameter.getPortalInfo().getSiteId(), StringTools.getLocale( localeFromUrl ), pageName
+        );
+
+        if (log.isDebugEnabled())  {
+            log.debug("siteId: " + factoryParameter.getPortalInfo().getSiteId() );
+            log.debug("locale: " + StringTools.getLocale( localeFromUrl ).toString().toLowerCase());
+            log.debug("pageName: " + pageName);
+            log.debug("ctxId: " + ctxId);
+        }
+        return ctxId;
     }
 
     protected void prepareParameters( HttpServletRequest httpRequest, Map<String, Object> httpRequestParameter ) {

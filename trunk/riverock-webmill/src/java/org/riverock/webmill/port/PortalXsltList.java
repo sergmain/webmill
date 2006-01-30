@@ -33,7 +33,7 @@ import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
@@ -91,7 +91,7 @@ public final class PortalXsltList implements XsltTransformerManager {
             log.debug("XsltList. serverName  ID - " + siteId);
         }
 
-        Map<String, XsltTransformer> map = PortalDaoFactory.getPortalDao().getTransformerMap( siteId );
+        Map<String, XsltTransformer> map = InternalDaoFactory.getInternalDao().getTransformerMap( siteId );
         return new PortalXsltList( map );
     }
 }

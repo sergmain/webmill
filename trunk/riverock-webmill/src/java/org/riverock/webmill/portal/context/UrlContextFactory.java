@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.webmill.portal.context;
 
 import java.util.Map;
@@ -33,10 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.exception.PortalPersistenceException;
-import org.riverock.webmill.portal.ContextFactory;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.portal.ContextFactory;
 
 /**
  * $Id$
@@ -44,11 +42,11 @@ import org.riverock.webmill.container.ContainerConstants;
 public final class UrlContextFactory extends ContextFactory {
     private final static Logger log = Logger.getLogger(UrlContextFactory.class);
 
-    private UrlContextFactory(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+    private UrlContextFactory(ContextFactoryParameter factoryParameter) {
         super(factoryParameter);
     }
 
-    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) {
         UrlContextFactory factory = new UrlContextFactory(factoryParameter);
         if (factory.getDefaultCtx()!=null)
             return factory;
@@ -90,7 +88,7 @@ public final class UrlContextFactory extends ContextFactory {
 
         Long id = null;
 
-        setPortletInfo( ctxTemplate );
+        setTemplateName( ctxTemplate );
         
         if ( log.isDebugEnabled() ) {
             log.debug( "ctxTemplate: " + ctxTemplate );

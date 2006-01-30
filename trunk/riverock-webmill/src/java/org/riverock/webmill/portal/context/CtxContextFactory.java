@@ -37,12 +37,10 @@ import org.apache.log4j.Logger;
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.portal.ContextFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
@@ -53,11 +51,11 @@ public final class CtxContextFactory extends ContextFactory {
     // add for compatible with jsr168 TCK
     private static final String INVOKE_PORTLET_NAME = "portletName";
 
-    private CtxContextFactory(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+    private CtxContextFactory(ContextFactoryParameter factoryParameter) {
         super(factoryParameter);
     }
 
-    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) {
         CtxContextFactory factory = new CtxContextFactory(factoryParameter);
         if (factory.getDefaultCtx()!=null) {
             return factory;
@@ -70,7 +68,6 @@ public final class CtxContextFactory extends ContextFactory {
             return factory;
         }
 
-        try {
 /*
             if (log.isDebugEnabled()) {
                 log.debug("menu: "+menu);
@@ -83,101 +80,94 @@ public final class CtxContextFactory extends ContextFactory {
                 }
             }
 */
-            if (menu==null || menu.getIndexMenuItem()==null) {
-                log.warn("menu: "+menu);
-                log.warn("locale: "+factory.realLocale.toString());
-                if (menu!=null) {
-                    log.warn("menu.getIndexMenuItem(): "+menu.getIndexMenuItem());
-                    if (menu.getIndexMenuItem()!=null) {
-                        log.warn("menu.getIndexMenuItem().getId(): "+menu.getIndexMenuItem().getId());
-                    }
-                    else {
-                        log.warn("menu.getIndexMenuItem() is null");
-                    }
+        if (menu == null || menu.getIndexMenuItem() == null) {
+            log.warn("menu: " + menu);
+            log.warn("locale: " + factory.realLocale.toString());
+            if (menu != null) {
+                log.warn("menu.getIndexMenuItem(): " + menu.getIndexMenuItem());
+                if (menu.getIndexMenuItem() != null) {
+                    log.warn("menu.getIndexMenuItem().getId(): " + menu.getIndexMenuItem().getId());
                 }
                 else {
-                    log.warn("menu is null");
+                    log.warn("menu.getIndexMenuItem() is null");
                 }
-                return factory;
             }
-
-            factory.defaultCtx = DefaultCtx.getInstance( factoryParameter, menu.getIndexMenuItem().getId() );
-            factory.initFromContext( factoryParameter.getAdapter() );
-            factory.setPortletInfo( menu.getIndexMenuItem().getNameTemplate() );
-
+            else {
+                log.warn("menu is null");
+            }
             return factory;
         }
-        catch( Exception e ) {
-            String es = "Eror init DefaultCtx for index_page";
-            log.error( es, e );
-            throw new PortalException( es, e );
-        }
+
+        factory.defaultCtx = DefaultCtx.getInstance(factoryParameter, menu.getIndexMenuItem().getId());
+        factory.initFromContext();
+        factory.setTemplateName(menu.getIndexMenuItem().getNameTemplate());
+
+        return factory;
     }
 
-    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) throws PortalException {
+    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) {
 
-        try {
-            log.debug( "Start process as page, format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/ctx?" );
-            // format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME[,PORTLET_NAME]>/<PARAMETER_OF_OTHER_PORTLET>/ctx?
+        log.debug("Start process as page, format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/ctx?");
+        // format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME[,PORTLET_NAME]>/<PARAMETER_OF_OTHER_PORTLET>/ctx?
 
-            String path = factoryParameter.getRequest().getPathInfo();
-            if ( path == null || path.equals( "/" ) ) {
-                return null;
+        String path = factoryParameter.getRequest().getPathInfo();
+        if (path == null || path.equals("/")) {
+            return null;
+        }
+
+        if (log.isDebugEnabled()) log.debug("path: " + path);
+
+        int idxSlash = path.indexOf('/', 1);
+        if (log.isDebugEnabled()) log.debug("idxSlash: " + idxSlash);
+        if (idxSlash == -1)
+            return null;
+
+        String localeFromUrl = null;
+        localeFromUrl = path.substring(1, idxSlash);
+        StringTokenizer st = new StringTokenizer(localeFromUrl, ",", false);
+        if (log.isDebugEnabled()) {
+            log.debug("st.countTokens(): " + st.countTokens());
+        }
+
+        if (st.countTokens() < 2)
+            return null;
+
+
+        realLocale = StringTools.getLocale(st.nextToken());
+        if (log.isDebugEnabled()) {
+            log.debug("token with locale: " + realLocale);
+        }
+
+        String localeNameTemp = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_LANG_PARAM);
+        if (localeNameTemp != null) {
+            realLocale = StringTools.getLocale(localeNameTemp);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("real locale: " + realLocale);
+        }
+
+
+        String templateName = st.nextToken();
+        String portletName = null;
+        if (st.hasMoreTokens()) {
+            portletName = st.nextToken();
+        }
+
+        if (StringTools.isEmpty(portletName)) {
+            portletName = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM);
+            if (portletName == null) {
+                portletName = factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME);
             }
+        }
 
-            if ( log.isDebugEnabled() ) log.debug( "path: " + path );
-
-            int idxSlash = path.indexOf( '/', 1 );
-            if ( log.isDebugEnabled() ) log.debug( "idxSlash: " + idxSlash );
-            if ( idxSlash == -1 )
-                return null;
-
-            String localeFromUrl = null;
-            localeFromUrl = path.substring( 1, idxSlash );
-            StringTokenizer st = new StringTokenizer( localeFromUrl, ",", false );
-            if ( log.isDebugEnabled() ) {
-                log.debug( "st.countTokens(): " + st.countTokens() );
-            }
-
-            if ( st.countTokens()<2 )
-                return null;
-
-
-            realLocale = StringTools.getLocale( st.nextToken() );
-            if ( log.isDebugEnabled() ) {
-                log.debug( "token with locale: " + realLocale );
-            }
-
-            String localeNameTemp = factoryParameter.getRequest().getParameter( ContainerConstants.NAME_LANG_PARAM );
-            if ( localeNameTemp != null ) {
-                realLocale = StringTools.getLocale( localeNameTemp );
-            }
-
-            if ( log.isDebugEnabled() ) {
-                log.debug( "real locale: " + realLocale );
-            }
-
-
-            String ctxTemplate = st.nextToken();
-            String ctxType = null;
-            if ( st.hasMoreTokens() ) {
-                ctxType = st.nextToken();
-            }
-
-            if ( StringTools.isEmpty(ctxType) ) {
-                ctxType = factoryParameter.getRequest().getParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM );
-                if (ctxType==null) {
-                    ctxType = factoryParameter.getRequest().getParameter( INVOKE_PORTLET_NAME );
-                }
-            }
-
-            // Todo parse request for parameters of others portlets
+        // Todo parse request for parameters of others portlets
 
 //        PortletDefinition portlet = null;
 //        try {
-//            portlet = PortletManager.getPortletDescription( ctxType );
+//            portlet = PortletManager.getPortletDescription( portletName );
 //        } catch (FileManagerException e) {
-//            log.error("Error getPortletDescription for type "+ctxType);
+//            log.error("Error getPortletDescription for type "+portletName);
 //        }
 //        String namePortletId = null;
 //        if (portlet!=null){
@@ -188,72 +178,45 @@ public final class CtxContextFactory extends ContextFactory {
 //        if (namePortletId!=null)
 //            id = ServletTools.getLong(request, namePortletId);
 
-            setPortletInfo( ctxTemplate );
+        setTemplateName(templateName);
 
-            if ( log.isDebugEnabled() ) {
-                log.debug( "realLocale: " + realLocale );
-                log.debug( "ctxTemplate: " + ctxTemplate );
-                log.debug( "ctxType: " + ctxType );
-//            log.debug( "portletId: "+id );
-            }
-
-
-            Long ctxId = null;
-            ctxId = DatabaseManager.getLongValue( factoryParameter.getAdapter(),
-                "select a.ID_SITE_CTX_CATALOG " +
-                "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c, " +
-                "       WM_PORTAL_PORTLET_NAME d, WM_PORTAL_TEMPLATE e " +
-                "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
-                "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +
-                "       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and " +
-                "       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and " +
-                "       d.TYPE=? and e.NAME_SITE_TEMPLATE=? ",
-                new Object[]{factoryParameter.getPortalInfo().getSiteId(), realLocale.toString().toLowerCase(), ctxType, ctxTemplate} );
-            if ( ctxId != null ) {
-                return ctxId;
-            }
-
-            defaultCtx = DefaultCtx.getInstance( factoryParameter, ctxType );
-            return null;
-        }
-        catch( Exception e ) {
-            final String es = "Error initPortalParameter";
-            log.error( es, e );
-            throw new PortalException( es, e );
+        if (log.isDebugEnabled()) {
+            log.debug("realLocale: " + realLocale);
+            log.debug("templateName: " + templateName);
+            log.debug("portletName: " + portletName);
         }
 
+        Long ctxId = InternalDaoFactory.getInternalDao().getCatalogId(factoryParameter.getPortalInfo().getSiteId(), realLocale, portletName, templateName);
+        if (ctxId != null) {
+            return ctxId;
+        }
+
+        defaultCtx = DefaultCtx.getInstance(factoryParameter, portletName);
+        return null;
     }
 
-    protected void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter )  throws PortalException {
-        try {
-            dynamicParameter = httpRequestParameter;
+    protected void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter ) {
+        dynamicParameter = httpRequestParameter;
 
-            if ( log.isDebugEnabled() ) {
-                log.debug( "dynamicParameter: "+dynamicParameter );
-                if ( dynamicParameter!=null ) {
-                    Iterator it = dynamicParameter.keySet().iterator();
-                    while (it.hasNext()) {
-                        String key = (String)it.next();
-                        Object obj = dynamicParameter.get( key );
-                        if (obj instanceof List) {
-                            log.debug( "Parameter, key: "+key );
-                            Iterator ii = ((List)obj).iterator();
-                            while (ii.hasNext()) {
-                                log.debug( "               value: "+ii.next() );
-                            }
+        if ( log.isDebugEnabled() ) {
+            log.debug( "dynamicParameter: "+dynamicParameter );
+            if ( dynamicParameter!=null ) {
+                Iterator it = dynamicParameter.keySet().iterator();
+                while (it.hasNext()) {
+                    String key = (String)it.next();
+                    Object obj = dynamicParameter.get( key );
+                    if (obj instanceof List) {
+                        log.debug( "Parameter, key: "+key );
+                        Iterator ii = ((List)obj).iterator();
+                        while (ii.hasNext()) {
+                            log.debug( "               value: "+ii.next() );
                         }
-                        else {
-                            log.debug( "Parameter, key: "+key+", value: "+obj.toString() );
-                        }
+                    }
+                    else {
+                        log.debug( "Parameter, key: "+key+", value: "+obj.toString() );
                     }
                 }
             }
-        }
-        catch( Exception e ) {
-            String es = "Error get parameters from http request";
-            log.error( es, e );
-            throw new PortalException( es, e );
         }
 
         String s = httpRequest.getServletPath();

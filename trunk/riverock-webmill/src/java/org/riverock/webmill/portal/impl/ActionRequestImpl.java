@@ -37,8 +37,7 @@ import javax.portlet.PortalContext;
 import javax.portlet.PortletPreferences;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.contenttype.ContentTypeManager;
 import org.riverock.webmill.portal.PortalRequestInstance;
@@ -51,7 +50,7 @@ import org.riverock.webmill.portal.PortalRequestInstance;
  * $Id$
  */
 public final class ActionRequestImpl extends WebmillPortletRequest implements ActionRequest {
-    private final static Log log = LogFactory.getLog( ActionRequestImpl.class );
+    private final static Logger log = Logger.getLogger( ActionRequestImpl.class );
 
     private File requestBodyFile = null;
     private boolean isMultiPartRequest;

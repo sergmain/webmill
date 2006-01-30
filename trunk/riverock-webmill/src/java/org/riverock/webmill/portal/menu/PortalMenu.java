@@ -37,7 +37,7 @@ import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
@@ -173,7 +173,7 @@ public final class PortalMenu implements Menu {
 
         if (log.isDebugEnabled()) log.debug("#33.70.00 ");
 
-        List<CatalogBean> list = PortalDaoFactory.getPortalDao().getCatalogList( bean.getCatalogLanguageId() );
+        List<CatalogBean> list = InternalDaoFactory.getInternalDao().getCatalogList( bean.getCatalogLanguageId() );
         Iterator<CatalogBean> iterator = list.iterator();
         while (iterator.hasNext()) {
             CatalogBean catalogBean = iterator.next();

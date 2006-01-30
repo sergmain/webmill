@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * @author SergeMaslyukov
@@ -77,7 +77,7 @@ public class SiteList {
                     backupObject = null;
 
                     SiteList site = new SiteList();
-                    site.hashListSite = PortalDaoFactory.getPortalDao().getSiteIdMap();
+                    site.hashListSite = InternalDaoFactory.getInternalDao().getSiteIdMap();
 
                     backupObject = site;
 
