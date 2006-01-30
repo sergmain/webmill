@@ -27,8 +27,6 @@ package org.riverock.portlet.price;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.riverock.generic.site.SiteListSite;
-import org.riverock.generic.exception.GenericException;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 
 /**
@@ -68,11 +66,9 @@ public class ShopPageParam {
     public ShopPageParam() {
     }
 
-    public void setServerName( String serverName_ )
-        throws GenericException
-    {
-        this.serverName = serverName_;
-        this.idSite = SiteListSite.getIdSite( this.serverName );
+    public void setServerName( String serverName, Long siteId ) {
+        this.serverName = serverName;
+        this.idSite = siteId;
     }
 
     public String getServerName() {

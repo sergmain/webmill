@@ -43,16 +43,9 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.webmill.container.tools.PortletService;
 
-
-
-
-
-
-public class JobItem
-{
+public class JobItem {
     private static Log log = LogFactory.getLog( JobItem.class );
 
     public Integer periodActivity;
@@ -157,12 +150,6 @@ public class JobItem
     }
 
 
-    private static String sqlJobPositionData =
-            "select TEXT_POSITION " +
-            "from   WM_JOB_POSITION_DATA " +
-            "where  ID_JOB_POSITION=? " +
-            "order by ID_JOB_POSITION_DATA asc";
-
     public boolean isFound = false;
 
     public Long idPosition = null;
@@ -220,7 +207,13 @@ public class JobItem
         "	a.id_job_type_education=c.id_job_type_education and " +
         "	a.ID_FIRM=e.ID_FIRM and e.ID_SITE=? ";
 
-    public static JobItem getInstance(DatabaseAdapter db_, Long id_, String serverName)
+    private static String sqlJobPositionData =
+            "select TEXT_POSITION " +
+            "from   WM_JOB_POSITION_DATA " +
+            "where  ID_JOB_POSITION=? " +
+            "order by ID_JOB_POSITION_DATA asc";
+
+    public static JobItem getInstance(DatabaseAdapter db_, Long id_, Long siteId)
             throws Exception
     {
         if (log.isDebugEnabled())
@@ -237,11 +230,9 @@ public class JobItem
             if (log.isDebugEnabled())
                 log.debug("query db for job item");
 
-            Long idSite = SiteListSite.getIdSite(serverName);
-
             ps = db_.prepareStatement(sqlJobPosition);
             RsetTools.setLong(ps, 1, item.idPosition);
-            RsetTools.setLong(ps, 2, idSite);
+            RsetTools.setLong(ps, 2, siteId );
             rs = ps.executeQuery();
 
             if (log.isDebugEnabled())
@@ -258,10 +249,10 @@ public class JobItem
                 item.dateEnd = item.datePost;
                 item.dateEnd.add(
                     Calendar.HOUR_OF_DAY,
-                    (item.periodActivity!=null?item.periodActivity.intValue():30)*24
+                    (item.periodActivity!=null?item.periodActivity:30)*24
                 );
-                item.ageFrom = RsetTools.getInt(rs, "age_from", new Integer(16));
-                item.ageTill = RsetTools.getInt(rs, "age_to", new Integer(65));
+                item.ageFrom = RsetTools.getInt(rs, "age_from", 16);
+                item.ageTill = RsetTools.getInt(rs, "age_to", 65);
                 item.gender = RsetTools.getString(rs, "sex_name");
                 item.nameEducation = RsetTools.getString(rs, "name_education");
                 item.salary = RsetTools.getFloat(rs, "salary");

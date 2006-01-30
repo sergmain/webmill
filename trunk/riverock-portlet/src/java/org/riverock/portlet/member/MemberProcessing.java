@@ -54,7 +54,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.member.validator.BindDynamicValidator;
 import org.riverock.portlet.member.validator.XmlValidator;
@@ -69,9 +68,7 @@ import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
 import org.riverock.portlet.schema.member.types.SqlCheckParameterTypeTypeType;
 import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 import org.riverock.portlet.schema.member.types.TypeFieldType;
-import org.riverock.portlet.tools.HtmlTools;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
@@ -407,7 +404,7 @@ public final class MemberProcessing {
 
             case FieldsTypeJspTypeType.YESNO_SWITCH_TYPE:
             case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
-                s_ = HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, bundle );
+                s_ = MemberTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, bundle );
                 break;
             case FieldsTypeJspTypeType.CHECKBOX_SWITCH_TYPE:
                 if (1==RsetTools.getInt(rs, MemberServiceClass.getRealName(ff), 0) )
@@ -630,7 +627,7 @@ public final class MemberProcessing {
 
             switch (db_.getFamaly()){
                 case DatabaseManager.MYSQL_FAMALY:
-                    String idSite = SiteUtils.getGrantedSiteId(db_, renderRequest.getServerName());
+                    String idSite = MemberTools.getGrantedSiteId(db_, renderRequest.getServerName());
                     whereSQL +=
                         prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                         ".ID_SITE in ("+idSite+") ";
@@ -1613,12 +1610,11 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             RestrictTypeTypeType.SITE_TYPE
             && !MemberServiceClass.checkRestrictField( content, RestrictTypeTypeType.SITE_TYPE) )
         {
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
             if (log.isDebugEnabled())
-                log.debug("#4.09.08 bind long param #" + numParam + ' ' +
-                          SiteListSite.getIdSite( renderRequest.getServerName())
-                );
+                log.debug("#4.09.08 bind long param #" + numParam + ' ' +siteId );
 
-            RsetTools.setLong(ps, numParam++, SiteListSite.getIdSite( renderRequest.getServerName() ));
+            RsetTools.setLong(ps, numParam++, siteId);
 
         }
 
@@ -2913,7 +2909,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                             case FieldsTypeJspTypeType.YESNO_SWITCH_TYPE:
                             case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
-                                v_str += HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, bundle );
+                                v_str += MemberTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, bundle );
                                 break;
                             case FieldsTypeJspTypeType.CHECKBOX_SWITCH_TYPE:
                                 if ( 1==RsetTools.getInt(rs, MemberServiceClass.getRealName(ff), 0) )
@@ -3123,7 +3119,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                     case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
                         s_ +=
                             "<select name=\"" + mod.getName() + '.' + MemberServiceClass.getRealName(ff) + "\">\n" +
-                            HtmlTools.printYesNo(
+                            MemberTools.printYesNo(
                                 ("1".equals(ff.getDefValue()) ? 1 : 0),
                                 true, bundle ) +
                             "</select>\n";
@@ -3228,7 +3224,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                     case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
                                         s_ +=
                                             "<select name=\"" + mod.getName() + '.' + MemberServiceClass.getRealName(ff) + "\">\n" +
-                                            HtmlTools.printYesNo(rs, MemberServiceClass.getRealName(ff),
+                                            MemberTools.printYesNo(rs, MemberServiceClass.getRealName(ff),
                                                 true, bundle ) +
                                             "</select>\n";
                                         break;
@@ -3547,7 +3543,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                                 case FieldsTypeJspTypeType.YESNO_SWITCH_TYPE:
                                 case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
 
-                                    editVal = HtmlTools.printYesNo(rs,
+                                    editVal = MemberTools.printYesNo(rs,
                                         MemberServiceClass.getRealName(ff), false, bundle );
                                     break;
 

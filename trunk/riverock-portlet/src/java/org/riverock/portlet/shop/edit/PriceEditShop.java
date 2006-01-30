@@ -52,6 +52,7 @@ import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 
 
 /**
@@ -92,24 +93,19 @@ public class PriceEditShop extends HttpServlet
 
             out = response.getWriter();
 
-                AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
-                if ( auth_==null )
-                {
-                    WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
-                    return;
-                }
+            AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
+            if ( auth_==null ) {
+                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
+                return;
+            }
 
-                db_ = DatabaseAdapter.getInstance();
+            db_ = DatabaseAdapter.getInstance();
 
-//                InitPage jspPage = new InitPage(db_, request,
-//                                                "mill.locale._price_list"
-//                );
+            ShopPageParam shopParam = new ShopPageParam();
+            PortletSession session = renderRequest.getPortletSession();
 
-
-                ShopPageParam shopParam = new ShopPageParam();
-                PortletSession session = renderRequest.getPortletSession();
-
-                shopParam.setServerName(renderRequest.getServerName());
+            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+            shopParam.setServerName( renderRequest.getServerName(), siteId );
 
                 if (renderRequest.getParameter(ShopPortlet.NAME_ID_SHOP_PARAM) != null)
                 {
@@ -158,7 +154,7 @@ public class PriceEditShop extends HttpServlet
                                 st.setString(1, RequestTools.getString(renderRequest, "name_" + i + "_" + idCode));
                                 RsetTools.setDouble(st, 2, PortletService.getDouble(renderRequest, "price_" + i + "_" + idCode));
                                 st.setString(3, RequestTools.getString(renderRequest, "curr_" + i + "_" + idCode));
-                                RsetTools.setInt(st, 4, PortletService.getInt(renderRequest, "cb_" + i + "_" + idCode, new Integer(0) ));
+                                RsetTools.setInt(st, 4, PortletService.getInt(renderRequest, "cb_" + i + "_" + idCode, 0 ));
                                 RsetTools.setLong(st, 5, idCode);
                                 RsetTools.setLong(st, 6, shopParam.id_shop);
 

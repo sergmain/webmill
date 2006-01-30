@@ -41,8 +41,8 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.generic.site.SiteListSite;
 import org.riverock.sql.cache.SqlStatement;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * $Id$
@@ -142,7 +142,7 @@ public final class Shop {
         if( portletRequest == null )
             return null;
 
-        Long idSite = SiteListSite.getIdSite( portletRequest.getServerName() );
+        Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
         String sql_ = "select ID_SHOP from WM_PRICE_SHOP_LIST where ID_SITE=?";
 
@@ -150,7 +150,7 @@ public final class Shop {
         ResultSet rs = null;
         try {
             ps = db_.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, idSite );
+            RsetTools.setLong( ps, 1, siteId );
             rs = ps.executeQuery();
 
             if( rs.next() )

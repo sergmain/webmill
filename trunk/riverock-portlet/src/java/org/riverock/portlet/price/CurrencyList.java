@@ -26,12 +26,8 @@ package org.riverock.portlet.price;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.main.CacheFactory;
-import org.riverock.generic.site.SiteListSite;
-import org.riverock.generic.startup.StartupApplication;
-import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.core.GetWmCashCurrencyWithIdSiteList;
 import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
 import org.riverock.portlet.schema.core.WmCashCurrencyListType;
@@ -130,26 +126,4 @@ public class CurrencyList
         }
         fillRealCurrencyData( list );
     }
-
-    public static void main(String args[]) throws Exception {
-
-        StartupApplication.init();
-        GenericConfig.setDefaultConnectionName( "MYSQL" );
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance();
-
-        Long idSite = SiteListSite.getIdSite("me.askmore");
-
-        long mills = System.currentTimeMillis();
-        CurrencyList currList = CurrencyList.getInstance(db_, idSite);
-        CustomCurrencyType list = currList.list;
-        System.out.println("Currency list processed for "+(System.currentTimeMillis()-mills)+"ms.");
-
-        final String fileName = GenericConfig.getGenericDebugDir()+"schema-currency.xml";
-        System.out.println( "fileName = " + fileName );
-        XmlTools.writeToFile( list, fileName );
-
-        DatabaseAdapter.close(db_);
-        db_ = null;
-    }
-
 }
