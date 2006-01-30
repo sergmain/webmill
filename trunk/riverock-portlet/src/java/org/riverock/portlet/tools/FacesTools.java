@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.portlet.PortletRequest;
 
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+
 /**
  * @author SergeMaslyukov
  *         Date: 02.01.2006
@@ -20,6 +23,10 @@ import javax.portlet.PortletRequest;
  *         $Id$
  */
 public class FacesTools {
+
+    public static PortalDaoProvider getPortalDaoProvider() {
+        return (PortalDaoProvider)FacesTools.getAttribute( ContainerConstants.PORTAL_PORTAL_DATA_MANAGER );
+    }
 
     public static Long getLong( UIComponent component, String name ) {
         return getLong( component, name, null);
