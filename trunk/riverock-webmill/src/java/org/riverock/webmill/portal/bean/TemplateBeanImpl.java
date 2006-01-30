@@ -1,16 +1,27 @@
 package org.riverock.webmill.portal.bean;
 
+import org.riverock.interfaces.portal.bean.TemplateBean;
+
 /**
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 16:32:46
  *         $Id$
  */
-public class TemplateBean {
+public class TemplateBeanImpl implements TemplateBean {
     private Long templateId; // _idSiteTemplate;
     private Long siteLanguageId; //_idSiteSupportLanguage;
     private String templateName; // _nameSiteTemplate;
     private String templateData;
+    private String templateLanguage = null;
+
+    public String getTemplateLanguage() {
+        return templateLanguage;
+    }
+
+    public void setTemplateLanguage(String templateLanguage) {
+        this.templateLanguage = templateLanguage;
+    }
 
     public Long getTemplateId() {
         return templateId;
