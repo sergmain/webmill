@@ -164,14 +164,6 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return true;
     }
 
-    public boolean isUserInRole(String userLogin, String userPassword, String role_) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public boolean checkAccess(String userLogin, String userPassword, String serverName) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public void setParameters(final AuthProviderParametersListType parametersList) {
         if (parametersList == null)
             return;
@@ -186,47 +178,51 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         }
     }
 
-    public UserInfo initUserInfo( String userLogin ) {
-        return null;
-    }
-
-    public String getGrantedUserId(String userLogin) {
+    public UserInfo initUserInfo(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<Long> getGrantedUserIdList(String userLogin) {
+    public String getGrantedUserId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<Long> getGrantedCompanyIdList(String userLogin) {
+    public List<Long> getGrantedUserIdList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getGrantedGroupCompanyId(String userLogin) {
+    public String getGrantedCompanyId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<Long> getGrantedGroupCompanyIdList(String userLogin) {
+    public List<Long> getGrantedCompanyIdList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getGrantedHoldingId(String userLogin) {
+    public String getGrantedGroupCompanyId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<Long> getGrantedHoldingIdList(String userLogin) {
+    public List<Long> getGrantedGroupCompanyIdList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Long checkCompanyId(Long companyId, String userLogin) {
+    public String getGrantedHoldingId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Long checkGroupCompanyId(Long groupCompanyId, String userLogin) {
+    public List<Long> getGrantedHoldingIdList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Long checkHoldingId(Long holdingId, String userLogin) {
+    public Long checkCompanyId(Long companyId, AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long checkHoldingId(Long holdingId, AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -234,11 +230,11 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public AuthInfo getAuthInfo(String userLogin, String userPassword) {
+    public AuthInfo getAuthInfo(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public AuthInfo getAuthInfo(Long authUserId) {
+    public AuthInfo getAuthInfo(AuthSession authSession, Long authUserId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

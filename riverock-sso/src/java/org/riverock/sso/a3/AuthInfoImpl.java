@@ -69,7 +69,7 @@ public class AuthInfoImpl implements AuthInfo {
         return groupCompanyId;
     }
 
-    public Long getHolfingId() {
+    public Long getHoldingId() {
         return holdingId;
     }
 
