@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * User: Admin
@@ -64,8 +64,8 @@ public final class RequestStatisticFilter implements Filter {
 
     public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
-        this.userAgent = PortalDaoFactory.getPortalDao().getUserAgentList();
-        this.url = PortalDaoFactory.getPortalDao().getUrlList();
+        this.userAgent = InternalDaoFactory.getInternalDao().getUserAgentList();
+        this.url = InternalDaoFactory.getInternalDao().getUrlList();
 
     }
 
@@ -136,7 +136,7 @@ public final class RequestStatisticFilter implements Filter {
 
             bean.setParameters( new String(StringTools.getBytesUTF(param), 0, lenParams) );
 
-            PortalDaoFactory.getPortalDao().saveRequestStatistic( userAgent, url, bean );
+            InternalDaoFactory.getInternalDao().saveRequestStatistic( userAgent, url, bean );
         }
         catch (Throwable th) {
             try {

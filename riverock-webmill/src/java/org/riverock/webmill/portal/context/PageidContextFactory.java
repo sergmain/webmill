@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.webmill.portal.context;
 
 import java.util.Map;
@@ -32,10 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.portal.ContextFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
@@ -43,11 +41,11 @@ import org.riverock.webmill.portal.ContextFactory;
 public final class PageidContextFactory extends ContextFactory {
     private final static Logger log = Logger.getLogger(PageidContextFactory.class);
 
-    private PageidContextFactory(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+    private PageidContextFactory(ContextFactoryParameter factoryParameter) {
         super(factoryParameter);
     }
 
-    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) throws PortalException, PortalPersistenceException {
+    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) {
         PageidContextFactory factory = new PageidContextFactory(factoryParameter);
         if (factory.getDefaultCtx()!=null)
             return factory;
@@ -55,64 +53,47 @@ public final class PageidContextFactory extends ContextFactory {
             return null;
     }
 
-    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) throws PortalException {
+    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) {
 
         log.debug("Start process as '/pageid', format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...");
         // format request: /<CONTEXT>/pageid/<LOCALE>/<CONTEXT_ID>/...
 
-        try {
-            String path = factoryParameter.getRequest().getPathInfo();
-            if (log.isDebugEnabled()) {
-                log.debug( "path: " + path + ", content type: " +factoryParameter.getRequest().getContentType() );
-            }
-            if (path==null || path.equals("/")) {
-                return null;
-            }
-
-            int idxSlash = path.indexOf('/', 1);
-            String localeFromUrl = null;
-            String pageId = null;
-            if (idxSlash==-1) {
-                localeFromUrl = path.substring(1);
-                pageId = getRealLocale().toString();
-            }
-            else {
-                localeFromUrl = path.substring(1, idxSlash);
-                int idxLocale = path.indexOf('/', idxSlash+1);
-                if (idxLocale==-1)
-                    pageId = path.substring(idxSlash+1);
-                else
-                    pageId = path.substring(idxSlash+1, idxLocale);
-            }
-
-            Long id = null;
-            try {
-                id = new Long(pageId);  
-            }
-            catch( java.lang.NumberFormatException e ) {
-                log.warn("NumberFormatException error of parsing pageid: " + pageId);
-                return null;
-            }
-
-            Long ctxId = DatabaseManager.getLongValue(
-                factoryParameter.getAdapter(),
-                "select a.ID_SITE_CTX_CATALOG " +
-                "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c " +
-                "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
-                "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and a.ID_SITE_CTX_CATALOG=?",
-                new Object[]{
-                    factoryParameter.getPortalInfo().getSiteId(),
-                    StringTools.getLocale( localeFromUrl ).toString().toLowerCase(), id }
-            );
-
-            return ctxId;
-
-        } catch (Exception e) {
-            String es = "Error get ID of context from DB";
-            log.error(es, e);
-            throw new PortalException(es, e);
+        String path = factoryParameter.getRequest().getPathInfo();
+        if (log.isDebugEnabled()) {
+            log.debug("path: " + path + ", content type: " + factoryParameter.getRequest().getContentType());
         }
+        if (path == null || path.equals("/")) {
+            return null;
+        }
+
+        int idxSlash = path.indexOf('/', 1);
+        String localeFromUrl = null;
+        String pageId = null;
+        if (idxSlash == -1) {
+            localeFromUrl = path.substring(1);
+            pageId = getRealLocale().toString();
+        }
+        else {
+            localeFromUrl = path.substring(1, idxSlash);
+            int idxLocale = path.indexOf('/', idxSlash + 1);
+            if (idxLocale == -1)
+                pageId = path.substring(idxSlash + 1);
+            else
+                pageId = path.substring(idxSlash + 1, idxLocale);
+        }
+
+        Long id = null;
+        try {
+            id = new Long(pageId);
+        }
+        catch (java.lang.NumberFormatException e) {
+            log.warn("NumberFormatException error of parsing pageid: " + pageId);
+            return null;
+        }
+
+        return InternalDaoFactory.getInternalDao().getCatalogId(
+            factoryParameter.getPortalInfo().getSiteId(),  StringTools.getLocale(localeFromUrl), id
+        );
     }
 
     protected void prepareParameters( HttpServletRequest httpRequest, Map<String, Object> httpRequestParameter ) {

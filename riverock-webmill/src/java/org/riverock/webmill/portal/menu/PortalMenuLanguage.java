@@ -33,31 +33,15 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
  */
 public final class PortalMenuLanguage implements MenuLanguage {
     private final static Logger log = Logger.getLogger( PortalMenuLanguage.class );
-
-    static{
-        Class c = PortalMenuLanguage.class;
-        try{
-            SqlStatement.registerRelateClass( c, PortalMenu.class );
-            SqlStatement.registerRelateClass( c, GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.class );
-        }
-        catch( Exception exception ) {
-            final String es = "Exception in SqlStatement.registerRelateClass()";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
 
     private List<Menu> menu = new ArrayList<Menu>();
     private SiteLanguageBean item = null;
@@ -141,7 +125,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
             log.debug("language - " + getLang());
         }
 
-        List<CatalogLanguageBean> list = PortalDaoFactory.getPortalDao().getCatalogLanguageList( bean.getSiteLanguageId() );
+        List<CatalogLanguageBean> list = InternalDaoFactory.getInternalDao().getCatalogLanguageList( bean.getSiteLanguageId() );
 
         Iterator<CatalogLanguageBean> iterator = list.iterator();
         while (iterator.hasNext()) {

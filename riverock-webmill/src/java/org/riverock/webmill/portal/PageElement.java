@@ -25,9 +25,9 @@
 package org.riverock.webmill.portal;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,21 +40,21 @@ import javax.servlet.RequestDispatcher;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
+import org.riverock.interfaces.portal.template.PortalTemplateItem;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.impl.PortletRequestDispatcherImpl;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
-import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
-import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
+import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -402,7 +402,7 @@ containing the portlet is restarted.
             renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
 
             if (portalRequestInstance.getDefaultCtx() != null && portalRequestInstance.getDefaultCtx().getCtx()!=null ) {
-                renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getIdSiteCtxCatalog() );
+                renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getCatalogId() );
             }
 
             // Todo after rewrite(delete) member portlet, you can delete next line
@@ -487,7 +487,7 @@ containing the portlet is restarted.
             }
 
             if (isAccessPermit) {
-                WmPortalCatalogItemType item = portalRequestInstance.getDefaultCtx().getCtx();
+                CatalogBean item = portalRequestInstance.getDefaultCtx().getCtx();
                 if (item != null && item.getPortletRole() != null) {
                     isAccessPermit = false;
                     securityMessage = "Access disabled in context item";
@@ -533,7 +533,7 @@ containing the portlet is restarted.
         return contextPath;
     }
 
-    private Properties initMetadata( WmPortalCatalogItemType defaultCtx ) throws PortalException {
+    private Properties initMetadata( CatalogBean defaultCtx ) throws PortalException {
         if (defaultCtx==null || defaultCtx.getMetadata()==null)
             return null;
 

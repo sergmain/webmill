@@ -33,11 +33,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * $Id$
@@ -47,19 +44,6 @@ import org.riverock.webmill.portal.dao.PortalDaoFactory;
  */
 public final class SiteMenu {
     private final static Logger log = Logger.getLogger( SiteMenu.class );
-
-    static {
-        try {
-            Class c = SiteMenu.class;
-            SqlStatement.registerRelateClass( c, PortalMenuLanguage.class );
-            SqlStatement.registerRelateClass( c, GetWmPortalSiteLanguageWithIdSiteList.class );
-        }
-        catch( Exception exception ) {
-            final String es = "Exception in ";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
 
     private List<MenuLanguage> menuLanguage = new ArrayList<MenuLanguage>();
     private static Map<Long, SiteMenu> siteMenuLaguage = new HashMap<Long, SiteMenu>();
@@ -122,7 +106,7 @@ public final class SiteMenu {
             log.debug("#33.60.00 ");
         }
 
-        List<SiteLanguageBean> list = PortalDaoFactory.getPortalDao().getSiteLanguageList( idSite );
+        List<SiteLanguageBean> list = InternalDaoFactory.getInternalDao().getSiteLanguageList( idSite );
 
         if (log.isDebugEnabled()) {
             log.debug("Count of language for this site is "+list.size());

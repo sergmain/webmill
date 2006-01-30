@@ -24,32 +24,31 @@
  */
 package org.riverock.webmill.portal.impl;
 
-import java.util.*;
 import java.security.Principal;
+import java.util.*;
 
-import javax.portlet.WindowState;
+import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
-import javax.portlet.PortletSession;
-import javax.portlet.PortalContext;
 import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.portlet.PortletSession;
+import javax.portlet.WindowState;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestWrapper;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.PortalConstants;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
+import org.apache.log4j.Logger;
+
 import org.riverock.common.html.Header;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.portal.PortalConstants;
+import org.riverock.webmill.portal.PortalRequestInstance;
 
 /**
  * User: SergeMaslyukov
@@ -58,7 +57,7 @@ import org.apache.commons.logging.LogFactory;
  * $Id$
  */
 public class WebmillPortletRequest extends ServletRequestWrapper implements HttpServletRequest, PortletRequest {
-    private final static Log log = LogFactory.getLog( WebmillPortletRequest.class );
+    private final static Logger log = Logger.getLogger( WebmillPortletRequest.class );
 
     protected HttpServletRequest httpRequest = null;
     protected HttpServletResponse httpResponse = null;
@@ -577,7 +576,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             this.cookies = new Cookie[0];
         }
 
-        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DATA_MANAGER, portalRequestInstance.getPortalDataManager() );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DATA_MANAGER, portalRequestInstance.getPortalDaoProvider() );
 
         this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getNameTemplate() );
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );

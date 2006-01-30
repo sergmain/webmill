@@ -52,7 +52,7 @@ import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.utils.ServletUtils;
 import org.riverock.interfaces.portal.CookieManager;
 
@@ -206,7 +206,7 @@ public class PortalInstanceImpl implements PortalInstance  {
     private PortalInstanceImpl( ServletConfig servletConfig ) {
         this.portalServletConfig = servletConfig;
         this.portletContainer = PortletContainerFactory.getContainerInstance( this );
-        this.supportedList = PortalDaoFactory.getPortalDao().getSupportedLocales();
+        this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
     }
 
     private static Object syncCounter = new Object();

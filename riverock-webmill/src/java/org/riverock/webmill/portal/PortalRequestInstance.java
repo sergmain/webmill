@@ -25,8 +25,8 @@
 package org.riverock.webmill.portal;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,24 +44,23 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.MainTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
-import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.CookieManager;
-import org.riverock.interfaces.portal.PortalDataManager;
-import org.riverock.sso.a3.AuthTools;
-import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.sso.a3.AuthTools;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.exception.PortalException;
+import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
-import org.riverock.webmill.portal.dao.PortalDataManagerImpl;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.port.PortalInfoImpl;
 
 /**
  * User: Admin
@@ -106,7 +105,7 @@ public final class PortalRequestInstance {
     private boolean isMultiPartRequest = false;
     private int contentLength;
 
-    private PortalDataManager portalDataManager = null;
+    private PortalDaoProvider portalDaoProvider = null;
 
     public void destroy() {
         Iterator iterator = getPageElementList().iterator();
@@ -144,7 +143,7 @@ public final class PortalRequestInstance {
         portalContext = null;
         MainTools.deleteFile( requestBodyFile );
         requestBodyFile = null;
-        portalDataManager = null;
+        portalDaoProvider = null;
     }
 
     public PortalRequestInstance() {
@@ -152,8 +151,8 @@ public final class PortalRequestInstance {
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
     }
 
-    public PortalDataManager getPortalDataManager() {
-        return portalDataManager;
+    public PortalDaoProvider getPortalDaoProvider() {
+        return portalDaoProvider;
     }
 
     PortalRequestInstance(
@@ -162,8 +161,7 @@ public final class PortalRequestInstance {
         ServletConfig portalServletConfig, 
         PortletContainer portletContainer,
         String portalName
-        )
-        throws Throwable {
+        ) throws PortalException {
 
         startMills = System.currentTimeMillis();
         this.byteArrayOutputStream = new ByteArrayOutputStream(WEBPAGE_BUFFER_SIZE);
@@ -175,7 +173,6 @@ public final class PortalRequestInstance {
         this.httpRequest = request_;
         this.httpResponse = response_;
         this.portalServletConfig = portalServletConfig;
-        DatabaseAdapter db = null;
         try {
             contentLength = httpRequest.getContentLength();
             isMultiPartRequest = PortletUtils.isMultiPart( httpRequest );
@@ -187,17 +184,16 @@ public final class PortalRequestInstance {
                 httpRequestParameter = Collections.unmodifiableMap(PortletUtils.getParameters(httpRequest));
             }
 
-            db = DatabaseAdapter.getInstance();
             this.auth = AuthTools.getAuthSession(httpRequest);
-            portalDataManager = new PortalDataManagerImpl( auth );
+            portalDaoProvider = new PortalDaoProviderImpl( auth );
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
             }
             
-            this.portalInfo = PortalInfoImpl.getInstance(db, httpRequest.getServerName());
+            this.portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName());
             this.portalContext = createPortalContext(portalName, portalInfo);
 
-            this.contextFactory = ContextFactory.initTypeContext(db, httpRequest, portalInfo, httpRequestParameter, portletContainer);
+            this.contextFactory = ContextFactory.initTypeContext( httpRequest, portalInfo, httpRequestParameter, portletContainer);
             if (contextFactory.getUrlResource() != null) {
                 if (log.isDebugEnabled()) {
                     log.debug("portalServletConfig: " + portalServletConfig );
@@ -283,15 +279,7 @@ public final class PortalRequestInstance {
             }
 
         }
-        catch (Throwable e) {
-            String es = "Error create portal request instance";
-            log.error(es, e);
-            throw e;
-        }
         finally {
-            DatabaseAdapter.close(db);
-            db = null;
-
             if (log.isInfoEnabled()) {
                 log.info("init PortalRequestInstance for " + (System.currentTimeMillis() - startMills) + " milliseconds");
             }

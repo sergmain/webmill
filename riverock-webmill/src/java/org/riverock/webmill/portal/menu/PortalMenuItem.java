@@ -33,8 +33,8 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.PortletNameBean;
-import org.riverock.webmill.portal.bean.TemplateBean;
-import org.riverock.webmill.portal.dao.PortalDaoFactory;
+import org.riverock.webmill.portal.bean.TemplateBeanImpl;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  *
@@ -88,8 +88,8 @@ public final class PortalMenuItem implements MenuItem{
         }
 
         this.menuName = ctx.getKeyMessage();
-        this.templateBean = PortalDaoFactory.getPortalDao().getTemplateBean( ctx.getTemplateId() );
-        this.portletNameBean = PortalDaoFactory.getPortalDao().getPortletNameBean( ctx.getPortletId() );
+        this.templateBean = InternalDaoFactory.getInternalDao().getTemplateBean( ctx.getTemplateId() );
+        this.portletNameBean = InternalDaoFactory.getInternalDao().getPortletNameBean( ctx.getPortletId() );
     }
 
     public Long getIdTop(){
