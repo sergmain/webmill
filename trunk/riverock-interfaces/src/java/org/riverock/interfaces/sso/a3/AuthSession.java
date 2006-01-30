@@ -35,4 +35,5 @@ public interface AuthSession extends Principal {
     public UserInfo getUserInfo();
 
     public AuthInfo getAuthInfo();
+    public AuthInfo getAuthInfo(Long authInfoId );
 }
