@@ -24,20 +24,6 @@
  */
 package org.riverock.portlet.tools;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.portlet.PortletException;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-
 /**
  * User: smaslyukov
  * Date: 09.08.2004
@@ -46,62 +32,10 @@ import org.riverock.generic.db.DatabaseManager;
  */
 public final class SiteUtils {
 
-    private final static Logger log = Logger.getLogger( SiteUtils.class );
+    public static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
 
     public static String getTempDir() {
-        return System.getProperty( "java.io.tmpdir" );
+        return System.getProperty( JAVA_IO_TMPDIR );
     }
 
-    public static String getGrantedSiteId( DatabaseAdapter adapter, String username )
-        throws PortletException {
-        List<Long> list = getGrantedSiteIdList( adapter, username );
-        if( list.size() == 0 )
-            return "NULL";
-
-        Iterator<Long> it = list.iterator();
-        String r = "";
-        while( it.hasNext() ) {
-            if( r.length() != 0 ) {
-                r += ", ";
-            }
-            r += it.next();
-        }
-        return r;
-    }
-
-    public static List<Long> getGrantedSiteIdList( DatabaseAdapter adapter, String serverName )
-        throws PortletException {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            String sql_ =
-                "select ID_SITE " +
-                "from   WM_PORTAL_VIRTUAL_HOST " +
-                "where  lower(NAME_VIRTUAL_HOST)=lower(?)";
-
-            ps = adapter.prepareStatement( sql_ );
-            ps.setString( 1, serverName );
-
-            rs = ps.executeQuery();
-
-            List<Long> list = new ArrayList<Long>();
-            while( rs.next() ) {
-                Long id = RsetTools.getLong( rs, "ID_SITE" );
-                if( id == null )
-                    continue;
-                list.add( id );
-            }
-            return list;
-        }
-        catch( Exception e ) {
-            final String es = "Exception get siteID";
-            log.error( es, e );
-            throw new PortletException( es, e );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
 }

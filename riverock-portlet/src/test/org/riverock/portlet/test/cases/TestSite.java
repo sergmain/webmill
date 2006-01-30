@@ -24,33 +24,10 @@
  */
 package org.riverock.portlet.test.cases;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.util.Iterator;
-
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.site.SiteListSite;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.interfaces.portlet.menu.MenuInterface;
-import org.riverock.interfaces.portlet.menu.MenuItemInterface;
-import org.riverock.interfaces.portlet.menu.MenuLanguageInterface;
-import org.riverock.portlet.core.*;
-import org.riverock.portlet.price.CurrencyList;
-import org.riverock.portlet.price.CurrencyService;
-import org.riverock.portlet.schema.core.*;
-import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-
-import org.riverock.interfaces.portal.PortalInfo;
-
-import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.riverock.generic.db.DatabaseAdapter;
 
 
 /**
