@@ -90,16 +90,16 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     public PortalTemplateManagerImpl(){}
 
     public static PortalTemplateManagerImpl getInstance(long id__) {
-        return getInstance(null, id__ );
+        return getInstance(null, (Long)id__ );
     }
 
     public static PortalTemplateManagerImpl getInstance(DatabaseAdapter db__, long id__) {
-        return getInstance(db__, id__ );
+        return getInstance(null, (Long)id__ );
     }
 
     public static PortalTemplateManagerImpl getInstance(DatabaseAdapter db__, Long id__) {
         try {
-            return (PortalTemplateManagerImpl) cache.getInstanceNew(db__, id__);
+            return (PortalTemplateManagerImpl) cache.getInstanceNew(null, id__);
         } catch (GenericException e) {
             String es = "Error in getInstance(DatabaseAdapter db__, Long id__)";
             log.error(es, e);

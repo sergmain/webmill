@@ -3,6 +3,7 @@ package org.riverock.webmill.portal.dao;
 import org.riverock.interfaces.portal.dao.PortalAuthDao;
 import org.riverock.interfaces.portal.dao.PortalCompanyDao;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.dao.PortalCommonDao;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
@@ -14,10 +15,15 @@ import org.riverock.interfaces.sso.a3.AuthSession;
 public class PortalDaoProviderImpl implements PortalDaoProvider {
     private PortalAuthDao portalAuthDao = null;
     private PortalCompanyDao portalCompanyDao = null;
+    private PortalCommonDao portalCommonDao = null;
 
     public PortalDaoProviderImpl(AuthSession authSession) {
         this.portalCompanyDao = new PortalCompanyDaoImpl(authSession);
         this.portalAuthDao = new PortalAuthDaoImpl(authSession);
+    }
+
+    public PortalCommonDao getPortalCommonDao() {
+        return portalCommonDao;
     }
 
     public PortalAuthDao getPortalAuthDao() {

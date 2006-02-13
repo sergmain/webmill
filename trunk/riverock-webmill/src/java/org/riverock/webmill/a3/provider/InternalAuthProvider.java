@@ -3,15 +3,18 @@ package org.riverock.webmill.a3.provider;
 import java.io.Serializable;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import org.riverock.sso.a3.*;
-import org.riverock.sso.schema.config.AuthProviderParametersListType;
-import org.riverock.sso.main.MainUserInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.GroupCompany;
+import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthProvider;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.webmill.portal.dao.InternalAuthDao;
+import org.riverock.webmill.portal.dao.InternalCompanyDao;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -23,9 +26,9 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  */
 public final class InternalAuthProvider implements AuthProvider, Serializable {
     private static final long serialVersionUID = 4055005503L;
-    private final static Logger log = Logger.getLogger( InternalAuthProvider.class );
 
     private InternalAuthDao authDao = InternalDaoFactory.getInternalAuthDao();
+    private InternalCompanyDao companyDao = InternalDaoFactory.getInternalCompanyDao();
 
     public InternalAuthProvider() {
     }
@@ -34,22 +37,15 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         return authDao.checkAccess( authSession.getUserLogin(), authSession.getUserPassword(), serverName );
     }
 
-    public void setParameters( final AuthProviderParametersListType params ) {
+    public void setParameters(List<List<AuthParameterBean>> params) {
     }
 
     public boolean isUserInRole( AuthSession authSession, final String role_ ) {
         return authDao.isUserInRole(authSession.getUserLogin(), authSession.getUserPassword(), role_);
     }
 
-    public UserInfo initUserInfo( AuthSession authSession ) {
-        try {
-            return MainUserInfo.getInstance( authSession.getUserLogin() );
-        }
-        catch( Exception e ) {
-            final String es = "Error user info for user login: " + authSession.getUserLogin();
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
+    public UserInfo getUserInfo( AuthSession authSession ) {
+        return authDao.getUserInfo( authSession.getUserLogin() );
     }
 
     public String getGrantedUserId( AuthSession authSession ) {
@@ -104,6 +100,10 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         return authDao.getAuthInfo( authSession.getUserLogin(), authSession.getUserPassword() );
     }
 
+    public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
+        return authDao.getAuthInfoList( authSession );
+    }
+
     public AuthInfo getAuthInfo(AuthSession authSession, Long authUserId) {
         final AuthInfo currentAuthInfo = getAuthInfo( authSession );
         final AuthInfo authInfo = authDao.getAuthInfo( authUserId );
@@ -113,4 +113,61 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         }
         return authInfo;
     }
+
+    public RoleBean getRole( AuthSession authSession , Long roleId) {
+        return authDao.getRole( authSession, roleId );
+    }
+
+    public List<RoleBean> getUserRoleList( AuthSession authSession ) {
+        return authDao.getUserRoleList( authSession );
+    }
+
+    public List<RoleBean> getRoleList( AuthSession authSession ) {
+        return authDao.getRoleList( authSession );
+    }
+
+    public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
+        return authDao.getRoleList( authSession, authUserId );
+    }
+
+    public Long addRole( AuthSession authSession, RoleBean roleBean) {
+        return authDao.addRole( authSession, roleBean );
+    }
+
+    public void updateRole( AuthSession authSession, RoleBean roleBean ) {
+        authDao.updateRole( authSession, roleBean );
+    }
+
+    public void deleteRole( AuthSession authSession, RoleBean roleBean ) {
+        authDao.deleteRole( authSession, roleBean );
+    }
+
+    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        return authDao.addUser( authSession, infoAuth );
+    }
+
+    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        authDao.updateUser( authSession, infoAuth );
+    }
+
+    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        authDao.deleteUser( authSession, infoAuth );
+    }
+
+    public List<UserInfo> getUserList(AuthSession authSession) {
+        return authDao.getUserList( authSession );
+    }
+
+    public List<Company> getCompanyList(AuthSession authSession) {
+        return companyDao.getCompanyList( authSession );
+    }
+
+    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
+        return companyDao.getGroupCompanyList( authSession );
+    }
+
+    public List<Holding> getHoldingList(AuthSession authSession) {
+        return companyDao.getHoldingList( authSession );
+    }
+
 }

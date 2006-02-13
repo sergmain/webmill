@@ -107,10 +107,8 @@ public class InternalDaoImpl implements InternalDao {
             ConcurrentMap<String, Long> userAgent = new ConcurrentHashMap<String, Long>(userAgentList.getWmPortalAccessUseragentCount() + 10);
 
             for (int i = 0; i < userAgentList.getWmPortalAccessUseragentCount(); i++) {
-                WmPortalAccessUseragentItemType userAgentItem =
-                    userAgentList.getWmPortalAccessUseragent(i);
-                userAgent.put(userAgentItem.getUserAgent(),
-                    userAgentItem.getIdSiteUserAgent());
+                WmPortalAccessUseragentItemType userAgentItem = userAgentList.getWmPortalAccessUseragent(i);
+                userAgent.put( userAgentItem.getUserAgent(), userAgentItem.getIdSiteUserAgent() );
             }
             return userAgent;
         }
@@ -134,8 +132,7 @@ public class InternalDaoImpl implements InternalDao {
             ConcurrentMap<String, Long> url = new ConcurrentHashMap<String, Long>(urlList.getWmPortalAccessUrlCount() + 10);
             for (int i = 0; i < urlList.getWmPortalAccessUrlCount(); i++) {
                 WmPortalAccessUrlItemType urlItem = urlList.getWmPortalAccessUrl(i);
-                url.put(urlItem.getUrl(),
-                    urlItem.getIdSiteAccessUrl());
+                url.put(urlItem.getUrl(), urlItem.getIdSiteAccessUrl());
             }
             return url;
         }
@@ -343,6 +340,7 @@ public class InternalDaoImpl implements InternalDao {
                 bean.setNameCustomLanguage( lang.getNameCustomLanguage() );
                 bean.setSiteId( lang.getIdSite() );
                 bean.setSiteLanguageId( lang.getIdSiteSupportLanguage() );
+                list.add( bean );
             }
 
             return list;
@@ -508,9 +506,8 @@ public class InternalDaoImpl implements InternalDao {
     }
 
     static{
-        Class c = PortalMenu.class;
         try{
-            SqlStatement.registerRelateClass( c, GetWmPortalCatalogWithIdSiteCtxLangCatalogList.class );
+            SqlStatement.registerRelateClass( PortalMenu.class, GetWmPortalCatalogWithIdSiteCtxLangCatalogList.class );
         }
         catch( Exception exception ) {
             final String es = "Exception in SqlStatement.registerRelateClass()";

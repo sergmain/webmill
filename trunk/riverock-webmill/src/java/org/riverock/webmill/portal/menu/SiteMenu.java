@@ -103,7 +103,7 @@ public final class SiteMenu {
 
     private SiteMenu( final Long idSite) {
         if (log.isDebugEnabled()) {
-            log.debug("#33.60.00 ");
+            log.debug("#33.60.00. Get List of language for siteId " + idSite );
         }
 
         List<SiteLanguageBean> list = InternalDaoFactory.getInternalDao().getSiteLanguageList( idSite );

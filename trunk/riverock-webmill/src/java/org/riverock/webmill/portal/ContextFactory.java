@@ -172,6 +172,7 @@ public abstract class ContextFactory {
                 }
 
                 if (defaultCtx.ctx.getPortletId()==null) {
+                    log.error( "defaultCtx.ctx.getPortletId() is null, unknown portlet");
                     log.error( "idSiteCtxCatalog: " + defaultCtx.ctx.getCatalogId() );
                     log.error( "ctxId: " + ctxId );
                     return null;
@@ -180,6 +181,7 @@ public abstract class ContextFactory {
 
                 PortletNameBean portletNameBean = InternalDaoFactory.getInternalDao().getPortletNameBean( defaultCtx.ctx.getPortletId() );
                 if (portletNameBean.getName()==null) {
+                    log.error("portletName for id "+defaultCtx.ctx.getPortletId()+" not found");
                     return null;
 //                    throw new PortalException("portletName for id "+defaultCtx.ctx.getPortletId()+" not found");
                 }

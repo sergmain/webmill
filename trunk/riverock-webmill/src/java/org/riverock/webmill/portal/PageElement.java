@@ -204,24 +204,15 @@ public final class PageElement {
                 log.debug("#10.1");
             }
 
-            if ( !isUrl ){
                 ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
                 try {
                     final ClassLoader classLoader = portletEntry.getClassLoader();
                     Thread.currentThread().setContextClassLoader( classLoader );
 
+            if ( !isUrl ){
                     portletEntry.getPortlet().render( renderRequest, renderResponse );
-                }
-                finally {
-                    Thread.currentThread().setContextClassLoader( oldLoader );
-                }
             }
             else {
-
-                ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-                try {
-                    final ClassLoader classLoader = portletEntry.getClassLoader();
-                    Thread.currentThread().setContextClassLoader( classLoader );
 
                     RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher( portletEntry.getPortletDefinition().getPortletClass() );
 
@@ -242,11 +233,12 @@ public final class PageElement {
                     if (log.isDebugEnabled()) {
                         log.debug("#91.5");
                     }
+            }
+
                 }
                 finally {
                     Thread.currentThread().setContextClassLoader( oldLoader );
                 }
-            }
             renderResponse.flushBuffer();
 
             if (log.isDebugEnabled()) {
@@ -423,6 +415,10 @@ containing the portlet is restarted.
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext()
             );
+            actionRequest.setAttribute( 
+		ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER, 
+		new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest ) 
+		);
 
             actionResponse = new ActionResponseImpl(portalRequestInstance, actionRequest, portalRequestInstance.getHttpResponse(), namespace, renderParameters, portletEntry.getPortletProperties() );
 
