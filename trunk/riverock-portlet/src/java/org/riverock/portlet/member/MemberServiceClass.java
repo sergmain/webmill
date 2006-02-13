@@ -225,7 +225,7 @@ public final class MemberServiceClass {
                 if (cnt != null && cnt.getQueryArea() != null)
                 {
                     SqlClause lookupSc = buildSelectClause(content1, cnt, module, dbDyn, serverName, authSession );
-                    // из lookupSc берем только from (таблицы) и where(условия)
+                    // get from lookupSc only 'from'(table() and where(condition)
 
                     if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                     {
