@@ -29,7 +29,7 @@ public class MemberTools {
     private final static Logger log = Logger.getLogger( MemberTools.class );
 
     public static PortalDaoProvider getPortalDaoProvider(PortletRequest portletRequest) {
-        return (PortalDaoProvider)portletRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DATA_MANAGER );
+        return (PortalDaoProvider)portletRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
     }
 
     public static String getGrantedSiteId( DatabaseAdapter adapter, String username )
