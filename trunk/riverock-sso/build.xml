@@ -56,7 +56,7 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
+<!--        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />-->
         <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
         <antcall target="jar"/>
     </target>
