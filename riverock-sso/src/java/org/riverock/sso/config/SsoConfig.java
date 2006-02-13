@@ -51,15 +51,12 @@ public class SsoConfig {
 
     private static boolean isConfigProcessed = false;
 
-    public static SsoConfigType getConfig()
-    {
+    public static SsoConfigType getConfig() {
         return (SsoConfigType)configObject.getConfigObject();
     }
 
     private static Object syncReadConfig = new Object();
-    private static void readConfig()
-        throws ConfigException
-    {
+    private static void readConfig() throws ConfigException {
         if (isConfigProcessed)
             return;
 
@@ -68,7 +65,15 @@ public class SsoConfig {
             if (isConfigProcessed)
                 return;
 
+		if (log.isDebugEnabled()) {
+        		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+			log.debug("SsoConfig classLoader: "+cl+"\nhash: "+cl.hashCode() );
+			ClassLoader ccl = ConfigObject.class.getClassLoader();
+			log.debug("ConfigObject classLoader: "+ccl+"\nhash: "+ccl.hashCode() );
+		}
+
             configObject = ConfigObject.load(JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfigType.class);
+
             if (log.isDebugEnabled())
                 log.debug("#15.006");
 
