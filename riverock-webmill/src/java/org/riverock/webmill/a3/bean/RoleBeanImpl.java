@@ -1,0 +1,45 @@
+package org.riverock.webmill.a3.bean;
+
+import java.io.Serializable;
+
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
+
+/**
+ * @author SergeMaslyukov
+ *         Date: 31.01.2006
+ *         Time: 16:08:54
+ *         $Id$
+ */
+public class RoleBeanImpl implements Serializable, RoleBean {
+    private static final long serialVersionUID = 2057005507L;
+
+    private Long roleId = null;
+    private String name = null;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId( Long roleId ) {
+        this.roleId = roleId;
+    }
+
+    public boolean equals( RoleBean roleBean ) {
+        if( roleBean == null || roleBean.getRoleId()==null || roleId==null ) {
+            return false;
+        }
+        return roleBean.getRoleId().equals( roleId );
+    }
+
+    public String toString() {
+        return "[name:" + name + ",id:" + roleId + "]";
+    }
+}
