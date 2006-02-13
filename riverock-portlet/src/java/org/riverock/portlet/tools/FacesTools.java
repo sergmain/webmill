@@ -25,7 +25,7 @@ import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 public class FacesTools {
 
     public static PortalDaoProvider getPortalDaoProvider() {
-        return (PortalDaoProvider)FacesTools.getAttribute( ContainerConstants.PORTAL_PORTAL_DATA_MANAGER );
+        return (PortalDaoProvider)FacesTools.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
     }
 
     public static Long getLong( UIComponent component, String name ) {
