@@ -3,8 +3,7 @@ package org.riverock.module.factory;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.module.Constants;
 import org.riverock.module.action.Action;
@@ -24,7 +23,7 @@ import org.riverock.module.web.request.ModuleRequest;
  *         $Id$
  */
 public abstract class ActionFactoryImpl implements ActionFactory {
-    private static final Log log = LogFactory.getLog(WebmillPortletActionFactoryImpl.class);
+    private static final Logger log = Logger.getLogger(WebmillPortletActionFactoryImpl.class);
 
     protected ActionConfig actionConfig = null;
 

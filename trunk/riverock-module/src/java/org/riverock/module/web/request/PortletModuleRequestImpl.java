@@ -4,8 +4,7 @@ import java.util.Locale;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.module.web.session.ModuleSession;
 import org.riverock.module.web.session.PortletModuleSessionImpl;
@@ -19,7 +18,7 @@ import org.riverock.webmill.container.tools.PortletService;
  *         $Id$
  */
 public abstract class PortletModuleRequestImpl implements ModuleRequest {
-    static private final Log log = LogFactory.getLog(PortletModuleRequestImpl.class);
+    static private final Logger log = Logger.getLogger(PortletModuleRequestImpl.class);
 
     protected PortletRequest portletRequest = null;
 

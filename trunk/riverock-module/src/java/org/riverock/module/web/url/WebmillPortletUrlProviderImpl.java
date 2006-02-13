@@ -3,8 +3,7 @@ package org.riverock.module.web.url;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.module.web.request.ModuleRequest;
@@ -19,7 +18,7 @@ import org.riverock.module.WebmillPortletConstants;
  *         $Id$
  */
 public class WebmillPortletUrlProviderImpl implements UrlProvider {
-    private static final Log log = LogFactory.getLog(WebmillPortletUrlProviderImpl.class);
+    private static final Logger log = Logger.getLogger(WebmillPortletUrlProviderImpl.class);
 
     private ModuleRequest moduleRequest = null;
     private ModuleResponse moduleResponse = null;

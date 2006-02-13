@@ -7,8 +7,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.PortletException;
 
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
+import org.apache.log4j.Logger;
 
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.response.ModuleResponse;
@@ -21,7 +20,7 @@ import org.riverock.module.exception.ModuleException;
  *         $Id$
  */
 public class PortletModuleRequestDispatcherImpl implements ModuleRequestDispatcher {
-    static private final Log log = LogFactory.getLog(PortletModuleRequestDispatcherImpl.class);
+    static private final Logger log = Logger.getLogger(PortletModuleRequestDispatcherImpl.class);
 
     private PortletRequestDispatcher portletRequestDispatcher = null;
     public PortletModuleRequestDispatcherImpl(PortletRequestDispatcher portletRequestDispatcher) {

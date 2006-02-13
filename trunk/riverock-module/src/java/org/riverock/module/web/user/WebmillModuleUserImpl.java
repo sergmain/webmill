@@ -2,14 +2,7 @@ package org.riverock.module.web.user;
 
 import java.security.Principal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.riverock.sso.a3.AuthInfo;
-import org.riverock.sso.a3.InternalAuthProvider;
-import org.riverock.module.exception.ModuleException;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.AuthException;
 
 /**
  * @author SMaslyukov
@@ -18,7 +11,6 @@ import org.riverock.interfaces.sso.a3.AuthException;
  *         $Id$
  */
 public class WebmillModuleUserImpl implements ModuleUser {
-    private static final Log log = LogFactory.getLog(WebmillModuleUserImpl.class);
 
     private AuthSession authSession = null;
     public WebmillModuleUserImpl(Principal userPrincipal) {
@@ -61,42 +53,15 @@ public class WebmillModuleUserImpl implements ModuleUser {
         }
     }
 
-    public boolean isCompany() throws ModuleException {
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo(authSession);
-        }
-        catch (AuthException e) {
-            String es = "Error check access level";
-            log.error( es, e );
-            throw new ModuleException( es, e );
-        }
-        return authInfo.getUseCurrentFirm()==1;
+    public boolean isCompany() {
+        return authSession.getAuthInfo().isCompany();
     }
 
-    public boolean isGroupCompany()  throws ModuleException {
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo(authSession);
-        }
-        catch (AuthException e) {
-            String es = "Error check access level";
-            log.error( es, e );
-            throw new ModuleException( es, e );
-        }
-        return authInfo.getService()==1;
+    public boolean isGroupCompany() {
+        return authSession.getAuthInfo().isGroupCompany();
     }
 
-    public boolean isHolding()  throws ModuleException {
-        AuthInfo authInfo = null;
-        try {
-            authInfo = InternalAuthProvider.getAuthInfo(authSession);
-        }
-        catch (AuthException e) {
-            String es = "Error check access level";
-            log.error( es, e );
-            throw new ModuleException( es, e );
-        }
-        return authInfo.getRoad()==1;
+    public boolean isHolding() {
+        return authSession.getAuthInfo().isHolding();
     }
 }
