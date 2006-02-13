@@ -3,6 +3,7 @@ package org.riverock.webmill.portal.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,13 +16,20 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.sso.schema.core.WmAuthRelateAccgroupItemType;
-import org.riverock.sso.schema.core.WmAuthUserItemType;
-import org.riverock.sso.core.InsertWmAuthRelateAccgroupItem;
-import org.riverock.sso.core.GetWmAuthUserItem;
 import org.riverock.sso.a3.AuthInfoImpl;
 import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.webmill.portal.utils.SiteList;
+import org.riverock.webmill.a3.bean.UserInfoImpl;
+import org.riverock.webmill.a3.bean.RoleBeanImpl;
+import org.riverock.webmill.schema.core.WmAuthUserItemType;
+import org.riverock.webmill.schema.core.WmAuthRelateAccgroupItemType;
+import org.riverock.webmill.core.GetWmAuthUserItem;
+import org.riverock.webmill.core.InsertWmAuthRelateAccgroupItem;
 
 /**
  * @author SergeMaslyukov
@@ -32,6 +40,64 @@ import org.riverock.webmill.portal.utils.SiteList;
 public class InternalAuthDaoImpl implements InternalAuthDao {
     private static Logger log = Logger.getLogger(InternalAuthDaoImpl.class);
 
+    public UserInfo getUserInfo(String userLogin) {
+        String sql_ = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        sql_ =
+            "select a.* " +
+            "from   WM_LIST_USER a, WM_AUTH_USER b " +
+            "where  a.id_user = b.id_user and b.user_login = ? ";
+
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
+            ps = db_.prepareStatement(sql_);
+            ps.setString(1, userLogin);
+
+            rs = ps.executeQuery();
+
+            UserInfoImpl userInfo = null;
+            if (rs.next()) {
+                userInfo = new UserInfoImpl();
+                set(rs, userInfo);
+            }
+            return userInfo;
+        }
+        catch (Exception e) {
+            final String es = "Error get user info";
+            log.error(es, e);
+            throw new IllegalStateException(es,e);
+        }
+        finally {
+            DatabaseManager.close(db_, rs, ps);
+            rs = null;
+            ps = null;
+            db_ = null;
+        }
+    }
+
+    private void set(ResultSet rs, UserInfoImpl userInfo) throws SQLException {
+        userInfo.setUserId(RsetTools.getLong(rs, "ID_USER"));
+        userInfo.setCompanyId(RsetTools.getLong(rs, "ID_FIRM"));
+        userInfo.setFirstName(RsetTools.getString(rs, "FIRST_NAME"));
+        userInfo.setMiddleName(RsetTools.getString(rs, "MIDDLE_NAME"));
+        userInfo.setLastName(RsetTools.getString(rs, "LAST_NAME"));
+
+        userInfo.setDateStartWork(RsetTools.getTimestamp(rs, "DATE_START_WORK"));
+
+        userInfo.setDateFire(RsetTools.getTimestamp(rs, "DATE_FIRE"));
+
+        userInfo.setAddress(RsetTools.getString(rs, "ADDRESS"));
+        userInfo.setTelephone(RsetTools.getString(rs, "TELEPHONE"));
+
+        userInfo.setDateBindProff(RsetTools.getTimestamp(rs, "DATE_BIND_PROFF"));
+
+        userInfo.setHomeTelephone(RsetTools.getString(rs, "HOME_TELEPHONE"));
+        userInfo.setEmail(RsetTools.getString(rs, "EMAIL"));
+        userInfo.setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
+    }
 
     public String getGrantedUserId(String username) {
         DatabaseAdapter db = null;
@@ -575,7 +641,8 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             if ( log.isDebugEnabled() )
                 log.debug( "#1.011" );
 
-            ps = db_.prepareStatement( "select null " +
+            ps = db_.prepareStatement(
+                "select null " +
                 "from   WM_AUTH_USER a, WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_ACCESS_GROUP c " +
                 "where  a.USER_LOGIN=? and " +
                 "       a.ID_AUTH_USER=b.ID_AUTH_USER and " +
@@ -606,7 +673,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
     }
 
 
-    private AuthInfo set(ResultSet rs) throws SQLException {
+    private AuthInfo setAuthInfo(ResultSet rs) throws SQLException {
         AuthInfoImpl bean = new AuthInfoImpl();
         bean.setAuthUserId( RsetTools.getLong(rs, "ID_AUTH_USER") );
         bean.setUserId( RsetTools.getLong(rs, "ID_USER") );
@@ -660,7 +727,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
             rs = ps.executeQuery();
             if (rs.next()) {
-                return set(rs);
+                return setAuthInfo(rs);
             }
             return null;
         }
@@ -695,6 +762,69 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
+    public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
+        DatabaseAdapter db = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            return getAuthInfoList(db, authSession );
+        }
+        catch(Exception e) {
+            final String es = "Exception get granted group company id list";
+            log.error(es, e);
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close(db);
+            db = null;
+        }
+    }
+
+    private List<AuthInfo> getAuthInfoList(DatabaseAdapter db, AuthSession authSession) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            switch (db.getFamaly()) {
+                case DatabaseManager.MYSQL_FAMALY:
+
+                    ps = db.prepareStatement(
+                        "select a.* " +
+                        "from   WM_AUTH_USER a, WM_LIST_USER b " +
+                        "where  a.ID_USER=b.ID_USER and  " +
+                        "       b.ID_FIRM  in ("+getGrantedCompanyId(db, authSession.getUserLogin())+") "
+                    );
+                    break;
+                default:
+                    ps = db.prepareStatement(
+                        "select a.* " +
+                        "from   WM_AUTH_USER a, WM_LIST_USER b, V$_READ_LIST_FIRM z1 " +
+                        "where  a.ID_USER=b.ID_USER and  " +
+                        "       b.ID_FIRM = z1.ID_FIRM and z1.ID_AUTH_USER=? "
+                    );
+
+                    RsetTools.setLong(ps, 1, authSession.getAuthInfo().getAuthUserId() );
+                    break;
+            }
+            rs = ps.executeQuery();
+
+            List<AuthInfo> list = new ArrayList<AuthInfo>();
+            while (rs.next()) {
+                AuthInfo authInfo = setAuthInfo(rs);
+                list.add( authInfo );
+            }
+            return list;
+        }
+        catch (Exception e) {
+            String es = "Error in getAuthInfoList()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(rs, ps);
+            rs = null;
+            ps = null;
+        }
+    }
+
     private AuthInfo getAuthInfo(DatabaseAdapter db_, Long authUserId) {
         if (authUserId==null) {
             return null;
@@ -707,7 +837,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             RsetTools.setLong(ps, 1, authUserId);
             rs = ps.executeQuery();
             if (rs.next()){
-                return set(rs);
+                return setAuthInfo(rs);
             }
             return null;
         }
@@ -896,6 +1026,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             Long aLong = iterator.next();
 
             if (isFirst) {
+		isFirst = false;
+	    }
+	    else {
                 sb.append( ", " );
             }
 
@@ -1533,5 +1666,474 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             rs = null;
             ps = null;
         }
+    }
+
+    public List<RoleBean> getUserRoleList( AuthSession authSession ) {
+        DatabaseAdapter db = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            ps = db.prepareStatement(
+                "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP " +
+                "from   WM_AUTH_ACCESS_GROUP c, WM_AUTH_RELATE_ACCGROUP b " +
+                "where  b.ID_AUTH_USER=? and b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP "
+            );
+
+            ps.setLong( 1, authSession.getAuthInfo().getAuthUserId() );
+            rs = ps.executeQuery();
+
+            List<RoleBean> roles = new ArrayList<RoleBean>();
+            while( rs.next() ) {
+                RoleBeanImpl roleImpl = new RoleBeanImpl();
+
+                roleImpl.setName( RsetTools.getString( rs, "NAME_ACCESS_GROUP" ) );
+                roleImpl.setRoleId( RsetTools.getLong( rs, "ID_ACCESS_GROUP" ) );
+
+                roles.add( roleImpl );
+            }
+            return roles;
+        }
+        catch(Exception e) {
+            String es = "error";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( rs, ps );
+            rs = null;
+            ps = null;
+        }
+    }
+
+    public List<RoleBean> getRoleList( AuthSession authSession ) {
+        DatabaseAdapter db = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            ps = db.prepareStatement(
+                "select  ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
+                "from    WM_AUTH_ACCESS_GROUP "
+            );
+
+            rs = ps.executeQuery();
+            return internalGetRoleList(rs);
+        }
+        catch( Exception e ) {
+            String es = "error";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, rs, ps );
+            db = null;
+            rs = null;
+            ps = null;
+        }
+    }
+
+    private static List<RoleBean> internalGetRoleList(ResultSet rs) throws SQLException {
+        List<RoleBean> list = new ArrayList<RoleBean>();
+        while( rs.next() ) {
+            RoleBeanImpl bean = new RoleBeanImpl();
+            Long id = RsetTools.getLong( rs, "ID_ACCESS_GROUP" );
+            String name = RsetTools.getString( rs, "NAME_ACCESS_GROUP" );
+
+            if( name != null && id != null ) {
+                bean.setName( name );
+                bean.setRoleId( id );
+                list.add( bean );
+            }
+        }
+        return list;
+    }
+
+    public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
+        DatabaseAdapter db = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            ps = db.prepareStatement(
+                "select c.ID_ACCESS_GROUP, c.NAME_ACCESS_GROUP  " +
+                "from   WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_ACCESS_GROUP c " +
+                "where  b.ID_AUTH_USER=? and " +
+                "       b.ID_ACCESS_GROUP=c.ID_ACCESS_GROUP"
+            );
+            ps.setLong(1, authUserId);
+            rs = ps.executeQuery();
+            return internalGetRoleList(rs);
+        }
+        catch( Exception e ) {
+            String es = "error";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, rs, ps );
+            db = null;
+            rs = null;
+            ps = null;
+        }
+    }
+
+    public Long addRole( AuthSession authSession, RoleBean roleBean) {
+
+        PreparedStatement ps = null;
+        DatabaseAdapter dbDyn = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_AUTH_ACCESS_GROUP" );
+            seq.setTableName( "WM_AUTH_ACCESS_GROUP" );
+            seq.setColumnName( "ID_ACCESS_GROUP" );
+            Long sequenceValue = dbDyn.getSequenceNextValue( seq );
+
+
+            ps = dbDyn.prepareStatement(
+                "insert into WM_AUTH_ACCESS_GROUP " +
+                "( ID_ACCESS_GROUP, NAME_ACCESS_GROUP )" +
+                ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" ) +
+                " ?, ? " +
+                ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" )
+            );
+
+            RsetTools.setLong( ps, 1, sequenceValue );
+            ps.setString( 2, roleBean.getName() );
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of inserted records - " + i1 );
+
+            dbDyn.commit();
+            return sequenceValue;
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+            }
+            String es = "Error add new role";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+    public void updateRole( AuthSession authSession, RoleBean roleBean ) {
+        DatabaseAdapter dbDyn = null;
+        PreparedStatement ps = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            String sql =
+                "update WM_AUTH_ACCESS_GROUP " +
+                "set    ID_ACCESS_GROUP=?, NAME_ACCESS_GROUP=? " +
+                "WHERE  ID_ACCESS_GROUP=? ";
+
+            ps = dbDyn.prepareStatement( sql );
+
+            ps.setString( 1, roleBean.getName() );
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of updated record - " + i1 );
+
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+            }
+
+            String es = "Error save role";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+    public void deleteRole( AuthSession authSession, RoleBean roleBean ) {
+        DatabaseAdapter dbDyn = null;
+        PreparedStatement ps = null;
+        try {
+            dbDyn = DatabaseAdapter.getInstance();
+
+            if( roleBean.getRoleId() == null )
+                throw new IllegalArgumentException( "role id is null" );
+
+            String sql = "delete from WM_AUTH_ACCESS_GROUP where ID_ACCESS_GROUP=? ";
+
+            ps = dbDyn.prepareStatement( sql );
+
+            RsetTools.setLong( ps, 1, roleBean.getRoleId() );
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of deleted records - " + i1 );
+
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+            }
+
+            String es = "Error delete role";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        DatabaseAdapter db = null;
+        PreparedStatement ps = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+
+            Long id_user = infoAuth.getUserInfo().getUserId();
+            if( id_user == null )
+                throw new IllegalArgumentException( "id_user not initialized" );
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_AUTH_USER" );
+            seq.setTableName( "WM_AUTH_USER" );
+            seq.setColumnName( "ID_AUTH_USER" );
+            Long id = db.getSequenceNextValue( seq );
+
+            ps = db.prepareStatement( "insert into WM_AUTH_USER " +
+                "( ID_AUTH_USER, ID_FIRM, ID_SERVICE, ID_ROAD, " +
+                "  ID_USER, USER_LOGIN, USER_PASSWORD, " +
+                "IS_USE_CURRENT_FIRM, IS_SERVICE, IS_ROAD " +
+                ") values (" +
+                "?, " + // PK
+                "?, " + // b1.companyId, " +
+                "?, " + // b2.id_service, " +
+                "?, " + //b3.id_road, "+
+                "?, ?, ?, ?, ?, ? " +
+                ")" );
+
+            Long companyId = null;
+            Long groupCompanyId = null;
+            Long holdingId = null;
+
+            companyId = authSession.checkCompanyId( infoAuth.getAuthInfo().getCompanyId() );
+            groupCompanyId = authSession.checkGroupCompanyId( infoAuth.getAuthInfo().getGroupCompanyId() );
+            holdingId = authSession.checkHoldingId( infoAuth.getAuthInfo().getHoldingId() );
+
+            if( log.isDebugEnabled() ) {
+                log.debug( "companyId " + companyId );
+                log.debug( "groupCompanyId " + groupCompanyId );
+                log.debug( "holdingId " + holdingId );
+            }
+
+            RsetTools.setLong( ps, 1, id );
+            if( companyId != null )
+                RsetTools.setLong( ps, 2, companyId );
+            else
+                ps.setNull( 2, Types.INTEGER );
+
+            if( groupCompanyId != null )
+                RsetTools.setLong( ps, 3, groupCompanyId );
+            else
+                ps.setNull( 3, Types.INTEGER );
+
+            if( holdingId != null )
+                RsetTools.setLong( ps, 4, holdingId );
+            else
+                ps.setNull( 4, Types.INTEGER );
+
+
+            RsetTools.setLong( ps, 5, id_user );
+            ps.setString( 6, infoAuth.getAuthInfo().getUserLogin() );
+            ps.setString( 7, infoAuth.getAuthInfo().getUserPassword() );
+
+            ps.setInt( 8, infoAuth.getAuthInfo().isCompany()?1:0 );
+            ps.setInt( 9, infoAuth.getAuthInfo().isGroupCompany() ? 1 : 0 );
+            ps.setInt( 10, infoAuth.getAuthInfo().isHolding() ? 1 : 0 );
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of inserted records - " + i1 );
+
+            processDeletedRoles( db, infoAuth );
+            processNewRoles( db, infoAuth );
+
+            db.commit();
+            return id;
+        }
+        catch( Exception e ) {
+            try {
+                if( db != null )
+                    db.rollback();
+            }
+            catch( Exception e001 ) {
+            }
+
+            final String es = "Error add user auth";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, ps );
+            ps = null;
+            db = null;
+        }
+    }
+    
+    private void processDeletedRoles( DatabaseAdapter db_, AuthUserExtendedInfo infoAuth ) throws Exception {
+        PreparedStatement ps = null;
+        try {
+            log.info( "Start delete roles for authUserId: " + infoAuth.getAuthInfo().getAuthUserId() +
+                ", roles list: " + infoAuth.getRoles() );
+
+            Iterator<RoleEditableBean> iterator = infoAuth.getRoles().iterator();
+            while( iterator.hasNext() ) {
+                RoleEditableBean roleBeanImpl = iterator.next();
+
+                log.info( "role: " + roleBeanImpl );
+
+                if( !roleBeanImpl.isDelete() ) {
+                    continue;
+                }
+
+                ps = db_.prepareStatement(
+                    "delete from WM_AUTH_RELATE_ACCGROUP " +
+                    "where  ID_AUTH_USER=? and ID_ACCESS_GROUP=? " );
+
+                ps.setLong( 1, infoAuth.getAuthInfo().getAuthUserId() );
+                ps.setLong( 2, roleBeanImpl.getRoleId() );
+                ps.execute();
+                ps.close();
+                ps = null;
+            }
+        }
+        finally {
+            DatabaseManager.close( ps );
+            ps = null;
+        }
+    }
+
+    private void processNewRoles( DatabaseAdapter db, AuthUserExtendedInfo infoAuth ) throws Exception {
+        PreparedStatement ps = null;
+        try {
+            Iterator<RoleEditableBean> iterator = infoAuth.getRoles().iterator();
+            while( iterator.hasNext() ) {
+                RoleEditableBean roleBeanImpl = iterator.next();
+
+                if( !roleBeanImpl.isNew() || roleBeanImpl.isDelete() ) {
+                    continue;
+                }
+
+                CustomSequenceType seq = new CustomSequenceType();
+                seq.setSequenceName( "seq_WM_AUTH_RELATE_ACCGROUP" );
+                seq.setTableName( "WM_AUTH_RELATE_ACCGROUP" );
+                seq.setColumnName( "ID_RELATE_ACCGROUP" );
+                Long id = db.getSequenceNextValue( seq );
+
+                ps = db.prepareStatement( "insert into WM_AUTH_RELATE_ACCGROUP " +
+                    "(ID_RELATE_ACCGROUP, ID_ACCESS_GROUP, ID_AUTH_USER ) " +
+                    "values" +
+                    "(?, ?, ? ) " );
+
+                ps.setLong( 1, id );
+                ps.setLong( 2, roleBeanImpl.getRoleId() );
+                ps.setLong( 3, infoAuth.getAuthInfo().getAuthUserId() );
+                ps.execute();
+                ps.close();
+                ps = null;
+            }
+        }
+        finally {
+            DatabaseManager.close( ps );
+            ps = null;
+        }
+    }
+
+    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<UserInfo> getUserList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public RoleBean getRole( AuthSession authSession , Long roleId) {
+        if( roleId == null ) {
+            return null;
+        }
+        DatabaseAdapter db = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+
+            String sql =
+                "select ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
+                "from 	WM_AUTH_ACCESS_GROUP " +
+                "where  ID_ACCESS_GROUP=? ";
+
+            ps = db.prepareStatement( sql );
+            ps.setLong( 1, roleId );
+
+            rs = ps.executeQuery();
+
+            RoleBean role = null;
+            if( rs.next() ) {
+                role = loadRoleFromResultSet( rs );
+            }
+            return role;
+        }
+        catch( Exception e ) {
+            String es = "Error load role for id: " + roleId;
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, rs, ps );
+            db = null;
+            rs = null;
+            ps = null;
+        }
+    }
+
+
+    private RoleBean loadRoleFromResultSet( ResultSet rs ) throws Exception {
+
+        RoleBeanImpl role = new RoleBeanImpl();
+        role.setRoleId( RsetTools.getLong( rs, "ID_ACCESS_GROUP" ) );
+        role.setName( RsetTools.getString( rs, "NAME_ACCESS_GROUP" ) );
+
+        return role;
     }
 }

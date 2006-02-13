@@ -24,13 +24,6 @@
  */
 package org.riverock.webmill.site;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
-
-import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.startup.StartupApplication;
@@ -140,7 +133,7 @@ public final class SiteService {
 
 
         System.out.println("delete shop data");
-        deleteShopData(DatabaseAdapter_, idSiteForDrop);
+//        deleteShopData(DatabaseAdapter_, idSiteForDrop);
 
         System.out.println("delete virtual host");
         DeleteWmPortalVirtualHostWithIdSite.process(DatabaseAdapter_, idSiteForDrop);
@@ -152,7 +145,7 @@ public final class SiteService {
         DatabaseAdapter_.commit();
         System.out.println("Deleting test data is done.");
     }
-
+/*
     private static void deleteShopData(DatabaseAdapter DatabaseAdapter_, long idSiteForDrop)
         throws Exception {
         WmCashCurrencyListType currencyList = GetWmCashCurrencyWithIdSiteList.getInstance(DatabaseAdapter_, idSiteForDrop).item;
@@ -207,7 +200,7 @@ public final class SiteService {
         DeleteWmPriceShopListWithIdSite.processData(DatabaseAdapter_, idSiteForDrop);
         DatabaseAdapter_.commit();
     }
-
+*/
 /*
     public static SiteExtendItemType getExtendData( String host )
         throws Exception

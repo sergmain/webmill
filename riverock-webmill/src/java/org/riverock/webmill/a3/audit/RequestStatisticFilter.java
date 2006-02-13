@@ -27,7 +27,6 @@ package org.riverock.webmill.a3.audit;
 import java.sql.Timestamp;
 import java.util.Enumeration;
 import java.util.Locale;
-import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -41,8 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
-import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
  * User: Admin
@@ -52,21 +49,13 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  * $Id$
  */
 public final class RequestStatisticFilter implements Filter {
-
     private final static Logger log = Logger.getLogger(RequestStatisticFilter.class);
 
-    private static final int SIZE_REFER = 200;
-    private static final int SIZE_PARAMETERS = 200;
     private FilterConfig filterConfig = null;
-
-    private ConcurrentMap<String, Long> userAgent = null;
-    private ConcurrentMap<String, Long> url = null;
-
     public void init(FilterConfig filterConfig) {
+System.out.println("start init statictic filter");
         this.filterConfig = filterConfig;
-        this.userAgent = InternalDaoFactory.getInternalDao().getUserAgentList();
-        this.url = InternalDaoFactory.getInternalDao().getUrlList();
-
+System.out.println("end init statictic filter");
     }
 
     /**
@@ -74,83 +63,41 @@ public final class RequestStatisticFilter implements Filter {
      */
     public void destroy() {
         this.filterConfig = null;
-        if (userAgent!=null) {
-            userAgent.clear();
-            userAgent = null;
-        }
-        if (url!=null) {
-            url.clear();
-            url = null;
-        }
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws ServletException {
 
         String startInfo = null;
+        if (log.isDebugEnabled()) {
+            log.debug("enter into filter");
+            startInfo = getDebugInfo(request, response);
+        }
+
+System.out.println("start process statictic filter");
         try {
-            RequestStatisticBean bean = new RequestStatisticBean();
-            bean.setAccessDate( new Timestamp(System.currentTimeMillis()) );
-            startInfo = null;
-
-            //Todo uncomment for production
-            if (log.isDebugEnabled()) {
-                log.debug("enter into filter");
-                startInfo = getDebugInfo(request, response);
-            }
-            log.debug("Start save userAgent info");
-
-
-            String userAgentString = Header.getUserAgent(request);
-            if (userAgentString == null)
-                userAgentString = "UserAgent unknown";
-            else if (userAgentString.length() < 5)
-                userAgentString = "UserAgent too small";
-            else
-                userAgentString = StringTools.truncateString(userAgentString, 150);
-
-            bean.setUserAgent( userAgentString );
-            bean.setUrl( ((HttpServletRequest)request).getRequestURI() );
-
-            String referer = Header.getReferer(request);
-            if (referer == null)
-                referer = "";
-            int lenRefer = StringTools.lengthUTF(referer);
-            if (lenRefer > SIZE_REFER) {
-                lenRefer = SIZE_REFER;
-                bean.setReferTooBig(true);
-            }
-            else
-                bean.setReferTooBig(false);
-
-            bean.setRefer( new String(StringTools.getBytesUTF(referer), 0, lenRefer) );
-
-            String param = ((HttpServletRequest) request).getQueryString();
-            int lenParams = StringTools.lengthUTF(param);
-            if (lenParams > SIZE_PARAMETERS) {
-                lenParams = SIZE_PARAMETERS;
-                bean.setParamTooBig(true);
-            }
-            else
-                bean.setParamTooBig(false);
-
-            bean.setParameters( new String(StringTools.getBytesUTF(param), 0, lenParams) );
-
-            InternalDaoFactory.getInternalDao().saveRequestStatistic( userAgent, url, bean );
+            RequestStatisticService.getInstance().process(
+                Header.getUserAgent(request),
+                ((HttpServletRequest)request).getRequestURI(),
+                Header.getReferer(request),
+                ((HttpServletRequest) request).getQueryString()
+            );
         }
         catch (Throwable th) {
             try {
                 log.error("startInfo:\n" + startInfo);
                 log.error("endInfo:\n" + getDebugInfo(request, response));
             }
-            catch (Exception e) {
-                log.error("Nested Exception in getDebugInfo()", e);
+            catch (Throwable e) {
+                log.error("Nested Throwable in getDebugInfo()", e);
+                e.printStackTrace( System.err );
             }
             final String es = "Exception call chain of filter";
             log.fatal(es, th);
-            throw new ServletException(es, th);
+            th.printStackTrace( System.err );
+//            throw new ServletException(es, th);
         }
-
+System.out.println("end process statictic filter");
 
         // Pass control on to the next filter
         try {
@@ -161,14 +108,14 @@ public final class RequestStatisticFilter implements Filter {
         catch (Throwable exc) {
             final String es = "Exception call chain of filter";
             log.fatal(es, exc);
+            exc.printStackTrace( System.err );
             throw new ServletException(es, exc);
         }
     }
 
     private static String getDebugInfo(ServletRequest request, ServletResponse response) {
-        String s_ = "";
-        s_ += "\nRequest Received at " +
-            (new Timestamp(System.currentTimeMillis())) + "\n";
+        String s_ = "\n";
+        s_ += "Request Received at " + (new Timestamp(System.currentTimeMillis())) + "\n";
         s_ += " characterEncoding=" + request.getCharacterEncoding() + "\n";
         s_ += "     contentLength=" + request.getContentLength() + "\n";
         s_ += "       contentType=" + request.getContentType() + "\n";

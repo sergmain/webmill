@@ -188,7 +188,11 @@ public final class PortalRequestInstance {
             portalDaoProvider = new PortalDaoProviderImpl( auth );
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
-            }
+		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                log.debug("portal requet instance class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
+		cl = portletContainer.getClass().getClassLoader();
+                log.debug("portlet container class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
+		}
             
             this.portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName());
             this.portalContext = createPortalContext(portalName, portalInfo);
@@ -388,6 +392,7 @@ public final class PortalRequestInstance {
 
         if (template == null) {
             String errorString = "Template '" + getNameTemplate() + "', locale " + getLocaleString() + ", not found";
+            log.warn("contextFactory: " + contextFactory);
             log.warn(errorString);
             throw new PortalException(errorString);
         }

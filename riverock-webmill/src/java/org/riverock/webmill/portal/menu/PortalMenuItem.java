@@ -31,9 +31,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portlet.menu.MenuItem;
+import org.riverock.interfaces.portal.bean.TemplateBean;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.PortletNameBean;
-import org.riverock.webmill.portal.bean.TemplateBeanImpl;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**

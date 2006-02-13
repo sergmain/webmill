@@ -576,7 +576,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             this.cookies = new Cookie[0];
         }
 
-        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DATA_MANAGER, portalRequestInstance.getPortalDaoProvider() );
+        this.setAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER, portalRequestInstance.getPortalDaoProvider() );
 
         this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getNameTemplate() );
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );

@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.GroupCompany;
+import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -396,6 +400,29 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
     }
 
+    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<UserInfo> getUserList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Holding> getHoldingList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     private CompanyBean loadCompanyFromResultSet( ResultSet rs ) throws Exception {
 
