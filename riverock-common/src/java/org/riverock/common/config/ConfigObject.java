@@ -26,6 +26,8 @@ package org.riverock.common.config;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Map;
+import java.util.Iterator;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -70,12 +72,29 @@ public class ConfigObject
                     PropertiesProvider.getParameter(nameConfigParam);
             }
             else {
+		if (log.isDebugEnabled()) {
+        		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+			log.debug("classLoader: "+cl+"\nhash: "+cl.hashCode() );
+		}
+		String name = "java:comp/env/" + nameJndiCtx;
                 try {
                     InitialContext ic = new InitialContext();
-                    config.nameConfigFile = (String)ic.lookup("java:comp/env/" + nameJndiCtx);
+                    config.nameConfigFile = (String)ic.lookup(name);
                 }
                 catch (NamingException e) {
-                    String es = "Error get value from JDNI context";
+                    String es = "Error get value from JDNI context. Name: "+ name;
+			try {
+                    		InitialContext ic = new InitialContext();
+                    		Map map = ic.getEnvironment();
+				Iterator<Map.Entry> iterator = map.entrySet().iterator();
+				while(iterator.hasNext()) {
+					Map.Entry entry = iterator.next();
+					log.error("key: "+entry.getKey()+", value: "+ entry.getValue());
+				} 
+			}
+			catch(Throwable th){
+				log.error("erorr",th);
+			}
                     log.error(es, e);
                     throw new ConfigException( es, e );
                 }
