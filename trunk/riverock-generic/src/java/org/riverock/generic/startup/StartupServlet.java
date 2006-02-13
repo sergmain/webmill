@@ -228,9 +228,10 @@ public final class StartupServlet extends HttpServlet {
     }
 
     private static String getLogConfigFileFromJNDI(String logConfigFile) {
+	String name = "java:comp/env/" + Constants.JNDI_MILL_LOG_CONFIG_FILE;
         try {
             InitialContext ic = new InitialContext();
-            logConfigFile = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_CONFIG_FILE); // mill/LogConfigFile");
+            logConfigFile = (String) ic.lookup( name ); 
             if (File.separatorChar == '\\')
                 logConfigFile = logConfigFile.replace('/', '\\');
             else
@@ -239,7 +240,7 @@ public final class StartupServlet extends HttpServlet {
             System.out.println("millLogConfigFile - " + logConfigFile);
         }
         catch (NamingException e) {
-            System.out.println("Error get millLogConfigFile object");
+            System.out.println("Error get name of logConfigFile. JNDI name " + );
             e.printStackTrace(System.out);
         }
         return logConfigFile;
