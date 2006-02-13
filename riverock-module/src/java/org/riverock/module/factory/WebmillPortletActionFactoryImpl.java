@@ -4,8 +4,7 @@ import org.riverock.module.web.config.ModuleConfig;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.factory.config.ActionConfig;
 import org.riverock.common.config.PropertiesProvider;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 
@@ -16,7 +15,7 @@ import java.io.File;
  *         $Id$
  */
 public class WebmillPortletActionFactoryImpl extends PortletActionFactoryImpl {
-    private static final Log log = LogFactory.getLog(WebmillPortletActionFactoryImpl.class);
+    private static final Logger log = Logger.getLogger(WebmillPortletActionFactoryImpl.class);
 
     public WebmillPortletActionFactoryImpl(ModuleConfig moduleConfig, String factoryCode) throws ActionException {
         ActionConfig actionConfig = getActionConfig( moduleConfig, factoryCode );

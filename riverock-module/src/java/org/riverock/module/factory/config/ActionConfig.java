@@ -7,8 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.digester.Digester;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import org.riverock.common.xml.EntityResolverImpl;
@@ -16,8 +15,8 @@ import org.riverock.module.action.Action;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.factory.bean.ActionBean;
 import org.riverock.module.factory.bean.ActionConfigBean;
-import org.riverock.module.factory.bean.ForwardBean;
 import org.riverock.module.factory.bean.ActionConfigurationBean;
+import org.riverock.module.factory.bean.ForwardBean;
 
 /**
  * @author Serge Maslyukov
@@ -26,7 +25,7 @@ import org.riverock.module.factory.bean.ActionConfigurationBean;
  *         $Id$
  */
 public class ActionConfig {
-    static private final Log log = LogFactory.getLog(ActionConfig.class);
+    static private final Logger log = Logger.getLogger(ActionConfig.class);
 
     private ActionConfigBean configBean = null;
     private ActionConfigurationBean defaultAction = null;
