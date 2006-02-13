@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+
+    <!-- Common part -->
+
+ <managed-bean>
+  <managed-bean-name>authSessionBean</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.main.AuthSessionBean</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+
+    <!-- User part -->
+    <managed-bean>
+        <managed-bean-name>auth</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserTreeBean</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    	<managed-property>
+           <property-name>authManager</property-name>
+           <value>#{authManager}</value>
+    	</managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>authUserAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    	<managed-property>
+           <property-name>authManager</property-name>
+           <value>#{authManager}</value>
+    	</managed-property>
+    	<managed-property>
+           <property-name>userHolderBean</property-name>
+           <value>#{userHolderBean}</value>
+    	</managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>dataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.auth.user.dao.DataProvider</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    	<managed-property>
+           <property-name>authManager</property-name>
+           <value>#{authManager}</value>
+    	</managed-property>
+    	<managed-property>
+           <property-name>userHolderBean</property-name>
+           <value>#{userHolderBean}</value>
+    	</managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>authManager</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.auth.user.dao.AuthManager</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    	<managed-property>
+           <property-name>moduleUserBean</property-name>
+           <value>#{authSessionBean}</value>
+    	</managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>userHolderBean</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserHolderBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
+    <!-- Role part -->
+ <managed-bean>
+  <managed-bean-name>roleDAO</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.auth.role.dao.RoleDAOImpl</managed-bean-class>
+  <managed-bean-scope>application</managed-bean-scope>
+ </managed-bean>
+
+ <managed-bean>
+  <managed-bean-name>roleSessionBean</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.auth.role.bean.RoleSessionBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+  <managed-property>
+   <property-name>roleDAO</property-name>
+   <value>#{roleDAO}</value>
+  </managed-property>
+ </managed-bean>
+
+ <managed-bean>
+  <managed-bean-name>roleBean</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.auth.role.bean.RoleManagedBean</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+  <managed-property>
+   <property-name>roleSessionBean</property-name>
+   <value>#{roleSessionBean}</value>
+  </managed-property>
+  <managed-property>
+   <property-name>authSessionBean</property-name>
+   <value>#{authSessionBean}</value>
+  </managed-property>
+ </managed-bean>
+
+ <managed-bean>
+  <managed-bean-name>roleAction</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.auth.role.bean.RoleAction</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+  <managed-property>
+   <property-name>sessionBean</property-name>
+   <value>#{roleSessionBean}</value>
+  </managed-property>
+  <managed-property>
+   <property-name>authSessionBean</property-name>
+   <value>#{authSessionBean}</value>
+  </managed-property>
+ </managed-bean>
+
+ <navigation-rule>
+  <from-view-id>/riverock/auth/role/role.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>role-add</from-outcome>
+   <to-view-id>/riverock/auth/role/role-add.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>role-edit</from-outcome>
+   <to-view-id>/riverock/auth/role/role-edit.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>role-delete</from-outcome>
+   <to-view-id>/riverock/auth/role/role-delete.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>role</from-outcome>
+   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/riverock/auth/role/role-add.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>role</from-outcome>
+   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/riverock/auth/role/role-edit.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>role</from-outcome>
+   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/riverock/auth/role/role-delete.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>role</from-outcome>
+   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+
+</faces-config>
