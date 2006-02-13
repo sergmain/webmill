@@ -164,10 +164,30 @@
             </fileset>
         </copy>
 
+        <property name="prop-path" value="/org/riverock/portlet/auth/resource"/>
+        <patternset id="prop.resources">
+            <include name="*.properties"/>
+        </patternset>
+        <copy todir="${build.dest}${prop-path}" overwrite="true">
+            <fileset dir="${src.java.dir}${prop-path}">
+                <patternset refid="prop.resources"/>
+            </fileset>
+        </copy>
+
+        <property name="company-prop-path" value="/org/riverock/portlet/company/resource"/>
+        <patternset id="company-prop.resources">
+            <include name="*.properties"/>
+        </patternset>
+        <copy todir="${build.dest}${company-prop-path}" overwrite="true">
+            <fileset dir="${src.java.dir}${company-prop-path}">
+                <patternset refid="company-prop.resources"/>
+            </fileset>
+        </copy>
+
     </target>
 
     <patternset id="war.lib">
-        <include name="${riverock-sso.lib}"/>
+<!--        <include name="${riverock-sso.lib}"/> -->
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
@@ -181,6 +201,7 @@
         <include name="${commons-beanutils.lib}"/>
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
+        <include name="${myfaces.lib}"/>
     </patternset>
 
     <target name="war" depends="jar" >
@@ -195,7 +216,7 @@
                 <exclude name="WEB-INF/web.xml"/>
                 <exclude name="**/*.*-*"/>
             </fileset>
-<!--
+<!--                                
             <classes dir="${build.dest}">
                 <patternset refid="war.classes"/>
             </classes>
