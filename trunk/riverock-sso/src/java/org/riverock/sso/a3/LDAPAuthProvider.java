@@ -27,6 +27,7 @@ package org.riverock.sso.a3;
 import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Iterator;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -36,12 +37,16 @@ import javax.naming.directory.InitialDirContext;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.sso.schema.config.AuthProviderParametersListType;
-import org.riverock.sso.schema.config.AuthProviderParametersType;
-import org.riverock.sso.schema.config.ParameterType;
 import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthProvider;
+import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.GroupCompany;
+import org.riverock.interfaces.portal.bean.Holding;
 
 /**
  * User: Admin
@@ -58,6 +63,7 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
 
     private String providerUrl = null;
     private DirContext ctx = null;
+    public static final String PROVIDER_URL_CONST = "provider-url";
 
     protected void finalize() throws Throwable {
         if (ctx != null) {
@@ -164,21 +170,25 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return true;
     }
 
-    public void setParameters(final AuthProviderParametersListType parametersList) {
-        if (parametersList == null)
+    public void setParameters(List<List<AuthParameterBean>> params) {
+        if (params == null)
             return;
 
-        for (int i = 0; i < parametersList.getParametersListCount(); i++) {
-            AuthProviderParametersType params = parametersList.getParametersList(i);
-            for (int k = 0; k < params.getParameterCount(); k++) {
-                ParameterType p = params.getParameter(k);
-                if ("provider-url".equals(p.getName()))
-                    providerUrl = p.getValue();
+        Iterator<List<AuthParameterBean>> iteratorMain = params.iterator();
+        while (iteratorMain.hasNext()) {
+            List<AuthParameterBean> authParameterBeans = iteratorMain.next();
+            Iterator<AuthParameterBean> iterator = authParameterBeans.iterator();
+            while (iterator.hasNext()) {
+                AuthParameterBean bean = iterator.next();
+                if (PROVIDER_URL_CONST.equals(bean.getName())) {
+                    providerUrl = bean.getValue();
+                }
             }
+
         }
     }
 
-    public UserInfo initUserInfo(AuthSession authSession) {
+    public UserInfo getUserInfo(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -235,6 +245,71 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
     }
 
     public AuthInfo getAuthInfo(AuthSession authSession, Long authUserId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public RoleBean getRole(AuthSession authSession, Long roleId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public RoleBean loadRole(AuthSession authSession, Long roleId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<RoleBean> getRoleList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    // get list of granted roles for specific user
+    public List<RoleBean> getUserRoleList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long addRole(AuthSession authSession, RoleBean roleBean) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateRole(AuthSession authSession, RoleBean roleBean) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteRole(AuthSession authSession, RoleBean roleBean) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<UserInfo> getUserList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Company> getCompanyList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Holding> getHoldingList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

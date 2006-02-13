@@ -27,10 +27,16 @@ package org.riverock.sso.a3;
 import java.io.Serializable;
 import java.util.List;
 
-import org.riverock.sso.schema.config.AuthProviderParametersListType;
 import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthProvider;
+import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.GroupCompany;
+import org.riverock.interfaces.portal.bean.Holding;
 
 /**
  * User: Admin
@@ -50,10 +56,11 @@ public final class ConfigFileAuthProvider implements AuthProvider, Serializable 
         return false;
     }
 
-    public void setParameters(final AuthProviderParametersListType params) {
+    public void setParameters(List<List<AuthParameterBean>> params) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public UserInfo initUserInfo(AuthSession authSession) {
+    public UserInfo getUserInfo(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -110,6 +117,66 @@ public final class ConfigFileAuthProvider implements AuthProvider, Serializable 
     }
 
     public AuthInfo getAuthInfo(AuthSession authSession, Long authUserId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public RoleBean getRole(AuthSession authSession, Long roleId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<RoleBean> getRoleList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<RoleBean> getUserRoleList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long addRole(AuthSession authSession, RoleBean roleBean) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateRole(AuthSession authSession, RoleBean roleBean) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteRole(AuthSession authSession, RoleBean roleBean) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<UserInfo> getUserList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Company> getCompanyList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Holding> getHoldingList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

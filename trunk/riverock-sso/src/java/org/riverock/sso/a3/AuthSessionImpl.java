@@ -31,12 +31,22 @@ import java.io.Serializable;
 
 import org.riverock.sso.schema.config.AuthType;
 import org.riverock.sso.schema.config.AuthProviderType;
+import org.riverock.sso.schema.config.AuthProviderParametersType;
+import org.riverock.sso.schema.config.ParameterType;
 import org.riverock.sso.config.SsoConfig;
+import org.riverock.sso.bean.AuthParameterBeanImpl;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthProvider;
+import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
+import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.GroupCompany;
+import org.riverock.interfaces.portal.bean.Holding;
 
 import org.apache.log4j.Logger;
 
@@ -96,7 +106,24 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
 
                                 try{
                                     AuthProvider obj = (AuthProvider)MainTools.createCustomObject( provider.getProviderClass() );
-                                    obj.setParameters( provider.getProviderParameters() );
+
+                                    List<List<AuthParameterBean>> lists = new ArrayList<List<AuthParameterBean>>();
+				    if (provider.getProviderParameters()!=null) {
+                                    	for (int ii = 0; i < provider.getProviderParameters().getParametersListCount(); ii++) {
+                                        	AuthProviderParametersType params = provider.getProviderParameters().getParametersList(ii);
+                                        	List<AuthParameterBean> list = new ArrayList<AuthParameterBean>();
+                                        	lists.add(list);
+                                        	for (int k = 0; k < params.getParameterCount(); k++) {
+                                            		ParameterType p = params.getParameter(k);
+                                            		AuthParameterBeanImpl bean = new AuthParameterBeanImpl();
+                                            		bean.setName( p.getName() );
+                                            		bean.setValue( p.getValue() );
+                                            		list.add(bean);
+                                        	}
+                                    	}
+				    }
+
+                                    obj.setParameters( lists );
                                     authProviderList.add( obj );
                                 }
                                 catch(Throwable e){
@@ -156,7 +183,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         }
 
         if (status) {
-            userInfo = activeProvider.initUserInfo( this );
+            userInfo = activeProvider.getUserInfo( this );
         }
 
         isAccessDenied = !status;
@@ -261,7 +288,66 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     }
 
     public AuthInfo getAuthInfo( Long authUserId ) {
-        final AuthInfo authInfo = activeProvider.getAuthInfo( this, authUserId );
-        return authInfo;
+        return activeProvider.getAuthInfo( this, authUserId );
+    }
+
+    public List<AuthInfo> getAuthInfoList() {
+        return activeProvider.getAuthInfoList( this );
+    }
+
+    public RoleBean getRole(Long roleId) {
+        return activeProvider.getRole( this, roleId );
+    }
+
+    public List<RoleBean> getUserRoleList() {
+        return activeProvider.getUserRoleList( this );
+    }
+
+    public List<RoleBean> getRoleList() {
+        return activeProvider.getRoleList( this );
+    }
+
+    public List<RoleBean> getRoleList(Long authUserId) {
+        return activeProvider.getRoleList( this, authUserId );
+    }
+
+    public Long addRole(RoleBean roleBean) {
+        return activeProvider.addRole( this, roleBean );
+    }
+
+    public void updateRole(RoleBean roleBean) {
+        activeProvider.updateRole( this, roleBean );
+    }
+
+    public void deleteRole(RoleBean roleBean) {
+        activeProvider.deleteRole( this, roleBean );
+    }
+
+    public Long addUser(AuthUserExtendedInfo authInfo) {
+        return activeProvider.addUser( this, authInfo );
+    }
+
+    public void updateUser(AuthUserExtendedInfo authInfo) {
+        activeProvider.updateUser( this, authInfo );
+    }
+
+    public void deleteUser(AuthUserExtendedInfo authInfo) {
+        activeProvider.deleteUser( this, authInfo );
+    }
+
+    public List<UserInfo> getUserList() {
+        return activeProvider.getUserList( this );
+    }
+
+    public List<Company> getCompanyList() {
+        return activeProvider.getCompanyList( this );
+    }
+
+    public List<GroupCompany> getGroupCompanyList() {
+        return activeProvider.getGroupCompanyList( this );
+    }
+
+    public List<Holding> getHoldingList() {
+        return activeProvider.getHoldingList( this );
     }
 }
