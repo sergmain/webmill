@@ -552,27 +552,6 @@ cd ..\..
             </classpath>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
-
-
-        <property name="prop-path" value="/org/riverock/portlet/auth/resource"/>
-        <patternset id="prop.resources">
-            <include name="*.properties"/>
-        </patternset>
-        <copy todir="${build.dest}${prop-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${prop-path}">
-                <patternset refid="prop.resources"/>
-            </fileset>
-        </copy>
-
-        <property name="company-prop-path" value="/org/riverock/portlet/company/resource"/>
-        <patternset id="company-prop.resources">
-            <include name="*.properties"/>
-        </patternset>
-        <copy todir="${build.dest}${company-prop-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${company-prop-path}">
-                <patternset refid="company-prop.resources"/>
-            </fileset>
-        </copy>
     </target>
 
     <patternset id="war.classes">

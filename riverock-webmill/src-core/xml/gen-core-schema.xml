@@ -51,6 +51,8 @@
 	<DbTablePrefix>WM_PORTAL_CATALOG_LANGUAGE</DbTablePrefix>
 	<DbTablePrefix>WM_PORTLET_ARTICLE</DbTablePrefix>
 	<DbTablePrefix>WM_LIST_LANGUAGE</DbTablePrefix>
+	<DbTablePrefix>WM_AUTH_USER</DbTablePrefix>
+	<DbTablePrefix>WM_AUTH_RELATE_ACCGROUP</DbTablePrefix>
 
 <!--	<DbTablePrefix>WM_CASH</DbTablePrefix>-->
 <!--	<DbTablePrefix>WM_PRICE</DbTablePrefix>-->
