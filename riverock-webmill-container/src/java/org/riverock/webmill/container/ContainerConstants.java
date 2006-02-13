@@ -62,7 +62,8 @@ public class ContainerConstants {
     public static final String PORTAL_PORTLET_CONFIG_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_CONFIG_ATTRIBUTE";
     public static final String PORTAL_PORTAL_CONTEXT_PATH = "javax.portlet.webmill.PORTAL_PORTAL_CONTEXT_PATH";
     public static final String PORTAL_CURRENT_CONTAINER = "javax.portlet.webmill.PORTAL_CURRENT_CONTAINER";
-    public static final String PORTAL_PORTAL_DATA_MANAGER = "javax.portlet.webmill.PORTAL_PORTAL_DATA_MANAGER";
+    public static final String PORTAL_PORTAL_DAO_PROVIDER = "javax.portlet.webmill.PORTAL_PORTAL_DAO_PROVIDER";
+    public static final String PORTAL_PORTAL_SESSION_MANAGER = "javax.portlet.webmill.PORTAL_PORTAL_SESSION_MANAGER";
 
 
     public static final String PORTAL_REMOTE_ADDRESS_ATTRIBUTE = "javax.portlet.webmill.PORTAL_REMOTE_ADDRESS_ATTRIBUTE";
