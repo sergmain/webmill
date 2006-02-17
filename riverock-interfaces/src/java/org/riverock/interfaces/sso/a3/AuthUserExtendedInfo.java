@@ -18,6 +18,6 @@ public interface AuthUserExtendedInfo {
 
     public String getUserName();
     public String getCompanyName();
-    public String getGroupCompanyName();
     public String getHoldingName();
+
 }

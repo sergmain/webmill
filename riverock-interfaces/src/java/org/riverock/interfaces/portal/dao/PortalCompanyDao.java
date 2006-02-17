@@ -13,7 +13,7 @@ import org.riverock.interfaces.portal.bean.Company;
 public interface PortalCompanyDao {
     public Company loadCompany( Long id );
     public List<Company> getCompanyList();
-    public Long processAddCompany( Company companyBean, String userLogin, Long groupCompanyId, Long holdingId );
+    public Long processAddCompany( Company companyBean, String userLogin, Long holdingId );
     public void processSaveCompany( Company companyBean );
     public void processDeleteCompany( Company companyBean );
 }
