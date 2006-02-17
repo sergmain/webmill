@@ -27,17 +27,14 @@ package org.riverock.generic.db.definition;
 
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.generic.exception.GenericException;
-import org.riverock.generic.main.CacheFactory;
+import org.riverock.generic.main.CacheFactoryWithDb;
+import org.riverock.generic.db.DatabaseAdapter;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class GetMainDbDefinitionItem
-{
-
-//     private static GetMainDbDefinitionItem dummy = new GetMainDbDefinitionItem();
-
-    private static CacheFactory cache = new CacheFactory( GetMainDbDefinitionItem.class.getName() );
+public class GetMainDbDefinitionItem {
+    private static CacheFactoryWithDb cache = new CacheFactoryWithDb( GetMainDbDefinitionItem.class.getName() );
 
      public MainDbDefinitionItemType item = new MainDbDefinitionItemType();
 
@@ -45,19 +42,19 @@ public class GetMainDbDefinitionItem
 
      public GetMainDbDefinitionItem(){}
 
-     public static GetMainDbDefinitionItem getInstance(org.riverock.generic.db.DatabaseAdapter db__, long id__)
-         throws Exception
-     {
-         return getInstance(db__, new Long(id__) );
-     }
+//     public static GetMainDbDefinitionItem getInstance(org.riverock.generic.db.DatabaseAdapter db__, long id__)
+//         throws Exception
+//     {
+//         return getInstance(db__, new Long(id__) );
+//     }
 
-     public static GetMainDbDefinitionItem getInstance(org.riverock.generic.db.DatabaseAdapter db__, Long id__)
+     public static GetMainDbDefinitionItem getInstance(DatabaseAdapter db__, Long id__)
          throws GenericException
      {
          return (GetMainDbDefinitionItem) cache.getInstanceNew(db__, id__);
      }
 
-     public MainDbDefinitionItemType getData(org.riverock.generic.db.DatabaseAdapter db_, long id)
+     public MainDbDefinitionItemType getData(DatabaseAdapter db_, long id)
          throws Exception
      {
          GetMainDbDefinitionItem obj = GetMainDbDefinitionItem.getInstance(db_, id);
@@ -88,11 +85,11 @@ public class GetMainDbDefinitionItem
          );
      }
 
-    public GetMainDbDefinitionItem(org.riverock.generic.db.DatabaseAdapter db_, long id)
-        throws Exception
-    {
-        this(db_, new Long(id));
-    }
+//    public GetMainDbDefinitionItem(DatabaseAdapter db_, long id)
+//        throws Exception
+//    {
+//        this(db_, new Long(id));
+//    }
 
     private static String sql_ = null;
     static
@@ -111,13 +108,13 @@ public class GetMainDbDefinitionItem
          }
     }
 
-    public GetMainDbDefinitionItem(org.riverock.generic.db.DatabaseAdapter db_, Long id)
+    public GetMainDbDefinitionItem(DatabaseAdapter db_, Long id)
         throws Exception
     {
         this(db_, id, sql_);
     }
 
-    public GetMainDbDefinitionItem(org.riverock.generic.db.DatabaseAdapter db_, Long id, String sqlString)
+    public GetMainDbDefinitionItem(DatabaseAdapter db_, Long id, String sqlString)
         throws Exception
     {
 
@@ -126,7 +123,7 @@ public class GetMainDbDefinitionItem
         try
         {
             ps = db_.prepareStatement(sqlString);
-            ps.setLong(1, id.longValue());
+            ps.setLong(1, id);
 
             rs = ps.executeQuery();
             if (rs.next())

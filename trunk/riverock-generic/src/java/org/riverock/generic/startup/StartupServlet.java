@@ -240,7 +240,7 @@ public final class StartupServlet extends HttpServlet {
             System.out.println("millLogConfigFile - " + logConfigFile);
         }
         catch (NamingException e) {
-            System.out.println("Error get name of logConfigFile. JNDI name " + );
+            System.out.println("Error get name of logConfigFile. JNDI name " + name);
             e.printStackTrace(System.out);
         }
         return logConfigFile;
