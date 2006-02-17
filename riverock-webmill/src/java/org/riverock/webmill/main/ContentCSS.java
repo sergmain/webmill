@@ -27,7 +27,6 @@ package org.riverock.webmill.main;
 import java.util.Date;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
@@ -57,20 +56,15 @@ public final class ContentCSS {
         cache.reinit();
     }
 
-    public static ContentCSS getInstance(DatabaseAdapter db__, long id__)
-        throws Exception {
-        return (ContentCSS) cache.getInstanceNew(db__, id__);
-    }
-
-    public static ContentCSS getInstance(DatabaseAdapter db__, Long id__)
+    public static ContentCSS getInstance(Long id__)
         throws Exception {
         if (id__ == null)
             return null;
 
-        return (ContentCSS) cache.getInstanceNew(db__, id__);
+        return (ContentCSS) cache.getInstanceNew(id__);
     }
 
-    public ContentCSS(DatabaseAdapter db_, Long siteId) throws Exception {
+    public ContentCSS(Long siteId) throws Exception {
         if (siteId == null)
             return;
 
