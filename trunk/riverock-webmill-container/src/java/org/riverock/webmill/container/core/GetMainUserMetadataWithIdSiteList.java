@@ -16,7 +16,7 @@ public class GetMainUserMetadataWithIdSiteList
 
      public boolean isFound = false;
 
-    private static org.riverock.generic.main.CacheFactory cache = new org.riverock.generic.main.CacheFactory( GetMainUserMetadataWithIdSiteList.class.getName() );
+    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb( GetMainUserMetadataWithIdSiteList.class.getName() );
 
     public static void reinit()
     {

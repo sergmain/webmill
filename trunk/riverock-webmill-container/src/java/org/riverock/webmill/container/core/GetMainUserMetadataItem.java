@@ -10,7 +10,7 @@ public class GetMainUserMetadataItem
 {
     private static org.apache.log4j.Logger cat = org.apache.log4j.Logger.getLogger("org.riverock.webmill.container.core.GetMainUserMetadataItem" );
 
-    private static org.riverock.generic.main.CacheFactory cache = new org.riverock.generic.main.CacheFactory( GetMainUserMetadataItem.class.getName() );
+    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb( GetMainUserMetadataItem.class.getName() );
 
     public static void reinit()
     {

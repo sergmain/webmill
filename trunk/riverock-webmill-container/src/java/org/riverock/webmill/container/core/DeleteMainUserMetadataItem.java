@@ -2,21 +2,20 @@
 package org.riverock.webmill.container.core;
 
 import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class DeleteMainUserMetadataItem 
-{
-    private static org.apache.log4j.Logger cat = org.apache.log4j.Logger.getLogger("org.riverock.webmill.container.core.DeleteMainUserMetadataItem" );
+import org.apache.log4j.Logger;
+
+public class DeleteMainUserMetadataItem {
+    private static Logger log = Logger.getLogger( DeleteMainUserMetadataItem.class );
 
      public DeleteMainUserMetadataItem(){}
 
-     public static Long processData(org.riverock.generic.db.DatabaseAdapter db_, MainUserMetadataItemType item)  throws javax.portlet.PortletException      {
-         return new Long(process(db_, item));
-     }
-
-     public static long process(org.riverock.generic.db.DatabaseAdapter db_, MainUserMetadataItemType item)  throws javax.portlet.PortletException      {
+     public static long process(DatabaseAdapter db_, MainUserMetadataItemType item)  throws javax.portlet.PortletException      {
 
          String sql_ =
              "delete from WM_LIST_USER_METADATA "+
@@ -32,56 +31,28 @@ public class DeleteMainUserMetadataItem
 
              int countInsertRecord = ps.executeUpdate();
 
-             if (cat.isDebugEnabled())
-                 cat.debug("Count of deleted records - "+countInsertRecord);
+             if (log.isDebugEnabled())
+                 log.debug("Count of deleted records - "+countInsertRecord);
 
              return countInsertRecord;
 
          }
          catch (Exception e) {
-             cat.error("Item getIdMainUserMetadata(), value - "+item.getIdMainUserMetadata());
-             cat.error("Item getIdUser(), value - "+item.getIdUser());
-             cat.error("Item getIdSite(), value - "+item.getIdSite());
-             cat.error("Item getMeta(), value - "+item.getMeta());
-             cat.error("Item getStringValue(), value - "+item.getStringValue());
-             cat.error("Item getIntValue(), value - "+item.getIntValue());
-             cat.error("Item getDateValue(), value - "+item.getDateValue());
-             cat.error("SQL "+sql_);
-             cat.error("Exception insert data in db", e);
+             log.error("Item getIdMainUserMetadata(), value - "+item.getIdMainUserMetadata());
+             log.error("Item getIdUser(), value - "+item.getIdUser());
+             log.error("Item getIdSite(), value - "+item.getIdSite());
+             log.error("Item getMeta(), value - "+item.getMeta());
+             log.error("Item getStringValue(), value - "+item.getStringValue());
+             log.error("Item getIntValue(), value - "+item.getIntValue());
+             log.error("Item getDateValue(), value - "+item.getDateValue());
+             log.error("SQL "+sql_);
+             log.error("Exception insert data in db", e);
             throw new javax.portlet.PortletException( e.getMessage(), e );
         }
         finally {
-            _closeRsPs(rs, ps);
+            DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
         }
-
     }
-
-    private static void _closeRsPs(ResultSet rs, PreparedStatement ps)
-    {
-        if (rs != null)
-        {
-            try
-            {
-                rs.close();
-                rs = null;
-            }
-            catch (Exception e01)
-            {
-            }
-        }
-        if (ps != null)
-        {
-            try
-            {
-                ps.close();
-                ps = null;
-            }
-            catch (Exception e02)
-            {
-            }
-        }
-    }
-
 }
