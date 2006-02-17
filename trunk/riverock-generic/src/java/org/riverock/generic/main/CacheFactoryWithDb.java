@@ -33,24 +33,28 @@ import java.lang.reflect.Method;
 
 import org.riverock.cache.impl.SimpleCacheFactory;
 import org.riverock.cache.impl.CacheException;
+import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.common.tools.MainTools;
 
 import org.apache.log4j.Logger;
 
-public class CacheFactory {
-    private static Logger log = Logger.getLogger( CacheFactory.class );
+public class CacheFactoryWithDb
+{
+    private static Logger log = Logger.getLogger( CacheFactoryWithDb.class );
 
     protected static Integer CountClassInCache = 20;
 
     private SimpleCacheFactory cache = null;
 
-    public CacheFactory(String className) {
+    public CacheFactoryWithDb(String className)
+    {
         log.info("create constructor: "+className);
         cache = new SimpleCacheFactory(className);
     }
 
-    public void reinit() {
+    public void reinit()
+    {
         cache.reinit();
     }
 
@@ -58,20 +62,25 @@ public class CacheFactory {
         cache.terminate(id);
     }
 
-    private static synchronized Object createObject(Long id__, String className)
+    private static synchronized Object createObject(DatabaseAdapter db_, Long id__, String className)
         throws GenericException {
 
-        Class p[] = new Class[1];
+        Class p[] = new Class[2];
         Object obj = null;
 
         try {
             Long idLong = id__;
-            p[0] = Long.class;
+            p[0] = DatabaseAdapter.class;
+            p[1] = Long.class;
 
-            if (log.isDebugEnabled()) {
-                log.debug("Class Long: " + p[0]);
-                log.debug("Name class " + className );
+            if (log.isDebugEnabled())
+            {
+                log.debug("Class DB: " + p[0]);
+                log.debug("Class Long: " + p[1]);
             }
+
+            if (log.isDebugEnabled())
+                log.debug("Name class " + className );
 
             Class cl = Class.forName( className );
 
@@ -80,7 +89,8 @@ public class CacheFactory {
 
             Constructor cn[] = cl.getConstructors();
 
-            if (log.isDebugEnabled()) {
+            if (log.isDebugEnabled())
+            {
                 log.debug("Constructor count " + cn.length);
 
                 for (int i = 0; i < cn.length; i++)
@@ -94,8 +104,9 @@ public class CacheFactory {
             if (log.isDebugEnabled())
                 log.debug("Constructor " + constr);
 
-            Object o[] = new Object[1];
-            o[0] = idLong;
+            Object o[] = new Object[2];
+            o[0] = db_;
+            o[1] = idLong;
 
             obj = constr.newInstance(o);
 
@@ -108,7 +119,13 @@ public class CacheFactory {
         }
     }
 
-    public synchronized Object getInstanceNew(Long id__) throws GenericException {
+//    public synchronized Object getInstanceNew(DatabaseAdapter db__, long id__)
+//            throws GenericException
+//    {
+//        return getInstanceNew(db__, new Long(id__));
+//    }
+
+    public synchronized Object getInstanceNew(DatabaseAdapter db__, Long id__) throws GenericException {
         try {
             Object obj = cache.get( id__ );
 
@@ -119,7 +136,7 @@ public class CacheFactory {
 
             if (log.isDebugEnabled()) log.debug("Result object is null, create new object "+id__);
 
-            Object cacheItem = createObject(id__, cache.getClassName());
+            Object cacheItem = createObject(db__, id__, cache.getClassName());
 
             if (log.isDebugEnabled())log.debug("Result new object is "+cacheItem);
 
@@ -135,7 +152,8 @@ public class CacheFactory {
         }
     }
 
-    public synchronized static void terminate(String className, Long id, boolean isFullReinit) {
+    public synchronized static void terminate(String className, Long id, boolean isFullReinit)
+    {
         if (className == null){
             if (log.isInfoEnabled())
                 log.info("#12.12.000 param className is null");
@@ -149,24 +167,28 @@ public class CacheFactory {
 
             Object obj = MainTools.createCustomObject( className );
 
-            if (isFullReinit) {
+            if (isFullReinit)
+            {
                 Method method1 = obj.getClass().getMethod("reinit", (Class[])null);
 
                 if (log.isDebugEnabled())
                     log.debug("#12.12.009  method1 is " + method1);
 
-                if (method1 != null) {
+                if (method1 != null)
+                {
                     method1.invoke(obj, (Object[])null);
 
                     if (log.isDebugEnabled())
                         log.debug("#12.12.010 ");
                 }
             }
-            else {
-                Class[] cl1 = {Long.class};
+            else
+            {
+                Class[] cl1 = {Class.forName("java.lang.Long")};
                 Method method1 = obj.getClass().getMethod("terminate", cl1);
 
-                if (method1 == null) {
+                if (method1 == null)
+                {
                     log.error("#12.12.020 error create method terminate{} for class  " + className);
                     return;
                 }
@@ -182,7 +204,8 @@ public class CacheFactory {
                     log.debug("#12.12.017 ");
             }
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             log.error("Method invocation error . ClassName: " + className + ", id: " + id + ", isFull: " + isFullReinit, e);
         }
     }
