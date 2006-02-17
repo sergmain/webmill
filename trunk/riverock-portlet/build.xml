@@ -187,7 +187,6 @@
     </target>
 
     <patternset id="war.lib">
-<!--        <include name="${riverock-sso.lib}"/> -->
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
@@ -199,6 +198,7 @@
         <include name="${commons-digester.lib}"/>
         <include name="${commons-collections.lib}"/>
         <include name="${commons-beanutils.lib}"/>
+        <include name="${commons-codec.lib}"/>
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
         <include name="${myfaces.lib}"/>
