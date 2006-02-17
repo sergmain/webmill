@@ -24,24 +24,42 @@
  */
 package org.riverock.generic.db.definition;
 
-import org.riverock.common.tools.MainTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.schema.db.*;
-import org.riverock.generic.schema.db.structure.*;
-import org.riverock.generic.schema.db.types.ActionTypeType;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.db.DatabaseAdapter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.config.GenericConfig;
 import org.apache.log4j.Logger;
 
-import java.sql.*;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-
+import org.riverock.common.tools.MainTools;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
+import org.riverock.generic.schema.db.DataDefinitionActionDataType;
+import org.riverock.generic.schema.db.DataDefinitionActionListType;
+import org.riverock.generic.schema.db.DataDefinitionActionType;
+import org.riverock.generic.schema.db.DataDefinitionListType;
+import org.riverock.generic.schema.db.DataDefinitionTableListType;
+import org.riverock.generic.schema.db.DataDefinitionType;
+import org.riverock.generic.schema.db.DataDefinitionTypeChoice;
+import org.riverock.generic.schema.db.structure.DbFieldType;
+import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
+import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.schema.db.structure.DbSequenceListType;
+import org.riverock.generic.schema.db.structure.DbSequenceType;
+import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.schema.db.types.ActionTypeType;
+import org.riverock.generic.tools.XmlTools;
 
 /**
  * User: Admin
@@ -50,46 +68,22 @@ import java.util.List;
  *
  * $Id$
  */
-public final class DefinitionService
-{
-    private static Logger log = Logger.getLogger("org.riverock.generic.db.definition.DefinitionService");
+public final class DefinitionService {
+    private static Logger log = Logger.getLogger(DefinitionService.class);
 
     private static boolean isDefinitionProcessed = false;
-    private static Hashtable definitionRelateHash = null;
-    private static Hashtable definitionHash = null;
-    private static Hashtable dbHash = null;
+    private static Map<String, Object> definitionRelateHash = null;
+    private static Map<String, DataDefinitionType> definitionHash = null;
+    private static Map<String, String> dbHash = null;
     private static DataDefinitionListType definitionList = new DataDefinitionListType();
 
-    public synchronized static void registerRelateDefinitionDown( String definitionMain,  String definitionTarget )
-    {
+    public synchronized static void registerRelateDefinitionDown( String definitionMain,  String definitionTarget ) {
         MainTools.putKey(definitionRelateHash, definitionMain, definitionTarget);
-/*
-        Object obj = definitionRelateHash.get( definitionMain );
-        if (obj==null)
-        {
-            definitionRelateHash.put( definitionMain, definitionTarget );
-        }
-        else if (obj instanceof Vector)
-        {
-            ((Vector)obj).add( definitionTarget );
-        }
-        else
-        {
-            Vector v = new Vector();
-            v.add(obj);
-            v.add( definitionTarget );
-            definitionRelateHash.remove( definitionMain );
-            definitionRelateHash.put( definitionMain, v );
-        }
-*/
     }
 
     private static Object syncDebug = new Object();
     public synchronized static void validateDatabaseStructure( DatabaseAdapter db_ )
-        throws Exception
-    {
-
-//        if (true) return;
+        throws Exception {
 
         if (!isDefinitionProcessed || DataDefinitionManager.isNeedReload())
         {
@@ -103,40 +97,31 @@ public final class DefinitionService
             {
                 log.error("Error init DataDefinitionManager", e);
                 throw e;
-//                    return;
             }
 
-            definitionRelateHash = new Hashtable();
-            definitionHash = new Hashtable();
+            definitionRelateHash = new HashMap<String, Object>();
+            definitionHash = new HashMap<String, DataDefinitionType>();
 
             // получаем из менеджера все файлы с определениями в виде массива
             DataDefinitionFile[] defFileArray = DataDefinitionManager.getDefinitionFileArray();
 
-            for (int i=0; i<defFileArray.length; i++)
-            {
-                DataDefinitionFile defFile = defFileArray[i];
-
-                if (defFile.definitionList==null)
-                {
-                    log.warn("Definition file '"+defFile.getFile()+"' is empty");
+            for (DataDefinitionFile defFile : defFileArray) {
+                if (defFile.definitionList == null) {
+                    log.warn("Definition file '" + defFile.getFile() + "' is empty");
                     continue;
                 }
-                for (int j=0; j<defFile.definitionList.getDefinitionCount(); j++)
-                {
+                for (int j = 0; j < defFile.definitionList.getDefinitionCount(); j++) {
                     DataDefinitionType defItem = defFile.definitionList.getDefinition(j);
                     Object defTemp = definitionHash.get(defItem.getNameDef());
-                    if (defTemp==null)
-                    {
+                    if (defTemp == null) {
                         definitionHash.put(defItem.getNameDef(), defItem);
-                        for (int k=0; k<defItem.getPreviousNameDefCount(); k++)
-                        {
+                        for (int k = 0; k < defItem.getPreviousNameDefCount(); k++) {
                             String prevDef = defItem.getPreviousNameDef(k);
-                            registerRelateDefinitionDown( defItem.getNameDef(), prevDef );
+                            registerRelateDefinitionDown(defItem.getNameDef(), prevDef);
                         }
                     }
-                    else
-                    {
-                        log.warn("Found duplicate key '"+defItem.getNameDef()+"' definition in file "+defFile.getFile());
+                    else {
+                        log.warn("Found duplicate key '" + defItem.getNameDef() + "' definition in file " + defFile.getFile());
                     }
                 }
             }
@@ -151,9 +136,9 @@ public final class DefinitionService
                 return;
             }
 
-            for (Enumeration e = definitionHash.keys() ; e.hasMoreElements() ;)
-            {
-                String key = (String)e.nextElement();
+            Iterator<String> iterator = definitionHash.keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
                 walk( key );
             }
         }
@@ -310,7 +295,7 @@ public final class DefinitionService
     {
         Double value = getDouble( actionList, nameParam );
         if (value==null)
-            return new Double(defValue);
+            return defValue;
 
         return value;
     }
@@ -349,7 +334,7 @@ public final class DefinitionService
     {
         Long value = getLong( actionList, nameParam );
         if (value==null)
-            return new Long(defValue);
+            return defValue;
 
         return value;
     }
@@ -388,7 +373,7 @@ public final class DefinitionService
     {
         Integer value = getInteger( actionList, nameParam );
         if (value==null)
-            return new Integer(defValue);
+            return defValue;
 
         return value;
     }
@@ -427,7 +412,7 @@ public final class DefinitionService
     {
         Boolean value = getBoolean( actionList, nameParam );
         if (value==null)
-            return new Boolean(defValue);
+            return defValue;
 
         return value;
     }
@@ -555,6 +540,7 @@ public final class DefinitionService
                 if (fkList!=null && fkList.getKeysCount()>0)
                 {
                     DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+                    // Todo: and what we do with table?
                     DbTableType table =
                         DatabaseManager.getTableFromStructure(
                             schema,
@@ -659,10 +645,8 @@ public final class DefinitionService
 
                                     field.setName( getString(action.getActionParameters(), "column_name" )  );
                                     field.setJavaType(
-                                        new Integer(
-                                            DatabaseManager.sqlTypesMapping(
-                                                getString(action.getActionParameters(), "column_type" )
-                                            )
+                                        DatabaseManager.sqlTypesMapping(
+                                            getString(action.getActionParameters(), "column_type" )
                                         )
                                     );
                                     field.setSize( getInteger(action.getActionParameters(), "column_size", 0) );
@@ -882,7 +866,7 @@ public final class DefinitionService
             dbHash.clear();
             dbHash = null;
         }
-        dbHash = new Hashtable();
+        dbHash = new HashMap<String, String>();
 
         // получаем из базы данных список определений, которые были обработаны
         MainDbDefinitionListType mainDef = null;
