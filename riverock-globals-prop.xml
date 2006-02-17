@@ -54,7 +54,7 @@
     <property name="taglibs-request.lib" value="taglibs-request-1.0.1.jar"/>
     <property name="taglibs-session.lib" value="taglibs-session-1.0.1.jar"/>
 
-    <property name="myfaces.lib" value="myfaces-all-1.1.jar"/>
+    <property name="myfaces.lib" value="myfaces-all-1.1.1.jar"/>
  
     <property name="portlet.lib" value="portlet-1.0.jar"/>
     <property name="secure.lib" value="bcprov-jdk14-122.jar"/>
