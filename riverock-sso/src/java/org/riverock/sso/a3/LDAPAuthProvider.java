@@ -45,7 +45,7 @@ import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.bean.GroupCompany;
+//import org.riverock.interfaces.portal.bean.GroupCompany;
 import org.riverock.interfaces.portal.bean.Holding;
 
 /**
@@ -208,13 +208,13 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public String getGrantedGroupCompanyId(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+//    public String getGrantedGroupCompanyId(AuthSession authSession) {
+//        return null;  //To change body of implemented methods use File | Settings | File Templates.
+//    }
 
-    public List<Long> getGrantedGroupCompanyIdList(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+//    public List<Long> getGrantedGroupCompanyIdList(AuthSession authSession) {
+//        return null;  //To change body of implemented methods use File | Settings | File Templates.
+//    }
 
     public String getGrantedHoldingId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -228,9 +228,9 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+//    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession) {
+//        return null;  //To change body of implemented methods use File | Settings | File Templates.
+//    }
 
     public Long checkHoldingId(Long holdingId, AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -305,9 +305,9 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+//    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
+//        return null;  //To change body of implemented methods use File | Settings | File Templates.
+//    }
 
     public List<Holding> getHoldingList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.

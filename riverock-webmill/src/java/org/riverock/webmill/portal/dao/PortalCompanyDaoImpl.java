@@ -27,8 +27,8 @@ public class PortalCompanyDaoImpl implements PortalCompanyDao {
         return InternalDaoFactory.getInternalCompanyDao().getCompanyList( authSession );
     }
 
-    public Long processAddCompany(Company companyBean, String userLogin, Long groupCompanyId, Long holdingId) {
-        return InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, userLogin, groupCompanyId, holdingId, authSession );
+    public Long processAddCompany(Company companyBean, String userLogin, Long holdingId) {
+        return InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, userLogin, holdingId, authSession );
     }
 
     public void processSaveCompany(Company companyBean) {

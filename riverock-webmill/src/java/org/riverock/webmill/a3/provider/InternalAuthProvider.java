@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.bean.GroupCompany;
+//import org.riverock.interfaces.portal.bean.GroupCompany;
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;
@@ -64,13 +64,13 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         return authDao.getGrantedCompanyIdList( authSession.getUserLogin() );
     }
 
-    public String getGrantedGroupCompanyId( AuthSession authSession ) {
-        return authDao.getGrantedGroupCompanyId( authSession.getUserLogin() );
-    }
+//    public String getGrantedGroupCompanyId( AuthSession authSession ) {
+//        return authDao.getGrantedGroupCompanyId( authSession.getUserLogin() );
+//    }
 
-    public List<Long> getGrantedGroupCompanyIdList( AuthSession authSession ) {
-        return authDao.getGrantedGroupCompanyIdList( authSession.getUserLogin() );
-    }
+//    public List<Long> getGrantedGroupCompanyIdList( AuthSession authSession ) {
+//        return authDao.getGrantedGroupCompanyIdList( authSession.getUserLogin() );
+//    }
 
     public String getGrantedHoldingId( AuthSession authSession ) {
         return authDao.getGrantedHoldingId( authSession.getUserLogin() );
@@ -84,9 +84,9 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         return authDao.checkCompanyId( companyId, authSession.getUserLogin() );
     }
 
-    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession ) {
-        return authDao.checkGroupCompanyId( groupCompanyId, authSession.getUserLogin() );
-    }
+//    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession ) {
+//        return authDao.checkGroupCompanyId( groupCompanyId, authSession.getUserLogin() );
+//    }
 
     public Long checkHoldingId(Long holdingId, AuthSession authSession ) {
         return authDao.checkHoldingId( holdingId, authSession.getUserLogin() );
@@ -162,9 +162,9 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         return companyDao.getCompanyList( authSession );
     }
 
-    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
-        return companyDao.getGroupCompanyList( authSession );
-    }
+//    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
+//        return companyDao.getGroupCompanyList( authSession );
+//    }
 
     public List<Holding> getHoldingList(AuthSession authSession) {
         return companyDao.getHoldingList( authSession );
