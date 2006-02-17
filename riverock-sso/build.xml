@@ -56,7 +56,6 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-<!--        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />-->
         <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
         <antcall target="jar"/>
     </target>
@@ -80,6 +79,7 @@
 
     <target name="compile" depends="prepare, set_build_number">
         <!-- Compile PersistenceException -->
+<!--
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
@@ -93,27 +93,11 @@
             <classpath refid="classpath-base"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
-
+-->
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
             srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-core.java.dir}"
             destdir="${build.dest}"
             debug="${debug}"
             deprecation="${deprecation}"
