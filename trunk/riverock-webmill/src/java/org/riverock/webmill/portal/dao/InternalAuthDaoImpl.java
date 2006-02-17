@@ -30,6 +30,8 @@ import org.riverock.webmill.schema.core.WmAuthUserItemType;
 import org.riverock.webmill.schema.core.WmAuthRelateAccgroupItemType;
 import org.riverock.webmill.core.GetWmAuthUserItem;
 import org.riverock.webmill.core.InsertWmAuthRelateAccgroupItem;
+import org.riverock.webmill.core.DeleteWmAuthRelateAccgroupWithIdAuthUser;
+import org.riverock.webmill.core.DeleteWmAuthUserWithIdAuthUser;
 
 /**
  * @author SergeMaslyukov
@@ -99,6 +101,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         userInfo.setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
     }
 
+    //Todo what doing whis method
     public String getGrantedUserId(String username) {
         DatabaseAdapter db = null;
         try {
@@ -217,14 +220,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                 "from    WM_AUTH_USER a01 " +
                 "where   a01.is_use_current_firm = 1 and a01.user_login=? " +
                 "union " +
-                "select  d02.id_firm " +
-                "from    WM_AUTH_USER a02, WM_LIST_R_GR_COMP_COMP d02 " +
-                "where   a02.is_service = 1 and a02.id_service = d02.id_service and a02.user_login=? " +
-                "union " +
-                "select  e03.id_firm " +
-                "from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GR_COMPANY d03, WM_LIST_R_GR_COMP_COMP e03 " +
-                "where   a03.is_road = 1 and a03.id_road = d03.id_road and d03.id_service = e03.id_service and " +
-                "        a03.user_login=? " +
+                "select  d02.ID_COMPANY " +
+                "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02 " +
+                "where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING and a02.user_login=? " +
                 "union " +
                 "select  b04.id_firm " +
                 "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04 " +
@@ -234,7 +232,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             ps.setString(1, username);
             ps.setString(2, username);
             ps.setString(3, username);
-            ps.setString(4, username);
 
             rs = ps.executeQuery();
 
@@ -261,91 +258,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    private String getGrantedGroupCompanyId(DatabaseAdapter db, String username) {
-        return listToString( getGrantedGroupCompanyIdList(db, username) );
-    }
-
-    public String getGrantedGroupCompanyId(String username) {
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            return getGrantedGroupCompanyId(db, username);
-        }
-        catch (Exception e) {
-            String es = "Error get grnted userd id";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        finally {
-            DatabaseManager.close(db);
-            db = null;
-        }
-    }
-
-    public List<Long> getGrantedGroupCompanyIdList(String username) {
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            return getGrantedGroupCompanyIdList(db, username);
-        }
-        catch(Exception e) {
-            final String es = "Exception get granted group company id list";
-            log.error(es, e);
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db);
-            db = null;
-        }
-    }
-
-    public List<Long> getGrantedGroupCompanyIdList(DatabaseAdapter adapter, String username) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            String sql_ =
-                "select  a01.id_service "+
-                "from    WM_AUTH_USER a01 "+
-                "where   a01.is_service = 1 and a01.user_login=?  "+
-                "union "+
-                "select  b02.id_service "+
-                "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_GR_COMPANY b02 "+
-                "where   a02.is_road = 1 and a02.id_road = b02.id_road and a02.user_login=?  "+
-                "union "+
-                "select  b04.id_service "+
-                "from    WM_AUTH_USER a04, WM_LIST_GROUP_COMPANY b04 "+
-                "where   a04.is_root = 1 and a04.user_login=? ";
-
-
-            ps = adapter.prepareStatement(sql_);
-            ps.setString(1, username);
-            ps.setString(2, username);
-            ps.setString(3, username);
-
-            rs = ps.executeQuery();
-
-            List<Long> list = new ArrayList<Long>();
-            while(rs.next())
-            {
-                Long id = RsetTools.getLong(rs, "id_service" );
-                if (id==null)
-                    continue;
-                list.add( id );
-            }
-            return list;
-        }
-        catch (Exception e) {
-            final String es = "Exception get granted group company id list";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        finally {
-            DatabaseManager.close( rs, ps);
-            rs = null;
-            ps = null;
-        }
-    }
-
     private String getGrantedHoldingId(DatabaseAdapter db, String username) {
         return listToString( getGrantedHoldingIdList(db, username) );
     }
@@ -357,7 +269,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             return getGrantedHoldingId(db, username);
         }
         catch (Exception e) {
-            String es = "Error get grnted userd id";
+            String es = "Error get granted holding id";
             log.error(es,e);
             throw new IllegalStateException(es,e);
         }
@@ -374,7 +286,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             return getGrantedUserIdList(db, username);
         }
         catch(Exception e) {
-            final String es = "Exception get userID list";
+            final String es = "Exception get list of holdingId";
             log.error(es, e);
             throw new IllegalStateException( es, e );
         }
@@ -389,11 +301,11 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         ResultSet rs = null;
         try {
             String sql_ =
-                "select  a01.id_road "+
+                "select  a01.ID_HOLDING "+
                 "from    WM_AUTH_USER a01 "+
-                "where   a01.is_road=1 and a01.user_login=?  "+
+                "where   a01.IS_HOLDING=1 and a01.user_login=?  "+
                 "union "+
-                "select  b04.id_road "+
+                "select  b04.ID_HOLDING "+
                 "from    WM_AUTH_USER a04, WM_LIST_HOLDING b04 "+
                 "where   a04.is_root=1 and a04.user_login=?";
 
@@ -406,7 +318,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             List<Long> list = new ArrayList<Long>();
             while(rs.next())
             {
-                Long id = RsetTools.getLong(rs, "id_road" );
+                Long id = RsetTools.getLong(rs, "ID_HOLDING" );
                 if (id==null)
                     continue;
                 list.add( id );
@@ -415,7 +327,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
         catch(Exception e)
         {
-            final String es = "Exception get granted holding  id list";
+            final String es = "Exception get granted holding id list";
             log.error(es, e);
             throw new IllegalStateException( es, e );
         }
@@ -470,50 +382,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public Long checkGroupCompanyId(Long groupCompanyId, String userLogin) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter db = null;
-        try {
-            db = DatabaseAdapter.getInstance();
-            switch (db.getFamaly())
-            {
-                case DatabaseManager.MYSQL_FAMALY:
-                    ps = db.prepareStatement(
-                        "select ID_SERVICE from WM_LIST_GROUP_COMPANY " +
-                        "where ID_SERVICE in ("+getGrantedGroupCompanyId(db, userLogin)+") and ID_SERVICE=?"
-                    );
-                    ps.setObject(1, groupCompanyId);
-                    break;
-                default:
-                    ps = db.prepareStatement(
-                        "select ID_SERVICE from v$_read_list_service where USER_LOGIN=? and ID_SERVICE=?"
-                    );
-
-                    ps.setString(1, userLogin);
-                    ps.setObject(2, groupCompanyId);
-
-                    break;
-            }
-            rs = ps.executeQuery();
-            if (rs.next())
-                return RsetTools.getLong(rs, "ID_SERVICE");
-
-            return null;
-        }
-        catch (Exception e) {
-            final String es = "Error check group company id";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        finally {
-            DatabaseManager.close(db, rs, ps);
-            db = null;
-            rs = null;
-            ps = null;
-        }
-    }
-
     public Long checkHoldingId(Long holdingId, String userLogin) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -524,14 +392,14 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     ps = db.prepareStatement(
-                        "select ID_ROAD from WM_LIST_HOLDING " +
-                        "where ID_ROAD in ("+getGrantedHoldingId(db, userLogin)+") and ID_ROAD=?"
+                        "select ID_HOLDING from WM_LIST_HOLDING " +
+                        "where ID_HOLDING in ("+getGrantedHoldingId(db, userLogin)+") and ID_HOLDING=?"
                     );
                     ps.setObject(1, holdingId);
                     break;
                 default:
                     ps = db.prepareStatement(
-                        "select ID_ROAD from v$_read_list_road where USER_LOGIN = ? and ID_ROAD=?"
+                        "select ID_HOLDING from v$_read_list_road where USER_LOGIN = ? and ID_ROAD=?"
                     );
 
                     ps.setString(1, userLogin);
@@ -541,12 +409,12 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             }
             rs = ps.executeQuery();
             if (rs.next())
-                return RsetTools.getLong(rs, "ID_ROAD");
+                return RsetTools.getLong(rs, "ID_HOLDING");
 
             return null;
         }
         catch (Exception e) {
-            final String es = "Error check company id";
+            final String es = "Error check holding id";
             log.error(es, e);
             throw new IllegalStateException( es, e );
         }
@@ -678,18 +546,15 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         bean.setAuthUserId( RsetTools.getLong(rs, "ID_AUTH_USER") );
         bean.setUserId( RsetTools.getLong(rs, "ID_USER") );
         bean.setCompanyId( RsetTools.getLong(rs, "ID_FIRM") );
-        bean.setGroupCompanyId( RsetTools.getLong(rs, "ID_SERVICE") );
-        bean.setHoldingId( RsetTools.getLong(rs, "ID_ROAD") );
+        bean.setHoldingId( RsetTools.getLong(rs, "ID_HOLDING") );
         bean.setUserLogin( RsetTools.getString(rs, "USER_LOGIN") );
         bean.setUserPassword( RsetTools.getString(rs, "USER_PASSWORD") );
 
         int isUseCurrentFirmTemp = RsetTools.getInt(rs, "IS_USE_CURRENT_FIRM", 0);
-        int isServiceTemp = RsetTools.getInt(rs, "IS_SERVICE", 0);
-        int isRoadTemp = RsetTools.getInt(rs, "IS_ROAD", 0);
+        int isRoadTemp = RsetTools.getInt(rs, "IS_HOLDING", 0);
         int isRootTemp = RsetTools.getInt(rs, "IS_ROOT", 0);
 
-        bean.setCompany( (isUseCurrentFirmTemp+isServiceTemp+isRoadTemp+isRootTemp)>0 );
-        bean.setGroupCompany( (isServiceTemp+isRoadTemp+isRootTemp)>0 );
+        bean.setCompany( (isUseCurrentFirmTemp+isRoadTemp+isRootTemp)>0 );
         bean.setHolding( (isRoadTemp+isRootTemp)>0 );
         bean.setRoot( (isRootTemp)>0 );
 
@@ -944,15 +809,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                 "        a01.user_login=? " +
                 "union " +
                 "select  d02.id_firm, a02.user_login, a02.id_user, a02.id_auth_user " +
-                "from    WM_AUTH_USER a02, WM_LIST_R_GR_COMP_COMP d02, WM_PORTAL_LIST_SITE f02 " +
-                "where   a02.is_service = 1 and a02.id_service = d02.id_service and " +
-                "        d02.id_firm= f02.ID_FIRM and f02.ID_SITE=? and a02.user_login=? " +
-                "union " +
-                "select  e03.id_firm, a03.user_login, a03.id_user, a03.id_auth_user " +
-                "from    WM_AUTH_USER a03, WM_LIST_R_HOLDING_GR_COMPANY d03, WM_LIST_R_GR_COMP_COMP e03, WM_PORTAL_LIST_SITE f03 " +
-                "where   a03.is_road = 1 and a03.id_road = d03.id_road and " +
-                "        d03.id_service = e03.id_service and e03.id_firm = f03.ID_FIRM and f03.ID_SITE=? and " +
-                "        a03.user_login=? " +
+                "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02, WM_PORTAL_LIST_SITE f02 " +
+                "where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING and " +
+                "        d02.ID_COMPANY = f02.ID_FIRM and f02.ID_SITE=? and a02.user_login=? " +
                 "union " +
                 "select  b04.id_firm, a04.user_login, a04.id_user, a04.id_auth_user " +
                 "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04, WM_PORTAL_LIST_SITE f04 " +
@@ -967,8 +826,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             ps.setString( 4, userLogin );
             RsetTools.setLong( ps, 5, idSite );
             ps.setString( 6, userLogin );
-            RsetTools.setLong( ps, 7, idSite );
-            ps.setString( 8, userLogin );
 
             rs = ps.executeQuery();
 
@@ -1037,8 +894,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         return sb.toString();
     }
 
-
-// From InternalAuthDaoTools
 
     public static Long addRole(DatabaseAdapter db_, String role_name)
         throws Exception
@@ -1234,33 +1089,33 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public static void setRelateGroupCompanyCompany(DatabaseAdapter ora_, Long id_service, Long id_firm)
+    public static void setRelateHoldingCompany(DatabaseAdapter ora_, Long holdingId, Long companyId )
         throws Exception
     {
         PreparedStatement ps = null;
         try
         {
-            if (!getRelateServiceFirm(ora_, id_firm, id_service))
+            if (!getRelateHoldingCompany(ora_, companyId, holdingId))
             {
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName("seq_WM_LIST_R_GR_COMP_COMP");
-                seq.setTableName( "WM_LIST_R_GR_COMP_COMP");
-                seq.setColumnName( "ID_REL_SERVICE" );
+                seq.setSequenceName("seq_WM_LIST_R_HOLDING_COMPANY");
+                seq.setTableName( "WM_LIST_R_HOLDING_COMPANY");
+                seq.setColumnName( "ID_REL_HOLDING" );
                 long id = ora_.getSequenceNextValue( seq );
 
                 ps = ora_.prepareStatement(
-                    "insert into WM_LIST_R_GR_COMP_COMP " +
-                    "(ID_REL_SERVICE, ID_SERVICE, ID_FIRM) " +
+                    "insert into WM_LIST_R_HOLDING_COMPANY " +
+                    "(ID_REL_HOLDING, ID_HOLDING, ID_COMPANY) " +
                     "values "+
                     "(?, ?, ?)"
                 );
                 ps.setLong(1, id);
-                ps.setObject(2, id_service);
-                ps.setObject(3, id_firm);
+                ps.setObject(2, holdingId);
+                ps.setObject(3, companyId);
                 int i = ps.executeUpdate();
 
                 if (log.isDebugEnabled())
-                    log.debug("Count of added role - "+i);
+                    log.debug("Count of added record in WM_LIST_R_HOLDING_COMPANY: "+i);
             }
         }
         catch (Exception e)
@@ -1274,75 +1129,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             ps = null;
         }
 
-    }
-
-    public static void deleteRelateGroupCompanyCompany(DatabaseAdapter ora_, Long id_service, Long id_firm)
-    {
-        PreparedStatement ps = null;
-        try
-        {
-            if (!getRelateServiceFirm(ora_, id_firm, id_service))
-            {
-                ps = ora_.prepareStatement(
-                    "delete from WM_LIST_R_GR_COMP_COMP " +
-                    "where ID_SERVICE=? and ID_FIRM=? "
-                );
-                ps.setObject(2, id_service);
-                ps.setObject(3, id_firm);
-                int i = ps.executeUpdate();
-
-                if (log.isDebugEnabled())
-                    log.debug("Count of deleted record: "+i);
-            }
-        }
-        catch (Exception e)
-        {
-		String es = "Error setRelateServiceFirm";
-            log.error(es, e);
-            throw new IllegalStateException(es,e);
-        }
-        finally {
-            DatabaseManager.close( ps );
-            ps = null;
-        }
-
-    }
-
-    public static void setRelateServiceFirm(DatabaseAdapter ora_, String service_name, String firm_name)
-        throws Exception
-    {
-        setRelateServiceFirm(ora_, service_name, firm_name, false, false);
-    }
-
-    public static void setRelateServiceFirm(DatabaseAdapter ora_, String service_name, String firm_name, boolean add_service, boolean add_firm)
-        throws Exception
-    {
-        Long id_firm = getIDFirm(ora_, firm_name);
-        if ((id_firm == null) && (add_firm))
-            id_firm = addNewFirm(ora_, firm_name);
-        else
-            return;
-
-        Long id_service = getIDService(ora_, service_name);
-        if ((id_service == null) && (add_service))
-            id_service = addNewService(ora_, service_name);
-        else
-            return;
-
-        setRelateGroupCompanyCompany(ora_, id_service, id_firm);
-    }
-
-    public static Long addNewUser(DatabaseAdapter ora_, String first_name,
-        String last_name, String middle_name, String firm_name,
-        String service_name, String email, String address,
-        String phone)
-        throws Exception
-    {
-
-        setRelateServiceFirm(ora_, service_name, firm_name, true, true);
-
-        return addNewUser(ora_, first_name, last_name, middle_name,
-            getIDFirm(ora_, firm_name), email, address, phone);
     }
 
     public static Long addNewUser(DatabaseAdapter db_, String first_name,
@@ -1394,6 +1180,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
+/*
     public static Long addNewFirm(DatabaseAdapter db_, String nameFirm)
         throws Exception
     {
@@ -1425,46 +1212,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         catch (Exception e)
         {
             log.error("Error addNewFirm", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( ps );
-            ps = null;
-        }
-    }
-
-    public static Long addNewService(DatabaseAdapter db_, String nameService)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        try
-        {
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName("seq_WM_LIST_GROUP_COMPANY");
-            seq.setTableName( "WM_LIST_GROUP_COMPANY");
-            seq.setColumnName( "ID_SERVICE" );
-            long ID = db_.getSequenceNextValue( seq );
-
-            ps = db_.prepareStatement(
-                "insert into WM_LIST_GROUP_COMPANY " +
-                "(ID_SERVICE, FULL_NAME_SERVICE, SHORT_NAME_SERVICE) " +
-                "values "+
-                "(?, ?, ? )"
-            );
-            ps.setLong(1, ID);
-            ps.setString(2, nameService);
-            ps.setString(3, nameService);
-            int i = ps.executeUpdate();
-
-            if (log.isDebugEnabled())
-                log.debug("Count of added role - "+i);
-
-            return ID;
-        }
-        catch (Exception e)
-        {
-            log.error("Error addNewService", e);
             throw e;
         }
         finally
@@ -1513,102 +1260,8 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             ps = null;
         }
     }
-
-    public static Long getIDFirm(DatabaseAdapter db_, String nameFirm)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            ps = db_.prepareStatement(
-                "select ID_FIRM from WM_LIST_COMPANY where SHORT_NAME=?"
-            );
-            ps.setString(1, nameFirm);
-            rs = ps.executeQuery();
-            Long id = null;
-            if (rs.next())
-                id = RsetTools.getLong(rs, "ID_FIRM");
-
-            return id;
-        }
-        catch (Exception e)
-        {
-            log.error("Error getIDFirm", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public static Long getIDService(DatabaseAdapter db_, String nameService)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            ps = db_.prepareStatement(
-                "select ID_SERVICE from WM_LIST_GROUP_COMPANY where SHORT_NAME_SERVICE=?"
-            );
-            ps.setString(1, nameService);
-            rs = ps.executeQuery();
-            Long id = null;
-            if (rs.next())
-                id = RsetTools.getLong(rs, "ID_SERVICE");
-
-            return id;
-        }
-        catch (Exception e)
-        {
-            log.error("Error getIDService", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public static Long getIDRoad(DatabaseAdapter db_, String nameRoad)
-        throws Exception
-    {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try
-        {
-            ps = db_.prepareStatement(
-                "select ID_ROAD from WM_LIST_HOLDING where NAME_ROAD=?"
-            );
-            ps.setString(1, nameRoad);
-            rs = ps.executeQuery();
-            Long id = null;
-            if (rs.next())
-                id = RsetTools.getLong(rs, "ID_ROAD");
-
-            return id;
-        }
-        catch (Exception e)
-        {
-            log.error("Error getIDRoad", e);
-            throw e;
-        }
-        finally
-        {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public static boolean getRelateServiceFirm(DatabaseAdapter ora_,
-        Long id_firm, Long id_service)
+*/
+    public static boolean getRelateHoldingCompany(DatabaseAdapter ora_, Long companyId, Long holdingId )
         throws Exception
     {
         PreparedStatement ps = null;
@@ -1616,11 +1269,11 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         try
         {
             ps = ora_.prepareStatement(
-                "select null COUNT_REC from WM_LIST_R_GR_COMP_COMP " +
-                "where ID_FIRM=? and ID_SERVICE=?"
+                "select null COUNT_REC from WM_LIST_R_HOLDING_COMPANY " +
+                "where ID_COMPANY=? and ID_HOLDING=?"
             );
-            ps.setObject(1, id_firm);
-            ps.setObject(2, id_service);
+            ps.setObject(1, companyId);
+            ps.setObject(2, holdingId);
             rs = ps.executeQuery();
 
             return rs.next();
@@ -1918,7 +1571,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         try {
             db = DatabaseAdapter.getInstance();
 
-            Long id_user = infoAuth.getUserInfo().getUserId();
+            Long id_user = infoAuth.getAuthInfo().getUserId();
             if( id_user == null )
                 throw new IllegalArgumentException( "id_user not initialized" );
 
@@ -1929,28 +1582,25 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             Long id = db.getSequenceNextValue( seq );
 
             ps = db.prepareStatement( "insert into WM_AUTH_USER " +
-                "( ID_AUTH_USER, ID_FIRM, ID_SERVICE, ID_ROAD, " +
+                "( ID_AUTH_USER, ID_FIRM, ID_HOLDING, " +
                 "  ID_USER, USER_LOGIN, USER_PASSWORD, " +
-                "IS_USE_CURRENT_FIRM, IS_SERVICE, IS_ROAD " +
+                "IS_USE_CURRENT_FIRM, IS_HOLDING " +
                 ") values (" +
                 "?, " + // PK
                 "?, " + // b1.companyId, " +
-                "?, " + // b2.id_service, " +
-                "?, " + //b3.id_road, "+
-                "?, ?, ?, ?, ?, ? " +
+                "?, " + // b3.id_road, "+
+                "?, ?, ?, ?, " +
+                "? " +
                 ")" );
 
             Long companyId = null;
-            Long groupCompanyId = null;
             Long holdingId = null;
 
             companyId = authSession.checkCompanyId( infoAuth.getAuthInfo().getCompanyId() );
-            groupCompanyId = authSession.checkGroupCompanyId( infoAuth.getAuthInfo().getGroupCompanyId() );
             holdingId = authSession.checkHoldingId( infoAuth.getAuthInfo().getHoldingId() );
 
             if( log.isDebugEnabled() ) {
                 log.debug( "companyId " + companyId );
-                log.debug( "groupCompanyId " + groupCompanyId );
                 log.debug( "holdingId " + holdingId );
             }
 
@@ -1960,36 +1610,30 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             else
                 ps.setNull( 2, Types.INTEGER );
 
-            if( groupCompanyId != null )
-                RsetTools.setLong( ps, 3, groupCompanyId );
+            if( holdingId != null )
+                RsetTools.setLong( ps, 3, holdingId );
             else
                 ps.setNull( 3, Types.INTEGER );
 
-            if( holdingId != null )
-                RsetTools.setLong( ps, 4, holdingId );
-            else
-                ps.setNull( 4, Types.INTEGER );
 
+            RsetTools.setLong( ps, 4, id_user );
+            ps.setString( 5, infoAuth.getAuthInfo().getUserLogin() );
+            ps.setString( 6, infoAuth.getAuthInfo().getUserPassword() );
 
-            RsetTools.setLong( ps, 5, id_user );
-            ps.setString( 6, infoAuth.getAuthInfo().getUserLogin() );
-            ps.setString( 7, infoAuth.getAuthInfo().getUserPassword() );
-
-            ps.setInt( 8, infoAuth.getAuthInfo().isCompany()?1:0 );
-            ps.setInt( 9, infoAuth.getAuthInfo().isGroupCompany() ? 1 : 0 );
-            ps.setInt( 10, infoAuth.getAuthInfo().isHolding() ? 1 : 0 );
+            ps.setInt( 7, infoAuth.getAuthInfo().isCompany()?1:0 );
+            ps.setInt( 8, infoAuth.getAuthInfo().isHolding() ? 1 : 0 );
             int i1 = ps.executeUpdate();
 
             if( log.isDebugEnabled() )
                 log.debug( "Count of inserted records - " + i1 );
 
             processDeletedRoles( db, infoAuth );
-            processNewRoles( db, infoAuth );
+            processNewRoles( db, infoAuth.getRoles(), id );
 
             db.commit();
             return id;
         }
-        catch( Exception e ) {
+        catch( Throwable e ) {
             try {
                 if( db != null )
                     db.rollback();
@@ -2007,13 +1651,17 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             db = null;
         }
     }
-    
+
     private void processDeletedRoles( DatabaseAdapter db_, AuthUserExtendedInfo infoAuth ) throws Exception {
-        PreparedStatement ps = null;
-        try {
-            log.info( "Start delete roles for authUserId: " + infoAuth.getAuthInfo().getAuthUserId() +
+	 log.info( "Start delete roles for authUserId: " + infoAuth.getAuthInfo().getAuthUserId() +
                 ", roles list: " + infoAuth.getRoles() );
 
+        PreparedStatement ps = null;
+        try {
+            if (infoAuth.getRoles()==null) {
+	        log.info( "Role list is null, return.");
+		return;
+	    }
             Iterator<RoleEditableBean> iterator = infoAuth.getRoles().iterator();
             while( iterator.hasNext() ) {
                 RoleEditableBean roleBeanImpl = iterator.next();
@@ -2030,7 +1678,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
                 ps.setLong( 1, infoAuth.getAuthInfo().getAuthUserId() );
                 ps.setLong( 2, roleBeanImpl.getRoleId() );
-                ps.execute();
+                ps.executeUpdate();
                 ps.close();
                 ps = null;
             }
@@ -2038,15 +1686,29 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         finally {
             DatabaseManager.close( ps );
             ps = null;
+
+	    log.info( "End delete roles");
         }
     }
 
-    private void processNewRoles( DatabaseAdapter db, AuthUserExtendedInfo infoAuth ) throws Exception {
+    private void processNewRoles( DatabaseAdapter db, List<RoleEditableBean> roles, Long authUserId ) throws Exception {
+        log.info( 
+	   "Start insert new roles for authUserId: " + authUserId +
+           ", roles list: " + roles
+	);
+
         PreparedStatement ps = null;
         try {
-            Iterator<RoleEditableBean> iterator = infoAuth.getRoles().iterator();
+            if (roles==null) {
+	        log.info( "Role list is null, return.");
+		return;
+	    }
+
+            Iterator<RoleEditableBean> iterator = roles.iterator();
             while( iterator.hasNext() ) {
                 RoleEditableBean roleBeanImpl = iterator.next();
+
+	        log.info("Role, new: "+roleBeanImpl.isNew()+", delete: "+roleBeanImpl.isDelete() );
 
                 if( !roleBeanImpl.isNew() || roleBeanImpl.isDelete() ) {
                     continue;
@@ -2065,8 +1727,8 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
                 ps.setLong( 1, id );
                 ps.setLong( 2, roleBeanImpl.getRoleId() );
-                ps.setLong( 3, infoAuth.getAuthInfo().getAuthUserId() );
-                ps.execute();
+                ps.setLong( 3, authUserId );
+                ps.executeUpdate();
                 ps.close();
                 ps = null;
             }
@@ -2074,19 +1736,144 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         finally {
             DatabaseManager.close( ps );
             ps = null;
+
+	    log.info( "End add roles");
         }
     }
 
     public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        log.info("Start update auth");
+
+        PreparedStatement ps = null;
+        DatabaseAdapter db = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            String sql =
+                "update WM_AUTH_USER " +
+                "set "+   
+		"ID_FIRM=?, IS_USE_CURRENT_FIRM=?, "+
+		"ID_HOLDING=?, IS_HOLDING=? "+
+                "WHERE  ID_AUTH_USER=? ";
+
+            ps = db.prepareStatement( sql );
+
+	    if (infoAuth.getAuthInfo().getCompanyId()==null) {
+	    	 ps.setNull( 1, Types.INTEGER );
+		 ps.setInt( 2, 0 );
+	    }
+	    else {
+	    	 ps.setLong( 1, infoAuth.getAuthInfo().getCompanyId() );
+		 ps.setInt( 2, infoAuth.getAuthInfo().isCompany()?1:0 );
+	    }
+	
+	    if (infoAuth.getAuthInfo().getHoldingId()==null) {
+	    	 ps.setNull( 3, Types.INTEGER );
+		 ps.setInt( 4, 0 );
+	    }
+	    else {
+	    	 ps.setLong( 3, infoAuth.getAuthInfo().getHoldingId() );
+		 ps.setInt( 4, infoAuth.getAuthInfo().isHolding()?1:0 );
+	    }
+	
+            ps.setLong( 5, infoAuth.getAuthInfo().getAuthUserId() );
+		ps.executeUpdate();
+
+            processDeletedRoles( db, infoAuth );
+            processNewRoles( db, infoAuth.getRoles(), infoAuth.getAuthInfo().getAuthUserId() );
+
+            db.commit();
+        }
+        catch( Throwable e ) {
+            try {
+                if( db != null )
+                    db.rollback();
+            }
+            catch( Exception e001 ) {
+            }
+
+            final String es = "Error add user auth";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, ps );
+            ps = null;
+		db = null;
+
+            log.info("End update auth");
+        }
     }
 
     public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        log.info("Start delete auth");
+
+        DatabaseAdapter db = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            DeleteWmAuthRelateAccgroupWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
+	    DeleteWmAuthUserWithIdAuthUser.process( db, infoAuth.getAuthInfo().getAuthUserId() );
+
+            db.commit();
+        }
+        catch( Throwable e ) {
+            try {
+                if( db != null )
+                    db.rollback();
+            }
+            catch( Exception e001 ) {
+            }
+
+            final String es = "Error add user auth";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db );
+		db = null;
+
+            log.info("End delete auth");
+        }
     }
 
     public List<UserInfo> getUserList(AuthSession authSession) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+            List<UserInfo> users = new ArrayList<UserInfo>();
+
+        if( authSession==null ) {
+            return users;
+        }
+        DatabaseAdapter db = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+
+	    String companyIdList = getGrantedCompanyId( db, authSession.getUserLogin() );
+
+            String sql =
+                "select * " +
+                "from 	WM_LIST_USER " +
+                "where  IS_DELETED=0 and ID_FIRM in (" + companyIdList + ")";
+
+            ps = db.prepareStatement( sql );
+            rs = ps.executeQuery();
+
+            while( rs.next() ) {
+		UserInfoImpl userInfo = new UserInfoImpl();
+		set(rs, userInfo);
+                users.add( userInfo );
+            }
+            return users;
+        }
+        catch( Exception e ) {
+            String es = "Error load list of users";
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, rs, ps );
+            db = null;
+            rs = null;
+            ps = null;
+        }
     }
 
     public RoleBean getRole( AuthSession authSession , Long roleId) {
