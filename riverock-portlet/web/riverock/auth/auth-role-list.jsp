@@ -7,10 +7,9 @@
     <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>
 
 
-    <f:verbatim><br/></f:verbatim>
+    <f:verbatim><br /></f:verbatim>
     <h:outputText value="#{msg['role_list']}" styleClass="standard_bold" />
-    <f:verbatim><br/></f:verbatim>
-    <f:verbatim><br/></f:verbatim>
+    <f:verbatim><br /><br /></f:verbatim>
 
     <h:selectOneMenu value="#{dataProvider.currentUser.newRoleId}"
 	styleClass="selectOneMenu" required="true" 
@@ -41,7 +40,7 @@
 
            <h:column>
                 <t:commandButton value="#{msg['delete_role']}" actionListener="#{authUserAction.deleteRoleActionListener}">
-                    <f:param name="roleId" value="#{role.roleId}"/>
+                    <t:updateActionListener property="#{userSessionBean.currentRoleId}" value="#{role.roleId}" />
 		</t:commandButton>
            </h:column>
         </t:dataTable>

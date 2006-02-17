@@ -1,5 +1,7 @@
 package org.riverock.portlet.auth.user.bean;
 
+import java.io.Serializable;
+
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 
@@ -9,7 +11,9 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
  *         Time: 17:23:14
  *         $Id$
  */
-public class RoleEditableBeanImpl implements RoleEditableBean {
+public class RoleEditableBeanImpl implements RoleEditableBean, Serializable {
+    private static final long serialVersionUID = 2043005512L;
+
     private boolean isNew = false;
     private boolean isDelete = false;
     private String name = null;

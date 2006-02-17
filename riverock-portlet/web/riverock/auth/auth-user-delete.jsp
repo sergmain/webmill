@@ -6,7 +6,27 @@
 
     <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>
 
-<h:panelGroup id="delete-user-panel" rendered="#{dataProvider.currentUser.delete}">
+<f:view>
+
+    <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>
+
+<h:form id="foo" rendered="#{userSessionBean.delete}">
+
+    <t:panelTabbedPane bgcolor="#FFFFCC" >
+
+        <t:panelTab id="tab1" label="#{msg['tabbed_tab1']}">
+    
+<f:verbatim><table borser="0" width="100%"><tr><td width="300" valign="top"></f:verbatim>
+
+
+        <f:subview id="select-user-subview">
+            <jsp:include page="auth-tree.jsp"/>
+        </f:subview>
+
+
+<f:verbatim></td><td valign="top"></f:verbatim>
+
+<h:panelGroup id="delete-user-panel" rendered="#{userSessionBean.delete}">
 
         <f:subview id="delete-user-info-subview" >
             <jsp:include page="auth-user-info.jsp"/>
@@ -25,4 +45,20 @@
         </h:commandButton>
 
 </h:panelGroup>
+
+<f:verbatim></td></tr></table></f:verbatim>
+
+
+        </t:panelTab>
+
+        <t:panelTab id="tab2" label="#{msg['tabbed_tab2']}">
+        <f:subview id="role-subview">
+        </f:subview>
+        </t:panelTab>
+
+    </t:panelTabbedPane>
+</h:form>
+
+
+</f:view>
 

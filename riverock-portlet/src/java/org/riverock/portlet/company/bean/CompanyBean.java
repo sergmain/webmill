@@ -26,6 +26,17 @@ public class CompanyBean implements Serializable, Company {
 	public CompanyBean() {
 	}
 
+	public CompanyBean(Company company) {
+		this.name = company.getName();
+		this.id = company.getId();
+		this.shortName = company.getShortName();
+		this.address = company.getAddress();
+		this.ceo = company.getCeo();
+		this.cfo = company.getCfo();
+		this.website = company.getWebsite();
+		this.info = company.getInfo();
+	}
+
 	public String getName() {
 		return name;
 	}

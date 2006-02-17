@@ -16,8 +16,6 @@ import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
-import org.riverock.portlet.auth.user.dao.AuthManager;
-
 /**
  * @author SergeMaslyukov
  *         Date: 02.01.2006
@@ -28,28 +26,25 @@ public class UserTreeBean implements Serializable {
     private final static Logger log = Logger.getLogger( UserTreeBean.class );
     private static final long serialVersionUID = 2043005500L;
 
-    private AuthManager authManager = null;
-
     private HtmlTree _tree;
     private String _nodePath;
+
+    private DataProvider dataProvider = null;
 
     public UserTreeBean() {
     }
 
-    public AuthManager getAuthManager() {
-        return authManager;
+    public DataProvider getDataProvider() {
+        return dataProvider;
     }
 
-    public void setAuthManager( AuthManager authManager ) {
-        if( log.isDebugEnabled() ) {
-            log.debug( "set auth manager to " + authManager );
-        }
-        this.authManager = authManager;
+    public void setDataProvider( DataProvider dataProvider ) {
+        this.dataProvider = dataProvider;
     }
 
     public TreeNode getUserTree() {
         TreeNode treeData = new TreeNodeBase( "foo-folder", "Company list", false );
-        Iterator<CompanyBean> iterator = authManager.getCompanyBeans().iterator();
+        Iterator<CompanyBean> iterator = dataProvider.getCompanyBeans().iterator();
         while( iterator.hasNext() ) {
             CompanyBean companyBean = iterator.next();
 

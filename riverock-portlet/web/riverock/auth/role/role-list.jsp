@@ -16,8 +16,6 @@
                        </f:facet>
                        <t:commandLink action="#{roleAction.selectRole}" immediate="true" >
                             <h:outputText value="#{role.name}" />
-                            <!-- for convenience: MyFaces extension. sets id of current row in countryForm -->
-                            <!-- you don't have to implement a custom action! -->
                             <t:updateActionListener property="#{roleSessionBean.currentRoleId}" value="#{role.id}" />
                        </t:commandLink>
                    </h:column>

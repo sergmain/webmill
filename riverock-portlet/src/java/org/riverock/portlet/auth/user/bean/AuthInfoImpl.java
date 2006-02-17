@@ -13,27 +13,26 @@ public class AuthInfoImpl implements AuthInfo {
     private Long authUserId;
     private Long userId;
     private Long companyId;
-    private Long groupCompanyId;
     private Long holdingId;
 
     private String userLogin = "";
     private String userPassword = "";
 
     private boolean isCompany = false;
-    private boolean isGroupCompany = false;
     private boolean isHolding = false;
     private boolean isRoot = false;
+
+    public AuthInfoImpl() {
+    }
 
     public AuthInfoImpl(AuthInfo info) {
         this.authUserId = info.getAuthUserId();
         this.userId = info.getUserId();
         this.companyId = info.getCompanyId();
-        this.groupCompanyId = info.getGroupCompanyId();
         this.holdingId = info.getHoldingId();
         this.userLogin = info.getUserLogin();
         this.userPassword = info.getUserPassword();
         this.isCompany = info.isCompany();
-        this.isGroupCompany = info.isGroupCompany();
         this.isHolding = info.isHolding();
         this.isRoot = info.isRoot();
     }
@@ -50,10 +49,6 @@ public class AuthInfoImpl implements AuthInfo {
         return companyId;
     }
 
-    public Long getGroupCompanyId() {
-        return groupCompanyId;
-    }
-
     public Long getHoldingId() {
         return holdingId;
     }
@@ -68,10 +63,6 @@ public class AuthInfoImpl implements AuthInfo {
 
     public boolean isCompany() {
         return isCompany;
-    }
-
-    public boolean isGroupCompany() {
-        return isGroupCompany;
     }
 
     public boolean isHolding() {
@@ -94,10 +85,6 @@ public class AuthInfoImpl implements AuthInfo {
         this.companyId = companyId;;
     }
 
-    public void setGroupCompanyId(Long groupCompanyId) {
-        this.groupCompanyId = groupCompanyId;
-    }
-
     public void setHoldingId(Long holdingId) {
         this.holdingId = holdingId;
     }
@@ -112,10 +99,6 @@ public class AuthInfoImpl implements AuthInfo {
 
     public void setCompany(boolean isCompany) {
         this.isCompany = isCompany;
-    }
-
-    public void setGroupCompany(boolean isGroupCompany) {
-        this.isGroupCompany = isGroupCompany;
     }
 
     public void setHolding(boolean isHolding) {

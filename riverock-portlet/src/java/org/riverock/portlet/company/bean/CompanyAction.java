@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.riverock.portlet.tools.FacesTools;
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.portlet.main.AuthSessionBean;
 
 /**
  * @author SergeMaslyukov
@@ -13,19 +14,19 @@ public class CompanyAction implements Serializable {
     private static final long serialVersionUID = 2055005501L;
 
 	private CompanySessionBean sessionBean = null;
-	private CompanyModuleUserBean companyModuleUser = null;
+	private AuthSessionBean authSessionBean = null;
 
 	public CompanyAction() {
 	}
 
-	public CompanyModuleUserBean getCompanyModuleUser() {
-		return companyModuleUser;
+	public AuthSessionBean getAuthSessionBean() {
+		return authSessionBean;
 	}
 
-	public void setCompanyModuleUser(CompanyModuleUserBean companyModuleUser) {
-		this.companyModuleUser = companyModuleUser;
+	public void setAuthSessionBean(AuthSessionBean authSessionBean) {
+		this.authSessionBean = authSessionBean;
 	}
-	
+
 	public CompanySessionBean getSessionBean() {
 		return sessionBean;
 	}
@@ -43,11 +44,12 @@ public class CompanyAction implements Serializable {
 	public String processAddCompany() {
 		Long companyId = FacesTools.getPortalDaoProvider().getPortalCompanyDao().processAddCompany(
 			sessionBean.getCompany(),
-			companyModuleUser.getUserLogin(),
-			companyModuleUser.getGroupCompanyId(),
-			companyModuleUser.getHoldingId()
+			authSessionBean.getUserLogin(),
+			authSessionBean.getHoldingId()
             );
 		sessionBean.setCurrentCompanyId( companyId );
+		loadCurrentCompany();
+
 		return "company";
 	}
 

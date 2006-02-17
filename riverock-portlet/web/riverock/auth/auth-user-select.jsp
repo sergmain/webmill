@@ -6,7 +6,7 @@
 
     <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>
 
-<h:panelGroup id="select-user-panel"  rendered="#{!dataProvider.currentUser.edit && !dataProvider.currentUser.delete && !dataProvider.currentUser.add}">
+<h:panelGroup id="select-user-panel"  rendered="#{!userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
 
         <f:subview id="select-user-info-subview" >
             <jsp:include page="auth-user-info.jsp"/>

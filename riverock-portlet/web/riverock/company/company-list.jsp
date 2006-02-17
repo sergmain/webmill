@@ -8,7 +8,7 @@
 
                 <t:dataTable id="companyDataTable"
                         var="company"
-                        value="#{companyBean.companyList}"
+                        value="#{companyService.companyList}"
                         preserveDataModel="true" >
                    <h:column>
                        <f:facet name="header">

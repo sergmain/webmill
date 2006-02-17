@@ -14,12 +14,18 @@
 
     <!-- User part -->
     <managed-bean>
-        <managed-bean-name>auth</managed-bean-name>
+        <managed-bean-name>userSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserSessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>userTree</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.auth.user.bean.UserTreeBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     	<managed-property>
-           <property-name>authManager</property-name>
-           <value>#{authManager}</value>
+           <property-name>dataProvider</property-name>
+           <value>#{dataProvider}</value>
     	</managed-property>
     </managed-bean>
 
@@ -28,60 +34,39 @@
         <managed-bean-class>org.riverock.portlet.auth.user.bean.UserAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     	<managed-property>
-           <property-name>authManager</property-name>
-           <value>#{authManager}</value>
+           <property-name>dataProvider</property-name>
+           <value>#{dataProvider}</value>
     	</managed-property>
     	<managed-property>
-           <property-name>userHolderBean</property-name>
-           <value>#{userHolderBean}</value>
-    	</managed-property>
-    </managed-bean>
-
-    <managed-bean>
-        <managed-bean-name>dataProvider</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.dao.DataProvider</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    	<managed-property>
-           <property-name>authManager</property-name>
-           <value>#{authManager}</value>
+           <property-name>userSessionBean</property-name>
+           <value>#{userSessionBean}</value>
     	</managed-property>
     	<managed-property>
-           <property-name>userHolderBean</property-name>
-           <value>#{userHolderBean}</value>
-    	</managed-property>
-    </managed-bean>
-
-    <managed-bean>
-        <managed-bean-name>authManager</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.dao.AuthManager</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    	<managed-property>
-           <property-name>moduleUserBean</property-name>
+           <property-name>authSessionBean</property-name>
            <value>#{authSessionBean}</value>
     	</managed-property>
     </managed-bean>
 
     <managed-bean>
-        <managed-bean-name>userHolderBean</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserHolderBean</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
+        <managed-bean-name>dataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.auth.user.bean.DataProvider</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    	<managed-property>
+           <property-name>userSessionBean</property-name>
+           <value>#{userSessionBean}</value>
+    	</managed-property>
+    	<managed-property>
+           <property-name>authSessionBean</property-name>
+           <value>#{authSessionBean}</value>
+    	</managed-property>
     </managed-bean>
 
     <!-- Role part -->
- <managed-bean>
-  <managed-bean-name>roleDAO</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.auth.role.dao.RoleDAOImpl</managed-bean-class>
-  <managed-bean-scope>application</managed-bean-scope>
- </managed-bean>
 
  <managed-bean>
   <managed-bean-name>roleSessionBean</managed-bean-name>
   <managed-bean-class>org.riverock.portlet.auth.role.bean.RoleSessionBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
-  <managed-property>
-   <property-name>roleDAO</property-name>
-   <value>#{roleDAO}</value>
-  </managed-property>
  </managed-bean>
 
  <managed-bean>
@@ -112,6 +97,52 @@
   </managed-property>
  </managed-bean>
 
+
+<!-- User navigation rules -->
+ <navigation-rule>
+  <from-view-id>/riverock/auth/auth.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>auth-add</from-outcome>
+   <to-view-id>/riverock/auth/auth-user-add.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>auth-edit</from-outcome>
+   <to-view-id>/riverock/auth/auth-user-edit.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>auth-delete</from-outcome>
+   <to-view-id>/riverock/auth/auth-user-delete.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>auth</from-outcome>
+   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+
+ <navigation-rule>
+  <from-view-id>/riverock/auth/auth-user-add.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>auth</from-outcome>
+   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/riverock/auth/auth-user-edit.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>auth</from-outcome>
+   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/riverock/auth/auth-user-delete.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>auth</from-outcome>
+   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+
+
+<!-- Role navigation rules -->
  <navigation-rule>
   <from-view-id>/riverock/auth/role/role.jsp</from-view-id>
   <navigation-case>
@@ -131,6 +162,7 @@
    <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
+
  <navigation-rule>
   <from-view-id>/riverock/auth/role/role-add.jsp</from-view-id>
   <navigation-case>

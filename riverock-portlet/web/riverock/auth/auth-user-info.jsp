@@ -13,24 +13,18 @@
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="User login:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<h:outputText value="#{dataProvider.currentUser.userLogin}" />
+	<h:outputText value="#{dataProvider.currentUser.authInfo.userLogin}" />
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Company:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.company}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.company}" border="0"/>
+	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.authInfo.company}" border="0"/>
+	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.authInfo.company}" border="0"/>
 	<h:outputText value="#{dataProvider.currentUser.companyName}" />
-<f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
-	<h:outputText value="Group of company:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.groupCompany}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.groupCompany}" border="0"/>
-	<h:outputText value="#{dataProvider.currentUser.groupCompanyName}"/>
 <f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
 	<h:outputText value="Holding:"/>
 <f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.holding}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.holding}" border="0"/>
+	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.authInfo.holding}" border="0"/>
+	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.authInfo.holding}" border="0"/>
 	<h:outputText value="#{dataProvider.currentUser.holdingName}" />
 
 
