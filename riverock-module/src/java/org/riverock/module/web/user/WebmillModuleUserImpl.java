@@ -57,9 +57,9 @@ public class WebmillModuleUserImpl implements ModuleUser {
         return authSession.getAuthInfo().isCompany();
     }
 
-    public boolean isGroupCompany() {
-        return authSession.getAuthInfo().isGroupCompany();
-    }
+//    public boolean isGroupCompany() {
+//        return authSession.getAuthInfo().isGroupCompany();
+//    }
 
     public boolean isHolding() {
         return authSession.getAuthInfo().isHolding();
