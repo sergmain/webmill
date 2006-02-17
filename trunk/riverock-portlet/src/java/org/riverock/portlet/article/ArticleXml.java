@@ -147,27 +147,15 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
     public ArticleXml() {
     }
 
-    public PortletResultContent getInstance(DatabaseAdapter db__, long id__) throws Exception {
-        return getInstance( id__ );
-    }
-
-    public PortletResultContent getInstance( Long id__ )
-            throws PortletException
-    {
-        DatabaseAdapter db__ = null;
+    public PortletResultContent getInstance( Long id__ ) throws PortletException {
         try {
-            db__ = DatabaseAdapter.getInstance();
-            PortletResultContent portletObject = (PortletResultContent) cache.getInstanceNew(db__, id__);
+            PortletResultContent portletObject = (PortletResultContent) cache.getInstanceNew(id__);
             return portletObject;
         }
         catch(Throwable e) {
             String es = "Error get instance of ArticleXml";
             log.error(es, e);
             throw new PortletException(es, e);
-        }
-        finally {
-            DatabaseManager.close(db__);
-            db__ = null;
         }
     }
 
@@ -211,14 +199,14 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
                 if (log.isDebugEnabled())
                     log.debug("#10.01.04 " + RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE"));
 
-                return getInstance(db__, RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE"));
+                return getInstance( RsetTools.getLong(rs, "ID_SITE_CTX_ARTICLE"));
             }
 
             if (log.isDebugEnabled())
                 log.debug("#10.01.05 ");
 
             // return dummy Article
-            return getInstance(db__, -1);
+            return new ArticleXml();
         }
         catch(Throwable e) {
             String es = "Exception in ArticleXml.getInstanceByCode()";
@@ -248,17 +236,25 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    public ArticleXml(DatabaseAdapter db_, Long id_) throws Exception {
-        WmPortletArticleItemType article = GetWmPortletArticleItem.getInstance(db_, id_).item;
+    public ArticleXml( Long id_) throws Exception {
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
+            WmPortletArticleItemType article = GetWmPortletArticleItem.getInstance(db_, id_).item;
 
-        if (article==null || Boolean.TRUE.equals( article.getIsDeleted()) )
-            return;
+            if (article==null || Boolean.TRUE.equals( article.getIsDeleted()) )
+                return;
 
-        this.id = id_;
-        datePost = Calendar.getInstance();
-        datePost.setTimeInMillis( article.getDatePost().getTime() );
-        nameArticle = article.getNameArticle();
-        initTextField( db_ );
+            this.id = id_;
+            datePost = Calendar.getInstance();
+            datePost.setTimeInMillis( article.getDatePost().getTime() );
+            nameArticle = article.getNameArticle();
+            initTextField( db_ );
+        }
+        finally {
+            DatabaseManager.close(db_);
+            db_ = null;
+        }
     }
 
     static String sql2_ = null;

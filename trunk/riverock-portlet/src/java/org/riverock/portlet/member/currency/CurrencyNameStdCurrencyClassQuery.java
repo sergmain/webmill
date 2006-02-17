@@ -31,7 +31,6 @@ import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.MemberQueryParameter;
@@ -66,25 +65,18 @@ public class CurrencyNameStdCurrencyClassQuery extends BaseClassQuery {
      *
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+        Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );
+        CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
+            currencyManager.getCurrencyList(), idCurrency );
+        StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem(
+            currencyManager.getCurrencyList(), item.getIdStandardCurrency() );
 
-            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), idCurrency );
-            StandardCurrencyItemType stdItem = CurrencyService.getStandardCurrencyItem( CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), item.getIdStandardCurrency() );
+        if( stdItem == null )
+            return "";
 
-            if( stdItem == null )
-                return "";
-
-            return "" + stdItem.getCurrencyCode();
-        }
-        finally {
-            DatabaseAdapter.close( db_ );
-            db_ = null;
-        }
+        return "" + stdItem.getCurrencyCode();
     }
 
     /**

@@ -45,70 +45,53 @@ import org.apache.commons.logging.LogFactory;
 /**
  * $Id$
  */
-public final class NewsGroup
-{
+public final class NewsGroup {
     private final static Log log = LogFactory.getLog( NewsGroup.class  );
 
     public NewsGroupType newsGroup = new NewsGroupType();
 
     private static CacheFactory cache = new CacheFactory( NewsGroup.class.getName() );
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         newsGroup = null;
         super.finalize();
     }
 
-    public void reinit()
-    {
+    public void reinit() {
         cache.reinit();
     }
 
-    public NewsGroup()
-    {
+    public NewsGroup() {
     }
 
-    public static NewsGroup getInstance(DatabaseAdapter db__, long id__)
-            throws Exception
-    {
-        return getInstance(db__, id__ );
-    }
-
-    public static NewsGroup getInstance(DatabaseAdapter db__, Long id__)
-            throws Exception
-    {
-        return (NewsGroup) cache.getInstanceNew(db__, id__);
+    public static NewsGroup getInstance(Long id__) throws Exception {
+        return (NewsGroup) cache.getInstanceNew(id__);
     }
 
     static String sql_ = null;
-    static
-    {
-        sql_ =
-            "select a.* from WM_NEWS_LIST a where a.IS_DELETED=0 and a.ID_NEWS=?";
+    static {
+        sql_ = "select a.* from WM_NEWS_LIST a where a.IS_DELETED=0 and a.ID_NEWS=?";
 
-        try
-        {
+        try {
             SqlStatement.registerSql( sql_, new NewsGroup().getClass() );
         }
-        catch(Throwable e)
-        {
+        catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
             log.error(es, e);
             throw new SqlStatementRegisterException( es, e );
         }
     }
 
-    public NewsGroup(DatabaseAdapter db_, Long id_)
-            throws PortletException
-    {
+    public NewsGroup(Long id_) throws PortletException {
         if (log.isDebugEnabled())
             log.debug("start create object of NewsGroup");
 
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        try
-        {
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
             newsGroup.setNewsGroupId( id_ );
 
             if (log.isDebugEnabled())
@@ -118,8 +101,7 @@ public final class NewsGroup
             RsetTools.setLong(ps, 1, newsGroup.getNewsGroupId() );
 
             rs = ps.executeQuery();
-            if (rs.next())
-            {
+            if (rs.next()) {
                 newsGroup.setNewsGroupName( RsetTools.getString(rs, "NAME_NEWS") );
                 newsGroup.setNewsGroupCode( RsetTools.getString(rs, "CODE_NEWS_GROUP") );
                 newsGroup.setMaxNews( RsetTools.getLong(rs, "COUNT_NEWS") );
@@ -133,70 +115,56 @@ public final class NewsGroup
                     log.debug("newsGroupName - "+newsGroup.getNewsGroupName() + " maxNews - "+newsGroup.getMaxNews() );
             }
         }
-        catch (Throwable e)
-        {
+        catch (Throwable e) {
             final String es = "Error create NewsGroup";
             log.error(es, e);
             throw new PortletException( es, e );
         }
-        finally
-        {
-            DatabaseManager.close(rs, ps);
+        finally {
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
+            db_ = null;
         }
     }
 
     static String sql1_ = null;
-    static
-    {
+    static {
         sql1_ =
             "select a.ID from WM_NEWS_ITEM a, WM_NEWS_LIST b " +
             "where b.ID_NEWS=? and a.ID_NEWS=b.ID_NEWS and a.IS_DELETED=0 " +
             "order by EDATE desc ";
 
-        try
-        {
+        try {
             SqlStatement.registerSql( sql1_, new NewsGroup().getClass() );
         }
-        catch(Throwable e)
-        {
+        catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
             log.error(es, e);
             throw new SqlStatementRegisterException( es, e );
         }
     }
 
-    public void fillNewsItems(DatabaseAdapter db_)
-            throws PortletException
-    {
+    private void fillNewsItems(DatabaseAdapter db_) throws Exception {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             ps = db_.prepareStatement(sql1_);
             RsetTools.setLong(ps, 1, newsGroup.getNewsGroupId() );
 
             rs = ps.executeQuery();
             int i = 0;
             int maxNews = newsGroup.getMaxNews()!=null?newsGroup.getMaxNews().intValue():10;
-            while (rs.next() && i++ < maxNews )
-            {
+            while (rs.next() && i++ < maxNews ) {
                 Long idNews = RsetTools.getLong(rs, "ID");
 
                 if (log.isDebugEnabled())
                     log.debug("getInstance of NewsItem. id - "+idNews);
 
-                NewsItem item = NewsItem.getInstance(db_, idNews );
+                NewsItem item = NewsItem.getInstance(idNews );
 
                 newsGroup.addNewsItem( item.newsItem );
             }
-        }
-        catch (Throwable e)
-        {
-            final String es = "Error in fillNewsItems";
-            log.error(es, e);
-            throw new PortletException( es, e );
         }
         finally
         {

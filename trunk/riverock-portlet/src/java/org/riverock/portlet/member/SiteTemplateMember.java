@@ -64,13 +64,8 @@ public class SiteTemplateMember {
     public SiteTemplateMember() {
     }
 
-    public static SiteTemplateMember getInstance( DatabaseAdapter db__, long id__ ) throws Exception {
-        return getInstance( db__, id__ );
-    }
-
-    public static SiteTemplateMember getInstance( DatabaseAdapter db__, Long id__ )
-        throws Exception {
-        return ( SiteTemplateMember ) cache.getInstanceNew( db__, id__ );
+    public static SiteTemplateMember getInstance( Long id__ ) throws Exception {
+        return ( SiteTemplateMember ) cache.getInstanceNew( id__ );
     }
 
     protected void finalize() throws Throwable {
@@ -102,11 +97,13 @@ public class SiteTemplateMember {
         }
     }
 
-    public SiteTemplateMember( DatabaseAdapter db_, Long idSite )
+    public SiteTemplateMember( Long idSite )
         throws Exception {
         PreparedStatement ps = null;
         ResultSet rs = null;
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql_ );
             RsetTools.setLong( ps, 1, idSite );
 
@@ -131,9 +128,10 @@ public class SiteTemplateMember {
             throw e;
         }
         finally {
-            DatabaseManager.close( rs, ps );
+            DatabaseManager.close( db_, rs, ps );
             rs = null;
             ps = null;
+            db_ = null;
         }
 
         if( log.isDebugEnabled() ) {

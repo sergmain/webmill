@@ -32,7 +32,6 @@ import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.utils.DateUtils;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.member.BaseClassQuery;
@@ -67,24 +66,15 @@ public class CurrencyDateChangeClassQuery extends BaseClassQuery {
      *
      * @return String
      */
-    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle )
-        throws Exception {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
+    public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+        Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
+            CurrencyManager.getInstance( siteId ).getCurrencyList(), idCurrency );
 
-            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-            CustomCurrencyItemType item = CurrencyService.getCurrencyItem( CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), idCurrency );
+        if( item == null || item.getCurrentCurs() == null )
+            return "";
 
-            if( item == null || item.getCurrentCurs() == null )
-                return "";
-
-            return "" + DateUtils.getStringDate( item.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH );
-        }
-        finally {
-            DatabaseAdapter.close( db_ );
-            db_ = null;
-        }
+        return "" + DateUtils.getStringDate( item.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH );
     }
 
     /**

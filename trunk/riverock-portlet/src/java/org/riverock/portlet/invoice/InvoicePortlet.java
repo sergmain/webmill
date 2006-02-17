@@ -100,13 +100,10 @@ public final class InvoicePortlet implements Portlet {
         OrderLogic.process( renderRequest );
 
         ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
-        DatabaseAdapter db_ = null;
         OutputStream outputStream = null;
         try {
             outputStream = renderResponse.getPortletOutputStream();
             StreamWrapper out = new StreamWrapper(outputStream, ContentTypeTools.CONTENT_TYPE_UTF8);
-
-            db_ = DatabaseAdapter.getInstance();
 
             PortletSession session = renderRequest.getPortletSession();
             ShopOrder order = (ShopOrder)session.getAttribute( ShopPortlet.ORDER_SESSION );
@@ -315,7 +312,7 @@ public final class InvoicePortlet implements Portlet {
 
                     if ( shopOrder.getOrderItemListCount()>0 ) {
                         OrderItemType itemTemp = shopOrder.getOrderItemList( 0 );
-                        Shop shopTemp = Shop.getInstance( db_, shopOrder.getIdShop() );
+                        Shop shopTemp = Shop.getInstance( shopOrder.getIdShop() );
 
                         s = bundle.getString( "reg.send_order.shop-header" );
                         orderCustomString +=
@@ -369,7 +366,7 @@ public final class InvoicePortlet implements Portlet {
                     for( int k = 0; k<order.getShopOrdertListCount(); k++ ) {
                         ShopOrderType shopOrder = order.getShopOrdertList( k );
                         OrderItemType itemTemp = shopOrder.getOrderItemList( 0 );
-                        Shop shopTemp = Shop.getInstance( db_, shopOrder.getIdShop() );
+                        Shop shopTemp = Shop.getInstance( shopOrder.getIdShop() );
 
                         s = bundle.getString( "reg.send_order.shop-header" );
                         orderAdminString +=
@@ -524,7 +521,7 @@ public final class InvoicePortlet implements Portlet {
             for( int k = 0; k<order.getShopOrdertListCount(); k++ ) {
                 ShopOrderType shopOrder = order.getShopOrdertList( k );
                 if ( shopOrder.getOrderItemListCount()>0 ) {
-                    Shop tempShop = Shop.getInstance( db_, shopOrder.getIdShop() );
+                    Shop tempShop = Shop.getInstance( shopOrder.getIdShop() );
                     out.write( "<tr>\n<td colspan=\"6\" align=\"left\" border=\"0\">\n" );
                     out.write( tempShop.name_shop_for_price_list );
                     out.write( "</td>\n<tr>\n" );
@@ -659,10 +656,6 @@ public final class InvoicePortlet implements Portlet {
             final String es = "Error procesing invoice";
             log.error( es, e );
             throw new PortletException( es, e );
-        }
-        finally {
-            DatabaseAdapter.close( db_ );
-            db_ = null;
         }
         outputStream.flush();
         outputStream.close();

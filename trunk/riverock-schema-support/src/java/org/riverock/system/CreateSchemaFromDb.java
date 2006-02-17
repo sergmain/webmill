@@ -202,7 +202,7 @@ public final class CreateSchemaFromDb {
             "\n"+
             (config.getIsUseCache()
             ?
-            "    private static org.riverock.generic.main.CacheFactory cache = new org.riverock.generic.main.CacheFactory( "+className+".class.getName() );\n"+
+            "    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb( "+className+".class.getName() );\n"+
             "\n"+
             "    public static void reinit()\n"+
             "    {\n"+
@@ -368,18 +368,13 @@ public final class CreateSchemaFromDb {
         return s;
     }
 
-    private static String declareClass(String className)
-    {
+    private static String declareClass(String className) {
         return
-            "public class "+className+
-//            (config.getIsUseCache()?" extends org.riverock.generic.main.CacheFactory ":"") +
-            (isApplModule?"implements ApplicationInterface":"")+
-            "\n";
+            "public class "+className+(isApplModule?"implements ApplicationInterface":"")+"\n";
     }
 
 
-    private static String putAuthCheck(DbTableType table, String accessActionType, String className )
-    {
+    private static String putAuthCheck(DbTableType table, String accessActionType, String className ) {
         if ( table==null )
             return "";
 
@@ -1084,7 +1079,7 @@ public final class CreateSchemaFromDb {
             "\n"+
             (config.getIsUseCache()
             ?
-            "    private static org.riverock.generic.main.CacheFactory cache = new org.riverock.generic.main.CacheFactory( "+className+".class.getName() );\n"+
+            "    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb( "+className+".class.getName() );\n"+
             "\n"+
             "    public static void reinit()\n"+
             "    {\n"+

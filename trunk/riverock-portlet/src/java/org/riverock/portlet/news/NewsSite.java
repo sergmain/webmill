@@ -256,7 +256,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
 
             rs = ps.executeQuery();
             while( rs.next() ) {
-                NewsGroup newsGroup = NewsGroup.getInstance( db_, RsetTools.getLong( rs, "ID_NEWS" ) );
+                NewsGroup newsGroup = NewsGroup.getInstance( RsetTools.getLong( rs, "ID_NEWS" ) );
 
                 Long idSiteLanguage = RsetTools.getLong( rs, "ID_SITE_SUPPORT_LANGUAGE" );
                 String codeLanguage = StringTools.getLocale( RsetTools.getString( rs, "CUSTOM_LANGUAGE" ) ).toString();

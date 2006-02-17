@@ -30,8 +30,7 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -51,7 +50,9 @@ import org.riverock.cache.impl.CacheException;
  * $Id$
  */
 public class FaqGroup implements PortletGetList {
-    private static Log log = LogFactory.getLog(FaqGroup.class);
+    private static Logger log = Logger.getLogger(FaqGroup.class);
+
+    private static CacheFactory cache = new CacheFactory(FaqGroup.class.getName());
 
     static String sql_ = null;
     static {
@@ -113,8 +114,6 @@ public class FaqGroup implements PortletGetList {
         return faqGroupName;
     }
 
-    private static CacheFactory cache = new CacheFactory(FaqGroup.class.getName());
-
     public List getFaqItem() {
         return v;
     }
@@ -122,23 +121,18 @@ public class FaqGroup implements PortletGetList {
     public FaqGroup() {
     }
 
-    public static FaqGroup getInstance(DatabaseAdapter db__, long id__)
-        throws Exception {
-        return getInstance(db__, id__);
+    public static FaqGroup getInstance(Long id__) throws Exception {
+        return (FaqGroup) cache.getInstanceNew(id__);
     }
 
-    public static FaqGroup getInstance(DatabaseAdapter db__, Long id__)
-        throws Exception {
-        return (FaqGroup) cache.getInstanceNew(db__, id__);
-    }
-
-    public FaqGroup(DatabaseAdapter db_, Long id_)
-        throws Exception {
+    public FaqGroup( Long id_) throws Exception {
         PreparedStatement ps = null;
         ResultSet rs = null;
         id = id_;
+        DatabaseAdapter adapter = null;
         try {
-            ps = db_.prepareStatement(sql_);
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, id);
 
             rs = ps.executeQuery();
@@ -158,9 +152,10 @@ public class FaqGroup implements PortletGetList {
             throw e;
         }
         finally {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(adapter, rs, ps);
             rs = null;
             ps = null;
+            adapter = null;
         }
     }
 

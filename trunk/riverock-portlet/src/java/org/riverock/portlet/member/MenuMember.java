@@ -115,7 +115,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
                 log.debug( "siteId: " + siteIdString );
             }
             Long siteId = new Long( siteIdString );
-            memberTemplates = SiteTemplateMember.getInstance( db_, siteId );
+            memberTemplates = SiteTemplateMember.getInstance( siteId );
 
 
             String sql_ =

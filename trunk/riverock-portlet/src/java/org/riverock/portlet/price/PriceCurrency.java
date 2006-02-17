@@ -28,10 +28,6 @@ import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.log4j.Logger;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.schema.portlet.shop.CurrencyItemType;
 import org.riverock.portlet.schema.portlet.shop.CurrencyListType;
 import org.riverock.portlet.schema.portlet.shop.HiddenParamType;
@@ -44,9 +40,7 @@ import org.riverock.webmill.container.ContainerConstants;
  * $Id$
  *
  */
-public class PriceCurrency
-{
-    private static Logger log = Logger.getLogger(PriceCurrency.class);
+public class PriceCurrency {
 
     private static HiddenParamType getHidden(String name, String value)
     {
@@ -92,21 +86,8 @@ public class PriceCurrency
 
         CustomCurrencyType list = null;
 
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-            list = CurrencyManager.getInstance(db_, siteId ).getCurrencyList();
-        }
-        catch(Throwable e){
-            String es = "Error in getCurrencyList()";
-            log.error(es, e);
-            throw new PriceException(es, e);
-        }
-        finally{
-            DatabaseManager.close(db_);
-            db_ = null;
-        }
+        Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        list = CurrencyManager.getInstance(siteId ).getCurrencyList();
 
         for (int i = 0; i < list.getCurrencyListCount(); i++) {
             CustomCurrencyItemType item = list.getCurrencyList(i);

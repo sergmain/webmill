@@ -101,7 +101,7 @@ public final class OrderLogic {
                 if( log.isDebugEnabled() )
                     log.debug( "tempShop is null and idShop is not null " );
 
-                shop = Shop.getInstance( dbDyn, idShop );
+                shop = Shop.getInstance( idShop );
                 session.setAttribute( ShopPortlet.CURRENT_SHOP, shop );
             }
             // если в сессии есть текущий магазин и
@@ -122,7 +122,7 @@ public final class OrderLogic {
                     log.debug( "#11.22.09 create shop instance with idShop - " + idShop );
                 }
 
-                shop = Shop.getInstance( dbDyn, idShop );
+                shop = Shop.getInstance( idShop );
 
                 if( log.isDebugEnabled() )
                     log.debug( "idShop of created shop - " + shop.id_shop );
@@ -272,6 +272,7 @@ public final class OrderLogic {
         PreparedStatement ps = null;
         try {
             if( authSession != null ) {
+		// Todo remove usage of WM_AUTH_USER table
                 switch( dbDyn.getFamaly() ) {
                     case DatabaseManager.MYSQL_FAMALY:
                         Long userId = DatabaseManager.getLongValue( dbDyn, "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ", new Object[]{authSession.getUserLogin()} );
@@ -675,17 +676,18 @@ public final class OrderLogic {
         try {
             GetWmPriceListItem itemTemp = GetWmPriceListItem.getInstance( db_, idItem );
 
+            final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );
             if( itemTemp.isFound ) {
 
                 GetWmPriceListItem.copyItem( itemTemp.item, item );
 
                 CurrencyItem currencyItem =
-                    ( CurrencyItem ) CurrencyService.getCurrencyItemByCode( CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), item.getCurrency() );
-                currencyItem.fillRealCurrencyData( CurrencyManager.getInstance( db_, siteId ).getCurrencyList().getStandardCurrencyList() );
+                    ( CurrencyItem ) CurrencyService.getCurrencyItemByCode( currencyManager.getCurrencyList(), item.getCurrency() );
+                currencyItem.fillRealCurrencyData( currencyManager.getCurrencyList().getStandardCurrencyList() );
 
                 item.setCurrencyItem( currencyItem );
 
-                Shop shop = Shop.getInstance( db_, item.getIdShop() );
+                Shop shop = Shop.getInstance( item.getIdShop() );
 
                 if( log.isDebugEnabled() ) {
                     log.debug( "currencyCode " + item.getCurrency() );
@@ -737,7 +739,7 @@ public final class OrderLogic {
                             precisionValue = precision.getPrecision();
 
                         CustomCurrencyItemType defaultCurrency =
-                            CurrencyService.getCurrencyItem( CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), shop.idOrderCurrency );
+                            CurrencyService.getCurrencyItem( currencyManager.getCurrencyList(), shop.idOrderCurrency );
 
                         item.setResultCurrency( defaultCurrency );
 

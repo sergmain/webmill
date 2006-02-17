@@ -29,15 +29,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
@@ -58,17 +56,17 @@ import org.riverock.webmill.container.portlet.extend.PortletResultObject;
  * $Id$
  */
 public final class FaqBlock implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Log log = LogFactory.getLog( FaqBlock.class );
+    private final static Logger log = Logger.getLogger( FaqBlock.class );
 
     private List<FaqGroup> v = null;
     private RenderRequest renderRequest = null;
-    private RenderResponse renderResponse = null;
-    private ResourceBundle bundle = null;
+//    private RenderResponse renderResponse = null;
+//    private ResourceBundle bundle = null;
 
     public void setParameters( final RenderRequest renderRequest, final RenderResponse renderResponse, final PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
-        this.renderResponse = renderResponse;
-        this.bundle = bundle;
+//        this.renderResponse = renderResponse;
+//        this.bundle = bundle;
     }
 
     protected void finalize() throws Throwable {
@@ -77,8 +75,8 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
             v = null;
         }
         renderRequest = null;
-        renderResponse = null;
-        bundle = null;
+//        renderResponse = null;
+//        bundle = null;
         super.finalize();
     }
 
@@ -119,7 +117,7 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
             rs = ps.executeQuery();
             while( rs.next() ) {
                 log.debug( "#10.01.04 " + RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) );
-                v.add( FaqGroup.getInstance( db_, RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) ) );
+                v.add( FaqGroup.getInstance( RsetTools.getLong( rs, "ID_SITE_PORTLET_FAQ" ) ) );
             }
 
             log.debug( "#10.01.05 " );
