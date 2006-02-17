@@ -31,8 +31,6 @@ import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.MemberQueryParameter;
 import org.riverock.portlet.price.CurrencyManager;
@@ -67,24 +65,16 @@ public final class CurrencyCurrentCursClassQuery extends BaseClassQuery {
      * @return String
      */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
 
-            Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-            CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
-                CurrencyManager.getInstance( db_, siteId ).getCurrencyList(), idCurrency
-            );
+        Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
+            CurrencyManager.getInstance( siteId ).getCurrencyList(), idCurrency
+        );
 
-            if( item == null || item.getCurrentCurs() == null )
-                return "";
+        if( item == null || item.getCurrentCurs() == null )
+            return "";
 
-            return "" + item.getCurrentCurs().getCurs();
-        }
-        finally {
-            DatabaseManager.close( db_ );
-            db_ = null;
-        }
+        return "" + item.getCurrentCurs().getCurs();
     }
 
     /**

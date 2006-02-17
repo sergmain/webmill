@@ -27,11 +27,13 @@ package org.riverock.portlet.price;
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.portlet.core.GetWmCashCurrencyWithIdSiteList;
 import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
 import org.riverock.portlet.schema.core.WmCashCurrencyListType;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
+import org.riverock.sql.cache.SqlStatement;
 
 /**
  * Author: mill
@@ -40,16 +42,14 @@ import org.riverock.portlet.schema.price.CustomCurrencyType;
  *
  * $Id$
  */
-public class CurrencyList
-{
+public class CurrencyList {
     private static Logger log = Logger.getLogger( CurrencyList.class );
 
     private static CacheFactory cache = new CacheFactory( CurrencyList.class.getName() );
 
     public CustomCurrencyType list = new CustomCurrencyType();
 
-    public CurrencyList()
-    {
+    public CurrencyList() {
     }
 
     public void reinit()
@@ -57,54 +57,38 @@ public class CurrencyList
         cache.reinit();
     }
 
-    public static CurrencyList getInstance(DatabaseAdapter db__, long id__)
-        throws Exception
-    {
-        return getInstance(db__, new Long(id__) );
-    }
-
-    public static CurrencyList getInstance(DatabaseAdapter db__, Long id__)
-        throws PriceException
-    {
+    public static CurrencyList getInstance(Long id__) throws PriceException {
         try {
-            return (CurrencyList) cache.getInstanceNew(db__, id__);
+            return (CurrencyList) cache.getInstanceNew(id__);
         } catch (Throwable e) {
-            String es = "Error in getInstance(DatabaseAdapter db__, Long id__)";
+            String es = "Error in getInstance( Long id__)";
             log.error(es, e);
             throw new PriceException(es, e);
         }
     }
 
-    private static void fillRealCurrencyData( CustomCurrencyType currency )
-            throws Exception
-    {
+    private static void fillRealCurrencyData( CustomCurrencyType currency ) throws Exception {
         if (currency==null)
             return;
 
-        for (int i=0; i< currency.getCurrencyListCount(); i++)
-        {
+        for (int i=0; i< currency.getCurrencyListCount(); i++) {
             CurrencyItem item = (CurrencyItem)currency.getCurrencyList( i );
             item.fillRealCurrencyData( currency.getStandardCurrencyList() );
-
         }
     }
 
-    static
-    {
-        try
-        {
-            org.riverock.sql.cache.SqlStatement.registerRelateClass( new CurrencyList().getClass(), new GetWmCashCurrencyWithIdSiteList().getClass());
+    static {
+        try {
+            SqlStatement.registerRelateClass( CurrencyList.class, GetWmCashCurrencyWithIdSiteList.class );
         }
-        catch (Exception exception)
-        {
+        catch (Exception exception) {
             log.error("Exception in ", exception);
         }
     }
-    public CurrencyList(DatabaseAdapter db_, Long idSite)
-            throws Exception
-    {
-        try
-        {
+    public CurrencyList(Long idSite) throws Exception {
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
             WmCashCurrencyListType currList = GetWmCashCurrencyWithIdSiteList.getInstance(db_, idSite).item;
             for (int i=0; i<currList.getWmCashCurrencyCount(); i++)
             {
@@ -114,15 +98,17 @@ public class CurrencyList
                 list.setStandardCurrencyList( CurrencyService.getStandardCurrencyList(db_) );
             }
         }
-        catch (Error e)
-        {
+        catch (Error e) {
             log.error("Error get currency list", e);
             throw e;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error("Exception get currency list", e);
             throw e;
+        }
+        finally {
+            DatabaseManager.close(db_);
+            db_ = null;
         }
         fillRealCurrencyData( list );
     }

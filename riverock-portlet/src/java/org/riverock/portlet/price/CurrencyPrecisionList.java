@@ -26,6 +26,7 @@ package org.riverock.portlet.price;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.schema.price.CurrencyPrecisionListType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 
@@ -80,7 +81,7 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType
         }
         finally
         {
-            org.riverock.generic.db.DatabaseManager.close( rs, ps );
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }

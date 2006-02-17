@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.article;
 
 import java.sql.PreparedStatement;
@@ -30,7 +29,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
@@ -62,7 +60,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultObject;
  * Author: mill
  * Date: Jan 10, 2003
  * Time: 9:45:31 AM
- * <p/>
+ *
  * $Id$
  */
 public final class ArticlePlain implements PortletResultObject, PortletGetList, PortletResultContent {
@@ -80,13 +78,11 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     public String articleCode = "";
     public Long idSupportLanguage = null;
     private RenderRequest renderRequest = null;
-    private RenderResponse renderResponse = null;
-    private ResourceBundle bundle = null;
+//    private ResourceBundle bundle = null;
 
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
-        this.renderResponse = renderResponse;
-        this.bundle = bundle;
+//        this.bundle = bundle;
     }
 
     public void reinit() {
@@ -170,27 +166,15 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     public ArticlePlain() {
     }
 
-    public PortletResultContent getInstance( DatabaseAdapter db__, long id__ ) throws Exception {
-        return getInstance( id__ );
-    }
-
-    public PortletResultContent getInstance( Long id__ )
-        throws PortletException {
-        DatabaseAdapter db__ = null;
+    public PortletResultContent getInstance( Long id__ ) throws PortletException {
         try {
-            db__ = DatabaseAdapter.getInstance();
-            return ( ArticlePlain ) cache.getInstanceNew( db__, id__ );
+            return ( ArticlePlain ) cache.getInstanceNew( id__ );
         }
         catch( Throwable e ) {
             String es = "Error get instance of ArticlePlain";
             log.error( es, e );
             throw new PortletException( es, e );
         }
-        finally {
-            DatabaseManager.close( db__ );
-            db__ = null;
-        }
-
     }
 
     static String sql_ = null;
@@ -234,14 +218,14 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
                 if( log.isDebugEnabled() )
                     log.debug( "#10.01.04 " + RsetTools.getLong( rs, "ID_SITE_CTX_ARTICLE" ) );
 
-                return getInstance( db__, RsetTools.getLong( rs, "ID_SITE_CTX_ARTICLE" ) );
+                return getInstance( RsetTools.getLong( rs, "ID_SITE_CTX_ARTICLE" ) );
             }
 
             if( log.isDebugEnabled() )
                 log.debug( "#10.01.05 " );
 
             // return dummy Article
-            return getInstance( db__, -1 );
+            return new ArticlePlain();
 
         }
         catch( Throwable e ) {
@@ -273,12 +257,14 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         }
     }
 
-    public ArticlePlain( DatabaseAdapter db_, Long id_ ) throws Exception {
+    public ArticlePlain( Long id_ ) throws Exception {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
         id = id_;
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql1_ );
             RsetTools.setLong( ps, 1, id );
 
@@ -296,9 +282,10 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             }
         }
         finally {
-            DatabaseManager.close( rs, ps );
+            DatabaseManager.close( db_, rs, ps );
             rs = null;
             ps = null;
+            db_ = null;
         }
     }
 

@@ -24,17 +24,13 @@
  */
 package org.riverock.portlet.price;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
 import org.riverock.portlet.schema.price.CurrencyCurrentCursType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.StandardCurrencyItemType;
 import org.riverock.portlet.schema.price.StandardCurrencyType;
-import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
 
 /**
  * User: Admin
@@ -44,11 +40,8 @@ import org.riverock.portlet.schema.core.WmCashCurrencyItemType;
  * $Id$
  */
 public class CurrencyItem extends CustomCurrencyItemType {
-//    private static Log cat = LogFactory.getLog("org.riverock.portlet.price.CurrencyItem");
 
-    public void fillRealCurrencyData(StandardCurrencyType stdCurrency)
-            throws Exception
-    {
+    public void fillRealCurrencyData(StandardCurrencyType stdCurrency) throws Exception {
             if (!Boolean.TRUE.equals(this.getIsUseStandardCurrency()) &&
                 this.getCurrentCurs()==null)
             {
@@ -87,13 +80,10 @@ public class CurrencyItem extends CustomCurrencyItemType {
             this.setIsRealInit( Boolean.TRUE );
     }
 
-    public CurrencyItem()
-    {
+    public CurrencyItem() {
     }
 
-    public CurrencyItem(DatabaseAdapter db_, WmCashCurrencyItemType item)
-        throws PriceException
-    {
+    public CurrencyItem(DatabaseAdapter db_, WmCashCurrencyItemType item) throws PriceException {
         this.setCurrencyCode(item.getCurrency());
         this.setCurrencyName(item.getNameCurrency());
         this.setIdCurrency(item.getIdCurrency());
@@ -102,14 +92,11 @@ public class CurrencyItem extends CustomCurrencyItemType {
         this.setIsUsed(item.getIsUsed());
         this.setIsUseStandardCurrency(item.getIsUseStandart());
         this.setPercent(item.getPercentValue());
-        this.setCurrentCurs(
-            CurrencyService.getCurrentCurs(db_, this.getIdCurrency(), this.getIdSite())
-        );
+        this.setCurrentCurs( CurrencyService.getCurrentCurs(db_, this.getIdCurrency(), this.getIdSite()) );
     }
 
-    public void set(DatabaseAdapter db_, ResultSet rs)
-        throws SQLException, PriceException
-    {
+/*
+    private void set(DatabaseAdapter db_, ResultSet rs) throws SQLException, PriceException {
         this.setCurrencyCode(RsetTools.getString(rs, "CURRENCY"));
         this.setCurrencyName(RsetTools.getString(rs, "NAME_CURRENCY"));
         this.setIdCurrency(RsetTools.getLong(rs, "ID_CURRENCY"));
@@ -122,4 +109,5 @@ public class CurrencyItem extends CustomCurrencyItemType {
             CurrencyService.getCurrentCurs(db_, this.getIdCurrency(), this.getIdSite())
         );
     }
+*/
 }

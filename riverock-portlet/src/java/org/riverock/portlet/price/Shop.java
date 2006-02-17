@@ -26,11 +26,7 @@ package org.riverock.portlet.price;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Calendar;
-
-import javax.portlet.PortletRequest;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,10 +35,8 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.GenericException;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.sql.cache.SqlStatement;
-import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * $Id$
@@ -53,24 +47,15 @@ public final class Shop {
     private static CacheFactory cache = new CacheFactory( Shop.class.getName() );
 
     public Long id_shop = null;
-
     public int is_close;
-
     public String name_shop;
-
     public String footer;
     public String header;
-
     public String code_shop = "";
     public String name_shop_for_price_list = "";
-
-
     public Calendar dateUpload;
     public Calendar dateCalcQuantity;
     public int newItemDays;
-
-//    public int is_activate_email_order = 0;
-//    public String order_email;
 
     // Валюта по умолчанию для отображения прайса
     public Long currencyID = null;
@@ -111,6 +96,7 @@ public final class Shop {
     public Shop() {
     };
 
+/*
     public static Long getShopID( DatabaseAdapter ora_, String codeShop )
         throws SQLException, DatabaseException {
         if( codeShop == null )
@@ -163,14 +149,11 @@ public final class Shop {
         }
         return null;
     }
+*/
 
-    public static Shop getInstance( DatabaseAdapter db_, long id ) throws PriceException {
-        return getInstance( db_, id );
-    }
-
-    public static Shop getInstance( DatabaseAdapter db_, Long id ) throws PriceException {
+    public static Shop getInstance( Long id ) throws PriceException {
         try {
-            return ( Shop ) cache.getInstanceNew( db_, id );
+            return ( Shop ) cache.getInstanceNew( id );
         }
         catch( GenericException genericException ) {
             final String es = "Exception in ";
@@ -186,7 +169,7 @@ public final class Shop {
             "select * from WM_PRICE_SHOP_LIST where ID_SHOP = ?";
 
         try {
-            SqlStatement.registerSql( sql_, new Shop().getClass() );
+            SqlStatement.registerSql( sql_, Shop.class );
         }
         catch( Exception e ) {
             log.error( "Exception in registerSql, sql\n" + sql_, e );
@@ -196,12 +179,12 @@ public final class Shop {
         }
     }
 
-    public Shop( DatabaseAdapter db_, Long id_shop_ )
-        throws PriceException {
+    public Shop( Long id_shop_ ) throws PriceException {
         PreparedStatement ps = null;
         ResultSet rs = null;
-
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement( sql_ );
             RsetTools.setLong( ps, 1, id_shop_ );
             rs = ps.executeQuery();
@@ -238,6 +221,8 @@ public final class Shop {
                 id_type_shop_1 = RsetTools.getLong( rs, "ID_TYPE_SHOP_1" );
                 id_type_shop_2 = RsetTools.getLong( rs, "ID_TYPE_SHOP_2" );
             }
+
+            precisionList.initCurrencyPrecision( db_, id_shop );
         }
         catch( Throwable e ) {
             final String es = "Exception create shop object";
@@ -245,11 +230,10 @@ public final class Shop {
             throw new PriceException( es, e );
         }
         finally {
-            DatabaseManager.close( rs, ps );
+            DatabaseManager.close( db_, rs, ps );
             rs = null;
             ps = null;
+            db_ = null;
         }
-
-        precisionList.initCurrencyPrecision( db_, id_shop );
     }
 }

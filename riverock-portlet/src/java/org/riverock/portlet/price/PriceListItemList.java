@@ -59,8 +59,7 @@ import org.riverock.webmill.container.ContainerConstants;
  * $Id$
  *
  */
-public final class PriceListItemList
-{
+public final class PriceListItemList {
     private final static Logger log = Logger.getLogger( PriceListItemList.class );
 
     // dont edit return type - name must be with package
@@ -128,7 +127,7 @@ public final class PriceListItemList
 
             PortletSession session = renderRequest.getPortletSession();
             ShopOrder order = (ShopOrder) session.getAttribute(ShopPortlet.ORDER_SESSION);
-            Shop shop = Shop.getInstance(db_, shopParam.id_shop);
+            Shop shop = Shop.getInstance(shopParam.id_shop);
             while (rs.next()) {
                 Long idPk = RsetTools.getLong(rs, "ID_ITEM");
 
@@ -154,16 +153,17 @@ public final class PriceListItemList
                 if (log.isDebugEnabled())
                     log.debug("currencyCode "+ currencyCode);
 
+                final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );
                 CurrencyItem currencyItem =
                     (CurrencyItem) CurrencyService.getCurrencyItemByCode(
-                        CurrencyManager.getInstance(db_, siteId ).getCurrencyList(), currencyCode
+                        currencyManager.getCurrencyList(), currencyCode
                     );
 
                 if (log.isDebugEnabled())
                     log.debug("currencyItem "+currencyItem);
 
                 currencyItem.fillRealCurrencyData(
-                    CurrencyManager.getInstance(db_, siteId ).getCurrencyList().getStandardCurrencyList()
+                    currencyManager.getCurrencyList().getStandardCurrencyList()
                 );
 
                 double resultPrice = 0;
@@ -183,7 +183,7 @@ public final class PriceListItemList
                     precisionValue = getPrecisionValue( shop, shopParam.id_currency );
 
                     CustomCurrencyItemType targetCurrency =
-                        CurrencyService.getCurrencyItem(CurrencyManager.getInstance(db_, siteId ).getCurrencyList(), shopParam.id_currency);
+                        CurrencyService.getCurrencyItem(currencyManager.getCurrencyList(), shopParam.id_currency);
 
                     if (log.isDebugEnabled()) {
                         log.debug("targetCurrency "+targetCurrency);

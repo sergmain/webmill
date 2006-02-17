@@ -26,13 +26,11 @@ package org.riverock.portlet.price;
 
 import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.portlet.schema.price.CustomCurrencyType;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.common.tools.MainTools;
 
@@ -44,12 +42,12 @@ import org.riverock.common.tools.MainTools;
  * $Id$
  */
 public class CurrencyManager {
-    private static Log log = LogFactory.getLog( CurrencyManager.class );
+    private static Logger log = Logger.getLogger( CurrencyManager.class );
 
     static
     {
-        Class p = new CurrencyManager().getClass();
-        SqlStatement.registerRelateClass( p, new CurrencyList().getClass());
+        Class p = CurrencyManager.class;
+        SqlStatement.registerRelateClass( p, CurrencyList.class );
     }
 
     private CustomCurrencyType currencyList = null;
@@ -62,11 +60,11 @@ public class CurrencyManager {
     public CurrencyManager(){}
 
     private static Object syncDebug = new Object();
-    public static CurrencyManager getInstance(DatabaseAdapter db_, Long idSite)
+    public static CurrencyManager getInstance(Long idSite)
         throws PriceException
     {
         CurrencyManager currency  = new CurrencyManager();
-        currency.currencyList = CurrencyList.getInstance(db_, idSite).list;
+        currency.currencyList = CurrencyList.getInstance(idSite).list;
 
         long mills = 0; // System.currentTimeMillis();
 

@@ -24,7 +24,6 @@
  */
 package org.riverock.portlet.login;
 
-//import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
 
 import javax.portlet.ActionRequest;

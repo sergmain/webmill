@@ -26,6 +26,7 @@ package org.riverock.portlet.news;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Locale;
 
 import org.riverock.common.tools.RsetTools;
@@ -34,6 +35,7 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.generic.utils.DateUtils;
+import org.riverock.generic.exception.DatabaseException;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.cache.impl.CacheException;
 import org.riverock.sql.cache.SqlStatementRegisterException;
@@ -58,30 +60,19 @@ public final class NewsItem {
 
     private static CacheFactory cache = new CacheFactory( NewsItem.class.getName() );
 
-    public NewsItem()
-    {
+    public NewsItem() {
     }
 
-    public void reinit()
-    {
+    public void reinit() {
         cache.reinit();
     }
 
-    public void terminate(Long id) throws CacheException
-    {
+    public void terminate(Long id) throws CacheException {
         cache.terminate(id);
     }
 
-    public static NewsItem getInstance(DatabaseAdapter db__, long id__)
-        throws Exception
-    {
-        return getInstance(db__, id__ );
-    }
-
-    public static NewsItem getInstance(DatabaseAdapter db__, Long id__)
-        throws Exception
-    {
-        return (NewsItem) cache.getInstanceNew(db__, id__);
+    public static NewsItem getInstance(Long id__) throws Exception {
+        return (NewsItem) cache.getInstanceNew(id__);
     }
 
     static String sql_ = null;
@@ -93,26 +84,23 @@ public final class NewsItem {
             "where  a.ID=? and a.IS_DELETED=0 and a.ID_NEWS=b.ID_NEWS and " +
             "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE";
 
-        try
-        {
+        try {
             SqlStatement.registerSql( sql_, NewsItem.class );
         }
-        catch(Throwable e)
-        {
+        catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
             log.error(es, e);
             throw new SqlStatementRegisterException( es, e );
         }
     }
 
-    public NewsItem(DatabaseAdapter db_, Long id_)
-        throws Exception
-    {
+    public NewsItem(Long id_) throws Exception {
         PreparedStatement ps = null;
         ResultSet rs = null;
         newsItem.setNewsItemId( id_ );
-        try
-        {
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, newsItem.getNewsItemId() );
 
@@ -149,31 +137,29 @@ public final class NewsItem {
             throw new PortletException( es, e );
         }
         finally {
-            DatabaseManager.close(rs, ps);
+            DatabaseManager.close(db_, rs, ps);
             rs = null;
             ps = null;
+            db_ = null;
         }
     }
 
     static String sql1_ = null;
-    static
-    {
+    static {
         sql1_ =
             "select TEXT from WM_NEWS_ITEM_TEXT where ID=? order by ID_MAIN_NEWS_TEXT asc";
 
-        try
-        {
+        try {
             SqlStatement.registerSql( sql1_, new NewsItem().getClass() );
         }
-        catch(Throwable e)
-        {
+        catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
             log.error(es, e);
             throw new SqlStatementRegisterException( es, e );
         }
     }
 
-    private void initTextField( DatabaseAdapter db_ ) throws PortletException {
+    private void initTextField( DatabaseAdapter db_ ) throws SQLException, DatabaseException {
         if ( newsItem.getNewsItemId() == null)
             return;
 
@@ -194,11 +180,6 @@ public final class NewsItem {
             }
 
             newsItem.setNewsText( text.toString() );
-        }
-        catch (Throwable e) {
-            final String es = "Exception initTextField";
-            log.error(es, e);
-            throw new PortletException( es, e );
         }
         finally {
             DatabaseManager.close(rset, ps);

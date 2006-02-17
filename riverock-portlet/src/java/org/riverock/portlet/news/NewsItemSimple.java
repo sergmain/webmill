@@ -29,11 +29,8 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
@@ -49,7 +46,7 @@ import org.riverock.webmill.container.tools.PortletMetadataService;
  *
  */
 public final class NewsItemSimple implements PortletResultObject, PortletResultContent {
-    private final static Log log = LogFactory.getLog( NewsItemSimple.class );
+    private final static Logger log = Logger.getLogger( NewsItemSimple.class );
 
     private NewsItemSimpleType newsItem = new NewsItemSimpleType();
 
@@ -71,10 +68,8 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
     public PortletResultContent getInstance() throws PortletException
     {
         Long id__ = PortletService.getLong( renderRequest, NewsSite.NAME_ID_NEWS_PARAM);
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
-            NewsItem item = NewsItem.getInstance(db_, id__);
+            NewsItem item = NewsItem.getInstance(id__);
 
             newsItem.setNewsAnons( item.newsItem.getNewsAnons() );
             newsItem.setNewsDate( item.newsItem.getNewsDate() );
@@ -87,10 +82,6 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
             final String es = "Error get NewsItem object";
             log.error(es, e);
             throw new PortletException( es, e );
-        }
-        finally {
-            DatabaseManager.close(db_);
-            db_ = null;
         }
         return this;
     }
