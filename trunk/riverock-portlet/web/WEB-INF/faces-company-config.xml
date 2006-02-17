@@ -2,9 +2,10 @@
 <!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
                               "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 <faces-config>
+
  <managed-bean>
-  <managed-bean-name>companyDAO</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.company.dao.CompanyDAOImpl</managed-bean-class>
+  <managed-bean-name>companyService</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.company.bean.CompanyService</managed-bean-class>
   <managed-bean-scope>application</managed-bean-scope>
  </managed-bean>
 
@@ -12,24 +13,6 @@
   <managed-bean-name>companySessionBean</managed-bean-name>
   <managed-bean-class>org.riverock.portlet.company.bean.CompanySessionBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
-  <managed-property>
-   <property-name>companyDAO</property-name>
-   <value>#{companyDAO}</value>
-  </managed-property>
- </managed-bean>
-
- <managed-bean>
-  <managed-bean-name>companyBean</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.company.bean.CompanyManagedBean</managed-bean-class>
-  <managed-bean-scope>request</managed-bean-scope>
-  <managed-property>
-   <property-name>companySessionBean</property-name>
-   <value>#{companySessionBean}</value>
-  </managed-property>
-  <managed-property>
-   <property-name>companyModuleUser</property-name>
-   <value>#{companyAuthSessionBean}</value>
-  </managed-property>
  </managed-bean>
 
  <managed-bean>
@@ -41,13 +24,13 @@
    <value>#{companySessionBean}</value>
   </managed-property>
   <managed-property>
-   <property-name>companyModuleUser</property-name>
-   <value>#{companyAuthSessionBean}</value>
+   <property-name>authSessionBean</property-name>
+   <value>#{authSessionBean}</value>
   </managed-property>
  </managed-bean>
 
  <managed-bean>
-  <managed-bean-name>companyAuthSessionBean</managed-bean-name>
+  <managed-bean-name>authSessionBean</managed-bean-name>
   <managed-bean-class>org.riverock.portlet.main.AuthSessionBean</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
  </managed-bean>

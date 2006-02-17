@@ -7,10 +7,10 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.auth.user.dao.AuthManager;
 import org.riverock.portlet.tools.FacesTools;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.portlet.main.AuthSessionBean;
 
 /**
  * @author SergeMaslyukov
@@ -22,57 +22,63 @@ public class UserAction implements Serializable {
     private final static Logger log = Logger.getLogger( UserAction.class );
     private static final long serialVersionUID = 2043005511L;
 
-    private UserHolderBean userHolderBean = null;
-    private AuthManager authManager = null;
+    private UserSessionBean userSessionBean = null;
+    private AuthSessionBean authSessionBean = null;
+    private DataProvider dataProvider = null;
 
     public UserAction() {
     }
 
     // getter/setter methods
-    public void setUserHolderBean( UserHolderBean userHolderBean ) {
-        this.userHolderBean = userHolderBean;
+    public void setUserSessionBean( UserSessionBean userSessionBean) {
+        this.userSessionBean = userSessionBean;
     }
 
     public AuthUserExtendedInfo getCurrentUser() {
-        return userHolderBean.getUserBean();
+        return userSessionBean.getUserBean();
     }
 
-    public AuthManager getAuthManager() {
-        return authManager;
+    public AuthSessionBean getAuthSessionBean() {
+        return authSessionBean;
     }
 
-    public void setAuthManager( AuthManager authManager ) {
-        this.authManager = authManager;
+    public void setAuthSessionBean( AuthSessionBean authSessionBean) {
+        this.authSessionBean = authSessionBean;
+    }
+
+    public DataProvider getDataProvider() {
+        return dataProvider;
+    }
+
+    public void setDataProvider( DataProvider dataProvider ) {
+        this.dataProvider = dataProvider;
     }
 
 // main tree action
-    public void selectUserAction( ActionEvent event ) {
-        log.info( "Select user action." );
+    public String selectUserAction( ActionEvent event ) {
+        log.info( "Select auth user action." );
+	loadCurrentUser();
 
-        Long authUserId = FacesTools.getLong( event.getComponent(), "authUserId" );
-        AuthUserExtendedInfoImpl authUserExtendedInfoImpl = lookupUserBean( authUserId );
-        userHolderBean.setUserBean( authUserExtendedInfoImpl );
-        log.info( "Current user bean: " + authUserExtendedInfoImpl );
-
+	userSessionBean.resetStatus();
+	return "auth";
     }
+
 
 // Role actions
     public void deleteRoleActionListener( ActionEvent event ) {
         log.info( "Delete role action." );
 
-        Long roleId = FacesTools.getLong( event.getComponent(), "roleId" );
+        Long roleId = userSessionBean.getCurrentRoleId();
         log.info( "delete role with id: " + roleId );
 
-
         Iterator<RoleEditableBean> iterator = null;
-
-        iterator = userHolderBean.getUserBean().getRoles().iterator();
+        iterator = userSessionBean.getUserBean().getRoles().iterator();
         while( iterator.hasNext() ) {
-            RoleEditableBean roleBeanImpl = iterator.next();
+            RoleEditableBean role = iterator.next();
 
-            if( roleBeanImpl.getRoleId().equals( roleId ) ) {
+            if( role.getRoleId().equals( roleId ) ) {
                 log.info( "Role is found. set isDelete to true" );
-                roleBeanImpl.setDelete( true );
+                role.setDelete( true );
                 break;
             }
         }
@@ -81,110 +87,117 @@ public class UserAction implements Serializable {
     public void addRoleAction() {
         log.info( "Add role action." );
 
-        Long roleId = userHolderBean.getUserBean().getNewRoleId();
+        Long roleId = userSessionBean.getUserBean().getNewRoleId();
         
         log.info( "New id of role: " + roleId );
         if( roleId == null ) {
             return;
         }
 
-        userHolderBean.getUserBean().getRoles().add( authManager.getRole( roleId ) );
+        RoleEditableBeanImpl role = 
+		new RoleEditableBeanImpl( authSessionBean.getAuthSession().getRole( roleId ) );
+        role.setNew( true );
+	
+        userSessionBean.getUserBean().getRoles().add( role );
+
     }
 
 // Add actions
-    public void addUserAction() {
+    public String addUserAction() {
         log.info( "Add user action." );
-        userHolderBean.setUserBean( new AuthUserExtendedInfoImpl() );
-        if( userHolderBean.getUserBean() != null ) {
-            userHolderBean.getUserBean().setAdd( true );
-            userHolderBean.getUserBean().setEdit( false );
-            userHolderBean.getUserBean().setDelete( false );
-        }
+	AuthUserExtendedInfoImpl bean = new AuthUserExtendedInfoImpl();
+	bean.setAuthInfo( new AuthInfoImpl() );
+        userSessionBean.setUserBean( bean );
 
+	userSessionBean.setAdd( true );
+
+	return "auth-add";
     }
 
-    public void processAddUserAction() {
+    public String processAddUserAction() {
         log.info( "Procss add user action." );
-        if( userHolderBean.getUserBean() != null ) {
-            authManager.processAddUser( userHolderBean.getUserBean() );
-            userHolderBean.setUserBean( null );
-            authManager.reinitCompanyBeans();
+        if( userSessionBean.getUserBean() != null ) {
+            authSessionBean.getAuthSession().addUser( userSessionBean.getUserBean() );
+            userSessionBean.setUserBean( null );
+
+            dataProvider.reinitCompanyBeans();
         }
+
+	userSessionBean.resetStatus();
+	return "auth";
     }
 
-    public void cancelAddUserAction() {
-        log.info( "Cancel add action." );
-        userHolderBean.setUserBean( null );
+    public String cancelAddUserAction() {
+        log.info( "Cancel add user action." );
+        userSessionBean.setUserBean( null );
+
+	userSessionBean.resetStatus();
+	return "auth";
     }
 
 // Edit actions
-    public void editUserAction() {
+    public String editUserAction() {
         log.info( "Edit user action." );
-        if( userHolderBean.getUserBean() != null ) {
-            userHolderBean.getUserBean().setAdd( false );
-            userHolderBean.getUserBean().setEdit( true );
-            userHolderBean.getUserBean().setDelete( false );
-        }
 
+	userSessionBean.setEdit( true );
+	return "auth-edit";
     }
 
-    public void saveUserAction() {
+    public String saveUserAction() {
         log.info( "Save user action." );
-        if( userHolderBean.getUserBean() != null ) {
-            userHolderBean.getUserBean().setAdd( false );
-            userHolderBean.getUserBean().setEdit( false );
-            userHolderBean.getUserBean().setDelete( false );
-
-            authManager.processSaveUser( userHolderBean.getUserBean() );
-            userHolderBean.setUserBean( null );
-            authManager.reinitCompanyBeans();
+        if( userSessionBean.getUserBean() != null ) {
+            authSessionBean.getAuthSession().updateUser( userSessionBean.getUserBean() );
+            userSessionBean.setUserBean( null );
+            dataProvider.reinitCompanyBeans();
         }
+
+	userSessionBean.resetStatus();
+	return "auth";
     }
 
-    public void cancelEditUserAction() {
-        log.info( "Cancel edit action." );
-        if( userHolderBean.getUserBean() != null ) {
-            userHolderBean.getUserBean().setAdd( false );
-            userHolderBean.getUserBean().setEdit( false );
-            userHolderBean.getUserBean().setDelete( false );
-            userHolderBean.setUserBean( null );
-            authManager.reinitCompanyBeans();
-        }
+    public String cancelEditUserAction() {
+        log.info( "Cancel edit user action." );
+
+	userSessionBean.resetStatus();
+	return "auth";
     }
 
 // Delete actions
-    public void deleteUserAction() {
-        log.info( "Edit user action." );
-        if( userHolderBean.getUserBean() != null ) {
-            userHolderBean.getUserBean().setEdit( false );
-            userHolderBean.getUserBean().setDelete( true );
-        }
+    public String deleteUserAction() {
+        log.info( "delete user action." );
 
+	userSessionBean.setDelete( true );
+	return "auth-delete";
     }
 
-    public void cancelDeleteUserAction() {
+    public String cancelDeleteUserAction() {
         log.info( "Cancel delete user action." );
-        if( userHolderBean.getUserBean() != null ) {
-            userHolderBean.getUserBean().setEdit( false );
-            userHolderBean.getUserBean().setDelete( false );
-        }
+
+	userSessionBean.resetStatus();
+	return "auth";
     }
 
-    public void processDeleteUserAction() {
+    public String processDeleteUserAction() {
         log.info( "Process delete user action." );
-        if( userHolderBean.getUserBean() != null ) {
-            authManager.deleteUser( userHolderBean.getUserBean() );
-            userHolderBean.setUserBean( null );
-            authManager.reinitCompanyBeans();
+        if( userSessionBean.getUserBean() != null ) {
+            authSessionBean.getAuthSession().deleteUser( userSessionBean.getUserBean() );
+            userSessionBean.setUserBean( null );
+            dataProvider.reinitCompanyBeans();
         }
+
+	userSessionBean.resetStatus();
+	return "auth";
     }
 
+    private void loadCurrentUser() {
+        userSessionBean.setUserBean( lookupUserBean( userSessionBean.getCurrentAuthUserId() ) );
+    }
 
     private AuthUserExtendedInfoImpl lookupUserBean( Long authUserId ) {
         log.info( "start search user bean for authUserId: " + authUserId );
 
         AuthUserExtendedInfoImpl resultAuthUserExtendedInfoImpl = null;
-        Iterator<CompanyBean> iterator = authManager.getCompanyBeans().iterator();
+        Iterator<CompanyBean> iterator = dataProvider.getCompanyBeans().iterator();
         while( iterator.hasNext() ) {
             CompanyBean companyBean = iterator.next();
 
@@ -194,10 +207,10 @@ public class UserAction implements Serializable {
 
                 if( userBean.getAuthInfo().getAuthUserId().equals( authUserId ) )
                     resultAuthUserExtendedInfoImpl = userBean;
-
-                userBean.setEdit( false );
             }
         }
+
+        log.info( "end search user");
         return resultAuthUserExtendedInfoImpl;
     }
 }

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
-<f:view>
+
 <h:form id="role-form">
 
 <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>	
@@ -37,4 +37,3 @@
 </h:panelGrid>
 </h:form>
 
-</f:view>

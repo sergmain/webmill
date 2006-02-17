@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
+import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.UserInfo;
@@ -21,19 +22,15 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
 
     private AuthInfoImpl authInfo = null;
     private UserInfo userInfo = null;
-    private Long userId = null;
+//    private Long userId = null;
 
     private String userName = null;
     private String companyName = null;
-    private String groupCompanyName = null;
     private String holdingName = null;
 
     private String userPassword2 = null;
     private String userPassword = null;
 
-    private boolean isAdd = false;
-    private boolean isEdit = false;
-    private boolean isDelete = false;
 
     private List<RoleEditableBeanImpl> roles = new ArrayList<RoleEditableBeanImpl>();
 
@@ -47,7 +44,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
 		this.newRoleId = newRoleId;
 	}
 
-    public AuthInfo getAuthInfo() {
+    public AuthInfoImpl getAuthInfo() {
         return authInfo;
     }
 
@@ -55,13 +52,27 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
         return userInfo;
     }
 
+    public void setAuthInfo( AuthInfoImpl authInfo ) {
+        this.authInfo = authInfo;
+    }
+
+    public void setUserInfo( UserInfo userInfo ) {
+        this.userInfo = userInfo;
+	if (userInfo!=null) {
+            userName = StringTools.getUserName(
+                    userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName()
+            );
+//	    userId = userInfo.getUserId();
+	}
+    }
+
     public List<RoleEditableBean> getCurrentRoles() {
         List<RoleEditableBean> resultRoles = new ArrayList<RoleEditableBean>();
         Iterator<RoleEditableBeanImpl> iterator = roles.iterator();
         while( iterator.hasNext() ) {
-            RoleEditableBeanImpl roleBeanImpl = iterator.next();
-            if (!roleBeanImpl.isDelete() ) {
-                resultRoles.add( roleBeanImpl );
+            RoleEditableBeanImpl role = iterator.next();
+            if (!role.isDelete() ) {
+                resultRoles.add( role );
             }
         }
         return resultRoles;
@@ -83,30 +94,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
         this.roles.add(roleImpl);
     }
 
-    public void setAdd(boolean isAdd) {
-        this.isAdd = isAdd;
-    }
-
-    public boolean getAdd() {
-        return isAdd;
-    }
-
-    public void setEdit(boolean isEdit) {
-        this.isEdit = isEdit;
-    }
-
-    public boolean getEdit() {
-        return isEdit;
-    }
-
-    public void setDelete(boolean isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    public boolean getDelete() {
-        return isDelete;
-    }
-
+/*
     public Long getUserId() {
         return userId;
     }
@@ -114,6 +102,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
     public void setUserId( Long userId ) {
         this.userId = userId;
     }
+*/
 
     public String getUserName() {
         return userName;
@@ -147,14 +136,6 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
         this.companyName = companyName;
     }
 
-    public String getGroupCompanyName() {
-        return groupCompanyName;
-    }
-
-    public void setGroupCompanyName( String groupCompanyName ) {
-        this.groupCompanyName = groupCompanyName;
-    }
-
     public String getHoldingName() {
         return holdingName;
     }
@@ -163,11 +144,4 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
         this.holdingName = holdingName;
     }
 
-    public void setAuthInfo( AuthInfoImpl authInfo ) {
-        this.authInfo = authInfo;
-    }
-
-    public void setUserInfo( UserInfo userInfo ) {
-        this.userInfo = userInfo;
-    }
 }
