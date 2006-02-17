@@ -45,7 +45,7 @@ import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.bean.GroupCompany;
+//import org.riverock.interfaces.portal.bean.GroupCompany;
 import org.riverock.interfaces.portal.bean.Holding;
 
 import org.apache.log4j.Logger;
@@ -251,13 +251,13 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         return activeProvider.getGrantedCompanyIdList( this );
     }
 
-    public String getGrantedGroupCompanyId() {
-        return activeProvider.getGrantedGroupCompanyId( this );
-    }
+//    public String getGrantedGroupCompanyId() {
+//        return activeProvider.getGrantedGroupCompanyId( this );
+//    }
 
-    public List<Long> getGrantedGroupCompanyIdList() {
-        return activeProvider.getGrantedGroupCompanyIdList( this );
-    }
+//    public List<Long> getGrantedGroupCompanyIdList() {
+//        return activeProvider.getGrantedGroupCompanyIdList( this );
+//    }
 
     public String getGrantedHoldingId() {
         return activeProvider.getGrantedHoldingId( this );
@@ -271,9 +271,9 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         return activeProvider.checkCompanyId( companyId, this );
     }
 
-    public Long checkGroupCompanyId(Long groupCompanyId) {
-        return activeProvider.checkGroupCompanyId( groupCompanyId, this );
-    }
+//    public Long checkGroupCompanyId(Long groupCompanyId) {
+//        return activeProvider.checkGroupCompanyId( groupCompanyId, this );
+//    }
 
     public Long checkHoldingId(Long holdingId) {
         return activeProvider.checkHoldingId( holdingId, this );
@@ -343,9 +343,9 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         return activeProvider.getCompanyList( this );
     }
 
-    public List<GroupCompany> getGroupCompanyList() {
-        return activeProvider.getGroupCompanyList( this );
-    }
+//    public List<GroupCompany> getGroupCompanyList() {
+//        return activeProvider.getGroupCompanyList( this );
+//    }
 
     public List<Holding> getHoldingList() {
         return activeProvider.getHoldingList( this );

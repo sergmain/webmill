@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.interfaces.portal.bean.GroupCompany;
+//import org.riverock.interfaces.portal.bean.GroupCompany;
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
@@ -32,6 +32,10 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         if( companyId == null ) {
             return null;
         }
+	if (authSession==null) {
+		return null;
+	}
+
         DatabaseAdapter db = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
@@ -89,6 +93,10 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
     }
 
     public List<Company> getCompanyList( AuthSession authSession ) {
+	if (authSession==null) {
+		return null;
+	}
+
         DatabaseAdapter db = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
@@ -142,7 +150,10 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
     }
 
-    public Long processAddCompany( Company companyBean, String userLogin, Long groupCompanyId, Long holdingId, AuthSession authSession ) {
+    public Long processAddCompany( Company companyBean, String userLogin, Long holdingId, AuthSession authSession ) {
+	if (authSession==null) {
+		return null;
+	}
 
         PreparedStatement ps = null;
         DatabaseAdapter dbDyn = null;
@@ -217,14 +228,10 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             if( log.isDebugEnabled() )
                 log.debug( "Count of inserted records - " + i1 );
 
-            if( groupCompanyId != null ) {
-                InternalAuthDaoImpl.setRelateGroupCompanyCompany( dbDyn, groupCompanyId, sequenceValue );
+            if( holdingId != null ) {
+                InternalAuthDaoImpl.setRelateHoldingCompany( dbDyn, holdingId, sequenceValue );
             }
             
-//		if (groupCompanyId!=null && holdingId!=null) {
-//			InternalAuthProviderTools.setRelateServiceRoad(dbDyn, holdingId, groupCompanyId);
-//		}
-
             dbDyn.commit();
             return sequenceValue;
         }
@@ -249,6 +256,10 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
 
 
     public void processSaveCompany( Company companyBean, AuthSession authSession ) {
+	if (authSession==null) {
+		return;
+	}
+
         DatabaseAdapter dbDyn = null;
         PreparedStatement ps = null;
         try {
@@ -340,6 +351,10 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
 
 
     public void processDeleteCompany( Company companyBean, AuthSession authSession ) {
+	if (authSession==null) {
+		return;
+	}
+
         DatabaseAdapter dbDyn = null;
         PreparedStatement ps = null;
         try {
@@ -401,26 +416,52 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
     }
 
     public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+	if (authSession==null) {
+		return null;
+	}
+
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+	if (authSession==null) {
+		return;
+	}
+
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+	if (authSession==null) {
+		return;
+	}
+
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public List<UserInfo> getUserList(AuthSession authSession) {
+	if (authSession==null) {
+		return null;
+	}
+
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+/*
     public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
+	if (authSession==null) {
+		return null;
+	}
+
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+*/
 
     public List<Holding> getHoldingList(AuthSession authSession) {
+	if (authSession==null) {
+		return null;
+	}
+
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
