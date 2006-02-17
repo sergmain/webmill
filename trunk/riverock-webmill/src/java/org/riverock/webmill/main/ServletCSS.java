@@ -83,8 +83,7 @@ public final class ServletCSS extends HttpServlet {
                     log.debug( "siteId: " + siteId );
                 }
 
-                // DatabaseAdapter is null, because not used in ContentCSS
-                ContentCSS css = ContentCSS.getInstance( null, siteId );
+                ContentCSS css = ContentCSS.getInstance( siteId );
                 if ( css == null || css.getIsEmpty() ) {
                     out.write( "<style type=\"text/css\"><!-- --></style>" );
                 }

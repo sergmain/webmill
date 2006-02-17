@@ -31,12 +31,12 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.webmill.config.WebmillConfig;
@@ -54,7 +54,7 @@ public class PortalXslt implements XsltTransformer{
     private Transformer transformer = null;
     private Object transformerSync = new Object();
 
-    public void terminate(java.lang.Long id_) {
+    public void terminate(Long id_) {
         cache.reinit();
     }
 
@@ -72,17 +72,12 @@ public class PortalXslt implements XsltTransformer{
     public PortalXslt() {
     }
 
-    public static PortalXslt getInstance(DatabaseAdapter db__, long id__)
+    public static PortalXslt getInstance(Long id__)
         throws Exception {
-        return getInstance(db__, new Long(id__));
+        return (PortalXslt) cache.getInstanceNew(id__);
     }
 
-    public static PortalXslt getInstance(DatabaseAdapter db__, Long id__)
-        throws Exception {
-        return (PortalXslt) cache.getInstanceNew(db__, id__);
-    }
-
-    public PortalXslt(DatabaseAdapter db_, Long id) {
+    public PortalXslt(Long id) {
         this( InternalDaoFactory.getInternalDao().getXslt( id ).toString() );
     }
 
@@ -110,7 +105,7 @@ public class PortalXslt implements XsltTransformer{
         try {
             translet = tFactory.newTemplates(xslSource);
         }
-        catch (javax.xml.transform.TransformerConfigurationException e) {
+        catch (TransformerConfigurationException e) {
             synchronized (syncObj) {
                 FileOutputStream out = new FileOutputStream(WebmillConfig.getWebmillTempDir() + "\\xslt-with-error.xsl");
                 out.write(xslt.getBytes(WebmillConfig.getHtmlCharset()));

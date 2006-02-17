@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portal.template.PortalTemplate;
@@ -89,19 +88,11 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
 
     public PortalTemplateManagerImpl(){}
 
-    public static PortalTemplateManagerImpl getInstance(long id__) {
-        return getInstance(null, (Long)id__ );
-    }
-
-    public static PortalTemplateManagerImpl getInstance(DatabaseAdapter db__, long id__) {
-        return getInstance(null, (Long)id__ );
-    }
-
-    public static PortalTemplateManagerImpl getInstance(DatabaseAdapter db__, Long id__) {
+    public static PortalTemplateManagerImpl getInstance(Long id__) {
         try {
-            return (PortalTemplateManagerImpl) cache.getInstanceNew(null, id__);
+            return (PortalTemplateManagerImpl) cache.getInstanceNew(id__);
         } catch (GenericException e) {
-            String es = "Error in getInstance(DatabaseAdapter db__, Long id__)";
+            String es = "Error in getInstance( Long id__)";
             log.error(es, e);
             throw new IllegalStateException(es, e);
         }
@@ -136,7 +127,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         return hash.get( nameTemplate + '_' + lang );
     }
 
-    public PortalTemplateManagerImpl(DatabaseAdapter db, Long siteId) {
+    public PortalTemplateManagerImpl(Long siteId) {
         List<TemplateBean> beans = InternalDaoFactory.getInternalDao().getTemplateList( siteId );
         Iterator<TemplateBean> iterator = beans.iterator();
         while (iterator.hasNext()) {
