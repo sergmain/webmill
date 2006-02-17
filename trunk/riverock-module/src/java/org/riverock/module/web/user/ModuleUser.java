@@ -19,7 +19,7 @@ public interface ModuleUser {
 
     public boolean isCompany() throws ModuleException ;
 
-    public boolean isGroupCompany() throws ModuleException ;
+//    public boolean isGroupCompany() throws ModuleException ;
 
     public boolean isHolding() throws ModuleException ;
 
