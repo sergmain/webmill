@@ -33,7 +33,6 @@ import org.riverock.generic.tools.servlet.HttpSessionApplWrapper;
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.startup.StartupApplication;
-import org.riverock.cache.impl.CacheArray;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
