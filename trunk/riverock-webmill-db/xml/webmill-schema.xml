@@ -120,13 +120,11 @@
 		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
 		<Fields name="USER_LOGIN" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
 		<Fields name="USER_PASSWORD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
-		<Fields name="IS_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
-		<Fields name="IS_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="IS_HOLDING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<Fields name="IS_USE_CURRENT_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
 		<Fields name="ID_USER_CREATED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
 		<Fields name="IS_ROOT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
-		<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
-		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
+		<Fields name="ID_HOLDING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="1"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_AUTH_USER" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_AUTH_USER_FK" pkName="ID_FIRM_MLF_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
@@ -360,31 +358,18 @@
 	</Tables>
 	<Tables schema="TEST" name="WM_LIST_HOLDING" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_HOLDING" columnName="ID_ROAD" keySeq="1" pkName="ID_ROAD_MLR_PK"/>
+			<columns schemaName="TEST" tableName="WM_LIST_HOLDING" columnName="ID_HOLDING" keySeq="1" pkName="ID_HOLDING_LH_PK"/>
 		</PrimaryKey>
-		<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
-		<Fields name="FULL_NAME_ROAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
-		<Fields name="NAME_ROAD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
-		<Fields name="NAME_JSP_METHOD" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" nullable="1"/>
-	</Tables>
-	<Tables schema="TEST" name="WM_LIST_GROUP_COMPANY" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_GROUP_COMPANY" columnName="ID_SERVICE" keySeq="1" pkName="ID_SERVICE_MLS_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="3" decimalDigit="0" nullable="0"/>
-		<Fields name="FULL_NAME_SERVICE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="0"/>
-		<Fields name="SHORT_NAME_SERVICE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="22" nullable="0"/>
-		<Fields name="DATE_START" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
-		<Fields name="DATE_STOP" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1"/>
-		<Fields name="ASCII_CODE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
-		<Fields name="IS_VIRTUAL" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
+		<Fields name="ID_HOLDING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" nullable="0" decimalDigit="0"/>
+		<Fields name="FULL_NAME_HOLDING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="200" nullable="1"/>
+		<Fields name="NAME_HOLDING" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
 	</Tables>
 	<Tables schema="TEST" name="WM_NEWS_ITEM" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_NEWS_ITEM" columnName="ID" keySeq="1" pkName="ID_MN_PK"/>
 		</PrimaryKey>
-		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
-		<Fields name="ID_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
+		<Fields name="ID" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0" decimalDigit="0"/>
+		<Fields name="ID_NEWS" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0" decimalDigit="0"/>
 		<Fields name="EDATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="1" defaultValue="sysdate"/>
 		<Fields name="HEADER" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
 		<Fields name="IS_DELETED" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
@@ -414,34 +399,18 @@
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-	<Tables schema="TEST" name="WM_LIST_R_HOLDING_GR_COMP" type="TABLE">
+	<Tables schema="TEST" name="WM_LIST_R_HOLDING_COMPANY" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_R_HOLDING_GR_COMP" columnName="ID_REL_ROAD" keySeq="1" pkName="ID_RELROAD_MRRS_PK"/>
+			<columns schemaName="TEST" tableName="WM_LIST_R_HOLDING_COMPANY" columnName="ID_REL_HOLDING" keySeq="1" pkName="ID_RELHOLDING_LRHC_PK"/>
 		</PrimaryKey>
-		<Fields name="ID_REL_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
-		<Fields name="ID_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_HOLDING" pkColumnName="ID_ROAD" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GR_COMP" fkColumnName="ID_ROAD" keySeq="1" fkName="ID_ROAD_MRRS_FK" pkName="ID_ROAD_MLR_PK">
+		<Fields name="ID_REL_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="0" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_HOLDING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_COMPANY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_HOLDING" pkColumnName="ID_HOLDING" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_COMPANY" fkColumnName="ID_HOLDING" keySeq="1" fkName="ID_HOLDING_LRHC_FK" pkName="ID_HOLDING_LH_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_GR_COMP" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_FIRM_MRRS_FK" pkName="ID_SERVICE_MLS_PK">
-			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
-	<Tables schema="TEST" name="WM_LIST_R_GR_COMP_COMP" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_R_GR_COMP_COMP" columnName="ID_REL_SERVICE" keySeq="1" pkName="ID_REL_SRV_MRSF_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_REL_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
-		<Fields name="ID_SERVICE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="38" decimalDigit="0" nullable="0"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_COMPANY" pkColumnName="ID_FIRM" fkSchemaName="TEST" fkTableName="WM_LIST_R_GR_COMP_COMP" fkColumnName="ID_FIRM" keySeq="1" fkName="ID_FIRM_MRSF_FK" pkName="ID_FIRM_MLF_PK">
-			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_SERVICE" fkSchemaName="TEST" fkTableName="WM_LIST_R_GR_COMP_COMP" fkColumnName="ID_SERVICE" keySeq="1" fkName="ID_SERVICE_MRSF_FK" pkName="ID_SERVICE_MLS_PK">
+		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_GROUP_COMPANY" pkColumnName="ID_COMPANY" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_COMPANY" fkColumnName="ID_COMPANY" keySeq="1" fkName="ID_FIRM_MRRS_FK" pkName="ID_COMPANY_LC_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
