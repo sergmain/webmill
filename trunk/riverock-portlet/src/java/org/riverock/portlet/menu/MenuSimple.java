@@ -57,7 +57,7 @@ import org.riverock.portlet.schema.menu.MenuModuleType;
 
 /**
  * $Author$
- * <p/>
+ * 
  * $Id$
  */
 public final class MenuSimple implements PortletResultObject, PortletGetList, PortletResultContent {
