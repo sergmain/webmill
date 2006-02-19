@@ -26,10 +26,10 @@ public class UserTreeBean implements Serializable {
     private final static Logger log = Logger.getLogger( UserTreeBean.class );
     private static final long serialVersionUID = 2043005500L;
 
+    private DataProvider dataProvider = null;
+
     private HtmlTree _tree;
     private String _nodePath;
-
-    private DataProvider dataProvider = null;
 
     public UserTreeBean() {
     }
@@ -42,7 +42,21 @@ public class UserTreeBean implements Serializable {
         this.dataProvider = dataProvider;
     }
 
+    private TreeNode treeNode = null;
     public TreeNode getUserTree() {
+
+	if (treeNode!=null) {
+		log.info("Invoke getUserTree(). Return cached value.");
+		return treeNode;
+	}
+
+	log.info("Invoke getUserTree()");
+
+      synchronized( this ) {
+	if (treeNode!=null) {
+		return treeNode;
+	}
+
         TreeNode treeData = new TreeNodeBase( "foo-folder", "Company list", false );
         Iterator<CompanyBean> iterator = dataProvider.getCompanyBeans().iterator();
         while( iterator.hasNext() ) {
@@ -65,36 +79,51 @@ public class UserTreeBean implements Serializable {
 
             treeData.getChildren().add( companyNode );
         }
-
-        return treeData;
+	treeNode = treeData; 
+      }
+      return treeNode;
     }
 
     public TreeModel getExpandedTreeData() {
+	log.info("Invoke getExpandedTreeData()");
+
         return new TreeModelBase( getUserTree() );
     }
 
     public void setTree( HtmlTree tree ) {
+	log.info("Invoke setTree( tree )");
+
         _tree = tree;
     }
 
     public HtmlTree getTree() {
+	log.info("Invoke getTree()");
+
         return _tree;
     }
 
     public String expandAll() {
+	log.info("Invoke expandAll()");
+
         _tree.expandAll();
         return null;
     }
 
     public void setNodePath( String nodePath ) {
+	log.info("Invoke setNodePath( nodePath )");
+
         _nodePath = nodePath;
     }
 
     public String getNodePath() {
+	log.info("Invoke getNodePath()");
+
         return _nodePath;
     }
 
     public void checkPath( FacesContext context, UIComponent component, Object value ) {
+	log.info("Invoke checkPath()");
+
         FacesMessage message = null;
         String path[] = _tree.getPathInformation( value.toString() );
         for( String nodeId : path ) {
@@ -113,6 +142,8 @@ public class UserTreeBean implements Serializable {
     }
 
     public void expandPath( ActionEvent event ) {
+	log.info("Invoke expandPath( event )");
+
         _tree.expandPath( _tree.getPathInformation( _nodePath ) );
     }
 }
