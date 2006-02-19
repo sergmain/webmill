@@ -36,7 +36,7 @@ import java.util.HashMap;
  *
  * $Id$
  */
-public class MultipartRequestWrapper extends HashMap {
+public class MultipartRequestWrapper extends HashMap<String, Object> {
 
     /**
      * the standard identifying header of
