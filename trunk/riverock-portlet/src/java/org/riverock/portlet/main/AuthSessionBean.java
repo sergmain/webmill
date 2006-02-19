@@ -38,17 +38,9 @@ public class AuthSessionBean implements Serializable {
         return authSession!=null?authSession.getAuthInfo().isCompany():false;
     }
 
-//    public boolean isGroupCompany() {
-//        return authSession!=null?authSession.getAuthInfo().isGroupCompany():false;
-//    }
-
     public boolean isHolding() {
         return authSession!=null?authSession.getAuthInfo().isHolding():false;
     }
-
-//    public Long getGroupCompanyId() {
-//        return authSession!=null?authSession.getAuthInfo().getGroupCompanyId():null;
-//    }
 
     public Long getHoldingId() {
         return authSession!=null?authSession.getAuthInfo().getHoldingId():null;
