@@ -83,7 +83,7 @@ public class DataProvider implements Serializable {
             RoleBean roleBean = iterator.next();
 
             if( !isAlreadyBinded( roleBean ) ) {
-                list.add( new SelectItem( roleBean.getRoleId().toString(), roleBean.getName() ) );
+                list.add( new SelectItem( roleBean.getRoleId(), roleBean.getName() ) );
             }
         }
         return list;
@@ -112,7 +112,6 @@ public class DataProvider implements Serializable {
 			throw new IllegalStateException("id is null, name: " + company.getName());
 		}
             list.add( new SelectItem( new Long(company.getId()), company.getName() ) );
-//            list.add( new SelectItem( company.getId().toString(), company.getName() ) );
         }
         return list;
     }
@@ -128,7 +127,7 @@ public class DataProvider implements Serializable {
         while( iterator.hasNext() ) {
             Holding holding = iterator.next();
 
-            list.add( new SelectItem( holding.getId().toString(), holding.getName() ) );
+            list.add( new SelectItem( holding.getId(), holding.getName() ) );
         }
         return list;
     }
