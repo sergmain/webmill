@@ -75,10 +75,16 @@ public class InternalDaoImpl implements InternalDao {
     }
 
     public Collection<String> getSupportedLocales() {
+        // Todo. return 'real' values
+        Set<String> list = new HashSet<String>();
+        list.add( "ru" );
+        list.add( "en" );
+        list.add( "ja" );
+        return list;
+/*
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            Set<String> list = new HashSet<String>();
             WmListLanguageListType languages = GetWmListLanguageFullList.getInstance( adapter, 1 ).item;
             for (int i=0; i<languages.getWmListLanguageCount(); i++){
                 WmListLanguageItemType item = languages.getWmListLanguage( i );
@@ -95,6 +101,7 @@ public class InternalDaoImpl implements InternalDao {
             DatabaseManager.close(adapter);
             adapter = null;
         }
+*/
     }
 
     public ConcurrentMap<String, Long> getUserAgentList() {
@@ -295,7 +302,7 @@ public class InternalDaoImpl implements InternalDao {
 
             SiteLanguageBean bean = new SiteLanguageBean();
             bean.setCustomLanguage( StringTools.getLocale( lang.getCustomLanguage()).toString() );
-            bean.setLanguageId( lang.getIdLanguage() );
+//            bean.setLanguageId( lang.getIdLanguage() );
             bean.setNameCustomLanguage( lang.getNameCustomLanguage() );
             bean.setSiteId( lang.getIdSite() );
             bean.setSiteLanguageId( lang.getIdSiteSupportLanguage() );
@@ -336,7 +343,7 @@ public class InternalDaoImpl implements InternalDao {
                 WmPortalSiteLanguageItemType lang = langs.getWmPortalSiteLanguage(i);
                 SiteLanguageBean bean = new SiteLanguageBean();
                 bean.setCustomLanguage( StringTools.getLocale(lang.getCustomLanguage()).toString() );
-                bean.setLanguageId( lang.getIdLanguage() );
+//                bean.setLanguageId( lang.getIdLanguage() );
                 bean.setNameCustomLanguage( lang.getNameCustomLanguage() );
                 bean.setSiteId( lang.getIdSite() );
                 bean.setSiteLanguageId( lang.getIdSiteSupportLanguage() );

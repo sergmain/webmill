@@ -60,6 +60,7 @@ public final class SiteService {
     public static void dropSiteLanguageData(DatabaseAdapter db_, Long idSiteLanguageForDrop)
         throws Exception {
         System.out.println("drop news");
+/*
         WmNewsListListType newsFullList =
             new GetWmNewsListWithIdSiteSupportLanguageList(db_, idSiteLanguageForDrop).item;
         for (int i = 0; i < newsFullList.getWmNewsListCount(); i++) {
@@ -72,6 +73,7 @@ public final class SiteService {
             DeleteWmNewsItemWithIdNews.processData(db_, newsGroupList.getIdNews());
         }
         DeleteWmNewsListWithIdSiteSupportLanguage.process(db_, idSiteLanguageForDrop);
+*/
         db_.commit();
 
         System.out.println("drop articles");
