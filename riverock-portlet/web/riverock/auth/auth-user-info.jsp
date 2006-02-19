@@ -39,7 +39,9 @@
         <h:outputText value="#{role.name}" />
     </t:dataList>
 
-<f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
-<f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
-<f:verbatim></td></tr></table></f:verbatim>
+<f:verbatim>
+	</td></tr><tr><td valign="top" colspan="2" align="left">
+	</td></tr><tr><td valign="top" colspan="2" align="left">
+	</td></tr></table>
+</f:verbatim>
 
