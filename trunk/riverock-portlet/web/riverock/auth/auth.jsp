@@ -10,6 +10,12 @@
 
 <h:form id="foo">
 
+<%/*
+        <h:commandButton id="role-list-action" action="role" value="Role" 
+	>
+        </h:commandButton>
+*/%>
+    
     <t:panelTabbedPane bgcolor="#FFFFCC" >
 
         <t:panelTab id="tab1" label="#{msg['tabbed_tab1']}">
@@ -42,10 +48,14 @@
 
         <t:panelTab id="tab2" label="#{msg['tabbed_tab2']}">
         <f:subview id="role-subview">
+            <jsp:include page="role/role.jsp"/>
         </f:subview>
         </t:panelTab>
 
     </t:panelTabbedPane>
+
+
+
 </h:form>
 
 

@@ -13,7 +13,9 @@
 	>
         </h:commandButton>
 
-    <t:tree2 id="serverTree" value="#{userTree.userTree}" var="node" varNodeToggler="t" clientSideToggle="false" showRootNode="false">
+<%/*    <h:commandLink value="Expand All" action="#{userTree.expandAll}"/> */%>
+
+    <t:tree2 id="serverTree" value="#{userTree.userTree}" var="node" varNodeToggler="t" clientSideToggle="false" showRootNode="false" binding="#{userTree.tree}">
         <f:facet name="company">
             <h:panelGroup>
                 <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>

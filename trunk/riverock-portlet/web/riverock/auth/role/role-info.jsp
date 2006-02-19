@@ -8,7 +8,7 @@
  <h:outputText value="Role info"/>
  <h:panelGrid columns="2">
  		<h:outputText value="#{msg.role_id}"/>
- 		<h:outputText value="#{roleSessionBean.role.id}"/>
+ 		<h:outputText value="#{roleSessionBean.role.roleId}"/>
  		<h:outputText value="#{msg.role_name}"/>
  		<h:outputText value="#{roleSessionBean.role.name}"/>
  </h:panelGrid>

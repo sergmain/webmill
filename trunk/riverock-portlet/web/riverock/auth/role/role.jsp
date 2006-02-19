@@ -4,7 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<h:form id="role-form">
 
 <f:loadBundle basename="org.riverock.portlet.auth.resource.Auth" var="msg"/>	
 	<h:panelGrid columns="2">
@@ -35,5 +34,4 @@
 	 
 	
 </h:panelGrid>
-</h:form>
 

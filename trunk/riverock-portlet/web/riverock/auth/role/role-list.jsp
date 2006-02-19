@@ -16,7 +16,7 @@
                        </f:facet>
                        <t:commandLink action="#{roleAction.selectRole}" immediate="true" >
                             <h:outputText value="#{role.name}" />
-                            <t:updateActionListener property="#{roleSessionBean.currentRoleId}" value="#{role.id}" />
+                            <t:updateActionListener property="#{roleSessionBean.currentRoleId}" value="#{role.roleId}" />
                        </t:commandLink>
                    </h:column>
 
