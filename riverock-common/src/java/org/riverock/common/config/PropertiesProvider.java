@@ -39,7 +39,7 @@ public class PropertiesProvider {
     private static boolean isServletEnv = false;
     private static String applicationPath = null;
     private static String configPath = null;
-    private static Map parameters = new HashMap();
+    private static Map<String, String> parameters = new HashMap<String, String>();
 
     private final static String lang[] = {"ru"};
 
@@ -71,15 +71,15 @@ public class PropertiesProvider {
         isServletEnv = servletEnv;
     }
 
-    public static Map getParameters() {
+    public static Map<String, String> getParameters() {
         return parameters;
     }
 
-    public static void setParameters(Map parameters) {
+    public static void setParameters(Map<String, String> parameters) {
         PropertiesProvider.parameters = parameters;
     }
 
-    public static Object getParameter(String key) {
+    public static String getParameter(String key) {
         if (key==null) {
             return null;
         }
