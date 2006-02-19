@@ -9,7 +9,7 @@ package org.riverock.webmill.portal.bean;
 public class SiteLanguageBean {
     private Long siteLanguageId;
     private Long siteId;
-    private Long languageId;
+//    private Long languageId;
 
     public Long getSiteLanguageId() {
         return siteLanguageId;
@@ -27,13 +27,13 @@ public class SiteLanguageBean {
         this.siteId = siteId;
     }
 
-    public Long getLanguageId() {
-        return languageId;
-    }
-
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
-    }
+//    public Long getLanguageId() {
+//        return languageId;
+//    }
+//
+//    public void setLanguageId(Long languageId) {
+//        this.languageId = languageId;
+//    }
 
     public String getCustomLanguage() {
         return customLanguage;
