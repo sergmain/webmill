@@ -50,17 +50,14 @@
 	<DbTablePrefix>WM_PORTAL_CATALOG</DbTablePrefix>
 	<DbTablePrefix>WM_PORTAL_CATALOG_LANGUAGE</DbTablePrefix>
 	<DbTablePrefix>WM_PORTLET_ARTICLE</DbTablePrefix>
-	<DbTablePrefix>WM_LIST_LANGUAGE</DbTablePrefix>
+<!--	<DbTablePrefix>WM_LIST_LANGUAGE</DbTablePrefix> -->
 	<DbTablePrefix>WM_AUTH_USER</DbTablePrefix>
 	<DbTablePrefix>WM_AUTH_RELATE_ACCGROUP</DbTablePrefix>
 
-<!--	<DbTablePrefix>WM_CASH</DbTablePrefix>-->
-<!--	<DbTablePrefix>WM_PRICE</DbTablePrefix>-->
+<!--	<DbTablePrefix>WM_NEWS</DbTablePrefix> -->
 
-	<DbTablePrefix>WM_NEWS</DbTablePrefix>
-
-	<TableToList>WM_NEWS_ITEM</TableToList>
-	<TableToList>WM_LIST_LANGUAGE</TableToList>
+<!--	<TableToList>WM_NEWS_ITEM</TableToList> -->
+<!--	<TableToList>WM_LIST_LANGUAGE</TableToList> -->
 	<TableToList>WM_PORTAL_CATALOG</TableToList>
 	<TableToList>WM_PORTAL_PORTLET_NAME</TableToList>
 	<TableToList>WM_PORTAL_CSS</TableToList>
