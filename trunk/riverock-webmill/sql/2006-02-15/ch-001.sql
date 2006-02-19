@@ -71,6 +71,57 @@ CREATE TABLE WM_LIST_R_HOLDING_COMPANY (
 )
 /
 
+alter table WM_I18N_MESSAGE
+add column SHORT_NAME_LANGUAGE varchar2(15)
+/
+
+update wm_list_language
+set short_name_language='ru'
+where short_name_language='ru_RU'
+/
+
+update wm_list_language
+set short_name_language='de'
+where short_name_language='de_DE'
+/
+
+update wm_list_language
+set short_name_language='en'
+where short_name_language='en_GB'
+/
+
+update wm_list_language
+set short_name_language='ja'
+where short_name_language='ja_JP'
+/
+
+update wm_list_language
+set short_name_language='es'
+where short_name_language='es_ES'
+/
+
+update wm_list_language
+set short_name_language='fr'
+where short_name_language='fr_FR'
+/
+
+update wm_list_language
+set short_name_language='it'
+where short_name_language='it_IT'
+/
+
+update  WM_I18N_MESSAGE a
+set SHORT_NAME_LANGUAGE  = 
+( select b.SHORT_NAME_LANGUAGE  from wm_list_language b where a.id_language=b.id_language)
+/
+
+alter table wm_portal_site_language
+drop column id_language
+/
+
+drop table wm_list_language
+/
+
 
 
 
