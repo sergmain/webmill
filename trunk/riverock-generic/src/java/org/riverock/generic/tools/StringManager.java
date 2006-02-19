@@ -328,10 +328,10 @@ public final class StringManager {
         {
             db_ = DatabaseAdapter.getInstance();
             String sql_ =
-                "select a.NAME_STORAGE, d.SHORT_NAME_LANGUAGE, b.NAME_ITEM, c.MESSAGE " +
-                "from   WM_I18N_STORAGE a, WM_I18N_ITEM b, WM_I18N_MESSAGE c, WM_LIST_LANGUAGE d " +
+                "select a.NAME_STORAGE, c.SHORT_NAME_LANGUAGE, b.NAME_ITEM, c.MESSAGE " +
+                "from   WM_I18N_STORAGE a, WM_I18N_ITEM b, WM_I18N_MESSAGE c " +
                 "where  a.ID_MAIN_I18N_STORAGE=b.ID_MAIN_I18N_STORAGE and " +
-                "       b.ID_MAIN_I18N_ITEM=c.ID_MAIN_I18N_ITEM and c.ID_LANGUAGE=d.ID_LANGUAGE ";
+                "       b.ID_MAIN_I18N_ITEM=c.ID_MAIN_I18N_ITEM ";
 
             st = db_.prepareStatement(sql_);
             rs = st.executeQuery();
