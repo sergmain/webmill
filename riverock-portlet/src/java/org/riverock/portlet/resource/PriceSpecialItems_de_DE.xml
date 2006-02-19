@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resource><pair key="index.jsp.id_item" value="id_item"/><pair key="index.jsp.action" value="Действие"/><pair key="add_special.jsp.new_rec" value="Новая запись"/><pair key="add_special.jsp.id_item" value="id_item"/><pair key="ch_special.jsp.id_item" value="id_item"/><pair key="del_special.jsp.confirm" value="Подтвердите удаление:"/><pair key="del_special.jsp.id_item" value="id_item"/><pair key="index.jsp.title" value="Список данных в таблице Позиции для отображения как специального предложения, на первой странице."/></resource>
