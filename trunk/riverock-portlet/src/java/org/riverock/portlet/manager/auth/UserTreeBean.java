@@ -1,4 +1,4 @@
-package org.riverock.portlet.auth.user.bean;
+package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -45,17 +45,21 @@ public class UserTreeBean implements Serializable {
     private TreeNode treeNode = null;
     public TreeNode getUserTree() {
 
+/*
 	if (treeNode!=null) {
 		log.info("Invoke getUserTree(). Return cached value.");
 		return treeNode;
 	}
+*/
 
 	log.info("Invoke getUserTree()");
 
+/*
       synchronized( this ) {
 	if (treeNode!=null) {
 		return treeNode;
 	}
+*/
 
         TreeNode treeData = new TreeNodeBase( "foo-folder", "Company list", false );
         Iterator<CompanyBean> iterator = dataProvider.getCompanyBeans().iterator();
@@ -80,7 +84,8 @@ public class UserTreeBean implements Serializable {
             treeData.getChildren().add( companyNode );
         }
 	treeNode = treeData; 
-      }
+
+//      }
       return treeNode;
     }
 

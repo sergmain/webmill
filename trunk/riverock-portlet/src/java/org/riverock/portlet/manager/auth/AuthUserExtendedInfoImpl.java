@@ -1,4 +1,4 @@
-package org.riverock.portlet.auth.user.bean;
+package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
 
     private AuthInfoImpl authInfo = null;
     private UserInfo userInfo = null;
-//    private Long userId = null;
 
     private String userName = null;
     private String companyName = null;
@@ -62,7 +61,6 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
             userName = StringTools.getUserName(
                     userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName()
             );
-//	    userId = userInfo.getUserId();
 	}
     }
 
@@ -93,16 +91,6 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
     public void addRole( RoleEditableBeanImpl roleImpl ) {
         this.roles.add(roleImpl);
     }
-
-/*
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId( Long userId ) {
-        this.userId = userId;
-    }
-*/
 
     public String getUserName() {
         return userName;

@@ -1,4 +1,4 @@
-package org.riverock.portlet.company.bean;
+package org.riverock.portlet.manager.company;
 
 import java.io.Serializable;
 
