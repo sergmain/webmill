@@ -73,13 +73,6 @@ public class WebmillErrorPage
         );
         actionResponse.setRenderParameter( urlNameConsts, urlName );
         actionResponse.setRenderParameter( urlConsts, url  );
-
-//        actionResponse.setRenderParameter(
-//            textConst,
-//            text + (th!=null? WebmillErrorPage.getErrorMessage(th):"")
-//        );
-//        actionResponse.setRenderParameter( urlNameConsts, urlName );
-//        actionResponse.setRenderParameter( urlConsts, url  );
     }
 
     public static void process( Writer out, Throwable th, String errorMessage, String url, String urlMessage )

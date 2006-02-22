@@ -45,7 +45,6 @@ import org.xml.sax.InputSource;
 import org.riverock.common.config.ConfigException;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.price.ImportPriceList;
 import org.riverock.portlet.price.Shop;
 import org.riverock.portlet.schema.import_price.PricesType;
@@ -83,11 +82,24 @@ public final class UploadPriceControllerPortlet implements Portlet {
         if ( renderRequest.getAttribute( ERROR_TEXT )!=null ) {
             Writer out = renderResponse.getWriter();
             String srcURL = PortletService.url(UploadPrice.CTX_TYPE_UPLOAD_PRICE, renderRequest, renderResponse );
-            WebmillErrorPage.processPortletError(out, null, (String)renderRequest.getAttribute( ERROR_TEXT ), srcURL, (String)renderRequest.getAttribute( ERROR_TEXT ));
+
+//            WebmillErrorPage.processPortletError(out, null, (String)renderRequest.getAttribute( ERROR_TEXT ), srcURL, (String)renderRequest.getAttribute( ERROR_TEXT ));
+//    public static void processPortletError( Writer out, Throwable th, String errorMessage, String url, String urlMessage ) throws IOException {
+
+        out.write( (String)renderRequest.getAttribute( ERROR_TEXT ) + 
+		"<p><a href=\""+srcURL+"\">"+(String)renderRequest.getAttribute( ERROR_URL )+"</a></p>\n" 
+	);
 
             out.flush();
             out.close();
         }
+    }
+
+    private String getErrorMessage( Throwable th ) {
+        return
+            "<br><span style=\"font-family: verdana,arial,helvetica,sans-serif; font-size: 10px;\">\n"+
+            ExceptionTools.getStackTrace( th, 40, "<br>" )+"\n"+
+            "</span><br>\n";
     }
 
     public void processAction( ActionRequest actionRequest, ActionResponse actionResponse ) {
@@ -152,7 +164,7 @@ public final class UploadPriceControllerPortlet implements Portlet {
                 actionResponse.setRenderParameter(
                     ERROR_TEXT,
                     "Exception parse uploaded file with data " +
-                    WebmillErrorPage.getErrorMessage(e)
+                    getErrorMessage(e)
                 );
                 actionResponse.setRenderParameter( ERROR_URL, "загрузить повторно" );
 
@@ -174,7 +186,7 @@ public final class UploadPriceControllerPortlet implements Portlet {
 
                 actionResponse.setRenderParameter(
                     ERROR_TEXT,
-                    "Exception store price data in DB " + WebmillErrorPage.getErrorMessage(e)
+                    "Exception store price data in DB " + getErrorMessage(e)
                 );
                 actionResponse.setRenderParameter( ERROR_URL, "загрузить повторно" );
                 return;
@@ -195,7 +207,7 @@ public final class UploadPriceControllerPortlet implements Portlet {
             log.error( "General exception import price-list", e );
             actionResponse.setRenderParameter(
                 ERROR_TEXT,
-                "General exception inport price-list " + WebmillErrorPage.getErrorMessage(e)
+                "General exception inport price-list " + getErrorMessage(e)
             );
             actionResponse.setRenderParameter( ERROR_URL, "загрузить повторно" );
             return;

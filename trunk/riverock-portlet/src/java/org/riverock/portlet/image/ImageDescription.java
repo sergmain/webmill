@@ -49,7 +49,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.riverock.common.tools.ExceptionTools;
-import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
@@ -91,10 +90,8 @@ public class ImageDescription extends HttpServlet
             {
 
                 AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
-                if ( auth_==null )
-                {
-                    WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
-                    return;
+                if ( auth_==null ) {
+                    throw new IllegalStateExcepton("You have not enough right to execute this operation" );
                 }
 
                 if (auth_.isUserInRole("webmill.upload_image"))

@@ -46,7 +46,6 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
@@ -90,8 +89,7 @@ public final class ImageIndex extends HttpServlet {
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_ == null ) {
-                WebmillErrorPage.process( out, null, "You have not enough right to execute this operation", "/", "continue" );
-                return;
+                throw new IllegalStateExcepton( "You have not enough right to execute this operation" );
             }
 
             db_ = DatabaseAdapter.getInstance();
