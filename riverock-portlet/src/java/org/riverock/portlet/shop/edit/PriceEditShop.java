@@ -47,7 +47,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.price.ShopPageParam;
 import org.riverock.portlet.price.ShopPortlet;
-import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -95,8 +94,7 @@ public class PriceEditShop extends HttpServlet
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_==null ) {
-                WebmillErrorPage.process(out, null, "You have not enough right to execute this operation", "/", "continue");
-                return;
+                throw new IllegalStateExcepton("You have not enough right to execute this operation");
             }
 
             db_ = DatabaseAdapter.getInstance();

@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.riverock.portlet.portlets.WebmillErrorPage;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
@@ -80,7 +79,10 @@ public final class UploadPrice extends HttpServlet {
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
             if ( auth_ == null || !auth_.isUserInRole( "webmill.upload_price_list" ) ) {
-                WebmillErrorPage.process( out, null, "You have not right to upload price", "/", "continue" );
+//    static void      processPortletError( Writer out, Throwable th, String errorMessage, String url, String urlMessage ) throws IOException {
+//                WebmillErrorPage.process( out, null, "You have not right to upload price", "/", "continue" );
+
+        	out.write( "You have not right to upload price. <p><a href=\"/\">continue</a></p>\n" );
                 return;
             }
 
