@@ -894,7 +894,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         return sb.toString();
     }
 
-
+/*
     public static Long addRole(DatabaseAdapter db_, String role_name)
         throws Exception
     {
@@ -1088,6 +1088,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             ps = null;
         }
     }
+*/
 
     public static void setRelateHoldingCompany(DatabaseAdapter ora_, Long holdingId, Long companyId )
         throws Exception
@@ -1448,7 +1449,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
             ps = dbDyn.prepareStatement(
                 "insert into WM_AUTH_ACCESS_GROUP " +
-                "( ID_ACCESS_GROUP, NAME_ACCESS_GROUP )" +
+                "( ID_ACCESS_GROUP, NAME_ACCESS_GROUP ) values " +
                 ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" ) +
                 " ?, ? " +
                 ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" )
@@ -1493,12 +1494,13 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
             String sql =
                 "update WM_AUTH_ACCESS_GROUP " +
-                "set    ID_ACCESS_GROUP=?, NAME_ACCESS_GROUP=? " +
+                "set    NAME_ACCESS_GROUP=? " +
                 "WHERE  ID_ACCESS_GROUP=? ";
 
             ps = dbDyn.prepareStatement( sql );
 
             ps.setString( 1, roleBean.getName() );
+            ps.setLong( 2, roleBean.getRoleId() );
 
             int i1 = ps.executeUpdate();
 
