@@ -1,4 +1,4 @@
-package org.riverock.portlet.auth.user.bean;
+package org.riverock.portlet.manager.auth;
 
 /**
  * @author SergeMaslyukov

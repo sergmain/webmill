@@ -1,4 +1,4 @@
-package org.riverock.portlet.auth.role.bean;
+package org.riverock.portlet.manager.role;
 
 import java.io.Serializable;
 import org.riverock.portlet.main.AuthSessionBean;
@@ -45,7 +45,7 @@ public class RoleAction implements Serializable {
 		return "role";
 	}
 
-	public String cancelAddrole() {
+	public String cancelAddRole() {
 		loadCurrentRole();
 		return "role";
 	}

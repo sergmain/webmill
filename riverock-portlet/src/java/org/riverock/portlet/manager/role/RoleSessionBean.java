@@ -1,7 +1,4 @@
-/**
- * 
- */
-package org.riverock.portlet.auth.role.bean;
+package org.riverock.portlet.manager.role;
 
 import java.io.Serializable;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;

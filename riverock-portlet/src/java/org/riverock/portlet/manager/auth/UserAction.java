@@ -1,4 +1,4 @@
-package org.riverock.portlet.auth.user.bean;
+package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
 import java.util.Iterator;
