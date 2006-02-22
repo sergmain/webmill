@@ -4,14 +4,6 @@
 
 <faces-config>
 
-    <!-- Common part -->
-
- <managed-bean>
-  <managed-bean-name>authSessionBean</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.main.AuthSessionBean</managed-bean-class>
-  <managed-bean-scope>request</managed-bean-scope>
- </managed-bean>
-
     <!-- User part -->
     <managed-bean>
         <managed-bean-name>userSessionBean</managed-bean-name>
@@ -21,7 +13,7 @@
 
     <managed-bean>
         <managed-bean-name>userTree</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserTreeBean</managed-bean-class>
+        <managed-bean-class>org.riverock.portlet.manager.auth.UserTreeBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     	<managed-property>
            <property-name>dataProvider</property-name>
@@ -31,7 +23,7 @@
 
     <managed-bean>
         <managed-bean-name>authUserAction</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserAction</managed-bean-class>
+        <managed-bean-class>org.riverock.portlet.manager.auth.UserAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     	<managed-property>
            <property-name>dataProvider</property-name>
@@ -49,7 +41,7 @@
 
     <managed-bean>
         <managed-bean-name>dataProvider</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.bean.DataProvider</managed-bean-class>
+        <managed-bean-class>org.riverock.portlet.manager.auth.DataProvider</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     	<managed-property>
            <property-name>userSessionBean</property-name>
@@ -71,7 +63,7 @@
 
  <managed-bean>
   <managed-bean-name>roleBean</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.auth.role.bean.RoleManagedBean</managed-bean-class>
+  <managed-bean-class>org.riverock.portlet.manager.role.RoleManagedBean</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
   <managed-property>
    <property-name>roleSessionBean</property-name>
@@ -85,7 +77,7 @@
 
  <managed-bean>
   <managed-bean-name>roleAction</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.auth.role.bean.RoleAction</managed-bean-class>
+  <managed-bean-class>org.riverock.portlet.manager.role.RoleAction</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
   <managed-property>
    <property-name>sessionBean</property-name>
@@ -100,88 +92,114 @@
 
 <!-- User navigation rules -->
  <navigation-rule>
-  <from-view-id>/riverock/auth/auth.jsp</from-view-id>
+  <from-view-id>/riverock/manager/auth/auth.jsp</from-view-id>
   <navigation-case>
    <from-outcome>auth-add</from-outcome>
-   <to-view-id>/riverock/auth/auth-user-add.jsp</to-view-id>
+   <to-view-id>/riverock/manager/auth/auth-user-add.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>auth-edit</from-outcome>
-   <to-view-id>/riverock/auth/auth-user-edit.jsp</to-view-id>
+   <to-view-id>/riverock/manager/auth/auth-user-edit.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>auth-delete</from-outcome>
-   <to-view-id>/riverock/auth/auth-user-delete.jsp</to-view-id>
+   <to-view-id>/riverock/manager/auth/auth-user-delete.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>auth</from-outcome>
-   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+   <to-view-id>/riverock/manager/auth/auth.jsp</to-view-id>
+  </navigation-case>
+
+  <navigation-case>
+   <from-outcome>role</from-outcome>
+   <to-view-id>/riverock/manager/role/role.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>company</from-outcome>
+   <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>holding</from-outcome>
+   <to-view-id>/riverock/manager/holding/holding.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
 
  <navigation-rule>
-  <from-view-id>/riverock/auth/auth-user-add.jsp</from-view-id>
+  <from-view-id>/riverock/manager/auth/auth-user-add.jsp</from-view-id>
   <navigation-case>
    <from-outcome>auth</from-outcome>
-   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+   <to-view-id>/riverock/manager/auth/auth.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/riverock/auth/auth-user-edit.jsp</from-view-id>
+  <from-view-id>/riverock/manager/auth/auth-user-edit.jsp</from-view-id>
   <navigation-case>
    <from-outcome>auth</from-outcome>
-   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+   <to-view-id>/riverock/manager/auth/auth.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/riverock/auth/auth-user-delete.jsp</from-view-id>
+  <from-view-id>/riverock/manager/auth/auth-user-delete.jsp</from-view-id>
   <navigation-case>
    <from-outcome>auth</from-outcome>
-   <to-view-id>/riverock/auth/auth.jsp</to-view-id>
+   <to-view-id>/riverock/manager/auth/auth.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
 
 
 <!-- Role navigation rules -->
  <navigation-rule>
-  <from-view-id>/riverock/auth/role/role.jsp</from-view-id>
+  <from-view-id>/riverock/manager/role/role.jsp</from-view-id>
   <navigation-case>
    <from-outcome>role-add</from-outcome>
-   <to-view-id>/riverock/auth/role/role-add.jsp</to-view-id>
+   <to-view-id>/riverock/manager/role/role-add.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>role-edit</from-outcome>
-   <to-view-id>/riverock/auth/role/role-edit.jsp</to-view-id>
+   <to-view-id>/riverock/manager/role/role-edit.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>role-delete</from-outcome>
-   <to-view-id>/riverock/auth/role/role-delete.jsp</to-view-id>
+   <to-view-id>/riverock/manager/role/role-delete.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>role</from-outcome>
-   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+   <to-view-id>/riverock/manager/role/role.jsp</to-view-id>
+  </navigation-case>
+
+  <navigation-case>
+   <from-outcome>auth</from-outcome>
+   <to-view-id>/riverock/manager/auth/auth.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>company</from-outcome>
+   <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>holding</from-outcome>
+   <to-view-id>/riverock/manager/holding/holding.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
 
  <navigation-rule>
-  <from-view-id>/riverock/auth/role/role-add.jsp</from-view-id>
+  <from-view-id>/riverock/manager/role/role-add.jsp</from-view-id>
   <navigation-case>
    <from-outcome>role</from-outcome>
-   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+   <to-view-id>/riverock/manager/role/role.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/riverock/auth/role/role-edit.jsp</from-view-id>
+  <from-view-id>/riverock/manager/role/role-edit.jsp</from-view-id>
   <navigation-case>
    <from-outcome>role</from-outcome>
-   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+   <to-view-id>/riverock/manager/role/role.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/riverock/auth/role/role-delete.jsp</from-view-id>
+  <from-view-id>/riverock/manager/role/role-delete.jsp</from-view-id>
   <navigation-case>
    <from-outcome>role</from-outcome>
-   <to-view-id>/riverock/auth/role/role.jsp</to-view-id>
+   <to-view-id>/riverock/manager/role/role.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
 

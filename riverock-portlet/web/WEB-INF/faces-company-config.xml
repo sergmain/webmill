@@ -11,13 +11,13 @@
 
  <managed-bean>
   <managed-bean-name>companySessionBean</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.company.bean.CompanySessionBean</managed-bean-class>
+  <managed-bean-class>org.riverock.portlet.manager.company.CompanySessionBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
 
  <managed-bean>
   <managed-bean-name>action</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.company.bean.CompanyAction</managed-bean-class>
+  <managed-bean-class>org.riverock.portlet.manager.company.CompanyAction</managed-bean-class>
   <managed-bean-scope>request</managed-bean-scope>
   <managed-property>
    <property-name>sessionBean</property-name>
@@ -29,50 +29,59 @@
   </managed-property>
  </managed-bean>
 
- <managed-bean>
-  <managed-bean-name>authSessionBean</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.main.AuthSessionBean</managed-bean-class>
-  <managed-bean-scope>request</managed-bean-scope>
- </managed-bean>
 
  <navigation-rule>
-  <from-view-id>/riverock/company/company.jsp</from-view-id>
+  <from-view-id>/riverock/manager/company/company.jsp</from-view-id>
   <navigation-case>
    <from-outcome>company-add</from-outcome>
-   <to-view-id>/riverock/company/company-add.jsp</to-view-id>
+   <to-view-id>/riverock/manager/company/company-add.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>company-edit</from-outcome>
-   <to-view-id>/riverock/company/company-edit.jsp</to-view-id>
+   <to-view-id>/riverock/manager/company/company-edit.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>company-delete</from-outcome>
-   <to-view-id>/riverock/company/company-delete.jsp</to-view-id>
+   <to-view-id>/riverock/manager/company/company-delete.jsp</to-view-id>
   </navigation-case>
   <navigation-case>
    <from-outcome>company</from-outcome>
-   <to-view-id>/riverock/company/company.jsp</to-view-id>
+   <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
+  </navigation-case>
+
+  <navigation-case>
+   <from-outcome>role</from-outcome>
+   <to-view-id>/riverock/manager/role/role.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>auth</from-outcome>
+   <to-view-id>/riverock/manager/auth/auth.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>holding</from-outcome>
+   <to-view-id>/riverock/manager/holding/holding.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+
+ <navigation-rule>
+  <from-view-id>/riverock/manager/company/company-add.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>company</from-outcome>
+   <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/riverock/company/company-add.jsp</from-view-id>
+  <from-view-id>/riverock/manager/company/company-edit.jsp</from-view-id>
   <navigation-case>
    <from-outcome>company</from-outcome>
-   <to-view-id>/riverock/company/company.jsp</to-view-id>
+   <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
-  <from-view-id>/riverock/company/company-edit.jsp</from-view-id>
+  <from-view-id>/riverock/manager/company/company-delete.jsp</from-view-id>
   <navigation-case>
    <from-outcome>company</from-outcome>
-   <to-view-id>/riverock/company/company.jsp</to-view-id>
-  </navigation-case>
- </navigation-rule>
- <navigation-rule>
-  <from-view-id>/riverock/company/company-delete.jsp</from-view-id>
-  <navigation-case>
-   <from-outcome>company</from-outcome>
-   <to-view-id>/riverock/company/company.jsp</to-view-id>
+   <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <lifecycle/>

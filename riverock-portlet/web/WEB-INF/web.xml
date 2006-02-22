@@ -32,7 +32,12 @@
 
 	<context-param>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>/WEB-INF/faces-auth-config.xml, /WEB-INF/faces-company-config.xml</param-value>
+		<param-value>
+			/WEB-INF/faces-common-config.xml, 
+			/WEB-INF/faces-auth-config.xml, 
+			/WEB-INF/faces-holding-config.xml, 
+			/WEB-INF/faces-company-config.xml
+		</param-value>
 	</context-param>
 	<context-param>
 		<description>
@@ -179,12 +184,6 @@
 			<param-name>cache-config-file</param-name>
 			<param-value>config\config-cache.xml</param-value>
 		</init-param>
-<!--
-		<init-param>
-			<param-name>sso-config-file</param-name>
-			<param-value>config\config-sso.xml</param-value>
-		</init-param>
--->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
@@ -204,31 +203,6 @@
 		<servlet-class>org.riverock.portlet.shop.upload.UploadPrice</servlet-class>
 		<load-on-startup>10</load-on-startup>
 	</servlet>
-	<servlet>
-		<servlet-name>Mill.ImageSelectFile</servlet-name>
-		<servlet-class>org.riverock.portlet.image.ImageSelectFile</servlet-class>
-		<load-on-startup>12</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.ImageSelectUrl</servlet-name>
-		<servlet-class>org.riverock.portlet.image.ImageSelectUrl</servlet-class>
-		<load-on-startup>12</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.ImageDescription</servlet-name>
-		<servlet-class>org.riverock.portlet.image.ImageDescription</servlet-class>
-		<load-on-startup>12</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.ImageIndex</servlet-name>
-		<servlet-class>org.riverock.portlet.image.ImageIndex</servlet-class>
-		<load-on-startup>12</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>Mill.ImageList</servlet-name>
-		<servlet-class>org.riverock.portlet.image.ImageList</servlet-class>
-		<load-on-startup>12</load-on-startup>
-	</servlet>
 	<servlet-mapping>
 		<servlet-name>MemberViewServlet</servlet-name>
 		<url-pattern>/member_view</url-pattern>
@@ -237,26 +211,7 @@
 		<servlet-name>Mill.UploadPrice</servlet-name>
 		<url-pattern>/mill.upload_price</url-pattern>
 	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.ImageSelectFile</servlet-name>
-		<url-pattern>/mill.image_select_file</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.ImageSelectUrl</servlet-name>
-		<url-pattern>/mill.image_select_url</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.ImageDescription</servlet-name>
-		<url-pattern>/mill.image_description</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.ImageIndex</servlet-name>
-		<url-pattern>/mill.image_index</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Mill.ImageList</servlet-name>
-		<url-pattern>/mill.image_list</url-pattern>
-	</servlet-mapping>
+
 	<!-- Set the default session timeout (in minutes) -->
 	<session-config>
 		<session-timeout>15</session-timeout>
