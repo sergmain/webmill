@@ -44,7 +44,7 @@ public class StringLocaleManager
 {
 
     /**
-     * The ResourceBundle for this StringManager.
+     * The ResourceBundle for this StringLocaleManager.
      */
 
     private ResourceBundle bundle;
@@ -59,12 +59,12 @@ public class StringLocaleManager
     }
 
     /**
-     * Creates a new StringManager for a given package. This is a
+     * Creates a new StringLocaleManager for a given package. This is a
      * private method and all access to it is arbitrated by the
-     * static getManager method call so that only one StringManager
+     * static getManager method call so that only one StringLocaleManager
      * per package will be created.
      *
-     * @param packageName Name of package to create StringManager for.
+     * @param packageName Name of package to create StringLocaleManager for.
      */
 
     private StringLocaleManager(String packageName, Locale loc)
