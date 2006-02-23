@@ -42,6 +42,7 @@ import org.apache.commons.logging.LogFactory;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
+import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.config.ConfigException;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.sso.a3.AuthSession;
