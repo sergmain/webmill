@@ -81,7 +81,7 @@ public class ImageSelectUrl extends HttpServlet
                 AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
                 if ( auth_==null )
                 {
-                    throw new IllegalStateExcepton( "You have not enough right to execute this operation" );
+                    throw new IllegalStateException( "You have not enough right to execute this operation" );
                 }
 
                 if (auth_.isUserInRole("webmill.upload_image"))
