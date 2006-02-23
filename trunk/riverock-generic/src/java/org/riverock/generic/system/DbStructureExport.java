@@ -81,6 +81,20 @@ public class DbStructureExport {
 //        DatabaseAdapter db_ = DatabaseAdapter.getInstance(false, "ORACLE_AAA");
 //        DatabaseAdapter dbOra = DatabaseAdapter.getInstance(false, "MSSQL-JTDS");
 
+        DatabaseManager.runSQL( dbOra, "delete from WM_PORTAL_ACCESS_STAT", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from WM_PORTAL_ACCESS_URL", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from WM_PORTAL_ACCESS_USERAGENT", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from wm_price_relate_user_order", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from wm_price_order", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from WM_PRICE_IMPORT_TABLE", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from WM_AUTH_USER where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from WM_LIST_USER_METADATA where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
+//        DatabaseManager.runSQL( dbOra, "delete from WM_PRICE_USER_DISCOUNT where id_user in (select id_user from WM_LIST_USER where is_deleted=1)", null, null);
+        DatabaseManager.runSQL( dbOra, "delete from WM_LIST_USER where is_deleted=1", null, null);
+
+
+        dbOra.commit();
+
         DbSchemaType schema = DatabaseManager.getDbStructure( dbOra );
 
         int i = 0;
@@ -105,7 +119,15 @@ public class DbStructureExport {
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
 
-            if (isData)
+            boolean isSkipData = false;
+            if ( table.getName().toUpperCase().startsWith("WM_FORUM") ||
+                table.getName().toUpperCase().startsWith("WM_PORTLET_FAQ") ||
+                table.getName().toUpperCase().startsWith("WM_JOB")
+            ) {
+                isSkipData = true;
+            }
+
+            if (isData && !isSkipData)
                 table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table));
         }
 
