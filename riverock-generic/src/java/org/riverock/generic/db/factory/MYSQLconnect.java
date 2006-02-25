@@ -101,7 +101,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
     }
 
     public boolean getIsNeedUpdateBracket() {
-        return false;
+        return true;
     }
 
     public boolean getIsByteArrayInUtf8() {
