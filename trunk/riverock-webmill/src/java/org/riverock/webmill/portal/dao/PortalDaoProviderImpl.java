@@ -4,6 +4,7 @@ import org.riverock.interfaces.portal.dao.PortalAuthDao;
 import org.riverock.interfaces.portal.dao.PortalCompanyDao;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portal.dao.PortalCommonDao;
+import org.riverock.interfaces.portal.dao.PortalHoldingDao;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
@@ -15,10 +16,12 @@ import org.riverock.interfaces.sso.a3.AuthSession;
 public class PortalDaoProviderImpl implements PortalDaoProvider {
     private PortalAuthDao portalAuthDao = null;
     private PortalCompanyDao portalCompanyDao = null;
+    private PortalHoldingDao portalHoldingDao = null;
     private PortalCommonDao portalCommonDao = null;
 
     public PortalDaoProviderImpl(AuthSession authSession) {
         this.portalCompanyDao = new PortalCompanyDaoImpl(authSession);
+        this.portalHoldingDao = new PortalHoldingDaoImpl(authSession);
         this.portalAuthDao = new PortalAuthDaoImpl(authSession);
     }
 
@@ -33,4 +36,9 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
     public PortalCompanyDao getPortalCompanyDao() {
         return portalCompanyDao;
     }
+
+    public PortalHoldingDao getPortalHoldingDao() {
+		return portalHoldingDao;
+	}
+
 }

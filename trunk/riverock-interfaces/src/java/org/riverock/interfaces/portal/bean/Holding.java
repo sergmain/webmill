@@ -1,5 +1,7 @@
 package org.riverock.interfaces.portal.bean;
 
+import java.util.List;
+
 /**
  * @author SergeMaslyukov
  *         Date: 02.02.2006
@@ -8,7 +10,8 @@ package org.riverock.interfaces.portal.bean;
  */
 public interface Holding {
 	public String getName();
-	public void setName(String name);
+	public String getShortName();
 	public Long getId();
-	public void setId(Long id);
+
+	public List<Long> getCompanyIdList();
 }

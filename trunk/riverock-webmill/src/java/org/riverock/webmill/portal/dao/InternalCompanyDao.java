@@ -21,6 +21,4 @@ public interface InternalCompanyDao {
     public void processDeleteCompany( Company companyBean, AuthSession authSession );
 
     public List<Company> getCompanyList( AuthSession authSession );
-//    public List<GroupCompany> getGroupCompanyList(AuthSession authSession);
-    public List<Holding> getHoldingList(AuthSession authSession);
 }

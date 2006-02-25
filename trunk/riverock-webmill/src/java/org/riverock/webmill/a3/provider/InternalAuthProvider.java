@@ -16,6 +16,7 @@ import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.webmill.portal.dao.InternalAuthDao;
 import org.riverock.webmill.portal.dao.InternalCompanyDao;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.dao.InternalHoldingDao;
 
 /**
  * User: Admin
@@ -29,6 +30,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
 
     private InternalAuthDao authDao = InternalDaoFactory.getInternalAuthDao();
     private InternalCompanyDao companyDao = InternalDaoFactory.getInternalCompanyDao();
+    private InternalHoldingDao internalHoldingDao = InternalDaoFactory.getInternalHoldingDao();
 
     public InternalAuthProvider() {
     }
@@ -162,12 +164,8 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         return companyDao.getCompanyList( authSession );
     }
 
-//    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
-//        return companyDao.getGroupCompanyList( authSession );
-//    }
-
     public List<Holding> getHoldingList(AuthSession authSession) {
-        return companyDao.getHoldingList( authSession );
+        return internalHoldingDao.getHoldingList( authSession );
     }
 
 }

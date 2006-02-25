@@ -33,6 +33,7 @@ package org.riverock.webmill.portal.dao;
 public class InternalDaoFactory {
 	public static InternalDao internalDao = new InternalDaoImpl();
 	public static InternalCompanyDao internalCompanyDao = new InternalCompanyDaoImpl();
+	public static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
 	public static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
 
     public static InternalDao getInternalDao() {
@@ -41,6 +42,10 @@ public class InternalDaoFactory {
 
     public static InternalCompanyDao getInternalCompanyDao() {
         return internalCompanyDao;
+    }
+
+    public static InternalHoldingDao getInternalHoldingDao() {
+        return internalHoldingDao;
     }
 
     public static InternalAuthDao getInternalAuthDao() {
