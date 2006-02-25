@@ -43,7 +43,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.tools.StringManager;
 import org.riverock.portlet.schema.member.*;
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
