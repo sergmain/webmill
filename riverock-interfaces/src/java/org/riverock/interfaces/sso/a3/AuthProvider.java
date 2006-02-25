@@ -26,14 +26,10 @@ public interface AuthProvider {
     public String getGrantedCompanyId(AuthSession authSession);
     public List<Long> getGrantedCompanyIdList( AuthSession authSession );
 
-//    public String getGrantedGroupCompanyId( AuthSession authSession );
-//    public List<Long> getGrantedGroupCompanyIdList( AuthSession authSession );
-
     public String getGrantedHoldingId( AuthSession authSession );
     public List<Long> getGrantedHoldingIdList( AuthSession authSession );
 
     public Long checkCompanyId(Long companyId, AuthSession authSession );
-//    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession );
     public Long checkHoldingId(Long holdingId, AuthSession authSession );
 
     public boolean checkRigthOnUser( Long id_auth_user_check, Long id_auth_user_owner );
@@ -61,7 +57,6 @@ public interface AuthProvider {
 
     public List<UserInfo> getUserList( AuthSession authSession );
     public List<Company> getCompanyList( AuthSession authSession );
-//    public List<GroupCompany> getGroupCompanyList( AuthSession authSession );
     public List<Holding> getHoldingList( AuthSession authSession );
 }
 

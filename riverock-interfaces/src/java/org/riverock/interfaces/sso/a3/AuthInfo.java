@@ -10,12 +10,12 @@ public interface AuthInfo {
     public Long getAuthUserId();
     public Long getUserId();
     public Long getCompanyId();
-//    public Long getGroupCompanyId();
     public Long getHoldingId();
+
     public String getUserLogin();
     public String getUserPassword();
+
     public boolean isCompany();
-//    public boolean isGroupCompany();
     public boolean isHolding();
     public boolean isRoot();
 }

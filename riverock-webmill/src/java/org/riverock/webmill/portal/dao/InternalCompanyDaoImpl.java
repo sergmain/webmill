@@ -8,11 +8,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.Company;
-//import org.riverock.interfaces.portal.bean.GroupCompany;
-import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -32,9 +28,9 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         if( companyId == null ) {
             return null;
         }
-	if (authSession==null) {
-		return null;
-	}
+        if (authSession==null) {
+            return null;
+        }
 
         DatabaseAdapter db = null;
         ResultSet rs = null;
@@ -93,9 +89,9 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
     }
 
     public List<Company> getCompanyList( AuthSession authSession ) {
-	if (authSession==null) {
-		return null;
-	}
+        if (authSession==null) {
+            return null;
+        }
 
         DatabaseAdapter db = null;
         ResultSet rs = null;
@@ -151,9 +147,9 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
     }
 
     public Long processAddCompany( Company companyBean, String userLogin, Long holdingId, AuthSession authSession ) {
-	if (authSession==null) {
-		return null;
-	}
+        if (authSession==null) {
+            return null;
+        }
 
         PreparedStatement ps = null;
         DatabaseAdapter dbDyn = null;
@@ -229,7 +225,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
                 log.debug( "Count of inserted records - " + i1 );
 
             if( holdingId != null ) {
-                InternalAuthDaoImpl.setRelateHoldingCompany( dbDyn, holdingId, sequenceValue );
+                InternalDaoFactory.getInternalHoldingDao().setRelateHoldingCompany( dbDyn, holdingId, sequenceValue );
             }
             
             dbDyn.commit();
@@ -254,11 +250,10 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
     }
 
-
     public void processSaveCompany( Company companyBean, AuthSession authSession ) {
-	if (authSession==null) {
-		return;
-	}
+        if (authSession==null) {
+            return;
+        }
 
         DatabaseAdapter dbDyn = null;
         PreparedStatement ps = null;
@@ -351,9 +346,9 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
 
 
     public void processDeleteCompany( Company companyBean, AuthSession authSession ) {
-	if (authSession==null) {
-		return;
-	}
+        if (authSession==null) {
+            return;
+        }
 
         DatabaseAdapter dbDyn = null;
         PreparedStatement ps = null;
@@ -415,6 +410,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
     }
 
+/*
     public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
 	if (authSession==null) {
 		return null;
@@ -446,25 +442,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
 
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
-/*
-    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
-	if (authSession==null) {
-		return null;
-	}
-
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 */
-
-    public List<Holding> getHoldingList(AuthSession authSession) {
-	if (authSession==null) {
-		return null;
-	}
-
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     private CompanyBean loadCompanyFromResultSet( ResultSet rs ) throws Exception {
 
         CompanyBean company = new CompanyBean();

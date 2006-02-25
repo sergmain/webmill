@@ -10,4 +10,6 @@ public interface PortalDaoProvider {
     public PortalCommonDao getPortalCommonDao();
     public PortalAuthDao getPortalAuthDao();
     public PortalCompanyDao getPortalCompanyDao();
+    public PortalHoldingDao getPortalHoldingDao();
+
 }

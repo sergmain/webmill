@@ -27,7 +27,6 @@ public interface InternalAuthDao {
     public List<Long> getGrantedHoldingIdList(String userLogin);
 
     public Long checkCompanyId(Long companyId, String userLogin);
-//    public Long checkGroupCompanyId(Long groupCompanyId, String userLogin);
     public Long checkHoldingId(Long holdingId, String userLogin);
 
     public boolean checkRigthOnUser( Long id_auth_user_check, Long id_auth_user_owner );

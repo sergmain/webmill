@@ -27,14 +27,10 @@ public interface AuthSession extends Principal {
     public String getGrantedCompanyId();
     public List<Long> getGrantedCompanyIdList();
 
-//    public String getGrantedGroupCompanyId();
-//    public List<Long> getGrantedGroupCompanyIdList();
-
     public String getGrantedHoldingId();
     public List<Long> getGrantedHoldingIdList();
 
     public Long checkCompanyId(Long companyId);
-//    public Long checkGroupCompanyId(Long groupCompanyId);
     public Long checkHoldingId(Long holdingId);
 
     public boolean checkRigthOnUser( Long id_auth_user_check, Long id_auth_user_owner );
@@ -60,7 +56,6 @@ public interface AuthSession extends Principal {
 
     public List<UserInfo> getUserList();
     public List<Company> getCompanyList();
-//    public List<GroupCompany> getGroupCompanyList();
     public List<Holding> getHoldingList();
 
 }
