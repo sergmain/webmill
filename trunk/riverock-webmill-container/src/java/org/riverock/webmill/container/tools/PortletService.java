@@ -517,14 +517,4 @@ public final class PortletService {
     public static String getString( final ResourceBundle bundle, final String key, final Object args[] ) {
         return MessageFormat.format( bundle.getString( key ), args );
     }
-
-    /**
-     * @deprecated Use ResourceBundle
-     * @param locale
-     * @return
-     */
-//    public static StringManager getStringManager( final Locale locale ) {
-//        return StringManager.getManager("mill.locale.main", locale);
-//    }
-//
 }
