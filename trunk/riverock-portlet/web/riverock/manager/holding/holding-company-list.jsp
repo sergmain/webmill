@@ -11,36 +11,35 @@
     <h:outputText value="#{msg['role_list']}" styleClass="standard_bold" />
     <f:verbatim><br /><br /></f:verbatim>
 
-    <h:selectOneMenu value="#{holdingDataProvider.currentUser.newRoleId}"
+    <h:selectOneMenu value="#{holdingDataProvider.currentHolding.newCompanyId}"
 	styleClass="selectOneMenu" required="true" 
 	>
-            <f:selectItems value="#{holdingDataProvider.roleList}" />
+            <f:selectItems value="#{holdingDataProvider.companyList}" />
         </h:selectOneMenu>
 
-    <t:commandButton value="#{msg['add_role']}" action="#{holdingAction.addRoleAction}">
-    </t:commandButton>
+    <t:commandButton value="#{msg.holding_add_company}" action="#{holdingAction.addCompanyAction}"/>
 
     <f:verbatim><br/></f:verbatim>
 
-        <t:dataTable id="role-edit-list"
+        <t:dataTable id="company-edit-list"
                 styleClass="standardTable"
                 headerClass="standardTable_Header"
                 rowClasses="standardTable_Row1,standardTable_Row2"
                 columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
-                var="role"
-                value="#{holdingDataProvider.currentUser.roles}"
+                var="company"
+                value="#{holdingDataProvider.currentHolding.companies}"
                 preserveDataModel="true">
 
            <h:column>
                <f:facet name="header">
-                    <h:outputText value="#{msg['role_name']}" />
+                    <h:outputText value="#{msg.company_name}" />
                </f:facet>
-               <h:outputText id="role-name" value="#{role.name}" />
+               <h:outputText id="company-name" value="#{company.name}" />
            </h:column>
 
            <h:column>
-                <t:commandButton value="#{msg['delete_role']}" actionListener="#{holdingAction.deleteRoleActionListener}">
-                    <t:updateActionListener property="#{holdingSessionBean.currentRoleId}" value="#{role.roleId}" />
+                <t:commandButton value="#{msg.delete_company}" actionListener="#{holdingAction.deleteCompanyActionListener}">
+                    <t:updateActionListener property="#{holdingSessionBean.currentCompanyId}" value="#{company.id}" />
 		</t:commandButton>
            </h:column>
         </t:dataTable>

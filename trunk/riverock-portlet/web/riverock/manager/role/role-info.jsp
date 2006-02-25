@@ -5,10 +5,15 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Role" var="msg"/>	
 
+<style type="text/css">
+td { vertical-align: top; }
+</style>
+
  <h:outputText value="#{msg.role_role_info}"/>
  <h:panelGrid columns="2">
  		<h:outputText value="#{msg.role_role_id}"/>
  		<h:outputText value="#{roleSessionBean.role.roleId}"/>
+
  		<h:outputText value="#{msg.role_name}"/>
  		<h:outputText value="#{roleSessionBean.role.name}"/>
  </h:panelGrid>

@@ -7,7 +7,7 @@
     <!-- User part -->
     <managed-bean>
         <managed-bean-name>userSessionBean</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.bean.UserSessionBean</managed-bean-class>
+        <managed-bean-class>org.riverock.portlet.manager.auth.UserSessionBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
@@ -57,7 +57,7 @@
 
  <managed-bean>
   <managed-bean-name>roleSessionBean</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.auth.role.bean.RoleSessionBean</managed-bean-class>
+  <managed-bean-class>org.riverock.portlet.manager.role.RoleSessionBean</managed-bean-class>
   <managed-bean-scope>session</managed-bean-scope>
  </managed-bean>
 

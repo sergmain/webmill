@@ -6,26 +6,25 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Company" var="msg"/>	
 
+<style type="text/css">
+TD { vertical-align: top; }
+</style>
+
 <f:view>
 <h:form id="add-company-form">
 
- <h:panelGroup id="panelGroup2">
- <h:panelGrid columns="1" rendered="#{!empty companySessionBean.company}">
+    <h:panelGrid columns="1" rendered="#{!empty companySessionBean.company}">
 
-<f:subview id="subviewCompanyInfo">
+	<f:subview id="subviewCompanyInfo">
             <jsp:include page="company-add-edit.jsp"/>
-</f:subview>
+	</f:subview>
  	
 	<h:panelGroup id="editDeleteControls">
 		<h:commandButton value="#{msg.action_add_process}" action="#{action.processAddCompany}"/>
 		<h:commandButton value="#{msg.action_add_cancel}" action="#{action.cancelAddCompany}"/>	
 	</h:panelGroup>
  	 
- </h:panelGrid>	 
- 	
-</h:panelGroup>
- 	
-	 
+    </h:panelGrid>	 
 	
 </h:form>
 </f:view>

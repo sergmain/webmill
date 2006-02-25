@@ -9,54 +9,35 @@
 <f:view>
 <h:form id="foo" rendered="#{holdingSessionBean.delete}">
 
-    <t:panelTabbedPane bgcolor="#FFFFCC" >
-
-        <t:panelTab id="tab1" label="#{msg['tabbed_tab1']}">
-    
-<f:verbatim><table borser="0" width="100%"><tr><td width="300" valign="top"></f:verbatim>
-
+    <h:panelGrid columns="2">
 
         <f:subview id="select-user-subview">
-            <jsp:include page="auth-tree.jsp"/>
+            <jsp:include page="holding-list.jsp"/>
         </f:subview>
 
-
-<f:verbatim></td><td valign="top"></f:verbatim>
 
 <h:panelGroup id="delete-user-panel" rendered="#{holdingSessionBean.delete}">
 
         <f:subview id="delete-user-info-subview" >
-            <jsp:include page="auth-user-info.jsp"/>
+            <jsp:include page="holding-info.jsp"/>
         </f:subview>
 
 	<h:outputText value="#{msg['confirm_delete_action']}"/>
 	<f:verbatim><br/></f:verbatim>
 
-        <h:commandButton id="process-delete-user-action" action="#{holdingAction.processDeleteUserAction}"
+        <h:commandButton id="process-delete-user-action" action="#{holdingAction.processDeleteHoldingAction}"
 		value="#{msg['process_delete_user_action']}"
 	>
         </h:commandButton>
-        <h:commandButton id="cancel-delete-user-action" action="#{holdingAction.cancelDeleteUserAction}"
+        <h:commandButton id="cancel-delete-user-action" action="#{holdingAction.cancelDeleteHoldingAction}"
 		value="#{msg['cancel_delete_user_action']}"
 	>
         </h:commandButton>
 
 </h:panelGroup>
 
-<f:verbatim></td></tr></table></f:verbatim>
+    </h:panelGrid>
 
-
-        </t:panelTab>
-
-        <t:panelTab id="tab2" label="#{msg['tabbed_tab2']}">
-        <f:subview id="role-subview">
-            <jsp:include page="role/role.jsp"/>
-        </f:subview>
-        </t:panelTab>
-
-    </t:panelTabbedPane>
 </h:form>
-
-
 </f:view>
 

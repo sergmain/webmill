@@ -29,7 +29,7 @@
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
         	<description>Webmill portal manager</description>
-        	<portlet-name>webmill.manager</portlet-name>
+        	<portlet-name>riverock.webmill-manager</portlet-name>
         	<display-name>Webmill manager</display-name>
             <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
             <init-param>

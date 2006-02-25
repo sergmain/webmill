@@ -7,13 +7,13 @@
     <!-- Holding part -->
     <managed-bean>
         <managed-bean-name>holdingSessionBean</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.auth.user.bean.HoldingSessionBean</managed-bean-class>
+        <managed-bean-class>org.riverock.portlet.manager.holding.HoldingSessionBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
     <managed-bean>
-        <managed-bean-name>userTree</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.manager.holding.UserTreeBean</managed-bean-class>
+        <managed-bean-name>holdingTree</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.holding.HoldingTreeBean</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     	<managed-property>
            <property-name>holdingDataProvider</property-name>
@@ -23,7 +23,7 @@
 
     <managed-bean>
         <managed-bean-name>holdingAction</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.manager.holding.UserAction</managed-bean-class>
+        <managed-bean-class>org.riverock.portlet.manager.holding.HoldingAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     	<managed-property>
            <property-name>holdingDataProvider</property-name>
@@ -53,9 +53,10 @@
     	</managed-property>
     </managed-bean>
 
-<!-- User navigation rules -->
+<!-- Holding navigation rules -->
  <navigation-rule>
   <from-view-id>/riverock/manager/holding/holding.jsp</from-view-id>
+
   <navigation-case>
    <from-outcome>holding-add</from-outcome>
    <to-view-id>/riverock/manager/holding/holding-add.jsp</to-view-id>
@@ -97,15 +98,15 @@
  <navigation-rule>
   <from-view-id>/riverock/manager/holding/holding-edit.jsp</from-view-id>
   <navigation-case>
-   <from-outcome>auth</from-outcome>
+   <from-outcome>holding</from-outcome>
    <to-view-id>/riverock/manager/holding/holding.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
  <navigation-rule>
   <from-view-id>/riverock/manager/holding/holding-delete.jsp</from-view-id>
   <navigation-case>
-   <from-outcome>auth</from-outcome>
-   <to-view-id>/riverock/manager/auth/holding.jsp</to-view-id>
+   <from-outcome>holding</from-outcome>
+   <to-view-id>/riverock/manager/holding/holding.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
 

@@ -7,9 +7,9 @@
 <f:view>
 <h:form id="role-form">
 
-<f:subview id="subviewRoleList">
+	<f:subview id="subviewRoleList">
             <jsp:include page="role.jsp"/>
-</f:subview>
+	</f:subview>
 
 </h:form>
 </f:view>

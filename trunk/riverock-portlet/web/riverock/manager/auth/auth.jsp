@@ -3,9 +3,13 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t"%>
-
+ 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Auth" var="msg"/>
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
+
+<style type="text/css">
+TD { vertical-align: top; }
+</style>
 
 <f:view>
 <h:form id="foo">
@@ -14,34 +18,18 @@
         <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"/>
         <h:commandButton id="holding-list-action" action="holding" value="#{manager.holding_button}"/>
 
-    
-<f:verbatim><table borser="0" width="100%"><tr><td width="300" valign="top"></f:verbatim>
-
+   <h:panelGrid columns="2"> 
 
         <f:subview id="auth-tree-subview" rendered="#{!userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
             <jsp:include page="auth-tree.jsp"/>
         </f:subview>
 
-
-<f:verbatim></td><td valign="top"></f:verbatim>
-
-
-<h:panelGroup rendered="#{!empty dataProvider.currentUser}">
-
-
-        <f:subview id="select-user-subview" rendered="#{!userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
+        <f:subview id="select-user-subview" rendered="#{!empty dataProvider.currentUser && !userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
             <jsp:include page="auth-user-select.jsp"/>
         </f:subview>
 
-</h:panelGroup>
-
-
-<f:verbatim></td></tr></table></f:verbatim>
-
-
+   </h:panelGrid>
 
 </h:form>
-
-
 </f:view>
 

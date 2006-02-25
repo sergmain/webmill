@@ -6,29 +6,31 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Auth" var="msg"/>
 
-<f:verbatim><table borser="0" width="100%" valign="top"><tr><td width="250"></f:verbatim>
+<h:panelGrid columns="2">
+
 	<h:outputText value="User name:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
 	<h:outputText value="#{dataProvider.currentUser.userName}" />
-<f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
+
 	<h:outputText value="User login:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
 	<h:outputText value="#{dataProvider.currentUser.authInfo.userLogin}" />
-<f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
+
 	<h:outputText value="Company:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
+    <h:panelGroup id="company-level-group">
 	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.authInfo.company}" border="0"/>
 	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.authInfo.company}" border="0"/>
 	<h:outputText value="#{dataProvider.currentUser.companyName}" />
-<f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
+    </h:panelGroup>
+
+
 	<h:outputText value="Holding:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
+    <h:panelGroup id="holding-level-group">
 	<t:graphicImage value="/images/yes.gif" rendered="#{dataProvider.currentUser.authInfo.holding}" border="0"/>
 	<t:graphicImage value="/images/no.gif" rendered="#{!dataProvider.currentUser.authInfo.holding}" border="0"/>
 	<h:outputText value="#{dataProvider.currentUser.holdingName}" />
+    </h:panelGroup>
+</h:panelGrid>
 
-
-<f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
+<h:panelGrid columns="1">
 
     <h:outputText value="#{msg['role_list']}" styleClass="standard_bold" />
     <t:dataList id="role-list"
@@ -39,9 +41,5 @@
         <h:outputText value="#{role.name}" />
     </t:dataList>
 
-<f:verbatim>
-	</td></tr><tr><td valign="top" colspan="2" align="left">
-	</td></tr><tr><td valign="top" colspan="2" align="left">
-	</td></tr></table>
-</f:verbatim>
+</h:panelGrid>
 

@@ -5,7 +5,7 @@
 
  <managed-bean>
   <managed-bean-name>companyService</managed-bean-name>
-  <managed-bean-class>org.riverock.portlet.company.bean.CompanyService</managed-bean-class>
+  <managed-bean-class>org.riverock.portlet.manager.company.CompanyService</managed-bean-class>
   <managed-bean-scope>application</managed-bean-scope>
  </managed-bean>
 
@@ -90,7 +90,7 @@
    <supported-locale>ru</supported-locale>
    <supported-locale>en</supported-locale>
   </locale-config>
-  <message-bundle>org.riverock.portlet.company.resource.Company</message-bundle>
+  <message-bundle>org.riverock.portlet.manager.resource.Company</message-bundle>
  </application>
 
  <factory/>
