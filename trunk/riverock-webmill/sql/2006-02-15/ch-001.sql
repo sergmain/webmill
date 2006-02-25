@@ -123,6 +123,17 @@ drop table wm_list_language
 /
 
 
+drop table WM_I18N_MESSAGE
+/
+
+drop table WM_I18N_ITEM
+/
+
+drop table WM_I18N_STORAGE
+/
+
+commit
+/
 
 
 
