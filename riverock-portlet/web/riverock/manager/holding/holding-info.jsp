@@ -6,42 +6,23 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>	
 
-<f:verbatim><table borser="0" width="100%" valign="top"><tr><td width="250"></f:verbatim>
-	<h:outputText value="User name:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
-	<h:outputText value="#{holdingDataProvider.currentUser.userName}" />
-<f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
-	<h:outputText value="User login:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
-	<h:outputText value="#{holdingDataProvider.currentUser.authInfo.userLogin}" />
-<f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
-	<h:outputText value="Company:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{holdingDataProvider.currentUser.authInfo.company}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!holdingDataProvider.currentUser.authInfo.company}" border="0"/>
-	<h:outputText value="#{holdingDataProvider.currentUser.companyName}" />
-<f:verbatim></td></tr><tr><td valign="top"></f:verbatim>
-	<h:outputText value="Holding:"/>
-<f:verbatim></td><td valign="top"></f:verbatim>
-	<t:graphicImage value="/images/yes.gif" rendered="#{holdingDataProvider.currentUser.authInfo.holding}" border="0"/>
-	<t:graphicImage value="/images/no.gif" rendered="#{!holdingDataProvider.currentUser.authInfo.holding}" border="0"/>
-	<h:outputText value="#{holdingDataProvider.currentUser.holdingName}" />
+    <h:panelGrid columns="2">
+	<h:outputText value="Holding short name:"/>
+	<h:outputText value="#{holdingDataProvider.currentHolding.shortName}" />
 
+	<h:outputText value="Holding name:"/>
+	<h:outputText value="#{holdingDataProvider.currentHolding.name}" />
 
-<f:verbatim></td></tr><tr><td valign="top" colspan="2" align="left"></f:verbatim>
+    </h:panelGrid>
 
-    <h:outputText value="#{msg['role_list']}" styleClass="standard_bold" />
-    <t:dataList id="role-list"
-        styleClass="standardList"
-        var="role"
-        value="#{holdingDataProvider.currentUser.roles}"
-        layout="orderedList" forceId="true">
-        <h:outputText value="#{role.name}" />
-    </t:dataList>
-
-<f:verbatim>
-	</td></tr><tr><td valign="top" colspan="2" align="left">
-	</td></tr><tr><td valign="top" colspan="2" align="left">
-	</td></tr></table>
-</f:verbatim>
+    <h:panelGrid columns="1">
+        <h:outputText value="#{msg.company_list}" styleClass="standard_bold" />
+	<t:dataList id="company-list"         
+        	styleClass="standardList"
+        	var="company"
+        	value="#{holdingDataProvider.currentHolding.companies}"
+        	layout="orderedList" forceId="true">
+        	<h:outputText value="#{company.name}" />
+    	</t:dataList>
+    </h:panelGrid>
 

@@ -7,7 +7,7 @@
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
 <f:view>
-<h:form id="manager">
+<h:form id="foo">
 
    <h:panelGrid columns="2">
         <h:commandButton id="auth-list-action" action="auth" value="#{manager.auth_button}"/>

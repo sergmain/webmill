@@ -6,6 +6,11 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Company" var="msg"/>	
 
+	    <h:commandButton value="#{msg.action_add_company}" 
+	    action="#{action.addCompany}" 
+	    style=" width : 106px; height : 22px;"
+	    />	
+
                 <t:dataTable id="companyDataTable"
                         var="company"
                         value="#{companyService.companyList}"

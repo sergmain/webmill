@@ -6,15 +6,19 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Auth" var="msg"/>
 
+<style type="text/css">
+TD { vertical-align: top; }
+</style>
+
 <f:view>
 <h:form id="foo" rendered="#{userSessionBean.edit}">
 
-<f:verbatim><table borser="0" width="100%"><tr><td width="300" valign="top"></f:verbatim>
+
+<h:panelGrid columns="2">
+
         <f:subview id="select-user-subview">
             <jsp:include page="auth-tree.jsp"/>
         </f:subview>
-
-<f:verbatim></td><td valign="top"></f:verbatim>
 
 
 <h:panelGroup id="edit-user-panel" rendered="#{userSessionBean.edit}">
@@ -78,7 +82,7 @@
 </h:panelGroup>
 
 
-<f:verbatim></td></tr></table></f:verbatim>
+</h:panelGrid>
 
 
 </h:form>

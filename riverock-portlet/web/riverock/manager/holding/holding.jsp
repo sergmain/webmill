@@ -7,6 +7,10 @@
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>	
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
+<style type="text/css">
+TD { vertical-align: top; }
+</style>
+
 <f:view>
 <h:form id="foo">
 
@@ -14,33 +18,19 @@
         <h:commandButton id="role-list-action" action="role" value="#{manager.role_button}"/>
         <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"/>
 
-<f:verbatim><table borser="0" width="100%"><tr><td width="300" valign="top"></f:verbatim>
+    <h:panelGrid columns="2">
 
-
-        <f:subview id="auth-tree-subview" rendered="#{!userSessionBean.edit && !holdingSessionBean.delete && !holdingSessionBean.add}">
+        <f:subview id="holding-subview" rendered="#{!userSessionBean.edit && !holdingSessionBean.delete && !holdingSessionBean.add}">
             <jsp:include page="holding-list.jsp"/>
         </f:subview>
 
 
-<f:verbatim></td><td valign="top"></f:verbatim>
-
-
-<h:panelGroup rendered="#{!empty holdingDataProvider.currentUser}">
-
-
-        <f:subview id="select-user-subview" rendered="#{!holdingSessionBean.edit && !holdingSessionBean.delete && !holdingSessionBean.add}">
-            <jsp:include page="auth-user-select.jsp"/>
+        <f:subview id="select-holding-subview" rendered="#{!empty holdingDataProvider.currentHolding && !holdingSessionBean.edit && !holdingSessionBean.delete && !holdingSessionBean.add}">
+            <jsp:include page="holding-select.jsp"/>
         </f:subview>
 
-</h:panelGroup>
-
-
-<f:verbatim></td></tr></table></f:verbatim>
-
-
+    </h:panelGrid>
 
 </h:form>
-
-
 </f:view>
 

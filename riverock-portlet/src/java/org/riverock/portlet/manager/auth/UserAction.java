@@ -7,7 +7,6 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.tools.FacesTools;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.portlet.main.AuthSessionBean;

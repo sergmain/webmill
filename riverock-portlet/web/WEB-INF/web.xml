@@ -34,6 +34,7 @@
 		<param-name>javax.faces.CONFIG_FILES</param-name>
 		<param-value>
 			/WEB-INF/faces-common-config.xml, 
+			/WEB-INF/faces-manager-config.xml, 
 			/WEB-INF/faces-auth-config.xml, 
 			/WEB-INF/faces-holding-config.xml, 
 			/WEB-INF/faces-company-config.xml

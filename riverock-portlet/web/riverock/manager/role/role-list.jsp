@@ -6,6 +6,10 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Role" var="msg"/>	
 
+    <h:commandButton value="#{msg.action_role_add_role}" action="#{roleAction.addRole}" style=" width : 106px; height : 22px;"/>	
+
+    <f:loadBundle basename="org.riverock.portlet.manager.resource.Role" var="msg"/>	
+
                 <t:dataTable id="roleDataTable"
                         var="role"
                         value="#{roleBean.roleList}"
