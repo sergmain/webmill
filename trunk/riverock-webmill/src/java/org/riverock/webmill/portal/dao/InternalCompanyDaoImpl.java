@@ -410,39 +410,6 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
     }
 
-/*
-    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-	if (authSession==null) {
-		return null;
-	}
-
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-	if (authSession==null) {
-		return;
-	}
-
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-	if (authSession==null) {
-		return;
-	}
-
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public List<UserInfo> getUserList(AuthSession authSession) {
-	if (authSession==null) {
-		return null;
-	}
-
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-*/
     private CompanyBean loadCompanyFromResultSet( ResultSet rs ) throws Exception {
 
         CompanyBean company = new CompanyBean();
