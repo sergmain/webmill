@@ -886,7 +886,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 		isFirst = false;
 	    }
 	    else {
-                sb.append( ", " );
+                sb.append( ',' );
             }
 
             sb.append( aLong );
