@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t"%>
 
+
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
 <f:view>
@@ -22,6 +23,9 @@
 
         <h:commandButton id="holding-list-action" action="holding" value="#{manager.holding_button}"/>
 	<h:outputText value="#{manager.holding_info}"/>
+
+        <h:commandButton id="portlet-name-list-action" action="portlet-name" value="#{manager.portlet_name_button}"/>
+	<h:outputText value="#{manager.portlet_name_info}"/>
    </h:panelGrid>
 
 </h:form>
