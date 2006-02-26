@@ -56,7 +56,7 @@ public final class RsetTools {
         throws SQLException
     {
         if (data!=null)
-            ps.setLong(index, data.longValue());
+            ps.setLong(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
@@ -65,7 +65,7 @@ public final class RsetTools {
         throws SQLException
     {
         if (data!=null)
-            ps.setInt(index, data.intValue());
+            ps.setInt(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
@@ -74,7 +74,7 @@ public final class RsetTools {
         throws SQLException
     {
         if (data!=null)
-            ps.setDouble(index, data.doubleValue());
+            ps.setDouble(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
@@ -83,7 +83,7 @@ public final class RsetTools {
         throws SQLException
     {
         if (data!=null)
-            ps.setFloat(index, data.floatValue());
+            ps.setFloat(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
@@ -93,6 +93,14 @@ public final class RsetTools {
     {
         if (data!=null)
             ps.setTimestamp(index, data);
+        else
+            ps.setNull(index, Types.DATE);
+    }
+
+    public static void setTimestamp( final PreparedStatement ps, final int index, final java.util.Date data)
+        throws SQLException {
+        if (data!=null)
+            ps.setTimestamp(index, new Timestamp( data.getTime() ) );
         else
             ps.setNull(index, Types.DATE);
     }
@@ -261,7 +269,7 @@ public final class RsetTools {
             if (rs.wasNull())
                 return def;
 
-            return new Integer( temp );
+            return temp;
         }
         catch (SQLException exc)
         {
@@ -306,7 +314,7 @@ public final class RsetTools {
             if (rs.wasNull())
                 return def;
 
-            return new Long(temp);
+            return temp;
         }
         catch (SQLException exc)
         {
@@ -347,7 +355,7 @@ public final class RsetTools {
             if (rs.wasNull())
                 return def;
 
-            return new Float(temp);
+            return temp;
         }
         catch (SQLException exc)
         {
@@ -385,7 +393,7 @@ public final class RsetTools {
 
         try
         {
-            i = ( rs.getObject( f )!=null ) ? new Double(rs.getDouble( f )) : def;
+            i = ( rs.getObject( f )!=null ) ? rs.getDouble( f ) : def;
         }
         catch (SQLException exc)
         {
