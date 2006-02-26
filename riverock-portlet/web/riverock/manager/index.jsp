@@ -26,6 +26,9 @@
 
         <h:commandButton id="portlet-name-list-action" action="portlet-name" value="#{manager.portlet_name_button}"/>
 	<h:outputText value="#{manager.portlet_name_info}"/>
+
+        <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"/>
+	<h:outputText value="#{manager.portal_user_info}"/>
    </h:panelGrid>
 
 </h:form>
