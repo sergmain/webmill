@@ -24,6 +24,14 @@
    <from-outcome>holding</from-outcome>
    <to-view-id>/riverock/manager/holding/holding.jsp</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>portlet-name</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>portal-user</from-outcome>
+   <to-view-id>/riverock/manager/users/portal-user.jsp</to-view-id>
+  </navigation-case>
  </navigation-rule>
 
 </faces-config>
