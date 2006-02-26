@@ -8,7 +8,6 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;

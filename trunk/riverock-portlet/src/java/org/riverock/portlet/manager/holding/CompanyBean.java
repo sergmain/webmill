@@ -22,8 +22,8 @@ public class CompanyBean implements Serializable {
     }
 
     public CompanyBean( Company company ) {
-	this.name = company.getName();
-	this.id = company.getId();
+        this.name = company.getName();
+        this.id = company.getId();
     }
 
     public Long getId() {
