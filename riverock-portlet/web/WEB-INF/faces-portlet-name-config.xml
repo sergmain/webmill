@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+
+<faces-config>
+
+ <managed-bean>
+  <managed-bean-name>portletNameService</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.manager.portletname.PortletNameService</managed-bean-class>
+  <managed-bean-scope>application</managed-bean-scope>
+ </managed-bean>
+
+ <managed-bean>
+  <managed-bean-name>portletNameSessionBean</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.manager.portletname.PortletNameSessionBean</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+
+ <managed-bean>
+  <managed-bean-name>portletNameAction</managed-bean-name>
+  <managed-bean-class>org.riverock.portlet.manager.portletname.PortletNameAction</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+  <managed-property>
+   <property-name>portletNameSessionBean</property-name>
+   <value>#{portletNameSessionBean}</value>
+  </managed-property>
+  <managed-property>
+   <property-name>authSessionBean</property-name>
+   <value>#{authSessionBean}</value>
+  </managed-property>
+ </managed-bean>
+
+<!-- navigation rules -->
+ <navigation-rule>
+  <from-view-id>/riverock/manager/portlet-name/portlet-name.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>portlet-name-add</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name-add.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>portlet-name-edit</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name-edit.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>portlet-name-delete</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name-delete.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>portlet-name</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name.jsp</to-view-id>
+  </navigation-case>
+
+  <navigation-case>
+   <from-outcome>auth</from-outcome>
+   <to-view-id>/riverock/manager/auth/auth.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>company</from-outcome>
+   <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
+  </navigation-case>
+  <navigation-case>
+   <from-outcome>holding</from-outcome>
+   <to-view-id>/riverock/manager/holding/holding.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+
+ <navigation-rule>
+  <from-view-id>/riverock/manager/portlet-name/portlet-name-add.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>portlet-name</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/riverock/manager/portlet-name/portlet-name-edit.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>portlet-name</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+ <navigation-rule>
+  <from-view-id>/riverock/manager/portlet-name/portlet-name-delete.jsp</from-view-id>
+  <navigation-case>
+   <from-outcome>portlet-name</from-outcome>
+   <to-view-id>/riverock/manager/portlet-name/portlet-name.jsp</to-view-id>
+  </navigation-case>
+ </navigation-rule>
+
+</faces-config>
