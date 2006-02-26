@@ -32,10 +32,6 @@ public class HoldingAction implements Serializable {
         this.holdingSessionBean = holdingSessionBean;
     }
 
-//    public HoldingBean getCurrentHolding() {
-//        return holdingSessionBean.getHoldingBean();
-//    }
-
     public AuthSessionBean getAuthSessionBean() {
         return authSessionBean;
     }
@@ -55,10 +51,10 @@ public class HoldingAction implements Serializable {
 // main select action
     public String selectHolding() {
         log.info( "Select holding action." );
-	loadCurrentHolding();
+        loadCurrentHolding();
 
-	holdingSessionBean.resetStatus();
-	return "holding";
+        holdingSessionBean.resetStatus();
+        return "holding";
     }
 
 
@@ -91,9 +87,9 @@ public class HoldingAction implements Serializable {
         if( companyId == null ) {
             return;
         }
-	CompanyBean company = new CompanyBean( 
-		FacesTools.getPortalDaoProvider().getPortalCompanyDao().loadCompany( companyId )
-	);
+        CompanyBean company = new CompanyBean(
+            FacesTools.getPortalDaoProvider().getPortalCompanyDao().loadCompany( companyId )
+        );
 
         holdingSessionBean.getHoldingBean().getCompanies().add( company );
     }
@@ -101,12 +97,12 @@ public class HoldingAction implements Serializable {
 // Add actions
     public String addHoldingAction() {
         log.info( "Add holding action." );
-	HoldingBean bean = new HoldingBean();
+        HoldingBean bean = new HoldingBean();
         holdingSessionBean.setHoldingBean( bean );
 
-	holdingSessionBean.setAdd( true );
+        holdingSessionBean.setAdd( true );
 
-	return "holding-add";
+        return "holding-add";
     }
 
     public String processAddHoldingAction() {
@@ -128,16 +124,16 @@ public class HoldingAction implements Serializable {
         log.info( "Cancel add holding action." );
         holdingSessionBean.setHoldingBean( null );
 
-	holdingSessionBean.resetStatus();
-	return "holding";
+        holdingSessionBean.resetStatus();
+        return "holding";
     }
 
 // Edit actions
     public String editHoldingAction() {
         log.info( "Edit holding action." );
 
-	holdingSessionBean.setEdit( true );
-	return "holding-edit";
+        holdingSessionBean.setEdit( true );
+        return "holding-edit";
     }
 
     public String saveHoldingAction() {

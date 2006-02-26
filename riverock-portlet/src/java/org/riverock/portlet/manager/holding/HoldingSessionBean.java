@@ -20,17 +20,17 @@ public class HoldingSessionBean {
     }
 
     public void resetStatus() {
-	isAdd = false;
-	isEdit = false;
-	isDelete = false;
+        isAdd = false;
+        isEdit = false;
+        isDelete = false;
     }
 
     public void setAdd(boolean isAdd) {
         this.isAdd = isAdd;
-	if (isAdd) {
-		isEdit = false;
-		isDelete = false;
-	}
+        if (isAdd) {
+            isEdit = false;
+            isDelete = false;
+        }
     }
 
     public boolean getAdd() {
@@ -39,10 +39,10 @@ public class HoldingSessionBean {
 
     public void setEdit(boolean isEdit) {
         this.isEdit = isEdit;
-	if (isEdit) {
-		isAdd = false;
-		isDelete = false;
-	}
+        if (isEdit) {
+            isAdd = false;
+            isDelete = false;
+        }
     }
 
     public boolean getEdit() {
@@ -51,10 +51,10 @@ public class HoldingSessionBean {
 
     public void setDelete(boolean isDelete) {
         this.isDelete = isDelete;
-	if (isDelete) {
-		isEdit = false;
-		isAdd = false;
-	}
+        if (isDelete) {
+            isEdit = false;
+            isAdd = false;
+        }
     }
 
     public boolean getDelete() {
