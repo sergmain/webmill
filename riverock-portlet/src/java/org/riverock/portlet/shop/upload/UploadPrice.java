@@ -52,7 +52,7 @@ public final class UploadPrice extends HttpServlet {
 
     private final static Log log = LogFactory.getLog( UploadPrice.class );
 
-    public final static String UPLOAD_FILE_PARM_NAME = "f";
+    public final static String UPLOAD_FILE_PARAM_NAME = "f";
     public final static String CTX_TYPE_UPLOAD_PRICE_CONTR    = "mill.upload_price_controller";
     public final static String CTX_TYPE_UPLOAD_PRICE   = "mill.upload_price";
 
@@ -94,7 +94,7 @@ public final class UploadPrice extends HttpServlet {
                 "Внимание! Файл импорта прайс-листа должен быть в корректном XML формате<br>" +
                 "Если загрузка прайс-листа прошла успешно, то дополнительных сообщений выдано не будет" +
                 "<p>" +
-                "<input type=\"FILE\" name=\"" + UPLOAD_FILE_PARM_NAME + "\" size=\"50\">" +
+                "<input type=\"FILE\" name=\"" + UPLOAD_FILE_PARAM_NAME + "\" size=\"50\">" +
                 "<br>" +
                 "<input type=\"submit\" value=\"Submit\">" +
                 "</p>" +
