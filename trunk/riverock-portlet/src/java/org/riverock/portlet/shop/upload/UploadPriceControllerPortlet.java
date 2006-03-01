@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Iterator;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -39,6 +41,15 @@ import javax.portlet.RenderResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.apache.commons.fileupload.RequestContext; 
+import org.apache.commons.fileupload.portlet.PortletRequestContext;
+import org.apache.commons.fileupload.portlet.PortletFileUpload;
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.FileItemFactory; 
+import org.apache.commons.fileupload.FileItem; 
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
@@ -106,44 +117,20 @@ public final class UploadPriceControllerPortlet implements Portlet {
     public void processAction( ActionRequest actionRequest, ActionResponse actionResponse ) {
 
         DatabaseAdapter db_ = null;
-        InputStream priceData = null;
-
         try  {
+	    boolean isMultiPart = PortletFileUpload.isMultipartContent(actionRequest);
             if ( log.isDebugEnabled() ) {
-                log.debug( "#55.01.06 " );
-                try {
-                    for ( Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); )
-                    {
-                        String s = (String)e.nextElement();
-                        log.debug( "Request attr - "+s+", value - "+RequestTools.getString( actionRequest, s ) );
-                    }
-                }
-                catch (ConfigException configException) {
-                    log.error("Exception in ", configException);
-                }
+		log.debug("isMultiPart: " + isMultiPart );
             }
 
-            Object obj = actionRequest.getParameterMap().get( UploadPrice.UPLOAD_FILE_PARM_NAME );
-            if (obj==null){
+	
+            if ( !isMultiPart ){
                 actionResponse.setRenderParameter(
-                    ERROR_TEXT, "Parameter '"+UploadPrice.UPLOAD_FILE_PARM_NAME+"' not found");
+                    ERROR_TEXT, "Request is not multi-part" );
                 actionResponse.setRenderParameter(
-                    ERROR_URL, "загрузить повторно");
+                    ERROR_URL, "Upload again");
                 return;
             }
-
-            if (!(obj instanceof InputStream)){
-                actionResponse.setRenderParameter(
-                    ERROR_TEXT, "Parameter '"+UploadPrice.UPLOAD_FILE_PARM_NAME+"' must be type 'FILE'" );
-                actionResponse.setRenderParameter(
-                    ERROR_URL, "загрузить повторно");
-                return;
-            }
-
-            priceData = (InputStream)obj;
-
-            if ( log.isDebugEnabled() )
-                log.debug( "#55.01.11 " );
 
             AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
             if ( auth_==null || !auth_.isUserInRole( "webmill.upload_price_list" ) ){
@@ -152,13 +139,38 @@ public final class UploadPriceControllerPortlet implements Portlet {
 
             db_ = DatabaseAdapter.getInstance();
 
-            if ( log.isDebugEnabled() )
-                log.debug( "#55.01.15 start import price in db " );
-
             PricesType prices = null;
             try{
-                InputSource inSrc = new InputSource( priceData );
-                prices = (PricesType)Unmarshaller.unmarshal( PricesType.class, inSrc );
+
+// Create a factory for disk-based file items
+FileItemFactory factory = new DiskFileItemFactory();
+
+// Create a new file upload handler
+PortletFileUpload upload = new PortletFileUpload(factory);
+
+// Set overall request size constraint
+upload.setSizeMax( 1024*1024 );
+
+// Parse the request
+List /* FileItem */ items = upload.parseRequest(actionRequest);		
+
+Iterator iter = items.iterator();
+// process only one file with data
+if (iter.hasNext()) {
+    FileItem item = (FileItem) iter.next();
+
+    if (!item.isFormField()) {
+        log.debug("uploaded file founded");
+    	InputStream uploadedStream = item.getInputStream();
+
+        InputSource inSrc = new InputSource( uploadedStream );
+        prices = (PricesType)Unmarshaller.unmarshal( PricesType.class, inSrc );
+
+    	uploadedStream.close();
+
+    }
+}
+
             }
             catch (Exception e){
                 log.error( "Exception parse of uploaded file with data", e );

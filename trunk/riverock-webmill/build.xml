@@ -61,6 +61,7 @@
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-digester.lib}"/>
         <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
+        <pathelement location="${lib.dir}/${commons-fileupload.lib}"/>
 
         <pathelement location="${lib.dir}/${castor.lib}"/>
         <pathelement location="${lib.dir}/${hypersonic.lib}"/>
@@ -566,6 +567,7 @@ cd ..\..
         <include name="${riverock-cache.lib}"/>
         <include name="${riverock-webmill.lib}"/>
 
+        <include name="${commons-fileupload.lib}"/>
         <include name="${commons-logging.lib}"/>
         <include name="${commons-digester.lib}"/>
         <include name="${commons-collections.lib}"/>
@@ -586,53 +588,9 @@ cd ..\..
                 <exclude name="WEB-INF/web.xml"/>
                 <exclude name="**/*.*-*"/>
             </fileset>
-<!--
-            <classes dir="${build.dest}">
-                <patternset refid="war.classes"/>
-            </classes>
--->
             <lib dir="${lib.dir}">
                 <patternset refid="war.lib"/>
             </lib>
         </war>
     </target>
-
-<!--
-    <target name="build_mill_context" >
-        <delete includeEmptyDirs="true" failonerror="false">
-            <fileset dir="${build_context}">
-                <include name="**"/>
-            </fileset>
-        </delete>
-        <mkdir dir="${build_context}" />
-
-        <copy file="${build.dir}/${mill.lib}" tofile="${build_mill_context_lib}/${main.lib}" filtering="off" overwrite="true"/>
-        <copy todir="${build_mill_context_lib}">
-            <fileset refid="web-inf-lib"/>
-        </copy>
-
-        <copy todir="${build_mill_context_images}">
-            <fileset dir="${src.dir}/images"/>
-        </copy>
-        <copy todir="${build_mill_context_xsd}">
-            <fileset dir="${src.dir}/xsd">
-                <include name="**/*.xsd"/>
-                <exclude name="test/**"/>
-            </fileset>
-        </copy>
-
-        <copy todir="${build_mill_context}/WEB-INF/mill">
-            <fileset dir="${webinf.jsp.dir}\mill">
-                <exclude name="**/*.xsd"/>
-                <exclude name="**/*.log"/>
-                <exclude name="**/mill.xml"/>
-                <exclude name="**/mill.log4j.properties"/>
-                <include name="**/*.xml"/>
-                <include name="log/**"/>
-            </fileset>
-        </copy>
-        <copy file="${webinf.jsp.dir}/web.xml"
-            tofile="${build_mill_context}/WEB-INF/web.xml"/>
-    </target>
--->
 </project>

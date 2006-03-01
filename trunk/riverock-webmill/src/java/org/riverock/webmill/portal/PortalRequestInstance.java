@@ -40,6 +40,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileUpload;
+import org.apache.commons.fileupload.RequestContext;
+import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
@@ -103,7 +106,6 @@ public final class PortalRequestInstance {
 
     private File requestBodyFile = null;
     private boolean isMultiPartRequest = false;
-    private int contentLength;
 
     private PortalDaoProvider portalDaoProvider = null;
 
@@ -174,8 +176,11 @@ public final class PortalRequestInstance {
         this.httpResponse = response_;
         this.portalServletConfig = portalServletConfig;
         try {
-            contentLength = httpRequest.getContentLength();
-            isMultiPartRequest = PortletUtils.isMultiPart( httpRequest );
+            RequestContext uploadRequestContext = new ServletRequestContext( httpRequest );
+            isMultiPartRequest = FileUpload.isMultipartContent( uploadRequestContext );
+            if (log.isDebugEnabled()) {
+                log.debug( "isMultiPartRequest: " + isMultiPartRequest );
+            }
             if (isMultiPartRequest) {
                 requestBodyFile = PortletUtils.storeBodyRequest( httpRequest, MAX_REQUEST_BODY_SIZE );
                 httpRequestParameter = new HashMap<String, Object>();
@@ -188,11 +193,11 @@ public final class PortalRequestInstance {
             portalDaoProvider = new PortalDaoProviderImpl( auth );
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
                 log.debug("portal requet instance class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
-		cl = portletContainer.getClass().getClassLoader();
+                cl = portletContainer.getClass().getClassLoader();
                 log.debug("portlet container class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
-		}
+            }
             
             this.portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName());
             this.portalContext = createPortalContext(portalName, portalInfo);
@@ -456,9 +461,4 @@ public final class PortalRequestInstance {
     public boolean isMultiPartRequest() {
         return isMultiPartRequest;
     }
-
-    public int getContentLength() {
-        return contentLength;
-    }
-
 }

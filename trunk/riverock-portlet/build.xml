@@ -58,6 +58,9 @@
         <pathelement location="${lib.dir}/${commons-codec.lib}"/>
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
+        <pathelement location="${lib.dir}/${commons-fileupload.lib}"/>
+        <pathelement location="${lib.dir}/${commons-io.lib}"/>
+
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
@@ -183,6 +186,8 @@
         <include name="${riverock-cache.lib}"/>
         <include name="${riverock-portlet.lib}"/>
 
+        <include name="${commons-io.lib}"/>
+        <include name="${commons-fileupload.lib}"/>
         <include name="${commons-lang.lib}"/>
         <include name="${commons-logging.lib}"/>
         <include name="${commons-digester.lib}"/>
@@ -206,11 +211,6 @@
                 <exclude name="WEB-INF/web.xml"/>
                 <exclude name="**/*.*-*"/>
             </fileset>
-<!--                                
-            <classes dir="${build.dest}">
-                <patternset refid="war.classes"/>
-            </classes>
--->
             <lib dir="${lib.dir}">
                 <patternset refid="war.lib"/>
             </lib>
