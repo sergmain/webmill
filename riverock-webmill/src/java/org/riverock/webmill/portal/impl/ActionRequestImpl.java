@@ -54,7 +54,6 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     private File requestBodyFile = null;
     private boolean isMultiPartRequest;
-    private int contentLength;
 
     private BufferedReader realBufferedReader = null;
     private InputStream realInputStream = null;
@@ -69,7 +68,6 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContextPath, portalContext );
         requestBodyFile = portalRequestInstance.getRequestBodyFile();
         isMultiPartRequest = portalRequestInstance.isMultiPartRequest();
-        contentLength = portalRequestInstance.getContentLength();
 
         contentTypeManager = ContentTypeManager.getInstance(portalRequestInstance.getLocale(), false);
     }
@@ -128,11 +126,21 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
     }
 
     public String getContentType() {
-        return contentTypeManager.getContentType();
+        if (isMultiPartRequest) {
+            return httpRequest.getContentType();
+        }
+        else {
+            return contentTypeManager.getContentType();
+        }
     }
 
     public int getContentLength() {
-        return contentLength;
+        if (isMultiPartRequest) {
+            return httpRequest.getContentLength();
+        }
+        else {
+            return -1;
+        }
     }
 }
 
