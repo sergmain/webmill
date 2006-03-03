@@ -102,24 +102,24 @@ public final class PortletService {
     }
 
     public static String pageid( final PortletRequest renderRequest ) {
-	String path = (String)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (path.equals("/"))
+        String path = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
+        if (path.equals("/") || path.equals("") )
             return ContainerConstants.PAGEID_SERVLET_NAME ;
 
         return path + ContainerConstants.PAGEID_SERVLET_NAME ;
     }
 
     public static String page( final PortletRequest renderRequest ) {
-	String path = (String)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (path.equals("/"))
+        String path = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
+        if (path.equals("/") || path.equals("") )
             return ContainerConstants.PAGE_SERVLET_NAME ;
 
         return path + ContainerConstants.PAGE_SERVLET_NAME ;
     }
 
     public static String urlPage( final PortletRequest renderRequest ) {
-	String path = (String)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (path.equals("/"))
+        String path = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
+        if (path.equals("/") || path.equals("") )
             return ContainerConstants.URL_SERVLET_NAME ;
 
         return path + ContainerConstants.URL_SERVLET_NAME ;
@@ -161,10 +161,6 @@ public final class PortletService {
         return
             b.append( '?' ).
             append( ContainerConstants.NAME_TYPE_CONTEXT_PARAM ).append( '=' ).append( portletName ).append( '&' );
-    }
-
-    public static String ctx( final PortletRequest renderRequest ) {
-        return PortletService.ctxStringBuilder(renderRequest).toString();
     }
 
     public static Integer getInitParameterInt( final PortletConfig portletConfig, final String name, final Integer defValue ) {
@@ -421,39 +417,9 @@ public final class PortletService {
         return s_;
     }
 
-    public static void cleanSession( final PortletSession session ) throws Exception {
-        if (session==null)
-            return;
-
-        // delete from session all objects
-        int countLoop = 3;
-        for (int i=0; i<countLoop; i++)
-        {
-            try
-            {
-                for (Enumeration e = session.getAttributeNames();
-                     e.hasMoreElements();
-                     e = session.getAttributeNames()
-                    )
-                {
-                    String name = (java.lang.String) e.nextElement() ;
-
-/*
-                    if(log.isDebugEnabled())
-                        log.debug("Attribute: "+name);
-*/
-
-                    session.removeAttribute( name );
-                }
-            }
-            catch( java.util.ConcurrentModificationException e)
-            {
-                if (i==countLoop-1)
-                    throw e;
-            }
-        }
+    public static String ctx( final PortletRequest renderRequest ) {
+        return PortletService.ctxStringBuilder(renderRequest).toString();
     }
-
 
     public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest ) {
         return ctxStringBuilder( renderRequest, null );
@@ -464,13 +430,13 @@ public final class PortletService {
     }
 
     public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest, final String portletName, final String templateName ) {
-        return ctxStringBuilder( renderRequest, portletName, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ), renderRequest.getLocale() );
+        return ctxStringBuilder( renderRequest, portletName, templateName, renderRequest.getLocale() );
     }
 
     public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale ) {
         StringBuilder b = null;
-        String portalContextPath = (String)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (portalContextPath.equals("/"))
+        String portalContextPath = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
+        if (portalContextPath.equals("/") || portalContextPath.equals("") )
             b = new StringBuilder( ContainerConstants.URI_CTX_MANAGER );
         else
             b = new StringBuilder( portalContextPath ).append( ContainerConstants.URI_CTX_MANAGER );
