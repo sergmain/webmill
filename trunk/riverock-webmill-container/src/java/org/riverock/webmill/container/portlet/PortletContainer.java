@@ -398,7 +398,7 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    public PortletItem searchPortletItem(final String queryPortletName) {
+    private PortletItem searchPortletItem(final String queryPortletName) {
         if (queryPortletName == null) {
             return null;
         }
