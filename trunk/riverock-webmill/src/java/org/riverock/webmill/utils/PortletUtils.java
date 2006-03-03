@@ -84,7 +84,7 @@ public final class PortletUtils {
             try {
                 file = File.createTempFile("request", ".dat") ;
 		if (log.isDebugEnabled()) {
-			log.debug("Temporary file with multipart request: " + file.getName());
+			log.debug("Temporary file with multipart request: " + file);
 		}
                 OutputStream outputStream = new FileOutputStream( file );
                 InputStream inputStream = request.getInputStream();
