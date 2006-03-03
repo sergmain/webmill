@@ -49,10 +49,7 @@ import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.bean.PortletNameBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.context.CtxContextFactory;
-import org.riverock.webmill.portal.context.PageContextFactory;
-import org.riverock.webmill.portal.context.PageidContextFactory;
-import org.riverock.webmill.portal.context.UrlContextFactory;
+import org.riverock.webmill.portal.context.*;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.PortalMenuItem;
 
@@ -105,11 +102,8 @@ public abstract class ContextFactory {
     }
 
     public final static class DefaultCtx {
-//        private WmPortalCatalogItemType ctx = null;
         private CatalogBean ctx = null;
-//        private WmPortalCatalogLanguageItemType langMenu = null;
         private CatalogLanguageBean langMenu = null;
-//        private WmPortalSiteLanguageItemType siteLang = null;
         private SiteLanguageBean siteLang = null;
         private PortletDefinition portlet = null;
         private String namePortletId = null;
@@ -130,8 +124,6 @@ public abstract class ContextFactory {
 
         public static DefaultCtx getInstance( ContextFactoryParameter factoryParameter, final Long ctxId ) {
 
-//            try
-            {
                 DefaultCtx defaultCtx = new DefaultCtx();
                 defaultCtx.ctx = InternalDaoFactory.getInternalDao().getCatalogBean( ctxId );
 
@@ -176,23 +168,16 @@ public abstract class ContextFactory {
                     log.error( "idSiteCtxCatalog: " + defaultCtx.ctx.getCatalogId() );
                     log.error( "ctxId: " + ctxId );
                     return null;
-//                    throw new PortalException("contextTypeId is null, unknown portlet");
                 }
 
                 PortletNameBean portletNameBean = InternalDaoFactory.getInternalDao().getPortletNameBean( defaultCtx.ctx.getPortletId() );
                 if (portletNameBean.getName()==null) {
                     log.error("portletName for id "+defaultCtx.ctx.getPortletId()+" not found");
                     return null;
-//                    throw new PortalException("portletName for id "+defaultCtx.ctx.getPortletId()+" not found");
                 }
 
                 initPortletDefinition( factoryParameter, defaultCtx, portletNameBean.getName() );
                 return defaultCtx;
-            }
-//            catch (Exception e) {
-//                log.error("Error", e);
-//                throw new PortalException("error", e);
-//            }
         }
 
         public static DefaultCtx getInstance( ContextFactoryParameter factoryParameter, final String portletName ) {
@@ -231,6 +216,11 @@ public abstract class ContextFactory {
     protected List<PortletParameters> portletsParameter = new LinkedList<PortletParameters>();
     protected String urlResource = null;
     protected DefaultCtx defaultCtx = null;
+    protected RequestState requestState = new RequestState();
+
+    public RequestState getRequestState() {
+        return requestState;
+    }
 
     protected abstract Long initPortalParameters( ContextFactoryParameter factoryParameter);
     protected abstract void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter );
@@ -330,13 +320,11 @@ public abstract class ContextFactory {
     public static final int PAGEID_SERVLET_IDX = 1;
     public static final int PAGE_SERVLET_IDX = 2;
     public static final int CTX_SERVLET_IDX = 3;
-    public static final int URL_SERVLET_IDX = 4;
     private static Map<String, Integer> contextTypeHash = new HashMap<String, Integer>();
     static {
         contextTypeHash.put(ContainerConstants.PAGEID_SERVLET_NAME, PAGEID_SERVLET_IDX);
         contextTypeHash.put(ContainerConstants.PAGE_SERVLET_NAME, PAGE_SERVLET_IDX);
         contextTypeHash.put(ContainerConstants.URI_CTX_MANAGER, CTX_SERVLET_IDX);
-        contextTypeHash.put(ContainerConstants.URL_SERVLET_NAME, URL_SERVLET_IDX);
     }
 
     /**
@@ -366,9 +354,6 @@ public abstract class ContextFactory {
                     break;
                 case CTX_SERVLET_IDX:
                     contextFactoryTemp = CtxContextFactory.getInstance(factoryParameter);
-                    break;
-                case URL_SERVLET_IDX:
-                    contextFactoryTemp = UrlContextFactory.getInstance(factoryParameter);
                     break;
                 default:
                     throw new IllegalStateException("Unknown servlet path: "+servletPath+". Check servelt mapping in WEB-INF/web.xml file");
