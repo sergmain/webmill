@@ -108,10 +108,7 @@ public final class CacheConfig {
         synchronized (syncTempDir) {
             if (Boolean.FALSE.equals(getConfig().getIsTempDirInit())) {
                 String dir = getConfig().getCacheTempDir();
-                if (File.separatorChar == '\\')
-                    dir = dir.replace('/', '\\');
-                else
-                    dir = dir.replace('\\', '/');
+		dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
                 if (!dir.endsWith(File.separator))
                     dir += File.separator;
@@ -149,10 +146,7 @@ public final class CacheConfig {
                 return getConfig().getCacheDebugDir();
 
             String dir = getConfig().getCacheDebugDir();
-            if (File.separatorChar == '\\')
-                dir = dir.replace('/', '\\');
-            else
-                dir = dir.replace('\\', '/');
+	    dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
             if (!dir.endsWith(File.separator))
                 dir += File.separator;
