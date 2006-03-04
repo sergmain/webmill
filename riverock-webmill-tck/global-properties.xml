@@ -80,5 +80,4 @@
 		<mkdir dir="${build-webtest.dir}"/>
 		<mkdir dir="${build-webtest-result.dir}"/>
 	</target>
-
 </project>

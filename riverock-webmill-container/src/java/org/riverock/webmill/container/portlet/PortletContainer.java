@@ -208,7 +208,12 @@ public final class PortletContainer implements Serializable {
                     Iterator<PortletEntry> listIterator = portletEntries.iterator();
                     while (listIterator.hasNext()) {
                         PortletEntry portletEntry = listIterator.next();
-                        destroyPortlet( container, portletEntry, uniqueName );
+			try {
+                        	destroyPortlet( container, portletEntry, uniqueName );
+			}
+			catch(Throwable th){
+				th.printStackTrace( System.out);
+			}
                     }
                     container.portletInstanceUniqueNameMap.remove( uniqueName );
                 }
@@ -337,6 +342,7 @@ public final class PortletContainer implements Serializable {
             Portlet object = null;
             PortletConfig portletConfig = null;
 
+	// Todo. instance of PortletContext is one per 'war'? I.e. same for all portlets in application?
             PortletContext portletContext =
                 new PortletContextImpl(portletItem.getServletConfig().getServletContext(), portalInstance.getPortalName(), portalInstance.getPortalMajorVersion(), portalInstance.getPortalMinorVersion());
 
@@ -369,16 +375,14 @@ public final class PortletContainer implements Serializable {
                 try {
                     object.init(portletConfig);
                 }
-                catch (PortletException e) {
+                catch (Throwable e) {
                     if (e instanceof UnavailableException) {
-                        return new PortletEntry(portletDefinition, (UnavailableException) e);
+                    	return new PortletEntry(portletDefinition, (UnavailableException) e);
                     }
-                    else
-                        throw e;
-                }
-                catch (RuntimeException e) {
-                    String es = "Error init portlet '" + portletName + "'";
-                    throw new PortletException(es, e);
+			UnavailableException ue = new UnavailableException( 
+				"portlet '"+portletName+"' permanent unavailable. Exception: " + e.toString(), -1);
+
+		  	return new PortletEntry(portletDefinition, ue);
                 }
             }
             else {

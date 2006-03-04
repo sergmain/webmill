@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+/*
+ * webmill-TCK - webtest based tests for jsr168 TCK
+ *
+ * Copyright (C) 2005, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!DOCTYPE project SYSTEM "../portal.dtd">
+
+<project name="Portlet TCK webtest" basedir="../..">
+
+    <import file="../../webtest-constants.xml" />
+
+    <property name="portletName" value="portlet-tck-portlet-request-dispatcher"/>
+    <property file="webtest/webtest-regexp.properties"/>
+    <property name="applicationName" value="portlet_jp_PortletRequestDispatcher_web"/>
+
+    <import file="../../global-properties.xml" />
+    <import file="../global-macro.xml" />
+
+    <target name="all">
+        <echo message="Start all portlet request dispatcher tests"/>
+
+        <antcall target="clean-prepare"/>
+
+<!-- see result-TCK-mismatch-spec.txt
+	<test_wo_click portlet="GetRequestDispatcherWithQueryStringTestPortlet"
+		       result="GetRequestDispatcherWithQueryStringTest Test PASSED."/>
+	<test_wo_click portlet="RequestMethodsParameterMiscTestPortlet"
+		       result="RequestMethodsParameterMiscTest Test PASSED."/>
+-->
+
+<!-- broken test
+	<test_wo_click portlet="AccessToPathTestPortlet"
+		       result="AccessToPathTest Test PASSED."/>
+	<test_wo_click portlet="RequestMethodsReturnNullTestPortlet"
+		       result="RequestMethodsReturnNullTest Test PASSED."/>
+	<test_wo_click portlet="RequestMethodsLocaleMiscTestPortlet"
+		       result="RequestMethodsLocaleMiscTest Test PASSED."/>
+	<test_wo_click portlet="ResponseMethodsMiscMiscTestPortlet"
+		       result="ResponseMethodsMiscMiscTest Test PASSED."/>
+-->
+
+
+
+	<test_wo_click portlet="ResponseMethodsReturnNullTestPortlet"
+		       result="ResponseMethodsReturnNullTest Test PASSED."/>
+	<test_wo_click portlet="SameThreadTestPortlet"
+		       result="SameThreadTest Test PASSED."/>
+	<test_wo_click portlet="ServletCannotChangeStatusCodeTestPortlet"
+		       result="ServletCannotChangeStatusCodeTest Test PASSED."/>
+	<test_wo_click portlet="ResponseGetOutputStreamTestPortlet"
+		       result="ResponseGetOutputStreamTest Test PASSED."/>
+ 
+	<test_wo_click portlet="GetRequestDispatcherTestPortlet"
+		       result="GetRequestDispatcherTest Test PASSED."/>
+	<test_wo_click portlet="GetRequestDispatcherTestPortlet"
+		       result="GetRequestDispatcherTest Test PASSED."/>
+	<test_wo_click portlet="GetMethodTestPortlet"
+		       result="GetMethodTest Test PASSED."/>
+
+	<test_wo_click portlet="RequestMethodsReturn0TestPortlet"
+		       result="RequestMethodsReturn0Test Test PASSED."/>
+	<test_wo_click portlet="RequestMethodsReturnPathInfoTestPortlet"
+		       result="RequestMethodsReturnPathInfoTest Test PASSED."/>
+	<test_wo_click portlet="RequestMethodsMiscMiscTestPortlet"
+		       result="RequestMethodsMiscMiscTest Test PASSED."/>
+	<test_wo_click portlet="RequestMethodsAttributeMiscTestPortlet"
+		       result="RequestMethodsAttributeMiscTest Test PASSED."/>
+	<test_wo_click portlet="IncludedRequestAttributesTestPortlet"
+		       result="IncludedRequestAttributesTest Test PASSED."/>
+
+	<test_wo_click portlet="IncludeServletTestPortlet"
+		       result="IncludeServletTest Test PASSED."/>
+	<test_wo_click portlet="IncludePortletExceptionTestPortlet"
+		       result="IncludePortletExceptionTest Test PASSED."/>
+	<test_wo_click portlet="IncludeNonexistingServletTestPortlet"
+		       result="IncludeNonexistingServletTest Test PASSED."/>
+	<test_wo_click portlet="IncludeJSPTestPortlet"
+		       result="IncludeJSPTest Test PASSED."/>
+	<test_wo_click portlet="IncludeIOExceptionTestPortlet"
+		       result="IncludeIOExceptionTest Test PASSED."/>
+	<test_wo_click portlet="IncludeHTMLTestPortlet"
+		       result="IncludeHTMLTest Test PASSED."/>
+
+    </target>
+
+</project>
