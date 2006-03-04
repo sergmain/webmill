@@ -133,6 +133,9 @@ public final class PortalRequestProcessor {
         Iterator iterator = portalRequestInstance.getPageElementList().iterator();
         while( iterator.hasNext() ) {
             PageElement pageElement = (PageElement)iterator.next();
+	    if (!pageElement.getRequestState().isActionRequest() )
+		continue;
+
             TemplateItemBaseClass.processActionTemplateItem( pageElement );
 
             // check if request was redirected

@@ -232,10 +232,7 @@ public final class StartupServlet extends HttpServlet {
         try {
             InitialContext ic = new InitialContext();
             logConfigFile = (String) ic.lookup( name ); 
-            if (File.separatorChar == '\\')
-                logConfigFile = logConfigFile.replace('/', '\\');
-            else
-                logConfigFile = logConfigFile.replace('\\', '/');
+	    logConfigFile = logConfigFile.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
             System.out.println("millLogConfigFile - " + logConfigFile);
         }
@@ -251,10 +248,8 @@ public final class StartupServlet extends HttpServlet {
             String logPath = null;
             InitialContext ic = new InitialContext();
             logPath = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_PATH);
-            if (File.separatorChar == '\\')
-                logPath = logPath.replace('/', '\\');
-            else
-                logPath = logPath.replace('\\', '/');
+	    logPath = logPath.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
+
             return logPath;
         }
         catch (NamingException e) {

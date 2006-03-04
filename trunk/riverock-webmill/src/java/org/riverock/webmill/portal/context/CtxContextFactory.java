@@ -29,8 +29,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -68,18 +70,6 @@ public final class CtxContextFactory extends ContextFactory {
             return factory;
         }
 
-/*
-            if (log.isDebugEnabled()) {
-                log.debug("menu: "+menu);
-                log.debug("locale: "+factory.realLocale.toString());
-                if (menu!=null) {
-                    log.debug("menu.getIndexMenuItem(): "+menu.getIndexMenuItem());
-                    if (menu.getIndexMenuItem()!=null) {
-                        log.debug("menu.getIndexMenuItem().getId(): "+menu.getIndexMenuItem().getId());
-                    }
-                }
-            }
-*/
         if (menu == null || menu.getIndexMenuItem() == null) {
             log.warn("menu: " + menu);
             log.warn("locale: " + factory.realLocale.toString());
@@ -105,10 +95,42 @@ public final class CtxContextFactory extends ContextFactory {
         return factory;
     }
 
+
+        private static final String requestFormat = 
+		"<PORTAL_CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE]/<PARAMETERS_OF_OTHER_PORTLETS>/ctx?";
+	// REQUEST_STATE: a-actionRequest, in other case-renderRequest
+
+    public static StringBuilder encodeUrl( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale, boolean isActionReqeust ) {
+        StringBuilder b = new StringBuilder();
+        String portalContextPath = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
+        if (portalContextPath.equals("/") || portalContextPath.equals("") )
+            b.append( ContainerConstants.URI_CTX_MANAGER );
+        else
+            b.append( portalContextPath ).append( ContainerConstants.URI_CTX_MANAGER );
+
+        b.append( '/' ).append( locale.toString() );
+        b.append( ',' );
+        if (templateName!=null)
+            b.append( templateName );
+
+        b.append( ',' );
+        if (portletName!=null)
+            b.append( portletName );
+
+        b.append( ',' );
+        if (isActionReqeust) 
+            b.append('a');
+        else
+            b.append('r');
+
+        b.append( "/ctx" );
+
+        return b;
+    }
+
     protected Long initPortalParameters(ContextFactoryParameter factoryParameter) {
 
-        log.debug("Start process as page, format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/ctx?");
-        // format request: /<CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME[,PORTLET_NAME]>/<PARAMETER_OF_OTHER_PORTLET>/ctx?
+        log.debug("Start process as page, format request: "+ requestFormat );
 
         String path = factoryParameter.getRequest().getPathInfo();
         if (path == null || path.equals("/")) {
@@ -149,6 +171,8 @@ public final class CtxContextFactory extends ContextFactory {
 
 
         String templateName = st.nextToken();
+        setTemplateName(templateName);
+
         String portletName = null;
         if (st.hasMoreTokens()) {
             portletName = st.nextToken();
@@ -160,6 +184,12 @@ public final class CtxContextFactory extends ContextFactory {
                 portletName = factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME);
             }
         }
+
+        if (st.hasMoreElements() ) {
+		String state = st.nextToken();
+		if (state!=null && state.equalsIgnoreCase("a") ) 
+			getRequestState().setActionRequest( true );
+	}
 
         // Todo parse request for parameters of others portlets
 
@@ -177,8 +207,6 @@ public final class CtxContextFactory extends ContextFactory {
 //        Long id = null;
 //        if (namePortletId!=null)
 //            id = ServletTools.getLong(request, namePortletId);
-
-        setTemplateName(templateName);
 
         if (log.isDebugEnabled()) {
             log.debug("realLocale: " + realLocale);

@@ -101,10 +101,7 @@ public class WebmillConfig {
             if (Boolean.FALSE.equals(getConfig().getIsTempDirInit()))
             {
                 String dir = getConfig().getWebmillTempDir();
-                if (File.separatorChar == '\\')
-                    dir = dir.replace('/', '\\');
-                else
-                    dir = dir.replace('\\', '/');
+	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
                 File dirTest = new File(dir);
                 if (!dirTest.exists())
@@ -142,10 +139,7 @@ public class WebmillConfig {
                 return getConfig().getWebmillDebugDir();
 
             String dir = getConfig().getWebmillDebugDir();
-            if (File.separatorChar == '\\')
-                dir = dir.replace('/', '\\');
-            else
-                dir = dir.replace('\\', '/');
+	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
             if (!dir.endsWith(File.separator))
                 dir += File.separator;
