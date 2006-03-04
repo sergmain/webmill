@@ -40,6 +40,7 @@ import javax.portlet.RenderResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -57,7 +58,7 @@ import org.riverock.portlet.tools.RequestTools;
  */
 public final class MemberPortlet  implements Portlet {
 
-    private final static Log log = LogFactory.getLog( MemberPortlet.class );
+    private final static Logger log = Logger.getLogger( MemberPortlet.class );
 
     public MemberPortlet() {
     }

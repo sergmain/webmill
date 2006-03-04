@@ -39,6 +39,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -47,7 +48,7 @@ import org.riverock.sql.cache.SqlStatement;
 
 
 public class PriceItemDescription {
-    private static Log log = LogFactory.getLog( PriceItemDescription.class );
+    private static Logger log = Logger.getLogger( PriceItemDescription.class );
 
     private static Map<Long, PriceItemDescription> descMap = new HashMap<Long, PriceItemDescription>();
     private Map<Long, String> description = new HashMap<Long, String>();

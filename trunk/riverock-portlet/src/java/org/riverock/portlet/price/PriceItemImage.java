@@ -31,6 +31,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -45,7 +46,7 @@ import org.riverock.sql.cache.SqlStatement;
  * $Id$
  */
 public class PriceItemImage {
-    private static Log log = LogFactory.getLog( PriceItemImage.class );
+    private static Logger log = Logger.getLogger( PriceItemImage.class );
 
     private static Map<Long, PriceItemImage> imageMap = new HashMap<Long, PriceItemImage>();
     private Map<Long, String> image = new HashMap<Long, String>();

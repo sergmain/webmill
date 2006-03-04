@@ -37,6 +37,7 @@ import javax.portlet.RenderResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
@@ -52,7 +53,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultContent;
  * $Id$
  */
 public final class JobItemSimple implements PortletResultObject, PortletResultContent {
-    private final static Log log = LogFactory.getLog( JobItemSimple.class );
+    private final static Logger log = Logger.getLogger( JobItemSimple.class );
 
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;

@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -45,7 +46,7 @@ import org.riverock.common.tools.RsetTools;
  */
 public class ImportPriceProcess
 {
-    private static Log log = LogFactory.getLog( ImportPriceProcess.class );
+    private static Logger log = Logger.getLogger( ImportPriceProcess.class );
 
     private static void moveItemToPrice(DatabaseAdapter dbDyn, Long idSite)
         throws Exception

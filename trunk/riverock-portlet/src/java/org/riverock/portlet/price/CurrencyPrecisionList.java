@@ -35,6 +35,7 @@ import java.sql.ResultSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * User: Admin
@@ -45,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CurrencyPrecisionList extends CurrencyPrecisionListType
 {
-    private static Log log = LogFactory.getLog( CurrencyPrecisionList.class );
+    private static Logger log = Logger.getLogger( CurrencyPrecisionList.class );
 
     public void initCurrencyPrecision(DatabaseAdapter db_, Long idShop)
     {

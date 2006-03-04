@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
@@ -66,7 +67,7 @@ import org.riverock.webmill.container.ContainerConstants;
  */
 public final class PriceEditImage extends HttpServlet
 {
-    private final static Log log = LogFactory.getLog(PriceEditImage.class);
+    private final static Logger log = Logger.getLogger(PriceEditImage.class);
 
     public PriceEditImage()
     {

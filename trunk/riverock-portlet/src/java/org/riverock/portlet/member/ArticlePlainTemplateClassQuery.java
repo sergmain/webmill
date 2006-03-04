@@ -33,6 +33,7 @@ import javax.portlet.PortletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
@@ -45,7 +46,7 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
  * $Id$
  */
 public class ArticlePlainTemplateClassQuery extends BaseClassQuery {
-    private static Log log = LogFactory.getLog( ArticlePlainTemplateClassQuery.class );
+    private static Logger log = Logger.getLogger( ArticlePlainTemplateClassQuery.class );
 
     public ArticlePlainTemplateClassQuery() {
     }

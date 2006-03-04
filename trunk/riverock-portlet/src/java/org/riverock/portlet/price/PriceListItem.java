@@ -30,6 +30,7 @@ import java.sql.ResultSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -40,7 +41,7 @@ import org.riverock.generic.db.DatabaseManager;
  */
 public class PriceListItem
 {
-    private static Log log = LogFactory.getLog( PriceListItem.class );
+    private static Logger log = Logger.getLogger( PriceListItem.class );
 
     public Long id_shop = null;
     public int isGroup = 0;

@@ -61,10 +61,11 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 public class TestCaseNews extends TestCase implements TestCaseInterface
 {
-    private static Log log = LogFactory.getLog(TestCaseNews.class);
+    private static Logger log = Logger.getLogger(TestCaseNews.class);
 
     private final static String NEWS_GROUP_TEXT = "Блок новостей ";
     private final static String NEWS_ITEM_TEXT = "Новость ";

@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
@@ -55,7 +56,7 @@ import org.riverock.common.config.PropertiesProvider;
  */
 public final class MemberViewServlet extends HttpServlet
 {
-    private final static Log log = LogFactory.getLog(MemberViewServlet.class);
+    private final static Logger log = Logger.getLogger(MemberViewServlet.class);
 
     private ServletConfig servletConfig = null;
     public void init(ServletConfig servletConfig) {

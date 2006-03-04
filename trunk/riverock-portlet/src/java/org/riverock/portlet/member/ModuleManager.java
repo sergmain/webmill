@@ -29,6 +29,7 @@ import java.io.FileFilter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.generic.main.CacheDirectory;
@@ -46,7 +47,7 @@ import org.riverock.portlet.schema.member.types.ContentTypeActionType;
  * $Id$
  */
 public final class ModuleManager {
-    private final static Log log = LogFactory.getLog( ModuleManager.class );
+    private final static Logger log = Logger.getLogger( ModuleManager.class );
 
     private final static FileFilter memberFilter = new ExtensionFileFilter( ".xml" );
 

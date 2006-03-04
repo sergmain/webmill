@@ -31,10 +31,12 @@ import java.util.ResourceBundle;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
+import javax.portlet.PortletURL;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
 
 import org.apache.log4j.Logger;
 
@@ -94,10 +96,11 @@ public final class LoginPlainPortlet implements Portlet {
                 return;
             }
 
-            out.write( "<form method=\"POST\" action=\"" + PortletService.ctx( renderRequest ) + "\" >\n" );
 
-            out.write( ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM,
-                LoginUtils.CTX_TYPE_LOGIN_PLAIN ) );
+	PortletURL portletUrl = renderResponse.createActionURL();
+	portletUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN );
+
+            out.write( "<form method=\"POST\" action=\"" + portletUrl + "\" >\n" );
 
             String srcURL = null;
             if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {

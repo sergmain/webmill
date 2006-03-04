@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -49,8 +50,7 @@ import org.riverock.webmill.container.tools.PortletService;
  * $Id$
  */
 public final class UploadPrice extends HttpServlet {
-
-    private final static Log log = LogFactory.getLog( UploadPrice.class );
+    private final static Logger log = Logger.getLogger( UploadPrice.class );
 
     public final static String UPLOAD_FILE_PARAM_NAME = "f";
     public final static String CTX_TYPE_UPLOAD_PRICE_CONTR    = "mill.upload_price_controller";

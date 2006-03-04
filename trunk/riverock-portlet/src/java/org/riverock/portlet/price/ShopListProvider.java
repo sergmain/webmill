@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -26,7 +27,7 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
  */
 public class ShopListProvider implements PortletGetList {
 
-    private static Log log = LogFactory.getLog( ShopPage.class );
+    private static Logger log = Logger.getLogger( ShopPage.class );
 
     public List<ClassQueryItem> getList( Long idSiteCtxLangCatalog, Long idContext ) {
 

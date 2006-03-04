@@ -35,6 +35,7 @@ import javax.portlet.PortletURL;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -51,7 +52,7 @@ import org.riverock.webmill.container.ContainerConstants;
  *
  */
 public class PriceListPosition {
-    private static Log log = LogFactory.getLog( PriceListPosition.class );
+    private static Logger log = Logger.getLogger( PriceListPosition.class );
 
     public static PricePositionType getInstance(DatabaseAdapter db_, ShopPageParam shopParam_, RenderResponse renderResponse)
         throws PriceException

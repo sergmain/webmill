@@ -37,6 +37,7 @@ import javax.portlet.RenderRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.RsetTools;
@@ -46,7 +47,7 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.container.tools.PortletService;
 
 public class JobItem {
-    private static Log log = LogFactory.getLog( JobItem.class );
+    private static Logger log = Logger.getLogger( JobItem.class );
 
     public Integer periodActivity;
 

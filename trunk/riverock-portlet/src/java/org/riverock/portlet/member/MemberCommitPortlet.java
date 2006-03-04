@@ -43,6 +43,7 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -68,7 +69,7 @@ import org.riverock.common.config.PropertiesProvider;
  */
 public final class MemberCommitPortlet implements Portlet {
 
-    private final static Log log = LogFactory.getLog( MemberCommitPortlet.class );
+    private final static Logger log = Logger.getLogger( MemberCommitPortlet.class );
     protected PortletConfig portletConfig = null;
 
     public MemberCommitPortlet() {

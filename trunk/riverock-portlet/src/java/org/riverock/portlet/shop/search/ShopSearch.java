@@ -39,6 +39,7 @@ import javax.portlet.RenderRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.NumberTools;
@@ -60,7 +61,7 @@ import org.riverock.webmill.container.tools.PortletService;
  */
 public class ShopSearch extends HttpServlet
 {
-    private static Log log = LogFactory.getLog(ShopSearch.class);
+    private static Logger log = Logger.getLogger(ShopSearch.class);
 
     class ParseException extends Exception
     {

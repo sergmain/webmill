@@ -30,6 +30,7 @@ import java.util.Calendar;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -42,7 +43,7 @@ import org.riverock.sql.cache.SqlStatement;
  * $Id$
  */
 public final class Shop {
-    private final static Log log = LogFactory.getLog( Shop.class );
+    private final static Logger log = Logger.getLogger( Shop.class );
 
     private static CacheFactory cache = new CacheFactory( Shop.class.getName() );
 

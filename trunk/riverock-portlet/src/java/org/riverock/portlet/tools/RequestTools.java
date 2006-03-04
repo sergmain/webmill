@@ -6,6 +6,7 @@ import javax.portlet.PortletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.common.tools.StringTools;
@@ -18,7 +19,7 @@ import org.riverock.portlet.price.PriceListPosition;
  *         $Id$
  */
 public class RequestTools {
-    private static Log log = LogFactory.getLog( RequestTools.class );
+    private static Logger log = Logger.getLogger( RequestTools.class );
 
     public static String getString( final PortletRequest request, final String f, String defaultValue) {
         return PortletService.getString(request, f, defaultValue, ContentTypeTools.CONTENT_TYPE_8859_1, ContentTypeTools.CONTENT_TYPE_UTF8);

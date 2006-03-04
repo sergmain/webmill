@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 
@@ -43,7 +44,7 @@ import org.riverock.common.tools.RsetTools;
  */
 public final class MenuMemberModule
 {
-    private final static Log log = LogFactory.getLog( MenuMemberModule.class );
+    private final static Logger log = Logger.getLogger( MenuMemberModule.class );
 
     /**
      * module - название модуля

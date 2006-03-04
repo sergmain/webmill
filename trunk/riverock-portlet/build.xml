@@ -177,6 +177,16 @@
             </fileset>
         </copy>
 
+        <property name="shop-prop-path" value="/org/riverock/portlet/shop/resource"/>
+        <patternset id="shop-prop.resources">
+            <include name="*.properties"/>
+        </patternset>
+        <copy todir="${build.dest}${shop-prop-path}" overwrite="true">
+            <fileset dir="${src.java.dir}${shop-prop-path}">
+                <patternset refid="shop-prop.resources"/>
+            </fileset>
+        </copy>
+
     </target>
 
     <patternset id="war.lib">

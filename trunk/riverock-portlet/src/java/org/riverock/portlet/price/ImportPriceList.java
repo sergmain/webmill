@@ -43,12 +43,13 @@ import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
 public class ImportPriceList {
-    private static Log log = LogFactory.getLog( ImportPriceList.class );
+    private static Logger log = Logger.getLogger( ImportPriceList.class );
 
     public static void process(File file, Long id_site, DatabaseAdapter db)
             throws PriceException

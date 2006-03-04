@@ -41,12 +41,13 @@ import javax.portlet.PortletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
 public final class NewsGroup {
-    private final static Log log = LogFactory.getLog( NewsGroup.class  );
+    private final static Logger log = Logger.getLogger( NewsGroup.class  );
 
     public NewsGroupType newsGroup = new NewsGroupType();
 
