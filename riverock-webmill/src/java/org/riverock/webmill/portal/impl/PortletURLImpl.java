@@ -43,8 +43,8 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.context.CtxContextFactory;
 
 /**
  * User: serg_main
@@ -65,12 +65,14 @@ public final class PortletURLImpl implements PortletURL {
     private boolean secure;
     private WindowState state = null;
     private PortalRequestInstance portalRequestInstance = null;
-    private PortletRequest portletRequest = null;
+    private RenderRequest portletRequest = null;
+    private boolean isActionReqeust = false;
 
-    public PortletURLImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest ) {
+    public PortletURLImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest, boolean isActionReqeust ) {
         this.portalRequestInstance = portalRequestInstance;
         this.portletRequest = renderRequest;
         this.secure = portalRequestInstance.getHttpRequest().isSecure();
+        this.isActionReqeust = isActionReqeust;
     }
 
     public void setWindowState( WindowState windowState ) throws WindowStateException {
@@ -182,7 +184,14 @@ public final class PortletURLImpl implements PortletURL {
             log.debug( "Result portlet name for insert into url: " + portletName );
         }
 
-        url.append( PortletService.ctxStringBuilder( portletRequest, portletName ) );
+        url.append(
+		CtxContextFactory.encodeUrl(
+			portletRequest, portletName,
+			(String)portletRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ),
+			portletRequest.getLocale(),
+            isActionReqeust
+		)
+	);
 
         if ( parameters != null ) {
             Iterator names = parameters.keySet().iterator();
@@ -257,13 +266,6 @@ public final class PortletURLImpl implements PortletURL {
         return state;
     }
     // --------------------------------------------------------------------------------------------
-
-
-    private boolean action;
-
-    public void setAction() {
-        action = true;
-    }
 
     public void setSecure() {
         secure = true;

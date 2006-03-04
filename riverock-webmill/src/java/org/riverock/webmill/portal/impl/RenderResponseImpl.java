@@ -320,11 +320,11 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public PortletURL createRenderURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, false );
     }
 
     public PortletURL createActionURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, true );
     }
 
     public String getNamespace() {

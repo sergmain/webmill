@@ -66,11 +66,6 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
         }
         else {
             session.removeAttribute( org.riverock.sso.main.Constants.AUTH_SESSION );
-
-            // User not correctly input authorization data
-            // remove all objects from session
-//            PortletService.cleanSession( session );
-
             return false;
         }
                 }

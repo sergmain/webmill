@@ -181,10 +181,7 @@ public final class GenericConfig {
         synchronized(syncTempDir){
             if (Boolean.FALSE.equals( getConfig().getIsTempDirInit() ) ){
                 String dir = getConfig().getGenericTempDir();
-                if (File.separatorChar=='\\')
-                    dir = dir.replace( '/', '\\');
-                else
-                    dir = dir.replace( '\\', '/');
+	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
                 
                 if (!dir.endsWith( File.separator ))
                     dir += File.separator;
@@ -227,10 +224,7 @@ public final class GenericConfig {
             String dir = getConfig().getGenericDebugDir();
             if (dir!=null){
 
-                if (File.separatorChar=='\\')
-                    dir = dir.replace( '/', '\\');
-                else
-                    dir = dir.replace( '\\', '/');
+	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
                 if (!dir.endsWith( File.separator ))
                     dir += File.separator;

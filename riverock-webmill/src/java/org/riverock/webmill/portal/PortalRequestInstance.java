@@ -63,6 +63,7 @@ import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
+import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -262,18 +263,17 @@ public final class PortalRequestInstance {
                         "value: " + templateItem.getValue() + ", " +
                         "namespace: " + element.getNamespace() +
                         ", code: " + templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot());
+			log.debug("getDefaultPortletDefinition(): "+getDefaultPortletDefinition() );
                 }
 
-                if (log.isDebugEnabled()) {
-                    log.debug("#5.10");
-                }
 
                 switch (templateItem.getTypeObject().getType()) {
                     case PortalTemplateItemType.PORTLET_TYPE:
-                        element.initPortlet(templateItem.getValue(), this);
+                        // Todo replace new RequestState() with actual satte of not-dynamic portlet
+                        element.initPortlet(templateItem.getValue(), this, new RequestState() );
                         break;
                     case PortalTemplateItemType.DYNAMIC_TYPE:
-                        element.initPortlet(getDefaultPortletDefinition(), this);
+                        element.initPortlet(getDefaultPortletDefinition(), this, getRequestState() );
                         break;
                     case PortalTemplateItemType.FILE_TYPE:
                     case PortalTemplateItemType.CUSTOM_TYPE:
@@ -295,11 +295,17 @@ public final class PortalRequestInstance {
         }
     }
 
-    private static PortalContextImpl createPortalContext(String portalName, PortalInfo portalInfo ) {
+    private PortalContextImpl createPortalContext(String portalName, PortalInfo portalInfo ) {
         Map<String,String> map = new HashMap<String, String>();
 
         map.put( ContainerConstants.PORTAL_PROP_SITE_ID, portalInfo.getSiteId().toString() );
         map.put( ContainerConstants.PORTAL_PROP_COMPANY_ID, portalInfo.getCompanyId().toString() );
+        map.put( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH, httpRequest.getContextPath() );
+	if (log.isDebugEnabled()) {
+		log.debug("portal context path: '" + httpRequest.getContextPath() +"'" );
+		log.debug("portal context path in map: '" + 
+			map.get(ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH) +"'" );
+	}
         map.putAll( portalInfo.getMetadata() );
 
         return new PortalContextImpl( portalName, map );
@@ -432,6 +438,13 @@ public final class PortalRequestInstance {
             return null;
 
         return contextFactory.getDefaultCtx();
+    }
+
+    public RequestState getRequestState() {
+        if (contextFactory == null)
+            return new RequestState();
+
+        return contextFactory.getRequestState();
     }
 
     public CookieManager getCookieManager() {

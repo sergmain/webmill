@@ -50,7 +50,6 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
-import org.riverock.webmill.container.portlet.PortletContainerFactory;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.utils.ServletUtils;
@@ -205,7 +204,7 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private PortalInstanceImpl( ServletConfig servletConfig ) {
         this.portalServletConfig = servletConfig;
-        this.portletContainer = PortletContainerFactory.getContainerInstance( this );
+        this.portletContainer = PortletContainer.getInstance( this );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
     }
 

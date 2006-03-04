@@ -35,6 +35,9 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import javax.portlet.PortletRequestDispatcher;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletConfig;
+import javax.portlet.PortletResponse;
 import javax.servlet.RequestDispatcher;
 
 import org.apache.log4j.Logger;
@@ -55,6 +58,7 @@ import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -86,6 +90,7 @@ public final class PageElement {
     private Properties properties = null;
     private boolean isAccessPermit = true;
     private String securityMessage = null;
+    private RequestState requestState = new RequestState();
 
     /*
      * renderParameter used for set parameters in action
@@ -133,6 +138,7 @@ public final class PageElement {
             renderParameters.clear();
             renderParameters = null;
         }
+	requestState = null;
         if (log.isDebugEnabled()) {
             log.debug("#13.2");
         }
@@ -281,6 +287,12 @@ public final class PageElement {
             // cache content
             portletContainer.getContentCache().setContent( portletEntry.getPortletDefinition(), data, renderRequest );
         }
+	catch( javax.portlet.UnavailableException ue ) {
+		PortletContainer.destroy( portletEntry.getPortletDefinition().getPortletName() );
+            errorString = "Portlet '" + portletEntry.getPortletDefinition().getPortletName() + "' unavailable.";
+            log.error( errorString, ue );
+            return;
+	}
         catch( java.lang.ThreadDeath e) {
             errorString = "Portlet '" + portletEntry.getPortletDefinition().getPortletName() + "' unavailable.";
             exception = e;
@@ -293,7 +305,8 @@ public final class PageElement {
         }
     }
 
-    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance ) {
+    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, RequestState requestState ) {
+        this.requestState = requestState;
         try {
             if (log.isDebugEnabled()) {
                 log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
@@ -304,6 +317,18 @@ public final class PageElement {
             portletEntry = portletContainer.getPortletInstance(portletName);
 
             if (portletEntry == null) {
+                errorString = "Portlet '" + portletName + "' unavailable.";
+                return;
+            }
+
+            if ( portletEntry.getIsPermanent() ) {
+		log.error( "portlet permanent unavailable, message: " + portletEntry.getExceptionMessage() );
+                errorString = "Portlet '" + portletName + "' unavailable.";
+                return;
+            }
+
+            if ( portletEntry.getIsWait() ) {
+		log.error( "portlet permanent unavailable for "+portletEntry.getInterval()+" seconds");
                 errorString = "Portlet '" + portletName + "' unavailable.";
                 return;
             }
@@ -360,7 +385,10 @@ containing the portlet is restarted.
             }
 
             if (params != null && params.getParameters() != null) {
-                map.putAll(params.getParameters());
+                // The portlet-container must not propagate parameters received
+                // in an action request to subsequent render requests of the portlet.
+                if ( !requestState.isActionRequest() )
+                    map.putAll(params.getParameters());
             }
             renderRequest = new RenderRequestImpl(
                 map,
@@ -369,7 +397,6 @@ containing the portlet is restarted.
                 portletEntry.getServletConfig().getServletContext(),
                 portletAttributes,
                 contextPath,
-                portalRequestInstance.getHttpRequest().getContextPath(),
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext() );
@@ -401,24 +428,34 @@ containing the portlet is restarted.
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
             renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );
-
             PortletUtils.setContentType(renderResponse);
 
+            renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_CONFIG, portletEntry.getPortletConfig() );
+            renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_REQUEST, renderRequest );
+            renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_RESPONSE, renderResponse );
+
+            Map<String, Object> actionRequestParamMap = new HashMap<String, Object>( map );
+
+            if (params != null && params.getParameters() != null) {
+                // The portlet-container must not propagate parameters received
+                // in an action request to subsequent render requests of the portlet.
+                if ( requestState.isActionRequest() )
+                    actionRequestParamMap.putAll(params.getParameters());
+            }
             actionRequest = new ActionRequestImpl(
-                map,
+                actionRequestParamMap,
                 portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
                 portletAttributes,
                 contextPath,
-                portalRequestInstance.getHttpRequest().getContextPath(),
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext()
             );
-            actionRequest.setAttribute( 
-		ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER, 
-		new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest ) 
-		);
+            actionRequest.setAttribute(
+                ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
+                new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
+            );
 
             actionResponse = new ActionResponseImpl(portalRequestInstance, actionRequest, portalRequestInstance.getHttpResponse(), namespace, renderParameters, portletEntry.getPortletProperties() );
 
@@ -619,4 +656,8 @@ containing the portlet is restarted.
     public String getRedirectUrl() {
         return redirectUrl;
     }
+	
+	public RequestState getRequestState() {
+		return requestState;
+	}
 }

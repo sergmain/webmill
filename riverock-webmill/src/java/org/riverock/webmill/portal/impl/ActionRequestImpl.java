@@ -63,9 +63,9 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         super.destroy();
     }
 
-    public ActionRequestImpl(final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map<String, Object> portletAttributes, final String contextPath, final String portalContextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext ) {
+    public ActionRequestImpl(final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map<String, Object> portletAttributes, final String contextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext ) {
         super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties);
-        prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContextPath, portalContext );
+        prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContext );
         requestBodyFile = portalRequestInstance.getRequestBodyFile();
         isMultiPartRequest = portalRequestInstance.isMultiPartRequest();
 
@@ -74,7 +74,7 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     public InputStream getPortletInputStream() throws java.io.IOException {
         if (!isMultiPartRequest) {
-            throw new IllegalStateException("Cant get portlet input stream for content type: " +httpRequest.getContentType() );
+            throw new IllegalStateException("Request is not multipart. Cant get portlet inputStream" );
         }
         if (realBufferedReader!=null) {
             throw new IllegalStateException( "getReader() already invoked" );
@@ -92,7 +92,7 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     public BufferedReader getReader() throws java.io.IOException {
         if (!isMultiPartRequest) {
-            throw new IllegalStateException("Cant get portlet input stream for content type: " +httpRequest.getContentType() );
+            throw new IllegalStateException( "Request is not multipart. Cant get portlet reader" );
         }
         if (realInputStream!=null) {
             throw new IllegalStateException( "getPortletInputStream() already invoked" );
@@ -118,6 +118,9 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
     }
 
     public void setCharacterEncoding( String encoding ) {
+	if (realInputStream!=null && realBufferedReader!=null) {
+            throw new IllegalStateException( "try to setCharacterEncoding() after invoke getReader() or getPortletInputStream()" );
+	}
         contentTypeManager.setCharacterEncoding( encoding );
     }
 
@@ -135,8 +138,9 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
     }
 
     public int getContentLength() {
-        if (isMultiPartRequest) {
-            return httpRequest.getContentLength();
+        if (isMultiPartRequest && requestBodyFile!=null) {
+//            return httpRequest.getContentLength();
+            return (int)requestBodyFile.length();
         }
         else {
             return -1;
