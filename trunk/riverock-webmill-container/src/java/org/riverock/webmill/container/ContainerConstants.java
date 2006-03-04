@@ -87,4 +87,14 @@ public class ContainerConstants {
     public static final String PORTAL_PROP_SITE_ID = "webmill.site-id";
     public static final String PORTAL_PROP_COMPANY_ID = "webmill.company-id";
     public static final String PORTAL_PROP_ADMIN_EMAIL = "webmill.admin-email";
+
+    public static final String jAVAX_PORTLET_CONFIG = "javax.portlet.config";
+    public static final String jAVAX_PORTLET_REQUEST = "javax.portlet.request";
+    public static final String jAVAX_PORTLET_RESPONSE = "javax.portlet.response";
+
+    public static final String jAVAX_SERVLET_REQEUST_URI = "javax.servlet.request_uri";
+    public static final String jAVAX_SERVLET_CONTEXT_PATH = "javax.servlet.context_path";
+    public static final String jAVAX_SERVLET_SERVLET_PATH = "javax.servlet.servlet_path";
+    public static final String jAVAX_SERVLET_PATH_INFO = "javax.servlet.path_info";
+    public static final String jAVAX_SERVLET_QUERY_STRING = "javax.servlet.query_string";
 }

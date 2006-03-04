@@ -58,4 +58,17 @@
     <target name="validator-exception" description="run portlet's TCK for specific host" >
         <ant antfile="webtest/tck/portlet-tck.xml" target="validator-exception" inheritall="true" />
     </target>
+    <target name="portlet-request-dispatcher" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="portlet-request-dispatcher" inheritall="true" />
+    </target>
+    <target name="portlet" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="portlet" inheritall="true" />
+    </target>
+    <target name="portlet-generic-portlet" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="portlet-generic-portlet" inheritall="true" />
+    </target>
+    <target name="render-request" description="run portlet's TCK for specific host" >
+        <ant antfile="webtest/tck/portlet-tck.xml" target="render-request" inheritall="true" />
+    </target>
+
 </project>

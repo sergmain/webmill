@@ -52,6 +52,11 @@ public final class PortletEntry {
     private ClassLoader classLoader = null;
     private String uniqueName = null;
     private Map<String, List<String>> portletProperties = new HashMap<String, List<String>>();
+    private String exceptionMessage = null;
+
+	public String getExceptionMessage() {
+		return exceptionMessage;
+	}
 
     public Map<String, List<String>> getPortletProperties() {
         return portletProperties;
@@ -74,6 +79,7 @@ public final class PortletEntry {
         servletConfig = null;
         classLoader = null;
         uniqueName = null;
+	exceptionMessage = null;
     }
 
     public ClassLoader getClassLoader() {
@@ -119,6 +125,7 @@ public final class PortletEntry {
         this.isPermanent = e.isPermanent();
         if (interval <= 0)
             this.isPermanent = true;
+	exceptionMessage = e.toString();
     }
 
     public boolean getIsWait() {

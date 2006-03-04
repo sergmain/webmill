@@ -40,6 +40,10 @@
         <ant antfile="webtest/tck/unavail-exception-test.xml" target="all" inheritall="true" />
         <ant antfile="webtest/tck/unmodif-exception-test.xml" target="all" inheritall="true" />
         <ant antfile="webtest/tck/validator-exception-test.xml" target="all" inheritall="true" />
+        <ant antfile="webtest/tck/portlet-request-dispatcher-test.xml" target="all" inheritall="true" />
+        <ant antfile="webtest/tck/portlet-test.xml" target="all" inheritall="true" />
+        <ant antfile="webtest/tck/portlet-generic-portlet-test.xml" target="all" inheritall="true" />
+        <ant antfile="webtest/tck/render-request-test.xml" target="all" inheritall="true" />
     </target>
 
     <target name="action-request">
@@ -85,6 +89,26 @@
     <target name="validator-exception">
         <echo message="Start validator exception tests"/>
         <ant antfile="webtest/tck/validator-exception-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="portlet-request-dispatcher">
+        <echo message="Start portlet request dispatcher tests"/>
+        <ant antfile="webtest/tck/portlet-request-dispatcher-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="portlet">
+        <echo message="Start portlet tests"/>
+        <ant antfile="webtest/tck/portlet-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="portlet-generic-portlet">
+        <echo message="Start portlet generic portlet tests"/>
+        <ant antfile="webtest/tck/portlet-generic-portlet-test.xml" target="all" inheritall="true" />
+    </target>
+
+    <target name="render-request">
+        <echo message="Start render request tests"/>
+        <ant antfile="webtest/tck/render-request-test.xml" target="all" inheritall="true" />
     </target>
 
 </project>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * webmill-TCK - webtest based tests for jsr168 TCK
+ *
+ * Copyright (C) 2005, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<!DOCTYPE project SYSTEM "portal.dtd">
+
+<project name="Webtest global macro file" basedir=".">
+
+
+
+    <macrodef name="testWithoutClick_2_invoke_with_helper">
+        <attribute name="portlet"/>
+        <attribute name="helper"/>
+        <attribute name="result"/>
+        <sequential>
+            <property name="webmill.lib-dir" value="@{webmill-context}/WEB-INF/lib"/>
+        <echo message="Start @{portlet} test"/>
+        <testSpec name="@{portlet}">
+            &configDeclare;
+            <steps description="@{portlet}">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="@{portlet}"/>
+                <storeDynamicProperty description="Portlet test name" name="portlet-helper-test-name"
+                    value="@{helper}"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="@{result}"/>
+                &testWithoutClick_2_invoke_with_helper; 
+            </steps>
+        </testSpec>
+
+        </sequential>
+    </macrodef>
+
+    <macrodef name="test_wo_click_2_invoke">
+        <attribute name="portlet"/>
+        <attribute name="result"/>
+        <sequential>
+            <property name="webmill.lib-dir" value="@{webmill-context}/WEB-INF/lib"/>
+        <echo message="Start @{portlet} test"/>
+        <testSpec name="@{portlet}">
+            &configDeclare;
+            <steps description="@{portlet}">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="@{portlet}"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="@{result}"/>
+                &testWithoutClick_with_2_invoke; 
+            </steps>
+        </testSpec>
+
+        </sequential>
+    </macrodef>
+
+    <macrodef name="test_wo_click">
+        <attribute name="portlet"/>
+        <attribute name="result"/>
+        <sequential>
+            <property name="webmill.lib-dir" value="@{webmill-context}/WEB-INF/lib"/>
+        <echo message="Start @{portlet} test"/>
+        <testSpec name="@{portlet}">
+            &configDeclare;
+            <steps description="@{portlet}">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="@{portlet}"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="@{result}"/>
+                &testWithoutClickLink; 
+            </steps>
+        </testSpec>
+
+        </sequential>
+    </macrodef>
+
+    <macrodef name="test_with_click">
+        <attribute name="portlet"/>
+        <attribute name="result"/>
+        <sequential>
+            <property name="webmill.lib-dir" value="@{webmill-context}/WEB-INF/lib"/>
+        <echo message="Start @{portlet} test"/>
+        <testSpec name="@{portlet}">
+            &configDeclare;
+            <steps description="@{portlet}">
+                &initGlobalProperties;
+                <storeDynamicProperty description="Portlet test name" name="portlet-test-name"
+                    value="@{portlet}"/>
+                <storeDynamicProperty description="Success test result" name="success-test-result"
+                    value="@{result}"/>
+                &testWithClickOnLink; 
+            </steps>
+        </testSpec>
+
+        </sequential>
+    </macrodef>
+
+                
+
+
+</project>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <!--
 /*
  * webmill-TCK - webtest based tests for jsr168 TCK
@@ -25,20 +24,15 @@
  *
  */
 -->
+    <storeDynamicProperty description="Portlet test url" name="portlet-test-url"
+        value="${test-url}${applicationName}::#{portlet-test-name}"/>
 
-<!ENTITY configDeclare     			    SYSTEM "_entity/configDeclare.xml">
-<!ENTITY loginProcess     			    SYSTEM "_entity/loginProcess.xml">
-<!ENTITY logoutProcess     			    SYSTEM "_entity/logoutProcess.xml">
-<!ENTITY invokeStartPage     		    SYSTEM "_entity/invokeStartPage.xml">
-<!ENTITY checkPortletAvail     		    SYSTEM "_entity/checkPortletAvail.xml">
-<!ENTITY initGlobalProperties     	    SYSTEM "_entity/initGlobalProperties.xml">
+    <storeDynamicProperty description="Portlet helper test url" name="portlet-helper-test-url"
+        value="${test-url}${applicationName}::#{portlet-helper-test-name}"/>
 
+    <invoke description="Invoke helper portlet" url="#{portlet-helper-test-url}" save="portlet-helper-#{portlet-helper-test-name}-"/>
 
-<!ENTITY testWithoutClick_with_2_invoke		SYSTEM "_entity/testWithoutClick_with_2_invoke.xml">
-<!ENTITY testWithoutClick_2_invoke_with_helper	SYSTEM "_entity/testWithoutClick_2_invoke_with_helper.xml">
-<!ENTITY testWithoutClickLink     	    SYSTEM "_entity/testWithoutClickLink.xml">
-<!ENTITY testWithClickOnLink     	    SYSTEM "_entity/testWithClickOnLink.xml">
-<!ENTITY invokePortlet                      SYSTEM "_entity/invokePortlet.xml">
-
-
-
+    <invoke description="1st invoke portlet" url="#{portlet-test-url}" save="portlet-1st-invoke-#{portlet-test-name}-"/>
+    <invoke description="2nd invoke portlet" url="#{portlet-test-url}" save="portlet-2nd-invoke#{portlet-test-name}-"/>
+    <verifytext description="Check what portlet test is success" text="#{success-test-result}"/>
+<!--    <echo message="#{success-test-result}"/>  -->
