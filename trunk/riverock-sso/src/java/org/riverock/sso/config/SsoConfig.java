@@ -103,10 +103,7 @@ public class SsoConfig {
             if (Boolean.FALSE.equals( getConfig().getIsTempDirInit() ) )
             {
                 String dir = getConfig().getSsoTempDir();
-                if (File.separatorChar=='\\')
-                    dir = dir.replace( '/', '\\');
-                else
-                    dir = dir.replace( '\\', '/');
+	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
                 if (!dir.endsWith( File.separator ))
                     dir += File.separator;
@@ -146,10 +143,7 @@ public class SsoConfig {
                 return getConfig().getSsoDebugDir();
 
             String dir = getConfig().getSsoDebugDir();
-            if (File.separatorChar=='\\')
-                dir = dir.replace( '/', '\\');
-            else
-                dir = dir.replace( '\\', '/');
+	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
             if (!dir.endsWith( File.separator ))
                 dir += File.separator;

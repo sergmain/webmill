@@ -129,10 +129,9 @@ public class ConfigObject
             throw new IllegalArgumentException(errorString);
         }
 
-        if (File.separatorChar=='\\')
-            config.nameConfigFile = config.nameConfigFile.replace( '/', '\\');
-        else
-            config.nameConfigFile = config.nameConfigFile.replace( '\\', '/');
+	    config.nameConfigFile = config.nameConfigFile.replace( 
+		File.separatorChar == '/'?'\\':'/', File.separatorChar 
+	    );
 
         if (log.isInfoEnabled()) {
             log.info( "nameConfigFile: " + config.nameConfigFile );

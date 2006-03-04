@@ -3697,13 +3697,7 @@ public final class CreateSchemaFromDb {
         if (path==null)
             return null;
 
-        String p = path;
-        if (File.separatorChar=='\\')
-            p.replace('/', '\\');
-        else
-            p.replace('\\', '/');
-
-        return p;
+	return path.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
     }
 
 }
