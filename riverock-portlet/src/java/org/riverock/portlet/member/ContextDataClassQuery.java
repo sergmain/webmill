@@ -36,6 +36,7 @@ import javax.portlet.PortletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -55,7 +56,7 @@ import org.riverock.webmill.container.tools.PortletService;
  * $Id$
  */
 public class ContextDataClassQuery extends BaseClassQuery {
-    private static Log log = LogFactory.getLog( ContextDataClassQuery.class );
+    private static Logger log = Logger.getLogger( ContextDataClassQuery.class );
 
     private Long idSiteCtxType = null;
 

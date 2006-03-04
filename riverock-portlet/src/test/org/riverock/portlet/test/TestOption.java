@@ -34,6 +34,7 @@ import javax.portlet.PortletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.ClassQueryItemImpl;
@@ -51,7 +52,7 @@ import org.riverock.portlet.member.ClassQueryItemImpl;
  */
 public final class TestOption extends BaseClassQuery
 {
-    private final static Log log = LogFactory.getLog( TestOption.class );
+    private final static Logger log = Logger.getLogger( TestOption.class );
 
     public String type = null;
     public Long idLang = null;

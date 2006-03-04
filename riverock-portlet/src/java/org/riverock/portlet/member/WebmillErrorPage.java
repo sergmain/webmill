@@ -31,6 +31,7 @@ import javax.portlet.ActionResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 
@@ -43,7 +44,7 @@ import org.riverock.common.tools.ExceptionTools;
  */
 public class WebmillErrorPage
 {
-    private static Log log = LogFactory.getLog( WebmillErrorPage.class );
+    private static Logger log = Logger.getLogger( WebmillErrorPage.class );
 
     public static void processPortletError( Writer out, Throwable th, String errorMessage, String url, String urlMessage ) throws IOException {
 

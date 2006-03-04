@@ -48,13 +48,14 @@ import javax.portlet.PortletException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 
 /**
  * $Id$
  */
 public final class NewsItem {
-    private final static Log log = LogFactory.getLog( NewsItem.class );
+    private final static Logger log = Logger.getLogger( NewsItem.class );
 
     public NewsItemType newsItem = new NewsItemType();
 

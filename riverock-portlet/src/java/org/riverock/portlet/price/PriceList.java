@@ -30,6 +30,7 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
@@ -45,7 +46,7 @@ import org.riverock.portlet.schema.price.ShopOrderType;
  * $Id$
  */
 public class PriceList {
-    private static Log log = LogFactory.getLog( PriceList.class );
+    private static Logger log = Logger.getLogger( PriceList.class );
 
     public PriceList() {
     }

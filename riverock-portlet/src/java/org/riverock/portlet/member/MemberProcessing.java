@@ -42,6 +42,7 @@ import javax.portlet.PortletResponse;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 
 import org.riverock.common.config.ConfigException;
@@ -77,7 +78,7 @@ import org.riverock.webmill.container.ContainerConstants;
  * $Id$
  */
 public final class MemberProcessing {
-    private final static Log log = LogFactory.getLog( MemberProcessing.class );
+    private final static Logger log = Logger.getLogger( MemberProcessing.class );
 
     public ModuleType mod = null;
     public ContentType content = null;

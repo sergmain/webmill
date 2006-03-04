@@ -36,6 +36,7 @@ import javax.portlet.RenderRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.tools.ContentTypeTools;
@@ -51,7 +52,7 @@ import org.riverock.webmill.container.tools.PortletService;
  */
 public class ImageSelectUrl extends HttpServlet
 {
-    private static Log log = LogFactory.getLog(ImageSelectUrl.class);
+    private static Logger log = Logger.getLogger(ImageSelectUrl.class);
 
     public ImageSelectUrl()
     {

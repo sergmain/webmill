@@ -37,6 +37,7 @@ import javax.portlet.PortletConfig;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.cache.impl.CacheException;
 import org.riverock.common.tools.DateTools;
@@ -69,7 +70,7 @@ import org.riverock.webmill.container.ContainerConstants;
  */
 
 public final class ArticleXml implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Log log = LogFactory.getLog( ArticleXml.class );
+    private final static Logger log = Logger.getLogger( ArticleXml.class );
 
     private static final CacheFactory cache = new CacheFactory( ArticleXml.class.getName() );
     private static final String DEFAULT_ROOT_NAME = "Article";

@@ -32,6 +32,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
@@ -51,7 +52,7 @@ import org.riverock.webmill.container.portal.bean.PortalTemplateImpl;
  * $RCSfile$
  */
 public class SiteTemplateMember {
-    private static Log log = LogFactory.getLog( SiteTemplateMember.class );
+    private static Logger log = Logger.getLogger( SiteTemplateMember.class );
 
     private static CacheFactory cache = new CacheFactory( SiteTemplateMember.class.getName() );
 

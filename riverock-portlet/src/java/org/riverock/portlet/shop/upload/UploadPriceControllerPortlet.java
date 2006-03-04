@@ -49,6 +49,7 @@ import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.FileItemFactory; 
 import org.apache.commons.fileupload.FileItem; 
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.log4j.Logger;
 
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
@@ -72,7 +73,7 @@ import org.riverock.webmill.container.ContainerConstants;
  * $Id$
  */
 public final class UploadPriceControllerPortlet implements Portlet {
-    private final static Log log = LogFactory.getLog( UploadPriceControllerPortlet.class );
+    private final static Logger log = Logger.getLogger( UploadPriceControllerPortlet.class );
 
     public UploadPriceControllerPortlet() {
     }

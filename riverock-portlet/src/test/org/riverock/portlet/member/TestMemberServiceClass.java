@@ -36,6 +36,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.tools.ExceptionTools;
@@ -74,7 +75,7 @@ import org.riverock.sql.parser.Parser;
  *         $Id$
  */
 public class TestMemberServiceClass extends TestCase {
-    private static Log log = LogFactory.getLog( TestMemberServiceClass.class );
+    private static Logger log = Logger.getLogger( TestMemberServiceClass.class );
 
     private static boolean isUseAssertion = true;
 

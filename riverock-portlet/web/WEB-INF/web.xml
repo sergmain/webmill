@@ -39,7 +39,8 @@
 			/WEB-INF/faces-holding-config.xml, 
 			/WEB-INF/faces-company-config.xml,
 			/WEB-INF/faces-portlet-name-config.xml,
-			/WEB-INF/faces-users-config.xml
+			/WEB-INF/faces-users-config.xml,
+			/WEB-INF/faces-shop-manager-config.xm
 		</param-value>
 	</context-param>
 	<context-param>

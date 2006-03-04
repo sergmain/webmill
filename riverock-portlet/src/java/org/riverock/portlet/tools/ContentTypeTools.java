@@ -5,6 +5,7 @@ import javax.portlet.PortletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.webmill.container.portlet.PortletContainerFactory;
 
@@ -15,7 +16,7 @@ import org.riverock.webmill.container.portlet.PortletContainerFactory;
  *         $Id$
  */
 public class ContentTypeTools {
-    private final static Log log = LogFactory.getLog(PortletContainerFactory.class);
+    private final static Logger log = Logger.getLogger(PortletContainerFactory.class);
 
     public static final String CONTENT_TYPE_UTF8 = "utf-8";
     public static final String CONTENT_TYPE_8859_1 = "8859_1";

@@ -35,6 +35,7 @@ import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -54,7 +55,7 @@ import org.riverock.portlet.schema.price.StandardCurrencyType;
  * $Id$
  */
 public final class CurrencyService {
-    private final static Log log = LogFactory.getLog( CurrencyService.class );
+    private final static Logger log = Logger.getLogger( CurrencyService.class );
 
     public static CurrencyCurrentCursType getCurrentCurs( DatabaseAdapter db_, Long idCurrency, Long idSite )
         throws PriceException {

@@ -33,6 +33,7 @@ import javax.portlet.PortletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
@@ -48,7 +49,7 @@ import org.riverock.webmill.container.tools.PortletService;
  * $Id$
  */
 public final class TemplateMemberClassQuery extends BaseClassQuery {
-    private final static Log log = LogFactory.getLog( TemplateMemberClassQuery.class );
+    private final static Logger log = Logger.getLogger( TemplateMemberClassQuery.class );
 
     private Long idSiteTemplate = null;
 

@@ -26,6 +26,7 @@ package org.riverock.portlet.test.cases;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 
@@ -39,7 +40,7 @@ import org.riverock.generic.db.DatabaseAdapter;
  */
 public class TestSite {
 
-    private static Log log = LogFactory.getLog( TestSite.class );
+    private static Logger log = Logger.getLogger( TestSite.class );
 
     public final static String TEST_SERVER_NAME = "test-host";
     public final static String TEST_LANGUAGE = "ru_RU";

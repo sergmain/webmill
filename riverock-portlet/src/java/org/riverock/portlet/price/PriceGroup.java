@@ -34,6 +34,7 @@ import javax.portlet.RenderResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -48,7 +49,7 @@ import org.riverock.webmill.container.ContainerConstants;
  * $Id$
  */
 public final class PriceGroup {
-    private final static Log log = LogFactory.getLog( PriceGroup.class );
+    private final static Logger log = Logger.getLogger( PriceGroup.class );
 
     public static GroupListType getInstance( DatabaseAdapter db_, ShopPageParam shopParam, RenderResponse renderResponse )
         throws PriceException {

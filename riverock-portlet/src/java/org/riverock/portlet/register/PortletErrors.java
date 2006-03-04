@@ -4,6 +4,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.action.ActionMessage;
@@ -18,7 +19,7 @@ import org.riverock.portlet.main.Constants;
  *         $Id$
  */
 public class PortletErrors {
-    private static final Log log = LogFactory.getLog(PortletErrors.class);
+    private static final Logger log = Logger.getLogger(PortletErrors.class);
 
     public static final String SYSTEM_ERROR = "system_error";
 

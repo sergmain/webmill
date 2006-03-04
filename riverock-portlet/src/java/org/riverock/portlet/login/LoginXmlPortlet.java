@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
+import javax.portlet.PortletURL;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -88,7 +89,8 @@ public final class LoginXmlPortlet implements Portlet {
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
             LoginType login = new LoginType();
-            login.setPortletName( LoginUtils.CTX_TYPE_LOGIN_XML );
+//            login.setPortletName( LoginUtils.CTX_TYPE_LOGIN_XML );
+            login.setPortletName( "" );
             if ( auth_ != null && auth_.checkAccess( renderRequest.getServerName() ) ) {
                 if ( log.isDebugEnabled() )
                     log.debug( "user " + auth_.getUserLogin() + " is  valid for " + renderRequest.getServerName() + " site" );
@@ -99,16 +101,17 @@ public final class LoginXmlPortlet implements Portlet {
             }
             else {
 
+		PortletURL portletUrl = renderResponse.createActionURL();
+		portletUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_XML );
+
                 String srcURL = null;
                 if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
                     srcURL = RequestTools.getString( renderRequest, LoginUtils.NAME_TOURL_PARAM );
-                }
-                else {
-                    srcURL = PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse );
-                }
+                	srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
+                	srcURL = StringTools.replaceString( srcURL, "%26", "&" );
 
-                srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
-                srcURL = StringTools.replaceString( srcURL, "%26", "&" );
+			portletUrl.setParameter( LoginUtils.NAME_TOURL_PARAM, srcURL );
+                }
 
                 if ( log.isDebugEnabled() ) {
                     log.debug( "reqeust parameter  mill.tourl: " + renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) );
@@ -117,8 +120,8 @@ public final class LoginXmlPortlet implements Portlet {
                     log.debug( "Header string - " + bundle.getString( "auth.check.header" ) );
                 }
 
-                login.setActionUrl( PortletService.ctx( renderRequest ) );
-                login.setToUrl( srcURL );
+                login.setActionUrl( portletUrl.toString() );
+                login.setToUrl( "" );
                 login.setInviteMessage( bundle.getString( "auth.check.header" ) );
                 login.setLoginMessage( bundle.getString( "auth.check.login" ) );
                 login.setPasswordMessage( bundle.getString( "auth.check.password" ) );

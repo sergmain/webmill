@@ -36,6 +36,7 @@ import javax.portlet.PortletConfig;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -50,7 +51,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultContent;
  * $Id$
  */
 public final class FaqItem implements PortletResultObject, PortletGetList, PortletResultContent {
-    private final static Log log = LogFactory.getLog( FaqItem.class );
+    private final static Logger log = Logger.getLogger( FaqItem.class );
 
     public String question = null;
     public String answer = null;
