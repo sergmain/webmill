@@ -36,13 +36,12 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  *         Time: 16:31:19
  *         $Id$
  */
-public class PortletItem implements Serializable {
+public class PortletWebApplication implements Serializable {
     private static final long serialVersionUID = 30430072384237876L;
 
     private ClassLoader classLoader = null;
     private ServletConfig servletConfig = null;
     private PortletDefinition portletDefinition = null;
-    private boolean isNew = true;
     private String uniqueName = null;
 
     public String getUniqueName() {
@@ -51,14 +50,6 @@ public class PortletItem implements Serializable {
 
     public void setUniqueName(String uniqueName) {
         this.uniqueName = uniqueName;
-    }
-
-    public boolean isNew() {
-        return isNew;
-    }
-
-    public void setNew(boolean aNew) {
-        isNew = aNew;
     }
 
     public PortletDefinition getPortletDefinition() {
