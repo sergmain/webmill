@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<portlet-app version="webmill portlet 3.0"
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
+	<portlet>
+		<description>Image Viewer Portlet</description>
+		<portlet-name>ImageViewerPortlet</portlet-name>
+		<display-name>Image Viewer Portlet</display-name>
+		<portlet-class>imageviewerportlet.ImageViewerPortlet</portlet-class>
+		<init-param>
+			<name>jspView</name>
+			<value>/jsp/view.jsp</value>
+		</init-param>
+		<init-param>
+			<name>jspEdit</name>
+			<value>/jsp/edit.jsp</value>
+		</init-param>
+		<init-param>
+			<name>bgColor</name>
+			<value>white</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+			<portlet-mode>EDIT</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>ImageViewer Portlet</title>
+			<short-title>ImageViewer</short-title>
+			<keywords>Images, Viewer</keywords>
+		</portlet-info>
+	</portlet>
+</portlet-app>

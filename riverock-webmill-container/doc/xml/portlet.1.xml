@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:portlet="http://java.sun.com/xml/ns/portlet"
+xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd /opt/SUNWps/dtd/portlet.xsd" version="1.0">
+<portlet>
+    <portlet-name>AJAXInvoiceViewerPortlet</portlet-name>
+    <portlet-class>com.sun.portal.jspportlet.JspPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+        <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+        <title>AJAX Invoice Viewer</title>
+    </portlet-info>
+    <portlet-preferences>
+        <preference>
+            <name>contentPage</name>
+            <value>/view1.jsp</value>
+            <value>/view2.jsp</value>
+        </preference>
+    </portlet-preferences>
+
+</portlet>
+</portlet-app> 

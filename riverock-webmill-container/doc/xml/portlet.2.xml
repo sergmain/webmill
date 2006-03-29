@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" 
+	version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
+http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+	<portlet>
+		<portlet-name>RssPortlet</portlet-name>
+		<portlet-class>com.plumtree.portlet.portlets.RssPortlet</portlet-class>
+		<!-- a xsl file for the rss version 1.0 -->
+		<init-param>
+			<name>RSS10_XSL</name>
+			<value>/WEB-INF/Rss10.xsl</value>
+		</init-param>
+		<!-- yet another xsl file for the rss version 2.0 -->
+		<init-param>
+			<name>RSS20_XSL</name>
+			<value>/WEB-INF/Rss20.xsl</value>
+		</init-param>
+		<!-- starting url for reading rss  -->
+		<init-param>
+			<name>url</name>
+			<value>http://jboss.org/jbossBlog/blog/?flavor=rss2</value>value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+			<portlet-mode>edit</portlet-mode>
+			<portlet-mode>help</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>RssPortlet</title>
+			<short-title>RSS</short-title>
+			<keywords>RSS</keywords>
+		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>RssXml</name>
+				<value>http://jboss.org/jbossBlog/blog/?flavor=rss2</value>value>
+				<value>http://www.theserverside.com/rss/theserverside-rss2.xml</value>
+				<value>http://www.theserverside.com/rss/theserverside-generalj2ee-rss2.xml</value>	
+				<value>http://slashdot.org/rss/index.rss</value>
+				<value>http://rss.news.yahoo.com/rss/tech</value>value>
+        <modifiable>0</modifiable>
+			</preference>
+		</portlet-preferences>
+	</portlet>
+</portlet-app>
+

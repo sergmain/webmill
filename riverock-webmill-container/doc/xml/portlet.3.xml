@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app
+    xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+    id="portlet_jp_ActionResponse_web"
+    version="1.0"
+    >
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet Application specific                                * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: NoRenderParametersTestPortlet                      * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>NoRenderParametersTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.NoRenderParametersTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>NoRenderParametersTestPortlet</title>
+      <short-title>NoRenderParametersTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SendRedirectIllegalArgumentExceptionTestPortlet    * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SendRedirectIllegalArgumentExceptionTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SendRedirectIllegalArgumentExceptionTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SendRedirectIllegalArgumentExceptionTestPortlet</title>
+      <short-title>SendRedirectIllegalArgumentExceptionTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SendRedirectIllegalStateExceptionTestPortlet       * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SendRedirectIllegalStateExceptionTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SendRedirectIllegalStateExceptionTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SendRedirectIllegalStateExceptionTestPortlet</title>
+      <short-title>SendRedirectIllegalStateExceptionTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SendRedirectTestPortlet                            * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SendRedirectTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SendRedirectTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SendRedirectTestPortlet</title>
+      <short-title>SendRedirectTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetPortletModeAfterSendRedirectTestPortlet         * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetPortletModeAfterSendRedirectTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetPortletModeAfterSendRedirectTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>EDIT</portlet-mode>
+      <portlet-mode>HELP</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>SetPortletModeAfterSendRedirectTestPortlet</title>
+      <short-title>SetPortletModeAfterSendRedirectTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetPortletModeIllegalStateExceptionTestPortlet     * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetPortletModeIllegalStateExceptionTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetPortletModeIllegalStateExceptionTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>EDIT</portlet-mode>
+      <portlet-mode>HELP</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>SetPortletModeIllegalStateExceptionTestPortlet</title>
+      <short-title>SetPortletModeIllegalStateExceptionTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetPortletModeTestPortlet                          * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetPortletModeTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetPortletModeTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+      <portlet-mode>EDIT</portlet-mode>
+      <portlet-mode>HELP</portlet-mode>
+    </supports>
+    <portlet-info>
+      <title>SetPortletModeTestPortlet</title>
+      <short-title>SetPortletModeTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetRenderParameterStringArrayIllegalArgumentExceptionTestPortlet * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetRenderParameterStringArrayIllegalArgumentExceptionTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetRenderParameterStringArrayIllegalArgumentExceptionTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetRenderParameterStringArrayIllegalArgumentExceptionTestPortlet</title>
+      <short-title>SetRenderParameterStringArrayIllegalArgumentExceptionTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetRenderParameterStringArrayTestPortlet           * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetRenderParameterStringArrayTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetRenderParameterStringArrayTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetRenderParameterStringArrayTestPortlet</title>
+      <short-title>SetRenderParameterStringArrayTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetRenderParameterStringIllegalArgumentExceptionTestPortlet * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetRenderParameterStringIllegalArgumentExceptionTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetRenderParameterStringIllegalArgumentExceptionTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetRenderParameterStringIllegalArgumentExceptionTestPortlet</title>
+      <short-title>SetRenderParameterStringIllegalArgumentExceptionTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetRenderParameterStringTestPortlet                * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetRenderParameterStringTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetRenderParameterStringTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetRenderParameterStringTestPortlet</title>
+      <short-title>SetRenderParameterStringTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetRenderParametersIllegalArgumentExceptionTestPortlet * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetRenderParametersIllegalArgumentExceptionTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetRenderParametersIllegalArgumentExceptionTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetRenderParametersIllegalArgumentExceptionTestPortlet</title>
+      <short-title>SetRenderParametersIllegalArgumentExceptionTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetRenderParametersTestPortlet                     * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetRenderParametersTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetRenderParametersTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetRenderParametersTestPortlet</title>
+      <short-title>SetRenderParametersTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetUndeclaredPortletModeTestPortlet                * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetUndeclaredPortletModeTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetUndeclaredPortletModeTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetUndeclaredPortletModeTestPortlet</title>
+      <short-title>SetUndeclaredPortletModeTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetUndeclaredWindowStateTestPortlet                * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetUndeclaredWindowStateTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetUndeclaredWindowStateTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetUndeclaredWindowStateTestPortlet</title>
+      <short-title>SetUndeclaredWindowStateTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetWindowStateAfterSendRedirectTestPortlet         * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetWindowStateAfterSendRedirectTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetWindowStateAfterSendRedirectTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetWindowStateAfterSendRedirectTestPortlet</title>
+      <short-title>SetWindowStateAfterSendRedirectTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+  <!-- *************************************************************** -->
+  <!-- *                                                             * -->
+  <!-- * Portlet: SetWindowStateIllegalStateExceptionTestPortlet     * -->
+  <!-- *                                                             * -->
+  <!-- *************************************************************** -->
+  <portlet>
+    <portlet-name>SetWindowStateIllegalStateExceptionTestPortlet</portlet-name>
+    <portlet-class>com.sun.ts.tests.portlet.api.javax_portlet.ActionResponse.SetWindowStateIllegalStateExceptionTestPortlet</portlet-class>
+    <expiration-cache>0</expiration-cache>
+    <supports>
+      <mime-type>text/html</mime-type>
+    </supports>
+    <portlet-info>
+      <title>SetWindowStateIllegalStateExceptionTestPortlet</title>
+      <short-title>SetWindowStateIllegalStateExceptionTestPortlet</short-title>
+    </portlet-info>
+  </portlet>
+</portlet-app>
+
