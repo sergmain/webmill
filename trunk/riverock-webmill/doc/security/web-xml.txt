@@ -1,0 +1,17 @@
+<security-constraint>     
+<web-resource-collection>          
+<web-resource-name>SecureOrdersEast</web-resource-name>          
+<description> Security constraint for  resources in the orders/east directory  </description>          
+<url-pattern>/orders/east/*</url-pattern>          
+<http-method>POST</http-method>          
+<http-method>GET</http-method>     
+</web-resource-collection>     
+<auth-constraint>          
+<description>  constraint for east coast sales  </description>          
+<role-name>east</role-name>          
+<role-name>manager</role-name>     
+</auth-constraint> 
+<user-data-constraint>          
+<description>SSL not required</description>          
+<transport-guarantee>NONE</transport-guarantee>     
+</user-data-constraint></security-constraint>
