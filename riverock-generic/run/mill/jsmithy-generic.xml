@@ -25,7 +25,7 @@
  *
  */
 -->
-<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverco\riverock-generic\src-schema\xsd\jsmithy-generic-config.xsd">
+<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-generic\src-schema\xsd\riverock-generic-config.xsd">
 	<GenericTempDir>c:\opt1\mill\temp</GenericTempDir>
 	<DTS>
 		<TimeZoneName>Europe/Moscow</TimeZoneName>
@@ -33,8 +33,8 @@
 	<!-- Charset used for get correct request parameters -->
 	<MailHost>localhost</MailHost>
 	<SecurityKeyStorage path="d:\keys\mill\keystore.ks" password="111" alias="222"/>
-        <DefaultConnectionName>ORACLE</DefaultConnectionName>
-<!--	<DefaultConnectionName>MYSQL</DefaultConnectionName>-->
+<!--    <DefaultConnectionName>ORACLE</DefaultConnectionName>-->
+	<DefaultConnectionName>MYSQL</DefaultConnectionName>
 	<DatabaseConnection name="ORACLE">
 		<Username>millennium</Username>
 		<Password>qqq</Password>
@@ -44,34 +44,6 @@
 		<IsConvertDatabaseString>false</IsConvertDatabaseString>
 		<IsAutoCommit>false</IsAutoCommit>
 	</DatabaseConnection>
-	<DatabaseConnection name="ORACLE_ZEON">
-		<Username>zeon</Username>
-		<Password>qqq</Password>
-		<ConnectString>jdbc:oracle:thin:@ser:1521:MILL</ConnectString>
-		<ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
-		<DatabaseCharset>UTF8</DatabaseCharset>
-		<IsConvertDatabaseString>false</IsConvertDatabaseString>
-		<IsAutoCommit>false</IsAutoCommit>
-	</DatabaseConnection>
-    <DatabaseConnection name="ORACLE_CNT">
-        <Username>cih</Username>
-        <Password>1</Password>
-        <ConnectString>jdbc:oracle:thin:@cnt.lo:1521:CNT2</ConnectString>
-        <ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
-        <DatabaseCharset>UTF8</DatabaseCharset>
-        <IsConvertDatabaseString>false</IsConvertDatabaseString>
-        <IsAutoCommit>false</IsAutoCommit>
-        <DataSourceType>DRIVER</DataSourceType>
-    </DatabaseConnection>
-    <DatabaseConnection name="ORACLE_CIH">
-        <Username>cih</Username>
-        <Password>qqq</Password>
-        <ConnectString>jdbc:oracle:thin:@smaslyukov:1521:MILL</ConnectString>
-        <ConnectionClass>org.riverock.generic.db.factory.ORAconnect</ConnectionClass>
-        <DatabaseCharset>UTF8</DatabaseCharset>
-        <IsConvertDatabaseString>false</IsConvertDatabaseString>
-        <IsAutoCommit>false</IsAutoCommit>
-    </DatabaseConnection>
 	<DatabaseConnection name="ORACLE_TEST">
 		<Username>TEST</Username>
 		<Password>qqq</Password>
