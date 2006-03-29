@@ -38,14 +38,10 @@ public final class PortletContextImpl implements PortletContext {
 
     private ServletContext servletContext;
     private String portalName;
-    private int portalMajorVersion;
-    private int portalMinorVersion;
 
-    public PortletContextImpl( ServletContext servletContext, String portalName, int portalMajorVersion, int portalMinorVersion ) {
+    public PortletContextImpl(ServletContext servletContext, String portalName) {
         this.servletContext = servletContext;
         this.portalName = portalName;
-        this.portalMajorVersion = portalMajorVersion;
-        this.portalMinorVersion = portalMinorVersion;
     }
 
     public String getServerInfo() {

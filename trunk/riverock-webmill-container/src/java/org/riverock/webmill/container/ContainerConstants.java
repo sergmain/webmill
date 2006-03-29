@@ -64,6 +64,7 @@ public class ContainerConstants {
     public static final String PORTAL_CURRENT_CONTAINER = "javax.portlet.webmill.PORTAL_CURRENT_CONTAINER";
     public static final String PORTAL_PORTAL_DAO_PROVIDER = "javax.portlet.webmill.PORTAL_PORTAL_DAO_PROVIDER";
     public static final String PORTAL_PORTAL_SESSION_MANAGER = "javax.portlet.webmill.PORTAL_PORTAL_SESSION_MANAGER";
+    public static final String PORTAL_PORTLET_NAMESPACE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_NAMESPACE_ATTRIBUTE";
 
 
     public static final String PORTAL_REMOTE_ADDRESS_ATTRIBUTE = "javax.portlet.webmill.PORTAL_REMOTE_ADDRESS_ATTRIBUTE";
@@ -81,7 +82,7 @@ public class ContainerConstants {
     public static final String locale_name_package = "locale-name-package";
     public static final String name_portlet_code_string = "name-portlet-code-string";
     public static final String class_name_get_list = "class-name-get-list";
-    public static final String is_direct_request = "is-direct-request";
+//    public static final String is_direct_request = "is-direct-request";
 
 
     public static final String PORTAL_PROP_SITE_ID = "webmill.site-id";

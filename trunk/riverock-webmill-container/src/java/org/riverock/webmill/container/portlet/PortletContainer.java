@@ -36,11 +36,10 @@ import java.util.Map;
 import javax.portlet.Portlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
-import javax.portlet.PortletException;
 import javax.portlet.UnavailableException;
 import javax.servlet.ServletConfig;
 
-import org.riverock.webmill.container.bean.PortletItem;
+import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.impl.PortletConfigImpl;
 import org.riverock.webmill.container.impl.PortletContextImpl;
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
@@ -63,13 +62,11 @@ public final class PortletContainer implements Serializable {
 
     public static final String PORTLET_ID_NAME_SEPARATOR = "::";
 
-    private static final boolean DEBUG = true;
-
     // List with portlet.xml files which waiting for digest
     private static List<WaitDigestFile> digestWaitList = new ArrayList<WaitDigestFile>();
 
     //
-    private static List<PortletItem> portletItems = new ArrayList<PortletItem>();
+    private static Map<String, PortletWebApplication> portletItems = new HashMap<String, PortletWebApplication>();
 
     //
     private static List<PortletContainer> portletContainers = new ArrayList<PortletContainer>();
@@ -77,13 +74,21 @@ public final class PortletContainer implements Serializable {
     //
     private static PortletDefinitionProcessor portletDefinitionProcessor = new PortletDefinitionProcessorImpl();
 
-    // in this map as key used unique name
+    // in this map as key used unique name of web-application
+    // unique name initialized in PortletRegisterServlet.init() method
     private Map<String, List<PortletEntry>> portletInstanceUniqueNameMap = new HashMap<String, List<PortletEntry>>();
-    //
+
+    // as key used full portlet name
     private Map<String, PortletEntry> portletInstanceMap = new HashMap<String, PortletEntry>();
+
+    // in this map as key used unique name of web-application
+    // unique name initialized in PortletRegisterServlet.init() method
+    private Map<String, PortletContext> portletContextMap = new HashMap<String, PortletContext>();
 
     private PortalInstance portalInstance = null;
     private PortletContentCache contentCache = null;
+
+    private static Object syncObect = new Object();
 
     private static class WaitDigestFile {
         private File file = null;
@@ -99,7 +104,6 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    private static Object syncObect = new Object();
     private PortletContainer(PortalInstance portalInstance) {
         this.contentCache = new PortletContentCacheImpl();
         this.portalInstance = portalInstance;
@@ -133,12 +137,12 @@ public final class PortletContainer implements Serializable {
                 Iterator<PortletDefinition> it = portletList.iterator();
                 while (it.hasNext()) {
                     PortletDefinition portletType = it.next();
-                    PortletItem portletItem = new PortletItem();
-                    portletItem.setPortletDefinition( portletType );
-                    portletItem.setServletConfig( waitDigestFile.servletConfig );
-                    portletItem.setClassLoader( waitDigestFile.classLoader );
-                    portletItem.setUniqueName( waitDigestFile.uniqueName );
-                    portletItems.add(portletItem);
+                    PortletWebApplication portletWebApplication = new PortletWebApplication();
+                    portletWebApplication.setPortletDefinition( portletType );
+                    portletWebApplication.setServletConfig( waitDigestFile.servletConfig );
+                    portletWebApplication.setClassLoader( waitDigestFile.classLoader );
+                    portletWebApplication.setUniqueName( waitDigestFile.uniqueName );
+                    portletItems.put( portletType.getFullPortletName(), portletWebApplication );
                 }
                 iterator.remove();
             }
@@ -179,12 +183,12 @@ public final class PortletContainer implements Serializable {
     public static void destroy(String uniqueName) {
         System.out.println("Undeploy uniqueName: " + uniqueName);
         synchronized(syncObect) {
-            Iterator<PortletItem> iterator = portletItems.iterator();
+            Iterator<Map.Entry<String,PortletWebApplication>> iterator = portletItems.entrySet().iterator();
             while (iterator.hasNext()) {
-                PortletItem portletItem = iterator.next();
+                PortletWebApplication portletWebApplication = iterator.next().getValue();
 
-                if ( portletItem.getUniqueName().equals( uniqueName ) ) {
-                    System.out.println( "Remove portlet entry: " + portletItem.getPortletDefinition().getFullPortletName() );
+                if ( portletWebApplication.getUniqueName().equals( uniqueName ) ) {
+                    System.out.println( "Remove portlet entry: " + portletWebApplication.getPortletDefinition().getFullPortletName() );
                     iterator.remove();
                 }
             }
@@ -208,14 +212,15 @@ public final class PortletContainer implements Serializable {
                     Iterator<PortletEntry> listIterator = portletEntries.iterator();
                     while (listIterator.hasNext()) {
                         PortletEntry portletEntry = listIterator.next();
-			try {
-                        	destroyPortlet( container, portletEntry, uniqueName );
-			}
-			catch(Throwable th){
-				th.printStackTrace( System.out);
-			}
+                        try {
+                            destroyPortlet( container, portletEntry, uniqueName );
+                        }
+                        catch(Throwable th){
+                            th.printStackTrace( System.out);
+                        }
                     }
                     container.portletInstanceUniqueNameMap.remove( uniqueName );
+                    container.portletContextMap.remove( uniqueName );
                 }
             }
         }
@@ -233,7 +238,6 @@ public final class PortletContainer implements Serializable {
 
         container.contentCache.invalidate( portletEntry.getPortletDefinition().getFullPortletName() );
         container.portletInstanceMap.remove( portletEntry.getPortletDefinition().getFullPortletName() );
-
 
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -256,17 +260,12 @@ public final class PortletContainer implements Serializable {
             throw new PortletContainerException(es);
         }
 
-
-//        System.out.println("get portlet instance for name: " + queryPortletName );
-
-
         String portletName = queryPortletName;
         if ( portletName.indexOf( PORTLET_ID_NAME_SEPARATOR )==-1 ) {
             portletName = PORTLET_ID_NAME_SEPARATOR + queryPortletName;
         }
 
         PortletEntry obj = portletInstanceMap.get( portletName );
-//        System.out.println("portlet name: "+portletName+", instance in map: " + obj);
         if (obj!=null) {
             boolean isNotUrl = !PortletService.getBooleanParam(obj.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
             if (isNotUrl) {
@@ -284,8 +283,6 @@ public final class PortletContainer implements Serializable {
             PortletEntry newPortlet = null;
             try {
                 newPortlet = createPortletInstance(portletName);
-                String s = (newPortlet!=null? ""+newPortlet.getPortlet(): "null");
-//                System.out.println( "Result of create new portlet entry: " + portletName + ", portlet: " + s );
             }
             catch (Throwable e) {
                 String es = "Erorr create instance of portlet '" + portletName + "'";
@@ -306,14 +303,14 @@ public final class PortletContainer implements Serializable {
     }
 
     private PortletEntry createPortletInstance(final String portletName) throws Exception {
-        PortletItem portletItem = searchPortletItem( portletName );
-        if (portletItem == null) {
+        PortletWebApplication portletWebApplication = searchPortletItem( portletName );
+        if (portletWebApplication == null) {
             String es = "Portlet '"+ portletName + "' not registered.";
             System.out.println( es );
             throw new PortletContainerException(es);
         }
 
-        PortletDefinition portletDefinition = portletItem.getPortletDefinition();
+        PortletDefinition portletDefinition = portletWebApplication.getPortletDefinition();
         if (portletDefinition == null) {
             String es = "Portlet definition for portlet '"+ portletName + "' not found.";
             System.out.println( es );
@@ -323,34 +320,22 @@ public final class PortletContainer implements Serializable {
         PortletEntry portletEntry = portletInstanceMap.get( portletName );
 
         if (portletEntry!=null) {
-            throw new IllegalStateException("Portlet '"+portletDefinition.getPortletName()+"' for context unique name '"+portletItem.getUniqueName()+"' already created.");
+            throw new IllegalStateException("Portlet '"+portletDefinition.getPortletName()+"' for context unique name '"+portletWebApplication.getUniqueName()+"' already created.");
         }
 
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
-            final ClassLoader classLoader = portletItem.getClassLoader();
-
-            boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
-
+            final ClassLoader classLoader = portletWebApplication.getClassLoader();
 //            System.out.println("oldLoader\n" + oldLoader+"\nhashCode: " + oldLoader.hashCode() );
 //            System.out.println("classLoader\n" + classLoader+"\nhashCode: " + classLoader.hashCode() );
-//            System.out.println("isNotUrl portlet: " + isNotUrl );
-
-
             Thread.currentThread().setContextClassLoader( classLoader );
 
+            PortletContext portletContext = getPortletContext( portletWebApplication, portalInstance.getPortalName() );
+            PortletResourceBundle resourceBundle = PortletResourceBundle.getInstance( portletDefinition, classLoader );
+            PortletConfig portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
+
             Portlet object = null;
-            PortletConfig portletConfig = null;
-
-	// Todo. instance of PortletContext is one per 'war'? I.e. same for all portlets in application?
-            PortletContext portletContext =
-                new PortletContextImpl(portletItem.getServletConfig().getServletContext(), portalInstance.getPortalName(), portalInstance.getPortalMajorVersion(), portalInstance.getPortalMinorVersion());
-
-            PortletResourceBundle resourceBundle =
-                PortletResourceBundle.getInstance( portletDefinition, classLoader );
-
-            portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
-
+            boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
             if ( isNotUrl ) {
                 Constructor constructor = null;
                 try {
@@ -377,19 +362,30 @@ public final class PortletContainer implements Serializable {
                 }
                 catch (Throwable e) {
                     if (e instanceof UnavailableException) {
+                        if (((UnavailableException)e).isPermanent()) {
+                            // Todo
+/*
+If a permanent unavailability is indicated by the UnavailableException, the portlet
+container must remove the portlet from service immediately, call the portlet’s destroy
+method, and release the portlet object.xviii A portlet that throws a permanent
+UnavailableException must be considered unavailable until the portlet application
+containing the portlet is restarted.
+*/
+                            destroy( portletName );
+                        }
                     	return new PortletEntry(portletDefinition, (UnavailableException) e);
                     }
-			UnavailableException ue = new UnavailableException( 
-				"portlet '"+portletName+"' permanent unavailable. Exception: " + e.toString(), -1);
+                    UnavailableException ue = new UnavailableException(
+                        "portlet '"+portletName+"' permanent unavailable. Exception: " + e.toString(), -1);
 
-		  	return new PortletEntry(portletDefinition, ue);
+                    return new PortletEntry(portletDefinition, ue);
                 }
             }
             else {
 //        	System.out.println("Portlet is url, resourceBundle: " + resourceBundle );
             }
 
-            final PortletEntry entry = new PortletEntry(portletDefinition, portletConfig, object, portletItem.getServletConfig(), portletItem.getClassLoader(), portletItem.getUniqueName() );
+            final PortletEntry entry = new PortletEntry(portletDefinition, portletConfig, object, portletWebApplication.getServletConfig(), portletWebApplication.getClassLoader(), portletWebApplication.getUniqueName() );
             return entry;
         }
         catch (Exception e) {
@@ -402,7 +398,27 @@ public final class PortletContainer implements Serializable {
         }
     }
 
-    private PortletItem searchPortletItem(final String queryPortletName) {
+    private PortletContext getPortletContext(PortletWebApplication portletWebApplication, String portalName) {
+        PortletContext portletContext = portletContextMap.get( portletWebApplication.getUniqueName() );
+        if (portletContext!=null) {
+            return portletContext;
+        }
+        synchronized( syncObect ) {
+            portletContext = portletContextMap.get( portletWebApplication.getUniqueName() );
+            if (portletContext!=null) {
+                return portletContext;
+            }
+
+            portletContext =  new PortletContextImpl(
+                portletWebApplication.getServletConfig().getServletContext(), portalName
+            );
+
+            portletContextMap.put(portletWebApplication.getUniqueName(), portletContext );
+            return portletContext;
+        }
+    }
+
+    private PortletWebApplication searchPortletItem(final String queryPortletName) {
         if (queryPortletName == null) {
             return null;
         }
@@ -412,15 +428,8 @@ public final class PortletContainer implements Serializable {
             portletName = PORTLET_ID_NAME_SEPARATOR + queryPortletName;
         }
 
+        return portletItems.get( portletName );
 /*
-        if (DEBUG) {
-            Iterator<PortletItem> it = portletItems.iterator();
-            while (it.hasNext()) {
-                PortletItem portletItem = it.next();
-                System.out.println("portletName = " + portletItem.getPortletDefinition().getPortletName()+ ", portlet context: " + portletItem.getUniqueName() );
-            }
-        }
-*/
         Iterator<PortletItem> it = portletItems.iterator();
         while (it.hasNext()) {
             PortletItem portletItem = it.next();
@@ -430,6 +439,7 @@ public final class PortletContainer implements Serializable {
         }
 
         return null;
+*/
     }
 
     private static void addPortletEntry( Map<String, List<PortletEntry>> map, final String key, final PortletEntry value ) {

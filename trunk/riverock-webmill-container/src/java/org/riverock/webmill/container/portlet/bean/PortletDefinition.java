@@ -99,9 +99,6 @@ public class PortletDefinition implements Serializable {
      */
     private List<SecurityRoleRef> _securityRoleRefList;
 
-    /**
-     * value of portlet-app.id attribute
-     */
     private String applicationName = null;
 
     private String fullPortletName = null;
@@ -154,40 +151,18 @@ public class PortletDefinition implements Serializable {
         this.portletInfo = portletInfo;
     }
 
-    /**
-     * Method addDescription
-     *
-     * @param vDescription
-     */
     public void addDescription(Description vDescription) {
         _descriptionList.add(vDescription);
     }
 
-    /**
-     * Method addDescription
-     *
-     * @param index
-     * @param vDescription
-     */
     public void addDescription(int index, Description vDescription) {
         _descriptionList.add(index, vDescription);
     }
 
-    /**
-     * Method addDisplayName
-     *
-     * @param vDisplayName
-     */
     public void addDisplayName(DisplayName vDisplayName) {
         _displayNameList.add(vDisplayName);
     }
 
-    /**
-     * Method addDisplayName
-     *
-     * @param index
-     * @param vDisplayName
-     */
     public void addDisplayName(int index, DisplayName vDisplayName) {
         _displayNameList.add(index, vDisplayName);
     }
@@ -385,11 +360,6 @@ public class PortletDefinition implements Serializable {
         return this.expirationCache;
     }
 
-    /**
-     * Returns the value of field 'id'.
-     *
-     * @return the value of field 'id'.
-     */
     public java.lang.String getId() {
         return this.id;
     }
@@ -693,6 +663,7 @@ public class PortletDefinition implements Serializable {
      */
     public void setId(java.lang.String id) {
         this.id = id;
+        initFullPortletName();
     }
 
     /**
@@ -738,12 +709,7 @@ public class PortletDefinition implements Serializable {
      */
     public void setPortletName(String portletName) {
         this.portletName = portletName;
-        if (applicationName!=null) {
-            this.fullPortletName = applicationName + PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
-        }
-        else {
-            this.fullPortletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
-        }
+        initFullPortletName();
     }
 
     /**
@@ -797,25 +763,13 @@ public class PortletDefinition implements Serializable {
         supportedLocaleList.set(index, vSupportedLocale);
     }
 
-    /**
-     * Method setSupportedLocale
-     *
-     * @param supportedLocaleArray
-     */
     public void setSupportedLocale(String[] supportedLocaleArray) {
-        //-- copy array
         supportedLocaleList.clear();
         for (final String newVar : supportedLocaleArray) {
             supportedLocaleList.add(newVar);
         }
     }
 
-    /**
-     * Method setSupports
-     *
-     * @param index
-     * @param vSupports
-     */
     public void setSupports(int index, Supports vSupports) {
         //-- check bounds for index
         if ((index < 0) || (index > _supportsList.size())) {
@@ -847,9 +801,7 @@ public class PortletDefinition implements Serializable {
         }
 
         this.applicationName = applicationName;
-        if (portletName!=null) {
-            this.fullPortletName = applicationName + PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
-        }
+        initFullPortletName();
     }
 
     public String getFullPortletName() {
@@ -860,4 +812,27 @@ public class PortletDefinition implements Serializable {
         this.fullPortletName = fullPortletName;
     }
 
+    private void initFullPortletName() {
+        if (applicationName==null && id==null) {
+            this.fullPortletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+            return;
+        }
+
+        if (applicationName!=null && id==null) {
+            this.fullPortletName = applicationName + PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+            return;
+        }
+
+        if (applicationName==null && id!=null) {
+            this.fullPortletName =
+                PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName +
+                PortletContainer.PORTLET_ID_NAME_SEPARATOR + id;
+            return;
+        }
+
+        this.fullPortletName =
+            applicationName + PortletContainer.PORTLET_ID_NAME_SEPARATOR +
+            portletName + PortletContainer.PORTLET_ID_NAME_SEPARATOR +
+            id;
+    }
 }

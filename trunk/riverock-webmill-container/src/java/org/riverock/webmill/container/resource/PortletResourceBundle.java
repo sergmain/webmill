@@ -59,47 +59,20 @@ public final class PortletResourceBundle {
             return null;
         }
 
-//        System.out.println("Get resource bundle for locale " + locale);
-
         ResourceBundle resourceBundle = null;
         resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
 
         if (resourceBundle!=null) {
             return resourceBundle;
         }
-        else {
-            //Todo check correction of usage of syncronization
-            synchronized(this) {
-                resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
-                if (resourceBundle!=null) {
-                    return resourceBundle;
-                }
-                resourceBundle = PortletResourceBundleWithLocale.getInstance( portletDefinition, locale, classLoader );
-                portletLocales.put( locale.toString(), resourceBundle );
-            }
-            return resourceBundle;
-        }
-/*
-        Locale temp = null;
-        if (!PortletService.isEmpty( locale.getVariant()) ) {
-            temp = new Locale( locale.getLanguage(), locale.getCountry() );
-            resourceBundle = (ResourceBundle)portletLocales.get( temp.toString() );
-
+        synchronized(PortletResourceBundle.class) {
+            resourceBundle = (ResourceBundle)portletLocales.get( locale.toString() );
             if (resourceBundle!=null) {
                 return resourceBundle;
             }
+            resourceBundle = PortletResourceBundleWithLocale.getInstance( portletDefinition, locale, classLoader );
+            portletLocales.put( locale.toString(), resourceBundle );
         }
-
-        if (!PortletService.isEmpty( locale.getCountry())) {
-            temp = new Locale( locale.getLanguage());
-            resourceBundle = (ResourceBundle)portletLocales.get( temp.toString() );
-
-            if (resourceBundle!=null) {
-                return resourceBundle;
-            }
-        }
-
-        return new PortletResourceBundleEmpty();
-*/
+        return resourceBundle;
     }
 }
