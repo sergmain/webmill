@@ -32,7 +32,6 @@ import java.util.Map;
 
 import javax.portlet.PortletMode;
 import javax.portlet.PortletModeException;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletSecurityException;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -43,6 +42,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.context.CtxContextFactory;
 
@@ -67,12 +67,14 @@ public final class PortletURLImpl implements PortletURL {
     private PortalRequestInstance portalRequestInstance = null;
     private RenderRequest portletRequest = null;
     private boolean isActionReqeust = false;
+    private Namespace namespace = null;
 
-    public PortletURLImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest, boolean isActionReqeust ) {
+    public PortletURLImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest, boolean isActionReqeust, Namespace namespace ) {
         this.portalRequestInstance = portalRequestInstance;
         this.portletRequest = renderRequest;
         this.secure = portalRequestInstance.getHttpRequest().isSecure();
         this.isActionReqeust = isActionReqeust;
+        this.namespace = namespace;
     }
 
     public void setWindowState( WindowState windowState ) throws WindowStateException {
@@ -124,15 +126,14 @@ public final class PortletURLImpl implements PortletURL {
      * @see javax.portlet.PortletURL#setParameters(Map)
      */
     public void setParameters( Map map ) {
-        Map<String, Object> parameters = (Map<String, Object>)map;
-        if ( parameters == null ) {
+        if ( map == null ) {
             throw new IllegalArgumentException( "Parameters must not be null." );
         }
 
-        Map<String, Object> temp = new HashMap<String, Object>( 2*parameters.size() );
-        Iterator<Map.Entry<String, Object>> iterator = parameters.entrySet().iterator();
+        Map<String, Object> temp = new HashMap<String, Object>( 2*map.size() );
+        Iterator iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<String, Object> entry = iterator.next();
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>)iterator.next();
 
             Object obj = entry.getValue();
             if (obj == null) {
@@ -185,13 +186,14 @@ public final class PortletURLImpl implements PortletURL {
         }
 
         url.append(
-		CtxContextFactory.encodeUrl(
-			portletRequest, portletName,
-			(String)portletRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ),
-			portletRequest.getLocale(),
-            isActionReqeust
-		)
-	);
+            CtxContextFactory.encodeUrl(
+                portletRequest, portletName,
+                (String)portletRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ),
+                portletRequest.getLocale(),
+                isActionReqeust,
+		namespace
+            )
+        );
 
         if ( parameters != null ) {
             Iterator names = parameters.keySet().iterator();

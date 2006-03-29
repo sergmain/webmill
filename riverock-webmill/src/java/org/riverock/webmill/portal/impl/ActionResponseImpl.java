@@ -36,7 +36,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
@@ -44,15 +43,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.portal.PortalRequestInstance;
-
 public final class ActionResponseImpl implements ActionResponse {
     private final static Logger log = Logger.getLogger( ActionResponseImpl.class );
 
-//    private PortalRequestInstance portalRequestInstance = null;
-//    private PortletRequest portletRequest = null;
     private HttpServletResponse httpResponse = null;
-    private String namespace = null;
     private PortletMode portletMode = PortletMode.VIEW;
     private WindowState windowState = WindowState.NORMAL;
     private boolean isRedirected = false;
@@ -62,7 +56,6 @@ public final class ActionResponseImpl implements ActionResponse {
 
     public void destroy() {
         httpResponse = null;
-        namespace = null;
         portletMode = null;
         windowState = null;
         redirectUrl = null;
@@ -72,12 +65,8 @@ public final class ActionResponseImpl implements ActionResponse {
         }
     }
 
-    public ActionResponseImpl( final PortalRequestInstance portalRequestInstance, final ActionRequest renderRequest, 
-        final HttpServletResponse response, final String namespace, final Map<String, Object> renderParameters,
+    public ActionResponseImpl( final HttpServletResponse response, final Map<String, Object> renderParameters,
         Map<String, List<String>> portletProperties) {
-//        this.portalRequestInstance = portalRequestInstance;
-//        this.portletRequest = renderRequest;
-        this.namespace = namespace;
         this.httpResponse = response;
         this.renderParameters = renderParameters;
         this.portletProperties = portletProperties;
@@ -123,7 +112,9 @@ public final class ActionResponseImpl implements ActionResponse {
     }
 
     public void setRenderParameters( final Map map ) {
-        // Todo implement of checking sendRedirect
+        if (isRedirected) {
+            throw new IllegalStateException( "Method is invoked after sendRedirect has been called" );
+        }
         if (map==null) {
             throw new IllegalArgumentException("Map is null");
         }
@@ -135,7 +126,9 @@ public final class ActionResponseImpl implements ActionResponse {
     }
 
     public void setRenderParameter( final String key, final String value ) {
-        // Todo implement of checking sendRedirect
+        if (isRedirected) {
+            throw new IllegalStateException( "Method is invoked after sendRedirect has been called" );
+        }
         if (key==null) {
             throw new IllegalArgumentException("Key is null");
         }
@@ -146,7 +139,9 @@ public final class ActionResponseImpl implements ActionResponse {
     }
 
     public void setRenderParameter( final String key, final String[] value ) {
-        // Todo implement of checking sendRedirect
+        if (isRedirected) {
+            throw new IllegalStateException( "Method is invoked after sendRedirect has been called" );
+        }
         if (key==null) {
             throw new IllegalArgumentException("Key is null");
         }

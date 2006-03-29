@@ -35,9 +35,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import javax.portlet.PortletRequestDispatcher;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletResponse;
 import javax.servlet.RequestDispatcher;
 
 import org.apache.log4j.Logger;
@@ -59,6 +56,7 @@ import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -77,7 +75,6 @@ public final class PageElement {
     private ActionResponseImpl actionResponse = null;
     private RenderRequestImpl renderRequest = null;
     private RenderResponseImpl renderResponse = null;
-    private String namespace = null;
     private SitePortletData data = null;
 
     private PortletEntry portletEntry = null;
@@ -91,6 +88,7 @@ public final class PageElement {
     private boolean isAccessPermit = true;
     private String securityMessage = null;
     private RequestState requestState = new RequestState();
+    private Namespace namespace = null;
 
     /*
      * renderParameter used for set parameters in action
@@ -104,8 +102,9 @@ public final class PageElement {
 
     private PortletContainer portletContainer = null;
 
-    public PageElement(PortletContainer portletContainer) {
+    public PageElement(PortletContainer portletContainer, Namespace namespace ) {
         this.portletContainer = portletContainer;
+        this.namespace = namespace;
     }
 
     public void destroy() {
@@ -125,7 +124,6 @@ public final class PageElement {
             renderResponse.destroy();
             renderResponse = null;
         }
-        namespace = null;
         data = null;
         portletEntry = null;
         portalTemplateItem = null;
@@ -138,7 +136,8 @@ public final class PageElement {
             renderParameters.clear();
             renderParameters = null;
         }
-	requestState = null;
+        requestState = null;
+        namespace = null;
         if (log.isDebugEnabled()) {
             log.debug("#13.2");
         }
@@ -210,41 +209,42 @@ public final class PageElement {
                 log.debug("#10.1");
             }
 
-                ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-                try {
-                    final ClassLoader classLoader = portletEntry.getClassLoader();
-                    Thread.currentThread().setContextClassLoader( classLoader );
+            ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+            try {
+                final ClassLoader classLoader = portletEntry.getClassLoader();
+                Thread.currentThread().setContextClassLoader(classLoader);
 
-            if ( !isUrl ){
-                    portletEntry.getPortlet().render( renderRequest, renderResponse );
-            }
-            else {
+                if (!isUrl) {
+                    portletEntry.getPortlet().render(renderRequest, renderResponse);
+                }
+                else {
 
-                    RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher( portletEntry.getPortletDefinition().getPortletClass() );
+                    RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher(portletEntry.getPortletDefinition().getPortletClass());
 
                     if (log.isDebugEnabled()) {
                         log.debug("#91.1");
-                        log.debug( "process url: " + portletEntry.getPortletDefinition().getPortletClass() );
-                        log.debug( "ServletContext: " + portletEntry.getServletConfig().getServletContext() );
-                        log.debug( "RequestDispatcher: " + rd );
+                        log.debug("process url: " + portletEntry.getPortletDefinition().getPortletClass());
+                        log.debug("ServletContext: " + portletEntry.getServletConfig().getServletContext());
+                        log.debug("RequestDispatcher: " + rd);
                     }
 
-                    PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl( rd );
+                    PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl(rd);
 
                     if (log.isDebugEnabled()) {
                         log.debug("#91.4");
                     }
-                    dispatcher.include( renderRequest, renderResponse );
+                    dispatcher.include(renderRequest, renderResponse);
 
                     if (log.isDebugEnabled()) {
                         log.debug("#91.5");
                     }
+                }
+
+            }
+            finally {
+                Thread.currentThread().setContextClassLoader(oldLoader);
             }
 
-                }
-                finally {
-                    Thread.currentThread().setContextClassLoader( oldLoader );
-                }
             renderResponse.flushBuffer();
 
             if (log.isDebugEnabled()) {
@@ -287,19 +287,19 @@ public final class PageElement {
             // cache content
             portletContainer.getContentCache().setContent( portletEntry.getPortletDefinition(), data, renderRequest );
         }
-	catch( javax.portlet.UnavailableException ue ) {
-		PortletContainer.destroy( portletEntry.getPortletDefinition().getPortletName() );
-            errorString = "Portlet '" + portletEntry.getPortletDefinition().getPortletName() + "' unavailable.";
+        catch( javax.portlet.UnavailableException ue ) {
+            PortletContainer.destroy( portletEntry.getPortletDefinition().getPortletName() );
+            errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
             log.error( errorString, ue );
             return;
-	}
+        }
         catch( java.lang.ThreadDeath e) {
-            errorString = "Portlet '" + portletEntry.getPortletDefinition().getPortletName() + "' unavailable.";
+            errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
             exception = e;
             log.error(errorString, e);
         }
         catch ( Throwable e ) {
-            errorString = "Portlet '" + portletEntry.getPortletDefinition().getPortletName() + "' unavailable.";
+            errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
             log.error( errorString, e );
             return;
         }
@@ -317,19 +317,19 @@ public final class PageElement {
             portletEntry = portletContainer.getPortletInstance(portletName);
 
             if (portletEntry == null) {
-                errorString = "Portlet '" + portletName + "' unavailable.";
+                errorString = portletUnavailable(portletName);
                 return;
             }
 
             if ( portletEntry.getIsPermanent() ) {
-		log.error( "portlet permanent unavailable, message: " + portletEntry.getExceptionMessage() );
-                errorString = "Portlet '" + portletName + "' unavailable.";
+                log.error( "portlet permanent unavailable, message: " + portletEntry.getExceptionMessage() );
+                errorString = portletUnavailable(portletName);
                 return;
             }
 
             if ( portletEntry.getIsWait() ) {
-		log.error( "portlet permanent unavailable for "+portletEntry.getInterval()+" seconds");
-                errorString = "Portlet '" + portletName + "' unavailable.";
+                log.error( "portlet permanent unavailable for "+portletEntry.getInterval()+" seconds");
+                errorString = portletUnavailable(portletName);
                 return;
             }
 
@@ -350,14 +350,6 @@ public final class PageElement {
                     log.debug("Start create instance of portlet '" + portletName + "'");
 
                 portletEntry = portletContainer.getPortletInstance(portletName);
-                // Todo
-/*
-If a permanent unavailability is indicated by the UnavailableException, the portlet
-container must remove the portlet from service immediately, call the portlet’s destroy
-method, and release the portlet object.xviii A portlet that throws a permanent
-UnavailableException must be considered unavailable until the portlet application
-containing the portlet is restarted.
-*/
 
                 if (portletEntry.getIsPermanent()) {
                     errorString = "Portlet '" + portletName + "' permanently unavailable.";
@@ -457,7 +449,7 @@ containing the portlet is restarted.
                 new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
             );
 
-            actionResponse = new ActionResponseImpl(portalRequestInstance, actionRequest, portalRequestInstance.getHttpResponse(), namespace, renderParameters, portletEntry.getPortletProperties() );
+            actionResponse = new ActionResponseImpl( portalRequestInstance.getHttpResponse(), renderParameters, portletEntry.getPortletProperties() );
 
             if (log.isDebugEnabled()) {
 
@@ -498,7 +490,7 @@ containing the portlet is restarted.
                         if (log.isDebugEnabled()) {
                             log.debug("check right " + roleRef.getRoleName() + ", portlet: " + portletEntry.getPortletDefinition().getPortletName());
                         }
-                        if (actionRequest.isUserInRole(roleRef.getRoleName())) {
+                        if (renderRequest.isUserInRole(roleRef.getRoleName())) {
                             isAccessPermit = true;
                             securityMessage = null;
                             errorString = null;
@@ -532,7 +524,7 @@ containing the portlet is restarted.
                     StringTokenizer st = new StringTokenizer(item.getPortletRole());
                     while (st.hasMoreElements()) {
                         String role = st.nextToken();
-                        if (actionRequest.isUserInRole(role)) {
+                        if (renderRequest.isUserInRole(role)) {
                             isAccessPermit = true;
                             break;
                         }
@@ -541,10 +533,14 @@ containing the portlet is restarted.
             }
         }
         catch (Throwable e) {
-            errorString = "Portlet '" + portletName + "' unavailable.";
+            errorString = portletUnavailable(portletName);
             log.error(errorString, e);
             return;
         }
+    }
+
+    private static String portletUnavailable(final String portletName) {
+        return "Portlet '" + portletName + "' unavailable.";
     }
 
     private String getContextPath(final PortalRequestInstance portalRequestInstance) {
@@ -619,14 +615,6 @@ containing the portlet is restarted.
 
     public void setData( SitePortletData data ) {
         this.data = data;
-    }
-
-    public String getNamespace() {
-        return namespace;
-    }
-
-    public void setNamespace( String namespace ) {
-        this.namespace = namespace;
     }
 
     public ContextFactory.PortletParameters getParams() {

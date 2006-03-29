@@ -64,6 +64,8 @@ import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
 import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -239,37 +241,37 @@ public final class PortalRequestInstance {
 
             // init page element list
             Iterator<PortalTemplateItem> iterator = template.getPortalTemplateItems().iterator();
-            // i - number of namespace
             int i = 0;
             while (iterator.hasNext()) {
                 PortalTemplateItem templateItem = iterator.next();
 
-                i++;
-                if (log.isDebugEnabled()) {
-                    log.debug("#5.1-" + i);
+                String portletName = null;
+                Namespace namespace = null;
+                if (templateItem.getTypeObject().getType()==PortalTemplateItemType.PORTLET_TYPE) {
+                    portletName = templateItem.getValue();
+                    namespace = NamespaceFactory.getNamespace( portletName, getNameTemplate(), i++ );
                 }
-
-                PageElement element = new PageElement(portletContainer);
-                // Todo: check structure namespace
-                // The getNamespace method must return a valid identifier as defined in the 3.8 Identifier
-                // Section of the Java Language Specification Second Edition.
-                element.setNamespace(templateItem.getNamespace() != null ? templateItem.getNamespace() : "p" + i);
+                else if (templateItem.getTypeObject().getType()==PortalTemplateItemType.DYNAMIC_TYPE) {
+                    portletName = getDefaultPortletDefinition();
+                    namespace = NamespaceFactory.getNamespace( portletName, getNameTemplate(), i++ );
+                }
+                PageElement element = new PageElement(portletContainer, namespace);
+                
                 element.setPortalTemplateItem(templateItem);
-                element.setParams(getParameters(element.getNamespace(), templateItem.getTypeObject()));
+                //Todo. init parameters of all portlets
+                element.setParams(getParameters("-1", templateItem.getTypeObject()));
 
                 if (log.isDebugEnabled()) {
-                    log.debug("TemplateItem, idx: " + i + ", " +
+                    log.debug("TemplateItem, " +
                         "type: " + (templateItem.getType() != null ? templateItem.getType().toString() : null) + ", " +
                         "value: " + templateItem.getValue() + ", " +
-                        "namespace: " + element.getNamespace() +
                         ", code: " + templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot());
-			log.debug("getDefaultPortletDefinition(): "+getDefaultPortletDefinition() );
+                    log.debug("getDefaultPortletDefinition(): "+getDefaultPortletDefinition() );
                 }
-
 
                 switch (templateItem.getTypeObject().getType()) {
                     case PortalTemplateItemType.PORTLET_TYPE:
-                        // Todo replace new RequestState() with actual satte of not-dynamic portlet
+                        // Todo replace new RequestState() with actual state of not-dynamic portlet
                         element.initPortlet(templateItem.getValue(), this, new RequestState() );
                         break;
                     case PortalTemplateItemType.DYNAMIC_TYPE:

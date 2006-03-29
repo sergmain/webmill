@@ -42,6 +42,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.portal.ContextFactory;
+import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -100,9 +101,9 @@ public final class CtxContextFactory extends ContextFactory {
 		"<PORTAL_CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE]/<PARAMETERS_OF_OTHER_PORTLETS>/ctx?";
 	// REQUEST_STATE: a-actionRequest, in other case-renderRequest
 
-    public static StringBuilder encodeUrl( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale, boolean isActionReqeust ) {
+    public static StringBuilder encodeUrl( final PortletRequest portletRequest, final String portletName, final String templateName, Locale locale, boolean isActionReqeust, Namespace namespace ) {
         StringBuilder b = new StringBuilder();
-        String portalContextPath = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
+        String portalContextPath = portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
         if (portalContextPath.equals("/") || portalContextPath.equals("") )
             b.append( ContainerConstants.URI_CTX_MANAGER );
         else
@@ -122,6 +123,8 @@ public final class CtxContextFactory extends ContextFactory {
             b.append('a');
         else
             b.append('r');
+        b.append( ',' );
+        b.append( namespace.getNamespace() );
 
         b.append( "/ctx" );
 
@@ -186,10 +189,16 @@ public final class CtxContextFactory extends ContextFactory {
         }
 
         if (st.hasMoreElements() ) {
-		String state = st.nextToken();
-		if (state!=null && state.equalsIgnoreCase("a") ) 
-			getRequestState().setActionRequest( true );
-	}
+            String state = st.nextToken();
+            if (state!=null && state.equalsIgnoreCase("a") )
+                getRequestState().setActionRequest( true );
+        }
+        if (st.hasMoreElements() ) {
+            String ns = st.nextToken();
+            if (!StringTools.isEmpty(ns)) {
+                activeNamespace = ns;
+            }
+        }
 
         // Todo parse request for parameters of others portlets
 
