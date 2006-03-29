@@ -43,55 +43,49 @@ import org.apache.log4j.Logger;
 public final class RsetTools {
     private final static Logger log = Logger.getLogger( RsetTools.class );
 
-    public static void setString( final PreparedStatement ps, final int index, final String data)
-        throws SQLException
-    {
-        if (data!=null)
+    public static void setString(final PreparedStatement ps, final int index, final String data)
+        throws SQLException {
+        if (data != null)
             ps.setString(index, data);
         else
             ps.setNull(index, Types.VARCHAR);
     }
 
-    public static void setLong( final PreparedStatement ps, final int index, final Long data)
-        throws SQLException
-    {
-        if (data!=null)
+    public static void setLong(final PreparedStatement ps, final int index, final Long data)
+        throws SQLException {
+        if (data != null)
             ps.setLong(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
 
-    public static void setInt( final PreparedStatement ps, final int index, final Integer data)
-        throws SQLException
-    {
-        if (data!=null)
+    public static void setInt(final PreparedStatement ps, final int index, final Integer data)
+        throws SQLException {
+        if (data != null)
             ps.setInt(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
 
-    public static void setDouble( final PreparedStatement ps, final int index, final Double data)
-        throws SQLException
-    {
-        if (data!=null)
+    public static void setDouble(final PreparedStatement ps, final int index, final Double data)
+        throws SQLException {
+        if (data != null)
             ps.setDouble(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
 
-    public static void setFloat( final PreparedStatement ps, final int index, final Float data)
-        throws SQLException
-    {
-        if (data!=null)
+    public static void setFloat(final PreparedStatement ps, final int index, final Float data)
+        throws SQLException {
+        if (data != null)
             ps.setFloat(index, data);
         else
             ps.setNull(index, Types.NUMERIC);
     }
 
-    public static void setTimestamp( final PreparedStatement ps, final int index, final Timestamp data)
-        throws SQLException
-    {
-        if (data!=null)
+    public static void setTimestamp(final PreparedStatement ps, final int index, final Timestamp data)
+        throws SQLException {
+        if (data != null)
             ps.setTimestamp(index, data);
         else
             ps.setNull(index, Types.DATE);
@@ -105,109 +99,70 @@ public final class RsetTools {
             ps.setNull(index, Types.DATE);
     }
 
-    public static String getColumnName( final ResultSet rs, final int columnNumber )
-        throws SQLException
-    {
+    public static String getColumnName(final ResultSet rs, final int columnNumber)
+        throws SQLException {
         ResultSetMetaData rsmd = rs.getMetaData();
-        return rsmd.getColumnName( columnNumber );
+        return rsmd.getColumnName(columnNumber);
     }
 
-    public static String getStringDate( final ResultSet rs, final String f,
-        final String mask, final String def, final Locale loc )
-        throws SQLException
-    {
-        String s = DateTools.getStringDate( getCalendar( rs, f, null ), mask, loc );
+    public static String getStringDate(final ResultSet rs, final String f,
+        final String mask, final String def, final Locale loc)
+        throws SQLException {
+        String s = DateTools.getStringDate(getCalendar(rs, f, null), mask, loc);
 
-        if ( s==null )
+        if (s == null)
             return def;
 
         return s;
     }
 
     /**
-     * Возвращает int значение из текущей записи. Если поле не найдено, возвращает 0
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
      */
-    public static Calendar getCalendar( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        return getCalendar( rs, f, null );
+    public static Calendar getCalendar(final ResultSet rs, final String f)
+        throws SQLException {
+        return getCalendar(rs, f, null);
     }
 
     /**
-     * Возвращает int значение из текущей записи. Если поле не найдено, возвращает 0
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * int def - возвращаемое значение, если поле не найдено
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
+     * int def - default value
      */
-    public static Calendar getCalendar( final ResultSet rs, final String f, final Calendar def )
-        throws SQLException
-    {
-        if ( rs==null || f==null )
+    public static Calendar getCalendar(final ResultSet rs, final String f, final Calendar def)
+        throws SQLException {
+        if (rs == null || f == null)
             return null;
 
-//        Object obj = null;
-        try
-        {
-            java.util.Date date = rs.getTimestamp( f );
+        try {
+            java.util.Date date = rs.getTimestamp(f);
             if (rs.wasNull())
                 return def;
 
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis( date.getTime() );
+            calendar.setTimeInMillis(date.getTime());
             return calendar;
-/*
-            obj = rs.getObject( f );
-            if ( obj==null )
-                return def;
-
-            Calendar c = new GregorianCalendar();
-            c.setTime( rs.getTime( f ) );
-
-            int hour = c.get( Calendar.HOUR_OF_DAY );
-            int min = c.get( Calendar.MINUTE );
-            int sec = c.get( Calendar.SECOND );
-            int millsec = c.get( Calendar.MILLISECOND );
-
-            c.setTime( rs.getDate( f ) );
-
-            c.add( Calendar.HOUR_OF_DAY, hour );
-            c.add( Calendar.MINUTE, min );
-            c.add( Calendar.SECOND, sec );
-            c.add( Calendar.MILLISECOND, millsec );
-            return c;
-*/
         }
-        catch (SQLException e)
-        {
-            log.error( "Error get Calendar value from field '"+f+"' ", e );
+        catch (SQLException e) {
+            log.error("Error get Calendar value from field '" + f + "' ", e);
             throw e;
         }
     }
 
-    public static Timestamp getTimestamp( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        if ( rs==null || f==null )
+    public static Timestamp getTimestamp(final ResultSet rs, final String f)
+        throws SQLException {
+        if (rs == null || f == null)
             return null;
 
         Timestamp stamp = null;
-        try
-        {
-            stamp = rs.getTimestamp( f );
+        try {
+            stamp = rs.getTimestamp(f);
             if (rs.wasNull())
                 return null;
         }
-        catch (SQLException exc)
-        {
-            log.error( "Error get timestamp field '"+f+"'", exc );
+        catch (SQLException exc) {
+            log.error("Error get timestamp field '" + f + "'", exc);
             throw exc;
         }
 
@@ -215,16 +170,12 @@ public final class RsetTools {
     }
 
     /**
-     * Возвращает int значение из текущей записи. Если поле не найдено, возвращает 0
-     * @param rs ResultSet с текущей записью выборки
-     * @param f имя поля
-     * @return java.util.Date если значение есть, иначе null
-     * @throws SQLException
+     * ResultSet rs - ResultSet
+     * String f - name of field
      */
-    public static java.util.Date getDate( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        if ( rs==null || f==null )
+    public static java.util.Date getDate(final ResultSet rs, final String f)
+        throws SQLException {
+        if (rs == null || f == null)
             return null;
 
         Calendar cal = getCalendar( rs, f, null );
@@ -235,153 +186,115 @@ public final class RsetTools {
     }
 
     /**
-     * Возвращает int значение из текущей записи. Если поле не найдено, возвращает 0
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
      */
-    public static Integer getInt( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        return getInt( rs, f, null );
+    public static Integer getInt(final ResultSet rs, final String f)
+        throws SQLException {
+        return getInt(rs, f, null);
     }
 
     /**
-     * Возвращает int значение из текущей записи. Если поле не найдено, возвращает 0
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * int def - возвращаемое значение, если поле не найдено
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
+     * int def - default value
      */
-    public static Integer getInt( final ResultSet rs, final String f, final Integer def )
-        throws SQLException
-    {
-        if ( rs==null || f==null )
+    public static Integer getInt(final ResultSet rs, final String f, final Integer def)
+        throws SQLException {
+        if (rs == null || f == null)
             return def;
 
-        try
-        {
+        try {
             int temp = rs.getInt(f);
             if (rs.wasNull())
                 return def;
 
             return temp;
         }
-        catch (SQLException exc)
-        {
-            log.error( "Error get Integer field '"+f+"' from ResultSet", exc );
+        catch (SQLException exc) {
+            log.error("Error get Integer field '" + f + "' from ResultSet", exc);
             throw exc;
         }
     }
 
     /**
-     * Возвращает long значение из текущей записи. Если поле не найдено, возвращает 0
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
      */
-    public static Long getLong( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        return getLong( rs, f, null );
+    public static Long getLong(final ResultSet rs, final String f)
+        throws SQLException {
+        return getLong(rs, f, null);
     }
 
     /**
-     * Возвращает long значение из текущей записи. Если поле не найдено, возвращает 0
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * long def - возвращаемое значение, если поле не найдено
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
+     * Long def - default value
      */
-    public static Long getLong( final ResultSet rs, final String f, final Long def )
-        throws SQLException
-    {
+    public static Long getLong(final ResultSet rs, final String f, final Long def)
+        throws SQLException {
 
-        if ( rs==null || f==null )
+        if (rs == null || f == null)
             return def;
 
-        try
-        {
-            long temp = rs.getLong( f );
+        try {
+            long temp = rs.getLong(f);
             if (rs.wasNull())
                 return def;
 
             return temp;
         }
-        catch (SQLException exc)
-        {
-            log.error( "Error get Long field '"+f+"'", exc );
+        catch (SQLException exc) {
+            log.error("Error get Long field '" + f + "'", exc);
             throw exc;
         }
-
     }
 
     /**
-     * Возвращает float значение из текущей записи. Если поле не найдено, возвращает 0
-     * @param rs - ResultSet с текущей записью выборки
-     * @param f - String, имя поля
-     * @return float значение из текущей записи
+     * ResultSet rs - ResultSet
+     * String f - name of field
      */
     public static Float getFloat( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        return getFloat( rs, f, null );
+        throws SQLException {
+        return getFloat(rs, f, null);
     }
 
     /**
-     Возвращает float значение из текущей записи. Если поле не найдено, возвращает 0
-     * @param rs - ResultSet с текущей записью выборки
-     * @param f - String, имя поля
-     * @param def - возвращаемое значение по умолчанию, если поле не найдено
-     * @return float значение из текущей записи
+     * ResultSet rs - ResultSet
+     * String f - name of field
+     * float def - default value
      */
-    public static Float getFloat( final ResultSet rs, final String f, final Float def )
-        throws SQLException
-    {
-        if ( rs==null || f==null )
+    public static Float getFloat(final ResultSet rs, final String f, final Float def)
+        throws SQLException {
+        if (rs == null || f == null)
             return def;
 
-        try
-        {
-            float temp = rs.getLong( f );
+        try {
+            float temp = rs.getFloat(f);
             if (rs.wasNull())
                 return def;
 
             return temp;
         }
-        catch (SQLException exc)
-        {
-            log.error( "Error get Float field '"+f+"' from ResultSet", exc );
+        catch (SQLException exc) {
+            log.error("Error get Float field '" + f + "' from ResultSet", exc);
             throw exc;
         }
     }
 
     /**
-     Возвращает double значение из текущей записи. Если поле не найдено, возвращает 0.0
-     * @param rs - ResultSet с текущей записью выборки
-     * @param f - String, имя поля
-     * @return double значение из текущей записи
+     * ResultSet rs - ResultSet
+     * String f - name of field
      */
-    public static Double getDouble( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        return getDouble( rs, f, null );
+    public static Double getDouble(final ResultSet rs, final String f)
+        throws SQLException {
+        return getDouble(rs, f, null);
     }
 
     /**
-     Возвращает double значение из текущей записи. Если поле не найдено, возвращает 0.0
-     * @param rs - ResultSet с текущей записью выборки
-     * @param f - String, имя поля
-     * @param def - возвращаемое значение по умолчанию, если поле не найдено
-     * @return double значение из текущей записи
+     * ResultSet rs - ResultSet
+     * String f - name of field
+     * Double def - default value
      */
     public static Double getDouble( final ResultSet rs, final String f, final Double def )
         throws SQLException
@@ -389,77 +302,60 @@ public final class RsetTools {
         if ( rs==null || f==null )
             return def;
 
-        Double i = def;
-
-        try
-        {
-            i = ( rs.getObject( f )!=null ) ? rs.getDouble( f ) : def;
+        try {
+            double d = rs.getDouble(f);
+            if (rs.wasNull())
+                return def;
+            else
+                return d;
         }
-        catch (SQLException exc)
-        {
-            log.error( "Error get Double field '"+f+"' from ResultSet", exc );
+        catch (SQLException exc) {
+            log.error("Error get Double field '" + f + "' from ResultSet", exc);
             throw exc;
         }
-
-        return i;
     }
 
-    public static BigDecimal getBigDecimal( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        return getBigDecimal( rs, f, null );
+    public static BigDecimal getBigDecimal(final ResultSet rs, final String f)
+        throws SQLException {
+        return getBigDecimal(rs, f, null);
     }
 
     /**
-     * Возвращает BigDecimal значение из текущей записи. Если поле не найдено, возвращает 0.0
-     * @param rs - ResultSet с текущей записью выборки
-     * @param f - String, имя поля
-     * @param def - возвращаемое значение по умолчанию, если поле не найдено
-     * @return double значение из текущей записи
+     * ResultSet rs - ResultSet
+     * String f - name of field
+     * BigDecimal def - default value
      */
-    public static BigDecimal getBigDecimal( final ResultSet rs, final String f, final BigDecimal def )
-        throws SQLException
-    {
-        if ( rs==null || f==null )
+    public static BigDecimal getBigDecimal(final ResultSet rs, final String f, final BigDecimal def)
+        throws SQLException {
+        if (rs == null || f == null)
             return def;
 
-        BigDecimal i = def;
+        try {
+            BigDecimal i = rs.getBigDecimal(f);
+            if (rs.wasNull())
+                return def;
 
-        try
-        {
-            i = ( rs.getObject( f )!=null ) ? rs.getBigDecimal( f ) : def;
+            return i;
         }
-        catch (SQLException exc)
-        {
-            log.error( "Error get BigDecimal field '"+f+"' from ResultSet", exc );
+        catch (SQLException exc) {
+            log.error("Error get BigDecimal field '" + f + "' from ResultSet", exc);
             throw exc;
         }
-
-        return i;
     }
 
     /**
-     * Возвращает String значение из текущей записи. Если поле не найдено, возвращает пустую строку
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
      */
-    public static String getString( final ResultSet rs, final String f )
-        throws SQLException
-    {
-        return getString( rs, f, null );
+    public static String getString(final ResultSet rs, final String f)
+        throws SQLException {
+        return getString(rs, f, null);
     }
 
     /**
-     * Возвращает String значение из текущей записи. Если поле не найдено, возвращает пустую строку
-     * Параметры:
-     * <blockquote>
-     * ResultSet rs - ResultSet с текущей записью выборки
-     * String f - имя поля
-     * String def - возвращаемое значение, если поле не найдено
-     * </blockquote>
+     * ResultSet rs - ResultSet
+     * String f - name of field
+     * String def - default value
      */
     public static String getString( final ResultSet rs, final String f, final String def )
         throws SQLException
@@ -467,21 +363,16 @@ public final class RsetTools {
         if ( rs==null || f==null )
             return def;
 
-        try
-        {
-            Object obj = rs.getObject( f );
+        try {
+            Object obj = rs.getObject(f);
             if (rs.wasNull())
                 return def;
 
             return obj.toString();
-
         }
-        catch (SQLException exc)
-        {
-            log.error( "Error get String field '"+f+"' from ResultSet, sql error code ", exc );
+        catch (SQLException exc) {
+            log.error("Error get String field '" + f + "' from ResultSet, sql error code ", exc);
             throw exc;
         }
-
     }
-
 }
