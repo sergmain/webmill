@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.generic.tools.servlet.ServletResponseWrapperInclude;
 
 import org.apache.log4j.Logger;
@@ -61,7 +62,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     private boolean isUsingWriter;
     private boolean isUsingStream;
-    private String namespace = null;
+    private Namespace namespace = null;
 
     private ServletOutputStream wrappedWriter = null;
 
@@ -106,7 +107,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public RenderResponseImpl( PortalRequestInstance portalRequestInstance, 
-        RenderRequest renderRequest, HttpServletResponse response, String namespace,
+        RenderRequest renderRequest, HttpServletResponse response, Namespace namespace,
         Map<String, List<String>> portletProperties) {
         super(response);
         this.portalRequestInstance = portalRequestInstance;
@@ -320,15 +321,15 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public PortletURL createRenderURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest, false );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, false, namespace );
     }
 
     public PortletURL createActionURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest, true );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, true, namespace );
     }
 
     public String getNamespace() {
-        return namespace;
+        return namespace.getNamespace();
     }
 
     public void setTitle( String title ) {

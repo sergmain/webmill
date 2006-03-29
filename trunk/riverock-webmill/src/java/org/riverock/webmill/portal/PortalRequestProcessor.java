@@ -161,7 +161,6 @@ public final class PortalRequestProcessor {
                     "TemplateItem, " +
                     "type: "+(templateItem.getType()!=null?templateItem.getType().toString():null)+", " +
                     "value: "+templateItem.getValue()+", " +
-                    "namespace: " + pageElement.getNamespace() + ", " +
                     "code: "+ templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot()
                 );
             }

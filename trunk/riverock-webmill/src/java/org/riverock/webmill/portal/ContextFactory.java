@@ -210,6 +210,7 @@ public abstract class ContextFactory {
         }
     }
 
+    protected String activeNamespace = null;
     protected String nameTemplate = null;
     protected Locale realLocale = null;
     protected Map<String, Object> dynamicParameter = null;
@@ -220,6 +221,10 @@ public abstract class ContextFactory {
 
     public RequestState getRequestState() {
         return requestState;
+    }
+
+    public String getActiveNamespace() {
+        return activeNamespace;
     }
 
     protected abstract Long initPortalParameters( ContextFactoryParameter factoryParameter);

@@ -396,10 +396,12 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if ( obj==null )
             return null;
 
-        List<String> list = new ArrayList<String>();
         if ( obj instanceof List ) {
-            list.addAll( (List)obj );
-        } else if (obj instanceof String[] ) {
+            return new ArrayList<String>( (List)obj );
+        }
+
+        List<String> list = new ArrayList<String>();
+        if (obj instanceof String[] ) {
             String values[] = (String[])obj;
             for (final String newVar : values) list.add(newVar.toString());
         }
@@ -555,7 +557,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance,
         final Map<String, Object> renderParameters, final Map<String, Object> portletAttributes,
         final String contextPath, 
-        final PortalContext portalContext) {
+        final PortalContext portalContext ) {
 
         this.portalContext = portalContext;
         this.contextPath = contextPath;
@@ -582,6 +584,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getNameTemplate() );
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
+//        this.setAttribute( ContainerConstants.PORTAL_PORTLET_NAMESPACE_ATTRIBUTE, namespace );
 
         // PORTAL_QUERY_STRING_ATTRIBUTE constants can be deleted 
         // after rewrite invoke method in member module with 'lookup' type
