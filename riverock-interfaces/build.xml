@@ -63,7 +63,7 @@
         <antcall target="clean"/>
     </target>
 
-    <target name="compile" depends="set_build_number, prepare">
+    <target name="compile" depends="prepare">
 
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${build.java}">

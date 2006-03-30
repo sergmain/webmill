@@ -48,7 +48,7 @@
         <pathelement location="${lib.dir}/1.4/ojdbc14.jar"/>
     </path>
 
-    <target name="compile" depends="prepare, set_build_number">
+    <target name="compile" depends="prepare">
         <mkdir dir="${build.dest}"/>
         <javac
             target="${java.class.target}"

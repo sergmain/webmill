@@ -65,7 +65,7 @@
         <antcall target="clean"/>
     </target>
 
-    <target name="compile" depends="prepare, set_build_number">
+    <target name="compile" depends="prepare">
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
