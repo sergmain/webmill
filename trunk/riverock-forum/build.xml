@@ -86,7 +86,7 @@
         <antcall target="clean"/>
     </target>
 
-    <target name="compile" depends="set_build_number, prepare">
+    <target name="compile" depends="prepare">
         <!-- Compile PersistenceException -->
         <javac
             target="${java.class.target}"
