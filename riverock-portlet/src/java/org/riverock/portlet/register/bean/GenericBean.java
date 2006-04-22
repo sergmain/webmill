@@ -1,4 +1,4 @@
-package org.riverock.portlet.portlets.bean;
+package org.riverock.portlet.register.bean;
 
 /**
  * @author SMaslyukov

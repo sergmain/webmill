@@ -39,8 +39,7 @@ import javax.portlet.PortletConfig;
 import javax.portlet.RenderResponse;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
@@ -59,7 +58,7 @@ import org.riverock.webmill.container.tools.PortletService;
  */
 public final class ImageList extends HttpServlet {
 
-    private final static Log cat = LogFactory.getLog( ImageList.class );
+    private final static Logger cat = Logger.getLogger( ImageList.class );
 
     public ImageList() {
     }

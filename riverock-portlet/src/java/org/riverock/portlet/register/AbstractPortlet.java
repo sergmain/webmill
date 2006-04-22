@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.register;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -34,8 +34,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;

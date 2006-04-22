@@ -25,6 +25,8 @@
 package org.riverock.portlet.login;
 
 import java.util.Enumeration;
+import java.io.Writer;
+import java.io.IOException;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -34,12 +36,12 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.portlet.tools.ContentTypeTools;
 
 /**
  * User: Admin
@@ -57,7 +59,11 @@ public final class LogoutPortlet implements Portlet {
     public void init( final PortletConfig portletConfig ) {
     }
 
-    public void render( RenderRequest renderRequest, RenderResponse renderResponse ) {
+    public void render( RenderRequest renderRequest, RenderResponse renderResponse ) throws PortletException, IOException {
+        processLogout(renderRequest);
+        ContentTypeTools.setContentType( renderResponse, ContentTypeTools.CONTENT_TYPE_UTF8 );
+        Writer out = renderResponse.getWriter();
+        out.write("You are logged out");
     }
 
     public void destroy() {
@@ -66,6 +72,10 @@ public final class LogoutPortlet implements Portlet {
     public void processAction( final ActionRequest actionRequest, final ActionResponse actionResponse )
        throws PortletException {
 
+        processLogout(actionRequest);
+    }
+
+    private void processLogout(PortletRequest actionRequest) throws PortletException {
         try
         {
             PortletSession session = actionRequest.getPortletSession();
@@ -74,23 +84,16 @@ public final class LogoutPortlet implements Portlet {
                 for (Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
 
                     String param = (String)e.nextElement();
-                    log.debug("parameter "+ param+" value "+RequestTools.getString(actionRequest, param) );
+                    log.debug("parameter "+ param+" value "+ RequestTools.getString(actionRequest, param) );
                 }
             }
             session.invalidate();
-
-//            if (log.isDebugEnabled())
-//                log.debug("url to redir:  "+actionResponse.encodeURL( PortletService.ctx( actionRequest ) ) );
-
-//            actionResponse.sendRedirect( PortletService.url(ContainerConstants.CTX_TYPE_INDEX, actionRequest, actionResponse, "" ) );
-            return;
-
         }
          catch (Exception e) {
             String es = "Error process logout";
             log.error( es, e );
             throw new PortletException( es, e );
          }
-     }
+    }
 
 }

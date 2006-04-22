@@ -1,13 +1,11 @@
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.register;
 
 import java.util.ResourceBundle;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 
-import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.action.ActionMessage;
+import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.portlet.main.Constants;
 

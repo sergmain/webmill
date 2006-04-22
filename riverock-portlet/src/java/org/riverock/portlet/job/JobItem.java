@@ -35,8 +35,8 @@ import java.util.Calendar;
 import javax.portlet.RenderResponse;
 import javax.portlet.RenderRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;

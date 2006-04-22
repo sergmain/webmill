@@ -39,8 +39,8 @@ import javax.portlet.PortletConfig;
 import javax.portlet.RenderResponse;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;

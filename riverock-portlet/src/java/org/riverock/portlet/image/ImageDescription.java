@@ -45,8 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.tools.ContentTypeTools;
@@ -59,7 +58,7 @@ import org.riverock.webmill.container.tools.PortletService;
 
 public class ImageDescription extends HttpServlet
 {
-    private static Log cat = LogFactory.getLog(ImageDescription.class);
+    private static Logger cat = Logger.getLogger(ImageDescription.class);
 
     public ImageDescription()
     {
