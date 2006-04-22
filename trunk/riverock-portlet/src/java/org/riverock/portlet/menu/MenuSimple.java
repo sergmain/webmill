@@ -117,7 +117,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 getCatalogByCode(portletCode_);
 
 
-            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE );
+            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
 
             if (log.isDebugEnabled()) {
                 log.debug("defaultCatalogId: " + defaultCatalogId);
@@ -147,7 +147,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 return null;
             }
 
-            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE );
+            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
 
             if (log.isDebugEnabled()) {
                 log.debug("defaultCatalogId: " + defaultCatalogId);
@@ -205,6 +205,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     XmlTools.writeToFile(menuSimple, fileName);
                 }
                 catch (Exception e) {
+                    // catch debug exception
                 }
             }
         }
@@ -293,6 +294,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     XmlTools.writeToFile(menuModuleArray, fileName);
                 }
                 catch (Exception e) {
+                    // catch debug exception
                 }
             }
         }
@@ -327,8 +329,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
     }
 
     private void remarkLevel(List v, int level) {
-        for (int i = 0; i < v.size(); i++) {
-            MenuModuleType menu = (MenuModuleType) v.get(i);
+        for (Object aV : v) {
+            MenuModuleType menu = (MenuModuleType) aV;
             menu.setIncludeLevel(level);
             remarkLevel(menu.getMenuModuleAsReference(), level + 1);
         }
@@ -349,6 +351,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     XmlTools.writeToFile(menuSimple, fileName);
                 }
                 catch (Exception e) {
+                    //catch debug exception
                 }
             }
         }
@@ -448,6 +451,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     XmlTools.writeToFile(menuSimple, fileName);
                 }
                 catch (Exception e) {
+                    //catch debug exception
                 }
             }
         }
@@ -562,7 +566,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         return getMenuModule(menuSimple.getMenuModuleAsReference()).getBytes();
     }
 
-    private static Object syncDebug = new Object();
+    private final static Object syncDebug = new Object();
 
     public byte[] getXml(String rootElement) throws Exception {
         if (log.isDebugEnabled())
@@ -570,7 +574,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         MenuSimpleType menu = menuSimple;
 
-        byte b[] = null;
+        byte b[];
         try {
             b = XmlTools.getXml(menu, rootElement);
         }
@@ -609,14 +613,13 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
     }
 
     private String getMenuModule(List v) {
-        if (v == null || v.size() == 0)
+        if (v == null || v.isEmpty())
             return "";
 
         String s = "";
         s += ("<table cellpadding=\"0\" cellspacing=\"0\" widht=\"100%\" border=\"0\">");
-        for (int i = 0; i < v.size(); i++) {
-            MenuModuleType item = (MenuModuleType) v.get(i);
-
+        for (Object aV : v) {
+            MenuModuleType item = (MenuModuleType) aV;
 
             s += "<tr><td class=\"menuData\" nowrap><a href=\"" +
                 item.getModuleUrl() +

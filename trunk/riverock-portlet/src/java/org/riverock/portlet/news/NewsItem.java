@@ -46,8 +46,8 @@ import org.riverock.sql.cache.SqlStatement;
 import javax.portlet.PortletException;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 
