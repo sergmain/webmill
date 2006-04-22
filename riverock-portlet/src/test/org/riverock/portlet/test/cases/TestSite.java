@@ -24,8 +24,8 @@
  */
 package org.riverock.portlet.test.cases;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;

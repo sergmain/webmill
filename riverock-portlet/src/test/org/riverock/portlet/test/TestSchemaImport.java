@@ -33,13 +33,13 @@
 
 package org.riverock.portlet.test;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 
 public class TestSchemaImport
 {
-    private static Log cat = LogFactory.getLog( "org.riverock.portlet.test.TestSchemaImport" );
+    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestSchemaImport" );
 
     public TestSchemaImport()
     {

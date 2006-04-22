@@ -24,8 +24,8 @@
  */
 package org.riverock.portlet.test;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 /**
  * Author: mill
@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class TestDropSiteFromHsql
 {
-    private static Log cat = LogFactory.getLog( TestDropSiteFromHsql.class );
+    private static Logger cat = Logger.getLogger( TestDropSiteFromHsql.class );
 
     private final static String nameConnection = "HSQLDB";
     private final static String  nameVirtualHost = "localhost";

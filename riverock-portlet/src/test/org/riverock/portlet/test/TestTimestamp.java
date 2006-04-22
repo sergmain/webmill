@@ -42,15 +42,15 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.generic.utils.DateUtils;
 
 public class TestTimestamp
 {
-    private static Log cat = LogFactory.getLog( "org.riverock.portlet.test.TestTimestamp" );
+    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestTimestamp" );
 
     public TestTimestamp()
     {
