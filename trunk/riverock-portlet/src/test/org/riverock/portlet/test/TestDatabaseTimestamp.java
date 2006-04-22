@@ -40,8 +40,8 @@ import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.utils.DateUtils;
@@ -51,7 +51,7 @@ import org.riverock.common.tools.DateTools;
 
 public class TestDatabaseTimestamp
 {
-    private static Log cat = LogFactory.getLog( "org.riverock.portlet.test.TestTimestamp" );
+    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestTimestamp" );
 
     public TestDatabaseTimestamp()
     {

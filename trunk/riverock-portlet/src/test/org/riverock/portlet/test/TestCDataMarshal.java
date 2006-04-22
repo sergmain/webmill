@@ -41,14 +41,14 @@ import java.io.OutputStreamWriter;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 public class TestCDataMarshal
 {
     public String text = "";
 
-    private static Log cat = LogFactory.getLog( "org.riverock.portlet.test.TestCDataMarshal" );
+    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestCDataMarshal" );
 
     public TestCDataMarshal()
     {

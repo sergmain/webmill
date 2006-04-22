@@ -59,8 +59,8 @@ import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 public class TestCaseNews extends TestCase implements TestCaseInterface

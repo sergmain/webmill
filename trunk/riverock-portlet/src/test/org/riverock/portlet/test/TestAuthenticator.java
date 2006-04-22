@@ -36,14 +36,14 @@ package org.riverock.portlet.test;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 
 
 public class TestAuthenticator extends Authenticator
 {
-    private static Log cat = LogFactory.getLog( "org.riverock.portlet.test.TestAuthenticator" );
+    private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestAuthenticator" );
 
     public TestAuthenticator()
     {

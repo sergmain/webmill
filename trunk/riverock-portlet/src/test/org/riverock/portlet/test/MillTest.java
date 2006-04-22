@@ -33,8 +33,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+
 
 /**
  * 
@@ -45,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MillTest
 {
-    private static Log cat = LogFactory.getLog( MillTest.class );
+    private static Logger cat = Logger.getLogger( MillTest.class );
 
     public MillTest()
     {
