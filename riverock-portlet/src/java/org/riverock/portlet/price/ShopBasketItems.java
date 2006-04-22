@@ -27,8 +27,8 @@ package org.riverock.portlet.price;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.common.tools.RsetTools;
@@ -40,7 +40,7 @@ import org.riverock.common.tools.RsetTools;
  */
 public class ShopBasketItems
 {
-    private static Log cat = LogFactory.getLog(ShopBasketItems.class);
+    private static Logger cat = Logger.getLogger(ShopBasketItems.class);
 
     public Long id_item;
     public int count;

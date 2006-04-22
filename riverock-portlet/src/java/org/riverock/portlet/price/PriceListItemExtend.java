@@ -33,7 +33,7 @@ package org.riverock.portlet.price;
 public class PriceListItemExtend extends PriceListItem
 {
 /*
-    private static Log cat = LogFactory.getLog("org.riverock.portlet.price.PriceListItemExtend");
+    private static Logger cat = Logger.getLogger("org.riverock.portlet.price.PriceListItemExtend");
 
     public String desc = "";
     public String imageNameFile = null;
