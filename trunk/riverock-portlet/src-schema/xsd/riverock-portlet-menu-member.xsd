@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serg (Home) -->
 <!--
 /*
  * org.riverock.portlet - Portlet Library
@@ -25,7 +26,7 @@
  *
  */
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
 	</xs:annotation>
@@ -35,7 +36,6 @@
 	<xs:complexType name="MenuMemberApplicationType">
 		<xs:sequence>
 			<xs:element name="ApplicationName" type="xs:string"/>
-			<xs:element name="ApplicationCode" type="xs:string"/>
 			<xs:element name="ApplicationRecordNumber" type="xs:int"/>
 			<xs:element name="MenuMemberModule" type="MenuMemberModuleType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -48,11 +48,8 @@
 			<xs:element name="ModuleRecordNumber" type="xs:int"/>
 			<xs:element name="ModuleName" type="xs:string"/>
 			<xs:element name="ModuleUrl" type="xs:string"/>
-			<xs:element name="ApplicationCode" type="xs:string"/>
-			<xs:element name="ModuleCode" type="xs:string"/>
 		</xs:sequence>
 		<xs:attribute name="orderField" type="xs:int"/>
-		<xs:attribute name="isNew" type="xs:boolean"/>
 	</xs:complexType>
 	<xs:complexType name="MenuMemberType">
 		<xs:sequence>
