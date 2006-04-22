@@ -27,16 +27,12 @@ package org.riverock.portlet.member;
 import java.io.File;
 import java.io.FileFilter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.config.ConfigException;
 import org.riverock.generic.main.CacheDirectory;
 import org.riverock.generic.main.CacheFile;
 import org.riverock.generic.main.ExtensionFileFilter;
 import org.riverock.generic.startup.StartupServlet;
-
 import org.riverock.portlet.schema.member.ContentType;
 import org.riverock.portlet.schema.member.ModuleType;
 import org.riverock.portlet.schema.member.QueryAreaType;
@@ -128,7 +124,7 @@ public final class ModuleManager {
     }
 
 
-    public ContentType getContent( String moduleName, int actionType ) throws Exception {
+    public ContentType getContent( String moduleName, int actionType ) {
         ModuleType mod = getModule( moduleName );
         if( mod == null )
             return null;
@@ -141,24 +137,8 @@ public final class ModuleManager {
         return null;
     }
 
-    private String getCustomDir()
-        throws ConfigException {
-        String dir = null;
-//        dir = WebmillConfig.getCustomMemberDir();
-/*
-        try {
-            InitialContext ic = new InitialContext();
-            dir = (String) ic.lookup("java:comp/env/"+ Constants.JNDI_CUSTOM_MEMBER_DIR );
-            if (cat.isDebugEnabled())
-                cat.debug("ConfigFile - "+ dir);
-        }
-        catch (NamingException e)
-        {
-            dir = null;
-            cat.warn("Custom member dir enviropment in JNDI not defined", e);
-        }
-*/
-        return dir;
+    private String getCustomDir() {
+        return null;
     }
 
     public static synchronized void reinit() {
@@ -166,7 +146,7 @@ public final class ModuleManager {
         moduleManager = null;
     }
 
-    public void init() throws Exception {
+    public void init() {
         if( mainDir == null ) {
             final String cacheDirectory = rootDir + File.separatorChar + MILL_MEMBER_DIR;
             if (log.isDebugEnabled()) {
@@ -242,15 +222,13 @@ public final class ModuleManager {
         }
     }
 
-    public ModuleType getModule( String moduleName )
-        throws Exception {
+    public ModuleType getModule( String moduleName ) {
         init();
         for( final MemberFile newVar : mainMemberFile ) {
             if( newVar == null )
                 continue;
 
-            MemberFile mf = newVar;
-            ModuleType mod = mf.getModule( moduleName );
+            ModuleType mod = newVar.getModule( moduleName );
             if( mod != null ) {
                 if( log.isDebugEnabled() )
                     log.debug( "Module '" + moduleName + "' is found in main directory" );
@@ -288,8 +266,7 @@ public final class ModuleManager {
                 if( newVar == null )
                     continue;
 
-                MemberFile mf = newVar;
-                ModuleType mod = mf.getModule( moduleName );
+                ModuleType mod = newVar.getModule( moduleName );
                 if( mod != null ) {
                     if( log.isDebugEnabled() )
                         log.debug( "Module '" + moduleName + "' is found in custom directory" );

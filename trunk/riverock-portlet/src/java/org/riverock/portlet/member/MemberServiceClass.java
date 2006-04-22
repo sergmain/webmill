@@ -31,7 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
@@ -199,7 +198,9 @@ public final class MemberServiceClass {
                     SiteUtils.getTempDir()+File.separatorChar+"member-content-site-start.xml",
                     "windows-1251");
                 }
-                catch(Exception ee){}
+                catch(Exception ee){
+                    log.info("Error write debug to file");
+                }
             }
         }
 
@@ -242,7 +243,7 @@ public final class MemberServiceClass {
                         if (log.isDebugEnabled())
                             log.debug("#22.33.02 "+sc.where);
 
-                        sc.where += MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
+                        sc.where += MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
                             '.' + cnt.getQueryArea().getPrimaryKey() + "=?";
 
                         if (log.isDebugEnabled())
@@ -255,7 +256,7 @@ public final class MemberServiceClass {
                                 sc.where += " and ";
 
                             sc.where += prevAlias + prevPK + "=" +
-                                MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
+                                MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
                                 '.' + prevPK;
 
                         }
@@ -275,7 +276,7 @@ public final class MemberServiceClass {
                             log.debug("#22.33.11 "+sc.where);
 
                         prevPK = cnt.getQueryArea().getPrimaryKey();
-                        prevAlias = MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.';
+                        prevAlias = MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.';
                     }
                 }
                 if (log.isDebugEnabled())
@@ -416,14 +417,14 @@ public final class MemberServiceClass {
                             content1.getQueryArea().getSqlCache().addFrom( fromType );
 
                             content1.getQueryArea().getSqlCache().addWhere(
-                                MemberProcessing.getWhere(
+                                MemberProcessingRenderRequest.getWhere(
                                     null,"ID_FIRM",null,TypeFieldType.FIELD,
                                     null,null,"?",TypeFieldType.PARAMETER
                                 )
                             );
 
                             content1.getQueryArea().getSqlCache().addWhere(
-                                MemberProcessing.getWhere(
+                                MemberProcessingRenderRequest.getWhere(
                                     null,"USER_LOGIN",null,TypeFieldType.FIELD,
                                     null,null,"?",TypeFieldType.PARAMETER
                                 )
@@ -442,7 +443,7 @@ public final class MemberServiceClass {
                     content1.getQueryArea().getSqlCache().addFrom( fromType );
 
                     content1.getQueryArea().getSqlCache().addWhere(
-                        MemberProcessing.getWhere(
+                        MemberProcessingRenderRequest.getWhere(
                             null,"USER_LOGIN",null,TypeFieldType.FIELD,
                             null,null,"?",TypeFieldType.PARAMETER
                         )
@@ -472,11 +473,11 @@ public final class MemberServiceClass {
                 addParameter(content1, "", SqlCheckParameterTypeTypeType.RESTRICT_SITE );
                 SqlFromType fromType = new SqlFromType();
                 fromType.setTable( "WM_PORTAL_VIRTUAL_HOST" );
-                fromType.setAlias( MemberProcessing.aliasSiteRestrict );
+                fromType.setAlias( MemberProcessingRenderRequest.aliasSiteRestrict );
                 content1.getQueryArea().getSqlCache().addFrom( fromType );
                 content1.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.aliasSiteRestrict,
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.aliasSiteRestrict,
                         "NAME_VIRTUAL_HOST",
                         null,
                         TypeFieldType.FIELD,
@@ -500,7 +501,9 @@ public final class MemberServiceClass {
                     SiteUtils.getTempDir()+File.separatorChar+"member-content-site.xml",
                     "windows-1251");
                 }
-                catch(Exception ee){}
+                catch(Exception ee){
+                    log.info("Error write debug to file");
+                }
             }
         }
 
@@ -508,18 +511,16 @@ public final class MemberServiceClass {
             content1.getQueryArea().getRestrict().getType().getType() ==
             RestrictTypeTypeType.USER_TYPE)
         {
-//            sql_ += ",?";
-
             if (! Boolean.TRUE.equals(content1.getQueryArea().getSqlCache().getIsInit()) )
             {
                 SqlFromType fromType = new SqlFromType();
                 fromType.setTable( "WM_AUTH_USER" );
-                fromType.setAlias( MemberProcessing.aliasUserRestrict );
+                fromType.setAlias( MemberProcessingRenderRequest.aliasUserRestrict );
                 content1.getQueryArea().getSqlCache().addFrom( fromType );
 
                 content1.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.aliasUserRestrict,"USER_LOGIN",null,TypeFieldType.FIELD,
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.aliasUserRestrict,"USER_LOGIN",null,TypeFieldType.FIELD,
                         null,null,"?",TypeFieldType.PARAMETER
                     )
                 );
@@ -578,7 +579,6 @@ public final class MemberServiceClass {
     }
 
     public static SqlClause buildSelectClause( ContentType contentMain, ContentType cnt, ModuleType module, DatabaseAdapter db_, String serverName, AuthSession authSession )
-        throws MemberException
     {
         SqlClause sc = new SqlClause();
 
@@ -586,8 +586,8 @@ public final class MemberServiceClass {
         {
             addParameterFromPK(contentMain, module.getName() + '.' + cnt.getQueryArea().getPrimaryKey());
             contentMain.getQueryArea().getSqlCache().addWhere(
-                MemberProcessing.getWhere(
-                    MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
+                MemberProcessingRenderRequest.getWhere(
+                    MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
                     cnt.getQueryArea().getPrimaryKey(),
                     null,
                     TypeFieldType.FIELD,
@@ -613,7 +613,7 @@ public final class MemberServiceClass {
                     sc.select += ',';
 
                 sc.select += (
-                    MemberProcessing.prepareTableAlias( ff.getRefTable(), module.getName() ) +
+                    MemberProcessingRenderRequest.prepareTableAlias( ff.getRefTable(), module.getName() ) +
                     '.' + ff.getName()
                     );
             }
@@ -631,13 +631,13 @@ public final class MemberServiceClass {
 
             sc.from +=
                 table.getTable() + ' ' +
-                MemberProcessing.prepareTableAlias(table.getRef(), module.getName());
+                MemberProcessingRenderRequest.prepareTableAlias(table.getRef(), module.getName());
 
             if (! Boolean.TRUE.equals(contentMain.getQueryArea().getSqlCache().getIsInit()) )
             {
                 SqlFromType fromType = new SqlFromType();
                 fromType.setTable( table.getTable() );
-                fromType.setAlias( MemberProcessing.prepareTableAlias(table.getRef(), module.getName() ) );
+                fromType.setAlias( MemberProcessingRenderRequest.prepareTableAlias(table.getRef(), module.getName() ) );
                 contentMain.getQueryArea().getSqlCache().addFrom( fromType );
             }
         }
@@ -645,14 +645,14 @@ public final class MemberServiceClass {
         // if in module delete operation is virtual, we are use 'is_deleted' field
         if (! Boolean.TRUE.equals(module.getIsDelete()) )
         {
-            sc.where = MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
+            sc.where = MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
                 module.getName()) + ".IS_DELETED=0 ";
 
             if (! Boolean.TRUE.equals(contentMain.getQueryArea().getSqlCache().getIsInit()) )
             {
                 contentMain.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
                         "IS_DELETED",
                         null, TypeFieldType.FIELD,
                         null,
@@ -678,19 +678,19 @@ public final class MemberServiceClass {
                     String idList = authSession.getGrantedCompanyId();
 
                     sc.where +=
-                        MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
+                        MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
                         module.getName()) + ".ID_FIRM in (" + idList + ") ";
                     break;
                 default:
-                    sc.where += MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
+                    sc.where += MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),
                         module.getName()) +
                         ".ID_FIRM in ( " +
                         "select " +
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict,
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict,
                             module.getName()) + ".ID_FIRM " +
                         "from v$_read_list_firm " +
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, module.getName()) + " " +
-                        "where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, module.getName()) +
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, module.getName()) + " " +
+                        "where " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, module.getName()) +
                         ".user_login=? " +
                         ") ";
                     break;
@@ -702,22 +702,22 @@ public final class MemberServiceClass {
 
                 SqlFromType fromType = new SqlFromType();
                 fromType.setTable( "v$_read_list_firm" );
-                fromType.setAlias( MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, module.getName()) );
+                fromType.setAlias( MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, module.getName()) );
                 contentMain.getQueryArea().getSqlCache().addFrom( fromType );
 
                 contentMain.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
                         "ID_FIRM",
                         null, TypeFieldType.FIELD,
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, module.getName()),
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, module.getName()),
                         "ID_FIRM",
                         null, TypeFieldType.FIELD
                     )
                 );
                 contentMain.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, module.getName()),
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, module.getName()),
                         "USER_LOGIN",
                         null,
                         TypeFieldType.FIELD,
@@ -742,14 +742,7 @@ public final class MemberServiceClass {
             {
                 case DatabaseManager.MYSQL_FAMALY:
 
-                    String idSite = null;
-                    try {
-                        idSite = MemberTools.getGrantedSiteId(db_, serverName);
-                    } catch (PortletException e) {
-                        log.error("Exception get siteId list");
-                        throw new MemberException(e.getMessage());
-                    }
-
+                    String idSite = MemberTools.getGrantedSiteId(db_, serverName);
                     if (log.isDebugEnabled())
                         log.debug("siteId list: "+idSite);
 
@@ -757,11 +750,11 @@ public final class MemberServiceClass {
                     break;
                 default:
                     sc.from += ", WM_PORTAL_VIRTUAL_HOST " +
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()) + ' ';
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, module.getName()) + ' ';
 
-                    sc.where += MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(), module.getName()) +
-                        ".ID_SITE=" + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()) +
-                        ".ID_SITE and " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()) + ".name_virtual_host=lower(?) ";
+                    sc.where += MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(), module.getName()) +
+                        ".ID_SITE=" + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, module.getName()) +
+                        ".ID_SITE and " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, module.getName()) + ".name_virtual_host=lower(?) ";
 
                     break;
             }
@@ -772,24 +765,24 @@ public final class MemberServiceClass {
 
                 SqlFromType fromType = new SqlFromType();
                 fromType.setTable( "WM_PORTAL_VIRTUAL_HOST " );
-                fromType.setAlias( MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()) );
+                fromType.setAlias( MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, module.getName()) );
                 contentMain.getQueryArea().getSqlCache().addFrom( fromType );
 
                 contentMain.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(), module.getName()),
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(), module.getName()),
                         "ID_SITE",
                         null,
                         TypeFieldType.FIELD,
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()),
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, module.getName()),
                         "ID_SITE",
                         null,
                         TypeFieldType.FIELD
                     )
                 );
                 contentMain.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, module.getName()),
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, module.getName()),
                         "NAME_VIRTUAL_HOST",
                         null,
                         TypeFieldType.FIELD,
@@ -808,14 +801,14 @@ public final class MemberServiceClass {
             RestrictTypeTypeType.USER_TYPE)
         {
             sc.from += ", WM_AUTH_USER " +
-                MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) + ' ';
+                MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, module.getName()) + ' ';
 
             if (sc.where.length() != 0)
                 sc.where += " and ";
 
-            sc.where += MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(), module.getName()) +
-                ".id_user=" + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) +
-                ".id_user and " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) + ".user_login=? ";
+            sc.where += MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(), module.getName()) +
+                ".id_user=" + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, module.getName()) +
+                ".id_user and " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, module.getName()) + ".user_login=? ";
 
             if (! Boolean.TRUE.equals(contentMain.getQueryArea().getSqlCache().getIsInit()) )
             {
@@ -823,25 +816,25 @@ public final class MemberServiceClass {
 
                 SqlFromType fromType = new SqlFromType();
                 fromType.setTable( "WM_AUTH_USER" );
-                fromType.setAlias( MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()) );
+                fromType.setAlias( MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, module.getName()) );
                 contentMain.getQueryArea().getSqlCache().addFrom( fromType );
 
 
                 contentMain.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.prepareTableAlias(contentMain.getQueryArea().getMainRefTable(),module.getName()),
                         "ID_USER",
                         null,
                         TypeFieldType.FIELD,
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()),
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, module.getName()),
                         "ID_USER",
                         null,
                         TypeFieldType.FIELD
                     )
                 );
                 contentMain.getQueryArea().getSqlCache().addWhere(
-                    MemberProcessing.getWhere(
-                        MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, module.getName()),
+                    MemberProcessingRenderRequest.getWhere(
+                        MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, module.getName()),
                         "USER_LOGIN",
                         null,
                         TypeFieldType.FIELD,
@@ -871,7 +864,7 @@ public final class MemberServiceClass {
         if (cnt.getQueryArea().getWhereCompelxCount()>0)
         {
             if (isInitWhere)
-                throw new MemberException("You must define only one element neither <Where> or <WhereComplex>");
+                throw new IllegalStateException("You must define only one element neither <Where> or <WhereComplex>");
 
             if (log.isDebugEnabled())
                 log.debug("join current WHERE (WhereComptlex element) condition with WHERE condition from LOOKUP module");
@@ -886,9 +879,9 @@ public final class MemberServiceClass {
                     sc.where += " and ";
 
                 sc.where += (
-                    MemberProcessing.prepareTableAlias(where.getLeft().getAlias(), module.getName())+'.'+
+                    MemberProcessingRenderRequest.prepareTableAlias(where.getLeft().getAlias(), module.getName())+'.'+
                     where.getLeft().getColumn()+'='+
-                    MemberProcessing.prepareTableAlias(where.getRight().getAlias(), module.getName())+'.'+
+                    MemberProcessingRenderRequest.prepareTableAlias(where.getRight().getAlias(), module.getName())+'.'+
                     where.getRight().getColumn()
                     );
             }
@@ -913,7 +906,7 @@ public final class MemberServiceClass {
                 if (order.getField().equals( ff.getName() ))
                 {
                     orderAlias =
-                            MemberProcessing.prepareTableAlias( ff.getRefTable(), module.getName() ) + '.';
+                            MemberProcessingRenderRequest.prepareTableAlias( ff.getRefTable(), module.getName() ) + '.';
                     break;
                 }
             }
@@ -1050,7 +1043,7 @@ public final class MemberServiceClass {
         String where_ = "";
 
         SqlClause sc = new SqlClause();
-        SqlClause lookupSc = null;
+        SqlClause lookupSc;
 
         String prevPK = null;
         String prevAlias = null;
@@ -1079,7 +1072,7 @@ public final class MemberServiceClass {
                             sc.where += " and ";
 
                         sc.where +=
-                            MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.' +
+                            MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.' +
                             cnt.getQueryArea().getPrimaryKey() + "=?";
 
                         if (prevPK != null)
@@ -1089,7 +1082,7 @@ public final class MemberServiceClass {
 
                             sc.where +=
                                 prevAlias + prevPK + "=" +
-                                MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.' +
+                                MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.' +
                                 prevPK;
 
                         }
@@ -1103,7 +1096,7 @@ public final class MemberServiceClass {
                         }
 
                         prevPK = cnt.getQueryArea().getPrimaryKey();
-                        prevAlias = MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.';
+                        prevAlias = MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.';
 
                     } //  if (lookupSc.from.length() > 0 && lookupSc.select.length() > 0)
                 }
@@ -1179,10 +1172,10 @@ public final class MemberServiceClass {
                 default:
                     where_ +=
                         "ID_FIRM in " +
-                        " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, mod.getName()) +
+                        " (select " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, mod.getName()) +
                         '.' + "ID_FIRM " +
-                        "  from v$_read_list_firm " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, mod.getName()) +
-                        "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, mod.getName()) + '.' + "user_login = ? ) ";
+                        "  from v$_read_list_firm " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, mod.getName()) +
+                        "  where " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, mod.getName()) + '.' + "user_login = ? ) ";
                     break;
             }
 
@@ -1215,10 +1208,10 @@ public final class MemberServiceClass {
                 default:
                     where_ +=
                         "ID_SITE in " +
-                        " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
+                        " (select " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, mod.getName()) +
                         '.' + "ID_SITE " +
-                        "  from WM_PORTAL_VIRTUAL_HOST " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
-                        "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
+                        "  from WM_PORTAL_VIRTUAL_HOST " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, mod.getName()) +
+                        "  where " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, mod.getName()) +
                         ".NAME_VIRTUAL_HOST = lower(?) ) ";
                     break;
             }
@@ -1243,10 +1236,10 @@ public final class MemberServiceClass {
                 default:
                     where_ +=
                         "id_user in " +
-                        " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +'.' +
+                        " (select " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, mod.getName()) +'.' +
                         "id_user " +
-                        "  from  WM_AUTH_USER " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
-                        "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        "  from  WM_AUTH_USER " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, mod.getName()) +
+                        "  where " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, mod.getName()) +
                         ".user_login=? ) ";
                     break;
             }
@@ -1293,8 +1286,6 @@ public final class MemberServiceClass {
                 }
                 finally {
                     DatabaseManager.close(rs, ps);
-                    rs = null;
-                    ps = null;
                 }
             default:
                 return sql;
@@ -1328,25 +1319,23 @@ public final class MemberServiceClass {
     {
         String insTable = content.getQueryArea().getTable(0).getTable();
 
-        String sql_ = null;
+        String sql_;
         if ( Boolean.TRUE.equals(mod.getIsDelete()) )
         {
             sql_ = "delete from " + insTable + ' ';
-//                +prepareTableAlias(content.getQueryArea().getMainRefTable(), mod.getName());
         }
         else
         {
-            sql_ = "update " + insTable + ' ' +
-//                prepareTableAlias(content.getQueryArea().getMainRefTable(), mod.getName()) +
+            sql_ =
+                "update " + insTable + ' ' +
                 " set " +
-//                prepareTableAlias(content.getQueryArea().getMainRefTable(), mod.getName()) + '.' +
                 "is_deleted=1 ";
         }
 
         String where_ = "";
 
         SqlClause sc = new SqlClause();
-        SqlClause lookupSc = null;
+        SqlClause lookupSc;
 
         String prevPK = null;
         String prevAlias = null;
@@ -1375,7 +1364,7 @@ public final class MemberServiceClass {
                         if (sc.where.length() != 0)
                             sc.where += " and ";
 
-                        sc.where += MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
+                        sc.where += MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
                             '.' + cnt.getQueryArea().getPrimaryKey() + "=?";
 
                         if (prevPK != null)
@@ -1383,7 +1372,7 @@ public final class MemberServiceClass {
                             if (sc.where.length() != 0)
                                 sc.where += " and ";
 
-                            sc.where += prevAlias + prevPK + "=" + MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
+                            sc.where += prevAlias + prevPK + "=" + MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) +
                                 '.' + prevPK;
 
                         }
@@ -1397,7 +1386,7 @@ public final class MemberServiceClass {
                         }
 
                         prevPK = cnt.getQueryArea().getPrimaryKey();
-                        prevAlias = MemberProcessing.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.';
+                        prevAlias = MemberProcessingRenderRequest.prepareTableAlias(cnt.getQueryArea().getMainRefTable(), modName) + '.';
                     }
                 }
             }
@@ -1474,10 +1463,10 @@ public final class MemberServiceClass {
                 default:
                     where_ += " and " +
                         "ID_FIRM in " +
-                        " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, mod.getName()) +
+                        " (select " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, mod.getName()) +
                         '.' + "ID_FIRM " +
-                        "  from v$_read_list_firm " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, mod.getName()) +
-                        "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasFirmRestrict, mod.getName()) + '.' + "USER_LOGIN=? ) ";
+                        "  from v$_read_list_firm " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, mod.getName()) +
+                        "  where " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasFirmRestrict, mod.getName()) + '.' + "USER_LOGIN=? ) ";
                     break;
             }
         }
@@ -1497,10 +1486,10 @@ public final class MemberServiceClass {
                 default:
                     where_ += " and " +
                         "ID_SITE in " +
-                        " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
+                        " (select " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, mod.getName()) +
                         '.' + "ID_SITE " +
-                        "  from WM_PORTAL_VIRTUAL_HOST " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
-                        "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasSiteRestrict, mod.getName()) +
+                        "  from WM_PORTAL_VIRTUAL_HOST " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, mod.getName()) +
+                        "  where " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasSiteRestrict, mod.getName()) +
                         ".NAME_VIRTUAL_HOST=lower(?) ) ";
                     break;
             }
@@ -1519,10 +1508,10 @@ public final class MemberServiceClass {
                 default:
                     where_ += " and " +
                         "ID_USER in " +
-                        " (select " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        " (select " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, mod.getName()) +
                         '.' + "ID_USER " +
-                        "  from  WM_AUTH_USER" + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
-                        "  where " + MemberProcessing.prepareTableAlias(MemberProcessing.aliasUserRestrict, mod.getName()) +
+                        "  from  WM_AUTH_USER" + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, mod.getName()) +
+                        "  where " + MemberProcessingRenderRequest.prepareTableAlias(MemberProcessingRenderRequest.aliasUserRestrict, mod.getName()) +
                         ".USER_LOGIN=?) ";
                     break;
             }

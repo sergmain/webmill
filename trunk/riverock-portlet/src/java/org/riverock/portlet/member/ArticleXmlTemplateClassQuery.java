@@ -42,7 +42,7 @@ import javax.portlet.PortletRequest;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
 public class ArticleXmlTemplateClassQuery extends BaseClassQuery {
-//    private static Log cat = LogFactory.getLog(ArticleXmlTemplateClassQuery.class);
+//    private static Logger cat = Logger.getLogger(ArticleXmlTemplateClassQuery.class);
 
     public ArticleXmlTemplateClassQuery() {
     }

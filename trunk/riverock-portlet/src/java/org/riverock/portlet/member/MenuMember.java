@@ -44,7 +44,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
@@ -154,9 +153,6 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         }
         finally {
             DatabaseManager.close( db_, rset, ps );
-            rset = null;
-            ps = null;
-            db_ = null;
         }
         return this;
     }
@@ -187,14 +183,13 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
     private final static String sql_ =
         "select distinct z.CODE_ARM,a.CODE_OBJECT_ARM,  a.NAME_OBJECT_ARM, " +
-        "       a.url, a.order_field, a.is_new  " +
+        "       a.URL, a.order_field  " +
         "from   WM_AUTH_MODULE a," +
         "(" +
         "select a.user_login, " +
         "       f.code_arm, " +
         "       d.id_object_arm, " +
-        "	e.id_arm, " +
-        "	e.is_new  " +
+        "	e.id_arm " +
         "from   WM_AUTH_USER a, " +
         "       WM_AUTH_RELATE_ACCGROUP b, " +
         "       WM_AUTH_RELATE_RIGHT_ARM d, " +
@@ -205,7 +200,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         "       d.id_object_arm = e.id_object_arm and " +
         "       e.id_arm = f.id_arm " +
         "union " +
-        "select a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm, d1.is_new   " +
+        "select a1.user_login, f1.code_arm, d1.id_object_arm, f1.id_arm   " +
         "from   WM_AUTH_USER a1, WM_AUTH_MODULE d1,  WM_AUTH_APPLICATION f1 " +
         "where  a1.is_root=1 and d1.id_arm = f1.id_arm " +
         ") z " +
@@ -214,12 +209,12 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         "       z.id_arm=? and a.url is not null ";
 
     String sql_mysql =
-        "select distinct f.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.url, a1.order_field, a1.is_new " +
+        "select distinct f.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.URL, a1.order_field " +
         "from   WM_AUTH_MODULE a1, WM_AUTH_USER a, WM_AUTH_RELATE_ACCGROUP b, WM_AUTH_RELATE_RIGHT_ARM d, WM_AUTH_MODULE e, WM_AUTH_APPLICATION f " +
         "where  a.id_auth_user=b.id_auth_user and b.id_access_group = d.id_access_group and d.id_object_arm = e.id_object_arm and " +
         "       e.id_arm = f.id_arm and a.user_login=? and a1.id_object_arm = d.id_object_arm and e.id_arm=? and a1.url is not null " +
         "union " +
-        "select distinct f01.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.url, a1.order_field, a1.is_new " +
+        "select distinct f01.CODE_ARM, a1.CODE_OBJECT_ARM,  a1.NAME_OBJECT_ARM, a1.url, a1.order_field " +
         "from   WM_AUTH_MODULE a1, WM_AUTH_USER a01, WM_AUTH_MODULE d01,  WM_AUTH_APPLICATION f01 " +
         "where  a01.is_root=1 and d01.id_arm = f01.id_arm and a01.user_login=? and a1.id_object_arm = d01.id_object_arm and " +
         "       f01.id_arm=? and a1.url is not null ";
@@ -236,10 +231,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         MenuMemberApplicationType appl = new MenuMemberApplicationType();
         try {
             appl.setApplicationName( RsetTools.getString( rs, "NAME_ARM" ) );
-            appl.setApplicationCode( RsetTools.getString( rs, "CODE_ARM" ) );
-
             appl.setOrderField( RsetTools.getInt( rs, "ORDER_FIELD" ) );
-
             appl.setApplicationId( RsetTools.getLong( rs, "ID_ARM" ) );
             appl.setApplicationRecordNumber( recordNumber_ );
 
@@ -249,7 +241,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             int moduleRecordNumber = 0;
             ArrayList<MenuMemberModuleType> list = new ArrayList<MenuMemberModuleType>();
             while( rset.next() ) {
-                MenuMemberModuleType mod = getModule( rset, appl.getApplicationCode() );
+                MenuMemberModuleType mod = getModule( rset );
                 if( mod != null ) {
                     mod.setModuleRecordNumber( moduleRecordNumber++ );
                     mod.setApplRecordNumber( appl.getApplicationRecordNumber() );
@@ -267,16 +259,14 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         }
         finally {
             DatabaseManager.close( rset, ps );
-            rset = null;
-            ps = null;
         }
 
     }
 
     private PreparedStatement makeStatement( DatabaseAdapter db_, String userLogin, Long applicationId )
-        throws SQLException, DatabaseException {
+        throws SQLException {
 
-        PreparedStatement ps = null;
+        PreparedStatement ps;
         switch( db_.getFamaly() ) {
             case DatabaseManager.MYSQL_FAMALY:
                 ps = db_.prepareStatement( sql_mysql );
@@ -297,7 +287,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         return ps;
     }
 
-    private MenuMemberModuleType getModule( ResultSet rs, String applicationCode_ )
+    private MenuMemberModuleType getModule( ResultSet rs )
         throws Exception {
         if( rs == null )
             return null;
@@ -308,28 +298,25 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         if (portalTemplate!=null) {
             templateName = portalTemplate.getTemplateName();
         }
-        mod.setApplicationCode( applicationCode_ );
         try {
             mod.setModuleName( RsetTools.getString( rs, "NAME_OBJECT_ARM" ) );
-            mod.setModuleCode( RsetTools.getString( rs, "CODE_OBJECT_ARM" ) );
             mod.setOrderField( RsetTools.getInt( rs, "ORDER_FIELD" ) );
-            mod.setIsNew( RsetTools.getInt( rs, "IS_NEW", 0 ) == 1 );
+            mod.setModuleUrl( RsetTools.getString( rs, "URL" ) );
 
             try {
+
+                int idx = mod.getModuleUrl().indexOf('?');
+                String moduleUrl =
+                    PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, templateName ) + '&' +
+                        (idx!=-1?mod.getModuleUrl().substring(idx + 1):mod.getModuleUrl());
 
                 if( log.isDebugEnabled() ) {
                     log.debug( "PortletParam  getMemberTemplate - " + getMemberTemplate() );
                     log.debug( "PortletParam  nameTemplate - " + templateName );
 
-                    log.debug( "Module url - " + PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, templateName ) + '&' +
-                        MemberConstants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
-                        MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() );
+                    log.debug( "Module url - " + moduleUrl );
                 }
-
-                mod.setModuleUrl( PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, templateName ) + '&' +
-                    MemberConstants.MEMBER_NAME_APPL_PARAM + '=' + applicationCode_ + '&' +
-                    MemberConstants.MEMBER_NAME_MOD_PARAM + '=' + mod.getModuleCode() );
-
+                mod.setModuleUrl( moduleUrl );
             }
             catch( Exception e ) {
                 log.error( "Error getModuleUrl ", e );
@@ -346,13 +333,11 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
     private PortalTemplate getMemberTemplate() {
 
-        PortalTemplate st = null;
-
         if( log.isDebugEnabled() ) {
             log.debug( "Looking template for locale " + renderRequest.getLocale().toString() );
         }
 
-        st = getMemberTemplate( renderRequest.getLocale() );
+        PortalTemplate st = getMemberTemplate( renderRequest.getLocale() );
         if( st != null )
             return st;
 

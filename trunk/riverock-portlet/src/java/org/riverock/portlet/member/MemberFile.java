@@ -30,7 +30,6 @@ import java.io.FileWriter;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -61,7 +60,7 @@ public final class MemberFile extends CacheFile {
 
     /**
      * @deprecated use Iterator
-     * @return
+     * @return Enumeration
      */
     public Enumeration getMemberModules() {
         if( memberHash == null )
@@ -120,47 +119,30 @@ public final class MemberFile extends CacheFile {
             return null;
         }
 
-        moduleType = ( ModuleType ) memberHash.get( nameModule_ );
+        moduleType = memberHash.get( nameModule_ );
         if( log.isDebugEnabled() ) {
             log.debug( "#7.02 file not changed. Get module from cache" );
             log.debug( "moduleType: " + moduleType );
             log.debug( "Values in HashMap: " + memberHash.size() );
-            Iterator iterator = memberHash.keySet().iterator();
-            while( iterator.hasNext() ) {
-                String key = ( String ) iterator.next();
-                ModuleType type = ( ModuleType ) memberHash.get( key );
-                log.debug( "key: " + key + ", value: " + type.getName() );
+            for (Map.Entry<String, ModuleType> entry : memberHash.entrySet()) {
+                log.debug("key: " + entry.getKey() + ", value: " + entry.getValue().getName());
             }
         }
 
         return moduleType;
     }
 
-    public MemberFile( File tempFile )
-        throws Exception {
+    public MemberFile( File tempFile ) {
         super( tempFile, 1000 * 10 );
 
-        if( log.isDebugEnabled() )
+        if( log.isDebugEnabled() ) {
             log.debug( "Start unmarshalling file " + tempFile );
-
-        try {
-            if( log.isDebugEnabled() )
-                log.debug( "Unmarshal new file: " + tempFile.getName() );
-
-            processFile();
         }
-        catch( Exception e ) {
-            log.error( "Exception while unmarshalling member file + " + getFile(), e );
-            if( memberHash != null )
-                memberHash.clear();
-            memberHash = null;
-            throw e;
-        }
+        processFile();
     }
 
-    private static Object syncObj = new Object();
-
-    private void processFile() throws Exception {
+    private final static Object syncObj = new Object();
+    private void processFile() {
         try {
             log.debug( "start processFile()" );
 
@@ -192,7 +174,7 @@ public final class MemberFile extends CacheFile {
         catch( Exception e ) {
             String errorString = "Error processing member file " + getFile();
             log.error( errorString, e );
-            throw e;
+            throw new IllegalStateException(errorString, e);
         }
     }
 }
