@@ -34,8 +34,6 @@ import java.util.ArrayList;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
@@ -44,7 +42,7 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.bean.PortletItem;
+import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -166,7 +164,7 @@ public class ContextDataClassQuery extends BaseClassQuery {
             log.debug("namePortlet "+namePortlet);
 
         PortletContainer portletContainer = (PortletContainer)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CONTAINER );
-        PortletItem portletItem = portletContainer.searchPortletItem( namePortlet );
+        PortletWebApplication portletItem = portletContainer.searchPortletItem( namePortlet );
 
         if (log.isDebugEnabled())
             log.debug("portletItem "+portletItem);

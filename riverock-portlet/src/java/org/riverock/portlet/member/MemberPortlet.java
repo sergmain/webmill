@@ -24,30 +24,16 @@
  */
 package org.riverock.portlet.member;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Enumeration;
+import java.io.IOException;
 import java.io.Writer;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletConfig;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
-
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.tools.RequestTools;
-
-
+import javax.portlet.PortletException;
 
 /**
  * User: Admin
@@ -56,117 +42,35 @@ import org.riverock.portlet.tools.RequestTools;
  *
  * $Id$
  */
-public final class MemberPortlet  implements Portlet {
+public final class MemberPortlet implements Portlet {
 
-    private final static Logger log = Logger.getLogger( MemberPortlet.class );
-
+    private PortletConfig portletConfig = null;
     public MemberPortlet() {
     }
 
-    private PortletConfig portletConfig = null;
-    public void init( PortletConfig portletConfig ) {
+    public void init(PortletConfig portletConfig) {
         this.portletConfig = portletConfig;
     }
 
     public void destroy() {
     }
 
-    public void processAction( ActionRequest actionRequest, ActionResponse actionResponse ) {
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException {
+        MemberPortletActionMethod.processAction( actionRequest, actionResponse );
     }
 
-    public void render( RenderRequest renderRequest, RenderResponse renderResponse ) throws PortletException {
+    public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException {
+        if ( renderRequest.getParameter( MemberConstants.ERROR_TEXT )!=null ) {
+            Writer out = renderResponse.getWriter();
+            WebmillErrorPage.processPortletError(out, null,
+                renderRequest.getParameter( MemberConstants.ERROR_TEXT ),
+                renderRequest.getParameter( renderResponse.createRenderURL().toString() ),
+                renderRequest.getParameter( MemberConstants.ERROR_URL_NAME ));
 
-        try {
-
-            String applicationCode = RequestTools.getString(renderRequest, MemberConstants.MEMBER_NAME_APPL_PARAM);
-            String moduleCode = RequestTools.getString(renderRequest, MemberConstants.MEMBER_NAME_MOD_PARAM);
-
-            if (log.isDebugEnabled())
-            {
-                log.debug("applicationCode " + applicationCode);
-                log.debug("moduleCode " + moduleCode);
-            }
-
-            PreparedStatement ps = null;
-            ResultSet rs = null;
-            DatabaseAdapter db_ = null;
-            try
-            {
-                db_ = DatabaseAdapter.getInstance();
-                ps = db_.prepareStatement(
-                    "select a.is_new, a.url " +
-                    "from   WM_AUTH_MODULE a, WM_AUTH_APPLICATION b " +
-                    "where  a.id_arm = b.id_arm and b.CODE_ARM=? and a.CODE_OBJECT_ARM=? "
-                );
-                ps.setString(1, applicationCode);
-                ps.setString(2, moduleCode);
-                rs = ps.executeQuery();
-                if (rs.next())
-                {
-
-                    String url = RsetTools.getString(rs, "URL");
-                    int isNew = RsetTools.getInt( rs, "IS_NEW", 0);
-                    String fullUrl = null;
-                    if  (isNew==1)
-                    {
-                        fullUrl = "/member_view?" + url.substring( url.indexOf('?')+1)+ '&';
-                    }
-                    else
-                    {
-                        fullUrl = url+'?';
-                    }
-
-                    PortletRequestDispatcher dispatcher = portletConfig.getPortletContext().getRequestDispatcher( fullUrl );
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("RequestDispatcher - " + dispatcher);
-                        log.debug("Method is 'include'. Url - " + fullUrl);
-                    }
-
-                    if (dispatcher == null) {
-                        log.error("RequestDispatcher is null");
-                        Writer out = renderResponse.getWriter();
-                        out.write("Error get dispatcher for path " + fullUrl);
-                    }
-                    else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("renderRequest session - "+renderRequest.getPortletSession());
-                            for (Enumeration e = renderRequest.getParameterNames(); e.hasMoreElements();) {
-                                String s = (String) e.nextElement();
-                                log.debug("Request param: " + s + ", value: " + RequestTools.getString(renderRequest, s));
-                            }
-                            boolean isFound = false;
-                            for (Enumeration e = renderRequest.getAttributeNames(); e.hasMoreElements();) {
-                                String key = (String) e.nextElement();
-                                log.debug("Request attr: " + key + ", value: " + renderRequest.getAttribute( key ));
-                                isFound = true;
-                            }
-                            if (!isFound) {
-                                log.debug("Count of attr in request is: "+isFound);  
-                            }
-                        }
-                        dispatcher.include( renderRequest, renderResponse );
-                    }
-                    return;
-                }
-                else {
-                    String errorSttring = " application '" + applicationCode + "'  module '" + moduleCode + "' not found";
-                    log.info(errorSttring);
-                    Writer out = renderResponse.getWriter();
-                    out.write(errorSttring);
-                }
-            }
-            finally {
-                DatabaseManager.close( db_, rs, ps );
-                rs = null;
-                ps = null;
-                db_ = null;
-            }
+            out.flush();
+            out.close();
+            return;
         }
-        catch (Exception e) {
-            String es = "Error in MemberPortlet";
-            log.error( es, e );
-            throw new PortletException( es, e );
-        }
+        MemberPortletRenderMethod.render( renderRequest, renderResponse );
     }
 }

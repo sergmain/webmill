@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
@@ -32,8 +31,7 @@ public class MemberTools {
         return (PortalDaoProvider)portletRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
     }
 
-    public static String getGrantedSiteId( DatabaseAdapter adapter, String username )
-        throws PortletException {
+    public static String getGrantedSiteId( DatabaseAdapter adapter, String username ) {
         List<Long> list = getGrantedSiteIdList( adapter, username );
         if( list.size() == 0 )
             return "NULL";
@@ -49,8 +47,7 @@ public class MemberTools {
         return r;
     }
 
-    public static List<Long> getGrantedSiteIdList( DatabaseAdapter adapter, String serverName )
-        throws PortletException {
+    public static List<Long> getGrantedSiteIdList( DatabaseAdapter adapter, String serverName ) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -76,7 +73,7 @@ public class MemberTools {
         catch( Exception e ) {
             final String es = "Exception get siteID";
             log.error( es, e );
-            throw new PortletException( es, e );
+            throw new IllegalStateException( es, e );
         }
         finally {
             DatabaseManager.close( rs, ps );
@@ -129,14 +126,12 @@ public class MemberTools {
      */
     public static String printYesNo( int val, boolean isEdit, ResourceBundle bundle ) {
 
-        int i_ = val;
-
         String v_is_select_yes;
         String v_is_select_no;
         String r = "";
 
         if (isEdit) {
-            if (i_ == 1) {
+            if (val == 1) {
                 v_is_select_yes = " selected";
                 v_is_select_no = "";
             }
@@ -149,7 +144,7 @@ public class MemberTools {
                     "<OPTION value=\"0\"" + v_is_select_no + ">" + bundle.getString("yesno.no") + "</option>\n");
         }
         else {
-            if (i_ == 1)
+            if (val == 1)
                 r += bundle.getString("yesno.yes");
             else
                 r += bundle.getString("yesno.no");

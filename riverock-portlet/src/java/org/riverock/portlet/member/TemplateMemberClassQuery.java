@@ -31,8 +31,8 @@ import java.util.Iterator;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;

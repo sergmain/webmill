@@ -22,15 +22,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.portlet.portlets;
+package org.riverock.portlet.member;
 
 import java.io.IOException;
 import java.io.Writer;
 
 import javax.portlet.ActionResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
@@ -57,23 +57,19 @@ public class WebmillErrorPage
         }
     }
     
-    public static void setErrorInfo( 
-        ActionResponse actionResponse, 
+    public static void setErrorInfo(
+        ActionResponse actionResponse,
         String text,
         String textConst,
-        Throwable th, 
-        String urlName, 
-        String urlNameConsts,
-        String url,
-        String urlConsts ) {
+        Throwable th,
+        String urlName,
+        String urlNameConsts) {
         
-//Todo switch to setAttribute()
         actionResponse.setRenderParameter(
             textConst,
             text + (th!=null? WebmillErrorPage.getErrorMessage(th):"")
         );
         actionResponse.setRenderParameter( urlNameConsts, urlName );
-        actionResponse.setRenderParameter( urlConsts, url  );
     }
 
     public static void process( Writer out, Throwable th, String errorMessage, String url, String urlMessage )
