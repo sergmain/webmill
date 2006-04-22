@@ -8,7 +8,7 @@
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>	
 
     <f:verbatim><br /></f:verbatim>
-    <h:outputText value="#{msg['role_list']}" styleClass="standard_bold" />
+    <h:outputText value="#{msg['company_list']}" styleClass="standard_bold" />
     <f:verbatim><br /><br /></f:verbatim>
 
     <h:selectOneMenu value="#{holdingDataProvider.currentHolding.newCompanyId}"
@@ -17,7 +17,7 @@
             <f:selectItems value="#{holdingDataProvider.companyList}" />
         </h:selectOneMenu>
 
-    <t:commandButton value="#{msg.holding_add_company}" action="#{holdingAction.addCompanyAction}"/>
+    <t:commandButton value="#{msg.holding_add_company_action}" action="#{holdingAction.addCompanyAction}"/>
 
     <f:verbatim><br/></f:verbatim>
 
@@ -38,7 +38,7 @@
            </h:column>
 
            <h:column>
-                <t:commandButton value="#{msg.delete_company}" actionListener="#{holdingAction.deleteCompanyActionListener}">
+                <t:commandButton value="#{msg.delete_company_action}" actionListener="#{holdingAction.deleteCompanyActionListener}">
                     <t:updateActionListener property="#{holdingSessionBean.currentCompanyId}" value="#{company.id}" />
 		</t:commandButton>
            </h:column>

@@ -7,10 +7,10 @@
     <f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>	
 
     <h:panelGrid columns="2">
-	<h:outputText value="Holding short name:"/>
+	<h:outputText value="#{msg.holding_short_name}"/>
 	<h:outputText value="#{holdingDataProvider.currentHolding.shortName}" />
 
-	<h:outputText value="Holding name:"/>
+	<h:outputText value="#{msg.holding_name}"/>
 	<h:outputText value="#{holdingDataProvider.currentHolding.name}" />
 
     </h:panelGrid>

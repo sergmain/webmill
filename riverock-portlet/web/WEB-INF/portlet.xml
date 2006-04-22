@@ -401,32 +401,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<mime-type>text/html</mime-type>
 		</supports>
 		<resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
-<!--		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle> -->
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.member_commit</portlet-name>
-		<portlet-class>org.riverock.portlet.member.MemberCommitPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.member_view</portlet-name>
-		<portlet-class>/member_view</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-        	<resource-bundle>org.riverock.portlet.resource.Main</resource-bundle>
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>

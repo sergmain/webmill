@@ -43,8 +43,8 @@ td { vertical-align: top; }
 	</h:panelGroup>
 
 	<h:panelGroup id="editDeleteControls">
-		<h:commandButton value="#{msg.action_portal_name_edit_save}" action="#{portalUserAction.processEditPortalUser}"/>
-		<h:commandButton value="#{msg.action_portal_name_edit_cancel}" action="#{portalUserAction.cancelEditPortalUser}"/>
+		<h:commandButton value="#{msg.portal_name_edit_save_action}" action="#{portalUserAction.processEditPortalUser}"/>
+		<h:commandButton value="#{msg.portal_name_edit_cancel_action}" action="#{portalUserAction.cancelEditPortalUser}"/>
 	</h:panelGroup>
  	 
     </h:panelGrid>	 
