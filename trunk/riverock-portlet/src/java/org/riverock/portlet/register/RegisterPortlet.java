@@ -47,9 +47,7 @@ import org.riverock.module.web.response.PortletModuleResponseImpl;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
 import org.riverock.portlet.main.Constants;
-import org.riverock.portlet.portlets.AbstractPortlet;
-import org.riverock.portlet.portlets.PortletErrors;
-import org.riverock.portlet.portlets.bean.GenericBean;
+import org.riverock.portlet.register.bean.GenericBean;
 import org.riverock.webmill.container.tools.PortletMetadataService;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -75,7 +73,7 @@ public class RegisterPortlet extends AbstractPortlet {
                 log.debug("key: "+key+", value: "+actionRequest.getParameter(key));
             }
         }
-        String forwardPage = null;
+        String forwardPage;
         try {
             ModuleRequest request = new WebmillPortletModuleRequestImpl(actionRequest);
             ModuleResponse response = new PortletModuleResponseImpl(actionResponse);
@@ -88,10 +86,6 @@ public class RegisterPortlet extends AbstractPortlet {
 
             initGenericBean( moduleActionRequest );
 
-//            if (request.getUser()==null){
-//                forwardPage = RegisterError.notLoggedError(moduleActionRequest);
-//            }
-//            else {
                 try {
                     forwardPage = actionFactory.doAction(moduleActionRequest);
                 } catch (ActionException ex) {
@@ -101,14 +95,11 @@ public class RegisterPortlet extends AbstractPortlet {
                 if (log.isDebugEnabled()) {
                     log.debug("forwardPage: "+forwardPage);
                 }
-//            }
         }
         catch (Exception e) {
             String es = "error process action request";
             log.error(es, e);
             throw new PortletException(es, e);
-        }
-        finally {
         }
 
         if (forwardPage == null) {

@@ -26,6 +26,8 @@ package org.riverock.portlet.login;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
@@ -46,7 +48,6 @@ import org.riverock.portlet.schema.portlet.login.LoginType;
 import org.riverock.portlet.schema.portlet.login.types.LoginTypeIsLoggedType;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -72,6 +73,7 @@ public final class LoginXmlPortlet implements Portlet {
     }
 
     public void processAction( final ActionRequest actionRequest, final ActionResponse actionResponse ) throws IOException {
+        log.debug("Start LoginXmlPortlet.processAction()");
         LoginUtils.check(actionRequest, actionResponse);
     }
 
@@ -89,8 +91,8 @@ public final class LoginXmlPortlet implements Portlet {
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
             LoginType login = new LoginType();
-//            login.setPortletName( LoginUtils.CTX_TYPE_LOGIN_XML );
-            login.setPortletName( "" );
+            login.setPortletName( LoginUtils.CTX_TYPE_LOGIN_XML );
+
             if ( auth_ != null && auth_.checkAccess( renderRequest.getServerName() ) ) {
                 if ( log.isDebugEnabled() )
                     log.debug( "user " + auth_.getUserLogin() + " is  valid for " + renderRequest.getServerName() + " site" );
@@ -101,16 +103,15 @@ public final class LoginXmlPortlet implements Portlet {
             }
             else {
 
-		PortletURL portletUrl = renderResponse.createActionURL();
-		portletUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_XML );
+                PortletURL portletUrl = renderResponse.createActionURL();
 
                 String srcURL = null;
                 if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
                     srcURL = RequestTools.getString( renderRequest, LoginUtils.NAME_TOURL_PARAM );
-                	srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
-                	srcURL = StringTools.replaceString( srcURL, "%26", "&" );
+                    srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
+                    srcURL = StringTools.replaceString( srcURL, "%26", "&" );
 
-			portletUrl.setParameter( LoginUtils.NAME_TOURL_PARAM, srcURL );
+                    login.setToUrl( srcURL );
                 }
 
                 if ( log.isDebugEnabled() ) {
@@ -121,7 +122,6 @@ public final class LoginXmlPortlet implements Portlet {
                 }
 
                 login.setActionUrl( portletUrl.toString() );
-                login.setToUrl( "" );
                 login.setInviteMessage( bundle.getString( "auth.check.header" ) );
                 login.setLoginMessage( bundle.getString( "auth.check.login" ) );
                 login.setPasswordMessage( bundle.getString( "auth.check.password" ) );
@@ -135,6 +135,7 @@ public final class LoginXmlPortlet implements Portlet {
             }
 
             byte[] bytes = XmlTools.getXml( login, xmlRoot, null, "utf-8");
+            writeDebug(bytes);
             out.write( bytes );
         }
         catch( Throwable e ) {
@@ -146,8 +147,20 @@ public final class LoginXmlPortlet implements Portlet {
             if (out!=null) {
                 out.flush();
                 out.close();
-                out = null;
             }
         }
+    }
+
+    protected void writeDebug(final byte bytes[]) throws IOException {
+
+        File file = File.createTempFile("xml-dump-", ".xml", new File("\\opt1"));
+        System.out.println("Write xml data to file: " + file.getAbsolutePath());
+        FileOutputStream out = new FileOutputStream(file, false);
+
+        if (bytes!=null)
+            out.write(bytes, 0, bytes.length);
+
+        out.flush();
+        out.close();
     }
 }

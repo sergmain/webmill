@@ -40,7 +40,7 @@ import org.riverock.common.tools.StringTools;
  * Author: mill
  * Date: Dec 2, 2002
  * Time: 4:42:13 PM
- * <p/>
+ * 
  * $Id$
  */
 public final class LoginUtils {
@@ -63,8 +63,8 @@ public final class LoginUtils {
             url = actionResponse.encodeURL( url );
         }
         if( log.isDebugEnabled() ) {
-            log.debug( "userLogin: " + ( login != null ? ( login.toString() + ", class: " + login.getClass().getName() ) : "null" ) );
-            log.debug( "userPassword: " + ( password != null ? ( password.toString() + ", class: " + password.getClass().getName() ) : "null" ) );
+            log.debug( "userLogin: " + ( login != null ? (login + ", class: " + login.getClass().getName() ) : "null" ) );
+            log.debug( "userPassword: " + ( password != null ? (password + ", class: " + password.getClass().getName() ) : "null" ) );
             log.debug( "URL #3: " + url );
         }
 
@@ -99,12 +99,10 @@ public final class LoginUtils {
             Thread.sleep( 3000 );
         }
         catch( InterruptedException e ) {
+            // catch InterruptedException
         }
 
         if( log.isDebugEnabled() )
             log.debug( "mills " + System.currentTimeMillis() );
-
-        return;
-
     }
 }

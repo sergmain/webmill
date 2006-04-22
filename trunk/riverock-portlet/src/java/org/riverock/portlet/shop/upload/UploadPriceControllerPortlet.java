@@ -39,8 +39,8 @@ import javax.portlet.PortletSecurityException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 import org.apache.commons.fileupload.RequestContext; 
 import org.apache.commons.fileupload.portlet.PortletRequestContext;

@@ -25,7 +25,6 @@
 package org.riverock.portlet.register;
 
 import org.riverock.module.action.ModuleActionRequest;
-import org.riverock.portlet.portlets.PortletErrors;
 
 /**
  * @author SergeMaslyukov

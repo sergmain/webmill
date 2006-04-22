@@ -45,6 +45,7 @@ import org.riverock.common.tools.StringTools;
 
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.RequestTools;
+import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -78,6 +79,7 @@ public final class LoginPlainPortlet implements Portlet {
 
         Writer out = null;
         try {
+            ContentTypeTools.setContentType( renderResponse, ContentTypeTools.CONTENT_TYPE_UTF8 );
             out = renderResponse.getWriter();
             ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
 
@@ -96,9 +98,8 @@ public final class LoginPlainPortlet implements Portlet {
                 return;
             }
 
-
-	PortletURL portletUrl = renderResponse.createActionURL();
-	portletUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN );
+            PortletURL portletUrl = renderResponse.createActionURL();
+            portletUrl.setParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, LoginUtils.CTX_TYPE_LOGIN_PLAIN );
 
             out.write( "<form method=\"POST\" action=\"" + portletUrl + "\" >\n" );
 
