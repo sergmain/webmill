@@ -27,8 +27,6 @@ package org.riverock.webmill.site;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.digester.Digester;
@@ -128,29 +126,25 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     public PortalTemplateManagerImpl(Long siteId) {
-        List<TemplateBean> beans = InternalDaoFactory.getInternalDao().getTemplateList( siteId );
-        Iterator<TemplateBean> iterator = beans.iterator();
-        while (iterator.hasNext()) {
-            TemplateBean templateBean = iterator.next();
-
+        for (TemplateBean templateBean : InternalDaoFactory.getInternalDao().getTemplateList( siteId )) {
             try {
-                PortalTemplate st = digestSiteTemplate(templateBean.getTemplateData(), templateBean.getTemplateName() );
-                String lang = StringTools.getLocale( templateBean.getTemplateLanguage() ).toString();
-                hash.put( st.getTemplateName()+'_'+lang, st);
-                hashId.put( templateBean.getTemplateId(), st );
+                PortalTemplate st = digestSiteTemplate(templateBean.getTemplateData(), templateBean.getTemplateName());
+                String lang = StringTools.getLocale(templateBean.getTemplateLanguage()).toString();
+                hash.put(st.getTemplateName() + '_' + lang, st);
+                hashId.put(templateBean.getTemplateId(), st);
 
                 SiteTemplateDescriptionType desc = new SiteTemplateDescriptionType();
-                desc.setIdTemplate( templateBean.getTemplateId() );
-                desc.setIdTemplateLanguage( templateBean.getSiteLanguageId() );
-                desc.setNameLanguage( lang );
-                desc.setTemplate( st );
-                templateList.addTemplateDescription( desc );
+                desc.setIdTemplate(templateBean.getTemplateId());
+                desc.setIdTemplateLanguage(templateBean.getSiteLanguageId());
+                desc.setNameLanguage(lang);
+                desc.setTemplate(st);
+                templateList.addTemplateDescription(desc);
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 // Todo. Add to template text data. If we get error, then create template with error message
                 String es = "Error get templates";
                 log.error(es, e);
-                throw new IllegalStateException(es,e );
+                throw new IllegalStateException(es, e);
             }
         }
     }

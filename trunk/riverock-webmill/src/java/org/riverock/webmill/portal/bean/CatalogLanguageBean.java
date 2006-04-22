@@ -10,7 +10,8 @@ public class CatalogLanguageBean {
     private Long catalogLanguageId;
     private Boolean isDefault = false;
     private Long siteLanguageId;
-    private String catalogCode = "'DEFAULT'";
+    private String catalogCode = null;
+//    private String catalogCode = "'DEFAULT'";
 
     public Long getCatalogLanguageId() {
         return catalogLanguageId;

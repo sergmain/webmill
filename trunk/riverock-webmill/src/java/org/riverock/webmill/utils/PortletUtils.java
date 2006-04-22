@@ -24,11 +24,11 @@
  */
 package org.riverock.webmill.utils;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.RequestContext; 
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.log4j.Logger;
 
@@ -63,16 +62,13 @@ public final class PortletUtils {
     }
 
     public static boolean isMultiPart( HttpServletRequest request ) {
-        RequestContext uploadRequestContext = new ServletRequestContext( request );
-        boolean isMultiPartRequest = FileUpload.isMultipartContent( uploadRequestContext );
-
-        return isMultiPartRequest;
+        return FileUpload.isMultipartContent( new ServletRequestContext( request ) );
     }
 
     public static File storeBodyRequest( final HttpServletRequest request, int maxLength ) {
-	if (log.isDebugEnabled()) {
-		log.info("start storeBodyRequest()" );
-	}
+        if (log.isDebugEnabled()) {
+            log.info("start storeBodyRequest()" );
+        }
 
         if (isMultiPart(request)) {
             int length = request.getContentLength();
@@ -80,12 +76,12 @@ public final class PortletUtils {
                 throw new IllegalStateException("Can not process body request because content length exceed max length. " +
                     "max length: "+maxLength + ", request content length: " + length);
             }
-            File file = null;
+            File file;
             try {
                 file = File.createTempFile("request", ".dat") ;
-		if (log.isDebugEnabled()) {
-			log.debug("Temporary file with multipart request: " + file);
-		}
+                if (log.isDebugEnabled()) {
+                    log.debug("Temporary file with multipart request: " + file);
+                }
                 OutputStream outputStream = new FileOutputStream( file );
                 InputStream inputStream = request.getInputStream();
                 copyData(inputStream, outputStream);

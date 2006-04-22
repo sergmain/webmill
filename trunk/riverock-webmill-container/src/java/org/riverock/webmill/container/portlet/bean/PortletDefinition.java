@@ -505,6 +505,7 @@ public class PortletDefinition implements Serializable {
      *
      * @param index
      */
+/*
     public Supports getSupports(int index) {
         //-- check bounds for index
         if ((index < 0) || (index > _supportsList.size())) {
@@ -513,10 +514,12 @@ public class PortletDefinition implements Serializable {
 
         return (Supports) _supportsList.get(index);
     }
+*/
 
     /**
      * Method getSupports
      */
+/*
     public Supports[] getSupports() {
         int size = _supportsList.size();
         Supports[] mArray = new Supports[size];
@@ -525,13 +528,17 @@ public class PortletDefinition implements Serializable {
         }
         return mArray;
     }
+*/
+    public List<Supports> getSupports() {
+        return _supportsList;
+    }
 
     /**
      * Method getSupportsCount
      */
-    public int getSupportsCount() {
-        return _supportsList.size();
-    }
+//    public int getSupportsCount() {
+//        return _supportsList.size();
+//    }
 
     /**
      * Method removeDescription

@@ -25,11 +25,13 @@
 package org.riverock.webmill.portal.impl;
 
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletModeException;
 import javax.portlet.PortletSecurityException;
@@ -42,9 +44,11 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.context.CtxContextFactory;
+import org.riverock.webmill.portal.context.CtxRequestContextPocessor;
+import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
  * User: serg_main
@@ -57,41 +61,46 @@ public final class PortletURLImpl implements PortletURL {
     private final static Logger log = Logger.getLogger( PortletURLImpl.class );
 
     protected PortletMode mode = null;
+    private WindowState state = null;
 
     private Map<String, Object> parameters = new HashMap<String, Object>();
 
-//    protected PortletWindow portletWindow;
-
     private boolean secure;
-    private WindowState state = null;
     private PortalRequestInstance portalRequestInstance = null;
     private RenderRequest portletRequest = null;
     private boolean isActionReqeust = false;
     private Namespace namespace = null;
+    private String portletName = null;
 
-    public PortletURLImpl( PortalRequestInstance portalRequestInstance, RenderRequest renderRequest, boolean isActionReqeust, Namespace namespace ) {
+    public PortletURLImpl(
+        PortalRequestInstance portalRequestInstance, RenderRequest renderRequest,
+        boolean isActionReqeust, Namespace namespace, RequestState requestState,
+        String portletName ) {
         this.portalRequestInstance = portalRequestInstance;
         this.portletRequest = renderRequest;
         this.secure = portalRequestInstance.getHttpRequest().isSecure();
         this.isActionReqeust = isActionReqeust;
+        this.state = requestState.getWindowState();
+        this.mode = requestState.getPortletMode();
         this.namespace = namespace;
+        this.portletName = portletName;
     }
 
     public void setWindowState( WindowState windowState ) throws WindowStateException {
-//        PortalContext portalContext = .getPortalContext();
-//        Enumeration supportedWindowStates = portalContext.getSupportedWindowStates();
-//        if (windowState != null)
-//        {
-//            while (supportedWindowStates.hasMoreElements())
-//            {
-//                WindowState supportedWindowState = (WindowState) supportedWindowStates.nextElement();
-//                if (windowState.equals(supportedWindowState))
-//                {
-//                    state = windowState;
-//                    return;
-//                }
-//            }
-//        }
+        PortalContext portalContext = portalRequestInstance.getPortalContext();
+        Enumeration supportedWindowStates = portalContext.getSupportedWindowStates();
+        if (windowState != null)
+        {
+            while (supportedWindowStates.hasMoreElements())
+            {
+                WindowState supportedWindowState = (WindowState) supportedWindowStates.nextElement();
+                if (windowState.equals(supportedWindowState))
+                {
+                    state = windowState;
+                    return;
+                }
+            }
+        }
         throw new WindowStateException( "unsupported Window State used: " + windowState, windowState );
     }
 
@@ -131,9 +140,8 @@ public final class PortletURLImpl implements PortletURL {
         }
 
         Map<String, Object> temp = new HashMap<String, Object>( 2*map.size() );
-        Iterator iterator = map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, Object> entry = (Map.Entry<String, Object>)iterator.next();
+        for (Object o : map.entrySet()) {
+            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) o;
 
             Object obj = entry.getValue();
             if (obj == null) {
@@ -158,7 +166,7 @@ public final class PortletURLImpl implements PortletURL {
 
     public void setSecure( boolean secure ) throws PortletSecurityException {
         // This implementation does assume not having a supporting security environment installed!
-        if ( secure == true ) {
+        if (secure ) {
             throw new PortletSecurityException( "The current implementation does assume not having a supporting security environment installed!" );
         }
 
@@ -166,32 +174,24 @@ public final class PortletURLImpl implements PortletURL {
     }
 
     public String toString() {
-        StringBuilder url = new StringBuilder( 50 );
+        StringBuilder url = new StringBuilder( 70 );
 
-        String portletName = getParameter( ContainerConstants.NAME_TYPE_CONTEXT_PARAM );
         if ( log.isDebugEnabled() ) {
             log.debug( "portlet name for insert into url: " + portletName );
             log.debug( "portletRequest: " + portletRequest );
         }
-        Object tempObj = portletRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE );
-        if ( log.isDebugEnabled() ) {
-            log.debug( "portlet name from attributes: " + tempObj );
-        }
 
-        if (portletName==null && tempObj!=null)
-            portletName = (String)tempObj;
-
-        if ( log.isDebugEnabled() ) {
-            log.debug( "Result portlet name for insert into url: " + portletName );
-        }
+        String resultPortletName = portletName;
+        if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) 
+            resultPortletName = portletName.substring(PortletContainer.PORTLET_ID_NAME_SEPARATOR .length());
 
         url.append(
-            CtxContextFactory.encodeUrl(
-                portletRequest, portletName,
+            CtxRequestContextPocessor.encodeUrl(
+                portletRequest, resultPortletName,
                 (String)portletRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ),
                 portletRequest.getLocale(),
                 isActionReqeust,
-		namespace
+                namespace
             )
         );
 
@@ -206,16 +206,14 @@ public final class PortletURLImpl implements PortletURL {
                 String key = (String)names.next();
                 Object obj = parameters.get( key );
                 if (obj instanceof List) {
-                    Iterator it = ((List)obj).iterator();
-                    while (it.hasNext()) {
-                        String value = (String)it.next();
+                    for (Object o : ((List) obj)) {
+                        String value = (String) o;
                         if (isNotFirst) {
-                            url.append( '&' );
-                        }
-                        else {
+                            url.append('&');
+                        } else {
                             isNotFirst = true;
                         }
-                        url.append( key ).append( '=' ).append( value );
+                        url.append(key).append('=').append(value);
                     }
                 }
                 else {
@@ -230,24 +228,24 @@ public final class PortletURLImpl implements PortletURL {
 
     // internal methods ---------------------------------------------------------------------------
     private boolean isPortletModeSupported( PortletMode requestedPortletMode ) {
-// Todo need implement
-//
-//        PortletDefinition portletDefinition = referencedPortletWindow.getPortletEntity().getPortletDefinition();
-//        ContentTypeSet contentTypes = portletDefinition.getContentTypeSet();
-//        ContentType contentType = contentTypes.get("text/html");
-//        Iterator portletModes = contentType.getPortletModes();
-//        if (requestedPortletMode != null)
-//        {
-//            while (portletModes.hasNext())
-//            {
-//                PortletMode supportedPortletMode = (PortletMode) portletModes.next();
-//                if (requestedPortletMode.equals(supportedPortletMode))
-//                {
-//                    return true;
-//                }
-//            }
-//        }
         return true;
+/*
+
+        PortletDefinition portletDefinition = referencedPortletWindow.getPortletEntity().getPortletDefinition();
+        List<Supports> supportses = portletDefinition.getSupports();
+        for (Supports supports : supportses) {
+
+            // todo switch to real mimetype of request
+            if (supports.getMimeType().equals("text/html")) {
+                for (String portletMode : supports.getPortletMode()) {
+                    if (portletMode.equals(requestedPortletMode.toString()) ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+*/
     }
     // --------------------------------------------------------------------------------------------
 
@@ -268,9 +266,4 @@ public final class PortletURLImpl implements PortletURL {
         return state;
     }
     // --------------------------------------------------------------------------------------------
-
-    public void setSecure() {
-        secure = true;
-    }
-
 }

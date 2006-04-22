@@ -111,6 +111,7 @@ public class Supports implements Serializable {
      *
      * @param index
      */
+/*
     public String getPortletMode(int index) {
         //-- check bounds for index
         if ((index < 0) || (index > _portletModeList.size())) {
@@ -119,10 +120,15 @@ public class Supports implements Serializable {
 
         return _portletModeList.get(index);
     }
+*/
 
     /**
      * Method getPortletMode
      */
+    public List<String> getPortletMode() {
+        return _portletModeList;
+    }
+/*
     public String[] getPortletMode() {
         int size = _portletModeList.size();
         String[] mArray = new String[size];
@@ -131,13 +137,14 @@ public class Supports implements Serializable {
         }
         return mArray;
     }
+*/
 
     /**
      * Method getPortletModeCount
      */
-    public int getPortletModeCount() {
-        return _portletModeList.size();
-    }
+//    public int getPortletModeCount() {
+//        return _portletModeList.size();
+//    }
 
     /**
      * Method removePortletMode

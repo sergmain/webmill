@@ -24,41 +24,9 @@
  */
 package org.riverock.webmill.portal.context;
 
-import javax.portlet.PortletMode;
-import javax.portlet.WindowState;
-
 /**
- * User: SergeMaslyukov
- * Date: 03.03.2006
- * Time: 03:26:06
+ * $Id$
  */
-public final class RequestState {
-
-    private boolean isActionRequest = false;
-    private PortletMode portletMode = PortletMode.VIEW;
-    private WindowState windowState = WindowState.NORMAL;
-
-    public PortletMode getPortletMode() {
-        return portletMode;
-    }
-
-    public void setPortletMode(PortletMode portletMode) {
-        this.portletMode = portletMode;
-    }
-
-    public WindowState getWindowState() {
-        return windowState;
-    }
-
-    public void setWindowState(WindowState windowState) {
-        this.windowState = windowState;
-    }
-
-    public boolean isActionRequest() {
-        return isActionRequest;
-    }
-
-    public void setActionRequest( boolean isActionRequest ) {
-        this.isActionRequest = isActionRequest;
-    }
+public interface RequestContextProcessor {
+    public RequestContext parseRequest( RequestContextParameter factoryParameter );
 }

@@ -52,7 +52,7 @@ public class PortalXslt implements XsltTransformer{
 
     private String xslt = null;
     private Transformer transformer = null;
-    private Object transformerSync = new Object();
+    private final Object transformerSync = new Object();
 
     public void terminate(Long id_) {
         cache.reinit();
@@ -95,13 +95,12 @@ public class PortalXslt implements XsltTransformer{
         }
     }
 
-    private static Object syncObj = new Object();
-
+    private final static Object syncObj = new Object();
     private void createTransformer() throws Exception {
         Source xslSource = new StreamSource(new StringReader(xslt));
 
         TransformerFactory tFactory = TransformerFactory.newInstance();
-        Templates translet = null;
+        Templates translet;
         try {
             translet = tFactory.newTemplates(xslSource);
         }
@@ -126,7 +125,6 @@ public class PortalXslt implements XsltTransformer{
                 log.error("Error get version of xerces", e2);
             }
             log.error("Error create TransformerFactory of XSLT", e);
-            translet = null;
             throw e;
         }
 

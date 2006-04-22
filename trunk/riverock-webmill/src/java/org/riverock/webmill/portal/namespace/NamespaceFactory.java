@@ -18,7 +18,7 @@ public class NamespaceFactory {
      * Section of the Java Language Specification Second Edition.
      *
      * @param fullPortletName
-     * @return
+     * @return Namespace
      */
     public static Namespace getNamespace( String fullPortletName, String templateName, int tempalteItemIndex ) {
         String n = "idx-" + tempalteItemIndex + "_" + templateName + '_' + fullPortletName;

@@ -1,3 +1,4 @@
+package org.riverock.webmill.container.deployer;
 /*
  * org.riverock.webmill.container -- Webmill portlet container implementation
  *
@@ -38,7 +39,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.riverock.webmill.container.deployer;
 
 import java.io.File;
 import java.io.FileInputStream;
