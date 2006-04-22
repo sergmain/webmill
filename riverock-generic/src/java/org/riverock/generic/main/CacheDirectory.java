@@ -30,7 +30,6 @@ import java.io.FileFilter;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
-import org.riverock.generic.exception.GenericException;
 
 /**
  * @author Serge Maslyukov
@@ -61,44 +60,35 @@ public final class CacheDirectory {
         return files;
     }
 
-    public boolean isNeedReload()
-        throws GenericException {
-        try {
-            if( currentDir == null )
-                return false;
-
-            File[] currentFiles = currentDir.listFiles( fileFilter );
-
-            if( files == null )
-                return false;
-
-            if( files.length != currentFiles.length )
-                return true;
-
-            for( final CacheFile newVar : files ) {
-                File temp = newVar.getFile();
-                File currFile = null;
-                for( final File newVar1 : currentFiles ) {
-                    currFile = newVar1;
-                    if( temp.getName().equals( currFile.getName() ) )
-                        break;
-                    currFile = null;
-                }
-                if( currFile != null && temp.lastModified() == currFile.lastModified() ) {
-                    if( log.isDebugEnabled() )
-                        log.debug( "File " + temp.getName() + " was changed. Return status is true" );
-
-                    return true;
-                }
-            }
+    public boolean isNeedReload() {
+        if (currentDir == null)
             return false;
-        }
-        catch( Throwable e ) {
-            final String es = "Error in isNeedReload()";
-            log.error( es, e );
-            throw new GenericException( es, e );
-        }
 
+        File[] currentFiles = currentDir.listFiles(fileFilter);
+
+        if (files == null)
+            return false;
+
+        if (files.length != currentFiles.length)
+            return true;
+
+        for (final CacheFile newVar : files) {
+            File temp = newVar.getFile();
+            File currFile = null;
+            for (final File newVar1 : currentFiles) {
+                currFile = newVar1;
+                if (temp.getName().equals(currFile.getName()))
+                    break;
+                currFile = null;
+            }
+            if (currFile != null && temp.lastModified() == currFile.lastModified()) {
+                if (log.isDebugEnabled())
+                    log.debug("File " + temp.getName() + " was changed. Return status is true");
+
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isUseCache() {

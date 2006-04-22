@@ -22,20 +22,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.generic.main;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.apache.log4j.Logger;
-import org.riverock.generic.exception.FileManagerException;
 
 /**
  * $Id$
  */
-public class CacheFile
-{
+public class CacheFile {
     private static Logger log = Logger.getLogger(CacheFile.class);
 
     private long lastAccessTime = 0;
@@ -44,28 +40,23 @@ public class CacheFile
     private long lastModified = -1;
     private File file = null;
 
-    public File getFile()
-    {
+    public File getFile() {
         return file;
     }
 
-    public void setLastModified()
-    {
+    public void setLastModified() {
         lastModified = file.lastModified();
     }
 
-    public boolean isNeedReload()
-    {
+    public boolean isNeedReload() {
         if (lastModified == file.lastModified())
             return false;
         else
             return true;
     }
 
-    public boolean isUseCache()
-    {
-        if (System.currentTimeMillis() - lastAccessTime <= delayPeriod)
-        {
+    public boolean isUseCache() {
+        if (System.currentTimeMillis() - lastAccessTime <= delayPeriod) {
             if (log.isDebugEnabled())
                 log.debug("#7.9.0 Use optimistic cached file");
 
@@ -76,31 +67,35 @@ public class CacheFile
         return false;
     }
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         file = null;
 
         super.finalize();
     }
 
     public CacheFile(File tempFile) throws Exception {
-        this(tempFile, 1000*10);
+        this(tempFile, 1000 * 10);
     }
 
     public CacheFile(String fileName) throws Exception {
-        this( new File(fileName), 1000*10);
+        this(new File(fileName), 1000 * 10);
     }
 
     public CacheFile(String fileName, long delayPeriod_) throws Exception {
-        this( new File(fileName), delayPeriod_);
+        this(new File(fileName), delayPeriod_);
     }
 
-    public CacheFile(File tempFile, long delayPeriod_)
-        throws FileManagerException, FileNotFoundException {
-        if (tempFile == null || !tempFile.exists()) {
+    public CacheFile(File tempFile, long delayPeriod_) {
+        if (tempFile == null) {
             String errorString = "Cache file to init is null";
-            log.error( errorString);
-            throw new FileNotFoundException( errorString );
+            log.error(errorString);
+            throw new IllegalStateException(errorString);
+        }
+
+        if (!tempFile.exists()) {
+            String errorString = "Cache file " + file.getAbsolutePath() + " is not exists";
+            log.error(errorString);
+            throw new IllegalStateException(errorString);
         }
 
         if (log.isDebugEnabled()) {
@@ -108,21 +103,9 @@ public class CacheFile
             log.debug("Name file: " + tempFile.getName());
         }
 
-        try{
-            delayPeriod = delayPeriod_;
-            file = tempFile;
-            setLastModified();
-        }
-        catch (Exception e){
-            String errorString = "Error init  cache file object";
-            if (tempFile!= null)
-                 errorString += tempFile.getName();
-
-            log.error(errorString, e);
-            file = null;
-            lastModified = -1;
-            throw new FileManagerException(errorString, e);
-        }
+        delayPeriod = delayPeriod_;
+        file = tempFile;
+        setLastModified();
     }
 
 }
