@@ -82,7 +82,7 @@ public abstract class DatabaseAdapter {
         return conn;
     }
 
-    public PreparedStatement prepareStatement(final String sql_) throws SQLException, DatabaseException {
+    public PreparedStatement prepareStatement(final String sql_) throws SQLException {
         return DatabaseRuntimeService.prepareStatement(conn, dc, tables, sql_);
     }
 
@@ -90,7 +90,7 @@ public abstract class DatabaseAdapter {
         return conn.createStatement();
     }
 
-    public void commit() throws SQLException, DatabaseException {
+    public void commit() throws SQLException {
         DatabaseRuntimeService.commit(conn, dc, tables);
     }
 
