@@ -46,8 +46,8 @@ td { vertical-align: top; }
 	</h:panelGroup>
 
 	<h:panelGroup>
-		<h:commandButton value="#{msg.action_portal_user_add_process}" action="#{portalUserAction.processAddPortalUser}"/>
-		<h:commandButton value="#{msg.action_portal_user_add_cancel}" action="#{portalUserAction.cancelAddPortalUser}"/>
+		<h:commandButton value="#{msg.portal_user_add_process_action}" action="#{portalUserAction.processAddPortalUser}"/>
+		<h:commandButton value="#{msg.portal_user_add_cancel_action}" action="#{portalUserAction.cancelAddPortalUser}"/>
 	</h:panelGroup>
 
     </h:panelGrid>	 

@@ -36,8 +36,8 @@ td { vertical-align: top; }
 	</f:subview>
  	
 	<h:panelGroup id="editDeleteControls">
-		<h:commandButton value="#{msg.portal_user_action_edit_portal_user}" action="portal-user-edit"/>
-		<h:commandButton value="#{msg.portal_user_action_delete_portal_user}" action="portal-user-delete"/>
+		<h:commandButton value="#{msg.portal_user_action_edit_portal_user_action}" action="portal-user-edit"/>
+		<h:commandButton value="#{msg.portal_user_action_delete_portal_user_action}" action="portal-user-delete"/>
 	</h:panelGroup>
  
    </h:panelGrid>	 

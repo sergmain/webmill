@@ -19,12 +19,12 @@
 <h:panelGroup id="edit-holding-panel" rendered="#{holdingSessionBean.edit}">
    <h:panelGrid columns="2">
 
-	<h:outputText value="Holding short name:"/>
+	<h:outputText value="#{msg.holding_short_name}"/>
             <h:inputText id="input_holding_short_name" value="#{holdingDataProvider.currentHolding.shortName}" maxlength="20" size="20" 
 		required="false">
             </h:inputText>
 
-	<h:outputText value="Holding name:"/>
+	<h:outputText value="#{msg.holding_name}"/>
             <h:inputText id="input_holding_name" value="#{holdingDataProvider.currentHolding.name}" maxlength="20" size="20" 
 		required="false">
             </h:inputText>

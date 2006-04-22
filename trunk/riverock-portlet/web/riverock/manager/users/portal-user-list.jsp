@@ -6,7 +6,7 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.PortalUser" var="msg"/>
 
-    <h:commandButton value="#{msg.action_portal_user_add_portal_user}" action="#{portalUserAction.addPortalUser}" style=" width : 106px; height : 22px;"/>
+    <h:commandButton value="#{msg.portal_user_add_portal_user_action}" action="#{portalUserAction.addPortalUser}" style=" width : 106px; height : 22px;"/>
 
                 <t:dataTable id="portalUserDataTable"
                         var="portalUser"

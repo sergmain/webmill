@@ -198,19 +198,10 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>MemberViewServlet</servlet-name>
-		<servlet-class>org.riverock.portlet.member.MemberViewServlet</servlet-class>
-		<load-on-startup>6</load-on-startup>
-	</servlet>
-	<servlet>
 		<servlet-name>Mill.UploadPrice</servlet-name>
 		<servlet-class>org.riverock.portlet.shop.upload.UploadPrice</servlet-class>
 		<load-on-startup>10</load-on-startup>
 	</servlet>
-	<servlet-mapping>
-		<servlet-name>MemberViewServlet</servlet-name>
-		<url-pattern>/member_view</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Mill.UploadPrice</servlet-name>
 		<url-pattern>/mill.upload_price</url-pattern>
