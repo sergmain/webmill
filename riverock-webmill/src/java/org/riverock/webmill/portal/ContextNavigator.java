@@ -25,9 +25,9 @@
 package org.riverock.webmill.portal;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -45,7 +45,7 @@ import org.riverock.webmill.portal.utils.SiteList;
 public final class ContextNavigator extends HttpServlet {
     private final static Logger log = Logger.getLogger(ContextNavigator.class);
 
-    private Map<Long, PortalInstanceImpl> portalInstanceMap = new HashMap<Long, PortalInstanceImpl>();
+    private ConcurrentMap<Long, PortalInstanceImpl> portalInstanceMap = new ConcurrentHashMap<Long, PortalInstanceImpl>();
 
     static ServletConfig portalServletConfig = null;
     public void init( ServletConfig servletConfig ) {
@@ -56,9 +56,7 @@ public final class ContextNavigator extends HttpServlet {
         portalServletConfig = null;
 
         if (portalInstanceMap!=null) {
-            Iterator<Map.Entry<Long,PortalInstanceImpl>> iterator = portalInstanceMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Long, PortalInstanceImpl> entry = iterator.next();
+            for (Map.Entry<Long, PortalInstanceImpl> entry : portalInstanceMap.entrySet()) {
                 entry.getValue().destroy();
             }
             portalInstanceMap.clear();
@@ -79,8 +77,7 @@ public final class ContextNavigator extends HttpServlet {
 
     public void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse )
         throws IOException, ServletException {
-        Long siteId = null;
-            siteId = SiteList.getIdSite( httpRequest.getServerName() );
+        Long siteId = SiteList.getIdSite( httpRequest.getServerName() );
         PortalInstanceImpl portalInstance = portalInstanceMap.get( siteId );
         if (portalInstance==null) {
             portalInstance = createNewPortalInsance( siteId );
@@ -88,13 +85,13 @@ public final class ContextNavigator extends HttpServlet {
         portalInstance.process(httpRequest, httpResponse );
     }
 
-    private synchronized PortalInstanceImpl createNewPortalInsance(Long siteId) {
+    private PortalInstanceImpl createNewPortalInsance(Long siteId) {
         PortalInstanceImpl portalInstance = portalInstanceMap.get( siteId );
         if (portalInstance!=null) {
             return portalInstance;
         }
         portalInstance = PortalInstanceImpl.getInstance( portalServletConfig );
-        portalInstanceMap.put( siteId, portalInstance );
+        portalInstanceMap.putIfAbsent( siteId, portalInstance );
         return portalInstance;
     }
 }

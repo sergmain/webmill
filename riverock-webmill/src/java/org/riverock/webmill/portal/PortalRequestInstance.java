@@ -28,12 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.portlet.PortalContext;
 import javax.servlet.ServletConfig;
@@ -41,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUpload;
-import org.apache.commons.fileupload.RequestContext;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.log4j.Logger;
 
@@ -56,14 +51,16 @@ import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.sso.a3.AuthTools;
-import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
-import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.context.RequestContext;
+import org.riverock.webmill.portal.context.RequestContextParameter;
+import org.riverock.webmill.portal.context.RequestContextFactory;
+import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.utils.PortletUtils;
@@ -89,33 +86,31 @@ public final class PortalRequestInstance {
 
     long startMills;
 
-    private ContextFactory contextFactory = null;
+    private RequestContext requestContext = null;
     private PortalInfo portalInfo = null;
-    private Locale[] preferredLocale = null;
+    /** array of preffered locales from http request */
+    private Locale[] preferredLocales = null;
+
     private HttpServletRequest httpRequest = null;
     private HttpServletResponse httpResponse = null;
     private ServletConfig portalServletConfig = null;
     private AuthSession auth = null;
     private ActionRequestImpl actionRequest = null;
-    private Map<String, Object> httpRequestParameter = null;
     private CookieManager cookieManager = new CookieManagerImpl();
-    private boolean isTextMimeType = true;
-    private String mimeType = null;
 
     private String errorString = null;
     private String redirectUrl = null;
 
     private PortalContext portalContext = null;
 
+    /** File with request data, if request is multipart */
     private File requestBodyFile = null;
     private boolean isMultiPartRequest = false;
 
     private PortalDaoProvider portalDaoProvider = null;
 
     public void destroy() {
-        Iterator iterator = getPageElementList().iterator();
-        while (iterator.hasNext()) {
-            PageElement pageElement = (PageElement) iterator.next();
+        for (PageElement pageElement : getPageElementList()) {
             pageElement.destroy();
         }
 
@@ -124,14 +119,15 @@ public final class PortalRequestInstance {
                 byteArrayOutputStream.close();
             }
             catch (IOException e) {
+                log.warn("Error close outputStream()");
             }
             byteArrayOutputStream = null;
         }
         xslt = null;
         template = null;
-        contextFactory = null;
+        requestContext = null;
         portalInfo = null;
-        preferredLocale = null;
+        preferredLocales = null;
         httpRequest = null;
         httpResponse = null;
         portalServletConfig = null;
@@ -140,11 +136,9 @@ public final class PortalRequestInstance {
             actionRequest.destroy();
             actionRequest = null;
         }
-        httpRequestParameter = null;
         cookieManager = null;
         errorString = null;
         redirectUrl = null;
-        mimeType = null;
         portalContext = null;
         MainTools.deleteFile( requestBodyFile );
         requestBodyFile = null;
@@ -165,7 +159,7 @@ public final class PortalRequestInstance {
         HttpServletResponse response_, 
         ServletConfig portalServletConfig, 
         PortletContainer portletContainer,
-        String portalName
+        String portalInfoName
         ) throws PortalException {
 
         startMills = System.currentTimeMillis();
@@ -179,21 +173,17 @@ public final class PortalRequestInstance {
         this.httpResponse = response_;
         this.portalServletConfig = portalServletConfig;
         try {
-            RequestContext uploadRequestContext = new ServletRequestContext( httpRequest );
-            isMultiPartRequest = FileUpload.isMultipartContent( uploadRequestContext );
+            org.apache.commons.fileupload.RequestContext uploadRequestContext = new ServletRequestContext( httpRequest );
+            this.isMultiPartRequest = FileUpload.isMultipartContent( uploadRequestContext );
             if (log.isDebugEnabled()) {
                 log.debug( "isMultiPartRequest: " + isMultiPartRequest );
             }
             if (isMultiPartRequest) {
                 requestBodyFile = PortletUtils.storeBodyRequest( httpRequest, MAX_REQUEST_BODY_SIZE );
-                httpRequestParameter = new HashMap<String, Object>();
-            }
-            else {
-                httpRequestParameter = Collections.unmodifiableMap(PortletUtils.getParameters(httpRequest));
             }
 
             this.auth = AuthTools.getAuthSession(httpRequest);
-            portalDaoProvider = new PortalDaoProviderImpl( auth );
+            this.portalDaoProvider = new PortalDaoProviderImpl( auth );
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -201,81 +191,70 @@ public final class PortalRequestInstance {
                 cl = portletContainer.getClass().getClassLoader();
                 log.debug("portlet container class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
             }
-            
             this.portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName());
-            this.portalContext = createPortalContext(portalName, portalInfo);
+            this.portalContext = new PortalContextImpl(portalInfoName, httpRequest.getContextPath(), portalInfo);
+            this.preferredLocales = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
 
-            this.contextFactory = ContextFactory.initTypeContext( httpRequest, portalInfo, httpRequestParameter, portletContainer);
-            if (contextFactory.getUrlResource() != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("portalServletConfig: " + portalServletConfig );
-                    if (portalServletConfig!=null) {
-                        log.debug("ServletContext: " + portalServletConfig.getServletContext());
-                    }
-                }
-                mimeType = portalServletConfig.getServletContext().getMimeType(contextFactory.getUrlResource());
-                if (log.isDebugEnabled()) {
-                    log.debug("mimeType: " + mimeType);
-                }
-                if (mimeType != null && !mimeType.startsWith("text/")) {
-                    isTextMimeType = false;
-                    return;
-                }
-            }
-            this.preferredLocale = Header.getAcceptLanguageAsLocaleListSorted(httpRequest);
+            RequestContextParameter factoryParameter =
+                new RequestContextParameter(httpRequest, portalInfo, portletContainer, isMultiPartRequest, requestBodyFile );
 
-            if (log.isDebugEnabled()) {
-                log.debug("#77.0");
+            this.requestContext = RequestContextFactory.createRequestContext( factoryParameter );
+            if (requestContext==null) {
+                throw new IllegalArgumentException("General error for access portal page");
             }
+
             initTemplate();
-
-            if (log.isDebugEnabled()) {
-                log.debug("#77.0");
-            }
-
             initXslt();
 
-            if (log.isDebugEnabled()) {
-                log.debug("#5.0");
-            }
-
             // init page element list
-            Iterator<PortalTemplateItem> iterator = template.getPortalTemplateItems().iterator();
             int i = 0;
-            while (iterator.hasNext()) {
-                PortalTemplateItem templateItem = iterator.next();
-
-                String portletName = null;
+            for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
+                String portletName;
                 Namespace namespace = null;
-                if (templateItem.getTypeObject().getType()==PortalTemplateItemType.PORTLET_TYPE) {
+                PortletParameters portletParameters = null;
+                if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
                     portletName = templateItem.getValue();
-                    namespace = NamespaceFactory.getNamespace( portletName, getNameTemplate(), i++ );
+                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++);
+
+                    portletParameters = requestContext.getParameters().get(namespace.getNamespace());
+                    if (portletParameters==null) {
+                        throw new IllegalStateException(
+                            "portletParameters object is null, " +
+                                "namespace: " + namespace.getNamespace() +", " +
+                                "portletName: " + portletName
+                        );
+                    }
+                } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
+                    portletName = requestContext.getDefaultPortletName();
+                    namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++);
+
+                    portletParameters = requestContext.getParameters().get(namespace.getNamespace());
+                    if (portletParameters==null) {
+                        throw new IllegalStateException("portletParameters object is null");
+                    }
                 }
-                else if (templateItem.getTypeObject().getType()==PortalTemplateItemType.DYNAMIC_TYPE) {
-                    portletName = getDefaultPortletDefinition();
-                    namespace = NamespaceFactory.getNamespace( portletName, getNameTemplate(), i++ );
-                }
-                PageElement element = new PageElement(portletContainer, namespace);
-                
-                element.setPortalTemplateItem(templateItem);
-                //Todo. init parameters of all portlets
-                element.setParams(getParameters("-1", templateItem.getTypeObject()));
+
+                PageElement element = new PageElement(
+                    portletContainer, namespace, templateItem, portletParameters
+                );
 
                 if (log.isDebugEnabled()) {
                     log.debug("TemplateItem, " +
-                        "type: " + (templateItem.getType() != null ? templateItem.getType().toString() : null) + ", " +
+                        "type: " + (templateItem.getType() != null ? templateItem.getType() : null) + ", " +
                         "value: " + templateItem.getValue() + ", " +
                         ", code: " + templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot());
-                    log.debug("getDefaultPortletDefinition(): "+getDefaultPortletDefinition() );
+                    log.debug("getDefaultPortletDefinition(): " + requestContext.getDefaultPortletName());
+                    log.debug("namespace: " + namespace);
+                    log.debug("portletParameters: " + portletParameters);
+                    log.debug("element.getParameters(): " + element.getParameters());
                 }
 
                 switch (templateItem.getTypeObject().getType()) {
                     case PortalTemplateItemType.PORTLET_TYPE:
-                        // Todo replace new RequestState() with actual state of not-dynamic portlet
-                        element.initPortlet(templateItem.getValue(), this, new RequestState() );
+                        element.initPortlet(templateItem.getValue(), this);
                         break;
                     case PortalTemplateItemType.DYNAMIC_TYPE:
-                        element.initPortlet(getDefaultPortletDefinition(), this, getRequestState() );
+                        element.initPortlet(requestContext.getDefaultPortletName(), this);
                         break;
                     case PortalTemplateItemType.FILE_TYPE:
                     case PortalTemplateItemType.CUSTOM_TYPE:
@@ -297,22 +276,6 @@ public final class PortalRequestInstance {
         }
     }
 
-    private PortalContextImpl createPortalContext(String portalName, PortalInfo portalInfo ) {
-        Map<String,String> map = new HashMap<String, String>();
-
-        map.put( ContainerConstants.PORTAL_PROP_SITE_ID, portalInfo.getSiteId().toString() );
-        map.put( ContainerConstants.PORTAL_PROP_COMPANY_ID, portalInfo.getCompanyId().toString() );
-        map.put( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH, httpRequest.getContextPath() );
-	if (log.isDebugEnabled()) {
-		log.debug("portal context path: '" + httpRequest.getContextPath() +"'" );
-		log.debug("portal context path in map: '" + 
-			map.get(ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH) +"'" );
-	}
-        map.putAll( portalInfo.getMetadata() );
-
-        return new PortalContextImpl( portalName, map );
-    }
-
     public PortalContext getPortalContext() {
         return portalContext;
     }
@@ -329,62 +292,27 @@ public final class PortalRequestInstance {
         return errorString;
     }
 
-    public Map getHttpRequestParameter() {
-        return httpRequestParameter;
-    }
-
     ActionRequestImpl getActionRequest() {
         return actionRequest;
     }
 
-    public Locale[] getPreferredLocale() {
-        return preferredLocale;
+    public Locale[] getPreferredLocales() {
+        return preferredLocales;
     }
 
     public AuthSession getAuth() {
         return auth;
     }
 
-    public String getNameTemplate() {
-        if (contextFactory == null)
-            return null;
-
-        return contextFactory.getNameTemplate();
-    }
-
-    public ContextFactory.PortletParameters getParameters(String namespace, PortalTemplateItemType type) {
-        if (contextFactory == null)
-            return null;
-
-        return contextFactory.getParameters(namespace, type);
-    }
-
-    public String getDefaultPortletDefinition() {
-        if (contextFactory == null)
-            return null;
-
-        return contextFactory.getDefaultPortletName();
-    }
-
     public Long getDefaultPortletId() {
-        if (contextFactory == null)
-            return null;
-
-        return contextFactory.getPortletId();
+        return requestContext.getDefaultPortletId();
     }
 
     public Locale getLocale() {
-        if (contextFactory == null)
+        if (requestContext==null)
             return null;
-
-        return contextFactory.getRealLocale();
-    }
-
-    public String getLocaleString() {
-        if (contextFactory == null || contextFactory.getRealLocale() == null)
-            return null;
-
-        return contextFactory.getRealLocale().toString();
+        else
+            return requestContext.getLocale();
     }
 
     public HttpServletRequest getHttpRequest() {
@@ -401,11 +329,10 @@ public final class PortalRequestInstance {
 
     private void initTemplate() throws PortalException {
 
-        template = getPortalInfo().getPortalTemplateManager().getTemplate( getNameTemplate(), getLocaleString() );
+        template = getPortalInfo().getPortalTemplateManager().getTemplate( requestContext.getTemplateName(), getLocale().toString() );
 
         if (template == null) {
-            String errorString = "Template '" + getNameTemplate() + "', locale " + getLocaleString() + ", not found";
-            log.warn("contextFactory: " + contextFactory);
+            String errorString = "Template '" + requestContext.getTemplateName() + "', locale " + getLocale().toString() + ", not found";
             log.warn(errorString);
             throw new PortalException(errorString);
         }
@@ -420,33 +347,16 @@ public final class PortalRequestInstance {
             log.error(errorString);
             throw new PortalException(errorString);
         }
-        xslt = getPortalInfo().getXsltTransformerManager().getXslt(getLocaleString());
+        xslt = getPortalInfo().getXsltTransformerManager().getXslt(getLocale().toString());
         if (xslt == null) {
-            String errorString = "XSLT for locale " + getLocaleString() + " not defined.";
+            String errorString = "XSLT for locale " + getLocale().toString() + " not defined.";
             log.error(errorString);
             throw new PortalException(errorString);
         }
     }
 
-    public String getUrlResource() {
-        if (contextFactory == null)
-            return null;
-
-        return contextFactory.getUrlResource();
-    }
-
-    public ContextFactory.DefaultCtx getDefaultCtx() {
-        if (contextFactory == null)
-            return null;
-
-        return contextFactory.getDefaultCtx();
-    }
-
-    public RequestState getRequestState() {
-        if (contextFactory == null)
-            return new RequestState();
-
-        return contextFactory.getRequestState();
+    public ExtendedCatalogItemBean getDefaultCtx() {
+        return requestContext.getDefaultCatalogItem();
     }
 
     public CookieManager getCookieManager() {
@@ -461,19 +371,15 @@ public final class PortalRequestInstance {
         this.redirectUrl = redirectUrl;
     }
 
-    public boolean getIsTextMimeType() {
-        return isTextMimeType;
-    }
-
-    public String getMimeType() {
-        return mimeType;
-    }
-
     public File getRequestBodyFile() {
         return requestBodyFile;
     }
 
     public boolean isMultiPartRequest() {
         return isMultiPartRequest;
+    }
+
+    public RequestContext getRequestContext() {
+        return requestContext;
     }
 }

@@ -371,7 +371,7 @@ public class InternalDaoImpl implements InternalDao {
             CustomSequenceType seq = new CustomSequenceType();
             WmPortalAccessStatItemType stat = new WmPortalAccessStatItemType();
 
-            Long userAgentId = (Long) userAgentList.get(bean.getUserAgent());
+            Long userAgentId = userAgentList.get(bean.getUserAgent());
             if (userAgentId == null) {
                 seq.setSequenceName("SEQ_WM_PORTAL_ACCESS_USERAGENT");
                 seq.setTableName("WM_PORTAL_ACCESS_USERAGENT");
@@ -384,7 +384,7 @@ public class InternalDaoImpl implements InternalDao {
                 InsertWmPortalAccessUseragentItem.process(adapter, item);
             }
 
-            Long urlId = (Long) urlList.get( bean.getUrl() );
+            Long urlId = urlList.get( bean.getUrl() );
             if (urlId == null) {
                 seq.setSequenceName("SEQ_WM_PORTAL_ACCESS_URL");
                 seq.setTableName("WM_PORTAL_ACCESS_URL");
@@ -487,15 +487,14 @@ public class InternalDaoImpl implements InternalDao {
                 .item;
 
             List<CatalogLanguageBean> beans = new ArrayList<CatalogLanguageBean>();
-            Iterator iterator = list.getWmPortalCatalogLanguageAsReference().iterator();
-            while (iterator.hasNext()) {
-                WmPortalCatalogLanguageItemType ic = (WmPortalCatalogLanguageItemType) iterator.next();
+            for (Object o : list.getWmPortalCatalogLanguageAsReference()) {
+                WmPortalCatalogLanguageItemType ic = (WmPortalCatalogLanguageItemType) o;
                 CatalogLanguageBean bean = new CatalogLanguageBean();
-                bean.setCatalogCode( ic.getCatalogCode() );
-                bean.setCatalogLanguageId( ic.getIdSiteCtxLangCatalog() );
-                bean.setDefault( ic.getIsDefault() );
-                bean.setSiteLanguageId( siteLanguageId );
-                beans.add( bean );
+                bean.setCatalogCode(ic.getCatalogCode());
+                bean.setCatalogLanguageId(ic.getIdSiteCtxLangCatalog());
+                bean.setDefault(ic.getIsDefault());
+                bean.setSiteLanguageId(siteLanguageId);
+                beans.add(bean);
             }
             return beans;
         }
@@ -585,12 +584,10 @@ public class InternalDaoImpl implements InternalDao {
             Collections.sort(list, new MenuItemComparator());
 
             List<CatalogBean> beans = new ArrayList<CatalogBean>();
-            Iterator<WmPortalCatalogItemType> it = list.iterator();
-            while (it.hasNext()){
-                WmPortalCatalogItemType item = it.next();
+            for (WmPortalCatalogItemType item : list) {
                 // Dont include menuitem with id_template==null to menu
-                if (item.getIdSiteTemplate()!=null) {
-                    beans.add( initCatalogBean(item) );
+                if (item.getIdSiteTemplate() != null) {
+                    beans.add(initCatalogBean(item));
                 }
             }
             return beans;
@@ -868,6 +865,25 @@ public class InternalDaoImpl implements InternalDao {
     }
 
     public Long getCatalogId(Long siteId, Locale locale, String portletName, String templateName) {
+        if (log.isDebugEnabled()) {
+            log.debug("InternalDaoImpl.getCatalogId()");
+            log.debug("     siteId: " + siteId);
+            log.debug("     locale: " + locale.toString().toLowerCase() );
+            log.debug("     portletName: " + portletName);
+            log.debug("     templateName: " + templateName);
+        }
+        /*
+select a.ID_SITE_CTX_CATALOG
+from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c,
+       	WM_PORTAL_PORTLET_NAME d, WM_PORTAL_TEMPLATE e
+where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and
+       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and
+       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and
+       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and
+       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and
+       d.TYPE=? and e.NAME_SITE_TEMPLATE=?
+               */
+
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
@@ -881,7 +897,8 @@ public class InternalDaoImpl implements InternalDao {
                 "       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and " +
                 "       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and " +
                 "       d.TYPE=? and e.NAME_SITE_TEMPLATE=? ",
-                new Object[]{siteId, locale.toString().toLowerCase(), portletName, templateName} );
+                new Object[]{siteId, locale.toString().toLowerCase(), portletName, templateName}
+            );
             return ctxId;
         }
         catch (Exception e) {

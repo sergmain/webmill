@@ -418,7 +418,7 @@ containing the portlet is restarted.
         }
     }
 
-    private PortletWebApplication searchPortletItem(final String queryPortletName) {
+    public PortletWebApplication searchPortletItem(final String queryPortletName) {
         if (queryPortletName == null) {
             return null;
         }

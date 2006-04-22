@@ -29,8 +29,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
@@ -208,13 +206,13 @@ public class PortalInstanceImpl implements PortalInstance  {
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
     }
 
-    private static Object syncCounter = new Object();
+    private final static Object syncCounter = new Object();
     private static int counterNDC = 0;
 
     public void process(HttpServletRequest request_, HttpServletResponse httpResponse )
         throws IOException, ServletException {
 
-        int counter = 0;
+        int counter;
         InternalServletResponseWrapper response_ = new InternalServletResponseWrapper( httpResponse );
 
         // Prepare Nested D... Context
@@ -225,24 +223,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("counter #6 " + counter);
-            log.debug("request_ " + request_);
-            log.debug("response_ " + response_);
-            log.debug("Request methos type - " + request_.getMethod() );
-            log.debug("Request URL - " + request_.getRequestURL());
-            log.debug("Request query string - " + request_.getQueryString());
-
-            for (Enumeration e = request_.getParameterNames(); e.hasMoreElements();) {
-                String s = (String) e.nextElement();
-                log.debug("Request parameter - " + s + ", value - " + request_.getParameter(s) );
-            }
-            log.debug( "This request made with cookie" );
-            Cookie[] cookies = request_.getCookies();
-            if (cookies!=null) {
-                for (final Cookie newVar : cookies) {
-                    log.debug(cookieToString(newVar));
-                }
-            }
+            putMainRequestDebug(counter, request_, response_);
         }
 
 
@@ -251,66 +232,15 @@ public class PortalInstanceImpl implements PortalInstance  {
             boolean isSessionValid = request_.isRequestedSessionIdValid();
 
             if (log.isDebugEnabled()) {
-                log.debug("old session ID is valid: " + isSessionValid);
-                log.debug("old session ID (from request): " + request_.getRequestedSessionId() );
-                HttpSession session = request_.getSession( false );
-                log.debug("session: " + session );
-                if (session!=null) {
-                    log.debug("old session ID (from session): " + session.getId() );
-                }
-                else {
-                    log.debug(" old session is null" );
-                }
+                putSessionDebug(isSessionValid, request_);
             }
 
             if (!isSessionValid) {
-                if (log.isInfoEnabled()) {
-                    log.info("invalidate current session ");
-                }
-
-                HttpSession tempSession = null;
-                try {
-                    tempSession = request_.getSession(false);
-                    if (tempSession != null) {
-                        tempSession.invalidate();
-                    }
-
-                    tempSession = request_.getSession(true);
-                } catch (java.lang.IllegalStateException e) {
-                    log.warn("Error invalidate session", e);
-                }
-
-                if (log.isInfoEnabled()) {
-                    log.info("Status of new session ID: " + request_.isRequestedSessionIdValid() );
-                    log.info("new session ID (from request): " + request_.getRequestedSessionId() );
-                    if (tempSession!=null) {
-                        log.info("new session ID (from session): " + tempSession.getId() );
-                    }
-                    else {
-                        log.info("new session ID (from session) is null" );
-                    }
-                }
-
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("#100.0");
+                initSession(request_);
             }
 
             portalRequestInstance = new PortalRequestInstance( request_, response_, portalServletConfig, portletContainer, getPortalName() );
-            if (!portalRequestInstance.getIsTextMimeType()) {
-                return;
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("#100.1");
-            }
-
             PortalRequestProcessor.processPortalRequest( portalRequestInstance );
-
-            if (log.isDebugEnabled()) {
-                log.debug("#100.2");
-            }
         }
         catch (Throwable e) {
             String es = "General error processing request";
@@ -342,16 +272,6 @@ public class PortalInstanceImpl implements PortalInstance  {
                 log.debug("Start finally block");
             }
             try {
-                // work around with not text mimeType
-                if (!portalRequestInstance.getIsTextMimeType()) {
-                    response_.isOk = true;
-                    response_.setContentType( portalRequestInstance.getMimeType() );
-                    portalRequestInstance.byteArrayOutputStream.close();
-                    portalRequestInstance.byteArrayOutputStream = null;
-                    httpResponse.sendRedirect( portalRequestInstance.getUrlResource() );
-                    return;
-                }
-
                 // work around with redirect
                 if ( portalRequestInstance.getRedirectUrl()!=null ) {
                     if ( log.isDebugEnabled() ) {
@@ -440,6 +360,69 @@ public class PortalInstanceImpl implements PortalInstance  {
         }
     }
 
+    private static void initSession(HttpServletRequest request_) {
+        if (log.isInfoEnabled()) {
+            log.info("invalidate current session ");
+        }
+
+        HttpSession tempSession = null;
+        try {
+            tempSession = request_.getSession(false);
+            if (tempSession != null) {
+                tempSession.invalidate();
+            }
+
+            tempSession = request_.getSession(true);
+        } catch (IllegalStateException e) {
+            log.warn("Error invalidate session", e);
+        }
+
+        if (log.isInfoEnabled()) {
+            log.info("Status of new session ID: " + request_.isRequestedSessionIdValid() );
+            log.info("new session ID (from request): " + request_.getRequestedSessionId() );
+            if (tempSession!=null) {
+                log.info("new session ID (from session): " + tempSession.getId() );
+            }
+            else {
+                log.info("new session ID (from session) is null" );
+            }
+        }
+    }
+
+    private static void putSessionDebug(boolean sessionValid, HttpServletRequest request_) {
+        log.debug("old session ID is valid: " + sessionValid);
+        log.debug("old session ID (from request): " + request_.getRequestedSessionId() );
+        HttpSession session = request_.getSession( false );
+        log.debug("session: " + session );
+        if (session!=null) {
+            log.debug("old session ID (from session): " + session.getId() );
+        }
+        else {
+            log.debug(" old session is null" );
+        }
+    }
+
+    private static void putMainRequestDebug(int counter, HttpServletRequest request_, InternalServletResponseWrapper response_) {
+        log.debug("counter #6 " + counter);
+        log.debug("request_ " + request_);
+        log.debug("response_ " + response_);
+        log.debug("Request methos type - " + request_.getMethod() );
+        log.debug("Request URL - " + request_.getRequestURL());
+        log.debug("Request query string - " + request_.getQueryString());
+
+        for (Enumeration e = request_.getParameterNames(); e.hasMoreElements();) {
+            String s = (String) e.nextElement();
+            log.debug("Request parameter - " + s + ", value - " + request_.getParameter(s) );
+        }
+        log.debug( "This request made with cookie" );
+        Cookie[] cookies = request_.getCookies();
+        if (cookies!=null) {
+            for (final Cookie newVar : cookies) {
+                log.debug(cookieToString(newVar));
+            }
+        }
+    }
+
     private static StringBuilder getTimeString( int counter, long startMills ) {
         return new StringBuilder( "\n<!-- NDC #" ).append( counter ).append( ", page processed for " ).append( System.currentTimeMillis() - startMills ).append( " milliseconds -->" );
     }
@@ -451,14 +434,11 @@ public class PortalInstanceImpl implements PortalInstance  {
             log.debug( "CookieManager: " + cookieManager );
         }
         if ( cookieManager!=null ) {
-            List<Cookie> cookieList = cookieManager.getCookieList();
-            Iterator<Cookie> iterator = cookieList.iterator();
-            while( iterator.hasNext() ) {
-                Cookie cookie = iterator.next();
-                if (log.isDebugEnabled() ) {
-                    log.debug( cookieToString( cookie) );
+            for (Cookie cookie : cookieManager.getCookieList()) {
+                if (log.isDebugEnabled()) {
+                    log.debug(cookieToString(cookie));
                 }
-                response_.addCookie( cookie );
+                response_.addCookie(cookie);
             }
         }
     }

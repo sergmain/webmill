@@ -25,13 +25,10 @@
 package org.riverock.webmill.portal.context;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
@@ -39,67 +36,27 @@ import org.apache.log4j.Logger;
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
-import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.portal.ContextFactory;
-import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.PortletParameters;
+import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
  * $Id$
  */
-public final class CtxContextFactory extends ContextFactory {
-    private final static Logger log = Logger.getLogger(CtxContextFactory.class);
+public final class CtxRequestContextPocessor implements RequestContextProcessor {
+    private final static Logger log = Logger.getLogger(CtxRequestContextPocessor.class);
 
     // add for compatible with jsr168 TCK
     private static final String INVOKE_PORTLET_NAME = "portletName";
 
-    private CtxContextFactory(ContextFactoryParameter factoryParameter) {
-        super(factoryParameter);
+    public CtxRequestContextPocessor() {
     }
 
-    public static ContextFactory getInstance(ContextFactoryParameter factoryParameter) {
-        CtxContextFactory factory = new CtxContextFactory(factoryParameter);
-        if (factory.getDefaultCtx()!=null) {
-            return factory;
-        }
-
-        // If not found context, processing as 'index_page'
-        MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(factory.realLocale.toString());
-        if (menu==null){
-            log.error( "menu is null, locale: "+factory.realLocale.toString() );
-            return factory;
-        }
-
-        if (menu == null || menu.getIndexMenuItem() == null) {
-            log.warn("menu: " + menu);
-            log.warn("locale: " + factory.realLocale.toString());
-            if (menu != null) {
-                log.warn("menu.getIndexMenuItem(): " + menu.getIndexMenuItem());
-                if (menu.getIndexMenuItem() != null) {
-                    log.warn("menu.getIndexMenuItem().getId(): " + menu.getIndexMenuItem().getId());
-                }
-                else {
-                    log.warn("menu.getIndexMenuItem() is null");
-                }
-            }
-            else {
-                log.warn("menu is null");
-            }
-            return factory;
-        }
-
-        factory.defaultCtx = DefaultCtx.getInstance(factoryParameter, menu.getIndexMenuItem().getId());
-        factory.initFromContext();
-        factory.setTemplateName(menu.getIndexMenuItem().getNameTemplate());
-
-        return factory;
-    }
-
-
-        private static final String requestFormat = 
-		"<PORTAL_CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE]/<PARAMETERS_OF_OTHER_PORTLETS>/ctx?";
-	// REQUEST_STATE: a-actionRequest, in other case-renderRequest
+    private static final String requestFormat =
+        "<PORTAL_CONTEXT>/ctx/<LOCALE>,<TEMPLATE_NAME>,[PORTLET_NAME],[REQUEST_STATE]/<PARAMETERS_OF_OTHER_PORTLETS>/ctx?";
+    // REQUEST_STATE: a-actionRequest, in other case-renderRequest
 
     public static StringBuilder encodeUrl( final PortletRequest portletRequest, final String portletName, final String templateName, Locale locale, boolean isActionReqeust, Namespace namespace ) {
         StringBuilder b = new StringBuilder();
@@ -119,7 +76,7 @@ public final class CtxContextFactory extends ContextFactory {
             b.append( portletName );
 
         b.append( ',' );
-        if (isActionReqeust) 
+        if (isActionReqeust)
             b.append('a');
         else
             b.append('r');
@@ -131,9 +88,11 @@ public final class CtxContextFactory extends ContextFactory {
         return b;
     }
 
-    protected Long initPortalParameters(ContextFactoryParameter factoryParameter) {
+    public RequestContext parseRequest(RequestContextParameter factoryParameter) {
 
         log.debug("Start process as page, format request: "+ requestFormat );
+
+        RequestContext bean = new RequestContext();
 
         String path = factoryParameter.getRequest().getPathInfo();
         if (path == null || path.equals("/")) {
@@ -147,8 +106,7 @@ public final class CtxContextFactory extends ContextFactory {
         if (idxSlash == -1)
             return null;
 
-        String localeFromUrl = null;
-        localeFromUrl = path.substring(1, idxSlash);
+        String localeFromUrl = path.substring(1, idxSlash);
         StringTokenizer st = new StringTokenizer(localeFromUrl, ",", false);
         if (log.isDebugEnabled()) {
             log.debug("st.countTokens(): " + st.countTokens());
@@ -157,28 +115,35 @@ public final class CtxContextFactory extends ContextFactory {
         if (st.countTokens() < 2)
             return null;
 
-
-        realLocale = StringTools.getLocale(st.nextToken());
+        // init locale
+        Locale locale = StringTools.getLocale(st.nextToken());
         if (log.isDebugEnabled()) {
-            log.debug("token with locale: " + realLocale);
+            log.debug("token with locale: " + locale);
         }
 
         String localeNameTemp = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_LANG_PARAM);
         if (localeNameTemp != null) {
-            realLocale = StringTools.getLocale(localeNameTemp);
+            locale = StringTools.getLocale(localeNameTemp);
         }
-
+        bean.setLocale( locale );
         if (log.isDebugEnabled()) {
-            log.debug("real locale: " + realLocale);
+            log.debug("real locale: " + locale);
         }
 
+        // init template name
+        bean.setTemplateName( st.nextToken() );
 
-        String templateName = st.nextToken();
-        setTemplateName(templateName);
-
+        // init portlet name
         String portletName = null;
         if (st.hasMoreTokens()) {
             portletName = st.nextToken();
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("portletName");
+            log.debug("     portletName from path: " + portletName);
+            log.debug("     ContainerConstants.NAME_TYPE_CONTEXT_PARAM: " + factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM));
+            log.debug("     portletName(for compatible TCK: " + factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME));
         }
 
         if (StringTools.isEmpty(portletName)) {
@@ -187,76 +152,60 @@ public final class CtxContextFactory extends ContextFactory {
                 portletName = factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME);
             }
         }
+        if (log.isDebugEnabled()) {
+            log.debug("Final portletName: " + portletName);
+        }
+        bean.setDefaultPortletName( portletName );
 
+        // Init request state: action/render, windows state, portlet mode
+        RequestState requestState = new RequestState();
         if (st.hasMoreElements() ) {
             String state = st.nextToken();
             if (state!=null && state.equalsIgnoreCase("a") )
-                getRequestState().setActionRequest( true );
+                requestState.setActionRequest( true );
         }
+        bean.setDefaultRequestState( requestState );
+
+        // set namespace of current(active) portlet
         if (st.hasMoreElements() ) {
             String ns = st.nextToken();
             if (!StringTools.isEmpty(ns)) {
-                activeNamespace = ns;
+                bean.setDefaultNamespace( ns );
             }
         }
-
-        // Todo parse request for parameters of others portlets
-
-//        PortletDefinition portlet = null;
-//        try {
-//            portlet = PortletManager.getPortletDescription( portletName );
-//        } catch (FileManagerException e) {
-//            log.error("Error getPortletDescription for type "+portletName);
-//        }
-//        String namePortletId = null;
-//        if (portlet!=null){
-//            namePortletId = PortletService.getStringParam(portlet, ContainerConstants.name_portlet_id);
-//        }
-//
-//        Long id = null;
-//        if (namePortletId!=null)
-//            id = ServletTools.getLong(request, namePortletId);
 
         if (log.isDebugEnabled()) {
-            log.debug("realLocale: " + realLocale);
-            log.debug("templateName: " + templateName);
-            log.debug("portletName: " + portletName);
+            log.debug("Result of parsing path");
+            log.debug("     path: " + path );
+            log.debug("     locale: " + bean.getLocale().toString() );
+            log.debug("     templateName: " + bean.getTemplateName());
+            log.debug("     portletName: " + bean.getDefaultPortletName() );
+            log.debug("     isAction: " + requestState.isActionRequest() );
         }
 
-        Long ctxId = InternalDaoFactory.getInternalDao().getCatalogId(factoryParameter.getPortalInfo().getSiteId(), realLocale, portletName, templateName);
-        if (ctxId != null) {
-            return ctxId;
+        Long ctxId = InternalDaoFactory.getInternalDao().getCatalogId(factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(), bean.getTemplateName());
+        if (log.isDebugEnabled()) {
+            log.debug("ctxId: " + ctxId );
         }
+        bean.setDefaultCatalogItem( ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId) );
+        if (bean.getDefaultCatalogItem()==null) {
+            return null;
+        }
+        RequestContextUtils.initParametersMap(bean, factoryParameter);
 
-        defaultCtx = DefaultCtx.getInstance(factoryParameter, portletName);
-        return null;
+        // prepare parameters for others portlets
+        prepareParameters( bean.getParameters(), factoryParameter.getRequest().getServletPath() );
+        return bean;
     }
 
-    protected void prepareParameters( final HttpServletRequest httpRequest, final Map<String, Object> httpRequestParameter ) {
-        dynamicParameter = httpRequestParameter;
+    /**
+     *  prepare parameters for others portlets
+     *
+     * @param map
+     * @param s - HttpServletRequest.getServletPath
+     */
+    private void prepareParameters( Map<String, PortletParameters> map, String s ) {
 
-        if ( log.isDebugEnabled() ) {
-            log.debug( "dynamicParameter: "+dynamicParameter );
-            if ( dynamicParameter!=null ) {
-                Iterator it = dynamicParameter.keySet().iterator();
-                while (it.hasNext()) {
-                    String key = (String)it.next();
-                    Object obj = dynamicParameter.get( key );
-                    if (obj instanceof List) {
-                        log.debug( "Parameter, key: "+key );
-                        Iterator ii = ((List)obj).iterator();
-                        while (ii.hasNext()) {
-                            log.debug( "               value: "+ii.next() );
-                        }
-                    }
-                    else {
-                        log.debug( "Parameter, key: "+key+", value: "+obj.toString() );
-                    }
-                }
-            }
-        }
-
-        String s = httpRequest.getServletPath();
         int idx = s.lastIndexOf( '/' );
         if (idx==-1)
             return;
@@ -287,8 +236,11 @@ public final class CtxContextFactory extends ContextFactory {
 
                 MapWithParameters.put( param, key, value );
             }
-            PortletParameters pp = new PortletParameters( namespace, param );
-            portletsParameter.add( pp );
+
+            //todo implement request state for all portlets
+            RequestState requestState = new RequestState();
+            PortletParameters pp = new PortletParameters( namespace, requestState, param );
+            map.put( namespace, pp );
         }
     }
 }

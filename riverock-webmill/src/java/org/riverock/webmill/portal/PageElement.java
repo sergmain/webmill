@@ -55,7 +55,6 @@ import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.portal.bean.CatalogBean;
-import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.utils.PortletUtils;
 
@@ -81,13 +80,12 @@ public final class PageElement {
     private PortalTemplateItem portalTemplateItem = null;
     private boolean isUrl = false;
     private boolean isXml = false;
-    private ContextFactory.PortletParameters params = null;
+    private PortletParameters parameters = null;
     private boolean isRedirected = false;
     private String redirectUrl = null;
     private Properties properties = null;
     private boolean isAccessPermit = true;
     private String securityMessage = null;
-    private RequestState requestState = new RequestState();
     private Namespace namespace = null;
 
     /*
@@ -102,9 +100,11 @@ public final class PageElement {
 
     private PortletContainer portletContainer = null;
 
-    public PageElement(PortletContainer portletContainer, Namespace namespace ) {
+    public PageElement(PortletContainer portletContainer, Namespace namespace, PortalTemplateItem portalTemplateItem, PortletParameters portletParameters) {
         this.portletContainer = portletContainer;
         this.namespace = namespace;
+        this.portalTemplateItem = portalTemplateItem;
+        this.parameters = portletParameters;
     }
 
     public void destroy() {
@@ -127,7 +127,7 @@ public final class PageElement {
         data = null;
         portletEntry = null;
         portalTemplateItem = null;
-        params = null;
+        parameters = null;
         redirectUrl = null;
         if (log.isDebugEnabled()) {
             log.debug("#13.1");
@@ -136,7 +136,6 @@ public final class PageElement {
             renderParameters.clear();
             renderParameters = null;
         }
-        requestState = null;
         namespace = null;
         if (log.isDebugEnabled()) {
             log.debug("#13.2");
@@ -195,17 +194,11 @@ public final class PageElement {
                 return;
             }
 
-
             if ( log.isDebugEnabled() ) {
                 log.debug( "Start render portlet '" + portletEntry.getPortletDefinition().getPortletName() + "'" );
                 log.debug( "portlet request: " + renderRequest + ", response: " + renderResponse );
-                log.debug( "portlet code: "+renderRequest.getAttribute(
-                    ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE ) );
-                log.debug( "portlet xml root: "+renderRequest.getAttribute(
-                    ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE ) );
-            }
-
-            if (log.isDebugEnabled()) {
+                log.debug( "portlet code: "+renderRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE ) );
+                log.debug( "portlet xml root: "+renderRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE ) );
                 log.debug("#10.1");
             }
 
@@ -291,7 +284,6 @@ public final class PageElement {
             PortletContainer.destroy( portletEntry.getPortletDefinition().getPortletName() );
             errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
             log.error( errorString, ue );
-            return;
         }
         catch( java.lang.ThreadDeath e) {
             errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
@@ -301,12 +293,10 @@ public final class PageElement {
         catch ( Throwable e ) {
             errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
             log.error( errorString, e );
-            return;
         }
     }
 
-    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, RequestState requestState ) {
-        this.requestState = requestState;
+    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance ) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
@@ -363,27 +353,21 @@ public final class PageElement {
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("Result of create portlet instance: " + errorString);
+                log.debug("Error message for creating of portlet instance: " + errorString);
             }
 
             String contextPath = getContextPath(portalRequestInstance);
 
-            Map<String, Object> map = null;
-            if (portalTemplateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
-                map = preparePortletParameters(portalRequestInstance);
-            }
-            else {
-                map = new HashMap<String, Object>();
-            }
+            Map<String, Object> renderRequestParamMap = new HashMap<String, Object>();
 
-            if (params != null && params.getParameters() != null) {
+            if (parameters != null && parameters.getParameters() != null) {
                 // The portlet-container must not propagate parameters received
                 // in an action request to subsequent render requests of the portlet.
-                if ( !requestState.isActionRequest() )
-                    map.putAll(params.getParameters());
+                if ( !parameters.getRequestState().isActionRequest() )
+                    renderRequestParamMap.putAll(parameters.getParameters());
             }
             renderRequest = new RenderRequestImpl(
-                map,
+                renderRequestParamMap,
                 portalRequestInstance,
                 renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
@@ -407,32 +391,39 @@ public final class PageElement {
             // set portlet specific attribute
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, portalTemplateItem.getCode());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
-            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_PORTLET_NAME_ATTRIBUTE, portletEntry.getPortletDefinition().getFullPortletName());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE, portletEntry.getPortletConfig());
             renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
             renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
 
-            if (portalRequestInstance.getDefaultCtx() != null && portalRequestInstance.getDefaultCtx().getCtx()!=null ) {
-                renderRequest.setAttribute(ContainerConstants.PORTAL_DEFAULT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getCatalogId() );
-            }
+            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getCatalogId() );
 
             // Todo after rewrite(delete) member portlet, you can delete next line
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
-            renderResponse = new RenderResponseImpl(portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(), namespace, portletEntry.getPortletProperties() );
+            if (log.isDebugEnabled()) {
+                log.debug("portalRequestInstance: "+portalRequestInstance);
+                log.debug("portletEntry: "+portletEntry);
+                log.debug("parameters: "+parameters);
+            }
+            renderResponse = new RenderResponseImpl(
+                portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(),
+                namespace, portletEntry.getPortletProperties(),
+                parameters.getRequestState(),
+                portletEntry.getPortletDefinition().getFullPortletName()
+            );
             PortletUtils.setContentType(renderResponse);
 
             renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_CONFIG, portletEntry.getPortletConfig() );
             renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_REQUEST, renderRequest );
             renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_RESPONSE, renderResponse );
 
-            Map<String, Object> actionRequestParamMap = new HashMap<String, Object>( map );
+            Map<String, Object> actionRequestParamMap = new HashMap<String, Object>( renderRequestParamMap );
 
-            if (params != null && params.getParameters() != null) {
+            if (parameters != null && parameters.getParameters() != null) {
                 // The portlet-container must not propagate parameters received
                 // in an action request to subsequent render requests of the portlet.
-                if ( requestState.isActionRequest() )
-                    actionRequestParamMap.putAll(params.getParameters());
+                if ( parameters.getRequestState().isActionRequest() )
+                    actionRequestParamMap.putAll(parameters.getParameters());
             }
             actionRequest = new ActionRequestImpl(
                 actionRequestParamMap,
@@ -535,7 +526,6 @@ public final class PageElement {
         catch (Throwable e) {
             errorString = portletUnavailable(portletName);
             log.error(errorString, e);
-            return;
         }
     }
 
@@ -555,8 +545,7 @@ public final class PageElement {
             contextPath = portalRequestInstance.getHttpRequest().getContextPath();
         }
         else {
-            final String realPath = portletRealPath;
-            File dir = new File(realPath);
+            File dir = new File(portletRealPath);
             contextPath = "/" + dir.getName();
         }
         return contextPath;
@@ -605,10 +594,6 @@ public final class PageElement {
         return portalTemplateItem;
     }
 
-    public void setPortalTemplateItem( PortalTemplateItem portalTemplateItem ) {
-        this.portalTemplateItem = portalTemplateItem;
-    }
-
     public SitePortletData getData() {
         return data;
     }
@@ -617,12 +602,8 @@ public final class PageElement {
         this.data = data;
     }
 
-    public ContextFactory.PortletParameters getParams() {
-        return params;
-    }
-
-    public void setParams( ContextFactory.PortletParameters params ) {
-        this.params = params;
+    public PortletParameters getParameters() {
+        return parameters;
     }
 
     public String getErrorString() {
@@ -644,8 +625,4 @@ public final class PageElement {
     public String getRedirectUrl() {
         return redirectUrl;
     }
-	
-	public RequestState getRequestState() {
-		return requestState;
-	}
 }

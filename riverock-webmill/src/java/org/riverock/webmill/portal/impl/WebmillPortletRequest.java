@@ -158,10 +158,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         return Collections.enumeration( values );
     }
 
-    // Todo need implement
     public Enumeration getPropertyNames() {
-
-        return null;
+        return Collections.enumeration( portletProperties.keySet() );
     }
 
     public PortalContext getPortalContext() {
@@ -290,8 +288,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             return super.getParameter( key );
         }
 
-        String value = null;
-        value = getParameterInternal( renderParameters, key );
+        String value = getParameterInternal( renderParameters, key );
         if ( value!=null ) {
             if (log.isDebugEnabled()) {
                 log.debug("value #1: "+value);
@@ -328,7 +325,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if ( obj instanceof String[] ) {
             String[] strings = (String[])obj;
             if (strings.length>0)
-                return strings[0].toString();
+                return strings[0];
             else
                 return null;
         }
@@ -359,30 +356,24 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         List<String> list = new ArrayList<String>();
 
-        List<String> temp = null;
-        temp = getParameterArray( parameters, key );
+        List<String> temp = getParameterArray( parameters, key );
         if (temp!=null) {
             list.addAll( temp );
             temp.clear();
-            temp = null;
         }
 
         temp = getParameterArray( renderParameters, key );
         if (temp!=null) {
             list.addAll( temp );
             temp.clear();
-            temp = null;
         }
 
         String[] values = new String[list.size()];
         int i=0;
-        Iterator<String> it = list.iterator();
-        while (it.hasNext()) {
-            String es = it.next();
+        for (String es : list) {
             values[i++] = es;
         }
         list.clear();
-        list = null;
 
         return values;
     }
@@ -403,7 +394,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         List<String> list = new ArrayList<String>();
         if (obj instanceof String[] ) {
             String values[] = (String[])obj;
-            for (final String newVar : values) list.add(newVar.toString());
+            for (final String newVar : values)
+                list.add(newVar);
         }
         else
             list.add( obj.toString() );
@@ -568,7 +560,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.httpRequest = portalRequestInstance.getHttpRequest();
         this.auth = portalRequestInstance.getAuth();
         this.locale = portalRequestInstance.getLocale();
-        this.preferredLocale = portalRequestInstance.getPreferredLocale();
+        this.preferredLocale = portalRequestInstance.getPreferredLocales();
 
         Cookie[] c = httpRequest.getCookies();
         if (c!=null) {
@@ -581,7 +573,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         this.setAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER, portalRequestInstance.getPortalDaoProvider() );
 
-        this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getNameTemplate() );
+        this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getRequestContext().getTemplateName() );
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
 //        this.setAttribute( ContainerConstants.PORTAL_PORTLET_NAMESPACE_ATTRIBUTE, namespace );

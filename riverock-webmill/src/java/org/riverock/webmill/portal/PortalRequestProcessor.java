@@ -26,6 +26,7 @@ package org.riverock.webmill.portal;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
@@ -33,16 +34,17 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.riverock.common.tools.MainTools;
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
+import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
-
-import org.apache.log4j.Logger;
 
 /**
  * User: SergeMaslyukov
@@ -61,8 +63,8 @@ public final class PortalRequestProcessor {
     static void processPortalRequest( PortalRequestInstance portalRequestInstance ) throws Exception {
 
         if ( log.isDebugEnabled() ) {
-            log.debug( "Dynamic content type: "+portalRequestInstance.getDefaultPortletDefinition() );
-            log.debug( "Template name: "+portalRequestInstance.getNameTemplate() );
+            log.debug( "Dynamic content type: "+portalRequestInstance.getRequestContext().getDefaultPortletName() );
+            log.debug( "Template name: "+portalRequestInstance.getRequestContext().getTemplateName() );
             log.debug( "Locale request:\n"+portalRequestInstance.getLocale().toString() );
             if (portalRequestInstance.template!=null) {
                 log.debug( "template:\n" + portalRequestInstance.template.toString());
@@ -79,28 +81,36 @@ public final class PortalRequestProcessor {
             return;
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug("Start processing action method");
+        }
         processActionSiteTemplateItems( portalRequestInstance );
         if (portalRequestInstance.getRedirectUrl()!=null) {
+            if (log.isDebugEnabled()) {
+                log.debug("RedirectUrl flag is true, terminate processing");
+            }
             return;
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("#20.1");
+            log.debug("Start processing render method");
         }
-
         render( portalRequestInstance );
+
         if (portalRequestInstance.getRedirectUrl()!=null) {
+            if (log.isDebugEnabled()) {
+                log.debug("RedirectUrl flag is true, terminate processing");
+            }
             return;
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("#20.2");
+            log.debug("Start build result page");
         }
-
         buildPage( portalRequestInstance );
 
         if (log.isDebugEnabled()) {
-            log.debug("#20.3");
+            log.debug("Finish processing page");
         }
     }
 
@@ -130,19 +140,36 @@ public final class PortalRequestProcessor {
             log.debug( "Start process action" );
         }
 
-        Iterator iterator = portalRequestInstance.getPageElementList().iterator();
-        while( iterator.hasNext() ) {
-            PageElement pageElement = (PageElement)iterator.next();
-	    if (!pageElement.getRequestState().isActionRequest() )
-		continue;
+        for (PageElement pageElement : portalRequestInstance.getPageElementList()) {
+            if (log.isDebugEnabled()) {
+                if (pageElement.getPortalTemplateItem().getTypeObject().getType()== PortalTemplateItemType.PORTLET_TYPE ||
+                    pageElement.getPortalTemplateItem().getTypeObject().getType()== PortalTemplateItemType.DYNAMIC_TYPE) {
 
-            TemplateItemBaseClass.processActionTemplateItem( pageElement );
+                    log.debug("PageElement: ");
+                    if (pageElement.getParameters()!=null) {
+                        log.debug("    isAction: "+pageElement.getParameters().getRequestState().isActionRequest());
+                        log.debug("    namespace: "+pageElement.getParameters().getNamespace());
+                    }
+                    log.debug("    template item  type: "+pageElement.getPortalTemplateItem().getTypeObject().toString());
+                    log.debug("    portlet name: "+pageElement.getPortletEntry().getPortletDefinition().getFullPortletName());
+                }
+                else {
+                    log.debug("Non-portlet page element");
+                }
+            }
+
+            // PortletParameters not null only for action portlet.
+            // For all others portlet from template PortletParameters can be null
+            if (pageElement.getParameters()!=null && !pageElement.getParameters().getRequestState().isActionRequest())
+                continue;
+
+            TemplateItemBaseClass.processActionTemplateItem(pageElement);
 
             // check if request was redirected
             if (pageElement.getIsRedirected()) {
-                portalRequestInstance.setRedirectUrl( pageElement.getRedirectUrl() );
-                if ( log.isDebugEnabled() ) {
-                    log.debug( "redirectUrl: " + portalRequestInstance.getRedirectUrl() );
+                portalRequestInstance.setRedirectUrl(pageElement.getRedirectUrl());
+                if (log.isDebugEnabled()) {
+                    log.debug("redirectUrl: " + portalRequestInstance.getRedirectUrl());
                 }
                 return;
             }
@@ -151,34 +178,32 @@ public final class PortalRequestProcessor {
 
     private static void render( PortalRequestInstance portalRequestInstance ) {
 
-        Iterator iterator = portalRequestInstance.getPageElementList().iterator();
-        while( iterator.hasNext() ) {
-            PageElement pageElement = (PageElement)iterator.next();
+        for (PageElement pageElement : portalRequestInstance.getPageElementList()) {
             PortalTemplateItem templateItem = pageElement.getPortalTemplateItem();
 
-            if ( log.isDebugEnabled() ) {
+            if (log.isDebugEnabled()) {
                 log.debug(
                     "TemplateItem, " +
-                    "type: "+(templateItem.getType()!=null?templateItem.getType().toString():null)+", " +
-                    "value: "+templateItem.getValue()+", " +
-                    "code: "+ templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot()
+                        "type: " + (templateItem.getType() != null ? templateItem.getType() : null) + ", " +
+                        "value: " + templateItem.getValue() + ", " +
+                        "code: " + templateItem.getCode() + ", xmlRoot: " + templateItem.getXmlRoot()
                 );
             }
 
-            TemplateItemBaseClass.renderTemplateItem( pageElement );
+            TemplateItemBaseClass.renderTemplateItem(pageElement);
 
             // check if request was redirected
             if (pageElement.getIsRedirected()) {
-                portalRequestInstance.setRedirectUrl( pageElement.getRedirectUrl() );
-                if ( log.isDebugEnabled() ) {
-                    log.debug( "redirectUrl: " + portalRequestInstance.getRedirectUrl() );
+                portalRequestInstance.setRedirectUrl(pageElement.getRedirectUrl());
+                if (log.isDebugEnabled()) {
+                    log.debug("redirectUrl: " + portalRequestInstance.getRedirectUrl());
                 }
                 return;
             }
         }
     }
 
-    private static Object syncCtxDebug = new Object();
+    private final static Object syncCtxDebug = new Object();
     private static void buildPage(PortalRequestInstance portalRequestInstance) throws Exception {
 
         ByteArrayOutputStream outputStream = null;
@@ -199,7 +224,7 @@ public final class PortalRequestProcessor {
                 log.debug("#30.1-"+i);
             }
 
-            SitePortletData item = null;
+            SitePortletData item;
             if ( pageElement.getException()!=null || pageElement.getErrorString()!=null ) {
                 String es = "";
                 if (pageElement.getErrorString()!=null) {
@@ -243,9 +268,9 @@ public final class PortalRequestProcessor {
                 if ( log.isDebugEnabled() ) {
                     synchronized(syncCtxDebug) {
                         MainTools.writeToFile( 
-                          WebmillConfig.getWebmillDebugDir()+
-                          System.currentTimeMillis()+
-			  "ctx-from-url-"+i+".xml", item.getData() );
+                          WebmillConfig.getWebmillDebugDir() + File.separatorChar +
+                              System.currentTimeMillis()+
+                              "ctx-from-url-"+i+".xml", item.getData() );
                     }
                 }
 

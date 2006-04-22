@@ -27,25 +27,26 @@ package org.riverock.webmill.portal.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Locale;
-import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletURL;
-import javax.portlet.RenderResponse;
 import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.ServletResponseWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.namespace.Namespace;
-import org.riverock.generic.tools.servlet.ServletResponseWrapperInclude;
-
 import org.apache.log4j.Logger;
+
+import org.riverock.generic.tools.servlet.ServletResponseWrapperInclude;
+import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.context.RequestState;
+import org.riverock.webmill.portal.namespace.Namespace;
 
 /**
  * User: Admin
@@ -63,6 +64,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     private boolean isUsingWriter;
     private boolean isUsingStream;
     private Namespace namespace = null;
+    private String portletName = null;
 
     private ServletOutputStream wrappedWriter = null;
 
@@ -76,16 +78,23 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     protected String title = null;
 
+    // current request state
+    private RequestState requestState = null;
+
     public byte[] getBytes() {
         if (servletResponse!=null &&
             servletResponse.getResponse()!=null &&
             servletResponse.getResponse() instanceof ServletResponseWrapperInclude )
             return ((ServletResponseWrapperInclude)servletResponse.getResponse()).getBytes();
         else {
-            log.warn(
-                "ServletResponce not instance of ServletResponseWrapperInclude. " +
-                "current class name: " + servletResponse.getClass().getName()
-            );
+            if (servletResponse!=null)
+                log.warn(
+                    "ServletResponce not instance of ServletResponseWrapperInclude. " +
+                        "current class name: " + servletResponse.getClass().getName()
+                );
+            else {
+                log.warn("servletResponse is null");
+            }
             return new byte[] {};
         }
     }
@@ -96,6 +105,7 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
                 wrappedWriter.close();
             }
             catch( IOException e ) {
+                // silence close write
             }
             wrappedWriter = null;
         }
@@ -108,12 +118,14 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     public RenderResponseImpl( PortalRequestInstance portalRequestInstance, 
         RenderRequest renderRequest, HttpServletResponse response, Namespace namespace,
-        Map<String, List<String>> portletProperties) {
+        Map<String, List<String>> portletProperties, RequestState requestState, String portletName ) {
         super(response);
+        this.requestState = requestState;
         this.portalRequestInstance = portalRequestInstance;
         this.renderRequest = renderRequest;
         this.portletProperties = portletProperties;
         this.namespace = namespace;
+        this.portletName = portletName;
         this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperInclude( portalRequestInstance.getLocale() ) );
     }
 
@@ -321,11 +333,11 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
     }
 
     public PortletURL createRenderURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest, false, namespace );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, false, namespace, requestState, portletName );
     }
 
     public PortletURL createActionURL() {
-        return new PortletURLImpl( portalRequestInstance, renderRequest, true, namespace );
+        return new PortletURLImpl( portalRequestInstance, renderRequest, true, namespace, requestState, portletName );
     }
 
     public String getNamespace() {

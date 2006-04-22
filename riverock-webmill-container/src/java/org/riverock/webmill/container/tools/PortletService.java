@@ -26,7 +26,6 @@ package org.riverock.webmill.container.tools;
 
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Map;
@@ -116,6 +115,7 @@ public final class PortletService {
 
         return path + ContainerConstants.PAGE_SERVLET_NAME ;
     }
+/*
 
     public static String urlPage( final PortletRequest renderRequest ) {
         String path = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
@@ -124,6 +124,7 @@ public final class PortletService {
 
         return path + ContainerConstants.URL_SERVLET_NAME ;
     }
+*/
 
     public static String url( final String portletName, final PortletRequest renderRequest, final PortletResponse renderResponse ) {
         return urlStringBuilder(
@@ -206,8 +207,7 @@ public final class PortletService {
         if (portletType==null || mimeType==null)
             return false;
 
-        for (int i = 0; i < portletType.getSupportsCount(); i++) {
-            Supports supports = portletType.getSupports(i);
+        for(Supports supports : portletType.getSupports() ) {
             String type = supports.getMimeType();
             if (type!=null && mimeType.equals( type ))
                 return true;
