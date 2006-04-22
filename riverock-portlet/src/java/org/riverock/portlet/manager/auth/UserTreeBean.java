@@ -1,7 +1,6 @@
 package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
-import java.util.Iterator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -45,43 +44,24 @@ public class UserTreeBean implements Serializable {
     private TreeNode treeNode = null;
     public TreeNode getUserTree() {
 
-/*
-	if (treeNode!=null) {
-		log.info("Invoke getUserTree(). Return cached value.");
-		return treeNode;
-	}
-*/
 
 	log.info("Invoke getUserTree()");
 
-/*
-      synchronized( this ) {
-	if (treeNode!=null) {
-		return treeNode;
-	}
-*/
-
         TreeNode treeData = new TreeNodeBase( "foo-folder", "Company list", false );
-        Iterator<CompanyBean> iterator = dataProvider.getCompanyBeans().iterator();
-        while( iterator.hasNext() ) {
-            CompanyBean companyBean = iterator.next();
-
-            TreeNodeBase companyNode = new TreeNodeBase( "company", companyBean.getCompanyName(), companyBean.getCompanyId().toString(), false );
-            Iterator<AuthUserExtendedInfoImpl> it = companyBean.getUserBeans().iterator();
-            while( it.hasNext() ) {
-                AuthUserExtendedInfoImpl authUserExtendedInfoImpl = it.next();
-
+        for (CompanyBean companyBean : dataProvider.getCompanyBeans()) {
+            TreeNodeBase companyNode = new TreeNodeBase("company", companyBean.getCompanyName(), companyBean.getCompanyId().toString(), false);
+            for (AuthUserExtendedInfoImpl authUserExtendedInfoImpl : companyBean.getUserBeans()) {
                 companyNode.getChildren().add(
                     new TreeNodeBase(
                         "user",
                         authUserExtendedInfoImpl.getUserName() + " ( " +
-                        authUserExtendedInfoImpl.getAuthInfo().getUserLogin() + " )",
+                            authUserExtendedInfoImpl.getAuthInfo().getUserLogin() + " )",
                         authUserExtendedInfoImpl.getAuthInfo().getAuthUserId().toString(),
-                        true )
+                        true)
                 );
             }
 
-            treeData.getChildren().add( companyNode );
+            treeData.getChildren().add(companyNode);
         }
 	treeNode = treeData; 
 

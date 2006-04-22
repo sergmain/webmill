@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Iterator;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
