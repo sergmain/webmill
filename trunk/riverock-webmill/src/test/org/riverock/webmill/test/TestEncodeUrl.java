@@ -52,6 +52,6 @@ public class TestEncodeUrl
 
         System.out.println( "str: " + URIUtil.encodeQuery( "тест" ));
         System.out.println( "str: " + URLEncoder.encode( "тест", "utf8" ));
-        System.out.println( "url: " + URLEncoder.encode( "http://me.askmore/mill/ctx", "utf8" ));
+        System.out.println( "url: " + URLEncoder.encode( "http://me.askmore/mill/ctx", "utf-8" ));
     }
 }

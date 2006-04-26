@@ -26,20 +26,19 @@ package org.riverock.portlet.news;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import java.util.Enumeration;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-
 
 import org.apache.log4j.Logger;
 
@@ -48,19 +47,18 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.DatabaseException;
-import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.portlet.schema.portlet.news_block.NewsSiteType;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
+import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.resource.PortletResourceBundleWithLocale;
-import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * $Id$
@@ -121,7 +119,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
 
     private static long lastReadData = 0;
     private final static long LENGTH_TIME_PERIOD = 10000;
-    private static Object syncObject = new Object();
+    private final static Object syncObject = new Object();
 
     private NewsSiteType checkInit( DatabaseAdapter db_, PortletRequest portletRequest ) throws PortletException {
 
@@ -132,7 +130,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
 
         NewsSiteType news = null;
         if( siteId != null )
-            news = ( NewsSiteType ) newsMap.get( siteId );
+            news = newsMap.get( siteId );
 
         synchronized( syncObject ) {
             if( ( ( System.currentTimeMillis() - lastReadData ) > LENGTH_TIME_PERIOD )
@@ -146,7 +144,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         return news;
     }
 
-    private void initNewsItem( NewsBlockType newsBlock ) throws PortletException {
+    private void initNewsItem(NewsBlockType newsBlock, RenderResponse renderResponse) throws PortletException {
 
         if( newsBlock == null )
             return;
@@ -170,6 +168,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                 nextNews = bundle.getString( "main.next-news" );
             }
             catch( MissingResourceException e ) {
+                // catch for try create string again
             }
 
             if( nextNews == null ) {
@@ -206,11 +205,15 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                     NewsItemType item = newsGroupType.getNewsItem( i );
                     item.setToFullItem( nextNews );
 
+//                    String url = PortletService.urlStringBuilder(portletConfig.getPortletName(), renderRequest, this.renderResponse).
+//                        append(NAME_ID_NEWS_PARAM).append('=').append(item.getNewsItemId()).append('&').
+//                        append(NEWS_TYPE).append("=item").
+//                        toString();
 
-                    item.setUrlToFullNewsItem( PortletService.urlStringBuilder( portletConfig.getPortletName(), renderRequest, renderResponse ).
-                        append( NAME_ID_NEWS_PARAM ).append( '=' ).append( item.getNewsItemId() ).append( '&' ).
-                        append( NEWS_TYPE ).append( "=item" ).
-                        toString() );
+                    PortletURL portletUrl = renderResponse.createRenderURL();
+                    portletUrl.setParameter(NEWS_TYPE, NewsSite.NEWS_TYPE_ITEM);
+                    portletUrl.setParameter(NAME_ID_NEWS_PARAM, ""+item.getNewsItemId());
+                    item.setUrlToFullNewsItem( portletUrl.toString() );
                 }
             }
         }
@@ -232,7 +235,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
             "order by a.ORDER_FIELD ASC";
 
         try {
-            SqlStatement.registerSql( sql_, new NewsSite().getClass() );
+            SqlStatement.registerSql( sql_, NewsSite.class );
         }
         catch( Throwable e ) {
             final String es = "Exception in registerSql, sql\n" + sql_;
@@ -361,7 +364,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
             }
 
             if( nb.getCodeLanguage().equals( renderRequest.getLocale().toString() ) ) {
-                initNewsItem( nb );
+                initNewsItem( nb, renderResponse);
                 for( int j = 0; j < nb.getNewsGroupCount(); j++ ) {
                     NewsGroupType newsGroupType = nb.getNewsGroup( j );
 
@@ -428,7 +431,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
             }
         }
 
-        initNewsItem( newsBlock );
+        initNewsItem( newsBlock, renderResponse);
         return new NewsBlock( newsBlock );
     }
 

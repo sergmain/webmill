@@ -27,21 +27,17 @@ package org.riverock.portlet.news;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.portlet.PortletException;
+
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
-import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.sql.cache.SqlStatement;
-
-
-
-import javax.portlet.PortletException;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 
 /**
  * $Id$
@@ -74,7 +70,7 @@ public final class NewsGroup {
         sql_ = "select a.* from WM_NEWS_LIST a where a.IS_DELETED=0 and a.ID_NEWS=?";
 
         try {
-            SqlStatement.registerSql( sql_, new NewsGroup().getClass() );
+            SqlStatement.registerSql( sql_, NewsGroup.class );
         }
         catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
@@ -137,7 +133,7 @@ public final class NewsGroup {
             "order by EDATE desc ";
 
         try {
-            SqlStatement.registerSql( sql1_, new NewsGroup().getClass() );
+            SqlStatement.registerSql( sql1_, NewsGroup.class );
         }
         catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
@@ -167,8 +163,7 @@ public final class NewsGroup {
                 newsGroup.addNewsItem( item.newsItem );
             }
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;

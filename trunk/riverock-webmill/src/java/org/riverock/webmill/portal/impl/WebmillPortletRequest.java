@@ -285,7 +285,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             if (log.isDebugEnabled()) {
                 log.debug("parameters: "+parameters+", renderParameters: " +renderParameters);
             }
-            return super.getParameter( key );
+//            return super.getParameter( key );
         }
 
         String value = getParameterInternal( renderParameters, key );
@@ -304,10 +304,11 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             return value;
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("value #3: "+super.getParameter( key ));
-        }
-        return super.getParameter( key );
+        return null;
+//        if (log.isDebugEnabled()) {
+//            log.debug("value #3: "+super.getParameter( key ));
+//        }
+//        return super.getParameter( key );
     }
 
     private String getParameterInternal( Map map, String key ) {
@@ -529,14 +530,6 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public RequestDispatcher getRequestDispatcher(String path) {
-/*
-        RequestDispatcher rd = super.getRequestDispatcher( path );
-        if (log.isDebugEnabled()) {
-            log.debug( "path: " + path );
-            log.debug( "RequestDispatcher: " + rd );
-        }
-        return rd;
-*/
         RequestDispatcher rd = servletContext.getRequestDispatcher( path );
         if ( log.isDebugEnabled() ) {
             log.debug( "ServletContext: " + servletContext );
@@ -576,7 +569,6 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE, portalRequestInstance.getRequestContext().getTemplateName() );
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
-//        this.setAttribute( ContainerConstants.PORTAL_PORTLET_NAMESPACE_ATTRIBUTE, namespace );
 
         // PORTAL_QUERY_STRING_ATTRIBUTE constants can be deleted 
         // after rewrite invoke method in member module with 'lookup' type

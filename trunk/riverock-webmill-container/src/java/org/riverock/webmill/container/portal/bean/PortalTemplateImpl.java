@@ -23,6 +23,16 @@ public class PortalTemplateImpl implements PortalTemplate {
 
     private java.lang.String templateName = null;
 
+    private Long templateId = null;
+
+    public Long getTemplateId() {
+        return templateId;
+    }
+
+    public void setTemplateId(Long templateId) {
+        this.templateId = templateId;
+    }
+
     /**
      * Field portalTemplateItems
      */

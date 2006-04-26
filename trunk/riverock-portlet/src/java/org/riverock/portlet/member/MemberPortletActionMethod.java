@@ -3,7 +3,7 @@ package org.riverock.portlet.member;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Enumeration;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -38,6 +38,7 @@ public class MemberPortletActionMethod {
     private final static Object syncFile = new Object();
     public static void processAction(ActionRequest actionRequest, ActionResponse actionResponse)
         throws PortletException {
+        log.debug("Start MemberPortletActionMethod.processAction()");
 
         MemberProcessingActionRequest mp = null;
         try {
@@ -49,24 +50,26 @@ public class MemberPortletActionMethod {
             String actionName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_ACTION_PARAM);
             String subActionName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_SUBACTION_PARAM).trim();
 
+
             if (log.isDebugEnabled()) {
-                Enumeration e = actionRequest.getParameterNames();
-                if (e.hasMoreElements()) {
-                    for (; e.hasMoreElements();) {
-                        String s = (String) e.nextElement();
-                        log.debug("Request attr - " + s + ", value - " + actionRequest.getParameter(s));
+                Map parameterMap = actionRequest.getParameterMap();
+                if (!parameterMap.entrySet().isEmpty()) {
+                    log.debug("Action request parameter");
+                    for (Object o : parameterMap.entrySet()) {
+                        Map.Entry entry = (Map.Entry) o;
+                        log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
                     }
                 } else {
-                    log.debug("Request map is empty");
+                    log.debug("Action request map is empty");
                 }
                 log.debug("Point #2.1 module '" + moduleName + "'");
                 log.debug("Point #2.2 action '" + actionName + "'");
                 log.debug("Point #2.3 subAction '" + subActionName + "'");
             }
 
-
             if (mp.mod == null) {
-                throw new PortletException("Point #4.2. Module '" + moduleName + "' not found");
+                actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Point #4.2. Module '" + moduleName + "' not found");
+                return;
             }
 
             // Check was module is lookup and can not calling directly from menu.
@@ -74,7 +77,8 @@ public class MemberPortletActionMethod {
                 mp.mod.getType().getType() == ModuleTypeTypeType.LOOKUP_TYPE &&
                 (mp.getFromParam() == null || mp.getFromParam().length() == 0)
                 ) {
-                throw new PortletException("Point #4.4. Module " + moduleName + " is lookup module");
+                actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Point #4.4. Module " + moduleName + " is lookup module");
+                return;
             }
 
             int actionType = ContentTypeActionType.valueOf(actionName).getType();
@@ -87,7 +91,8 @@ public class MemberPortletActionMethod {
 
             mp.content = MemberServiceClass.getContent(mp.mod, actionType);
             if (mp.content == null) {
-                throw new PortletException("Module: '" + moduleName + "', action '" + actionName + "', not found");
+                actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Module: '" + moduleName + "', action '" + actionName + "', not found");
+                return;
             }
 
             if (log.isDebugEnabled()) {
@@ -101,7 +106,8 @@ public class MemberPortletActionMethod {
 
 
             if (!MemberServiceClass.checkRole(actionRequest, mp.content)) {
-                throw new PortletException("Access denied");
+                actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Access denied");
+                return;
             }
 
             if (log.isDebugEnabled()) {
@@ -112,6 +118,8 @@ public class MemberPortletActionMethod {
                         "windows-1251");
                 }
             }
+
+            initRenderParameters( actionRequest.getParameterMap(), actionResponse);
 
             if ("commit".equalsIgnoreCase(subActionName)) {
                 DatabaseAdapter dbDyn = null;
@@ -206,42 +214,8 @@ public class MemberPortletActionMethod {
 
                             // block for testing PK with different types
                             if (log.isDebugEnabled()) {
-                                PreparedStatement psTest = null;
-                                ResultSet rsTest = null;
-                                try {
-                                    String sqlTest = "select * from " +
-                                        (mp.content.getQueryArea().getTable(0)).getTable() +
-                                        " where " + mp.content.getQueryArea().getPrimaryKey() + " = ?";
-
-                                    log.debug("Test sql\n" + sqlTest);
-                                    psTest = dbDyn.prepareStatement(sqlTest);
-                                    log.debug("Test fetch. id - " + idNewRec);
-                                    log.debug("Test fetch. type of PK - " + mp.content.getQueryArea().getPrimaryKeyType());
-
-                                    switch (mp.content.getQueryArea().getPrimaryKeyType().getType()) {
-                                        case PrimaryKeyTypeType.NUMBER_TYPE:
-                                            psTest.setLong(1, (Long) idNewRec);
-                                            break;
-                                        case PrimaryKeyTypeType.STRING_TYPE:
-                                            psTest.setString(1, (String) idNewRec);
-                                            break;
-                                        default :
-                                            log.error("Test fetch. Unknown type of PK - " + mp.content.getQueryArea().getPrimaryKeyType());
-                                    }
-                                    rsTest = psTest.executeQuery();
-
-                                    int i = 0;
-                                    while (rsTest.next())
-                                        i++;
-                                    log.debug("Fetching " + i + " test records");
-                                }
-                                catch (Exception e) {
-                                    log.error("Error get test record", e);
-                                }
-                                finally {
-                                    DatabaseManager.close(rsTest, psTest);
-                                }
-                            } // if(log.isDebugEnabled())
+                                outputDebugOfInsertStatus(mp, dbDyn, idNewRec);
+                            }
 
                             mp.prepareBigtextData(dbDyn, idNewRec, false);
 
@@ -341,8 +315,10 @@ public class MemberPortletActionMethod {
                                 if (mp.content.getQueryArea().getPrimaryKeyType().getType() ==
                                     PrimaryKeyTypeType.NUMBER_TYPE) {
                                     CacheFactory.terminate(rc.getClassName(), (Long) idCurrRec, Boolean.TRUE.equals(rc.getIsFullReinitCache()));
-                                } else
-                                    throw new Exception("Change. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());
+                                } else {
+                                    actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Change. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());
+                                    return;
+                                }
                             }
                             break;
 
@@ -359,8 +335,10 @@ public class MemberPortletActionMethod {
                                 PrimaryKeyTypeType.STRING_TYPE) {
                                 idRec = RequestTools.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                             }
-                            else
-                                throw new Exception("Delete. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());
+                            else {
+                                actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Delete. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());
+                                return;
+                            }
 
                             // delete data from slave table for MySQL,
                             // 'cos mysql not support DELETE CASCADE reference integrity
@@ -392,7 +370,8 @@ public class MemberPortletActionMethod {
                             break;
 
                         default:
-                            throw new Exception("Unknown type of action - " + actionName);
+                            actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Unknown type of action - " + actionName);
+                            return;
                     }
                     log.debug("do commit");
 
@@ -433,7 +412,7 @@ public class MemberPortletActionMethod {
                     DatabaseManager.close(dbDyn, ps);
                 }
 
-            } // if ("commit" ...
+            }
         }
         catch (Exception e) {
             final String es = "General processing error ";
@@ -444,6 +423,67 @@ public class MemberPortletActionMethod {
             if (mp != null) {
                 mp.destroy();
             }
+        }
+    }
+
+    private static void initRenderParameters(Map parameterMap, ActionResponse actionResponse) {
+        log.debug("Start initRenderParameters()");
+        if (!parameterMap.entrySet().isEmpty()) {
+            log.debug("Request parameter");
+            for (Object o : parameterMap.entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
+
+                if ((entry.getKey()).equals(MemberConstants.MEMBER_ACTION_PARAM)) {
+                    actionResponse.setRenderParameter(MemberConstants.MEMBER_ACTION_PARAM, ContentTypeActionType.INDEX.toString());
+                }
+                else if ((entry.getKey()).equals(MemberConstants.MEMBER_SUBACTION_PARAM)) {
+                    // do not include sub-action in render request
+                }
+                else {
+                    actionResponse.setRenderParameter(entry.getKey().toString(), entry.getValue().toString());
+                }
+                log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
+            }
+        } else {
+            log.debug("Parameters for render request not found");
+        }
+    }
+
+    private static void outputDebugOfInsertStatus(MemberProcessingActionRequest mp, DatabaseAdapter dbDyn, Object idNewRec) {
+        PreparedStatement psTest = null;
+        ResultSet rsTest = null;
+        try {
+            String sqlTest = "select * from " +
+                (mp.content.getQueryArea().getTable(0)).getTable() +
+                " where " + mp.content.getQueryArea().getPrimaryKey() + " = ?";
+
+            log.debug("Test sql\n" + sqlTest);
+            psTest = dbDyn.prepareStatement(sqlTest);
+            log.debug("Test fetch. id - " + idNewRec);
+            log.debug("Test fetch. type of PK - " + mp.content.getQueryArea().getPrimaryKeyType());
+
+            switch (mp.content.getQueryArea().getPrimaryKeyType().getType()) {
+                case PrimaryKeyTypeType.NUMBER_TYPE:
+                    psTest.setLong(1, (Long) idNewRec);
+                    break;
+                case PrimaryKeyTypeType.STRING_TYPE:
+                    psTest.setString(1, (String) idNewRec);
+                    break;
+                default :
+                    log.error("Test fetch. Unknown type of PK - " + mp.content.getQueryArea().getPrimaryKeyType());
+            }
+            rsTest = psTest.executeQuery();
+
+            int i = 0;
+            while (rsTest.next())
+                i++;
+            log.debug("Fetching " + i + " test records");
+        }
+        catch (Exception e) {
+            log.error("Error get test record", e);
+        }
+        finally {
+            DatabaseManager.close(rsTest, psTest);
         }
     }
 }

@@ -225,9 +225,9 @@ public final class RequestContextUtils {
         log.debug("Start getRequestContextBean()");
 
         RequestContext bean = new RequestContext();
-        bean.setDefaultCatalogItem( ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId) );
-        bean.setLocale( StringTools.getLocale( bean.getDefaultCatalogItem().getSiteLanguage().getCustomLanguage() ) );
-        bean.setDefaultPortletName( bean.getDefaultCatalogItem().getPortletDefinition().getPortletName() );
+        bean.setExtendedCatalogItem( ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId) );
+        bean.setLocale( bean.getExtendedCatalogItem().getLocale() );
+        bean.setDefaultPortletName( bean.getExtendedCatalogItem().getPortletDefinition().getPortletName() );
         bean.setDefaultRequestState( new RequestState() );
 
         initParametersMap(bean, factoryParameter);
@@ -237,57 +237,89 @@ public final class RequestContextUtils {
 
     static void initParametersMap( RequestContext bean, RequestContextParameter factoryParameter) {
         PortalTemplate template = factoryParameter.getPortalInfo().getPortalTemplateManager().getTemplate(
-            bean.getDefaultCatalogItem().getCtx().getTemplateId()
+            bean.getExtendedCatalogItem().getTemplateId()
         );
 
         if (template == null) {
-            String errorString = "Template with id " + bean.getDefaultCatalogItem().getCtx().getTemplateId() + " not found";
+            String errorString = "Template with id " + bean.getExtendedCatalogItem().getTemplateId() + " not found";
             log.warn(errorString);
             throw new IllegalStateException(errorString);
         }
-        log.debug( "template:\n" + template.toString());
         bean.setTemplateName( template.getTemplateName() );
         // looking for dynamic portlet.
         int i=0;
-        Namespace namespace = null;
+        if (log.isDebugEnabled()) {
+            log.debug( "template:\n" + template.toString());
+            log.debug( "Process template");
+        }
         for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
             if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
-                namespace = NamespaceFactory.getNamespace(templateItem.getValue(), template.getTemplateName(), i++);
+                Namespace namespace = NamespaceFactory.getNamespace(templateItem.getValue(), template.getTemplateName(), i++);
                 if (log.isDebugEnabled()) {
-                    log.debug("namespace: " +namespace.getNamespace());
-                    log.debug("portlet: " +templateItem.getValue());
-                    log.debug("TemplateName: " +template.getTemplateName());
+                    log.debug("    template name: " +template.getTemplateName());
+                    log.debug("    namespace: " +namespace.getNamespace());
+                    log.debug("    portlet: " +templateItem.getValue());
+                    log.debug("    default namespace: " +bean.getDefaultNamespace());
+                    log.debug("    default portlet: " +bean.getExtendedCatalogItem().getPortletDefinition().getPortletName());
+                    log.debug("");
                 }
-                PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, Object>() );
-                bean.getParameters().put( namespace.getNamespace(), portletParameters );
 
-            } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
-                //noinspection UnusedAssignment
-                namespace = NamespaceFactory.getNamespace(
-                    bean.getDefaultCatalogItem().getPortletDefinition().getPortletName(), template.getTemplateName(), i++
-                );
-                bean.setDefaultNamespace( namespace.getNamespace() );
-
-                // prepare dynamic parameters
-                PortletParameters portletParameters;
-                if (factoryParameter.isMultiPartRequest()) {
-                    portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
+                if ( bean.getDefaultNamespace()!=null) {
+                    if ( bean.getDefaultNamespace().equals( namespace.getNamespace() ) ) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("    Create parameter for NS "+namespace.getNamespace() +", action state: " +bean.getDefaultRequestState());
+                        }
+                        initParameterForDefaultPortlet(factoryParameter, bean);
+                    }
+                    else {
+                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, Object>() );
+                        bean.getParameters().put( namespace.getNamespace(), portletParameters );
+                    }
                 }
                 else {
-                    Map<String, Object> httpRequestParameter = PortletUtils.getParameters(factoryParameter.getRequest());
-                    String nameId = PortletService.getStringParam( bean.getDefaultCatalogItem().getPortletDefinition(), ContainerConstants.name_portlet_id );
-                    if ( log.isDebugEnabled() ) {
-                        log.debug( "nameId: "+nameId );
-                        log.debug( "Id: "+bean.getDefaultPortletId() );
+                    String tempPortletName = bean.getExtendedCatalogItem().getPortletDefinition().getPortletName();
+                    if (tempPortletName !=null && tempPortletName.equals(templateItem.getValue())) {
+                        initParameterForDefaultPortlet(factoryParameter, bean);
                     }
-                    if (nameId!=null) {
-                        httpRequestParameter.put( nameId, bean.getDefaultPortletId() );
+                    else {
+                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, Object>() );
+                        bean.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
-
-                    portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), httpRequestParameter );
                 }
-                bean.getParameters().put( bean.getDefaultNamespace(), portletParameters );
+            } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
+                //noinspection UnusedAssignment
+                Namespace namespace = NamespaceFactory.getNamespace(
+                    bean.getExtendedCatalogItem().getPortletDefinition().getPortletName(), template.getTemplateName(), i++
+                );
+                bean.setDefaultNamespace( namespace.getNamespace() );
+                initParameterForDefaultPortlet(factoryParameter, bean);
             }
         }
+    }
+
+    public static void initParameterForDefaultPortlet(RequestContextParameter factoryParameter, RequestContext bean) {
+        // prepare dynamic parameters
+        PortletParameters portletParameters;
+        if (factoryParameter.isMultiPartRequest()) {
+            portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
+        }
+        else {
+            Map<String, Object> httpRequestParameter = PortletUtils.getParameters(factoryParameter.getRequest());
+
+            // init id of concrete portlet instance with value
+            if (bean.getConcretePortletIdValue()!=null) {
+                String nameId = PortletService.getStringParam( bean.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.name_portlet_id );
+                if ( log.isDebugEnabled() ) {
+                    log.debug( "nameId: "+nameId );
+                    log.debug( "Id: "+bean.getConcretePortletIdValue() );
+                }
+                if (nameId!=null) {
+                    httpRequestParameter.put( nameId, bean.getConcretePortletIdValue() );
+                }
+            }
+
+            portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), httpRequestParameter );
+        }
+        bean.getParameters().put( bean.getDefaultNamespace(), portletParameters );
     }
 }

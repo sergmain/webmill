@@ -13,13 +13,18 @@ import org.riverock.webmill.portal.PortletParameters;
  *         Time: 13:01:59
  */
 public class RequestContext {
-    private Long ctxId = null;
     private String templateName = null;
+
     private String defaultPortletName = null;
+
     private String defaultNamespace = null;
+
     private Locale locale = null;
-    private ExtendedCatalogItemBean defaultCatalogItem = null;
+
+    private ExtendedCatalogItemBean extendedCatalogItem = null;
+
     private Map<String, PortletParameters> parameters = new HashMap<String, PortletParameters>();
+
     private RequestState defaultRequestState = null;
 
     public RequestState getDefaultRequestState() {
@@ -33,15 +38,12 @@ public class RequestContext {
         this.defaultRequestState = defaultRequestState;
     }
 
-    public ExtendedCatalogItemBean getDefaultCatalogItem() {
-//        if (defaultCatalogItem==null) {
-//            throw new IllegalStateException("defaultCatalogItem is null");
-//        }
-        return defaultCatalogItem;
+    public ExtendedCatalogItemBean getExtendedCatalogItem() {
+        return extendedCatalogItem;
     }
 
-    public void setDefaultCatalogItem(ExtendedCatalogItemBean defaultCatalogItem) {
-        this.defaultCatalogItem = defaultCatalogItem;
+    public void setExtendedCatalogItem(ExtendedCatalogItemBean extendedCatalogItem) {
+        this.extendedCatalogItem = extendedCatalogItem;
     }
 
     public Map<String, PortletParameters> getParameters() {
@@ -70,10 +72,11 @@ public class RequestContext {
         this.locale = locale;
     }
 
+    /**
+     * For some cases default namespace may not be initialized: i.e. page with non-dynamic template
+     * @return String default namespace
+     */
     public String getDefaultNamespace() {
-        if (defaultNamespace ==null) {
-            throw new IllegalStateException("defaultNamespace is null");
-        }
         return defaultNamespace;
     }
 
@@ -92,31 +95,19 @@ public class RequestContext {
         this.templateName = templateName;
     }
 
-    public Long getCtxId() {
-        if (ctxId==null) {
-            throw new IllegalStateException("ctxId is null");
-        }
-        return ctxId;
-    }
-
-    public void setCtxId(Long ctxId) {
-        this.ctxId = ctxId;
-    }
-
-
     public String getNamePortletId() {
-        if (defaultCatalogItem==null) {
-            throw new IllegalStateException("defaultCatalogItem is null");
+        if (extendedCatalogItem ==null) {
+            throw new IllegalStateException("extendedCatalogItem is null");
         }
 
-        return defaultCatalogItem.getNamePortletId();
+        return extendedCatalogItem.getNamePortletId();
     }
 
-    public Long getDefaultPortletId() {
-        if (defaultCatalogItem==null) {
-            throw new IllegalStateException("defaultCatalogItem is null");
+    public Long getConcretePortletIdValue() {
+        if (extendedCatalogItem ==null) {
+            throw new IllegalStateException("extendedCatalogItem is null");
         }
 
-        return defaultCatalogItem.getCtx().getContextId();
+        return extendedCatalogItem.getConcretePortletIdValue();
     }
 }

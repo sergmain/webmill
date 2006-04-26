@@ -128,7 +128,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     public PortalTemplateManagerImpl(Long siteId) {
         for (TemplateBean templateBean : InternalDaoFactory.getInternalDao().getTemplateList( siteId )) {
             try {
-                PortalTemplate st = digestSiteTemplate(templateBean.getTemplateData(), templateBean.getTemplateName());
+                PortalTemplate st = digestSiteTemplate(templateBean.getTemplateData(), templateBean.getTemplateName(), templateBean.getTemplateId());
                 String lang = StringTools.getLocale(templateBean.getTemplateLanguage()).toString();
                 hash.put(st.getTemplateName() + '_' + lang, st);
                 hashId.put(templateBean.getTemplateId(), st);
@@ -149,7 +149,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         }
     }
 
-    public static PortalTemplate digestSiteTemplate(String templateData, String templateName) throws IOException, SAXException {
+    public static PortalTemplate digestSiteTemplate(String templateData, String templateName, Long templateId) throws IOException, SAXException {
         if (StringTools.isEmpty(templateData) ) {
             final PortalTemplateImpl portalTemplate = new PortalTemplateImpl();
             portalTemplate.setTemplateName( templateName );
@@ -160,6 +160,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         }
         PortalTemplateImpl st = (PortalTemplateImpl) digester.parse( new ByteArrayInputStream( templateData.getBytes() ));
         st.setTemplateName( templateName );
+        st.setTemplateId( templateId );
 
         return st;
     }

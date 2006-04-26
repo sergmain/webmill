@@ -1,8 +1,9 @@
 package org.riverock.portlet.member;
 
-import java.io.PrintWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.portlet.RenderRequest;
@@ -25,10 +26,10 @@ public class MemberPortletRenderMethod {
     private final static Logger log = Logger.getLogger(MemberPortletRenderMethod.class);
 
     public static void render(RenderRequest renderRequest, RenderResponse renderResponse) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("request: " + renderRequest);
-            log.debug("response: " + renderResponse);
-        }
+        log.debug("Start MemberPortletRenderMethod.render()");
+
+        dumpParametersFromMap(renderRequest.getParameterMap(), "MemberPortletRenderMethod.");
+
         MemberProcessingRenderRequest mp = null;
         try {
             ResourceBundle bundle = (ResourceBundle) renderRequest.getAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE);
@@ -44,20 +45,25 @@ public class MemberPortletRenderMethod {
             mp = new MemberProcessingRenderRequest(renderRequest, renderResponse, bundle, moduleManager);
 
             if (log.isDebugEnabled()) {
-                log.debug("MemberProcessingRenderRequest - " + mp);
-
-                for (Enumeration e = renderRequest.getParameterNames(); e.hasMoreElements();) {
-                    String s = (String) e.nextElement();
-                    log.debug("Request param: " + s + ", value: " + RequestTools.getString(renderRequest, s));
+                Map parameterMap = renderRequest.getParameterMap();
+                if (!parameterMap.entrySet().isEmpty()) {
+                    log.debug("Render request parameter");
+                    for (Object o : parameterMap.entrySet()) {
+                        Map.Entry entry = (Map.Entry) o;
+                        log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
+                    }
+                } else {
+                    log.debug("Render request map is empty");
                 }
                 boolean isFound = false;
+                log.debug("Render request attr:");
                 for (Enumeration e = renderRequest.getAttributeNames(); e.hasMoreElements();) {
                     String key = (String) e.nextElement();
-                    log.debug("Request attr: " + key + ", value: " + renderRequest.getAttribute(key));
+                    log.debug("    key: " + key + ", value: " + renderRequest.getAttribute(key));
                     isFound = true;
                 }
                 if (!isFound) {
-                    log.debug("Count of attr in request is: " + isFound);
+                    log.debug("Attribute in render request is present: " + isFound);
                 }
             }
 
@@ -71,6 +77,9 @@ public class MemberPortletRenderMethod {
                 log.debug("Point #2.1 module '" + moduleName + "'");
                 log.debug("Point #2.2 action '" + actionName + "'");
                 log.debug("Point #2.3 subAction '" + subActionName + "'");
+                log.debug("Point #7.1 module '" + renderRequest.getParameterMap().get(MemberConstants.MEMBER_MODULE_PARAM) + "'");
+                log.debug("Point #7.2 action '" + renderRequest.getParameterMap().get(MemberConstants.MEMBER_ACTION_PARAM) + "'");
+                log.debug("Point #7.3 subAction '" + renderRequest.getParameterMap().get(MemberConstants.MEMBER_SUBACTION_PARAM) + "'");
             }
 
 
@@ -243,5 +252,28 @@ public class MemberPortletRenderMethod {
 
     private static void putEndForm(PrintWriter out) {
         out.println("</form>");
+    }
+
+    private static void dumpParametersFromMap(Map formParameters, String info) {
+
+        log.debug(info);
+        if (formParameters==null) {
+            log.debug("    Map with parameters is null");
+            return;
+        }
+        for (Object o : formParameters.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+            if (entry.getValue() instanceof String) {
+                log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
+            } else if (entry.getValue() instanceof String[]) {
+                String[] arr = (String[]) entry.getValue();
+                log.debug("    key: " + entry.getKey());
+                for (String anArr : arr) {
+                    log.debug("        value: " + anArr);
+                }
+            } else {
+                throw new IllegalStateException("Wrong type of value: " + entry.getValue().getClass().getName());
+            }
+        }
     }
 }

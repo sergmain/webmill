@@ -69,7 +69,8 @@ public class WebmillErrorPage
             textConst,
             text + (th!=null? WebmillErrorPage.getErrorMessage(th):"")
         );
-        actionResponse.setRenderParameter( urlNameConsts, urlName );
+        if (urlNameConsts!=null && urlName!=null)
+            actionResponse.setRenderParameter( urlNameConsts, urlName );
     }
 
     public static void process( Writer out, Throwable th, String errorMessage, String url, String urlMessage )

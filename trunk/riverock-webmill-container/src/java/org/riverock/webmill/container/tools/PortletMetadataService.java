@@ -24,7 +24,7 @@
  */
 package org.riverock.webmill.container.tools;
 
-import java.util.Properties;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 
@@ -53,11 +53,11 @@ public class PortletMetadataService {
         if (portletRequest==null || key==null)
             return defValue;
 
-        Properties p = (Properties)portletRequest.getAttribute( ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE );
+        Map<String, String> p = (Map<String, String>)portletRequest.getAttribute( ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE );
         if (p==null)
             return defValue;
 
-        String value = p.getProperty( key );
+        String value = p.get( key );
         if ( PortletService.isEmpty( value ) ) {
             return defValue;
         }

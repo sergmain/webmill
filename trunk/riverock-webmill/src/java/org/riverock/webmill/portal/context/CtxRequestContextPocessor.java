@@ -143,15 +143,20 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             log.debug("portletName");
             log.debug("     portletName from path: " + portletName);
             log.debug("     ContainerConstants.NAME_TYPE_CONTEXT_PARAM: " + factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM));
-            log.debug("     portletName(for compatible TCK: " + factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME));
+            log.debug("     portletName for compatible with TCK: " + factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME));
         }
 
-        if (StringTools.isEmpty(portletName)) {
-            portletName = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM);
-            if (portletName == null) {
-                portletName = factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME);
-            }
-        }
+        // In 1st case we get portlet name from 'portletName' parameter. For compatible with TCK
+        // in 2nd case we get portlet name from 'mill.context' parameter.
+        //    This extension allow us create URL to other portlet
+        // In last case we get portlet name from URI
+        String pn = factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME);
+        if (pn==null)
+            pn = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM);
+
+        if (pn!=null)
+            portletName = pn;
+
         if (log.isDebugEnabled()) {
             log.debug("Final portletName: " + portletName);
         }
@@ -181,16 +186,22 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             log.debug("     templateName: " + bean.getTemplateName());
             log.debug("     portletName: " + bean.getDefaultPortletName() );
             log.debug("     isAction: " + requestState.isActionRequest() );
+            log.debug("     default ns: " + bean.getDefaultNamespace() );
         }
 
         Long ctxId = InternalDaoFactory.getInternalDao().getCatalogId(factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(), bean.getTemplateName());
         if (log.isDebugEnabled()) {
             log.debug("ctxId: " + ctxId );
         }
-        bean.setDefaultCatalogItem( ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId) );
-        if (bean.getDefaultCatalogItem()==null) {
+        ExtendedCatalogItemBean extendedBean = ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId);
+        if (extendedBean==null) {
+            extendedBean = ExtendedCatalogItemBean.getInstance(factoryParameter, bean.getTemplateName(), bean.getDefaultPortletName(), bean.getLocale());
+        }
+        if (extendedBean==null) {
             return null;
         }
+        bean.setExtendedCatalogItem( extendedBean );
+
         RequestContextUtils.initParametersMap(bean, factoryParameter);
 
         // prepare parameters for others portlets
