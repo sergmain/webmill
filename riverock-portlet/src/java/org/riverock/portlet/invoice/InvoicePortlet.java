@@ -25,8 +25,7 @@
 package org.riverock.portlet.invoice;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
@@ -63,7 +62,6 @@ import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.tools.StreamWrapper;
 
 /**
  * Author: mill
@@ -93,17 +91,17 @@ public final class InvoicePortlet implements Portlet {
     public void destroy() {
     }
 
-    private static Object syncObj = new Object();
+    private final static Object syncObj = new Object();
 
     public void render( RenderRequest renderRequest, RenderResponse renderResponse )
-        throws PortletException, IOException {
+        throws PortletException {
         OrderLogic.process( renderRequest );
 
         ResourceBundle bundle = portletConfig.getResourceBundle( renderRequest.getLocale() );
-        OutputStream outputStream = null;
+        PrintWriter out = null;
         try {
-            outputStream = renderResponse.getPortletOutputStream();
-            StreamWrapper out = new StreamWrapper(outputStream, ContentTypeTools.CONTENT_TYPE_UTF8);
+            ContentTypeTools.setContentType( renderResponse, ContentTypeTools.CONTENT_TYPE_UTF8 );
+            out = renderResponse.getWriter();
 
             PortletSession session = renderRequest.getPortletSession();
             ShopOrder order = (ShopOrder)session.getAttribute( ShopPortlet.ORDER_SESSION );
@@ -147,22 +145,18 @@ public final class InvoicePortlet implements Portlet {
 
                         OrderLogic.updateAuthSession( dbDyn, order, authSession );
                         order.setAuthSession( authSession );
+                        dbDyn.commit();
                     }
                     catch( Exception e1 ) {
                         try {
                             dbDyn.rollback();
                         }
                         catch( Exception e02 ) {
+                            // catch rollback error
                         }
                         throw e1;
                     }
                     finally {
-                        try {
-                            dbDyn.commit();
-                        }
-                        catch( Exception e01 ) {
-                        }
-
                         DatabaseAdapter.close( dbDyn );
                         dbDyn = null;
                     }
@@ -210,22 +204,18 @@ public final class InvoicePortlet implements Portlet {
                         dbDyn = DatabaseAdapter.getInstance();
                         Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
                         OrderLogic.setItem( dbDyn, order, id_item, count, siteId );
+                        dbDyn.commit();
                     }
                     catch( Exception e1 ) {
                         try {
                             dbDyn.rollback();
                         }
                         catch( Exception e02 ) {
+                            // catch roolback error
                         }
                         throw e1;
                     }
                     finally {
-                        try {
-                            dbDyn.commit();
-                        }
-                        catch( Exception e01 ) {
-                        }
-
                         DatabaseAdapter.close( dbDyn );
                         dbDyn = null;
                     }
@@ -249,16 +239,11 @@ public final class InvoicePortlet implements Portlet {
                             dbDyn.rollback();
                         }
                         catch( Exception e02 ) {
+                            // catch rollback error
                         }
                         throw e1;
                     }
                     finally {
-                        try {
-                            dbDyn.commit();
-                        }
-                        catch( Exception e01 ) {
-                        }
-
                         DatabaseAdapter.close( dbDyn );
                         dbDyn = null;
                     }
@@ -271,6 +256,7 @@ public final class InvoicePortlet implements Portlet {
                 try {
                     dbDyn = DatabaseAdapter.getInstance();
                     PriceList.synchronizeOrderWithDb( dbDyn, order );
+                    dbDyn.commit();
                 }
                 catch( Exception e1 ) {
                     log.error( "Error delete item from basket", e1 );
@@ -279,16 +265,11 @@ public final class InvoicePortlet implements Portlet {
                         dbDyn.rollback();
                     }
                     catch( Exception e02 ) {
+                        // catch rollback error
                     }
                     throw e1;
                 }
                 finally {
-                    try {
-                        dbDyn.commit();
-                    }
-                    catch( Exception e01 ) {
-                    }
-
                     DatabaseAdapter.close( dbDyn );
                     dbDyn = null;
                 }
@@ -657,8 +638,10 @@ public final class InvoicePortlet implements Portlet {
             log.error( es, e );
             throw new PortletException( es, e );
         }
-        outputStream.flush();
-        outputStream.close();
-        outputStream = null;
+        if (out!=null) {
+            out.flush();
+            out.close();
+            out = null;
+        }
     }
 }
