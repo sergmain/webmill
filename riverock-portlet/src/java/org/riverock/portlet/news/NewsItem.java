@@ -29,26 +29,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import javax.portlet.PortletException;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.Logger;
+
+import org.riverock.cache.impl.CacheException;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.generic.utils.DateUtils;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
-import org.riverock.cache.impl.CacheException;
-import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.sql.cache.SqlStatement;
-
-
-
-import javax.portlet.PortletException;
-
-import org.apache.commons.lang.StringEscapeUtils;
-
-
-import org.apache.log4j.Logger;
+import org.riverock.sql.cache.SqlStatementRegisterException;
 
 
 /**
@@ -151,7 +146,7 @@ public final class NewsItem {
             "select TEXT from WM_NEWS_ITEM_TEXT where ID=? order by ID_MAIN_NEWS_TEXT asc";
 
         try {
-            SqlStatement.registerSql( sql1_, new NewsItem().getClass() );
+            SqlStatement.registerSql( sql1_, NewsItem.class );
         }
         catch(Throwable e) {
             final String es = "Error in registerSql, sql\n"+sql_;
@@ -160,7 +155,7 @@ public final class NewsItem {
         }
     }
 
-    private void initTextField( DatabaseAdapter db_ ) throws SQLException, DatabaseException {
+    private void initTextField( DatabaseAdapter db_ ) throws SQLException {
         if ( newsItem.getNewsItemId() == null)
             return;
 

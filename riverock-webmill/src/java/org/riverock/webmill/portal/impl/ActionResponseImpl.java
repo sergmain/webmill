@@ -32,7 +32,6 @@
  */
 package org.riverock.webmill.portal.impl;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -118,10 +117,9 @@ public final class ActionResponseImpl implements ActionResponse {
         if (map==null) {
             throw new IllegalArgumentException("Map is null");
         }
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry)it.next();
-            renderParameters.put( entry.getKey().toString(), entry.getValue() );
+        for (Object o : map.entrySet()) {
+            Map.Entry entry = (Map.Entry) o;
+            renderParameters.put(entry.getKey().toString(), entry.getValue());
         }
     }
 

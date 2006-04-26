@@ -38,6 +38,10 @@ public final class RequestState {
     private PortletMode portletMode = PortletMode.VIEW;
     private WindowState windowState = WindowState.NORMAL;
 
+    public String toString() {
+        return "[action:"+isActionRequest+",mode:"+portletMode+",state:"+windowState+"]";
+    }
+
     public PortletMode getPortletMode() {
         return portletMode;
     }

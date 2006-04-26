@@ -6,7 +6,7 @@
 
     <f:loadBundle basename="org.riverock.portlet.manager.resource.PortletName" var="msg"/>
 
-    <h:commandButton value="#{msg.action_portlet_name_add_portlet_name}" action="#{portletNameAction.addPortletName}" style=" width : 106px; height : 22px;"/>
+    <h:commandButton value="#{msg.add_portlet_name_action}" action="#{portletNameAction.addPortletName}" style=" width : 106px; height : 22px;"/>
 
                 <t:dataTable id="portletNameDataTable"
                         var="portletName"

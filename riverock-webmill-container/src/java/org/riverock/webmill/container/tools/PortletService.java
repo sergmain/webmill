@@ -27,21 +27,20 @@ package org.riverock.webmill.container.tools;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Map;
 import java.util.Locale;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletSession;
 import javax.portlet.PortletResponse;
+import javax.portlet.PortletSession;
 
+import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.bean.InitParam;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Supports;
-import org.riverock.webmill.container.portlet.bean.InitParam;
-import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 
 /**
  * $Id$
@@ -56,9 +55,7 @@ public final class PortletService {
         if ( templateParameters == null || isEmpty(nameParam) )
             return defValue;
 
-        Iterator<PortalTemplateParameter> iterator = templateParameters.iterator();
-        while (iterator.hasNext()) {
-            PortalTemplateParameter portalTemplateParameter = iterator.next();
+        for (PortalTemplateParameter portalTemplateParameter : templateParameters) {
             if (portalTemplateParameter.getName().equals(nameParam))
                 return portalTemplateParameter.getValue();
         }
@@ -66,10 +63,7 @@ public final class PortletService {
     }
 
     public static boolean isEmpty( final String s) {
-        if (s==null || s.trim().length()==0)
-            return true;
-        else
-            return false;
+        return s == null || s.trim().length() == 0;
     }
 
     public static String convertString( final String s, final String fromCharset, final String toCharset)
@@ -115,27 +109,14 @@ public final class PortletService {
 
         return path + ContainerConstants.PAGE_SERVLET_NAME ;
     }
-/*
-
-    public static String urlPage( final PortletRequest renderRequest ) {
-        String path = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
-        if (path.equals("/") || path.equals("") )
-            return ContainerConstants.URL_SERVLET_NAME ;
-
-        return path + ContainerConstants.URL_SERVLET_NAME ;
-    }
-*/
 
     public static String url( final String portletName, final PortletRequest renderRequest, final PortletResponse renderResponse ) {
         return urlStringBuilder(
             portletName,
             renderRequest,
-            renderResponse
+            renderResponse,
+            (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE )
         ).toString();
-    }
-
-    public static StringBuilder urlStringBuilder( final String portletName, final PortletRequest renderRequest, final PortletResponse renderResponse ) {
-        return urlStringBuilder( portletName, renderRequest, renderResponse, (String)renderRequest.getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE ) );
     }
 
     public static String url(
@@ -243,7 +224,7 @@ public final class PortletService {
         for (int i = 0; i < v.getInitParamCount(); i++) {
             InitParam init = v.getInitParam(i);
             if (name_.equals(init.getName()))
-                return new Boolean(init.getValue());
+                return Boolean.valueOf(init.getValue());
         }
         return defaultvalue;
     }
@@ -252,8 +233,8 @@ public final class PortletService {
         if (v == null || name_ == null || name_.trim().length() == 0)
             return null;
 
-        for (int i = 0; i < v.size(); i++) {
-            InitParam init = (InitParam) v.get(i);
+        for (Object aV : v) {
+            InitParam init = (InitParam) aV;
             if (name_.equals(init.getName()))
                 return new Long(init.getValue());
         }
@@ -281,10 +262,9 @@ public final class PortletService {
 
         }
         catch (Exception e) {
+            // silence remove attribete
         }
-
         session.removeAttribute(attr);
-        obj = null;
     }
 
     public static Long getIdPortlet( final String namePortletID, final PortletRequest request ) {
@@ -434,7 +414,7 @@ public final class PortletService {
     }
 
     public static StringBuilder ctxStringBuilder( final PortletRequest renderRequest, final String portletName, final String templateName, Locale locale ) {
-        StringBuilder b = null;
+        StringBuilder b;
         String portalContextPath = renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH );
         if (portalContextPath.equals("/") || portalContextPath.equals("") )
             b = new StringBuilder( ContainerConstants.URI_CTX_MANAGER );

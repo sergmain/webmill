@@ -38,22 +38,22 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
+import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.config.GenericConfig;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
+import org.riverock.portlet.schema.menu.MenuModuleType;
+import org.riverock.portlet.schema.menu.MenuSimpleType;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.interfaces.portal.PortalInfo;
-import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.portlet.schema.menu.MenuSimpleType;
-import org.riverock.portlet.schema.menu.MenuModuleType;
 
 /**
  * $Author$
@@ -116,8 +116,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 portalInfo.getMenu(renderRequest.getLocale().toString()).
                 getCatalogByCode(portletCode_);
 
-
-            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
+//            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
+            Long defaultCatalogId = null;
 
             if (log.isDebugEnabled()) {
                 log.debug("defaultCatalogId: " + defaultCatalogId);
@@ -147,7 +147,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                 return null;
             }
 
-            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
+//            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
+            Long defaultCatalogId = null;
 
             if (log.isDebugEnabled()) {
                 log.debug("defaultCatalogId: " + defaultCatalogId);
@@ -277,7 +278,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private static Logger log1 = Logger.getLogger("org.riverock.portlet.MenuSimple-1");
+    private static Logger log1 = Logger.getLogger("org.riverock.portlet.menu.MenuSimple-1");
 
     private final static Object objSync = new Object();
 
@@ -489,35 +490,11 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             }
 
             m.setModuleName(item.getMenuName());
-/*
-            if (item.getUrlResource() != null && item.getUrlResource().length() > 0) {
-                if (log.isDebugEnabled()) {
-                    log.debug("UrlResource: " + item.getUrlResource());
-                }
-
-                // format request: /<CONTEXT>/url/<LOCALE>,<TEMPLATE_NAME>/<PARAMETER_OF_OTHER_PORTLET>/page/<URL_TO_PAGE>
-                // URL_TO_PAGE: [/CONTEXT_NAME]/page-url (page-url is html, jsp or other page)
-
-//                PortletURL portletUrl = renderResponse.createRenderURL();
-//                portletUrl.setParameter();
-
-                m.setModuleUrl(renderResponse.encodeURL(new StringBuilder().
-                    append(PortletService.urlPage(renderRequest)).append('/').
-                    append(renderRequest.getLocale().toString()).append(',').
-                    append(item.getType()).append(',').
-                    append(item.getNameTemplate()).append(',').
-                    append(item.getId()).
-                    append(ContainerConstants.URL_PAGE).
-                    append(item.getUrlResource()).toString()));
-            }
-            else {
-*/  
-              // set menu URL
-                if (item.getUrl() == null)
-                    m.setModuleUrl(renderResponse.encodeURL(PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId()));
-                else
-                    m.setModuleUrl(renderResponse.encodeURL(PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl()));
-//            }
+            // set menu URL
+            if (item.getUrl() == null)
+                m.setModuleUrl(renderResponse.encodeURL(PortletService.pageid(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getId()));
+            else
+                m.setModuleUrl(renderResponse.encodeURL(PortletService.page(renderRequest) + '/' + renderRequest.getLocale().toString() + '/' + item.getUrl()));
 
             //////
 

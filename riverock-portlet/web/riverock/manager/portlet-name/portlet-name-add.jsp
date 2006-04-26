@@ -20,8 +20,8 @@ td { vertical-align: top; }
 	</f:subview>
  	
 	<h:panelGroup>
-		<h:commandButton value="#{msg.action_portlet_name_add_process}" action="#{portletNameAction.processAddPortletName}"/>
-		<h:commandButton value="#{msg.action_portlet_name_add_cancel}" action="#{portletNameAction.cancelAddPortletName}"/>	
+		<h:commandButton value="#{msg.add_process_action}" action="#{portletNameAction.processAddPortletName}"/>
+		<h:commandButton value="#{msg.add_cancel_action}" action="#{portletNameAction.cancelAddPortletName}"/>	
 	</h:panelGroup>
  	 
     </h:panelGrid>	 

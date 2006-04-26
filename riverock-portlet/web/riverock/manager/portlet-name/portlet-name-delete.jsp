@@ -20,8 +20,8 @@ td { vertical-align: top; }
 	</f:subview>
  	
 	<h:panelGroup id="editDeleteControls">
-		<h:commandButton value="#{msg.action_portlet_name_delete_confirm}" action="#{portletNameAction.processDeletePortletName}"/>
-		<h:commandButton value="#{msg.action_portlet_name_delete_cancel}" action="portlet-name"/>
+		<h:commandButton value="#{msg.delete_confirm_action}" action="#{portletNameAction.processDeletePortletName}"/>
+		<h:commandButton value="#{msg.delete_cancel_action}" action="portlet-name"/>
 	</h:panelGroup>
  	 
     </h:panelGrid>	 

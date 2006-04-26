@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.HashMap;
 
 import javax.portlet.PortalContext;
 import javax.servlet.ServletConfig;
@@ -251,10 +252,10 @@ public final class PortalRequestInstance {
 
                 switch (templateItem.getTypeObject().getType()) {
                     case PortalTemplateItemType.PORTLET_TYPE:
-                        element.initPortlet(templateItem.getValue(), this);
+                        element.initPortlet(templateItem.getValue(), this, new HashMap<String, String>(), new ArrayList<String>());
                         break;
                     case PortalTemplateItemType.DYNAMIC_TYPE:
-                        element.initPortlet(requestContext.getDefaultPortletName(), this);
+                        element.initPortlet(requestContext.getDefaultPortletName(), this, requestContext.getExtendedCatalogItem().getPortletMetadata(), requestContext.getExtendedCatalogItem().getRoleList());
                         break;
                     case PortalTemplateItemType.FILE_TYPE:
                     case PortalTemplateItemType.CUSTOM_TYPE:
@@ -302,10 +303,6 @@ public final class PortalRequestInstance {
 
     public AuthSession getAuth() {
         return auth;
-    }
-
-    public Long getDefaultPortletId() {
-        return requestContext.getDefaultPortletId();
     }
 
     public Locale getLocale() {
@@ -356,7 +353,7 @@ public final class PortalRequestInstance {
     }
 
     public ExtendedCatalogItemBean getDefaultCtx() {
-        return requestContext.getDefaultCatalogItem();
+        return requestContext.getExtendedCatalogItem();
     }
 
     public CookieManager getCookieManager() {

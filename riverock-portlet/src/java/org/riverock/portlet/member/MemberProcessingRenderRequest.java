@@ -3166,10 +3166,6 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         return s_;
     }
 
-//    public ModuleManager getModuleManager() {
-//        return moduleManager;
-//    }
-
     public MemberProcessingRenderRequest( RenderRequest renderRequest, RenderResponse renderResponse, ResourceBundle bundle, ModuleManager moduleManager ) {
 
         if (renderRequest== null)
