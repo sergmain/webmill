@@ -24,22 +24,22 @@
  */
 package org.riverock.generic.tools.servlet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.io.ByteArrayOutputStream;
 import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 
-import org.riverock.common.contenttype.ContentTypeManager;
-
 import org.apache.log4j.Logger;
 
-public final class ServletResponseWrapperInclude implements ServletResponse {
+import org.riverock.common.contenttype.ContentTypeManager;
+
+public class ServletResponseWrapperInclude implements ServletResponse {
 
     private final static Logger log = Logger.getLogger( ServletResponseWrapperInclude.class );
 
@@ -129,9 +129,6 @@ public final class ServletResponseWrapperInclude implements ServletResponse {
             log.debug( "getWriter(), outputStream: " +
                 (outputStream==null?"is null":outputStream.getClass().getName())
             );
-        }
-
-        if ( log.isDebugEnabled() ) {
             log.debug( "contentType: " + contentTypeManager );
             if (contentTypeManager!=null)
                 log.debug( "charset: " + contentTypeManager.getCharacterEncoding() );

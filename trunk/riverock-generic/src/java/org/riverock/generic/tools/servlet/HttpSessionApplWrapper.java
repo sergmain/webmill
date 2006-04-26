@@ -31,8 +31,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
-import org.apache.log4j.Logger;
-
 /**
  * Author: mill
  * Date: Feb 19, 2003

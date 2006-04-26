@@ -107,13 +107,9 @@ public class ContentTypeManager {
         ContentType type = new ContentType(contentTypeString);
         if (log.isDebugEnabled()) {
             log.debug("parsed contentType: " + type);
-            if (type != null) {
-                log.debug("contentType.getContentType(): " + type.getContentType());
-                log.debug("contentType.getCharset(): " + type.getCharset());
-            }
+            log.debug("contentType.getContentType(): " + type.getContentType());
+            log.debug("contentType.getCharset(): " + type.getCharset());
         }
-        if (type == null)
-            return null;
 
         StringBuilder contentTypeTemp = null;
         if (type.getContentType() != null)

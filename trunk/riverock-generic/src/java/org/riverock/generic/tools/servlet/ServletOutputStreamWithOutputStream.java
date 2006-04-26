@@ -13,12 +13,10 @@ import javax.servlet.ServletOutputStream;
  */
 public class ServletOutputStreamWithOutputStream extends ServletOutputStream {
     private OutputStream outputStream = null;
-    private String encoding = null;
 
     public ServletOutputStreamWithOutputStream( OutputStream outputStream ) {
         super();
         this.outputStream = outputStream;
-        this.encoding = null;
     }
 
     public void write(int b) throws IOException {

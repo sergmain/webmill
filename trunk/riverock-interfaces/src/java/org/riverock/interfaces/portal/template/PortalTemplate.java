@@ -9,6 +9,7 @@ import java.util.List;
  *         $Id$
  */
 public interface PortalTemplate {
+    public Long getTemplateId();
     public String getTemplateName();
     public String getRole();
     public List<PortalTemplateItem> getPortalTemplateItems();
