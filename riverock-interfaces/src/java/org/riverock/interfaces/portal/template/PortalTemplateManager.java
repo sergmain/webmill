@@ -7,6 +7,6 @@ package org.riverock.interfaces.portal.template;
  *         $Id$
  */
 public interface PortalTemplateManager {
-    public PortalTemplate getTemplate( final String templateName, final String lang );
+    public PortalTemplate getTemplate( final String templateName, final String localeName );
     public PortalTemplate getTemplate( final long templateId );
 }

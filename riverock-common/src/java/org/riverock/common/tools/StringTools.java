@@ -173,7 +173,7 @@ public class StringTools {
     /**
      * @deprecated use decodeXml
      * @param s
-     * @return
+     * @return String
      */
     public static String toOrigin( final String s) {
         return StringEscapeUtils.unescapeXml( s );
@@ -183,7 +183,7 @@ public class StringTools {
     /**
      * @deprecated use StringEscapeUtils.escapeXml( s )
      * @param s
-     * @return
+     * @return String
      */
     public static String encodeXml( final String s ) {
         return StringEscapeUtils.escapeXml( s );
@@ -192,7 +192,7 @@ public class StringTools {
     /**
      * @deprecated use StringEscapeUtils.unescapeXml( s )
      * @param s
-     * @return
+     * @return String
      */
     public static String decodeXml( final String s ) {
         return StringEscapeUtils.unescapeXml( s );
@@ -201,7 +201,7 @@ public class StringTools {
     /**
      * @deprecated use encodeXml
      * @param s
-     * @return
+     * @return String
      */
     public static String prepareEditForm( final String s) {
         return StringEscapeUtils.escapeXml( s );
@@ -474,8 +474,7 @@ public class StringTools {
      * @param isLeft - boolean. Дополнение слева или справа
      * @return  -  String.
      */
-    public static String appendString( final String s, final char ch, final int countCharInString, final boolean isLeft)
-    {
+    public static String appendString( final String s, final char ch, final int countCharInString, final boolean isLeft) {
         if (s == null)
             return null;
 
@@ -495,8 +494,7 @@ public class StringTools {
      * @param count_char - int. Количество символов
      * @return - String. Результирующая строка
      */
-    public static String truncateString( final String s, int count_char)
-    {
+    public static String truncateString( final String s, int count_char) {
         if (s == null)
             return null;
 
@@ -513,13 +511,11 @@ public class StringTools {
      * @param count_char - int. Количество символов
      * @return - String. Результирующая строка
      */
-    public static String truncString( final String s, final int count_char)
-    {
+    public static String truncString( final String s, final int count_char) {
         return truncateString(s, count_char);
     }
 
-    public static String rewriteString( final String s_)
-    {
+    public static String rewriteString( final String s_) {
         if (s_ == null)
             return null;
 
@@ -540,8 +536,7 @@ public class StringTools {
      *
      * @param bytes - byte[] array representation
      */
-    public static String convertByte( final byte bytes[])
-    {
+    public static String convertByte( final byte bytes[]) {
 
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (final byte newVar : bytes) {
@@ -549,11 +544,9 @@ public class StringTools {
             sb.append(convertDigit((int) (newVar & 0x0f)));
         }
         return (sb.toString());
-
     }
 
-    private static char convertDigit( final int valueToConvert)
-    {
+    private static char convertDigit( final int valueToConvert) {
         int value = valueToConvert;
         value &= 0x0f;
         if (value >= 10)
@@ -563,8 +556,7 @@ public class StringTools {
 
     }
 
-    public static String rewriteURL( final String str_)
-    {
+    public static String rewriteURL( final String str_) {
         if (str_ == null)
             return null;
 
@@ -583,8 +575,7 @@ public class StringTools {
         return resultStr;
     }
 
-    public static String getIdByString( final List list, final String defaultForNull )
-    {
+    public static String getIdByString( final List list, final String defaultForNull ) {
         if (list.size()==0)
             return defaultForNull;
 
