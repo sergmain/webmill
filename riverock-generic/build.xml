@@ -54,6 +54,7 @@
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
+        <pathelement location="${lib.dir}/${commons-codec.lib}"/>
         <pathelement location="${lib.dir}/${xalan.lib}"/>
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>

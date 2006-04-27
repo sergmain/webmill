@@ -618,7 +618,7 @@ public class DatabaseStructureManager {
      *
      * @param connection
      * @param table
-     * @return
+     * @return DbDataTableType
      */
     public static DbDataTableType getDataTable(Connection connection, DbTableType table)
         throws Exception
@@ -774,7 +774,7 @@ public class DatabaseStructureManager {
 
     /**
      *
-     * @return
+     * @return ArrayList
      */
     public static ArrayList getFieldsList(DatabaseAdapter adapter, Connection conn1, String schemaPattern, String tablePattern)
     {
@@ -906,7 +906,7 @@ public class DatabaseStructureManager {
      * т.е. все справочники на которые ссылается данная таблица
      * @param connection
      * @param tableName String имя таблицы для которой ищутся все стравочники
-     * @return
+     * @return ArrayList
      */
     public static ArrayList getImportedKeys(Connection connection, String schemaName, String tableName)
     {

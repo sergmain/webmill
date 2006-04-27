@@ -204,8 +204,7 @@ public final class PortletService {
         if (v == null || name_ == null || name_.trim().length() == 0)
             return defaultValue;
 
-        for (int i = 0; i < v.getInitParamCount(); i++) {
-            InitParam init = v.getInitParam(i);
+        for (InitParam init : v.getInitParamList()) {
             if (name_.equals(init.getName())) {
                 return init.getValue() != null ? init.getValue() : defaultValue;
             }
@@ -218,23 +217,21 @@ public final class PortletService {
     }
 
     public static Boolean getBooleanParam( final PortletDefinition v, final String name_, final Boolean defaultvalue ) {
-        if (v == null || name_ == null || name_.trim().length() == 0)
+        if (v == null || name_ == null)
             return defaultvalue;
 
-        for (int i = 0; i < v.getInitParamCount(); i++) {
-            InitParam init = v.getInitParam(i);
+        for (InitParam init : v.getInitParamList()) {
             if (name_.equals(init.getName()))
                 return Boolean.valueOf(init.getValue());
         }
         return defaultvalue;
     }
 
-    public static Long getLongParam( final List v, final String name_ ) {
+    public static Long getLongParam( final List<InitParam> v, final String name_ ) {
         if (v == null || name_ == null || name_.trim().length() == 0)
             return null;
 
-        for (Object aV : v) {
-            InitParam init = (InitParam) aV;
+        for (InitParam init : v) {
             if (name_.equals(init.getName()))
                 return new Long(init.getValue());
         }

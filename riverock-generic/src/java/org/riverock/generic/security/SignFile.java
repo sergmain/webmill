@@ -25,23 +25,31 @@
 
 package org.riverock.generic.security;
 
-import org.riverock.common.tools.Base64;
-import org.riverock.common.tools.MainTools;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.utils.DateUtils;
-import org.riverock.generic.schema.transfer.TransferFileConfigType;
-import org.riverock.generic.schema.transfer.TransferFileContentType;
-import org.riverock.generic.schema.transfer.TransferFileListType;
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.security.Provider;
 import java.security.Security;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import org.apache.log4j.Logger;
+import org.apache.commons.codec.binary.Base64;
+import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
+
+import org.riverock.common.tools.MainTools;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.schema.transfer.TransferFileConfigType;
+import org.riverock.generic.schema.transfer.TransferFileContentType;
+import org.riverock.generic.schema.transfer.TransferFileListType;
+import org.riverock.generic.utils.DateUtils;
 
 public class SignFile
 {

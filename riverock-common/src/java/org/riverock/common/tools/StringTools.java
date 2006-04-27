@@ -24,12 +24,13 @@
  */
 package org.riverock.common.tools;
 
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.StringEscapeUtils;
-
-import java.util.Locale;
-import java.util.List;
 
 /**
  * Public tools for work with strings.
@@ -45,38 +46,38 @@ public class StringTools {
         }
 
         String s = "";
-        if (!StringTools.isEmpty(firstName)) {
+        if (!StringUtils.isEmpty(firstName)) {
             s += firstName;
 
-            if (!StringTools.isEmpty(middleName) || !StringTools.isEmpty(lastName)) {
+            if (!StringUtils.isEmpty(middleName) || !StringUtils.isEmpty(lastName)) {
                 s += " ";
             }
         }
-        if (!StringTools.isEmpty(middleName)) {
+        if (!StringUtils.isEmpty(middleName)) {
             s += middleName;
-            if (!StringTools.isEmpty(lastName)) {
+            if (!StringUtils.isEmpty(lastName)) {
                 s += " ";
             }
         }
-        if (!StringTools.isEmpty(lastName)) {
+        if (!StringUtils.isEmpty(lastName)) {
             s += lastName;
         }
         
-        if (StringTools.isEmpty(s)) {
-//            return "unknown";
+        if (StringUtils.isEmpty(s)) {
             return null;
         }
         else {
             return s;
-//            return StringEscapeUtils.escapeXml(s);
         }
     }
 
+    /**
+     * @deprecated use org.apache.commons.lang.StringUtils.isEmpty()
+     * @param s
+     * @return boolean
+     */
     public static boolean isEmpty( final String s) {
-        if (s==null || s.trim().length()==0)
-            return true;
-        else
-            return false;
+        return s == null || s.trim().length() == 0;
     }
 
     /**
@@ -265,7 +266,7 @@ public class StringTools {
      * @return - String. Новая строка
      */
     public static String replaceEmpty( final String s, final String def) {
-        if (isEmpty(s))
+        if (StringUtils.isEmpty(s))
             return def;
         else
             return s;
@@ -580,12 +581,14 @@ public class StringTools {
             return defaultForNull;
 
         String r = "";
-        for (int i=0; i<list.size(); i++)
-        {
-            if (r.length()!=0)
+        boolean isFirst = true;
+        for (Object aList : list) {
+            if (isFirst)
+                isFirst = false;
+            else
                 r += ',';
 
-            r += list.get(i).toString();
+            r += aList.toString();
         }
         return r;
     }

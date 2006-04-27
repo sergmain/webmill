@@ -25,15 +25,15 @@
 
 package org.riverock.generic.tools;
 
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
+
+import org.apache.log4j.Logger;
+import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
 
 /**
  * Author: mill
@@ -138,7 +138,6 @@ public final class XmlTools
         finally
         {
             fos = null;
-//            System.gc();
         }
     }
 
@@ -188,10 +187,8 @@ public final class XmlTools
         marsh.setEncoding(encoding);
         if (namespace!=null)
         {
-            for (int i=0; i<namespace.length; i++)
-            {
-//                System.out.println("Add namespace: prefix - "+namespace[i][0]+", ns - "+namespace[i][1]);
-                marsh.setNamespaceMapping(namespace[i][0], namespace[i][1]);
+            for (String[] aNamespace : namespace) {
+                marsh.setNamespaceMapping(aNamespace[0], aNamespace[1]);
             }
         }
         marsh.marshal(obj);
