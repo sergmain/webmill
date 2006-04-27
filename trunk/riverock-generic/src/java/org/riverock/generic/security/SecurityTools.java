@@ -25,10 +25,6 @@
 
 package org.riverock.generic.security;
 
-import org.riverock.common.tools.Base64;
-import org.riverock.generic.security.SecurityException;
-import org.apache.log4j.Logger;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,6 +35,8 @@ import java.security.Signature;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
+import org.apache.log4j.Logger;
+import org.apache.commons.codec.binary.Base64;
 
 // OID 1.2.840.113549.1.1.4 - md5WithRSAEncryption
 /**
@@ -76,8 +74,7 @@ public class SecurityTools
             in = null;
 
             retBytes = new byte[i];
-            for (int j = 0; j < i; j++)
-                retBytes[j] = buffBytes[j];
+            System.arraycopy(buffBytes, 0, retBytes, 0, i);
             cat.debug("End bytes from file");
         }
         catch (Exception e)
@@ -156,12 +153,6 @@ public class SecurityTools
 
             ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 
-            if (bais == null)
-            {
-                cat.error("#4.0003 Error get ByteArrayInputStream for byte array. length array: "+bytes.length);
-                return null;
-            }
-
             cat.debug("#4.0004 return certificate");
             return (X509Certificate) cf.generateCertificate(bais);
 
@@ -180,11 +171,6 @@ public class SecurityTools
         cat.debug("#3.0001 get x509 certificate");
         X509Certificate cert = getX509CertPEM(fileName);
         cat.debug("#3.0002 certificate is " + cert.toString());
-        if (cert == null)
-        {
-            cat.error("error create x509 certificate");
-            return null;
-        }
         return cert.getPublicKey();
     }
 

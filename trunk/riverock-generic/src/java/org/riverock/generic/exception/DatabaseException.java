@@ -32,7 +32,7 @@ package org.riverock.generic.exception;
  * @author Serge Maslyukov
  *         $Id$
  */
-public class DatabaseException extends Exception {
+public class DatabaseException extends RuntimeException {
     public DatabaseException() {
         super();
     }

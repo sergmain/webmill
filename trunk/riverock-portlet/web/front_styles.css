@@ -102,7 +102,7 @@ td.basketItem {
 .newshead {background-color:#ededff; 
 	background-image:url(/source/back.gif);
 	color:#67628c; 
-	font-size:normal; 
+	font-size:medium;
 	font-weight:bolder;}
 
 .newsdate {font-size:smaller; font-weight:bold;}
@@ -115,7 +115,7 @@ td.basketItem {
 	}
 
 input, textarea, select {
-	color:#0; 
+	color:#000000;
 	background-color:#CFDCED;
 	font-weight:bold;
 	font-family:sans-serif;

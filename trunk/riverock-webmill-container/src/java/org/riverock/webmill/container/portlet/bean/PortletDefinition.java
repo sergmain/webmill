@@ -67,9 +67,9 @@ public class PortletDefinition implements Serializable {
     private java.lang.String portletClass;
 
     /**
-     * Field _initParamList
+     * Field initParamList
      */
-    private List<InitParam> _initParamList;
+    private List<InitParam> initParamList;
 
     /**
      * Field _expirationCache
@@ -77,9 +77,9 @@ public class PortletDefinition implements Serializable {
     private String expirationCache;
 
     /**
-     * Field _supportsList
+     * Field supportsList
      */
-    private List<Supports> _supportsList;
+    private List<Supports> supportsList;
 
     /**
      * Field _supportedLocaleList
@@ -95,9 +95,9 @@ public class PortletDefinition implements Serializable {
     private PortletPreferences _portletPreferences;
 
     /**
-     * Field _securityRoleRefList
+     * Field securityRoleRefList
      */
-    private List<SecurityRoleRef> _securityRoleRefList;
+    private List<SecurityRoleRef> securityRoleRefList;
 
     private String applicationName = null;
 
@@ -107,10 +107,10 @@ public class PortletDefinition implements Serializable {
         super();
         _descriptionList = new ArrayList<Description>();
         _displayNameList = new ArrayList<DisplayName>();
-        _initParamList = new ArrayList<InitParam>();
-        _supportsList = new ArrayList<Supports>();
+        initParamList = new ArrayList<InitParam>();
+        supportsList = new ArrayList<Supports>();
         supportedLocaleList = new ArrayList<String>();
-        _securityRoleRefList = new ArrayList<SecurityRoleRef>();
+        securityRoleRefList = new ArrayList<SecurityRoleRef>();
     }
 
     public void destroy() {
@@ -120,17 +120,17 @@ public class PortletDefinition implements Serializable {
         if (_displayNameList!=null) {
             _displayNameList.clear();
         }
-        if (_initParamList!=null) {
-            _initParamList.clear();
+        if (initParamList !=null) {
+            initParamList.clear();
         }
-        if (_supportsList!=null) {
-            _supportsList.clear();
+        if (supportsList !=null) {
+            supportsList.clear();
         }
         if (supportedLocaleList!=null) {
             supportedLocaleList.clear();
         }
-        if (_securityRoleRefList!=null) {
-            _securityRoleRefList.clear();
+        if (securityRoleRefList !=null) {
+            securityRoleRefList.clear();
         }
         applicationName = null;
     }
@@ -173,7 +173,7 @@ public class PortletDefinition implements Serializable {
      * @param vInitParam
      */
     public void addInitParam(InitParam vInitParam) {
-        _initParamList.add(vInitParam);
+        initParamList.add(vInitParam);
     }
 
     /**
@@ -183,7 +183,7 @@ public class PortletDefinition implements Serializable {
      * @param vInitParam
      */
     public void addInitParam(int index, InitParam vInitParam) {
-        _initParamList.add(index, vInitParam);
+        initParamList.add(index, vInitParam);
     }
 
     /**
@@ -192,7 +192,7 @@ public class PortletDefinition implements Serializable {
      * @param vSecurityRoleRef
      */
     public void addSecurityRoleRef(SecurityRoleRef vSecurityRoleRef) {
-        _securityRoleRefList.add(vSecurityRoleRef);
+        securityRoleRefList.add(vSecurityRoleRef);
     }
 
     /**
@@ -202,7 +202,7 @@ public class PortletDefinition implements Serializable {
      * @param vSecurityRoleRef
      */
     public void addSecurityRoleRef(int index, SecurityRoleRef vSecurityRoleRef) {
-        _securityRoleRefList.add(index, vSecurityRoleRef);
+        securityRoleRefList.add(index, vSecurityRoleRef);
     }
 
     /**
@@ -230,7 +230,7 @@ public class PortletDefinition implements Serializable {
      * @param vSupports
      */
     public void addSupports(Supports vSupports) {
-        _supportsList.add(vSupports);
+        supportsList.add(vSupports);
     }
 
     /**
@@ -240,7 +240,7 @@ public class PortletDefinition implements Serializable {
      * @param vSupports
      */
     public void addSupports(int index, Supports vSupports) {
-        _supportsList.add(index, vSupports);
+        supportsList.add(index, vSupports);
     }
 
     /**
@@ -261,14 +261,14 @@ public class PortletDefinition implements Serializable {
      * Method clearInitParam
      */
     public void clearInitParam() {
-        _initParamList.clear();
+        initParamList.clear();
     }
 
     /**
      * Method clearSecurityRoleRef
      */
     public void clearSecurityRoleRef() {
-        _securityRoleRefList.clear();
+        securityRoleRefList.clear();
     }
 
     /**
@@ -282,7 +282,7 @@ public class PortletDefinition implements Serializable {
      * Method clearSupports
      */
     public void clearSupports() {
-        _supportsList.clear();
+        supportsList.clear();
     }
 
     /**
@@ -371,21 +371,21 @@ public class PortletDefinition implements Serializable {
      */
     public InitParam getInitParam(int index) {
         //-- check bounds for index
-        if ((index < 0) || (index > _initParamList.size())) {
+        if ((index < 0) || (index > initParamList.size())) {
             throw new IndexOutOfBoundsException();
         }
 
-        return (InitParam) _initParamList.get(index);
+        return (InitParam) initParamList.get(index);
     }
 
     /**
      * Method getInitParam
      */
     public InitParam[] getInitParam() {
-        int size = _initParamList.size();
+        int size = initParamList.size();
         InitParam[] mArray = new InitParam[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (InitParam) _initParamList.get(index);
+            mArray[index] = (InitParam) initParamList.get(index);
         }
         return mArray;
     }
@@ -393,18 +393,18 @@ public class PortletDefinition implements Serializable {
     /**
      * Method getInitParam
      */
-    public List<InitParam> getInitParamAsRef() {
-        if (_initParamList==null) {
-             _initParamList = new ArrayList<InitParam>();
+    public List<InitParam> getInitParamList() {
+        if (initParamList==null) {
+             initParamList=new ArrayList<InitParam>();
         }
-        return _initParamList;
+        return initParamList;
     }
 
     /**
      * Method getInitParamCount
      */
     public int getInitParamCount() {
-        return _initParamList.size();
+        return initParamList.size();
     }
 
     /**
@@ -439,32 +439,32 @@ public class PortletDefinition implements Serializable {
      *
      * @param index
      */
-    public SecurityRoleRef getSecurityRoleRef(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _securityRoleRefList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return (SecurityRoleRef) _securityRoleRefList.get(index);
-    }
+//    public SecurityRoleRef getSecurityRoleRef(int index) {
+//        //-- check bounds for index
+//        if ((index < 0) || (index > securityRoleRefList.size())) {
+//            throw new IndexOutOfBoundsException();
+//        }
+//
+//        return (SecurityRoleRef) securityRoleRefList.get(index);
+//    }
 
     /**
      * Method getSecurityRoleRef
      */
-    public SecurityRoleRef[] getSecurityRoleRef() {
-        int size = _securityRoleRefList.size();
-        SecurityRoleRef[] mArray = new SecurityRoleRef[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (SecurityRoleRef) _securityRoleRefList.get(index);
-        }
-        return mArray;
-    }
+//    public SecurityRoleRef[] getSecurityRoleRef() {
+//        int size = securityRoleRefList.size();
+//        SecurityRoleRef[] mArray = new SecurityRoleRef[size];
+//        for (int index = 0; index < size; index++) {
+//            mArray[index] = (SecurityRoleRef) securityRoleRefList.get(index);
+//        }
+//        return mArray;
+//    }
 
-    /**
-     * Method getSecurityRoleRefCount
-     */
-    public int getSecurityRoleRefCount() {
-        return _securityRoleRefList.size();
+    public List<SecurityRoleRef> getSecurityRoleRefList() {
+        if (securityRoleRefList==null)
+            return new ArrayList<SecurityRoleRef>();
+
+        return securityRoleRefList;
     }
 
     /**
@@ -472,32 +472,35 @@ public class PortletDefinition implements Serializable {
      *
      * @param index
      */
-    public String getSupportedLocale(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > supportedLocaleList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return supportedLocaleList.get(index);
-    }
+//    public String getSupportedLocale(int index) {
+//        //-- check bounds for index
+//        if ((index < 0) || (index > supportedLocaleList.size())) {
+//            throw new IndexOutOfBoundsException();
+//        }
+//
+//        return supportedLocaleList.get(index);
+//    }
 
     /**
      * Method getSupportedLocale
      */
-    public String[] getSupportedLocale() {
-        int size = supportedLocaleList.size();
-        String[] mArray = new String[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = supportedLocaleList.get(index);
-        }
-        return mArray;
-    }
+//    public String[] getSupportedLocale() {
+//        int size = supportedLocaleList.size();
+//        String[] mArray = new String[size];
+//        for (int index = 0; index < size; index++) {
+//            mArray[index] = supportedLocaleList.get(index);
+//        }
+//        return mArray;
+//    }
 
     /**
      * Method getSupportedLocaleCount
      */
-    public int getSupportedLocaleCount() {
-        return supportedLocaleList.size();
+    public List<String> getSupportedLocaleList() {
+        if (supportedLocaleList==null)
+            return new ArrayList<String>();
+
+        return supportedLocaleList;
     }
 
     /**
@@ -508,11 +511,11 @@ public class PortletDefinition implements Serializable {
 /*
     public Supports getSupports(int index) {
         //-- check bounds for index
-        if ((index < 0) || (index > _supportsList.size())) {
+        if ((index < 0) || (index > supportsList.size())) {
             throw new IndexOutOfBoundsException();
         }
 
-        return (Supports) _supportsList.get(index);
+        return (Supports) supportsList.get(index);
     }
 */
 
@@ -521,23 +524,26 @@ public class PortletDefinition implements Serializable {
      */
 /*
     public Supports[] getSupports() {
-        int size = _supportsList.size();
+        int size = supportsList.size();
         Supports[] mArray = new Supports[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (Supports) _supportsList.get(index);
+            mArray[index] = (Supports) supportsList.get(index);
         }
         return mArray;
     }
 */
     public List<Supports> getSupports() {
-        return _supportsList;
+        if (supportsList ==null)
+            return new ArrayList<Supports>();
+
+        return supportsList;
     }
 
     /**
      * Method getSupportsCount
      */
 //    public int getSupportsCount() {
-//        return _supportsList.size();
+//        return supportsList.size();
 //    }
 
     /**
@@ -566,7 +572,7 @@ public class PortletDefinition implements Serializable {
      * @param vInitParam
      */
     public boolean removeInitParam(InitParam vInitParam) {
-        boolean removed = _initParamList.remove(vInitParam);
+        boolean removed = initParamList.remove(vInitParam);
         return removed;
     }
 
@@ -576,7 +582,7 @@ public class PortletDefinition implements Serializable {
      * @param vSecurityRoleRef
      */
     public boolean removeSecurityRoleRef(SecurityRoleRef vSecurityRoleRef) {
-        boolean removed = _securityRoleRefList.remove(vSecurityRoleRef);
+        boolean removed = securityRoleRefList.remove(vSecurityRoleRef);
         return removed;
     }
 
@@ -596,7 +602,7 @@ public class PortletDefinition implements Serializable {
      * @param vSupports
      */
     public boolean removeSupports(Supports vSupports) {
-        boolean removed = _supportsList.remove(vSupports);
+        boolean removed = supportsList.remove(vSupports);
         return removed;
     }
 
@@ -681,10 +687,10 @@ public class PortletDefinition implements Serializable {
      */
     public void setInitParam(int index, InitParam vInitParam) {
         //-- check bounds for index
-        if ((index < 0) || (index > _initParamList.size())) {
+        if ((index < 0) || (index > initParamList.size())) {
             throw new IndexOutOfBoundsException();
         }
-        _initParamList.set(index, vInitParam);
+        initParamList.set(index, vInitParam);
     }
 
     /**
@@ -694,9 +700,9 @@ public class PortletDefinition implements Serializable {
      */
     public void setInitParam(InitParam[] initParamArray) {
         //-- copy array
-        _initParamList.clear();
+        initParamList.clear();
         for (final InitParam newVar : initParamArray) {
-            _initParamList.add(newVar);
+            initParamList.add(newVar);
         }
     }
 
@@ -737,10 +743,10 @@ public class PortletDefinition implements Serializable {
      */
     public void setSecurityRoleRef(int index, SecurityRoleRef vSecurityRoleRef) {
         //-- check bounds for index
-        if ((index < 0) || (index > _securityRoleRefList.size())) {
+        if ((index < 0) || (index > securityRoleRefList.size())) {
             throw new IndexOutOfBoundsException();
         }
-        _securityRoleRefList.set(index, vSecurityRoleRef);
+        securityRoleRefList.set(index, vSecurityRoleRef);
     }
 
     /**
@@ -750,9 +756,9 @@ public class PortletDefinition implements Serializable {
      */
     public void setSecurityRoleRef(SecurityRoleRef[] securityRoleRefArray) {
         //-- copy array
-        _securityRoleRefList.clear();
+        securityRoleRefList.clear();
         for (final SecurityRoleRef newVar : securityRoleRefArray) {
-            _securityRoleRefList.add(newVar);
+            securityRoleRefList.add(newVar);
         }
     }
 
@@ -779,10 +785,10 @@ public class PortletDefinition implements Serializable {
 
     public void setSupports(int index, Supports vSupports) {
         //-- check bounds for index
-        if ((index < 0) || (index > _supportsList.size())) {
+        if ((index < 0) || (index > supportsList.size())) {
             throw new IndexOutOfBoundsException();
         }
-        _supportsList.set(index, vSupports);
+        supportsList.set(index, vSupports);
     }
 
     /**
@@ -792,9 +798,9 @@ public class PortletDefinition implements Serializable {
      */
     public void setSupports(Supports[] supportsArray) {
         //-- copy array
-        _supportsList.clear();
+        supportsList.clear();
         for (final Supports newVar : supportsArray) {
-            _supportsList.add(newVar);
+            supportsList.add(newVar);
         }
     }
 

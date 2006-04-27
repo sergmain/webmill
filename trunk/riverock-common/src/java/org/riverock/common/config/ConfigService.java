@@ -33,49 +33,43 @@
 
 package org.riverock.common.config;
 
-import java.util.Locale;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormatSymbols;
-
-import org.riverock.common.tools.StringLocaleManager;
+import java.util.Locale;
+import java.util.MissingResourceException;
 
 import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.StringLocaleManager;
 
 public final class ConfigService {
     private final static Logger log = Logger.getLogger( ConfigService.class );
 
-    public static void initLocale() throws ConfigException {
+    public static void initLocale() {
         String[] localeLanguage = PropertiesProvider.getLocaleLanguage();
-        for (int i = 0; i < localeLanguage.length; i++)
-        {
+        for (String aLocaleLanguage : localeLanguage) {
             if (log.isDebugEnabled())
-                log.debug("#15.001  load resource for lang " + localeLanguage[i]);
+                log.debug("#15.001  load resource for lang " + aLocaleLanguage);
 
-            try
-            {
-                Locale loc = new Locale(localeLanguage[i], "");
+            try {
+                Locale loc = new Locale(aLocaleLanguage, "");
                 StringLocaleManager sm =
                     StringLocaleManager.getManager("org.riverock.common.locale", loc);
 
                 String month[] = new String[12];
                 String month_short[] = new String[12];
 
-                for (int j = 0; j < 12; j++)
-                {
-                    try
-                    {
+                for (int j = 0; j < 12; j++) {
+                    try {
                         month[j] = sm.getStr("month." + (j + 1));
                     }
-                    catch (UnsupportedEncodingException e)
-                    {
+                    catch (UnsupportedEncodingException e) {
                         month[j] = "Error get key";
                     }
-                    try
-                    {
+                    try {
                         month_short[j] = sm.getStr("month_short." + (j + 1));
                     }
-                    catch (UnsupportedEncodingException e)
-                    {
+                    catch (UnsupportedEncodingException e) {
                         month_short[j] = "Error get short key";
                     }
                 }
@@ -83,9 +77,8 @@ public final class ConfigService {
                 dfs.setMonths(month);
                 dfs.setShortMonths(month_short);
             }
-            catch (java.util.MissingResourceException e)
-            {
-                final String es = "Error getting resource for language " + localeLanguage[i];
+            catch (MissingResourceException e) {
+                final String es = "Error getting resource for language " + aLocaleLanguage;
                 log.error(es, e);
                 throw new ConfigException(es, e);
             }

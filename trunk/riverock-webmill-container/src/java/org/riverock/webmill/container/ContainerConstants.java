@@ -79,7 +79,7 @@ public class ContainerConstants {
     public static final String locale_name_package = "locale-name-package";
     public static final String name_portlet_code_string = "name-portlet-code-string";
     public static final String class_name_get_list = "class-name-get-list";
-
+    public static final String always_process_as_action = "always-process-as-action";
 
     public static final String PORTAL_PROP_SITE_ID = "webmill.site-id";
     public static final String PORTAL_PROP_COMPANY_ID = "webmill.company-id";
