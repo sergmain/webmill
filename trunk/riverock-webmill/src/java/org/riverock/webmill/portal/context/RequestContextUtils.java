@@ -24,10 +24,10 @@
  */
 package org.riverock.webmill.portal.context;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -37,19 +37,19 @@ import org.apache.log4j.Logger;
 import org.riverock.common.html.AcceptLanguageWithLevel;
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
-import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.portal.namespace.Namespace;
-import org.riverock.webmill.portal.namespace.NamespaceFactory;
-import org.riverock.webmill.portal.PortletParameters;
-import org.riverock.webmill.utils.ServletUtils;
-import org.riverock.webmill.utils.PortletUtils;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.portal.PortletParameters;
+import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.namespace.NamespaceFactory;
+import org.riverock.webmill.utils.PortletUtils;
+import org.riverock.webmill.utils.ServletUtils;
 
 /**
  * $Id$
@@ -253,6 +253,10 @@ public final class RequestContextUtils {
             log.debug( "Process template");
         }
         for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
+
+            // we change request status if portlet is 'always_process_as_action'
+            RequestState requestState;
+
             if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
                 Namespace namespace = NamespaceFactory.getNamespace(templateItem.getValue(), template.getTemplateName(), i++);
                 if (log.isDebugEnabled()) {
@@ -269,20 +273,22 @@ public final class RequestContextUtils {
                         if (log.isDebugEnabled()) {
                             log.debug("    Create parameter for NS "+namespace.getNamespace() +", action state: " +bean.getDefaultRequestState());
                         }
-                        initParameterForDefaultPortlet(factoryParameter, bean);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, bean);
                     }
                     else {
-                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, Object>() );
+                        requestState = new RequestState();
+                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, Object>() );
                         bean.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
                 else {
                     String tempPortletName = bean.getExtendedCatalogItem().getPortletDefinition().getPortletName();
                     if (tempPortletName !=null && tempPortletName.equals(templateItem.getValue())) {
-                        initParameterForDefaultPortlet(factoryParameter, bean);
+                        requestState = initParameterForDefaultPortlet(factoryParameter, bean);
                     }
                     else {
-                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, Object>() );
+                        requestState = new RequestState();
+                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, Object>() );
                         bean.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
@@ -292,12 +298,19 @@ public final class RequestContextUtils {
                     bean.getExtendedCatalogItem().getPortletDefinition().getPortletName(), template.getTemplateName(), i++
                 );
                 bean.setDefaultNamespace( namespace.getNamespace() );
-                initParameterForDefaultPortlet(factoryParameter, bean);
+                requestState = initParameterForDefaultPortlet(factoryParameter, bean);
+            }
+            else {
+                continue;
+            }
+            if (PortletService.getBooleanParam(bean.getExtendedCatalogItem().getPortletDefinition(), ContainerConstants.always_process_as_action, false)) {
+                log.debug("Set explicitly action status for portlet");
+                requestState.setActionRequest(true);
             }
         }
     }
 
-    public static void initParameterForDefaultPortlet(RequestContextParameter factoryParameter, RequestContext bean) {
+    public static RequestState initParameterForDefaultPortlet(RequestContextParameter factoryParameter, RequestContext bean) {
         // prepare dynamic parameters
         PortletParameters portletParameters;
         if (factoryParameter.isMultiPartRequest()) {
@@ -321,5 +334,6 @@ public final class RequestContextUtils {
             portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), httpRequestParameter );
         }
         bean.getParameters().put( bean.getDefaultNamespace(), portletParameters );
+        return bean.getDefaultRequestState();
     }
 }
