@@ -125,25 +125,22 @@ public final class SwitchLanguagePortlet implements Portlet {
                 }
             }
             Long id_lang = PortletService.getLong( actionRequest, NAME_ID_LANGUAGE );
+            if (log.isDebugEnabled()) {
+                log.debug("id_lang: " + id_lang);
+            }
 
             String s = getLanguageName( id_lang );
 
             if (log.isDebugEnabled())
-                log.debug("Language name - " + s);
+                log.debug("Language name: " + s);
 
-            String newUrl = null;
+            String newUrl;
             if (s == null || s.length() == 0) {
                 newUrl = actionResponse.encodeURL(PortletService.ctx( actionRequest ));
             }
             else {
-
                 StringBuilder b = null;
                 b = PortletService.ctxStringBuilder( actionRequest, null, null, StringTools.getLocale(s) );
-//                if (actionRequest.getContextPath().equals("/"))
-//                    b = new StringBuilder( ContainerConstants.URI_CTX_MANAGER );
-//                else
-//                    b = new StringBuilder(actionRequest.getContextPath()).append( ContainerConstants.URI_CTX_MANAGER );
-//
                 b.append( '?' ).append( ContainerConstants.NAME_LANG_PARAM ).append( '=' ).append( s );
                 newUrl = b.toString();
             }
@@ -159,9 +156,6 @@ public final class SwitchLanguagePortlet implements Portlet {
             }
 
             actionResponse.sendRedirect(newUrl);
-            return;
-
-
         }
         catch (Exception e) {
             String es = "Error switch language";

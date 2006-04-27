@@ -464,12 +464,10 @@ public final class PageElement {
             }
 
             if (!isUrl && portletEntry.getPortletDefinition() != null) {
-                int roleRefCount = portletEntry.getPortletDefinition().getSecurityRoleRefCount();
-                if (roleRefCount > 0) {
+                if (!portletEntry.getPortletDefinition().getSecurityRoleRefList().isEmpty()) {
                     isAccessPermit = false;
                     errorString = ACCESS_DISABLED_FOR_PORTLET;
-                    for (int i = 0; i < roleRefCount; i++) {
-                        SecurityRoleRef roleRef = portletEntry.getPortletDefinition().getSecurityRoleRef(i);
+                    for (SecurityRoleRef roleRef : portletEntry.getPortletDefinition().getSecurityRoleRefList()) {
 
                         if (log.isDebugEnabled()) {
                             log.debug("check right " + roleRef.getRoleName() + ", portlet: " + portletEntry.getPortletDefinition().getPortletName());

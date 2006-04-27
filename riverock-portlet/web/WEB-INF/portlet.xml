@@ -460,6 +460,10 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>mill.logout</portlet-name>
 		<portlet-class>org.riverock.portlet.login.LogoutPortlet</portlet-class>
+        <init-param>
+            <name>always-process-as-action</name>
+            <value>true</value>
+        </init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
@@ -471,9 +475,13 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<portlet-name>mill.language</portlet-name>
 		<portlet-class>org.riverock.portlet.language.SwitchLanguagePortlet</portlet-class>
 		<init-param>
-			<name>name-portlet-id</name>
-			<value>mill.id_language</value>
+			<name>always-process-as-action</name>
+			<value>true</value>
 		</init-param>
+        <init-param>
+            <name>name-portlet-id</name>
+            <value>mill.id_language</value>
+        </init-param>
 		<init-param>
 			<name>class-name-get-list</name>
 			<value>org.riverock.portlet.member.context.LanguagePerSite</value>
