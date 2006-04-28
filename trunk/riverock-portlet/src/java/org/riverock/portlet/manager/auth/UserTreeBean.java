@@ -22,7 +22,7 @@ import org.apache.myfaces.custom.tree2.TreeNodeBase;
  *         $Id$
  */
 public class UserTreeBean implements Serializable {
-    private final static Logger log = Logger.getLogger( UserTreeBean.class );
+    private final static Logger log = Logger.getLogger(UserTreeBean.class);
     private static final long serialVersionUID = 2043005500L;
 
     private DataProvider dataProvider = null;
@@ -37,17 +37,18 @@ public class UserTreeBean implements Serializable {
         return dataProvider;
     }
 
-    public void setDataProvider( DataProvider dataProvider ) {
+    public void setDataProvider(DataProvider dataProvider) {
         this.dataProvider = dataProvider;
     }
 
     private TreeNode treeNode = null;
+
     public TreeNode getUserTree() {
 
 
-	log.info("Invoke getUserTree()");
+        log.info("Invoke getUserTree()");
 
-        TreeNode treeData = new TreeNodeBase( "foo-folder", "Company list", false );
+        TreeNode treeData = new TreeNodeBase("foo-folder", "Company list", false);
         for (CompanyBean companyBean : dataProvider.getCompanyBeans()) {
             TreeNodeBase companyNode = new TreeNodeBase("company", companyBean.getCompanyName(), companyBean.getCompanyId().toString(), false);
             for (AuthUserExtendedInfoImpl authUserExtendedInfoImpl : companyBean.getUserBeans()) {
@@ -63,72 +64,72 @@ public class UserTreeBean implements Serializable {
 
             treeData.getChildren().add(companyNode);
         }
-	treeNode = treeData; 
+        treeNode = treeData;
 
 //      }
-      return treeNode;
+        return treeNode;
     }
 
     public TreeModel getExpandedTreeData() {
-	log.info("Invoke getExpandedTreeData()");
+        log.info("Invoke getExpandedTreeData()");
 
-        return new TreeModelBase( getUserTree() );
+        return new TreeModelBase(getUserTree());
     }
 
-    public void setTree( HtmlTree tree ) {
-	log.info("Invoke setTree( tree )");
+    public void setTree(HtmlTree tree) {
+        log.info("Invoke setTree( tree )");
 
         _tree = tree;
     }
 
     public HtmlTree getTree() {
-	log.info("Invoke getTree()");
+        log.info("Invoke getTree()");
 
         return _tree;
     }
 
     public String expandAll() {
-	log.info("Invoke expandAll()");
+        log.info("Invoke expandAll()");
 
         _tree.expandAll();
         return null;
     }
 
-    public void setNodePath( String nodePath ) {
-	log.info("Invoke setNodePath( nodePath )");
+    public void setNodePath(String nodePath) {
+        log.info("Invoke setNodePath( nodePath )");
 
         _nodePath = nodePath;
     }
 
     public String getNodePath() {
-	log.info("Invoke getNodePath()");
+        log.info("Invoke getNodePath()");
 
         return _nodePath;
     }
 
-    public void checkPath( FacesContext context, UIComponent component, Object value ) {
-	log.info("Invoke checkPath()");
+    public void checkPath(FacesContext context, UIComponent component, Object value) {
+        log.info("Invoke checkPath()");
 
         FacesMessage message = null;
-        String path[] = _tree.getPathInformation( value.toString() );
-        for( String nodeId : path ) {
+        String path[] = _tree.getPathInformation(value.toString());
+        for (String nodeId : path) {
             try {
-                _tree.setNodeId( nodeId );
+                _tree.setNodeId(nodeId);
             }
-            catch( Exception e ) {
-                throw new ValidatorException( message, e );
+            catch (Exception e) {
+                throw new ValidatorException(message, e);
             }
-            if( _tree.getNode().isLeaf() ) {
-                message = new FacesMessage( FacesMessage.SEVERITY_ERROR, "Invalid node path (cannot expand a leaf): " + nodeId, "Invalid node path (cannot expand a leaf): " + nodeId );
-                throw new ValidatorException( message );
+            if (_tree.getNode().isLeaf()) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid node path (cannot expand a leaf): " + nodeId, "Invalid node path (cannot expand a leaf): " + nodeId);
+                throw new ValidatorException(message);
             }
         }
 
     }
 
-    public void expandPath( ActionEvent event ) {
-	log.info("Invoke expandPath( event )");
+    public void expandPath(ActionEvent event) {
+        log.info("Invoke expandPath( event )");
 
-        _tree.expandPath( _tree.getPathInformation( _nodePath ) );
+        _tree.expandPath(_tree.getPathInformation(_nodePath));
     }
 }

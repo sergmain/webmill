@@ -36,10 +36,10 @@ public class UserSessionBean {
 
     public void setEdit(boolean isEdit) {
         this.isEdit = isEdit;
-	if (isEdit) {
-		isAdd = false;
-		isDelete = false;
-	}
+        if (isEdit) {
+            isAdd = false;
+            isDelete = false;
+        }
     }
 
     public boolean getEdit() {
@@ -48,10 +48,10 @@ public class UserSessionBean {
 
     public void setDelete(boolean isDelete) {
         this.isDelete = isDelete;
-	if (isDelete) {
-		isEdit = false;
-		isAdd = false;
-	}
+        if (isDelete) {
+            isEdit = false;
+            isAdd = false;
+        }
     }
 
     public boolean getDelete() {

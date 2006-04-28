@@ -4,34 +4,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.DateTools;
+import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.StringTools;
-import org.riverock.sso.a3.AuthInfoImpl;
 import org.riverock.interfaces.sso.a3.AuthInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
-import org.riverock.webmill.portal.utils.SiteList;
-import org.riverock.webmill.a3.bean.UserInfoImpl;
+import org.riverock.sso.a3.AuthInfoImpl;
 import org.riverock.webmill.a3.bean.RoleBeanImpl;
-import org.riverock.webmill.schema.core.WmAuthUserItemType;
-import org.riverock.webmill.schema.core.WmAuthRelateAccgroupItemType;
-import org.riverock.webmill.core.GetWmAuthUserItem;
-import org.riverock.webmill.core.InsertWmAuthRelateAccgroupItem;
+import org.riverock.webmill.a3.bean.UserInfoImpl;
 import org.riverock.webmill.core.DeleteWmAuthRelateAccgroupWithIdAuthUser;
 import org.riverock.webmill.core.DeleteWmAuthUserWithIdAuthUser;
+import org.riverock.webmill.core.GetWmAuthUserItem;
+import org.riverock.webmill.portal.utils.SiteList;
+import org.riverock.webmill.schema.core.WmAuthUserItemType;
 
 /**
  * @author SergeMaslyukov
@@ -479,9 +477,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         if ( log.isDebugEnabled() )
             log.debug( "role '" + role_ + "', user login '" + userLogin + "'  " );
 
-        if ( StringTools.isEmpty(userLogin) ||
+        if ( StringUtils.isEmpty(userLogin) ||
             userPassword == null ||
-            StringTools.isEmpty(role_)
+            StringUtils.isEmpty(role_)
         )
             return false;
 
@@ -1319,6 +1317,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                     dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback error
             }
             String es = "Error add new role";
             log.error( es, e );
@@ -1358,9 +1357,11 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
         catch( Exception e ) {
             try {
-                dbDyn.rollback();
+                if (dbDyn!=null)
+                    dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback error
             }
 
             String es = "Error save role";
@@ -1398,9 +1399,11 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
         catch( Exception e ) {
             try {
-                dbDyn.rollback();
+                if (dbDyn!=null)
+                    dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback error
             }
 
             String es = "Error delete role";
@@ -1476,7 +1479,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             if( log.isDebugEnabled() )
                 log.debug( "Count of inserted records - " + i1 );
 
-            processDeletedRoles( db, infoAuth );
+//            processDeletedRoles( db, infoAuth );
             processNewRoles( db, infoAuth.getRoles(), id );
 
             db.commit();
@@ -1488,6 +1491,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                     db.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback error
             }
 
             final String es = "Error add user auth";
@@ -1502,31 +1506,34 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
     }
 
     private void processDeletedRoles( DatabaseAdapter db_, AuthUserExtendedInfo infoAuth ) throws Exception {
-	 log.info( "Start delete roles for authUserId: " + infoAuth.getAuthInfo().getAuthUserId() +
-                ", roles list: " + infoAuth.getRoles() );
+
+        // do not process delete of roles for new users
+        if (infoAuth==null || infoAuth.getAuthInfo()==null || infoAuth.getAuthInfo().getAuthUserId()==null) {
+            return;
+        }
+
+        log.info( "Start delete roles for authUserId: " + infoAuth.getAuthInfo().getAuthUserId() +
+            ", roles list: " + infoAuth.getRoles() );
 
         PreparedStatement ps = null;
         try {
             if (infoAuth.getRoles()==null) {
-	        log.info( "Role list is null, return.");
-		return;
-	    }
-            Iterator<RoleEditableBean> iterator = infoAuth.getRoles().iterator();
-            while( iterator.hasNext() ) {
-                RoleEditableBean roleBeanImpl = iterator.next();
+                log.info( "Role list is null, return.");
+                return;
+            }
+            for (RoleEditableBean roleBeanImpl : infoAuth.getRoles()) {
+                log.info("role: " + roleBeanImpl);
 
-                log.info( "role: " + roleBeanImpl );
-
-                if( !roleBeanImpl.isDelete() ) {
+                if (!roleBeanImpl.isDelete()) {
                     continue;
                 }
 
                 ps = db_.prepareStatement(
                     "delete from WM_AUTH_RELATE_ACCGROUP " +
-                    "where  ID_AUTH_USER=? and ID_ACCESS_GROUP=? " );
+                        "where  ID_AUTH_USER=? and ID_ACCESS_GROUP=? ");
 
-                ps.setLong( 1, infoAuth.getAuthInfo().getAuthUserId() );
-                ps.setLong( 2, roleBeanImpl.getRoleId() );
+                ps.setLong(1, infoAuth.getAuthInfo().getAuthUserId());
+                ps.setLong(2, roleBeanImpl.getRoleId());
                 ps.executeUpdate();
                 ps.close();
                 ps = null;
@@ -1536,7 +1543,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             DatabaseManager.close( ps );
             ps = null;
 
-	    log.info( "End delete roles");
+            log.info( "End delete roles");
         }
     }
 
@@ -1549,34 +1556,31 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         PreparedStatement ps = null;
         try {
             if (roles==null) {
-	        log.info( "Role list is null, return.");
-		return;
-	    }
+                log.info( "Role list is null, return.");
+                return;
+            }
 
-            Iterator<RoleEditableBean> iterator = roles.iterator();
-            while( iterator.hasNext() ) {
-                RoleEditableBean roleBeanImpl = iterator.next();
+            for (RoleEditableBean roleBeanImpl : roles) {
+                log.info("Role, new: " + roleBeanImpl.isNew() + ", delete: " + roleBeanImpl.isDelete());
 
-	        log.info("Role, new: "+roleBeanImpl.isNew()+", delete: "+roleBeanImpl.isDelete() );
-
-                if( !roleBeanImpl.isNew() || roleBeanImpl.isDelete() ) {
+                if (!roleBeanImpl.isNew() || roleBeanImpl.isDelete()) {
                     continue;
                 }
 
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName( "seq_WM_AUTH_RELATE_ACCGROUP" );
-                seq.setTableName( "WM_AUTH_RELATE_ACCGROUP" );
-                seq.setColumnName( "ID_RELATE_ACCGROUP" );
-                Long id = db.getSequenceNextValue( seq );
+                seq.setSequenceName("seq_WM_AUTH_RELATE_ACCGROUP");
+                seq.setTableName("WM_AUTH_RELATE_ACCGROUP");
+                seq.setColumnName("ID_RELATE_ACCGROUP");
+                Long id = db.getSequenceNextValue(seq);
 
-                ps = db.prepareStatement( "insert into WM_AUTH_RELATE_ACCGROUP " +
+                ps = db.prepareStatement("insert into WM_AUTH_RELATE_ACCGROUP " +
                     "(ID_RELATE_ACCGROUP, ID_ACCESS_GROUP, ID_AUTH_USER ) " +
                     "values" +
-                    "(?, ?, ? ) " );
+                    "(?, ?, ? ) ");
 
-                ps.setLong( 1, id );
-                ps.setLong( 2, roleBeanImpl.getRoleId() );
-                ps.setLong( 3, authUserId );
+                ps.setLong(1, id);
+                ps.setLong(2, roleBeanImpl.getRoleId());
+                ps.setLong(3, authUserId);
                 ps.executeUpdate();
                 ps.close();
                 ps = null;
@@ -1638,6 +1642,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                     db.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback error
             }
 
             final String es = "Error add user auth";
@@ -1647,7 +1652,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         finally {
             DatabaseManager.close( db, ps );
             ps = null;
-		db = null;
+            db = null;
 
             log.info("End update auth");
         }
@@ -1670,6 +1675,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                     db.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback error
             }
 
             final String es = "Error add user auth";
@@ -1678,7 +1684,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
         finally {
             DatabaseManager.close( db );
-		db = null;
+            db = null;
 
             log.info("End delete auth");
         }

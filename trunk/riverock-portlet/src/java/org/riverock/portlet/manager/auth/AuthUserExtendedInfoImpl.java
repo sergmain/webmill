@@ -3,7 +3,6 @@ package org.riverock.portlet.manager.auth;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
@@ -56,20 +55,18 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
 
     public void setUserInfo( UserInfo userInfo ) {
         this.userInfo = userInfo;
-	if (userInfo!=null) {
+        if (userInfo!=null) {
             userName = StringTools.getUserName(
-                    userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName()
+                userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName()
             );
-	}
+        }
     }
 
     public List<RoleEditableBean> getCurrentRoles() {
         List<RoleEditableBean> resultRoles = new ArrayList<RoleEditableBean>();
-        Iterator<RoleEditableBeanImpl> iterator = roles.iterator();
-        while( iterator.hasNext() ) {
-            RoleEditableBeanImpl role = iterator.next();
-            if (!role.isDelete() ) {
-                resultRoles.add( role );
+        for (RoleEditableBeanImpl role : roles) {
+            if (!role.isDelete()) {
+                resultRoles.add(role);
             }
         }
         return resultRoles;

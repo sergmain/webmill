@@ -1,7 +1,6 @@
 package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
-import java.util.Iterator;
 
 import javax.faces.event.ActionEvent;
 
@@ -70,14 +69,10 @@ public class UserAction implements Serializable {
         Long roleId = userSessionBean.getCurrentRoleId();
         log.info( "delete role with id: " + roleId );
 
-        Iterator<RoleEditableBean> iterator = null;
-        iterator = userSessionBean.getUserBean().getRoles().iterator();
-        while( iterator.hasNext() ) {
-            RoleEditableBean role = iterator.next();
-
-            if( role.getRoleId().equals( roleId ) ) {
-                log.info( "Role is found. set isDelete to true" );
-                role.setDelete( true );
+        for (RoleEditableBean role : userSessionBean.getUserBean().getRoles()) {
+            if (role.getRoleId().equals(roleId)) {
+                log.info("Role is found. set isDelete to true");
+                role.setDelete(true);
                 break;
             }
         }
@@ -93,8 +88,7 @@ public class UserAction implements Serializable {
             return;
         }
 
-        RoleEditableBeanImpl role = 
-		new RoleEditableBeanImpl( authSessionBean.getAuthSession().getRole( roleId ) );
+        RoleEditableBeanImpl role = new RoleEditableBeanImpl( authSessionBean.getAuthSession().getRole( roleId ) );
         role.setNew( true );
 	
         userSessionBean.getUserBean().getRoles().add( role );
@@ -196,15 +190,9 @@ public class UserAction implements Serializable {
         log.info( "start search user bean for authUserId: " + authUserId );
 
         AuthUserExtendedInfoImpl resultAuthUserExtendedInfoImpl = null;
-        Iterator<CompanyBean> iterator = dataProvider.getCompanyBeans().iterator();
-        while( iterator.hasNext() ) {
-            CompanyBean companyBean = iterator.next();
-
-            Iterator<AuthUserExtendedInfoImpl> it = companyBean.getUserBeans().iterator();
-            while( it.hasNext() ) {
-                AuthUserExtendedInfoImpl userBean = it.next();
-
-                if( userBean.getAuthInfo().getAuthUserId().equals( authUserId ) )
+        for (CompanyBean companyBean : dataProvider.getCompanyBeans()) {
+            for (AuthUserExtendedInfoImpl userBean : companyBean.getUserBeans()) {
+                if (userBean.getAuthInfo().getAuthUserId().equals(authUserId))
                     resultAuthUserExtendedInfoImpl = userBean;
             }
         }
