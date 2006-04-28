@@ -31,22 +31,32 @@
 <f:view>
     <h:form id="foo">
 
-        <h:commandButton id="role-list-action" action="role" value="#{manager.role_button}"/>
-        <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"/>
-        <h:commandButton id="holding-list-action" action="holding" value="#{manager.holding_button}"/>
+        <h:commandButton id="role-list-action" action="role" value="#{manager.role_button}"
+                         styleClass="top-button-action"/>
+        <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
+                         styleClass="top-button-action"/>
+        <h:commandButton id="holding-list-action" action="holding" value="#{manager.holding_button}"
+                         styleClass="top-button-action"/>
 
-        <h:panelGrid columns="2">
+        <h:panelGrid columns="1" id="main-grid">
+            <h:commandButton id="add-user-action" action="#{authUserAction.addUserAction}"
+                             value="#{msg['add_user_action']}"
+                             styleClass="auth-button-action">
+            </h:commandButton>
 
-            <f:subview id="auth-tree-subview"
-                       rendered="#{!userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
-                <jsp:include page="auth-tree.jsp"/>
-            </f:subview>
+            <h:panelGrid columns="2" id="tree-grid">
 
-            <f:subview id="select-user-subview"
-                       rendered="#{!empty dataProvider.currentUser && !userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
-                <jsp:include page="auth-user-select.jsp"/>
-            </f:subview>
+                <f:subview id="auth-tree-subview"
+                           rendered="#{!userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
+                    <jsp:include page="auth-tree.jsp"/>
+                </f:subview>
 
+                <f:subview id="select-user-subview"
+                           rendered="#{!empty dataProvider.currentUser && !userSessionBean.edit && !userSessionBean.delete && !userSessionBean.add}">
+                    <jsp:include page="auth-user-select.jsp"/>
+                </f:subview>
+
+            </h:panelGrid>
         </h:panelGrid>
 
     </h:form>

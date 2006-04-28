@@ -2,19 +2,18 @@ package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.interfaces.sso.a3.bean.RoleBean;
-import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
-import org.riverock.interfaces.sso.a3.AuthInfo;
-import org.riverock.interfaces.sso.a3.UserInfo;
-import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.interfaces.sso.a3.AuthInfo;
+import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.portlet.main.AuthSessionBean;
 
 /**
@@ -57,19 +56,16 @@ public class DataProvider implements Serializable {
         List<SelectItem> list = new ArrayList<SelectItem>();
 
         List<UserInfo> userList = authSessionBean.getAuthSession().getUserList();
-        Iterator<UserInfo> iterator = userList.iterator();
-        while( iterator.hasNext() ) {
-            UserInfo userInfo =  iterator.next();
+        for (UserInfo userInfo : userList) {
+            String userName = StringTools.getUserName(
+                userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName()
+            );
 
-		String userName = StringTools.getUserName(
-                    userInfo.getFirstName(),userInfo.getMiddleName(), userInfo.getLastName()
-                );
+            if (userName == null) {
+                userName = "userName is null";
+            }
 
-		if (userName==null) {
-			userName = "userName is null";
-		}
-
-            list.add( new SelectItem( userInfo.getUserId(), userName ) );
+            list.add(new SelectItem(userInfo.getUserId(), userName));
         }
         return list;
     }
@@ -78,22 +74,17 @@ public class DataProvider implements Serializable {
         List<SelectItem> list = new ArrayList<SelectItem>();
         List<RoleBean> roles = authSessionBean.getAuthSession().getRoleList();
 
-        Iterator<RoleBean> iterator = roles.iterator();
-        while( iterator.hasNext() ) {
-            RoleBean roleBean = iterator.next();
-
-            if( !isAlreadyBinded( roleBean ) ) {
-                list.add( new SelectItem( roleBean.getRoleId(), roleBean.getName() ) );
+        for (RoleBean roleBean : roles) {
+            if (!isAlreadyBinded(roleBean)) {
+                list.add(new SelectItem(roleBean.getRoleId(), roleBean.getName()));
             }
         }
         return list;
     }
 
     private boolean isAlreadyBinded( RoleBean roleBean ) {
-        Iterator<RoleEditableBean> iterator = userSessionBean.getUserBean().getRoles().iterator();
-        while( iterator.hasNext() ) {
-            RoleEditableBean roleImpl = iterator.next();
-            if( roleImpl.getRoleId().equals( roleBean.getRoleId() ) ) {
+        for (RoleEditableBean roleImpl : userSessionBean.getUserBean().getRoles()) {
+            if (roleImpl.getRoleId().equals(roleBean.getRoleId())) {
                 return true;
             }
         }
@@ -104,14 +95,11 @@ public class DataProvider implements Serializable {
         List<SelectItem> list = new ArrayList<SelectItem>();
         List<Company> companies = authSessionBean.getAuthSession().getCompanyList();
 
-        Iterator<Company> iterator = companies.iterator();
-        while( iterator.hasNext() ) {
-            Company company = iterator.next();
-
-		if (company.getId()==null) {
-			throw new IllegalStateException("id is null, name: " + company.getName());
-		}
-            list.add( new SelectItem( new Long(company.getId()), company.getName() ) );
+        for (Company company : companies) {
+            if (company.getId() == null) {
+                throw new IllegalStateException("id is null, name: " + company.getName());
+            }
+            list.add(new SelectItem(company.getId(), company.getName()));
         }
         return list;
     }
@@ -123,11 +111,8 @@ public class DataProvider implements Serializable {
 	if (holdings==null)
 		return list;
 
-        Iterator<Holding> iterator = holdings.iterator();
-        while( iterator.hasNext() ) {
-            Holding holding = iterator.next();
-
-            list.add( new SelectItem( holding.getId(), holding.getName() ) );
+        for (Holding holding : holdings) {
+            list.add(new SelectItem(holding.getId(), holding.getName()));
         }
         return list;
     }
@@ -147,48 +132,37 @@ public class DataProvider implements Serializable {
 
     private List<CompanyBean> initCompanyBeans( AuthSession authSession ) {
         List<CompanyBean> list = new ArrayList<CompanyBean>();
-	if (authSession==null) {
-		return list;
-	}
+        if (authSession==null) {
+            return list;
+        }
 
         List<Company> companies = authSession.getCompanyList();
         List<UserInfo> userList = authSession.getUserList();
         List<AuthInfo> authList = authSession.getAuthInfoList();
 
-        Iterator<Company> iterator = companies.iterator();
-        while( iterator.hasNext() ) {
-            Company company = iterator.next();
-
+        for (Company company : companies) {
             CompanyBean companyBean = new CompanyBean();
-            companyBean.setCompanyId( company.getId() );
-            companyBean.setCompanyName( company.getName() );
+            companyBean.setCompanyId(company.getId());
+            companyBean.setCompanyName(company.getName());
 
-            Iterator<UserInfo> userIterator = userList.iterator();
-            while( userIterator.hasNext() ) {
-                UserInfo userInfo = userIterator.next();
-
-                if (userInfo.getCompanyId().equals( company.getId() )) {
-                    Iterator<AuthInfo> authIterator = authList.iterator();
-                    while( authIterator.hasNext() ) {
-                        AuthInfo authInfo = authIterator.next();
-
-                        if (userInfo.getUserId().equals( authInfo.getUserId() )) {
+            for (UserInfo userInfo : userList) {
+                if (userInfo.getCompanyId().equals(company.getId())) {
+                    for (AuthInfo authInfo : authList) {
+                        if (userInfo.getUserId().equals(authInfo.getUserId())) {
                             AuthUserExtendedInfoImpl bean = new AuthUserExtendedInfoImpl();
-                            bean.setAuthInfo( new AuthInfoImpl(authInfo) );
-                            bean.setUserInfo( userInfo );
+                            bean.setAuthInfo(new AuthInfoImpl(authInfo));
+                            bean.setUserInfo(userInfo);
 
-                            List<RoleBean> roles = authSession.getRoleList( authInfo.getAuthUserId() );
-                            Iterator<RoleBean> roleIterator = roles.iterator();
-                            while( roleIterator.hasNext() ) {
-                                RoleBean roleBean = roleIterator.next();
-                                bean.addRole( new RoleEditableBeanImpl(roleBean) );
+                            List<RoleBean> roles = authSession.getRoleList(authInfo.getAuthUserId());
+                            for (RoleBean roleBean : roles) {
+                                bean.addRole(new RoleEditableBeanImpl(roleBean));
                             }
-                            companyBean.addUserBeans( bean );
+                            companyBean.addUserBeans(bean);
                         }
                     }
                 }
             }
-            list.add( companyBean );
+            list.add(companyBean);
         }
         return list;
     }

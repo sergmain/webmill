@@ -86,10 +86,12 @@
                     <h:panelGroup id="edit-delete-actions">
                         <h:commandButton id="save-user-action" action="#{authUserAction.saveUserAction}"
                                          value="#{msg['save_user_action']}"
+                                         styleClass="auth-button-action"
                             >
                         </h:commandButton>
                         <h:commandButton id="cancel-edit-user-action" action="#{authUserAction.cancelEditUserAction}"
                                          value="#{msg['cancel_edit_user_action']}"
+                                         styleClass="auth-button-action"
                             >
                         </h:commandButton>
                     </h:panelGroup>
