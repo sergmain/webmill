@@ -567,6 +567,7 @@ cd ..\..
         <include name="${riverock-cache.lib}"/>
         <include name="${riverock-webmill.lib}"/>
 
+        <include name="${commons-lang.lib}"/>
         <include name="${commons-fileupload.lib}"/>
         <include name="${commons-logging.lib}"/>
         <include name="${commons-digester.lib}"/>

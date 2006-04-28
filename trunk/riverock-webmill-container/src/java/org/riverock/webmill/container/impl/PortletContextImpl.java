@@ -24,7 +24,10 @@
  */
 package org.riverock.webmill.container.impl;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
 
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequestDispatcher;
@@ -32,7 +35,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
 public final class PortletContextImpl implements PortletContext {
-
     private final static int PORTLET_API_MAJOR_VERSION = 1;
     private final static int PORTLET_API_MINOR_VERSION = 0;
 
@@ -49,6 +51,9 @@ public final class PortletContextImpl implements PortletContext {
     }
 
     public PortletRequestDispatcher getRequestDispatcher( final String path ) {
+        String es = "getRequestDispatcher(), path: " + path;
+        System.out.println(es);
+
         RequestDispatcher rd = servletContext.getRequestDispatcher( path );
         return new PortletRequestDispatcherImpl( rd );
     }
@@ -58,7 +63,7 @@ public final class PortletContextImpl implements PortletContext {
         return rd!=null ?new PortletRequestDispatcherImpl( rd ) :null;
     }
 
-    public java.io.InputStream getResourceAsStream( final String path ) {
+    public InputStream getResourceAsStream( final String path ) {
         return servletContext.getResourceAsStream( path );
     }
 
@@ -82,7 +87,7 @@ public final class PortletContextImpl implements PortletContext {
         return servletContext.getResourcePaths( path );
     }
 
-    public java.net.URL getResource( final String path ) throws MalformedURLException {
+    public URL getResource( final String path ) throws MalformedURLException {
         if (path == null || !path.startsWith( "/" )) {
             throw new MalformedURLException( "path must start with a '/'" );
         }
@@ -109,7 +114,7 @@ public final class PortletContextImpl implements PortletContext {
         return servletContext.getInitParameter( name );
     }
 
-    public java.util.Enumeration getInitParameterNames() {
+    public Enumeration getInitParameterNames() {
         return servletContext.getInitParameterNames();
     }
 
@@ -141,7 +146,9 @@ public final class PortletContextImpl implements PortletContext {
         return servletContext.getServletContextName();
     }
 
-    public javax.servlet.ServletContext getServletContext() {
+    /** @deprecated
+     */
+    public ServletContext getServletContext() {
         return servletContext;
     }
 }

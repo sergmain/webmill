@@ -45,7 +45,7 @@ import org.riverock.common.html.Header;
  * User: Admin
  * Date: Mar 19, 2003
  * Time: 10:42:41 PM
- * <p/>
+ * 
  * $Id$
  */
 public final class RequestStatisticFilter implements Filter {
@@ -53,9 +53,9 @@ public final class RequestStatisticFilter implements Filter {
 
     private FilterConfig filterConfig = null;
     public void init(FilterConfig filterConfig) {
-System.out.println("start init statictic filter");
+        System.out.println("start init statictic filter");
         this.filterConfig = filterConfig;
-System.out.println("end init statictic filter");
+        System.out.println("end init statictic filter");
     }
 
     /**
@@ -74,7 +74,6 @@ System.out.println("end init statictic filter");
             startInfo = getDebugInfo(request, response);
         }
 
-System.out.println("start process statictic filter");
         try {
             RequestStatisticService.getInstance().process(
                 Header.getUserAgent(request),
@@ -95,15 +94,12 @@ System.out.println("start process statictic filter");
             final String es = "Exception call chain of filter";
             log.fatal(es, th);
             th.printStackTrace( System.err );
-//            throw new ServletException(es, th);
         }
-System.out.println("end process statictic filter");
 
         // Pass control on to the next filter
         try {
             // !!!!!!!!!!!!!!!!! DO NOT COMMENT THIS LINE !!!!!!!!!!!!!!!!!!!!!!!!
             chain.doFilter(request, response);
-            return;
         }
         catch (Throwable exc) {
             final String es = "Exception call chain of filter";

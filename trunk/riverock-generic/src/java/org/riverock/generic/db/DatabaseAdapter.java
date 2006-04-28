@@ -1,12 +1,12 @@
 /*
  * org.riverock.generic -- Database connectivity classes
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -45,6 +45,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
 import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.schema.config.types.DataSourceTypeType;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -54,7 +55,6 @@ import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
 import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
-import org.riverock.generic.exception.DatabaseException;
 
 /**
  * $Revision$ $Date$
@@ -104,7 +104,6 @@ public abstract class DatabaseAdapter {
                 conn.close();
             }
             catch (Exception e) {
-                // catch close error
             }
             conn = null;
         }
@@ -241,8 +240,8 @@ public abstract class DatabaseAdapter {
 
     public abstract String getDriverClass();
 
-    private final static Object syncObject = new Object();
-    protected void init(DatabaseConnectionType dc_) throws SQLException {
+    private static Object syncObject = new Object();
+    protected void init(DatabaseConnectionType dc_) throws DatabaseException, SQLException {
         dc = dc_;
 
         try {
@@ -322,7 +321,8 @@ public abstract class DatabaseAdapter {
         }
     }
 
-    protected static DatabaseAdapter openConnect(final DatabaseConnectionType dc) {
+    protected static DatabaseAdapter openConnect(final DatabaseConnectionType dc)
+        throws DatabaseException {
         if (dc == null) {
             String es = "DatabaseConnection is null.";
             log.fatal(es);
@@ -349,7 +349,6 @@ public abstract class DatabaseAdapter {
                     db_.conn = null;
                 }
                 catch (Exception e02) {
-                    // catch close error
                 }
             }
             db_ = null;
@@ -365,7 +364,7 @@ public abstract class DatabaseAdapter {
         return db_;
     }
 
-    public static DatabaseAdapter getInstance() {
+    public static DatabaseAdapter getInstance() throws DatabaseException {
         return getInstance(GenericConfig.getDefaultConnectionName());
     }
 
@@ -374,7 +373,8 @@ public abstract class DatabaseAdapter {
      * @return - DatabaseAdapter
      * @throws DatabaseException
      */
-    public static DatabaseAdapter getInstance(final String connectionName) {
+    public static DatabaseAdapter getInstance(final String connectionName)
+        throws DatabaseException {
         if (connectionName == null) {
             log.error("Call DatabaseAdapter.getInstance(final boolean isDynamic, final String connectionName) with connectionName==null");
             return null;
@@ -406,7 +406,6 @@ public abstract class DatabaseAdapter {
             db_.rollback();
         }
         catch (Exception e) {
-            // catch rollback error
         }
 
         try {
@@ -414,7 +413,6 @@ public abstract class DatabaseAdapter {
             db_.conn = null;
         }
         catch (Exception e) {
-            // catch close error
         }
     }
 }
