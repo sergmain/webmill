@@ -1,12 +1,12 @@
 /*
  * org.riverock.generic -- Database connectivity classes
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -32,7 +32,7 @@ package org.riverock.generic.exception;
  * @author Serge Maslyukov
  *         $Id$
  */
-public class DatabaseException extends RuntimeException {
+public class DatabaseException extends Exception {
     public DatabaseException() {
         super();
     }

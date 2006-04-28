@@ -1,12 +1,12 @@
 /*
  * org.riverock.common -- Supporting classes, interfaces, and utilities
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -90,7 +90,7 @@ public class ConfigObject
 				while(iterator.hasNext()) {
 					Map.Entry entry = iterator.next();
 					log.error("key: "+entry.getKey()+", value: "+ entry.getValue());
-				} 
+				}
 			}
 			catch(Throwable th){
 				log.error("erorr",th);
@@ -129,8 +129,8 @@ public class ConfigObject
             throw new IllegalArgumentException(errorString);
         }
 
-	    config.nameConfigFile = config.nameConfigFile.replace( 
-		File.separatorChar == '/'?'\\':'/', File.separatorChar 
+	    config.nameConfigFile = config.nameConfigFile.replace(
+		File.separatorChar == '/'?'\\':'/', File.separatorChar
 	    );
 
         if (log.isInfoEnabled()) {

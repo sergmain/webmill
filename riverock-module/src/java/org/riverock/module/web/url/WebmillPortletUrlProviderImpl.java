@@ -6,6 +6,7 @@ import javax.portlet.PortletResponse;
 import org.apache.log4j.Logger;
 
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.action.ModuleActionRequest;
@@ -45,10 +46,13 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
 
     public StringBuilder getUrlStringBuilder(String moduleName, String actionName) {
         return
-            PortletService.urlStringBuilder( moduleName,  (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse() ).
-            append( WebmillPortletConstants.ACTION_NAME_PARAM ).
-            append( '=' ).
-            append( actionName ).
-            append( '&' );
+            PortletService.urlStringBuilder(
+                moduleName,  (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse(),
+                (String)((PortletRequest)moduleRequest).getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE )
+            ).
+                append( WebmillPortletConstants.ACTION_NAME_PARAM ).
+                append( '=' ).
+                append( actionName ).
+                append( '&' );
     }
 }

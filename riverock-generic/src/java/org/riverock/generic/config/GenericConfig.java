@@ -1,12 +1,12 @@
 /*
  * org.riverock.generic -- Database connectivity classes
- * 
+ *
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
+ *
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -32,6 +32,7 @@ import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.config.ConfigException;
 import org.riverock.common.config.ConfigObject;
 import org.riverock.generic.schema.config.CustomDirsType;
 import org.riverock.generic.schema.config.DatabaseConnectionType;
@@ -72,8 +73,8 @@ public final class GenericConfig {
         return (GenericConfigType)configObject.getConfigObject();
     }
 
-    private final static Object syncReadConfig = new Object();
-    private static void readConfig() {
+    private static Object syncReadConfig = new Object();
+    private static void readConfig()throws ConfigException{
 
         if (isConfigProcessed) return;
 
@@ -112,8 +113,8 @@ public final class GenericConfig {
 // PUBLIC SECTION
 //-----------------------------------------------------
 
-    private final static Object syncTZ = new Object();
-    public static TimeZone getTZ() {
+    private static Object syncTZ = new Object();
+    public static TimeZone getTZ() throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("GenericConfig.getTZ() #1");
         if (!isConfigProcessed)readConfig();
@@ -175,8 +176,8 @@ public final class GenericConfig {
         }
     }
 
-    private final static Object syncTempDir = new Object();
-    public static String getGenericTempDir() {
+    private static Object syncTempDir = new Object();
+    public static String getGenericTempDir()throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.937");
         if (!isConfigProcessed)readConfig();
@@ -186,7 +187,7 @@ public final class GenericConfig {
             if (Boolean.FALSE.equals( getConfig().getIsTempDirInit() ) ){
                 String dir = getConfig().getGenericTempDir();
 	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
-                
+
                 if (!dir.endsWith( File.separator ))
                     dir += File.separator;
 
@@ -208,8 +209,8 @@ public final class GenericConfig {
         }
     }
 
-    private final static Object syncDebugDir = new Object();
-    public static String getGenericDebugDir() {
+    private static Object syncDebugDir = new Object();
+    public static String getGenericDebugDir()throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.937.1");
         if (!isConfigProcessed)readConfig();
@@ -257,7 +258,7 @@ public final class GenericConfig {
     }
 
     public static DatabaseConnectionType getDatabaseConnection( final String connectionName )
-         {
+        throws ConfigException{
 
         if (log.isDebugEnabled()) log.debug("#15.909");
 
@@ -268,7 +269,7 @@ public final class GenericConfig {
         return (DatabaseConnectionType)dbConfig.get( connectionName );
     }
 
-    public static String getDBconnectClassName( final String connectionName )  {
+    public static String getDBconnectClassName( final String connectionName ) throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.911");
         if (!isConfigProcessed)readConfig();
@@ -281,7 +282,7 @@ public final class GenericConfig {
         defaultConnectionName = defaultConnectionName_;
     }
 
-    public static String getDefaultConnectionName()  {
+    public static String getDefaultConnectionName() throws ConfigException {
 
         // if defaultConnectionName is overrided, then return new value(not from config)
         if (defaultConnectionName!=null)
@@ -294,7 +295,7 @@ public final class GenericConfig {
         return getConfig().getDefaultConnectionName();
     }
 
-    public static PropertyType[] getProperty()  {
+    public static PropertyType[] getProperty() throws ConfigException {
 
         if (log.isDebugEnabled()) log.debug("#16.951");
         if (!isConfigProcessed)readConfig();
@@ -303,7 +304,7 @@ public final class GenericConfig {
         return getConfig().getProperty();
     }
 
-    public static List getPropertyList()  {
+    public static List getPropertyList() throws ConfigException {
 
         if (log.isDebugEnabled()) log.debug("#16.961");
         if (!isConfigProcessed)readConfig();
@@ -312,7 +313,7 @@ public final class GenericConfig {
         return getConfig().getPropertyAsReference();
     }
 
-    public static int getPropertyCount() {
+    public static int getPropertyCount() throws ConfigException {
 
         if (log.isDebugEnabled()) log.debug("#16.971");
         if (!isConfigProcessed)readConfig();
@@ -321,7 +322,7 @@ public final class GenericConfig {
         return getConfig().getPropertyCount();
     }
 
-    public static PropertyType getProperty( final int idx ) {
+    public static PropertyType getProperty( final int idx ) throws ConfigException {
 
         if (log.isDebugEnabled()) log.debug("#16.981");
         if (!isConfigProcessed)readConfig();
@@ -330,7 +331,7 @@ public final class GenericConfig {
         return getConfig().getProperty(idx);
     }
 
-    public static String getMailSMTPHost() {
+    public static String getMailSMTPHost() throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.927");
         if (!isConfigProcessed)readConfig();
@@ -339,7 +340,7 @@ public final class GenericConfig {
         return getConfig().getMailHost();
     }
 
-    public static String getCustomDefinitionDir() {
+    public static String getCustomDefinitionDir()throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#16.910");
         if (!isConfigProcessed)readConfig();
@@ -351,4 +352,15 @@ public final class GenericConfig {
 
         return dirs.getCustomDataDefinitionDir();
     }
+
+//    public static String getContextName() {
+//        return contextName;
+//    }
+//
+//    public static void setContextName( String contextName_ ) {
+//        if (log.isInfoEnabled()) {
+//            log.info( "Set new application context to " + contextName_);
+//        }
+//        contextName = contextName_;
+//    }
 }
