@@ -6,7 +6,7 @@ package org.riverock.interfaces.portal.bean;
  *         Time: 23:41:35
  *         $Id$
  */
-public interface TemplateBean {
+public interface Template {
     public String getTemplateLanguage();
     public Long getTemplateId();
     public Long getSiteLanguageId();

@@ -29,10 +29,10 @@ import java.text.MessageFormat;
 import javax.mail.MessagingException;
 import javax.portlet.PortletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.mail.MailMessage;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
@@ -70,7 +70,7 @@ public class CreateAccountAction implements Action {
         bean.setMiddleName( moduleActionRequest.getRequest().getString( RegisterConstants.MIDDLE_NAME_PARAM ) );
         bean.setEmail( moduleActionRequest.getRequest().getString( RegisterConstants.EMAIL_PARAM ) );
 
-        if( StringTools.isEmpty( bean.getEmail() ) ) {
+        if( StringUtils.isEmpty( bean.getEmail() ) ) {
             log.warn( "email is empty" ); 
             return RegisterError.emailIsEmpty( moduleActionRequest );
         }
@@ -157,7 +157,7 @@ public class CreateAccountAction implements Action {
             return RegisterConstants.EMAIL_IS_NULL_STATUS;
         }
 
-        if( StringTools.isEmpty( bean.getRole() ) ) {
+        if( StringUtils.isEmpty( bean.getRole() ) ) {
             return RegisterConstants.ROLE_IS_NULL_STATUS;
         }
 

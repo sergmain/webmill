@@ -85,8 +85,7 @@ public class StringTools {
      * @param f
      * @return результирующая строка
      */
-    public static String capitalizeString( final String f)
-    {
+    public static String capitalizeString( final String f) {
         String r = "";
         if (f.indexOf('_')==-1)
         {
@@ -99,8 +98,7 @@ public class StringTools {
         String s_ = f;
 
         int pos;
-        while ((pos = s_.indexOf('_')) != -1)
-        {
+        while ((pos = s_.indexOf('_')) != -1) {
             if (pos != s_.length())
             {
                 r += StringTools.capitalizeFirstChar(s_.substring(0, pos));
@@ -111,8 +109,7 @@ public class StringTools {
     }
 
 
-    public static String capitalizeFirstChar( final String s )
-    {
+    public static String capitalizeFirstChar( final String s ) {
         if (s==null)
             return null;
 
@@ -208,8 +205,7 @@ public class StringTools {
         return StringEscapeUtils.escapeXml( s );
     }
 
-    public static String prepareToParsingSimple( final String s)
-    {
+    public static String prepareToParsingSimple( final String s) {
         if (s==null)
             return null;
 
@@ -222,8 +218,7 @@ public class StringTools {
         ) + "</para>";
     }
 
-    public static String prepareToParsing( final String s)
-    {
+    public static String prepareToParsing( final String s) {
         if (s==null)
             return null;
 
@@ -240,8 +235,7 @@ public class StringTools {
         ) + "</para>";
     }
 
-    public static String toPlainHTML( final String s)
-    {
+    public static String toPlainHTML( final String s) {
         if (s==null)
             return null;
 
@@ -277,8 +271,7 @@ public class StringTools {
      * @param bytes - byte[]. Входной массив байт
      * @return - byte[]. Выходной массив байт, отформатированный в столбцы по 76 байт.
      */
-    public static byte[] formatArray( final byte bytes[])
-    {
+    public static byte[] formatArray( final byte bytes[]) {
         int newLength = bytes.length + bytes.length / 57;
 
         if (log.isDebugEnabled())
@@ -307,17 +300,14 @@ public class StringTools {
         return bf;
     }
 
-    public static byte[] getBytesUTF( final String s)
-    {
+    public static byte[] getBytesUTF( final String s) {
         if (s==null)
             return new byte[0];
 
-        try
-        {
+        try {
             return s.getBytes("utf-8");
         }
-        catch (java.io.UnsupportedEncodingException e)
-        {
+        catch (java.io.UnsupportedEncodingException e) {
             log.warn("String.getBytes(\"utf-8\") not supported");
             return new byte[0];
         }
@@ -334,18 +324,15 @@ public class StringTools {
 		String(b, int offset, int length, "utf-8")
 	}
 */
-    public static int getStartUTF( final String s, final int maxByte)
-    {
+    public static int getStartUTF( final String s, final int maxByte) {
         return getStartUTF(getBytesUTF(s), maxByte);
     }
 
-    public static int getStartUTF( final byte[] b, final int maxByte)
-    {
+    public static int getStartUTF( final byte[] b, final int maxByte) {
         return getStartUTF(b, maxByte, 0);
     }
 
-    public static int getStartUTF( final byte[] b, final int maxByte, final int offset)
-    {
+    public static int getStartUTF( final byte[] b, final int maxByte, final int offset) {
         if (b.length <= offset)
             return -1;
 
@@ -371,17 +358,20 @@ public class StringTools {
     }
 
     /**
+     * @deprecated use  org.apache.commons.lang.StringUtils.replace( str_, search_, ins);
      * Replace substring.
      * @param str_ - String. Source string
      * @param search_ - String which will be searching
      * @param ins - String for replace.
-     * @return - String. Результирующая строка. Если один из параметров равен null, возвращается null
+     *
+     * @return - String. resulting string.
      */
-    public static String replaceString( final String str_, final String search_, final String ins)
-    {
+    public static String replaceString( final String str_, final String search_, final String ins) {
+        return StringUtils.replace( str_, search_, ins);
+/*
         if ((str_ == null) || (search_ == null) || (ins == null))
             return null;
-
+        
         String s_ = str_, resultStr = "";
 
         int pos;
@@ -394,6 +384,7 @@ public class StringTools {
             }
         }
         return resultStr + s_;
+*/
     }
 
     /**

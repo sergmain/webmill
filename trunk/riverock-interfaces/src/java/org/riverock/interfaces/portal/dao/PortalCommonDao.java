@@ -2,7 +2,7 @@ package org.riverock.interfaces.portal.dao;
 
 import java.util.List;
 
-import org.riverock.interfaces.portal.bean.TemplateBean;
+import org.riverock.interfaces.portal.bean.Template;
 
 /**
  * @author SergeMaslyukov
@@ -11,7 +11,7 @@ import org.riverock.interfaces.portal.bean.TemplateBean;
  *         $Id$
  */
 public interface PortalCommonDao {
-    public TemplateBean getTemplateBean(Long templateId);
-    public List<TemplateBean> getTemplateList( Long siteId );
-    public List<TemplateBean> getTemplateLanguageList( Long siteLanguageId );
+    public Template getTemplateBean(Long templateId);
+    public List<Template> getTemplateList( Long siteId );
+    public List<Template> getTemplateLanguageList( Long siteLanguageId );
 }

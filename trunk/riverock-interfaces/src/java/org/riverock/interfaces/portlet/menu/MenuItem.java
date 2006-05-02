@@ -46,8 +46,4 @@ public interface MenuItem extends TreeItem {
     public String getMenuName();
     public List<MenuItem> getCatalogItems();
     public String getUrl();
-    /**
-     * @deprecated dont use
-     */
-    public String getUrlResource();
 }

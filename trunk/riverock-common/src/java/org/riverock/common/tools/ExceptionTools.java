@@ -37,29 +37,6 @@ import java.io.PrintStream;
  */
 public final class ExceptionTools {
 
-    /*
-     * @deprecated
-     * @param e
-     * @param numLines
-     * @return
-     */
-//    public static String getStackTrace( final Exception e, final int numLines )
-//    {
-//        return getStackTrace((Throwable)e, numLines, null);
-//    }
-
-    /*
-     * @deprecated 
-     * @param e
-     * @param numLines
-     * @param addAtEndLine
-     * @return
-     */
-//    public static String getStackTrace( final Exception e, final int numLines, final String addAtEndLine )
-//    {
-//        return getStackTrace((Throwable )e, numLines, addAtEndLine);
-//    }
-
     public static String getStackTrace( final Throwable e, final int numLines ) {
         return getStackTrace(e, numLines, null);
     }
@@ -88,8 +65,7 @@ public final class ExceptionTools {
             if (i >= bytes.length)
                 return StringTools.replaceString(new String(bytes), "\n", addAtEndLine + "\n");
             else
-                return StringTools.replaceString(new String(bytes, 0, i),
-                        "\n", addAtEndLine + "\n");
+                return StringTools.replaceString(new String(bytes, 0, i), "\n", addAtEndLine + "\n");
         }
     }
 }
