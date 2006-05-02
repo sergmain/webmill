@@ -345,7 +345,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	</portlet>
 	<portlet>
 		<portlet-name>mill.upload_price</portlet-name>
-		<portlet-class>/mill.upload_price</portlet-class>
+		<portlet-class>org.riverock.portlet.shop.upload.UploadPricePortlet</portlet-class>
 		<init-param>
 			<name>is-url</name>
 			<value>true</value>
@@ -356,17 +356,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
-	</portlet>
-	<portlet>
-		<portlet-name>mill.upload_price_controller</portlet-name>
-		<portlet-class>org.riverock.portlet.shop.upload.UploadPriceControllerPortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
+        <security-role-ref><role-name>webmill.upload_price_list</role-name></security-role-ref>
+    </portlet>
 	<portlet>
 		<portlet-name>mill.menu_member</portlet-name>
 		<portlet-class>org.riverock.portlet.member.MenuMemberPortlet</portlet-class>

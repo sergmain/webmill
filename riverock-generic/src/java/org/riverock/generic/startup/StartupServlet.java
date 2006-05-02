@@ -70,7 +70,7 @@ public final class StartupServlet extends HttpServlet {
         PropertiesProvider.setConfigPath(
             PropertiesProvider.getApplicationPath() +
             (PropertiesProvider.getApplicationPath().endsWith(File.separator) ? "" : File.separator) +
-            "WEB-INF" + File.separatorChar + "mill"
+            "WEB-INF" + File.separatorChar + "webmill"
         );
         System.out.println("info Application path: " + PropertiesProvider.getApplicationPath());
         System.out.println("info getServletContextName - " + config.getServletContext().getServletContextName());

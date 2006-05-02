@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<MemberArea xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-portlet\src-schema\xsd\riverock-portlet-member.xsd " xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+	<Module name="content.css" authApplication="CONTENT" authModule="CONTENT.CSS" isDelete="1" maxRecord="10">
+		<RelateClass isFullReinitCache="1" className="org.riverock.webmill.main.ContentCSS"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.css</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>Управление CSS стилями сайта</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CONTENT_CSS</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CONTENT_CSS" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="IS_CURRENT" dbType="NUMBER" length="1" jspType="yes_1_no_n" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Текущий?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DATE_POST" dbType="DATE" jspType="date_text" isShow="true" mask="dd.MM.yyyy HH:mm:ss">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Дата создания</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="TEXT_COMMENT" dbType="VARCHAR" length="100" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Комментарий к CSS</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTAL_CSS" ref="a"/>
+				<Order field="date_post" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Добавить новый CSS</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Изменить тип CSS</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Удалить</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.css</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>Добавить новый CSS</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CONTENT_CSS</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CONTENT_CSS" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="IS_CURRENT" dbType="NUMBER" length="1" jspType="yes_1_no_n" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Текущий?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="TEXT_COMMENT" dbType="VARCHAR" length="100" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Комментарий к CSS</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CSS_DATA" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>text of CSS</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_CONTENT_CSS_DATA</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_CONTENT_CSS_DATA" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="CSS_DATA" dbType="VARCHAR" length="2000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTAL_CSS_DATA" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTAL_CSS" ref="a"/>
+				<Order field="date_post" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>Список CSS файлов</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Список CSS файлов</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.css</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>Добавить новый CSS</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CONTENT_CSS</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CONTENT_CSS" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="IS_CURRENT" dbType="NUMBER" jspType="yes_1_no_n" isShow="true" length="1" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Текущий?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DATE_POST" dbType="DATE" jspType="date_text" isShow="true" isEdit="false" mask="dd.MM.yyyy HH:mm:ss">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Дата создания</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="TEXT_COMMENT" dbType="VARCHAR" jspType="text" isShow="true" length="100" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Комментарий к CSS</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CSS_DATA" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>text of CSS</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_CONTENT_CSS_DATA</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_CONTENT_CSS_DATA" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="CSS_DATA" dbType="VARCHAR" length="2000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTAL_CSS_DATA" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTAL_CSS" ref="a"/>
+				<Order field="date_post" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>Список CSS файлов</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Список CSS файлов</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.css</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>Удалить CSS</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CONTENT_CSS</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CONTENT_CSS" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="IS_CURRENT" dbType="NUMBER" length="1" jspType="yes_1_no_n" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Текущий?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DATE_POST" dbType="DATE" jspType="date_text" isShow="true" mask="dd.MM.yyyy HH:mm:ss">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Дата создания</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="TEXT_COMMENT" dbType="VARCHAR" length="100" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Комментарий к CSS</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CSS_DATA" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>text of CSS</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_CONTENT_CSS_DATA</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_CONTENT_CSS_DATA" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="CSS_DATA" dbType="VARCHAR" length="2000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTAL_CSS_DATA" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTAL_CSS" ref="a"/>
+				<Order field="date_post" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+				<StringData>Список CSS файлов</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Список CSS файлов</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="content.dyn_css" authApplication="CONTENT" authModule="CONTENT.DYNAMIN_CSS" isDelete="1">
+		<RelateClass isFullReinitCache="1" className="org.riverock.webmill.main.ContentCSS"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.css</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Управление типами контентов</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="NAME_SITE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="false">
+						<StringData>Name site</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_CSS_DYNAMIC" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="false">
+						<StringData>CSS динамический?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CSS_FILE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Имя CSS файла</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTAL_LIST_SITE" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="false">
+					<StringData>to index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.css</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Изменение типа CSS</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="NAME_SITE" dbType="VARCHAR" length="30" jspType="text" isShow="true" isEdit="false" isNotNull="true">
+					<NameColumn isUseProperties="false">
+						<StringData>Name site</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_CSS_DYNAMIC" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>CSS динамический?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CSS_FILE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Имя CSS файла</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTAL_LIST_SITE" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Список питов CSS</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="content.forum" authApplication="CONTENT" authModule="CONTENT.FORUM" isDelete="1">
+		<RelateClass isFullReinitCache="0" className="org.riverock.portlet.forum.ForumConfig"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Список форумов</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_FORUM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_FORUM" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_ALL_THREAD" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>All threads</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_LOCALE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use locale</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_PROPERTIES" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use properties</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FORUM" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Name of forum</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="MAIN_FORUM" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Insert</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Добавить новый форум</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_FORUM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_FORUM" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_ALL_THREAD" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>All threads</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_LOCALE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use locale</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_PROPERTIES" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use properties</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FORUM" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Name of forum</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="MAIN_FORUM" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Изменить данные форума</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_FORUM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_FORUM" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_ALL_THREAD" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>All threads</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_LOCALE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use locale</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_PROPERTIES" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use properties</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FORUM" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Name of forum</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="MAIN_FORUM" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Удалить форум</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_FORUM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_FORUM" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_ALL_THREAD" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>All threads</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_LOCALE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use locale</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_PROPERTIES" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Use properties</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FORUM" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Name of forum</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="MAIN_FORUM" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="content.shop" authApplication="CONTENT" authModule="CONTENT.SHOP" isDelete="1">
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.price.Shop"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Данные по магазинам</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SHOP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SHOP" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_CLOSE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Закрыт?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP_FOR_PRICE_LIST" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Внутренне название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_SHOP" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Код магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_LIST" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Выбрать действие</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>На главную</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Добавить</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Изменить</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Удалить</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Добавить новый магазин</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SHOP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SHOP" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP" dbType="VARCHAR" length="50" jspType="text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_PROCESS_INVOICE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Оформление заказа доступно?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_TYPE_SHOP_1" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Первый тип магазина</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_type</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_type" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="type" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_PRICE_QUERY_TYPE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ID_TYPE_SHOP_2" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Второй тип магазина</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_type</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_type" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="type" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_PRICE_QUERY_TYPE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP_FOR_PRICE_LIST" dbType="VARCHAR" length="50" jspType="text" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Внутреннее название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_NEED_RECALC" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Нужен ли интерфейс пересчета в другие валюты</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_SHOP" dbType="VARCHAR" length="30" jspType="text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Код магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DISCOUNT" dbType="NUMBER" length="8" jspType="float_text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Общая скидка для магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="COMMAS_COUNT" dbType="NUMBER" length="5" jspType="int_text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Количество знаков после запятой по умолчанию</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Валюта по умолчанию </StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+						<Where>IS_USED=1</Where>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ID_ORDER_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Валюта заказа</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+						<Where>IS_USED=1</Where>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="HEADER_STRING" dbType="VARCHAR" length="2000" jspType="text_area" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_FIRM">
+						<StringData>Данные для заголовка</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="FOOTER_STRING" dbType="VARCHAR" length="2000" jspType="text_area" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_FIRM">
+						<StringData>Данные для подвала</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_LIST" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Выбрать действие</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>На главную страницу</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Изменить данные по магазину</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SHOP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SHOP" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP" dbType="VARCHAR" length="50" jspType="text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_PROCESS_INVOICE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Оформление заказа доступно?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_TYPE_SHOP_1" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Первый тип магазина</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_type</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_type" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="type" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_PRICE_QUERY_TYPE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ID_TYPE_SHOP_2" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Второй тип магазина</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_type</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_type" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="type" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_PRICE_QUERY_TYPE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP_FOR_PRICE_LIST" dbType="VARCHAR" length="50" jspType="text" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Внутреннее название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_NEED_RECALC" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Нужен ли интерфейс пересчета в другие валюты</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_SHOP" dbType="VARCHAR" length="30" jspType="text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Код магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DISCOUNT" dbType="NUMBER" length="8" jspType="float_text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Общая скидка для магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="COMMAS_COUNT" dbType="NUMBER" length="5" jspType="int_text" isShow="true" isEdit="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Количество знаков после запятой по умолчанию</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Валюта по умолчанию</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+						<Where>IS_USED=1</Where>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ID_ORDER_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Валюта заказа</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+						<Where>IS_USED=1</Where>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="HEADER_STRING" dbType="VARCHAR" length="2000" jspType="text_area" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_FIRM">
+						<StringData>Данные для заголовка</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="FOOTER_STRING" dbType="VARCHAR" length="2000" jspType="text_area" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_FIRM">
+						<StringData>Данные для подвала</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_LIST" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Выбрать действие</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>На главную страницу</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Удалить магазин</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SHOP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SHOP" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP" dbType="VARCHAR" length="50" jspType="text" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_PROCESS_INVOICE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Оформление заказа доступно?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_TYPE_SHOP_1" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Первый тип магазина</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_type</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_type" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="type" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_PRICE_QUERY_TYPE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ID_TYPE_SHOP_2" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Второй тип магазина</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_type</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_type" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="type" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_PRICE_QUERY_TYPE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP_FOR_PRICE_LIST" dbType="VARCHAR" length="50" jspType="text" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Внутреннее название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_NEED_RECALC" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Нужен ли интерфейс пересчета в другие валюты</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_SHOP" dbType="VARCHAR" length="30" jspType="text" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Код магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DISCOUNT" dbType="NUMBER" length="8" jspType="float_text" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Общая скидка для магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Валюта по умолчанию</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+						<Where>IS_USED=1</Where>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ID_ORDER_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0">
+						<StringData>Валюта заказа</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+						<Where>IS_USED=1</Where>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="HEADER_STRING" dbType="VARCHAR" length="2000" jspType="text_area" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_FIRM">
+						<StringData>Данные для заголовка</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="FOOTER_STRING" dbType="VARCHAR" length="2000" jspType="text_area" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_FIRM">
+						<StringData>Данные для подвала</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_LIST" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Выбрать действие</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>На главную страницу</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="content.copyright" authApplication="CONTENT" authModule="CONTENT.COPYRIGHT" isDelete="1">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Список собственников прав на статьи</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CTX_OWNER_COPYRIGHT</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CTX_OWNER_COPYRIGHT" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="OWNER_COPYRIGHT" dbType="VARCHAR" length="100" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Собственник прав</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="SITE_CTX_OWNER_COPYRIGHT" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Insert</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Добавить нового собственника прав</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CTX_OWNER_COPYRIGHT</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CTX_OWNER_COPYRIGHT" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="OWNER_COPYRIGHT" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Собственник прав</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="SITE_CTX_OWNER_COPYRIGHT" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Change </StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CTX_OWNER_COPYRIGHT</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CTX_OWNER_COPYRIGHT" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="OWNER_COPYRIGHT" dbType="VARCHAR" length="100" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Собственник прав</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="SITE_CTX_OWNER_COPYRIGHT" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Delete</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_CTX_OWNER_COPYRIGHT</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_CTX_OWNER_COPYRIGHT" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="OWNER_COPYRIGHT" dbType="VARCHAR" length="100" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Собственник прав</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="SITE_CTX_OWNER_COPYRIGHT" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="content.is_register" authApplication="CONTENT" authModule="IS_REGISTER" isDelete="1">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Список сайтов</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="NAME_SITE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="false">
+						<StringData>Name site</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTAL_LIST_SITE" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="false">
+					<StringData>to index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Статус регистрации</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.site-admin</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Изменение информации о сайте</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="NAME_SITE" dbType="VARCHAR" length="30" jspType="text" isShow="true" isEdit="0" isNotNull="true">
+					<NameColumn isUseProperties="false">
+						<StringData>Name site</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_REGISTER_ALLOWED" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Регистрация доступна для юзеров?</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTAL_LIST_SITE" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Type of action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Index page</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+</MemberArea>

@@ -209,15 +209,6 @@
 		<servlet-class>org.riverock.webmill.container.portlet.register.PortletRegisterServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	<servlet>
-		<servlet-name>Mill.UploadPrice</servlet-name>
-		<servlet-class>org.riverock.portlet.shop.upload.UploadPrice</servlet-class>
-		<load-on-startup>10</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Mill.UploadPrice</servlet-name>
-		<url-pattern>/mill.upload_price</url-pattern>
-	</servlet-mapping>
 
 	<!-- Set the default session timeout (in minutes) -->
 	<session-config>

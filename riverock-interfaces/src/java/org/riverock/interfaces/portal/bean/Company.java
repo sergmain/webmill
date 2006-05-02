@@ -15,4 +15,5 @@ public interface Company {
     public String getCfo();
     public String getWebsite();
     public String getInfo();
+    public boolean isDeleted();
 }

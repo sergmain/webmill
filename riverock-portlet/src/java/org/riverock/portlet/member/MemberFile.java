@@ -84,9 +84,8 @@ public final class MemberFile extends CacheFile {
         if( log.isDebugEnabled() )
             log.debug( "#7.1.0  " + nameModule_ + ", isUseCache:" + isUseCache + ", " + getFile().getName() );
 
-        ModuleType moduleType = null;
         if( isUseCache ) {
-            moduleType = memberHash.get( nameModule_ );
+            ModuleType moduleType = memberHash.get( nameModule_ );
             if( log.isDebugEnabled() )
                 log.debug( "moduleType: " + moduleType );
 
@@ -119,7 +118,7 @@ public final class MemberFile extends CacheFile {
             return null;
         }
 
-        moduleType = memberHash.get( nameModule_ );
+        ModuleType moduleType = memberHash.get( nameModule_ );
         if( log.isDebugEnabled() ) {
             log.debug( "#7.02 file not changed. Get module from cache" );
             log.debug( "moduleType: " + moduleType );
@@ -167,6 +166,7 @@ public final class MemberFile extends CacheFile {
                         Marshaller.marshal( ma, w );
                     }
                     catch( Exception e ) {
+                        //catch debug error
                     }
                 }
             }

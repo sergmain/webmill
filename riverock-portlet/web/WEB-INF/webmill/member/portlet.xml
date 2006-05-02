@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<MemberArea xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-portlet\src-schema\xsd\riverock-portlet-member.xsd" xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+	<Module name="portlet.faq_lang" authApplication="CONTENT" authModule="CONTENT.FAQ" isDelete="1">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>FAQ</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SITE_SUPPORT_LANGUAGE</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_SUPPORT_LANGUAGE" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Site name</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="0">
+							<NameColumn isUseProperties="0">
+								<StringData>PK</StringData>
+							</NameColumn>
+						</Fields>
+						<Fields refTable="a" name="NAME_SITE" dbType="VARCHAR" jspType="text" isShow="1">
+							<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+								<StringData>FIELD</StringData>
+							</NameColumn>
+						</Fields>
+						<Table table="WM_PORTAL_LIST_SITE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ID_LANGUAGE" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Language</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_LANGUAGE</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_LANGUAGE" dbType="NUMBER" jspType="int_text" isShow="0">
+							<NameColumn isUseProperties="0">
+								<StringData>PK</StringData>
+							</NameColumn>
+						</Fields>
+						<Fields refTable="a" name="NAME_LANGUAGE" dbType="VARCHAR" jspType="text" isShow="1">
+							<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+								<StringData>FIELD</StringData>
+							</NameColumn>
+						</Fields>
+						<Table table="WM_LIST_LANGUAGE" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTAL_SITE_LANGUAGE" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>Список FAQ</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Список FAQ</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="lookup" module="content.faq">
+				<TargetModuleName isUseProperties="0">
+					<StringData>FAQ</StringData>
+				</TargetModuleName>
+				<TargetModuleLookup type="index"/>
+				<TargetModuleLookup type="insert"/>
+				<TargetModuleLookup type="change"/>
+				<TargetModuleLookup type="delete"/>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="content.faq" authApplication="CONTENT" authModule="CONTENT.FAQ" isDelete="1" type="lookup" lookupPK="ID_SITE_SUPPORT_LANGUAGE">
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.faq.FaqGroup"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>Список FAQ</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ" dbType="NUMBER" jspType="int_text" isShow="1">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="FAQ_CODE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>FAQ code</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FAQ" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>name FAQ</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ" ref="a"/>
+				<Order field="ID_SITE_PORTLET_FAQ" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>FAQ 1</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="lookup" module="content.faq_list">
+				<TargetModuleName isUseProperties="0">
+					<StringData>FAQ list</StringData>
+				</TargetModuleName>
+				<TargetModuleLookup type="index"/>
+				<TargetModuleLookup type="insert"/>
+				<TargetModuleLookup type="change"/>
+				<TargetModuleLookup type="delete"/>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>add_news.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="FAQ_CODE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>FAQ code</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FAQ" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>name FAQ</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ" ref="a"/>
+				<Order field="ID_SITE_PORTLET_FAQ" direction="DESC"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>change_list_news.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ" dbType="NUMBER" jspType="int_text" isShow="1" isEdit="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="FAQ_CODE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>FAQ code</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FAQ" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>name FAQ</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>add_news.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ" dbType="NUMBER" jspType="int_text" isShow="1">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="FAQ_CODE" dbType="VARCHAR" length="30" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>FAQ code</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_FAQ" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+						<StringData>name FAQ</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="content.faq_list" authApplication="CONTENT" authModule="CONTENT.FAQ" isDelete="1" type="lookup" lookupPK="ID_SITE_PORTLET_FAQ">
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.faq.FaqGroup"/>
+		<RelateClass isFullReinitCache="false" className="org.riverock.portlet.faq.FaqItem"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>Список FAQ</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ_LIST</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_LIST" dbType="NUMBER" jspType="int_text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DATE_POST" dbType="DATE" jspType="date_text" isShow="true" mask="dd.MM.yyyy HH:mm:ss">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Дата создания</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="QUESTION" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Вопрос</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_QUESTION</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_QUESTION" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="QUESTION" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_QUESTION" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ANSWER" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Ответ</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_ANSWER</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_ANSWER" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="ANSWER" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_ANSWER" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ_LIST" ref="a"/>
+				<Order field="DATE_POST" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>add_news.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ_LIST</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_LIST" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="QUESTION" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Вопрос</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_QUESTION</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_QUESTION" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="QUESTION" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_QUESTION" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ANSWER" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Ответ</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_ANSWER</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_ANSWER" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="ANSWER" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_ANSWER" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ_LIST" ref="a"/>
+				<Order field="DATE_POST" direction="DESC"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>change_list_news.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ_LIST</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_LIST" dbType="NUMBER" jspType="int_text" isShow="1" isEdit="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DATE_POST" dbType="DATE" jspType="date_text" isShow="true" isEdit="false" mask="dd.MM.yyyy HH:mm:ss">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Дата создания</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="QUESTION" dbType="VARCHAR" jspType="bigtext" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Вопрос</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_QUESTION</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_QUESTION" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="QUESTION" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_QUESTION" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ANSWER" dbType="VARCHAR" jspType="bigtext" isShow="true" isEdit="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Ответ</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_ANSWER</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_ANSWER" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="ANSWER" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_ANSWER" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ_LIST" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.faq</role-name>
+			</security-role-ref>
+			<Title isUseProperties="0" storage="mill.locale.MAIN_LIST_NEWS">
+				<StringData>delete Q/A</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_SITE_PORTLET_FAQ_LIST</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_LIST" dbType="NUMBER" jspType="int_text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="DATE_POST" dbType="DATE" jspType="date_text" isShow="true" mask="dd.MM.yyyy HH:mm:ss">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Дата создания</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="QUESTION" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Вопрос</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_QUESTION</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_QUESTION" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="QUESTION" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_QUESTION" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="ANSWER" dbType="VARCHAR" jspType="bigtext" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Ответ</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_SITE_PORTLET_FAQ_ANSWER</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_SITE_PORTLET_FAQ_ANSWER" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="ANSWER" dbType="VARCHAR" length="4000" jspType="text" isShow="1"/>
+						<Table table="WM_PORTLET_FAQ_ANSWER" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_PORTLET_FAQ_LIST" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+</MemberArea>

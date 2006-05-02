@@ -72,11 +72,11 @@ public class ConfigObject
                     PropertiesProvider.getParameter(nameConfigParam);
             }
             else {
-		if (log.isDebugEnabled()) {
-        		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-			log.debug("classLoader: "+cl+"\nhash: "+cl.hashCode() );
-		}
-		String name = "java:comp/env/" + nameJndiCtx;
+                if (log.isDebugEnabled()) {
+                    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                    log.debug("classLoader: "+cl+"\nhash: "+cl.hashCode() );
+                }
+                String name = "java:comp/env/" + nameJndiCtx;
                 try {
                     InitialContext ic = new InitialContext();
                     config.nameConfigFile = (String)ic.lookup(name);
@@ -84,11 +84,11 @@ public class ConfigObject
                 catch (NamingException e) {
                     String es = "Error get value from JDNI context. Name: "+ name;
 			try {
-                    		InitialContext ic = new InitialContext();
-                    		Map map = ic.getEnvironment();
-				Iterator<Map.Entry> iterator = map.entrySet().iterator();
-				while(iterator.hasNext()) {
-					Map.Entry entry = iterator.next();
+                InitialContext ic = new InitialContext();
+                Map map = ic.getEnvironment();
+                Iterator<Map.Entry> iterator = map.entrySet().iterator();
+                while(iterator.hasNext()) {
+                    Map.Entry entry = iterator.next();
 					log.error("key: "+entry.getKey()+", value: "+ entry.getValue());
 				}
 			}

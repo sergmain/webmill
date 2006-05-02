@@ -1,0 +1,897 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id$-->
+<MemberArea xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="c:\sandbox\riverock\riverock-portlet\src-schema\xsd\riverock-portlet-member.xsd" xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+	<Module name="mill.auth.appl" authApplication="AUTH" authModule="RIGHT" isDelete="true">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>index.jsp.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ARM" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.name_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="30">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.code_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="3">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_APPLICATION" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="lookup" module="mill.auth.mod">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.next</StringData>
+				</TargetModuleName>
+				<TargetModuleLookup type="index"/>
+				<TargetModuleLookup type="insert"/>
+				<TargetModuleLookup type="change"/>
+				<TargetModuleLookup type="delete"/>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>add_appl.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ARM" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.name_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="30">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.code_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="3">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_APPLICATION" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>change_appl.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ARM" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.name_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="30">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.code_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="3">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_APPLICATION" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>delete_appl.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ARM" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.name_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="30">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.code_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="3">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>index.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_APPLICATION" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="mill.auth.mod" authApplication="AUTH" authModule="RIGHT" isDelete="true" type="lookup" lookupPK="ID_ARM">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>mod.jsp.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_OBJECT_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_OBJECT_ARM" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.name_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="40">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.code_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="URL" dbType="VARCHAR" jspType="text" isShow="true" length="80">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.url</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="8">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_NEW" dbType="NUMBER" jspType="yesno_switch" isShow="true" length="1" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>is New format?</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_MODULE" ref="a"/>
+				<Order field="ORDER_FIELD" direction="ASC"/>
+				<Order field="NAME_OBJECT_ARM" direction="ASC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>mod.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>add_mod.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_OBJECT_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_OBJECT_ARM" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.name_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="40">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.code_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="URL" dbType="VARCHAR" jspType="text" isShow="true" length="80">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.url</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="8">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_NEW" dbType="NUMBER" jspType="yesno_switch" isShow="true" length="1" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>is New format?</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_MODULE" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>change_mod.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_OBJECT_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_OBJECT_ARM" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.name_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="40">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.code_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="URL" dbType="VARCHAR" jspType="text" isShow="true" length="80">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.url</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="8">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_NEW" dbType="NUMBER" jspType="yesno_switch" isShow="true" length="1" isNotNull="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>is New format?</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_MODULE" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>delete_mod.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_OBJECT_ARM</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_OBJECT_ARM" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.name_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_OBJECT_ARM" dbType="VARCHAR" jspType="text" isShow="true" length="40">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.code_object_arm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="URL" dbType="VARCHAR" jspType="text" isShow="true" length="80">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.url</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ORDER_FIELD" dbType="NUMBER" jspType="int_text" isShow="true" length="8">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.order_field</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="STRING_KEY" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ARM">
+						<StringData>mod.jsp.string_key</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_NEW" dbType="NUMBER" jspType="yesno_switch" isShow="true" length="1">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>is New format?</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_MODULE" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="mill.auth.role" authApplication="AUTH" authModule="RIGHT" isDelete="true">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+				<StringData>index.jsp.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+						<StringData>index.jsp.name_access_group</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+				<StringData>add.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+						<StringData>index.jsp.name_access_group</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+				<StringData>change.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+						<StringData>index.jsp.name_access_group</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+				<StringData>delete.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="true" length="100">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_ACCESS_GROUP">
+						<StringData>index.jsp.name_access_group</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0" storage="mill.locale.main">
+					<StringData>Вернуться в начало раздела</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="mill.a3.user" authApplication="AUTH" authModule="AUTH.USER_ROLES" isDelete="true">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_USER">
+				<StringData>index.jsp.title</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="firm"/>
+				<PrimaryKey>ID_AUTH_USER</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_AUTH_USER" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_USER">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="b1" name="ID_FIRM" dbType="NUMBER" jspType="int_text" isShow="false" length="1">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_USER">
+						<StringData>index.jsp.is_road</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="c" name="SHORT_NAME" dbType="VARCHAR" jspType="text" isShow="true" length="125">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_USER">
+						<StringData>index.jsp.name_firm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="b" name="LAST_NAME" dbType="VARCHAR" jspType="text" isShow="true" length="50">
+					<NameColumn isUseProperties="false" storage="mill.locale.AUTH_USER">
+						<StringData>Фамилия</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="b" name="FIRST_NAME" dbType="VARCHAR" jspType="text" isShow="true" length="60">
+					<NameColumn isUseProperties="false" storage="mill.locale.AUTH_USER">
+						<StringData>Имя</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="b" name="MIDDLE_NAME" dbType="VARCHAR" jspType="text" isShow="true" length="50">
+					<NameColumn isUseProperties="false" storage="mill.locale.AUTH_USER">
+						<StringData>Отчество</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="USER_LOGIN" dbType="VARCHAR" jspType="text" isShow="true" length="20">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_USER">
+						<StringData>index.jsp.user_login</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_CURRENT_FIRM" dbType="NUMBER" jspType="yesno_switch" isShow="true" length="1">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_USER">
+						<StringData>index.jsp.is_use_current_firm</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_SERVICE" dbType="NUMBER" jspType="yesno_switch" isShow="true" length="1">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_USER">
+						<StringData>index.jsp.is_service</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_ROAD" dbType="NUMBER" jspType="yesno_switch" isShow="true" length="1">
+					<NameColumn isUseProperties="1" storage="mill.locale.AUTH_USER">
+						<StringData>index.jsp.is_road</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_AUTH_USER" ref="a"/>
+				<Table table="WM_LIST_USER" ref="b"/>
+				<Table table="WM_LIST_COMPANY" ref="c"/>
+				<Table table="WM_LIST_USER" ref="b1"/>
+				<WhereCompelx>
+					<Left>
+						<Alias>a</Alias>
+						<Column>id_user</Column>
+					</Left>
+					<Right>
+						<Alias>b1</Alias>
+						<Column>id_user</Column>
+					</Right>
+				</WhereCompelx>
+				<WhereCompelx>
+					<Left>
+						<Alias>a</Alias>
+						<Column>id_user</Column>
+					</Left>
+					<Right>
+						<Alias>b</Alias>
+						<Column>id_user</Column>
+					</Right>
+				</WhereCompelx>
+				<WhereCompelx>
+					<Left>
+						<Alias>a</Alias>
+						<Column>id_firm</Column>
+					</Left>
+					<Right>
+						<Alias>c</Alias>
+						<Column>id_firm</Column>
+					</Right>
+				</WhereCompelx>
+				<Order field="SHORT_NAME" direction="ASC"/>
+				<Order field="LAST_NAME" direction="ASC"/>
+				<Order field="FIRST_NAME" direction="ASC"/>
+				<Order field="MIDDLE_NAME" direction="ASC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.AUTH_USER">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="lookup" module="mill.a3.userrole">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.next</StringData>
+				</TargetModuleName>
+				<TargetModuleLookup type="index"/>
+				<TargetModuleLookup type="insert"/>
+				<TargetModuleLookup type="delete"/>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="mill.a3.userrole" authApplication="AUTH" authModule="AUTH.USER_ROLES" isDelete="true" type="lookup" lookupPK="ID_AUTH_USER">
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_USER">
+				<StringData>list_bind.jsp.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_RELATE_ACCGROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_RELATE_ACCGROUP" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Уровень 'слубжа'</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_AUTH_RELATE_ACCGROUP" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.AUTH_ARM">
+				<StringData>mod.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_USER">
+				<StringData>add_list_bind.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_RELATE_ACCGROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_RELATE_ACCGROUP" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Уровень 'слубжа'</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_AUTH_RELATE_ACCGROUP" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_USER">
+				<StringData>change_list_bind.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_RELATE_ACCGROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_RELATE_ACCGROUP" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Уровень 'слубжа'</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_AUTH_RELATE_ACCGROUP" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.auth</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.AUTH_USER">
+				<StringData>delete_list_bind.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_RELATE_ACCGROUP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_RELATE_ACCGROUP" dbType="NUMBER" jspType="int_text" isShow="0">
+					<NameColumn isUseProperties="0" storage="mill.locale.AUTH_ARM">
+						<StringData>##</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.MAIN_USER_INFO">
+						<StringData>Уровень 'слубжа'</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>ID_ACCESS_GROUP</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_ACCESS_GROUP" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_ACCESS_GROUP" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_AUTH_ACCESS_GROUP" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_AUTH_RELATE_ACCGROUP" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+</MemberArea>

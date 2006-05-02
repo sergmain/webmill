@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<MemberArea xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-portlet\src-schema\xsd\riverock-portlet-member.xsd" xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
+	<Module name="currency.precision" authApplication="CURRENCY" authModule="PRECISION" isDelete="1">
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.price.CurrencyList"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false">
+				<StringData>Список доступных магазинов</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_SHOP</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_SHOP" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Название магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_CLOSE" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Закрыт?</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_SHOP_FOR_PRICE_LIST" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Название магазина внутренее</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CODE_SHOP" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.HAM_QSO_LOG">
+						<StringData>Код магазина</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_LIST" ref="a"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="false">
+				<StringData>Выбрать действие</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="0">
+					<StringData>На главную страницу</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="lookup" module="currency.prec.value">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Точность валюты</StringData>
+				</TargetModuleName>
+				<TargetModuleLookup type="index"/>
+				<TargetModuleLookup type="insert"/>
+				<TargetModuleLookup type="change"/>
+				<TargetModuleLookup type="delete"/>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="currency.prec.value" authApplication="CURRENCY" authModule="PRECISION" isDelete="1" type="lookup" lookupPK="ID_SHOP">
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.price.CurrencyList"/>
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.price.Shop"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>Точность валют</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_PRICE_SHOP_PRECISION</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_PRICE_SHOP_PRECISION" dbType="NUMBER" jspType="int_text" isShow="true"/>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Валюта</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="PRECISION_SHOP" dbType="NUMBER" jspType="int_text" isShow="true" length="30">
+					<NameColumn isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Точность после запятой</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_PRECISION" ref="a"/>
+				<Order field="ID_CURRENCY" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="false" storage="mill.locale.main">
+					<StringData>Добавить</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="false" storage="mill.locale.main">
+					<StringData>οзменить</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="false" storage="mill.locale.main">
+					<StringData>Удалить</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>Добавить точность валюты</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_PRICE_SHOP_PRECISION</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_PRICE_SHOP_PRECISION" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Валюта</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="PRECISION_SHOP" dbType="NUMBER" jspType="int_text" isShow="true" length="30">
+					<NameColumn isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Точность после запятой</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_PRECISION" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>οзменить точность валюты</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_PRICE_SHOP_PRECISION</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_PRICE_SHOP_PRECISION" dbType="NUMBER" jspType="int_text" isShow="false" isEdit="false"/>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true" isEdit="false">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Валюта</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="PRECISION_SHOP" dbType="NUMBER" jspType="int_text" isShow="true" isEdit="true" length="30">
+					<NameColumn isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Точность после запятой</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_PRECISION" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>Удалить точность валюты</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_PRICE_SHOP_PRECISION</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_PRICE_SHOP_PRECISION" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Валюта</StringData>
+					</NameColumn>
+					<QueryArea>
+						<Restrict type="site"/>
+						<PrimaryKey>ID_CURRENCY</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Fields refTable="a" name="PRECISION_SHOP" dbType="NUMBER" jspType="int_text" isShow="true" length="30">
+					<NameColumn isUseProperties="false" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>Точность после запятой</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_PRICE_SHOP_PRECISION" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="currency.currency" authApplication="CURRENCY" authModule="CURRENCY" isDelete="1">
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.price.CurrencyList"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>index.jsp.title</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_CURRENCY</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.name_currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" length="40" jspType="lookupClass" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.real_curs_percent</StringData>
+					</NameColumn>
+					<ClassQuery nameClass="org.riverock.portlet.member.currency.CurrencyRealCursClassQuery" nameOptionName="type" xmlRoot="CatalogTemplate">
+						<Parameters method="setIdCurrency" field="ID_CURRENCY" type="java.lang.Long"/>
+					</ClassQuery>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookupClass" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.date_change</StringData>
+					</NameColumn>
+					<ClassQuery nameClass="org.riverock.portlet.member.currency.CurrencyDateChangeClassQuery" nameOptionName="type" xmlRoot="CatalogTemplate">
+						<Parameters method="setIdCurrency" field="ID_CURRENCY" type="java.lang.Long"/>
+					</ClassQuery>
+				</Fields>
+				<Fields refTable="a" name="CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" length="20" jspType="lookupClass" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.current_curs</StringData>
+					</NameColumn>
+					<ClassQuery nameClass="org.riverock.portlet.member.currency.CurrencyCurrentCursClassQuery" nameOptionName="type" xmlRoot="current_curs">
+						<Parameters method="setIdCurrency" field="ID_CURRENCY" type="java.lang.Long"/>
+					</ClassQuery>
+				</Fields>
+				<Fields refTable="a" name="IS_USED" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.is_used</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" length="40" jspType="lookupClass" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.std_curs</StringData>
+					</NameColumn>
+					<ClassQuery nameClass="org.riverock.portlet.member.currency.CurrencyStdCursClassQuery" nameOptionName="type" xmlRoot="std_curs">
+						<Parameters method="setIdCurrency" field="ID_CURRENCY" type="java.lang.Long"/>
+					</ClassQuery>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="lookupClass" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.std_date_change</StringData>
+					</NameColumn>
+					<ClassQuery nameClass="org.riverock.portlet.member.currency.CurrencyStdDateChangeClassQuery" nameOptionName="type" xmlRoot="std_date_change">
+						<Parameters method="setIdCurrency" field="ID_CURRENCY" type="java.lang.Long"/>
+					</ClassQuery>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_STANDART" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.is_use_standart</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" length="10" jspType="lookupClass" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.name_str_curr</StringData>
+					</NameColumn>
+					<ClassQuery nameClass="org.riverock.portlet.member.currency.CurrencyNameStdCurrencyClassQuery" nameOptionName="type" xmlRoot="name_std_curr">
+						<Parameters method="setIdCurrency" field="ID_CURRENCY" type="java.lang.Long"/>
+					</ClassQuery>
+				</Fields>
+				<Fields refTable="a" name="PERCENT_VALUE" dbType="NUMBER" length="10" jspType="float_text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>index.jsp.percent</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_CASH_CURRENCY" ref="a"/>
+				<Order field="IS_USED" direction="DESC"/>
+				<Order field="CURRENCY"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="change">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.change</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="delete">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.delete</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="lookup" module="currency.curs">
+				<TargetModuleName isUseProperties="0">
+					<StringData>Currency curs</StringData>
+				</TargetModuleName>
+				<TargetModuleLookup type="index"/>
+				<TargetModuleLookup type="insert"/>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>add.title</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_CURRENCY</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_currency.jsp.currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USED" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" defValue="1">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_currency.jsp.is_used</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_currency.jsp.name_currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_STANDART" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_currency.jsp.is_use_standart</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="PERCENT_VALUE" dbType="NUMBER" length="50" jspType="float_text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_currency.jsp.percent</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_CASH_CURRENCY" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="change">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>change.title</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_CURRENCY</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USED" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" defValue="1">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.is_used</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.name_currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_STANDART" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.is_use_standart</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="PERCENT_VALUE" dbType="NUMBER" length="50" jspType="float_text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_currency.jsp.percent</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_STANDART_CURS" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>ch_currency.jsp.id_standart_curs</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_std_curr</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_std_curr" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="name_std_curr" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY_STD" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_CASH_CURRENCY" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="delete">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>add.title</StringData>
+			</Title>
+			<QueryArea>
+				<Restrict type="site"/>
+				<PrimaryKey>ID_CURRENCY</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_CURRENCY" dbType="NUMBER" jspType="int_text" isShow="false"/>
+				<Fields refTable="a" name="ID_SITE" dbType="NUMBER" jspType="int_text" isShow="false">
+					<NameColumn isUseProperties="0">
+						<StringData>PK</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USED" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true" defValue="1">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.is_used</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="NAME_CURRENCY" dbType="VARCHAR" length="50" jspType="text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.name_currency</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="IS_USE_STANDART" dbType="NUMBER" length="1" jspType="yesno_switch" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>change_currency.jsp.is_use_standart</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="PERCENT_VALUE" dbType="NUMBER" length="50" jspType="float_text" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_currency.jsp.percent</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="ID_STANDART_CURS" dbType="NUMBER" jspType="lookup" isShow="true">
+					<NameColumn isUseProperties="0" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>ch_currency.jsp.id_standart_curs</StringData>
+					</NameColumn>
+					<QueryArea>
+						<PrimaryKey>id_std_curr</PrimaryKey>
+						<PrimaryKeyType>number</PrimaryKeyType>
+						<MainRefTable>a</MainRefTable>
+						<Fields refTable="a" name="id_std_curr" dbType="NUMBER" jspType="int_text" isShow="0"/>
+						<Fields refTable="a" name="name_std_curr" dbType="VARCHAR" jspType="text" isShow="1"/>
+						<Table table="WM_CASH_CURRENCY_STD" ref="a"/>
+					</QueryArea>
+				</Fields>
+				<Table table="WM_CASH_CURRENCY" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+	<Module name="currency.curs" authApplication="CURRENCY" authModule="CURRENCY" isDelete="1" type="lookup" lookupPK="ID_CURRENCY">
+		<RelateClass isFullReinitCache="true" className="org.riverock.portlet.price.CurrencyList"/>
+		<Content action="index">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>curs.jsp.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_CURVAL</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_CURVAL" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="DATE_CHANGE" dbType="DATE" jspType="date_text" isShow="true" mask="dd.MM.yyyy HH:mm:ss">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>curs.jsp.date_change</StringData>
+					</NameColumn>
+				</Fields>
+				<Fields refTable="a" name="CURS" dbType="NUMBER" length="30" jspType="float_text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>curs.jsp.curs</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_CASH_CURR_VALUE" ref="a"/>
+				<Order field="DATE_CHANGE" direction="DESC"/>
+			</QueryArea>
+			<TargetAreaName isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>index.jsp.action</StringData>
+			</TargetAreaName>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+			<TargetModule action="insert">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>button.add</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+		<Content action="insert">
+			<security-role-ref>
+				<role-name>webmill.currency</role-name>
+			</security-role-ref>
+			<Title isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+				<StringData>add.title</StringData>
+			</Title>
+			<QueryArea>
+				<PrimaryKey>ID_CURVAL</PrimaryKey>
+				<PrimaryKeyType>number</PrimaryKeyType>
+				<MainRefTable>a</MainRefTable>
+				<Fields refTable="a" name="ID_CURVAL" dbType="NUMBER" jspType="int_text" isShow="0"/>
+				<Fields refTable="a" name="CURS" dbType="NUMBER" length="30" jspType="float_text" isShow="true">
+					<NameColumn isUseProperties="1" storage="mill.locale.PAYMENT_CURRENCY">
+						<StringData>add_curs.jsp.curs</StringData>
+					</NameColumn>
+				</Fields>
+				<Table table="WM_CASH_CURR_VALUE" ref="a"/>
+			</QueryArea>
+			<TargetModule action="index">
+				<TargetModuleName isUseProperties="1" storage="mill.locale.main">
+					<StringData>page.main.3</StringData>
+				</TargetModuleName>
+			</TargetModule>
+		</Content>
+	</Module>
+</MemberArea>
