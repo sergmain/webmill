@@ -20,8 +20,6 @@ public interface InternalAuthDao {
 
     public List<Long> getGrantedUserIdList(String userLogin);
     public List<Long> getGrantedCompanyIdList(String userLogin);
-//    public String getGrantedGroupCompanyId(String userLogin);
-//    public List<Long> getGrantedGroupCompanyIdList(String userLogin);
 
     public String getGrantedHoldingId(String userLogin);
     public List<Long> getGrantedHoldingIdList(String userLogin);

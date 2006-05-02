@@ -35,6 +35,21 @@ public class InternalDaoFactory {
 	public static InternalCompanyDao internalCompanyDao = new InternalCompanyDaoImpl();
 	public static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
 	public static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
+	public static InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
+	public static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
+	public static InternalVirtualHostDao internalVirtualHostDao = new InternalVirtualHostDaoImpl();
+
+    public static InternalVirtualHostDao getInternalVirtualHostDao() {
+        return internalVirtualHostDao;
+    }
+
+    public static InternalXsltDao getInternalXsltDao() {
+        return internalXsltDao;
+    }
+
+    public static InternalSiteDao getInternalSiteDao() {
+        return internalSiteDao;
+    }
 
     public static InternalDao getInternalDao() {
         return internalDao;

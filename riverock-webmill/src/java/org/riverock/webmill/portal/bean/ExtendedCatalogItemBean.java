@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.template.PortalTemplate;
@@ -88,7 +89,7 @@ public final class ExtendedCatalogItemBean {
         catalogItem.templateId = ctx.getTemplateId();
         catalogItem.portletMetadata = initMetadata(ctx);
         List<String> roles = new ArrayList<String>();
-        if (!StringTools.isEmpty(ctx.getPortletRole())) {
+        if (!StringUtils.isEmpty(ctx.getPortletRole())) {
             StringTokenizer st = new StringTokenizer(ctx.getPortletRole());
             while (st.hasMoreElements()) {
                 roles.add( st.nextToken() );

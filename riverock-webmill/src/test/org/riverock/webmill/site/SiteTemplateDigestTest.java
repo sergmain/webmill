@@ -142,10 +142,10 @@ public class SiteTemplateDigestTest {
 
     public static void main(String[] args) throws Exception {
 
-        for (int i=0; i<template.length; i++) {
+        for (String aTemplate : template) {
             PortalTemplate siteTemplate =
-                PortalTemplateManagerImpl.digestSiteTemplate( template[i], "template" );
-            System.out.println("template:\n" + siteTemplate.toString() );
+                PortalTemplateManagerImpl.digestSiteTemplate(aTemplate, "template", 1L);
+            System.out.println("template:\n" + siteTemplate.toString());
         }
     }
 }

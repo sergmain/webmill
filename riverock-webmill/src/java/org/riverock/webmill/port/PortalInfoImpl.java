@@ -28,12 +28,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
@@ -82,9 +82,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         if (siteLanguageId == null)
             return false;
 
-        Iterator<SiteLanguageBean> it = siteLanguageList.iterator();
-        while (it.hasNext()) {
-            SiteLanguageBean siteLanguageBean = it.next();
+        for (SiteLanguageBean siteLanguageBean : siteLanguageList) {
             if (siteLanguageId.equals(siteLanguageBean.getSiteLanguageId())) {
                 return true;
             }
@@ -103,9 +101,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
         if (supportLanguageMap == null) {
             supportLanguageMap = new HashMap<String, Long>();
-            Iterator<SiteLanguageBean> iterator = siteLanguageList.iterator();
-            while (iterator.hasNext()) {
-                SiteLanguageBean bean = iterator.next();
+            for (SiteLanguageBean bean : siteLanguageList) {
                 supportLanguageMap.put(bean.getCustomLanguage(), bean.getSiteLanguageId());
             }
         }
@@ -133,7 +129,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private static long lastReadData = 0;
     private final static long LENGTH_TIME_PERIOD = 30000;
-    private static Object syncObject = new Object();
+    private final static Object syncObject = new Object();
 
     // Todo replace synchronized with synchronized(syncObject)
     public synchronized static PortalInfoImpl getInstance(String serverName) {
@@ -143,9 +139,9 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
                 ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD));
         }
 
-        Long id = null;
-        id = SiteList.getIdSite(serverName);
-        if (log.isDebugEnabled()) log.debug("ServerName:" + serverName + ", siteId: " + id);
+        Long id = SiteList.getIdSite(serverName);
+        if (log.isDebugEnabled())
+            log.debug("ServerName:" + serverName + ", siteId: " + id);
 
         return getInstance(id);
     }
@@ -156,7 +152,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
             PortalInfoImpl p = null;
             if (siteId != null)
-                p = (PortalInfoImpl) portatInfoMap.get(siteId);
+                p = portatInfoMap.get(siteId);
 
             if ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD || p == null) {
                 log.debug("#15.01.03 reinit cached value ");
@@ -171,11 +167,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private PortalInfoImpl(Long siteId) {
         this.siteId = siteId;
-        long mills = 0; // System.currentTimeMillis();
+        long mills; // System.currentTimeMillis();
         siteBean = InternalDaoFactory.getInternalDao().getSiteBean( siteId );
 
-        if (!StringTools.isEmpty(siteBean.getDefLanguage()) &&
-            !StringTools.isEmpty(siteBean.getDefCountry())) {
+        if (!StringUtils.isEmpty(siteBean.getDefLanguage()) &&
+            !StringUtils.isEmpty(siteBean.getDefCountry())) {
 
             defaultLocale = new Locale(siteBean.getDefLanguage().toLowerCase(),
                 siteBean.getDefCountry(),
@@ -215,7 +211,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         meta = new HashMap<String, String>();
         Properties properties = new Properties();
         try {
-            // Todo investigate what value must passed to ByteArrayInputStream
+            // Todo decide, what value must be passed to ByteArrayInputStream
             properties.load( new ByteArrayInputStream( "".getBytes() ) );
         }
         catch (IOException e) {
@@ -223,10 +219,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
             log.error(es, e);
             throw new IllegalStateException( es, e);
         }
-        Iterator<Map.Entry<Object,Object>> iterator = properties.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Object, Object> entry = iterator.next();
-            meta.put( entry.getKey().toString(), entry.getValue().toString() );
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            meta.put(entry.getKey().toString(), entry.getValue().toString());
         }
         meta.put( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL, siteBean.getAdminEmail() );
     }
@@ -274,9 +268,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         // Build menu
         SiteMenu sc = SiteMenu.getInstance(siteId);
         languageMenuMap = new HashMap<String, MenuLanguage>();
-        Iterator<MenuLanguage> iterator = sc.getMenuLanguage().iterator();
-        while (iterator.hasNext()) {
-            MenuLanguage menuLanguageInterface = iterator.next();
+        for (MenuLanguage menuLanguageInterface : sc.getMenuLanguage()) {
             languageMenuMap.put(menuLanguageInterface.getLocaleStr(), menuLanguageInterface);
         }
     }

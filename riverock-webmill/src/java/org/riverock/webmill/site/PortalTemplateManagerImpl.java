@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.digester.Digester;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -150,7 +151,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     public static PortalTemplate digestSiteTemplate(String templateData, String templateName, Long templateId) throws IOException, SAXException {
-        if (StringTools.isEmpty(templateData) ) {
+        if (StringUtils.isEmpty(templateData) ) {
             final PortalTemplateImpl portalTemplate = new PortalTemplateImpl();
             portalTemplate.setTemplateName( templateName );
             return portalTemplate;

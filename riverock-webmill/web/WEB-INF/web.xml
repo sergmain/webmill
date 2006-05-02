@@ -69,10 +69,6 @@
 		<url-pattern>/pageid/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>ContextNavigator</servlet-name>
-		<url-pattern>/url/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
 		<servlet-name>ServletCSS</servlet-name>
 		<url-pattern>/css</url-pattern>
 	</servlet-mapping>

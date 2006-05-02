@@ -111,7 +111,6 @@ public final class ServletCSS extends HttpServlet {
             else {
                 dispatcher.forward( request, response );
             }
-            return;
         }
         catch( Exception e ) {
             final String es = "Error processing ServletCSS";

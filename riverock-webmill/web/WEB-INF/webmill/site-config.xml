@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serg (Home) -->
+<Sites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-webmill\src-schema\xsd\riverock-webmill-site-config.xsd">
+	<SiteConfig siteName="test.askmore" defaultLocale="ru_admin">
+		<Company>
+			<Name>1st company</Name>
+			<ShortName>Short name</ShortName>
+			<Address>Address</Address>
+			<Ceo>Ceo</Ceo>
+			<Cfo>Cfo</Cfo>
+			<Website>http://localhost</Website>
+			<Info>Info string</Info>
+		</Company>
+		<Host>test.askmore</Host>
+		<CssFile>default.css</CssFile>
+		<SiteLanguage name="Admin RU" locale="ru_admin">
+			<Template name="index">
+				<TemplateFile>index-template.xml</TemplateFile>
+			</Template>
+			<Template name="dynamic">
+				<TemplateFile>dynamic-template.xml</TemplateFile>
+			</Template>
+			<Xslt name="default xslt">
+				<XsltFile>default.xslt</XsltFile>
+			</Xslt>
+			<MenuGroup code="MAIN">
+				<Menu>
+					<MenuName>String</MenuName>
+					<PortletName>mill.index</PortletName>
+					<TemplateName>index</TemplateName>
+					<Url>homepage</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Webmill manager</MenuName>
+					<PortletName>webmill.manager</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>manager</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Загрузка прайсов</MenuName>
+					<PortletName>mill.upload_price</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>price-upload</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Login</MenuName>
+					<PortletName>mill.login</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>login</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Logout</MenuName>
+					<PortletName>mill.logout</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>logout</Url>
+				</Menu>
+			</MenuGroup>
+		</SiteLanguage>
+		<SiteLanguage name="Admin EN" locale="en_admin">
+			<Template name="index">
+				<TemplateFile>index-template.xml</TemplateFile>
+			</Template>
+			<Template name="dynamic">
+				<TemplateFile>dynamic-template.xml</TemplateFile>
+			</Template>
+			<Xslt name="default xslt">
+				<XsltFile>default.xslt</XsltFile>
+			</Xslt>
+			<MenuGroup code="MAIN">
+				<Menu>
+					<MenuName>String</MenuName>
+					<PortletName>mill.index</PortletName>
+					<TemplateName>index</TemplateName>
+					<Url>homepage</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Webmill manager</MenuName>
+					<PortletName>webmill.manager</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>manager</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Upload price-list</MenuName>
+					<PortletName>mill.upload_price</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>price-upload</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Login</MenuName>
+					<PortletName>mill.login</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>login</Url>
+				</Menu>
+				<Menu>
+					<MenuName>Logout</MenuName>
+					<PortletName>mill.logout</PortletName>
+					<TemplateName>dynamic</TemplateName>
+					<Url>logout</Url>
+				</Menu>
+			</MenuGroup>
+		</SiteLanguage>
+	</SiteConfig>
+</Sites>

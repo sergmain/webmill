@@ -37,6 +37,7 @@ import org.riverock.webmill.schema.core.WmAuthUserItemType;
  *         Time: 19:33:35
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class InternalAuthDaoImpl implements InternalAuthDao {
     private static Logger log = Logger.getLogger(InternalAuthDaoImpl.class);
 

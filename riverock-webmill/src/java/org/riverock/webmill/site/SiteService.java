@@ -372,10 +372,10 @@ public final class SiteService {
                     GetWmPortalXsltDataWithIdSiteXsltList.getInstance(db_, xsltItem.getIdSiteXslt()).item;
                 String xsltData = "";
                 for (int k=0; k<xsltDataList.getWmPortalXsltDataCount(); k++)
-                    xsltData += xsltDataList.getWmPortalXsltData(k).getXslt();
-                xsltItem.setXslt( xsltData );
+                    xsltData += xsltDataList.getWmPortalXsltData(k).getXsltData();
+                xsltItem.setXsltData( xsltData );
             }
-            extendItemLang.setXslt( xsltList );
+            extendItemLang.setXsltData( xsltList );
             lang.addItem( extendItemLang );
         }
 

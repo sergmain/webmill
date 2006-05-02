@@ -24,20 +24,22 @@
  */
 package org.riverock.webmill.port;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
@@ -45,12 +47,12 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 /**
  * $Id$
  */
-public class PortalXslt implements XsltTransformer{
+public class PortalXslt implements XsltTransformer {
     private static Logger log = Logger.getLogger(PortalXslt.class);
 
     private static CacheFactory cache = new CacheFactory(PortalXslt.class.getName());
 
-    private String xslt = null;
+    private Xslt xslt = null;
     private Transformer transformer = null;
     private final Object transformerSync = new Object();
 
@@ -77,27 +79,30 @@ public class PortalXslt implements XsltTransformer{
         return (PortalXslt) cache.getInstanceNew(id__);
     }
 
-    public PortalXslt(Long id) {
-        this( InternalDaoFactory.getInternalDao().getXslt( id ).toString() );
+    public PortalXslt(Long xsltId) {
+        this( InternalDaoFactory.getInternalXsltDao().getXslt(xsltId) );
     }
 
-    public PortalXslt(String xslt) {
+    public PortalXslt(Xslt xslt) {
+        if (xslt == null || StringUtils.isEmpty(xslt.getXsltData())) {
+            return;
+        }
+
         this.xslt = xslt;
-        if (!StringTools.isEmpty(xslt)) {
-            try {
-                createTransformer();
-            }
-            catch (Exception e) {
-                String es = "Error create transformer";
-                log.error(es, e);
-                throw new IllegalStateException(es,e );
-            }
+        try {
+            createTransformer();
+        }
+        catch (Exception e) {
+            String es = "Error create transformer";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
         }
     }
 
     private final static Object syncObj = new Object();
+
     private void createTransformer() throws Exception {
-        Source xslSource = new StreamSource(new StringReader(xslt));
+        Source xslSource = new StreamSource(new StringReader(xslt.getXsltData()));
 
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Templates translet;
@@ -106,11 +111,10 @@ public class PortalXslt implements XsltTransformer{
         }
         catch (TransformerConfigurationException e) {
             synchronized (syncObj) {
-                FileOutputStream out = new FileOutputStream(WebmillConfig.getWebmillTempDir() + "\\xslt-with-error.xsl");
-                out.write(xslt.getBytes(WebmillConfig.getHtmlCharset()));
+                FileOutputStream out = new FileOutputStream(WebmillConfig.getWebmillTempDir() + File.separatorChar+"xslt-with-error.xsl");
+                out.write(xslt.getXsltData().getBytes(WebmillConfig.getHtmlCharset()));
                 out.flush();
                 out.close();
-                out = null;
             }
             try {
                 log.error("Xalan version - " + org.apache.xalan.Version.getVersion());

@@ -37,27 +37,23 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.TemplateBean;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.a3.audit.RequestStatisticBean;
 import org.riverock.webmill.core.*;
-import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.main.ContentCSS;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.port.PortalInfoImpl;
-import org.riverock.webmill.port.PortalXslt;
 import org.riverock.webmill.port.PortalXsltList;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.bean.PortletNameBean;
-import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.bean.TemplateBeanImpl;
 import org.riverock.webmill.portal.menu.PortalMenu;
-import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.menu.PortalMenuLanguage;
+import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.utils.SiteList;
 import org.riverock.webmill.schema.core.*;
 import org.riverock.webmill.site.PortalTemplateManagerImpl;
@@ -68,6 +64,7 @@ import org.riverock.webmill.site.PortalTemplateManagerImpl;
  *         Time: 20:23:06
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class InternalDaoImpl implements InternalDao {
     private final static Logger log = Logger.getLogger(InternalDaoImpl.class);
 
@@ -182,8 +179,7 @@ public class InternalDaoImpl implements InternalDao {
             rs = ps.executeQuery();
             Map<String, Long> map = new HashMap<String, Long>();
             while (rs.next()) {
-                map.put(RsetTools.getString(rs, "NAME_VIRTUAL_HOST").toLowerCase(),
-                    RsetTools.getLong(rs, "ID_SITE"));
+                map.put(RsetTools.getString(rs, "NAME_VIRTUAL_HOST").toLowerCase(), RsetTools.getLong(rs, "ID_SITE"));
             }
             return map;
         }
@@ -255,42 +251,6 @@ public class InternalDaoImpl implements InternalDao {
             adapter = null;
             rset = null;
             ps = null;
-        }
-    }
-
-    public SiteBean getSiteBean(Long siteId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalListSiteItemType site = GetWmPortalListSiteItem.getInstance(adapter, siteId).item;
-
-            SiteBean bean = new SiteBean();
-            bean.setActivateEmailOrder( site.getIsActivateEmailOrder() );
-            bean.setAdminEmail( site.getAdminEmail() );
-            bean.setCompanyId( site.getIdFirm() );
-            bean.setCssDynamic( site.getIsCssDynamic() );
-            bean.setCssFile( site.getCssFile() );
-            bean.setDefCountry( site.getDefCountry() );
-            bean.setDefLanguage( site.getDefLanguage() );
-            bean.setDefVariant( site.getDefVariant() );
-            bean.setOrderEmail( site.getOrderEmail() );
-            bean.setRegisterAllowed( site.getIsRegisterAllowed() );
-            bean.setSiteId( site.getIdSite() );
-            bean.setSiteName( site.getNameSite() );
-
-            if (bean.getDefLanguage() == null)
-                bean.setDefLanguage("");
-
-            return bean;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
         }
     }
 
@@ -668,94 +628,6 @@ public class InternalDaoImpl implements InternalDao {
         }
     }
 
-    public Map<String, XsltTransformer> getTransformerMap(Long siteId) {
-        PreparedStatement ps = null;
-        ResultSet rset = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            String sql_ =
-                "select a.CUSTOM_LANGUAGE, d.ID_SITE_XSLT " +
-                "from   WM_PORTAL_SITE_LANGUAGE a, WM_PORTAL_XSLT d " +
-                "where  a.ID_SITE=? and " +
-                "       a.ID_SITE_SUPPORT_LANGUAGE=d.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       d.IS_CURRENT=1";
-
-            ps = adapter.prepareStatement(sql_);
-
-            ps.setObject(1, siteId);
-            rset = ps.executeQuery();
-            Map<String, XsltTransformer> map = new HashMap<String, XsltTransformer>();
-
-            while (rset.next()) {
-                String lang = StringTools.getLocale(RsetTools.getString(rset, "CUSTOM_LANGUAGE")).toString();
-                Long id = RsetTools.getLong(rset, "ID_SITE_XSLT");
-
-                if (log.isDebugEnabled()) {
-                    log.debug("XsltList. lang - " + lang);
-                    log.debug("XsltList. id - " + id);
-                }
-
-                XsltTransformer item = new PortalXslt( getXslt(adapter, id).toString() );
-                map.put(lang, item);
-            }
-
-            return map;
-        }
-        catch (Exception e) {
-            final String es = "Error get css ";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        finally {
-            DatabaseManager.close(adapter, rset, ps);
-            adapter = null;
-            rset = null;
-            ps = null;
-        }
-
-    }
-
-    static {
-        try {
-            SqlStatement.registerRelateClass(PortalXslt.class, GetWmPortalXsltDataWithIdSiteXsltList.class);
-        }
-        catch (Throwable exception) {
-            final String es = "Exception in ";
-            log.error(es, exception);
-            throw new SqlStatementRegisterException(es, exception);
-        }
-    }
-
-    public StringBuilder getXslt(Long xsltId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            return getXslt( adapter, xsltId );
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    private StringBuilder getXslt(DatabaseAdapter adapter, Long xsltId) throws PortalPersistenceException {
-        StringBuilder sb = new StringBuilder();
-        WmPortalXsltDataListType xsltList = GetWmPortalXsltDataWithIdSiteXsltList.getInstance(adapter, xsltId).item;
-        for (int i = 0; i < xsltList.getWmPortalXsltDataCount(); i++) {
-            WmPortalXsltDataItemType item = xsltList.getWmPortalXsltData(i);
-            sb.append( item.getXslt() );
-        }
-
-        return sb;
-    }
-
-
     static String templateSql =
         "select a.ID_SITE_TEMPLATE, b.CUSTOM_LANGUAGE, a.NAME_SITE_TEMPLATE, " +
         "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE " +
@@ -872,22 +744,11 @@ public class InternalDaoImpl implements InternalDao {
             log.debug("     portletName: " + portletName);
             log.debug("     templateName: " + templateName);
         }
-        /*
-select a.ID_SITE_CTX_CATALOG
-from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c,
-       	WM_PORTAL_PORTLET_NAME d, WM_PORTAL_TEMPLATE e
-where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and
-       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and
-       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and
-       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and
-       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and
-       d.TYPE=? and e.NAME_SITE_TEMPLATE=?
-               */
 
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            Long ctxId = DatabaseManager.getLongValue( adapter,
+            return DatabaseManager.getLongValue( adapter,
                 "select a.ID_SITE_CTX_CATALOG " +
                 "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c, " +
                 "       WM_PORTAL_PORTLET_NAME d, WM_PORTAL_TEMPLATE e " +
@@ -899,7 +760,6 @@ where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and
                 "       d.TYPE=? and e.NAME_SITE_TEMPLATE=? ",
                 new Object[]{siteId, locale.toString().toLowerCase(), portletName, templateName}
             );
-            return ctxId;
         }
         catch (Exception e) {
             String es = "Error get getSiteBean()";
@@ -917,7 +777,7 @@ where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            Long ctxId = DatabaseManager.getLongValue(
+            return DatabaseManager.getLongValue(
                     adapter,
                     "select a.ID_SITE_CTX_CATALOG " +
                     "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c " +
@@ -927,8 +787,6 @@ where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and
                     "       a.CTX_PAGE_URL=?",
                     new Object[]{ siteId, locale.toString().toLowerCase(), pageName }
             );
-
-            return ctxId;
         }
         catch (Exception e) {
             String es = "Error get getSiteBean()";
@@ -946,7 +804,7 @@ where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            Long ctxId = DatabaseManager.getLongValue(
+            return DatabaseManager.getLongValue(
                 adapter,
                 "select a.ID_SITE_CTX_CATALOG " +
                 "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c " +
@@ -955,8 +813,6 @@ where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and
                 "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and a.ID_SITE_CTX_CATALOG=?",
                     new Object[]{ siteId, locale.toString().toLowerCase(), catalogId }
             );
-
-            return ctxId;
         }
         catch (Exception e) {
             String es = "Error get getSiteBean()";

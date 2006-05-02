@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serg (Home) -->
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:webmill-core="http://webmill.riverock.org/xsd/riverock-webmill-core.xsd">
+	<xs:element name="Sites">
+		<xs:annotation>
+			<xs:documentation>Root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SiteConfig" type="SiteConfigType" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="SiteConfigType">
+		<xs:sequence>
+			<xs:element name="Company" type="CompanyType"/>
+			<xs:element name="Host" type="xs:string" maxOccurs="unbounded"/>
+			<xs:element name="CssFile" type="xs:string" minOccurs="0"/>
+			<xs:element name="SiteLanguage" type="SiteLanguageType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="siteName" type="xs:string" use="required"/>
+		<xs:attribute name="defaultLocale" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="CompanyType">
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string"/>
+			<xs:element name="ShortName" type="xs:string" minOccurs="0"/>
+			<xs:element name="Address" type="xs:string" minOccurs="0"/>
+			<xs:element name="Ceo" type="xs:string" minOccurs="0"/>
+			<xs:element name="Cfo" type="xs:string" minOccurs="0"/>
+			<xs:element name="Website" type="xs:string" minOccurs="0"/>
+			<xs:element name="Info" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SiteLanguageType">
+		<xs:sequence>
+			<xs:element name="Template" type="TemplateType" maxOccurs="unbounded"/>
+			<xs:element name="Xslt" type="XsltType"/>
+			<xs:element name="MenuGroup" type="MenuGroupType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="locale" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XsltType">
+		<xs:sequence>
+			<xs:element name="XsltFile" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TemplateType">
+		<xs:sequence>
+			<xs:element name="TemplateFile" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="MenuGroupType">
+		<xs:sequence>
+			<xs:element name="Menu" type="MenuType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="code" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="MenuType">
+		<xs:sequence>
+			<xs:element name="MenuName" type="xs:string"/>
+			<xs:element name="PortletName" type="xs:string"/>
+			<xs:element name="TemplateName" type="xs:string"/>
+			<xs:element name="Url" type="xs:string"/>
+			<xs:element name="Menu" type="MenuType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

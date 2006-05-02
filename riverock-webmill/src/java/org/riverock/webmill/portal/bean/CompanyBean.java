@@ -21,11 +21,20 @@ public class CompanyBean implements Serializable, Company {
 	private String cfo = null;
 	private String website = null;
 	private String info = null;
+    private boolean isDeleted = false;
 
-	public CompanyBean() {
+    public CompanyBean() {
 	}
 
-	public String getName() {
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public String getName() {
 		return name;
 	}
 
