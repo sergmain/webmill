@@ -25,7 +25,6 @@
 package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -54,9 +53,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
             log.debug("menu: "+menu);
         }
 
-        Iterator<Menu> iterator = menu.iterator();
-        while (iterator.hasNext()) {
-            Menu catalog = iterator.next();
+        for (Menu catalog : this.menu) {
             MenuItem item = catalog.getIndexMenuItem();
             if (item != null)
                 return item;
@@ -74,9 +71,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
     }
 
     public Menu getDefault() {
-        Iterator<Menu> iterator = menu.iterator();
-        while (iterator.hasNext()) {
-            Menu catalog = iterator.next();
+        for (Menu catalog : this.menu) {
             if (catalog.getIsDefault())
                 return catalog;
         }
@@ -87,10 +82,8 @@ public final class PortalMenuLanguage implements MenuLanguage {
         if (code==null)
             return null;
 
-        Iterator<Menu> iterator = menu.iterator();
-        while (iterator.hasNext()) {
-            Menu catalog = iterator.next();
-            if (code.equals( catalog.getCatalogCode()) )
+        for (Menu catalog : this.menu) {
+            if (code.equals(catalog.getCatalogCode()))
                 return catalog;
         }
         return null;
@@ -101,11 +94,9 @@ public final class PortalMenuLanguage implements MenuLanguage {
         if (id==null)
             return null;
 
-        Iterator<Menu> iterator = menu.iterator();
-        while (iterator.hasNext()) {
-            Menu menu = iterator.next();
+        for (Menu menu : this.menu) {
             MenuItem ci = menu.searchMenuItem(id);
-            if (ci!=null) {
+            if (ci != null) {
                 return ci;
             }
         }
@@ -127,10 +118,8 @@ public final class PortalMenuLanguage implements MenuLanguage {
 
         List<CatalogLanguageBean> list = InternalDaoFactory.getInternalDao().getCatalogLanguageList( bean.getSiteLanguageId() );
 
-        Iterator<CatalogLanguageBean> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            CatalogLanguageBean catalogLanguageBean = iterator.next();
-            Menu catalog = new PortalMenu( catalogLanguageBean );
+        for (CatalogLanguageBean catalogLanguageBean : list) {
+            Menu catalog = new PortalMenu(catalogLanguageBean);
             menu.add(catalog);
         }
     }

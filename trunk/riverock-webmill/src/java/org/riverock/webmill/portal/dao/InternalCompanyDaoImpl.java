@@ -21,8 +21,49 @@ import org.riverock.webmill.portal.bean.CompanyBean;
  *         Time: 1:24:25
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class InternalCompanyDaoImpl implements InternalCompanyDao {
     private final static Logger log = Logger.getLogger(InternalCompanyDaoImpl.class);
+
+    public Company loadCompany( String companyName ) {
+        if( companyName == null ) {
+            return null;
+        }
+
+        DatabaseAdapter db = null;
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+
+            String sql =
+                "select ID_FIRM, full_name, short_name, " +
+                "	    address, chief, buh, url,  " +
+                "	    short_info, is_work, is_search, is_deleted " +
+                "from 	WM_LIST_COMPANY " +
+                "where  full_name=? ";
+
+            ps = db.prepareStatement( sql );
+            ps.setString( 1, companyName );
+            rs = ps.executeQuery();
+
+            Company company = null;
+            if( rs.next() ) {
+                company = loadCompanyFromResultSet( rs );
+            }
+            return company;
+        }
+        catch( Exception e ) {
+            String es = "Error load company for name: " + companyName;
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db, rs, ps );
+            db = null;
+            rs = null;
+            ps = null;
+        }
+    }
 
     public Company loadCompany( Long companyId, AuthSession authSession ) {
         if( companyId == null ) {
@@ -41,7 +82,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             String sql =
                 "select ID_FIRM, full_name, short_name, " +
                 "	    address, chief, buh, url,  " +
-                "	    short_info, is_work, is_search " +
+                "	    short_info, is_work, is_search, is_deleted " +
                 "from 	WM_LIST_COMPANY " +
                 "where  is_deleted=0 and ID_FIRM=? and ID_FIRM in ";
 
@@ -102,7 +143,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             String sql =
                 "select ID_FIRM, full_name, short_name,\n" +
                 "	address, chief, buh, url, \n" +
-                "	short_info, is_work, is_search " +
+                "	short_info, is_work, is_search, is_deleted " +
                 "from 	WM_LIST_COMPANY " +
                 "where  is_deleted=0 and ID_FIRM in ";
 
@@ -142,6 +183,88 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             DatabaseManager.close( db, rs, ps );
             db = null;
             rs = null;
+            ps = null;
+        }
+    }
+
+    public Long processAddCompany( Company companyBean, Long holdingId ) {
+
+        PreparedStatement ps = null;
+        DatabaseAdapter dbDyn = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_LIST_COMPANY" );
+            seq.setTableName( "WM_LIST_COMPANY" );
+            seq.setColumnName( "ID_FIRM" );
+            Long sequenceValue = dbDyn.getSequenceNextValue( seq );
+
+
+            ps = dbDyn.prepareStatement( "insert into WM_LIST_COMPANY (" +
+                "	ID_FIRM, " +
+                "	full_name, " +
+                "	short_name, " +
+                "	address, " +
+                "	chief, " +
+                "	buh, " +
+                "	url, " +
+                "	short_info, " +
+                "   is_deleted" +
+                ")values " +
+
+                ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" ) +
+
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "	?," +
+                "   0 " +
+                ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" ) );
+
+            int num = 1;
+            RsetTools.setLong( ps, num++, sequenceValue );
+            ps.setString( num++, companyBean.getName() );
+            ps.setString( num++, companyBean.getShortName() );
+            ps.setString( num++, companyBean.getAddress() );
+            ps.setString( num++, companyBean.getCeo() );
+            ps.setString( num++, companyBean.getCfo() );
+            ps.setString( num++, companyBean.getWebsite() );
+            ps.setString( num++, companyBean.getInfo() );
+
+            int i1 = ps.executeUpdate();
+
+            if( log.isDebugEnabled() )
+                log.debug( "Count of inserted records - " + i1 );
+
+            if( holdingId != null ) {
+                InternalDaoFactory.getInternalHoldingDao().setRelateHoldingCompany( dbDyn, holdingId, sequenceValue );
+            }
+
+            dbDyn.commit();
+            return sequenceValue;
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                //catch rollback error
+            }
+            String es = "Error add new company";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
             ps = null;
         }
     }
@@ -237,6 +360,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
                     dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                //catch rollback error
             }
             String es = "Error add new company";
             log.error( es, e );
@@ -328,9 +452,11 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
         catch( Exception e ) {
             try {
-                dbDyn.rollback();
+                if (dbDyn!=null)
+                    dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                //catch rollback error
             }
 
             String es = "Error save company";
@@ -394,9 +520,11 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
         catch( Exception e ) {
             try {
-                dbDyn.rollback();
+                if (dbDyn!=null)
+                    dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback error
             }
 
             String es = "Error delete company";
@@ -421,6 +549,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         company.setCfo( RsetTools.getString( rs, "buh" ) );
         company.setWebsite( RsetTools.getString( rs, "url" ) );
         company.setInfo( RsetTools.getString( rs, "short_info" ) );
+        company.setDeleted( RsetTools.getInt( rs, "is_deleted", 0 )==1 );
 
         return company;
     }

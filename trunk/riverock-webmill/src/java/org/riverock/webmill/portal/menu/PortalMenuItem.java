@@ -75,8 +75,11 @@ public final class PortalMenuItem implements MenuItem{
     }
 
     public PortalMenuItem(CatalogBean catalogBean) {
-
         this.ctx = catalogBean;
+        if (this.ctx==null) {
+            throw new IllegalStateException("catalogBean is empty");
+        }
+
         if (log.isDebugEnabled()){
             log.debug("ctxItem: "+ctx);
             if (ctx!=null){
@@ -126,9 +129,5 @@ public final class PortalMenuItem implements MenuItem{
 
     public String getUrl(){
         return ctx.getUrl();
-    }
-
-    public String getUrlResource() {
-        throw new IllegalStateException("method not supported");
     }
 }

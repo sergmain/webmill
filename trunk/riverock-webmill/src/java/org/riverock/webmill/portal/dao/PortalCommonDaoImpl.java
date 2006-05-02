@@ -20,7 +20,7 @@ public class PortalCommonDaoImpl implements PortalCommonDao {
     }
     public TemplateBean getTemplateBean(Long templateId) {
         return InternalDaoFactory.getInternalDao().getTemplateBean(templateId);
-    };
+    }
 
     public List<TemplateBean> getTemplateList( Long siteId ) {
         return InternalDaoFactory.getInternalDao().getTemplateList(siteId);

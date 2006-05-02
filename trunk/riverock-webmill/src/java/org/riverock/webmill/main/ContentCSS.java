@@ -26,8 +26,10 @@ package org.riverock.webmill.main;
 
 import java.util.Date;
 
-import org.riverock.common.tools.StringTools;
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -36,7 +38,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  * $Id$
  */
 public final class ContentCSS {
-    private CssBean css = new CssBean();
+    private Css css;
 
     private static CacheFactory cache = new CacheFactory(ContentCSS.class.getName());
 
@@ -69,25 +71,27 @@ public final class ContentCSS {
             return;
 
         css = InternalDaoFactory.getInternalDao().getCssBean( siteId );
+        if (css==null)
+            css = new CssBean();
     }
 
     public String getCss() {
         return css.getCss();
     }
 
-    public void setCss(String css) {
-        this.css.setCss( css );
-    }
-
     public Date getDatePost() {
         return css.getDate();
     }
 
-    public void setDatePost(Date datePost) {
-        this.css.setDate( datePost );
-    }
+//    public void setCss(String css) {
+//        this.css.setCss( css );
+//    }
+
+//    public void setDatePost(Date datePost) {
+//        this.css.setDate( datePost );
+//    }
 
     public boolean getIsEmpty() {
-        return StringTools.isEmpty(css.getCss());
+        return StringUtils.isEmpty(css.getCss());
     }
 }

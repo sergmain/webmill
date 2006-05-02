@@ -6,14 +6,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-import org.riverock.interfaces.portal.xslt.XsltTransformer;
+import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.interfaces.portal.bean.TemplateBean;
 import org.riverock.webmill.a3.audit.RequestStatisticBean;
-import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.bean.PortletNameBean;
-import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
 
 /**
@@ -28,8 +26,7 @@ public interface InternalDao {
     public ConcurrentMap<String, Long> getUrlList();
     public Map<String, Long> getSiteIdMap();
 
-    public CssBean getCssBean( Long siteId );
-    public SiteBean getSiteBean( Long siteId );
+    public Css getCssBean( Long siteId );
 
     public void saveRequestStatistic( ConcurrentMap<String, Long> userAgentList, ConcurrentMap<String, Long> urlList, RequestStatisticBean bean );
 
@@ -42,6 +39,10 @@ public interface InternalDao {
     public List<CatalogBean> getCatalogList(Long catalogLanguageId);
     public CatalogBean getCatalogBean(Long catalogId);
 
+    public Long getCatalogId(Long siteId, Locale locale, String portletName, String templateName );
+    public Long getCatalogId(Long siteId, Locale locale, String pageName );
+    public Long getCatalogId(Long siteId, Locale locale, Long catalogId );
+
 
     public TemplateBean getTemplateBean(Long templateId);
     public List<TemplateBean> getTemplateLanguageList( Long siteLanguageId );
@@ -49,12 +50,5 @@ public interface InternalDao {
 
     public PortletNameBean getPortletNameBean(Long portletId);
 
-    public Map<String,XsltTransformer> getTransformerMap(Long siteId);
-
-    public StringBuilder getXslt( Long xsltId );
-
-    public Long getCatalogId(Long siteId, Locale locale, String portletName, String templateName );
-    public Long getCatalogId(Long siteId, Locale locale, String pageName );
-    public Long getCatalogId(Long siteId, Locale locale, Long catalogId );
 
 }

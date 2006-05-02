@@ -1,23 +1,27 @@
 package org.riverock.webmill.portal.bean;
 
+import java.io.Serializable;
+
+import org.riverock.interfaces.portal.bean.Site;
+
 /**
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 14:29:04
  *         $Id$
  */
-public class SiteBean {
+public class SiteBean implements Serializable, Site {
+    private static final long serialVersionUID = 3255005503L;
 
     private Long siteId;
     private Long companyId;
     private Boolean isCssDynamic = false;
     private Boolean isRegisterAllowed = false;
-    private Boolean isActivateEmailOrder = false;
     private String defLanguage;
     private String defCountry;
     private String defVariant;
     private String siteName;
-    private String adminEmail;
+    private String adminEmail=null;
     private String cssFile = "/front_styles.css";
 
     public Long getSiteId() {
@@ -50,14 +54,6 @@ public class SiteBean {
 
     public void setRegisterAllowed(Boolean registerAllowed) {
         isRegisterAllowed = registerAllowed;
-    }
-
-    public Boolean getActivateEmailOrder() {
-        return isActivateEmailOrder;
-    }
-
-    public void setActivateEmailOrder(Boolean activateEmailOrder) {
-        isActivateEmailOrder = activateEmailOrder;
     }
 
     public String getDefLanguage() {
@@ -107,17 +103,4 @@ public class SiteBean {
     public void setCssFile(String cssFile) {
         this.cssFile = cssFile;
     }
-
-    public String getOrderEmail() {
-        return orderEmail;
-    }
-
-    public void setOrderEmail(String orderEmail) {
-        this.orderEmail = orderEmail;
-    }
-
-    private String orderEmail;
-
-    public SiteBean() {}
-
 }

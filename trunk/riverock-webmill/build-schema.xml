@@ -39,7 +39,7 @@
         <antcall target="delete_all_schema"/>
 
         <antcall target="gen_config_schema"/>
-<!--        <antcall target="gen_core-extend_schema"/>-->
+        <antcall target="gen_site_config_schema"/>
     </target>
 
     <target name="gen_config_schema">
@@ -48,12 +48,11 @@
         <property name="schema-package-java" value="org.riverock.webmill.schema.config"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
-<!--
-    <target name="gen_core-extend_schema">
-        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/webmill/schema/extend/"/>
-        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-core-extend.xsd"/>
-        <property name="schema-package-java" value="org.riverock.webmill.schema.extend"/>
+
+    <target name="gen_site_config_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/org/riverock/webmill/schema/site_config/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-webmill-site-config.xsd"/>
+        <property name="schema-package-java" value="org.riverock.webmill.schema.site_config"/>
         <antcall target="gen_schema_from_schema"/>
     </target>
--->
 </project>

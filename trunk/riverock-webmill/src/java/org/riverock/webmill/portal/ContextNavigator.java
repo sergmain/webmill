@@ -47,15 +47,16 @@ public final class ContextNavigator extends HttpServlet {
 
     private ConcurrentMap<Long, PortalInstanceImpl> portalInstanceMap = new ConcurrentHashMap<Long, PortalInstanceImpl>();
 
-    static ServletConfig portalServletConfig = null;
-    public void init( ServletConfig servletConfig ) {
+    private ServletConfig portalServletConfig = null;
+
+    public void init(ServletConfig servletConfig) {
         portalServletConfig = servletConfig;
     }
 
     public void destroy() {
         portalServletConfig = null;
 
-        if (portalInstanceMap!=null) {
+        if (portalInstanceMap != null) {
             for (Map.Entry<Long, PortalInstanceImpl> entry : portalInstanceMap.entrySet()) {
                 entry.getValue().destroy();
             }
@@ -75,23 +76,34 @@ public final class ContextNavigator extends HttpServlet {
         doGet(request, response);
     }
 
-    public void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse )
-        throws IOException, ServletException {
-        Long siteId = SiteList.getIdSite( httpRequest.getServerName() );
-        PortalInstanceImpl portalInstance = portalInstanceMap.get( siteId );
-        if (portalInstance==null) {
-            portalInstance = createNewPortalInsance( siteId );
+    private static final Object obj = new Object();
+    private boolean isOfflineMarkupProcessed = false;
+    public void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException, ServletException {
+
+        if (!isOfflineMarkupProcessed) {
+            synchronized(obj) {
+                if (!isOfflineMarkupProcessed) {
+                    PortalOfflineMarkupProcessor.process();
+                    isOfflineMarkupProcessed = true;
+                }
+            }
         }
-        portalInstance.process(httpRequest, httpResponse );
+
+        Long siteId = SiteList.getIdSite(httpRequest.getServerName());
+        PortalInstanceImpl portalInstance = portalInstanceMap.get(siteId);
+        if (portalInstance == null) {
+            portalInstance = createNewPortalInsance(siteId);
+        }
+        portalInstance.process(httpRequest, httpResponse);
     }
 
     private PortalInstanceImpl createNewPortalInsance(Long siteId) {
-        PortalInstanceImpl portalInstance = portalInstanceMap.get( siteId );
-        if (portalInstance!=null) {
+        PortalInstanceImpl portalInstance = portalInstanceMap.get(siteId);
+        if (portalInstance != null) {
             return portalInstance;
         }
-        portalInstance = PortalInstanceImpl.getInstance( portalServletConfig );
-        portalInstanceMap.putIfAbsent( siteId, portalInstance );
+        portalInstance = PortalInstanceImpl.getInstance(portalServletConfig);
+        portalInstanceMap.putIfAbsent(siteId, portalInstance);
         return portalInstance;
     }
 }
