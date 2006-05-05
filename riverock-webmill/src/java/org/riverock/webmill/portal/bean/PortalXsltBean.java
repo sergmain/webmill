@@ -13,8 +13,26 @@ public class PortalXsltBean implements Serializable, Xslt {
     private static final long serialVersionUID = 3255005501L;
 
     private Long id = null;
+    private Long siteLanguageId = null;
     private String name = null;
     private String xsltData = null;
+    private boolean isCurrent = false;
+
+    public boolean isCurrent() {
+        return isCurrent;
+    }
+
+    public void setCurrent(boolean current) {
+        isCurrent = current;
+    }
+
+    public Long getSiteLanguageId() {
+        return siteLanguageId;
+    }
+
+    public void setSiteLanguageId(Long siteLanguageId) {
+        this.siteLanguageId = siteLanguageId;
+    }
 
     public Long getId() {
         return id;

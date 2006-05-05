@@ -56,10 +56,11 @@ public final class Header {
     }
 
     public static AcceptLanguageWithLevel[] getAcceptLanguageArray( final String accept ) {
-        List v = getAcceptLanguageAsList( accept );
+        List<AcceptLanguageWithLevel> v = getAcceptLanguageAsList( accept );
         AcceptLanguageWithLevel[] array = new AcceptLanguageWithLevel[v.size()];
-        for( int i = 0; i<v.size(); i++ ) {
-            array[i] = (AcceptLanguageWithLevel)v.get( i );
+        int i=0;
+        for (AcceptLanguageWithLevel item : v) {
+            array[i++] = item;
         }
 
         return array;

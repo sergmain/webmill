@@ -1,12 +1,14 @@
 package org.riverock.webmill.portal.bean;
 
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+
 /**
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 14:52:56
  *         $Id$
  */
-public class SiteLanguageBean {
+public class SiteLanguageBean implements SiteLanguage {
     private Long siteLanguageId;
     private Long siteId;
     private String customLanguage;

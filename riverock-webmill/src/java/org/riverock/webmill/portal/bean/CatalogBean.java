@@ -1,28 +1,41 @@
 package org.riverock.webmill.portal.bean;
 
+import java.util.List;
+
+import org.riverock.interfaces.portal.bean.CatalogItem;
+
 /**
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 15:52:55
  *         $Id$
  */
-public class CatalogBean {
-   private Long catalogId; // idSiteCtxCatalog
-   private Long topCatalogId = 0l; //idTopCtxCatalog
-   private Long portletId; //idSiteCtxType
-   private Long contextId;
-   private Boolean isUseProperties = false;
-   private Long templateId; //idSiteTemplate
-   private Long catalogLanguageId; // idSiteCtxLangCatalog;
-   private Integer orderField;
-   private String storage;
-   private String keyMessage;
-   private String url; //ctxPageUrl;
-   private String title; //ctxPageTitle;
-   private String author; //ctxPageAuthor;
-   private String keyword; //ctxPageKeyword;
-   private String metadata;
-   private String portletRole;
+public class CatalogBean implements CatalogItem {
+    private Long catalogId; // idSiteCtxCatalog
+    private Long topCatalogId = 0l; //idTopCtxCatalog
+    private Long portletId; //idSiteCtxType
+    private Long contextId;
+    private Boolean isUseProperties = false;
+    private Long templateId; //idSiteTemplate
+    private Long catalogLanguageId; // idSiteCtxLangCatalog;
+    private Integer orderField;
+    private String storage;
+    private String keyMessage;
+    private String url; //ctxPageUrl;
+    private String title; //ctxPageTitle;
+    private String author; //ctxPageAuthor;
+    private String keyword; //ctxPageKeyword;
+    private String metadata;
+    private String portletRole;
+    private List<CatalogItem> subCatalogItemList = null;
+
+    public List<CatalogItem> getSubCatalogItemList() {
+        return subCatalogItemList;
+    }
+
+    public void setSubCatalogItemList(List<CatalogItem> subCatalogItemList) {
+        this.subCatalogItemList = subCatalogItemList;
+    }
 
     public Long getCatalogId() {
         return catalogId;

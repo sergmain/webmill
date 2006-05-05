@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
@@ -174,7 +175,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
         // set namespace of current(active) portlet
         if (st.hasMoreElements() ) {
             String ns = st.nextToken();
-            if (!StringTools.isEmpty(ns)) {
+            if (!StringUtils.isEmpty(ns)) {
                 bean.setDefaultNamespace( ns );
             }
         }
@@ -189,7 +190,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             log.debug("     default ns: " + bean.getDefaultNamespace() );
         }
 
-        Long ctxId = InternalDaoFactory.getInternalDao().getCatalogId(factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(), bean.getTemplateName());
+        Long ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(), bean.getTemplateName());
         if (log.isDebugEnabled()) {
             log.debug("ctxId: " + ctxId );
         }

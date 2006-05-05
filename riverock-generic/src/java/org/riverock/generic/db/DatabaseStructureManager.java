@@ -1,30 +1,29 @@
 package org.riverock.generic.db;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.ArrayList;
-import java.util.TreeSet;
-import java.util.Iterator;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.sql.Connection;
 import java.sql.ResultSetMetaData;
-import java.io.FileNotFoundException;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.schema.db.structure.*;
-import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.generic.exception.DatabaseException;
-import org.riverock.generic.db.definition.DefinitionService;
-import org.riverock.common.tools.StringTools;
-import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
+import org.riverock.generic.db.definition.DefinitionService;
+import org.riverock.generic.exception.DatabaseException;
+import org.riverock.generic.schema.config.DatabaseConnectionType;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.schema.db.structure.*;
 
 /**
  * @author SergeMaslyukov
@@ -489,7 +488,7 @@ public class DatabaseStructureManager {
                 if (isDebug)
                     System.out.println("ID of fk "+idFk);
 
-                TreeSet setPk = new TreeSet();
+                TreeSet<Long> setPk = new TreeSet<Long>();
 
                 // Создаем список упорядоченных первичных ключей
                 // для данного вторичного ключа
@@ -507,24 +506,20 @@ public class DatabaseStructureManager {
                         setPk.add( idPkRec );
                 }
 
-                Iterator it = setPk.iterator();
                 String tempData = "";
                 // двигаясь по списку первичных ключей создаем результирующий строковый объект
-                while (it.hasNext())
-                {
-                    long pk = ((Long) it.next());
+                for (Long aSetPk : setPk) {
+                    long pk = ((Long) aSetPk);
 
-                    for (int i = 0; i < tableData.getRecordsCount(); i++)
-                    {
+                    for (int i = 0; i < tableData.getRecordsCount(); i++) {
                         DbDataRecordType record = tableData.getRecords(i);
 
                         DbDataFieldDataType fieldPk = record.getFieldsData(idxPk);
                         long pkTemp = fieldPk.getNumberData().longValue();
 
-                        if (pkTemp==pk)
-                        {
+                        if (pkTemp == pk) {
                             DbDataFieldDataType fieldData = record.getFieldsData(idx);
-                            if (fieldData.getStringData()!=null)
+                            if (fieldData.getStringData() != null)
                                 tempData += fieldData.getStringData();
                         }
                     }
@@ -599,8 +594,6 @@ public class DatabaseStructureManager {
                         if (log.isDebugEnabled())
                             log.debug("number of updated records - "+count);
 
-//                        ps1.clearParameters();
-
                         prevPos = pos;
 
                     } // while ( (pos=StringTools.getStartUTF ...
@@ -664,8 +657,6 @@ public class DatabaseStructureManager {
                     Object obj = rs.getObject(field.getName());
 
                     fieldData.setJavaTypeField(field.getJavaType());
-//                    fieldData.setSize( field.getSize() );
-//                    fieldData.setDecimalDigit( field.getDecimalDigit() );
 
                     if (obj == null)
                     {
@@ -688,7 +679,6 @@ public class DatabaseStructureManager {
                             case Types.CHAR:
                             case Types.VARCHAR:
                                 fieldData.setStringData(
-//                                    toDB(rs.getString(field.getName()))
                                     rs.getString(field.getName())
                                 );
                                 break;
@@ -1146,7 +1136,7 @@ public class DatabaseStructureManager {
         dropColumn(adapter, originTable, tempField);
     }
 
-    private static Object syncObj = new Object();
+    private final static Object syncObj = new Object();
     public static void checkDatabaseStructure(DatabaseAdapter adapater, DatabaseConnectionType dc) throws DatabaseException {
         if (log.isDebugEnabled()) {
             log.debug( "dc.getIsCheckStructure(): " + dc.getIsCheckStructure());

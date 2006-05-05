@@ -30,10 +30,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.PortletName;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portlet.menu.MenuItem;
-import org.riverock.interfaces.portal.bean.TemplateBean;
 import org.riverock.webmill.portal.bean.CatalogBean;
-import org.riverock.webmill.portal.bean.PortletNameBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -45,16 +45,16 @@ public final class PortalMenuItem implements MenuItem{
     private final static Logger log = Logger.getLogger( MenuItem.class );
 
     private CatalogBean ctx = null;
-    private TemplateBean templateBean = null;
-    private PortletNameBean portletNameBean = null;
+    private Template template = null;
+    private PortletName portletName = null;
 
     private String menuName = null;
     private List<MenuItem> catalogItems = new LinkedList<MenuItem>();  // List of MenuItem
 
-    protected void finalize() throws Throwable{
+    protected void finalize() throws Throwable {
         menuName = null;
-        portletNameBean = null;
-        templateBean = null;
+        portletName = null;
+        template = null;
         if (getCatalogItems()!=null) {
             getCatalogItems().clear();
             catalogItems = null;
@@ -70,8 +70,8 @@ public final class PortalMenuItem implements MenuItem{
 
     public String toString() {
         return
-            "[id: "+getId()+",idTop: "+getIdTop()+",portletNameBean: "+portletNameBean+",portletId: "+getIdPortlet()+"," +
-            "template: "+templateBean+",name: "+menuName+",url: "+getUrl()+"]";
+            "[id: "+getId()+",idTop: "+getIdTop()+",portletName: "+portletName +",portletId: "+getIdPortlet()+"," +
+            "template: "+template +",name: "+menuName+",url: "+getUrl()+"]";
     }
 
     public PortalMenuItem(CatalogBean catalogBean) {
@@ -83,7 +83,7 @@ public final class PortalMenuItem implements MenuItem{
         if (log.isDebugEnabled()){
             log.debug("ctxItem: "+ctx);
             if (ctx!=null){
-                log.debug("ctxItem.getCatalogId(): "+ctx.getCatalogId());
+                log.debug("ctxItem.getCatalogItemId(): "+ctx.getCatalogId());
                 log.debug("ctxItem.getCatalogLanguageId(): "+ctx.getCatalogLanguageId() );
                 log.debug("ctxItem.getIdSiteTemplate(): "+ctx.getTemplateId() );
                 log.debug("ctxItem.getIdSiteCtxType(): "+ctx.getPortletId() );
@@ -91,8 +91,8 @@ public final class PortalMenuItem implements MenuItem{
         }
 
         this.menuName = ctx.getKeyMessage();
-        this.templateBean = InternalDaoFactory.getInternalDao().getTemplateBean( ctx.getTemplateId() );
-        this.portletNameBean = InternalDaoFactory.getInternalDao().getPortletNameBean( ctx.getPortletId() );
+        this.template = InternalDaoFactory.getInternalTemplateDao().getTemplate( ctx.getTemplateId() );
+        this.portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName( ctx.getPortletId() );
     }
 
     public Long getIdTop(){
@@ -108,7 +108,7 @@ public final class PortalMenuItem implements MenuItem{
     }
 
     public String getNameTemplate(){
-        return templateBean!=null?templateBean.getTemplateName():null;
+        return template !=null?template.getTemplateName():null;
     }
 
     public Long getIdType() {
@@ -116,7 +116,7 @@ public final class PortalMenuItem implements MenuItem{
     }
 
     public String getType(){
-        return portletNameBean.getName();
+        return portletName.getPortletName();
     }
 
     public String getMenuName(){

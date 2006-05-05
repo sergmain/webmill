@@ -26,14 +26,13 @@ package org.riverock.webmill.portal.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -46,16 +45,14 @@ public final class SiteMenu {
     private final static Logger log = Logger.getLogger( SiteMenu.class );
 
     private List<MenuLanguage> menuLanguage = new ArrayList<MenuLanguage>();
-    private static Map<Long, SiteMenu> siteMenuLaguage = new HashMap<Long, SiteMenu>();
+    private final static Map<Long, SiteMenu> siteMenuLaguage = new HashMap<Long, SiteMenu>();
 
     public List<MenuLanguage> getMenuLanguage() {
         return menuLanguage;
     }
 
-    protected void finalize() throws Throwable
-    {
-        if (menuLanguage != null)
-        {
+    protected void finalize() throws Throwable {
+        if (menuLanguage != null) {
             menuLanguage.clear();
             menuLanguage = null;
         }
@@ -65,10 +62,6 @@ public final class SiteMenu {
 
     public SiteMenu(){}
 
-//    public static SiteMenu getInstance( final long id_) throws Exception {
-//        return getInstance( (Long)id_ );
-//    }
-
     public static SiteMenu getInstance( final Long idSite_) {
 
         SiteMenu tempLangMenu = siteMenuLaguage.get( idSite_ );
@@ -76,8 +69,7 @@ public final class SiteMenu {
         if (tempLangMenu!=null)
             return tempLangMenu;
 
-        synchronized(siteMenuLaguage)
-        {
+        synchronized(siteMenuLaguage) {
             SiteMenu temp = new SiteMenu( idSite_ );
             siteMenuLaguage.put( idSite_,  temp);
             return temp;
@@ -86,14 +78,11 @@ public final class SiteMenu {
 
     public MenuLanguage getMenuLanguage( final String localeName) {
 
-        Iterator<MenuLanguage> it = menuLanguage.iterator();
-        while (it.hasNext()) {
-            MenuLanguage tempCat = it.next();
-
-            if (tempCat==null || tempCat.getLocaleStr()==null)
+        for (MenuLanguage tempCat : menuLanguage) {
+            if (tempCat == null || tempCat.getLocaleStr() == null)
                 continue;
 
-            if (tempCat.getLocaleStr().equals( localeName ) )
+            if (tempCat.getLocaleStr().equals(localeName))
                 return tempCat;
         }
 
@@ -106,36 +95,28 @@ public final class SiteMenu {
             log.debug("#33.60.00. Get List of language for siteId " + idSite );
         }
 
-        List<SiteLanguageBean> list = InternalDaoFactory.getInternalDao().getSiteLanguageList( idSite );
+        List<SiteLanguage> list = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList( idSite );
 
         if (log.isDebugEnabled()) {
             log.debug("Count of language for this site is "+list.size());
         }
 
-        Iterator<SiteLanguageBean> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            SiteLanguageBean bean = iterator.next();
-            menuLanguage.add( new PortalMenuLanguage( bean) );
+        for (SiteLanguage bean : list) {
+            menuLanguage.add(new PortalMenuLanguage(bean));
         }
     }
 
-    public void reinit()
-    {
-        if (siteMenuLaguage!=null)
-        {
-            synchronized(siteMenuLaguage)
-            {
+    public void reinit() {
+        if (siteMenuLaguage != null) {
+            synchronized (siteMenuLaguage) {
                 siteMenuLaguage.clear();
             }
         }
     }
 
-    public void terminate( final Long id_ )
-    {
-        if (siteMenuLaguage!=null)
-        {
-            synchronized(siteMenuLaguage)
-            {
+    public void terminate(final Long id_) {
+        if (siteMenuLaguage != null) {
+            synchronized (siteMenuLaguage) {
                 siteMenuLaguage.clear();
             }
         }

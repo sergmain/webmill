@@ -35,15 +35,15 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.generic.exception.DatabaseException;
+import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
 import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
-import org.riverock.generic.exception.GenericException;
-import org.riverock.generic.exception.DatabaseException;
-
-import org.apache.log4j.Logger;
 
 /**
  * User: Admin
@@ -337,7 +337,7 @@ public final class DatabaseManager {
     /**
      * Clone description of table. Data not cloned
      * @param srcTable
-     * @return
+     * @return DbTableType
      */
     public static DbTableType cloneDescriptionTable( final DbTableType srcTable )
     {
@@ -692,14 +692,15 @@ public final class DatabaseManager {
     /**
      *
      * @param dbDyn
-     * @param idRec value of PK in main table
-     * @param pkName
-     * @param pkType
-     * @param namePkTargetTable
-     * @param nameTargetTable
-     * @param nameTargetField
-     * @param insertString
-     * @param isDelete
+     * @param idRec - value of PK in main table
+     * @param pkName - name PK in main table
+     * @param pkType - type of PK in main table
+     * @param nameTargetTable  - name of slave table
+     * @param namePkTargetTable - name of PK in slave table
+     * @param nameTargetField - name of filed with BigText data in slave table
+     * @param insertString - insert string
+     * @param isDelete - delete data from slave table before insert true/false
+     *
      * @throws Exception
      */
     public static void insertBigText(
@@ -1264,7 +1265,7 @@ public final class DatabaseManager {
     }
 
     public static int runSQL( final DatabaseAdapter db, final String query, final Object[] params, final int[] types )
-        throws SQLException, DatabaseException
+        throws SQLException
     {
         int n = 0;
         Statement stmt = null;

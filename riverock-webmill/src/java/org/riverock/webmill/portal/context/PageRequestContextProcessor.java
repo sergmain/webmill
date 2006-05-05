@@ -61,7 +61,7 @@ public final class PageRequestContextProcessor implements RequestContextProcesso
         Locale locale = StringTools.getLocale(path.substring(1, idxSlash));
         String pageName = path.substring( idxSlash+1 );
 
-        Long ctxId = InternalDaoFactory.getInternalDao().getCatalogId(
+        Long ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
             factoryParameter.getPortalInfo().getSiteId(), locale, pageName
         );
 

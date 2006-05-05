@@ -1,6 +1,6 @@
 package org.riverock.webmill.portal.bean;
 
-import org.riverock.interfaces.portal.bean.TemplateBean;
+import org.riverock.interfaces.portal.bean.Template;
 
 /**
  * @author SergeMaslyukov
@@ -8,7 +8,7 @@ import org.riverock.interfaces.portal.bean.TemplateBean;
  *         Time: 16:32:46
  *         $Id$
  */
-public class TemplateBeanImpl implements TemplateBean {
+public class TemplateBean implements Template {
     private Long templateId; // _idSiteTemplate;
     private Long siteLanguageId; //_idSiteSupportLanguage;
     private String templateName; // _nameSiteTemplate;
