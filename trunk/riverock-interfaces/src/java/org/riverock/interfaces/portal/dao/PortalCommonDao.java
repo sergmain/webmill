@@ -11,7 +11,7 @@ import org.riverock.interfaces.portal.bean.Template;
  *         $Id$
  */
 public interface PortalCommonDao {
-    public Template getTemplateBean(Long templateId);
+    public Template getTemplate(Long templateId);
     public List<Template> getTemplateList( Long siteId );
     public List<Template> getTemplateLanguageList( Long siteLanguageId );
 }

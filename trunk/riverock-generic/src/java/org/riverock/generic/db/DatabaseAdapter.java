@@ -104,6 +104,7 @@ public abstract class DatabaseAdapter {
                 conn.close();
             }
             catch (Exception e) {
+                //catch close connection error
             }
             conn = null;
         }
@@ -240,7 +241,7 @@ public abstract class DatabaseAdapter {
 
     public abstract String getDriverClass();
 
-    private static Object syncObject = new Object();
+    private final static Object syncObject = new Object();
     protected void init(DatabaseConnectionType dc_) throws DatabaseException, SQLException {
         dc = dc_;
 
@@ -349,9 +350,9 @@ public abstract class DatabaseAdapter {
                     db_.conn = null;
                 }
                 catch (Exception e02) {
+                    // catch close connection error
                 }
             }
-            db_ = null;
 
             log.fatal("Error create instance for class " + dc.getConnectionClass());
             log.fatal("ConnectionName - " + dc.getName());
@@ -406,6 +407,7 @@ public abstract class DatabaseAdapter {
             db_.rollback();
         }
         catch (Exception e) {
+            // catch rollback error
         }
 
         try {
@@ -413,6 +415,7 @@ public abstract class DatabaseAdapter {
             db_.conn = null;
         }
         catch (Exception e) {
+            // catch close error
         }
     }
 }

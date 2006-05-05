@@ -39,7 +39,7 @@ import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
-import org.riverock.interfaces.portal.bean.TemplateBean;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.webmill.container.portal.bean.PortalTemplateImpl;
 import org.riverock.webmill.container.portal.bean.PortalTemplateItemImpl;
 import org.riverock.webmill.container.portal.bean.PortalTemplateParameterImpl;
@@ -127,16 +127,16 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     public PortalTemplateManagerImpl(Long siteId) {
-        for (TemplateBean templateBean : InternalDaoFactory.getInternalDao().getTemplateList( siteId )) {
+        for (Template template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
             try {
-                PortalTemplate st = digestSiteTemplate(templateBean.getTemplateData(), templateBean.getTemplateName(), templateBean.getTemplateId());
-                String lang = StringTools.getLocale(templateBean.getTemplateLanguage()).toString();
+                PortalTemplate st = digestSiteTemplate(template.getTemplateData(), template.getTemplateName(), template.getTemplateId());
+                String lang = StringTools.getLocale(template.getTemplateLanguage()).toString();
                 hash.put(st.getTemplateName() + '_' + lang, st);
-                hashId.put(templateBean.getTemplateId(), st);
+                hashId.put(template.getTemplateId(), st);
 
                 SiteTemplateDescriptionType desc = new SiteTemplateDescriptionType();
-                desc.setIdTemplate(templateBean.getTemplateId());
-                desc.setIdTemplateLanguage(templateBean.getSiteLanguageId());
+                desc.setIdTemplate(template.getTemplateId());
+                desc.setIdTemplateLanguage(template.getSiteLanguageId());
                 desc.setNameLanguage(lang);
                 desc.setTemplate(st);
                 templateList.addTemplateDescription(desc);

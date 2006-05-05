@@ -12,10 +12,12 @@ import org.riverock.interfaces.portal.bean.Xslt;
  *         $Id$
  */
 public interface InternalXsltDao {
-    public Map<String, XsltTransformer> getTransformerMap(Long siteId);
+    public Map<String, XsltTransformer> getTransformerForCurrentXsltMap(Long siteId);
     public StringBuilder getXsltData( Long xsltId );
 
-    public Map<String, Xslt> getXsltMap(Long siteId);
+    /** key is language of site */
+    public Map<String, Xslt> getCurrentXsltForSiteMap(Long siteId);
     public Xslt getXslt(Long siteId);
     public Xslt getXslt(String xsltName);
+    public Long createXslt(Xslt xslt);
 }

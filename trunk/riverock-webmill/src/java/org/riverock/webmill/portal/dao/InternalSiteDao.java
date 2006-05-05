@@ -9,7 +9,7 @@ import org.riverock.interfaces.portal.bean.Site;
  *         $Id$
  */
 public interface InternalSiteDao {
-    public Site getSiteBean( Long siteId );
-    public Site getSiteBean( String siteName );
-    public Long createSite(Site siteBean);
+    public Site getSite( Long siteId );
+    public Site getSite( String siteName );
+    public Long createSite(Site site);
 }

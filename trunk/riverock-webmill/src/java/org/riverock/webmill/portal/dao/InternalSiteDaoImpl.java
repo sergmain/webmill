@@ -23,13 +23,13 @@ import org.riverock.interfaces.portal.bean.Site;
 public class InternalSiteDaoImpl implements InternalSiteDao {
     private final static Logger log = Logger.getLogger(InternalSiteDaoImpl.class);
 
-    public Site getSiteBean(Long siteId) {
+    public Site getSite(Long siteId) {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
             WmPortalListSiteItemType site = GetWmPortalListSiteItem.getInstance(adapter, siteId).item;
 
-            return initSiteBean(site);
+            return initSite(site);
         }
         catch (Exception e) {
             String es = "Error get getSiteBean()";
@@ -42,7 +42,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
         }
     }
 
-    private Site initSiteBean(WmPortalListSiteItemType site) {
+    private Site initSite(WmPortalListSiteItemType site) {
         if (site==null)
             return null;
 
@@ -63,7 +63,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
         return bean;
     }
 
-    public Site getSiteBean(String siteName) {
+    public Site getSite(String siteName) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
@@ -74,7 +74,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             RsetTools.setString(ps, 1, siteName);
             rs = ps.executeQuery();
             if (rs.next()) {
-                return initSiteBean( GetWmPortalListSiteItem.fillBean(rs) );
+                return initSite( GetWmPortalListSiteItem.fillBean(rs) );
             }
             return null;
         }
@@ -91,7 +91,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
         }
     }
 
-    public Long createSite( Site siteBean ) {
+    public Long createSite( Site site ) {
 
         PreparedStatement ps = null;
         DatabaseAdapter dbDyn = null;
@@ -128,15 +128,15 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
 
             int num = 1;
             RsetTools.setLong( ps, num++, sequenceValue );
-            RsetTools.setLong( ps, num++, siteBean.getCompanyId() );
-            ps.setString( num++, siteBean.getDefLanguage() );
-            ps.setString( num++, siteBean.getDefCountry() );
-            ps.setString( num++, siteBean.getDefVariant() );
-            ps.setString( num++, siteBean.getSiteName() );
-            ps.setString( num++, siteBean.getAdminEmail() );
-            ps.setInt( num++, siteBean.getCssDynamic()?1:0 );
-            ps.setString( num++, siteBean.getCssFile() );
-            ps.setInt( num++, siteBean.getRegisterAllowed()?1:0 );
+            RsetTools.setLong( ps, num++, site.getCompanyId() );
+            ps.setString( num++, site.getDefLanguage() );
+            ps.setString( num++, site.getDefCountry() );
+            ps.setString( num++, site.getDefVariant() );
+            ps.setString( num++, site.getSiteName() );
+            ps.setString( num++, site.getAdminEmail() );
+            ps.setInt( num++, site.getCssDynamic()?1:0 );
+            ps.setString( num++, site.getCssFile() );
+            ps.setInt( num++, site.getRegisterAllowed()?1:0 );
 
             int i1 = ps.executeUpdate();
 

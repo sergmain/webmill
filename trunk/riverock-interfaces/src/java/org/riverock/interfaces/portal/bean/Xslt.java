@@ -7,7 +7,9 @@ package org.riverock.interfaces.portal.bean;
  */
 public interface Xslt {
     public Long getId();
+    public Long getSiteLanguageId();
     public String getName();
     public String getXsltData();
+    public boolean isCurrent();
 }
 

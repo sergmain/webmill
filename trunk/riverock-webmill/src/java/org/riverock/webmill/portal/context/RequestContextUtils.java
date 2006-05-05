@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.html.AcceptLanguageWithLevel;
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
@@ -44,7 +45,6 @@ import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
@@ -77,9 +77,9 @@ public final class RequestContextUtils {
     private static Locale getPreferredLocaleFromRequest( final HttpServletRequest request, final Long siteId ) {
         // determinate preffered locale
         // AcceptLanguageWithLevel[] accept =
-        List acceptVector = Header.getAcceptLanguageAsList( request );
+        List<AcceptLanguageWithLevel> acceptVector = Header.getAcceptLanguageAsList( request );
 
-        List<SiteLanguageBean> supportLanguageList = InternalDaoFactory.getInternalDao().getSiteLanguageList(siteId);
+        List<SiteLanguage> supportLanguageList = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
 
         if (log.isDebugEnabled())
             log.debug("Start looking for preffered locale");
@@ -87,7 +87,7 @@ public final class RequestContextUtils {
         // Locale not queried in URL
         Locale tempLocale = null;
         AcceptLanguageWithLevel bestAccept = null;
-        SiteLanguageBean includedFromCookie = null;
+        SiteLanguage includedFromCookie = null;
 
         Cookie[] cookies_req = request.getCookies();
         if (cookies_req!=null) {
@@ -113,13 +113,12 @@ public final class RequestContextUtils {
             }
 
             if (acceptVector!=null){
-                for (Object anAcceptVector : acceptVector) {
-                    AcceptLanguageWithLevel accept = (AcceptLanguageWithLevel) anAcceptVector;
+                for (AcceptLanguageWithLevel accept : acceptVector) {
 
                     if (log.isDebugEnabled())
                         log.debug("Accepted locale item, locale - " + accept.locale + ", level - " + accept.level);
 
-                    SiteLanguageBean included = includedAccept(accept.locale, supportLanguageList);
+                    SiteLanguage included = includedAccept(accept.locale, supportLanguageList);
 
                     if (log.isDebugEnabled()) log.debug("included - " + included);
 
@@ -143,7 +142,7 @@ public final class RequestContextUtils {
         return tempLocale;
     }
 
-    private static SiteLanguageBean includedAccept( final Locale accept, final List<SiteLanguageBean> supportLanguageList ) {
+    private static SiteLanguage includedAccept( final Locale accept, final List<SiteLanguage> supportLanguageList ) {
 
         boolean hasVariant = (accept.getVariant()!=null && accept.getVariant().trim().length()>0);
         boolean hasCountry = (accept.getCountry()!=null && accept.getCountry().trim().length()>0);
@@ -152,11 +151,11 @@ public final class RequestContextUtils {
             log.debug("accept locale: "+accept.toString()+", hasVariant - "+hasVariant + ", hasCountry - "+hasCountry);
         }
 
-        SiteLanguageBean result = null;
+        SiteLanguage result = null;
         Locale rl = null;
-        SiteLanguageBean resultTemp = null;
+        SiteLanguage resultTemp = null;
         Locale rlTemp = null;
-        for (SiteLanguageBean bean : supportLanguageList) {
+        for (SiteLanguage bean : supportLanguageList) {
             Locale cl = StringTools.getLocale(bean.getCustomLanguage());
 
             if (log.isDebugEnabled()) {

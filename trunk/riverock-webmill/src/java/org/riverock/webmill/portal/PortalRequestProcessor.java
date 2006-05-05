@@ -34,11 +34,11 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.MainTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.config.WebmillConfig;
@@ -116,7 +116,7 @@ public final class PortalRequestProcessor {
 
     private static boolean checkTemplateRole(PortalRequestInstance portalRequestInstance) {
         if (portalRequestInstance.template==null ||
-            StringTools.isEmpty( portalRequestInstance.template.getRole() ) ) {
+            StringUtils.isEmpty( portalRequestInstance.template.getRole() ) ) {
             return true;
         }
 

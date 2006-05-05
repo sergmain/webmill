@@ -52,12 +52,12 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
         try {
             SqlCacheType sqlCache = content.getQueryArea().getSqlCache();
 
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("sqlQuery.getCheckSql not cached, start create new.");
+            if (log.isDebugEnabled())
+                log.debug("sqlQuery.getCheckSql not cached, start create new.");
 
             if (sqlCache.getFromCount() == 0 || sqlCache.getWhereCount() == 0) {
-                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                    MemberProcessingActionRequest.log.debug("Return true. from count - " + sqlCache.getFromCount() + ", where count - " + sqlCache.getWhereCount());
+                if (log.isDebugEnabled())
+                    log.debug("Return true. from count - " + sqlCache.getFromCount() + ", where count - " + sqlCache.getWhereCount());
 
                 return true;
             }
@@ -117,8 +117,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                 }
             }
 
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("sql for check\n" + sql);
+            if (log.isDebugEnabled())
+                log.debug("sql for check\n" + sql);
 
             ps = db_.prepareStatement(sql);
             int numParam = 1;
@@ -136,7 +136,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                             case ParameterTypeType.DATE_TYPE:
                                 throw new Exception("DATE_TYPE of PK not implemented");
                             default:
-                                MemberProcessingActionRequest.log.info("Unknown type of PK - " + parameter.getParameterType());
+                                log.info("Unknown type of PK - " + parameter.getParameterType());
                         }
                         break;
 
@@ -149,14 +149,14 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                         String nameFirmField = isFirmFieldExists(content.getQueryArea());
                         switch (db_.getFamaly()) {
                             case DatabaseManager.MYSQL_FAMALY:
-                                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                                    MemberProcessingActionRequest.log.debug("nameFirmField: " + nameFirmField);
+                                if (log.isDebugEnabled())
+                                    log.debug("nameFirmField: " + nameFirmField);
 
                                 if (nameFirmField != null) {
                                     List<Long> list = authSession.getGrantedCompanyIdList();
                                     Long id = PortletService.getLong(portletRequest, mod.getName() + '.' + nameFirmField);
 
-                                    MemberProcessingActionRequest.log.debug("id: " + id);
+                                    log.debug("id: " + id);
                                     if (id == null)
                                         return false;
 
@@ -166,7 +166,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                                             isFound = true;
                                     }
 
-                                    MemberProcessingActionRequest.log.debug("return false ");
+                                    log.debug("return false ");
                                     if (!isFound)
                                         return false;
                                 }
@@ -188,19 +188,19 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                         break;
                 }
             }
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("start executeQuery ");
+            if (log.isDebugEnabled())
+                log.debug("start executeQuery ");
 
             rs = ps.executeQuery();
 
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("done executeQuery");
+            if (log.isDebugEnabled())
+                log.debug("done executeQuery");
 
             if (rs.next())
                 return true;
         }
         catch (Exception e) {
-            MemberProcessingActionRequest.log.error("Error checkRestriction", e);
+            log.error("Error checkRestriction", e);
             throw e;
         }
         finally {
@@ -239,8 +239,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
         throws Exception {
         Object returnID = null;
 
-        if (MemberProcessingActionRequest.log.isDebugEnabled())
-            MemberProcessingActionRequest.log.debug("#99.01.00 sequence -  " + "seq_" + content.getQueryArea().getTable(0).getTable());
+        if (log.isDebugEnabled())
+            log.debug("#99.01.00 sequence -  " + "seq_" + content.getQueryArea().getTable(0).getTable());
 
         // create sequence for PK
         CustomSequenceType seq = new CustomSequenceType();
@@ -251,8 +251,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
         int numParam = 1;
 
-        if (MemberProcessingActionRequest.log.isDebugEnabled())
-            MemberProcessingActionRequest.log.debug("#99.01.01 value of PK " + pkID);
+        if (log.isDebugEnabled())
+            log.debug("#99.01.01 value of PK " + pkID);
 
         // bind PK
         switch (content.getQueryArea().getPrimaryKeyType().getType()) {
@@ -260,9 +260,9 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                 RsetTools.setLong(ps, numParam++, pkID);
                 returnID = pkID;
 
-                if (MemberProcessingActionRequest.log.isDebugEnabled()) {
-                    MemberProcessingActionRequest.log.debug("#99.01.02.1 PK object " + returnID);
-                    MemberProcessingActionRequest.log.debug("#99.01.02.2 type of PK " + returnID.getClass().getName());
+                if (log.isDebugEnabled()) {
+                    log.debug("#99.01.02.1 PK object " + returnID);
+                    log.debug("#99.01.02.2 type of PK " + returnID.getClass().getName());
                 }
                 break;
 
@@ -270,8 +270,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                 ps.setString(numParam++, "" + returnID);
                 returnID = "" + pkID;
 
-                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                    MemberProcessingActionRequest.log.debug("#99.01.03 " + returnID);
+                if (log.isDebugEnabled())
+                    log.debug("#99.01.03 " + returnID);
 
                 break;
             default:
@@ -283,8 +283,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
             FieldsType ff = content.getQueryArea().getFields(k);
             if (Boolean.TRUE.equals(ff.getIsShow()) && (ff.getJspType().getType() != FieldsTypeJspTypeType.BIGTEXT_TYPE))
             {
-                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                    MemberProcessingActionRequest.log.debug("#4.05.01 bind " + ff.getJspType().toString() + " param #" + numParam + " " + RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                if (log.isDebugEnabled())
+                    log.debug("#4.05.01 bind " + ff.getJspType().toString() + " param #" + numParam + " " + RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
 
                 String stringParam =
                     RequestTools.getString(
@@ -345,8 +345,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
             ContentType cnt = moduleManager.getContent(modName, ContentTypeActionType.INDEX_TYPE);
             if (cnt != null && cnt.getQueryArea() != null &&
                 !st.hasMoreTokens()) {
-                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                    MemberProcessingActionRequest.log.debug("#4.09.03.1 bind '" + cnt.getQueryArea().getPrimaryKeyType().toString() +
+                if (log.isDebugEnabled())
+                    log.debug("#4.09.03.1 bind '" + cnt.getQueryArea().getPrimaryKeyType().toString() +
                         "' param #" + numParam + " " + modName + '.' + cnt.getQueryArea().getPrimaryKey() + ' ' +
                         RequestTools.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey())
                     );
@@ -374,8 +374,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
         if (mod.getSelfLookup() != null &&
             mod.getSelfLookup().getCurrentField() != null &&
             mod.getSelfLookup().getTopField() != null) {
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("#4.01.03.1 bind long param #" + numParam + " " +
+            if (log.isDebugEnabled())
+                log.debug("#4.01.03.1 bind long param #" + numParam + " " +
                     PortletService.getLong(portletRequest, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), 0L)
                 );
 
@@ -389,8 +389,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
             content.getQueryArea().getRestrict().getType().getType() ==
                 RestrictTypeTypeType.FIRM_TYPE
             && !MemberServiceClass.checkRestrictField(content, RestrictTypeTypeType.FIRM_TYPE)) {
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("#4.09.07 bind long param #" + numParam + ' ' + authSession.getUserInfo().getCompanyId());
+            if (log.isDebugEnabled())
+                log.debug("#4.09.07 bind long param #" + numParam + ' ' + authSession.getUserInfo().getCompanyId());
 
             RsetTools.setLong(ps, numParam++, authSession.getUserInfo().getCompanyId());
         }
@@ -400,8 +400,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                 RestrictTypeTypeType.SITE_TYPE
             && !MemberServiceClass.checkRestrictField(content, RestrictTypeTypeType.SITE_TYPE)) {
             Long siteId = new Long(portletRequest.getPortalContext().getProperty(ContainerConstants.PORTAL_PROP_SITE_ID));
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("#4.09.08 bind long param #" + numParam + ' ' + siteId);
+            if (log.isDebugEnabled())
+                log.debug("#4.09.08 bind long param #" + numParam + ' ' + siteId);
 
             RsetTools.setLong(ps, numParam++, siteId);
 
@@ -411,22 +411,22 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
             content.getQueryArea().getRestrict().getType().getType() ==
                 RestrictTypeTypeType.USER_TYPE
             && !MemberServiceClass.checkRestrictField(content, RestrictTypeTypeType.USER_TYPE)) {
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("#4.09.09  bind long param #" + numParam + " " + authSession.getUserInfo().getUserId());
+            if (log.isDebugEnabled())
+                log.debug("#4.09.09  bind long param #" + numParam + " " + authSession.getUserInfo().getUserId());
 
             RsetTools.setLong(ps, numParam++, authSession.getUserInfo().getUserId());
         }
 
-        if (MemberProcessingActionRequest.log.isDebugEnabled())
-            MemberProcessingActionRequest.log.debug("#4.09.10 count of binded parameters " + (numParam - 1));
+        if (log.isDebugEnabled())
+            log.debug("#4.09.10 count of binded parameters " + (numParam - 1));
 
         return returnID;
     }
 
     public void prepareBigtextData(DatabaseAdapter dbDyn, Object idRec, boolean isDelete)
         throws Exception {
-        if (MemberProcessingActionRequest.log.isDebugEnabled())
-            MemberProcessingActionRequest.log.debug("#88.01.00 " + idRec);
+        if (log.isDebugEnabled())
+            log.debug("#88.01.00 " + idRec);
 
         // looking for bigtext field
         for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++) {
@@ -435,8 +435,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
             // if isShow and this field is bigtext then process this field
             if (Boolean.TRUE.equals(ff.getIsShow()) && ff.getJspType().getType() == FieldsTypeJspTypeType.BIGTEXT_TYPE)
             {
-                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                    MemberProcessingActionRequest.log.debug("BigText field - " + ff.getName());
+                if (log.isDebugEnabled())
+                    log.debug("BigText field - " + ff.getName());
 
                 String insertString =
                     RequestTools.getString(
@@ -453,7 +453,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                 }
 
                 if (nameTargetField == null) {
-                    MemberProcessingActionRequest.log.error("Name field for store data not found.");
+                    log.error("Name field for store data not found.");
                     throw new Exception("Name field for store data not found.");
                 }
 
@@ -472,8 +472,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
     public void deleteBigtextData(DatabaseAdapter dbDyn, Object idRec)
         throws Exception {
-        if (MemberProcessingActionRequest.log.isDebugEnabled())
-            MemberProcessingActionRequest.log.debug("#88.01.00 " + idRec);
+        if (log.isDebugEnabled())
+            log.debug("#88.01.00 " + idRec);
 
         // looking for bigtext field
         for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++) {
@@ -481,8 +481,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
             // if bigtext then process this field
             if (ff.getJspType().getType() == FieldsTypeJspTypeType.BIGTEXT_TYPE) {
-                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                    MemberProcessingActionRequest.log.debug("BigText field - " + ff.getName());
+                if (log.isDebugEnabled())
+                    log.debug("BigText field - " + ff.getName());
 
                 DatabaseManager.deleteFromBigTable(
                     dbDyn,
@@ -586,8 +586,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
                             stringParam =
                                 RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
-                            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                                MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + stringParam);
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
 
                             RsetTools.setString(ps, numParam++, stringParam);
                             break;
@@ -597,8 +597,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                             stringParam =
                                 RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
-                            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                                MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + stringParam);
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
 
                             if (stringParam.length() == 0)
                                 ps.setNull(numParam++, Types.DATE);
@@ -613,8 +613,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                         case FieldsTypeJspTypeType.INT_TEXT_TYPE:
                             longParam = PortletService.getLong(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
-                            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                                MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + stringParam);
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
 
                             RsetTools.setLong(ps, numParam++, longParam);
                             break;
@@ -625,8 +625,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                             doubleParam =
                                 PortletService.getDouble(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
-                            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                                MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + doubleParam);
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + doubleParam);
 
                             RsetTools.setDouble(ps, numParam++, doubleParam);
                             break;
@@ -634,8 +634,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                         default:
                             stringParam = RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
 
-                            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                                MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + stringParam);
+                            if (log.isDebugEnabled())
+                                log.debug("Param  #" + numParam + ", value: " + stringParam);
 
                             RsetTools.setString(ps, numParam++, stringParam);
                     }
@@ -652,8 +652,8 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
         }
 
         if (isUsePrimaryKey) {
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + returnIdPK);
+            if (log.isDebugEnabled())
+                log.debug("Param  #" + numParam + ", value: " + returnIdPK);
 
             if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE) {
                 RsetTools.setLong(ps, numParam++, ((Long) returnIdPK));
@@ -681,8 +681,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
             mod.getSelfLookup().getTopField() != null) {
             final Long longParam = PortletService.getLong(portletRequest, mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), 0L);
 
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + longParam);
+            if (log.isDebugEnabled())
+                log.debug("Param  #" + numParam + ", value: " + longParam);
 
             RsetTools.setLong(ps, numParam++,
                 longParam
@@ -695,8 +695,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
-                    if (MemberProcessingActionRequest.log.isDebugEnabled())
-                        MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + portletRequest.getRemoteUser());
+                    if (log.isDebugEnabled())
+                        log.debug("Param  #" + numParam + ", value: " + portletRequest.getRemoteUser());
 
                     ps.setString(numParam++, portletRequest.getRemoteUser());
                     break;
@@ -709,8 +709,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
-                    if (MemberProcessingActionRequest.log.isDebugEnabled())
-                        MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + portletRequest.getServerName());
+                    if (log.isDebugEnabled())
+                        log.debug("Param  #" + numParam + ", value: " + portletRequest.getServerName());
 
                     ps.setString(numParam++, portletRequest.getServerName());
                     break;
@@ -723,8 +723,8 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
-                    if (MemberProcessingActionRequest.log.isDebugEnabled())
-                        MemberProcessingActionRequest.log.debug("Param  #" + numParam + ", value: " + portletRequest.getRemoteUser());
+                    if (log.isDebugEnabled())
+                        log.debug("Param  #" + numParam + ", value: " + portletRequest.getRemoteUser());
 
                     ps.setString(numParam++, portletRequest.getRemoteUser());
                     break;
@@ -746,7 +746,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
             ModuleType module = moduleManager.getModule(str);
             if (module == null) {
-                MemberProcessingActionRequest.log.warn("checkRecursiveCall. module is null. Str - " + str);
+                log.warn("checkRecursiveCall. module is null. Str - " + str);
                 return MemberConstants.MEMBER_FROM_PARAM + " section is incorrect. ";
             }
 
@@ -795,18 +795,18 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         try {
             db_ = DatabaseAdapter.getInstance();
             String moduleName = RequestTools.getString(this.portletRequest, MemberConstants.MEMBER_MODULE_PARAM);
-            if (MemberProcessingActionRequest.log.isDebugEnabled()) {
-                MemberProcessingActionRequest.log.debug("moduleName: " + moduleName);
+            if (log.isDebugEnabled()) {
+                log.debug("moduleName: " + moduleName);
                 for (Enumeration e = this.portletRequest.getParameterNames(); e.hasMoreElements();) {
                     String s = (String) e.nextElement();
-                    MemberProcessingActionRequest.log.debug("Request parameter: " + s + ", value: " + RequestTools.getString(this.portletRequest, s));
+                    log.debug("Request parameter: " + s + ", value: " + RequestTools.getString(this.portletRequest, s));
                 }
             }
 
             mod = moduleManager.getModule(moduleName);
         }
         catch (Exception e) {
-            MemberProcessingActionRequest.log.error("Error get module", e);
+            log.error("Error get module", e);
             mod = null;
         }
 
@@ -823,7 +823,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         throws Exception {
         String sql_ = MemberServiceClass.buildUpdateSQL(dbDyn, content, fromParam, mod, false, portletRequest.getParameterMap(), portletRequest.getRemoteUser(), portletRequest.getServerName(), moduleManager, authSession);
 
-        MemberProcessingActionRequest.log.info("sql for update yes1-noN\n" + sql_);
+        log.info("sql for update yes1-noN\n" + sql_);
 
 
         PreparedStatement ps = null;
@@ -844,12 +844,12 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
         for (int k = 0; k < content.getQueryArea().getFieldsCount(); k++) {
             FieldsType ff = content.getQueryArea().getFields(k);
 
-            if (MemberProcessingActionRequest.log.isDebugEnabled())
-                MemberProcessingActionRequest.log.debug("Field '" + ff.getName() + "', validator is " + ff.getValidator());
+            if (log.isDebugEnabled())
+                log.debug("Field '" + ff.getName() + "', validator is " + ff.getValidator());
 
             if (ff.getValidator() != null) {
-                if (MemberProcessingActionRequest.log.isDebugEnabled())
-                    MemberProcessingActionRequest.log.debug("Start validate field '" + ff.getName() + "'");
+                if (log.isDebugEnabled())
+                    log.debug("Start validate field '" + ff.getName() + "'");
 
                 String result;
                 switch (ff.getValidator().getType().getType()) {

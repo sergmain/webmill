@@ -31,13 +31,33 @@ package org.riverock.webmill.portal.dao;
  *         $Id$
  */
 public class InternalDaoFactory {
-	public static InternalDao internalDao = new InternalDaoImpl();
-	public static InternalCompanyDao internalCompanyDao = new InternalCompanyDaoImpl();
-	public static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
-	public static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
-	public static InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
-	public static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
-	public static InternalVirtualHostDao internalVirtualHostDao = new InternalVirtualHostDaoImpl();
+    public static InternalDao internalDao = new InternalDaoImpl();
+    public static InternalCompanyDao internalCompanyDao = new InternalCompanyDaoImpl();
+    public static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
+    public static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
+    public static InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
+    public static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
+    public static InternalVirtualHostDao internalVirtualHostDao = new InternalVirtualHostDaoImpl();
+    public static InternalSiteLanguageDao internalSiteLanguageDao = new InternalSiteLanguageDaoImpl();
+    public static InternalTemplateDao internalTemplateDao = new InternalTemplateDaoImpl();
+    public static InternalPortletNameDao internalPortletNameDao = new InternalPortletNameDaoImpl();
+    public static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
+
+    public static InternalCatalogDao getInternalCatalogDao() {
+        return internalCatalogDao;
+    }
+
+    public static InternalPortletNameDao getInternalPortletNameDao() {
+        return internalPortletNameDao;
+    }
+
+    public static InternalTemplateDao getInternalTemplateDao() {
+        return internalTemplateDao;
+    }
+
+    public static InternalSiteLanguageDao getInternalSiteLanguageDao() {
+        return internalSiteLanguageDao;
+    }
 
     public static InternalVirtualHostDao getInternalVirtualHostDao() {
         return internalVirtualHostDao;

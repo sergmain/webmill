@@ -173,7 +173,7 @@ public final class PortalMenu implements Menu {
 
         if (log.isDebugEnabled()) log.debug("#33.70.00 ");
 
-        List<CatalogBean> list = InternalDaoFactory.getInternalDao().getCatalogList( bean.getCatalogLanguageId() );
+        List<CatalogBean> list = InternalDaoFactory.getInternalCatalogDao().getCatalogItemList( bean.getCatalogLanguageId() );
         Iterator<CatalogBean> iterator = list.iterator();
         while (iterator.hasNext()) {
             CatalogBean catalogBean = iterator.next();

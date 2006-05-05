@@ -26,36 +26,45 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.interfaces.portal.bean.TemplateBean;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.a3.audit.RequestStatisticBean;
-import org.riverock.webmill.core.*;
+import org.riverock.webmill.core.GetWmPortalAccessUrlFullList;
+import org.riverock.webmill.core.GetWmPortalAccessUseragentFullList;
+import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
+import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
+import org.riverock.webmill.core.GetWmPortalListSiteItem;
+import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
+import org.riverock.webmill.core.InsertWmPortalAccessStatItem;
+import org.riverock.webmill.core.InsertWmPortalAccessUrlItem;
+import org.riverock.webmill.core.InsertWmPortalAccessUseragentItem;
 import org.riverock.webmill.main.ContentCSS;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.port.PortalXsltList;
-import org.riverock.webmill.portal.bean.CatalogBean;
-import org.riverock.webmill.portal.bean.CatalogLanguageBean;
-import org.riverock.webmill.portal.bean.PortletNameBean;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
-import org.riverock.webmill.portal.bean.TemplateBeanImpl;
 import org.riverock.webmill.portal.menu.PortalMenu;
 import org.riverock.webmill.portal.menu.PortalMenuLanguage;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.utils.SiteList;
-import org.riverock.webmill.schema.core.*;
+import org.riverock.webmill.schema.core.WmPortalAccessStatItemType;
+import org.riverock.webmill.schema.core.WmPortalAccessUrlItemType;
+import org.riverock.webmill.schema.core.WmPortalAccessUrlListType;
+import org.riverock.webmill.schema.core.WmPortalAccessUseragentItemType;
+import org.riverock.webmill.schema.core.WmPortalAccessUseragentListType;
 import org.riverock.webmill.site.PortalTemplateManagerImpl;
 
 /**
@@ -67,9 +76,6 @@ import org.riverock.webmill.site.PortalTemplateManagerImpl;
 @SuppressWarnings({"UnusedAssignment"})
 public class InternalDaoImpl implements InternalDao {
     private final static Logger log = Logger.getLogger(InternalDaoImpl.class);
-
-    public InternalDaoImpl() {
-    }
 
     public Collection<String> getSupportedLocales() {
         // Todo. return 'real' values
@@ -214,7 +220,7 @@ public class InternalDaoImpl implements InternalDao {
         }
     }
 
-    public CssBean getCssBean(Long siteId) {
+    public CssBean getCss(Long siteId) {
         if (siteId == null)
             return new CssBean();
 
@@ -251,75 +257,6 @@ public class InternalDaoImpl implements InternalDao {
             adapter = null;
             rset = null;
             ps = null;
-        }
-    }
-
-    public SiteLanguageBean getSiteLanguageBean(Long siteLanguageId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalSiteLanguageItemType lang = GetWmPortalSiteLanguageItem.getInstance(adapter, siteLanguageId).item;
-
-            SiteLanguageBean bean = new SiteLanguageBean();
-            bean.setCustomLanguage( StringTools.getLocale( lang.getCustomLanguage()).toString() );
-//            bean.setLanguageId( lang.getIdLanguage() );
-            bean.setNameCustomLanguage( lang.getNameCustomLanguage() );
-            bean.setSiteId( lang.getIdSite() );
-            bean.setSiteLanguageId( lang.getIdSiteSupportLanguage() );
-            return bean;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    static {
-        try {
-            Class c = SiteMenu.class;
-            SqlStatement.registerRelateClass( c, PortalMenuLanguage.class );
-            SqlStatement.registerRelateClass( c, GetWmPortalSiteLanguageWithIdSiteList.class );
-        }
-        catch( Exception exception ) {
-            final String es = "Exception in ";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
-
-    public List<SiteLanguageBean> getSiteLanguageList(Long siteId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            List<SiteLanguageBean> list = new ArrayList<SiteLanguageBean>();
-            WmPortalSiteLanguageListType langs = GetWmPortalSiteLanguageWithIdSiteList.getInstance(adapter, siteId).item;
-
-            for (int i = 0; i < langs.getWmPortalSiteLanguageCount(); i++) {
-                WmPortalSiteLanguageItemType lang = langs.getWmPortalSiteLanguage(i);
-                SiteLanguageBean bean = new SiteLanguageBean();
-                bean.setCustomLanguage( StringTools.getLocale(lang.getCustomLanguage()).toString() );
-//                bean.setLanguageId( lang.getIdLanguage() );
-                bean.setNameCustomLanguage( lang.getNameCustomLanguage() );
-                bean.setSiteId( lang.getIdSite() );
-                bean.setSiteLanguageId( lang.getIdSiteSupportLanguage() );
-                list.add( bean );
-            }
-
-            return list;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
         }
     }
 
@@ -398,173 +335,19 @@ public class InternalDaoImpl implements InternalDao {
 
     }
 
-    public CatalogLanguageBean getCatalogLanguageBean(Long catalogLanguageId ) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalCatalogLanguageItemType ic =
-                GetWmPortalCatalogLanguageItem.getInstance(adapter, catalogLanguageId ).item;
-
-            CatalogLanguageBean bean = new CatalogLanguageBean();
-            bean.setCatalogCode( ic.getCatalogCode() );
-            bean.setCatalogLanguageId( ic.getIdSiteCtxLangCatalog() );
-            bean.setDefault( ic.getIsDefault() );
-            bean.setSiteLanguageId( ic.getIdSiteSupportLanguage() );
-
-            return bean;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    static{
-        Class c = PortalMenuLanguage.class;
-        try{
-            SqlStatement.registerRelateClass( c, PortalMenu.class );
-            SqlStatement.registerRelateClass( c, GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.class );
-        }
-        catch( Exception exception ) {
-            final String es = "Exception in SqlStatement.registerRelateClass()";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
-
-    public List<CatalogLanguageBean> getCatalogLanguageList(Long siteLanguageId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalCatalogLanguageListType list =
-                GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.
-                getInstance(adapter, siteLanguageId )
-                .item;
-
-            List<CatalogLanguageBean> beans = new ArrayList<CatalogLanguageBean>();
-            for (Object o : list.getWmPortalCatalogLanguageAsReference()) {
-                WmPortalCatalogLanguageItemType ic = (WmPortalCatalogLanguageItemType) o;
-                CatalogLanguageBean bean = new CatalogLanguageBean();
-                bean.setCatalogCode(ic.getCatalogCode());
-                bean.setCatalogLanguageId(ic.getIdSiteCtxLangCatalog());
-                bean.setDefault(ic.getIsDefault());
-                bean.setSiteLanguageId(siteLanguageId);
-                beans.add(bean);
-            }
-            return beans;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-
-
-    }
-
-    static{
-        try{
-            SqlStatement.registerRelateClass( PortalMenu.class, GetWmPortalCatalogWithIdSiteCtxLangCatalogList.class );
-        }
-        catch( Exception exception ) {
-            final String es = "Exception in SqlStatement.registerRelateClass()";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
-
-    public CatalogBean getCatalogBean(Long catalogId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalCatalogItemType catalogItem =
-                    GetWmPortalCatalogItem.getInstance(adapter, catalogId).item;
-
-            if (catalogItem==null) {
-                return null;
-            }
-
-            return initCatalogBean(catalogItem);
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    private static CatalogBean initCatalogBean(WmPortalCatalogItemType item) {
-        CatalogBean bean = null;
-        // Dont include menuitem with id_template==null to menu
-        if (item.getIdSiteTemplate()!=null) {
-            bean = new CatalogBean();
-            bean.setAuthor( item.getCtxPageAuthor() );
-            bean.setCatalogId( item.getIdSiteCtxCatalog() );
-            bean.setCatalogLanguageId( item.getIdSiteCtxLangCatalog() );
-            bean.setContextId( item.getIdContext() );
-            bean.setPortletId( item.getIdSiteCtxType() );
-            bean.setKeyMessage( item.getKeyMessage() );
-            bean.setKeyword( item.getCtxPageKeyword() );
-            bean.setMetadata( item.getMetadata() );
-            bean.setOrderField( item.getOrderField() );
-            bean.setPortletRole( item.getPortletRole() );
-            bean.setStorage( item.getStorage() );
-            bean.setTemplateId( item.getIdSiteTemplate() );
-            bean.setTitle( item.getCtxPageTitle() );
-            bean.setTopCatalogId( item.getIdTopCtxCatalog() );
-            bean.setUrl( item.getCtxPageUrl() );
-            bean.setUseProperties( item.getIsUseProperties() );
-        }
-        return bean;
-    }
-
-    public List<CatalogBean> getCatalogList(Long catalogLanguageId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalCatalogListType catalogList =
-                    GetWmPortalCatalogWithIdSiteCtxLangCatalogList.getInstance(adapter, catalogLanguageId).item;
-
-            List<WmPortalCatalogItemType> list = catalogList.getWmPortalCatalogAsReference();
-
-            // remove call of sorting, when will be implemented sort in SQL query
-            Collections.sort(list, new MenuItemComparator());
-
-            List<CatalogBean> beans = new ArrayList<CatalogBean>();
-            for (WmPortalCatalogItemType item : list) {
-                // Dont include menuitem with id_template==null to menu
-                if (item.getIdSiteTemplate() != null) {
-                    beans.add(initCatalogBean(item));
-                }
-            }
-            return beans;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
 
     static {
         try {
+            Class c = SiteMenu.class;
+            SqlStatement.registerRelateClass( c, PortalMenuLanguage.class );
+            SqlStatement.registerRelateClass( c, GetWmPortalSiteLanguageWithIdSiteList.class );
+
+            c = PortalMenuLanguage.class;
+            SqlStatement.registerRelateClass( c, PortalMenu.class );
+            SqlStatement.registerRelateClass( c, GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList.class );
+
+            SqlStatement.registerRelateClass( PortalMenu.class, GetWmPortalCatalogWithIdSiteCtxLangCatalogList.class );
+
             Class p = PortalInfoImpl.class;
             SqlStatement.registerRelateClass(p, GetWmPortalListSiteItem.class);
             SqlStatement.registerRelateClass(p, PortalXsltList.class);
@@ -579,278 +362,4 @@ public class InternalDaoImpl implements InternalDao {
         }
     }
 
-    public TemplateBean getTemplateBean(Long templateId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalTemplateItemType template = GetWmPortalTemplateItem.getInstance(adapter, templateId).item;
-            TemplateBeanImpl bean = null;
-            if (template!=null) {
-                bean = new TemplateBeanImpl();
-                bean.setSiteLanguageId( template.getIdSiteSupportLanguage() );
-                bean.setTemplateData( template.getTemplateData() );
-                bean.setTemplateId( template.getIdSiteTemplate() );
-                bean.setTemplateName( template.getNameSiteTemplate() );
-            }
-            return bean;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    public PortletNameBean getPortletNameBean(Long portletId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            WmPortalPortletNameItemType ctxType = GetWmPortalPortletNameItem.getInstance(adapter, portletId ).item;
-            PortletNameBean bean = new PortletNameBean();
-            if (ctxType!=null) {
-                bean.setName( ctxType.getType() );
-                bean.setPortletId( portletId );
-            }
-            return bean;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    static String templateSql =
-        "select a.ID_SITE_TEMPLATE, b.CUSTOM_LANGUAGE, a.NAME_SITE_TEMPLATE, " +
-        "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE " +
-        "from   WM_PORTAL_TEMPLATE a, WM_PORTAL_SITE_LANGUAGE b " +
-        "where  b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
-    static {
-        try {
-            SqlStatement.registerSql( sql_, PortalTemplateManagerImpl.class );
-        }
-        catch( Throwable exception ) {
-            final String es = "Exception in SqlStatement.registerSql()";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
-
-    public List<TemplateBean> getTemplateList( Long siteId ) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            ps = adapter.prepareStatement(templateSql);
-            ps.setLong(1, siteId);
-
-            rs = ps.executeQuery();
-
-            List<TemplateBean> beans =  new ArrayList<TemplateBean>();
-            while (rs.next()) {
-
-                TemplateBeanImpl bean = new TemplateBeanImpl();
-                bean.setSiteLanguageId( RsetTools.getLong(rs, "ID_SITE_SUPPORT_LANGUAGE") );
-                bean.setTemplateData( RsetTools.getString(rs, "TEMPLATE_DATA") );
-                bean.setTemplateId( RsetTools.getLong(rs, "ID_SITE_TEMPLATE") );
-                bean.setTemplateName( RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
-                bean.setTemplateLanguage( RsetTools.getString(rs, "CUSTOM_LANGUAGE") );
-
-                beans.add( bean );
-            }
-            return beans;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter, rs, ps);
-            adapter = null;
-            rs = null;
-            ps = null;
-        }
-    }
-
-    static String templateLanguageSql =
-        "select a.ID_SITE_TEMPLATE, b.CUSTOM_LANGUAGE, a.NAME_SITE_TEMPLATE, " +
-        "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE " +
-        "from   WM_PORTAL_TEMPLATE a, WM_PORTAL_SITE_LANGUAGE b " +
-        "where  b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
-    static {
-        try {
-            SqlStatement.registerSql( sql_, PortalTemplateManagerImpl.class );
-        }
-        catch( Throwable exception ) {
-            final String es = "Exception in SqlStatement.registerSql()";
-            log.error( es, exception );
-            throw new SqlStatementRegisterException( es, exception );
-        }
-    }
-
-    public List<TemplateBean> getTemplateLanguageList( Long siteLanguageId ) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            ps = adapter.prepareStatement(templateLanguageSql);
-            ps.setLong(1, siteLanguageId);
-
-            rs = ps.executeQuery();
-
-            List<TemplateBean> beans =  new ArrayList<TemplateBean>();
-            while (rs.next()) {
-
-                TemplateBeanImpl bean = new TemplateBeanImpl();
-                bean.setSiteLanguageId( siteLanguageId );
-                bean.setTemplateData( RsetTools.getString(rs, "TEMPLATE_DATA") );
-                bean.setTemplateId( RsetTools.getLong(rs, "ID_SITE_TEMPLATE") );
-                bean.setTemplateName( RsetTools.getString(rs, "NAME_SITE_TEMPLATE") );
-                bean.setTemplateLanguage( RsetTools.getString(rs, "CUSTOM_LANGUAGE") );
-
-                beans.add( bean );
-            }
-            return beans;
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter, rs, ps);
-            adapter = null;
-            rs = null;
-            ps = null;
-        }
-    }
-
-    public Long getCatalogId(Long siteId, Locale locale, String portletName, String templateName) {
-        if (log.isDebugEnabled()) {
-            log.debug("InternalDaoImpl.getCatalogId()");
-            log.debug("     siteId: " + siteId);
-            log.debug("     locale: " + locale.toString().toLowerCase() );
-            log.debug("     portletName: " + portletName);
-            log.debug("     templateName: " + templateName);
-        }
-
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            return DatabaseManager.getLongValue( adapter,
-                "select a.ID_SITE_CTX_CATALOG " +
-                "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c, " +
-                "       WM_PORTAL_PORTLET_NAME d, WM_PORTAL_TEMPLATE e " +
-                "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
-                "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +
-                "       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and " +
-                "       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and " +
-                "       d.TYPE=? and e.NAME_SITE_TEMPLATE=? ",
-                new Object[]{siteId, locale.toString().toLowerCase(), portletName, templateName}
-            );
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    public Long getCatalogId(Long siteId, Locale locale, String pageName) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            return DatabaseManager.getLongValue(
-                    adapter,
-                    "select a.ID_SITE_CTX_CATALOG " +
-                    "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c " +
-                    "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
-                    "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                    "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +
-                    "       a.CTX_PAGE_URL=?",
-                    new Object[]{ siteId, locale.toString().toLowerCase(), pageName }
-            );
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    public Long getCatalogId(Long siteId, Locale locale, Long catalogId) {
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-
-            return DatabaseManager.getLongValue(
-                adapter,
-                "select a.ID_SITE_CTX_CATALOG " +
-                "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b, WM_PORTAL_SITE_LANGUAGE c " +
-                "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
-                "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
-                "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and a.ID_SITE_CTX_CATALOG=?",
-                    new Object[]{ siteId, locale.toString().toLowerCase(), catalogId }
-            );
-        }
-        catch (Exception e) {
-            String es = "Error get getSiteBean()";
-            log.error(es, e);
-            throw new IllegalStateException(es,e );
-        }
-        finally{
-            DatabaseManager.close(adapter);
-            adapter = null;
-        }
-    }
-
-    private class MenuItemComparator implements Comparator<WmPortalCatalogItemType> {
-        public int compare(WmPortalCatalogItemType o1, WmPortalCatalogItemType o2) {
-
-            if (o1==null && o2==null)
-                return 0;
-            if (o1==null)
-                return 1;
-            if (o2==null)
-                return -1;
-
-            // "order by a.ID_TOP_CTX_CATALOG ASC, a.ORDER_FIELD ASC ";
-            if ( o1.getIdTopCtxCatalog().equals( o2 .getIdTopCtxCatalog()))
-            {
-                if ( o1.getOrderField()==null && o2.getOrderField()==null)
-                    return 0;
-
-                if ( o1.getOrderField()!=null && o2.getOrderField()==null )
-                    return -1;
-
-                if ( o1.getOrderField()==null && o2.getOrderField()!=null)
-                    return 1;
-
-                return o1.getOrderField().compareTo( o2.getOrderField() );
-            }
-            else
-                return o1.getIdTopCtxCatalog().compareTo( o2.getIdTopCtxCatalog() );
-        }
-    }
 }

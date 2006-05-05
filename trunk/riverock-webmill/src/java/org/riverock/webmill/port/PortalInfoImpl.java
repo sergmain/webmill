@@ -38,13 +38,14 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
 import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.portal.bean.SiteBean;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.menu.SiteMenu;
 import org.riverock.webmill.portal.utils.SiteList;
@@ -60,8 +61,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient static Map<Long, PortalInfoImpl> portatInfoMap = new HashMap<Long, PortalInfoImpl>();
 
-    private transient SiteBean siteBean = new SiteBean();
-    private transient List<SiteLanguageBean> siteLanguageList = null;
+    private transient Site siteBean = new SiteBean();
+    private transient List<SiteLanguage> siteLanguageList = null;
 
     private transient Locale defaultLocale = null;
 
@@ -82,8 +83,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         if (siteLanguageId == null)
             return false;
 
-        for (SiteLanguageBean siteLanguageBean : siteLanguageList) {
-            if (siteLanguageId.equals(siteLanguageBean.getSiteLanguageId())) {
+        for (SiteLanguage siteLanguage : siteLanguageList) {
+            if (siteLanguageId.equals(siteLanguage.getSiteLanguageId())) {
                 return true;
             }
         }
@@ -101,8 +102,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
         if (supportLanguageMap == null) {
             supportLanguageMap = new HashMap<String, Long>();
-            for (SiteLanguageBean bean : siteLanguageList) {
-                supportLanguageMap.put(bean.getCustomLanguage(), bean.getSiteLanguageId());
+            for (SiteLanguage siteLanguage : siteLanguageList) {
+                supportLanguageMap.put(siteLanguage.getCustomLanguage(), siteLanguage.getSiteLanguageId());
             }
         }
 
@@ -168,7 +169,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private PortalInfoImpl(Long siteId) {
         this.siteId = siteId;
         long mills; // System.currentTimeMillis();
-        siteBean = InternalDaoFactory.getInternalDao().getSiteBean( siteId );
+        siteBean = InternalDaoFactory.getInternalSiteDao().getSite( siteId );
 
         if (!StringUtils.isEmpty(siteBean.getDefLanguage()) &&
             !StringUtils.isEmpty(siteBean.getDefCountry())) {
@@ -201,7 +202,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         if (log.isInfoEnabled()) log.info("Init portalTemplateManager for " + (System.currentTimeMillis() - mills) + " milliseconds");
 
         if (log.isInfoEnabled()) mills = System.currentTimeMillis();
-        siteLanguageList = InternalDaoFactory.getInternalDao().getSiteLanguageList( siteId );
+        siteLanguageList = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList( siteId );
         if (log.isInfoEnabled()) log.info("Init language listfor " + (System.currentTimeMillis() - mills) + " milliseconds");
 
         initMenu();
@@ -286,11 +287,11 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         return null;
     }
 
-    public SiteBean getSite() {
+    public Site getSite() {
         return siteBean;
     }
 
-    public List getSiteLanguageList() {
+    public List<SiteLanguage> getSiteLanguageList() {
         return siteLanguageList;
     }
 }

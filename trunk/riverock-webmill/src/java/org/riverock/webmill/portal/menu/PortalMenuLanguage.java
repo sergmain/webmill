@@ -29,11 +29,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
-import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -43,7 +43,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
     private final static Logger log = Logger.getLogger( PortalMenuLanguage.class );
 
     private List<Menu> menu = new ArrayList<Menu>();
-    private SiteLanguageBean item = null;
+    private SiteLanguage item = null;
 
     public PortalMenuLanguage(){}
 
@@ -103,7 +103,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
         return null;
     }
 
-    public PortalMenuLanguage(SiteLanguageBean bean) {
+    public PortalMenuLanguage(SiteLanguage bean) {
         if (bean == null)
             return;
 
@@ -116,7 +116,7 @@ public final class PortalMenuLanguage implements MenuLanguage {
             log.debug("language - " + getLang());
         }
 
-        List<CatalogLanguageBean> list = InternalDaoFactory.getInternalDao().getCatalogLanguageList( bean.getSiteLanguageId() );
+        List<CatalogLanguageBean> list = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageList( bean.getSiteLanguageId() );
 
         for (CatalogLanguageBean catalogLanguageBean : list) {
             Menu catalog = new PortalMenu(catalogLanguageBean);

@@ -1,21 +1,19 @@
 package org.riverock.generic.db;
 
-import java.sql.PreparedStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.schema.config.DatabaseConnectionType;
-import org.riverock.sql.parser.Parser;
-import org.riverock.sql.cache.SqlStatement;
-import org.riverock.schema.sql.SqlNameType;
 import org.riverock.common.tools.MainTools;
+import org.riverock.generic.schema.config.DatabaseConnectionType;
+import org.riverock.schema.sql.SqlNameType;
+import org.riverock.sql.cache.SqlStatement;
+import org.riverock.sql.parser.Parser;
 
 /**
  * @author SergeMaslyukov
@@ -30,7 +28,7 @@ public class DatabaseRuntimeService {
 
         try {
             if (Boolean.TRUE.equals(dc.getIsSupportCache())) {
-                Parser parser = org.riverock.sql.cache.SqlStatement.parseSql(sql_);
+                Parser parser = SqlStatement.parseSql(sql_);
 
                 if (log.isDebugEnabled())
                     log.debug("parser.typeStatement!=Parser.SELECT - " + (parser.typeStatement != Parser.SELECT));
@@ -42,7 +40,7 @@ public class DatabaseRuntimeService {
                         if (log.isDebugEnabled())
                             log.debug("Name lookung table - " + name);
 
-                        String nameTable = (String) tables1.get(name);
+                        String nameTable = tables1.get(name);
                         if (log.isDebugEnabled())
                             log.debug("searching table " + name + " in hash - " + nameTable);
 
@@ -87,18 +85,14 @@ public class DatabaseRuntimeService {
                 synchronized (syncCommit) {
                     if (log.isDebugEnabled()) log.debug("Count of changed tables - " + tables1.size());
 
-                    Iterator iterator = tables1.keySet().iterator();
-                    while (iterator.hasNext()) {
-                        String tableName = (String) iterator.next();
+                    for (String tableName : tables1.keySet()) {
 
                         if (log.isDebugEnabled()) {
                             log.debug("process cache for table " + tableName);
                             log.debug("count of class in hash " + SqlStatement.classHash.size());
                         }
 
-                        Iterator iteratorClass = SqlStatement.classHash.keySet().iterator();
-                        while (iteratorClass.hasNext()) {
-                            String className = (String) iteratorClass.next();
+                        for (String className : SqlStatement.classHash.keySet()) {
                             Object obj = SqlStatement.classHash.get(className);
 
                             if (log.isDebugEnabled()) {
@@ -110,8 +104,8 @@ public class DatabaseRuntimeService {
                                 continue;
 
                             if (obj instanceof List) {
-                                for (int j = 0; j < ((List) obj).size(); j++) {
-                                    Parser checkParser = (Parser) ((List) obj).get(j);
+                                for (Object o : (List) obj) {
+                                    Parser checkParser = (Parser) o;
                                     isDependent = checkDependence(checkParser, tableName);
                                     if (isDependent)
                                         break;
@@ -141,8 +135,7 @@ public class DatabaseRuntimeService {
         }
     }
 
-    private static Object syncRollback = new Object();
-
+    private final static Object syncRollback = new Object();
     public static void rollback(Connection conn, DatabaseConnectionType dc, Map<String, String> tables) throws SQLException {
         conn.rollback();
         if (Boolean.TRUE.equals(dc.getIsSupportCache())) {
@@ -154,8 +147,8 @@ public class DatabaseRuntimeService {
 
     public static boolean checkDependence(final Parser checkParser, final String name) {
         if (checkParser != null) {
-            for (int k = 0; k < checkParser.depend.getSource().getItemCount(); k++) {
-                SqlNameType checkName = checkParser.depend.getSource().getItem(k);
+            for (Object o : checkParser.depend.getSource().getItemAsReference()) {
+                SqlNameType checkName = (SqlNameType) o;
 
                 if (checkName.getIsNameQuoted()) {
                     if (name.equals(checkName.getOriginName()))
@@ -211,18 +204,13 @@ public class DatabaseRuntimeService {
         if (relateObject == null)
             return;
 
-        if (relateObject instanceof ArrayList) {
-            for (int j = 0; j < ((ArrayList) relateObject).size(); j++) {
-                String relateClassName = (String) ((ArrayList) relateObject).get(j);
-                reinitClass(relateClassName);
-            }
-        } else if (relateObject instanceof ArrayList) {
-            for (int j = 0; j < ((ArrayList) relateObject).size(); j++) {
-                String relateClassName = (String) ((ArrayList) relateObject).get(j);
+        if (relateObject instanceof List) {
+            for (Object o : (List)relateObject ) {
+                String relateClassName = (String)o;
                 reinitClass(relateClassName);
             }
         } else {
-            if (log.isDebugEnabled() && relateObject != null)
+            if (log.isDebugEnabled())
                 log.debug("call reinitClass() with object " + relateObject.getClass().getName());
 
             reinitClass((String) relateObject);

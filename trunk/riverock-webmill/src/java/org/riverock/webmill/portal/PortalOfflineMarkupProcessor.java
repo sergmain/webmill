@@ -2,8 +2,10 @@ package org.riverock.webmill.portal;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Locale;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
@@ -13,15 +15,28 @@ import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.VirtualHost;
+import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.interfaces.portal.bean.PortletName;
+import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.webmill.portal.bean.CompanyBean;
 import org.riverock.webmill.portal.bean.SiteBean;
+import org.riverock.webmill.portal.bean.SiteLanguageBean;
+import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
+import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.InternalSiteDao;
+import org.riverock.webmill.portal.menu.PortalMenu;
 import org.riverock.webmill.schema.site_config.CompanyType;
 import org.riverock.webmill.schema.site_config.SiteConfigType;
+import org.riverock.webmill.schema.site_config.SiteLanguageType;
 import org.riverock.webmill.schema.site_config.Sites;
+import org.riverock.webmill.schema.site_config.TemplateType;
+import org.riverock.webmill.schema.site_config.MenuGroupType;
+import org.riverock.webmill.schema.site_config.MenuType;
 
 /**
  * @author Sergei Maslyukov
@@ -32,6 +47,7 @@ public class PortalOfflineMarkupProcessor {
     private final static Logger log = Logger.getLogger(PortalOfflineMarkupProcessor.class);
 
     public static final String SITE_CONFIG_FILE = "webmill/site-config.xml";
+    private static final int MAX_BINARY_FILE_SIZE = 0x4000;
 
     public static void process() {
         String applPath = PropertiesProvider.getApplicationPath();
@@ -58,7 +74,7 @@ public class PortalOfflineMarkupProcessor {
                     company = companyBean;
                 }
 
-                Site site = siteDao.getSiteBean( siteConfig.getSiteName() );
+                Site site = siteDao.getSite( siteConfig.getSiteName() );
                 boolean isNewSite = false;
                 if (site==null) {
                     isNewSite = true;
@@ -73,7 +89,7 @@ public class PortalOfflineMarkupProcessor {
                     siteBean.setDefLanguage(locale.getLanguage());
                     siteBean.setDefVariant(locale.getVariant());
                     siteBean.setCompanyId(company.getId());
-                    siteBean.setSiteId( siteDao.createSite( siteBean ) );
+                    siteBean.setSiteId(siteDao.createSite(siteBean));
                     site = siteBean;
                 }
 
@@ -93,7 +109,42 @@ public class PortalOfflineMarkupProcessor {
                         InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost, site.getSiteId());
                     }
                 }
+                for (Object siteLangObj : siteConfig.getSiteLanguageAsReference()){
+                    SiteLanguageType siteLanguageConfig = (SiteLanguageType) siteLangObj;
+                    SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageConfig.getLocale());
+                    if (siteLanguage==null) {
+                        SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
+                        siteLanguageBean.setSiteLanguageId(
+                            InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguageBean)
+                        );
+                        siteLanguage = siteLanguageBean;
+                    }
+                    for (Object templateConfigObj :siteLanguageConfig.getTemplateAsReference()){
+                        TemplateType templateItem = (TemplateType) templateConfigObj;
+                        Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(templateItem.getName());
+                        if (template==null) {
+                            TemplateBean templateBean = new TemplateBean();
 
+                            templateBean.setTemplateData(readBinaryFile(templateItem.getTemplateFile()));
+                            templateBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+                            templateBean.setTemplateName(templateItem.getName());
+                            InternalDaoFactory.getInternalTemplateDao().createTemplate(templateBean);
+                        }
+                    }
+                    Xslt xslt = InternalDaoFactory.getInternalXsltDao().getXslt(siteLanguageConfig.getXslt().getName());
+                    if (xslt==null) {
+                        PortalXsltBean xsltBean = new PortalXsltBean();
+                        xsltBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+                        xsltBean.setName(siteLanguageConfig.getXslt().getName());
+                        xsltBean.setXsltData(readBinaryFile(siteLanguageConfig.getXslt().getXsltFile()));
+                        xsltBean.setCurrent(true);
+                        InternalDaoFactory.getInternalXsltDao().createXslt(xsltBean);
+                    }
+
+                    for (MenuGroupType menuGroup : (List<MenuGroupType>)siteLanguageConfig.getMenuGroupAsReference() ) {
+                        processMenu( (List<MenuType>)menuGroup.getMenuAsReference() );
+                    }
+                }
 
             }
         } catch (Throwable e) {
@@ -101,6 +152,34 @@ public class PortalOfflineMarkupProcessor {
             log.error(es, e);
             throw new IllegalStateException( es, e);
         }
+    }
+
+    private static void processMenu(List<MenuType> menuList) {
+        for (MenuType menuItem : menuList) {
+            PortletName portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName(menuItem.getPortletName());
+            if (portletName==null)
+                continue;
+
+            Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(menuItem.getTemplateName());
+            if (template==null)
+                continue;
+
+            Menu menu = new PortalMenu();
+
+        }
+    }
+
+    private static String readBinaryFile(String binaryFileName) throws IOException {
+        File templateFile = new File(binaryFileName);
+        InputStream inputStream = new FileInputStream(templateFile);
+        long size = templateFile.length();
+        if (size>MAX_BINARY_FILE_SIZE) {
+            throw new IllegalStateException("Template file too big. Max size of template - "+MAX_BINARY_FILE_SIZE);
+        }
+        byte[] bytes = new byte[(int)size];
+        inputStream.read(bytes, 0, (int)size);
+
+        return new String(bytes);
     }
 
     private static CompanyBean createCompanyBean(CompanyType companyType) {

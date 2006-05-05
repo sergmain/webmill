@@ -17,6 +17,8 @@ import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
@@ -79,7 +81,7 @@ public final class ExtendedCatalogItemBean {
         }
 
         ExtendedCatalogItemBean catalogItem = new ExtendedCatalogItemBean();
-        CatalogBean ctx = InternalDaoFactory.getInternalDao().getCatalogBean(ctxId);
+        CatalogBean ctx = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(ctxId);
 
         if (ctx == null) {
             log.error("Catalog record for id " + ctxId + " not found. process as 'index' page");
@@ -97,7 +99,7 @@ public final class ExtendedCatalogItemBean {
             catalogItem.roleList = Collections.unmodifiableList(roles);
         }
 
-        CatalogLanguageBean langMenu = InternalDaoFactory.getInternalDao().getCatalogLanguageBean(
+        CatalogLanguageBean langMenu = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageBean(
             ctx.getCatalogLanguageId()
         );
         if (langMenu == null) {
@@ -105,7 +107,7 @@ public final class ExtendedCatalogItemBean {
             return null;
         }
 
-        SiteLanguageBean siteLanguage = InternalDaoFactory.getInternalDao().getSiteLanguageBean(langMenu.getSiteLanguageId());
+        SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(langMenu.getSiteLanguageId());
         if (siteLanguage == null) {
             log.error("Site language with id " + langMenu.getSiteLanguageId() + " not found. process as 'index' page");
             return null;
@@ -133,13 +135,13 @@ public final class ExtendedCatalogItemBean {
             return null;
         }
 
-        PortletNameBean portletNameBean = InternalDaoFactory.getInternalDao().getPortletNameBean(ctx.getPortletId());
-        if (portletNameBean.getName() == null) {
+        PortletName portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName(ctx.getPortletId());
+        if (portletName.getPortletName() == null) {
             log.error("portletName for id " + ctx.getPortletId() + " not found");
             return null;
         }
 
-        initPortletDefinition(factoryParameter, catalogItem, portletNameBean.getName());
+        initPortletDefinition(factoryParameter, catalogItem, portletName.getPortletName());
         return catalogItem;
     }
 

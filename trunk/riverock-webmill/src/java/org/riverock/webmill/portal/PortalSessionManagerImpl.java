@@ -3,11 +3,11 @@ package org.riverock.webmill.portal;
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.PortalSessionManager;
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.common.tools.StringTools;
 import org.riverock.sso.a3.AuthSessionImpl;
 
 /**
@@ -41,7 +41,7 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
         AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
 
         // don't check if login or password is null.
-        if ( StringTools.isEmpty(userLogin) || StringTools.isEmpty(userLogin) ) {
+        if ( StringUtils.isEmpty(userLogin) || StringUtils.isEmpty(userLogin) ) {
             return false;
         }
 
