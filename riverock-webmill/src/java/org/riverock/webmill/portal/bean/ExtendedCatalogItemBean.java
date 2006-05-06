@@ -19,6 +19,8 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.PortletName;
+import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
@@ -81,7 +83,7 @@ public final class ExtendedCatalogItemBean {
         }
 
         ExtendedCatalogItemBean catalogItem = new ExtendedCatalogItemBean();
-        CatalogBean ctx = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(ctxId);
+        CatalogItem ctx = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(ctxId);
 
         if (ctx == null) {
             log.error("Catalog record for id " + ctxId + " not found. process as 'index' page");
@@ -99,7 +101,7 @@ public final class ExtendedCatalogItemBean {
             catalogItem.roleList = Collections.unmodifiableList(roles);
         }
 
-        CatalogLanguageBean langMenu = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageBean(
+        CatalogLanguageItem langMenu = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItem(
             ctx.getCatalogLanguageId()
         );
         if (langMenu == null) {
@@ -182,7 +184,7 @@ public final class ExtendedCatalogItemBean {
         }
     }
 
-    private static Map<String, String> initMetadata( CatalogBean defaultCtx ) {
+    private static Map<String, String> initMetadata( CatalogItem defaultCtx ) {
         HashMap<String, String> map = new HashMap<String, String>();
         if (defaultCtx==null || defaultCtx.getMetadata()==null) {
             return map;

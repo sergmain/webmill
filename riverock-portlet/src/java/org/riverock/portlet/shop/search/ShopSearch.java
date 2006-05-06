@@ -40,6 +40,7 @@ import javax.portlet.RenderRequest;
 
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.NumberTools;
@@ -83,10 +84,10 @@ public class ShopSearch extends HttpServlet
     {
         try
         {
-            if (StringTools.isEmpty(s_))
+            if (StringUtils.isBlank(s_))
                 return default_return;
 
-            double d = Double.parseDouble(replcd(s_));
+            double d = Double.parseDouble(StringUtils.replace(s_, ",", "."));
 
             if (log.isDebugEnabled())
             {
@@ -115,11 +116,6 @@ public class ShopSearch extends HttpServlet
             return default_return;
         }
     }
-
-    private String replcd(String s_)
-    {
-        return StringTools.replaceString(s_, ",", ".");
-    };
 
     private String decode_logic(String s_)
             throws Exception

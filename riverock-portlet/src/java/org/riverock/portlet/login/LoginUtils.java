@@ -29,12 +29,12 @@ import java.io.IOException;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.PortalSessionManager;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.common.tools.StringTools;
 
 /**
  * Author: mill
@@ -68,7 +68,7 @@ public final class LoginUtils {
             log.debug( "URL #3: " + url );
         }
 
-        if ( StringTools.isEmpty( login ) && StringTools.isEmpty( password )) {
+        if ( StringUtils.isBlank( login ) && StringUtils.isBlank( password )) {
             return;
         }
 

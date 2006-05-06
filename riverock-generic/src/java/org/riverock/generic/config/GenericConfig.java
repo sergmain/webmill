@@ -25,8 +25,9 @@
 package org.riverock.generic.config;
 
 import java.io.File;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
@@ -54,7 +55,7 @@ public final class GenericConfig {
     public final static String JNDI_GENERIC_CONFIG_FILE = "jsmithy/generic/ConfigFile";
 
     private static ConfigObject configObject = null;
-    private static Hashtable dbConfig = null;
+    private static Map<String, DatabaseConnectionType> dbConfig = null;
     private static TimeZone currentTimeZone = null;
 
     private static boolean isConfigProcessed = false;
@@ -73,7 +74,7 @@ public final class GenericConfig {
         return (GenericConfigType)configObject.getConfigObject();
     }
 
-    private static Object syncReadConfig = new Object();
+    private final static Object syncReadConfig = new Object();
     private static void readConfig()throws ConfigException{
 
         if (isConfigProcessed) return;
@@ -95,7 +96,7 @@ public final class GenericConfig {
                 dbConfig = null;
             }
 
-            dbConfig = new Hashtable( getConfig().getDatabaseConnectionCount() );
+            dbConfig = new HashMap<String, DatabaseConnectionType>( getConfig().getDatabaseConnectionCount() );
             for (int i = 0; i < getConfig().getDatabaseConnectionCount(); i++) {
                 DatabaseConnectionType dbc =  getConfig().getDatabaseConnection(i);
                 dbConfig.put( dbc.getName(), dbc);
@@ -113,7 +114,7 @@ public final class GenericConfig {
 // PUBLIC SECTION
 //-----------------------------------------------------
 
-    private static Object syncTZ = new Object();
+    private final static Object syncTZ = new Object();
     public static TimeZone getTZ() throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("GenericConfig.getTZ() #1");
@@ -176,7 +177,7 @@ public final class GenericConfig {
         }
     }
 
-    private static Object syncTempDir = new Object();
+    private final static Object syncTempDir = new Object();
     public static String getGenericTempDir()throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.937");
@@ -209,7 +210,7 @@ public final class GenericConfig {
         }
     }
 
-    private static Object syncDebugDir = new Object();
+    private final static Object syncDebugDir = new Object();
     public static String getGenericDebugDir()throws ConfigException{
 
         if (log.isDebugEnabled())log.debug("#15.937.1");
@@ -266,7 +267,7 @@ public final class GenericConfig {
 
         if (log.isDebugEnabled()) log.debug("#15.910");
 
-        return (DatabaseConnectionType)dbConfig.get( connectionName );
+        return dbConfig.get( connectionName );
     }
 
     public static String getDBconnectClassName( final String connectionName ) throws ConfigException{

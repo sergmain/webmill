@@ -13,30 +13,31 @@ import org.xml.sax.InputSource;
 
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.tools.StringTools;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.portal.bean.Xslt;
-import org.riverock.interfaces.portal.bean.PortletName;
-import org.riverock.interfaces.portlet.menu.Menu;
+import org.riverock.webmill.portal.bean.CatalogBean;
+import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.bean.CompanyBean;
+import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
-import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.InternalSiteDao;
-import org.riverock.webmill.portal.menu.PortalMenu;
 import org.riverock.webmill.schema.site_config.CompanyType;
+import org.riverock.webmill.schema.site_config.MenuGroupType;
+import org.riverock.webmill.schema.site_config.MenuType;
 import org.riverock.webmill.schema.site_config.SiteConfigType;
 import org.riverock.webmill.schema.site_config.SiteLanguageType;
 import org.riverock.webmill.schema.site_config.Sites;
 import org.riverock.webmill.schema.site_config.TemplateType;
-import org.riverock.webmill.schema.site_config.MenuGroupType;
-import org.riverock.webmill.schema.site_config.MenuType;
 
 /**
  * @author Sergei Maslyukov
@@ -46,16 +47,25 @@ import org.riverock.webmill.schema.site_config.MenuType;
 public class PortalOfflineMarkupProcessor {
     private final static Logger log = Logger.getLogger(PortalOfflineMarkupProcessor.class);
 
-    public static final String SITE_CONFIG_FILE = "webmill/site-config.xml";
+    public static final String SITE_CONFIG_FILE = "/WEB-INF/webmill/site-config.xml";
     private static final int MAX_BINARY_FILE_SIZE = 0x4000;
 
-    public static void process() {
+    public static void process() throws IOException {
+        log.debug("Start process PortalOfflineMarkupProcessor");
+
         String applPath = PropertiesProvider.getApplicationPath();
 
         File file = new File(applPath+File.separatorChar + SITE_CONFIG_FILE);
+        if (log.isDebugEnabled()) {
+            log.debug("file exists: " + file.exists());
+            log.debug("   path: " + file.getPath());
+            log.debug("   parent: " + file.getParent());
+            log.debug("   canon: " + file.getCanonicalPath());
+        }
+
         if (!file.exists()) {
-            log.debug("Config file '" +SITE_CONFIG_FILE+"' not exists");
-            log.debug("  full path: " +file.getAbsolutePath());
+            log.warn("Config file '" +SITE_CONFIG_FILE+"' not exists");
+            log.warn("  full path: " +file.getAbsolutePath());
             return;
         }
 
@@ -78,9 +88,8 @@ public class PortalOfflineMarkupProcessor {
                 boolean isNewSite = false;
                 if (site==null) {
                     isNewSite = true;
-                    SiteBean siteBean = new SiteBean();
                     //Create new site
-                    siteBean = new SiteBean();
+                    SiteBean siteBean = new SiteBean();
                     siteBean.setSiteName(siteConfig.getSiteName());
                     siteBean.setCssDynamic(false);
                     siteBean.setCssFile(siteConfig.getCssFile());
@@ -114,6 +123,9 @@ public class PortalOfflineMarkupProcessor {
                     SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageConfig.getLocale());
                     if (siteLanguage==null) {
                         SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
+                        siteLanguageBean.setSiteId(site.getSiteId());
+                        siteLanguageBean.setCustomLanguage(siteLanguageConfig.getLocale());
+                        siteLanguageBean.setNameCustomLanguage(siteLanguageConfig.getLocale());
                         siteLanguageBean.setSiteLanguageId(
                             InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguageBean)
                         );
@@ -125,9 +137,18 @@ public class PortalOfflineMarkupProcessor {
                         if (template==null) {
                             TemplateBean templateBean = new TemplateBean();
 
-                            templateBean.setTemplateData(readBinaryFile(templateItem.getTemplateFile()));
+                            templateBean.setTemplateData(
+                                readBinaryFile(file.getParent()+File.separatorChar+templateItem.getTemplateFile())
+                            );
                             templateBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
                             templateBean.setTemplateName(templateItem.getName());
+                            if (log.isDebugEnabled()) {
+                                log.debug("template");
+                                log.debug("    name: " +templateBean.getTemplateName());
+                                log.debug("    id: " +templateBean.getTemplateId());
+                                log.debug("    lang: " +templateBean.getTemplateLanguage());
+                                log.debug("    siteLangId: " +templateBean.getSiteLanguageId());
+                            }
                             InternalDaoFactory.getInternalTemplateDao().createTemplate(templateBean);
                         }
                     }
@@ -136,25 +157,44 @@ public class PortalOfflineMarkupProcessor {
                         PortalXsltBean xsltBean = new PortalXsltBean();
                         xsltBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
                         xsltBean.setName(siteLanguageConfig.getXslt().getName());
-                        xsltBean.setXsltData(readBinaryFile(siteLanguageConfig.getXslt().getXsltFile()));
+                        xsltBean.setXsltData(
+                            readBinaryFile(file.getParent()+File.separatorChar+siteLanguageConfig.getXslt().getXsltFile())
+                        );
                         xsltBean.setCurrent(true);
                         InternalDaoFactory.getInternalXsltDao().createXslt(xsltBean);
                     }
 
                     for (MenuGroupType menuGroup : (List<MenuGroupType>)siteLanguageConfig.getMenuGroupAsReference() ) {
-                        processMenu( (List<MenuType>)menuGroup.getMenuAsReference() );
+                        CatalogLanguageItem catalogLanguageItem =
+                            InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItem(menuGroup.getCode());
+
+                        if (catalogLanguageItem==null) {
+                            CatalogLanguageBean bean = new CatalogLanguageBean();
+                            bean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+                            bean.setCatalogCode(menuGroup.getCode());
+                            bean.setDefault(false);
+                            bean.setCatalogLanguageId(
+                                InternalDaoFactory.getInternalCatalogDao().createCatalogLanguageItem(bean)
+                            );
+                            catalogLanguageItem = bean;
+                        }
+
+                        processMenu( siteLanguage, catalogLanguageItem, (List<MenuType>)menuGroup.getMenuAsReference(), 0L );
                     }
                 }
 
             }
         } catch (Throwable e) {
-            String es = "Error unmarshal config file "+file.getAbsolutePath();
+            String es = "Error process config file: "+file.getAbsolutePath();
             log.error(es, e);
             throw new IllegalStateException( es, e);
         }
     }
 
-    private static void processMenu(List<MenuType> menuList) {
+    private static void processMenu(SiteLanguage siteLanguage, CatalogLanguageItem catalogLanguageItem, List<MenuType> menuList, Long topCatalogItemId) {
+        if (menuList==null)
+            return;
+
         for (MenuType menuItem : menuList) {
             PortletName portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName(menuItem.getPortletName());
             if (portletName==null)
@@ -164,8 +204,31 @@ public class PortalOfflineMarkupProcessor {
             if (template==null)
                 continue;
 
-            Menu menu = new PortalMenu();
+            Long catalogItemId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
+                siteLanguage.getSiteLanguageId(), portletName.getPortletId(), template.getTemplateId()
+            );
 
+            if (log.isDebugEnabled()) {
+                log.debug("catalogItemId: " + catalogItemId);
+                log.debug("siteLanguage.getSiteLanguageId(): " + catalogItemId);
+                log.debug("portletName.getPortletId(): " + portletName.getPortletId());
+                log.debug("template.getTemplateId(): " + template.getTemplateId());
+            }
+
+            if (catalogItemId==null) {
+                CatalogBean catalogBean = new CatalogBean();
+                catalogBean.setCatalogLanguageId(catalogLanguageItem.getCatalogLanguageId());
+                catalogBean.setPortletId(portletName.getPortletId());
+                catalogBean.setTopCatalogId(topCatalogItemId);
+                catalogBean.setTemplateId(template.getTemplateId());
+                catalogBean.setKeyMessage(menuItem.getMenuName());
+                catalogBean.setUseProperties(false);
+                catalogBean.setUrl(menuItem.getUrl());
+
+                catalogItemId = InternalDaoFactory.getInternalCatalogDao().createCatalogItem(catalogBean);
+            }
+
+            processMenu(siteLanguage, catalogLanguageItem, (List<MenuType>)menuItem.getMenuAsReference(), catalogItemId);
         }
     }
 

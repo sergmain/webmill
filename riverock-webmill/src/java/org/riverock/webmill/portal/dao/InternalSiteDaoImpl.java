@@ -103,12 +103,23 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             seq.setSequenceName( "seq_wm_portal_list_site" );
             seq.setTableName( "wm_portal_list_site" );
             seq.setColumnName( "ID_SITE" );
-            Long sequenceValue = dbDyn.getSequenceNextValue( seq );
+            Long id = dbDyn.getSequenceNextValue( seq );
+/*
 
+            WmPortalListSiteItemType item = new WmPortalListSiteItemType();
+            item.setIdSite(id);
+            item.setAdminEmail(site.getAdminEmail());
+            item.setCssFile(site.getCssFile());
+            item.setDefCountry(site.getDefCountry());
+            item.setDefLanguage(site.getDefLanguage());
+            item.setDefVariant(site.getDefVariant());
+            item.setIdFirm(site.getCompanyId());
+            item.setIsCssDynamic(site.getCssDynamic());
+            item.setIsRegisterAllowed(site.getRegisterAllowed());
+            item.setNameSite(site.getSiteName());
+*/
 
-
-
-            ps = dbDyn.prepareStatement( "insert into WM_LIST_COMPANY (" +
+            ps = dbDyn.prepareStatement( "insert into wm_portal_list_site (" +
                 "ID_SITE, ID_FIRM, DEF_LANGUAGE, DEF_COUNTRY, DEF_VARIANT, " +
                 "NAME_SITE, ADMIN_EMAIL, IS_CSS_DYNAMIC, CSS_FILE, " +
                 "IS_REGISTER_ALLOWED " +
@@ -127,7 +138,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
                 ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" ) );
 
             int num = 1;
-            RsetTools.setLong( ps, num++, sequenceValue );
+            RsetTools.setLong( ps, num++, id );
             RsetTools.setLong( ps, num++, site.getCompanyId() );
             ps.setString( num++, site.getDefLanguage() );
             ps.setString( num++, site.getDefCountry() );
@@ -144,7 +155,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
                 log.debug( "Count of inserted records - " + i1 );
 
             dbDyn.commit();
-            return sequenceValue;
+            return id;
         }
         catch( Exception e ) {
             try {

@@ -24,19 +24,18 @@
  */
 package org.riverock.webmill.portal.menu;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.TreeUtils;
+import org.riverock.interfaces.common.TreeItem;
+import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.portal.bean.CatalogBean;
-import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -45,7 +44,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 public final class PortalMenu implements Menu {
     private final static Logger log = Logger.getLogger( PortalMenu.class );
 
-    private LinkedList<MenuItem> menuItem = new LinkedList<MenuItem>();
+    private List<MenuItem> menuItem = new ArrayList<MenuItem>();
     private boolean isDefault = false;
     private String catalogCode = null;
 
@@ -57,35 +56,35 @@ public final class PortalMenu implements Menu {
         return catalogCode;
     }
 
-    public MenuItem searchMenuItem(Long id_)
-    {
+    public MenuItem searchMenuItem(Long id_) {
         if (id_==null || menuItem==null)
             return null;
 
-        ListIterator it = menuItem.listIterator();
-        while (it.hasNext()) {
-            MenuItem ci = (MenuItem)it.next();
+        for (MenuItem ci : menuItem) {
             if (ci.getId().equals(id_))
                 return ci;
 
-           ci = searchMenuItemInternal( ci.getCatalogItems(), id_);
+            ci = searchMenuItemInternal( ci.getCatalogItems(), id_);
+            if (ci!=null) {
+                return ci;
+            }
         }
 
         return null;
     }
 
-    private MenuItem searchMenuItemInternal(List v, Long id_)
-    {
+    private MenuItem searchMenuItemInternal(List<MenuItem> v, Long id_) {
         if (v==null || id_==null)
             return null;
 
-        ListIterator it = v.listIterator();
-        while (it.hasNext()) {
-            MenuItem ci = (MenuItem)it.next();
+        for (MenuItem ci : v) {
             if (ci.getId().equals(id_))
                 return ci;
 
-           ci = searchMenuItemInternal( ci.getCatalogItems(), id_);
+            ci = searchMenuItemInternal( ci.getCatalogItems(), id_);
+            if (ci!=null) {
+                return ci;
+            }
         }
 
         return null;
@@ -121,9 +120,8 @@ public final class PortalMenu implements Menu {
         if (v == null)
             return null;
 
-        Iterator it = v.iterator();
-        while (it.hasNext()) {
-            MenuItem ctxItem = (MenuItem)it.next();
+        for (Object o : v) {
+            MenuItem ctxItem = (MenuItem)o;
 
             if (log.isDebugEnabled()) {
                 log.debug("Menu item type: " + ctxItem.getType());
@@ -144,14 +142,12 @@ public final class PortalMenu implements Menu {
         return getIndexTemplate(menuItem);
     }
 
-    public static boolean checkCurrentThread(List items, MenuItem find)
-    {
+    public static boolean checkCurrentThread(List items, MenuItem find) {
         if (find == null || items == null)
             return false;
 
-        ListIterator it = items.listIterator();
-        while (it.hasNext()) {
-            MenuItem ctxItem = (MenuItem)it.next();
+        for (Object o : items) {
+            MenuItem ctxItem = (MenuItem)o;
 
             if (ctxItem == find)
                 return true;
@@ -162,7 +158,7 @@ public final class PortalMenu implements Menu {
         return false;
     }
 
-    public PortalMenu(CatalogLanguageBean bean) {
+    public PortalMenu(CatalogLanguageItem bean) {
 
         if (bean==null){
             throw new IllegalStateException("Item of menu is null");
@@ -173,16 +169,14 @@ public final class PortalMenu implements Menu {
 
         if (log.isDebugEnabled()) log.debug("#33.70.00 ");
 
-        List<CatalogBean> list = InternalDaoFactory.getInternalCatalogDao().getCatalogItemList( bean.getCatalogLanguageId() );
-        Iterator<CatalogBean> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            CatalogBean catalogBean = iterator.next();
-            menuItem.add(new PortalMenuItem( catalogBean ));
+        List<CatalogItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogItemList( bean.getCatalogLanguageId() );
+        for (CatalogItem catalogBean : list) {
+            menuItem.add(new PortalMenuItem(catalogBean));
         }
 
         if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
 
-        menuItem = TreeUtils.rebuildTree(menuItem);
+        menuItem = (List<MenuItem>)(List)TreeUtils.rebuildTree((List<TreeItem>)((List)menuItem));
 
         if (log.isDebugEnabled()) log.debug("menuItem size - " + menuItem.size());
     }

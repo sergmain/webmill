@@ -25,7 +25,7 @@
 			</Xslt>
 			<MenuGroup code="MAIN">
 				<Menu>
-					<MenuName>String</MenuName>
+					<MenuName>Homepage</MenuName>
 					<PortletName>mill.index</PortletName>
 					<TemplateName>index</TemplateName>
 					<Url>homepage</Url>

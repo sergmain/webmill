@@ -36,6 +36,6 @@ import java.util.List;
 public interface TreeItem {
     public Long getTopId();
     public Long getId();
-    public List getSubTree();
-    public void setSubTree(List list);
+    public List<TreeItem> getSubTree();
+    public void setSubTree(List<TreeItem> list);
 }

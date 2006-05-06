@@ -110,9 +110,15 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     public PortalTemplate getTemplate( final long id ) {
-        if (log.isDebugEnabled()) log.debug("search  template for id - "+ id);
+        if (log.isDebugEnabled()) {
+            log.debug("search template for id - "+ id);
+            for (Map.Entry<Long, PortalTemplate> entry : hashId.entrySet() ) {
+                log.debug("template id: " + entry.getKey()+", template: " +entry.getValue());
+            }
+        }
 
-        return hashId.get( id );
+        PortalTemplate template = hashId.get(id);
+        return template;
     }
 
     public PortalTemplate getTemplate( final String nameTemplate, final String lang ) {
@@ -127,6 +133,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     public PortalTemplateManagerImpl(Long siteId) {
+        log.debug("Start PortalTemplateManagerImpl()");
         for (Template template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
             try {
                 PortalTemplate st = digestSiteTemplate(template.getTemplateData(), template.getTemplateName(), template.getTemplateId());

@@ -33,12 +33,9 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-
-
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.exception.ModuleException;
 import org.riverock.module.factory.ActionFactory;
@@ -102,7 +99,7 @@ public abstract class AbstractPortlet implements Portlet {
         // forward page
         Throwable th = null;
         try {
-            if (!StringTools.isEmpty(forwardPage)) {
+            if (!StringUtils.isBlank(forwardPage)) {
                 moduleConfig.getContext().getRequestDispatcher( forwardPage ).include( moduleRequest, moduleResponse );
             }
         }

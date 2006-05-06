@@ -1,39 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DbSchemaType xmlns="http://generic.riverock.org/xsd/riverock-database-structure.xsd">
-<!--
-	<Tables schema="TEST" name="WM_I18N_ITEM" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_I18N_ITEM" columnName="ID_MAIN_I18N_ITEM" keySeq="1" pkName="ID_I18N_ITM_MII_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_MAIN_I18N_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_MAIN_I18N_STORAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
-		<Fields name="NAME_ITEM" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_I18N_STORAGE" pkColumnName="ID_MAIN_I18N_STORAGE" fkSchemaName="TEST" fkTableName="WM_I18N_ITEM" fkColumnName="ID_MAIN_I18N_STORAGE" keySeq="1" fkName="ID_MAIN_I18N_STORAGE_MII_FK" pkName="ID_I18N_STG_MIS_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
-	<Tables schema="TEST" name="WM_I18N_MESSAGE" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_I18N_MESSAGE" columnName="ID_MAIN_I18N_MESSAGE" keySeq="1" pkName="ID_I18N_MSG_MIM_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_MAIN_I18N_MESSAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="6" decimalDigit="0" nullable="0"/>
-		<Fields name="ID_MAIN_I18N_ITEM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="1"/>
-		<Fields name="MESSAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="1000" nullable="1"/>
-		<Fields name="SHORT_NAME_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" nullable="1"/>
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_I18N_ITEM" pkColumnName="ID_MAIN_I18N_ITEM" fkSchemaName="TEST" fkTableName="WM_I18N_MESSAGE" fkColumnName="ID_MAIN_I18N_ITEM" keySeq="1" fkName="ID_MAIN_I18N_ITEM_MIM_FK" pkName="ID_I18N_ITM_MII_PK">
-			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
-	</Tables>
-	<Tables schema="TEST" name="WM_I18N_STORAGE" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_I18N_STORAGE" columnName="ID_MAIN_I18N_STORAGE" keySeq="1" pkName="ID_I18N_STG_MIS_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_MAIN_I18N_STORAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
-		<Fields name="NAME_STORAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="100" nullable="1"/>
-	</Tables>
--->
 	<Tables schema="TEST" name="WM_AUTH_ACCESS_GROUP" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_AUTH_ACCESS_GROUP" columnName="ID_ACCESS_GROUP" keySeq="1" pkName="ID_AG_AAG_PK"/>
@@ -302,17 +268,6 @@
 		<Fields name="NAME_DEFINITION" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="50" nullable="0"/>
 		<Fields name="APLAY_DATE" dataType="DATE" javaType="91" javaStringType="java.sql.Types.TIMESTAMP" size="7" nullable="0" defaultValue="sysdate"/>
 	</Tables>
-<!--
-	<Tables schema="TEST" name="WM_LIST_LANGUAGE" type="TABLE">
-		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_LANGUAGE" columnName="ID_LANGUAGE" keySeq="1" pkName="ID_LANGUAGE_MN_PK"/>
-		</PrimaryKey>
-		<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
-		<Fields name="NAME_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
-		<Fields name="SHORT_NAME_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="15" nullable="1"/>
-		<Fields name="CODEPAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
-	</Tables>
--->
 	<Tables schema="TEST" name="WM_LIST_COMPANY" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_LIST_COMPANY" columnName="ID_FIRM" keySeq="1" pkName="ID_FIRM_MLF_PK"/>
@@ -1011,19 +966,10 @@
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_PORTAL_SITE_LANGUAGE" columnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" pkName="ID_SITE_SUPPORT_LANG_SSL_PK"/>
 		</PrimaryKey>
-		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
-		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
-<!--
-		<Fields name="ID_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
--->
-		<Fields name="CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="1"/>
-		<Fields name="NAME_CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1"/>
-<!--
-		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_LANGUAGE" pkColumnName="ID_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_SITE_LANGUAGE" fkColumnName="ID_LANGUAGE" keySeq="1" fkName="ID_LANGUAGE_SSL_FK" pkName="ID_LANGUAGE_MN_PK">
-			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
-			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
-		</ImportedKeys>
--->
+		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="20" nullable="0"/>
+		<Fields name="NAME_CUSTOM_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_LIST_SITE" pkColumnName="ID_SITE" fkSchemaName="TEST" fkTableName="WM_PORTAL_SITE_LANGUAGE" fkColumnName="ID_SITE" keySeq="1" fkName="ID_SITE_SSL_FK" pkName="ID_SITE_SLS_PK">
 			<DeleteRule ruleType="0" ruleName="java.sql.DatabaseMetaData.importedKeyCascade"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
@@ -1305,7 +1251,6 @@ where   a.id_service = b.id_service
 	<Sequences name="SEQ_WM_PORTAL_PORTLET_NAME" minValue="1" maxValue="9999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="41"/>
 	<Sequences name="SEQ_WM_IMAGE_DIR" minValue="1" maxValue="999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="1031"/>
 	<Sequences name="SEQ_WM_NEWS_LIST" minValue="1" maxValue="9999999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="425"/>
-	<Sequences name="SEQ_WM_LIST_LANGUAGE" minValue="1" maxValue="999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="11"/>
 	<Sequences name="SEQ_WM_JOB_GENDER_LIST" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="7"/>
 	<Sequences name="SEQ_WM_IMAGE_PRICE_ITEMS" minValue="1" maxValue="99999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="20"/>
 

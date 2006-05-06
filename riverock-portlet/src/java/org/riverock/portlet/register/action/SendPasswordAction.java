@@ -29,10 +29,10 @@ import java.util.ResourceBundle;
 import javax.mail.MessagingException;
 import javax.portlet.PortletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.mail.MailMessage;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
@@ -59,16 +59,14 @@ public class SendPasswordAction implements Action {
         PortletRequest portletRequet = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
         String email = moduleActionRequest.getRequest().getString( RegisterConstants.NAME_EMAIL );
 
-        if( StringTools.isEmpty( email ) ) {
+        if( StringUtils.isBlank( email ) ) {
             return RegisterError.emailIsEmpty( moduleActionRequest );
         }
 
         RegisterDAOFactory daof = RegisterDAOFactory.getDAOFactory();
         RegisterPasswordInfoDAO passwordInfoDAO = daof.getSendPasswordDAO();
-        RegisterPasswordInfoBean bean = null;
         try {
-            bean = passwordInfoDAO.execute( moduleActionRequest.getRequest().getServerNameId(), email );
-
+            RegisterPasswordInfoBean bean = passwordInfoDAO.execute( moduleActionRequest.getRequest().getServerNameId(), email );
             if( bean == null ) {
                 return RegisterError.noSuchEmail( moduleActionRequest );
             }

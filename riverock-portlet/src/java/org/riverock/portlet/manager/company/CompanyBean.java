@@ -19,8 +19,9 @@ public class CompanyBean implements Serializable, Company {
 	private String cfo = null;
 	private String website = null;
 	private String info = null;
+    private boolean isDeleted = false;
 
-	public CompanyBean() {
+    public CompanyBean() {
 	}
 
 	public CompanyBean(Company company) {
@@ -32,9 +33,18 @@ public class CompanyBean implements Serializable, Company {
 		this.cfo = company.getCfo();
 		this.website = company.getWebsite();
 		this.info = company.getInfo();
-	}
+        this.isDeleted = company.isDeleted();
+    }
 
-	public String getName() {
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public String getName() {
 		return name;
 	}
 
@@ -94,7 +104,7 @@ public class CompanyBean implements Serializable, Company {
 		return info;
 	}
 
-	public void setInfo(String info) {
-		this.info = info;
-	}
+    public void setInfo(String info) {
+        this.info = info;
+    }
 }

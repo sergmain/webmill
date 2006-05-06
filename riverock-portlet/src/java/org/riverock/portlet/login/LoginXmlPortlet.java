@@ -24,30 +24,29 @@
  */
 package org.riverock.portlet.login;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
-import javax.portlet.PortletURL;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.tools.XmlTools;
-
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.schema.portlet.login.LoginType;
 import org.riverock.portlet.schema.portlet.login.types.LoginTypeIsLoggedType;
 import org.riverock.portlet.tools.RequestTools;
-import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -108,8 +107,8 @@ public final class LoginXmlPortlet implements Portlet {
                 String srcURL = null;
                 if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
                     srcURL = RequestTools.getString( renderRequest, LoginUtils.NAME_TOURL_PARAM );
-                    srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
-                    srcURL = StringTools.replaceString( srcURL, "%26", "&" );
+                    srcURL = StringUtils.replace( srcURL, "%3D", "=" );
+                    srcURL = StringUtils.replace( srcURL, "%26", "&" );
 
                     login.setToUrl( srcURL );
                 }
@@ -130,7 +129,7 @@ public final class LoginXmlPortlet implements Portlet {
             }
 
             String xmlRoot = (String)renderRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE );
-            if (StringTools.isEmpty( xmlRoot ) ) {
+            if (StringUtils.isBlank( xmlRoot ) ) {
                 xmlRoot = "LoginXml";
             }
 
