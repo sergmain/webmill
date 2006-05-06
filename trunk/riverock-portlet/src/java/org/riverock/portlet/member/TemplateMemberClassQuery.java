@@ -27,18 +27,15 @@ package org.riverock.portlet.member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Iterator;
 
 import javax.portlet.PortletRequest;
-
-
 
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.interfaces.portal.bean.TemplateBean;
+import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -76,7 +73,7 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
      */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) {
         PortalDaoProvider portalDaoProvider = MemberTools.getPortalDaoProvider(renderRequest);
-        TemplateBean templateBean = portalDaoProvider.getPortalCommonDao().getTemplateBean( idSiteTemplate );
+        Template templateBean = portalDaoProvider.getPortalCommonDao().getTemplate( idSiteTemplate );
         if( templateBean != null )
             return templateBean.getTemplateName();
 
@@ -96,27 +93,24 @@ public final class TemplateMemberClassQuery extends BaseClassQuery {
 
             Long id = PortletService.getLong( renderRequest, nameModule + '.' + nameField );
             PortalDaoProvider portalDaoProvider = MemberTools.getPortalDaoProvider(renderRequest);
-            List<TemplateBean> beans = portalDaoProvider.getPortalCommonDao().getTemplateLanguageList( id );
+            List<Template> beans = portalDaoProvider.getPortalCommonDao().getTemplateLanguageList( id );
 
             if( log.isDebugEnabled() ) {
                 log.debug( "parameter " + nameModule + '.' + nameField + " is " + renderRequest.getParameter( nameModule + '.' + nameField ) );
                 log.debug( "id " + id );
             }
-            Iterator<TemplateBean> iterator = beans.iterator();
-            while( iterator.hasNext() ) {
-                TemplateBean templateBean = iterator.next();
+            for (Template templateBean : beans) {
                 ClassQueryItem item = new ClassQueryItemImpl(
-                    templateBean.getTemplateId(), templateBean.getTemplateName() );
+                    templateBean.getTemplateId(), templateBean.getTemplateName());
 
-                if( item.getIndex().equals( idSiteTemplate ) )
-                    item.setSelected( true );
-                v.add( item );
+                if (item.getIndex().equals(idSiteTemplate))
+                    item.setSelected(true);
+                v.add(item);
             }
             return v;
         }
         finally {
             DatabaseAdapter.close( db_ );
-            db_ = null;
         }
     }
 

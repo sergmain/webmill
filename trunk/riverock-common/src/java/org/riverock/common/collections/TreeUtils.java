@@ -28,34 +28,36 @@
  */
 package org.riverock.common.collections;
 
-import org.apache.log4j.Logger;
-import org.riverock.interfaces.common.TreeItem;
-
-import java.util.List;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
+
+import org.apache.log4j.Logger;
+
+import org.riverock.interfaces.common.TreeItem;
 
 
 public final class TreeUtils {
 
     private final static Logger log = Logger.getLogger( TreeUtils.class );
 
-    public static LinkedList rebuildTree( final LinkedList source) {
-                             
-        LinkedList menuItem = (LinkedList)source.clone();
-        LinkedList result = null;
-        LinkedList v = new LinkedList();
+    public static List<TreeItem> rebuildTree( final List<TreeItem> source) {
+
+        List<TreeItem> treeItems = new LinkedList<TreeItem>();
+        for (TreeItem treeItem : source)
+            treeItems.add(treeItem);
+
+        List<TreeItem> result = null;
+        List<TreeItem> v = new ArrayList<TreeItem>();
         Long id = 0L;
 
-        if (log.isDebugEnabled()) log.debug("Before rebuid. Size of menuItem " + menuItem.size());
+        if (log.isDebugEnabled()) log.debug("Before rebuid. Size of treeItems " + treeItems.size());
 
-        while (menuItem.size()>0) {
-            if (log.isDebugEnabled()) log.debug("#1.01.01 menuItem.size() - " + menuItem.size() + "; ID -  " + id);
+        while (treeItems.size()>0) {
+            if (log.isDebugEnabled()) log.debug("#1.01.01 treeItems.size() - " + treeItems.size() + "; ID -  " + id);
 
-
-            ListIterator it = menuItem.listIterator();
-            while (it.hasNext()) {
-                TreeItem item = (TreeItem)it.next();
+            for (TreeItem item : treeItems ) {
                 if ( id.equals( item.getTopId() ) )
                     v.add(item);
             }
@@ -68,7 +70,9 @@ public final class TreeUtils {
             if (result == null) {
                 if (log.isDebugEnabled()) log.debug("Init result Vector");
 
-                result = (LinkedList)v.clone();
+                result = new ArrayList<TreeItem>();
+                for (TreeItem vItem : v)
+                    result.add(vItem);
 
                 if (log.isDebugEnabled()) log.debug("Finish init result Vector. result.size() - " + result.size());
             }
@@ -77,31 +81,32 @@ public final class TreeUtils {
 
             if (log.isDebugEnabled()) log.debug("#1.01.07 result.size() - " + result.size());
 
-            menuItem.removeAll(v);
+            treeItems.removeAll(v);
 
-            if (log.isDebugEnabled()) log.debug("#1.01.09 menuItem.size() - " + menuItem.size());
+            if (log.isDebugEnabled()) log.debug("#1.01.09 treeItems.size() - " + treeItems.size());
 
             v.clear();
             if (log.isDebugEnabled()) {
-                log.debug("#1.01.11 ctx.List.size() - " + menuItem.size());
+                log.debug("#1.01.11 ctx.List.size() - " + treeItems.size());
                 log.debug("#1.01.13 result.size() - " + result.size());
             }
 
-            if (menuItem.size() > 0)
-                id = ((TreeItem) menuItem.get(0)).getTopId();
+            if (treeItems.size() > 0)
+                id = treeItems.get(0).getTopId();
         }
-        menuItem = null;
+        treeItems.clear();
+
         if (result != null)
-            menuItem = result;
+            treeItems = result;
         else
-            menuItem = new LinkedList();
+            treeItems = new ArrayList<TreeItem>();
 
-        if (log.isDebugEnabled()) log.debug("After rebuid. Size of menuItem " + menuItem.size());
+        if (log.isDebugEnabled()) log.debug("After rebuid. Size of treeItems " + treeItems.size());
 
-        return menuItem;
+        return treeItems;
     }
 
-    private static boolean putList( final List target, final LinkedList data, final Long id) {
+    private static boolean putList( final List<TreeItem> target, final List<TreeItem> data, final Long id) {
 
         if (target==null || id==null)
             return false;
@@ -111,7 +116,11 @@ public final class TreeUtils {
             TreeItem item = (TreeItem)it.next();
 
             if (id.equals(item.getId())) {
-                item.setSubTree( (LinkedList)data.clone() );
+                List<TreeItem> list = new ArrayList<TreeItem>();
+                for ( TreeItem treeItem : data) {
+                    list.add( treeItem );
+                }
+                item.setSubTree( list );
                 return true;
             }
             else {

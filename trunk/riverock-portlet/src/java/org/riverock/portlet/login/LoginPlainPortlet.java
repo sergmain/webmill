@@ -31,23 +31,21 @@ import java.util.ResourceBundle;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
-import javax.portlet.PortletURL;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ServletTools;
-import org.riverock.common.tools.StringTools;
-
 import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -110,8 +108,8 @@ public final class LoginPlainPortlet implements Portlet {
                 srcURL = PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse );
             }
 
-            srcURL = StringTools.replaceString( srcURL, "%3D", "=" );
-            srcURL = StringTools.replaceString( srcURL, "%26", "&" );
+            srcURL = StringUtils.replace( srcURL, "%3D", "=" );
+            srcURL = StringUtils.replace( srcURL, "%26", "&" );
 
             out.write( ServletTools.getHiddenItem( LoginUtils.NAME_TOURL_PARAM, srcURL ) );
 

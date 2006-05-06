@@ -38,13 +38,13 @@ import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.mail.MailMessage;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.ServletTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
@@ -619,7 +619,7 @@ public final class InvoicePortlet implements Portlet {
 
 
             if ( order.getShopOrdertListCount()!= 0 && order.getAuthSession()!=null &&
-                 !StringTools.isEmpty( orderEmail ) && isActivateEmailOrder ) {
+                 !StringUtils.isBlank( orderEmail ) && isActivateEmailOrder ) {
 
                 out.write( "<br>\n" );
                 out.write( "<form method=\"GET\" action=\"" + PortletService.ctx( renderRequest ) + "\">\n" );

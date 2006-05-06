@@ -43,15 +43,7 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.a3.audit.RequestStatisticBean;
-import org.riverock.webmill.core.GetWmPortalAccessUrlFullList;
-import org.riverock.webmill.core.GetWmPortalAccessUseragentFullList;
-import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
-import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
-import org.riverock.webmill.core.GetWmPortalListSiteItem;
-import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
-import org.riverock.webmill.core.InsertWmPortalAccessStatItem;
-import org.riverock.webmill.core.InsertWmPortalAccessUrlItem;
-import org.riverock.webmill.core.InsertWmPortalAccessUseragentItem;
+import org.riverock.webmill.core.*;
 import org.riverock.webmill.main.ContentCSS;
 import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.port.PortalInfoImpl;
@@ -341,6 +333,8 @@ public class InternalDaoImpl implements InternalDao {
             Class c = SiteMenu.class;
             SqlStatement.registerRelateClass( c, PortalMenuLanguage.class );
             SqlStatement.registerRelateClass( c, GetWmPortalSiteLanguageWithIdSiteList.class );
+
+            SqlStatement.registerRelateClass( PortalTemplateManagerImpl.class, GetWmPortalTemplateItem.class );
 
             c = PortalMenuLanguage.class;
             SqlStatement.registerRelateClass( c, PortalMenu.class );

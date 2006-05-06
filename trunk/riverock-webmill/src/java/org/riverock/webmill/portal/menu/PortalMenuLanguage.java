@@ -29,11 +29,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portlet.menu.Menu;
 import org.riverock.interfaces.portlet.menu.MenuItem;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 
 /**
@@ -116,9 +116,9 @@ public final class PortalMenuLanguage implements MenuLanguage {
             log.debug("language - " + getLang());
         }
 
-        List<CatalogLanguageBean> list = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageList( bean.getSiteLanguageId() );
+        List<CatalogLanguageItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItemList( bean.getSiteLanguageId() );
 
-        for (CatalogLanguageBean catalogLanguageBean : list) {
+        for (CatalogLanguageItem catalogLanguageBean : list) {
             Menu catalog = new PortalMenu(catalogLanguageBean);
             menu.add(catalog);
         }

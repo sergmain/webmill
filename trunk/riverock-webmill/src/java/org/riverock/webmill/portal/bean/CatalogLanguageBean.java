@@ -1,17 +1,18 @@
 package org.riverock.webmill.portal.bean;
 
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+
 /**
  * @author SergeMaslyukov
  *         Date: 27.01.2006
  *         Time: 15:39:41
  *         $Id$
  */
-public class CatalogLanguageBean {
+public class CatalogLanguageBean implements CatalogLanguageItem {
     private Long catalogLanguageId;
     private Boolean isDefault = false;
     private Long siteLanguageId;
     private String catalogCode = null;
-//    private String catalogCode = "'DEFAULT'";
 
     public Long getCatalogLanguageId() {
         return catalogLanguageId;

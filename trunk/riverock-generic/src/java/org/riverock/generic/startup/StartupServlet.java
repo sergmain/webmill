@@ -149,9 +149,9 @@ public final class StartupServlet extends HttpServlet {
     }
 
     private synchronized static void initLogging() {
-        boolean isLocal = "true".equalsIgnoreCase( (String)PropertiesProvider.getParameter(ConfigObject.LOCAL_CONFIG_PARAM_NAME) );
+        boolean isLocal = "true".equalsIgnoreCase( PropertiesProvider.getParameter(ConfigObject.LOCAL_CONFIG_PARAM_NAME) );
         System.out.println("isLocal = " + isLocal);
-        String logPath = null;
+        String logPath;
         if (isLocal) {
             String s = getLogPathFromConfig();
             if (s==null) {
@@ -220,11 +220,11 @@ public final class StartupServlet extends HttpServlet {
     }
 
     private static String getLogConfigFileFormConfig() {
-        return (String)PropertiesProvider.getParameter( LOG_CONFIG_FILE_PARAM_NAME );
+        return PropertiesProvider.getParameter( LOG_CONFIG_FILE_PARAM_NAME );
     }
 
     private static String getLogPathFromConfig() {
-        return (String)PropertiesProvider.getParameter( LOG_PATH_PARAM_NAME );
+        return PropertiesProvider.getParameter( LOG_PATH_PARAM_NAME );
     }
 
     private static String getLogConfigFileFromJNDI(String logConfigFile) {
@@ -245,10 +245,9 @@ public final class StartupServlet extends HttpServlet {
 
     private static String getLogPathFromJNDI() {
         try {
-            String logPath = null;
             InitialContext ic = new InitialContext();
-            logPath = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_PATH);
-	    logPath = logPath.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
+            String logPath = (String) ic.lookup("java:comp/env/" + Constants.JNDI_MILL_LOG_PATH);
+            logPath = logPath.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
 
             return logPath;
         }
@@ -260,8 +259,7 @@ public final class StartupServlet extends HttpServlet {
     }
 
     public static void test() {
-        Context ctx = null;
-
+        Context ctx;
         try {
             ctx = new InitialContext();
         }
@@ -280,7 +278,6 @@ public final class StartupServlet extends HttpServlet {
         }
 
         try {
-//            Context envCtx = (Context) ctx.lookup("java:/comp/env/");
             System.out.println("list() on java:/comp/env Context : ");
             NamingEnumeration en = ctx.list("java:/comp/env/");
             while (en.hasMoreElements()) {

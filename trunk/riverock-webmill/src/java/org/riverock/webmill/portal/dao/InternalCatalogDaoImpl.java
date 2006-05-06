@@ -1,26 +1,33 @@
 package org.riverock.webmill.portal.dao;
 
-import java.util.Locale;
-import java.util.List;
-import java.util.Collections;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.webmill.core.GetWmPortalCatalogItem;
+import org.riverock.webmill.core.GetWmPortalCatalogLanguageItem;
+import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
+import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
+import org.riverock.webmill.core.InsertWmPortalCatalogItem;
+import org.riverock.webmill.core.InsertWmPortalCatalogLanguageItem;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
-import org.riverock.webmill.schema.core.WmPortalCatalogListType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageListType;
-import org.riverock.webmill.core.GetWmPortalCatalogItem;
-import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
-import org.riverock.webmill.core.GetWmPortalCatalogLanguageItem;
-import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
-import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.webmill.schema.core.WmPortalCatalogListType;
 
 /**
  * @author Sergei Maslyukov
@@ -57,6 +64,36 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         }
     }
 
+    public Long getCatalogItemId(Long siteLanguageId, Long portletNameId, Long templateId) {
+        if (log.isDebugEnabled()) {
+            log.debug("InternalDaoCatalogImpl.getCatalogItemId()");
+            log.debug("     siteLanguageId: " + siteLanguageId);
+            log.debug("     portletNameId: " + portletNameId);
+            log.debug("     templateId: " + templateId);
+        }
+
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            return DatabaseManager.getLongValue( adapter,
+                "select a.ID_SITE_CTX_CATALOG " +
+                "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b " +
+                "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
+                "       b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_CTX_TYPE=? and a.ID_SITE_TEMPLATE=? ",
+                new Object[]{siteLanguageId, portletNameId, templateId}
+            );
+        }
+        catch (Exception e) {
+            String es = "Error get getCatalogItemId()";
+            log.error(es, e);
+            throw new IllegalStateException(es,e );
+        }
+        finally{
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName) {
         if (log.isDebugEnabled()) {
             log.debug("InternalDaoImpl.getCatalogItemId()");
@@ -83,7 +120,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
             );
         }
         catch (Exception e) {
-            String es = "Error get getSiteBean()";
+            String es = "Error get getCatalogItemId()";
             log.error(es, e);
             throw new IllegalStateException(es,e );
         }
@@ -201,7 +238,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         }
     }
 
-    public CatalogLanguageBean getCatalogLanguageBean(Long catalogLanguageId ) {
+    public CatalogLanguageItem getCatalogLanguageItem(Long catalogLanguageId ) {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
@@ -227,7 +264,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         }
     }
 
-    public List<CatalogLanguageBean> getCatalogLanguageList(Long siteLanguageId) {
+    public List<CatalogLanguageItem> getCatalogLanguageItemList(Long siteLanguageId) {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
@@ -236,7 +273,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
                 getInstance(adapter, siteLanguageId )
                 .item;
 
-            List<CatalogLanguageBean> beans = new ArrayList<CatalogLanguageBean>();
+            List<CatalogLanguageItem> beans = new ArrayList<CatalogLanguageItem>();
             for (Object o : list.getWmPortalCatalogLanguageAsReference()) {
                 WmPortalCatalogLanguageItemType ic = (WmPortalCatalogLanguageItemType) o;
                 CatalogLanguageBean bean = new CatalogLanguageBean();
@@ -261,7 +298,139 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
 
     }
 
+    public Long createCatalogItem(CatalogItem catalogItem) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
 
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_PORTAL_CATALOG" );
+            seq.setTableName( "WM_PORTAL_CATALOG" );
+            seq.setColumnName( "ID_SITE_CTX_CATALOG" );
+            Long id = adapter.getSequenceNextValue( seq );
+
+            WmPortalCatalogItemType item = new WmPortalCatalogItemType();
+            item.setIdSiteCtxCatalog(id);
+            item.setCtxPageAuthor( catalogItem.getAuthor());
+            item.setCtxPageKeyword( catalogItem.getKeyword());
+            item.setCtxPageTitle( catalogItem.getTitle());
+            item.setCtxPageUrl( catalogItem.getUrl());
+            item.setIdContext( catalogItem.getContextId());
+            item.setIdSiteCtxLangCatalog( catalogItem.getCatalogLanguageId());
+            item.setIdSiteCtxType( catalogItem.getPortletId());
+            item.setIdSiteTemplate( catalogItem.getTemplateId());
+            item.setIdTopCtxCatalog( catalogItem.getTopCatalogId());
+            if (catalogItem.getTopCatalogId()==null)
+                item.setIdTopCtxCatalog(0L);
+
+            item.setIsUseProperties( catalogItem.getUseProperties());
+            item.setKeyMessage( catalogItem.getKeyMessage());
+            item.setMetadata( catalogItem.getMetadata());
+            item.setOrderField( catalogItem.getOrderField());
+            item.setPortletRole( catalogItem.getPortletRole());
+            item.setStorage( catalogItem.getStorage());
+
+            InsertWmPortalCatalogItem.process(adapter, item);
+
+            adapter.commit();
+            return id;
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error create site language";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem) {
+        if (log.isDebugEnabled()) {
+            log.debug("Item getIdSiteCtxLangCatalog(), value - "+catalogLanguageItem.getCatalogLanguageId());
+            log.debug("Item getCatalogCode(), value - "+catalogLanguageItem.getCatalogCode());
+            log.debug("Item getIsDefault(), value - "+catalogLanguageItem.getDefault());
+            log.debug("Item getIdSiteSupportLanguage(), value - "+catalogLanguageItem.getSiteLanguageId());
+        }
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_PORTAL_CATALOG_LANGUAGE" );
+            seq.setTableName( "WM_PORTAL_CATALOG_LANGUAGE" );
+            seq.setColumnName( "ID_SITE_CTX_LANG_CATALOG" );
+            Long id = adapter.getSequenceNextValue( seq );
+
+            WmPortalCatalogLanguageItemType item = new WmPortalCatalogLanguageItemType();
+            item.setIdSiteCtxLangCatalog(id);
+            item.setIdSiteSupportLanguage(catalogLanguageItem.getSiteLanguageId());
+            item.setCatalogCode(catalogLanguageItem.getCatalogCode());
+            item.setIsDefault(catalogLanguageItem.getDefault());
+
+            InsertWmPortalCatalogLanguageItem.process(adapter, item);
+
+            adapter.commit();
+            return id;
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error create site language";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(
+                "select * from WM_PORTAL_CATALOG_LANGUAGE where CATALOG_CODE=?"
+            );
+
+            RsetTools.setString(ps, 1, catalogLanguageCode);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                WmPortalCatalogLanguageItemType item = GetWmPortalCatalogLanguageItem.fillBean(rs);
+                CatalogLanguageBean bean = new CatalogLanguageBean();
+                bean.setCatalogCode( item.getCatalogCode() );
+                bean.setCatalogLanguageId( item.getIdSiteCtxLangCatalog() );
+                bean.setDefault( item.getIsDefault() );
+                bean.setSiteLanguageId( item.getIdSiteSupportLanguage() );
+
+                return bean;
+            }
+            return null;
+        }
+        catch (Exception e) {
+            final String es = "Error get catalogLanguageItem bean for name: " + catalogLanguageCode;
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
+    }
 
     private class MenuItemComparator implements Comparator<WmPortalCatalogItemType> {
         public int compare(WmPortalCatalogItemType o1, WmPortalCatalogItemType o2) {

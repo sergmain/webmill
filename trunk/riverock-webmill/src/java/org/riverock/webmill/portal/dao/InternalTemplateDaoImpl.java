@@ -166,6 +166,9 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
     }
 
     public List<Template> getTemplateList(Long siteId) {
+        if (log.isDebugEnabled())
+            log.debug("Start getTemplateList(), siteId: " +siteId);
+
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;

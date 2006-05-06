@@ -36,6 +36,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.cache.impl.CacheException;
@@ -120,7 +121,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             log.debug( "Article plain. method is 'Plain'" );
 
         return ( isTranslateCR ?
-            StringTools.replaceString( text, "\n", "<br>\n" ) :
+            StringUtils.replace( text, "\n", "<br>\n" ) :
             text
             ).getBytes( ContentTypeTools.CONTENT_TYPE_UTF8 );
     }
@@ -348,7 +349,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
             "       b.IS_PLAIN_HTML=1";
 
         try {
-            SqlStatement.registerSql( sql3_, new ArticlePlain().getClass() );
+            SqlStatement.registerSql( sql3_, ArticlePlain.class );
         }
         catch( Throwable e ) {
             final String es = "Error in registerSql, sql\n" + sql_;
