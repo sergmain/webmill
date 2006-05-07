@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -76,7 +77,7 @@ public class ForumDAO {
 
             //------------------------
             String condition = " T_F_ID=? " ;
-            if (!StringTools.isEmpty(keyword)) {
+            if (!StringUtils.isBlank(keyword)) {
                 condition += " and T_NAME like ? ";
             }
 
@@ -86,7 +87,7 @@ public class ForumDAO {
                 "SELECT count(*) count_records " +
                 "FROM   WM_FORUM_TOPIC  " +
                 "WHERE  " + condition,
-                (!StringTools.isEmpty(keyword))
+                (!StringUtils.isBlank(keyword))
                 ?new Object[]{f_id, keywordSearch}
                 :new Object[]{f_id}
             );
@@ -101,7 +102,7 @@ public class ForumDAO {
                 "order by a.t_order DESC, a.t_lasttime DESC";
             ps = adapter.prepareStatement( sql1 );
             ps.setLong(1, f_id);
-            if (!StringTools.isEmpty(keyword)) {
+            if (!StringUtils.isBlank(keyword)) {
                 ps.setString(2, keywordSearch);
             }
             rs = ps.executeQuery();
