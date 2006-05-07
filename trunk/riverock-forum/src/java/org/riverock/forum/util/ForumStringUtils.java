@@ -1,13 +1,14 @@
 package org.riverock.forum.util;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 
 /**
  * String Util.
  */
-public class StringUtils {
+public class ForumStringUtils {
 
     /**
      * Parse a string to boolean.
@@ -17,7 +18,7 @@ public class StringUtils {
      *         on exception return false.
      */
     public static boolean parseBoolean(String param) {
-        if (StringTools.isEmpty(param))
+        if (StringUtils.isBlank(param))
             return false;
         switch (param.charAt(0)) {
             case '1':
@@ -90,7 +91,7 @@ public class StringUtils {
      * @return string
      */
     public static String convertURL(String input) {
-        if (StringTools.isEmpty(input)) {
+        if (StringUtils.isBlank(input)) {
             return "";
         }
         StringBuilder buf = new StringBuilder(input.length() + 25);
