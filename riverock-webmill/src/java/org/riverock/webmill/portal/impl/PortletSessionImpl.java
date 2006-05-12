@@ -45,11 +45,13 @@ public final class PortletSessionImpl implements PortletSession, HttpSession {
     private final static Logger log = Logger.getLogger( PortletSessionImpl.class );
 
     private HttpSession session = null;
-    public PortletSessionImpl(HttpSession session){
+    private PortletContext portletContext = null;
+    public PortletSessionImpl(HttpSession session, PortletContext portletContext){
         if (session==null) {
             throw new NullPointerException("session object is null");
         }
         this.session = session;
+        this.portletContext = portletContext;
 //        creationTime = System.currentTimeMillis();
     }
 
@@ -65,7 +67,6 @@ public final class PortletSessionImpl implements PortletSession, HttpSession {
 
     private long accessTime;
     public long getLastAccessedTime(){
-//        return accessTime;
         return session.getLastAccessedTime();
     }
 
@@ -76,7 +77,7 @@ public final class PortletSessionImpl implements PortletSession, HttpSession {
 
     public PortletContext getPortletContext(){
         accessTime = System.currentTimeMillis();
-        return null;
+        return portletContext;
     }
 
     public int getMaxInactiveInterval(){

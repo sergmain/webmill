@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.List;
 
 import javax.portlet.PortletRequest;
 
@@ -235,7 +236,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             if ( p.hasMoreTokens() )
                 namespace = p.nextToken();
 
-            Map<String, Object> param = new HashMap<String, Object>();
+            Map<String, List<String>> param = new HashMap<String, List<String>>();
             while ( p.hasMoreTokens() ) {
                 String temp = p.nextToken();
 
@@ -246,7 +247,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
                 String key = temp.substring( 0, idx );
                 String value = temp.substring( idx+1 );
 
-                MapWithParameters.put( param, key, value );
+                MapWithParameters.putInStringList( param, key, value );
             }
 
             //todo implement request state for all portlets

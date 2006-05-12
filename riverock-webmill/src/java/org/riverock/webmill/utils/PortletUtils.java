@@ -29,7 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -116,7 +116,7 @@ public final class PortletUtils {
         }
     }
 
-    public static Map<String, Object> getParameters( final HttpServletRequest request ) {
+    public static Map<String, List<String>> getParameters( final HttpServletRequest request ) {
 
         boolean isMultiPartRequest = isMultiPart(request);
 
@@ -124,7 +124,7 @@ public final class PortletUtils {
             throw new IllegalStateException("MultiPart request must processed via parseMultiPartRequest() method");
         }
 
-        Map<String, Object> p = new HashMap<String, Object>();
+        Map<String, List<String>> p = new HashMap<String, List<String>>();
 
         Enumeration e = request.getParameterNames();
         for (; e.hasMoreElements() ;) {
@@ -132,15 +132,7 @@ public final class PortletUtils {
 
             String value[] = request.getParameterValues( key );
             if (value!=null) {
-                if (value.length==1)
-                    p.put(key, value[0]);
-                else {
-                    List<String> ee = new ArrayList<String>();
-                    for (final String newVar : value)
-                        ee.add(newVar);
-
-                    p.put(key, ee);
-                }
+                p.put(key, Arrays.asList(value));
             }
         }
         return p;

@@ -79,6 +79,9 @@ public final class ContextNavigator extends HttpServlet {
     private static final Object obj = new Object();
     private boolean isOfflineMarkupProcessed = false;
     public void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException, ServletException {
+        if (log.isDebugEnabled()) {
+            log.debug("httpRequest: "+httpRequest+", httpResponse: " +httpResponse);
+        }
 
         if (!isOfflineMarkupProcessed) {
             synchronized(obj) {

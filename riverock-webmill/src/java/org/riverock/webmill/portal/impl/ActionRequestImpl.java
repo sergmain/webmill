@@ -31,10 +31,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortalContext;
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
@@ -63,9 +65,9 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         super.destroy();
     }
 
-    public ActionRequestImpl(final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map<String, Object> portletAttributes, final String contextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext ) {
-        super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties);
-        prepareRequest( parameters, portalRequestInstance, null, portletAttributes, contextPath, portalContext );
+    public ActionRequestImpl(final Map<String, List<String>> parameters, final PortalRequestInstance portalRequestInstance, final ServletContext servletContext, final Map<String, Object> portletAttributes, final String contextPath, final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties, final PortalContext portalContext, final PortletContext portletContext ) {
+        super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties, portletAttributes, new HashMap<String, List<String>>(), portletContext );
+        prepareRequest( parameters, portalRequestInstance, contextPath, portalContext );
         requestBodyFile = portalRequestInstance.getRequestBodyFile();
         isMultiPartRequest = portalRequestInstance.isMultiPartRequest();
 
@@ -139,7 +141,6 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
 
     public int getContentLength() {
         if (isMultiPartRequest && requestBodyFile!=null) {
-//            return httpRequest.getContentLength();
             return (int)requestBodyFile.length();
         }
         else {

@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.html.AcceptLanguageWithLevel;
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
+import org.riverock.common.collections.MapWithParameters;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
@@ -276,7 +277,7 @@ public final class RequestContextUtils {
                     }
                     else {
                         requestState = new RequestState();
-                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, Object>() );
+                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, List<String>>() );
                         bean.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
@@ -287,7 +288,7 @@ public final class RequestContextUtils {
                     }
                     else {
                         requestState = new RequestState();
-                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, Object>() );
+                        PortletParameters portletParameters = new PortletParameters(namespace.getNamespace(), requestState, new HashMap<String, List<String>>() );
                         bean.getParameters().put( namespace.getNamespace(), portletParameters );
                     }
                 }
@@ -316,7 +317,7 @@ public final class RequestContextUtils {
             portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
         }
         else {
-            Map<String, Object> httpRequestParameter = PortletUtils.getParameters(factoryParameter.getRequest());
+            Map<String, List<String>> httpRequestParameter = PortletUtils.getParameters(factoryParameter.getRequest());
 
             // init id of concrete portlet instance with value
             if (bean.getConcretePortletIdValue()!=null) {
@@ -326,7 +327,7 @@ public final class RequestContextUtils {
                     log.debug( "Id: "+bean.getConcretePortletIdValue() );
                 }
                 if (nameId!=null) {
-                    httpRequestParameter.put( nameId, bean.getConcretePortletIdValue() );
+                    MapWithParameters.putInStringList(httpRequestParameter, nameId, bean.getConcretePortletIdValue().toString() );
                 }
             }
 

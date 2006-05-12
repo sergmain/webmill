@@ -42,6 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.collections.MapWithParameters;
+
 public final class ActionResponseImpl implements ActionResponse {
     private final static Logger log = Logger.getLogger( ActionResponseImpl.class );
 
@@ -50,7 +52,7 @@ public final class ActionResponseImpl implements ActionResponse {
     private WindowState windowState = WindowState.NORMAL;
     private boolean isRedirected = false;
     private String redirectUrl = null;
-    private Map<String, Object> renderParameters = null;
+    private Map<String, List<String>> renderParameters = null;
     private Map<String, List<String>> portletProperties = null;
 
     public void destroy() {
@@ -64,11 +66,14 @@ public final class ActionResponseImpl implements ActionResponse {
         }
     }
 
-    public ActionResponseImpl( final HttpServletResponse response, final Map<String, Object> renderParameters,
-        Map<String, List<String>> portletProperties) {
+    public ActionResponseImpl( final HttpServletResponse response, final Map<String, List<String>> renderParameters,
+                               Map<String, List<String>> portletProperties) {
         this.httpResponse = response;
         this.renderParameters = renderParameters;
         this.portletProperties = portletProperties;
+        if (log.isDebugEnabled()) {
+            log.debug("renderParameters: " + ((Object)renderParameters).toString());
+        }
     }
 
     public boolean getIsRedirected() {
@@ -119,7 +124,18 @@ public final class ActionResponseImpl implements ActionResponse {
         }
         for (Object o : map.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
-            renderParameters.put(entry.getKey().toString(), entry.getValue());
+
+            if (!(entry.getKey() instanceof String)) {
+                throw new IllegalArgumentException("Key must not be null and of type java.lang.String.");
+            }
+            if (!(entry.getValue() instanceof String[])) {
+                throw new IllegalArgumentException("Value must not be null and of type java.lang.String[].");
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("set renderParameters, key: " + (String)entry.getKey()+", values: " + entry.getValue());
+            }
+
+            MapWithParameters.putInStringList(renderParameters, (String)entry.getKey(), (String[])entry.getValue());
         }
     }
 
@@ -133,7 +149,10 @@ public final class ActionResponseImpl implements ActionResponse {
         if (value==null) {
             throw new IllegalArgumentException("Value is null");
         }
-        renderParameters.put( key, value );
+        if (log.isDebugEnabled()) {
+            log.debug("set renderParameters, key: " + key+", values: " + value);
+        }
+        MapWithParameters.putInStringList(renderParameters, key, value);
     }
 
     public void setRenderParameter( final String key, final String[] value ) {
@@ -146,6 +165,11 @@ public final class ActionResponseImpl implements ActionResponse {
         if (value==null) {
             throw new IllegalArgumentException("Value is null");
         }
-        renderParameters.put( key, value );
+        if (log.isDebugEnabled()) {
+            log.debug("set renderParameters, key: " + key+", values: " + value);
+        }
+
+
+        MapWithParameters.putInStringList(renderParameters, key, value);
     }
 }

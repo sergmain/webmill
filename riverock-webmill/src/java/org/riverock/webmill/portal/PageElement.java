@@ -82,7 +82,7 @@ public final class PageElement {
     /**
      * renderParameter used for set parameters in action
      */
-    private Map<String, Object> renderParameters = new HashMap<String, Object>();
+    private Map<String, List<String>> renderParameters = new HashMap<String, List<String>>();
     /*
      *
      */
@@ -351,7 +351,7 @@ public final class PageElement {
 
             String contextPath = getContextPath(portalRequestInstance);
 
-            Map<String, Object> renderRequestParamMap = new HashMap<String, Object>();
+            Map<String, List<String>> renderRequestParamMap = new HashMap<String, List<String>>();
 
             if (parameters != null && parameters.getParameters() != null) {
                 // The portlet-container must not propagate parameters received
@@ -363,6 +363,7 @@ public final class PageElement {
                     log.debug("Request is action. Do not send parameters to render request");
                 }
             }
+
             renderRequest = new RenderRequestImpl(
                 renderRequestParamMap,
                 portalRequestInstance,
@@ -372,7 +373,8 @@ public final class PageElement {
                 contextPath,
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
-                portalRequestInstance.getPortalContext()
+                portalRequestInstance.getPortalContext(),
+                portletEntry.getPortletConfig().getPortletContext()
             );
 
             // portlet metadata
@@ -407,7 +409,7 @@ public final class PageElement {
             renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_REQUEST, renderRequest );
             renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_RESPONSE, renderResponse );
 
-            Map<String, Object> actionRequestParamMap = new HashMap<String, Object>( renderRequestParamMap );
+            Map<String, List<String>> actionRequestParamMap = new HashMap<String, List<String>>( renderRequestParamMap );
 
             if (parameters != null && parameters.getParameters() != null) {
                 // The portlet-container must not propagate parameters received
@@ -423,7 +425,8 @@ public final class PageElement {
                 contextPath,
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
-                portalRequestInstance.getPortalContext()
+                portalRequestInstance.getPortalContext(),
+                portletEntry.getPortletConfig().getPortletContext()
             );
             actionRequest.setAttribute(
                 ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,

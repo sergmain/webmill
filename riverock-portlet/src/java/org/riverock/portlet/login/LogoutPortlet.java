@@ -60,7 +60,6 @@ public final class LogoutPortlet implements Portlet {
     }
 
     public void render( RenderRequest renderRequest, RenderResponse renderResponse ) throws PortletException, IOException {
-        processLogout(renderRequest);
         ContentTypeTools.setContentType( renderResponse, ContentTypeTools.CONTENT_TYPE_UTF8 );
         Writer out = renderResponse.getWriter();
         out.write("You are logged out");
