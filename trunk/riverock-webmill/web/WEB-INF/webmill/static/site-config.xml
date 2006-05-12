@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serg (Home) -->
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serge (Home) -->
 <Sites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-webmill\src-schema\xsd\riverock-webmill-site-config.xsd">
-	<SiteConfig siteName="test.askmore" defaultLocale="ru_admin">
-		<Company>
-			<Name>1st company</Name>
-			<ShortName>Short name</ShortName>
-			<Address>Address</Address>
-			<Ceo>Ceo</Ceo>
-			<Cfo>Cfo</Cfo>
-			<Website>http://localhost</Website>
-			<Info>Info string</Info>
-		</Company>
+	<SiteConfig>
 		<Host>test.askmore</Host>
-		<CssFile>default.css</CssFile>
+		<SiteInstance>
+			<SiteName>test.askmore</SiteName>
+			<Company>
+				<Name>1st company</Name>
+				<ShortName>Short name</ShortName>
+				<Address>Address</Address>
+				<Ceo>Ceo</Ceo>
+				<Cfo>Cfo</Cfo>
+				<Website>http://localhost</Website>
+				<Info>Info string</Info>
+			</Company>
+			<CssFile>default.css</CssFile>
+			<DefaultLcale>ru_admin</DefaultLcale>
+		</SiteInstance>
 		<SiteLanguage name="Admin RU" locale="ru_admin">
 			<Template name="index">
 				<TemplateFile>index-template.xml</TemplateFile>
