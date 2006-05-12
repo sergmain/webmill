@@ -40,6 +40,29 @@ import org.apache.commons.logging.LogFactory;
 public class StringTools {
     private final static Log log = LogFactory.getLog(StringTools.class);
 
+    /**
+     * Converts a string array to a string.
+     * Autor: Apache group, License: Apache2
+     * @param values  the string array to convert.
+     * @return a string representing the values in the string array.
+     */
+    public static String arrayToString(String[] values) {
+		StringBuffer buffer = new StringBuffer();
+		if (values == null) {
+			buffer.append("null");
+		} else {
+			buffer.append("{");
+			for (int i = 0; i < values.length; i++) {
+				buffer.append(values[i]);
+				if (i < values.length - 1) {
+					buffer.append(",");
+				}
+			}
+			buffer.append("}");
+		}
+    	return buffer.toString();
+    }
+
     public static String getUserName(String firstName, String middleName, String lastName) {
         if (log.isDebugEnabled()) {
             log.debug("firstName: " + firstName+ ", middleName: " +middleName+ ", lastName: " + lastName );
