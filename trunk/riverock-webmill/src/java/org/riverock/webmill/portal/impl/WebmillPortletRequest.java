@@ -33,9 +33,11 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.WindowState;
+import javax.portlet.PortletContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestWrapper;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +46,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
+import org.riverock.generic.tools.servlet.ServletRequestWrapperInclude;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.portal.PortalConstants;
@@ -62,23 +66,25 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     protected HttpServletRequest httpRequest = null;
     protected HttpServletResponse httpResponse = null;
     // parameters for current portlet
-    protected Map<String, Object> parameters = null;
+    protected Map<String, List<String>> parameters = null;
     protected PortletSession session = null;
     protected AuthSession auth = null;
     // Locale of this request
     protected Locale locale = null;
     protected Locale[] preferredLocale = null;
     protected Cookie[] cookies = null;
-    private Map<String, Object> renderParameters = null;
+    private Map<String, List<String>> renderParameters = null;
     private Map<String, Object> portletAttributes = null;
     private ServletContext servletContext = null;
 
     private PortletPreferences portletPreferences = null;
+    private ServletRequest wrapper = null;
 
     // context path of current portlet
     private String contextPath = null;
 
     private PortalContext portalContext = null;
+    private PortletContext portletContext = null;
 
     private Map<String, List<String>> portletProperties = null;
 
@@ -95,11 +101,23 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         portalContext = null;
     }
 
-    public WebmillPortletRequest(ServletContext servletContext, HttpServletRequest httpServletRequest, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties) {
-        super( httpServletRequest );
+    public WebmillPortletRequest(ServletContext servletContext, HttpServletRequest httpServletRequest, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties,final Map<String, Object> portletAttributes, Map<String, List<String>> renderParameters, PortletContext portletContext) {
+        super( new ServletRequestWrapperInclude(httpServletRequest, null, portletAttributes) );
+        wrapper = super.getRequest();
+        this.portletAttributes = portletAttributes;
         this.servletContext = servletContext;
+        this.portletContext = portletContext;
         this.portletPreferences = portletPreferences;
         this.portletProperties = portletProperties;
+        this.renderParameters = renderParameters;
+    }
+
+    public ServletRequest getRequest() {
+        return wrapper;
+    }
+
+    public void setRequest(ServletRequest servletRequest) {
+        wrapper = servletRequest;
     }
 
     public boolean isWindowStateAllowed( WindowState windowState ) {
@@ -129,7 +147,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     public PortletSession getPortletSession( boolean b ) {
         if ( !httpRequest.isRequestedSessionIdValid() ) {
             this.session = null;
-            this.session = new PortletSessionImpl( httpRequest.getSession(true) );
+            this.session = new PortletSessionImpl( httpRequest.getSession(true), portletContext );
         }
         return session;
     }
@@ -241,18 +259,35 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public Object getAttribute( String key ) {
+        if (log.isDebugEnabled()) {
+            log.debug("getAttribute(), key: " + key + ", this: " + this);
+        }
         if (key==null) {
             throw new IllegalArgumentException("Call getAttribute() with key==null");
         }
 
-        return portletAttributes.get( key );
+        Object o = portletAttributes.get( key );
+        if (o!=null) {
+            return o;
+        }
+
+        return getRequest().getAttribute(key);
     }
 
     public Enumeration getAttributeNames() {
+/*
+        List keys = Collections.list(getRequest().getAttributeNames());
+        keys.addAll( portletAttributes.keySet() );
+        return Collections.enumeration( keys );
+*/
         return Collections.enumeration( portletAttributes.keySet() );
     }
 
     public void setAttribute( String key, Object value ) {
+        if (log.isDebugEnabled()) {
+            log.debug("set attribute. key: " + key + ", value: " + value+", this: "+this);
+        }
+        
         if (key==null) {
             throw new IllegalArgumentException("Call setAttribute() with key==null");
         }
@@ -260,7 +295,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if ( value==null ) {
             removeAttribute( key );
         }
-
+//        getRequest().setAttribute(key, value);
         portletAttributes.put( key, value );
     }
 
@@ -269,6 +304,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             throw new IllegalArgumentException("Call removeAttribute() with null");
         }
 
+//        getRequest().removeAttribute( key );
         portletAttributes.remove( key );
     }
 
@@ -277,65 +313,37 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             throw new IllegalArgumentException("Call getParameter() with null");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("key: "+key);
-        }
-
         if ( parameters==null && renderParameters==null ) {
-            if (log.isDebugEnabled()) {
-                log.debug("parameters: "+parameters+", renderParameters: " +renderParameters);
-            }
-//            return super.getParameter( key );
+            return null;
         }
 
         String value = getParameterInternal( renderParameters, key );
         if ( value!=null ) {
-            if (log.isDebugEnabled()) {
-                log.debug("value #1: "+value);
-            }
             return value;
         }
 
         value = getParameterInternal( parameters, key );
-        if ( value!=null ) {
-            if (log.isDebugEnabled()) {
-                log.debug("value #2: "+value);
-            }
-            return value;
-        }
-
-        return null;
-//        if (log.isDebugEnabled()) {
-//            log.debug("value #3: "+super.getParameter( key ));
-//        }
-//        return super.getParameter( key );
+        return value;
     }
 
-    private String getParameterInternal( Map map, String key ) {
+    private String getParameterInternal( Map<String, List<String>> map, String key ) {
 
         if (map==null || key==null )
             return null;
 
-        Object obj = map.get( key );
+        List<String> obj = map.get( key );
         if ( obj==null )
             return null;
 
-        if ( obj instanceof List )
-            return ( (List)obj ).get( 0 ).toString();
+        return obj.get(0);
 
-        if ( obj instanceof String[] ) {
-            String[] strings = (String[])obj;
-            if (strings.length>0)
-                return strings[0];
-            else
-                return null;
-        }
-        return obj.toString();
     }
 
     public Enumeration getParameterNames() {
-        if ( parameters == null && renderParameters==null )
+        if ( parameters == null && renderParameters==null ) {
+            // Todo may be exists better solution?
             return new Hashtable().elements();
+        }
 
         List<String> set = new ArrayList<String>();
         if (parameters!=null)
@@ -344,6 +352,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if (renderParameters!=null)
             set.addAll( renderParameters.keySet() );
 
+        dumpMap(renderParameters, "getParameterNames(), renderParameters");
         return Collections.enumeration( set );
     }
 
@@ -360,63 +369,75 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         List<String> temp = getParameterArray( parameters, key );
         if (temp!=null) {
             list.addAll( temp );
-            temp.clear();
         }
 
         temp = getParameterArray( renderParameters, key );
         if (temp!=null) {
             list.addAll( temp );
-            temp.clear();
         }
 
-        String[] values = new String[list.size()];
-        int i=0;
-        for (String es : list) {
-            values[i++] = es;
-        }
-        list.clear();
+        String[] values = list.toArray(new String[0]);
 
+        if (log.isDebugEnabled()) {
+            log.debug("getParameterValues(): " + StringTools.arrayToString(values));
+        }
+
+        dumpMap(renderParameters, "getParameterValues(), renderParameters");
         return values;
     }
 
-    private static List<String> getParameterArray( Map map, String key ) {
+    private static List<String> getParameterArray( Map<String, List<String>> map, String key ) {
 
         if (map==null || key==null )
             return null;
 
-        Object obj = map.get( key );
-        if ( obj==null )
+        List<String> list = map.get( key );
+        if ( list==null )
             return null;
-
-        if ( obj instanceof List ) {
-            return new ArrayList<String>( (List)obj );
-        }
-
-        List<String> list = new ArrayList<String>();
-        if (obj instanceof String[] ) {
-            String values[] = (String[])obj;
-            for (final String newVar : values)
-                list.add(newVar);
-        }
-        else
-            list.add( obj.toString() );
 
         return list;
     }
 
 
     public Map getParameterMap() {
-        if ( parameters==null && renderParameters==null )
-            return null;
+        dumpMap(renderParameters, "getParameterMap(), renderParameters");
+        dumpMap(parameters, "getParameterMap(), parameters");
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
         if ( parameters!=null )
             map.putAll( parameters );
 
-        if ( renderParameters!=null )
-            map.putAll( renderParameters );
+        if ( renderParameters!=null ) {
+            for ( Map.Entry<String, List<String>> entry : renderParameters.entrySet()) {
+                List<String> list = map.get(entry.getKey());
+                if (list!=null) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("getParameterMap() #1.1, key: "+entry.getKey()+", value: " + StringTools.arrayToString(list.toArray(new String[0])));
+                        log.debug("getParameterMap() #1.2, key: "+entry.getKey()+", value: " + StringTools.arrayToString(entry.getValue().toArray(new String[0])));
+                    }
+                    list.addAll(entry.getValue());
+                    if (log.isDebugEnabled()) {
+                        log.debug("getParameterMap() #1.3, key: "+entry.getKey()+", value: " + StringTools.arrayToString(list.toArray(new String[0])));
+                    }
+                    map.put(entry.getKey(), list);
+                }
+                else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("getParameterMap() #2, key: "+entry.getKey()+", value: " + StringTools.arrayToString(entry.getValue().toArray(new String[0])));
+                    }
+                    map.put( entry.getKey(), entry.getValue() );
+                }
+            }
+        }
+        Map<String, String[]> result = new HashMap<String, String[]>();
+        for ( Map.Entry<String, List<String>> entry : map.entrySet()) {
+            if (log.isDebugEnabled()) {
+                log.debug("getParameterMap() #3, key: "+entry.getKey()+", value: " + StringTools.arrayToString(entry.getValue().toArray(new String[0])));
+            }
+            result.put( entry.getKey(), entry.getValue().toArray(new String[0]));
+        }
 
-        return map;
+        return result;
     }
 
     public boolean isSecure() {
@@ -484,9 +505,23 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public String getQueryString() {
-        String attr = (String)super.getAttribute( "javax.servlet.include.query_string" );
-        return ( attr != null ) ?attr
-            :httpRequest.getQueryString();
+        String queryString = (String)super.getAttribute( "javax.servlet.include.query_string" );
+
+        if (log.isDebugEnabled()) {
+            log.debug("queryString: " + queryString);
+            log.debug("httpRequest: " + httpRequest);
+            if (httpRequest!=null) {
+                log.debug("httpRequest.getQueryString(): " + httpRequest.getQueryString());
+            }
+        }
+
+        if ( queryString != null )
+            return queryString;
+
+        if (httpRequest!=null)
+            return httpRequest.getQueryString();
+        else
+            return null;
     }
 
     public String getPathTranslated() {
@@ -539,17 +574,14 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     protected void prepareRequest(
-        final Map<String, Object> parameters, final PortalRequestInstance portalRequestInstance,
-        final Map<String, Object> renderParameters, final Map<String, Object> portletAttributes,
-        final String contextPath, 
+        final Map<String, List<String>> parameters, final PortalRequestInstance portalRequestInstance,
+        final String contextPath,
         final PortalContext portalContext ) {
 
         this.portalContext = portalContext;
         this.contextPath = contextPath;
         this.parameters = Collections.unmodifiableMap( parameters );
-        this.renderParameters = renderParameters;
-        this.portletAttributes = portletAttributes;
-        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true));
+        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext);
         this.httpRequest = portalRequestInstance.getHttpRequest();
         this.auth = portalRequestInstance.getAuth();
         this.locale = portalRequestInstance.getLocale();
@@ -579,5 +611,32 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         this.setAttribute( ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE, httpRequest.getRemoteAddr() );
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
+    }
+
+    private static void dumpMap(Map<String, List<String>> params, String info) {
+        if (!log.isDebugEnabled()) {
+            return;
+        }
+        log.debug(info);
+        if (params ==null) {
+            log.debug("    Map is null");
+            return;
+        }
+        for (Map.Entry<String, List<String>> entry : params.entrySet()) {
+            List<String> list = entry.getValue();
+            log.debug("    key: " + entry.getKey());
+            if (list==null) {
+                log.debug("    list value is null");
+                continue;
+            }
+            if (list.isEmpty()) {
+                log.debug("    list value is empty");
+                continue;
+            }
+
+            for (String anArr : list) {
+                log.debug("        value: " + anArr);
+            }
+        }
     }
 }

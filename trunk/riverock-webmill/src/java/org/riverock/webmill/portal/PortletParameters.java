@@ -1,6 +1,7 @@
 package org.riverock.webmill.portal;
 
 import java.util.Map;
+import java.util.List;
 import java.io.File;
 
 import org.riverock.webmill.portal.context.RequestState;
@@ -12,7 +13,7 @@ import org.riverock.webmill.portal.context.RequestState;
  */
 public final class PortletParameters {
     private String namespace = null;
-    private Map<String, Object> parameters = null;
+    private Map<String, List<String>> parameters = null;
 
     /** File with request data, if request is multipart */
     private File requestBodyFile = null;
@@ -20,7 +21,7 @@ public final class PortletParameters {
     private boolean isMultiPart = false;
     private RequestState requestState = null;
 
-    public PortletParameters( final String namespace, RequestState requestState, final Map<String, Object> parameters) {
+    public PortletParameters( final String namespace, RequestState requestState, final Map<String, List<String>> parameters) {
         this.namespace = namespace;
         this.parameters = parameters;
         this.requestState = requestState;
@@ -49,7 +50,7 @@ public final class PortletParameters {
         return namespace;
     }
 
-    public Map<String, Object> getParameters() {
+    public Map<String, List<String>> getParameters() {
         return parameters;
     }
 }

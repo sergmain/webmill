@@ -274,7 +274,7 @@ public final class PortletContainer implements Serializable {
         synchronized (syncObect) {
             digestWaitedPortletFile();
 
-            PortletEntry newPortlet = null;
+            PortletEntry newPortlet;
             try {
                 newPortlet = createPortletInstance(portletName);
             }
@@ -331,7 +331,7 @@ public final class PortletContainer implements Serializable {
             Portlet object = null;
             boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
             if ( isNotUrl ) {
-                Constructor constructor = null;
+                Constructor constructor;
                 try {
                     final Class<?> aClass = classLoader.loadClass( portletDefinition.getPortletClass());
                     constructor = aClass.getConstructor(new Class[]{});

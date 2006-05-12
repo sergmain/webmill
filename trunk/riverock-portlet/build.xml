@@ -65,12 +65,12 @@
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
 
-        <pathelement location="${lib.dir}/${myfaces.lib}"/>
-<!--
+<!--        <pathelement location="${lib.dir}/${myfaces.lib}"/> -->
+
         <pathelement location="${lib.dir}/${myfaces-api.lib}"/>
         <pathelement location="${lib.dir}/${myfaces-core.lib}"/>
         <pathelement location="${lib.dir}/${myfaces-tomahawk.lib}"/>
--->
+
     </path>
 
     <property name="build_context" value="${build.dir}/mill_context"/>
@@ -211,12 +211,13 @@
         <include name="${commons-codec.lib}"/>
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
-        <include name="${myfaces.lib}"/>
-<!--
+
+<!--        <include name="${myfaces.lib}"/> -->
+
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>
         <include name="${myfaces-tomahawk.lib}"/>
--->
+
     </patternset>
 
     <target name="war" depends="jar" >

@@ -588,7 +588,7 @@ cd ..\..
                 <exclude name="WEB-INF/classes/**/*.*"/>
                 <exclude name="WEB-INF/lib/*.*"/>
                 <exclude name="WEB-INF/web.xml"/>
-<!--                <exclude name="**/*.*-*"/> -->
+                <exclude name="**/*.*-*"/>
             </fileset>
             <lib dir="${lib.dir}">
                 <patternset refid="war.lib"/>

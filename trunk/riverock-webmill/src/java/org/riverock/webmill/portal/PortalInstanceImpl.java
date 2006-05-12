@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -115,13 +116,73 @@ public class PortalInstanceImpl implements PortalInstance  {
         return portalVersion.minor;
     }
 
+    private static class InternalServletRequestWrapper extends HttpServletRequestWrapper {
+
+        // all methos in HttpServletRequest must invoked only from ContextNavigator
+        // all others invokes are wrong
+        boolean isOk = false;
+
+        public InternalServletRequestWrapper(HttpServletRequest request) {
+            super(request);
+        }
+
+        public Enumeration getAttributeNames() {
+            if ( !isOk ) {
+                log.warn( "!!! Requested getAttributeNames() from http request" );
+                try {
+                    throw new Exception("error");
+                }
+                catch(Exception e) {
+                    log.error("error", e);
+                }
+            }
+            return super.getAttributeNames();
+        }
+
+        public Object getAttribute(String key) {
+            if ( !isOk ) {
+                log.warn( "!!! Requested getAttributeNames() from http request, key: " + key );
+                try {
+                    throw new Exception("error");
+                }
+                catch(Exception e) {
+                    log.error("error", e);
+                }
+            }
+            return super.getAttribute(key);
+        }
+
+        public void setAttribute(String key, Object value) {
+            if ( !isOk ) {
+                log.warn( "!!! Requested getAttributeNames() from http request, key: " + key + ", value: " + value );
+                try {
+                    throw new Exception("error");
+                }
+                catch(Exception e) {
+                    log.error("error", e);
+                }
+            }
+            super.setAttribute(key, value);
+        }
+
+        public void removeAttribute(String key) {
+            if ( !isOk ) {
+                log.warn( "!!! Requested removeAttribute() from http request" );
+                try {
+                    throw new Exception("error");
+                }
+                catch(Exception e) {
+                    log.error("error", e);
+                }
+            }
+            super.removeAttribute(key);
+        }
+    }
+
     private static class InternalServletResponseWrapper extends HttpServletResponseWrapper {
 
         // all methos in HttpServletResponse must invoked only from ContextNavigator
         // all others invokes are wrong
-        // 
-        // Some invoke was made directly to servletResponse,
-        // because not implemented ServletContextWrapper (and getRequestDispatcher() method)
         boolean isOk = false;
 
         public InternalServletResponseWrapper( HttpServletResponse httpServletResponse ) {
@@ -139,7 +200,6 @@ public class PortalInstanceImpl implements PortalInstance  {
                     log.error("error", e);
                 }
             }
-
             return super.getResponse();
         }
 
@@ -209,10 +269,12 @@ public class PortalInstanceImpl implements PortalInstance  {
     private final static Object syncCounter = new Object();
     private static int counterNDC = 0;
 
-    public void process(HttpServletRequest request_, HttpServletResponse httpResponse )
+    public void process(HttpServletRequest httpServletRequest, HttpServletResponse httpResponse )
         throws IOException, ServletException {
 
         int counter;
+//        HttpServletRequest request_ = new InternalServletRequestWrapper( httpServletRequest );
+        HttpServletRequest request_ = httpServletRequest;
         InternalServletResponseWrapper response_ = new InternalServletResponseWrapper( httpResponse );
 
         // Prepare Nested D... Context
