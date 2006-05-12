@@ -3,8 +3,8 @@ package org.riverock.forum.action;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
+import org.riverock.common.tools.StringTools;
 import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.ForumError;
 import org.riverock.forum.dao.CommitEditMessageDAO;
@@ -43,7 +43,7 @@ public class CommitEditMessageAction  implements Action {
 
         String u_lastip = forumActionBean.getRequest().getRemoteAddr();
 
-        if (StringUtils.isBlank(content)) {
+        if (StringTools.isEmpty(content)) {
             return ForumError.blankError(forumActionBean);
         }
         DAOFactory daof = DAOFactory.getDAOFactory();

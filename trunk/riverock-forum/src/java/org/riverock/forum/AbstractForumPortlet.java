@@ -10,8 +10,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
+import org.riverock.common.tools.StringTools;
 import org.riverock.forum.util.Constants;
 import org.riverock.module.action.ActionNameProvider;
 import org.riverock.module.action.WebmillPortletActionNameProviderImpl;
@@ -73,7 +73,7 @@ public abstract class AbstractForumPortlet implements Portlet {
         // forward page
         Throwable th = null;
         try {
-            if (!StringUtils.isBlank(forwardPage)) {
+            if (!StringTools.isEmpty(forwardPage)) {
                 moduleConfig.getContext().getRequestDispatcher( forwardPage ).include( moduleRequest, moduleResponse );
             }
         }

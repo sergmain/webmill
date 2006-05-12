@@ -7,14 +7,14 @@ import java.util.Iterator;
 import javax.portlet.ActionRequest;
 
 import org.apache.log4j.Logger;
-import org.apache.commons.lang.StringUtils;
 
+import org.riverock.common.tools.StringTools;
 import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.ForumError;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.PostPDAO;
 import org.riverock.forum.util.Constants;
-import org.riverock.forum.util.ForumStringUtils;
+import org.riverock.forum.util.StringUtils;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
@@ -32,7 +32,7 @@ public class PostPAction implements Action {
         }
 
         Long userId = auth_.getId();
-        boolean reply = ForumStringUtils.parseBoolean(forumActionBean.getRequest().getString(Constants.NAME_FORUM_REPLY));
+        boolean reply = StringUtils.parseBoolean(forumActionBean.getRequest().getString(Constants.NAME_FORUM_REPLY));
         int tm_iconid = forumActionBean.getRequest().getInt( "tm_iconid", new Integer(0)).intValue();
 
         Integer f_id = forumActionBean.getRequest().getInt( Constants.NAME_FORUM_CONCRETE_ID );
@@ -63,7 +63,7 @@ public class PostPAction implements Action {
 
         String u_lastip = forumActionBean.getRequest().getRemoteAddr();
 
-        if (StringUtils.isBlank(content) || (!reply && StringUtils.isBlank(subject))) {
+        if (StringTools.isEmpty(content) || (!reply && StringTools.isEmpty(subject))) {
             return ForumError.blankError(forumActionBean);
         }
         DAOFactory daof = DAOFactory.getDAOFactory();
