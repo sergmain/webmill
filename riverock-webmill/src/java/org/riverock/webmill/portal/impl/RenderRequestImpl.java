@@ -34,6 +34,8 @@ import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 
 /**
  * User: Admin
@@ -54,9 +56,17 @@ public final class RenderRequestImpl extends WebmillPortletRequest implements Re
         final PortletPreferences portletPreferences, 
         final Map<String, List<String>> portletProperties,
         final PortalContext portalContext,
-        final PortletContext portletContext) {
+        final PortletContext portletContext,
+        final PortletDefinition portletDefinition,
+        final Namespace namespace
+        ) {
         
-        super( servletContext, portalRequestInstance.getHttpRequest(), portletPreferences, portletProperties, portletAttributes, renderParameters, portletContext );
+        super(
+            servletContext, portalRequestInstance.getHttpRequest(), portletPreferences,
+            portletProperties, portletAttributes, renderParameters, portletContext,
+            portletDefinition, namespace
+        );
+        
         prepareRequest( parameters, portalRequestInstance, contextPath, portalContext);
     }
 }

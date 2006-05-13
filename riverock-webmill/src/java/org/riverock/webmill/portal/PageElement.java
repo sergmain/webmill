@@ -374,7 +374,9 @@ public final class PageElement {
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext(),
-                portletEntry.getPortletConfig().getPortletContext()
+                portletEntry.getPortletConfig().getPortletContext(),
+                portletEntry.getPortletDefinition(),
+                namespace
             );
 
             // portlet metadata
@@ -426,7 +428,9 @@ public final class PageElement {
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext(),
-                portletEntry.getPortletConfig().getPortletContext()
+                portletEntry.getPortletConfig().getPortletContext(),
+                portletEntry.getPortletDefinition(),
+                namespace
             );
             actionRequest.setAttribute(
                 ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,

@@ -34,6 +34,9 @@ import javax.portlet.PortletRequestDispatcher;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
+/**
+ * Author: Apache group, projects Pluto, License Apache2
+ */
 public final class PortletContextImpl implements PortletContext {
     private final static int PORTLET_API_MAJOR_VERSION = 1;
     private final static int PORTLET_API_MINOR_VERSION = 0;
