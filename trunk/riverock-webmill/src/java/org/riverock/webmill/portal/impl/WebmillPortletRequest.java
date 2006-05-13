@@ -51,10 +51,19 @@ import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
 import org.riverock.generic.tools.servlet.ServletRequestWrapperInclude;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.bean.PortletDefinition;
+import org.riverock.webmill.container.portlet.bean.Supports;
+import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.namespace.NamespaceMapper;
+import org.riverock.webmill.portal.namespace.NamespaceMapperImpl;
 
 /**
+ *
+ * Part of code used from Apache Pluto project, License Apache2
+ *
  * User: SergeMaslyukov
  * Date: 24.12.2004
  * Time: 1:47:18
@@ -78,7 +87,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     private ServletContext servletContext = null;
 
     private PortletPreferences portletPreferences = null;
-    private ServletRequest wrapper = null;
+//    private ServletRequest wrapper = null;
 
     // context path of current portlet
     private String contextPath = null;
@@ -87,6 +96,9 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     private PortletContext portletContext = null;
 
     private Map<String, List<String>> portletProperties = null;
+    private PortletDefinition portletDefinition=null;
+    private Namespace namespace=null;
+    private NamespaceMapper mapper = new NamespaceMapperImpl();
 
     public void destroy() {
         httpRequest = null;
@@ -101,9 +113,19 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         portalContext = null;
     }
 
-    public WebmillPortletRequest(ServletContext servletContext, HttpServletRequest httpServletRequest, PortletPreferences portletPreferences, Map<String, List<String>> portletProperties,final Map<String, Object> portletAttributes, Map<String, List<String>> renderParameters, PortletContext portletContext) {
-        super( new ServletRequestWrapperInclude(httpServletRequest, null, portletAttributes) );
-        wrapper = super.getRequest();
+    public WebmillPortletRequest(
+        final ServletContext servletContext, final HttpServletRequest httpServletRequest,
+        final PortletPreferences portletPreferences, final Map<String, List<String>> portletProperties,
+        final Map<String, Object> portletAttributes, final Map<String, List<String>> renderParameters,
+        final PortletContext portletContext, final PortletDefinition portletDefinition,
+        final Namespace namespace) {
+
+        super( httpServletRequest );
+//        super( new ServletRequestWrapperInclude(httpServletRequest, null, portletAttributes) );
+//        wrapper = super.getRequest();
+
+        this.namespace = namespace;
+        this.portletDefinition = portletDefinition;
         this.portletAttributes = portletAttributes;
         this.servletContext = servletContext;
         this.portletContext = portletContext;
@@ -112,20 +134,26 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.renderParameters = renderParameters;
     }
 
-    public ServletRequest getRequest() {
-        return wrapper;
-    }
+//    public ServletRequest getRequest() {
+//        return wrapper;
+//    }
 
-    public void setRequest(ServletRequest servletRequest) {
-        wrapper = servletRequest;
-    }
+//    public void setRequest(ServletRequest servletRequest) {
+//        wrapper = servletRequest;
+//    }
 
     public boolean isWindowStateAllowed( WindowState windowState ) {
+        for (Enumeration en = portalContext.getSupportedWindowStates();
+                en.hasMoreElements(); ) {
+            if (en.nextElement().toString().equals(windowState.toString())) {
+                return true;
+            }
+        }
         return false;
     }
 
     public boolean isPortletModeAllowed( PortletMode portletMode ) {
-        return false;
+        return (isPortletModeAllowedByPortlet(portletMode) && isPortletModeAllowedByPortal(portletMode));
     }
 
     public PortletMode getPortletMode() {
@@ -185,7 +213,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public String getAuthType() {
-        return null;
+        return HttpServletRequest.FORM_AUTH;
     }
 
     public Cookie[] getCookies() {
@@ -218,10 +246,6 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
     public String getContextPath() {
         return contextPath;
-//        final String realPath = servletContext.getRealPath("/");
-//        File dir = new File(realPath);
-//        return dir.getName();
-//        return super.getContextPath();
     }
 
     public String getRemoteUser() {
@@ -255,7 +279,28 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         if ( !status )
             return false;
 
-        return auth.isUserInRole( role );
+        PortletDefinition def = portletDefinition;
+
+        SecurityRoleRef ref = null;
+        for (SecurityRoleRef r : def.getSecurityRoleRefList()){
+            if (r.getRoleName().equals(role)) {
+                ref = r;
+                break;
+            }
+        }
+
+        String link;
+        if (ref != null && ref.getRoleLink() != null) {
+            link = ref.getRoleLink();
+        } else {
+            link = role;
+        }
+
+        return auth.isUserInRole( link );
+    }
+
+    public HttpServletRequest getHttpServletRequest() {
+        return (HttpServletRequest) super.getRequest();
     }
 
     public Object getAttribute( String key ) {
@@ -266,21 +311,44 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             throw new IllegalArgumentException("Call getAttribute() with key==null");
         }
 
+/*
         Object o = portletAttributes.get( key );
         if (o!=null) {
             return o;
         }
 
         return getRequest().getAttribute(key);
+*/
+        String encodedName = isNameReserved(key) ?
+                key :
+                mapper.encode(namespace, key);
+
+        Object attribute = getHttpServletRequest().getAttribute(encodedName);
+
+        if (attribute == null) {
+            attribute = getHttpServletRequest().getAttribute(key);
+        }
+        return attribute;
     }
 
     public Enumeration getAttributeNames() {
-/*
-        List keys = Collections.list(getRequest().getAttributeNames());
-        keys.addAll( portletAttributes.keySet() );
-        return Collections.enumeration( keys );
-*/
-        return Collections.enumeration( portletAttributes.keySet() );
+//        return Collections.enumeration( portletAttributes.keySet() );
+
+        Enumeration attributes = this.getHttpServletRequest().getAttributeNames();
+
+        List portletAttributes = new ArrayList();
+
+        while (attributes.hasMoreElements()) {
+            String attribute = (String) attributes.nextElement();
+
+            String portletAttribute = mapper.decode(namespace, attribute);
+
+            if (portletAttribute != null) { // it is in the portlet's namespace
+                portletAttributes.add(portletAttribute);
+            }
+        }
+
+        return Collections.enumeration( portletAttributes );
     }
 
     public void setAttribute( String key, Object value ) {
@@ -292,20 +360,26 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             throw new IllegalArgumentException("Call setAttribute() with key==null");
         }
 
-        if ( value==null ) {
-            removeAttribute( key );
+//        if ( value==null ) {
+//            removeAttribute( key );
+//        }
+//        portletAttributes.put( key, value );
+        String encodedName = isNameReserved(key) ?
+                key : mapper.encode(namespace, key);
+        if (value == null) {
+            removeAttribute(key);
+        } else {
+            getHttpServletRequest().setAttribute(encodedName, value);
         }
-//        getRequest().setAttribute(key, value);
-        portletAttributes.put( key, value );
     }
 
     public void removeAttribute( String key ) {
         if (key==null) {
             throw new IllegalArgumentException("Call removeAttribute() with null");
         }
-
-//        getRequest().removeAttribute( key );
-        portletAttributes.remove( key );
+//        portletAttributes.remove( key );
+        String encodedName = isNameReserved(key) ? key : mapper.encode(namespace, key);
+        getHttpServletRequest().removeAttribute(encodedName);
     }
 
     public String getParameter( String key ) {
@@ -613,6 +687,12 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
     }
 
+    // Private methods
+
+    private boolean isNameReserved(String name) {
+        return name.startsWith("java.") || name.startsWith("javax.");
+    }
+
     private static void dumpMap(Map<String, List<String>> params, String info) {
         if (!log.isDebugEnabled()) {
             return;
@@ -638,5 +718,35 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
                 log.debug("        value: " + anArr);
             }
         }
+    }
+
+    private boolean isPortletModeAllowedByPortlet(PortletMode mode) {
+        if (isPortletModeMandatory(mode)) {
+            return true;
+        }
+
+        for (Supports modes : portletDefinition.getSupports()) {
+            for (String m : modes.getPortletMode()) {
+                if (m.equals(mode.toString())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isPortletModeAllowedByPortal(PortletMode mode) {
+        Enumeration supportedModes = portalContext.getSupportedPortletModes();
+        while (supportedModes.hasMoreElements()) {
+            if (supportedModes.nextElement().toString().equals(
+                    (mode.toString()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPortletModeMandatory(PortletMode mode) {
+        return PortletMode.VIEW.equals(mode) || PortletMode.EDIT.equals(mode) || PortletMode.HELP.equals(mode);
     }
 }

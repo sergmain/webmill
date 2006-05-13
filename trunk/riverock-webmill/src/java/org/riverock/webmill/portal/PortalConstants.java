@@ -34,4 +34,6 @@ package org.riverock.webmill.portal;
 public class PortalConstants {
     public static final String PORTAL_NAMESPACE_PARAMETER = "mill.ns";
     public static final String WEBMILL_GUEST_ROLE = "webmill.guest";
+
+    public static final String JAVAX_PORTLET_WEBMILL_PREFIX = "javax.portlet.webmillt";
 }

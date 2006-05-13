@@ -70,6 +70,7 @@ public class PortalOfflineMarkupProcessor {
         }
 
         try {
+/*
             InputSource inSrc = new InputSource( new FileInputStream( file ) );
             Sites sites = (Sites) Unmarshaller.unmarshal( Sites.class, inSrc );
 
@@ -182,8 +183,9 @@ public class PortalOfflineMarkupProcessor {
                         processMenu( siteLanguage, catalogLanguageItem, (List<MenuType>)menuGroup.getMenuAsReference(), 0L );
                     }
                 }
-
             }
+*/
+
         } catch (Throwable e) {
             String es = "Error process config file: "+file.getAbsolutePath();
             log.error(es, e);
