@@ -43,32 +43,33 @@ public class PostAction implements Action {
         }
         if ( lastPortTime!=null ) {
             int floodTime = ForumPortlet.getFloodTime( forumActionBean.getConfig() );
-            if ((System.currentTimeMillis()-lastPortTime.longValue()) < floodTime * 1000) {
+            if ((System.currentTimeMillis()- lastPortTime) < floodTime * 1000) {
                 return ForumError.floodError(forumActionBean);
             }
         }
-        sess.setAttribute(Constants.LAST_POST_TIME, new Long(System.currentTimeMillis()) );
+        sess.setAttribute(Constants.LAST_POST_TIME, System.currentTimeMillis() );
 
-        PostBean postBean = null;
         if (log.isDebugEnabled()) {
             log.debug("reply: " + reply);
             log.debug("t_id: " + t_id);
         }
+        PostBean postBean;
         if (reply) {
-            postBean = postDAO.reply(forumActionBean.getForumId(), t_id.intValue());
+            postBean = postDAO.reply(forumActionBean.getForumId(), t_id);
             if (postBean != null && postBean.getT_locked() > 0) {
                 return ForumError.topicLockedError(forumActionBean);
             }
         } else {
-            postBean = postDAO.post(forumActionBean.getForumId(), f_id.intValue());
-        }
-        postBean.setForumId( forumActionBean.getForumId() );
-
-        if (log.isDebugEnabled()) {
-            log.debug("postBean: " + postBean);
+            postBean = postDAO.post(forumActionBean.getForumId(), f_id);
         }
 
         if (postBean != null) {
+            postBean.setForumId( forumActionBean.getForumId() );
+
+            if (log.isDebugEnabled()) {
+                log.debug("postBean: " + postBean);
+            }
+
             postBean.setReply(reply);
             forumActionBean.getRequest().setAttribute("postBean", postBean);
             return Constants.OK_EXECUTE_STATUS;
