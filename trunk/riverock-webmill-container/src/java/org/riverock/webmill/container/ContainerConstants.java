@@ -42,38 +42,38 @@ public class ContainerConstants {
     public final static String NAME_TEMPLATE_CONTEXT_PARAM    = "mill.template";
 
 
-    public static final String PORTAL_QUERY_METHOD_ATTRIBUTE = "javax.portlet.webmill.PORTAL_QUERY_METHOD_ATTRIBUTE";
-    public static final String PORTAL_COOKIE_MANAGER_ATTRIBUTE = "javax.portlet.webmill.PORTAL_COOKIE_MANAGER_ATTRIBUTE";
+    public static final String PORTAL_QUERY_METHOD_ATTRIBUTE = "org.riverock.webmill.PORTAL_QUERY_METHOD_ATTRIBUTE";
+    public static final String PORTAL_COOKIE_MANAGER_ATTRIBUTE = "org.riverock.webmill.PORTAL_COOKIE_MANAGER_ATTRIBUTE";
 
-    public static final String PORTAL_QUERY_STRING_ATTRIBUTE = "javax.portlet.webmill.PORTAL_QUERY_STRING_ATTRIBUTE";
-    public static final String PORTAL_COOKIES_ATTRIBUTE = "javax.portlet.webmill.PORTAL_COOKIES_ATTRIBUTE";
-    public static final String PORTAL_AUTH_ATTRIBUTE = "javax.portlet.webmill.PORTAL_AUTH_ATTRIBUTE";
-    public static final String PORTAL_RESOURCE_BUNDLE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE";
-    public static final String PORTAL_TEMPLATE_NAME_ATTRIBUTE = "javax.portlet.webmill.PORTAL_TEMPLATE_NAME_ATTRIBUTE";
+    public static final String PORTAL_QUERY_STRING_ATTRIBUTE = "org.riverock.webmill.PORTAL_QUERY_STRING_ATTRIBUTE";
+    public static final String PORTAL_COOKIES_ATTRIBUTE = "org.riverock.webmill.PORTAL_COOKIES_ATTRIBUTE";
+    public static final String PORTAL_AUTH_ATTRIBUTE = "org.riverock.webmill.PORTAL_AUTH_ATTRIBUTE";
+    public static final String PORTAL_RESOURCE_BUNDLE_ATTRIBUTE = "org.riverock.webmill.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE";
+    public static final String PORTAL_TEMPLATE_NAME_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_NAME_ATTRIBUTE";
 
-    public static final String PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE = "javax.portlet.webmill.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE";
-    public static final String PORTAL_PORTLET_METADATA_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_METADATA_ATTRIBUTE";
+    public static final String PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE = "org.riverock.webmill.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE";
+    public static final String PORTAL_PORTLET_METADATA_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_METADATA_ATTRIBUTE";
 
     /** value of current catalog item id (id of menu item) */
-    public static final String PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE = "javax.portlet.webmill.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE";
-    public static final String PORTAL_PORTLET_CONFIG_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_CONFIG_ATTRIBUTE";
-    public static final String PORTAL_PORTAL_CONTEXT_PATH = "javax.portlet.webmill.PORTAL_PORTAL_CONTEXT_PATH";
-    public static final String PORTAL_CURRENT_CONTAINER = "javax.portlet.webmill.PORTAL_CURRENT_CONTAINER";
-    public static final String PORTAL_PORTAL_DAO_PROVIDER = "javax.portlet.webmill.PORTAL_PORTAL_DAO_PROVIDER";
-    public static final String PORTAL_PORTAL_SESSION_MANAGER = "javax.portlet.webmill.PORTAL_PORTAL_SESSION_MANAGER";
-    public static final String PORTAL_PORTLET_NAMESPACE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_NAMESPACE_ATTRIBUTE";
+    public static final String PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE = "org.riverock.webmill.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE";
+    public static final String PORTAL_PORTLET_CONFIG_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_CONFIG_ATTRIBUTE";
+    public static final String PORTAL_PORTAL_CONTEXT_PATH = "org.riverock.webmill.PORTAL_PORTAL_CONTEXT_PATH";
+    public static final String PORTAL_CURRENT_CONTAINER = "org.riverock.webmill.PORTAL_CURRENT_CONTAINER";
+    public static final String PORTAL_PORTAL_DAO_PROVIDER = "org.riverock.webmill.PORTAL_PORTAL_DAO_PROVIDER";
+    public static final String PORTAL_PORTAL_SESSION_MANAGER = "org.riverock.webmill.PORTAL_PORTAL_SESSION_MANAGER";
+    public static final String PORTAL_PORTLET_NAMESPACE_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_NAMESPACE_ATTRIBUTE";
 
 
-    public static final String PORTAL_REMOTE_ADDRESS_ATTRIBUTE = "javax.portlet.webmill.PORTAL_REMOTE_ADDRESS_ATTRIBUTE";
-    public static final String PORTAL_USER_AGENT_ATTRIBUTE = "javax.portlet.webmill.PORTAL_USER_AGENT_ATTRIBUTE";
+    public static final String PORTAL_REMOTE_ADDRESS_ATTRIBUTE = "org.riverock.webmill.PORTAL_REMOTE_ADDRESS_ATTRIBUTE";
+    public static final String PORTAL_USER_AGENT_ATTRIBUTE = "org.riverock.webmill.PORTAL_USER_AGENT_ATTRIBUTE";
 
-    public static final String PORTAL_PORTLET_CODE_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_CODE_ATTRIBUTE";
-    public static final String PORTAL_PORTLET_XML_ROOT_ATTRIBUTE = "javax.portlet.webmill.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE";
+    public static final String PORTAL_PORTLET_CODE_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_CODE_ATTRIBUTE";
+    public static final String PORTAL_PORTLET_XML_ROOT_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE";
 
-    public static final String PORTAL_INFO_ATTRIBUTE = "javax.portlet.webmill.PORTAL_INFO_ATTRIBUTE";
+    public static final String PORTAL_INFO_ATTRIBUTE = "org.riverock.webmill.PORTAL_INFO_ATTRIBUTE";
 
     public static final String type_portlet = "type-portlet";
-    public static final String is_url = "is-url";
+//    public static final String is_url = "is-url";
     public static final String is_xml = "is-xml";
     public static final String name_portlet_id = "name-portlet-id";
     public static final String locale_name_package = "locale-name-package";

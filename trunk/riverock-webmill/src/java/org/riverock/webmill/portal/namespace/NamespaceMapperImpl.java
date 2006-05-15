@@ -1,7 +1,5 @@
 package org.riverock.webmill.portal.namespace;
 
-import org.riverock.webmill.portal.PortalConstants;
-
 /**
  *  Part of code used from Apache Pluto project, License Apache2
  *
@@ -11,6 +9,7 @@ import org.riverock.webmill.portal.PortalConstants;
  *         $Id$
  */
 public class NamespaceMapperImpl implements NamespaceMapper {
+    private static final String WEBMILL_PREFIX = "Webmill_";
 
     public NamespaceMapperImpl() {
     }
@@ -19,7 +18,7 @@ public class NamespaceMapperImpl implements NamespaceMapper {
 
     public String encode(Namespace namespace, String name) {
         StringBuffer buffer = new StringBuffer(50);
-        buffer.append("Webmill");
+        buffer.append(WEBMILL_PREFIX);
         buffer.append(namespace.getNamespace());
         buffer.append('_');
         buffer.append(name);
@@ -30,7 +29,7 @@ public class NamespaceMapperImpl implements NamespaceMapper {
                          Namespace namespace2,
                          String name) {
         StringBuilder buffer = new StringBuilder(50);
-        buffer.append("Webmill");
+        buffer.append(WEBMILL_PREFIX);
         buffer.append(namespace1.getNamespace());
         buffer.append('_');
         buffer.append(namespace2.getNamespace());
@@ -40,11 +39,11 @@ public class NamespaceMapperImpl implements NamespaceMapper {
     }
 
     public String decode(Namespace namespace, String name) {
-        if (!name.startsWith("Webmill")) {
+        if (!name.startsWith(WEBMILL_PREFIX)) {
             return null;
         }
         StringBuilder buffer = new StringBuilder(50);
-        buffer.append("Webmill");
+        buffer.append(WEBMILL_PREFIX);
         buffer.append(namespace.getNamespace());
         buffer.append('_');
         if (!name.startsWith(buffer.toString())) {
