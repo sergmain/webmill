@@ -346,10 +346,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>mill.upload_price</portlet-name>
 		<portlet-class>org.riverock.portlet.shop.upload.UploadPricePortlet</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
@@ -538,6 +534,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+<!--
 	<portlet>
 		<portlet-name>mill.image.step_file</portlet-name>
 		<portlet-class>/mill.image_select_file</portlet-class>
@@ -552,6 +549,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.image.select_url</portlet-name>
 		<portlet-class>/mill.image_select_url</portlet-class>
@@ -566,6 +565,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.image.desc</portlet-name>
 		<portlet-class>/mill.image_description</portlet-class>
@@ -580,6 +581,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.image.list</portlet-name>
 		<portlet-class>/mill.image_list</portlet-class>
@@ -594,6 +597,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.image.index</portlet-name>
 		<portlet-class>/mill.image_index</portlet-class>
@@ -608,6 +613,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.price.index</portlet-name>
 		<portlet-class>/mill.price_edit_index</portlet-class>
@@ -622,6 +629,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.price.description</portlet-name>
 		<portlet-class>/mill.price_edit_description</portlet-class>
@@ -636,6 +645,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.price.shop</portlet-name>
 		<portlet-class>/mill.price_edit_shop</portlet-class>
@@ -650,6 +661,8 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
+<!--
 	<portlet>
 		<portlet-name>mill.price.image</portlet-name>
 		<portlet-class>/mill.price_edit_image</portlet-class>
@@ -664,4 +677,5 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
+-->
 </portlet-app>

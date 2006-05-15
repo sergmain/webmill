@@ -30,16 +30,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.PortletRequestDispatcher;
-import javax.servlet.RequestDispatcher;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.bean.SitePortletData;
-import org.riverock.webmill.container.impl.PortletRequestDispatcherImpl;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.PortletEntry;
 import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
@@ -60,6 +56,8 @@ import org.riverock.webmill.utils.PortletUtils;
 public final class PageElement {
     private final static Logger log = Logger.getLogger( PageElement.class );
 
+    private static final String ACCESS_DISABLED_FOR_PORTLET = "Access disabled in portlet.xml";
+
     private Throwable exception = null;
     private String errorString = null;
 
@@ -71,7 +69,7 @@ public final class PageElement {
 
     private PortletEntry portletEntry = null;
     private PortalTemplateItem portalTemplateItem = null;
-    private boolean isUrl = false;
+//    private boolean isUrl = false;
     private boolean isXml = false;
     private PortletParameters parameters = null;
     private boolean isRedirected = false;
@@ -83,12 +81,6 @@ public final class PageElement {
      * renderParameter used for set parameters in action
      */
     private Map<String, List<String>> renderParameters = new HashMap<String, List<String>>();
-    /*
-     *
-     */
-    private Map<String, Object> portletAttributes = new HashMap<String, Object>();
-    private static final String ACCESS_DISABLED_FOR_PORTLET = "Access disabled in portlet.xml";
-
     private PortletContainer portletContainer = null;
 
     public PageElement(PortletContainer portletContainer, Namespace namespace,
@@ -138,10 +130,11 @@ public final class PageElement {
 
     void processActionPortlet() {
 
-        if (isUrl || exception!=null || errorString!=null) {
+//        if (isUrl || exception!=null || errorString!=null) {
+        if (exception!=null || errorString!=null) {
             if ( log.isDebugEnabled() ) {
-                log.debug("isUrl" + isUrl + ", exception: " + exception + ", errorString: "+ errorString );
-                log.debug("isAccessPermit" + isAccessPermit );
+//                log.debug("isUrl" + isUrl + ", exception: " + exception + ", errorString: "+ errorString );
+                log.debug("exception: " + exception + ", errorString: "+ errorString +", isAccessPermit: " + isAccessPermit );
             }
             return;
         }
@@ -201,31 +194,31 @@ public final class PageElement {
                 final ClassLoader classLoader = portletEntry.getClassLoader();
                 Thread.currentThread().setContextClassLoader(classLoader);
 
-                if (!isUrl) {
+//                if (!isUrl) {
                     portletEntry.getPortlet().render(renderRequest, renderResponse);
-                }
-                else {
-
-                    RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher(portletEntry.getPortletDefinition().getPortletClass());
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("#91.1");
-                        log.debug("process url: " + portletEntry.getPortletDefinition().getPortletClass());
-                        log.debug("ServletContext: " + portletEntry.getServletConfig().getServletContext());
-                        log.debug("RequestDispatcher: " + rd);
-                    }
-
-                    PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl(rd);
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("#91.4");
-                    }
-                    dispatcher.include(renderRequest, renderResponse);
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("#91.5");
-                    }
-                }
+//                }
+//                else {
+//
+//                    RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher(portletEntry.getPortletDefinition().getPortletClass());
+//
+//                    if (log.isDebugEnabled()) {
+//                        log.debug("#91.1");
+//                        log.debug("process url: " + portletEntry.getPortletDefinition().getPortletClass());
+//                        log.debug("ServletContext: " + portletEntry.getServletConfig().getServletContext());
+//                        log.debug("RequestDispatcher: " + rd);
+//                    }
+//
+//                    PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl(rd);
+//
+//                    if (log.isDebugEnabled()) {
+//                        log.debug("#91.4");
+//                    }
+//                    dispatcher.include(renderRequest, renderResponse);
+//
+//                    if (log.isDebugEnabled()) {
+//                        log.debug("#91.5");
+//                    }
+//                }
 
             }
             finally {
@@ -326,9 +319,9 @@ public final class PageElement {
             }
 
             isXml = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_xml, Boolean.FALSE);
-            isUrl = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
+//            isUrl = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
 
-            if (!isUrl) {
+//            if (!isUrl) {
                 if (log.isDebugEnabled())
                     log.debug("Start create instance of portlet '" + portletName + "'");
 
@@ -343,7 +336,7 @@ public final class PageElement {
                 if (portletEntry.getPortlet() == null) {
                     errorString = "Portlet '" + portletName + "' not created for unknown reason.";
                 }
-            }
+//            }
 
             if (log.isDebugEnabled()) {
                 log.debug("Error message of create portlet instance: " + errorString);
@@ -369,7 +362,6 @@ public final class PageElement {
                 portalRequestInstance,
                 renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes,
                 contextPath,
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
@@ -388,7 +380,7 @@ public final class PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
             renderRequest.setAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE, portalTemplateItem.getParameters() );
 
-            // todo current implementation not support current catalog ID
+            // todo current implementation not support 'current catalog ID'
 //            renderRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE, portalRequestInstance.getDefaultCtx().getCtx().getCatalogItemId() );
 
             // Todo after rewrite(delete) member portlet, you can delete next line
@@ -400,8 +392,11 @@ public final class PageElement {
                 log.debug("parameters: "+parameters);
             }
             renderResponse = new RenderResponseImpl(
-                portalRequestInstance, renderRequest, portalRequestInstance.getHttpResponse(),
-                namespace, portletEntry.getPortletProperties(),
+                portalRequestInstance,
+                renderRequest,
+                portalRequestInstance.getHttpResponse(),
+                namespace,
+                portletEntry.getPortletProperties(),
                 parameters.getRequestState(),
                 portletEntry.getPortletDefinition().getFullPortletName()
             );
@@ -423,7 +418,6 @@ public final class PageElement {
                 actionRequestParamMap,
                 portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
-                portletAttributes,
                 contextPath,
                 portletEntry.getPortletDefinition().getPortletPreferences(),
                 portletEntry.getPortletProperties(),
@@ -470,31 +464,25 @@ public final class PageElement {
                 log.debug("Done init page element ");
             }
 
-            if (!isUrl && portletEntry.getPortletDefinition() != null) {
+//            if (!isUrl && portletEntry.getPortletDefinition() != null) {
+            if (portletEntry.getPortletDefinition() != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("portlet: " + portletEntry.getPortletDefinition().getPortletName());
+                }
                 if (!portletEntry.getPortletDefinition().getSecurityRoleRefList().isEmpty()) {
                     isAccessPermit = false;
                     errorString = ACCESS_DISABLED_FOR_PORTLET;
                     for (SecurityRoleRef roleRef : portletEntry.getPortletDefinition().getSecurityRoleRefList()) {
 
                         if (log.isDebugEnabled()) {
-                            log.debug("check right " + roleRef.getRoleName() + ", portlet: " + portletEntry.getPortletDefinition().getPortletName());
+                            log.debug("SecurityRoleRef.roleName: " + roleRef.getRoleName() + ", SecurityRoleRef.roleLink: " + roleRef.getRoleLink());
                         }
-                        if (renderRequest.isUserInRole(roleRef.getRoleName())) {
+
+                        if (renderRequest.isUserInRole(roleRef.getRoleLink()!=null ? roleRef.getRoleLink() : roleRef.getRoleName())) {
                             isAccessPermit = true;
                             errorString = null;
                             break;
                         }
-/*
-                    RoleLinkType roleLink = roleRef.getRoleLink();
-                    if (roleLink!=null) {
-                        if (actionRequest.isUserInRole( roleLink.getContent() ) ) {
-                            isAccessPermit = true;
-                            break;
-                        }
-                    }
-                    else
-                    {
-*/
                     }
                 }
             }
@@ -547,10 +535,6 @@ public final class PageElement {
 
     public PortletEntry getPortletEntry() {
         return portletEntry;
-    }
-
-    public boolean getIsUrl() {
-        return isUrl;
     }
 
     public PortalTemplateItem getPortalTemplateItem() {

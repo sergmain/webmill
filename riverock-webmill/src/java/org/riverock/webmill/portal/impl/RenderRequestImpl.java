@@ -46,24 +46,23 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  */
 public final class RenderRequestImpl extends WebmillPortletRequest implements RenderRequest {
 
-    public RenderRequestImpl( 
+    public RenderRequestImpl(
         final Map<String, List<String>> parameters,
-        final PortalRequestInstance portalRequestInstance, 
+        final PortalRequestInstance portalRequestInstance,
         final Map<String, List<String>> renderParameters,
-        final ServletContext servletContext, 
-        final Map<String, Object> portletAttributes, 
-        final String contextPath, 
-        final PortletPreferences portletPreferences, 
+        final ServletContext servletContext,
+        final String contextPath,
+        final PortletPreferences portletPreferences,
         final Map<String, List<String>> portletProperties,
         final PortalContext portalContext,
         final PortletContext portletContext,
         final PortletDefinition portletDefinition,
         final Namespace namespace
-        ) {
+    ) {
         
         super(
             servletContext, portalRequestInstance.getHttpRequest(), portletPreferences,
-            portletProperties, portletAttributes, renderParameters, portletContext,
+            portletProperties, renderParameters, portletContext,
             portletDefinition, namespace
         );
         

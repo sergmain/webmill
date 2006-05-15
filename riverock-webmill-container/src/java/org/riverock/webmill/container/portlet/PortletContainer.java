@@ -47,7 +47,6 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.PortletPreferencesImpl;
 import org.riverock.webmill.container.resource.PortletResourceBundle;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * User: serg_main
@@ -261,15 +260,15 @@ public final class PortletContainer implements Serializable {
 
         PortletEntry obj = portletInstanceMap.get( portletName );
         if (obj!=null) {
-            boolean isNotUrl = !PortletService.getBooleanParam(obj.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
-            if (isNotUrl) {
+//            boolean isNotUrl = !PortletService.getBooleanParam(obj.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
+//            if (isNotUrl) {
                 if( obj.getPortlet()!=null || obj.getIsWait() ) {
                     return obj;
                 }
-            }
-            else {
-                return obj;
-            }
+//            }
+//            else {
+//                return obj;
+//            }
         }
         synchronized (syncObect) {
             digestWaitedPortletFile();
@@ -329,8 +328,8 @@ public final class PortletContainer implements Serializable {
             PortletConfig portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
 
             Portlet object = null;
-            boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
-            if ( isNotUrl ) {
+//            boolean isNotUrl = !PortletService.getBooleanParam(portletDefinition, ContainerConstants.is_url, Boolean.FALSE);
+//            if ( isNotUrl ) {
                 Constructor constructor;
                 try {
                     final Class<?> aClass = classLoader.loadClass( portletDefinition.getPortletClass());
@@ -374,10 +373,10 @@ containing the portlet is restarted.
 
                     return new PortletEntry(portletDefinition, ue);
                 }
-            }
-            else {
-//        	System.out.println("Portlet is url, resourceBundle: " + resourceBundle );
-            }
+//            }
+//            else {
+////        	System.out.println("Portlet is url, resourceBundle: " + resourceBundle );
+//            }
 
             return new PortletEntry(portletDefinition, portletConfig, object, portletWebApplication.getServletConfig(), portletWebApplication.getClassLoader(), portletWebApplication.getUniqueName() );
         }
