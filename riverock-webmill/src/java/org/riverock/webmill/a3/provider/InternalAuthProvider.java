@@ -32,140 +32,336 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
     private InternalCompanyDao companyDao = InternalDaoFactory.getInternalCompanyDao();
     private InternalHoldingDao internalHoldingDao = InternalDaoFactory.getInternalHoldingDao();
 
+    private ClassLoader classLoader = null;
+
     public InternalAuthProvider() {
+//        this.classLoader = classLoader;
+        // Todo remove hack with getting classLoader ref
+        this.classLoader = Thread.currentThread().getContextClassLoader();
     }
 
     public boolean checkAccess( AuthSession authSession, final String serverName ) {
-        return authDao.checkAccess( authSession.getUserLogin(), authSession.getUserPassword(), serverName );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.checkAccess( authSession.getUserLogin(), authSession.getUserPassword(), serverName );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void setParameters(List<List<AuthParameterBean>> params) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public boolean isUserInRole( AuthSession authSession, final String role_ ) {
-        return authDao.isUserInRole(authSession.getUserLogin(), authSession.getUserPassword(), role_);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.isUserInRole(authSession.getUserLogin(), authSession.getUserPassword(), role_);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public UserInfo getUserInfo( AuthSession authSession ) {
-        return authDao.getUserInfo( authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getUserInfo( authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public String getGrantedUserId( AuthSession authSession ) {
-        return authDao.getGrantedUserId( authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getGrantedUserId( authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Long> getGrantedUserIdList( AuthSession authSession ) {
-        return authDao.getGrantedUserIdList( authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getGrantedUserIdList( authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public String getGrantedCompanyId( AuthSession authSession ) {
-        return authDao.getGrantedCompanyId( authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getGrantedCompanyId( authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Long> getGrantedCompanyIdList( AuthSession authSession ) {
-        return authDao.getGrantedCompanyIdList( authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getGrantedCompanyIdList( authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
-//    public String getGrantedGroupCompanyId( AuthSession authSession ) {
-//        return authDao.getGrantedGroupCompanyId( authSession.getUserLogin() );
-//    }
-
-//    public List<Long> getGrantedGroupCompanyIdList( AuthSession authSession ) {
-//        return authDao.getGrantedGroupCompanyIdList( authSession.getUserLogin() );
-//    }
-
     public String getGrantedHoldingId( AuthSession authSession ) {
-        return authDao.getGrantedHoldingId( authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getGrantedHoldingId( authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Long> getGrantedHoldingIdList( AuthSession authSession ) {
-        return authDao.getGrantedHoldingIdList( authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getGrantedHoldingIdList( authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long checkCompanyId(Long companyId , AuthSession authSession ) {
-        return authDao.checkCompanyId( companyId, authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.checkCompanyId( companyId, authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
-//    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession ) {
-//        return authDao.checkGroupCompanyId( groupCompanyId, authSession.getUserLogin() );
-//    }
-
     public Long checkHoldingId(Long holdingId, AuthSession authSession ) {
-        return authDao.checkHoldingId( holdingId, authSession.getUserLogin() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.checkHoldingId( holdingId, authSession.getUserLogin() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public boolean checkRigthOnUser(Long id_auth_user_check, Long id_auth_user_owner) {
-        return authDao.checkRigthOnUser( id_auth_user_check, id_auth_user_owner );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.checkRigthOnUser( id_auth_user_check, id_auth_user_owner );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public AuthInfo getAuthInfo(AuthSession authSession) {
-        return authDao.getAuthInfo( authSession.getUserLogin(), authSession.getUserPassword() );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getAuthInfo( authSession.getUserLogin(), authSession.getUserPassword() );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<AuthInfo> getAuthInfoList(AuthSession authSession) {
-        return authDao.getAuthInfoList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getAuthInfoList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public AuthInfo getAuthInfo(AuthSession authSession, Long authUserId) {
-        final AuthInfo currentAuthInfo = getAuthInfo( authSession );
-        final AuthInfo authInfo = authDao.getAuthInfo( authUserId );
-        if( currentAuthInfo==null || authInfo==null ||
-            !checkRigthOnUser(currentAuthInfo.getAuthUserId(), authInfo.getAuthUserId() ) ) {
-            return null;
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+
+            final AuthInfo currentAuthInfo = getAuthInfo( authSession );
+            final AuthInfo authInfo = authDao.getAuthInfo( authUserId );
+            if( currentAuthInfo==null || authInfo==null ||
+                !checkRigthOnUser(currentAuthInfo.getAuthUserId(), authInfo.getAuthUserId() ) ) {
+                return null;
+            }
+            return authInfo;
         }
-        return authInfo;
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public RoleBean getRole( AuthSession authSession , Long roleId) {
-        return authDao.getRole( authSession, roleId );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getRole( authSession, roleId );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<RoleBean> getUserRoleList( AuthSession authSession ) {
-        return authDao.getUserRoleList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getUserRoleList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<RoleBean> getRoleList( AuthSession authSession ) {
-        return authDao.getRoleList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getRoleList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<RoleBean> getRoleList(AuthSession authSession, Long authUserId) {
-        return authDao.getRoleList( authSession, authUserId );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getRoleList( authSession, authUserId );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long addRole( AuthSession authSession, RoleBean roleBean) {
-        return authDao.addRole( authSession, roleBean );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.addRole( authSession, roleBean );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateRole( AuthSession authSession, RoleBean roleBean ) {
-        authDao.updateRole( authSession, roleBean );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            authDao.updateRole( authSession, roleBean );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deleteRole( AuthSession authSession, RoleBean roleBean ) {
-        authDao.deleteRole( authSession, roleBean );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            authDao.deleteRole( authSession, roleBean );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-        return authDao.addUser( authSession, infoAuth );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.addUser( authSession, infoAuth );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-        authDao.updateUser( authSession, infoAuth );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            authDao.updateUser( authSession, infoAuth );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-        authDao.deleteUser( authSession, infoAuth );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            authDao.deleteUser( authSession, infoAuth );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<UserInfo> getUserList(AuthSession authSession) {
-        return authDao.getUserList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return authDao.getUserList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Company> getCompanyList(AuthSession authSession) {
-        return companyDao.getCompanyList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return companyDao.getCompanyList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Holding> getHoldingList(AuthSession authSession) {
-        return internalHoldingDao.getHoldingList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return internalHoldingDao.getHoldingList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
-
 }

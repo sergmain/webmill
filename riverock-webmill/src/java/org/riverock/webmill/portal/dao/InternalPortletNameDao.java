@@ -10,4 +10,5 @@ import org.riverock.interfaces.portal.bean.PortletName;
 public interface InternalPortletNameDao {
     public PortletName getPortletName(Long portletId);
     public PortletName getPortletName(String portletName);
+    public Long createPortletName(PortletName portletName);
 }

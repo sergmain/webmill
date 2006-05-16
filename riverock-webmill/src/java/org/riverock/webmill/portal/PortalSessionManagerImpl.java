@@ -23,7 +23,7 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
 
     PortalSessionManagerImpl( ClassLoader classLoader, ActionRequest actionRequest ) {
         this.actionRequest = actionRequest;
-	this.classLoader = classLoader;
+        this.classLoader = classLoader;
     }
 
     public boolean createSession(String userLogin, String userPassword) {
@@ -32,45 +32,45 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
 
-	if (log.isDebugEnabled()) {
-		ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            if (log.isDebugEnabled()) {
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
                 log.debug("PortalSessionManagerImpl class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
-	}
+            }
 
-        PortletSession session = actionRequest.getPortletSession();
-        AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
+            PortletSession session = actionRequest.getPortletSession();
+            AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
 
-        // don't check if login or password is null.
-        if ( StringUtils.isEmpty(userLogin) || StringUtils.isEmpty(userLogin) ) {
-            return false;
-        }
+            // don't check if login or password is null.
+            if ( StringUtils.isEmpty(userLogin) || StringUtils.isEmpty(userLogin) ) {
+                return false;
+            }
 
-        if (auth_==null) {
-            auth_ = new AuthSessionImpl( userLogin, userPassword );
-        }
+            if (auth_==null) {
+                auth_ = new AuthSessionImpl( userLogin, userPassword );
+            }
 
-	if (log.isDebugEnabled()) {
-		ClassLoader cl = auth_.getClass().getClassLoader();
+            if (log.isDebugEnabled()) {
+                ClassLoader cl = auth_.getClass().getClassLoader();
                 log.debug("AuthSessionImpl class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
-	}
+            }
 
-        final boolean checkAccess = auth_.checkAccess( actionRequest.getServerName() );
-        if ( log.isDebugEnabled() ) {
-            log.debug(
-                "checkAccess status for server name '"+actionRequest.getServerName()+"' " +
-                " is " + checkAccess + ", auth: " + auth_ );
+            final boolean checkAccess = auth_.checkAccess( actionRequest.getServerName() );
+            if ( log.isDebugEnabled() ) {
+                log.debug(
+                    "checkAccess status for server name '"+actionRequest.getServerName()+"' " +
+                        " is " + checkAccess + ", auth: " + auth_ );
+            }
+            if (checkAccess) {
+                session.setAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, auth_);
+                return true;
+            }
+            else {
+                session.removeAttribute( org.riverock.sso.main.Constants.AUTH_SESSION );
+                return false;
+            }
         }
-        if (checkAccess) {
-            session.setAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, auth_);
-            return true;
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
         }
-        else {
-            session.removeAttribute( org.riverock.sso.main.Constants.AUTH_SESSION );
-            return false;
-        }
-                }
-                finally {
-                    Thread.currentThread().setContextClassLoader( oldLoader );
-                }
     }
 }

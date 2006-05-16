@@ -73,13 +73,13 @@ public final class LoginUtils {
         }
 
         PortalSessionManager sessionManager = (PortalSessionManager)actionRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER );
-	if (log.isDebugEnabled()) {
-        	ClassLoader cl = Thread.currentThread().getContextClassLoader();
-		log.debug("LoginUtils classLoader: "+cl+"\nhash: "+cl.hashCode() );
-		ClassLoader ccl = sessionManager.getClass().getClassLoader();
-		log.debug("PortalSessionManager impl classLoader: "+ccl+"\nhash: "+ccl.hashCode() );
-	}
 
+        if (log.isDebugEnabled()) {
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            log.debug("LoginUtils classLoader: "+cl+"\nhash: "+cl.hashCode() );
+            ClassLoader ccl = sessionManager.getClass().getClassLoader();
+            log.debug("PortalSessionManager impl classLoader: "+ccl+"\nhash: "+ccl.hashCode() );
+        }
 
         boolean checkAccess = sessionManager.createSession( login, password );
 

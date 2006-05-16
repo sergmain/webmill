@@ -56,7 +56,7 @@ import org.riverock.webmill.utils.PortletUtils;
 public final class PageElement {
     private final static Logger log = Logger.getLogger( PageElement.class );
 
-    private static final String ACCESS_DISABLED_FOR_PORTLET = "Access disabled in portlet.xml";
+    private static final String ACCESS_DISABLED_FOR_PORTLET = "Access denied";
 
     private Throwable exception = null;
     private String errorString = null;
@@ -160,7 +160,7 @@ public final class PageElement {
 
             if ( e.getMessage()==null || !e.getMessage().contains(notImpl) ) {
                 log.error("Exception: ", e);
-	    }
+            }
         }
     }
 

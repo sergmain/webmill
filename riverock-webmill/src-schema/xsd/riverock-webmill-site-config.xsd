@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serge (Home) -->
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serg (Home) -->
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:webmill-core="http://webmill.riverock.org/xsd/riverock-webmill-core.xsd">
 	<xs:element name="Sites">
 		<xs:annotation>
@@ -17,13 +17,14 @@
 			<xs:element name="SiteInstance" type="SiteInstanceType" minOccurs="0"/>
 			<xs:element name="SiteLanguage" type="SiteLanguageType" maxOccurs="unbounded"/>
 		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="SiteInstanceType">
 		<xs:sequence>
 			<xs:element name="SiteName" type="xs:string"/>
 			<xs:element name="Company" type="CompanyType"/>
 			<xs:element name="CssFile" type="xs:string" minOccurs="0"/>
-			<xs:element name="DefaultLcale" type="xs:string"/>
+			<xs:element name="DefaultLocale" type="xs:string"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="CompanyType">

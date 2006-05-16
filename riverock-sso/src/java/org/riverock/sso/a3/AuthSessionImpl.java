@@ -24,31 +24,30 @@
  */
 package org.riverock.sso.a3;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.riverock.sso.schema.config.AuthType;
-import org.riverock.sso.schema.config.AuthProviderType;
-import org.riverock.sso.schema.config.AuthProviderParametersType;
-import org.riverock.sso.schema.config.ParameterType;
-import org.riverock.sso.config.SsoConfig;
-import org.riverock.sso.bean.AuthParameterBeanImpl;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.interfaces.sso.a3.AuthSession;
-import org.riverock.interfaces.sso.a3.UserInfo;
+import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
-import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
-import org.riverock.interfaces.portal.bean.Company;
-//import org.riverock.interfaces.portal.bean.GroupCompany;
-import org.riverock.interfaces.portal.bean.Holding;
-
-import org.apache.log4j.Logger;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.sso.bean.AuthParameterBeanImpl;
+import org.riverock.sso.config.SsoConfig;
+import org.riverock.sso.schema.config.AuthProviderParametersType;
+import org.riverock.sso.schema.config.AuthProviderType;
+import org.riverock.sso.schema.config.AuthType;
+import org.riverock.sso.schema.config.ParameterType;
 
 /**
  * $Id$
@@ -80,12 +79,12 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     private UserInfo userInfo;
 
 
-    private transient static Object syncObj = new Object();
+    private transient final static Object syncObj = new Object();
     public static List<AuthProvider> getAuthProviderList() {
         if (authProviderList==null){
             synchronized(syncObj){
                 if (authProviderList==null) {
-                    AuthType auth = null;
+                    AuthType auth;
                     try{
                         auth = SsoConfig.getAuth();
                     }
@@ -98,8 +97,8 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
 
                     authProviderList = new ArrayList<AuthProvider>();
                     if ( auth!=null ){
-                        for (int i=0; i<auth.getAuthProviderCount(); i++){
-                            AuthProviderType provider = auth.getAuthProvider(i);
+                        for (Object o : auth.getAuthProviderAsReference()){
+                            AuthProviderType provider = (AuthProviderType) o;
                             if (Boolean.TRUE.equals( provider.getIsUse() ) ){
                                 if (log.isInfoEnabled())
                                     log.info("Add new auth provider "+provider.getProviderName());
@@ -108,20 +107,20 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
                                     AuthProvider obj = (AuthProvider)MainTools.createCustomObject( provider.getProviderClass() );
 
                                     List<List<AuthParameterBean>> lists = new ArrayList<List<AuthParameterBean>>();
-				    if (provider.getProviderParameters()!=null) {
-                                    	for (int ii = 0; i < provider.getProviderParameters().getParametersListCount(); ii++) {
-                                        	AuthProviderParametersType params = provider.getProviderParameters().getParametersList(ii);
-                                        	List<AuthParameterBean> list = new ArrayList<AuthParameterBean>();
-                                        	lists.add(list);
-                                        	for (int k = 0; k < params.getParameterCount(); k++) {
-                                            		ParameterType p = params.getParameter(k);
-                                            		AuthParameterBeanImpl bean = new AuthParameterBeanImpl();
-                                            		bean.setName( p.getName() );
-                                            		bean.setValue( p.getValue() );
-                                            		list.add(bean);
-                                        	}
-                                    	}
-				    }
+                                    if (provider.getProviderParameters()!=null) {
+                                        for (Object object : provider.getProviderParameters().getParametersListAsReference() ) {
+                                            AuthProviderParametersType params = (AuthProviderParametersType) object;
+                                            List<AuthParameterBean> list = new ArrayList<AuthParameterBean>();
+                                            lists.add(list);
+                                            for (Object o1 : params.getParameterAsReference()) {
+                                                ParameterType p = (ParameterType) o1;
+                                                AuthParameterBeanImpl bean = new AuthParameterBeanImpl();
+                                                bean.setName( p.getName() );
+                                                bean.setValue( p.getValue() );
+                                                list.add(bean);
+                                            }
+                                        }
+                                    }
 
                                     obj.setParameters( lists );
                                     authProviderList.add( obj );
@@ -163,18 +162,16 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
 
         isAccessChecked = true;
         isAccessDenied = true;
-        if ( StringTools.isEmpty(getUserLogin()) || StringTools.isEmpty(getUserPassword()) ) {
+        if ( StringUtils.isBlank(getUserLogin()) || StringUtils.isBlank(getUserPassword()) ) {
             return false;
         }
 
         boolean status = false;
-        Iterator<AuthProvider> iterator = getAuthProviderList().iterator();
-        while (iterator.hasNext()) {
-            AuthProvider authProvider = iterator.next();
+        for (AuthProvider authProvider : getAuthProviderList()) {
             if (log.isInfoEnabled())
-                log.info("Check role with provider named '"+authProvider+"'");
+                log.info("Check role with provider named '" + authProvider + "'");
 
-            status = authProvider.checkAccess( this, serverName );
+            status = authProvider.checkAccess(this, serverName);
             if (status) {
                 activeProvider = authProvider;
                 break;
@@ -213,7 +210,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
 
         String name = StringTools.getUserName( userInfo.getFirstName(), userInfo.getMiddleName(), userInfo.getLastName() );
 
-        if (StringTools.isEmpty(name))
+        if (StringUtils.isBlank(name))
             return null;
 
         return name;
@@ -251,14 +248,6 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         return activeProvider.getGrantedCompanyIdList( this );
     }
 
-//    public String getGrantedGroupCompanyId() {
-//        return activeProvider.getGrantedGroupCompanyId( this );
-//    }
-
-//    public List<Long> getGrantedGroupCompanyIdList() {
-//        return activeProvider.getGrantedGroupCompanyIdList( this );
-//    }
-
     public String getGrantedHoldingId() {
         return activeProvider.getGrantedHoldingId( this );
     }
@@ -270,10 +259,6 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     public Long checkCompanyId(Long companyId ) {
         return activeProvider.checkCompanyId( companyId, this );
     }
-
-//    public Long checkGroupCompanyId(Long groupCompanyId) {
-//        return activeProvider.checkGroupCompanyId( groupCompanyId, this );
-//    }
 
     public Long checkHoldingId(Long holdingId) {
         return activeProvider.checkHoldingId( holdingId, this );
@@ -342,10 +327,6 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     public List<Company> getCompanyList() {
         return activeProvider.getCompanyList( this );
     }
-
-//    public List<GroupCompany> getGroupCompanyList() {
-//        return activeProvider.getGroupCompanyList( this );
-//    }
 
     public List<Holding> getHoldingList() {
         return activeProvider.getHoldingList( this );

@@ -10,6 +10,7 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
  *         Time: 17:54:24
  */
 public interface InternalVirtualHostDao {
+    public List<VirtualHost> getVirtualHostsFullList();
     public List<VirtualHost> getVirtualHosts(Long siteId);
-    public Long createVirtualHost(VirtualHost virtualHost, Long siteId);
+    public Long createVirtualHost(VirtualHost virtualHost);
 }

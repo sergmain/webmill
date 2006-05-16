@@ -7,5 +7,6 @@ package org.riverock.interfaces.portal.bean;
  */
 public interface VirtualHost {
     public Long getId();
+    public Long getSiteId();
     public String getHost();
 }

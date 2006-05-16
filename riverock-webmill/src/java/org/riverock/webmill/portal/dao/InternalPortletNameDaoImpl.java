@@ -7,8 +7,10 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.webmill.core.GetWmPortalPortletNameItem;
+import org.riverock.webmill.core.InsertWmPortalPortletNameItem;
 import org.riverock.webmill.portal.bean.PortletNameBean;
 import org.riverock.webmill.schema.core.WmPortalPortletNameItemType;
 
@@ -79,5 +81,42 @@ public class InternalPortletNameDaoImpl implements InternalPortletNameDao {
             rs = null;
             ps = null;
         }
+    }
+
+    public Long createPortletName(PortletName portletName) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_PORTAL_PORTLET_NAME" );
+            seq.setTableName( "WM_PORTAL_PORTLET_NAME" );
+            seq.setColumnName( "ID_SITE_CTX_TYPE" );
+            Long id = adapter.getSequenceNextValue( seq );
+
+            WmPortalPortletNameItemType item = new WmPortalPortletNameItemType();
+            item.setIdSiteCtxType(id);
+            item.setType(portletName.getPortletName());
+
+            InsertWmPortalPortletNameItem.process(adapter, item);
+
+            adapter.commit();
+            return id;
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error create portlet name";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+
     }
 }

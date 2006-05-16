@@ -273,7 +273,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             return true;
         }
 
-        if ( httpRequest.getServerName() == null || auth == null ) {
+        if (httpRequest.getServerName()==null || auth==null) {
             return false;
         }
 
