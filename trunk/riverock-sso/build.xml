@@ -42,6 +42,7 @@
         <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
+        <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${secure.lib}"/>
         <pathelement location="${lib.dir}/mail.jar"/>
@@ -60,7 +61,7 @@
         <antcall target="jar"/>
     </target>
 
-    <target name="run_tomcat_with_new jar">
+    <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
 
@@ -78,22 +79,6 @@
     </target>
 
     <target name="compile" depends="prepare">
-        <!-- Compile PersistenceException -->
-<!--
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src.java.dir}/org/riverock/sso/exception"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath refid="classpath-base"/>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
--->
         <javac
             target="${java.class.target}"
             source="${java.class.source}"

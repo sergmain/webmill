@@ -55,16 +55,17 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
-    public Template getTemplate(String templateName) {
+    public Template getTemplate(String templateName, Long siteLanguageId) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
             ps = adapter.prepareStatement(
-                "select * from WM_PORTAL_TEMPLATE where NAME_SITE_TEMPLATE=?"
+                "select * from WM_PORTAL_TEMPLATE where NAME_SITE_TEMPLATE=? and ID_SITE_SUPPORT_LANGUAGE=?"
             );
             ps.setString(1, templateName);
+            ps.setLong(2, siteLanguageId);
 
             rs = ps.executeQuery();
 
@@ -235,7 +236,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
             catch(Throwable th) {
                 // catch rollback error
             }
-            String es = "Error create site language";
+            String es = "Error create template";
             log.error(es, e);
             throw new IllegalStateException( es, e);
         } finally {

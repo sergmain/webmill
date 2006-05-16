@@ -29,6 +29,7 @@ import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
+import org.riverock.webmill.portal.bean.PortletNameBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.dao.InternalSiteDao;
 import org.riverock.webmill.schema.site_config.CompanyType;
@@ -47,8 +48,20 @@ import org.riverock.webmill.schema.site_config.TemplateType;
 public class PortalOfflineMarkupProcessor {
     private final static Logger log = Logger.getLogger(PortalOfflineMarkupProcessor.class);
 
-    public static final String SITE_CONFIG_FILE = "/WEB-INF/webmill/site-config.xml";
+    public static final String SITE_CONFIG_FILE = "/WEB-INF/webmill/static/site-config.xml";
     private static final int MAX_BINARY_FILE_SIZE = 0x4000;
+
+    private static class VirtualHostSiteExist {
+        private VirtualHostSiteExist(boolean isValid){
+            this.isValid = isValid;
+        }
+        private VirtualHostSiteExist(boolean isValid, Long siteId){
+            this.isValid = isValid;
+            this.siteId = siteId;
+        }
+        private boolean isValid;
+        private Long siteId;
+    }
 
     public static void process() throws IOException {
         log.debug("Start process PortalOfflineMarkupProcessor");
@@ -70,7 +83,7 @@ public class PortalOfflineMarkupProcessor {
         }
 
         try {
-/*
+
             InputSource inSrc = new InputSource( new FileInputStream( file ) );
             Sites sites = (Sites) Unmarshaller.unmarshal( Sites.class, inSrc );
 
@@ -78,32 +91,38 @@ public class PortalOfflineMarkupProcessor {
             for (Object o : sites.getSiteConfigAsReference()) {
                 SiteConfigType siteConfig = (SiteConfigType)o;
 
-                Company company = InternalDaoFactory.getInternalCompanyDao().loadCompany(siteConfig.getCompany().getName());
-                if (company==null) {
-                    CompanyBean companyBean = createCompanyBean(siteConfig.getCompany());
-                    companyBean.setId( InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, null ) );
-                    company = companyBean;
+                List<VirtualHost> hostFullList = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
+
+                VirtualHostSiteExist b = checkVirtualHost(hostFullList, siteConfig.getHostAsReference());
+                if (!b.isValid) {
+                    log.error("Error in list of virtual hosts, name site config: "+siteConfig.getName());
+                    continue;
                 }
 
-                Site site = siteDao.getSite( siteConfig.getSiteName() );
-                boolean isNewSite = false;
-                if (site==null) {
-                    isNewSite = true;
-                    //Create new site
-                    SiteBean siteBean = new SiteBean();
-                    siteBean.setSiteName(siteConfig.getSiteName());
-                    siteBean.setCssDynamic(false);
-                    siteBean.setCssFile(siteConfig.getCssFile());
-                    Locale locale = StringTools.getLocale( siteConfig.getDefaultLocale() );
-                    siteBean.setDefCountry(locale.getCountry());
-                    siteBean.setDefLanguage(locale.getLanguage());
-                    siteBean.setDefVariant(locale.getVariant());
-                    siteBean.setCompanyId(company.getId());
-                    siteBean.setSiteId(siteDao.createSite(siteBean));
-                    site = siteBean;
+                if (b.siteId==null) {
+                    // create new company
+                    Company company = InternalDaoFactory.getInternalCompanyDao().loadCompany(siteConfig.getSiteInstance().getCompany().getName());
+                    if (company==null) {
+                        CompanyBean companyBean = createCompanyBean(siteConfig.getSiteInstance().getCompany());
+                        companyBean.setId( InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, null ) );
+                        company = companyBean;
+                    }
+                    Site site = siteDao.getSite( siteConfig.getSiteInstance().getSiteName() );
+                    if (site==null) {
+                        //Create new site
+                        SiteBean siteBean = new SiteBean();
+                        siteBean.setSiteName(siteConfig.getSiteInstance().getSiteName());
+                        siteBean.setCssDynamic(false);
+                        siteBean.setCssFile(siteConfig.getSiteInstance().getCssFile());
+                        Locale locale = StringTools.getLocale( siteConfig.getSiteInstance().getDefaultLocale() );
+                        siteBean.setDefCountry(locale.getCountry());
+                        siteBean.setDefLanguage(locale.getLanguage());
+                        siteBean.setDefVariant(locale.getVariant());
+                        siteBean.setCompanyId(company.getId());
+                        b.siteId = siteDao.createSite(siteBean);
+                    }
                 }
-
-                List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(site.getSiteId());
+                List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(b.siteId);
                 for (Object objHost : siteConfig.getHostAsReference()) {
                     String hostName = (String) objHost;
                     boolean isNotExists = true;
@@ -116,7 +135,8 @@ public class PortalOfflineMarkupProcessor {
                     if (isNotExists) {
                         VirtualHostBean virtualHost = new VirtualHostBean();
                         virtualHost.setHost( hostName.toLowerCase() );
-                        InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost, site.getSiteId());
+                        virtualHost.setSiteId(b.siteId);
+                        InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost);
                     }
                 }
                 for (Object siteLangObj : siteConfig.getSiteLanguageAsReference()){
@@ -124,7 +144,7 @@ public class PortalOfflineMarkupProcessor {
                     SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageConfig.getLocale());
                     if (siteLanguage==null) {
                         SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
-                        siteLanguageBean.setSiteId(site.getSiteId());
+                        siteLanguageBean.setSiteId(b.siteId);
                         siteLanguageBean.setCustomLanguage(siteLanguageConfig.getLocale());
                         siteLanguageBean.setNameCustomLanguage(siteLanguageConfig.getLocale());
                         siteLanguageBean.setSiteLanguageId(
@@ -134,7 +154,7 @@ public class PortalOfflineMarkupProcessor {
                     }
                     for (Object templateConfigObj :siteLanguageConfig.getTemplateAsReference()){
                         TemplateType templateItem = (TemplateType) templateConfigObj;
-                        Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(templateItem.getName());
+                        Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(templateItem.getName(), siteLanguage.getSiteLanguageId());
                         if (template==null) {
                             TemplateBean templateBean = new TemplateBean();
 
@@ -153,21 +173,22 @@ public class PortalOfflineMarkupProcessor {
                             InternalDaoFactory.getInternalTemplateDao().createTemplate(templateBean);
                         }
                     }
-                    Xslt xslt = InternalDaoFactory.getInternalXsltDao().getXslt(siteLanguageConfig.getXslt().getName());
+                    Xslt xslt = InternalDaoFactory.getInternalXsltDao().getXslt(siteLanguageConfig.getXslt().getName(), siteLanguage.getSiteLanguageId());
                     if (xslt==null) {
+                        Xslt currentXslt = InternalDaoFactory.getInternalXsltDao().getCurrentXslt(siteLanguage.getSiteLanguageId());
                         PortalXsltBean xsltBean = new PortalXsltBean();
                         xsltBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
                         xsltBean.setName(siteLanguageConfig.getXslt().getName());
                         xsltBean.setXsltData(
                             readBinaryFile(file.getParent()+File.separatorChar+siteLanguageConfig.getXslt().getXsltFile())
                         );
-                        xsltBean.setCurrent(true);
+                        xsltBean.setCurrent(currentXslt==null);
                         InternalDaoFactory.getInternalXsltDao().createXslt(xsltBean);
                     }
 
                     for (MenuGroupType menuGroup : (List<MenuGroupType>)siteLanguageConfig.getMenuGroupAsReference() ) {
                         CatalogLanguageItem catalogLanguageItem =
-                            InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItem(menuGroup.getCode());
+                            InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItem(menuGroup.getCode(), siteLanguage.getSiteLanguageId());
 
                         if (catalogLanguageItem==null) {
                             CatalogLanguageBean bean = new CatalogLanguageBean();
@@ -184,7 +205,7 @@ public class PortalOfflineMarkupProcessor {
                     }
                 }
             }
-*/
+
 
         } catch (Throwable e) {
             String es = "Error process config file: "+file.getAbsolutePath();
@@ -193,18 +214,62 @@ public class PortalOfflineMarkupProcessor {
         }
     }
 
+    private static VirtualHostSiteExist checkVirtualHost(List<VirtualHost> hostFullList, List hosts) {
+        if (hosts==null || hosts.isEmpty()) {
+            return new VirtualHostSiteExist(true);
+        }
+
+        Long siteId = null;
+        for (Object objHost : hosts) {
+            String hostName = (String) objHost;
+            for (VirtualHost host : hostFullList) {
+                if (hostName.equalsIgnoreCase(host.getHost())) {
+                    if (siteId==null) {
+                        siteId = host.getSiteId();
+                    }
+                    if (!siteId.equals(host.getSiteId())){
+                        return new VirtualHostSiteExist(false);
+                    }
+                    break;
+                }
+            }
+        }
+        return new VirtualHostSiteExist(true, siteId);
+    }
+
     private static void processMenu(SiteLanguage siteLanguage, CatalogLanguageItem catalogLanguageItem, List<MenuType> menuList, Long topCatalogItemId) {
         if (menuList==null)
             return;
 
+        int orderFiled=1;
         for (MenuType menuItem : menuList) {
+            if (log.isDebugEnabled()) {
+                log.debug("Process menu item");
+                log.debug("    portletName: " + menuItem.getPortletName());
+                log.debug("    templateName: " + menuItem.getTemplateName());
+                log.debug("    menuName: " + menuItem.getMenuName());
+                log.debug("    url: " + menuItem.getUrl());
+            }
             PortletName portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName(menuItem.getPortletName());
-            if (portletName==null)
-                continue;
+            if (log.isDebugEnabled()) {
+                log.debug("    PortletName object: " + portletName);
+            }
+            if (portletName==null) {
+                PortletNameBean portletNameBean = new PortletNameBean();
+                portletNameBean.setPortletName(menuItem.getPortletName());
+                portletNameBean.setActive(false);
+                portletNameBean.setPortletId(InternalDaoFactory.getInternalPortletNameDao().createPortletName(portletNameBean));
+                portletName=portletNameBean;
+            }
 
-            Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(menuItem.getTemplateName());
-            if (template==null)
+            Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(menuItem.getTemplateName(), siteLanguage.getSiteLanguageId());
+            if (log.isDebugEnabled()) {
+                log.debug("    Template object" + template);
+            }
+            if (template==null){
+                log.debug("    Object for template: " + menuItem.getTemplateName()+" not found");
                 continue;
+            }
 
             Long catalogItemId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(
                 siteLanguage.getSiteLanguageId(), portletName.getPortletId(), template.getTemplateId()
@@ -212,7 +277,7 @@ public class PortalOfflineMarkupProcessor {
 
             if (log.isDebugEnabled()) {
                 log.debug("catalogItemId: " + catalogItemId);
-                log.debug("siteLanguage.getSiteLanguageId(): " + catalogItemId);
+                log.debug("catalogLanguageItem.getCatalogLanguageId(): " + catalogLanguageItem.getCatalogLanguageId());
                 log.debug("portletName.getPortletId(): " + portletName.getPortletId());
                 log.debug("template.getTemplateId(): " + template.getTemplateId());
             }
@@ -226,6 +291,7 @@ public class PortalOfflineMarkupProcessor {
                 catalogBean.setKeyMessage(menuItem.getMenuName());
                 catalogBean.setUseProperties(false);
                 catalogBean.setUrl(menuItem.getUrl());
+                catalogBean.setOrderField(orderFiled++);
 
                 catalogItemId = InternalDaoFactory.getInternalCatalogDao().createCatalogItem(catalogBean);
             }

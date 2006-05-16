@@ -26,12 +26,12 @@ package org.riverock.sso.config;
 
 import java.io.File;
 
-import org.riverock.common.config.ConfigObject;
-import org.riverock.common.config.ConfigException;
-import org.riverock.sso.schema.config.SsoConfigType;
-import org.riverock.sso.schema.config.AuthType;
-
 import org.apache.log4j.Logger;
+
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.config.ConfigObject;
+import org.riverock.sso.schema.config.AuthType;
+import org.riverock.sso.schema.config.SsoConfigType;
 
 /**
  * User: serg_main
@@ -55,7 +55,7 @@ public class SsoConfig {
         return (SsoConfigType)configObject.getConfigObject();
     }
 
-    private static Object syncReadConfig = new Object();
+    private final static Object syncReadConfig = new Object();
     private static void readConfig() throws ConfigException {
         if (isConfigProcessed)
             return;
@@ -65,12 +65,12 @@ public class SsoConfig {
             if (isConfigProcessed)
                 return;
 
-		if (log.isDebugEnabled()) {
-        		ClassLoader cl = Thread.currentThread().getContextClassLoader();
-			log.debug("SsoConfig classLoader: "+cl+"\nhash: "+cl.hashCode() );
-			ClassLoader ccl = ConfigObject.class.getClassLoader();
-			log.debug("ConfigObject classLoader: "+ccl+"\nhash: "+ccl.hashCode() );
-		}
+            if (log.isDebugEnabled()) {
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                log.debug("SsoConfig classLoader: "+cl+"\nhash: "+cl.hashCode() );
+                ClassLoader ccl = ConfigObject.class.getClassLoader();
+                log.debug("ConfigObject classLoader: "+ccl+"\nhash: "+ccl.hashCode() );
+            }
 
             configObject = ConfigObject.load(JNDI_SSO_CONFIG_FILE , CONFIG_FILE_PARAM_NAME,  NAME_CONFIG_FILE, SsoConfigType.class);
 
@@ -85,7 +85,7 @@ public class SsoConfig {
 // PUBLIC SECTION
 //-----------------------------------------------------
 
-    private static Object syncTempDir = new Object();
+    private final static Object syncTempDir = new Object();
     public static String getCacheTempDir()
         throws ConfigException
     {
@@ -121,7 +121,7 @@ public class SsoConfig {
         }
     }
 
-    private static Object syncDebug = new Object();
+    private final static Object syncDebug = new Object();
     public static String getSsoDebugDir()
         throws ConfigException
     {

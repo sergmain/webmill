@@ -47,7 +47,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             String sql_ =
                 "select * " +
                 "from   WM_PORTAL_XSLT " +
-                "where  ID_SITE_XSLT=? and IS_CURRENT=1";
+                "where  ID_SITE_XSLT=?";
 
             ps = adapter.prepareStatement(sql_);
 
@@ -83,7 +83,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         }
     }
 
-    public Xslt getXslt(String xsltName) {
+    public Xslt getXslt(String xsltName, Long siteLanguageId) {
         PreparedStatement ps = null;
         ResultSet rset = null;
         DatabaseAdapter adapter = null;
@@ -92,11 +92,57 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             String sql_ =
                 "select * " +
                 "from   WM_PORTAL_XSLT " +
-                "where  TEXT_COMMENT=? and IS_CURRENT=1";
+                "where  TEXT_COMMENT=? and ID_SITE_SUPPORT_LANGUAGE=?";
 
             ps = adapter.prepareStatement(sql_);
 
             ps.setString(1, xsltName);
+            ps.setLong(2, siteLanguageId);
+            rset = ps.executeQuery();
+
+            PortalXsltBean portalXsltBean = null;
+            if (rset.next()) {
+                WmPortalXsltItemType item = GetWmPortalXsltItem.fillBean(rset);
+                portalXsltBean = new PortalXsltBean();
+                portalXsltBean.setId(item.getIdSiteXslt());
+                portalXsltBean.setName( item.getTextComment() );
+                portalXsltBean.setXsltData( getXsltData(adapter, item.getIdSiteXslt()).toString() );
+                portalXsltBean.setSiteLanguageId( item.getIdSiteSupportLanguage() );
+                portalXsltBean.setCurrent(item.getIsCurrent() != null && item.getIsCurrent() );
+
+                if (log.isDebugEnabled()) {
+                    log.debug("XsltList. id - " + portalXsltBean.getId());
+                }
+            }
+            return portalXsltBean;
+        }
+        catch (Exception e) {
+            final String es = "Error get xslt ";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rset, ps);
+            adapter = null;
+            rset = null;
+            ps = null;
+        }
+    }
+
+    public Xslt getCurrentXslt(Long siteLanguageId) {
+        PreparedStatement ps = null;
+        ResultSet rset = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            String sql_ =
+                "select * " +
+                "from   WM_PORTAL_XSLT " +
+                "where  ID_SITE_SUPPORT_LANGUAGE=? and IS_CURRENT=1";
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps.setLong(1, siteLanguageId);
             rset = ps.executeQuery();
 
             PortalXsltBean portalXsltBean = null;

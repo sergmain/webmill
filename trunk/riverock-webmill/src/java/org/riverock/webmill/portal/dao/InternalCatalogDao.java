@@ -26,5 +26,5 @@ public interface InternalCatalogDao {
     public Long createCatalogItem(CatalogItem catalogItem);
     public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem);
 
-    public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode);
+    public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId);
 }

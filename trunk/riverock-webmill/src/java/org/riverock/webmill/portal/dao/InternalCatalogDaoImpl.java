@@ -395,17 +395,18 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         }
     }
 
-    public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode) {
+    public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
             ps = adapter.prepareStatement(
-                "select * from WM_PORTAL_CATALOG_LANGUAGE where CATALOG_CODE=?"
+                "select * from WM_PORTAL_CATALOG_LANGUAGE where CATALOG_CODE=? and id_site_support_language=?"
             );
 
             RsetTools.setString(ps, 1, catalogLanguageCode);
+            RsetTools.setLong(ps, 2, siteLanguageId);
             rs = ps.executeQuery();
             if (rs.next()) {
                 WmPortalCatalogLanguageItemType item = GetWmPortalCatalogLanguageItem.fillBean(rs);
