@@ -48,6 +48,7 @@ public final class NewsPortlet extends GenericWebmillPortlet {
     }
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
+        
         String newsType = renderRequest.getParameter( NewsSite.NEWS_TYPE );
         PortletResultObject resultObject ;
         if (newsType==null || !NewsSite.NEWS_TYPE_ITEM.equals( newsType ) )

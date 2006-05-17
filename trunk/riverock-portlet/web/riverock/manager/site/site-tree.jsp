@@ -12,8 +12,19 @@
             showRootNode="true" binding="#{siteTree.tree}">
         <f:facet name="site">
             <h:panelGroup>
-                <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:commandLink id="select-template-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
+                               actionListener="#{siteAction.selectSiteAction}">
+
+                    <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                    <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+
+                    <h:outputText value="#{node.description}"/>
+
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
+                    <t:updateActionListener property="#{siteSessionBean.type}" value="#{siteSessionBean.siteType}"/>
+                </h:commandLink>
+
+
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
             </h:panelGroup>
         </f:facet>

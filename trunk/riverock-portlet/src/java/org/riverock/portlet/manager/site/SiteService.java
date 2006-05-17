@@ -12,6 +12,7 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.portlet.tools.FacesTools;
 import org.riverock.portlet.manager.site.bean.SiteBean;
 import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
+import org.riverock.portlet.manager.site.bean.SiteExtended;
 
 /**
  * @author Sergei Maslyukov
@@ -40,5 +41,14 @@ public class SiteService {
             list.add( new SiteLanguageBean(item) );
         }
         return list;
+    }
+
+    public SiteExtended getSiteExtended(Long siteId) {
+        SiteExtended siteExtended = new SiteExtended();
+        siteExtended.setSite( FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId) );
+        siteExtended.setVirtualHosts(
+            FacesTools.getPortalDaoProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId())
+        );
+        return siteExtended;
     }
 }

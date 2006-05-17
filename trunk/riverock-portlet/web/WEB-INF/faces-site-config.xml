@@ -10,7 +10,6 @@
     </managed-bean>
 
     <managed-bean>
-        <description>SiteTree managed bean</description>
         <managed-bean-name>siteTree</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.site.SiteTree</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -22,9 +21,38 @@
     </managed-bean>
 
     <managed-bean>
+        <managed-bean-name>siteDataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.site.DataProvider</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>siteService</property-name>
+            <property-class>org.riverock.portlet.manager.site.SiteService</property-class>
+            <value>#{siteService}</value>
+        </managed-property>
+        <managed-property>
+           <property-name>siteSessionBean</property-name>
+           <value>#{siteSessionBean}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
         <managed-bean-name>siteService</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.site.SiteService</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>siteAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.site.SiteAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    	<managed-property>
+           <property-name>siteSessionBean</property-name>
+           <value>#{siteSessionBean}</value>
+    	</managed-property>
+    	<managed-property>
+           <property-name>authSessionBean</property-name>
+           <value>#{authSessionBean}</value>
+    	</managed-property>
     </managed-bean>
 
     <application>
