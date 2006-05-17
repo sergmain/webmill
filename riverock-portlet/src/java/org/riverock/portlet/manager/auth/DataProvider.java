@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
@@ -23,6 +25,8 @@ import org.riverock.portlet.main.AuthSessionBean;
  *         $Id$
  */
 public class DataProvider implements Serializable {
+    private final static Logger log = Logger.getLogger( DataProvider.class );
+
     private static final long serialVersionUID = 2043005511L;
 
     private AuthSessionBean authSessionBean = null;
@@ -55,6 +59,12 @@ public class DataProvider implements Serializable {
     public List<SelectItem> getUserList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
 
+        if (log.isDebugEnabled()) {
+            log.debug("authSessionBean: " +authSessionBean);
+            if (authSessionBean!=null) {
+                   log.debug("authSessionBean.getAuthSession(: " + authSessionBean.getAuthSession());
+            }
+        }
         List<UserInfo> userList = authSessionBean.getAuthSession().getUserList();
         for (UserInfo userInfo : userList) {
             String userName = StringTools.getUserName(
@@ -108,8 +118,8 @@ public class DataProvider implements Serializable {
         List<SelectItem> list = new ArrayList<SelectItem>();
         List<Holding> holdings = authSessionBean.getAuthSession().getHoldingList();
 
-	if (holdings==null)
-		return list;
+    if (holdings==null)
+        return list;
 
         for (Holding holding : holdings) {
             list.add(new SelectItem(holding.getId(), holding.getName()));

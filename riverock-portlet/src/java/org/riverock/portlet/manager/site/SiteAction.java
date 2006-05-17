@@ -20,7 +20,6 @@ import org.riverock.portlet.main.AuthSessionBean;
  *
  */
 public class SiteAction implements Serializable {
-
     private final static Logger log = Logger.getLogger( SiteAction.class );
     private static final long serialVersionUID = 2057005511L;
 
@@ -74,8 +73,16 @@ public class SiteAction implements Serializable {
 */        
     }
 
+    public void selectSiteAction(){
+        log.info( "select site action." );
+    }
+
     public void selectSiteLanguageAction(){
         log.info( "select site language action." );
+    }
+
+    public void selectTemplateAction(){
+        log.info( "select template action." );
     }
 
     public void addCompanyAction() {

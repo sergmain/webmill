@@ -50,7 +50,7 @@ public class SiteSessionBean {
         return objectType;
     }
 
-    public void setType(int type) {
-        this.objectType = type;
+    public void setObjectType(int objectType) {
+        this.objectType = objectType;
     }
 }
