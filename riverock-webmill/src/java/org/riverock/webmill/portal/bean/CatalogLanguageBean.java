@@ -1,5 +1,7 @@
 package org.riverock.webmill.portal.bean;
 
+import java.io.Serializable;
+
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 
 /**
@@ -8,7 +10,9 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
  *         Time: 15:39:41
  *         $Id$
  */
-public class CatalogLanguageBean implements CatalogLanguageItem {
+public class CatalogLanguageBean implements Serializable, CatalogLanguageItem {
+    private static final long serialVersionUID = 1057005507L;
+
     private Long catalogLanguageId;
     private Boolean isDefault = false;
     private Long siteLanguageId;

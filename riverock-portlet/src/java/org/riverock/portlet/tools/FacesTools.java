@@ -1,20 +1,19 @@
 package org.riverock.portlet.tools;
 
 import java.security.Principal;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIParameter;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.portlet.PortletRequest;
 
-import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * @author SergeMaslyukov
@@ -35,13 +34,12 @@ public class FacesTools {
     public static Long getLong( UIComponent component, String name, Long defValue ) {
         List list = component.getChildren();
         if( list != null ) {
-            Iterator it = list.iterator();
-            while( it.hasNext() ) {
-                UIComponent c1 = ( UIComponent ) it.next();
-                if( c1 instanceof UIParameter ) {
-                    UIParameter parameter = ( UIParameter ) c1;
-                    if( parameter.getName().equals( name ) ) {
-                        return new Long( parameter.getValue().toString() );
+            for (Object aList : list) {
+                UIComponent c1 = (UIComponent) aList;
+                if (c1 instanceof UIParameter) {
+                    UIParameter parameter = (UIParameter) c1;
+                    if (parameter.getName().equals(name)) {
+                        return new Long(parameter.getValue().toString());
                     }
                 }
             }
@@ -49,15 +47,15 @@ public class FacesTools {
         return defValue;
     }
 
-    public static final FacesContext getFacesContext() {
+    public static FacesContext getFacesContext() {
         return FacesContext.getCurrentInstance();
     }
 
-    public static final Application getApplication() {
+    public static Application getApplication() {
         return getFacesContext().getApplication();
     }
 
-    public static final HttpSession getSession() {
+    public static HttpSession getSession() {
         return ( HttpSession ) getFacesContext().getExternalContext().getSession( false );
     }
 
@@ -73,7 +71,7 @@ public class FacesTools {
         throw new IllegalStateException("request type is not HttpServletRequest and not PortletRequest. Type: " + obj.getClass().getName() );
     }
 
-    public static final HttpServletRequest getRequest() {
+    public static HttpServletRequest getRequest() {
         Object obj = getFacesContext().getExternalContext().getRequest();
         if (obj instanceof HttpServletRequest) {
             return (HttpServletRequest)obj;
@@ -82,7 +80,7 @@ public class FacesTools {
         throw new IllegalStateException("request type is not HttpServletRequest");
     }
 
-    public static final HttpServletResponse getHttpServletResponse() {
+    public static HttpServletResponse getHttpServletResponse() {
         Object obj = getFacesContext().getExternalContext().getResponse();
         if (obj instanceof HttpServletResponse) {
             return (HttpServletResponse)obj;
@@ -91,7 +89,7 @@ public class FacesTools {
         throw new IllegalStateException("responce type is not HttpServletResponse");
     }
 
-    public static final Principal getUserPrincipal() {
+    public static Principal getUserPrincipal() {
         return getFacesContext().getExternalContext().getUserPrincipal();
     }
 

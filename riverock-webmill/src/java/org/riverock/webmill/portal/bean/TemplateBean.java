@@ -1,5 +1,7 @@
 package org.riverock.webmill.portal.bean;
 
+import java.io.Serializable;
+
 import org.riverock.interfaces.portal.bean.Template;
 
 /**
@@ -8,10 +10,12 @@ import org.riverock.interfaces.portal.bean.Template;
  *         Time: 16:32:46
  *         $Id$
  */
-public class TemplateBean implements Template {
-    private Long templateId; // _idSiteTemplate;
-    private Long siteLanguageId; //_idSiteSupportLanguage;
-    private String templateName; // _nameSiteTemplate;
+public class TemplateBean implements Serializable, Template {
+    private static final long serialVersionUID = 1059005501L;
+
+    private Long templateId;
+    private Long siteLanguageId;
+    private String templateName; 
     private String templateData;
     private String templateLanguage = null;
 

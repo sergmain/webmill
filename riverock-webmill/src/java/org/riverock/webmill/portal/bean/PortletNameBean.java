@@ -1,5 +1,7 @@
 package org.riverock.webmill.portal.bean;
 
+import java.io.Serializable;
+
 import org.riverock.interfaces.portal.bean.PortletName;
 
 /**
@@ -8,7 +10,9 @@ import org.riverock.interfaces.portal.bean.PortletName;
  *         Time: 16:39:36
  *         $Id$
  */
-public class PortletNameBean implements PortletName {
+public class PortletNameBean implements Serializable, PortletName {
+    private static final long serialVersionUID = 1057005503L;
+
     private Long portletId;
     private String portletName;
     private boolean isActive;

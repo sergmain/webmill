@@ -11,7 +11,7 @@ import org.riverock.interfaces.portal.bean.Company;
  *         $Id$
  */
 public class CompanyBean implements Serializable, Company {
-    private static final long serialVersionUID = 4055005502L;
+    private static final long serialVersionUID = 1057005508L;
 
 	private String name = null;
 	private Long id = null;

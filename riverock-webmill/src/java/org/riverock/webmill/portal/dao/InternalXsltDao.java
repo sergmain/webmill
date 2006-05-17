@@ -16,7 +16,7 @@ public interface InternalXsltDao {
     public StringBuilder getXsltData( Long xsltId );
 
     /** key is language of site */
-    public Map<String, Xslt> getCurrentXsltForSiteMap(Long siteId);
+    public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId);
     public Xslt getCurrentXslt(Long siteLanguageId);
 
     public Xslt getXslt(Long siteId);
