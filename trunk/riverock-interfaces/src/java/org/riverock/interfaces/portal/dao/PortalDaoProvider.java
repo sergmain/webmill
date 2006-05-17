@@ -12,4 +12,12 @@ public interface PortalDaoProvider {
     public PortalCompanyDao getPortalCompanyDao();
     public PortalHoldingDao getPortalHoldingDao();
 
+    public PortalCatalogDao getPortalCatalogDao();
+    public PortalPortletNameDao getPortalPortletNameDao();
+    public PortalSiteDao getPortalSiteDao();
+    public PortalSiteLanguageDao getPortalSiteLanguageDao();
+    public PortalTemplateDao getPortalTemplateDao();
+    public PortalVirtualHostDao getPortalVirtualHostDao();
+    public PortalXsltDao getPortalXsltDao();
+
 }
