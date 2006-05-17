@@ -84,6 +84,7 @@
    <to-view-id>/riverock/manager/company/company.jsp</to-view-id>
   </navigation-case>
  </navigation-rule>
+
  <lifecycle/>
  <application>
   <locale-config>

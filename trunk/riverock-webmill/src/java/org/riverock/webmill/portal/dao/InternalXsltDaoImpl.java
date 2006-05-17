@@ -241,7 +241,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         }
     }
 
-    public Map<String, Xslt> getCurrentXsltForSiteMap(Long siteId) {
+    public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId) {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();

@@ -100,7 +100,12 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         userInfo.setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
     }
 
-    //Todo what doing whis method
+    /**
+     * retrun list of users, which current user can operate
+     * 
+     * @param username
+     * @return String comma separated list
+     */
     public String getGrantedUserId(String username) {
         DatabaseAdapter db = null;
         try {

@@ -32,6 +32,10 @@
    <from-outcome>portal-user</from-outcome>
    <to-view-id>/riverock/manager/users/portal-user.jsp</to-view-id>
   </navigation-case>
+  <navigation-case>
+   <from-outcome>site-list</from-outcome>
+   <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
+  </navigation-case>
  </navigation-rule>
 
 </faces-config>

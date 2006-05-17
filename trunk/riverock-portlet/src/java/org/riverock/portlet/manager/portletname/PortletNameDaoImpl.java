@@ -18,7 +18,8 @@ import org.riverock.common.tools.RsetTools;
  *         Time: 15:50:56
  *         $Id$
  */
-public class PortletNameDaoImpl implements PortletNameDao {
+@SuppressWarnings({"UnusedAssignment"})
+public class PortletNameDaoImpl {
     private final static Logger log = Logger.getLogger(PortletNameDaoImpl.class);
 
     public PortletNameBean getPortletName( Long portletNameId ) {
@@ -115,7 +116,7 @@ public class PortletNameDaoImpl implements PortletNameDao {
                 ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" ) );
 
             RsetTools.setLong( ps, 1, sequenceValue );
-            ps.setString( 2, portletNameBean.getName() );
+            ps.setString( 2, portletNameBean.getPortletName() );
             ps.executeUpdate();
 
             dbDyn.commit();
@@ -127,6 +128,7 @@ public class PortletNameDaoImpl implements PortletNameDao {
                     dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                //
             }
             String es = "Error add new portlet name ";
             log.error( es, e );
@@ -153,8 +155,8 @@ public class PortletNameDaoImpl implements PortletNameDao {
                 "where  ID_SITE_CTX_TYPE=?";
 
             ps = dbDyn.prepareStatement( sql );
-            ps.setString( 1, portletNameBean.getName() );
-            RsetTools.setLong( ps, 2, portletNameBean.getId() );
+            ps.setString( 1, portletNameBean.getPortletName() );
+            RsetTools.setLong( ps, 2, portletNameBean.getPortletId() );
 
             int i1 = ps.executeUpdate();
 
@@ -188,7 +190,7 @@ public class PortletNameDaoImpl implements PortletNameDao {
         try {
             dbDyn = DatabaseAdapter.getInstance();
 
-            if( portletNameBean.getId() == null )
+            if( portletNameBean.getPortletId() == null )
                 throw new IllegalArgumentException( "portletNameId is null" );
 
             String sql =
@@ -196,7 +198,7 @@ public class PortletNameDaoImpl implements PortletNameDao {
                 "where  ID_SITE_CTX_TYPE=?";
 
             ps = dbDyn.prepareStatement( sql );
-            RsetTools.setLong( ps, 1, portletNameBean.getId() );
+            RsetTools.setLong( ps, 1, portletNameBean.getPortletId() );
             int i1 = ps.executeUpdate();
 
             if( log.isDebugEnabled() )
@@ -224,9 +226,9 @@ public class PortletNameDaoImpl implements PortletNameDao {
 
     private PortletNameBean loadPortletNameFromResultSet( ResultSet rs ) throws Exception {
 
-        PortletNameBeanImpl bean = new PortletNameBeanImpl();
-        bean.setId( RsetTools.getLong(rs, "ID_SITE_CTX_TYPE") );
-        bean.setName( RsetTools.getString(rs, "TYPE") );
+        PortletNameBean bean = new PortletNameBean();
+        bean.setPortletId( RsetTools.getLong(rs, "ID_SITE_CTX_TYPE") );
+        bean.setPortletName( RsetTools.getString(rs, "TYPE") );
 
         return bean;
     }

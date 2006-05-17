@@ -35,7 +35,6 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
     private ClassLoader classLoader = null;
 
     public InternalAuthProvider() {
-//        this.classLoader = classLoader;
         // Todo remove hack with getting classLoader ref
         this.classLoader = Thread.currentThread().getContextClassLoader();
     }

@@ -1,22 +1,28 @@
-package org.riverock.webmill.portal.bean;
+package org.riverock.portlet.manager.site.bean;
 
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 
 /**
- * @author SergeMaslyukov
- *         Date: 27.01.2006
- *         Time: 14:52:56
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 17.05.2006
+ *         Time: 17:38:58
  */
-public class SiteLanguageBean implements Serializable,  SiteLanguage {
-    private static final long serialVersionUID = 1055005503L;
+public class SiteLanguageBean implements Serializable, SiteLanguage {
+    private static final long serialVersionUID = 2057005504L;
 
     private Long siteLanguageId;
     private Long siteId;
     private String customLanguage;
     private String nameCustomLanguage;
+
+    public SiteLanguageBean(SiteLanguage siteLanguage) {
+        this.siteLanguageId = siteLanguage.getSiteLanguageId();
+        this.siteId = siteLanguage.getSiteId();
+        this.customLanguage = siteLanguage.getCustomLanguage();
+        this.nameCustomLanguage = siteLanguage.getNameCustomLanguage();
+    }
 
     public Long getSiteLanguageId() {
         return siteLanguageId;

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+    "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+<faces-config>
+
+    <managed-bean>
+        <managed-bean-name>siteSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.site.SiteSessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <description>SiteTree managed bean</description>
+        <managed-bean-name>siteTree</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.site.SiteTree</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>siteService</property-name>
+            <property-class>org.riverock.portlet.manager.site.SiteService</property-class>
+            <value>#{siteService}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>siteService</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.site.SiteService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>ru</supported-locale>
+        </locale-config>
+        <message-bundle>org.riverock.portlet.manager.resource.Site_en</message-bundle>
+    </application>
+</faces-config>

@@ -36,6 +36,8 @@
                      styleClass="top-button-action"/>
     <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
                      styleClass="top-button-action"/>
+    <h:commandButton id="site-list-action" action="site-list" value="#{manager.site_button}"
+                     styleClass="top-button-action"/>
 
     <h:outputText value="#{manager.auth_info}" style="font-size:10px"/>
     <h:outputText value="#{manager.role_info}" style="font-size:10px"/>
@@ -43,6 +45,7 @@
     <h:outputText value="#{manager.holding_info}" style="font-size:10px"/>
     <h:outputText value="#{manager.portlet_name_info}" style="font-size:10px"/>
     <h:outputText value="#{manager.portal_user_info}" style="font-size:10px"/>
+    <h:outputText value="#{manager.site_info}" style="font-size:10px"/>
 
 </h:panelGrid>
 

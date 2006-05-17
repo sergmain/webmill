@@ -3,7 +3,6 @@ package org.riverock.webmill.portal.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -22,6 +21,7 @@ import org.riverock.webmill.portal.bean.HoldingBean;
  *         Time: 1:24:25
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class InternalHoldingDaoImpl implements InternalHoldingDao {
     private final static Logger log = Logger.getLogger(InternalHoldingDaoImpl.class);
 
@@ -199,6 +199,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
                     dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback exception
             }
             String es = "Error add new holding";
             log.error( es, e );
@@ -270,9 +271,11 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
         }
         catch( Exception e ) {
             try {
-                dbDyn.rollback();
+                if (dbDyn!=null)
+                    dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback exception
             }
 
             String es = "Error save holding";
@@ -338,9 +341,11 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
         }
         catch( Exception e ) {
             try {
-                dbDyn.rollback();
+                if (dbDyn!=null)
+                    dbDyn.rollback();
             }
             catch( Exception e001 ) {
+                // catch rollback exception
             }
 
             String es = "Error delete holding";
@@ -514,10 +519,8 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
         if( holdingBean.getId() == null )
             throw new IllegalArgumentException( "holdingId is null" );
 
-        Iterator<Long> iterator = holdingBean.getCompanyIdList().iterator();
-        while(iterator.hasNext()) {
-            Long companyId = iterator.next();
-            setRelateHoldingCompany( dbDyn, holdingBean.getId(), companyId );
+        for (Long companyId : holdingBean.getCompanyIdList()) {
+            setRelateHoldingCompany(dbDyn, holdingBean.getId(), companyId);
         }
     }
 

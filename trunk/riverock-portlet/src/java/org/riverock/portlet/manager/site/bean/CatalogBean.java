@@ -1,36 +1,67 @@
-package org.riverock.webmill.portal.bean;
+package org.riverock.portlet.manager.site.bean;
 
 import java.util.List;
-import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 
 /**
- * @author SergeMaslyukov
- *         Date: 27.01.2006
- *         Time: 15:52:55
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 17.05.2006
+ *         Time: 17:42:16
  */
-public class CatalogBean implements Serializable, CatalogItem {
-    private static final long serialVersionUID = 1057005506L;
+public class CatalogBean implements CatalogItem {
+    private static final long serialVersionUID = 2057005507L;
 
-    private Long catalogId; // idSiteCtxCatalog
-    private Long topCatalogId = 0l; //idTopCtxCatalog
-    private Long portletId; //idSiteCtxType
+    private Long catalogId;
+    private Long topCatalogId = 0L;
+    private Long portletId;
     private Long contextId;
     private Boolean isUseProperties = false;
-    private Long templateId; //idSiteTemplate
-    private Long catalogLanguageId; // idSiteCtxLangCatalog;
+    private Long templateId;
+    private Long catalogLanguageId;
     private Integer orderField;
     private String storage;
     private String keyMessage;
-    private String url; //ctxPageUrl;
-    private String title; //ctxPageTitle;
-    private String author; //ctxPageAuthor;
-    private String keyword; //ctxPageKeyword;
+    private String url;
+    private String title;
+    private String author;
+    private String keyword;
     private String metadata;
     private String portletRole;
     private List<CatalogItem> subCatalogItemList = null;
+
+    public CatalogBean(CatalogItem catalogItem) {
+        this.catalogId=catalogItem.getCatalogId();
+        this.topCatalogId=catalogItem.getTopCatalogId();
+        this.portletId=catalogItem.getPortletId();
+        this.contextId=catalogItem.getContextId();
+        this.isUseProperties=catalogItem.getUseProperties();
+        this.templateId=catalogItem.getTemplateId();
+        this.catalogLanguageId=catalogItem.getCatalogLanguageId();
+        this.orderField=catalogItem.getOrderField();
+        this.storage=catalogItem.getStorage();
+        this.keyMessage=catalogItem.getKeyMessage();
+        this.url=catalogItem.getUrl();
+        this.title=catalogItem.getTitle();
+        this.author=catalogItem.getAuthor();
+        this.keyword=catalogItem.getKeyword();
+        this.metadata=catalogItem.getMetadata();
+        this.portletRole=catalogItem.getPortletRole();
+        this.subCatalogItemList=initCatalogList(catalogItem.getSubCatalogItemList());
+    }
+
+    private List<CatalogItem> initCatalogList(List<CatalogItem> subCatalogItemList) {
+        if (subCatalogItemList==null) {
+            return null;
+        }
+
+        List<CatalogItem> items = new ArrayList<CatalogItem>();
+        for (CatalogItem item : subCatalogItemList) {
+            items.add( new CatalogBean(item) );
+        }
+        return items;
+    }
 
     public List<CatalogItem> getSubCatalogItemList() {
         return subCatalogItemList;
@@ -168,3 +199,4 @@ public class CatalogBean implements Serializable, CatalogItem {
         this.portletRole = portletRole;
     }
 }
+

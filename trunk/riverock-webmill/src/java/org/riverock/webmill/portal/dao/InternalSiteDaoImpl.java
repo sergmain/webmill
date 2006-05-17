@@ -2,6 +2,8 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -10,8 +12,10 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.webmill.core.GetWmPortalListSiteItem;
+import org.riverock.webmill.core.GetWmPortalListSiteFullList;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
+import org.riverock.webmill.schema.core.WmPortalListSiteListType;
 import org.riverock.interfaces.portal.bean.Site;
 
 /**
@@ -22,6 +26,30 @@ import org.riverock.interfaces.portal.bean.Site;
 @SuppressWarnings({"UnusedAssignment"})
 public class InternalSiteDaoImpl implements InternalSiteDao {
     private final static Logger log = Logger.getLogger(InternalSiteDaoImpl.class);
+
+    public List<Site> getSites() {
+        DatabaseAdapter adapter = null;
+        List<Site> list = new ArrayList<Site>();
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            WmPortalListSiteListType sites = GetWmPortalListSiteFullList.getInstance(adapter, 0).item;
+
+            for (Object o : sites.getWmPortalListSiteAsReference()) {
+                WmPortalListSiteItemType item = (WmPortalListSiteItemType) o;
+                list.add( initSite(item) );
+            }
+        }
+        catch (Exception e) {
+            String es = "Error get list of sites";
+            log.error(es, e);
+            throw new IllegalStateException(es,e );
+        }
+        finally{
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+        return list;
+    }
 
     public Site getSite(Long siteId) {
         DatabaseAdapter adapter = null;
