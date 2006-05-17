@@ -12,8 +12,7 @@
             showRootNode="true" binding="#{siteTree.tree}">
         <f:facet name="site">
             <h:panelGroup>
-                <h:commandLink id="select-template-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{siteAction.selectSiteAction}">
+                <h:commandLink id="select-template-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
 
                     <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                     <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
@@ -21,11 +20,8 @@
                     <h:outputText value="#{node.description}"/>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
-                    <t:updateActionListener property="#{siteSessionBean.type}" value="#{siteSessionBean.siteType}"/>
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteType}"/>
                 </h:commandLink>
-
-
-                <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-list">
@@ -38,27 +34,25 @@
         </f:facet>
         <f:facet name="template">
             <h:panelGroup>
-                <h:commandLink id="select-template-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{siteAction.selectTemplateAction}">
+                <h:commandLink id="select-template-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
 
                     <t:graphicImage value="/images/user.png" border="0"/>
                     <h:outputText value="#{node.description}"/>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
-                    <t:updateActionListener property="#{siteSessionBean.type}" value="#{siteSessionBean.templateType}"/>
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.templateType}"/>
                 </h:commandLink>
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-language">
             <h:panelGroup>
-                <h:commandLink id="select-site-language-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{siteAction.selectSiteLanguageAction}">
+                <h:commandLink id="select-site-language-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
 
                     <t:graphicImage value="/images/user.png" border="0"/>
                     <h:outputText value="#{node.description}"/>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
-                    <t:updateActionListener property="#{siteSessionBean.type}" value="#{siteSessionBean.siteLanguageType}"/>
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
                 </h:commandLink>
             </h:panelGroup>
         </f:facet>
