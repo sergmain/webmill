@@ -140,9 +140,9 @@ public class TestDropSiteFromHsql
             );
         }
 
-        for (int i=0; i<site.getSiteLanguage().getItemCount(); i++)
+        for (int i=0; i<site.getSiteLanguageList().getItemCount(); i++)
         {
-            SiteExtendLanguageType siteLangTemp = site.getSiteLanguage().getItem(i);
+            SiteExtendLanguageType siteLangTemp = site.getSiteLanguageList().getItem(i);
             seq.setSequenceName("SEQ_WM_PORTAL_SITE_LANGUAGE");
             seq.setTableName( "WM_PORTAL_SITE_LANGUAGE");
             seq.setColumnName( "ID_SITE_SUPPORT_LANGUAGE" );
@@ -364,9 +364,9 @@ public class TestDropSiteFromHsql
 
     private static void replaceIdCtxType(SiteExtendItemType site, long idCtxTypeOld, long idCtxTypeNew)
     {
-        for (int k=0; k<site.getSiteLanguage().getItemCount();k++ )
+        for (int k=0; k<site.getSiteLanguageList().getItemCount();k++ )
         {
-            SiteExtendLanguageType siteLang = site.getSiteLanguage().getItem(k);
+            SiteExtendLanguageType siteLang = site.getSiteLanguageList().getItem(k);
 
             for (int j=0; j<siteLang.getContext().getItemCount();j++ )
             {

@@ -4,15 +4,21 @@
  */
 package org.riverock.portlet.manager.site;
 
+import java.io.Serializable;
+
 /**
  * @author Sergei Maslyukov
  *         16.05.2006
  *         20:24:52
  */
-public class SiteSessionBean {
+public class SiteSessionBean implements Serializable {
+    private static final long serialVersionUID = 2058005508L;
+
     public static final int SITE_TYPE = 1;
     public static final int SITE_LANGUAGE_TYPE = 2;
     public static final int TEMPLATE_TYPE = 3;
+    public static final int XSLT_TYPE = 4;
+    public static final int CSS_TYPE = 5;
 
     private boolean isEdit;
     private Long id = null;
@@ -28,6 +34,14 @@ public class SiteSessionBean {
 
     public int getTemplateType() {
         return TEMPLATE_TYPE;
+    }
+
+    public int getXsltType() {
+        return XSLT_TYPE;
+    }
+
+    public int getCssType() {
+        return CSS_TYPE;
     }
 
     public boolean isEdit() {

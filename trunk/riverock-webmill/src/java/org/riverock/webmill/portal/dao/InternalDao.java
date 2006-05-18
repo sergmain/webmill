@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.webmill.a3.audit.RequestStatisticBean;
 
 /**
@@ -24,8 +23,6 @@ public interface InternalDao {
      * value - siteId
      */
     public Map<String, Long> getSiteIdMap();
-
-    public Css getCss( Long siteId );
 
     public void saveRequestStatistic( ConcurrentMap<String, Long> userAgentList, ConcurrentMap<String, Long> urlList, RequestStatisticBean bean );
 

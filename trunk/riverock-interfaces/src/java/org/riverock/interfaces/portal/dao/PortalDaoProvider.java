@@ -20,4 +20,6 @@ public interface PortalDaoProvider {
     public PortalVirtualHostDao getPortalVirtualHostDao();
     public PortalXsltDao getPortalXsltDao();
 
+    public PortalCssDao getPortalCssDao();
+
 }

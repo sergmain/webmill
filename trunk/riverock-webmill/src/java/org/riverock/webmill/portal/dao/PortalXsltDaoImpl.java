@@ -1,9 +1,11 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.Map;
+import java.util.List;
 
 import org.riverock.interfaces.portal.dao.PortalXsltDao;
 import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * @author Sergei Maslyukov
@@ -11,6 +13,12 @@ import org.riverock.interfaces.portal.bean.Xslt;
  *         Time: 14:17:22
  */
 public class PortalXsltDaoImpl implements PortalXsltDao {
+    private AuthSession authSession = null;
+
+    PortalXsltDaoImpl(AuthSession authSession) {
+        this.authSession = authSession;
+    }
+
     public StringBuilder getXsltData(Long xsltId) {
         return InternalDaoFactory.getInternalXsltDao().getXsltData(xsltId);
     }
@@ -36,5 +44,9 @@ public class PortalXsltDaoImpl implements PortalXsltDao {
 
     public Long createXslt(Xslt xslt) {
         return InternalDaoFactory.getInternalXsltDao().createXslt(xslt);
+    }
+
+    public List<Xslt> getXsltList(Long siteLanguageId) {
+        return InternalDaoFactory.getInternalXsltDao().getXsltList(siteLanguageId);
     }
 }

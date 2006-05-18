@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.myfaces.custom.tree2.HtmlTree;
 import org.apache.myfaces.custom.tree2.TreeModel;
@@ -18,8 +19,11 @@ import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
+import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.interfaces.portal.bean.Xslt;
 
 /**
  * @author SergeMaslyukov
@@ -47,16 +51,49 @@ public class SiteTree implements Serializable {
         TreeNode treeData = new TreeNodeBase("site-list", "Webmill portal. Site list.", false);
         for (Site site : siteService.getSites()) {
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
-            for (SiteLanguage siteLanguage : siteService.getSiteLanguage(site.getSiteId())) {
-                siteNode.getChildren().add(
-                    new TreeNodeBase(
-                        "site-language",
-                        siteLanguage.getNameCustomLanguage() + " ( " + siteLanguage.getCustomLanguage() + " )",
-                        siteLanguage.getSiteLanguageId().toString(),
-                        true)
-                );
+
+            TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", false);
+            siteNode.getChildren().add( siteLanguageListNode );
+
+            TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", false);
+            siteNode.getChildren().add( cssListNode );
+
+            for (Css css : siteService.getCssList(site.getSiteId())) {
+                TreeNodeBase cssNode =
+                    new TreeNodeBase("css", StringUtils.isNotBlank(css.getCssComment()) ? css.getCssComment() : "CSS",
+                        css.getCssId().toString(), true);
+
+                cssListNode.getChildren().add(cssNode);
+            }
+
+            for (SiteLanguage siteLanguage : siteService.getSiteLanguageList(site.getSiteId())) {
+                TreeNodeBase siteLanguageNode = new TreeNodeBase(
+                    "site-language",
+                    siteLanguage.getNameCustomLanguage() + " (" + siteLanguage.getCustomLanguage() + ")",
+                    siteLanguage.getSiteLanguageId().toString(),
+                    false);
+                siteLanguageListNode.getChildren().add(siteLanguageNode);
+
+                TreeNodeBase templateListNode = new TreeNodeBase("template-list", "Templates", false);
+                for (Template template : siteService.getTemplateList(siteLanguage.getSiteLanguageId())) {
+                    templateListNode.getChildren().add(
+                        new TreeNodeBase("template",template.getTemplateName(),template.getTemplateId().toString(),true)
+                    );
+                }
+                siteLanguageNode.getChildren().add(templateListNode);
+
+                TreeNodeBase xsltListNode = new TreeNodeBase("xslt-list", "Xslt list", false);
+                for (Xslt xslt : siteService.getXsltList(siteLanguage.getSiteLanguageId())) {
+                    xsltListNode.getChildren().add(
+                        new TreeNodeBase("xslt",xslt.getName(),xslt.getId().toString(),true)
+                    );
+                }
+                siteLanguageNode.getChildren().add(xsltListNode);
+
 
             }
+
+
             treeData.getChildren().add(siteNode);
         }
         treeNode = treeData;
