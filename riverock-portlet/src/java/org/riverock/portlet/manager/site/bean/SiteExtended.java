@@ -2,6 +2,7 @@ package org.riverock.portlet.manager.site.bean;
 
 import java.util.List;
 import java.util.Locale;
+import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
@@ -11,7 +12,9 @@ import org.riverock.interfaces.portal.bean.VirtualHost;
  *         Date: 17.05.2006
  *         Time: 19:33:55
  */
-public class SiteExtended {
+public class SiteExtended implements Serializable {
+    private static final long serialVersionUID = 2058005301L;
+
     private Site site = null;
     private List<VirtualHost> virtualHosts = null;
 

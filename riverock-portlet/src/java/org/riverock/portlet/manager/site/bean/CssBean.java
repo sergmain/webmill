@@ -1,18 +1,17 @@
-package org.riverock.webmill.main;
+package org.riverock.portlet.manager.site.bean;
 
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
 
 import org.riverock.interfaces.portal.bean.Css;
 
 /**
- * @author SergeMaslyukov
- *         Date: 27.01.2006
- *         Time: 3:11:20
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 18.05.2006
+ *         Time: 13:28:41
  */
 public class CssBean implements Serializable, Css {
-    private static final long serialVersionUID = 3037005502L;
+    private static final long serialVersionUID = 2057004503L;
 
     private Long cssId = null;
     private Long siteId = null;
@@ -20,6 +19,18 @@ public class CssBean implements Serializable, Css {
     private String cssComment = "";
     private Date date = null;
     private boolean isCurrent = false;
+
+    public CssBean(){
+    }
+
+    public CssBean(Css css) {
+        this.cssId=css.getCssId();
+        this.siteId=css.getSiteId();
+        this.css=css.getCss();
+        this.cssComment=css.getCssComment();
+        this.date=css.getDate();
+        this.isCurrent=css.isCurrent();
+    }
 
     public String getCssComment() {
         return cssComment;

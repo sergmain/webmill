@@ -8,6 +8,10 @@ import java.util.Date;
  *         Time: 20:37:18
  */
 public interface Css {
+    public Long getCssId();
+    public Long getSiteId();
     public String getCss();
+    public String getCssComment();
     public Date getDate();
+    public boolean isCurrent();
 }

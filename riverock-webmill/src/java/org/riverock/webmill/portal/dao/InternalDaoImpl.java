@@ -44,8 +44,6 @@ import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.a3.audit.RequestStatisticBean;
 import org.riverock.webmill.core.*;
-import org.riverock.webmill.main.ContentCSS;
-import org.riverock.webmill.main.CssBean;
 import org.riverock.webmill.port.PortalInfoImpl;
 import org.riverock.webmill.port.PortalXsltList;
 import org.riverock.webmill.portal.menu.PortalMenu;
@@ -191,64 +189,6 @@ public class InternalDaoImpl implements InternalDao {
             rs = null;
             ps = null;
             db_ = null;
-        }
-    }
-
-    static String cssSql_ =
-        "select a.date_post, b.css_data " +
-        "from   WM_PORTAL_CSS a, WM_PORTAL_CSS_DATA b " +
-        "where  a.ID_SITE=? and a.is_current=1 and " +
-        "       a.id_site_content_css=b.id_site_content_css " +
-        "order by ID_SITE_CONTENT_CSS_DATA asc";
-
-    static {
-        try {
-            SqlStatement.registerSql(cssSql_, ContentCSS.class);
-        }
-        catch (Throwable exception) {
-            final String es = "Exception in SqlStatement.registerSql()";
-            log.error(es, exception);
-            throw new SqlStatementRegisterException(es, exception);
-        }
-    }
-
-    public CssBean getCss(Long siteId) {
-        if (siteId == null)
-            return new CssBean();
-
-        PreparedStatement ps = null;
-        ResultSet rset = null;
-        boolean isFirstRecord = true;
-        DatabaseAdapter adapter = null;
-        try {
-            adapter = DatabaseAdapter.getInstance();
-            ps = adapter.prepareStatement(cssSql_);
-
-            RsetTools.setLong(ps, 1, siteId);
-            rset = ps.executeQuery();
-            CssBean cssBean = new CssBean();
-            StringBuilder sb = new StringBuilder();
-            while (rset.next()) {
-                if (isFirstRecord) {
-                    cssBean.setDate( RsetTools.getTimestamp(rset, "DATE_POST") );
-                    isFirstRecord = false;
-                }
-                sb.append( RsetTools.getString(rset, "CSS_DATA", "") );
-
-            }
-            cssBean.setCss(sb.toString() );
-            return cssBean;
-        }
-        catch (Exception e) {
-            final String es = "Error get css ";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        finally {
-            DatabaseManager.close(adapter, rset, ps);
-            adapter = null;
-            rset = null;
-            ps = null;
         }
     }
 

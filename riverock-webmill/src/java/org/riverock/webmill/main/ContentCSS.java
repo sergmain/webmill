@@ -38,7 +38,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  * $Id$
  */
 public final class ContentCSS {
-    private Css css;
+    private Css css=null;
 
     private static CacheFactory cache = new CacheFactory(ContentCSS.class.getName());
 
@@ -70,7 +70,7 @@ public final class ContentCSS {
         if (siteId == null)
             return;
 
-        css = InternalDaoFactory.getInternalDao().getCss( siteId );
+        css = InternalDaoFactory.getInternalCssDao().getCss( siteId );
         if (css==null)
             css = new CssBean();
     }
@@ -83,15 +83,7 @@ public final class ContentCSS {
         return css.getDate();
     }
 
-//    public void setCss(String css) {
-//        this.css.setCss( css );
-//    }
-
-//    public void setDatePost(Date datePost) {
-//        this.css.setDate( datePost );
-//    }
-
     public boolean getIsEmpty() {
-        return StringUtils.isEmpty(css.getCss());
+        return StringUtils.isBlank(css.getCss());
     }
 }

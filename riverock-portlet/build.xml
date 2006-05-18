@@ -29,6 +29,7 @@
 <project name="Portlet library" default="usage-main" basedir=".">
 
     <property name="Name" value="riverock-portlet"/>
+    <property name="portlet-context-name" value="riverock-portlets"/>
     <property name="release-version" value="4.0.0"/>
     <property name="manifest-title-name" value="WebMill portlets"/>
     <property name="manifest-vendor-name" value="WebMill. http://webmill.askmore.info"/>
@@ -38,6 +39,10 @@
     <property name="site.name" value="_localhost"/>
     <property name="src.site.dir" value="${src.jsp.dir}/${site.name}"/>
     <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
+
+    <property name="url"      value="http://me.askmore/manager"/>
+    <property name="username" value="admin"/>
+    <property name="password" value=""/>
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
@@ -81,11 +86,46 @@
     <property name="build_mill_context_images" value="${build_mill_context}/images"/>
     <property name="build_mill_context_xsd" value="${build_mill_context}/xsd"/>
 
+    <path id="deployer.classpath">
+      <fileset dir="${tomcat-home}/server/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${tomcat-home}/server/lib">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
+    <taskdef resource="org/apache/catalina/ant/catalina.tasks">
+        <classpath>
+            <path refid="deployer.classpath"/>
+        </classpath>
+    </taskdef>
+
     <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
-        <antcall target="copy_new_jars"/>
+        <copy file="${build.dir}\${main.lib}" todir="C:\opt2\_www\_me.askmore.info\riverock-portlets\WEB-INF\lib" overwrite="true"/>
+        <!--<antcall target="copy_new_jars"/>-->
         <antcall target="start.apache"/>
+    </target>
+
+    <target name="undeploy" description="Undeploy web application">
+      <undeploy url="${url}" username="${username}" password="${password}" path="/${portlet-context-name}"/>
+    </target>
+
+    <target name="stop" description="Undeploy web application">
+        <stop url="${url}" username="${username}" password="${password}" path="/${portlet-context-name}"/>
+    </target>
+
+    <target name="start" description="Undeploy web application">
+        <start url="${url}" username="${username}" password="${password}" path="/${portlet-context-name}"/>
+    </target>
+
+    <target name="reload_with_new_jar">
+        <antcall target="stop"/>
+        <antcall target="jar"/>
+        <copy file="${build.dir}\${main.lib}" todir="C:\opt2\_www\_me.askmore.info\riverock-portlets\WEB-INF\lib" overwrite="true"/>
+        <antcall target="start"/>
     </target>
 
     <target name="copy_to_mill">
@@ -224,7 +264,7 @@
     </patternset>
 
     <target name="war" depends="jar" >
-        <property name="war-file-name" value="${build.dir}/riverock-portlets.war"/>
+        <property name="war-file-name" value="${build.dir}/${portlet-context-name}.war"/>
         <delete file="${war-file-name}"/>
         <war webxml="${web.dir}/WEB-INF/web.xml"
             warfile="${war-file-name}"

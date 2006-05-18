@@ -1,6 +1,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.Map;
+import java.util.List;
 
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.Xslt;
@@ -22,4 +23,6 @@ public interface InternalXsltDao {
     public Xslt getXslt(Long siteId);
     public Xslt getXslt(String xsltName, Long siteLanguageId);
     public Long createXslt(Xslt xslt);
+
+    public List<Xslt> getXsltList(Long siteLanguageId);
 }

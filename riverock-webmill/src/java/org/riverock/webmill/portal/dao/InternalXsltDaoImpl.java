@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
@@ -21,12 +23,14 @@ import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetWmPortalXsltDataWithIdSiteXsltList;
 import org.riverock.webmill.core.GetWmPortalXsltItem;
 import org.riverock.webmill.core.InsertWmPortalXsltItem;
+import org.riverock.webmill.core.GetWmPortalXsltWithIdSiteSupportLanguageList;
 import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.port.PortalXslt;
 import org.riverock.webmill.portal.bean.PortalXsltBean;
 import org.riverock.webmill.schema.core.WmPortalXsltDataItemType;
 import org.riverock.webmill.schema.core.WmPortalXsltDataListType;
 import org.riverock.webmill.schema.core.WmPortalXsltItemType;
+import org.riverock.webmill.schema.core.WmPortalXsltListType;
 
 /**
  * @author Sergei Maslyukov
@@ -57,12 +61,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             PortalXsltBean portalXsltBean = null;
             if (rset.next()) {
                 WmPortalXsltItemType item = GetWmPortalXsltItem.fillBean(rset);
-                portalXsltBean = new PortalXsltBean();
-                portalXsltBean.setId(xsltId);
-                portalXsltBean.setName( item.getTextComment() );
-                portalXsltBean.setXsltData( getXsltData(adapter, xsltId).toString() );
-                portalXsltBean.setSiteLanguageId( item.getIdSiteSupportLanguage() );
-                portalXsltBean.setCurrent(item.getIsCurrent() != null && item.getIsCurrent() );
+                portalXsltBean = initXsltBean(adapter, item);
 
                 if (log.isDebugEnabled()) {
                     log.debug("XsltList. id - " + xsltId);
@@ -81,6 +80,16 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             rset = null;
             ps = null;
         }
+    }
+
+    private PortalXsltBean initXsltBean(DatabaseAdapter adapter, WmPortalXsltItemType item) throws PortalPersistenceException {
+        PortalXsltBean portalXsltBean = new PortalXsltBean();
+        portalXsltBean.setId(item.getIdSiteXslt());
+        portalXsltBean.setName( item.getTextComment() );
+        portalXsltBean.setXsltData( getXsltData(adapter, item.getIdSiteXslt() ).toString() );
+        portalXsltBean.setSiteLanguageId( item.getIdSiteSupportLanguage() );
+        portalXsltBean.setCurrent(item.getIsCurrent() != null && item.getIsCurrent() );
+        return portalXsltBean;
     }
 
     public Xslt getXslt(String xsltName, Long siteLanguageId) {
@@ -103,12 +112,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             PortalXsltBean portalXsltBean = null;
             if (rset.next()) {
                 WmPortalXsltItemType item = GetWmPortalXsltItem.fillBean(rset);
-                portalXsltBean = new PortalXsltBean();
-                portalXsltBean.setId(item.getIdSiteXslt());
-                portalXsltBean.setName( item.getTextComment() );
-                portalXsltBean.setXsltData( getXsltData(adapter, item.getIdSiteXslt()).toString() );
-                portalXsltBean.setSiteLanguageId( item.getIdSiteSupportLanguage() );
-                portalXsltBean.setCurrent(item.getIsCurrent() != null && item.getIsCurrent() );
+                portalXsltBean = initXsltBean(adapter, item);
 
                 if (log.isDebugEnabled()) {
                     log.debug("XsltList. id - " + portalXsltBean.getId());
@@ -148,12 +152,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             PortalXsltBean portalXsltBean = null;
             if (rset.next()) {
                 WmPortalXsltItemType item = GetWmPortalXsltItem.fillBean(rset);
-                portalXsltBean = new PortalXsltBean();
-                portalXsltBean.setId(item.getIdSiteXslt());
-                portalXsltBean.setName( item.getTextComment() );
-                portalXsltBean.setXsltData( getXsltData(adapter, item.getIdSiteXslt()).toString() );
-                portalXsltBean.setSiteLanguageId( item.getIdSiteSupportLanguage() );
-                portalXsltBean.setCurrent(item.getIsCurrent() != null && item.getIsCurrent() );
+                portalXsltBean = initXsltBean(adapter, item);
 
                 if (log.isDebugEnabled()) {
                     log.debug("XsltList. id - " + portalXsltBean.getId());
@@ -241,6 +240,29 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         }
     }
 
+    public List<Xslt> getXsltList(Long siteLanguageId) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            List<Xslt> list = new ArrayList<Xslt>();
+            WmPortalXsltListType xsltList = GetWmPortalXsltWithIdSiteSupportLanguageList.getInstance(adapter, siteLanguageId).item;
+            for (Object o : xsltList.getWmPortalXsltAsReference()) {
+                PortalXsltBean xslt = initXsltBean(adapter, (WmPortalXsltItemType)o);
+                list.add(xslt);
+            }
+            return list;
+        }
+        catch (Exception e) {
+            String es = "Error get getSiteBean()";
+            log.error(es, e);
+            throw new IllegalStateException(es,e );
+        }
+        finally{
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
     public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId) {
         DatabaseAdapter adapter = null;
         try {
@@ -256,7 +278,6 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             DatabaseManager.close(adapter);
             adapter = null;
         }
-
     }
 
     public Map<String, Xslt> getCurrentXsltForSiteMap(DatabaseAdapter adapter, Long siteId) {

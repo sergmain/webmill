@@ -4,6 +4,8 @@
  */
 package org.riverock.portlet.manager.site;
 
+import java.io.Serializable;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.manager.site.bean.SiteExtended;
@@ -15,7 +17,7 @@ import org.riverock.portlet.manager.site.bean.SiteExtended;
  *
  *
  */
-public class DataProvider {
+public class DataProvider implements Serializable {
     private final static Logger log = Logger.getLogger(DataProvider.class);
     private static final long serialVersionUID = 2057005500L;
 
