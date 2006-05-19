@@ -83,7 +83,7 @@ public class CompanyAction implements Serializable {
 	}
 
 	private void loadCurrentCompany() {
-		Company bean = FacesTools.getPortalDaoProvider().getPortalCompanyDao().loadCompany(
+		Company bean = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(
 			sessionBean.getCurrentCompanyId() );
 		sessionBean.setCompany( bean );
 	}

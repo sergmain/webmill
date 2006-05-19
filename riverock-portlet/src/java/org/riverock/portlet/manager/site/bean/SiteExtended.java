@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
+import org.riverock.interfaces.portal.bean.Company;
 
 /**
  * @author Sergei Maslyukov
@@ -17,6 +18,15 @@ public class SiteExtended implements Serializable {
 
     private Site site = null;
     private List<VirtualHost> virtualHosts = null;
+    private Company company = null;
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
     public Site getSite() {
         return site;

@@ -25,7 +25,7 @@ import org.riverock.webmill.portal.bean.CompanyBean;
 public class InternalCompanyDaoImpl implements InternalCompanyDao {
     private final static Logger log = Logger.getLogger(InternalCompanyDaoImpl.class);
 
-    public Company loadCompany( String companyName ) {
+    public Company getCompany( String companyName ) {
         if( companyName == null ) {
             return null;
         }
@@ -65,7 +65,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
         }
     }
 
-    public Company loadCompany( Long companyId, AuthSession authSession ) {
+    public Company getCompany( Long companyId, AuthSession authSession ) {
         if( companyId == null ) {
             return null;
         }

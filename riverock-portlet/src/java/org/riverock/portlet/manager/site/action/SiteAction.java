@@ -1,13 +1,10 @@
-/**
- * License
- * 
- */
-package org.riverock.portlet.manager.site;
+package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.main.AuthSessionBean;
 
 /**
@@ -41,44 +38,32 @@ public class SiteAction implements Serializable {
     }
 
 // main select action
-    public String selectHolding() {
-        log.info( "Select CSS action." );
-        loadCurrentCss();
+    public String selectSite() {
+        SiteAction.log.info( "Select site action." );
+        loadCurrentSite();
 
 //        siteSessionBean.resetStatus();
         return "site";
     }
 
-    public void selectSiteAction(){
-        log.info( "select site action." );
-    }
-
-    public void selectSiteLanguageAction(){
-        log.info( "select site language action." );
-    }
-
-    public void selectTemplateAction(){
-        log.info( "select template action." );
-    }
-
 // Add actions
-    public String addCssAction() {
-        log.info( "Add CSS action." );
-/*        
+    public String addSiteAction() {
+        SiteAction.log.info( "Add site action." );
+/*
         HoldingBean bean = new HoldingBean();
         holdingSessionBean.setHoldingBean( bean );
 
         holdingSessionBean.setAdd( true );
 */
-        return "css-add";
+        return "site-add";
     }
 
-    public String processAddCssAction() {
-        log.info( "Procss add CSS action." );
-/*        
+    public String processAddSiteAction() {
+        SiteAction.log.info( "Procss add site action." );
+/*
         if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding( 
-			holdingSessionBean.getHoldingBean() 
+		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
+			holdingSessionBean.getHoldingBean()
 		);
             holdingSessionBean.setHoldingBean( null );
 
@@ -86,73 +71,73 @@ public class SiteAction implements Serializable {
         }
 
 	holdingSessionBean.resetStatus();
-*/	
-	return "site";
+*/
+    return "site";
     }
 
-    public String cancelAddCssAction() {
-        log.info( "Cancel add CSS action." );
-/*        
+    public String cancelAddSiteAction() {
+        SiteAction.log.info( "Cancel add site action." );
+/*
         holdingSessionBean.setHoldingBean( null );
 
         holdingSessionBean.resetStatus();
-*/        
+*/
         return "site";
     }
 
 // Edit actions
-    public String editCssAction() {
-        log.info( "Edit holding action." );
+    public String editSiteAction() {
+        SiteAction.log.info( "Edit site action." );
 /*
         holdingSessionBean.setEdit( true );
-*/        
+*/
         return "css-edit";
     }
 
-    public String saveChangesCssAction() {
-        log.info( "Save changes CSS action." );
-/*        
+    public String processEditSiteAction() {
+        SiteAction.log.info( "Save changes site action." );
+/*
         if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding( 
-			holdingSessionBean.getHoldingBean() 
+		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding(
+			holdingSessionBean.getHoldingBean()
 		);
             holdingSessionBean.setHoldingBean( null );
             holdingDataProvider.reinitHoldingBeans();
         }
 
 	holdingSessionBean.resetStatus();
-*/	
-	return "site";
+*/
+    return "site";
     }
 
-    public String cancelEditCssAction() {
-        log.info( "Cancel edit CSS action." );
+    public String cancelEditSiteAction() {
+        SiteAction.log.info( "Cancel edit site action." );
 
 //	holdingSessionBean.resetStatus();
-	return "site";
+    return "site";
     }
 
 // Delete actions
-    public String deleteCssAction() {
-        log.info( "delete CSS action." );
+    public String deleteSiteAction() {
+        SiteAction.log.info( "delete site action." );
 
 //	holdingSessionBean.setDelete( true );
-	return "css-delete";
+    return "css-delete";
     }
 
-    public String cancelDeleteCssAction() {
-        log.info( "Cancel delete holding action." );
+    public String cancelDeleteSiteAction() {
+        SiteAction.log.info( "Cancel delete holding action." );
 
 //	holdingSessionBean.resetStatus();
-	return "site";
+    return "site";
     }
 
-    public String processDeleteCSSAction() {
-        log.info( "Process delete CSS action." );
-/*        
+    public String processDeleteSiteAction() {
+        SiteAction.log.info( "Process delete site action." );
+/*
         if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding( 
-			holdingSessionBean.getHoldingBean() 
+		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding(
+			holdingSessionBean.getHoldingBean()
 		);
 
             holdingSessionBean.setHoldingBean( null );
@@ -160,10 +145,10 @@ public class SiteAction implements Serializable {
         }
 
 	holdingSessionBean.resetStatus();
-*/	
-	return "site";
+*/
+    return "site";
     }
 
-    private void loadCurrentCss() {
+    private void loadCurrentSite() {
     }
 }

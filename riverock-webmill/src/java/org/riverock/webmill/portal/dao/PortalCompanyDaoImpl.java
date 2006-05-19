@@ -19,8 +19,8 @@ public class PortalCompanyDaoImpl implements PortalCompanyDao {
         this.authSession = authSession;
     }
 
-    public Company loadCompany(Long id) {
-        return InternalDaoFactory.getInternalCompanyDao().loadCompany( id, authSession );
+    public Company getCompany(Long id) {
+        return InternalDaoFactory.getInternalCompanyDao().getCompany( id, authSession );
     }
 
     public List<Company> getCompanyList() {

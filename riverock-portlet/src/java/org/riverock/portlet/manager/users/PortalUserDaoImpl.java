@@ -70,7 +70,7 @@ public class PortalUserDaoImpl implements PortalUserDao {
             PortalUserBeanImpl beanPortal = null;
             if( rs.next() ) {
                 beanPortal = loadPortalUserFromResultSet( rs );
-                final Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().loadCompany( beanPortal.getCompanyId() );
+                final Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany( beanPortal.getCompanyId() );
                 if (company!=null)
                     beanPortal.setCompanyName( company.getName() );
                 else
@@ -130,7 +130,7 @@ public class PortalUserDaoImpl implements PortalUserDao {
             List<PortalUserBean> list = new ArrayList<PortalUserBean>();
             while( rs.next() ) {
                 PortalUserBeanImpl beanPortal = loadPortalUserFromResultSet( rs );
-                final Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().loadCompany( beanPortal.getCompanyId() );
+                final Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany( beanPortal.getCompanyId() );
                 if (company!=null)
                     beanPortal.setCompanyName( company.getName() );
                 else

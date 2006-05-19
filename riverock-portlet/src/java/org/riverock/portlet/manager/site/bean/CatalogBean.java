@@ -2,6 +2,7 @@ package org.riverock.portlet.manager.site.bean;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 
@@ -10,7 +11,7 @@ import org.riverock.interfaces.portal.bean.CatalogItem;
  *         Date: 17.05.2006
  *         Time: 17:42:16
  */
-public class CatalogBean implements CatalogItem {
+public class CatalogBean implements Serializable, CatalogItem {
     private static final long serialVersionUID = 2057005507L;
 
     private Long catalogId;

@@ -35,9 +35,19 @@
                  <jsp:include page="site-tree.jsp"/>
              </f:subview>
 
-             <f:subview id="site-right-subview">
-                 <jsp:include page="site-right-panel.jsp"/>
-             </f:subview>
+             <h:panelGroup id="operation-site-delete-panel">
+                 <h:commandButton id="site-delete-process-action" action="#{siteAction.processDeleteSiteAction}"
+                                  value="#{msg['process_delete_site_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                 <h:commandButton id="site-delete-cancel-action" action="#{siteAction.cancelDeleteSiteAction}"
+                                  value="#{msg['cancel_delete_site_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+             </h:panelGroup>
 
          </h:panelGrid>
 	 	

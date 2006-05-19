@@ -35,9 +35,19 @@
                  <jsp:include page="site-tree.jsp"/>
              </f:subview>
 
-             <f:subview id="site-right-subview">
-                 <jsp:include page="site-right-panel.jsp"/>
-             </f:subview>
+             <h:panelGroup id="operation-site-language-add-panel">
+                 <h:commandButton id="site-language-add-process-action" action="#{siteLanguageAction.processAddSiteLanguageAction}"
+                                  value="#{msg['process_add_site_language_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                 <h:commandButton id="site-language-add-cancel-action" action="#{siteLanguageAction.cancelAddSiteLanguageAction}"
+                                  value="#{msg['cancel_add_site_language_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+             </h:panelGroup>
 
          </h:panelGrid>
 	 	

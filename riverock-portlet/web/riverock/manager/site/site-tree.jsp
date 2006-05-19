@@ -16,7 +16,7 @@
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
-                <h:commandButton id="add-site-action-id" action="add-site-action" image="/images/add.gif" style="border : 0" alt="Add new site"/>
+                <h:commandButton id="add-site-action-id" action="#{siteAction.addSiteAction}" image="/images/add.gif" style="border : 0" alt="Add new site"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-language-list">
@@ -25,7 +25,7 @@
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
-                <h:commandButton id="add-site-language-action-id" action="add-site-language-action" image="/images/add.gif" style="border : 0" alt="Add new site language"/>
+                <h:commandButton id="add-site-language-action-id" action="#{siteLanguageAction.addSiteLanguageAction}" image="/images/add.gif" style="border : 0" alt="Add new site language"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="template-list">
@@ -34,7 +34,7 @@
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
-                <h:commandButton id="add-template-action-id" action="add-template-action" image="/images/add.gif" style="border : 0" alt="Add new template"/>
+                <h:commandButton id="add-template-action-id" action="#{templateAction.addTemplateAction}" image="/images/add.gif" style="border : 0" alt="Add new template"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="xslt-list">
@@ -43,7 +43,7 @@
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
-                <h:commandButton id="add-xslt-action-id" action="add-xslt-action" image="/images/add.gif" style="border : 0" alt="Add new XSLT"/>
+                <h:commandButton id="add-xslt-action-id" action="#{xsltAction.addXsltAction}" image="/images/add.gif" style="border : 0" alt="Add new XSLT"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="css-list">
@@ -52,7 +52,7 @@
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
-                <h:commandButton id="add-css-action-id" action="add-css-action" image="/images/add.gif" style="border : 0" alt="Add new CSS"/>
+                <h:commandButton id="add-css-action-id" action="#{cssAction.addCssAction}" image="/images/add.gif" style="border : 0" alt="Add new CSS"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="site">

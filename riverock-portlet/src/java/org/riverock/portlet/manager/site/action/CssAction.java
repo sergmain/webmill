@@ -2,13 +2,14 @@
  * License
  * 
  */
-package org.riverock.portlet.manager.site;
+package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.manager.site.SiteSessionBean;
 
 /**
  * @author Sergei Maslyukov
@@ -17,14 +18,14 @@ import org.riverock.portlet.main.AuthSessionBean;
  *
  *
  */
-public class SiteAction implements Serializable {
-    private final static Logger log = Logger.getLogger( SiteAction.class );
+public class CssAction implements Serializable {
+    private final static Logger log = Logger.getLogger( CssAction.class );
     private static final long serialVersionUID = 2057005511L;
 
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
 
-    public SiteAction() {
+    public CssAction() {
     }
 
     // getter/setter methods
@@ -41,24 +42,12 @@ public class SiteAction implements Serializable {
     }
 
 // main select action
-    public String selectHolding() {
+    public String selectCss() {
         log.info( "Select CSS action." );
         loadCurrentCss();
 
 //        siteSessionBean.resetStatus();
         return "site";
-    }
-
-    public void selectSiteAction(){
-        log.info( "select site action." );
-    }
-
-    public void selectSiteLanguageAction(){
-        log.info( "select site language action." );
-    }
-
-    public void selectTemplateAction(){
-        log.info( "select template action." );
     }
 
 // Add actions
@@ -86,8 +75,8 @@ public class SiteAction implements Serializable {
         }
 
 	holdingSessionBean.resetStatus();
-*/	
-	return "site";
+*/
+    return "site";
     }
 
     public String cancelAddCssAction() {
@@ -96,20 +85,20 @@ public class SiteAction implements Serializable {
         holdingSessionBean.setHoldingBean( null );
 
         holdingSessionBean.resetStatus();
-*/        
+*/
         return "site";
     }
 
 // Edit actions
     public String editCssAction() {
-        log.info( "Edit holding action." );
+        log.info( "Edit CSS action." );
 /*
         holdingSessionBean.setEdit( true );
-*/        
+*/
         return "css-edit";
     }
 
-    public String saveChangesCssAction() {
+    public String processEditCssAction() {
         log.info( "Save changes CSS action." );
 /*        
         if( holdingSessionBean.getHoldingBean() != null ) {
@@ -121,15 +110,15 @@ public class SiteAction implements Serializable {
         }
 
 	holdingSessionBean.resetStatus();
-*/	
-	return "site";
+*/
+    return "site";
     }
 
     public String cancelEditCssAction() {
         log.info( "Cancel edit CSS action." );
 
 //	holdingSessionBean.resetStatus();
-	return "site";
+    return "site";
     }
 
 // Delete actions
@@ -137,17 +126,17 @@ public class SiteAction implements Serializable {
         log.info( "delete CSS action." );
 
 //	holdingSessionBean.setDelete( true );
-	return "css-delete";
+    return "css-delete";
     }
 
     public String cancelDeleteCssAction() {
-        log.info( "Cancel delete holding action." );
+        log.info( "Cancel delete CSS action." );
 
 //	holdingSessionBean.resetStatus();
-	return "site";
+    return "site";
     }
 
-    public String processDeleteCSSAction() {
+    public String processDeleteCssAction() {
         log.info( "Process delete CSS action." );
 /*        
         if( holdingSessionBean.getHoldingBean() != null ) {
@@ -160,8 +149,8 @@ public class SiteAction implements Serializable {
         }
 
 	holdingSessionBean.resetStatus();
-*/	
-	return "site";
+*/
+    return "site";
     }
 
     private void loadCurrentCss() {
