@@ -35,9 +35,19 @@
                  <jsp:include page="site-tree.jsp"/>
              </f:subview>
 
-             <f:subview id="site-right-subview">
-                 <jsp:include page="site-right-panel.jsp"/>
-             </f:subview>
+             <h:panelGroup id="operation-site-edit-panel">
+                 <h:commandButton id="site-edit-process-action" action="#{siteAction.processEditSiteAction}"
+                                  value="#{msg['process_edit_site_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                 <h:commandButton id="site-edit-cancel-action" action="#{siteAction.cancelEditSiteAction}"
+                                  value="#{msg['cancel_edit_site_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+             </h:panelGroup>
 
          </h:panelGrid>
 	 	

@@ -87,7 +87,7 @@ public class HoldingAction implements Serializable {
             return;
         }
         CompanyBean company = new CompanyBean(
-            FacesTools.getPortalDaoProvider().getPortalCompanyDao().loadCompany( companyId )
+            FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany( companyId )
         );
 
         holdingSessionBean.getHoldingBean().getCompanies().add( company );

@@ -4,24 +4,22 @@
  */
 package org.riverock.portlet.manager.site;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.Serializable;
 
-import org.apache.log4j.Logger;
-
+import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.Xslt;
-import org.riverock.interfaces.portal.bean.Css;
-import org.riverock.portlet.tools.FacesTools;
+import org.riverock.portlet.manager.site.bean.CssBean;
 import org.riverock.portlet.manager.site.bean.SiteBean;
-import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
+import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
-import org.riverock.portlet.manager.site.bean.CssBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -31,7 +29,7 @@ import org.riverock.portlet.manager.site.bean.CssBean;
  *
  */
 public class SiteService implements Serializable {
-    private final static Logger log = Logger.getLogger( SiteService.class );
+//    private final static Logger log = Logger.getLogger( SiteService.class );
     private static final long serialVersionUID = 2058005507L;
 
     public SiteService() {
@@ -70,10 +68,12 @@ public class SiteService implements Serializable {
         for (Xslt xslt: xslts) {
             list.add( new XsltBean(xslt) );
         }
+/*
         if (log.isDebugEnabled()){
             log.debug("count of XSLT #3: " + xslts.size());
             log.debug("count of XSLT #4: " + list.size());
         }
+*/
         return list;
     }
 
@@ -82,6 +82,9 @@ public class SiteService implements Serializable {
         siteExtended.setSite( FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId) );
         siteExtended.setVirtualHosts(
             FacesTools.getPortalDaoProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId())
+        );
+        siteExtended.setCompany(
+            FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(siteExtended.getSite().getCompanyId())
         );
         return siteExtended;
     }

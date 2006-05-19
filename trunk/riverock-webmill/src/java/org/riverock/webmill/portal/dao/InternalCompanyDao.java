@@ -13,8 +13,8 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public interface InternalCompanyDao {
     
-    public Company loadCompany( String companyName );
-    public Company loadCompany( Long id, AuthSession authSession );
+    public Company getCompany( String companyName );
+    public Company getCompany( Long id, AuthSession authSession );
 
     public Long processAddCompany( Company companyBean, Long holdingId );
     public Long processAddCompany( Company companyBean, String userLogin, Long holdingId, AuthSession authSession );

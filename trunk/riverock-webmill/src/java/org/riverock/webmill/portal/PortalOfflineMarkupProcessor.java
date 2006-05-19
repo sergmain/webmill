@@ -101,7 +101,7 @@ public class PortalOfflineMarkupProcessor {
 
                 if (b.siteId==null) {
                     // create new company
-                    Company company = InternalDaoFactory.getInternalCompanyDao().loadCompany(siteConfig.getSiteInstance().getCompany().getName());
+                    Company company = InternalDaoFactory.getInternalCompanyDao().getCompany(siteConfig.getSiteInstance().getCompany().getName());
                     if (company==null) {
                         CompanyBean companyBean = createCompanyBean(siteConfig.getSiteInstance().getCompany());
                         companyBean.setId( InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, null ) );

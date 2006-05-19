@@ -35,9 +35,19 @@
                  <jsp:include page="site-tree.jsp"/>
              </f:subview>
 
-             <f:subview id="site-right-subview">
-                 <jsp:include page="site-right-panel.jsp"/>
-             </f:subview>
+             <h:panelGroup id="operation-xslt-delete-panel">
+                 <h:commandButton id="xslt-delete-process-action" action="#{xsltAction.processDeleteXsltAction}"
+                                  value="#{msg['process_delete_xslt_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                 <h:commandButton id="xslt-delete-cancel-action" action="#{xsltAction.cancelDeleteXsltAction}"
+                                  value="#{msg['cancel_delete_xslt_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+             </h:panelGroup>
 
          </h:panelGrid>
 	 	

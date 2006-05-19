@@ -35,9 +35,19 @@
                  <jsp:include page="site-tree.jsp"/>
              </f:subview>
 
-             <f:subview id="site-right-subview">
-                 <jsp:include page="site-right-panel.jsp"/>
-             </f:subview>
+             <h:panelGroup id="operation-xslt-edit-panel">
+                 <h:commandButton id="xslt-edit-process-action" action="#{xsltAction.processEditXsltAction}"
+                                  value="#{msg['process_edit_xslt_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                 <h:commandButton id="xslt-edit-cancel-action" action="#{xsltAction.cancelEditXsltAction}"
+                                  value="#{msg['cancel_edit_xslt_action']}"
+                                  styleClass="site-button-action"
+                     >
+                 </h:commandButton>
+             </h:panelGroup>
 
          </h:panelGrid>
 	 	

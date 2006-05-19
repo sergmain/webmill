@@ -44,7 +44,8 @@ public class SiteTree implements Serializable {
     public SiteTree() {
     }
 
-    public TreeNode getSiteTree() {
+    @SuppressWarnings("unchecked")
+	public TreeNode getSiteTree() {
 
         log.info("Invoke getSiteTree()");
 
