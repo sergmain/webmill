@@ -51,6 +51,10 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
     }
 
     public List<VirtualHost> getVirtualHosts(Long siteId) {
+	if (siteId==null) {
+		throw new IllegalStateException("getVirtualHost(), siteId is null");
+	}
+
         DatabaseAdapter adapter = null;
 
         List<VirtualHost> virtualHosts = new ArrayList<VirtualHost>();

@@ -55,7 +55,7 @@ public class SiteLanguageAction implements Serializable {
 
         holdingSessionBean.setAdd( true );
 */
-        return "css-add";
+        return "site-language-add";
     }
 
     public String processAddSiteLanguageAction() {
@@ -91,7 +91,7 @@ public class SiteLanguageAction implements Serializable {
 /*
         holdingSessionBean.setEdit( true );
 */
-        return "css-edit";
+        return "site-language-edit";
     }
 
     public String processEditSiteLanguageAction() {
@@ -122,7 +122,7 @@ public class SiteLanguageAction implements Serializable {
         SiteLanguageAction.log.info( "delete site language action." );
 
 //	holdingSessionBean.setDelete( true );
-    return "css-delete";
+    return "site-language-delete";
     }
 
     public String cancelDeleteSiteLanguageAction() {
