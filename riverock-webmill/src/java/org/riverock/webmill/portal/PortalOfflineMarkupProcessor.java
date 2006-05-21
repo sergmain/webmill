@@ -9,6 +9,8 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Unmarshaller;
+import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.ValidationException;
 import org.xml.sax.InputSource;
 
 import org.riverock.common.config.PropertiesProvider;
@@ -39,6 +41,7 @@ import org.riverock.webmill.schema.site_config.SiteConfigType;
 import org.riverock.webmill.schema.site_config.SiteLanguageType;
 import org.riverock.webmill.schema.site_config.Sites;
 import org.riverock.webmill.schema.site_config.TemplateType;
+import org.riverock.generic.startup.StartupApplication;
 
 /**
  * @author Sergei Maslyukov
@@ -84,133 +87,140 @@ public class PortalOfflineMarkupProcessor {
 
         try {
 
-            InputSource inSrc = new InputSource( new FileInputStream( file ) );
-            Sites sites = (Sites) Unmarshaller.unmarshal( Sites.class, inSrc );
-
-            InternalSiteDao siteDao = InternalDaoFactory.getInternalSiteDao();
-            for (Object o : sites.getSiteConfigAsReference()) {
-                SiteConfigType siteConfig = (SiteConfigType)o;
-
-                List<VirtualHost> hostFullList = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
-
-                VirtualHostSiteExist b = checkVirtualHost(hostFullList, siteConfig.getHostAsReference());
-                if (!b.isValid) {
-                    log.error("Error in list of virtual hosts, name site config: "+siteConfig.getName());
-                    continue;
-                }
-
-                if (b.siteId==null) {
-                    // create new company
-                    Company company = InternalDaoFactory.getInternalCompanyDao().getCompany(siteConfig.getSiteInstance().getCompany().getName());
-                    if (company==null) {
-                        CompanyBean companyBean = createCompanyBean(siteConfig.getSiteInstance().getCompany());
-                        companyBean.setId( InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, null ) );
-                        company = companyBean;
-                    }
-                    Site site = siteDao.getSite( siteConfig.getSiteInstance().getSiteName() );
-                    if (site==null) {
-                        //Create new site
-                        SiteBean siteBean = new SiteBean();
-                        siteBean.setSiteName(siteConfig.getSiteInstance().getSiteName());
-                        siteBean.setCssDynamic(false);
-                        siteBean.setCssFile(siteConfig.getSiteInstance().getCssFile());
-                        Locale locale = StringTools.getLocale( siteConfig.getSiteInstance().getDefaultLocale() );
-                        siteBean.setDefCountry(locale.getCountry());
-                        siteBean.setDefLanguage(locale.getLanguage());
-                        siteBean.setDefVariant(locale.getVariant());
-                        siteBean.setCompanyId(company.getId());
-                        b.siteId = siteDao.createSite(siteBean);
-                    }
-                }
-                List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(b.siteId);
-                for (Object objHost : siteConfig.getHostAsReference()) {
-                    String hostName = (String) objHost;
-                    boolean isNotExists = true;
-                    for (VirtualHost host : hosts) {
-                        if (hostName.equalsIgnoreCase(host.getHost())) {
-                            isNotExists = false;
-                            break;
-                        }
-                    }
-                    if (isNotExists) {
-                        VirtualHostBean virtualHost = new VirtualHostBean();
-                        virtualHost.setHost( hostName.toLowerCase() );
-                        virtualHost.setSiteId(b.siteId);
-                        InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost);
-                    }
-                }
-                for (Object siteLangObj : siteConfig.getSiteLanguageAsReference()){
-                    SiteLanguageType siteLanguageConfig = (SiteLanguageType) siteLangObj;
-                    SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageConfig.getLocale());
-                    if (siteLanguage==null) {
-                        SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
-                        siteLanguageBean.setSiteId(b.siteId);
-                        siteLanguageBean.setCustomLanguage(siteLanguageConfig.getLocale());
-                        siteLanguageBean.setNameCustomLanguage(siteLanguageConfig.getLocale());
-                        siteLanguageBean.setSiteLanguageId(
-                            InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguageBean)
-                        );
-                        siteLanguage = siteLanguageBean;
-                    }
-                    for (Object templateConfigObj :siteLanguageConfig.getTemplateAsReference()){
-                        TemplateType templateItem = (TemplateType) templateConfigObj;
-                        Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(templateItem.getName(), siteLanguage.getSiteLanguageId());
-                        if (template==null) {
-                            TemplateBean templateBean = new TemplateBean();
-
-                            templateBean.setTemplateData(
-                                readBinaryFile(file.getParent()+File.separatorChar+templateItem.getTemplateFile())
-                            );
-                            templateBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
-                            templateBean.setTemplateName(templateItem.getName());
-                            if (log.isDebugEnabled()) {
-                                log.debug("template");
-                                log.debug("    name: " +templateBean.getTemplateName());
-                                log.debug("    id: " +templateBean.getTemplateId());
-                                log.debug("    lang: " +templateBean.getTemplateLanguage());
-                                log.debug("    siteLangId: " +templateBean.getSiteLanguageId());
-                            }
-                            InternalDaoFactory.getInternalTemplateDao().createTemplate(templateBean);
-                        }
-                    }
-                    Xslt xslt = InternalDaoFactory.getInternalXsltDao().getXslt(siteLanguageConfig.getXslt().getName(), siteLanguage.getSiteLanguageId());
-                    if (xslt==null) {
-                        Xslt currentXslt = InternalDaoFactory.getInternalXsltDao().getCurrentXslt(siteLanguage.getSiteLanguageId());
-                        PortalXsltBean xsltBean = new PortalXsltBean();
-                        xsltBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
-                        xsltBean.setName(siteLanguageConfig.getXslt().getName());
-                        xsltBean.setXsltData(
-                            readBinaryFile(file.getParent()+File.separatorChar+siteLanguageConfig.getXslt().getXsltFile())
-                        );
-                        xsltBean.setCurrent(currentXslt==null);
-                        InternalDaoFactory.getInternalXsltDao().createXslt(xsltBean);
-                    }
-
-                    for (MenuGroupType menuGroup : (List<MenuGroupType>)siteLanguageConfig.getMenuGroupAsReference() ) {
-                        CatalogLanguageItem catalogLanguageItem =
-                            InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItem(menuGroup.getCode(), siteLanguage.getSiteLanguageId());
-
-                        if (catalogLanguageItem==null) {
-                            CatalogLanguageBean bean = new CatalogLanguageBean();
-                            bean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
-                            bean.setCatalogCode(menuGroup.getCode());
-                            bean.setDefault(false);
-                            bean.setCatalogLanguageId(
-                                InternalDaoFactory.getInternalCatalogDao().createCatalogLanguageItem(bean)
-                            );
-                            catalogLanguageItem = bean;
-                        }
-
-                        processMenu( siteLanguage, catalogLanguageItem, (List<MenuType>)menuGroup.getMenuAsReference(), 0L );
-                    }
-                }
-            }
+            processConfigFile(file);
 
 
         } catch (Throwable e) {
             String es = "Error process config file: "+file.getAbsolutePath();
             log.error(es, e);
             throw new IllegalStateException( es, e);
+        }
+    }
+
+    private static void processConfigFile(File file) throws MarshalException, ValidationException, IOException {
+        InputSource inSrc = new InputSource( new FileInputStream( file ) );
+        Sites sites = (Sites) Unmarshaller.unmarshal( Sites.class, inSrc );
+
+        InternalSiteDao siteDao = InternalDaoFactory.getInternalSiteDao();
+        for (Object o : sites.getSiteConfigAsReference()) {
+            SiteConfigType siteConfig = (SiteConfigType)o;
+
+            List<VirtualHost> hostFullList = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
+
+            VirtualHostSiteExist b = checkVirtualHost(hostFullList, siteConfig.getHostAsReference());
+            if (!b.isValid) {
+                log.error("Error in list of virtual hosts, name site config: "+siteConfig.getName());
+                continue;
+            }
+
+            if (b.siteId==null) {
+                // create new company
+                Company company = InternalDaoFactory.getInternalCompanyDao().getCompany(siteConfig.getSiteInstance().getCompany().getName());
+                if (company==null) {
+                    CompanyBean companyBean = createCompanyBean(siteConfig.getSiteInstance().getCompany());
+                    companyBean.setId( InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, null ) );
+                    company = companyBean;
+                }
+                Site site = siteDao.getSite( siteConfig.getSiteInstance().getSiteName() );
+                if (site==null) {
+                    //Create new site
+                    SiteBean siteBean = new SiteBean();
+                    siteBean.setSiteName(siteConfig.getSiteInstance().getSiteName());
+                    siteBean.setCssDynamic(false);
+                    siteBean.setCssFile(siteConfig.getSiteInstance().getCssFile());
+                    Locale locale = StringTools.getLocale( siteConfig.getSiteInstance().getDefaultLocale() );
+                    siteBean.setDefCountry(locale.getCountry());
+                    siteBean.setDefLanguage(locale.getLanguage());
+                    siteBean.setDefVariant(locale.getVariant());
+                    siteBean.setCompanyId(company.getId());
+                    b.siteId = siteDao.createSite(siteBean);
+                }
+                else {
+                    b.siteId = site.getSiteId();
+                }
+            }
+            List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(b.siteId);
+            for (Object objHost : siteConfig.getHostAsReference()) {
+                String hostName = (String) objHost;
+                boolean isNotExists = true;
+                for (VirtualHost host : hosts) {
+                    if (hostName.equalsIgnoreCase(host.getHost())) {
+                        isNotExists = false;
+                        break;
+                    }
+                }
+                if (isNotExists) {
+                    VirtualHostBean virtualHost = new VirtualHostBean();
+                    virtualHost.setHost( hostName.toLowerCase() );
+                    virtualHost.setSiteId(b.siteId);
+                    InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost);
+                }
+            }
+            for (Object siteLangObj : siteConfig.getSiteLanguageAsReference()){
+                SiteLanguageType siteLanguageConfig = (SiteLanguageType) siteLangObj;
+                SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageConfig.getLocale());
+                if (siteLanguage==null) {
+                    SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
+                    siteLanguageBean.setSiteId(b.siteId);
+                    siteLanguageBean.setCustomLanguage(siteLanguageConfig.getLocale());
+                    siteLanguageBean.setNameCustomLanguage(siteLanguageConfig.getLocale());
+                    siteLanguageBean.setSiteLanguageId(
+                        InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguageBean)
+                    );
+                    siteLanguage = siteLanguageBean;
+                }
+                for (Object templateConfigObj :siteLanguageConfig.getTemplateAsReference()){
+                    TemplateType templateItem = (TemplateType) templateConfigObj;
+                    Template template = InternalDaoFactory.getInternalTemplateDao().getTemplate(templateItem.getName(), siteLanguage.getSiteLanguageId());
+                    if (template==null) {
+                        TemplateBean templateBean = new TemplateBean();
+
+                        templateBean.setTemplateData(
+                            readBinaryFile(file.getParent()+File.separatorChar+templateItem.getTemplateFile())
+                        );
+                        templateBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+                        templateBean.setTemplateName(templateItem.getName());
+                        if (log.isDebugEnabled()) {
+                            log.debug("template");
+                            log.debug("    name: " +templateBean.getTemplateName());
+                            log.debug("    id: " +templateBean.getTemplateId());
+                            log.debug("    lang: " +templateBean.getTemplateLanguage());
+                            log.debug("    siteLangId: " +templateBean.getSiteLanguageId());
+                        }
+                        InternalDaoFactory.getInternalTemplateDao().createTemplate(templateBean);
+                    }
+                }
+                Xslt xslt = InternalDaoFactory.getInternalXsltDao().getXslt(siteLanguageConfig.getXslt().getName(), siteLanguage.getSiteLanguageId());
+                if (xslt==null) {
+                    Xslt currentXslt = InternalDaoFactory.getInternalXsltDao().getCurrentXslt(siteLanguage.getSiteLanguageId());
+                    PortalXsltBean xsltBean = new PortalXsltBean();
+                    xsltBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+                    xsltBean.setName(siteLanguageConfig.getXslt().getName());
+                    xsltBean.setXsltData(
+                        readBinaryFile(file.getParent()+File.separatorChar+siteLanguageConfig.getXslt().getXsltFile())
+                    );
+                    xsltBean.setCurrent(currentXslt==null);
+                    InternalDaoFactory.getInternalXsltDao().createXslt(xsltBean);
+                }
+
+                for (MenuGroupType menuGroup : (List<MenuGroupType>)siteLanguageConfig.getMenuGroupAsReference() ) {
+                    CatalogLanguageItem catalogLanguageItem =
+                        InternalDaoFactory.getInternalCatalogDao().getCatalogLanguageItem(menuGroup.getCode(), siteLanguage.getSiteLanguageId());
+
+                    if (catalogLanguageItem==null) {
+                        CatalogLanguageBean bean = new CatalogLanguageBean();
+                        bean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+                        bean.setCatalogCode(menuGroup.getCode());
+                        bean.setDefault(false);
+                        bean.setCatalogLanguageId(
+                            InternalDaoFactory.getInternalCatalogDao().createCatalogLanguageItem(bean)
+                        );
+                        catalogLanguageItem = bean;
+                    }
+
+                    processMenu( siteLanguage, catalogLanguageItem, (List<MenuType>)menuGroup.getMenuAsReference(), 0L );
+                }
+            }
         }
     }
 
@@ -324,6 +334,11 @@ public class PortalOfflineMarkupProcessor {
         company.setShortName(companyType.getShortName());
         company.setWebsite(companyType.getWebsite());
         return company;
+    }
+
+    public static void main(String[] args) throws IOException, ValidationException, MarshalException {
+        StartupApplication.init();
+        processConfigFile( new File("C:\\sandbox\\riverock\\riverock-webmill\\web\\WEB-INF\\webmill\\static\\site-config.xml") );
     }
 
 }
