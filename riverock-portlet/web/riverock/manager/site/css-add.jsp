@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
+
 <style type="text/css">
     TD {
         vertical-align: top;
@@ -39,25 +41,20 @@
 			
 				<h:panelGroup id="operation-css-add-panel">
 				    <h:commandButton id="css-add-process-action" action="#{cssAction.processAddCssAction}"
-				                     value="#{msg['process_add_css_action']}"
+				                     value="#{msg.process_add_css_action}"
 				                     styleClass="site-button-action"
 				        >
 				    </h:commandButton>
 				    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
 				    <h:commandButton id="css-add-cancel-action" action="#{cssAction.cancelAddCssAction}"
-				                     value="#{msg['cancel_add_css_action']}"
+				                     value="#{msg.cancel_add_css_action}"
 				                     styleClass="site-button-action"
 				        >
 				    </h:commandButton>
 				</h:panelGroup>
 			</h:panelGroup>
-
          </h:panelGrid>
-	 	
-	 	
+
 	 </h:panelGrid>
-	 
-	 
-	
 </h:form>
 </f:view>

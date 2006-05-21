@@ -95,11 +95,13 @@
       </fileset>
     </path>
 
+<!--
     <taskdef resource="org/apache/catalina/ant/catalina.tasks">
         <classpath>
             <path refid="deployer.classpath"/>
         </classpath>
     </taskdef>
+-->
 
     <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>

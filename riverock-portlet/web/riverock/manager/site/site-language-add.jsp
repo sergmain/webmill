@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
+
 <style type="text/css">
     TD {
         vertical-align: top;
