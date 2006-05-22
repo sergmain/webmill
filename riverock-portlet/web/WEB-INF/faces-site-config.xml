@@ -36,9 +36,7 @@
         <managed-bean-class>org.riverock.portlet.manager.site.SiteService</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
-
     <!-- Actions -->
-
     <managed-bean>
         <managed-bean-name>cssAction</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.site.action.CssAction</managed-bean-class>
@@ -52,7 +50,6 @@
             <value>#{authSessionBean}</value>
         </managed-property>
     </managed-bean>
-
     <managed-bean>
         <managed-bean-name>siteAction</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.site.action.SiteAction</managed-bean-class>
@@ -66,7 +63,6 @@
             <value>#{authSessionBean}</value>
         </managed-property>
     </managed-bean>
-
     <managed-bean>
         <managed-bean-name>siteLanguageAction</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.site.action.SiteLanguageAction</managed-bean-class>
@@ -80,7 +76,6 @@
             <value>#{authSessionBean}</value>
         </managed-property>
     </managed-bean>
-
     <managed-bean>
         <managed-bean-name>templateAction</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.site.action.TemplateAction</managed-bean-class>
@@ -94,7 +89,6 @@
             <value>#{authSessionBean}</value>
         </managed-property>
     </managed-bean>
-
     <managed-bean>
         <managed-bean-name>xsltAction</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.site.action.XsltAction</managed-bean-class>
@@ -110,178 +104,116 @@
     </managed-bean>
 
 
-    <!-- Navigation rules -->
-
     <navigation-rule>
-        <from-view-id>/riverock/manager/site/site.jsp</from-view-id>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>site</from-outcome>
+            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>site-add</from-outcome>
             <to-view-id>/riverock/manager/site/site-add.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>site-edit</from-outcome>
             <to-view-id>/riverock/manager/site/site-edit.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>site-delete</from-outcome>
             <to-view-id>/riverock/manager/site/site-delete.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>site-language-add</from-outcome>
             <to-view-id>/riverock/manager/site/site-language-add.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>site-language-edit</from-outcome>
             <to-view-id>/riverock/manager/site/site-language-edit.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>site-language-delete</from-outcome>
             <to-view-id>/riverock/manager/site/site-language-delete.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>css-add</from-outcome>
             <to-view-id>/riverock/manager/site/css-add.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>css-edit</from-outcome>
             <to-view-id>/riverock/manager/site/css-edit.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>css-delete</from-outcome>
             <to-view-id>/riverock/manager/site/css-delete.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>template-add</from-outcome>
             <to-view-id>/riverock/manager/site/template-add.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>template-edit</from-outcome>
             <to-view-id>/riverock/manager/site/template-edit.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>template-delete</from-outcome>
             <to-view-id>/riverock/manager/site/template-delete.jsp</to-view-id>
         </navigation-case>
-        <navigation-case>
-            <from-outcome>xslt-edit</from-outcome>
-            <to-view-id>/riverock/manager/site/xslt-edit.jsp</to-view-id>
-        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>xslt-add</from-outcome>
             <to-view-id>/riverock/manager/site/xslt-add.jsp</to-view-id>
         </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>xslt-edit</from-outcome>
+            <to-view-id>/riverock/manager/site/xslt-edit.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>xslt-delete</from-outcome>
             <to-view-id>/riverock/manager/site/xslt-delete.jsp</to-view-id>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/site-add.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/site-edit.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/site-language-add.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/site-delete.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/site-language-edit.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/site-language-delete.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/css-add.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/css-edit.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/css-delete.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/template-add.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/template-edit.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/template-delete.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/xslt-add.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/xslt-edit.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/riverock/manager/site/xslt-delete.jsp</from-view-id>
-        <navigation-case>
-            <from-outcome>site</from-outcome>
-            <to-view-id>/riverock/manager/site/site.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <application>

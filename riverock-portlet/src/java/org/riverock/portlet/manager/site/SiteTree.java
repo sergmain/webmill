@@ -44,6 +44,10 @@ public class SiteTree implements Serializable {
     public SiteTree() {
     }
 
+    public void setSiteTree(TreeNode treeNode) {
+        this.treeNode = treeNode;
+    }
+
     @SuppressWarnings("unchecked")
 	public TreeNode getSiteTree() {
 
@@ -90,16 +94,11 @@ public class SiteTree implements Serializable {
                     );
                 }
                 siteLanguageNode.getChildren().add(xsltListNode);
-
-
             }
-
 
             treeData.getChildren().add(siteNode);
         }
         treeNode = treeData;
-
-//      }
         return treeNode;
     }
 

@@ -20,7 +20,7 @@ public interface InternalXsltDao {
     public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId);
     public Xslt getCurrentXslt(Long siteLanguageId);
 
-    public Xslt getXslt(Long siteId);
+    public Xslt getXslt(Long xsltId);
     public Xslt getXslt(String xsltName, Long siteLanguageId);
     public Long createXslt(Xslt xslt);
 

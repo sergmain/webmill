@@ -18,6 +18,10 @@ public class PortalCssDaoImpl implements PortalCssDao {
         this.authSession = authSession;
     }
 
+    public Css getCssCurrent(Long siteId) {
+        return InternalDaoFactory.getInternalCssDao().getCssCurrent(siteId);
+    }
+
     public Css getCss(Long cssId) {
         return InternalDaoFactory.getInternalCssDao().getCss(cssId);
     }

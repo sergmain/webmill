@@ -36,7 +36,7 @@
                      styleClass="top-button-action"/>
     <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
                      styleClass="top-button-action"/>
-    <h:commandButton id="site-list-action" action="site-list" value="#{manager.site_button}"
+    <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
                      styleClass="top-button-action"/>
 
     <h:outputText value="#{manager.auth_info}" style="font-size:10px"/>

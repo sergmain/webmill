@@ -70,7 +70,7 @@ public final class ContentCSS {
         if (siteId == null)
             return;
 
-        css = InternalDaoFactory.getInternalCssDao().getCss( siteId );
+        css = InternalDaoFactory.getInternalCssDao().getCssCurrent( siteId );
         if (css==null)
             css = new CssBean();
     }

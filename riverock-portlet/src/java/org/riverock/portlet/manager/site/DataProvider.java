@@ -9,6 +9,10 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.manager.site.bean.SiteExtended;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.interfaces.portal.bean.Css;
 
 /**
  * @author Sergei Maslyukov
@@ -25,6 +29,10 @@ public class DataProvider implements Serializable {
     private SiteSessionBean siteSessionBean = null;
 
     private SiteExtended siteExtended = null;
+    private SiteLanguage siteLanguage = null;
+    private Template template = null;
+    private Xslt xslt = null;
+    private Css css = null;
 
     public DataProvider() {
     }
@@ -56,4 +64,69 @@ public class DataProvider implements Serializable {
 
         return siteExtended;
     }
+
+    public SiteLanguage getSiteLanguage() {
+        if (siteSessionBean.getObjectType()!=siteSessionBean.getSiteLanguageType()) {
+            throw new IllegalStateException("Query site language info with not site language type, current type: " + siteSessionBean.getObjectType());
+        }
+        Long siteLangaugeId = siteSessionBean.getId();
+        if (siteLanguage==null) {
+            siteLanguage = siteService.getSiteLanguage(siteLangaugeId);
+        }
+        if (!siteLanguage.getSiteLanguageId().equals(siteLangaugeId)) {
+            log.warn("Mismatch siteLangaugeId");
+            siteLanguage = siteService.getSiteLanguage(siteLangaugeId);
+        }
+
+        return siteLanguage;
+    }
+
+    public Template getTemplate() {
+        if (siteSessionBean.getObjectType()!=siteSessionBean.getTemplateType()) {
+            throw new IllegalStateException("Query template info with not template type, current type: " + siteSessionBean.getObjectType());
+        }
+        Long templateId = siteSessionBean.getId();
+        if (template==null) {
+            template = siteService.getTemplate(templateId);
+        }
+        if (!template.getTemplateId().equals(templateId)) {
+            log.warn("Mismatch templateId");
+            template = siteService.getTemplate(templateId);
+        }
+
+        return template;
+    }
+
+    public Xslt getXslt() {
+        if (siteSessionBean.getObjectType()!=siteSessionBean.getXsltType()) {
+            throw new IllegalStateException("Query xslt info with not xslt type, current type: " + siteSessionBean.getObjectType());
+        }
+        Long xsltId = siteSessionBean.getId();
+        if (xslt==null) {
+            xslt = siteService.getXslt(xsltId);
+        }
+        if (!xslt.getId().equals(xsltId)) {
+            log.warn("Mismatch xsltId");
+            xslt = siteService.getXslt(xsltId);
+        }
+
+        return xslt;
+    }
+
+    public Css getCss() {
+        if (siteSessionBean.getObjectType()!=siteSessionBean.getCssType()) {
+            throw new IllegalStateException("Query CSS info with not CSS type, current type: " + siteSessionBean.getObjectType());
+        }
+        Long cssId = siteSessionBean.getId();
+        if (css==null) {
+            css = siteService.getCss(cssId);
+        }
+        if (!css.getCssId().equals(cssId)) {
+            log.warn("Mismatch cssId");
+            css = siteService.getCss(cssId);
+        }
+
+        return css;
+    }
+
 }
