@@ -86,6 +86,7 @@
     <property name="build_mill_context_images" value="${build_mill_context}/images"/>
     <property name="build_mill_context_xsd" value="${build_mill_context}/xsd"/>
 
+<!--
     <path id="deployer.classpath">
       <fileset dir="${tomcat-home}/server/lib">
         <include name="*.jar"/>
@@ -100,6 +101,7 @@
             <path refid="deployer.classpath"/>
         </classpath>
     </taskdef>
+-->
 
     <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>

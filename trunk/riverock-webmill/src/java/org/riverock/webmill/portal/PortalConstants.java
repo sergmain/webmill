@@ -32,8 +32,11 @@ package org.riverock.webmill.portal;
  * $Id$
  */
 public class PortalConstants {
-    public static final String PORTAL_NAMESPACE_PARAMETER = "mill.ns";
-    public static final String WEBMILL_GUEST_ROLE = "webmill.guest";
+//    public static final String PORTAL_NAMESPACE_PARAMETER = "mill.ns";
 
-    public static final String JAVAX_PORTLET_WEBMILL_PREFIX = "javax.portlet.webmillt";
+    public static final String WEBMILL_GUEST_ROLE = "webmill.guest";
+    public static final String WEBMILL_ANONYMOUS_ROLE = "webmill.anonymous";
+    public static final String WEBMILL_AUTHENTIC_ROLE = "webmill.authentic";
+
+    public static final String JAVAX_PORTLET_WEBMILL_PREFIX = "javax.portlet.webmill";
 }

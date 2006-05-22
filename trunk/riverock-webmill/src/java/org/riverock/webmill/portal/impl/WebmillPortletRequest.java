@@ -274,12 +274,17 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         }
 
         if (httpRequest.getServerName()==null || auth==null) {
-            return false;
+            return role.equals(PortalConstants.WEBMILL_ANONYMOUS_ROLE);
         }
 
         boolean status = auth.checkAccess( httpRequest.getServerName() );
-        if ( !status )
+        if ( !status ) {
             return false;
+        }
+
+        if (role.equals(PortalConstants.WEBMILL_AUTHENTIC_ROLE)) {
+            return true;
+        }
 
         PortletDefinition def = portletDefinition;
 
