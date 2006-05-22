@@ -7,6 +7,9 @@
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
 
 <h:panelGroup id="site-tree-group">
+
+    <t:saveState id="ss-site-tree" value="#{siteTree.siteTree}" />
+
     <t:tree2 id="serverTree" value="#{siteTree.siteTree}" var="node"
    			varNodeToggler="t" clientSideToggle="false"
             showRootNode="true" binding="#{siteTree.tree}">
@@ -76,7 +79,7 @@
         </f:facet>
         <f:facet name="template">
             <h:panelGroup>
-                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
+                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}" action="site">
 
                     <t:graphicImage value="/images/user.png" border="0"/>
                     <h:outputText value="#{node.description}"/>

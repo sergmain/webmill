@@ -10,7 +10,9 @@ import org.riverock.interfaces.portal.bean.Css;
  *         Time: 13:34:07
  */
 public interface InternalCssDao {
-    public Css getCss(Long cssId);
+    public Css getCssCurrent(Long siteId);
     public Long createCss(Css css);
     public List<Css> getCssList(Long siteId);
+
+    public Css getCss(Long cssId);
 }

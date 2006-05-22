@@ -17,6 +17,9 @@ public class SiteLanguageBean implements Serializable, SiteLanguage {
     private String customLanguage;
     private String nameCustomLanguage;
 
+    public SiteLanguageBean() {
+    }
+
     public SiteLanguageBean(SiteLanguage siteLanguage) {
         this.siteLanguageId = siteLanguage.getSiteLanguageId();
         this.siteId = siteLanguage.getSiteId();

@@ -37,7 +37,7 @@ import org.riverock.webmill.schema.core.WmPortalCssListType;
 public class InternalCssDaoImpl implements InternalCssDao {
     private final static Logger log = Logger.getLogger( InternalCssDaoImpl.class );
 
-    static String cssSql_ =
+    static String cssCurrentSql_ =
         "select a.date_post, b.css_data " +
         "from   WM_PORTAL_CSS a, WM_PORTAL_CSS_DATA b " +
         "where  a.ID_SITE=? and a.is_current=1 and " +
@@ -46,7 +46,7 @@ public class InternalCssDaoImpl implements InternalCssDao {
 
     static {
         try {
-            SqlStatement.registerSql(cssSql_, ContentCSS.class);
+            SqlStatement.registerSql(cssCurrentSql_, ContentCSS.class);
         }
         catch (Throwable exception) {
             final String es = "Exception in SqlStatement.registerSql()";
@@ -55,9 +55,10 @@ public class InternalCssDaoImpl implements InternalCssDao {
         }
     }
 
-    public CssBean getCss(Long siteId) {
-        if (siteId == null)
-            return new CssBean();
+    public CssBean getCssCurrent(Long siteId) {
+        if (siteId == null) {
+            return null;
+        }
 
         PreparedStatement ps = null;
         ResultSet rset = null;
@@ -65,7 +66,7 @@ public class InternalCssDaoImpl implements InternalCssDao {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            ps = adapter.prepareStatement(cssSql_);
+            ps = adapter.prepareStatement(cssCurrentSql_);
 
             RsetTools.setLong(ps, 1, siteId);
             rset = ps.executeQuery();
@@ -189,6 +190,67 @@ public class InternalCssDaoImpl implements InternalCssDao {
         } finally {
             DatabaseManager.close(adapter);
             adapter = null;
+        }
+    }
+
+    static String cssSql_ =
+        "select a.ID_SITE_CONTENT_CSS, a.IS_CURRENT, a.DATE_POST, a.TEXT_COMMENT, a.ID_SITE, b.css_data " +
+        "from   WM_PORTAL_CSS a, WM_PORTAL_CSS_DATA b " +
+        "where  a.ID_SITE_CONTENT_CSS=? and a.ID_SITE_CONTENT_CSS=b.ID_SITE_CONTENT_CSS " +
+        "order by ID_SITE_CONTENT_CSS_DATA asc";
+
+    static {
+        try {
+            SqlStatement.registerSql(cssCurrentSql_, ContentCSS.class);
+        }
+        catch (Throwable exception) {
+            final String es = "Exception in SqlStatement.registerSql()";
+            log.error(es, exception);
+            throw new SqlStatementRegisterException(es, exception);
+        }
+    }
+
+    public Css getCss(Long cssId) {
+        if (cssId == null)
+            return new CssBean();
+
+        PreparedStatement ps = null;
+        ResultSet rset = null;
+        boolean isFirstRecord = true;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(cssSql_);
+
+            RsetTools.setLong(ps, 1, cssId);
+            rset = ps.executeQuery();
+            CssBean cssBean = new CssBean();
+            StringBuilder sb = new StringBuilder();
+            while (rset.next()) {
+                if (isFirstRecord) {
+                    cssBean.setCssId( RsetTools.getLong(rset, "ID_SITE_CONTENT_CSS") );
+                    cssBean.setCurrent( RsetTools.getInt(rset, "IS_CURRENT", 0)==1 );
+                    cssBean.setDate( RsetTools.getTimestamp(rset, "DATE_POST") );
+                    cssBean.setCssComment( RsetTools.getString(rset, "TEXT_COMMENT") );
+                    cssBean.setSiteId( RsetTools.getLong(rset, "ID_SITE") );
+                    isFirstRecord = false;
+                }
+                sb.append( RsetTools.getString(rset, "CSS_DATA", "") );
+
+            }
+            cssBean.setCss(sb.toString() );
+            return cssBean;
+        }
+        catch (Exception e) {
+            final String es = "Error get css ";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rset, ps);
+            adapter = null;
+            rset = null;
+            ps = null;
         }
     }
 

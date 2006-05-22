@@ -29,7 +29,6 @@ import org.riverock.portlet.tools.FacesTools;
  *
  */
 public class SiteService implements Serializable {
-//    private final static Logger log = Logger.getLogger( SiteService.class );
     private static final long serialVersionUID = 2058005507L;
 
     public SiteService() {
@@ -68,12 +67,6 @@ public class SiteService implements Serializable {
         for (Xslt xslt: xslts) {
             list.add( new XsltBean(xslt) );
         }
-/*
-        if (log.isDebugEnabled()){
-            log.debug("count of XSLT #3: " + xslts.size());
-            log.debug("count of XSLT #4: " + list.size());
-        }
-*/
         return list;
     }
 
@@ -87,6 +80,34 @@ public class SiteService implements Serializable {
             FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(siteExtended.getSite().getCompanyId())
         );
         return siteExtended;
+    }
+
+    public SiteLanguage getSiteLanguage(Long siteLanguageId) {
+        SiteLanguage siteLanguage = new SiteLanguageBean(
+            FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId)
+        );
+        return siteLanguage;
+    }
+
+    public Template getTemplate(Long templateId) {
+        Template template = new TemplateBean(
+            FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(templateId)
+        );
+        return template;
+    }
+
+    public Xslt getXslt(Long xsltId) {
+        Xslt xslt = new XsltBean(
+            FacesTools.getPortalDaoProvider().getPortalXsltDao().getXslt(xsltId)
+        );
+        return xslt;
+    }
+
+    public Css getCss(Long cssId) {
+        Css css = new CssBean(
+            FacesTools.getPortalDaoProvider().getPortalCssDao().getCss(cssId)
+        );
+        return css;
     }
 
     public List<? extends Css> getCssList(Long siteId) {

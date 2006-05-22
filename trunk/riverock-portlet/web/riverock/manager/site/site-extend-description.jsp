@@ -5,29 +5,29 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 
-<f:loadBundle basename="org.riverock.portlet.manager.resource.Auth" var="msg"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
 
 <h:panelGrid columns="2">
 
     <h:outputText value="Name:"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.siteName}"/>
 
-    <h:outputText value="Company"/>
+    <h:outputText value="Company:"/>
     <h:outputText value="#{siteDataProvider.siteExtended.company.name}"/>
 
-    <h:outputText value="Locale"/>
+    <h:outputText value="Locale:"/>
     <h:outputText value="#{siteDataProvider.siteExtended.siteDefaultLocale}"/>
 
-    <h:outputText value="Admin E-Mail"/>
+    <h:outputText value="Admin E-Mail:"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.adminEmail}"/>
 
-    <h:outputText value="User can register"/>
+    <h:outputText value="User can register:"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.registerAllowed}"/>
 
     <h:outputText value="CSS is dynamic"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.cssDynamic}"/>
 
-    <h:outputText value="CSS file"/>
+    <h:outputText value="CSS file:"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.cssFile}"/>
 
 </h:panelGrid>
