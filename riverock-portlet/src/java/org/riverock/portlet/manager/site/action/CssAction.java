@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.DataProvider;
 
 /**
  * @author Sergei Maslyukov
@@ -24,8 +25,13 @@ public class CssAction implements Serializable {
 
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
+    private DataProvider dataProvider = null;
 
     public CssAction() {
+    }
+
+    public void setDataProvider(DataProvider dataProvider) {
+        this.dataProvider = dataProvider;
     }
 
     // getter/setter methods

@@ -39,13 +39,13 @@
 
              <h:panelGroup id="operation-template-add-panel">
                  <h:commandButton id="template-add-process-action" action="#{templateAction.processAddTemplateAction}"
-                                  value="#{msg['process_add_template_action']}"
+                                  value="#{msg['process_add_template_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
                  <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                  <h:commandButton id="template-add-cancel-action" action="#{templateAction.cancelAddTemplateAction}"
-                                  value="#{msg['cancel_add_template_action']}"
+                                  value="#{msg['cancel_add_template_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>

@@ -39,13 +39,13 @@
 
              <h:panelGroup id="operation-site-language-delete-panel">
                  <h:commandButton id="site-language-delete-process-action" action="#{siteLaguageAction.processDeleteSiteLanguageAction}"
-                                  value="#{msg['process_delete_site_language_action']}"
+                                  value="#{msg['process_delete_site_language_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
                  <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                  <h:commandButton id="site-language-delete-cancel-action" action="#{siteLanguageAction.cancelDeleteSiteLanguagcAction}"
-                                  value="#{msg['cancel_delete_site_language_action']}"
+                                  value="#{msg['cancel_delete_site_language_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>

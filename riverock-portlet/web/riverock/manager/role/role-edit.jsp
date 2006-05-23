@@ -10,6 +10,16 @@
     td {
         vertical-align: top;
     }
+
+    .top-button-action {
+        width: 150px;
+        height: 22px;
+    }
+
+    .role-button-action {
+        width: 150px;
+        height: 22px;
+    }
 </style>
 
 <f:view>
@@ -22,8 +32,10 @@
             </f:subview>
 
             <h:panelGroup id="editDeleteControls">
-                <h:commandButton value="#{msg.action_role_edit_save}" action="#{roleAction.processEditRole}"/>
-                <h:commandButton value="#{msg.action_role_edit_cancel}" action="#{roleAction.cancelEditRole}"/>
+                <h:commandButton value="#{msg.action_role_edit_save}" action="#{roleAction.processEditRole}"
+                                 styleClass="role-button-action"/>
+                <h:commandButton value="#{msg.action_role_edit_cancel}" action="#{roleAction.cancelEditRole}"
+                                 styleClass="role-button-action"/>
             </h:panelGroup>
 
         </h:panelGrid>

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.main.AuthSessionBean;
 
 /**
@@ -20,8 +21,13 @@ public class SiteLanguageAction implements Serializable {
 
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
+    private DataProvider dataProvider = null;
 
     public SiteLanguageAction() {
+    }
+
+    public void setDataProvider(DataProvider dataProvider) {
+        this.dataProvider = dataProvider;
     }
 
     // getter/setter methods

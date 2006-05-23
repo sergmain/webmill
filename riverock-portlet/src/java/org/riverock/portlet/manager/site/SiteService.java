@@ -8,11 +8,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
+
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.manager.site.bean.CssBean;
 import org.riverock.portlet.manager.site.bean.SiteBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
@@ -32,6 +35,22 @@ public class SiteService implements Serializable {
     private static final long serialVersionUID = 2058005507L;
 
     public SiteService() {
+    }
+
+    @SuppressWarnings({"RedundantStringConstructorCall"})
+    public List<SelectItem> getCompanyList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<Company> companies = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompanyList();
+
+        for (Company company : companies) {
+            if (company.getId() == null) {
+                throw new IllegalStateException("id is null, name: " + company.getName());
+            }
+
+            // create new String - work around with different classloader issue
+            list.add(new SelectItem(new String(company.getId().toString()), new String(company.getName())));
+        }
+        return list;
     }
 
     public List<Site> getSites() {

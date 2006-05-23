@@ -39,13 +39,13 @@
 
              <h:panelGroup id="operation-template-edit-panel">
                  <h:commandButton id="template-edit-process-action" action="#{templateAction.processEditTemplateAction}"
-                                  value="#{msg['process_edit_template_action']}"
+                                  value="#{msg['process_edit_template_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
                  <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                  <h:commandButton id="template-edit-cancel-action" action="#{templateAction.cancelEditTemplateAction}"
-                                  value="#{msg['cancel_edit_template_action']}"
+                                  value="#{msg['cancel_edit_template_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>

@@ -27,36 +27,42 @@
     }
 </style>
 <f:view>
-	<h:form>
-	
-	<h:panelGrid columns="1">
-	 	 
-	 	<h:panelGrid columns="2">
-	 	
-             <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
-                 <jsp:include page="site-tree.jsp"/>
-             </f:subview>
+    <h:form>
 
-             <h:panelGroup id="operation-site-edit-panel">
-                 <h:commandButton id="site-edit-process-action" action="#{siteAction.processEditSiteAction}"
-                                  value="#{msg['process_edit_site_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-                 <h:commandButton id="site-edit-cancel-action" action="#{siteAction.cancelEditSiteAction}"
-                                  value="#{msg['cancel_edit_site_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-             </h:panelGroup>
+        <h:panelGrid columns="1">
 
-         </h:panelGrid>
-	 	
-	 	
-	 </h:panelGrid>
-	 
-	 
-	
-</h:form>
+            <h:panelGrid columns="2">
+
+                <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
+                    <jsp:include page="site-tree.jsp"/>
+                </f:subview>
+
+                <h:panelGrid columns="1">
+
+                    <f:subview id="subview-site-info">
+                        <jsp:include page="site-add-edit.jsp"/>
+                    </f:subview>
+
+                    <h:panelGroup id="operation-site-edit-panel">
+                        <h:commandButton id="site-edit-process-action" action="#{siteAction.processEditSiteAction}"
+                                         value="#{msg['process_edit_site_action']}" immediate="true"
+                                         styleClass="site-button-action"
+                            >
+                        </h:commandButton>
+                        <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                        <h:commandButton id="site-edit-cancel-action" action="#{siteAction.cancelEditSiteAction}"
+                                         value="#{msg['cancel_edit_site_action']}" immediate="true"
+                                         styleClass="site-button-action"
+                            >
+                        </h:commandButton>
+                    </h:panelGroup>
+                </h:panelGrid>
+
+            </h:panelGrid>
+
+
+        </h:panelGrid>
+
+
+    </h:form>
 </f:view>

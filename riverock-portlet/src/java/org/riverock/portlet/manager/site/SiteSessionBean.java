@@ -6,6 +6,12 @@ package org.riverock.portlet.manager.site;
 
 import java.io.Serializable;
 
+import org.riverock.portlet.manager.site.bean.CssBean;
+import org.riverock.portlet.manager.site.bean.SiteExtended;
+import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
+import org.riverock.portlet.manager.site.bean.TemplateBean;
+import org.riverock.portlet.manager.site.bean.XsltBean;
+
 /**
  * @author Sergei Maslyukov
  *         16.05.2006
@@ -23,6 +29,52 @@ public class SiteSessionBean implements Serializable {
     private boolean isEdit;
     private Long id = null;
     private int objectType=0;
+
+    private SiteExtended siteExtended = null;
+    private SiteLanguageBean siteLanguage = null;
+    private TemplateBean template = null;
+    private CssBean css = null;
+    private XsltBean xslt = null;
+
+    public SiteExtended getSiteExtended() {
+        return siteExtended;
+    }
+
+    public void setSiteExtended(SiteExtended siteExtended) {
+        this.siteExtended = siteExtended;
+    }
+
+    public SiteLanguageBean getSiteLanguage() {
+        return siteLanguage;
+    }
+
+    public void setSiteLanguage(SiteLanguageBean siteLanguage) {
+        this.siteLanguage = siteLanguage;
+    }
+
+    public TemplateBean getTemplate() {
+        return template;
+    }
+
+    public void setTemplate(TemplateBean template) {
+        this.template = template;
+    }
+
+    public CssBean getCss() {
+        return css;
+    }
+
+    public void setCss(CssBean css) {
+        this.css = css;
+    }
+
+    public XsltBean getXslt() {
+        return xslt;
+    }
+
+    public void setXslt(XsltBean xslt) {
+        this.xslt = xslt;
+    }
 
     public int getSiteType() {
         return SITE_TYPE;
