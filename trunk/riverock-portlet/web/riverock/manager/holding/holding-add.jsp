@@ -4,7 +4,23 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t"%>
 
-    <f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>	
+<style type="text/css">
+    TD {
+        vertical-align: top;
+    }
+
+    .top-button-action {
+        width: 150px;
+        height: 22px;
+    }
+
+    .holding-button-action {
+        width: 150px;
+        height: 22px;
+    }
+</style>
+
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>
 
 <f:view>
 <h:form id="foo" rendered="#{holdingSessionBean.add}">
@@ -45,11 +61,11 @@
 
     <h:panelGroup id="select-action-group">
         <h:commandButton id="process-add-holding-action" action="#{holdingAction.processAddHoldingAction}"
-		value="#{msg.process_add_holding_action}"
+		value="#{msg.process_add_holding_action}" styleClass="holding-button-action"
 	>
         </h:commandButton>
         <h:commandButton id="cancel-add-holding-action" action="#{holdingAction.cancelAddHoldingAction}"
-		value="#{msg.cancel_add_holding_action}" immediate="true"
+		value="#{msg.cancel_add_holding_action}" immediate="true" styleClass="holding-button-action"
 	>
         </h:commandButton>
     </h:panelGroup>

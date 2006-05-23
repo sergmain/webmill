@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.manager.site.DataProvider;
+import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.bean.SiteExtended;
 
 /**
  * @author Sergei Maslyukov
@@ -20,8 +22,13 @@ public class SiteAction implements Serializable {
 
     private SiteSessionBean siteSessionBean = null;
     private AuthSessionBean authSessionBean = null;
+    private DataProvider dataProvider = null;
 
     public SiteAction() {
+    }
+
+    public void setDataProvider(DataProvider dataProvider) {
+        this.dataProvider = dataProvider;
     }
 
     // getter/setter methods
@@ -49,65 +56,62 @@ public class SiteAction implements Serializable {
 // Add actions
     public String addSiteAction() {
         SiteAction.log.info( "Add site action." );
-/*
-        HoldingBean bean = new HoldingBean();
-        holdingSessionBean.setHoldingBean( bean );
 
-        holdingSessionBean.setAdd( true );
-*/
+        SiteExtended bean = new SiteExtended();
+        siteSessionBean.setSiteExtended( bean );
+
+//        holdingSessionBean.setAdd( true );
+
         return "site-add";
     }
 
     public String processAddSiteAction() {
         SiteAction.log.info( "Procss add site action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
 
-            holdingDataProvider.reinitHoldingBeans();
+        if( siteSessionBean.getSiteExtended()!=null ) {
+//            FacesTools.getPortalDaoProvider().getPortalSiteDao().processAddHolding(siteSessionBean.getSiteExtended());
+            siteSessionBean.setSiteExtended(null);
+
+            dataProvider.clearSite();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+//    holdingSessionBean.resetStatus();
+
+        return "site";
     }
 
     public String cancelAddSiteAction() {
         SiteAction.log.info( "Cancel add site action." );
-/*
-        holdingSessionBean.setHoldingBean( null );
 
-        holdingSessionBean.resetStatus();
-*/
+        siteSessionBean.setSiteExtended(null);
+
+//        holdingSessionBean.resetStatus();
+
         return "site";
     }
 
 // Edit actions
     public String editSiteAction() {
         SiteAction.log.info( "Edit site action." );
-/*
-        holdingSessionBean.setEdit( true );
-*/
-        return "css-edit";
+
+        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
+//        holdingSessionBean.setEdit( true );
+
+        return "site-edit";
     }
 
     public String processEditSiteAction() {
         SiteAction.log.info( "Save changes site action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+
+        if( siteSessionBean.getSiteExtended()!=null ) {
+//            FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding(siteSessionBean.getSiteExtended());
+            siteSessionBean.setSiteExtended( null );
+            dataProvider.clearSite();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+//        holdingSessionBean.resetStatus();
+
+        return "site";
     }
 
     public String cancelEditSiteAction() {
@@ -122,7 +126,7 @@ public class SiteAction implements Serializable {
         SiteAction.log.info( "delete site action." );
 
 //	holdingSessionBean.setDelete( true );
-    return "css-delete";
+    return "site-delete";
     }
 
     public String cancelDeleteSiteAction() {

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.common.tools.StringTools;
 
 /**
  * @author Sergei Maslyukov
@@ -16,16 +17,16 @@ import org.riverock.interfaces.portal.bean.Company;
 public class SiteExtended implements Serializable {
     private static final long serialVersionUID = 2058005301L;
 
-    private Site site = null;
+    private SiteBean site = null;
     private List<VirtualHost> virtualHosts = null;
-    private Company company = null;
+    private CompanyBean company = null;
 
     public Company getCompany() {
         return company;
     }
 
     public void setCompany(Company company) {
-        this.company = company;
+        this.company = new CompanyBean(company);
     }
 
     public Site getSite() {
@@ -33,7 +34,7 @@ public class SiteExtended implements Serializable {
     }
 
     public void setSite(Site site) {
-        this.site = site;
+        this.site = new SiteBean(site);
     }
 
     public List<VirtualHost> getVirtualHosts() {
@@ -49,11 +50,21 @@ public class SiteExtended implements Serializable {
             return null;
         }
 
-        if (site.getDefCountry()==null && site.getDefVariant()==null)
+        if (site.getDefCountry()==null && site.getDefVariant()==null) {
             return new Locale(site.getDefLanguage()).toString();
-        else if (site.getDefVariant()==null)
+        }
+        else if (site.getDefVariant()==null) {
             return new Locale(site.getDefLanguage(), site.getDefCountry()).toString();
-        else
+        }
+        else {
             return new Locale(site.getDefLanguage(), site.getDefCountry(), site.getDefVariant()).toString();
+        }
+    }
+
+    public void setSiteDefaultLocale(String localeString) {
+        Locale locale = StringTools.getLocale(localeString);
+        site.setDefLanguage(locale.getLanguage());
+        site.setDefCountry(locale.getCountry());
+        site.setDefVariant(locale.getVariant());
     }
 }

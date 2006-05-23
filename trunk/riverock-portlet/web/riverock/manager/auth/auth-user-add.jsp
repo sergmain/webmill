@@ -113,7 +113,7 @@
 
             <h:panelGroup id="select-action-group">
                 <h:commandButton id="process-add-user-action" action="#{authUserAction.processAddUserAction}"
-                                 value="#{msg['process_add_user_action']}"
+                                 value="#{msg['process_add_user_action']}" immediate="true"
                                  styleClass="auth-button-action"
                     >
                 </h:commandButton>

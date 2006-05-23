@@ -39,13 +39,13 @@
 
              <h:panelGroup id="operation-xslt-delete-panel">
                  <h:commandButton id="xslt-delete-process-action" action="#{xsltAction.processDeleteXsltAction}"
-                                  value="#{msg['process_delete_xslt_action']}"
+                                  value="#{msg['process_delete_xslt_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
                  <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                  <h:commandButton id="xslt-delete-cancel-action" action="#{xsltAction.cancelDeleteXsltAction}"
-                                  value="#{msg['cancel_delete_xslt_action']}"
+                                  value="#{msg['cancel_delete_xslt_action']}" immediate="true"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>

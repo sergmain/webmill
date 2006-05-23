@@ -9,25 +9,25 @@
 
 <h:panelGrid columns="2">
 
-    <h:outputText value="Name:"/>
+    <h:outputText value="#{msg.site_name}"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.siteName}"/>
 
-    <h:outputText value="Company:"/>
+    <h:outputText value="#{msg.site_company}"/>
     <h:outputText value="#{siteDataProvider.siteExtended.company.name}"/>
 
-    <h:outputText value="Locale:"/>
+    <h:outputText value="#{msg.locale}"/>
     <h:outputText value="#{siteDataProvider.siteExtended.siteDefaultLocale}"/>
 
-    <h:outputText value="Admin E-Mail:"/>
+    <h:outputText value="#{msg.site_admin_email}"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.adminEmail}"/>
 
-    <h:outputText value="User can register:"/>
+    <h:outputText value="#{msg.site_user_can_register}"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.registerAllowed}"/>
 
-    <h:outputText value="CSS is dynamic"/>
+    <h:outputText value="#{msg.site_css_is_dynamic}"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.cssDynamic}"/>
 
-    <h:outputText value="CSS file:"/>
+    <h:outputText value="#{msg.site_css_file}"/>
     <h:outputText value="#{siteDataProvider.siteExtended.site.cssFile}"/>
 
 </h:panelGrid>

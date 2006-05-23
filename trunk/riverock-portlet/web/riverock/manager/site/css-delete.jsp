@@ -41,13 +41,13 @@
 
                  <h:panelGroup id="operation-css-delete-panel">
                      <h:commandButton id="css-delete-process-action" action="#{cssAction.processDeleteCssAction}"
-                                      value="#{msg['process_delete_css_action']}"
+                                      value="#{msg['process_delete_css_action']}" immediate="true"
                                       styleClass="site-button-action"
                          >
                      </h:commandButton>
                      <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                      <h:commandButton id="css-delete-cancel-action" action="#{cssAction.cancelDeleteCssAction}"
-                                      value="#{msg['cancel_delete_css_action']}"
+                                      value="#{msg['cancel_delete_css_action']}" immediate="true"
                                       styleClass="site-button-action"
                          >
                      </h:commandButton>

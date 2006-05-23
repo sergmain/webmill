@@ -65,6 +65,10 @@ public class DataProvider implements Serializable {
         return siteExtended;
     }
 
+    public void clearSite() {
+        this.siteExtended=null;
+    }
+
     public SiteLanguage getSiteLanguage() {
         if (siteSessionBean.getObjectType()!=siteSessionBean.getSiteLanguageType()) {
             throw new IllegalStateException("Query site language info with not site language type, current type: " + siteSessionBean.getObjectType());
@@ -79,6 +83,10 @@ public class DataProvider implements Serializable {
         }
 
         return siteLanguage;
+    }
+
+    public void clearSiteLanguage() {
+        this.siteLanguage=null;
     }
 
     public Template getTemplate() {
@@ -97,6 +105,10 @@ public class DataProvider implements Serializable {
         return template;
     }
 
+    public void clearTemplate() {
+        this.template=null;
+    }
+
     public Xslt getXslt() {
         if (siteSessionBean.getObjectType()!=siteSessionBean.getXsltType()) {
             throw new IllegalStateException("Query xslt info with not xslt type, current type: " + siteSessionBean.getObjectType());
@@ -113,6 +125,10 @@ public class DataProvider implements Serializable {
         return xslt;
     }
 
+    public void clearXslt() {
+        this.xslt=null;
+    }
+
     public Css getCss() {
         if (siteSessionBean.getObjectType()!=siteSessionBean.getCssType()) {
             throw new IllegalStateException("Query CSS info with not CSS type, current type: " + siteSessionBean.getObjectType());
@@ -127,6 +143,10 @@ public class DataProvider implements Serializable {
         }
 
         return css;
+    }
+
+    public void clearCss() {
+        this.css=null;
     }
 
 }

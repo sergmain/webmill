@@ -38,19 +38,26 @@
              </f:subview>
 
 
-             <h:panelGroup id="operation-site-add-panel">
-                 <h:commandButton id="site-add-process-action" action="#{siteAction.processAddSiteAction}"
-                                  value="#{msg['process_add_site_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-                 <h:commandButton id="site-add-cancel-action" action="#{siteAction.cancelAddSiteAction}"
-                                  value="#{msg['cancel_add_site_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-             </h:panelGroup>
+             <h:panelGrid columns="1">
+
+                 <f:subview id="subview-site-info">
+                         <jsp:include page="site-add-edit.jsp"/>
+                 </f:subview>
+
+                 <h:panelGroup id="operation-site-add-panel">
+                     <h:commandButton id="site-add-process-action" action="#{siteAction.processAddSiteAction}"
+                                      value="#{msg['process_add_site_action']}" immediate="true"
+                                      styleClass="site-button-action"
+                         >
+                     </h:commandButton>
+                     <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                     <h:commandButton id="site-add-cancel-action" action="#{siteAction.cancelAddSiteAction}"
+                                      value="#{msg['cancel_add_site_action']}" immediate="true"
+                                      styleClass="site-button-action"
+                         >
+                     </h:commandButton>
+                 </h:panelGroup>
+             </h:panelGrid>
 
          </h:panelGrid>
 	 	

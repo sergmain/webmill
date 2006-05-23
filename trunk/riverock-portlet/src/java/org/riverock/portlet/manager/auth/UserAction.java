@@ -55,10 +55,10 @@ public class UserAction implements Serializable {
 // main tree action
     public String selectUserAction( ActionEvent event ) {
         log.info( "Select auth user action." );
-	loadCurrentUser();
+        loadCurrentUser();
 
-	userSessionBean.resetStatus();
-	return "auth";
+        userSessionBean.resetStatus();
+        return "auth";
     }
 
 
@@ -98,13 +98,13 @@ public class UserAction implements Serializable {
 // Add actions
     public String addUserAction() {
         log.info( "Add user action." );
-	AuthUserExtendedInfoImpl bean = new AuthUserExtendedInfoImpl();
-	bean.setAuthInfo( new AuthInfoImpl() );
+        AuthUserExtendedInfoImpl bean = new AuthUserExtendedInfoImpl();
+        bean.setAuthInfo( new AuthInfoImpl() );
         userSessionBean.setUserBean( bean );
 
-	userSessionBean.setAdd( true );
+        userSessionBean.setAdd( true );
 
-	return "auth-add";
+        return "auth-add";
     }
 
     public String processAddUserAction() {
@@ -116,24 +116,24 @@ public class UserAction implements Serializable {
             dataProvider.reinitCompanyBeans();
         }
 
-	userSessionBean.resetStatus();
-	return "auth";
+        userSessionBean.resetStatus();
+        return "auth";
     }
 
     public String cancelAddUserAction() {
         log.info( "Cancel add user action." );
         userSessionBean.setUserBean( null );
 
-	userSessionBean.resetStatus();
-	return "auth";
+        userSessionBean.resetStatus();
+        return "auth";
     }
 
 // Edit actions
     public String editUserAction() {
         log.info( "Edit user action." );
 
-	userSessionBean.setEdit( true );
-	return "auth-edit";
+        userSessionBean.setEdit( true );
+        return "auth-edit";
     }
 
     public String saveUserAction() {
@@ -144,30 +144,30 @@ public class UserAction implements Serializable {
             dataProvider.reinitCompanyBeans();
         }
 
-	userSessionBean.resetStatus();
-	return "auth";
+        userSessionBean.resetStatus();
+        return "auth";
     }
 
     public String cancelEditUserAction() {
         log.info( "Cancel edit user action." );
 
-	userSessionBean.resetStatus();
-	return "auth";
+        userSessionBean.resetStatus();
+        return "auth";
     }
 
 // Delete actions
     public String deleteUserAction() {
         log.info( "delete user action." );
 
-	userSessionBean.setDelete( true );
-	return "auth-delete";
+        userSessionBean.setDelete( true );
+        return "auth-delete";
     }
 
     public String cancelDeleteUserAction() {
         log.info( "Cancel delete user action." );
 
-	userSessionBean.resetStatus();
-	return "auth";
+        userSessionBean.resetStatus();
+        return "auth";
     }
 
     public String processDeleteUserAction() {
@@ -178,8 +178,8 @@ public class UserAction implements Serializable {
             dataProvider.reinitCompanyBeans();
         }
 
-	userSessionBean.resetStatus();
-	return "auth";
+        userSessionBean.resetStatus();
+        return "auth";
     }
 
     private void loadCurrentUser() {

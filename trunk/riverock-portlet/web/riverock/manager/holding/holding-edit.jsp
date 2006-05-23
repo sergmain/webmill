@@ -1,62 +1,81 @@
-<%@ page session="false" contentType="text/html;charset=utf-8"%>
+<%@ page session="false" contentType="text/html;charset=utf-8" %>
 
-<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
-<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
-<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t"%>
+<%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
+<%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
+<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-    <f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>	
+<style type="text/css">
+    TD {
+        vertical-align: top;
+    }
+
+    .top-button-action {
+        width: 150px;
+        height: 22px;
+    }
+
+    .holding-button-action {
+        width: 150px;
+        height: 22px;
+    }
+</style>
+
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>
 
 <f:view>
-<h:form id="foo" rendered="#{holdingSessionBean.edit}">
+    <h:form id="foo" rendered="#{holdingSessionBean.edit}">
 
-    <h:panelGrid columns="2">
+        <h:panelGrid columns="2">
 
-        <f:subview id="select-user-subview">
-            <jsp:include page="holding-list.jsp"/>
-        </f:subview>
-
-
-<h:panelGroup id="edit-holding-panel" rendered="#{holdingSessionBean.edit}">
-   <h:panelGrid columns="2">
-
-	<h:outputText value="#{msg.holding_short_name}"/>
-            <h:inputText id="input_holding_short_name" value="#{holdingDataProvider.currentHolding.shortName}" maxlength="20" size="20" 
-		required="false">
-            </h:inputText>
-
-	<h:outputText value="#{msg.holding_name}"/>
-            <h:inputText id="input_holding_name" value="#{holdingDataProvider.currentHolding.name}" maxlength="20" size="20" 
-		required="false">
-            </h:inputText>
-
-</h:panelGrid>	 
+            <f:subview id="select-user-subview">
+                <jsp:include page="holding-list.jsp"/>
+            </f:subview>
 
 
-<h:panelGrid columns="1">
-        <f:subview id="edit-company-list-subview">
-            <jsp:include page="holding-company-list.jsp"/>
-        </f:subview>
+            <h:panelGroup id="edit-holding-panel" rendered="#{holdingSessionBean.edit}">
+                <h:panelGrid columns="2">
+
+                    <h:outputText value="#{msg.holding_short_name}"/>
+                    <h:inputText id="input_holding_short_name" value="#{holdingDataProvider.currentHolding.shortName}"
+                                 maxlength="20" size="20"
+                                 required="false">
+                    </h:inputText>
+
+                    <h:outputText value="#{msg.holding_name}"/>
+                    <h:inputText id="input_holding_name" value="#{holdingDataProvider.currentHolding.name}"
+                                 maxlength="20" size="20"
+                                 required="false">
+                    </h:inputText>
+
+                </h:panelGrid>
 
 
-    <h:panelGroup id="edit-delete-actions">
-        <h:commandButton id="save-holding-action" action="#{holdingAction.saveHoldingAction}"
-		value="#{msg['save_holding_action']}"
-	>
-        </h:commandButton>
-        <h:commandButton id="cancel-edit-holding-action" action="#{holdingAction.cancelEditHoldingAction}"
-		value="#{msg['cancel_edit_holding_action']}"
-	>
-        </h:commandButton>
-    </h:panelGroup>
+                <h:panelGrid columns="1">
+                    <f:subview id="edit-company-list-subview">
+                        <jsp:include page="holding-company-list.jsp"/>
+                    </f:subview>
 
 
-</h:panelGrid>	 
-</h:panelGroup>
+                    <h:panelGroup id="edit-delete-actions">
+                        <h:commandButton id="save-holding-action" action="#{holdingAction.saveHoldingAction}"
+                                         value="#{msg['save_holding_action']}" styleClass="holding-button-action"
+                            >
+                        </h:commandButton>
+                        <h:commandButton id="cancel-edit-holding-action"
+                                         action="#{holdingAction.cancelEditHoldingAction}"
+                                         value="#{msg['cancel_edit_holding_action']}" styleClass="holding-button-action"
+                            >
+                        </h:commandButton>
+                    </h:panelGroup>
 
-    </h:panelGrid>
+
+                </h:panelGrid>
+            </h:panelGroup>
+
+        </h:panelGrid>
 
 
-</h:form>
+    </h:form>
 </f:view>
 
 
