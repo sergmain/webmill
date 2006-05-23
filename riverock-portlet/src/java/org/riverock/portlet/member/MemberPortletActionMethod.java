@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.PropertiesProvider;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
@@ -62,9 +63,9 @@ public class MemberPortletActionMethod {
                 } else {
                     log.debug("Action request map is empty");
                 }
-                log.debug("Point #2.1 module '" + moduleName + "'");
-                log.debug("Point #2.2 action '" + actionName + "'");
-                log.debug("Point #2.3 subAction '" + subActionName + "'");
+                log.debug("   Point #4.1 module '" + moduleName + "'");
+                log.debug("   Point #4.2 action '" + actionName + "'");
+                log.debug("   Point #4.3 subAction '" + subActionName + "'");
             }
 
             if (mp.mod == null) {
@@ -430,8 +431,8 @@ public class MemberPortletActionMethod {
         log.debug("Start initRenderParameters()");
         if (!parameterMap.entrySet().isEmpty()) {
             log.debug("Request parameter");
-            for (Object o : parameterMap.entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
+            Map<String, String[]> map = parameterMap;
+            for (Map.Entry<String, String[]> entry : map.entrySet()) {
 
                 if ((entry.getKey()).equals(MemberConstants.MEMBER_ACTION_PARAM)) {
                     actionResponse.setRenderParameter(MemberConstants.MEMBER_ACTION_PARAM, ContentTypeActionType.INDEX.toString());
@@ -440,9 +441,13 @@ public class MemberPortletActionMethod {
                     // do not include sub-action in render request
                 }
                 else {
-                    actionResponse.setRenderParameter(entry.getKey().toString(), entry.getValue().toString());
+                    for (String v : entry.getValue()) {
+                        actionResponse.setRenderParameter(entry.getKey(), v);
+                    }
                 }
-                log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
+                if (log.isDebugEnabled()) {
+                    log.debug("    key: " + entry.getKey() + ", value: " + StringTools.arrayToString(entry.getValue()));
+                }
             }
         } else {
             log.debug("Parameters for render request not found");

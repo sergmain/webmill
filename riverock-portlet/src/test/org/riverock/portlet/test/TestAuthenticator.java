@@ -36,9 +36,7 @@ package org.riverock.portlet.test;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
-
-
-
+import org.apache.log4j.Logger;
 
 
 public class TestAuthenticator extends Authenticator

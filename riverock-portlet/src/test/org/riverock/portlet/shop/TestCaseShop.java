@@ -42,6 +42,7 @@ import org.riverock.portlet.schema.import_price.PriceListItemType;
 import org.riverock.portlet.schema.import_price.PriceListType;
 import org.riverock.portlet.schema.import_price.PricesType;
 import org.riverock.portlet.schema.import_price.types.PriceListItemTypeIsLoadType;
+import org.riverock.portlet.schema.core.WmPriceListListType;
 import org.riverock.portlet.test.cases.TestCaseInterface;
 import org.riverock.portlet.test.cases.TestCaseSiteAbstract;
 import org.riverock.portlet.test.cases.TestSite;
@@ -133,7 +134,7 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
 
         WmPriceListListType price = GetWmPriceListWithIdShopList.getInstance( testAbstract.db_, TestSite.idShop ).item;
         assertFalse( "Error insert items in price-list, count of items in price-list wrong",
-            price.getPriceListCount() != countItems );
+            price.getWmPriceListCount() != countItems );
 
         ShopPageParam shopParam = new ShopPageParam();
         shopParam.id_currency = TestCaseSiteAbstract.testSite.idCurrencyEURO;
@@ -168,7 +169,7 @@ public class TestCaseShop extends TestCase implements TestCaseInterface {
         System.out.println( "start tearDown()" );
 
         if ( testAbstract != null ) {
-            if ( testAbstract.db_ != null && testAbstract.db_.conn != null ) {
+            if ( testAbstract.db_ != null) {
                 testAbstract.db_.commit();
             }
             DatabaseAdapter.close( testAbstract.db_ );

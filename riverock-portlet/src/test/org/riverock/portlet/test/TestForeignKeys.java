@@ -37,13 +37,14 @@ package org.riverock.portlet.test;
 
 
 
+import org.apache.log4j.Logger;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
+import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
-import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
 
 public class TestForeignKeys
 {

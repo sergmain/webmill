@@ -41,7 +41,7 @@ import java.io.OutputStreamWriter;
 import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
-
+import org.apache.log4j.Logger;
 
 
 public class TestCDataMarshal

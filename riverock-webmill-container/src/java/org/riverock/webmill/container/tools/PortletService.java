@@ -283,6 +283,7 @@ public final class PortletService {
         final String parameter = request.getParameter(f);
         if (parameter != null) {
             try {
+
                 s_ = convertString(parameter, serverCharset, htmlCharset);
             }
             catch (Exception e) {

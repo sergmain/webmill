@@ -140,7 +140,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</init-param>
 		<init-param>
 			<name>class-name-get-list</name>
-			<value>org.riverock.portlet.portlets.JobItemSimple</value>
+			<value>org.riverock.portlet.job.JobItemSimple</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -214,7 +214,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</init-param>
 		<init-param>
 			<name>class-name-get-list</name>
-			<value>org.riverock.portlet.portlets.FaqItem</value>
+			<value>org.riverock.portlet.job.FaqItem</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>

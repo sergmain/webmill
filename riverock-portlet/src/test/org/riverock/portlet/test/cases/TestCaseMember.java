@@ -35,38 +35,39 @@ package org.riverock.portlet.test.cases;
 import java.sql.DatabaseMetaData;
 import java.sql.Types;
 import java.util.Enumeration;
-import java.util.Vector;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import junit.framework.TestCase;
+
+import org.riverock.common.tools.ExceptionTools;
+import org.riverock.common.tools.MainTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.member.MemberFile;
-import org.riverock.portlet.member.ModuleManager;
-import org.riverock.portlet.member.TemplateMemberClassQuery;
-import org.riverock.portlet.member.MemberServiceClass;
 import org.riverock.generic.schema.db.structure.DbFieldType;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.portlet.member.MemberFile;
+import org.riverock.portlet.member.MemberServiceClass;
+import org.riverock.portlet.member.TemplateMemberClassQuery;
 import org.riverock.portlet.schema.member.ClassQueryType;
 import org.riverock.portlet.schema.member.ContentType;
 import org.riverock.portlet.schema.member.FieldsType;
 import org.riverock.portlet.schema.member.ModuleType;
 import org.riverock.portlet.schema.member.QueryAreaType;
+import org.riverock.portlet.schema.member.RelateClassType;
 import org.riverock.portlet.schema.member.RestrictType;
 import org.riverock.portlet.schema.member.TableType;
 import org.riverock.portlet.schema.member.TargetModuleType;
-import org.riverock.portlet.schema.member.RelateClassType;
-import org.riverock.portlet.schema.member.types.*;
-import org.riverock.common.tools.MainTools;
-import org.riverock.common.tools.ExceptionTools;
-import org.riverock.generic.tools.servlet.HttpServletRequestApplWrapper;
-import org.riverock.sql.parser.Parser;
+import org.riverock.portlet.schema.member.types.ContentTypeActionType;
+import org.riverock.portlet.schema.member.types.FieldsTypeDbTypeType;
+import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
+import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
+import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 import org.riverock.sql.cache.SqlStatement;
-
-import javax.portlet.PortletRequest;
+import org.riverock.sql.parser.Parser;
 
 public class TestCaseMember extends TestCase
 {
@@ -364,7 +365,7 @@ public class TestCaseMember extends TestCase
                         Exception ee = null;
                         try
                         {
-                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "server-name", null, authSession );
+                            String sql = MemberServiceClass.buildInsertSQL(content, null, mod, db_, "server-name", null, null );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -409,7 +410,7 @@ public class TestCaseMember extends TestCase
 //                            HttpServletRequestApplWrapper req = new HttpServletRequestApplWrapper();
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", null, authSession );
+                            String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", null, null );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
@@ -450,7 +451,7 @@ public class TestCaseMember extends TestCase
                         {
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
-                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", null, authSession );
+                            String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", null, null );
                             Parser parser = SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)

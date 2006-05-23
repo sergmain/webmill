@@ -40,6 +40,29 @@ public class MapTools {
 
     private final static Logger log = Logger.getLogger( ServletTools.class );
 
+    public static String getString( final Map map, final String f, final String def ) {
+        String i_ = def;
+        Object obj = map.get( f );
+        if ( obj != null ) {
+            try {
+                if (obj instanceof String) {
+                    return (String)obj;
+                }
+                else if (obj instanceof String[]) {
+                    return ((String[])obj)[0];
+                }
+                else {
+                    throw new IllegalStateException("value in Map must String or String[] type. Current type: " + obj.getClass().getName());
+                }
+            }
+            catch( Exception exc ) {
+                // not rethrow exception 'cos this method return def value in this case
+                log.warn( "Exception in getInt(), def value will be return", exc );
+            }
+        }
+        return i_;
+    }
+
     public static Integer getInt( final Map map, final String f ) {
         return getInt( map, f, null );
     }
@@ -49,7 +72,15 @@ public class MapTools {
         Object obj = map.get( f );
         if ( obj != null ) {
             try {
-                i_ = new Integer( obj.toString() );
+                if (obj instanceof String) {
+                    i_ = new Integer( (String)obj );
+                }
+                else if (obj instanceof String[]) {
+                    i_ = new Integer( ((String[])obj)[0] );
+                }
+                else {
+                    throw new IllegalStateException("value in Map must String or String[] type. Current type: " + obj.getClass().getName());
+                }
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
@@ -63,12 +94,21 @@ public class MapTools {
         return getLong( map, f, null );
     }
 
+
     public static Long getLong( final Map map, final String f, final Long def ) {
         Long i_ = def;
         Object obj = map.get( f );
-        if ( obj != null ) {
+        if ( obj!= null) {
             try {
-                i_ = new Long( obj.toString() );
+                if (obj instanceof String) {
+                    i_ = new Long( (String)obj );
+                }
+                else if (obj instanceof String[]) {
+                    i_ = new Long( ((String[])obj)[0] );
+                }
+                else {
+                    throw new IllegalStateException("value in Map must String or String[] type. Current type: " + obj.getClass().getName());
+                }
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
@@ -87,9 +127,19 @@ public class MapTools {
         Object obj = map.get( f );
         if ( obj != null ) {
             try {
-                String s_ = obj.toString();
-                s_ = s_.replace( ',', '.' );
-                i_ = new Float( s_ );
+                if (obj instanceof String) {
+                    String s_ = (String)obj;
+                    s_ = s_.replace( ',', '.' );
+                    i_ = new Float( s_ );
+                }
+                else if (obj instanceof String[]) {
+                    String s_ = ((String[])obj)[0];
+                    s_ = s_.replace( ',', '.' );
+                    i_ = new Float( s_ );
+                }
+                else {
+                    throw new IllegalStateException("value in Map must String or String[] type. Current type: " + obj.getClass().getName());
+                }
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case
@@ -108,9 +158,19 @@ public class MapTools {
         Object obj = map.get( f );
         if ( obj != null ) {
             try {
-                String s_ = obj.toString();
-                s_ = s_.replace( ',', '.' );
-                i_ = new Double( s_ );
+                if (obj instanceof String) {
+                    String s_ = (String)obj;
+                    s_ = s_.replace( ',', '.' );
+                    i_ = new Double( s_ );
+                }
+                else if (obj instanceof String[]) {
+                    String s_ = ((String[])obj)[0];
+                    s_ = s_.replace( ',', '.' );
+                    i_ = new Double( s_ );
+                }
+                else {
+                    throw new IllegalStateException("value in Map must String or String[] type. Current type: " + obj.getClass().getName());
+                }
             }
             catch( Exception exc ) {
                 // not rethrow exception 'cos this method return def value in this case

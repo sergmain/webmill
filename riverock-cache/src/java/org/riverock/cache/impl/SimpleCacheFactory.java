@@ -166,9 +166,7 @@ public final class SimpleCacheFactory implements Cache {
      * @param value
      * @throws CacheException
      */
-    public void put(Object key, Object value)
-        throws CacheException
-    {
+    public void put(Object key, Object value) throws CacheException {
         if (! (key instanceof Long))
         {
             String es = "SimpleCache support only key with Long type";
@@ -357,16 +355,21 @@ public final class SimpleCacheFactory implements Cache {
         initValueArray();
     }
 
-    public synchronized void terminate(Long id)
-        throws CacheException
-    {
+    public synchronized void terminate(Long id) {
         if (log.isDebugEnabled())
             log.debug("#12.17.001  id " + id);
 
-        if (id != null)
-            terminate(id);
+        if (id != null) {
+            int itemIdx = getIndexOfItem(id);
+            if (itemIdx==-1)
+                return;
+
+            cache[itemIdx] = null;
+//            terminate(id);
+        }
     }
 
+/*
     public synchronized void terminate(long id) {
 
         int itemIdx = getIndexOfItem(id);
@@ -375,9 +378,9 @@ public final class SimpleCacheFactory implements Cache {
 
         cache[itemIdx] = null;
     }
+*/
 
-    private synchronized void destroyCache()
-    {
+    private synchronized void destroyCache() {
         accessTime = null;
         accessCount = null;
         indexValue = null;
@@ -385,12 +388,8 @@ public final class SimpleCacheFactory implements Cache {
     }
 
 
-    private synchronized void initArray()
-    {
-        if ((accessTime == null) || (cache == null) || (indexValue == null) ||
-            (accessCount == null)
-        )
-        {
+    private synchronized void initArray() {
+        if ((accessTime == null) || (cache == null) || (indexValue == null) || (accessCount == null)){
             destroyCache();
         }
         initValueArray();
@@ -496,8 +495,7 @@ public final class SimpleCacheFactory implements Cache {
         return -1;
     }
 
-    protected synchronized int getNewIndex()
-    {
+    protected synchronized int getNewIndex() {
         int idx = -1;
 
         long countItem = maxCountItems();
@@ -509,36 +507,34 @@ public final class SimpleCacheFactory implements Cache {
         int expiredId = 0;
         long tmp;
 
-        for (int j = 0; j < countItem; j++)
-        {
-            if (cache[j] == null)
+        for (int j = 0; j < countItem; j++) {
+            if (cache[j] == null) {
                 return j;
+            }
 
             tmp = currTime - accessTime[j];
-            if (tmp > periodExpired)
-            {
+            if (tmp > periodExpired) {
                 periodExpired = tmp;
                 expiredId = j;
                 isExpired = true;
             }
 
-            if (accessCount[j] < minCount)
-            {
+            if (accessCount[j] < minCount) {
                 minCount = accessCount[j];
                 idx = j;
             }
         }
-        if (isExpired)
+        if (isExpired) {
             return expiredId;
+        }
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("Not expired");
+        }
 
         long minTime = Long.MAX_VALUE;
-        for (int i = 0; i < countItem; i++)
-        {
-            if ((accessCount[i] == minCount) && (accessTime[i] < minTime))
-            {
+        for (int i = 0; i < countItem; i++) {
+            if ((accessCount[i] == minCount) && (accessTime[i] < minTime)) {
                 minTime = accessTime[i];
                 idx = i;
             }

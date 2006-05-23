@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
 import javax.portlet.PortletRequest;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.collections.MapTools;
 import org.riverock.common.tools.RsetTools;
@@ -1524,20 +1525,17 @@ public final class MemberServiceClass {
         DatabaseAdapter dbDyn, Map map, String serverName, String remoteUser, ModuleManager moduleManager )
         throws Exception {
 
-        if (fromParam.length() > 0) {
+        if (StringUtils.isNotBlank(fromParam)) {
             StringTokenizer st = new StringTokenizer(fromParam, ",");
 
-            while (st.hasMoreTokens())
-            {
+            while (st.hasMoreTokens()) {
                 String modName = st.nextToken();
 
                 ContentType cnt = moduleManager.getContent(modName, ContentTypeActionType.INDEX_TYPE);
 
-                if (cnt != null && cnt.getQueryArea() != null)
-                {
+                if (cnt != null && cnt.getQueryArea()!=null) {
                     //prepare lookup PK
-                    if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE)
-                    {
+                    if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.NUMBER_TYPE) {
                         final Long longParam = MapTools.getLong(map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
 
                         if (log.isDebugEnabled())
@@ -1545,8 +1543,7 @@ public final class MemberServiceClass {
 
                         RsetTools.setLong(ps, numParam++, longParam );
                     }
-                    else if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
-                    {
+                    else if (cnt.getQueryArea().getPrimaryKeyType().getType()==PrimaryKeyTypeType.STRING_TYPE) {
                         final String stringParam = RequestTools.getString( map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
 
                         if (log.isDebugEnabled())

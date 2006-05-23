@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
+import org.riverock.common.tools.StringTools;
 
 /**
  * User: Admin
@@ -79,7 +80,8 @@ public final class RequestStatisticFilter implements Filter {
                 Header.getUserAgent(request),
                 ((HttpServletRequest)request).getRequestURI(),
                 Header.getReferer(request),
-                ((HttpServletRequest) request).getQueryString()
+                ((HttpServletRequest) request).getQueryString(),
+                request.getServerName()
             );
         }
         catch (Throwable th) {
@@ -117,7 +119,7 @@ public final class RequestStatisticFilter implements Filter {
         s_ += "       contentType=" + request.getContentType() + "\n";
         s_ += "            locale=" + request.getLocale() + "\n";
 
-        String s = ("           locales=");
+        s_ = ("           locales=");
         Enumeration locales = request.getLocales();
         boolean first = true;
         while (locales.hasMoreElements()) {
@@ -125,22 +127,14 @@ public final class RequestStatisticFilter implements Filter {
             if (first)
                 first = false;
             else
-                s += (", ");
-            s += (locale.toString());
+                s_ += (", ");
+            s_ += (locale.toString());
         }
-        s_ += s + "\n";
+        s_ += s_ + "\n";
         Enumeration names = request.getParameterNames();
-        s = "";
         while (names.hasMoreElements()) {
             String name = (String) names.nextElement();
-            s = ("         parameter=" + name + "=");
-            String values[] = request.getParameterValues(name);
-            for (int i = 0; i < values.length; i++) {
-                if (i > 0)
-                    s += (", ");
-                s += (values[i]);
-            }
-            s_ += s + "\n";
+            s_ += ("         parameter=" + name + "=" + StringTools.arrayToString( request.getParameterValues(name) ) + '\n');
         }
         s_ += "          protocol=" + request.getProtocol() + "\n";
         s_ += "        remoteAddr=" + request.getRemoteAddr() + "\n";

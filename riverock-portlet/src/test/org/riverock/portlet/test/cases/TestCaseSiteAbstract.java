@@ -62,7 +62,7 @@ public class TestCaseSiteAbstract {
     protected void testSiteStructure( TestCaseInterface testCase )
         throws Exception
     {
-        CacheArray.reinitFullCache();
+//        CacheArray.reinitFullCache();
 
         DatabaseConnectionType dbConnConfig = GenericConfig.getDatabaseConnection( nameConnection );
         if (dbConnConfig==null)
