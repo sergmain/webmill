@@ -20,7 +20,6 @@ public class RequestStatisticService {
 
     private static RequestStatisticService service = null;
 
-    private InternalDao internalDao = null;
     private static final int SIZE_REFER = 200;
     private static final int SIZE_PARAMETERS = 200;
 
@@ -29,7 +28,7 @@ public class RequestStatisticService {
 
 
     private RequestStatisticService() {
-        this.internalDao = InternalDaoFactory.getInternalDao();
+        InternalDao internalDao = InternalDaoFactory.getInternalDao();
         this.userAgent = internalDao.getUserAgentList();
         this.url = internalDao.getUrlList();
     }
@@ -58,36 +57,41 @@ public class RequestStatisticService {
 		if (service!=null) {
 			return service;
 		}
-		RequestStatisticService tempService = new RequestStatisticService();
-		service = tempService;	
+        service = new RequestStatisticService();
 	}
 	return service;
     }
 
-    public void process(String userAgentString, String uri, String referer, String queryString ) {
+    public void process(String userAgentString, String uri, String referer, String queryString, String serverName) {
 
         RequestStatisticBean bean = new RequestStatisticBean();
         bean.setAccessDate( new Timestamp(System.currentTimeMillis()) );
+        bean.setServerName( serverName );
 
-        if (userAgentString == null)
+        if (userAgentString == null) {
             userAgentString = "UserAgent unknown";
-        else if (userAgentString.length() < 5)
+        }
+        else if (userAgentString.length() < 5) {
             userAgentString = "UserAgent too small";
-        else
+        }
+        else {
             userAgentString = StringTools.truncateString(userAgentString, 150);
+        }
 
         bean.setUserAgent( userAgentString );
         bean.setUrl( uri );
 
-        if (referer == null)
+        if (referer == null) {
             referer = "";
+        }
         int lenRefer = StringTools.lengthUTF(referer);
         if (lenRefer > SIZE_REFER) {
             lenRefer = SIZE_REFER;
             bean.setReferTooBig(true);
         }
-        else
+        else {
             bean.setReferTooBig(false);
+        }
 
         bean.setRefer( new String(StringTools.getBytesUTF(referer), 0, lenRefer) );
 
@@ -96,8 +100,9 @@ public class RequestStatisticService {
             lenParams = SIZE_PARAMETERS;
             bean.setParamTooBig(true);
         }
-        else
+        else {
             bean.setParamTooBig(false);
+        }
 
         bean.setParameters( new String(StringTools.getBytesUTF(queryString), 0, lenParams) );
 

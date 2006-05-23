@@ -36,6 +36,7 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 
 import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.MainTools;
@@ -46,22 +47,14 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.utils.DateUtils;
-import org.riverock.portlet.news.NewsBlock;
 import org.riverock.portlet.news.NewsSite;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
 import org.riverock.portlet.schema.portlet.news_block.NewsGroupType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemSimpleType;
 import org.riverock.portlet.schema.portlet.news_block.NewsItemType;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.interfaces.portal.template.PortalTemplateItem;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-
-
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
 public class TestCaseNews extends TestCase implements TestCaseInterface
 {
@@ -401,8 +394,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 
 //        ctxInstance.setType( "mill.news_block" );
 
-        TemplateItemType templateItem = new TemplateItemType();
-        templateItem.setCode( NEWS_GROUP_CODE );
+//        TemplateItemType templateItem = new TemplateItemType();
+//        templateItem.setCode( NEWS_GROUP_CODE );
 
         // localePackage надо брать из файла описателя портлетов
 
@@ -435,8 +428,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
     {
         testAbstract.initRequestSession();
 
-        TemplateItemType templateItem = new TemplateItemType();
-        templateItem.setCode( "RELEASE_NEWS_ITEM" );
+//        TemplateItemType templateItem = new TemplateItemType();
+//        templateItem.setCode( "RELEASE_NEWS_ITEM" );
 
 //        testAbstract.session.setAttribute(Constants.PORTLET_CODE_SESSION, "RELEASE_NEWS_ITEM");
 //        portletParameter.portletCode = NEWS_GROUP_CODE;
@@ -469,7 +462,7 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 //                );
 
 
-                TemplateItemType templateItem = new TemplateItemType();
+//                TemplateItemType templateItem = new TemplateItemType();
 
                 // localePackage надо брать из файла описателя портлетов
 //                PortletParameter portletParameter =
@@ -659,8 +652,8 @@ public class TestCaseNews extends TestCase implements TestCaseInterface
 //        PortletDefinition desc = PortletManager.getPortletDescription( codePortlet );
 //        assertFalse("Description for portlet '"+codePortlet+"' not found", desc==null);
 
-        TemplateItemType templateItem = new TemplateItemType();
-
+//        TemplateItemType templateItem = new TemplateItemType();
+//
         // localePackage надо брать из файла описателя портлетов
 //        PortletParameter portletParameter =
 //            new PortletParameter(ctxInstance,

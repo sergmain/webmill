@@ -35,15 +35,12 @@ package org.riverock.portlet.test;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.SimpleTimeZone;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-
-
-
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.DateTools;
 import org.riverock.generic.utils.DateUtils;

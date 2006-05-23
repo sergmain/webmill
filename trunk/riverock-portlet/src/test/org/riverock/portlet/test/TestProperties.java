@@ -38,8 +38,7 @@ import java.util.Enumeration;
 import java.sql.Timestamp;
 
 
-
-
+import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.common.tools.DateTools;

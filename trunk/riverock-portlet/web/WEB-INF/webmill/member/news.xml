@@ -81,8 +81,8 @@
 		</Content>
 	</Module>
 	<Module name="news.list" authApplication="CONTENT" authModule="WEB_NEWS" isDelete="0" type="lookup" lookupPK="ID_SITE_SUPPORT_LANGUAGE">
-		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.portlets.NewsSite"/>
-		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.portlets.NewsGroup"/>
+		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.news.NewsSite"/>
+		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.news.NewsGroup"/>
 		<Content action="index">
 			<security-role-ref>
 				<role-name>webmill.news-read</role-name>
@@ -285,9 +285,9 @@
 		</Content>
 	</Module>
 	<Module name="news.topic" authApplication="CONTENT" authModule="WEB_NEWS" isDelete="1" type="lookup" lookupPK="ID_NEWS">
-		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.portlets.NewsSite"/>
-		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.portlets.NewsGroup"/>
-		<RelateClass isFullReinitCache="0" className="org.riverock.portlet.portlets.NewsItem"/>
+		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.news.NewsSite"/>
+		<RelateClass isFullReinitCache="1" className="org.riverock.portlet.news.NewsGroup"/>
+		<RelateClass isFullReinitCache="0" className="org.riverock.portlet.news.NewsItem"/>
 		<Content action="index">
 			<security-role-ref>
 				<role-name>webmill.news</role-name>

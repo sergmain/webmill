@@ -86,48 +86,12 @@
     <property name="build_mill_context_images" value="${build_mill_context}/images"/>
     <property name="build_mill_context_xsd" value="${build_mill_context}/xsd"/>
 
-<!--
-    <path id="deployer.classpath">
-      <fileset dir="${tomcat-home}/server/lib">
-        <include name="*.jar"/>
-      </fileset>
-      <fileset dir="${tomcat-home}/server/lib">
-        <include name="*.jar"/>
-      </fileset>
-    </path>
-
-    <taskdef resource="org/apache/catalina/ant/catalina.tasks">
-        <classpath>
-            <path refid="deployer.classpath"/>
-        </classpath>
-    </taskdef>
--->
-
     <target name="run_tomcat_with_new_jar">
         <antcall target="stop.apache"/>
         <antcall target="jar"/>
         <copy file="${build.dir}\${main.lib}" todir="C:\opt2\_www\_me.askmore.info\riverock-portlets\WEB-INF\lib" overwrite="true"/>
         <!--<antcall target="copy_new_jars"/>-->
         <antcall target="start.apache"/>
-    </target>
-
-    <target name="undeploy" description="Undeploy web application">
-      <undeploy url="${url}" username="${username}" password="${password}" path="/${portlet-context-name}"/>
-    </target>
-
-    <target name="stop" description="Undeploy web application">
-        <stop url="${url}" username="${username}" password="${password}" path="/${portlet-context-name}"/>
-    </target>
-
-    <target name="start" description="Undeploy web application">
-        <start url="${url}" username="${username}" password="${password}" path="/${portlet-context-name}"/>
-    </target>
-
-    <target name="reload_with_new_jar">
-        <antcall target="stop"/>
-        <antcall target="jar"/>
-        <copy file="${build.dir}\${main.lib}" todir="C:\opt2\_www\_me.askmore.info\riverock-portlets\WEB-INF\lib" overwrite="true"/>
-        <antcall target="start"/>
     </target>
 
     <target name="copy_to_mill">

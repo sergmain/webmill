@@ -33,8 +33,7 @@
 package org.riverock.portlet.test.cases;
 
 import junit.framework.TestSuite;
-
-
+import org.apache.log4j.Logger;
 
 
 public class SuiteMember
@@ -46,7 +45,7 @@ public class SuiteMember
     public static TestSuite suite ( )
     {
 
-		TestSuite suite= new TestSuite("Member tests");
+        TestSuite suite= new TestSuite("Member tests");
 
         suite.addTest( new TestCaseMember("testRestrict") );
         suite.addTest( new TestCaseMember("testRestrictFields") );
@@ -61,7 +60,7 @@ public class SuiteMember
 
         return suite;
 
-	}
+    }
 
 
 }

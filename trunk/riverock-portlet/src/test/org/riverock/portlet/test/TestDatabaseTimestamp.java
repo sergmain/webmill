@@ -41,7 +41,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 
-
+import org.apache.log4j.Logger;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.utils.DateUtils;

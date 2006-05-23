@@ -69,6 +69,16 @@ public class MemberPortletRenderMethod {
 
 ///////////////
 
+            if (log.isDebugEnabled()) {
+                String p = renderRequest.getParameter(MemberConstants.MEMBER_MODULE_PARAM);
+                log.debug("Point #1.1 module: " + p);
+                if (p!=null) {
+                    log.debug("Point #1.2 class: " + p.getClass().getName());
+                }
+                else {
+                    log.debug("Point #1.2 object is null");
+                }
+            }
             String moduleName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_MODULE_PARAM);
             String actionName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_ACTION_PARAM);
             String subActionName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_SUBACTION_PARAM, "").trim();
