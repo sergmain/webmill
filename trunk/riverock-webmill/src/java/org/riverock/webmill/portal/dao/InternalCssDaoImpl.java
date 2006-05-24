@@ -3,6 +3,7 @@ package org.riverock.webmill.portal.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -251,6 +252,31 @@ public class InternalCssDaoImpl implements InternalCssDao {
             adapter = null;
             rset = null;
             ps = null;
+        }
+    }
+
+    public void deleteCss(DatabaseAdapter adapter, Long siteId) {
+
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete * from WM_PORTAL_CSS_DATA " +
+                    "where ID_SITE_CONTENT_CSS in " +
+                    "(select ID_SITE_CONTENT_CSS from WM_PORTAL_CSS where ID_SITE=?)",
+
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete * from ID_SITE_CONTENT_CSS where ID_SITE=?",
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+
+        } catch (SQLException e) {
+            String es = "Error delete news";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
         }
     }
 

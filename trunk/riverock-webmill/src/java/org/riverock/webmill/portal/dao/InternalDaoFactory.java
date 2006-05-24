@@ -43,6 +43,11 @@ public class InternalDaoFactory {
     public static InternalPortletNameDao internalPortletNameDao = new InternalPortletNameDaoImpl();
     public static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
     public static InternalCssDao internalCssDao = new InternalCssDaoImpl();
+    public static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
+
+    public static InternalCmsDao getInternalCmsDao() {
+        return internalCmsDao;
+    }
 
     public static InternalCssDao getInternalCssDao() {
         return internalCssDao;

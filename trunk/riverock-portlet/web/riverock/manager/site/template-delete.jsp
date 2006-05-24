@@ -39,13 +39,13 @@
 
              <h:panelGroup id="operation-template-delete-panel">
                  <h:commandButton id="template-delete-process-action" action="#{templateAction.processDeleteTemplateAction}"
-                                  value="#{msg['process_delete_template_action']}" immediate="true"
+                                  value="#{msg['process_delete_template_action']}"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
                  <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                  <h:commandButton id="template-delete-cancel-action" action="#{templateAction.cancelDeleteTemplateAction}"
-                                  value="#{msg['cancel_deleet_template_action']}" immediate="true"
+                                  value="#{msg['cancel_deleet_template_action']}"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>

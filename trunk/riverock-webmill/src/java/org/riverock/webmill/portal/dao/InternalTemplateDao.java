@@ -2,6 +2,7 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.List;
 
+import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.interfaces.portal.bean.Template;
 
 /**
@@ -15,4 +16,8 @@ public interface InternalTemplateDao {
     public List<Template> getTemplateLanguageList( Long siteLanguageId );
     public List<Template> getTemplateList( Long siteId );
     public Long createTemplate(Template template);
+
+    public void deleteTemplateForSite(DatabaseAdapter adapter, Long siteId);
+
+    public void deleteTemplateForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
 }

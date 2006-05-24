@@ -82,7 +82,7 @@ public class AuthInfoImpl implements AuthInfo {
     }
 
     public void setCompanyId(Long companyId) {
-        this.companyId = companyId;;
+        this.companyId = companyId;
     }
 
     public void setHoldingId(Long holdingId) {

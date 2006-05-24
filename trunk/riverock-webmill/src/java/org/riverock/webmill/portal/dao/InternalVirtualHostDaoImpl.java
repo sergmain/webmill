@@ -2,6 +2,8 @@ package org.riverock.webmill.portal.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Types;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
@@ -112,6 +114,22 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
         } finally {
             DatabaseManager.close(adapter);
             adapter = null;
+        }
+    }
+
+    public void deleteVirtualHost(DatabaseAdapter adapter, Long siteId) {
+
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete * from WM_PORTAL_VIRTUAL_HOST where ID_SITE=?",
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+
+        } catch (SQLException e) {
+            String es = "Error delete virtual host for site";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
         }
     }
 }

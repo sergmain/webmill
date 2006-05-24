@@ -2,8 +2,9 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.List;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -11,12 +12,13 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.webmill.core.GetWmPortalListSiteItem;
+import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.webmill.core.GetWmPortalListSiteFullList;
+import org.riverock.webmill.core.GetWmPortalListSiteItem;
+import org.riverock.webmill.core.UpdateWmPortalListSiteItem;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
 import org.riverock.webmill.schema.core.WmPortalListSiteListType;
-import org.riverock.interfaces.portal.bean.Site;
 
 /**
  * @author Sergei Maslyukov
@@ -121,6 +123,16 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
 
     public Long createSite( Site site ) {
 
+        if (log.isDebugEnabled()) {
+            log.debug("site: " + site);
+            if (site!=null) {
+                log.debug("    language: " + site.getDefLanguage());
+                log.debug("    country: " + site.getDefCountry());
+                log.debug("    variant: " + site.getDefVariant());
+                log.debug("    companyId: " + site.getCompanyId());
+            }
+        }
+
         PreparedStatement ps = null;
         DatabaseAdapter dbDyn = null;
         try {
@@ -128,8 +140,8 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             dbDyn = DatabaseAdapter.getInstance();
 
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_wm_portal_list_site" );
-            seq.setTableName( "wm_portal_list_site" );
+            seq.setSequenceName( "seq_WM_PORTAL_LIST_SITE" );
+            seq.setTableName( "WM_PORTAL_LIST_SITE" );
             seq.setColumnName( "ID_SITE" );
             Long id = dbDyn.getSequenceNextValue( seq );
 /*
@@ -147,7 +159,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             item.setNameSite(site.getSiteName());
 */
 
-            ps = dbDyn.prepareStatement( "insert into wm_portal_list_site (" +
+            ps = dbDyn.prepareStatement( "insert into WM_PORTAL_LIST_SITE (" +
                 "ID_SITE, ID_FIRM, DEF_LANGUAGE, DEF_COUNTRY, DEF_VARIANT, " +
                 "NAME_SITE, ADMIN_EMAIL, IS_CSS_DYNAMIC, CSS_FILE, " +
                 "IS_REGISTER_ALLOWED " +
@@ -202,6 +214,89 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             DatabaseManager.close( dbDyn, ps );
             dbDyn = null;
             ps = null;
+        }
+    }
+
+    public void updateSite(Site site) {
+
+        PreparedStatement ps = null;
+        DatabaseAdapter dbDyn = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            WmPortalListSiteItemType item = new WmPortalListSiteItemType();
+            item.setIdSite(site.getSiteId());
+            item.setAdminEmail(site.getAdminEmail());
+            item.setCssFile(site.getCssFile());
+            item.setDefCountry(site.getDefCountry());
+            item.setDefLanguage(site.getDefLanguage());
+            item.setDefVariant(site.getDefVariant());
+            item.setIdFirm(site.getCompanyId());
+            item.setIsCssDynamic(site.getCssDynamic());
+            item.setIsRegisterAllowed(site.getRegisterAllowed());
+            item.setNameSite(site.getSiteName());
+
+            UpdateWmPortalListSiteItem.process(dbDyn, item);
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                //catch rollback error
+            }
+            String es = "Error add new site";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+    public void deleteSite(Long siteId) {
+
+        DatabaseAdapter dbDyn = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            InternalDaoFactory.getInternalCmsDao().deleteArticleForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalCmsDao().deleteNewsForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalCssDao().deleteCss(dbDyn, siteId);
+            InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHost(dbDyn, siteId);
+
+            DatabaseManager.runSQL(
+                dbDyn,
+                "delete * from WM_PORTAL_LIST_SITE where ID_SITE=?",
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                //catch rollback error
+            }
+            String es = "Error add new site";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn);
+            dbDyn = null;
         }
     }
 

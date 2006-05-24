@@ -15,8 +15,8 @@ public class SiteBean implements Serializable, Site {
 
     private Long siteId;
     private Long companyId;
-    private Boolean isCssDynamic = false;
-    private Boolean isRegisterAllowed = false;
+    private boolean isCssDynamic = false;
+    private boolean isRegisterAllowed = false;
     private String defLanguage;
     private String defCountry;
     private String defVariant;
@@ -40,19 +40,19 @@ public class SiteBean implements Serializable, Site {
         this.companyId = companyId;
     }
 
-    public Boolean getCssDynamic() {
+    public boolean getCssDynamic() {
         return isCssDynamic;
     }
 
-    public void setCssDynamic(Boolean cssDynamic) {
+    public void setCssDynamic(boolean cssDynamic) {
         isCssDynamic = cssDynamic;
     }
 
-    public Boolean getRegisterAllowed() {
+    public boolean getRegisterAllowed() {
         return isRegisterAllowed;
     }
 
-    public void setRegisterAllowed(Boolean registerAllowed) {
+    public void setRegisterAllowed(boolean registerAllowed) {
         isRegisterAllowed = registerAllowed;
     }
 

@@ -5,8 +5,10 @@
 package org.riverock.portlet.manager.site.bean;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.common.tools.StringTools;
 
 /**
  * @author Sergei Maslyukov
@@ -18,33 +20,56 @@ import org.riverock.interfaces.portal.bean.Site;
 public class SiteBean implements Serializable, Site {
     private static final long serialVersionUID = 2057005502L;
 
-	private Long siteId=null;
-	private Long companyId;
-	private String siteName;
-	private Boolean cssDynamic;
-	private String cssFile;
-	private Boolean registerAllowed;
-	private String defLanguage;
-	private String defCountry;
-	private String defVariant;
-	private String adminEmail;
+    private Long siteId=null;
+    private Long companyId;
+    private String siteName;
+    private boolean cssDynamic;
+    private String cssFile;
+    private boolean registerAllowed;
+    private String defLanguage;
+    private String defCountry;
+    private String defVariant;
+    private String adminEmail;
 
-	public SiteBean(){
-	}
+    public SiteBean(){
+    }
 
-	public SiteBean(Site site){
-		this.siteId = site.getSiteId();
-		this.companyId = site.getCompanyId();
-		this.siteName = site.getSiteName();
-		this.cssDynamic = site.getCssDynamic();
-		this.cssFile = site.getCssFile();
-		this.registerAllowed = site.getRegisterAllowed();
-		this.defLanguage = site.getDefLanguage();
-		this.defCountry = site.getDefCountry();
-		this.defVariant = site.getDefVariant();
-		this.adminEmail = site.getAdminEmail();
-	}
-	
+    public SiteBean(Site site){
+        this.siteId = site.getSiteId();
+        this.companyId = site.getCompanyId();
+        this.siteName = site.getSiteName();
+        this.cssDynamic = site.getCssDynamic();
+        this.cssFile = site.getCssFile();
+        this.registerAllowed = site.getRegisterAllowed();
+        this.defLanguage = site.getDefLanguage();
+        this.defCountry = site.getDefCountry();
+        this.defVariant = site.getDefVariant();
+        this.adminEmail = site.getAdminEmail();
+    }
+
+    public String getSiteDefaultLocale() {
+        if (getDefLanguage()==null && getDefCountry()==null && getDefVariant()==null) {
+            return null;
+        }
+
+        if (getDefCountry()==null && getDefVariant()==null) {
+            return new Locale(getDefLanguage()).toString();
+        }
+        else if (getDefVariant()==null) {
+            return new Locale(getDefLanguage(), getDefCountry()).toString();
+        }
+        else {
+            return new Locale(getDefLanguage(), getDefCountry(), getDefVariant()).toString();
+        }
+    }
+
+    public void setSiteDefaultLocale(String localeString) {
+        Locale locale = StringTools.getLocale(localeString);
+        setDefLanguage(locale.getLanguage());
+        setDefCountry(locale.getCountry());
+        setDefVariant(locale.getVariant());
+    }
+
     public Long getSiteId() {
         return siteId;
     }
@@ -69,11 +94,11 @@ public class SiteBean implements Serializable, Site {
         this.siteName = siteName;
     }
 
-    public Boolean getCssDynamic() {
+    public boolean getCssDynamic() {
         return cssDynamic;
     }
 
-    public void setCssDynamic(Boolean cssDynamic) {
+    public void setCssDynamic(boolean cssDynamic) {
         this.cssDynamic = cssDynamic;
     }
 
@@ -85,11 +110,11 @@ public class SiteBean implements Serializable, Site {
         this.cssFile = cssFile;
     }
 
-    public Boolean getRegisterAllowed() {
+    public boolean getRegisterAllowed() {
         return registerAllowed;
     }
 
-    public void setRegisterAllowed(Boolean registerAllowed) {
+    public void setRegisterAllowed(boolean registerAllowed) {
         this.registerAllowed = registerAllowed;
     }
 

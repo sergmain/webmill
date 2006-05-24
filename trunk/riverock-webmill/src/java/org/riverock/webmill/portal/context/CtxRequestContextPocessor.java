@@ -25,20 +25,21 @@
 package org.riverock.webmill.portal.context;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.List;
 
 import javax.portlet.PortletRequest;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.tools.SimpleStringTokenizer;
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
@@ -153,11 +154,17 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
         //    This extension allow us create URL to other portlet
         // In last case we get portlet name from URI
         String pn = factoryParameter.getRequest().getParameter(INVOKE_PORTLET_NAME);
-        if (pn==null)
+        if (pn==null) {
             pn = factoryParameter.getRequest().getParameter(ContainerConstants.NAME_TYPE_CONTEXT_PARAM);
+        }
 
-        if (pn!=null)
+        if (pn!=null) {
             portletName = pn;
+        }
+
+        if ( portletName!=null && portletName.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
+            portletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Final portletName: " + portletName);

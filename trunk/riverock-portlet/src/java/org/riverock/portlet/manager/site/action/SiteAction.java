@@ -1,13 +1,19 @@
 package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
+import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.bean.SiteBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -45,7 +51,7 @@ public class SiteAction implements Serializable {
     }
 
 // main select action
-    public String selectSite() {
+    public String selectSite(ActionEvent event) {
         SiteAction.log.info( "Select site action." );
         loadCurrentSite();
 
@@ -55,10 +61,10 @@ public class SiteAction implements Serializable {
 
 // Add actions
     public String addSiteAction() {
-        SiteAction.log.info( "Add site action." );
+        log.info( "Add site action." );
 
-        SiteExtended bean = new SiteExtended();
-        siteSessionBean.setSiteExtended( bean );
+        SiteExtended siteExtended = new SiteExtended( new SiteBean(), new ArrayList<VirtualHost>(), null );
+        siteSessionBean.setSiteExtended(siteExtended);
 
 //        holdingSessionBean.setAdd( true );
 
@@ -66,24 +72,32 @@ public class SiteAction implements Serializable {
     }
 
     public String processAddSiteAction() {
-        SiteAction.log.info( "Procss add site action." );
+        log.info( "Procss add site action." );
 
-        if( siteSessionBean.getSiteExtended()!=null ) {
-//            FacesTools.getPortalDaoProvider().getPortalSiteDao().processAddHolding(siteSessionBean.getSiteExtended());
-            siteSessionBean.setSiteExtended(null);
-
-            dataProvider.clearSite();
+        if (log.isDebugEnabled()) {
+            log.debug("site: " + siteSessionBean.getSiteExtended());
+            if (siteSessionBean.getSiteExtended()!=null) {
+                log.debug("    language: " + siteSessionBean.getSiteExtended().getSite().getDefLanguage());
+                log.debug("    country: " + siteSessionBean.getSiteExtended().getSite().getDefCountry());
+                log.debug("    variant: " + siteSessionBean.getSiteExtended().getSite().getDefVariant());
+                log.debug("    companyId: " + siteSessionBean.getSiteExtended().getSite().getCompanyId());
+            }
         }
 
-//    holdingSessionBean.resetStatus();
+        if( siteSessionBean.getSiteExtended()!=null ) {
+            FacesTools.getPortalDaoProvider().getPortalSiteDao().createSite(siteSessionBean.getSiteExtended().getSite());
+            siteSessionBean.setSiteExtended(null);
+            dataProvider.clearSite();
+        }
 
         return "site";
     }
 
     public String cancelAddSiteAction() {
-        SiteAction.log.info( "Cancel add site action." );
+        log.info( "Cancel add site action." );
 
         siteSessionBean.setSiteExtended(null);
+        dataProvider.clearSite();
 
 //        holdingSessionBean.resetStatus();
 
@@ -92,19 +106,19 @@ public class SiteAction implements Serializable {
 
 // Edit actions
     public String editSiteAction() {
-        SiteAction.log.info( "Edit site action." );
+        log.info( "Edit site action." );
 
-        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
+//        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
 //        holdingSessionBean.setEdit( true );
 
         return "site-edit";
     }
 
     public String processEditSiteAction() {
-        SiteAction.log.info( "Save changes site action." );
+        log.info( "Save changes site action." );
 
         if( siteSessionBean.getSiteExtended()!=null ) {
-//            FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding(siteSessionBean.getSiteExtended());
+            FacesTools.getPortalDaoProvider().getPortalSiteDao().updateSite(siteSessionBean.getSiteExtended().getSite());
             siteSessionBean.setSiteExtended( null );
             dataProvider.clearSite();
         }
@@ -115,44 +129,44 @@ public class SiteAction implements Serializable {
     }
 
     public String cancelEditSiteAction() {
-        SiteAction.log.info( "Cancel edit site action." );
+        log.info( "Cancel edit site action." );
 
 //	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
 // Delete actions
     public String deleteSiteAction() {
-        SiteAction.log.info( "delete site action." );
+        log.info( "delete site action." );
+
+        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
 
 //	holdingSessionBean.setDelete( true );
-    return "site-delete";
+        return "site-delete";
     }
 
     public String cancelDeleteSiteAction() {
-        SiteAction.log.info( "Cancel delete holding action." );
+        log.info( "Cancel delete holding action." );
 
 //	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
     public String processDeleteSiteAction() {
-        SiteAction.log.info( "Process delete site action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+        log.info( "Process delete site action." );
+        if( siteSessionBean.getSiteExtended() != null ) {
+            FacesTools.getPortalDaoProvider().getPortalSiteDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
+            siteSessionBean.setSiteExtended( null );
+            dataProvider.clearSite();
+//            holdingDataProvider.reinitHoldingBeans();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+//	holdingSessionBean.resetStatus();
+
+        return "site";
     }
 
     private void loadCurrentSite() {
+        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
     }
 }

@@ -39,13 +39,13 @@
 
              <h:panelGroup id="operation-site-language-add-panel">
                  <h:commandButton id="site-language-add-process-action" action="#{siteLanguageAction.processAddSiteLanguageAction}"
-                                  value="#{msg['process_add_site_language_action']}" immediate="true"
+                                  value="#{msg['process_add_site_language_action']}"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
                  <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                  <h:commandButton id="site-language-add-cancel-action" action="#{siteLanguageAction.cancelAddSiteLanguageAction}"
-                                  value="#{msg['cancel_add_site_language_action']}" immediate="true"
+                                  value="#{msg['cancel_add_site_language_action']}"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>

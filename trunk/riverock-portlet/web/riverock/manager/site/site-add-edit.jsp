@@ -12,7 +12,7 @@
 
      <h:outputText value="#{msg.site_company}"/>
      <h:panelGroup id="select-company-group">
-         <h:selectOneMenu id="select-one-company" value="#{siteSessionBean.siteExtended.company.id}"
+         <h:selectOneMenu id="select-one-company" value="#{siteSessionBean.siteExtended.site.companyId}"
                           styleClass="selectOneMenu" required="true"
              >
              <f:selectItems value="#{siteService.companyList}"/>
@@ -20,16 +20,16 @@
      </h:panelGroup>
 
      <h:outputText value="#{msg.locale}"/>
-     <h:inputText id="site-locale-field" value="#{siteSessionBean.siteExtended.siteDefaultLocale}"/>
+     <h:inputText id="site-locale-field" value="#{siteSessionBean.siteExtended.site.siteDefaultLocale}"/>
 
      <h:outputText value="#{msg.site_admin_email}"/>
      <h:inputText id="site-admin-email-field" value="#{siteSessionBean.siteExtended.site.adminEmail}"/>
 
      <h:outputText value="#{msg.site_user_can_register}"/>
-     <h:inputText id="site-register-allowed-field" value="#{siteSessionBean.siteExtended.site.registerAllowed}"/>
+     <h:selectBooleanCheckbox id="site-register-allowed-field" value="#{siteSessionBean.siteExtended.site.registerAllowed}"/>
 
      <h:outputText value="#{msg.site_css_is_dynamic}"/>
-     <h:inputText id="site-css-dynamic-field" value="#{siteSessionBean.siteExtended.site.cssDynamic}"/>
+     <h:selectBooleanCheckbox id="site-css-dynamic-field" value="#{siteSessionBean.siteExtended.site.cssDynamic}"/>
 
      <h:outputText value="#{msg.site_css_file}"/>
      <h:inputText id="site-css-file-field" value="#{siteSessionBean.siteExtended.site.cssFile}"/>
