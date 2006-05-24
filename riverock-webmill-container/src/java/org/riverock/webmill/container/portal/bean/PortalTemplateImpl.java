@@ -1,12 +1,11 @@
 package org.riverock.webmill.container.portal.bean;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
-import org.riverock.interfaces.portal.template.PortalTemplate;
 
 /**
  * Both attributes, 'nameTemplate' and 'name' are deprecated. Must
@@ -113,9 +112,7 @@ public class PortalTemplateImpl implements PortalTemplate {
         }
         s += ">\n";
 
-        Iterator<PortalTemplateItem> items = portalTemplateItems.iterator();
-        while (items.hasNext()) {
-            PortalTemplateItem portalTemplateItem = items.next();
+        for (PortalTemplateItem portalTemplateItem : portalTemplateItems) {
             s += "    <SiteTemplateItem  type=\"" + portalTemplateItem.getType() + "\" value=\"" + portalTemplateItem.getValue() + "\"";
             if (portalTemplateItem.getCode() != null) {
                 s += " code=\"" + portalTemplateItem.getCode() + "\"";
@@ -126,9 +123,7 @@ public class PortalTemplateImpl implements PortalTemplate {
 
             s += ">\n";
 
-            Iterator<PortalTemplateParameter> iterator = portalTemplateItem.getParameters().iterator();
-            while (iterator.hasNext()) {
-                PortalTemplateParameter portalTemplateParameterImpl = iterator.next();
+            for (PortalTemplateParameter portalTemplateParameterImpl : portalTemplateItem.getParameters()) {
                 s += "        <Parameter name=\"" + portalTemplateParameterImpl.getName() + "\" value=\"" + portalTemplateParameterImpl.getValue() + "\"/>\n";
             }
             s += "    </SiteTemplateItem>\n";

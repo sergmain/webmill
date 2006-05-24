@@ -29,6 +29,8 @@
 <project name="Webmill portal build script" default="jar_without_copy" basedir=".">
 
     <property name="Name" value="riverock-webmill"/>
+    <property name="portlet-context-name" value=""/>
+
     <property name="release-version" value="5.0.1"/>
     <property name="build-release-name" value="webmill-${release-version}"/>
     <property name="manifest-title-name" value="WebMill engine"/>
