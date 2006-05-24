@@ -12,11 +12,11 @@ public interface Site {
 
     public String getSiteName();
 
-    public Boolean getCssDynamic();
+    public boolean getCssDynamic();
 
     public String getCssFile();
 
-    public Boolean getRegisterAllowed();
+    public boolean getRegisterAllowed();
 
     public String getDefLanguage();
 

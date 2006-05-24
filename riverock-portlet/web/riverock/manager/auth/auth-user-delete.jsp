@@ -47,7 +47,7 @@
                 <f:verbatim><br/></f:verbatim>
 
                 <h:commandButton id="process-delete-user-action" action="#{authUserAction.processDeleteUserAction}"
-                                 value="#{msg['process_delete_user_action']}" immediate="true"
+                                 value="#{msg['process_delete_user_action']}" 
                                  styleClass="auth-button-action"
                     >
                 </h:commandButton>

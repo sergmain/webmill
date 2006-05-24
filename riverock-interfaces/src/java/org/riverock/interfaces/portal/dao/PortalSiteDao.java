@@ -14,4 +14,6 @@ public interface PortalSiteDao {
     public Site getSite( Long siteId );
     public Site getSite( String siteName );
     public Long createSite(Site site);
+    public void updateSite(Site site);
+    public void deleteSite(Long siteId);
 }

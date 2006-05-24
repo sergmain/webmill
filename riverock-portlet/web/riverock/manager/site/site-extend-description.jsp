@@ -10,25 +10,25 @@
 <h:panelGrid columns="2">
 
     <h:outputText value="#{msg.site_name}"/>
-    <h:outputText value="#{siteDataProvider.siteExtended.site.siteName}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.site.siteName}"/>
 
     <h:outputText value="#{msg.site_company}"/>
-    <h:outputText value="#{siteDataProvider.siteExtended.company.name}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.company.name}"/>
 
     <h:outputText value="#{msg.locale}"/>
-    <h:outputText value="#{siteDataProvider.siteExtended.siteDefaultLocale}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.site.siteDefaultLocale}"/>
 
     <h:outputText value="#{msg.site_admin_email}"/>
-    <h:outputText value="#{siteDataProvider.siteExtended.site.adminEmail}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.site.adminEmail}"/>
 
     <h:outputText value="#{msg.site_user_can_register}"/>
-    <h:outputText value="#{siteDataProvider.siteExtended.site.registerAllowed}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.site.registerAllowed}"/>
 
     <h:outputText value="#{msg.site_css_is_dynamic}"/>
-    <h:outputText value="#{siteDataProvider.siteExtended.site.cssDynamic}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.site.cssDynamic}"/>
 
     <h:outputText value="#{msg.site_css_file}"/>
-    <h:outputText value="#{siteDataProvider.siteExtended.site.cssFile}"/>
+    <h:outputText value="#{siteSessionBean.siteExtended.site.cssFile}"/>
 
 </h:panelGrid>
 
@@ -38,7 +38,7 @@
     <t:dataList id="virtual-host-list"
                 styleClass="standardList"
                 var="host"
-                value="#{siteDataProvider.siteExtended.virtualHosts}"
+                value="#{siteSessionBean.siteExtended.virtualHosts}"
                 layout="orderedList" forceId="true">
         <h:outputText value="#{host.host}"/>
     </t:dataList>

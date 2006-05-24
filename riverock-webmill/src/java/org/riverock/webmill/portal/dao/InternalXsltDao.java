@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author SergeMaslyukov
@@ -25,4 +26,7 @@ public interface InternalXsltDao {
     public Long createXslt(Xslt xslt);
 
     public List<Xslt> getXsltList(Long siteLanguageId);
+
+    public void deleteXsltForSite(DatabaseAdapter adapter, Long siteId);
+    public void deleteXsltForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
 }

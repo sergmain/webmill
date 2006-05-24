@@ -65,7 +65,9 @@
         </f:facet>
         <f:facet name="site">
             <h:panelGroup>
-                <h:commandLink id="select-site-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
+                <h:commandLink id="select-site-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
+                    actionListener="#{siteAction.selectSite}"
+                    >
 
                     <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                     <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>

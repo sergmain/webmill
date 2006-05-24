@@ -3,6 +3,7 @@ package org.riverock.webmill.portal.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -260,6 +261,58 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         finally{
             DatabaseManager.close(adapter);
             adapter = null;
+        }
+    }
+
+    public void deleteXsltForSite(DatabaseAdapter adapter, Long siteId) {
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete * from WM_PORTAL_XSLT_DATA " +
+                    "where ID_SITE_XSLT in " +
+                    "(select a.ID_SITE_XSLT from WM_PORTAL_XSLT a, WM_PORTAL_SITE_LANGUAGE b " +
+                    "where b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE)",
+
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete * from WM_PORTAL_XSLT " +
+                    "where ID_SITE_SUPPORT_LANGUAGE in " +
+                    "(select a.ID_SITE_SUPPORT_LANGUAGE from WM_PORTAL_SITE_LANGUAGE a " +
+                    "where   a.ID_SITE=? )",
+
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+        } catch (SQLException e) {
+            String es = "Error delete xslt for site";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        }
+    }
+
+    public void deleteXsltForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete * from WM_PORTAL_XSLT_DATA " +
+                    "where ID_SITE_XSLT in " +
+                    "(select a.ID_SITE_XSLT from WM_PORTAL_XSLT a " +
+                    "where a.ID_SITE_SUPPORT_LANGUAGE=?)",
+
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete * from WM_PORTAL_XSLT where ID_SITE_SUPPORT_LANGUAGE=?",
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+        } catch (SQLException e) {
+            String es = "Error delete xslt for site language";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
         }
     }
 

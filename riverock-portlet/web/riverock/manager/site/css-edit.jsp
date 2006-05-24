@@ -40,13 +40,13 @@
 
              <h:panelGroup id="operation-css-edit-panel">
                  <h:commandButton id="css-edit-process-action" action="#{cssAction.processEditCssAction}"
-                                  value="#{msg['process_edit_css_action']}" immediate="true"
+                                  value="#{msg['process_edit_css_action']}"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
                  <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                  <h:commandButton id="css-edit-cancel-action" action="#{cssAction.cancelEditCssAction}"
-                                  value="#{msg['cancel_edit_css_action']}" immediate="true"
+                                  value="#{msg['cancel_edit_css_action']}"
                                   styleClass="site-button-action"
                      >
                  </h:commandButton>
