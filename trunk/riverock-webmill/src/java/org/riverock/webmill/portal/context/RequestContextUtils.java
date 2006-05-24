@@ -43,6 +43,7 @@ import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
@@ -227,7 +228,14 @@ public final class RequestContextUtils {
         RequestContext bean = new RequestContext();
         bean.setExtendedCatalogItem( ExtendedCatalogItemBean.getInstance(factoryParameter, ctxId) );
         bean.setLocale( bean.getExtendedCatalogItem().getLocale() );
-        bean.setDefaultPortletName( bean.getExtendedCatalogItem().getPortletDefinition().getPortletName() );
+
+        if (log.isDebugEnabled()) {
+            log.debug("    bean.getExtendedCatalogItem().getPortletDefinition().getPortletName(): "+bean.getExtendedCatalogItem().getPortletDefinition().getPortletName());
+            log.debug("    bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName(): "+bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName());
+        }
+
+//        bean.setDefaultPortletName( bean.getExtendedCatalogItem().getPortletDefinition().getPortletName() );
+        bean.setDefaultPortletName( bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName() );
         bean.setDefaultRequestState( new RequestState() );
 
         initParametersMap(bean, factoryParameter);
@@ -258,11 +266,17 @@ public final class RequestContextUtils {
             RequestState requestState;
 
             if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
-                Namespace namespace = NamespaceFactory.getNamespace(templateItem.getValue(), template.getTemplateName(), i++);
+                String portletName = templateItem.getValue();
+
+                if ( portletName.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
+                    portletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+                }
+
+                Namespace namespace = NamespaceFactory.getNamespace(portletName, template.getTemplateName(), i++);
                 if (log.isDebugEnabled()) {
                     log.debug("    template name: " +template.getTemplateName());
                     log.debug("    namespace: " +namespace.getNamespace());
-                    log.debug("    portlet: " +templateItem.getValue());
+                    log.debug("    portlet: " +portletName);
                     log.debug("    default namespace: " +bean.getDefaultNamespace());
                     log.debug("    default portlet: " +bean.getExtendedCatalogItem().getPortletDefinition().getPortletName());
                     log.debug("");
@@ -283,7 +297,7 @@ public final class RequestContextUtils {
                 }
                 else {
                     String tempPortletName = bean.getExtendedCatalogItem().getPortletDefinition().getPortletName();
-                    if (tempPortletName !=null && tempPortletName.equals(templateItem.getValue())) {
+                    if (tempPortletName !=null && tempPortletName.equals(portletName)) {
                         requestState = initParameterForDefaultPortlet(factoryParameter, bean);
                     }
                     else {
@@ -295,7 +309,7 @@ public final class RequestContextUtils {
             } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                 //noinspection UnusedAssignment
                 Namespace namespace = NamespaceFactory.getNamespace(
-                    bean.getExtendedCatalogItem().getPortletDefinition().getPortletName(), template.getTemplateName(), i++
+                    bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName(), template.getTemplateName(), i++
                 );
                 bean.setDefaultNamespace( namespace.getNamespace() );
                 requestState = initParameterForDefaultPortlet(factoryParameter, bean);

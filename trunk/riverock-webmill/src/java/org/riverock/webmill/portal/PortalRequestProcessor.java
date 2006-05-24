@@ -142,8 +142,8 @@ public final class PortalRequestProcessor {
 
         for (PageElement pageElement : portalRequestInstance.getPageElementList()) {
             if (log.isDebugEnabled()) {
-                if (pageElement.getPortalTemplateItem().getTypeObject().getType()== PortalTemplateItemType.PORTLET_TYPE ||
-                    pageElement.getPortalTemplateItem().getTypeObject().getType()== PortalTemplateItemType.DYNAMIC_TYPE) {
+                if (pageElement.getPortalTemplateItem().getTypeObject().getType()==PortalTemplateItemType.PORTLET_TYPE ||
+                    pageElement.getPortalTemplateItem().getTypeObject().getType()==PortalTemplateItemType.DYNAMIC_TYPE) {
 
                     log.debug("PageElement: ");
                     if (pageElement.getParameters()!=null) {

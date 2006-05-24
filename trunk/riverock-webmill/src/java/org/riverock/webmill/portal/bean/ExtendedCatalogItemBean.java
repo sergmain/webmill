@@ -77,8 +77,11 @@ public final class ExtendedCatalogItemBean {
     }
 
     public static ExtendedCatalogItemBean getInstance(RequestContextParameter factoryParameter, final Long ctxId) {
+        if (log.isDebugEnabled()) {
+            log.debug("ExtendedCatalogItemBean.getInstance() ctxId: " + ctxId);
+        }
+
         if (ctxId == null) {
-            log.debug("ctxId is null. return null value.");
             return null;
         }
 
@@ -143,6 +146,10 @@ public final class ExtendedCatalogItemBean {
             return null;
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug("Portlet name, id "+ctx.getPortletId()+", name: " +portletName.getPortletName());
+        }
+
         initPortletDefinition(factoryParameter, catalogItem, portletName.getPortletName());
         return catalogItem;
     }
@@ -174,6 +181,7 @@ public final class ExtendedCatalogItemBean {
             log.error("Error get portlet '" + portletName + "'", e);
         }
         if (entry == null) {
+            log.warn("Instance for portlet name "+portletName+" not found");
             return;
         }
 

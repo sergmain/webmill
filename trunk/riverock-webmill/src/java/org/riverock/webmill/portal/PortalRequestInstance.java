@@ -215,6 +215,10 @@ public final class PortalRequestInstance {
                 PortletParameters portletParameters = null;
                 if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
                     portletName = templateItem.getValue();
+                    if ( portletName.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
+                        portletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
+                    }
+                    
                     namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++);
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
