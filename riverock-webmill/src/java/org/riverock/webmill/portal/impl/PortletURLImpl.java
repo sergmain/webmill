@@ -182,8 +182,9 @@ public final class PortletURLImpl implements PortletURL {
         }
 
         String resultPortletName = portletName;
-        if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) 
+        if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
             resultPortletName = portletName.substring(PortletContainer.PORTLET_ID_NAME_SEPARATOR .length());
+        }
 
         url.append(
             CtxRequestContextPocessor.encodeUrl(
@@ -198,8 +199,9 @@ public final class PortletURLImpl implements PortletURL {
         if ( parameters != null ) {
             Iterator names = parameters.keySet().iterator();
 
-            if (names.hasNext())
+            if (names.hasNext()) {
                 url.append( '?' );
+            }
 
             boolean isNotFirst = false;
             while( names.hasNext() ) {
