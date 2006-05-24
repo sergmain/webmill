@@ -34,16 +34,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.collections.MapWithParameters;
 import org.riverock.common.html.AcceptLanguageWithLevel;
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
-import org.riverock.common.collections.MapWithParameters;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.PortletParameters;
 import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
@@ -266,11 +265,7 @@ public final class RequestContextUtils {
             RequestState requestState;
 
             if (templateItem.getTypeObject().getType() == PortalTemplateItemType.PORTLET_TYPE) {
-                String portletName = templateItem.getValue();
-
-                if ( portletName.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
-                    portletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + portletName;
-                }
+                String portletName = templateItem.getValueAsPortletName();
 
                 Namespace namespace = NamespaceFactory.getNamespace(portletName, template.getTemplateName(), i++);
                 if (log.isDebugEnabled()) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
@@ -23,17 +24,17 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
     /**
      * Field value
      */
-    private java.lang.String value;
+    private String value;
 
     /**
      * Field code
      */
-    private java.lang.String code;
+    private String code;
 
     /**
      * Field xmlRoot
      */
-    private java.lang.String xmlRoot;
+    private String xmlRoot;
 
     /**
      * Field isDisabled
@@ -43,7 +44,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
     /**
      * Field namespace
      */
-    private java.lang.String namespace;
+    private String namespace;
 
     /**
      * Field parameters
@@ -76,7 +77,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @return the value of field 'code'.
      */
-    public java.lang.String getCode() {
+    public String getCode() {
         return this.code;
     }
 
@@ -132,13 +133,17 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
         return this.portalTemplateItemType;
     }
 
-    /**
-     * Returns the value of field 'value'.
-     *
-     * @return the value of field 'value'.
-     */
-    public java.lang.String getValue() {
+    public String getValue() {
         return this.value;
+    }
+
+    public String getValueAsPortletName() {
+        if ( value.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
+            return PortletContainer.PORTLET_ID_NAME_SEPARATOR + value;
+        }
+        else {
+            return value;
+        }
     }
 
     /**
@@ -146,7 +151,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @return the value of field 'xmlRoot'.
      */
-    public java.lang.String getXmlRoot() {
+    public String getXmlRoot() {
         return this.xmlRoot;
     }
 
@@ -155,7 +160,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @param code the value of field 'code'.
      */
-    public void setCode(java.lang.String code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -173,7 +178,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @param namespace the value of field 'namespace'.
      */
-    public void setNamespace(java.lang.String namespace) {
+    public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
@@ -213,7 +218,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @param value the value of field 'value'.
      */
-    public void setValue(java.lang.String value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
@@ -222,7 +227,7 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      *
      * @param xmlRoot the value of field 'xmlRoot'.
      */
-    public void setXmlRoot(java.lang.String xmlRoot) {
+    public void setXmlRoot(String xmlRoot) {
         this.xmlRoot = xmlRoot;
     }
 }

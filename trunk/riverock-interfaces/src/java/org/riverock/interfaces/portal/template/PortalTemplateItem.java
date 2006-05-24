@@ -13,6 +13,7 @@ public interface PortalTemplateItem {
     public String getNamespace();
     public String getCode();
     public String getValue();
+    public String getValueAsPortletName();
     public String getXmlRoot();
     public PortalTemplateItemType getTypeObject();
     public List<PortalTemplateParameter> getParameters();
