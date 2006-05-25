@@ -101,6 +101,10 @@ public class Preference implements Serializable {
      * @param vValue
      */
     public void addValue(String vValue) {
+        if (_valueList == null) {
+            setValue(new ArrayList<String>());
+        }
+
         _valueList.add(vValue);
     }
 

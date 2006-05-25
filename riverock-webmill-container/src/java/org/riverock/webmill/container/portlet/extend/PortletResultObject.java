@@ -29,8 +29,6 @@ import javax.portlet.RenderResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletConfig;
 
-import org.riverock.generic.db.DatabaseAdapter;
-
 /**
  *
  * $Author$

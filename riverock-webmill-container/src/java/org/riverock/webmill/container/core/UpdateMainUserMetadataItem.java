@@ -1,13 +1,8 @@
 package org.riverock.webmill.container.core;
 
-import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Types;
-
-public class UpdateMainUserMetadataItem 
+public class UpdateMainUserMetadataItem
 {
+/*
     private static org.apache.log4j.Logger cat = org.apache.log4j.Logger.getLogger("org.riverock.webmill.container.core.UpdateMainUserMetadataItem" );
 
      public UpdateMainUserMetadataItem(){}
@@ -110,5 +105,5 @@ public class UpdateMainUserMetadataItem
             }
         }
     }
-
+*/
 }

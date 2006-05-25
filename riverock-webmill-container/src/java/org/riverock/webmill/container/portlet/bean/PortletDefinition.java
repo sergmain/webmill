@@ -47,9 +47,9 @@ public class PortletDefinition implements Serializable {
     private java.lang.String id;
 
     /**
-     * Field _descriptionList
+     * Field descriptionList
      */
-    private List<Description> _descriptionList;
+    private List<Description> descriptionList;
 
     /**
      * Field _portletName
@@ -57,9 +57,9 @@ public class PortletDefinition implements Serializable {
     private String portletName;
 
     /**
-     * Field _displayNameList
+     * Field displayNameList
      */
-    private List<DisplayName> _displayNameList;
+    private List<DisplayName> displayNameList;
 
     /**
      * Field _portletClass
@@ -90,9 +90,9 @@ public class PortletDefinition implements Serializable {
     private PortletInfo portletInfo = null;
 
     /**
-     * Field _portletPreferences
+     * Field portletPreferences
      */
-    private PortletPreferences _portletPreferences;
+    private PortletPreferences portletPreferences;
 
     /**
      * Field securityRoleRefList
@@ -105,8 +105,8 @@ public class PortletDefinition implements Serializable {
 
     public PortletDefinition() {
         super();
-        _descriptionList = new ArrayList<Description>();
-        _displayNameList = new ArrayList<DisplayName>();
+        descriptionList = new ArrayList<Description>();
+        displayNameList = new ArrayList<DisplayName>();
         initParamList = new ArrayList<InitParam>();
         supportsList = new ArrayList<Supports>();
         supportedLocaleList = new ArrayList<String>();
@@ -114,11 +114,11 @@ public class PortletDefinition implements Serializable {
     }
 
     public void destroy() {
-        if (_descriptionList!=null) {
-            _descriptionList.clear();
+        if (descriptionList !=null) {
+            descriptionList.clear();
         }
-        if (_displayNameList!=null) {
-            _displayNameList.clear();
+        if (displayNameList !=null) {
+            displayNameList.clear();
         }
         if (initParamList !=null) {
             initParamList.clear();
@@ -152,19 +152,19 @@ public class PortletDefinition implements Serializable {
     }
 
     public void addDescription(Description vDescription) {
-        _descriptionList.add(vDescription);
+        descriptionList.add(vDescription);
     }
 
     public void addDescription(int index, Description vDescription) {
-        _descriptionList.add(index, vDescription);
+        descriptionList.add(index, vDescription);
     }
 
     public void addDisplayName(DisplayName vDisplayName) {
-        _displayNameList.add(vDisplayName);
+        displayNameList.add(vDisplayName);
     }
 
     public void addDisplayName(int index, DisplayName vDisplayName) {
-        _displayNameList.add(index, vDisplayName);
+        displayNameList.add(index, vDisplayName);
     }
 
     /**
@@ -247,14 +247,14 @@ public class PortletDefinition implements Serializable {
      * Method clearDescription
      */
     public void clearDescription() {
-        _descriptionList.clear();
+        descriptionList.clear();
     }
 
     /**
      * Method clearDisplayName
      */
     public void clearDisplayName() {
-        _displayNameList.clear();
+        displayNameList.clear();
     }
 
     /**
@@ -292,21 +292,21 @@ public class PortletDefinition implements Serializable {
      */
     public Description getDescription(int index) {
         //-- check bounds for index
-        if ((index < 0) || (index > _descriptionList.size())) {
+        if ((index < 0) || (index > descriptionList.size())) {
             throw new IndexOutOfBoundsException();
         }
 
-        return (Description) _descriptionList.get(index);
+        return (Description) descriptionList.get(index);
     }
 
     /**
      * Method getDescription
      */
     public Description[] getDescription() {
-        int size = _descriptionList.size();
+        int size = descriptionList.size();
         Description[] mArray = new Description[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (Description) _descriptionList.get(index);
+            mArray[index] = (Description) descriptionList.get(index);
         }
         return mArray;
     }
@@ -315,7 +315,7 @@ public class PortletDefinition implements Serializable {
      * Method getDescriptionCount
      */
     public int getDescriptionCount() {
-        return _descriptionList.size();
+        return descriptionList.size();
     }
 
     /**
@@ -325,21 +325,21 @@ public class PortletDefinition implements Serializable {
      */
     public DisplayName getDisplayName(int index) {
         //-- check bounds for index
-        if ((index < 0) || (index > _displayNameList.size())) {
+        if ((index < 0) || (index > displayNameList.size())) {
             throw new IndexOutOfBoundsException();
         }
 
-        return (DisplayName) _displayNameList.get(index);
+        return (DisplayName) displayNameList.get(index);
     }
 
     /**
      * Method getDisplayName
      */
     public DisplayName[] getDisplayName() {
-        int size = _displayNameList.size();
+        int size = displayNameList.size();
         DisplayName[] mArray = new DisplayName[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (DisplayName) _displayNameList.get(index);
+            mArray[index] = (DisplayName) displayNameList.get(index);
         }
         return mArray;
     }
@@ -348,7 +348,7 @@ public class PortletDefinition implements Serializable {
      * Method getDisplayNameCount
      */
     public int getDisplayNameCount() {
-        return _displayNameList.size();
+        return displayNameList.size();
     }
 
     /**
@@ -431,7 +431,7 @@ public class PortletDefinition implements Serializable {
      * @return the value of field 'portletPreferences'.
      */
     public PortletPreferences getPortletPreferences() {
-        return this._portletPreferences;
+        return this.portletPreferences;
     }
 
     /**
@@ -552,7 +552,7 @@ public class PortletDefinition implements Serializable {
      * @param vDescription
      */
     public boolean removeDescription(Description vDescription) {
-        boolean removed = _descriptionList.remove(vDescription);
+        boolean removed = descriptionList.remove(vDescription);
         return removed;
     }
 
@@ -562,7 +562,7 @@ public class PortletDefinition implements Serializable {
      * @param vDisplayName
      */
     public boolean removeDisplayName(DisplayName vDisplayName) {
-        boolean removed = _displayNameList.remove(vDisplayName);
+        boolean removed = displayNameList.remove(vDisplayName);
         return removed;
     }
 
@@ -614,10 +614,10 @@ public class PortletDefinition implements Serializable {
      */
     public void setDescription(int index, Description vDescription) {
         //-- check bounds for index
-        if ((index < 0) || (index > _descriptionList.size())) {
+        if ((index < 0) || (index > descriptionList.size())) {
             throw new IndexOutOfBoundsException();
         }
-        _descriptionList.set(index, vDescription);
+        descriptionList.set(index, vDescription);
     }
 
     /**
@@ -627,9 +627,9 @@ public class PortletDefinition implements Serializable {
      */
     public void setDescription(Description[] descriptionArray) {
         //-- copy array
-        _descriptionList.clear();
+        descriptionList.clear();
         for (final Description newVar : descriptionArray) {
-            _descriptionList.add(newVar);
+            descriptionList.add(newVar);
         }
     }
 
@@ -641,10 +641,10 @@ public class PortletDefinition implements Serializable {
      */
     public void setDisplayName(int index, DisplayName vDisplayName) {
         //-- check bounds for index
-        if ((index < 0) || (index > _displayNameList.size())) {
+        if ((index < 0) || (index > displayNameList.size())) {
             throw new IndexOutOfBoundsException();
         }
-        _displayNameList.set(index, vDisplayName);
+        displayNameList.set(index, vDisplayName);
     }
 
     /**
@@ -654,9 +654,9 @@ public class PortletDefinition implements Serializable {
      */
     public void setDisplayName(DisplayName[] displayNameArray) {
         //-- copy array
-        _displayNameList.clear();
+        displayNameList.clear();
         for (final DisplayName newVar : displayNameArray) {
-            _displayNameList.add(newVar);
+            displayNameList.add(newVar);
         }
     }
 
@@ -732,7 +732,7 @@ public class PortletDefinition implements Serializable {
      *                           'portletPreferences'.
      */
     public void setPortletPreferences(PortletPreferences portletPreferences) {
-        this._portletPreferences = portletPreferences;
+        this.portletPreferences = portletPreferences;
     }
 
     /**

@@ -1,13 +1,8 @@
 package org.riverock.webmill.container.core;
 
-import org.riverock.webmill.container.schema.core.MainUserMetadataListType;
-import org.riverock.sql.cache.SqlStatement;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 public class GetMainUserMetadataWithIdUserList
 {
+/*
     private static org.apache.log4j.Logger cat = org.apache.log4j.Logger.getLogger("org.riverock.webmill.container.core.GetMainUserMetadataWithIdUserList" );
 
      public MainUserMetadataListType item = new MainUserMetadataListType();
@@ -38,9 +33,6 @@ public class GetMainUserMetadataWithIdUserList
         }
      }
 
-    /**
-     * @deprecated use getInstance() method
-     */
     public MainUserMetadataListType getData(org.riverock.generic.db.DatabaseAdapter db_, long id)  throws javax.portlet.PortletException     {
         GetMainUserMetadataWithIdUserList obj = GetMainUserMetadataWithIdUserList.getInstance(db_, id);
         if (obj!=null)
@@ -159,4 +151,5 @@ public class GetMainUserMetadataWithIdUserList
         }
     }
 
+*/
 }

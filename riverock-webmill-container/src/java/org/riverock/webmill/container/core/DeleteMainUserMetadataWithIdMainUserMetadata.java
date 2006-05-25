@@ -1,14 +1,8 @@
 package org.riverock.webmill.container.core;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import org.apache.log4j.Logger;
 
 public class DeleteMainUserMetadataWithIdMainUserMetadata {
+/*
     private static Logger log = Logger.getLogger(DeleteMainUserMetadataWithIdMainUserMetadata.class );
 
     public DeleteMainUserMetadataWithIdMainUserMetadata(){}
@@ -47,4 +41,5 @@ public class DeleteMainUserMetadataWithIdMainUserMetadata {
             ps = null;
         }
     }
+*/
 }
