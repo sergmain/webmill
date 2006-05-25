@@ -32,5 +32,41 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<short-title>ImageViewer</short-title>
 			<keywords>Images, Viewer</keywords>
 		</portlet-info>
+        <portlet-preferences>
+            <preference>
+                <name>url</name>
+                <value>http://10.3.16.240/discoverer4i/viewer</value>
+            </preference>
+            <preference>
+                <name>eul</name>
+                <value>OBDDIS</value>
+            </preference>
+<!--
+            <preference>
+                <name>wbk</name>
+                <value>grrem</value>
+            </preference>
+-->
+            <preference>
+                <name>wbk</name>
+                <value>26____1</value>
+            </preference>
+            <preference>
+                <name>nlsl</name>
+                <value>ru-ru</value>
+            </preference>
+            <preference>
+                <name>ac</name>
+                <value>OBDDIS@wh</value>
+            </preference>
+            <preference>
+                <name>pw</name>
+                <value>discrem</value>
+            </preference>
+            <preference>
+                <name>IS_DEBUG</name>
+                <value>true</value>
+            </preference>
+        </portlet-preferences>
 	</portlet>
 </portlet-app>

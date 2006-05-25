@@ -1,13 +1,8 @@
 package org.riverock.webmill.container.core;
 
-import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
-import org.riverock.sql.cache.SqlStatement;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 public class GetMainUserMetadataItem
 {
+/*
     private static org.apache.log4j.Logger cat = org.apache.log4j.Logger.getLogger("org.riverock.webmill.container.core.GetMainUserMetadataItem" );
 
     private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb( GetMainUserMetadataItem.class.getName() );
@@ -38,9 +33,6 @@ public class GetMainUserMetadataItem
         }
      }
 
-    /**
-     * @deprecated use getInstance() method
-     */
     public MainUserMetadataItemType getData(org.riverock.generic.db.DatabaseAdapter db_, long id)  throws javax.portlet.PortletException     {
          GetMainUserMetadataItem obj = GetMainUserMetadataItem.getInstance(db_, id);
         if (obj!=null)
@@ -191,4 +183,5 @@ public class GetMainUserMetadataItem
         }
     }
 
+*/
 }

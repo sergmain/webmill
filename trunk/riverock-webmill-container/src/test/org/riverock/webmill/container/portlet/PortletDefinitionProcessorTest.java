@@ -30,6 +30,7 @@ import javax.portlet.PortletPreferences;
 
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
+import org.riverock.common.tools.StringTools;
 
 /**
  * @author smaslyukov
@@ -42,20 +43,16 @@ public class PortletDefinitionProcessorTest {
     public static void main(String[] args) throws Exception {
         PortletDefinitionProcessor processor = new PortletDefinitionProcessorImpl();
 
-        File file = new File("portlet.2.xml");
+//        File file = new File("portlet.2.xml");
+        File file = new File("doc/xml/portlet.xml");
 
         PortletApplication application = processor.digest( file );
 
         PortletDefinition definition = application.getPortlet(0);
         PortletPreferences portletPreferences = definition.getPortletPreferences();
-//        String[] values = portletPreferences.getValues(
-//            "RssXml",
-//            new String[]
-//            {
-//                "http://www.theserverside.com/rss/theserverside-0.9.rdf"
-//            }
-//        );
+        String[] values = portletPreferences.getValues("url", null);
 
+        System.out.println("url pref: " + StringTools.arrayToString(values));
         int i = 0;
 
     }

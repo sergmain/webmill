@@ -24,16 +24,6 @@
  */
 package org.riverock.webmill.container.tools;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javax.portlet.PortletException;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
-import org.riverock.webmill.container.core.GetMainUserMetadataItem;
-
 /**
  * @author SMaslyukov
  *         Date: 19.03.2005
@@ -41,7 +31,7 @@ import org.riverock.webmill.container.core.GetMainUserMetadataItem;
  *         $Id$
  */
 public final class PortalUserMetadata {
-
+/*
     private final static String sql =
             "select a.* " +
             "from   WM_LIST_USER_METADATA a, WM_PORTAL_VIRTUAL_HOST b, WM_AUTH_USER c " +
@@ -75,7 +65,7 @@ public final class PortalUserMetadata {
             ps = null;
         }
     }
-
+*/
 /*
     public final static void setMetadata(
         DatabaseAdapter adapter, String userLogin, String serverName, String metadataName, 

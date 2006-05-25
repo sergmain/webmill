@@ -1,16 +1,8 @@
 //Todo add copyright
 package org.riverock.webmill.container.core;
 
-import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import org.apache.log4j.Logger;
-
 public class DeleteMainUserMetadataItem {
+/*
     private static Logger log = Logger.getLogger( DeleteMainUserMetadataItem.class );
 
      public DeleteMainUserMetadataItem(){}
@@ -55,4 +47,5 @@ public class DeleteMainUserMetadataItem {
             ps = null;
         }
     }
+*/
 }

@@ -1,12 +1,8 @@
 package org.riverock.webmill.container.core;
 
-import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-public class DeleteMainUserMetadataWithIdUser 
+public class DeleteMainUserMetadataWithIdUser
 {
+/*
     private static org.apache.log4j.Logger cat = org.apache.log4j.Logger.getLogger("org.riverock.webmill.container.core.DeleteMainUserMetadataWithIdUser" );
 
     public DeleteMainUserMetadataWithIdUser(){}
@@ -83,5 +79,5 @@ public class DeleteMainUserMetadataWithIdUser
             }
         }
     }
-
+*/
 }

@@ -121,7 +121,7 @@ public class PortletDefinitionProcessorImpl implements PortletDefinitionProcesso
                 "setReadOnly",
                 0,
                 new Class[] { Boolean.class });
-            digester.addBeanPropertySetter("portlet-app/portlet/portlet-preferences/preference/modifiable", "modifiable");
+            digester.addSetNext("portlet-app/portlet/portlet-preferences/preference", "addPreference");
 
             digester.addObjectCreate("portlet-app/user-attribute", UserAttribute.class);
             digester.addSetProperties("portlet-app/user-attribute", "id", "id");
