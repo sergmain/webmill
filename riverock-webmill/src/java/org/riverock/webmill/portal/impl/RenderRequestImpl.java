@@ -24,18 +24,27 @@
  */
 package org.riverock.webmill.portal.impl;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
 
-import javax.portlet.RenderRequest;
-import javax.portlet.PortletPreferences;
 import javax.portlet.PortalContext;
 import javax.portlet.PortletContext;
+import javax.portlet.PortletPreferences;
+import javax.portlet.RenderRequest;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.portal.PortalRequestInstance;
 import org.riverock.webmill.portal.namespace.Namespace;
-import org.riverock.webmill.container.portlet.bean.PortletDefinition;
+import org.riverock.interfaces.generic.InternalRequest;
 
 /**
  * User: Admin
@@ -44,7 +53,8 @@ import org.riverock.webmill.container.portlet.bean.PortletDefinition;
  *
  * $Id$
  */
-public final class RenderRequestImpl extends WebmillPortletRequest implements RenderRequest {
+public final class RenderRequestImpl extends WebmillPortletRequest implements RenderRequest, InternalRequest {
+    private final static Logger log = Logger.getLogger( RenderRequestImpl.class );
 
     public RenderRequestImpl(
         final Map<String, List<String>> parameters,
@@ -59,13 +69,86 @@ public final class RenderRequestImpl extends WebmillPortletRequest implements Re
         final PortletDefinition portletDefinition,
         final Namespace namespace
     ) {
-        
+
         super(
             servletContext, portalRequestInstance.getHttpRequest(), portletPreferences,
             portletProperties, renderParameters, portletContext,
             portletDefinition, namespace
         );
-        
+
         prepareRequest( parameters, portalRequestInstance, contextPath, portalContext);
+    }
+
+    public void setIncluded(boolean included) {
+        super.included=included;
+    }
+
+    public boolean isIncluded() {
+        return super.included;
+    }
+
+    public void setIncludedQueryString(String queryString) {
+        if (!included) {
+            throw new IllegalStateException("Parameters cannot be appended to render request which is not included in a dispatch.");
+        }
+        if (StringUtils.isNotBlank(queryString)) {
+            includedParameters = parseQueryString(queryString);
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("No query string appended to the included request.");
+            }
+        }
+    }
+
+    /**
+     * author: Apache groupl, project: Pluto, license: Apache2
+     *
+     * Parses the appended query string and merges the appended parameters to
+     * the original parameters. Query parameters are name-value pairs separated
+     * by the '<code>&amp;</code>' character.
+     * @param queryString  the appended query string.
+     */
+    private Map<String, List<String>> parseQueryString(String queryString) {
+
+        // Create the appended parameters map:
+        //   key is the parameter name as a string,
+        //   value is a List of parameter values (List of String).
+        Map<String, List<String>> appendedParameters = new HashMap<String, List<String>>();
+
+        // Parse the appended query string.
+        if (log.isDebugEnabled()) {
+            log.debug("Parsing appended query string: " + queryString);
+        }
+        try {
+            StringTokenizer st = new StringTokenizer(queryString, "&", false);
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                int equalIndex = token.indexOf("=");
+                if (equalIndex > 0) {
+                    String value;
+                    String key = URLDecoder.decode( token.substring(0, equalIndex), "utf-8" );
+                    if (equalIndex < token.length() - 1) {
+                        value = URLDecoder.decode( token.substring(equalIndex + 1), "utf-8" );
+                    }
+                    else {
+                        value = "";
+                    }
+                    List<String> values = appendedParameters.get(key);
+                    if (values == null) {
+                        values = new ArrayList<String>();
+                    }
+                    values.add(value);
+                    appendedParameters.put(key, values);
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            String es = "Error decode parameter string";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug(appendedParameters.size() + " parameters appended.");
+        }
+        return appendedParameters;
     }
 }
