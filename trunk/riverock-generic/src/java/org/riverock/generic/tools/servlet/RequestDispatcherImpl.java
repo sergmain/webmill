@@ -29,11 +29,12 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletRequestWrapper;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+
+import org.riverock.interfaces.generic.InternalRequest;
 
 /**
  * User: SergeMaslyukov
@@ -45,18 +46,24 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     private final static Logger log = Logger.getLogger( RequestDispatcherImpl.class );
 
     private RequestDispatcher requestDispatcher = null;
+    private String queryString=null;
 
     public RequestDispatcherImpl( RequestDispatcher requestDispatcher ) {
         this.requestDispatcher = requestDispatcher;
     }
 
+    public RequestDispatcherImpl( RequestDispatcher requestDispatcher, String queryString ) {
+        this.requestDispatcher = requestDispatcher;
+        this.queryString = queryString;
+    }
+
     public void forward( ServletRequest servletRequest, ServletResponse servletResponse ) throws ServletException, IOException {
         if ( log.isDebugEnabled() ) {
             log.debug( "forward new context" );
-         }
+        }
 
         try {
-            requestDispatcher.include( (HttpServletRequest)servletRequest, (HttpServletResponse)servletResponse );
+            requestDispatcher.include( servletRequest, servletResponse );
             servletResponse.flushBuffer();
         }
         catch( java.io.IOException e ) {
@@ -71,15 +78,39 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         }
     }
 
-    public void include( ServletRequest request, ServletResponse response )
-        throws java.io.IOException, ServletException {
+    public void include( ServletRequest request, ServletResponse response ) throws IOException, ServletException {
 
+
+        InternalRequest internalRequest = getInternalRequest(request);
+
+        boolean isIncluded = (internalRequest.isIncluded());
+        try {
+            internalRequest.setIncluded(true);
+            internalRequest.setIncludedQueryString(queryString);
+
+            requestDispatcher.include( (ServletRequest) internalRequest, response);
+        }
+        catch( java.io.IOException e ) {
+            String es = "IOException include new request";
+            log.error( es, e );
+            throw e;
+        }
+        catch( ServletException e ) {
+            String es = "Error include new request";
+            log.error( es, e );
+            throw new ServletException( es, e );
+        }
+        finally {
+            internalRequest.setIncluded(isIncluded);
+        }
+
+/*
         if ( log.isDebugEnabled() ) {
             log.debug( "include new context" );
          }
 
         try {
-            requestDispatcher.include( (HttpServletRequest)request, (HttpServletResponse)response );
+            requestDispatcher.include( request, response );
             response.flushBuffer();
         }
         catch( java.io.IOException e ) {
@@ -92,5 +123,18 @@ public class RequestDispatcherImpl implements RequestDispatcher {
             log.error( es, e );
             throw new ServletException( es, e );
         }
+*/
     }
+
+    private static InternalRequest getInternalRequest(ServletRequest request) {
+        while (!(request instanceof InternalRequest)) {
+            request = ((ServletRequestWrapper) request).getRequest();
+            if (request == null) {
+                throw new IllegalStateException(
+                        "The internal request cannot be found.");
+            }
+        }
+        return (InternalRequest) request;
+    }
+
 }

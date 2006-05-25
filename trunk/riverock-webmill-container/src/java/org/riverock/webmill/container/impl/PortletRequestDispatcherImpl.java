@@ -24,50 +24,66 @@
  */
 package org.riverock.webmill.container.impl;
 
+import java.io.IOException;
+
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.riverock.interfaces.generic.InternalRequest;
+
 public final class PortletRequestDispatcherImpl implements PortletRequestDispatcher {
-//    private final static Logger log = Logger.getLogger(PortletRequestDispatcherImpl.class);
 
     private RequestDispatcher requestDispatcher = null;
+    private String queryString=null;
 
     public PortletRequestDispatcherImpl( RequestDispatcher requestDispatcher ) {
         this.requestDispatcher = requestDispatcher;
     }
 
-    public void include( RenderRequest request, RenderResponse response )
-        throws PortletException, java.io.IOException {
+    public PortletRequestDispatcherImpl( RequestDispatcher requestDispatcher, String queryString) {
+        this.requestDispatcher = requestDispatcher;
+        this.queryString = queryString;
+    }
 
-/*
-        if ( log.isDebugEnabled() ) {
-            log.debug( "include new context" );
-            log.debug( "request: " + request );
-            log.debug( "response: " + response );
-        }
-*/
+    public void include( RenderRequest request, RenderResponse response ) throws PortletException, IOException {
 
+        InternalRequest internalRequest = getInternalRequest(request);
+
+        boolean isIncluded = (internalRequest.isIncluded());
         try {
-            requestDispatcher.include(
-                (HttpServletRequest)request, (HttpServletResponse)response
-            );
-            response.flushBuffer();
-        }
-        catch( java.io.IOException e ) {
-            String es = "IOException include new request";
-//            log.error( es, e );
-            throw e;
-        }
-        catch( ServletException e ) {
-            String es = "Error include new request";
-//            log.error( es, e );
-            throw new PortletException( es, e );
+            internalRequest.setIncluded(true);
+            internalRequest.setIncludedQueryString(queryString);
+
+            requestDispatcher.include( (HttpServletRequest) internalRequest, (HttpServletResponse) response);
+        } catch (IOException ex) {
+            throw ex;
+        } catch (ServletException ex) {
+            if (ex.getRootCause() != null) {
+                throw new PortletException(ex.getRootCause());
+            } else {
+                throw new PortletException(ex);
+            }
+        } finally {
+            internalRequest.setIncluded(isIncluded);
         }
     }
+
+    private static InternalRequest getInternalRequest(RenderRequest request) {
+        while (!(request instanceof InternalRequest)) {
+            request = (RenderRequest)((ServletRequestWrapper) request).getRequest();
+            if (request == null) {
+                throw new IllegalStateException(
+                        "The internal portlet request cannot be found.");
+            }
+        }
+        return (InternalRequest) request;
+    }
+
 }

@@ -26,7 +26,6 @@ package org.riverock.portlet.news;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
@@ -40,19 +39,14 @@ import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.ServletTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.core.InsertMainUserMetadataItem;
-import org.riverock.webmill.container.core.UpdateMainUserMetadataItem;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.schema.core.MainUserMetadataItemType;
-import org.riverock.webmill.container.tools.PortalUserMetadata;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * @author SMaslyukov
@@ -93,14 +87,14 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
     }
 
 
-    private static Object syncDebug = new Object();
+    private final static Object syncDebug = new Object();
     public byte[] getXml(String rootElement) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("start get XmlByte array, rootElement: " + rootElement );
         }
 
 
-        byte b[] = null;
+        byte b[];
         try {
             b = XmlTools.getXml( null, rootElement );
         }
@@ -207,15 +201,19 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
     }
 
     private boolean getSubscribeStatus(DatabaseAdapter adapter, AuthSession auth_, String serverName) throws Exception {
+/*
         MainUserMetadataItemType meta = PortalUserMetadata.getMetadata( adapter, auth_.getUserLogin(), serverName, NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS);
         if (meta==null || meta.getIntValue()==null) {
             return false;
         }
         return meta.getIntValue()==1;
+*/
+        return false;
     }
 
     static void setSubscribeStatus(PortletRequest portletRequest, boolean isSubscribe) throws Exception {
 
+/*
         DatabaseAdapter db_ = null;
         try {
 
@@ -260,7 +258,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
             DatabaseAdapter.close( db_ );
             db_ = null;
         }
-
+*/
     }
 
     private boolean userNotLogged(AuthSession auth_, StringBuilder out) {

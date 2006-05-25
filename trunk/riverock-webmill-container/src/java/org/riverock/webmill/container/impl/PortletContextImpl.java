@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Set;
 
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequestDispatcher;
@@ -53,21 +54,59 @@ public final class PortletContextImpl implements PortletContext {
         return portalName;
     }
 
-    public PortletRequestDispatcher getRequestDispatcher( final String path ) {
-        String es = "getRequestDispatcher(), path: " + path;
-        System.out.println(es);
-
-        RequestDispatcher rd = servletContext.getRequestDispatcher( path );
-        return new PortletRequestDispatcherImpl( rd );
+    public PortletRequestDispatcher getRequestDispatcher(String path) {
+        return createRequestDispatcher(servletContext, path);
     }
 
-    public PortletRequestDispatcher getNamedDispatcher( final String name ) {
-        RequestDispatcher rd = servletContext.getNamedDispatcher( name );
-        return rd!=null ?new PortletRequestDispatcherImpl( rd ) :null;
+    public static PortletRequestDispatcher createRequestDispatcher(ServletContext servletContext, String path) {
+        // Check if the path name is valid. A valid path name must not be null
+        //   and must start with a slash '/' as defined by the portlet spec.
+        if (path == null || !path.startsWith("/")) {
+            System.out.println("Failed to retrieve PortletRequestDispatcher: " +
+                "path name must begin with a slash '/', path: " + path);
+            return null;
+        }
+
+        // Extract query string which contains appended parameters.
+        String queryString = null;
+        int index = path.indexOf("?");
+        if (index > 0 && index < path.length() - 1) {
+            queryString = path.substring(index + 1);
+            System.out.println("queryString = " + queryString);
+        }
+
+        // Construct PortletRequestDispatcher.
+        PortletRequestDispatcher portletRequestDispatcher = null;
+        try {
+            RequestDispatcher servletRequestDispatcher = servletContext.getRequestDispatcher(path);
+            if (servletRequestDispatcher != null) {
+                portletRequestDispatcher = new PortletRequestDispatcherImpl(servletRequestDispatcher, queryString);
+            }
+            else {
+                System.out.println("No matching request dispatcher found for: " + path);
+            }
+        } catch (Exception ex) {
+            // We need to catch exception because of a Tomcat 4.x bug.
+            //   Tomcat throws an exception instead of return null if the path
+            //   was not found.
+            ex.printStackTrace();
+            portletRequestDispatcher = null;
+        }
+        return portletRequestDispatcher;
     }
 
-    public InputStream getResourceAsStream( final String path ) {
-        return servletContext.getResourceAsStream( path );
+    public PortletRequestDispatcher getNamedDispatcher(String name) {
+        RequestDispatcher dispatcher = servletContext.getNamedDispatcher(name);
+        if (dispatcher != null) {
+            return new PortletRequestDispatcherImpl(dispatcher);
+        } else {
+            System.out.println("No matching request dispatcher found for name: "+ name);
+        }
+        return null;
+    }
+
+    public InputStream getResourceAsStream(final String path) {
+        return servletContext.getResourceAsStream(path);
     }
 
     public int getMajorVersion() {
@@ -78,78 +117,79 @@ public final class PortletContextImpl implements PortletContext {
         return PORTLET_API_MINOR_VERSION;
     }
 
-    public String getMimeType( final String file ) {
-        return servletContext.getMimeType( file );
+    public String getMimeType(final String file) {
+        return servletContext.getMimeType(file);
     }
 
-    public String getRealPath( final String path ) {
-        return servletContext.getRealPath( path );
+    public String getRealPath(final String path) {
+        return servletContext.getRealPath(path);
     }
 
-    public java.util.Set getResourcePaths( final String path ) {
-        return servletContext.getResourcePaths( path );
+    public Set getResourcePaths(final String path) {
+        return servletContext.getResourcePaths(path);
     }
 
-    public URL getResource( final String path ) throws MalformedURLException {
-        if (path == null || !path.startsWith( "/" )) {
-            throw new MalformedURLException( "path must start with a '/'" );
+    public URL getResource(final String path) throws MalformedURLException {
+        if (path == null || !path.startsWith("/")) {
+            throw new MalformedURLException("path must start with a '/'");
         }
-        return servletContext.getResource( path );
+        return servletContext.getResource(path);
     }
 
-    public Object getAttribute( final String name ) {
+    public Object getAttribute(final String name) {
         if (name == null) {
-            throw new IllegalArgumentException( "Attribute name == null" );
+            throw new IllegalArgumentException("Attribute name == null");
         }
 
-        return servletContext.getAttribute( name );
+        return servletContext.getAttribute(name);
     }
 
-    public java.util.Enumeration getAttributeNames() {
+    public Enumeration getAttributeNames() {
         return servletContext.getAttributeNames();
     }
 
-    public String getInitParameter( final String name ) {
+    public String getInitParameter(final String name) {
         if (name == null) {
-            throw new IllegalArgumentException( "Parameter name == null" );
+            throw new IllegalArgumentException("Parameter name == null");
         }
 
-        return servletContext.getInitParameter( name );
+        return servletContext.getInitParameter(name);
     }
 
     public Enumeration getInitParameterNames() {
         return servletContext.getInitParameterNames();
     }
 
-    public void log( final String msg ) {
-        servletContext.log( msg );
+    public void log(final String msg) {
+        servletContext.log(msg);
     }
 
-    public void log( final String message, final Throwable throwable ) {
-        servletContext.log( message, throwable );
+    public void log(final String message, final Throwable throwable) {
+        servletContext.log(message, throwable);
     }
 
-    public void removeAttribute( final String name ) {
+    public void removeAttribute(final String name) {
         if (name == null) {
-            throw new IllegalArgumentException( "Attribute name == null" );
+            throw new IllegalArgumentException("Attribute name == null");
         }
 
-        servletContext.removeAttribute( name );
+        servletContext.removeAttribute(name);
     }
 
-    public void setAttribute( final String name, final Object object ) {
+    public void setAttribute(final String name, final Object object) {
         if (name == null) {
-            throw new IllegalArgumentException( "Attribute name == null" );
+            throw new IllegalArgumentException("Attribute name == null");
         }
 
-        servletContext.setAttribute( name, object );
+        servletContext.setAttribute(name, object);
     }
 
     public String getPortletContextName() {
         return servletContext.getServletContextName();
     }
 
-    /** @deprecated
+    /**
+     * @deprecated
      */
     public ServletContext getServletContext() {
         return servletContext;

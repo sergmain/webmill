@@ -193,33 +193,7 @@ public final class PageElement {
             try {
                 final ClassLoader classLoader = portletEntry.getClassLoader();
                 Thread.currentThread().setContextClassLoader(classLoader);
-
-//                if (!isUrl) {
-                    portletEntry.getPortlet().render(renderRequest, renderResponse);
-//                }
-//                else {
-//
-//                    RequestDispatcher rd = portletEntry.getServletConfig().getServletContext().getRequestDispatcher(portletEntry.getPortletDefinition().getPortletClass());
-//
-//                    if (log.isDebugEnabled()) {
-//                        log.debug("#91.1");
-//                        log.debug("process url: " + portletEntry.getPortletDefinition().getPortletClass());
-//                        log.debug("ServletContext: " + portletEntry.getServletConfig().getServletContext());
-//                        log.debug("RequestDispatcher: " + rd);
-//                    }
-//
-//                    PortletRequestDispatcher dispatcher = new PortletRequestDispatcherImpl(rd);
-//
-//                    if (log.isDebugEnabled()) {
-//                        log.debug("#91.4");
-//                    }
-//                    dispatcher.include(renderRequest, renderResponse);
-//
-//                    if (log.isDebugEnabled()) {
-//                        log.debug("#91.5");
-//                    }
-//                }
-
+                portletEntry.getPortlet().render(renderRequest, renderResponse);
             }
             finally {
                 Thread.currentThread().setContextClassLoader(oldLoader);

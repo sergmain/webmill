@@ -2,6 +2,7 @@ package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.MissingResourceException;
 
 import javax.faces.event.ActionEvent;
 
@@ -110,7 +111,7 @@ public class SiteAction implements Serializable {
 
 //        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
 //        holdingSessionBean.setEdit( true );
-
+         MissingResourceException
         return "site-edit";
     }
 
