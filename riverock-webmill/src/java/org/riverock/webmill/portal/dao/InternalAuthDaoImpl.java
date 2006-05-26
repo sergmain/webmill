@@ -42,6 +42,24 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
     private static Logger log = Logger.getLogger(InternalAuthDaoImpl.class);
 
     public UserInfo getUserInfo(String userLogin) {
+        DatabaseAdapter db_ = null;
+        try {
+            db_ = DatabaseAdapter.getInstance();
+            return getUserInfo(db_, userLogin);
+        }
+        catch (Exception e) {
+            final String es = "Error get user info";
+            log.error(es, e);
+            throw new IllegalStateException(es,e);
+        }
+        finally {
+            DatabaseManager.close(db_);
+            db_ = null;
+        }
+
+    }
+
+    public UserInfo getUserInfo(DatabaseAdapter db_, String userLogin) {
         String sql_ = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -51,9 +69,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             "from   WM_LIST_USER a, WM_AUTH_USER b " +
             "where  a.id_user = b.id_user and b.user_login = ? ";
 
-        DatabaseAdapter db_ = null;
         try {
-            db_ = DatabaseAdapter.getInstance();
             ps = db_.prepareStatement(sql_);
             ps.setString(1, userLogin);
 
@@ -72,10 +88,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             throw new IllegalStateException(es,e);
         }
         finally {
-            DatabaseManager.close(db_, rs, ps);
+            DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
-            db_ = null;
         }
     }
 

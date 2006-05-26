@@ -7,6 +7,7 @@ import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author SergeMaslyukov
@@ -54,4 +55,5 @@ public interface InternalAuthDao {
     public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth);
     public List<UserInfo> getUserList(AuthSession authSession);
 
+    public UserInfo getUserInfo(DatabaseAdapter db_, String userLogin);
 }
