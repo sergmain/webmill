@@ -53,6 +53,8 @@
 	<DbTablePrefix>WM_AUTH_USER</DbTablePrefix>
 	<DbTablePrefix>WM_AUTH_RELATE_ACCGROUP</DbTablePrefix>
 
+    <DbTablePrefix>WM_LIST_USER_METADATA</DbTablePrefix>
+
 	<TableToList>WM_PORTAL_CATALOG</TableToList>
 	<TableToList>WM_PORTAL_PORTLET_NAME</TableToList>
 	<TableToList>WM_PORTAL_CSS</TableToList>

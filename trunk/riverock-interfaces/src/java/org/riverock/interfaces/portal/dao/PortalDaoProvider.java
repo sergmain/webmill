@@ -21,5 +21,6 @@ public interface PortalDaoProvider {
     public PortalXsltDao getPortalXsltDao();
 
     public PortalCssDao getPortalCssDao();
+    public PortalUserMetadataDao getPortalUserMetadataDao();
 
 }

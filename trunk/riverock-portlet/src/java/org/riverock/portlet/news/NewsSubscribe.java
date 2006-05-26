@@ -33,6 +33,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
@@ -40,13 +41,14 @@ import org.riverock.common.tools.MainTools;
 import org.riverock.common.tools.ServletTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
+import org.riverock.interfaces.portal.user.UserMetadataItem;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
-import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * @author SMaslyukov
@@ -134,7 +136,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
             db_ = DatabaseAdapter.getInstance();
 
-            String indexPage = PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse, "" );
+//            String indexPage1 = PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse, "" );
 
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
@@ -147,9 +149,9 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
                 return prepareReturn( out );
             }
 
-            boolean isSubscribed = getSubscribeStatus( db_, auth_, renderRequest.getServerName() );
+            boolean isSubscribed = getSubscribeStatus( auth_ );
             printSubscribeForm( out, isSubscribed );
-            printToIndexPage( out, indexPage );
+//            printToIndexPage( out, indexPage );
 
             return prepareReturn( out );
         }
@@ -166,7 +168,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
     }
 
     private boolean emailIsValid(AuthSession auth_, StringBuilder out) {
-        if ( auth_.getUserInfo().getEmail()==null ) {
+        if ( StringUtils.isBlank(auth_.getUserInfo().getEmail())) {
             out.append( "You must setup your e-mail address before change of status of subscription");
 
             return false;
@@ -185,7 +187,7 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
     private void printSubscribeForm(StringBuilder out, boolean isSubscribed) {
         out
             .append("\n<form method=\"POST\" action=\"")
-            .append(PortletService.ctx(renderRequest))
+            .append(renderResponse.createActionURL().toString())
             .append("\" >\n")
             .append( ServletTools.getHiddenItem( ContainerConstants.NAME_TYPE_CONTEXT_PARAM, NewsSubscribePortlet.PORTLET_NAME ) )
             .append( ServletTools.getHiddenItem( NewsSubscribePortlet.CHANGE_STATUS_PARAM, NewsSubscribePortlet.CHANGE_STATUS_PARAM  ) )
@@ -200,65 +202,31 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
             .append( "\">\n</form>\n" );
     }
 
-    private boolean getSubscribeStatus(DatabaseAdapter adapter, AuthSession auth_, String serverName) throws Exception {
-/*
-        MainUserMetadataItemType meta = PortalUserMetadata.getMetadata( adapter, auth_.getUserLogin(), serverName, NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS);
+    private boolean getSubscribeStatus(AuthSession auth_) {
+        PortalDaoProvider portalDaoProvider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
+        UserMetadataItem meta = portalDaoProvider.getPortalUserMetadataDao().getMetadata( auth_.getUserLogin(), siteId, NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS);
         if (meta==null || meta.getIntValue()==null) {
             return false;
         }
         return meta.getIntValue()==1;
-*/
-        return false;
     }
 
     static void setSubscribeStatus(PortletRequest portletRequest, boolean isSubscribe) throws Exception {
 
-/*
-        DatabaseAdapter db_ = null;
         try {
-
-            db_ = DatabaseAdapter.getInstance();
 
             Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
 
             AuthSession auth_ = (AuthSession)portletRequest.getUserPrincipal();
-            MainUserMetadataItemType meta = PortalUserMetadata.getMetadata( db_, auth_.getUserLogin(), portletRequest.getServerName(), NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS);
-
-            if (meta==null) {
-                CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName( "SEQ_WM_LIST_USER_METADATA" );
-                seq.setTableName( "WM_LIST_USER_METADATA" );
-                seq.setColumnName( "ID_MAIN_USER_METADATA" );
-                Long id = db_.getSequenceNextValue( seq );
-
-                meta = new MainUserMetadataItemType();
-                meta.setIdMainUserMetadata( id );
-                meta.setIdUser( auth_.getUserInfo().getUserId() );
-                meta.setIdSite( siteId );
-                meta.setMeta( NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS );
-                meta.setIntValue( isSubscribe?1L:0L );
-                InsertMainUserMetadataItem.process(db_, meta);
-            }
-            else {
-                meta.setIntValue( isSubscribe?1L:0L );
-                UpdateMainUserMetadataItem.process(db_, meta);
-            }
-            db_.commit();
+            PortalDaoProvider portalDaoProvider = (PortalDaoProvider)portletRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+            portalDaoProvider.getPortalUserMetadataDao().setMetadataIntValue(auth_.getUserLogin(), siteId, NewsSubscribePortlet.META_SUBSCRIBED_ON_NEWS, isSubscribe?1L:0L);
         }
         catch (Exception e) {
-            try {
-                db_.rollback();
-            } catch (SQLException e1) {
-            }
             final String es = "Erorr set new status of subscription to news";
             log.error(es, e);
             throw new PortletException( es, e );
         }
-        finally {
-            DatabaseAdapter.close( db_ );
-            db_ = null;
-        }
-*/
     }
 
     private boolean userNotLogged(AuthSession auth_, StringBuilder out) {
