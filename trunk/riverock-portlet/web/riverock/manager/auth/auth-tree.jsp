@@ -6,6 +6,7 @@
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Auth" var="msg"/>
 
+
 <h:panelGroup id="user-tree-group">
 
     <t:tree2 id="serverTree" value="#{userTree.userTree}" var="node" varNodeToggler="t" clientSideToggle="false"

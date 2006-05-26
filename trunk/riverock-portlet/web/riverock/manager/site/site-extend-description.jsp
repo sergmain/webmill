@@ -15,7 +15,7 @@
     <h:outputText value="#{msg.site_company}"/>
     <h:outputText value="#{siteSessionBean.siteExtended.company.name}"/>
 
-    <h:outputText value="#{msg.locale}"/>
+    <h:outputText value="#{msg.site_locale}"/>
     <h:outputText value="#{siteSessionBean.siteExtended.site.siteDefaultLocale}"/>
 
     <h:outputText value="#{msg.site_admin_email}"/>

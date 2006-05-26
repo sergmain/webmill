@@ -19,7 +19,7 @@
          </h:selectOneMenu>
      </h:panelGroup>
 
-     <h:outputText value="#{msg.locale}"/>
+     <h:outputText value="#{msg.site_locale}"/>
      <h:inputText id="site-locale-field" value="#{siteSessionBean.siteExtended.site.siteDefaultLocale}"/>
 
      <h:outputText value="#{msg.site_admin_email}"/>

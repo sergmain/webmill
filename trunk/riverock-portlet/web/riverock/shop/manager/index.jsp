@@ -11,9 +11,9 @@ TD { vertical-align: top; }
 </style>
 
 <f:view>
-<h:form id="foo" enctype="multipart/form-data>
+<h:form id="foo" enctype="multipart/form-data">
 
-   <h:panelGrid columns="1"> 
+   <h:panelGrid columns="1">
 
     	<h:outputText value="#{msg.xml_format_warning}" styleClass="standard_bold" />
 

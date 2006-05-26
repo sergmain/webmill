@@ -27,20 +27,21 @@ package org.riverock.webmill.config;
 import java.io.File;
 import java.nio.charset.Charset;
 
-import org.riverock.webmill.schema.config.WebmillConfigType;
-import org.riverock.webmill.schema.config.CustomDirsType;
+import org.apache.log4j.Logger;
+
 import org.riverock.common.config.ConfigObject;
 import org.riverock.common.tools.StringTools;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.schema.config.CustomDirsType;
+import org.riverock.webmill.schema.config.WebmillConfigType;
 
 
 /**
  * User: serg_main
  * Date: 28.11.2003
  * Time: 21:45:01
+ *
  * @author Serge Maslyukov
- * $Id$
+ *         $Id$
  */
 public class WebmillConfig {
     private static Logger log = Logger.getLogger(WebmillConfig.class);
@@ -48,32 +49,31 @@ public class WebmillConfig {
     private static final String NAME_CONFIG_PARAM = "jsmithy-webmill.xml";
     private static final String JNDI_WEBMILL_CONFIG_FILE = "jsmithy/webmill/ConfigFile";
 
-//    public static String contextName = "";
     private static ConfigObject configObject = null;
 
     private static boolean isConfigProcessed = false;
 
-    public static WebmillConfigType getConfig()
-    {
+    public static WebmillConfigType getConfig() {
         return (WebmillConfigType) configObject.getConfigObject();
     }
 
-    private static Object syncReadConfig = new Object();
+    private final static Object syncReadConfig = new Object();
 
     private static void readConfig() {
-        if (isConfigProcessed)
+        if (isConfigProcessed) {
             return;
+        }
 
-        synchronized (syncReadConfig)
-        {
-            if (isConfigProcessed)
+        synchronized (syncReadConfig) {
+            if (isConfigProcessed) {
                 return;
+            }
 
-            configObject = ConfigObject.load(
-                JNDI_WEBMILL_CONFIG_FILE, CONFIG_FILE_PARAM_NAME, NAME_CONFIG_PARAM, WebmillConfigType.class);
+            configObject = ConfigObject.load(JNDI_WEBMILL_CONFIG_FILE, CONFIG_FILE_PARAM_NAME, NAME_CONFIG_PARAM, WebmillConfigType.class);
 
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("#15.006");
+            }
 
             isConfigProcessed = true;
         }
@@ -83,35 +83,36 @@ public class WebmillConfig {
 // PUBLIC SECTION
 //-----------------------------------------------------
 
-    private static Object syncTempDir = new Object();
+    private final static Object syncTempDir = new Object();
 
-    public static String getWebmillTempDir()
-    {
-        if (log.isDebugEnabled())
+    public static String getWebmillTempDir() {
+        if (log.isDebugEnabled()) {
             log.debug("#15.937");
+        }
 
-        if (!isConfigProcessed)
+        if (!isConfigProcessed) {
             readConfig();
+        }
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("#15.938");
+        }
 
-        synchronized (syncTempDir)
-        {
-            if (Boolean.FALSE.equals(getConfig().getIsTempDirInit()))
-            {
+        synchronized (syncTempDir) {
+            if (Boolean.FALSE.equals(getConfig().getIsTempDirInit())) {
                 String dir = getConfig().getWebmillTempDir();
-	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
+
+                dir = dir.replace(File.separatorChar == '/' ? '\\' : '/', File.separatorChar);
 
                 File dirTest = new File(dir);
-                if (!dirTest.exists())
-                {
+                if (!dirTest.exists()) {
                     log.error("Specified temp directory '" + dir + "' not exists. Set to default java input/output temp directory");
                     dir = System.getProperty("java.io.tmpdir");
                 }
 
-                if (!dir.endsWith(File.separator))
+                if (!dir.endsWith(File.separator)) {
                     dir += File.separator;
+                }
 
                 getConfig().setWebmillTempDir(dir);
                 getConfig().setIsTempDirInit(Boolean.TRUE);
@@ -120,33 +121,39 @@ public class WebmillConfig {
         }
     }
 
-    private static Object syncDebug = new Object();
+    private final static Object syncDebug = new Object();
 
     public static String getWebmillDebugDir() {
-        if (log.isDebugEnabled()) log.debug("#15.937.1");
+        if (log.isDebugEnabled()) {
+            log.debug("#15.937.1");
+        }
 
-        if (!isConfigProcessed)
+        if (!isConfigProcessed) {
             readConfig();
+        }
 
-        if (log.isDebugEnabled()) log.debug("#15.938.1");
+        if (log.isDebugEnabled()) {
+            log.debug("#15.938.1");
+        }
 
-        if (getConfig().getIsDebugDirInit())
+        if (getConfig().getIsDebugDirInit()) {
             return getConfig().getWebmillDebugDir();
+        }
 
-        synchronized (syncDebug)
-        {
-            if (getConfig().getIsDebugDirInit())
+        synchronized (syncDebug) {
+            if (getConfig().getIsDebugDirInit()) {
                 return getConfig().getWebmillDebugDir();
+            }
 
             String dir = getConfig().getWebmillDebugDir();
-	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
+            dir = dir.replace(File.separatorChar == '/' ? '\\' : '/', File.separatorChar);
 
-            if (!dir.endsWith(File.separator))
+            if (!dir.endsWith(File.separator)) {
                 dir += File.separator;
+            }
 
             File dirTest = new File(dir);
-            if (!dirTest.exists())
-            {
+            if (!dirTest.exists()) {
                 log.warn("Specified debug directory '" + dir + "' not exists. Set to default java input/output temp directory");
                 dir = System.getProperty("java.io.tmpdir");
             }
@@ -157,8 +164,7 @@ public class WebmillConfig {
         }
     }
 
-    public static String getMainLanguage()
-    {
+    public static String getMainLanguage() {
         if (log.isDebugEnabled()) log.debug("#15.903");
 
         if (!isConfigProcessed)
@@ -166,12 +172,13 @@ public class WebmillConfig {
 
         if (log.isDebugEnabled()) {
             log.debug("#15.904 Main language: " +
-                StringTools.getLocale( getConfig().getMainLanguage()).toString()
+                StringTools.getLocale(getConfig().getMainLanguage()).toString()
             );
         }
 
-        return StringTools.getLocale( getConfig().getMainLanguage() ).toString();
+        return StringTools.getLocale(getConfig().getMainLanguage()).toString();
     }
+
     public static String getServerCharset() {
         if (log.isDebugEnabled()) log.debug("#15.905");
 
@@ -184,8 +191,7 @@ public class WebmillConfig {
     }
 
 
-    public static String getHtmlCharset()
-    {
+    public static String getHtmlCharset() {
         if (log.isDebugEnabled())
             log.debug("#15.923");
 
@@ -198,8 +204,7 @@ public class WebmillConfig {
         return getConfig().getHtmlCharset();
     }
 
-    public static Charset getCharset()
-    {
+    public static Charset getCharset() {
         if (log.isDebugEnabled())
             log.debug("#15.923");
 
@@ -209,11 +214,10 @@ public class WebmillConfig {
         if (log.isDebugEnabled())
             log.debug("#15.924");
 
-        return Charset.forName( getConfig().getHtmlCharset() );
+        return Charset.forName(getConfig().getHtmlCharset());
     }
 
-    public static boolean getIsSafePage()
-    {
+    public static boolean getIsSafePage() {
         if (log.isDebugEnabled())
             log.debug("#Get isSafePage");
 
@@ -224,11 +228,10 @@ public class WebmillConfig {
             log.debug("#Done get isSafePage");
 
 
-        return getConfig().getIsSafePage() == null ? false : getConfig().getIsSafePage();
+        return getConfig().getIsSafePage() != null && getConfig().getIsSafePage();
     }
 
-    public static String getMailSMTPHost()
-    {
+    public static String getMailSMTPHost() {
         if (log.isDebugEnabled())
             log.debug("#15.927");
 
@@ -241,8 +244,7 @@ public class WebmillConfig {
         return getConfig().getMailHost();
     }
 
-    public static String getCustomPortletDir()
-    {
+    public static String getCustomPortletDir() {
         if (log.isDebugEnabled())
             log.debug("#16.927");
 
@@ -253,14 +255,13 @@ public class WebmillConfig {
             log.debug("#16.928");
 
         CustomDirsType dirs = getConfig().getCustomDirs();
-        if (dirs==null)
+        if (dirs == null)
             return null;
 
         return dirs.getCustomPortletDir();
     }
 
-    public static String getCustomMemberDir()
-    {
+    public static String getCustomMemberDir() {
         if (log.isDebugEnabled())
             log.debug("#16.901");
 
@@ -271,14 +272,13 @@ public class WebmillConfig {
             log.debug("#16.902");
 
         CustomDirsType dirs = getConfig().getCustomDirs();
-        if (dirs==null)
+        if (dirs == null)
             return null;
 
         return dirs.getCustomMemberDir();
     }
 
-    public static String getCustomApplDir()
-    {
+    public static String getCustomApplDir() {
         if (log.isDebugEnabled())
             log.debug("#16.910");
 
@@ -289,7 +289,7 @@ public class WebmillConfig {
             log.debug("#16.911");
 
         CustomDirsType dirs = getConfig().getCustomDirs();
-        if (dirs==null)
+        if (dirs == null)
             return null;
 
         return dirs.getCustomApplicationDir();

@@ -1,4 +1,5 @@
 <style type="text/css"><!--
+
 body {
     font-family: verdana, arial, helvetica, sans-serif;
     font-size: 10px;
@@ -231,6 +232,26 @@ td.priceDataInBasket {
     padding: 1px;
 }
 
+.newshead {
+    background-color: #ededff;
+    background-image: url( /source/back.gif );
+    color: #67628c;
+    font-size: small;
+    font-weight: bolder;
+}
+
+.newsdate {
+    font-size: smaller;
+    font-weight: bold;
+}
+
+.newstime {
+    text-align: center;
+    background-image: url( /source/back.gif );
+    font-weight: bold;
+    color: #67628c;
+}
+
 input, textarea, select {
     color: #000000;
     background-color: #EEEEEE;
@@ -239,6 +260,7 @@ input, textarea, select {
     font-size: smaller;
     border: solid 1px #555566;
     margin: 2px;
+
 }
 
 .inputButton {
@@ -264,4 +286,3 @@ input, textarea, select {
 }
 
 -->
-</style>

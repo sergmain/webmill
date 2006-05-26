@@ -63,69 +63,46 @@ import org.riverock.webmill.container.ContainerConstants;
  * <LI><CODE>renderResponse</CODE>
  * <LI><CODE>portletConfig</CODE>
  * </UL>
- * @see   javax.portlet.PortletRequest
- * @see   javax.portlet.RenderResponse
- * @see   javax.portlet.PortletConfig
  *
+ * @see javax.portlet.PortletRequest
+ * @see javax.portlet.RenderResponse
+ * @see javax.portlet.PortletConfig
  */
-public class DefineObjectsTag extends TagSupport
-{
+public class DefineObjectsTag extends TagSupport {
 
     /**
      * Processes the <CODE>defineObjects</CODE> tag.
+     *
      * @return <CODE>SKIP_BODY</CODE>
      */
-    public int doStartTag() throws JspException
-    {
-        PortletRequest renderRequest = (PortletRequest)pageContext.getRequest();
-        RenderResponse renderResponse = (RenderResponse)pageContext.getResponse();
-        PortletConfig portletConfig = (PortletConfig)pageContext.getRequest().getAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE);
+    public int doStartTag() throws JspException {
+        PortletRequest renderRequest = (PortletRequest) pageContext.getRequest();
+        RenderResponse renderResponse = (RenderResponse) pageContext.getResponse();
+        PortletConfig portletConfig = (PortletConfig) pageContext.getRequest().getAttribute(ContainerConstants.PORTAL_PORTLET_CONFIG_ATTRIBUTE);
 
-        if (pageContext.getAttribute("renderRequest") == null)   //Set attributes only once
-        {
-            pageContext.setAttribute("renderRequest",
-                                     renderRequest,
-                                     PageContext.PAGE_SCOPE);
+        if (pageContext.getAttribute("renderRequest") == null) {
+            pageContext.setAttribute("renderRequest", renderRequest, PageContext.PAGE_SCOPE);
         }
 
-        if (pageContext.getAttribute("renderResponse") == null)
-        {
-            pageContext.setAttribute("renderResponse",
-                                     renderResponse,
-                                     PageContext.PAGE_SCOPE);
+        if (pageContext.getAttribute("renderResponse") == null) {
+            pageContext.setAttribute("renderResponse", renderResponse, PageContext.PAGE_SCOPE);
         }
 
-        if (pageContext.getAttribute("portletConfig") == null)
-        {
-            pageContext.setAttribute("portletConfig",
-                                     portletConfig,
-                                     PageContext.PAGE_SCOPE);
+        if (pageContext.getAttribute("portletConfig") == null) {
+            pageContext.setAttribute("portletConfig", portletConfig, PageContext.PAGE_SCOPE);
         }
 
         return SKIP_BODY;
     }
 
-    public static class TEI extends TagExtraInfo
-    {
+    public static class TEI extends TagExtraInfo {
 
-        public VariableInfo [] getVariableInfo (TagData tagData)
-        {
-            VariableInfo [] info = new VariableInfo [] {
-                new VariableInfo("renderRequest",
-                                 "javax.portlet.RenderRequest",
-                                 true,
-                                 VariableInfo.AT_BEGIN),
-                new VariableInfo("renderResponse",
-                                 "javax.portlet.RenderResponse",
-                                 true,
-                                 VariableInfo.AT_BEGIN),
-                new VariableInfo("portletConfig",
-                                 "javax.portlet.PortletConfig",
-                                 true,
-                                 VariableInfo.AT_BEGIN)
+        public VariableInfo [] getVariableInfo(TagData tagData) {
+            return new VariableInfo []{
+                new VariableInfo("renderRequest", "javax.portlet.RenderRequest", true, VariableInfo.AT_BEGIN),
+                new VariableInfo("renderResponse", "javax.portlet.RenderResponse", true, VariableInfo.AT_BEGIN),
+                new VariableInfo("portletConfig", "javax.portlet.PortletConfig", true, VariableInfo.AT_BEGIN)
             };
-
-            return info;
         }
     }
 }

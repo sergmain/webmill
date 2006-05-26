@@ -85,16 +85,17 @@ public class InternalSiteLanguageDaoImpl implements InternalSiteLanguageDao {
         }
     }
 
-    public SiteLanguage getSiteLanguage(String languageLocale) {
+    public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
             ps = adapter.prepareStatement(
-                "select * from WM_PORTAL_SITE_LANGUAGE where CUSTOM_LANGUAGE=? "
+                "select * from WM_PORTAL_SITE_LANGUAGE where CUSTOM_LANGUAGE=? and ID_SITE=? "
             );
             ps.setString(1, languageLocale);
+            ps.setLong(2, siteId);
             rs = ps.executeQuery();
             SiteLanguageBean bean = null;
             if (rs.next()) {
