@@ -12,6 +12,6 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 public interface InternalSiteLanguageDao {
     public List<SiteLanguage> getSiteLanguageList( Long siteId );
     public SiteLanguage getSiteLanguage(Long siteLanguageId);
-    public SiteLanguage getSiteLanguage(String languageLocale);
+    public SiteLanguage getSiteLanguage(Long siteId, String languageLocale);
     public Long createSiteLanguage(SiteLanguage siteLanguage);
 }

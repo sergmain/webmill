@@ -103,27 +103,6 @@ public class RequestDispatcherImpl implements RequestDispatcher {
         finally {
             internalRequest.setIncluded(isIncluded);
         }
-
-/*
-        if ( log.isDebugEnabled() ) {
-            log.debug( "include new context" );
-         }
-
-        try {
-            requestDispatcher.include( request, response );
-            response.flushBuffer();
-        }
-        catch( java.io.IOException e ) {
-            String es = "IOException include new request";
-            log.error( es, e );
-            throw e;
-        }
-        catch( ServletException e ) {
-            String es = "Error include new request";
-            log.error( es, e );
-            throw new ServletException( es, e );
-        }
-*/
     }
 
     private static InternalRequest getInternalRequest(ServletRequest request) {

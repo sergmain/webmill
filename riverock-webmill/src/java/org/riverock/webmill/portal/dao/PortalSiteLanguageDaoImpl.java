@@ -26,8 +26,8 @@ public class PortalSiteLanguageDaoImpl implements PortalSiteLanguageDao {
         return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
     }
 
-    public SiteLanguage getSiteLanguage(String languageLocale) {
-        return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(languageLocale);
+    public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
+        return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, languageLocale);
     }
 
     public Long createSiteLanguage(SiteLanguage siteLanguage) {

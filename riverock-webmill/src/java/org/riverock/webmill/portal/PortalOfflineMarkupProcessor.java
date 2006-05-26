@@ -106,6 +106,17 @@ public class PortalOfflineMarkupProcessor {
             SiteConfigType siteConfig = (SiteConfigType)o;
 
             List<VirtualHost> hostFullList = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
+            if (log.isDebugEnabled()) {
+                log.debug("process site: " + siteConfig.getName());
+                if (hostFullList!=null && !hostFullList.isEmpty()) {
+                    for (VirtualHost virtualHost : hostFullList) {
+                        log.debug("   virtual host: " + virtualHost.getHost()+", siteId: " + virtualHost.getSiteId());
+                    }
+                }
+                else {
+                    log.debug("   no virtual host for this site");
+                }
+            }
 
             VirtualHostSiteExist b = checkVirtualHost(hostFullList, siteConfig.getHostAsReference());
             if (!b.isValid) {
@@ -139,6 +150,9 @@ public class PortalOfflineMarkupProcessor {
                     b.siteId = site.getSiteId();
                 }
             }
+            if (log.isDebugEnabled()) {
+                log.debug("    siteId: " + b.siteId);
+            }
             List<VirtualHost> hosts = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(b.siteId);
             for (Object objHost : siteConfig.getHostAsReference()) {
                 String hostName = (String) objHost;
@@ -156,9 +170,10 @@ public class PortalOfflineMarkupProcessor {
                     InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost);
                 }
             }
+
             for (Object siteLangObj : siteConfig.getSiteLanguageAsReference()){
                 SiteLanguageType siteLanguageConfig = (SiteLanguageType) siteLangObj;
-                SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageConfig.getLocale());
+                SiteLanguage siteLanguage = InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(b.siteId, siteLanguageConfig.getLocale());
                 if (siteLanguage==null) {
                     SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
                     siteLanguageBean.setSiteId(b.siteId);

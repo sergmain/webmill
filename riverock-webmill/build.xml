@@ -32,6 +32,9 @@
     <property name="portlet-context-name" value=""/>
 
     <property name="release-version" value="5.0.1"/>
+    <property name="portal-release-version" value="5.5"/>
+    <property name="name-portal-release-version" value="webmill-portal-${portal-release-version}"/>
+
     <property name="build-release-name" value="webmill-${release-version}"/>
     <property name="manifest-title-name" value="WebMill engine"/>
     <property name="manifest-vendor-name" value="WebMill. http://webmill.askmore.info"/>
@@ -161,28 +164,13 @@
         </junit>
     </target>
 
-<!--
     <target name="build-release-properties">
         <property name="build-release-dir" value="${build.dir}/${build-release-name}"/>
         <property name="build-release-full-name" value="${build.dir}/${build-release-name}"/>
 
-        <property name="build-tomcat-name" value="tomcat"/>
-        <property name="build-tomcat-dir" value="${build-release-dir}/${build-tomcat-name}"/>
-        <property name="build-tomcat-bin-dir" value="${build-tomcat-dir}/bin"/>
-        <property name="build-tomcat-config-dir" value="${build-tomcat-dir}/conf"/>
-        <property name="build-tomcat-common-lib-dir" value="${build-tomcat-dir}/common/lib"/>
-        <property name="build-tomcat-common-endorsed-dir" value="${build-tomcat-dir}/common/endorsed"/>
-
-        <property name="build-tomcat-webapps-dir" value="${build-tomcat-dir}/webapps"/>
-
-        <property name="build-host-name" value="_localhost"/>
         <property name="build-www-name" value="www"/>
         <property name="build-www-dir" value="${build-release-dir}"/>
         <property name="build-www-mill-dir" value="${build-www-dir}/mill"/>
-
-        <property name="build-www-localhost-dir" value="${build-tomcat-webapps-dir}/localhost"/>
-        <property name="build-www-me.askmore-dir" value="${build-tomcat-webapps-dir}/me.askmore"/>
-        <property name="build-www-petstore-dir" value="${build-tomcat-webapps-dir}/petstore"/>
 
         <property name="build-lib-dir" value="${build-release-dir}/lib"/>
 
@@ -196,227 +184,70 @@
         <property name="build-logs-dir" value="${build-release-dir}/${build-logs-name}"/>
         <property name="build-logs-logs-dir" value="${build-logs-dir}/logs"/>
         <property name="build-logs-log4j-dir" value="${build-logs-dir}/${build-log4j-name}"/>
-        <property name="build-logs4j-localhost-dir" value="${build-logs-log4j-dir}/${build-host-name}"/>
 
         <property name="build-temp-dir-name" value="temp"/>
         <property name="build-temp-dir" value="${build-release-dir}/${build-temp-dir-name}"/>
 
-        <property name="build-hypersonic-name" value="hypersonic"/>
-        <property name="build-hypersonic-dir" value="${build-release-dir}/${build-hypersonic-name}"/>
     </target>
+
 
     <target name="build_release" depends="build-release-properties" >
-        <antcall target="full_clean"/>
-        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
-        <antcall target="clean"/>
+        <ant antfile="../build.xml" target="full_build_module" />
 
+        <delete failonerror="false">
+            <fileset dir="${build-release-dir}">
+                <include name="**"/>
+            </fileset>
+        </delete>
         <mkdir dir="${build-release-dir}"/>
-        <mkdir dir="${build-www-dir}"/>
-        <mkdir dir="${build-www-mill-dir}"/>
-        <mkdir dir="${build-www-localhost-dir}"/>
-        <mkdir dir="${build-release-dir}/hypersonic"/>
-        <mkdir dir="${build-temp-dir}"/>
-        <mkdir dir="${build-logs-logs-dir}"/>
-        <mkdir dir="${build-logs-log4j-dir}"/>
-        <mkdir dir="${build-logs4j-localhost-dir}"/>
-        <mkdir dir="${build-tomcat-dir}"/>
-        <mkdir dir="${build-lib-dir}"/>
 
-        <copy file="${lib.dir}/${hypersonic.lib}"
-            tofile="${build-lib-dir}/${hypersonic.lib}" filtering="on"/>
 
-        <copy file="${build-empty-file}"
-            tofile="${build-temp-dir}/${build-empty-file-name}" filtering="on" failonerror="true"/>
-        <copy file="${build-empty-file}"
-            tofile="${build-logs4j-localhost-dir}/${build-empty-file-name}" filtering="on" failonerror="true"/>
-        <copy file="${build-empty-file}"
-            tofile="${build-logs-logs-dir}/${build-empty-file-name}" filtering="on" failonerror="true"/>
+        <copy file="../riverock-portlet/build/riverock-portlets.war" todir="${build.dir}" overwrite="true" failonerror="true"/>
+        <unzip src="${build.dir}/riverock-portlets.war" dest="${build-release-dir}"/>
 
-        <echo file="${build-release-dir}/run.bat">
-cd ${build-hypersonic-name}
-call runServer.bat
-cd ..
-cd ${build-tomcat-name}\bin
-set CATALINA_HOME=..
-set CATALINA_HOME=..
-set JAVA_ENDORSED_DIRS=%CATALINA_HOME%/common/endorsed
-set CATALINA_OPTS=-Xms32m -Xmx128m
-start catalina.bat run
-cd ..\..
-</echo>
 
-        <unzip src="${tomcat.dir}/tomcat.zip" dest="${build-tomcat-dir}"/>
-        <delete dir="${build-tomcat-webapps-dir}" failonerror="false"/>
-        <mkdir dir="${build-tomcat-webapps-dir}"/>
+        <copy file="${lib.dir}/${mysql-jdbc.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-interfaces.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-webmill-container.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-webmill.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${riverock-sso.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
+        <copy file="${lib.dir}/${portlet.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
 
-        <mkdir dir="${build-www-localhost-dir}"/>
-        <mkdir dir="${build-www-me.askmore-dir}"/>
-        <mkdir dir="${build-www-petstore-dir}"/>
 
-        <copy file="${lib.dir}/${secure.lib}"
-            tofile="${build-tomcat-common-lib-dir}/${secure.lib}" filtering="on"/>
-        <copy file="${lib.dir}/${log4j.lib}"
-            tofile="${build-tomcat-common-lib-dir}/${log4j.lib}" filtering="on"/>
-
-        <copy file="${src.jsp.dir}/mill-config.xml" tofile="${build-www-dir}/mill-config-origin.xml" filtering="on"/>
-        <java fork="true"
-            classname="org.riverock.system.ProcessMillConfig"
-            failonerror="true">
-            <arg value="${build-www-dir}/mill-config-origin.xml"/>
-            <arg value="${build-www-dir}/mill-config.xml"/>
-            <arg value="${build-release-name}/${build-temp-dir-name}"/>
-            <classpath location="${build.dir}/${main.lib}"/>
-            <classpath refid="classpath-base"/>
-        </java>
-        <delete file="${build-www-dir}/mill-config-origin.xml"/>
-
-        <copy file="${src.jsp.dir}/mill.xml" tofile="${build-temp-dir}/mill-origin.xml" filtering="on"/>
-
-        <java fork="true"
-            classname="org.riverock.system.ProcessMillContextConfig"
-            failonerror="true">
-            <arg value="${build-temp-dir}/mill-origin.xml"/>
-            <arg value="${build-temp-dir}/mill.xml"/>
-            <arg value="${build-release-name}/${build-logs-name}/${build-log4j-name}/${build-host-name}"/>
-            <arg value="${build-release-name}/${build-logs-name}/${build-log4j-name}/${build-log4j-config-file}"/>
-            <arg value="${build-release-name}/mill-config.xml"/>
-            <classpath location="${build.dir}/${main.lib}"/>
-            <classpath refid="classpath-base"/>
-        </java>
-        <copy file="${build-temp-dir}/mill.xml" tofile="${build-www-localhost-dir}/mill.xml"/>
-        <copy file="${build-temp-dir}/mill.xml" tofile="${build-www-me.askmore-dir}/mill.xml"/>
-        <copy file="${build-temp-dir}/mill.xml" tofile="${build-www-petstore-dir}/mill.xml"/>
-        <delete file="${build-temp-dir}/mill-origin.xml"/>
-
-        <delete file="${build-tomcat-config-dir}/server.xml"/>
-        <copy file="${src.tomcat-xml.dir}/server.xml" tofile="${build-tomcat-config-dir}/server-origin.xml" filtering="on"/>
-
-        <echo message="input param - ${build-tomcat-config-dir}/server-origin.xml"/>
-        <echo message="out param - ${build-tomcat-config-dir}/server.xml"/>
-        <echo message="appsBase - ${build-release-name}/${build-www-name}/${build-host-name}"/>
-
-        <java fork="true"
-            classname="org.riverock.system.ProcessTomcatServerConfig"
-            failonerror="true">
-            <arg value="${build-tomcat-config-dir}/server-origin.xml"/>
-            <arg value="${build-tomcat-config-dir}/server.xml"/>
-            <arg value="webapps"/>
-            <classpath location="${build.dir}/${main.lib}"/>
-            <classpath refid="classpath-base"/>
-        </java>
-        <delete file="${build-tomcat-config-dir}/server-origin.xml"/>
-
-        <copy file="${docs.dir}\install.txt"
-            tofile="${build-release-dir}\install.txt" filtering="on"/>
-
-        <copy file="${webinf.jsp.dir}\mill\mill.log4j.properties"
-            tofile="${build-logs-log4j-dir}\${build-log4j-config-file}" filtering="on"/>
-
-        <copy file="${lib.dir}\${hypersonic.lib}"
-            tofile="${build-tomcat-common-lib-dir}\${hypersonic.lib}"/>
-        <copy file="${lib.dir}\activation.jar"
-            tofile="${build-tomcat-common-lib-dir}\activation.jar"/>
-        <copy file="${lib.dir}\mail.jar"
-            tofile="${build-tomcat-common-lib-dir}\mail.jar"/>
-        <copy file="${lib.dir}\1.4\ojdbc14.jar"
-            tofile="${build-tomcat-common-lib-dir}\ojdbc14.jar"/>
-        <copy file="${lib.dir}\servlet.jar"
-            tofile="${build-tomcat-common-lib-dir}\servlet.jar"/>
-
-        <delete file="${build-tomcat-common-lib-dir}\classes12.jar" failonerror="false" />
-
-        <copy todir="${build-release-dir}\hypersonic">
-            <fileset dir="hypersonic"/>
-        </copy>
-
-        <copy file="${lib.dir}\xalan.jar"
-            tofile="${build-tomcat-common-endorsed-dir}\xalan.jar"/>
-        <copy file="${lib.dir}\xercesImpl.jar"
-            tofile="${build-tomcat-common-endorsed-dir}\xercesImpl.jar"/>
-        <copy file="${lib.dir}\xmlParserAPIs.jar"
-            tofile="${build-tomcat-common-endorsed-dir}\xmlParserAPIs.jar"/>
-
-        <copy todir="${build-tomcat-common-lib-dir}" failonerror="true">
-            <fileset file="${lib.dir}\license.*"/>
-        </copy>
-
-        <copy todir="${build-www-mill-dir}/WEB-INF/lib" failonerror="true">
-            <fileset file="${lib.dir}\license.log4j"/>
-            <fileset file="${lib.dir}\license.castor_exolab"/>
-        </copy>
-
-        <copy todir="${build-www-mill-dir}/WEB-INF/mill">
-            <fileset dir="${webinf.jsp.dir}\mill">
-                <exclude name="**/*.xsd"/>
-                <exclude name="**/mill.xml"/>
-                <exclude name="log/**/*.log"/>
-                <include name="**/*.xml"/>
-                <include name="log/**"/>
+        <property name="webmill-static-path" value="/WEB-INF/webmill"/>
+        <patternset id="webmill-static.resources">
+            <include name="**/**"/>
+        </patternset>
+        <copy todir="${build-release-dir}${webmill-static-path}" overwrite="true">
+            <fileset dir="${web.dir}/${webmill-static-path}">
+                <patternset refid="webmill-static.resources"/>
             </fileset>
         </copy>
 
-        <copy todir="${build-www-mill-dir}/images">
-            <fileset dir="${src.dir}/images"/>
+
+        <copy file="${src.dir}/release/context.xml" todir="${build-release-dir}/META-INF" overwrite="true" failonerror="true">
+            <filterset>
+              <filter token="@@WEBMILL_RELEASE@@" value="${name-portal-release-version}"/>
+            </filterset>
         </copy>
-        <copy todir="${build-www-mill-dir}/xsd">
-            <fileset dir="${src.dir}/xsd">
-                <include name="**/*.xsd"/>
-                <exclude name="test/**"/>
+        <copy file="${src.dir}/release/web.xml" todir="${build-release-dir}/WEB-INF" overwrite="true" failonerror="true"/>
+        <copy file="${src.dir}/release/config-webmill.xml" todir="${build-release-dir}/WEB-INF/config" overwrite="true" failonerror="true"/>
+        <copy file="${src.dir}/release/config-sso.xml" todir="${build-release-dir}/WEB-INF/config" overwrite="true" failonerror="true"/>
+
+        <copy file="${web.dir}/default.css" todir="${build-release-dir}" overwrite="true" failonerror="true"/>
+
+
+        <property name="war-file-name" value="${build.dir}/${name-portal-release-version}.war"/>
+        <delete file="${war-file-name}"/>
+        <war webxml="${build-release-dir}/WEB-INF/web.xml" warfile="${war-file-name}" update="false" duplicate="preserve">
+            <fileset dir="${build-release-dir}">
             </fileset>
-        </copy>
-        <copy file="${webinf.jsp.dir}/web.xml"
-            tofile="${build-www-mill-dir}/WEB-INF/web.xml"/>
+        </war>
 
-        <copy file="${lib.dir}/${castor.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${castor.lib}"/>
-        <copy file="${lib.dir}/${portlet.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${portlet.lib}"/>
 
-        <copy file="${lib.dir}/${riverock-sql-parser.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${riverock-sql-parser.lib}"/>
-
-        <copy file="${build.dir}/${main.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${main.lib}"/>
-
-        <copy file="${lib.dir}/${log4j.lib}"
-            tofile="${build-www-mill-dir}/WEB-INF/lib/${log4j.lib}"/>
-
-        <copy file="${src.site.dir}\front_styles.css"
-            tofile="${build-www-localhost-dir}\data\front_styles.css"/>
-        <copy file="${src.site.dir}\index.html"
-            tofile="${build-www-localhost-dir}\data\index.html"/>
-
-        <copy file="${src.site.dir}\front_styles.css"
-            tofile="${build-www-me.askmore-dir}\data\front_styles.css" />
-        <copy file="${src.site.dir}\index.html"
-            tofile="${build-www-me.askmore-dir}\data\index.html"/>
-
-        <copy file="${src.site.dir}\front_styles.css"
-            tofile="${build-www-petstore-dir}\data\front_styles.css" />
-        <copy file="${src.site.dir}\index.html"
-            tofile="${build-www-petstore-dir}\data\index.html"/>
-
-        <copy todir="${build-release-dir}\docs\public">
-            <fileset dir="doc\public"/>
-        </copy>
-        <copy todir="${build-release-dir}\docs\xml-sample">
-            <fileset dir="doc\xml-sample"/>
-        </copy>
-        <copy todir="${build-release-dir}\docs\_how-to">
-            <fileset dir="doc\_how-to"/>
-        </copy>
-
-        <tar tarfile="${build-release-full-name}.tar" basedir="${build.dir}" longfile="gnu"  includes="">
-            <exclude name="**/*.java"/>
-            <exclude name="${main.lib}"/>
-            <exclude name="classes/**"/>
-            <exclude name="java/**"/>
-        </tar>
-        <gzip zipfile="${build-release-full-name}.tar.gz" src="${build-release-full-name}.tar"/>
-        <delete file="${build-release-full-name}.tar"/>
     </target>
 
+<!--
     <target name="make-release-files" depends="build-release-properties">
         <tar tarfile="${build-release-full-name}.tar" basedir="${build.dir}" longfile="gnu" includes="">
             <exclude name="**/*.java"/>
@@ -428,21 +259,7 @@ cd ..\..
         <delete file="${build-release-full-name}.tar"/>
     </target>
 
-    <target name="del.webapps.dir">
-        <delete dir="c:\opt\Tomcat 4.1\work\"/>
-    </target>
-
-    <target name="clean.webapps">
-        <property name="null.prop" value=""/>
-        <exec executable="net" outputproperty="null.prop">
-            <arg line=" stop 'Apache Tomcat 4.1'"/>
-        </exec>
-        <antcall target="del.webapps.dir"/>
-        <exec executable="net" outputproperty="null.prop">
-            <arg line=" start 'Apache Tomcat 4.1'"/>
-        </exec>
-    </target>
-    -->
+-->
 
     <target name="replace_properties">
         <property name="path-to-ctx" value="org/riverock/webmill"/>
