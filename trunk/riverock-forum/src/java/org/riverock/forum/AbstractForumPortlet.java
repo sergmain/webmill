@@ -8,6 +8,11 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+
 
 import org.apache.log4j.Logger;
 
@@ -37,6 +42,9 @@ public abstract class AbstractForumPortlet implements Portlet {
     protected ActionFactory actionFactory = null;
     protected ModuleConfig moduleConfig = null;
 
+    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+	}
+
     public void init(PortletConfig portletConfig) throws PortletException {
         this.moduleConfig = new PortletModuleConfigImpl(portletConfig);
         try {
@@ -56,7 +64,11 @@ public abstract class AbstractForumPortlet implements Portlet {
         moduleConfig = null;
     }
 
+public abstract void process(PortletRequest request, PortletResponse response) throws PortletException, IOException;
+
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
+
+	process(renderRequest, renderResponse);
 
         renderRequest.setAttribute( Constants.REQUEST_LOCALE_VALUE, renderRequest.getLocale() );
         ModuleRequest moduleRequest = new WebmillPortletModuleRequestImpl(renderRequest);

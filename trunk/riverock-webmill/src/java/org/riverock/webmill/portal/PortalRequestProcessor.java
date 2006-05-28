@@ -345,14 +345,19 @@ public final class PortalRequestProcessor {
         }
 
         byte[] bytes = xml.toByteArray();
-        synchronized( syncObj) {
-            if (log.isDebugEnabled()) {
-                String fileName = WebmillConfig.getWebmillTempDir() + "portlet-data.xml";
-                log.debug( "write portlet result to file "+fileName );
-                MainTools.writeToFile( fileName, bytes );
+        if (log.isDebugEnabled()) {
+            synchronized( syncObj) {
+		try {
+                	String fileName = WebmillConfig.getWebmillTempDir() + "portlet-data.xml";
+                	log.debug( "write portlet result to file "+fileName );
+                	MainTools.writeToFile( fileName, bytes );
+		}
+		catch(Throwable th) {
+			log.warn("Error write debug info", th);
+		}
             }
         }
-        
+
         ByteArrayInputStream stream = new ByteArrayInputStream( bytes );
         Source xmlSource = new StreamSource( stream );
 

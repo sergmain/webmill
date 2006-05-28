@@ -7,6 +7,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +39,7 @@ import org.riverock.webmill.container.tools.PortletMetadataService;
 public class ForumPortlet extends AbstractForumPortlet {
     private final static Logger log = Logger.getLogger(ForumPortlet.class);
 
-    public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    public void process(PortletRequest actionRequest, PortletResponse actionResponse) throws PortletException, IOException {
         long timeStart = System.currentTimeMillis();
 
         Long forumId = PortletService.getLong(actionRequest, Constants.NAME_FORUM_ID);
