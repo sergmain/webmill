@@ -101,24 +101,6 @@
             <classpath refid="classpath-base"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
-<!--
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
--->
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
@@ -151,6 +133,17 @@
             </classpath>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
+
+        <property name="forum-path" value="/org/riverock/forum/i18n"/>
+        <patternset id="forum.properties">
+            <include name="*.properties"/>
+        </patternset>
+        <copy todir="${build.dest}${forum-path}" overwrite="true">
+            <fileset dir="${src.java.dir}${forum-path}">
+                <patternset refid="forum.properties"/>
+            </fileset>
+        </copy>
+
     </target>
 
     <patternset id="war.lib">

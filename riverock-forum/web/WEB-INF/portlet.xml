@@ -61,7 +61,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-		<resource-bundle>org.riverock.forum.i18n.ForumResourses</resource-bundle>
+		<resource-bundle>org.riverock.forum.i18n.ForumResources</resource-bundle>
 		<portlet-info>
 			<title>Riverock forum portlet</title>
 		</portlet-info>
@@ -80,7 +80,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-		<resource-bundle>org.riverock.forum.i18n.ForumResourses</resource-bundle>
+		<resource-bundle>org.riverock.forum.i18n.ForumResources</resource-bundle>
 		<portlet-info>
 			<title>Riverock forum portlet list manager</title>
 		</portlet-info>

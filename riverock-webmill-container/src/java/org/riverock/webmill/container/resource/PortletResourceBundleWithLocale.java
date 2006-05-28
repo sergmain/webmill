@@ -87,8 +87,34 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
             resourceBundle = ResourceBundle.getBundle( resourceBundleClass, locale, classLoader );
         }
         catch (MissingResourceException e) {
+
             System.out.println("Error create resource bundle");
             e.printStackTrace( System.out );
+
+
+        String name = "/" + resourceBundleClass.replace( '.', '/');
+
+	java.net.URL url;
+	url = classLoader.getResource(name);
+	System.out.println("resource: " + name+", url: "+url);
+
+	String n = name+".properties";
+	url = classLoader.getResource(n);
+	System.out.println("resource: " + n+", url: "+url);
+
+	if (locale!=null) {
+		if (locale.getCountry()!=null) {
+			n = name + '_' + locale.toString() + ".properties";
+			url = classLoader.getResource(n);
+			System.out.println("resource: " + n+", url: "+url);
+		}
+		n = name + '_' + locale.getLanguage() + ".properties";
+		url = classLoader.getResource(n);
+		System.out.println("resource: " + n + ", url: "+url);
+	}
+	else {
+		System.out.println("Locale is null");
+	}	
         }
     }
 

@@ -45,10 +45,16 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
     }
 
     public StringBuilder getUrlStringBuilder(String moduleName, String actionName) {
+        if (log.isDebugEnabled()) {
+            log.debug("request class: " + moduleRequest.getOriginRequest().getClass().getName());
+            log.debug("response class: " + moduleResponse.getOriginResponse().getClass().getName());
+        }
         return
             PortletService.urlStringBuilder(
-                moduleName,  (PortletRequest)moduleRequest.getOriginRequest(), (PortletResponse)moduleResponse.getOriginResponse(),
-                (String)((PortletRequest)moduleRequest).getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE )
+                moduleName,  
+		(PortletRequest)moduleRequest.getOriginRequest(), 
+		(PortletResponse)moduleResponse.getOriginResponse(),
+                (String)((PortletRequest)moduleRequest.getOriginRequest()).getAttribute( ContainerConstants.PORTAL_TEMPLATE_NAME_ATTRIBUTE )
             ).
                 append( WebmillPortletConstants.ACTION_NAME_PARAM ).
                 append( '=' ).
