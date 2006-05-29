@@ -14,7 +14,7 @@
 
     .top-button-action {
         width: 120px;
-        height: 22px;
+        height: 20px;
     }
 
     .company-button-action {
@@ -23,7 +23,7 @@
     }
 </style>
 
-<h:panelGrid columns="6">
+<h:panelGrid columns="7">
     <h:commandButton id="auth-list-action" action="auth" value="#{manager.auth_button}"
                      styleClass="top-button-action"/>
     <h:commandButton id="role-list-action" action="role" value="#{manager.role_button}"

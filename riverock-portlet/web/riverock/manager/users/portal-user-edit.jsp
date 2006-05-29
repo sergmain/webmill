@@ -12,8 +12,8 @@
     }
 
     .top-button-action {
-        width: 150px;
-        height: 22px;
+        width: 120px;
+        height: 20px;
     }
 
     .portal-user-button-action {
