@@ -155,9 +155,12 @@
                 <tr>
                     <td colspan="2" valign="bottom">
                             <%--						<A HREF="user.do?u_id=<%=message.getM_u_id()%>">--%>
+<%--
                         <img src="<%= application.getRealPath("/") %>/riverock/forum/img/m_profile.gif" WIDTH="55"
                              HEIGHT="17" BORDER="0" ALT="">
+--%>
                             <%--                            </A>--%>
+<%--
                         <img src="<%= application.getRealPath("/") %>/riverock/forum/img/m_pm.gif" WIDTH="55"
                              HEIGHT="17" BORDER="0" ALT="">
                         <img src="<%= application.getRealPath("/") %>/riverock/forum/img/m_email.gif" WIDTH="55"
@@ -166,6 +169,7 @@
                              HEIGHT="17" BORDER="0" ALT="">
                         <img src="<%= application.getRealPath("/") %>/riverock/forum/img/m_search.gif" WIDTH="55"
                              HEIGHT="17" BORDER="0" ALT="">
+--%>
                     </td>
                 </tr>
             </table>
@@ -208,6 +212,7 @@
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
     <form method="GET" action="<c:out value='${genericBean.forumHomeUrl}' escapeXml="false" />">
         <input type="hidden" name="action" value="forum"/>
+        <input type="hidden" name="forum_id" value="<c:out value="${genericBean.forumId}"/>"/>
         <tr>
             <td>
                 Search:
