@@ -12,6 +12,7 @@
 
 <c:set var="locale"><request:attribute name="request-locale"/></c:set>
 <fmt:setLocale value="${locale}" scope="request" />
+<fmt:setBundle basename="org.riverock.forum.i18n.ForumResources"/>
 
 <!--bar-->
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
