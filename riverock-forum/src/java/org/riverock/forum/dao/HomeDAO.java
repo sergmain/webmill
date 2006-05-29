@@ -26,6 +26,7 @@ import org.riverock.module.web.url.UrlProvider;
 /**
  * HomeDAO interface
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class HomeDAO {
     private final static Logger log = Logger.getLogger(HomeDAO.class);
 
@@ -50,11 +51,12 @@ public class HomeDAO {
         ResultSet rs = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            WmForumCategoryListType categories = new GetWmForumCategoryWithForumIdList(adapter, forumId).item;
             WmForumItemType forum = new GetWmForumItem(adapter, forumId).item;
             if (forum==null) {
                 return null;
             }
+            WmForumCategoryListType categories = new GetWmForumCategoryWithForumIdList(adapter, forumId).item;
+
             ForumBean forumBean = new ForumBean();
             forumBean.setForumName( forum.getForumName() );
             forumBean.setForumId( forumId );
@@ -79,7 +81,7 @@ public class HomeDAO {
 
                 ps = adapter.prepareStatement( sql );
                 ps.setInt(1, item.getForumCategoryId() );
-                rs = ps.executeQuery();;
+                rs = ps.executeQuery();
 
 
                 List<ForumConcreteBean> forums = new ArrayList<ForumConcreteBean>();
@@ -152,4 +154,5 @@ public class HomeDAO {
             ps = null;
         }
     }
+
 }

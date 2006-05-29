@@ -23,6 +23,7 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
     private PortalXsltDao portalXsltDao = null;
     private PortalCssDao portalCssDao = null;
     private PortalUserMetadataDao portalUserMetadataDao = null;
+    private PortalUserDao portalUserDao = null;
 
     public PortalDaoProviderImpl(AuthSession authSession) {
         this.portalCompanyDao = new PortalCompanyDaoImpl(authSession);
@@ -38,6 +39,11 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
         this.portalXsltDao = new PortalXsltDaoImpl(authSession);
         this.portalCssDao = new PortalCssDaoImpl(authSession);
         this.portalUserMetadataDao = new PortalUserMetadataDaoImpl(authSession);
+        this.portalUserDao = new PortalUserDaoImpl(authSession);
+    }
+
+    public PortalUserDao getPortalUserDao() {
+        return portalUserDao;
     }
 
     public PortalUserMetadataDao getPortalUserMetadataDao() {

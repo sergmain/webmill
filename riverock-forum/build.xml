@@ -30,6 +30,7 @@
 
     <property name="Name" value="riverock-forum"/>
     <property name="release-version" value="1.0.0"/>
+    <property name="portlet-context-name" value="riverock-forum"/>
     <property name="build-release-name" value="riverock-forum-${release-version}"/>
     <property name="manifest-title-name" value="riverock forum"/>
     <property name="manifest-vendor-name" value="riverock. http://www.riverock.com"/>
@@ -165,7 +166,7 @@
     </patternset>
 
     <target name="war" depends="jar" >
-        <property name="war-file-name" value="${build.dir}/riverock-forum.war"/>
+        <property name="war-file-name" value="${build.dir}/${portlet-context-name}.war"/>
         <delete file="${war-file-name}"/>
         <war webxml="${web.dir}/WEB-INF/web.xml"
             warfile="${war-file-name}"

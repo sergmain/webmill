@@ -7,13 +7,13 @@ import java.sql.Types;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.riverock.common.tools.RsetTools;
+import org.riverock.forum.bean.ForumSmallBean;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.exception.DatabaseException;
-import org.riverock.forum.bean.ForumSmallBean;
-import org.riverock.common.tools.RsetTools;
 
+@SuppressWarnings({"UnusedAssignment"})
 public final class CommonDAO {
 
     public static int getForumID(DatabaseAdapter adapter) throws SQLException {
@@ -85,7 +85,7 @@ public final class CommonDAO {
         return forums;
     }
 
-    public static void deleteForumConcrete(DatabaseAdapter adapter, Integer forumConcreteId) throws SQLException, DatabaseException {
+    public static void deleteForumConcrete(DatabaseAdapter adapter, Integer forumConcreteId) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

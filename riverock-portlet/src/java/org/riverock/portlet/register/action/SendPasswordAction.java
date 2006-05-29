@@ -66,7 +66,7 @@ public class SendPasswordAction implements Action {
         RegisterDAOFactory daof = RegisterDAOFactory.getDAOFactory();
         RegisterPasswordInfoDAO passwordInfoDAO = daof.getSendPasswordDAO();
         try {
-            RegisterPasswordInfoBean bean = passwordInfoDAO.execute( moduleActionRequest.getRequest().getServerNameId(), email );
+            RegisterPasswordInfoBean bean = passwordInfoDAO.execute( moduleActionRequest.getRequest().getSiteId(), email );
             if( bean == null ) {
                 return RegisterError.noSuchEmail( moduleActionRequest );
             }

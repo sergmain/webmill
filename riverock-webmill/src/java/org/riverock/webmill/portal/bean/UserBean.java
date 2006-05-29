@@ -1,18 +1,17 @@
-package org.riverock.portlet.manager.users;
+package org.riverock.webmill.portal.bean;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.io.Serializable;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.User;
+import org.riverock.common.tools.StringTools;
 
 /**
- * @author SergeMaslyukov
- *         Date: 26.02.2006
- *         Time: 15:55:44
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 29.05.2006
+ *         Time: 15:28:27
  */
-public class PortalUserBeanImpl implements Serializable, User {
+public class UserBean implements User, Serializable {
     private static final long serialVersionUID = 2057005507L;
 
     private Long userId = null;
@@ -29,10 +28,10 @@ public class PortalUserBeanImpl implements Serializable, User {
     private String phone = null;
     private String email = null;
 
-    public PortalUserBeanImpl() {
+    public UserBean() {
     }
 
-    public PortalUserBeanImpl(User beanPortal) {
+    public UserBean(User beanPortal) {
         this.userId = beanPortal.getUserId();
         this.companyId = beanPortal.getCompanyId();
         this.firstName = beanPortal.getFirstName();

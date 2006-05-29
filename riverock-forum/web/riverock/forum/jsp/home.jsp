@@ -12,9 +12,9 @@
 <!--bar-->
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5" >
 	<tr>
-		<td>
+		<td valign="middle">
 			<b>
-                <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 valign="middle">
+                <img src="<%= application.getRealPath("/") %>/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="banner">
                 <c:out value="${genericBean.forumName}"/>
             </b>
 		</td>

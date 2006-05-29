@@ -1,22 +1,20 @@
-package org.riverock.portlet.manager.users;
+package org.riverock.interfaces.portal.bean;
 
 import java.util.Date;
 
 /**
- * @author SergeMaslyukov
- *         Date: 26.02.2006
- *         Time: 15:47:30
- *         $Id$
+ * @author Sergei Maslyukov
+ *         Date: 29.05.2006
+ *         Time: 15:22:19
  */
-public interface PortalUserBean {
-    public String getName();
-    public Long getId();
+public interface User {
+    public Long getUserId();
     public Long getCompanyId();
     public String getFirstName();
     public String getMiddleName();
     public String getLastName();
     public Date getCreatedDate();
-    public Date getClosedDate();
+    public Date getDeletedDate();
     public String getAddress();
     public String getPhone();
     public String getEmail();

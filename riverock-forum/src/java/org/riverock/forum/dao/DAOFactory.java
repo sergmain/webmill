@@ -57,4 +57,8 @@ public class DAOFactory {
     public TopLevelForumDAO getTopLevelForumDAO() {
         return new TopLevelForumDAO();
     }
+
+    public ForumIntegrityDao getForumIntegrityDao() {
+        return new ForumIntegrityDao();
+    }
 }
