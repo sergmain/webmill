@@ -18,6 +18,15 @@ public class GenericBean {
     private StringBuilder forumHomeUrl;
     private String forumName = null;
     private Integer forumId;
+    private String actionUrl;
+
+    public String getActionUrl() {
+        return actionUrl;
+    }
+
+    public void setActionUrl(String actionUrl) {
+        this.actionUrl = actionUrl;
+    }
 
     public String getRemoteAddr() {
         return remoteAddr;

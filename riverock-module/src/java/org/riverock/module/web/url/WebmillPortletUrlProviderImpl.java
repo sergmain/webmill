@@ -1,7 +1,14 @@
 package org.riverock.module.web.url;
 
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.portlet.RenderResponse;
+import javax.portlet.PortletURL;
 
 import org.apache.log4j.Logger;
 
@@ -23,6 +30,7 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
 
     private ModuleRequest moduleRequest = null;
     private ModuleResponse moduleResponse = null;
+    private Map<String, List<String>> params = new HashMap<String, List<String>>();
 
     public WebmillPortletUrlProviderImpl(ModuleRequest moduleRequest, ModuleResponse moduleResponse){
         this.moduleRequest = moduleRequest;
@@ -60,5 +68,46 @@ public class WebmillPortletUrlProviderImpl implements UrlProvider {
                 append( '=' ).
                 append( actionName ).
                 append( '&' );
+    }
+
+    public void setParameter(String key, String value) {
+        List<String> list = params.get(key);
+        if (list==null) {
+            list = new ArrayList<String>();
+            list.add(key);
+            params.put(key, list);
+        }
+        else {
+            list.add(value);
+        }
+    }
+
+    public String getActionUrl(){
+        if (log.isDebugEnabled()) {
+            log.debug("rorigin request: " +moduleResponse.getOriginResponse());
+        }
+        if (!(moduleResponse.getOriginResponse() instanceof RenderResponse)) {
+            return null;
+        }
+        PortletURL url = ((RenderResponse) moduleResponse.getOriginResponse()).createActionURL();
+        for (Map.Entry<String, List<String>> entry : params.entrySet()) {
+            for (String s : entry.getValue()) {
+                url.setParameter(entry.getKey(), s);
+            }
+        }
+        return url.toString();
+    }
+
+    public String getRenderUrl(){
+        if (!(moduleResponse.getOriginResponse() instanceof RenderResponse)) {
+            return null;
+        }
+        PortletURL url = ((RenderResponse) moduleResponse.getOriginResponse()).createRenderURL();
+        for (Map.Entry<String, List<String>> entry : params.entrySet()) {
+            for (String s : entry.getValue()) {
+                url.setParameter(entry.getKey(), s);
+            }
+        }
+        return url.toString();
     }
 }
