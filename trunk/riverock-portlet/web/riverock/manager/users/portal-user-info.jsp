@@ -9,7 +9,7 @@
  <h:outputText value="#{msg.portal_user_info}"/>
  <h:panelGrid columns="2">
  		<h:outputText value="#{msg.portal_user_id}"/>
- 		<h:outputText value="#{portalUserSessionBean.portalUser.id}"/>
+ 		<h:outputText value="#{portalUserSessionBean.portalUser.userId}"/>
 
  		<h:outputText value="#{msg.portal_user_company_name}"/>
  		<h:outputText value="#{portalUserSessionBean.portalUser.companyName}"/>

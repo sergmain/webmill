@@ -12,8 +12,8 @@
     }
 
     .top-button-action {
-        width: 150px;
-        height: 22px;
+        width: 120px;
+        height: 20px;
     }
 
     .site-button-action {
@@ -38,6 +38,14 @@
              </f:subview>
 
              <h:panelGroup id="operation-site-delete-panel">
+
+                 <f:subview id="delete-site-subview">
+                     <jsp:include page="site-extend-description.jsp"/>
+                 </f:subview>
+
+                 <h:outputText value="#{msg['confirm_delete_site_saction']}"/>
+                 <f:verbatim><br/></f:verbatim>
+
                  <h:commandButton id="site-delete-process-action" action="#{siteAction.processDeleteSiteAction}"
                                   value="#{msg['process_delete_site_action']}"
                                   styleClass="site-button-action"

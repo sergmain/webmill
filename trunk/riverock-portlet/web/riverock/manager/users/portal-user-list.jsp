@@ -18,7 +18,7 @@
                        </f:facet>
                        <t:commandLink action="#{portalUserAction.selectPortalUser}" immediate="true" >
                             <h:outputText value="#{portalUser.name}" />
-                            <t:updateActionListener property="#{portalUserSessionBean.currentPortalUserId}" value="#{portalUser.id}" />
+                            <t:updateActionListener property="#{portalUserSessionBean.currentPortalUserId}" value="#{portalUser.userId}" />
                        </t:commandLink>
                    </h:column>
 
