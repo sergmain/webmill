@@ -9,4 +9,9 @@ package org.riverock.module.web.url;
 public interface UrlProvider {
     public String getUrl(String moduleName, String actionName);
     public StringBuilder getUrlStringBuilder(String moduleName, String actionName);
+
+    public void setParameter(String key, String value);
+
+    public String getActionUrl();
+    public String getRenderUrl();
 }

@@ -3,20 +3,19 @@ package org.riverock.forum;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
-
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.forum.util.Constants;
 import org.riverock.module.action.ActionNameProvider;
 import org.riverock.module.action.WebmillPortletActionNameProviderImpl;
@@ -43,6 +42,7 @@ public abstract class AbstractForumPortlet implements Portlet {
     protected ModuleConfig moduleConfig = null;
 
     public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+        process(actionRequest, actionResponse);
 	}
 
     public void init(PortletConfig portletConfig) throws PortletException {
@@ -68,7 +68,7 @@ public abstract void process(PortletRequest request, PortletResponse response) t
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
 
-	process(renderRequest, renderResponse);
+        process(renderRequest, renderResponse);
 
         renderRequest.setAttribute( Constants.REQUEST_LOCALE_VALUE, renderRequest.getLocale() );
         ModuleRequest moduleRequest = new WebmillPortletModuleRequestImpl(renderRequest);
@@ -85,7 +85,7 @@ public abstract void process(PortletRequest request, PortletResponse response) t
         // forward page
         Throwable th = null;
         try {
-            if (!StringTools.isEmpty(forwardPage)) {
+            if (StringUtils.isNotBlank(forwardPage)) {
                 moduleConfig.getContext().getRequestDispatcher( forwardPage ).include( moduleRequest, moduleResponse );
             }
         }
