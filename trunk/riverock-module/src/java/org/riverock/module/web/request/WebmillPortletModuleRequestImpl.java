@@ -1,11 +1,11 @@
 package org.riverock.module.web.request;
 
-import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
+import javax.portlet.PortletRequest;
+
 import org.riverock.module.web.user.ModuleUser;
 import org.riverock.module.web.user.WebmillModuleUserImpl;
-
-import javax.portlet.PortletRequest;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * @author Serge Maslyukov
@@ -27,8 +27,12 @@ public class WebmillPortletModuleRequestImpl extends PortletModuleRequestImpl {
         return PortletService.getUserAgent( portletRequest );
     }
 
-    public Long getServerNameId() {
+    public Long getSiteId() {
         return (Long)portletRequest.getAttribute( ContainerConstants.PORTAL_PROP_SITE_ID );
+    }
+
+    public Object getAttribute(String key) {
+        return portletRequest.getAttribute( key );
     }
 
     public ModuleUser getUser() {

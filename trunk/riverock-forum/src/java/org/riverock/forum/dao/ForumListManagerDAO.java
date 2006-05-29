@@ -1,7 +1,17 @@
 package org.riverock.forum.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
+import org.riverock.forum.bean.ForumIntegrityBean;
+import org.riverock.forum.bean.PortalUserBean;
 import org.riverock.forum.core.InsertWmForumItem;
 import org.riverock.forum.core.UpdateWmForumItem;
 import org.riverock.forum.exception.PersistenceException;
@@ -11,16 +21,14 @@ import org.riverock.forum.util.Constants;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.exception.DatabaseException;
+import org.riverock.interfaces.portal.PortalInfo;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.exception.ModuleException;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.user.ModuleUser;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * @author SMaslyukov
@@ -28,6 +36,7 @@ import java.sql.Types;
  *         Time: 11:25:39
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class ForumListManagerDAO {
     private final static Logger log = Logger.getLogger(ForumListManagerDAO.class);
 
@@ -35,13 +44,13 @@ public class ForumListManagerDAO {
 
         log.debug("in execute()");
 
-        String subAction = moduleActionRequest.getRequest().getString( Constants.NAME_SUB_ACTION);
+        String subAction = moduleActionRequest.getRequest().getString(Constants.NAME_SUB_ACTION);
 
         if (log.isDebugEnabled()) {
-            log.debug("subAction: "+subAction);
+            log.debug("subAction: " + subAction);
         }
 
-        if (subAction==null){
+        if (subAction == null) {
             return;
         }
 
@@ -52,24 +61,22 @@ public class ForumListManagerDAO {
             WmForumItemType forum = getForum(adapter, moduleActionRequest);
 
             if (subAction.equals("update-forum")) {
-                updateForum(auth_, moduleActionRequest, adapter, forum );
-            }
-            else if (subAction.equals("add-forum")) {
+                updateForum(auth_, moduleActionRequest, adapter, forum);
+            } else if (subAction.equals("add-forum")) {
                 addNewForum(auth_, moduleActionRequest, adapter);
-            }
-            else if (subAction.equals("delete-forum")) {
+            } else if (subAction.equals("delete-forum")) {
                 deleteForum(auth_, moduleActionRequest, false, adapter, forum);
-            }
-            else if (subAction.equals("permanent-delete-forum")) {
+            } else if (subAction.equals("permanent-delete-forum")) {
                 deleteForum(auth_, moduleActionRequest, true, adapter, forum);
-            }
-            else if (subAction.equals("restore-forum")) {
+            } else if (subAction.equals("restore-forum")) {
                 restoreForum(auth_, moduleActionRequest, adapter, forum);
+            } else if (subAction.equals("create-lost-user")) {
+                createLostUser(moduleActionRequest);
             }
             adapter.commit();
         }
         catch (Exception e) {
-            String es = "Error process admin action, sub action: "+subAction;
+            String es = "Error process admin action, sub action: " + subAction;
             log.error(es, e);
             throw new ActionException(es, e);
         }
@@ -82,43 +89,82 @@ public class ForumListManagerDAO {
 
     private static WmForumItemType getForum(DatabaseAdapter adapter, ModuleActionRequest moduleActionRequest) {
         Long forumId = moduleActionRequest.getRequest().getLong("forumId");
-        if (forumId==null) {
+        if (forumId == null) {
             return null;
         }
-        return CommonUtils.checkForumId( adapter, forumId, moduleActionRequest.getRequest().getServerName() );
+        return CommonUtils.checkForumId(adapter, forumId, moduleActionRequest.getRequest().getServerName());
     }
 
     private void restoreForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException, DatabaseException {
         log.debug("in restoreForum()");
 
-        if (forum==null) {
+        if (forum == null) {
             return;
         }
 
         DatabaseManager.runSQL(
             adapter,
             "update WM_FORUM " +
-            "set    IS_DELETED=0 " +
-            "where  FORUM_ID=? ",
-            new Object[] {forum.getForumId() },
-            new int[] { Types.INTEGER }
+                "set    IS_DELETED=0 " +
+                "where  FORUM_ID=? ",
+            new Object[]{forum.getForumId()},
+            new int[]{Types.INTEGER}
         );
         log.debug("out restoreForum()");
 
     }
 
+    private void createLostUser(ModuleActionRequest forumActionBean) {
+        log.debug("in createLostUser()");
+
+        try {
+            Long siteId;
+            siteId = forumActionBean.getRequest().getSiteId();
+            log.debug("   siteId: "+siteId);
+
+            PortalDaoProvider portalDaoProvider = (PortalDaoProvider) forumActionBean.getRequest().getAttribute(ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER);
+            ForumIntegrityBean bean = DAOFactory.getDAOFactory().getForumIntegrityDao().getIntegrityStatus(siteId);
+            log.debug("   bean: "+bean);
+            if (bean!=null){
+                log.debug("   bean.userId list: "+bean.getLostUserId());
+                if (bean.getLostUserId()!=null) {
+                    log.debug("   lost userId: " +StringTools.getIdByString( bean.getLostUserId(), "null" ));
+                }
+            }
+
+            if (bean!=null) {
+                PortalInfo p = (PortalInfo) forumActionBean.getRequest().getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+                for (Long userId : bean.getLostUserId()) {
+                    log.debug("Add lost user, userId; " + userId);
+                    PortalUserBean userBean = new PortalUserBean();
+                    userBean.setFirstName("Lost");
+                    userBean.setLastName("User");
+                    userBean.setUserId(userId);
+                    userBean.setCompanyId(p.getCompanyId());
+                    userBean.setCreatedDate(new Date(System.currentTimeMillis()));
+                    portalDaoProvider.getPortalUserDao().addUser(userBean);
+                }
+            }
+        } catch (ModuleException e) {
+            String es = "Error create lostUser";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        log.debug("out createLostUser()");
+    }
+
     private void deleteForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, boolean isPermanent, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException, DatabaseException {
         log.debug("in deleteForum()");
 
-        if (forum==null) {
+        if (forum == null) {
             return;
         }
 
-        int checkBox = moduleActionRequest.getRequest().getInt( "confirm-delete", new Integer(0) ).intValue();
+        int checkBox = moduleActionRequest.getRequest().getInt("confirm-delete", 0);
         if (log.isDebugEnabled()) {
-            log.debug("checkBox: "+checkBox);
+            log.debug("checkBox: " + checkBox);
         }
-        if (checkBox!=1) {
+        if (checkBox != 1) {
             return;
         }
 
@@ -128,10 +174,10 @@ public class ForumListManagerDAO {
             try {
                 ps = adapter.prepareStatement(
                     "select a.F_ID " +
-                    "from   WM_FORUM_CONCRETE a , WM_FORUM_CATEGORY b " +
-                    "where  a.FORUM_CATEGORY_ID=b.FORUM_CATEGORY_ID and b.FORUM_ID=?"
+                        "from   WM_FORUM_CONCRETE a , WM_FORUM_CATEGORY b " +
+                        "where  a.FORUM_CATEGORY_ID=b.FORUM_CATEGORY_ID and b.FORUM_ID=?"
                 );
-                ps.setInt(1, forum.getForumId().intValue());
+                ps.setInt(1, forum.getForumId());
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
@@ -140,14 +186,14 @@ public class ForumListManagerDAO {
                 DatabaseManager.runSQL(
                     adapter,
                     "delete from WM_FORUM_CATEGORY where FORUM_ID=? ",
-                    new Object[] { forum.getForumId() },
-                    new int[] { Types.INTEGER }
+                    new Object[]{forum.getForumId()},
+                    new int[]{Types.INTEGER}
                 );
                 DatabaseManager.runSQL(
                     adapter,
                     "delete from WM_FORUM where FORUM_ID=? ",
-                    new Object[] { forum.getForumId() },
-                    new int[] { Types.INTEGER }
+                    new Object[]{forum.getForumId()},
+                    new int[]{Types.INTEGER}
                 );
             }
             finally {
@@ -155,32 +201,31 @@ public class ForumListManagerDAO {
                 rs = null;
                 ps = null;
             }
-        }
-        else {
+        } else {
             DatabaseManager.runSQL(
                 adapter,
                 "update WM_FORUM " +
-                "set    IS_DELETED=1 " +
-                "where  FORUM_ID=? ",
-                new Object[] { forum.getForumId() },
-                new int[] { Types.INTEGER }
+                    "set    IS_DELETED=1 " +
+                    "where  FORUM_ID=? ",
+                new Object[]{forum.getForumId()},
+                new int[]{Types.INTEGER}
             );
         }
         log.debug("out deleteForum()");
 
     }
 
-    private void addNewForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, DatabaseAdapter adapter) throws SQLException, PersistenceException, ModuleException  {
+    private void addNewForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, DatabaseAdapter adapter) throws SQLException, PersistenceException, ModuleException {
         log.debug("in addNewForum()");
 
         WmForumItemType forum = new WmForumItemType();
-        forum.setForumName( moduleActionRequest.getRequest().getString( "forum-name" ) );
-        forum.setForumId( new Integer(CommonDAO.getForumID( adapter )) );
-        forum.setSiteId( new Integer(moduleActionRequest.getRequest().getServerNameId().intValue()) );
-        forum.setIsDeleted( Boolean.FALSE );
-        forum.setIsUseLocale( Boolean.FALSE );
+        forum.setForumName(moduleActionRequest.getRequest().getString("forum-name"));
+        forum.setForumId(CommonDAO.getForumID(adapter));
+        forum.setSiteId(moduleActionRequest.getRequest().getSiteId().intValue());
+        forum.setIsDeleted(Boolean.FALSE);
+        forum.setIsUseLocale(Boolean.FALSE);
 
-        InsertWmForumItem.process( adapter, forum );
+        InsertWmForumItem.process(adapter, forum);
 
         log.debug("out addNewForum()");
     }
@@ -188,13 +233,13 @@ public class ForumListManagerDAO {
     private void updateForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException, PersistenceException {
         log.debug("in updateForum()");
 
-        if (forum==null) {
+        if (forum == null) {
             return;
         }
 
-        forum.setForumName( forumActionBean.getRequest().getString( "forum-name" ));
-        forum.setIsUseLocale( Boolean.FALSE );
-        UpdateWmForumItem.process( adapter, forum );
+        forum.setForumName(forumActionBean.getRequest().getString("forum-name"));
+        forum.setIsUseLocale(Boolean.FALSE);
+        UpdateWmForumItem.process(adapter, forum);
 
         log.debug("out updateForum()");
     }

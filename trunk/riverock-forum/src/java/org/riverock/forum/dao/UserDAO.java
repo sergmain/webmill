@@ -5,13 +5,12 @@ import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.forum.bean.UserBean;
-import org.riverock.module.exception.ActionException;
-import org.riverock.forum.util.CommonUtils;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.forum.bean.UserBean;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.module.exception.ActionException;
 
 /**
  * UserDAO interface

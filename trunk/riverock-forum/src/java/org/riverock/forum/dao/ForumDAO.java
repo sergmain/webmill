@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -56,7 +57,7 @@ public class ForumDAO {
 
             ps = adapter.prepareStatement( sql );
             ps.setLong(1, f_id);
-            rs = ps.executeQuery();;
+            rs = ps.executeQuery();
 
             if (rs.next()) {
                 forumConcreteBean.setF_id(f_id);
@@ -76,7 +77,7 @@ public class ForumDAO {
 
             //------------------------
             String condition = " T_F_ID=? " ;
-            if (!StringTools.isEmpty(keyword)) {
+            if (StringUtils.isNotBlank(keyword)) {
                 condition += " and T_NAME like ? ";
             }
 
@@ -86,7 +87,7 @@ public class ForumDAO {
                 "SELECT count(*) count_records " +
                 "FROM   WM_FORUM_TOPIC  " +
                 "WHERE  " + condition,
-                (!StringTools.isEmpty(keyword))
+                (StringUtils.isNotBlank(keyword))
                 ?new Object[]{f_id, keywordSearch}
                 :new Object[]{f_id}
             );
@@ -101,7 +102,7 @@ public class ForumDAO {
                 "order by a.t_order DESC, a.t_lasttime DESC";
             ps = adapter.prepareStatement( sql1 );
             ps.setLong(1, f_id);
-            if (!StringTools.isEmpty(keyword)) {
+            if (StringUtils.isNotBlank(keyword)) {
                 ps.setString(2, keywordSearch);
             }
             rs = ps.executeQuery();
@@ -111,7 +112,7 @@ public class ForumDAO {
             forumConcreteBean.setMessagesPerPage(messagesPerPage);
             forumConcreteBean.setCount(countRecord!=null?countRecord.intValue() :0);
 
-            int countPages = (int)(forumConcreteBean.getCount()/topicsPerPage);
+            int countPages = forumConcreteBean.getCount()/topicsPerPage;
             if ((forumConcreteBean.getCount()%topicsPerPage)!=0) {
                 countPages++;
             }
@@ -145,7 +146,7 @@ public class ForumDAO {
                 topic.setU_name2(
                     StringTools.getUserName( RsetTools.getString(rs, "FIRST_NAME2"), RsetTools.getString(rs, "MIDDLE_NAME2"), RsetTools.getString(rs, "LAST_NAME2") )
                 );
-                countPages = (int)(topic.getT_replies()/messagesPerPage);
+                countPages = topic.getT_replies()/messagesPerPage;
                 if ((topic.getT_replies()%messagesPerPage)!=0) {
                     countPages++;
                 }
@@ -169,9 +170,6 @@ public class ForumDAO {
             throw new ActionException(es, e);
         } finally {
             DatabaseManager.close(adapter, rs, ps);
-            adapter = null;
-            rs = null;
-            ps = null;
         }
     }
 }

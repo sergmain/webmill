@@ -1,7 +1,10 @@
 package org.riverock.portlet.manager.users;
 
 import java.io.Serializable;
+
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.tools.FacesTools;
+import org.riverock.interfaces.portal.bean.User;
 
 /**
  * @author SergeMaslyukov
@@ -12,80 +15,74 @@ import org.riverock.portlet.main.AuthSessionBean;
 public class PortalUserAction implements Serializable {
     private static final long serialVersionUID = 2057005501L;
 
-	private PortalUserSessionBean portalUserSessionBean = null;
-	private AuthSessionBean authSessionBean = null;
+    private PortalUserSessionBean portalUserSessionBean = null;
+    private AuthSessionBean authSessionBean = null;
 
-	public PortalUserAction() {
-	}
+    public PortalUserAction() {
+    }
 
-	public AuthSessionBean getAuthSessionBean() {
-		return authSessionBean;
-	}
+    public AuthSessionBean getAuthSessionBean() {
+        return authSessionBean;
+    }
 
-	public void setAuthSessionBean(AuthSessionBean authSessionBean) {
-		this.authSessionBean = authSessionBean;
-	}
-	
-	public PortalUserSessionBean getSessionBean() {
-		return portalUserSessionBean;
-	}
+    public void setAuthSessionBean(AuthSessionBean authSessionBean) {
+        this.authSessionBean = authSessionBean;
+    }
 
-	public void setPortalUserSessionBean(PortalUserSessionBean portalUserSessionBean) {
-		this.portalUserSessionBean = portalUserSessionBean;
-	}
-			
-	public String addPortalUser() {
-		portalUserSessionBean.setPortalUser( new PortalUserBeanImpl() );
+    public PortalUserSessionBean getSessionBean() {
+        return portalUserSessionBean;
+    }
 
-		return "portal-user-add";
-	}
+    public void setPortalUserSessionBean(PortalUserSessionBean portalUserSessionBean) {
+        this.portalUserSessionBean = portalUserSessionBean;
+    }
 
-	public String processAddPortalUser() {
-        	Long id = PortalUserDaoFactory.getPortalUserDao().addPortalUser(
-            		portalUserSessionBean.getPortalUser(), authSessionBean.getAuthSession() 
-		);
+    public String addPortalUser() {
+        portalUserSessionBean.setPortalUser(new PortalUserBeanImpl());
 
-        	portalUserSessionBean.setCurrentPortalUserId( id );
-		loadCurrentPortalUser();
-		return "portal-user";
-	}
+        return "portal-user-add";
+    }
 
-	public String cancelAddPortalUser() {
-		loadCurrentPortalUser();
-		return "portal-user";
-	}
+    public String processAddPortalUser() {
+        Long id = FacesTools.getPortalDaoProvider().getPortalUserDao().addUser(portalUserSessionBean.getPortalUser());
 
-	public String processEditPortalUser() {
-        PortalUserDaoFactory.getPortalUserDao().updatePortalUser(
-            portalUserSessionBean.getPortalUser(), authSessionBean.getAuthSession() );
-		return "portal-user";
-	}
+        portalUserSessionBean.setCurrentPortalUserId(id);
+        loadCurrentPortalUser();
+        return "portal-user";
+    }
 
-	public String cancelEditPortalUser() {
-		loadCurrentPortalUser();
-		return "portal-user";
-	}
+    public String cancelAddPortalUser() {
+        loadCurrentPortalUser();
+        return "portal-user";
+    }
 
-	public String processDeletePortalUser() {
-        PortalUserDaoFactory.getPortalUserDao().deletePortalUser(
-            portalUserSessionBean.getPortalUser(), authSessionBean.getAuthSession() );
-		portalUserSessionBean.setPortalUser( null );
-		return "portal-user";
-	}
-	
-	public String selectPortalUser() {
-		loadCurrentPortalUser();
-		return "portal-user";
-	}
+    public String processEditPortalUser() {
+        FacesTools.getPortalDaoProvider().getPortalUserDao().updateUser(portalUserSessionBean.getPortalUser());
+        return "portal-user";
+    }
 
-	private void loadCurrentPortalUser() {
-		if (portalUserSessionBean.getCurrentPortalUserId()==null) {
-			portalUserSessionBean.setPortalUser( null );
-			return;
-		}
-        	PortalUserBean beanPortal = PortalUserDaoFactory.getPortalUserDao().getPortalUser(
-            		portalUserSessionBean.getCurrentPortalUserId(), authSessionBean.getAuthSession() 
-		);
-		portalUserSessionBean.setPortalUser( beanPortal );
-	}
+    public String cancelEditPortalUser() {
+        loadCurrentPortalUser();
+        return "portal-user";
+    }
+
+    public String processDeletePortalUser() {
+        FacesTools.getPortalDaoProvider().getPortalUserDao().deleteUser(portalUserSessionBean.getPortalUser());
+        portalUserSessionBean.setPortalUser(null);
+        return "portal-user";
+    }
+
+    public String selectPortalUser() {
+        loadCurrentPortalUser();
+        return "portal-user";
+    }
+
+    private void loadCurrentPortalUser() {
+        if (portalUserSessionBean.getCurrentPortalUserId() == null) {
+            portalUserSessionBean.setPortalUser(null);
+            return;
+        }
+        User user = FacesTools.getPortalDaoProvider().getPortalUserDao().getUser(portalUserSessionBean.getCurrentPortalUserId());
+        portalUserSessionBean.setPortalUser(user);
+    }
 }

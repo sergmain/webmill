@@ -13,7 +13,6 @@ import org.riverock.forum.schema.core.WmForumListType;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.module.exception.ActionException;
-import org.riverock.module.web.request.ModuleRequest;
 
 /**
  * @author SMaslyukov
@@ -24,11 +23,11 @@ import org.riverock.module.web.request.ModuleRequest;
 public class TopLevelForumDAO {
     private final static Logger log = Logger.getLogger(TopLevelForumDAO.class);
 
-    public ForumTopLevelBean execute(ModuleRequest moduleRequest) throws ActionException {
+    public ForumTopLevelBean execute(Long siteId) throws ActionException {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            WmForumListType forumsCore = new GetWmForumWithSiteIdList(adapter, moduleRequest.getServerNameId()).item;
+            WmForumListType forumsCore = new GetWmForumWithSiteIdList(adapter, siteId).item;
             ForumTopLevelBean forumTopLevelBean = new ForumTopLevelBean();
             List<ForumBean> forums = new ArrayList<ForumBean>();
             forumTopLevelBean.setForums( forums );
@@ -36,7 +35,7 @@ public class TopLevelForumDAO {
                 WmForumItemType item = forumsCore.getWmForum(i);
 
                 ForumBean forum = new ForumBean();
-                forum.setForumId( (long)item.getForumId() );
+                forum.setForumId( item.getForumId().longValue() );
                 forum.setForumName( item.getForumName() );
                 forum.setDeleted( item.getIsDeleted() );
 

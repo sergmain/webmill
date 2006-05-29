@@ -1,11 +1,10 @@
 package org.riverock.module.web.request;
 
+import java.util.Locale;
+
+import org.riverock.module.exception.ModuleException;
 import org.riverock.module.web.session.ModuleSession;
 import org.riverock.module.web.user.ModuleUser;
-import org.riverock.module.exception.ModuleException;
-
-import java.util.Locale;
-import java.security.Principal;
 
 /**
  * @author Serge Maslyukov
@@ -41,5 +40,7 @@ public interface ModuleRequest {
 
     public boolean isUserInRole(String role);
 
-    public Long getServerNameId() throws ModuleException;
+    public Long getSiteId() throws ModuleException;
+
+    public Object getAttribute(String key);
 }

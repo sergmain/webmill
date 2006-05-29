@@ -8,7 +8,9 @@ import java.util.Iterator;
 import javax.faces.model.SelectItem;
 
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.User;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -36,27 +38,24 @@ public class PortalUserService implements Serializable {
         List<SelectItem> list = new ArrayList<SelectItem>();
         List<Company> companies = authSessionBean.getAuthSession().getCompanyList();
 
-        Iterator<Company> iterator = companies.iterator();
-        while( iterator.hasNext() ) {
-            Company companyBean = iterator.next();
-
-            list.add( new SelectItem( companyBean.getId(), companyBean.getName() ) );
+        for (Company companyBean : companies) {
+            list.add(new SelectItem(companyBean.getId(), companyBean.getName()));
         }
         return list;
     }
 
-	public List<PortalUserBean> getPortalUserList() {
-		List<PortalUserBean> list = PortalUserDaoFactory.getPortalUserDao().getPortlalUserList( authSessionBean.getAuthSession() );
-		if (list==null) {
-			return null;
-		}
-		
-		Iterator<PortalUserBean> iterator = list.iterator();
-		List<PortalUserBean> portalUsers = new ArrayList<PortalUserBean>();
-		while(iterator.hasNext()) {
-			PortalUserBean portalUser = iterator.next();
-			portalUsers.add( new PortalUserBeanImpl(portalUser) );
-		}
-		return portalUsers;
-	}
+    public List<User> getPortalUserList() {
+        List<User> list = FacesTools.getPortalDaoProvider().getPortalUserDao().getUserList();
+        if (list==null) {
+            return null;
+        }
+
+        Iterator<User> iterator = list.iterator();
+        List<User> portalUsers = new ArrayList<User>();
+        while(iterator.hasNext()) {
+            User portalUser = iterator.next();
+            portalUsers.add( new PortalUserBeanImpl(portalUser) );
+        }
+        return portalUsers;
+    }
 }
