@@ -2,8 +2,10 @@
 <%@ taglib prefix="c" uri="jstl/core" %>
 <%@ taglib prefix="fmt" uri="jstl/format" %>
 <%@ taglib prefix="request" uri="/tld/jakarta-request" %>
+
 <c:set var="locale"><request:attribute name="request-locale"/></c:set>
 <fmt:setLocale value="${locale}" scope="request" />
+<fmt:setBundle basename="org.riverock.forum.i18n.ForumResources"/>
 
 <%@include file="inc/header.jsp" %>
 

@@ -7,6 +7,7 @@
 
 <c:set var="locale"><request:attribute name="request-locale"/></c:set>
 <fmt:setLocale value="${locale}" scope="request" />
+<fmt:setBundle basename="org.riverock.forum.i18n.ForumResources"/>
 
 <request:isUserInRole role="wm.forum-admin, webmill.root">
 
