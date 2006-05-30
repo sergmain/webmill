@@ -39,16 +39,7 @@ public class CreateAccountBean {
     private String lastName = null;
     private String middleName = null;
     private String role = null;
-    private String adminEmail = null;
     private Long companyId = null;
-
-    public String getAdminEmail() {
-        return adminEmail;
-    }
-
-    public void setAdminEmail( String adminEmail ) {
-        this.adminEmail = adminEmail;
-    }
 
     public Long getCompanyId() {
         return companyId;

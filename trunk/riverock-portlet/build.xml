@@ -51,7 +51,7 @@
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${secure.lib}"/>
-        <pathelement location="${lib.dir}/mail.jar"/>
+        <pathelement location="${lib.dir}/${mail.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
@@ -166,35 +166,17 @@
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
-        <property name="xml-path" value="/org/riverock/portlet/resource"/>
-        <patternset id="xml.resources">
-            <include name="*.xml"/>
-        </patternset>
-        <copy todir="${build.dest}${xml-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${xml-path}">
-                <patternset refid="xml.resources"/>
-            </fileset>
-        </copy>
+        <copy_resources res-path="/org/riverock/portlet/resource" file-mask="*.xml"
+            src="${src.java.dir}" dest="${build.dest}"/>
 
-        <property name="manager-prop-path" value="/org/riverock/portlet/manager/resource"/>
-        <patternset id="manager-prop.resources">
-            <include name="*.properties"/>
-        </patternset>
-        <copy todir="${build.dest}${manager-prop-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${manager-prop-path}">
-                <patternset refid="manager-prop.resources"/>
-            </fileset>
-        </copy>
+        <copy_resources res-path="/org/riverock/portlet/manager/resource" file-mask="*.properties"
+            src="${src.java.dir}" dest="${build.dest}"/>
 
-        <property name="shop-prop-path" value="/org/riverock/portlet/shop/resource"/>
-        <patternset id="shop-prop.resources">
-            <include name="*.properties"/>
-        </patternset>
-        <copy todir="${build.dest}${shop-prop-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${shop-prop-path}">
-                <patternset refid="shop-prop.resources"/>
-            </fileset>
-        </copy>
+        <copy_resources res-path="/org/riverock/portlet/shop/resource" file-mask="*.properties"
+            src="${src.java.dir}" dest="${build.dest}"/>
+
+        <copy_resources res-path="/org/riverock/portlet/register/i18n" file-mask="*.xml"
+            src="${src.java.dir}" dest="${build.dest}"/>
 
     </target>
 
@@ -204,6 +186,7 @@
         <include name="${riverock-common.lib}"/>
         <include name="${riverock-cache.lib}"/>
         <include name="${riverock-portlet.lib}"/>
+        <include name="${riverock-module.lib}"/>
 
         <include name="${commons-io.lib}"/>
         <include name="${commons-fileupload.lib}"/>
@@ -215,6 +198,11 @@
         <include name="${commons-codec.lib}"/>
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
+
+        <include name="${jstl.lib}"/>
+        <include name="${standard.lib}"/>
+        <include name="${taglibs-request.lib}"/>
+        <include name="${taglibs-session.lib}"/>
 
         <include name="${myfaces.lib}"/>
 <!--

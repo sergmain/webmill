@@ -38,6 +38,7 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${servlet.lib}"/>
+        <pathelement location="${lib.dir}/${mail.lib}"/>
 <!--        <pathelement location="${lib.dir}/${log4j.lib}"/>-->
 <!--        <pathelement location="${lib.dir}/${common-logging.lib}"/>-->
 <!--        <pathelement location="${lib.dir}/${castor.lib}"/>-->

@@ -27,30 +27,27 @@ package org.riverock.common.mail;
 
 import java.util.Properties;
 
-import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.PasswordAuthentication;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
 
 /**
+ * @deprecated
  * $Id$
  */
-
 public final class MailMessage {
     private static Logger log = Logger.getLogger(MailMessage.class);
 
     public static void sendMessage(String message,
-        String mail_to,
-        String mail_from,
-        String subj,
-        String smtpHost)
-        throws javax.mail.internet.AddressException,
-        javax.mail.MessagingException {
+                                   String mail_to,
+                                   String mail_from,
+                                   String subj,
+                                   String smtpHost)
+        throws javax.mail.MessagingException {
 
         if (log.isDebugEnabled()) {
             log.debug("message\n" + message);
@@ -70,7 +67,7 @@ public final class MailMessage {
         Session MailSess = Session.getDefaultInstance(props, null);
 
         MimeMessage msg = new MimeMessage(MailSess);
-        InternetAddress[] toAddrs = null, ccAddrs = null;
+        InternetAddress[] toAddrs = null;
 
         toAddrs = InternetAddress.parse(mail_to, false);
 

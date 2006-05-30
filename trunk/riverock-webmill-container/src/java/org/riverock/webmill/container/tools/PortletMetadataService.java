@@ -39,8 +39,9 @@ import org.riverock.webmill.container.ContainerConstants;
 public class PortletMetadataService {
     public static boolean getMetadataBoolean( final PortletRequest portletRequest, final String key, final boolean defValue ) {
         String s = getMetadata(portletRequest, key);
-        if (s==null)
+        if (s==null) {
             return defValue;
+        }
 
         return Boolean.valueOf(s);
     }
@@ -50,12 +51,14 @@ public class PortletMetadataService {
     }
 
     public static String getMetadata( final PortletRequest portletRequest, final String key, final String defValue ) {
-        if (portletRequest==null || key==null)
+        if (portletRequest==null || key==null) {
             return defValue;
+        }
 
         Map<String, String> p = (Map<String, String>)portletRequest.getAttribute( ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE );
-        if (p==null)
+        if (p==null) {
             return defValue;
+        }
 
         String value = p.get( key );
         if ( PortletService.isEmpty( value ) ) {

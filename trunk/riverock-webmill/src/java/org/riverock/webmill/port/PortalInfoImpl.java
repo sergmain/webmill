@@ -171,8 +171,8 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         long mills; // System.currentTimeMillis();
         siteBean = InternalDaoFactory.getInternalSiteDao().getSite( siteId );
 
-        if (!StringUtils.isEmpty(siteBean.getDefLanguage()) &&
-            !StringUtils.isEmpty(siteBean.getDefCountry())) {
+        if (StringUtils.isNotBlank(siteBean.getDefLanguage()) &&
+            StringUtils.isNotBlank(siteBean.getDefCountry())) {
 
             defaultLocale = new Locale(siteBean.getDefLanguage().toLowerCase(),
                 siteBean.getDefCountry(),

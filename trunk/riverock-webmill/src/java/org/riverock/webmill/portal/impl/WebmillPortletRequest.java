@@ -25,7 +25,15 @@
 package org.riverock.webmill.portal.impl;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletContext;
@@ -46,6 +54,7 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
+import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
@@ -54,6 +63,7 @@ import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.portlet.bean.Supports;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.mail.PortalMailServiceProviderImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.namespace.NamespaceMapperImpl;
@@ -714,6 +724,14 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         this.setAttribute( ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE, httpRequest.getRemoteAddr() );
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
+
+        this.setAttribute(
+            ContainerConstants.PORTAL_PORTAL_MAIL_SERVICE_PROVIDER,
+            new PortalMailServiceProviderImpl(
+                GenericConfig.getMailSMTPHost(),
+                portalRequestInstance.getPortalInfo().getSite().getAdminEmail()
+            )
+        );
     }
 
     // Private methods

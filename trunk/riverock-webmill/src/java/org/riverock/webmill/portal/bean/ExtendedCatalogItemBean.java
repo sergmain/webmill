@@ -193,6 +193,12 @@ public final class ExtendedCatalogItemBean {
     }
 
     private static Map<String, String> initMetadata( CatalogItem defaultCtx ) {
+        if (log.isDebugEnabled()) {
+            log.debug("defaultCtx: " + defaultCtx);
+            if (defaultCtx!=null) {
+                log.debug("defaultCtx.getMetadata(): " + defaultCtx.getMetadata());
+            }
+        }
         HashMap<String, String> map = new HashMap<String, String>();
         if (defaultCtx==null || defaultCtx.getMetadata()==null) {
             return map;

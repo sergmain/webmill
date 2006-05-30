@@ -64,7 +64,7 @@
     <target name="full_build_module">
         <antcall target="full_clean"/>
         <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
-        <antcall target="jar"/>
+        <antcall target="war"/>
     </target>
 
     <target name="run_tomcat_with_new jar">

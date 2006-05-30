@@ -6,6 +6,7 @@ import java.util.Map;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
+import org.riverock.interfaces.portal.bean.Site;
 
 /**
  * @author smaslyukov
@@ -22,5 +23,6 @@ public interface PortalInfo {
     public Map<String, String> getMetadata();
     public Locale getDefaultLocale();
     public PortalTemplateManager getPortalTemplateManager();
+    public Site getSite();
 }
 

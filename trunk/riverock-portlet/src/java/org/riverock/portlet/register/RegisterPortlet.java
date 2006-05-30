@@ -32,6 +32,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -65,6 +66,9 @@ public class RegisterPortlet extends AbstractPortlet {
     }
 
     public void processAction(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+    }
+
+    public void process(PortletRequest actionRequest, PortletResponse actionResponse) throws PortletException, IOException {
 
         if (log.isDebugEnabled()) {
             Enumeration en = actionRequest.getParameterNames();
@@ -116,6 +120,7 @@ public class RegisterPortlet extends AbstractPortlet {
         genericBean.setLogoutUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.LOGOUT_URL_METADATA ) );
         genericBean.setRegisterUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.REGISTER_URL_METADATA ) );
         genericBean.setMembersUrl( PortletMetadataService.getMetadata( (PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), Constants.MEMBERS_URL_METADATA ) );
+        genericBean.setActionUrl(moduleActionRequest.getUrlProvider().getActionUrl());
         genericBean.setBaseModuleUrl(
             PortletService.ctxStringBuilder((PortletRequest)moduleActionRequest.getRequest().getOriginRequest(), "mill.register" ).
             append("?a=1")
