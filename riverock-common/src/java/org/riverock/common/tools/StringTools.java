@@ -68,29 +68,30 @@ public class StringTools {
             log.debug("firstName: " + firstName+ ", middleName: " +middleName+ ", lastName: " + lastName );
         }
 
-        String s = "";
-        if (!StringUtils.isEmpty(firstName)) {
-            s += firstName;
+        StringBuilder s = new StringBuilder();
+        if (StringUtils.isNotBlank(firstName)) {
+            s.append(firstName);
 
-            if (!StringUtils.isEmpty(middleName) || !StringUtils.isEmpty(lastName)) {
-                s += " ";
+            if (StringUtils.isNotBlank(middleName) || StringUtils.isNotBlank(lastName)) {
+                s.append(" ");
             }
         }
-        if (!StringUtils.isEmpty(middleName)) {
-            s += middleName;
-            if (!StringUtils.isEmpty(lastName)) {
-                s += " ";
+        if (StringUtils.isNotBlank(middleName)) {
+            s.append(middleName);
+            if (StringUtils.isNotBlank(lastName)) {
+                s.append(" ");
             }
         }
-        if (!StringUtils.isEmpty(lastName)) {
-            s += lastName;
+        if (StringUtils.isNotBlank(lastName)) {
+            s.append(lastName);
         }
-        
-        if (StringUtils.isEmpty(s)) {
+
+        String result = s.toString();
+        if (StringUtils.isBlank(result)) {
             return null;
         }
         else {
-            return s;
+            return result;
         }
     }
 

@@ -25,6 +25,7 @@
 package org.riverock.portlet.register.action;
 
 import java.text.MessageFormat;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.portlet.PortletRequest;
@@ -32,8 +33,7 @@ import javax.portlet.PortletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.mail.MailMessage;
-import org.riverock.generic.config.GenericConfig;
+import org.riverock.interfaces.portal.mail.PortalMailServiceProvider;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
@@ -53,13 +53,13 @@ import org.riverock.webmill.container.tools.PortletService;
  *         $Id$
  */
 public class CreateAccountAction implements Action {
-    private final static Logger log = Logger.getLogger( SendPasswordAction.class );
+    private final static Logger log = Logger.getLogger( CreateAccountAction.class );
 
     public String execute( ModuleActionRequest moduleActionRequest ) throws ActionException {
 
         log.debug("Start createAccountAction");
 
-        PortletRequest portletRequet = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
+        PortletRequest portletRequest = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
 
         CreateAccountBean bean = new CreateAccountBean();
         bean.setUsername( moduleActionRequest.getRequest().getString( RegisterConstants.USERNAME_PARAM ) );
@@ -71,20 +71,45 @@ public class CreateAccountAction implements Action {
         bean.setEmail( moduleActionRequest.getRequest().getString( RegisterConstants.EMAIL_PARAM ) );
 
         if( StringUtils.isEmpty( bean.getEmail() ) ) {
-            log.warn( "email is empty" ); 
+            log.warn( "email is empty" );
             return RegisterError.emailIsEmpty( moduleActionRequest );
         }
 
+/*
+        Map<String, String> p = (Map<String, String>) portletRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE);
+        if (p == null) {
+            out.println("portlet metadata is null");
+        } else {
+            for (Map.Entry<String, String> entry : p.entrySet()) {
+                out.println("key: " + entry.getKey() + ", value: " + entry.getValue() + "<BR>");
+            }
+        }
+
+*/
+
         // register-default-role
-        String role = PortletMetadataService.getMetadata( portletRequet, RegisterConstants.DEFAULT_ROLE_METADATA );
+        String role = PortletMetadataService.getMetadata( portletRequest, RegisterConstants.DEFAULT_ROLE_METADATA );
+        if (log.isDebugEnabled()) {
+            log.debug("register role: " + role);
+            log.debug("portletRequest: " + portletRequest);
+            Map<String, String> p = (Map<String, String>) portletRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE);
+            log.debug("metadata map: "+p );
+            if (p == null) {
+                log.debug("portlet metadata is null");
+            } else {
+                log.debug("portlet metadata:");
+                for (Map.Entry<String, String> entry : p.entrySet()) {
+                    log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
+                }
+            }
+        }
         bean.setRole( role );
-        bean.setAdminEmail( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL ) );
-        bean.setCompanyId( new Long( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID ) ) );
+        bean.setCompanyId( new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID ) ) );
 
         try {
             int status = checkRegisterData( bean );
             if( status != RegisterConstants.OK_STATUS ) {
-                log.warn( "checking status is not OK, value: " + status ); 
+                log.warn( "checking status is not OK, value: " + status );
                 return sendStatus( bean, moduleActionRequest, status );
             }
 
@@ -118,19 +143,18 @@ public class CreateAccountAction implements Action {
                 return RegisterError.roleIsNull( moduleActionRequest );
 
             case RegisterConstants.OK_STATUS:
-                if( log.isDebugEnabled() ) {
-                    log.debug( "Admin mail: " + bean.getAdminEmail() );
-                }
+
+                PortalMailServiceProvider mailServiceProvider = (PortalMailServiceProvider)
+                    moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_PORTAL_MAIL_SERVICE_PROVIDER);
+                String remodeAddr = (String)moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE);
 
                 String s = moduleActionRequest.getResourceBundle().getString( "reg.mail_body" );
-                String mailMessage =
-                    MessageFormat.format( s, new Object[]{bean.getUsername(), bean.getPassword1() } );
+                String mailMessage = MessageFormat.format( s, new Object[]{bean.getUsername(), bean.getPassword1() } );
 
-                MailMessage.sendMessage( mailMessage + "\n\nProcess of registration was made from IP ",
-                    bean.getEmail(),
-                    bean.getAdminEmail(),
-                    "Confirm registration",
-                    GenericConfig.getMailSMTPHost() );
+                mailServiceProvider.getPortalMailService().sendMessageInUTF8(
+                    bean.getUsername()+" <"+bean.getEmail()+'>', "Confirm registration",
+                    mailMessage + "\n\nProcess of registration was made from IP " + remodeAddr
+                );
 
                 return RegisterConstants.OK_EXECUTE_STATUS;
 
@@ -157,7 +181,7 @@ public class CreateAccountAction implements Action {
             return RegisterConstants.EMAIL_IS_NULL_STATUS;
         }
 
-        if( StringUtils.isEmpty( bean.getRole() ) ) {
+        if( StringUtils.isBlank( bean.getRole() ) ) {
             return RegisterConstants.ROLE_IS_NULL_STATUS;
         }
 

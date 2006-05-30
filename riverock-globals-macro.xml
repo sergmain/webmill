@@ -42,4 +42,21 @@
             <copy file="../riverock-lib/lib/${riverock-forum.lib}" todir="${webmill.lib-dir}" overwrite="true"/>
         </sequential>
     </macrodef>
+
+    <macrodef name="copy_resources">
+        <attribute name="res-path"/>
+        <attribute name="file-mask"/>
+        <attribute name="src"/>
+        <attribute name="dest"/>
+        <sequential>
+            <patternset id="resources.set">
+                <include name="@{file-mask}"/>
+            </patternset>
+            <copy todir="@{dest}@{res-path}" overwrite="true">
+                <fileset dir="@{src}@{res-path}">
+                    <patternset refid="resources.set"/>
+                </fileset>
+            </copy>
+        </sequential>
+    </macrodef>
 </project>

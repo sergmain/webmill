@@ -60,11 +60,6 @@
              </h:panelGroup>
 
          </h:panelGrid>
-	 	
-	 	
 	 </h:panelGrid>
-	 
-	 
-	
 </h:form>
 </f:view>

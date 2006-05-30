@@ -17,8 +17,8 @@
                           <h:outputText value="#{msg.header_table_portlet_name_name}" />
                        </f:facet>
                        <t:commandLink action="#{portletNameAction.selectPortletName}" immediate="true" >
-                            <h:outputText value="#{portletName.name}" />
-                            <t:updateActionListener property="#{portletNameSessionBean.currentPortletNameId}" value="#{portletName.id}" />
+                            <h:outputText value="#{portletName.portletName}" />
+                            <t:updateActionListener property="#{portletNameSessionBean.currentPortletNameId}" value="#{portletName.portletId}" />
                        </t:commandLink>
                    </h:column>
 

@@ -28,6 +28,7 @@ import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageListType;
 import org.riverock.webmill.schema.core.WmPortalCatalogListType;
+import org.riverock.webmill.container.portlet.PortletContainer;
 
 /**
  * @author Sergei Maslyukov
@@ -95,11 +96,18 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
     }
 
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName) {
+
+        String resultPortletName = portletName;
+        if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
+            resultPortletName = portletName.substring(PortletContainer.PORTLET_ID_NAME_SEPARATOR .length());
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("InternalDaoImpl.getCatalogItemId()");
             log.debug("     siteId: " + siteId);
             log.debug("     locale: " + locale.toString().toLowerCase() );
             log.debug("     portletName: " + portletName);
+            log.debug("     resultPortletName: " + resultPortletName);
             log.debug("     templateName: " + templateName);
         }
 
@@ -116,7 +124,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
                 "       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and " +
                 "       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and " +
                 "       d.TYPE=? and e.NAME_SITE_TEMPLATE=? ",
-                new Object[]{siteId, locale.toString().toLowerCase(), portletName, templateName}
+                new Object[]{siteId, locale.toString().toLowerCase(), resultPortletName, templateName}
             );
         }
         catch (Exception e) {

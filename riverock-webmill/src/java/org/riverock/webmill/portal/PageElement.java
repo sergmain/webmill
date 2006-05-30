@@ -361,9 +361,17 @@ public final class PageElement {
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
             if (log.isDebugEnabled()) {
-                log.debug("portalRequestInstance: "+portalRequestInstance);
-                log.debug("portletEntry: "+portletEntry);
-                log.debug("parameters: "+parameters);
+                log.debug("    portalRequestInstance: "+portalRequestInstance);
+                log.debug("    portletEntry: "+portletEntry);
+                log.debug("    parameters: "+parameters);
+                if (portletMetadata == null) {
+                    log.debug("    portlet metadata is null");
+                } else {
+                    log.debug("    portlet metadata:");
+                    for (Map.Entry<String, String> entry : portletMetadata.entrySet()) {
+                        log.debug("        key: " + entry.getKey() + ", value: " + entry.getValue());
+                    }
+                }
             }
             renderResponse = new RenderResponseImpl(
                 portalRequestInstance,

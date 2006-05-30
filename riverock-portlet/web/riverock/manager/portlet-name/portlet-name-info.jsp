@@ -12,9 +12,9 @@ td { vertical-align: top; }
  <h:outputText value="#{msg.portlet_name_info}"/>
  <h:panelGrid columns="2">
  		<h:outputText value="#{msg.portlet_name_id}"/>
- 		<h:outputText value="#{portletNameSessionBean.portletName.id}"/>
+ 		<h:outputText value="#{portletNameSessionBean.portletName.portletId}"/>
 
  		<h:outputText value="#{msg.portlet_name_name}"/>
- 		<h:outputText value="#{portletNameSessionBean.portletName.name}"/>
+ 		<h:outputText value="#{portletNameSessionBean.portletName.portletName}"/>
  </h:panelGrid>
  	

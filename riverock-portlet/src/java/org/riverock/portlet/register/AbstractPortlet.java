@@ -32,6 +32,8 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,6 +65,7 @@ public abstract class AbstractPortlet implements Portlet {
     protected ModuleConfig moduleConfig = null;
 
     public abstract String processSystemError(ModuleRequest request, ResourceBundle resourceBundle);
+    public abstract void process(PortletRequest actionRequest, PortletResponse actionResponse) throws PortletException, IOException;
 
     public void init(PortletConfig portletConfig) throws PortletException {
         this.moduleConfig = new PortletModuleConfigImpl(portletConfig);
@@ -85,6 +88,8 @@ public abstract class AbstractPortlet implements Portlet {
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
 
+        process(renderRequest, renderResponse);
+
         ModuleRequest moduleRequest = new WebmillPortletModuleRequestImpl(renderRequest);
         ModuleResponse moduleResponse = new PortletModuleResponseImpl(renderResponse);
         ResourceBundle bundle = moduleConfig.getResourceBundle(renderRequest.getLocale());
@@ -99,7 +104,7 @@ public abstract class AbstractPortlet implements Portlet {
         // forward page
         Throwable th = null;
         try {
-            if (!StringUtils.isBlank(forwardPage)) {
+            if (StringUtils.isNotBlank(forwardPage)) {
                 moduleConfig.getContext().getRequestDispatcher( forwardPage ).include( moduleRequest, moduleResponse );
             }
         }
