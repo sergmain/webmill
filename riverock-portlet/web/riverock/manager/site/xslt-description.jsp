@@ -17,16 +17,3 @@
 
 </h:panelGrid>
 
-<h:panelGroup id="operation-xslt-panel">
-    <h:commandButton id="edit-xslt-action" action="xslt-edit"
-                     value="#{msg['edit_xslt_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-    <h:commandButton id="delete-xslt-action" action="xslt-delete"
-                     value="#{msg['delete_xslt_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-</h:panelGroup>

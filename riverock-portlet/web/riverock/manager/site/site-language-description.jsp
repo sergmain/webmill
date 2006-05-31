@@ -17,16 +17,3 @@
 
 </h:panelGrid>
 
-<h:panelGroup id="operation-site-language-panel">
-    <h:commandButton id="edit-site-language-action" action="site-language-edit"
-                     value="#{msg['edit_site_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-    <h:commandButton id="delete-site-language-action" action="site-language-delete"
-                     value="#{msg['delete_site_language_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-</h:panelGroup>

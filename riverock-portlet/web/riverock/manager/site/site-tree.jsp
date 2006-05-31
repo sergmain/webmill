@@ -20,7 +20,10 @@
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-action-id" action="#{siteAction.addSiteAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}"/>
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}">
+
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteType}"/>
+                </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-language-list">
@@ -30,7 +33,9 @@
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-language-action-id" action="#{siteLanguageAction.addSiteLanguageAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}"/>
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}">
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
+                </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="template-list">
@@ -40,7 +45,9 @@
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-template-action-id" action="#{templateAction.addTemplateAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_template_button_alt}"/>
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_template_button_alt}">
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.templateType}"/>
+                </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="xslt-list">
@@ -50,7 +57,9 @@
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-xslt-action-id" action="#{xsltAction.addXsltAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_xslt_button_alt}"/>
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_xslt_button_alt}">
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.xsltType}"/>
+                </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="css-list">
@@ -60,7 +69,9 @@
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-css-action-id" action="#{cssAction.addCssAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_css_button_alt}"/>
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_css_button_alt}">
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.cssType}"/>
+                </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="site">
@@ -74,20 +85,8 @@
 
                     <h:outputText value="#{node.description}"/>
 
-                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteType}"/>
-                </h:commandLink>
-            </h:panelGroup>
-        </f:facet>
-        <f:facet name="template">
-            <h:panelGroup>
-                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}" action="site">
-
-                    <t:graphicImage value="/images/user.png" border="0"/>
-                    <h:outputText value="#{node.description}"/>
-
-                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
-                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.templateType}"/>
                 </h:commandLink>
             </h:panelGroup>
         </f:facet>
@@ -100,6 +99,18 @@
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
+                </h:commandLink>
+            </h:panelGroup>
+        </f:facet>
+        <f:facet name="template">
+            <h:panelGroup>
+                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}" action="site">
+
+                    <t:graphicImage value="/images/user.png" border="0"/>
+                    <h:outputText value="#{node.description}"/>
+
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
+                    <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.templateType}"/>
                 </h:commandLink>
             </h:panelGroup>
         </f:facet>

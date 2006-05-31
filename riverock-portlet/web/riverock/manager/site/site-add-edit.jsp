@@ -33,5 +33,10 @@
 
      <h:outputText value="#{msg.site_css_file}"/>
      <h:inputText id="site-css-file-field" value="#{siteSessionBean.siteExtended.site.cssFile}"/>
+
  </h:panelGrid>
+
+<f:subview id="site-virtual-host-edit-subview">
+    <jsp:include page="site-virtual-host-edit-list.jsp"/>
+</f:subview>
 

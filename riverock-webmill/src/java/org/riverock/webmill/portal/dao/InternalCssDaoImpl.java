@@ -260,7 +260,7 @@ public class InternalCssDaoImpl implements InternalCssDao {
         try {
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_CSS_DATA " +
+                "delete from WM_PORTAL_CSS_DATA " +
                     "where ID_SITE_CONTENT_CSS in " +
                     "(select ID_SITE_CONTENT_CSS from WM_PORTAL_CSS where ID_SITE=?)",
 
@@ -269,12 +269,12 @@ public class InternalCssDaoImpl implements InternalCssDao {
 
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from ID_SITE_CONTENT_CSS where ID_SITE=?",
+                "delete from WM_PORTAL_CSS where ID_SITE=?",
                 new Object[]{siteId}, new int[]{Types.DECIMAL}
             );
 
         } catch (SQLException e) {
-            String es = "Error delete news";
+            String es = "Error delete css";
             log.error(es, e);
             throw new IllegalStateException( es, e);
         }

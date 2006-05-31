@@ -14,6 +14,10 @@ public interface PortalSiteDao {
     public Site getSite( Long siteId );
     public Site getSite( String siteName );
     public Long createSite(Site site);
+    public Long createSiteWithVirtualHost(Site site, List<String> hosts);
+
     public void updateSite(Site site);
+    public void updateSiteWithVirtualHost(Site site, List<String> hosts);
+
     public void deleteSite(Long siteId);
 }

@@ -251,7 +251,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         try {
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_TEMPLATE " +
+                "delete from WM_PORTAL_TEMPLATE " +
                     "where ID_SITE_SUPPORT_LANGUAGE in " +
                     "(select a.ID_SITE_SUPPORT_LANGUAGE from WM_PORTAL_SITE_LANGUAGE a " +
                     "where   a.ID_SITE=? )",
@@ -269,7 +269,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         try {
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_TEMPLATE where ID_SITE_SUPPORT_LANGUAGE=?",
+                "delete from WM_PORTAL_TEMPLATE where ID_SITE_SUPPORT_LANGUAGE=?",
                 new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
             );
         } catch (SQLException e) {

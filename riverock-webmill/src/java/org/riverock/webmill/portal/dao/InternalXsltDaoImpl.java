@@ -268,7 +268,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         try {
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_XSLT_DATA " +
+                "delete from WM_PORTAL_XSLT_DATA " +
                     "where ID_SITE_XSLT in " +
                     "(select a.ID_SITE_XSLT from WM_PORTAL_XSLT a, WM_PORTAL_SITE_LANGUAGE b " +
                     "where b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE)",
@@ -278,7 +278,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
 
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_XSLT " +
+                "delete from WM_PORTAL_XSLT " +
                     "where ID_SITE_SUPPORT_LANGUAGE in " +
                     "(select a.ID_SITE_SUPPORT_LANGUAGE from WM_PORTAL_SITE_LANGUAGE a " +
                     "where   a.ID_SITE=? )",
@@ -296,7 +296,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         try {
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_XSLT_DATA " +
+                "delete from WM_PORTAL_XSLT_DATA " +
                     "where ID_SITE_XSLT in " +
                     "(select a.ID_SITE_XSLT from WM_PORTAL_XSLT a " +
                     "where a.ID_SITE_SUPPORT_LANGUAGE=?)",
@@ -306,7 +306,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
 
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_XSLT where ID_SITE_SUPPORT_LANGUAGE=?",
+                "delete from WM_PORTAL_XSLT where ID_SITE_SUPPORT_LANGUAGE=?",
                 new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
             );
         } catch (SQLException e) {

@@ -10,12 +10,13 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.interfaces.portal.bean.Xslt;
-import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.manager.site.bean.CssBean;
 import org.riverock.portlet.manager.site.bean.SiteBean;
 import org.riverock.portlet.manager.site.bean.SiteExtended;
@@ -92,9 +93,12 @@ public class SiteService implements Serializable {
     public SiteExtended getSiteExtended(Long siteId) {
         SiteExtended siteExtended = new SiteExtended();
         siteExtended.setSite( FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId) );
-        siteExtended.setVirtualHosts(
-            FacesTools.getPortalDaoProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId())
-        );
+        List<VirtualHost> virtualHosts = FacesTools.getPortalDaoProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId());
+        List<String> hosts = new ArrayList<String>();
+        for (VirtualHost host : virtualHosts) {
+            hosts.add(host.getHost().toLowerCase());
+        }
+        siteExtended.setVirtualHosts(hosts);
         siteExtended.setCompany(
             FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(siteExtended.getSite().getCompanyId())
         );

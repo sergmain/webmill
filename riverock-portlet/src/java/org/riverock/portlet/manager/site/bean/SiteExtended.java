@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Site;
-import org.riverock.interfaces.portal.bean.VirtualHost;
 
 /**
  * @author Sergei Maslyukov
@@ -16,13 +15,13 @@ public class SiteExtended implements Serializable {
     private static final long serialVersionUID = 2058005301L;
 
     private SiteBean site = null;
-    private List<VirtualHost> virtualHosts = null;
+    private List<String> virtualHosts = null;
     private CompanyBean company = null;
 
     public SiteExtended(){
     }
 
-    public SiteExtended(SiteBean siteBean, List<VirtualHost> virtualHosts, CompanyBean company){
+    public SiteExtended(SiteBean siteBean, List<String> virtualHosts, CompanyBean company){
         this.site=siteBean;
         this.virtualHosts=virtualHosts;
         this.company=company;
@@ -44,11 +43,11 @@ public class SiteExtended implements Serializable {
         this.site = new SiteBean(site);
     }
 
-    public List<VirtualHost> getVirtualHosts() {
+    public List<String> getVirtualHosts() {
         return virtualHosts;
     }
 
-    public void setVirtualHosts(List<VirtualHost> virtualHosts) {
+    public void setVirtualHosts(List<String> virtualHosts) {
         this.virtualHosts = virtualHosts;
     }
 }

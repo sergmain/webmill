@@ -53,9 +53,9 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
     }
 
     public List<VirtualHost> getVirtualHosts(Long siteId) {
-	if (siteId==null) {
-		throw new IllegalStateException("getVirtualHost(), siteId is null");
-	}
+        if (siteId == null) {
+            throw new IllegalStateException("getVirtualHost(), siteId is null");
+        }
 
         DatabaseAdapter adapter = null;
 
@@ -86,34 +86,47 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_WM_PORTAL_VIRTUAL_HOST" );
-            seq.setTableName( "WM_PORTAL_VIRTUAL_HOST" );
-            seq.setColumnName( "ID_SITE_VIRTUAL_HOST" );
-            Long id = adapter.getSequenceNextValue( seq );
+            Long id = createVirtualHost(adapter, virtualHost);
 
-            WmPortalVirtualHostItemType item = new WmPortalVirtualHostItemType();
-            item.setIdSiteVirtualHost(id);
-            item.setIdSite(virtualHost.getSiteId());
-            item.setNameVirtualHost(virtualHost.getHost());
-
-            InsertWmPortalVirtualHostItem.process(adapter, item);
             adapter.commit();
             return id;
         } catch (Throwable e) {
             try {
-                if (adapter!=null)
+                if (adapter != null)
                     adapter.rollback();
             }
-            catch(Throwable th) {
+            catch (Throwable th) {
                 // catch rollback error
             }
             String es = "Error create virtual host";
             log.error(es, e);
-            throw new IllegalStateException( es, e);
+            throw new IllegalStateException(es, e);
         } finally {
             DatabaseManager.close(adapter);
             adapter = null;
+        }
+    }
+
+    public Long createVirtualHost(DatabaseAdapter adapter, VirtualHost host) {
+
+        try {
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_WM_PORTAL_VIRTUAL_HOST");
+            seq.setTableName("WM_PORTAL_VIRTUAL_HOST");
+            seq.setColumnName("ID_SITE_VIRTUAL_HOST");
+            Long siteId = adapter.getSequenceNextValue(seq);
+
+            WmPortalVirtualHostItemType item = new WmPortalVirtualHostItemType();
+            item.setIdSiteVirtualHost(siteId);
+            item.setIdSite(host.getSiteId());
+            item.setNameVirtualHost(host.getHost());
+
+            InsertWmPortalVirtualHostItem.process(adapter, item);
+            return siteId;
+        } catch (Throwable e) {
+            String es = "Error create virtual host";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
         }
     }
 
@@ -122,14 +135,15 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
         try {
             DatabaseManager.runSQL(
                 adapter,
-                "delete * from WM_PORTAL_VIRTUAL_HOST where ID_SITE=?",
+                "delete from WM_PORTAL_VIRTUAL_HOST where ID_SITE=?",
                 new Object[]{siteId}, new int[]{Types.DECIMAL}
             );
 
         } catch (SQLException e) {
             String es = "Error delete virtual host for site";
             log.error(es, e);
-            throw new IllegalStateException( es, e);
+            throw new IllegalStateException(es, e);
         }
     }
+
 }
