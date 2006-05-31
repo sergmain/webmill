@@ -253,7 +253,7 @@ public final class PortalRequestInstance {
 
                 switch (templateItem.getTypeObject().getType()) {
                     case PortalTemplateItemType.PORTLET_TYPE:
-                        element.initPortlet(templateItem.getValue(), this, new HashMap<String, String>(), new ArrayList<String>());
+                        element.initPortlet(templateItem.getValueAsPortletName(), this, new HashMap<String, String>(), new ArrayList<String>());
                         break;
                     case PortalTemplateItemType.DYNAMIC_TYPE:
                         element.initPortlet(requestContext.getDefaultPortletName(), this, requestContext.getExtendedCatalogItem().getPortletMetadata(), requestContext.getExtendedCatalogItem().getRoleList());

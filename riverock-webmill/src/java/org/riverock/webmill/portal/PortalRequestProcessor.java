@@ -151,7 +151,7 @@ public final class PortalRequestProcessor {
                         log.debug("    namespace: "+pageElement.getParameters().getNamespace());
                     }
                     log.debug("    template item  type: "+pageElement.getPortalTemplateItem().getTypeObject().toString());
-                    log.debug("    portlet name: "+pageElement.getPortletEntry().getPortletDefinition().getFullPortletName());
+                    log.debug("    portlet name: "+pageElement.getFullPortletName());
                 }
                 else {
                     log.debug("Non-portlet page element");
