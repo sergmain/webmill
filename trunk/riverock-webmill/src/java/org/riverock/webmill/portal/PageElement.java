@@ -76,6 +76,7 @@ public final class PageElement {
     private String redirectUrl = null;
     private boolean isAccessPermit = true;
     private Namespace namespace = null;
+    private String fullPortletName=null;
 
     /**
      * renderParameter used for set parameters in action
@@ -258,6 +259,7 @@ public final class PageElement {
     }
 
     void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, Map<String, String> portletMetadata, List<String> roleList ) {
+        fullPortletName = portletName;
         try {
             if (log.isDebugEnabled()) {
                 log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
@@ -293,24 +295,21 @@ public final class PageElement {
             }
 
             isXml = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_xml, Boolean.FALSE);
-//            isUrl = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_url, Boolean.FALSE);
 
-//            if (!isUrl) {
-                if (log.isDebugEnabled())
-                    log.debug("Start create instance of portlet '" + portletName + "'");
+            if (log.isDebugEnabled())
+                log.debug("Start create instance of portlet '" + portletName + "'");
 
-                portletEntry = portletContainer.getPortletInstance(portletName);
+            portletEntry = portletContainer.getPortletInstance(portletName);
 
-                if (portletEntry.getIsPermanent()) {
-                    errorString = "Portlet '" + portletName + "' permanently unavailable.";
-                }
-                else if (portletEntry.getInterval() > 0) {
-                    errorString = "Portlet '" + portletName + "' unavailable for " + portletEntry.getInterval() + " seconds.";
-                }
-                if (portletEntry.getPortlet() == null) {
-                    errorString = "Portlet '" + portletName + "' not created for unknown reason.";
-                }
-//            }
+            if (portletEntry.getIsPermanent()) {
+                errorString = "Portlet '" + portletName + "' permanently unavailable.";
+            }
+            else if (portletEntry.getInterval() > 0) {
+                errorString = "Portlet '" + portletName + "' unavailable for " + portletEntry.getInterval() + " seconds.";
+            }
+            if (portletEntry.getPortlet() == null) {
+                errorString = "Portlet '" + portletName + "' not created for unknown reason.";
+            }
 
             if (log.isDebugEnabled()) {
                 log.debug("Error message of create portlet instance: " + errorString);
@@ -446,7 +445,6 @@ public final class PageElement {
                 log.debug("Done init page element ");
             }
 
-//            if (!isUrl && portletEntry.getPortletDefinition() != null) {
             if (portletEntry.getPortletDefinition() != null) {
                 if (log.isDebugEnabled()) {
                     log.debug("portlet: " + portletEntry.getPortletDefinition().getPortletName());
@@ -553,5 +551,9 @@ public final class PageElement {
 
     public String getRedirectUrl() {
         return redirectUrl;
+    }
+
+    public String getFullPortletName() {
+        return fullPortletName;
     }
 }

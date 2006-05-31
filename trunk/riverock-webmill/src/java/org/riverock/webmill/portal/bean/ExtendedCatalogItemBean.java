@@ -24,6 +24,7 @@ import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.PortletContainerException;
 import org.riverock.webmill.container.portlet.PortletEntry;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.portal.context.RequestContextParameter;
@@ -44,8 +45,21 @@ public final class ExtendedCatalogItemBean {
     private Long templateId = null;
     private Map<String, String> portletMetadata = null;
     private List<String> roleList = null;
+    private String fullPortletName=null;
 
     private ExtendedCatalogItemBean() {
+    }
+
+    public String getFullPortletName() {
+        return fullPortletName;
+    }
+
+    public void setFullPortletName(String fullPortletName) {
+        String portletName = fullPortletName;
+        if ( portletName.indexOf( PortletContainer.PORTLET_ID_NAME_SEPARATOR )==-1 ) {
+            portletName = PortletContainer.PORTLET_ID_NAME_SEPARATOR + fullPortletName;
+        }
+        this.fullPortletName = portletName;
     }
 
     public List<String> getRoleList() {
@@ -150,7 +164,9 @@ public final class ExtendedCatalogItemBean {
             log.debug("Portlet name, id "+ctx.getPortletId()+", name: " +portletName.getPortletName());
         }
 
-        initPortletDefinition(factoryParameter, catalogItem, portletName.getPortletName());
+        catalogItem.setFullPortletName(portletName.getPortletName());
+
+        initPortletDefinition(factoryParameter, catalogItem);
         return catalogItem;
     }
 
@@ -164,31 +180,34 @@ public final class ExtendedCatalogItemBean {
         extendedCatalogItem.roleList = new ArrayList<String>();
         extendedCatalogItem.templateId = template.getTemplateId();
         extendedCatalogItem.locale = locale;
+        extendedCatalogItem.setFullPortletName(portletName);
 
-        initPortletDefinition( factoryParameter, extendedCatalogItem, portletName );
+        initPortletDefinition(factoryParameter, extendedCatalogItem);
         return extendedCatalogItem;
     }
 
-    private static void initPortletDefinition(RequestContextParameter contextParameter, ExtendedCatalogItemBean extendedCatalogItem, String portletName) {
+    private static void initPortletDefinition(RequestContextParameter contextParameter, ExtendedCatalogItemBean extendedCatalogItem) {
         if (contextParameter == null || contextParameter.getPortletContainer() == null) {
             return;
         }
         PortletEntry entry = null;
         try {
-            entry = contextParameter.getPortletContainer().getPortletInstance(portletName);
+            entry = contextParameter.getPortletContainer().getPortletInstance(extendedCatalogItem.getFullPortletName());
         }
         catch (PortletContainerException e) {
-            log.error("Error get portlet '" + portletName + "'", e);
+            log.error("Error get portlet '" + extendedCatalogItem.getFullPortletName() + "'", e);
         }
         if (entry == null) {
-            log.warn("Instance for portlet name "+portletName+" not found");
+            log.warn("Instance for portlet name "+extendedCatalogItem.getFullPortletName()+" not found");
             return;
         }
 
         extendedCatalogItem.portlet = entry.getPortletDefinition();
         if (extendedCatalogItem.portlet != null) {
-            extendedCatalogItem.namePortletId =
-                PortletService.getStringParam(extendedCatalogItem.portlet, ContainerConstants.name_portlet_id);
+            extendedCatalogItem.namePortletId = PortletService.getStringParam(
+                extendedCatalogItem.portlet, ContainerConstants.name_portlet_id
+            );
+            extendedCatalogItem.setFullPortletName(extendedCatalogItem.portlet.getFullPortletName());
         }
     }
 

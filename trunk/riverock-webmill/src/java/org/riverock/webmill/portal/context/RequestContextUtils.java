@@ -229,12 +229,17 @@ public final class RequestContextUtils {
         bean.setLocale( bean.getExtendedCatalogItem().getLocale() );
 
         if (log.isDebugEnabled()) {
-            log.debug("    bean.getExtendedCatalogItem().getPortletDefinition().getPortletName(): "+bean.getExtendedCatalogItem().getPortletDefinition().getPortletName());
-            log.debug("    bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName(): "+bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName());
+            log.debug("    bean.getExtendedCatalogItem().getFullPortletName(): "+bean.getExtendedCatalogItem().getFullPortletName());
+            if (bean.getExtendedCatalogItem().getPortletDefinition()!=null) {
+                log.debug("    bean.getExtendedCatalogItem().getPortletDefinition().getPortletName(): "+bean.getExtendedCatalogItem().getPortletDefinition().getPortletName());
+                log.debug("    bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName(): "+bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName());
+            }
+            else {
+                log.debug("    bean.getExtendedCatalogItem().getPortletDefinition() is null");
+            }
         }
 
-//        bean.setDefaultPortletName( bean.getExtendedCatalogItem().getPortletDefinition().getPortletName() );
-        bean.setDefaultPortletName( bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName() );
+        bean.setDefaultPortletName( bean.getExtendedCatalogItem().getFullPortletName() );
         bean.setDefaultRequestState( new RequestState() );
 
         initParametersMap(bean, factoryParameter);
@@ -273,7 +278,7 @@ public final class RequestContextUtils {
                     log.debug("    namespace: " +namespace.getNamespace());
                     log.debug("    portlet: " +portletName);
                     log.debug("    default namespace: " +bean.getDefaultNamespace());
-                    log.debug("    default portlet: " +bean.getExtendedCatalogItem().getPortletDefinition().getPortletName());
+                    log.debug("    default portlet: " +bean.getExtendedCatalogItem().getFullPortletName());
                     log.debug("");
                 }
 
@@ -291,7 +296,7 @@ public final class RequestContextUtils {
                     }
                 }
                 else {
-                    String tempPortletName = bean.getExtendedCatalogItem().getPortletDefinition().getPortletName();
+                    String tempPortletName = bean.getExtendedCatalogItem().getFullPortletName();
                     if (tempPortletName !=null && tempPortletName.equals(portletName)) {
                         requestState = initParameterForDefaultPortlet(factoryParameter, bean);
                     }
@@ -304,7 +309,7 @@ public final class RequestContextUtils {
             } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                 //noinspection UnusedAssignment
                 Namespace namespace = NamespaceFactory.getNamespace(
-                    bean.getExtendedCatalogItem().getPortletDefinition().getFullPortletName(), template.getTemplateName(), i++
+                    bean.getExtendedCatalogItem().getFullPortletName(), template.getTemplateName(), i++
                 );
                 bean.setDefaultNamespace( namespace.getNamespace() );
                 requestState = initParameterForDefaultPortlet(factoryParameter, bean);
