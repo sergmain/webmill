@@ -17,4 +17,8 @@ public interface InternalSiteDao {
     public Long createSite(Site site);
     public void updateSite(Site site);
     public void deleteSite(Long siteId);
+
+    public void updateSite(Site site, List<String> hosts);
+
+    public Long createSite(Site site, List<String> hosts);
 }

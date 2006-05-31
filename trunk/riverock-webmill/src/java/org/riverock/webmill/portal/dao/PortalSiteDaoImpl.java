@@ -34,8 +34,16 @@ public class PortalSiteDaoImpl implements PortalSiteDao {
         return InternalDaoFactory.getInternalSiteDao().createSite(site);
     }
 
+    public Long createSiteWithVirtualHost(Site site, List<String> hosts) {
+        return InternalDaoFactory.getInternalSiteDao().createSite(site, hosts);
+    }
+
     public void updateSite(Site site) {
         InternalDaoFactory.getInternalSiteDao().updateSite(site);
+    }
+
+    public void updateSiteWithVirtualHost(Site site, List<String> hosts) {
+        InternalDaoFactory.getInternalSiteDao().updateSite(site, hosts);
     }
 
     public void deleteSite(Long siteId) {

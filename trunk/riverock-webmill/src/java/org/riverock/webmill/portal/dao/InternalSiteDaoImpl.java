@@ -9,14 +9,17 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.portal.bean.VirtualHost;
 import org.riverock.webmill.core.GetWmPortalListSiteFullList;
 import org.riverock.webmill.core.GetWmPortalListSiteItem;
 import org.riverock.webmill.core.UpdateWmPortalListSiteItem;
 import org.riverock.webmill.portal.bean.SiteBean;
+import org.riverock.webmill.portal.bean.VirtualHostBean;
 import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
 import org.riverock.webmill.schema.core.WmPortalListSiteListType;
 
@@ -122,6 +125,147 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
     }
 
     public Long createSite( Site site ) {
+        return createSite(site, null);
+    }
+
+    public void updateSite(Site site) {
+        updateSite(site, null);
+    }
+
+    public void deleteSite(Long siteId) {
+
+        DatabaseAdapter dbDyn = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            InternalDaoFactory.getInternalCmsDao().deleteArticleForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalCmsDao().deleteNewsForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalCssDao().deleteCss(dbDyn, siteId);
+            InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
+            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHost(dbDyn, siteId);
+
+            DatabaseManager.runSQL(
+                dbDyn,
+                "delete from WM_PORTAL_LIST_SITE where ID_SITE=?",
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                //catch rollback error
+            }
+            String es = "Error delete site";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn);
+            dbDyn = null;
+        }
+    }
+
+    public void updateSite(Site site, List<String> hosts) {
+        log.debug("Start update site");
+
+        PreparedStatement ps = null;
+        DatabaseAdapter dbDyn = null;
+        try {
+
+            dbDyn = DatabaseAdapter.getInstance();
+
+            WmPortalListSiteItemType item = new WmPortalListSiteItemType();
+            item.setIdSite(site.getSiteId());
+            item.setAdminEmail(site.getAdminEmail());
+            item.setCssFile(site.getCssFile());
+            item.setDefCountry(site.getDefCountry());
+            item.setDefLanguage(site.getDefLanguage());
+            item.setDefVariant(site.getDefVariant());
+            item.setIdFirm(site.getCompanyId());
+            item.setIsCssDynamic(site.getCssDynamic());
+            item.setIsRegisterAllowed(site.getRegisterAllowed());
+            item.setNameSite(site.getSiteName());
+
+            UpdateWmPortalListSiteItem.process(dbDyn, item);
+
+            if (log.isDebugEnabled()) {
+                log.debug("hosts: " + hosts);
+                if (hosts!=null) {
+                    log.debug("hosts list: " + StringTools.arrayToString( hosts.toArray(new String[0]) ) );
+                }
+            }
+            
+            if (hosts!=null) {
+                List<VirtualHost> list = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(site.getSiteId());
+                if (log.isDebugEnabled()) {
+                    log.debug("current hosts in DB: " + list);
+                    if (list!=null) {
+                        for (VirtualHost virtualHost : list) {
+                            log.debug("    host: " + virtualHost.getHost()+", id; " + virtualHost.getId());
+                        }
+                    }
+                }
+
+                for (VirtualHost virtualHost : list) {
+                    boolean isPresent=false;
+                    for (String host : hosts) {
+                        if (virtualHost.getHost().equalsIgnoreCase(host)) {
+                            isPresent=true;
+                            break;
+                        }
+                    }
+                    if (!isPresent) {
+                        DatabaseManager.runSQL(
+                            dbDyn,
+                            "delete from WM_PORTAL_VIRTUAL_HOST where ID_SITE=? and lower(NAME_VIRTUAL_HOST)=?",
+                            new Object[]{site.getSiteId(), virtualHost.getHost().toLowerCase()}, new int[]{Types.DECIMAL, Types.VARCHAR}
+                        );
+                    }
+                }
+                for (String host : hosts) {
+                    boolean isPresent=false;
+                    for (VirtualHost virtualHost : list) {
+                        if (virtualHost.getHost().equalsIgnoreCase(host)) {
+                            isPresent=true;
+                            break;
+                        }
+                    }
+                    if (!isPresent) {
+                        VirtualHost hostBean = new VirtualHostBean(null, site.getSiteId(), host );
+                        InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(dbDyn, hostBean);
+                    }
+                }
+            }
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                //catch rollback error
+            }
+            String es = "Error update site";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+
+        }
+        finally {
+            DatabaseManager.close( dbDyn, ps );
+            dbDyn = null;
+            ps = null;
+        }
+    }
+
+    public Long createSite(Site site, List<String> hosts) {
 
         if (log.isDebugEnabled()) {
             log.debug("site: " + site);
@@ -143,21 +287,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             seq.setSequenceName( "seq_WM_PORTAL_LIST_SITE" );
             seq.setTableName( "WM_PORTAL_LIST_SITE" );
             seq.setColumnName( "ID_SITE" );
-            Long id = dbDyn.getSequenceNextValue( seq );
-/*
-
-            WmPortalListSiteItemType item = new WmPortalListSiteItemType();
-            item.setIdSite(id);
-            item.setAdminEmail(site.getAdminEmail());
-            item.setCssFile(site.getCssFile());
-            item.setDefCountry(site.getDefCountry());
-            item.setDefLanguage(site.getDefLanguage());
-            item.setDefVariant(site.getDefVariant());
-            item.setIdFirm(site.getCompanyId());
-            item.setIsCssDynamic(site.getCssDynamic());
-            item.setIsRegisterAllowed(site.getRegisterAllowed());
-            item.setNameSite(site.getSiteName());
-*/
+            Long siteId = dbDyn.getSequenceNextValue( seq );
 
             ps = dbDyn.prepareStatement( "insert into WM_PORTAL_LIST_SITE (" +
                 "ID_SITE, ID_FIRM, DEF_LANGUAGE, DEF_COUNTRY, DEF_VARIANT, " +
@@ -178,7 +308,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
                 ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" ) );
 
             int num = 1;
-            RsetTools.setLong( ps, num++, id );
+            RsetTools.setLong( ps, num++, siteId );
             RsetTools.setLong( ps, num++, site.getCompanyId() );
             ps.setString( num++, site.getDefLanguage() );
             ps.setString( num++, site.getDefCountry() );
@@ -194,8 +324,15 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             if( log.isDebugEnabled() )
                 log.debug( "Count of inserted records - " + i1 );
 
+            if (hosts!=null) {
+                for (String s : hosts) {
+                    VirtualHost host = new VirtualHostBean(null, siteId, s );
+                    InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(dbDyn, host);
+                }
+            }
+
             dbDyn.commit();
-            return id;
+            return siteId;
         }
         catch( Exception e ) {
             try {
@@ -214,89 +351,6 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             DatabaseManager.close( dbDyn, ps );
             dbDyn = null;
             ps = null;
-        }
-    }
-
-    public void updateSite(Site site) {
-
-        PreparedStatement ps = null;
-        DatabaseAdapter dbDyn = null;
-        try {
-
-            dbDyn = DatabaseAdapter.getInstance();
-
-            WmPortalListSiteItemType item = new WmPortalListSiteItemType();
-            item.setIdSite(site.getSiteId());
-            item.setAdminEmail(site.getAdminEmail());
-            item.setCssFile(site.getCssFile());
-            item.setDefCountry(site.getDefCountry());
-            item.setDefLanguage(site.getDefLanguage());
-            item.setDefVariant(site.getDefVariant());
-            item.setIdFirm(site.getCompanyId());
-            item.setIsCssDynamic(site.getCssDynamic());
-            item.setIsRegisterAllowed(site.getRegisterAllowed());
-            item.setNameSite(site.getSiteName());
-
-            UpdateWmPortalListSiteItem.process(dbDyn, item);
-            dbDyn.commit();
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error add new site";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-
-        }
-        finally {
-            DatabaseManager.close( dbDyn, ps );
-            dbDyn = null;
-            ps = null;
-        }
-    }
-
-    public void deleteSite(Long siteId) {
-
-        DatabaseAdapter dbDyn = null;
-        try {
-
-            dbDyn = DatabaseAdapter.getInstance();
-
-            InternalDaoFactory.getInternalCmsDao().deleteArticleForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalCmsDao().deleteNewsForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalCssDao().deleteCss(dbDyn, siteId);
-            InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
-            InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHost(dbDyn, siteId);
-
-            DatabaseManager.runSQL(
-                dbDyn,
-                "delete * from WM_PORTAL_LIST_SITE where ID_SITE=?",
-                new Object[]{siteId}, new int[]{Types.DECIMAL}
-            );
-
-            dbDyn.commit();
-        }
-        catch( Exception e ) {
-            try {
-                if( dbDyn != null )
-                    dbDyn.rollback();
-            }
-            catch( Exception e001 ) {
-                //catch rollback error
-            }
-            String es = "Error add new site";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
-        }
-        finally {
-            DatabaseManager.close( dbDyn);
-            dbDyn = null;
         }
     }
 

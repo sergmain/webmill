@@ -16,4 +16,6 @@ public interface InternalVirtualHostDao {
     public Long createVirtualHost(VirtualHost virtualHost);
 
     public void deleteVirtualHost(DatabaseAdapter adapter, Long siteId);
+
+    public Long createVirtualHost(DatabaseAdapter adapter, VirtualHost host);
 }

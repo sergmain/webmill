@@ -40,21 +40,8 @@
                 var="host"
                 value="#{siteSessionBean.siteExtended.virtualHosts}"
                 layout="orderedList" forceId="true">
-        <h:outputText value="#{host.host}"/>
+        <h:outputText value="#{host}"/>
     </t:dataList>
 
 </h:panelGrid>
 
-<h:panelGroup id="operation-site-panel">
-    <h:commandButton id="edit-site-action" action="site-edit"
-                     value="#{msg['edit_site_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-    <h:commandButton id="delete-site-action" action="site-delete"
-                     value="#{msg['delete_site_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-</h:panelGroup>

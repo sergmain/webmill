@@ -13,17 +13,3 @@
     <h:outputText value="#{siteDataProvider.template.templateName}"/>
 
 </h:panelGrid>
-
-<h:panelGroup id="operation-template-panel">
-    <h:commandButton id="edit-template-action" action="template-edit"
-                     value="#{msg['edit_template_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-    <h:commandButton id="delete-template-action" action="template-delete"
-                     value="#{msg['delete_template_action']}"
-                     styleClass="site-button-action"
-        >
-    </h:commandButton>
-</h:panelGroup>

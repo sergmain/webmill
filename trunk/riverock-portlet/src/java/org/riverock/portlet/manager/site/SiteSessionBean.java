@@ -20,6 +20,7 @@ import org.riverock.portlet.manager.site.bean.XsltBean;
 public class SiteSessionBean implements Serializable {
     private static final long serialVersionUID = 2058005508L;
 
+    public static final int UNKNOWN_TYPE = 0;
     public static final int SITE_TYPE = 1;
     public static final int SITE_LANGUAGE_TYPE = 2;
     public static final int TEMPLATE_TYPE = 3;
@@ -35,6 +36,25 @@ public class SiteSessionBean implements Serializable {
     private TemplateBean template = null;
     private CssBean css = null;
     private XsltBean xslt = null;
+
+    private String currentVirtualHost = null;
+    private String newVirtualHost = null;
+
+    public String getCurrentVirtualHost() {
+        return currentVirtualHost;
+    }
+
+    public void setCurrentVirtualHost(String currentVirtualHost) {
+        this.currentVirtualHost = currentVirtualHost;
+    }
+
+    public String getNewVirtualHost() {
+        return newVirtualHost;
+    }
+
+    public void setNewVirtualHost(String newVirtualHost) {
+        this.newVirtualHost = newVirtualHost;
+    }
 
     public SiteExtended getSiteExtended() {
         return siteExtended;

@@ -389,49 +389,52 @@ public final class PageElement {
 
             Map<String, List<String>> actionRequestParamMap = new HashMap<String, List<String>>( renderRequestParamMap );
 
-            if (parameters != null && parameters.getParameters() != null) {
-                // The portlet-container must not propagate parameters received
-                // in an action request to subsequent render requests of the portlet.
-                if ( parameters.getRequestState().isActionRequest() )
+            if ( parameters.getRequestState().isActionRequest() ) {
+                if (parameters.getParameters()!=null) {
+                    // The portlet-container must not propagate parameters received
+                    // in an action request to subsequent render requests of the portlet.
                     actionRequestParamMap.putAll(parameters.getParameters());
-            }
-            actionRequest = new ActionRequestImpl(
-                actionRequestParamMap,
-                portalRequestInstance,
-                portletEntry.getServletConfig().getServletContext(),
-                contextPath,
-                portletEntry.getPortletDefinition().getPortletPreferences(),
-                portletEntry.getPortletProperties(),
-                portalRequestInstance.getPortalContext(),
-                portletEntry.getPortletConfig().getPortletContext(),
-                portletEntry.getPortletDefinition(),
-                namespace
-            );
-            actionRequest.setAttribute(
-                ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
-                new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
-            );
+                }
+                actionRequest = new ActionRequestImpl(
+                    actionRequestParamMap,
+                    portalRequestInstance,
+                    portletEntry.getServletConfig().getServletContext(),
+                    contextPath,
+                    portletEntry.getPortletDefinition().getPortletPreferences(),
+                    portletEntry.getPortletProperties(),
+                    portalRequestInstance.getPortalContext(),
+                    portletEntry.getPortletConfig().getPortletContext(),
+                    portletEntry.getPortletDefinition(),
+                    namespace
+                );
+                actionRequest.setAttribute(
+                    ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
+                    new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
+                );
 
-            actionResponse = new ActionResponseImpl(
-                portalRequestInstance.getHttpResponse(),
-                renderParameters,
-                portletEntry.getPortletProperties()
-            );
+                actionResponse = new ActionResponseImpl(
+                    portalRequestInstance.getHttpResponse(),
+                    renderParameters,
+                    portletEntry.getPortletProperties()
+                );
 
-            if (log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
 
-                Enumeration e = actionRequest.getParameterNames();
-                if (e.hasMoreElements()) {
-                    for (; e.hasMoreElements();) {
-                        String s = (String) e.nextElement();
-                        log.debug("actionRequest attr - " + s + ", value - " + actionRequest.getParameter(s));
+                    Enumeration e = actionRequest.getParameterNames();
+                    if (e.hasMoreElements()) {
+                        for (; e.hasMoreElements();) {
+                            String s = (String) e.nextElement();
+                            log.debug("actionRequest attr - " + s + ", value - " + actionRequest.getParameter(s));
+                        }
+                    }
+                    else {
+                        log.debug("actionRequest map is empty");
                     }
                 }
-                else {
-                    log.debug("actionRequest map is empty");
-                }
+            }
 
-                e = renderRequest.getParameterNames();
+            if (log.isDebugEnabled()) {
+                Enumeration e = renderRequest.getParameterNames();
                 if (e.hasMoreElements()) {
                     for (; e.hasMoreElements();) {
                         String s = (String) e.nextElement();

@@ -26,7 +26,7 @@
  */
 -->
 <!--$Id$-->
-<project name="Portlet library, tomcat extension" default="usage-main" basedir=".">
+<project name="Webmill portal, tomcat extension" default="usage-main" basedir=".">
     <import file="build.xml"/>
 
     <property name="url"      value="http://me.askmore/manager"/>

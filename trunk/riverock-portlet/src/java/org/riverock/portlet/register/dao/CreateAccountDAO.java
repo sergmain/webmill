@@ -24,23 +24,11 @@
  */
 package org.riverock.portlet.register.dao;
 
-import java.util.StringTokenizer;
-import java.sql.SQLException;
-
-import javax.mail.internet.InternetAddress;
-import javax.portlet.PortletException;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.bean.CreateAccountBean;
-import org.riverock.portlet.tools.FacesTools;
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.interfaces.portal.mail.PortalMailServiceProvider;
-import org.riverock.interfaces.portal.dao.PortalDaoProvider;
-import org.riverock.webmill.container.ContainerConstants;
 
 /**
  * @author SergeMaslyukov
@@ -54,7 +42,7 @@ public class CreateAccountDAO {
     public int execute( ModuleActionRequest moduleActionRequest, CreateAccountBean bean ) throws Exception {
 
         log.debug("start createAccountDAO");
-
+/*
         DatabaseAdapter dbDyn = null;
         try {
 
@@ -145,6 +133,7 @@ public class CreateAccountDAO {
             DatabaseManager.close( dbDyn );
             dbDyn = null;
         }
+*/
         return RegisterConstants.OK_STATUS;
 
     }
