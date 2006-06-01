@@ -12,6 +12,9 @@ import org.riverock.interfaces.portal.bean.Css;
 public interface PortalCssDao {
     public Css getCssCurrent(Long siteId);
     public Css getCss(Long cssId);
-    public Long createCss(Css css);
     public List<Css> getCssList(Long siteId);
+
+    public Long createCss(Css css);
+    public void updateCss(Css css);
+    public void deleteCss(Long cssId);
 }

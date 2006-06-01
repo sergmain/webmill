@@ -20,6 +20,7 @@
                 <h:commandButton id="add-site-action-id" action="#{siteAction.addSiteAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}">
 
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteType}"/>
                 </h:commandButton>
             </h:panelGroup>
@@ -33,6 +34,7 @@
                 <h:commandButton id="add-site-language-action-id" action="#{siteLanguageAction.addSiteLanguageAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}">
 
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
                 </h:commandButton>
             </h:panelGroup>
@@ -45,6 +47,8 @@
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-template-action-id" action="#{templateAction.addTemplateAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_template_button_alt}">
+
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.templateType}"/>
                 </h:commandButton>
             </h:panelGroup>
@@ -57,18 +61,22 @@
                 <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-xslt-action-id" action="#{xsltAction.addXsltAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_xslt_button_alt}">
+
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.xsltType}"/>
                 </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="css-list">
             <h:panelGroup id="site-tree-css-group">
-                <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
-                <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
-                <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+                <t:graphicImage id="site-tree-css-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="site-tree-css-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="site-tree-css-list-name" value="#{node.description}" styleClass="nodeFolder"/>
+                <h:outputText id="site-tree-css-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-css-action-id" action="#{cssAction.addCssAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_css_button_alt}">
+
+                    <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.cssType}"/>
                 </h:commandButton>
             </h:panelGroup>
@@ -123,8 +131,8 @@
                                actionListener="#{cssAction.selectCss}"
                     >
 
-                    <t:graphicImage value="/images/user.png" border="0"/>
-                    <h:outputText value="#{node.description}"/>
+                    <t:graphicImage id="site-tree-css-image" value="/images/user.png" border="0"/>
+                    <h:outputText id="site-tree-css-name" value="#{node.description}"/>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.cssType}"/>

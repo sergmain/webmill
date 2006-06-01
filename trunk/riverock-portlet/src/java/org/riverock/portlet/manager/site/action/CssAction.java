@@ -11,8 +11,10 @@ import javax.faces.event.ActionEvent;
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
-import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.DataProvider;
+import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.bean.CssBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -52,115 +54,114 @@ public class CssAction implements Serializable {
 // main select action
     public String selectCss(ActionEvent event) {
         log.info( "Select CSS action." );
-        loadCurrentCss();
+        loadCurrentObject();
 
-//        siteSessionBean.resetStatus();
         return "site";
     }
 
 // Add actions
     public String addCssAction() {
         log.info( "Add CSS action." );
-/*        
-        HoldingBean bean = new HoldingBean();
-        holdingSessionBean.setHoldingBean( bean );
 
-        holdingSessionBean.setAdd( true );
-*/
+        CssBean cssBean = new CssBean();
+        cssBean.setSiteId(siteSessionBean.getId());
+        setSessionObject(cssBean);
+
         return "css-add";
     }
 
     public String processAddCssAction() {
         log.info( "Procss add CSS action." );
-/*        
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding( 
-			holdingSessionBean.getHoldingBean() 
-		);
-            holdingSessionBean.setHoldingBean( null );
 
-            holdingDataProvider.reinitHoldingBeans();
+        if( getSessionObject() !=null ) {
+            Long cssId = FacesTools.getPortalDaoProvider().getPortalCssDao().createCss(
+                getSessionObject()
+            );
+            setSessionObject(null);
+            siteSessionBean.setId(cssId);
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelAddCssAction() {
         log.info( "Cancel add CSS action." );
-/*        
-        holdingSessionBean.setHoldingBean( null );
 
-        holdingSessionBean.resetStatus();
-*/
+        setSessionObject(null);
+        cleadDataProviderObject();
+
         return "site";
     }
 
 // Edit actions
     public String editCssAction() {
         log.info( "Edit CSS action." );
-/*
-        holdingSessionBean.setEdit( true );
-*/
+
         return "css-edit";
     }
 
     public String processEditCssAction() {
         log.info( "Save changes CSS action." );
-/*        
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding( 
-			holdingSessionBean.getHoldingBean() 
-		);
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+
+        if( getSessionObject() !=null ) {
+            FacesTools.getPortalDaoProvider().getPortalCssDao().updateCss(getSessionObject());
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelEditCssAction() {
         log.info( "Cancel edit CSS action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
 // Delete actions
     public String deleteCssAction() {
         log.info( "delete CSS action." );
 
-//	holdingSessionBean.setDelete( true );
-    return "css-delete";
+        setSessionObject( new CssBean(dataProvider.getCss()) );
+
+        return "css-delete";
     }
 
     public String cancelDeleteCssAction() {
         log.info( "Cancel delete CSS action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
     public String processDeleteCssAction() {
         log.info( "Process delete CSS action." );
-/*        
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding( 
-			holdingSessionBean.getHoldingBean() 
-		);
 
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+        if( getSessionObject() != null ) {
+            FacesTools.getPortalDaoProvider().getPortalCssDao().deleteCss(getSessionObject().getCssId());
+            setSessionObject(null);
+            siteSessionBean.setId(null);
+            siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);
+            cleadDataProviderObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
-    private void loadCurrentCss() {
+    private void setSessionObject(CssBean bean) {
+        siteSessionBean.setCss( bean );
+    }
+
+    private void loadCurrentObject() {
+        siteSessionBean.setCss( new CssBean(dataProvider.getCss()) );
+    }
+
+    private void cleadDataProviderObject() {
+        dataProvider.clearCss();
+    }
+
+    private CssBean getSessionObject() {
+        return siteSessionBean.getCss();
     }
 }
