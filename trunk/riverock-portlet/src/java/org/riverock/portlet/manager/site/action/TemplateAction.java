@@ -6,9 +6,11 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.manager.site.SiteSessionBean;
-import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.manager.site.DataProvider;
+import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.bean.TemplateBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -48,115 +50,114 @@ public class TemplateAction implements Serializable {
 // main select action
     public String selectTemplate(ActionEvent event) {
         TemplateAction.log.info( "Select template action." );
-        loadCurrentTemplate();
+        loadCurrentObject();
 
-//        siteSessionBean.resetStatus();
         return "site";
     }
 
 // Add actions
     public String addTemplateAction() {
         TemplateAction.log.info( "Add template action." );
-/*
-        HoldingBean bean = new HoldingBean();
-        holdingSessionBean.setHoldingBean( bean );
 
-        holdingSessionBean.setAdd( true );
-*/
-        return "css-add";
+        TemplateBean templateBean = new TemplateBean();
+        templateBean.setSiteLanguageId(siteSessionBean.getId());
+        setSessionObject(templateBean);
+
+        return "template-add";
     }
 
     public String processAddTemplateAction() {
         TemplateAction.log.info( "Procss add template action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
 
-            holdingDataProvider.reinitHoldingBeans();
+        if( getSessionObject() !=null ) {
+            Long templateId = FacesTools.getPortalDaoProvider().getPortalTemplateDao().createTemplate(
+                getSessionObject()
+            );
+            setSessionObject(null);
+            siteSessionBean.setId(templateId);
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelAddTemplateAction() {
         TemplateAction.log.info( "Cancel add template action." );
-/*
-        holdingSessionBean.setHoldingBean( null );
 
-        holdingSessionBean.resetStatus();
-*/
+        setSessionObject(null);
+        cleadDataProviderObject();
+
         return "site";
     }
 
 // Edit actions
     public String editTemplateAction() {
         TemplateAction.log.info( "Edit holding action." );
-/*
-        holdingSessionBean.setEdit( true );
-*/
-        return "css-edit";
+
+        return "tenmplate-edit";
     }
 
     public String processEditTemplateAction() {
         TemplateAction.log.info( "Save changes template action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+
+        if( getSessionObject() !=null ) {
+            FacesTools.getPortalDaoProvider().getPortalTemplateDao().updateTemplate(getSessionObject());
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelEditTemplateAction() {
         TemplateAction.log.info( "Cancel edit template action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
 // Delete actions
     public String deleteTemplateAction() {
         TemplateAction.log.info( "delete template action." );
 
-//	holdingSessionBean.setDelete( true );
-    return "css-delete";
+        setSessionObject( new TemplateBean(dataProvider.getTemplate()) );
+
+        return "template-delete";
     }
 
     public String cancelDeleteTemplateAction() {
         TemplateAction.log.info( "Cancel delete holding action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
     public String processDeleteTemplateAction() {
         TemplateAction.log.info( "Process delete template action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding(
-			holdingSessionBean.getHoldingBean()
-		);
 
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+        if( getSessionObject() != null ) {
+            FacesTools.getPortalDaoProvider().getPortalTemplateDao().deleteTemplate(getSessionObject().getTemplateId());
+            setSessionObject(null);
+            siteSessionBean.setId(null);
+            siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);
+            cleadDataProviderObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
-    private void loadCurrentTemplate() {
+    private void setSessionObject(TemplateBean bean) {
+        siteSessionBean.setTemplate( bean );
+    }
+
+    private void loadCurrentObject() {
+        siteSessionBean.setTemplate( new TemplateBean(dataProvider.getTemplate()) );
+    }
+
+    private void cleadDataProviderObject() {
+        dataProvider.clearTemplate();
+    }
+
+    private TemplateBean getSessionObject() {
+        return siteSessionBean.getTemplate();
     }
 }

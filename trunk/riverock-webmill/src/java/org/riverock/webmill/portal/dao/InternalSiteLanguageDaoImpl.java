@@ -3,6 +3,7 @@ package org.riverock.webmill.portal.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,6 +225,20 @@ public class InternalSiteLanguageDaoImpl implements InternalSiteLanguageDao {
         finally {
             DatabaseManager.close( dbDyn);
             dbDyn = null;
+        }
+    }
+
+    public void deleteSiteLanguageForSite(DatabaseAdapter adapter, Long siteId) {
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTAL_SITE_LANGUAGE where ID_SITE=?",
+                new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+        } catch (SQLException e) {
+            String es = "Error delete site language for site";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
         }
     }
 }

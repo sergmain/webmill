@@ -117,8 +117,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
             }
         }
 
-        PortalTemplate template = hashId.get(id);
-        return template;
+        return hashId.get(id);
     }
 
     public PortalTemplate getTemplate( final String nameTemplate, final String lang ) {
@@ -137,16 +136,19 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         for (Template template : InternalDaoFactory.getInternalTemplateDao().getTemplateList( siteId )) {
             try {
                 PortalTemplate st = digestSiteTemplate(template.getTemplateData(), template.getTemplateName(), template.getTemplateId());
-                String lang = StringTools.getLocale(template.getTemplateLanguage()).toString();
-                hash.put(st.getTemplateName() + '_' + lang, st);
-                hashId.put(template.getTemplateId(), st);
+                // dont add broken template 
+                if (st!=null) {
+                    String lang = StringTools.getLocale(template.getTemplateLanguage()).toString();
+                    hash.put(st.getTemplateName() + '_' + lang, st);
+                    hashId.put(template.getTemplateId(), st);
 
-                SiteTemplateDescriptionType desc = new SiteTemplateDescriptionType();
-                desc.setIdTemplate(template.getTemplateId());
-                desc.setIdTemplateLanguage(template.getSiteLanguageId());
-                desc.setNameLanguage(lang);
-                desc.setTemplate(st);
-                templateList.addTemplateDescription(desc);
+                    SiteTemplateDescriptionType desc = new SiteTemplateDescriptionType();
+                    desc.setIdTemplate(template.getTemplateId());
+                    desc.setIdTemplateLanguage(template.getSiteLanguageId());
+                    desc.setNameLanguage(lang);
+                    desc.setTemplate(st);
+                    templateList.addTemplateDescription(desc);
+                }
             }
             catch (Exception e) {
                 // Todo. Add to template text data. If we get error, then create template with error message
@@ -157,7 +159,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         }
     }
 
-    public static PortalTemplate digestSiteTemplate(String templateData, String templateName, Long templateId) throws IOException, SAXException {
+    public static PortalTemplate digestSiteTemplate(String templateData, String templateName, Long templateId) {
         if (StringUtils.isEmpty(templateData) ) {
             final PortalTemplateImpl portalTemplate = new PortalTemplateImpl();
             portalTemplate.setTemplateName( templateName );
@@ -166,9 +168,18 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
         if (log.isDebugEnabled()) {
             log.debug("Digest template:\n" + templateData);
         }
-        PortalTemplateImpl st = (PortalTemplateImpl) digester.parse( new ByteArrayInputStream( templateData.getBytes() ));
-        st.setTemplateName( templateName );
-        st.setTemplateId( templateId );
+        PortalTemplateImpl st = null;
+        try {
+            st = (PortalTemplateImpl) digester.parse( new ByteArrayInputStream( templateData.getBytes() ));
+            st.setTemplateName( templateName );
+            st.setTemplateId( templateId );
+        } catch (IOException e) {
+            String es = "Error digest template, data:\n"+templateData;
+            log.error(es, e);
+        } catch (SAXException e) {
+            String es = "Error digest template, data:\n"+templateData;
+            log.error(es, e);
+        }
 
         return st;
     }

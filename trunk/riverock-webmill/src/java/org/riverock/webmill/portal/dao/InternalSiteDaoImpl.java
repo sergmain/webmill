@@ -145,6 +145,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             InternalDaoFactory.getInternalCssDao().deleteCssForSite(dbDyn, siteId);
             InternalDaoFactory.getInternalXsltDao().deleteXsltForSite(dbDyn, siteId);
             InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHost(dbDyn, siteId);
+            InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguageForSite(dbDyn, siteId);
 
             DatabaseManager.runSQL(
                 dbDyn,

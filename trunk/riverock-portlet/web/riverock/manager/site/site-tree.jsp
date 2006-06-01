@@ -41,10 +41,10 @@
         </f:facet>
         <f:facet name="template-list">
             <h:panelGroup id="site-tree-template-group">
-                <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
-                <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
-                <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+                <t:graphicImage id="site-tree-template-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="site-tree-template-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="site-tree-template-list-name" value="#{node.description}" styleClass="nodeFolder"/>
+                <h:outputText id="site-tree-template-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-template-action-id" action="#{templateAction.addTemplateAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_template_button_alt}">
 
@@ -117,8 +117,8 @@
                                actionListener="#{templateAction.selectTemplate}"
                     >
 
-                    <t:graphicImage value="/images/user.png" border="0"/>
-                    <h:outputText value="#{node.description}"/>
+                    <t:graphicImage id="site-tree-template-image" value="/images/user.png" border="0"/>
+                    <h:outputText id="site-tree-template-name" value="#{node.description}"/>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.templateType}"/>

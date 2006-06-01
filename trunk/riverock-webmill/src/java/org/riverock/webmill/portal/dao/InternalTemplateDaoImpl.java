@@ -2,8 +2,8 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Types;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +18,7 @@ import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetWmPortalTemplateItem;
 import org.riverock.webmill.core.InsertWmPortalTemplateItem;
+import org.riverock.webmill.core.UpdateWmPortalTemplateItem;
 import org.riverock.webmill.portal.bean.TemplateBean;
 import org.riverock.webmill.schema.core.WmPortalTemplateItemType;
 import org.riverock.webmill.site.PortalTemplateManagerImpl;
@@ -276,6 +277,67 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
             String es = "Error delete template for site language";
             log.error(es, e);
             throw new IllegalStateException( es, e);
+        }
+    }
+
+    public void updateTemplate(Template template) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            WmPortalTemplateItemType item = new WmPortalTemplateItemType();
+            item.setIdSiteSupportLanguage(template.getSiteLanguageId());
+            item.setIdSiteTemplate(template.getTemplateId());
+            item.setNameSiteTemplate(template.getTemplateName());
+            item.setTemplateData(template.getTemplateData());
+
+            UpdateWmPortalTemplateItem.process(adapter, item);
+
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error update template";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public void deleteTemplate(Long templateId) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTAL_TEMPLATE " +
+                    "where ID_SITE_TEMPLATE=?",
+
+                new Object[]{templateId}, new int[]{Types.DECIMAL}
+            );
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error delete template";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
         }
     }
 

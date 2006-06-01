@@ -3,6 +3,7 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov
@@ -17,4 +18,6 @@ public interface InternalSiteLanguageDao {
     public Long createSiteLanguage(SiteLanguage siteLanguage);
     public void updateSiteLanguage(SiteLanguage siteLanguage);
     public void deleteSiteLanguage(Long siteLanguageId);
+
+    public void deleteSiteLanguageForSite(DatabaseAdapter adapter, Long siteId);
 }

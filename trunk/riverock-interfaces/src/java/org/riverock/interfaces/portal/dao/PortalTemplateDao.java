@@ -14,5 +14,8 @@ public interface PortalTemplateDao {
     public Template getTemplate(String templateName, Long siteLanguageId);
     public List<Template> getTemplateLanguageList( Long siteLanguageId );
     public List<Template> getTemplateList( Long siteId );
+
     public Long createTemplate(Template template);
+    public void updateTemplate(Template template);
+    public void deleteTemplate(Long templateId);
 }
