@@ -37,4 +37,12 @@ public class PortalTemplateDaoImpl implements PortalTemplateDao {
     public Long createTemplate(Template template) {
         return InternalDaoFactory.getInternalTemplateDao().createTemplate(template);
     }
+
+    public void updateTemplate(Template template) {
+        InternalDaoFactory.getInternalTemplateDao().updateTemplate(template);
+    }
+
+    public void deleteTemplate(Long templateId) {
+        InternalDaoFactory.getInternalTemplateDao().deleteTemplate(templateId);
+    }
 }

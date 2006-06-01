@@ -55,7 +55,7 @@
                 </h:commandButton>
                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
                 <h:commandButton id="template-delete-cancel-action" action="#{templateAction.cancelDeleteTemplateAction}"
-                                 value="#{msg['cancel_deleet_template_action']}"
+                                 value="#{msg['cancel_delete_template_action']}"
                                  styleClass="site-button-action"
                     >
                 </h:commandButton>

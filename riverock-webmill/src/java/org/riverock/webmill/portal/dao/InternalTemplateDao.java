@@ -20,4 +20,8 @@ public interface InternalTemplateDao {
     public void deleteTemplateForSite(DatabaseAdapter adapter, Long siteId);
 
     public void deleteTemplateForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
+
+    public void updateTemplate(Template template);
+
+    public void deleteTemplate(Long templateId);
 }
