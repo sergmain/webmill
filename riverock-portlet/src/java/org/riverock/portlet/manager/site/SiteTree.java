@@ -57,10 +57,10 @@ public class SiteTree implements Serializable {
         for (Site site : siteService.getSites()) {
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
 
-            TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", false);
+            TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", site.getSiteId().toString(), false);
             siteNode.getChildren().add( siteLanguageListNode );
 
-            TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", false);
+            TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", site.getSiteId().toString(), false);
             siteNode.getChildren().add( cssListNode );
 
             for (Css css : siteService.getCssList(site.getSiteId())) {
@@ -79,7 +79,7 @@ public class SiteTree implements Serializable {
                     false);
                 siteLanguageListNode.getChildren().add(siteLanguageNode);
 
-                TreeNodeBase templateListNode = new TreeNodeBase("template-list", "Templates", false);
+                TreeNodeBase templateListNode = new TreeNodeBase("template-list", "Templates", siteLanguage.getSiteLanguageId().toString(), false);
                 for (Template template : siteService.getTemplateList(siteLanguage.getSiteLanguageId())) {
                     templateListNode.getChildren().add(
                         new TreeNodeBase("template",template.getTemplateName(),template.getTemplateId().toString(),true)
@@ -87,7 +87,7 @@ public class SiteTree implements Serializable {
                 }
                 siteLanguageNode.getChildren().add(templateListNode);
 
-                TreeNodeBase xsltListNode = new TreeNodeBase("xslt-list", "Xslt list", false);
+                TreeNodeBase xsltListNode = new TreeNodeBase("xslt-list", "Xslt list", siteLanguage.getSiteLanguageId().toString(), false);
                 for (Xslt xslt : siteService.getXsltList(siteLanguage.getSiteLanguageId())) {
                     xsltListNode.getChildren().add(
                         new TreeNodeBase("xslt",xslt.getName(),xslt.getId().toString(),true)

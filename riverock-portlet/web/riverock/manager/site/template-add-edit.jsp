@@ -36,7 +36,4 @@
 
  </h:panelGrid>
 
-<f:subview id="site-virtual-host-edit-subview">
-    <jsp:include page="site-virtual-host-edit-list.jsp"/>
-</f:subview>
 

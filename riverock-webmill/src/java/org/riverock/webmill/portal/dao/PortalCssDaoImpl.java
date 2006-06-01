@@ -30,6 +30,14 @@ public class PortalCssDaoImpl implements PortalCssDao {
         return InternalDaoFactory.getInternalCssDao().createCss(css);
     }
 
+    public void updateCss(Css css) {
+        InternalDaoFactory.getInternalCssDao().updateCss(css);
+    }
+
+    public void deleteCss(Long cssId) {
+        InternalDaoFactory.getInternalCssDao().deleteCss(cssId);
+    }
+
     public List<Css> getCssList(Long siteId) {
         return InternalDaoFactory.getInternalCssDao().getCssList(siteId);
     }

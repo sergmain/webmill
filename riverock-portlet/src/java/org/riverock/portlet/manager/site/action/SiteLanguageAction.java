@@ -11,8 +11,6 @@ import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.manager.site.SiteSessionBean;
 import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * @author Sergei Maslyukov
@@ -62,8 +60,7 @@ public class SiteLanguageAction implements Serializable {
         log.debug( "Add site language action." );
 
         SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
-        PortalInfo p = (PortalInfo) FacesTools.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-        siteLanguageBean.setSiteId( p.getSiteId() );
+        siteLanguageBean.setSiteId(siteSessionBean.getId());
         setSessionObject(siteLanguageBean);
 
         return "site-language-add";
@@ -71,6 +68,7 @@ public class SiteLanguageAction implements Serializable {
 
     public String processAddSiteLanguageAction() {
         log.debug( "Procss add site language action." );
+
         if( getSessionObject() !=null ) {
             Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().createSiteLanguage(
                 getSessionObject()
@@ -137,6 +135,7 @@ public class SiteLanguageAction implements Serializable {
 
     public String processDeleteSiteLanguageAction() {
         log.debug( "Process delete site language action." );
+
         if( getSessionObject() != null ) {
             FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().deleteSiteLanguage(getSessionObject().getSiteLanguageId());
             setSessionObject(null);

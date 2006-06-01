@@ -12,10 +12,13 @@ import org.riverock.generic.db.DatabaseAdapter;
  */
 public interface InternalCssDao {
     public Css getCssCurrent(Long siteId);
-    public Long createCss(Css css);
     public List<Css> getCssList(Long siteId);
 
     public Css getCss(Long cssId);
 
-    public void deleteCss(DatabaseAdapter adapter, Long siteId);
+    public Long createCss(Css css);
+    public void updateCss(Css css);
+    public void deleteCss(Long cssId);
+    public void deleteCssForSite(DatabaseAdapter adapter, Long siteId);
+
 }
