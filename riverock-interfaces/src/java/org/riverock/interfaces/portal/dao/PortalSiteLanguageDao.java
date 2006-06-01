@@ -13,5 +13,8 @@ public interface PortalSiteLanguageDao {
     public List<SiteLanguage> getSiteLanguageList( Long siteId );
     public SiteLanguage getSiteLanguage(Long siteLanguageId);
     public SiteLanguage getSiteLanguage(Long siteId, String languageLocale);
+    
     public Long createSiteLanguage(SiteLanguage siteLanguage);
+    public void updateSiteLanguage(SiteLanguage siteLanguage);
+    public void deleteSiteLanguage(Long siteLanguageId);
 }

@@ -2,6 +2,8 @@ package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 
+import javax.faces.event.ActionEvent;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.manager.site.SiteSessionBean;
@@ -44,7 +46,7 @@ public class XsltAction implements Serializable {
     }
 
 // main select action
-    public String selectHolding() {
+    public String selectXslt(ActionEvent event) {
         XsltAction.log.info( "Select xslt action." );
         loadCurrentXslt();
 

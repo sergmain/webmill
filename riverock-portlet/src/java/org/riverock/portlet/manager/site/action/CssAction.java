@@ -6,6 +6,8 @@ package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 
+import javax.faces.event.ActionEvent;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
@@ -48,7 +50,7 @@ public class CssAction implements Serializable {
     }
 
 // main select action
-    public String selectCss() {
+    public String selectCss(ActionEvent event) {
         log.info( "Select CSS action." );
         loadCurrentCss();
 

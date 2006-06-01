@@ -27,34 +27,42 @@
     }
 </style>
 <f:view>
-	<h:form>
-	
-	<h:panelGrid columns="1">
-	 	 
-	 	<h:panelGrid columns="2">
-	 	
+    <h:form>
+
+        <f:subview id="site-top-actions-subview">
+            <jsp:include page="site-top-actions.jsp"/>
+        </f:subview>
+
+        <h:panelGrid columns="2">
+
             <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
                 <jsp:include page="site-tree.jsp"/>
             </f:subview>
 
-			<h:panelGroup id="css-add-panel">
-			
-				<h:panelGroup id="operation-css-add-panel">
-				    <h:commandButton id="css-add-process-action" action="#{cssAction.processAddCssAction}"
-				                     value="#{msg.process_add_css_action}"
-				                     styleClass="site-button-action"
-				        >
-				    </h:commandButton>
-				    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-				    <h:commandButton id="css-add-cancel-action" action="#{cssAction.cancelAddCssAction}"
-				                     value="#{msg.cancel_add_css_action}"
-				                     styleClass="site-button-action"
-				        >
-				    </h:commandButton>
-				</h:panelGroup>
-			</h:panelGroup>
-         </h:panelGrid>
+            <h:panelGroup id="css-add-panel">
 
-	 </h:panelGrid>
-</h:form>
+                <h:panelGrid columns="1">
+
+                    <f:subview id="subview-css-info">
+                        <jsp:include page="css-add-edit.jsp"/>
+                    </f:subview>
+
+                    <h:panelGroup id="operation-css-add-panel">
+                        <h:commandButton id="css-add-process-action" action="#{cssAction.processAddCssAction}"
+                                         value="#{msg.process_add_css_action}"
+                                         styleClass="site-button-action"
+                            >
+                        </h:commandButton>
+                        <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                        <h:commandButton id="css-add-cancel-action" action="#{cssAction.cancelAddCssAction}"
+                                         value="#{msg.cancel_add_css_action}"
+                                         styleClass="site-button-action"
+                            >
+                        </h:commandButton>
+                    </h:panelGroup>
+                </h:panelGrid>
+            </h:panelGroup>
+        </h:panelGrid>
+
+    </h:form>
 </f:view>

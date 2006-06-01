@@ -23,7 +23,7 @@ public class InternalCmsDaoImpl implements InternalCmsDao {
                 "delete from WM_PORTLET_ARTICLE_DATA " +
                     "where ID_SITE_CTX_ARTICLE in " +
                     "(select a.ID_SITE_CTX_ARTICLE from WM_PORTLET_ARTICLE a, WM_PORTAL_SITE_LANGUAGE b " +
-                    "where b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE)",
+                    " where b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE)",
 
                 new Object[]{siteId}, new int[]{Types.DECIMAL}
             );
@@ -35,6 +35,32 @@ public class InternalCmsDaoImpl implements InternalCmsDao {
                     "(select ID_SITE_SUPPORT_LANGUAGE from WM_PORTAL_SITE_LANGUAGE where ID_SITE=?)",
 
                 new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+        } catch (SQLException e) {
+            String es = "Error delete articles";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        }
+    }
+
+    public void deleteArticleForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTLET_ARTICLE_DATA " +
+                    "where ID_SITE_CTX_ARTICLE in " +
+                    "(select a.ID_SITE_CTX_ARTICLE from WM_PORTLET_ARTICLE a " +
+                    " where a.ID_SITE_SUPPORT_LANGUAGE=?)",
+
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTLET_ARTICLE " +
+                    "where ID_SITE_SUPPORT_LANGUAGE=? ",
+
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
             );
         } catch (SQLException e) {
             String es = "Error delete articles";
@@ -62,7 +88,7 @@ public class InternalCmsDaoImpl implements InternalCmsDao {
                 "delete from WM_NEWS_ITEM " +
                     "where ID_NEWS in " +
                     "(select b.ID_NEWS from WM_NEWS_LIST b, WM_PORTAL_SITE_LANGUAGE c " +
-                    "where c.ID_SITE=? and b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE ) ",
+                    " where c.ID_SITE=? and b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE ) ",
                 new Object[]{siteId}, new int[]{Types.DECIMAL}
             );
 
@@ -73,6 +99,41 @@ public class InternalCmsDaoImpl implements InternalCmsDao {
                     "(select ID_SITE_SUPPORT_LANGUAGE from WM_PORTAL_SITE_LANGUAGE where ID_SITE=?)",
 
                 new Object[]{siteId}, new int[]{Types.DECIMAL}
+            );
+        } catch (SQLException e) {
+            String es = "Error delete news";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        }
+    }
+
+    public void deleteNewsForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_NEWS_ITEM_TEXT " +
+                    "where ID in " +
+                    "(select a.ID from WM_NEWS_ITEM a, WM_NEWS_LIST b " +
+                    " where b.ID_SITE_SUPPORT_LANGUAGE=? and b.ID_NEWS=a.ID_NEWS )",
+
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_NEWS_ITEM " +
+                    "where ID_NEWS in " +
+                    "(select b.ID_NEWS from WM_NEWS_LIST b where b.ID_SITE_SUPPORT_LANGUAGE=? ) ",
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_NEWS_LIST " +
+                    "where ID_SITE_SUPPORT_LANGUAGE=? ",
+
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
             );
         } catch (SQLException e) {
             String es = "Error delete news";

@@ -50,7 +50,7 @@ public class SiteAction implements Serializable {
     }
 
     public String selectSite(ActionEvent event) {
-        SiteAction.log.info( "Select site action." );
+        log.debug( "Select site action." );
         loadCurrentSite();
 
         return "site";
@@ -58,7 +58,7 @@ public class SiteAction implements Serializable {
 
 // Add actions
     public String addSiteAction() {
-        log.info( "Add site action." );
+        log.debug( "Add site action." );
 
         if (log.isDebugEnabled()) {
             log.debug("site: " + siteSessionBean.getSiteExtended());
@@ -79,7 +79,7 @@ public class SiteAction implements Serializable {
     }
 
     public String processAddSiteAction() {
-        log.info( "Procss add site action." );
+        log.debug( "Procss add site action." );
 
         if (log.isDebugEnabled()) {
             log.debug("site: " + siteSessionBean.getSiteExtended());
@@ -107,7 +107,7 @@ public class SiteAction implements Serializable {
     }
 
     public String cancelAddSiteAction() {
-        log.info( "Cancel add site action." );
+        log.debug( "Cancel add site action." );
 
         siteSessionBean.setSiteExtended(null);
         dataProvider.clearSite();
@@ -117,13 +117,13 @@ public class SiteAction implements Serializable {
 
 // Edit actions
     public String editSiteAction() {
-        log.info( "Edit site action." );
+        log.debug( "Edit site action." );
 
         return "site-edit";
     }
 
     public String processEditSiteAction() {
-        log.info( "Save changes site action." );
+        log.debug( "Save changes site action." );
 
         if( siteSessionBean.getSiteExtended()!=null ) {
             FacesTools.getPortalDaoProvider().getPortalSiteDao().updateSiteWithVirtualHost(
@@ -137,14 +137,14 @@ public class SiteAction implements Serializable {
     }
 
     public String cancelEditSiteAction() {
-        log.info( "Cancel edit site action." );
+        log.debug( "Cancel edit site action." );
 
         return "site";
     }
 
 // Delete actions
     public String deleteSiteAction() {
-        log.info( "delete site action." );
+        log.debug( "delete site action." );
 
         siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
 
@@ -152,7 +152,7 @@ public class SiteAction implements Serializable {
     }
 
     public String cancelDeleteSiteAction() {
-        log.info( "Cancel delete holding action." );
+        log.debug( "Cancel delete holding action." );
 
         return "site";
     }
@@ -172,10 +172,12 @@ public class SiteAction implements Serializable {
 
 // virtual host actions
     public void deleteVirtualHostActionListener( ActionEvent event ) {
-        log.info( "Delete virtual host action." );
+        log.debug( "Delete virtual host action." );
 
         String host = siteSessionBean.getCurrentVirtualHost();
-        log.info( "delete virtual host: " + host );
+        if (log.isDebugEnabled()) {
+            log.debug( "delete virtual host: " + host );
+        }
 
         if (StringUtils.isBlank(host)) {
             return;
@@ -186,11 +188,14 @@ public class SiteAction implements Serializable {
     }
 
     public void addVirtualHostAction() {
-        log.info( "Add virtual host action." );
+        log.debug( "Add virtual host action." );
 
         String newHost = siteSessionBean.getNewVirtualHost();
 
-        log.info( "New virtual host: " + newHost );
+        if (log.isDebugEnabled()) {
+            log.debug( "New virtual host: " + newHost );
+        }
+
         if (StringUtils.isBlank(newHost)) {
             return;
         }

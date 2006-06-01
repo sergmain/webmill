@@ -27,36 +27,40 @@
     }
 </style>
 <f:view>
-	<h:form>
-	
-	<h:panelGrid columns="1">
-	 	 
-	 	<h:panelGrid columns="2">
-	 	
-             <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
-                 <jsp:include page="site-tree.jsp"/>
-             </f:subview>
+    <h:form>
 
-             <h:panelGroup id="operation-site-language-edit-panel">
-                 <h:commandButton id="site-language-edit-process-action" action="#{siteLanguagetAction.processEditSiteLanguageAction}"
-                                  value="#{msg['process_edit_site_language_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-                 <h:commandButton id="site-language-edit-cancel-action" action="#{siteLanguageAction.cancelEditSiteLanguageAction}"
-                                  value="#{msg['cancel_edit_site_language_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-             </h:panelGroup>
+        <f:subview id="site-top-actions-subview">
+            <jsp:include page="site-top-actions.jsp"/>
+        </f:subview>
 
-         </h:panelGrid>
-	 	
-	 	
-	 </h:panelGrid>
-	 
-	 
-	
-</h:form>
+        <h:panelGrid columns="2">
+
+            <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
+                <jsp:include page="site-tree.jsp"/>
+            </f:subview>
+
+            <h:panelGrid columns="1">
+
+                <f:subview id="subview-site-info">
+                    <jsp:include page="site-language-add-edit.jsp"/>
+                </f:subview>
+
+                <h:panelGroup id="operation-site-language-edit-panel">
+                    <h:commandButton id="site-language-edit-process-action" action="#{siteLanguageAction.processEditSiteLanguageAction}"
+                                     value="#{msg['process_edit_site_language_action']}"
+                                     styleClass="site-button-action"
+                        >
+                    </h:commandButton>
+                    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                    <h:commandButton id="site-language-edit-cancel-action" action="#{siteLanguageAction.cancelEditSiteLanguageAction}"
+                                     value="#{msg['cancel_edit_site_language_action']}"
+                                     styleClass="site-button-action"
+                        >
+                    </h:commandButton>
+                </h:panelGroup>
+
+            </h:panelGrid>
+        </h:panelGrid>
+
+    </h:form>
 </f:view>

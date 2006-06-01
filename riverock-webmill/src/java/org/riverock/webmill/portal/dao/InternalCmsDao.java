@@ -9,5 +9,7 @@ import org.riverock.generic.db.DatabaseAdapter;
  */
 public interface InternalCmsDao {
     public void deleteArticleForSite(DatabaseAdapter adapter, Long siteId);
+    public void deleteArticleForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
     public void deleteNewsForSite(DatabaseAdapter adapter, Long siteId);
+    public void deleteNewsForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
 }

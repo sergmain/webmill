@@ -201,7 +201,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
                     log.debug("hosts list: " + StringTools.arrayToString( hosts.toArray(new String[0]) ) );
                 }
             }
-            
+
             if (hosts!=null) {
                 List<VirtualHost> list = InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(site.getSiteId());
                 if (log.isDebugEnabled()) {
