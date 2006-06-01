@@ -2,6 +2,7 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.webmill.core.GetWmPortalSiteLanguageItem;
 import org.riverock.webmill.core.GetWmPortalSiteLanguageWithIdSiteList;
 import org.riverock.webmill.core.InsertWmPortalSiteLanguageItem;
+import org.riverock.webmill.core.UpdateWmPortalSiteLanguageItem;
 import org.riverock.webmill.portal.bean.SiteLanguageBean;
 import org.riverock.webmill.schema.core.WmPortalSiteLanguageItemType;
 import org.riverock.webmill.schema.core.WmPortalSiteLanguageListType;
@@ -157,6 +159,71 @@ public class InternalSiteLanguageDaoImpl implements InternalSiteLanguageDao {
         } finally {
             DatabaseManager.close(adapter);
             adapter = null;
+        }
+    }
+
+    public void updateSiteLanguage(SiteLanguage siteLanguage) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            WmPortalSiteLanguageItemType item = new WmPortalSiteLanguageItemType();
+            item.setIdSiteSupportLanguage(siteLanguage.getSiteLanguageId());
+            item.setIdSite(siteLanguage.getSiteId());
+            item.setCustomLanguage(siteLanguage.getCustomLanguage());
+            item.setNameCustomLanguage(siteLanguage.getNameCustomLanguage());
+
+            UpdateWmPortalSiteLanguageItem.process(adapter, item);
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error update site language";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public void deleteSiteLanguage(Long siteLanguageId) {
+        DatabaseAdapter dbDyn = null;
+        try {
+            dbDyn = DatabaseAdapter.getInstance();
+
+            InternalDaoFactory.getInternalCmsDao().deleteArticleForSiteLanguage(dbDyn, siteLanguageId);
+            InternalDaoFactory.getInternalCmsDao().deleteNewsForSiteLanguage(dbDyn, siteLanguageId);
+            InternalDaoFactory.getInternalTemplateDao().deleteTemplateForSiteLanguage(dbDyn, siteLanguageId);
+            InternalDaoFactory.getInternalXsltDao().deleteXsltForSiteLanguage(dbDyn, siteLanguageId);
+            DatabaseManager.runSQL(
+                dbDyn,
+                "delete from WM_PORTAL_SITE_LANGUAGE where ID_SITE_SUPPORT_LANGUAGE=?",
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+
+            dbDyn.commit();
+        }
+        catch( Exception e ) {
+            try {
+                if( dbDyn != null )
+                    dbDyn.rollback();
+            }
+            catch( Exception e001 ) {
+                //catch rollback error
+            }
+            String es = "Error delete site language";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( dbDyn);
+            dbDyn = null;
         }
     }
 }

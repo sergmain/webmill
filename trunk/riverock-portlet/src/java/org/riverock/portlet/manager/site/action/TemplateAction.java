@@ -2,6 +2,8 @@ package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 
+import javax.faces.event.ActionEvent;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.manager.site.SiteSessionBean;
@@ -44,7 +46,7 @@ public class TemplateAction implements Serializable {
     }
 
 // main select action
-    public String selectTemplate() {
+    public String selectTemplate(ActionEvent event) {
         TemplateAction.log.info( "Select template action." );
         loadCurrentTemplate();
 

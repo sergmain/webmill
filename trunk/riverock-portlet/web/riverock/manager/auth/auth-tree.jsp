@@ -12,27 +12,27 @@
     <t:tree2 id="serverTree" value="#{userTree.userTree}" var="node" varNodeToggler="t" clientSideToggle="false"
              showRootNode="false" binding="#{userTree.tree}">
         <f:facet name="company">
-            <h:panelGroup>
-                <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
-                <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
+            <h:panelGroup id="auth-tree-company-group">
+                <t:graphicImage id="auth-tree-company-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="auth-tree-company-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="auth-tree-company-name" value="#{node.description}" styleClass="nodeFolder"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="foo-folder">
-            <h:panelGroup>
-                <t:graphicImage value="/images/yellow-folder-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage value="/images/yellow-folder-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
-                <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
-                <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+            <h:panelGroup id="auth-tree-foo-folder-group">
+                <t:graphicImage id="auth-tree-foo-folder-image-open" value="/images/yellow-folder-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="auth-tree-foo-folder-image-close" value="/images/yellow-folder-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="auth-tree-foo-folder-name" value="#{node.description}" styleClass="nodeFolder"/>
+                <h:outputText id="auth-tree-foo-folder-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
             </h:panelGroup>
         </f:facet>
         <f:facet name="user">
-            <h:panelGroup>
+            <h:panelGroup id="auth-tree-company-user">
                 <h:commandLink id="select-user-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
                                actionListener="#{authUserAction.selectUserAction}">
 
-                    <t:graphicImage value="/images/user.png" border="0"/>
-                    <h:outputText value="#{node.description}"/>
+                    <t:graphicImage id="auth-tree-user-image" value="/images/user.png" border="0"/>
+                    <h:outputText id="auth-tree-company-name" value="#{node.description}"/>
 
                     <t:updateActionListener property="#{userSessionBean.currentAuthUserId}" value="#{node.identifier}"/>
                 </h:commandLink>

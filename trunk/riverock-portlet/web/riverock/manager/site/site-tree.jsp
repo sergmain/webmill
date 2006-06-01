@@ -8,17 +8,15 @@
 
 <h:panelGroup id="site-tree-group">
 
-    <t:saveState id="ss-site-tree" value="#{siteTree.siteTree}" />
-
     <t:tree2 id="serverTree" value="#{siteTree.siteTree}" var="node"
    			varNodeToggler="t" clientSideToggle="false"
             showRootNode="true" binding="#{siteTree.tree}">
         <f:facet name="site-list">
-            <h:panelGroup>
-                <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
-                <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
-                <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+            <h:panelGroup id="site-tree-site-list-group">
+                <t:graphicImage id="site-tree-sile-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="site-tree-sile-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="site-tree-site-list-name" value="#{node.description}" styleClass="nodeFolder"/>
+                <h:outputText id="site-tree-site-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-action-id" action="#{siteAction.addSiteAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}">
 
@@ -27,19 +25,20 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-language-list">
-            <h:panelGroup>
-                <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
-                <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
-                <h:outputText value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
+            <h:panelGroup id="site-tree-site-language-list-group">
+                <t:graphicImage id="site-tree-sile-language-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="site-tree-sile-language-list-image-open" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <h:outputText id="site-tree-site-language-list-name" value="#{node.description}" styleClass="nodeFolder"/>
+                <h:outputText id="site-tree-site-language-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-language-action-id" action="#{siteLanguageAction.addSiteLanguageAction}"
                     image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}">
+
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
                 </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="template-list">
-            <h:panelGroup>
+            <h:panelGroup id="site-tree-template-group">
                 <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
@@ -51,7 +50,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="xslt-list">
-            <h:panelGroup>
+            <h:panelGroup id="site-tree-xslt-group">
                 <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
@@ -63,7 +62,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="css-list">
-            <h:panelGroup>
+            <h:panelGroup id="site-tree-css-group">
                 <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                 <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText value="#{node.description}" styleClass="nodeFolder"/>
@@ -75,15 +74,15 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="site">
-            <h:panelGroup>
+            <h:panelGroup id="site-tree-site-group">
                 <h:commandLink id="select-site-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                    actionListener="#{siteAction.selectSite}"
+                               actionListener="#{siteAction.selectSite}"
                     >
 
-                    <t:graphicImage value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                    <t:graphicImage value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                    <t:graphicImage id="site-tree-sile-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                    <t:graphicImage id="site-tree-sile-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
 
-                    <h:outputText value="#{node.description}"/>
+                    <h:outputText id="site-tree-site-name" value="#{node.description}"/>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteType}"/>
@@ -91,11 +90,13 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-language">
-            <h:panelGroup>
-                <h:commandLink id="select-site-language-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
+            <h:panelGroup id="site-tree-site-language-group">
+                <h:commandLink id="select-site-language-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
+                               actionListener="#{siteLanguageAction.selectSiteLanguage}"
+                    >
 
-                    <t:graphicImage value="/images/user.png" border="0"/>
-                    <h:outputText value="#{node.description}"/>
+                    <t:graphicImage id="site-tree-sile-language-image" value="/images/user.png" border="0"/>
+                    <h:outputText id="site-tree-site-language-name" value="#{node.description}"/>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
@@ -103,8 +104,10 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="template">
-            <h:panelGroup>
-                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}" action="site">
+            <h:panelGroup id="site-tree-template-group">
+                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}" action="site"
+                               actionListener="#{templateAction.selectTemplate}"
+                    >
 
                     <t:graphicImage value="/images/user.png" border="0"/>
                     <h:outputText value="#{node.description}"/>
@@ -115,8 +118,10 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="css">
-            <h:panelGroup>
-                <h:commandLink id="select-css-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
+            <h:panelGroup id="site-tree-css-group">
+                <h:commandLink id="select-css-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
+                               actionListener="#{cssAction.selectCss}"
+                    >
 
                     <t:graphicImage value="/images/user.png" border="0"/>
                     <h:outputText value="#{node.description}"/>
@@ -127,8 +132,10 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="xslt">
-            <h:panelGroup>
-                <h:commandLink id="select-xslt-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}">
+            <h:panelGroup id="site-tree-xslt-group">
+                <h:commandLink id="select-xslt-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
+                               actionListener="#{xsltAction.selectXslt}"
+                    >
 
                     <t:graphicImage value="/images/user.png" border="0"/>
                     <h:outputText value="#{node.description}"/>

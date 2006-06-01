@@ -2,11 +2,17 @@ package org.riverock.portlet.manager.site.action;
 
 import java.io.Serializable;
 
+import javax.faces.event.ActionEvent;
+
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.manager.site.SiteSessionBean;
-import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.manager.site.DataProvider;
+import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
+import org.riverock.portlet.tools.FacesTools;
+import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.interfaces.portal.PortalInfo;
 
 /**
  * @author Sergei Maslyukov
@@ -44,117 +50,117 @@ public class SiteLanguageAction implements Serializable {
     }
 
 // main select action
-    public String selectSiteLanguage() {
-        SiteLanguageAction.log.info( "Select site language action." );
-        loadCurrentSiteLanguage();
+    public String selectSiteLanguage(ActionEvent event) {
+        log.debug( "Select site language action." );
+        loadCurrentObject();
 
-//        siteSessionBean.resetStatus();
         return "site";
     }
 
 // Add actions
     public String addSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Add site language action." );
-/*
-        HoldingBean bean = new HoldingBean();
-        holdingSessionBean.setHoldingBean( bean );
+        log.debug( "Add site language action." );
 
-        holdingSessionBean.setAdd( true );
-*/
+        SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
+        PortalInfo p = (PortalInfo) FacesTools.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
+        siteLanguageBean.setSiteId( p.getSiteId() );
+        setSessionObject(siteLanguageBean);
+
         return "site-language-add";
     }
 
     public String processAddSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Procss add site language action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
-
-            holdingDataProvider.reinitHoldingBeans();
+        log.debug( "Procss add site language action." );
+        if( getSessionObject() !=null ) {
+            Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().createSiteLanguage(
+                getSessionObject()
+            );
+            setSessionObject(null);
+            siteSessionBean.setId(siteLanguageId);
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelAddSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Cancel add site language action." );
-/*
-        holdingSessionBean.setHoldingBean( null );
+        log.debug( "Cancel add site language action." );
 
-        holdingSessionBean.resetStatus();
-*/
+        setSessionObject(null);
+        cleadDataProviderObject();
+
         return "site";
     }
 
 // Edit actions
     public String editSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Edit holding action." );
-/*
-        holdingSessionBean.setEdit( true );
-*/
+        log.debug( "Edit site language action." );
+
         return "site-language-edit";
     }
 
     public String processEditSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Save changes site language action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+        log.debug( "Save changes site language action." );
+
+        if( getSessionObject() !=null ) {
+            FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().updateSiteLanguage(
+                getSessionObject()
+            );
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelEditSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Cancel edit site language action." );
+        log.debug( "Cancel edit site language action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
 // Delete actions
     public String deleteSiteLanguageAction() {
-        SiteLanguageAction.log.info( "delete site language action." );
+        log.debug( "delete site language action." );
 
-//	holdingSessionBean.setDelete( true );
-    return "site-language-delete";
+        setSessionObject( new SiteLanguageBean(dataProvider.getSiteLanguage()) );
+
+        return "site-language-delete";
     }
 
     public String cancelDeleteSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Cancel delete holding action." );
+        log.debug( "Cancel delete holding action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
     public String processDeleteSiteLanguageAction() {
-        SiteLanguageAction.log.info( "Process delete site language action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+        log.debug( "Process delete site language action." );
+        if( getSessionObject() != null ) {
+            FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().deleteSiteLanguage(getSessionObject().getSiteLanguageId());
+            setSessionObject(null);
+            siteSessionBean.setId(null);
+            siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);
+            cleadDataProviderObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
-    private void loadCurrentSiteLanguage() {
+    private void setSessionObject(SiteLanguageBean bean) {
+        siteSessionBean.setSiteLanguage( bean );
+    }
+
+    private void loadCurrentObject() {
+        siteSessionBean.setSiteLanguage( new SiteLanguageBean(dataProvider.getSiteLanguage()) );
+    }
+
+    private void cleadDataProviderObject() {
+        dataProvider.clearSiteLanguage();
+    }
+
+    private SiteLanguageBean getSessionObject() {
+        return siteSessionBean.getSiteLanguage();
     }
 }

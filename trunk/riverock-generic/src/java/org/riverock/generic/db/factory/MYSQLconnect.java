@@ -441,7 +441,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
     }
 
     public ArrayList getViewList(String schemaPattern, String tablePattern) throws Exception {
-        // version 3.õ and 4.0 of MySQL not support view
+        // version 3.x and 4.0 of MySQL not support view
         return new ArrayList(0);
     }
 

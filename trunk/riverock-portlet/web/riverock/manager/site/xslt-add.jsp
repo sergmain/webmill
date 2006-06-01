@@ -27,36 +27,40 @@
     }
 </style>
 <f:view>
-	<h:form>
-	
-	<h:panelGrid columns="1">
-	 	 
-	 	<h:panelGrid columns="2">
-	 	
-             <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
-                 <jsp:include page="site-tree.jsp"/>
-             </f:subview>
+    <h:form>
 
-             <h:panelGroup id="operation-xslt-add-panel">
-                 <h:commandButton id="xslt-add-process-action" action="#{xsltAction.processAddXsltAction}"
-                                  value="#{msg['process_add_xslt_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-                 <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-                 <h:commandButton id="xslt-add-cancel-action" action="#{xsltAction.cancelAddXsltAction}"
-                                  value="#{msg['cancel_add_xslt_action']}"
-                                  styleClass="site-button-action"
-                     >
-                 </h:commandButton>
-             </h:panelGroup>
+        <f:subview id="site-top-actions-subview">
+            <jsp:include page="site-top-actions.jsp"/>
+        </f:subview>
 
-         </h:panelGrid>
-	 	
-	 	
-	 </h:panelGrid>
-	 
-	 
-	
-</h:form>
+        <h:panelGrid columns="2">
+
+            <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
+                <jsp:include page="site-tree.jsp"/>
+            </f:subview>
+
+            <h:panelGrid columns="1">
+
+                <f:subview id="subview-site-info">
+                    <jsp:include page="xslt-add-edit.jsp"/>
+                </f:subview>
+
+                <h:panelGroup id="operation-xslt-add-panel">
+                    <h:commandButton id="xslt-add-process-action" action="#{xsltAction.processAddXsltAction}"
+                                     value="#{msg['process_add_xslt_action']}"
+                                     styleClass="site-button-action"
+                        >
+                    </h:commandButton>
+                    <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
+                    <h:commandButton id="xslt-add-cancel-action" action="#{xsltAction.cancelAddXsltAction}"
+                                     value="#{msg['cancel_add_xslt_action']}"
+                                     styleClass="site-button-action"
+                        >
+                    </h:commandButton>
+                </h:panelGroup>
+            </h:panelGrid>
+
+        </h:panelGrid>
+
+    </h:form>
 </f:view>
