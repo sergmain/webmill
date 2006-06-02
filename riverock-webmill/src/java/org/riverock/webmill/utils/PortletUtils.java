@@ -34,6 +34,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -132,7 +133,7 @@ public final class PortletUtils {
 
             String value[] = request.getParameterValues( key );
             if (value!=null) {
-                p.put(key, Arrays.asList(value));
+                p.put(key, new ArrayList<String>(Arrays.asList(value)));
             }
         }
         return p;

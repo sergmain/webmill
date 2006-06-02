@@ -339,6 +339,7 @@ public final class RequestContextUtils {
                 if ( log.isDebugEnabled() ) {
                     log.debug( "nameId: "+nameId );
                     log.debug( "Id: "+bean.getConcretePortletIdValue() );
+                    log.debug( "httpRequestParameter: "+httpRequestParameter );
                 }
                 if (nameId!=null) {
                     MapWithParameters.putInStringList(httpRequestParameter, nameId, bean.getConcretePortletIdValue().toString() );
