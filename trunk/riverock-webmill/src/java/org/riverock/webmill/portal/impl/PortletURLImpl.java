@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletMode;
@@ -63,7 +64,7 @@ public final class PortletURLImpl implements PortletURL {
     protected PortletMode mode = null;
     private WindowState state = null;
 
-    private Map<String, Object> parameters = new HashMap<String, Object>();
+    private Map<String, List<String>> parameters = new HashMap<String, List<String>>();
 
     private boolean secure;
     private PortalRequestInstance portalRequestInstance = null;
@@ -120,15 +121,14 @@ public final class PortletURLImpl implements PortletURL {
         if ( name == null || value == null ) {
             throw new IllegalArgumentException( "name and value must not be null" );
         }
-        MapWithParameters.put( parameters, name, value );
+        MapWithParameters.putInStringList( parameters, name, value );
     }
 
     public void setParameter( String name, String[] values ) {
         if ( name == null || values == null || values.length == 0 ) {
             throw new IllegalArgumentException( "name and values must not be null or values be an empty array" );
         }
-        List list = Arrays.asList( values );
-        parameters.put( name, list );
+        MapWithParameters.putInStringList(parameters, name, values);
     }
 
     /* (non-Javadoc)
@@ -139,9 +139,9 @@ public final class PortletURLImpl implements PortletURL {
             throw new IllegalArgumentException( "Parameters must not be null." );
         }
 
-        Map<String, Object> temp = new HashMap<String, Object>( 2*map.size() );
+        Map<String, List<String>> temp = new HashMap<String, List<String>>( 2*map.size() );
         for (Object o : map.entrySet()) {
-            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) o;
+            Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) o;
 
             Object obj = entry.getValue();
             if (obj == null) {
@@ -153,12 +153,17 @@ public final class PortletURLImpl implements PortletURL {
             if (!(obj instanceof String) && !(obj instanceof String[]) && !(obj instanceof List)) {
                 throw new IllegalArgumentException("Value must be type java.lang.String, java.lang.String[] or java.util.List. Type is " + obj.getClass().getName());
             }
-            if (obj instanceof List)
-                temp.put(entry.getKey(), obj);
-            else if (obj instanceof String)
-                temp.put(entry.getKey(), obj);
-            else
-                temp.put(entry.getKey(), Arrays.asList((String[]) obj));
+            if (obj instanceof List) {
+                temp.put(entry.getKey(), new ArrayList<String>((List<String>)obj));
+            }
+            else if (obj instanceof String) {
+                List<String> list = new ArrayList<String>();
+                list.add((String)obj);
+                temp.put(entry.getKey(), list);
+            }
+            else {
+                temp.put(entry.getKey(), new ArrayList<String>(Arrays.asList((String[]) obj)));
+            }
         }
 
         this.parameters.putAll( temp );
@@ -253,11 +258,19 @@ public final class PortletURLImpl implements PortletURL {
 
     // additional methods -------------------------------------------------------------------------
     public String getParameter( String name ) {
-        return (String)parameters.get( name );
+        List<String> list = parameters.get( name );
+        if (list==null || list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
     }
 
     public String[] getParameters( String name ) {
-        return (String[])parameters.get( name );
+        List<String> list = parameters.get( name );
+        if (list==null || list.isEmpty()) {
+            return new String[]{};
+        }
+        return list.toArray(new String[0]);
     }
 
     public PortletMode getPortletMode() {
