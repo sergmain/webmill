@@ -10,7 +10,11 @@
 
     <t:tree2 id="serverTree" value="#{siteTree.siteTree}" var="node"
    			varNodeToggler="t" clientSideToggle="false"
-            showRootNode="true" binding="#{siteTree.tree}">
+            showRootNode="false" binding="#{siteTree.tree}">
+        <f:facet name="tree-root">
+            <h:panelGroup id="site-tree-tree-root-group">
+            </h:panelGroup>
+        </f:facet>
         <f:facet name="site-list">
             <h:panelGroup id="site-tree-site-list-group">
                 <t:graphicImage id="site-tree-sile-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
