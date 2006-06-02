@@ -28,7 +28,7 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
 
     public boolean createSession(String userLogin, String userPassword) {
 
-	ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
 
@@ -41,7 +41,7 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
             AuthSession auth_ = (AuthSession)actionRequest.getUserPrincipal();
 
             // don't check if login or password is null.
-            if ( StringUtils.isEmpty(userLogin) || StringUtils.isEmpty(userLogin) ) {
+            if ( StringUtils.isBlank(userLogin) || StringUtils.isBlank(userLogin) ) {
                 return false;
             }
 
