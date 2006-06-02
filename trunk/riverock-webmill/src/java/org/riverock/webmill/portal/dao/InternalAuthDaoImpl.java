@@ -756,8 +756,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         try {
 
             Long idSite = SiteList.getIdSite( serverName );
-            if ( log.isDebugEnabled() )
+            if ( log.isDebugEnabled() ) {
                 log.debug( "serverName " + serverName + ", idSite " + idSite );
+            }
 
             ps = adapter.prepareStatement( sql_ );
 
@@ -781,8 +782,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             rs = null;
             ps = null;
         }
-        if ( log.isDebugEnabled() )
+        if ( log.isDebugEnabled() ) {
             log.debug( "isValid " + isValid );
+        }
 
         return isValid;
     }
@@ -800,8 +802,9 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         try {
 
             Long idSite = SiteList.getIdSite( serverName );
-            if ( log.isDebugEnabled() )
+            if ( log.isDebugEnabled() ) {
                 log.debug( "serverName " + serverName + ", idSite " + idSite );
+            }
 
             ps = adapter.prepareStatement( sql_ );
 

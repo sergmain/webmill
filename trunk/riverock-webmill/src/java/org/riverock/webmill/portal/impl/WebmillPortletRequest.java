@@ -289,7 +289,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             return false;
         }
 
-        if (role.equals(PortalConstants.WEBMILL_AUTHENTIC_ROLE)) {
+        if (auth!=null && role.equals(PortalConstants.WEBMILL_AUTHENTIC_ROLE)) {
             return true;
         }
 
