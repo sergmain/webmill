@@ -64,6 +64,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultObject;
  *
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class ArticlePlain implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger( ArticlePlain.class );
 
