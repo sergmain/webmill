@@ -36,7 +36,7 @@
 
             <h:panelGrid columns="2">
 
-                <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
+                <f:subview id="site-tree-subview">
                     <jsp:include page="site-tree.jsp"/>
                 </f:subview>
 

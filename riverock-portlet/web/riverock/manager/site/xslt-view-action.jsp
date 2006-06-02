@@ -21,6 +21,7 @@
     <h:commandButton id="delete-xslt-action" action="xslt-delete"
                      value="#{msg['delete_xslt_action']}"
                      styleClass="site-button-action"
+                     rendered="#{!siteDataProvider.xslt.current}"
         >
     </h:commandButton>
 </h:panelGroup>

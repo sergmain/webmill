@@ -21,6 +21,7 @@
     <h:commandButton id="delete-css-action" action="css-delete"
                      value="#{msg['delete_css_action']}"
                      styleClass="site-button-action"
+                     rendered="#{!siteDataProvider.css.current}"
         >
     </h:commandButton>
 </h:panelGroup>

@@ -208,17 +208,6 @@ public class InternalCssDaoImpl implements InternalCssDao {
         }
     }
 
-    private void clearCurrentFlag(Css css, DatabaseAdapter adapter) throws SQLException {
-        if (css.isCurrent()) {
-            DatabaseManager.runSQL(
-                adapter,
-                "update WM_PORTAL_CSS set IS_CURRENT=0 where ID_SITE=?",
-                new Object[] {css.getSiteId()},
-                new int[]{Types.NUMERIC}
-            );
-        }
-    }
-
     public List<Css> getCssList(Long siteId) {
         DatabaseAdapter adapter = null;
         try {
@@ -386,4 +375,14 @@ public class InternalCssDaoImpl implements InternalCssDao {
         return sb;
     }
 
+    private void clearCurrentFlag(Css css, DatabaseAdapter adapter) throws SQLException {
+        if (css.isCurrent()) {
+            DatabaseManager.runSQL(
+                adapter,
+                "update WM_PORTAL_CSS set IS_CURRENT=0 where ID_SITE=?",
+                new Object[] {css.getSiteId()},
+                new int[]{Types.NUMERIC}
+            );
+        }
+    }
 }

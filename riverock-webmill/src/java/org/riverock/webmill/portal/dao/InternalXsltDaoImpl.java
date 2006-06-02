@@ -2,12 +2,12 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Types;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -23,8 +23,9 @@ import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
 import org.riverock.webmill.core.GetWmPortalXsltDataWithIdSiteXsltList;
 import org.riverock.webmill.core.GetWmPortalXsltItem;
-import org.riverock.webmill.core.InsertWmPortalXsltItem;
 import org.riverock.webmill.core.GetWmPortalXsltWithIdSiteSupportLanguageList;
+import org.riverock.webmill.core.InsertWmPortalXsltItem;
+import org.riverock.webmill.core.UpdateWmPortalXsltItem;
 import org.riverock.webmill.exception.PortalPersistenceException;
 import org.riverock.webmill.port.PortalXslt;
 import org.riverock.webmill.portal.bean.PortalXsltBean;
@@ -316,6 +317,94 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         }
     }
 
+    public void updateXslt(Xslt xslt) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            clearCurrentFlag(xslt, adapter);
+
+            WmPortalXsltItemType item = new WmPortalXsltItemType();
+            item.setIdSiteSupportLanguage(xslt.getSiteLanguageId());
+            item.setIdSiteXslt(xslt.getId());
+            item.setIsCurrent(xslt.isCurrent());
+            item.setTextComment(xslt.getName());
+            item.setXslt(xslt.getXsltData());
+
+            UpdateWmPortalXsltItem.process(adapter, item);
+            DatabaseManager.insertBigText(
+                adapter,
+                xslt.getId(),
+                "ID_SITE_XSLT",
+                PrimaryKeyTypeTypeType.NUMBER,
+                "WM_PORTAL_XSLT_DATA",
+                "ID_SITE_XSLT_DATA",
+                "XSLT",
+                xslt.getXsltData(),
+                true
+            );
+
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error update xslt";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+
+    }
+
+    public void deleteXslt(Long xsltId) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            WmPortalXsltItemType currentXslt = GetWmPortalXsltItem.getInstance(adapter, xsltId).item;
+            if (currentXslt!=null && currentXslt.getIsCurrent()) {
+                // dont delete Xslt, if this Xslt is 'current'
+                return;
+            }
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTAL_XSLT_DATA " +
+                    "where ID_SITE_XSLT=?",
+
+                new Object[]{xsltId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTAL_XSLT where ID_SITE_XSLT=?",
+                new Object[]{xsltId}, new int[]{Types.DECIMAL}
+            );
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error delete css";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
     public Map<String, Xslt> getCurrentXsltForSiteAsMap(Long siteId) {
         DatabaseAdapter adapter = null;
         try {
@@ -447,5 +536,14 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         return sb;
     }
 
-
+    private void clearCurrentFlag(Xslt xslt, DatabaseAdapter adapter) throws SQLException {
+        if (xslt.isCurrent()) {
+            DatabaseManager.runSQL(
+                adapter,
+                "update WM_PORTAL_XSLT set IS_CURRENT=0 where ID_SITE_SUPPORT_LANGUAGE=?",
+                new Object[] {xslt.getSiteLanguageId()},
+                new int[]{Types.NUMERIC}
+            );
+        }
+    }
 }

@@ -19,7 +19,10 @@ public interface PortalXsltDao {
 
     public Xslt getXslt(Long xsltId);
     public Xslt getXslt(String xsltName, Long siteLanguageId);
-    public Long createXslt(Xslt xslt);
     public List<Xslt> getXsltList(Long siteLanguageId);
+
+    public Long createXslt(Xslt xslt);
+    public void updateXslt(Xslt xslt);
+    public void deleteXslt(Long xsltId);
 }
 
