@@ -27,7 +27,7 @@
     }
 </style>
 <f:view>
-    <h:form>
+    <h:form rendered="#{!siteDataProvider.xslt.current}">
 
         <f:subview id="site-top-actions-subview">
             <jsp:include page="site-top-actions.jsp"/>
@@ -35,7 +35,7 @@
 
         <h:panelGrid columns="2">
 
-            <f:subview id="site-tree-subview" rendered="#{!siteSessionBean.edit}">
+            <f:subview id="site-tree-subview">
                 <jsp:include page="site-tree.jsp"/>
             </f:subview>
 
@@ -64,4 +64,5 @@
         </h:panelGrid>
 
     </h:form>
+    <h:outputText value="#{msg.can_not_delete_current_xslt}" rendered="#{siteDataProvider.xslt.current}"/>
 </f:view>

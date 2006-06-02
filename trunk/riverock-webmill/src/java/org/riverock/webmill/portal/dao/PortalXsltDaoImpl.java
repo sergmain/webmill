@@ -46,6 +46,14 @@ public class PortalXsltDaoImpl implements PortalXsltDao {
         return InternalDaoFactory.getInternalXsltDao().createXslt(xslt);
     }
 
+    public void updateXslt(Xslt xslt) {
+        InternalDaoFactory.getInternalXsltDao().updateXslt(xslt);
+    }
+
+    public void deleteXslt(Long xsltId) {
+        InternalDaoFactory.getInternalXsltDao().deleteXslt(xsltId);
+    }
+
     public List<Xslt> getXsltList(Long siteLanguageId) {
         return InternalDaoFactory.getInternalXsltDao().getXsltList(siteLanguageId);
     }

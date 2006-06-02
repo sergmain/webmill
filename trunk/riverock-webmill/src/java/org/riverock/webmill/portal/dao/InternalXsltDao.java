@@ -29,4 +29,8 @@ public interface InternalXsltDao {
 
     public void deleteXsltForSite(DatabaseAdapter adapter, Long siteId);
     public void deleteXsltForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
+
+    public void updateXslt(Xslt xslt);
+
+    public void deleteXslt(Long xsltId);
 }

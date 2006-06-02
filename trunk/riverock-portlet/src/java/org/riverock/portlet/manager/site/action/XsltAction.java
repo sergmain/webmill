@@ -6,9 +6,11 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.manager.site.SiteSessionBean;
-import org.riverock.portlet.manager.site.DataProvider;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.manager.site.DataProvider;
+import org.riverock.portlet.manager.site.SiteSessionBean;
+import org.riverock.portlet.manager.site.bean.XsltBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -48,127 +50,114 @@ public class XsltAction implements Serializable {
 // main select action
     public String selectXslt(ActionEvent event) {
         XsltAction.log.info( "Select xslt action." );
-        loadCurrentXslt();
+        loadCurrentObject();
 
-//        siteSessionBean.resetStatus();
         return "site";
-    }
-
-    public void selectSiteAction(){
-        XsltAction.log.info( "select site action." );
-    }
-
-    public void selectSiteLanguageAction(){
-        XsltAction.log.info( "select site language action." );
-    }
-
-    public void selectTemplateAction(){
-        XsltAction.log.info( "select template action." );
     }
 
 // Add actions
     public String addXsltAction() {
         XsltAction.log.info( "Add xslt action." );
-/*
-        HoldingBean bean = new HoldingBean();
-        holdingSessionBean.setHoldingBean( bean );
 
-        holdingSessionBean.setAdd( true );
-*/
-        return "css-add";
+        XsltBean xsltBean = new XsltBean();
+        xsltBean.setSiteLanguageId(siteSessionBean.getId());
+        setSessionObject(xsltBean);
+
+        return "xslt-add";
     }
 
     public String processAddXsltAction() {
         XsltAction.log.info( "Procss add xslt action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
 
-            holdingDataProvider.reinitHoldingBeans();
+        if( getSessionObject() !=null ) {
+            Long xsltId = FacesTools.getPortalDaoProvider().getPortalXsltDao().createXslt(
+                getSessionObject()
+            );
+            setSessionObject(null);
+            siteSessionBean.setId(xsltId);
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelAddXsltAction() {
         XsltAction.log.info( "Cancel add xslt action." );
-/*
-        holdingSessionBean.setHoldingBean( null );
 
-        holdingSessionBean.resetStatus();
-*/
+        setSessionObject(null);
+        cleadDataProviderObject();
+
         return "site";
     }
 
 // Edit actions
     public String editXsltAction() {
         XsltAction.log.info( "Edit holding action." );
-/*
-        holdingSessionBean.setEdit( true );
-*/
-        return "css-edit";
+
+        return "xslt-edit";
     }
 
     public String processEditXsltAction() {
         XsltAction.log.info( "Save changes xslt action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processSaveHolding(
-			holdingSessionBean.getHoldingBean()
-		);
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+
+        if( getSessionObject() !=null ) {
+            FacesTools.getPortalDaoProvider().getPortalXsltDao().updateXslt(getSessionObject());
+            cleadDataProviderObject();
+            loadCurrentObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
     public String cancelEditXsltAction() {
         XsltAction.log.info( "Cancel edit xslt action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
 // Delete actions
     public String deleteXsltAction() {
         XsltAction.log.info( "delete xslt action." );
 
-//	holdingSessionBean.setDelete( true );
-    return "css-delete";
+        setSessionObject( new XsltBean(dataProvider.getXslt()) );
+
+        return "xslt-delete";
     }
 
     public String cancelDeleteXsltAction() {
         XsltAction.log.info( "Cancel delete holding action." );
 
-//	holdingSessionBean.resetStatus();
-    return "site";
+        return "site";
     }
 
     public String processDeleteXsltAction() {
         XsltAction.log.info( "Process delete xslt action." );
-/*
-        if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processDeleteHolding(
-			holdingSessionBean.getHoldingBean()
-		);
 
-            holdingSessionBean.setHoldingBean( null );
-            holdingDataProvider.reinitHoldingBeans();
+        if( getSessionObject() != null ) {
+            FacesTools.getPortalDaoProvider().getPortalXsltDao().deleteXslt(getSessionObject().getId());
+            setSessionObject(null);
+            siteSessionBean.setId(null);
+            siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);
+            cleadDataProviderObject();
         }
 
-	holdingSessionBean.resetStatus();
-*/
-    return "site";
+        return "site";
     }
 
-    private void loadCurrentXslt() {
+    private void setSessionObject(XsltBean bean) {
+        siteSessionBean.setXslt( bean );
+    }
+
+    private void loadCurrentObject() {
+        siteSessionBean.setXslt( new XsltBean(dataProvider.getXslt()) );
+    }
+
+    private void cleadDataProviderObject() {
+        dataProvider.clearXslt();
+    }
+
+    private XsltBean getSessionObject() {
+        return siteSessionBean.getXslt();
     }
 }
