@@ -38,32 +38,30 @@ import org.riverock.common.tools.MainTools;
  * User: serg_main
  * Date: 06.02.2004
  * Time: 17:07:00
+ *
  * @author Serge Maslyukov
- * $Id$
+ *         $Id$
  */
 public class CurrencyManager {
-    private static Logger log = Logger.getLogger( CurrencyManager.class );
+    private static Logger log = Logger.getLogger(CurrencyManager.class);
 
-    static
-    {
-        Class p = CurrencyManager.class;
-        SqlStatement.registerRelateClass( p, CurrencyList.class );
+    static {
+        SqlStatement.registerRelateClass(CurrencyManager.class, CurrencyList.class);
     }
 
     private CustomCurrencyType currencyList = null;
 
-    public CustomCurrencyType getCurrencyList()
-    {
+    public CustomCurrencyType getCurrencyList() {
         return currencyList;
     }
 
-    public CurrencyManager(){}
+    public CurrencyManager() {
+    }
 
-    private static Object syncDebug = new Object();
-    public static CurrencyManager getInstance(Long idSite)
-        throws PriceException
-    {
-        CurrencyManager currency  = new CurrencyManager();
+    private final static Object syncDebug = new Object();
+
+    public static CurrencyManager getInstance(Long idSite) throws PriceException {
+        CurrencyManager currency = new CurrencyManager();
         currency.currencyList = CurrencyList.getInstance(idSite).list;
 
         long mills = 0; // System.currentTimeMillis();
@@ -71,35 +69,28 @@ public class CurrencyManager {
         if (log.isInfoEnabled())
             mills = System.currentTimeMillis();
 
-        if (log.isDebugEnabled())
-        {
-            synchronized(syncDebug)
-            {
-                try
-                {
-                    byte[] originByte = XmlTools.getXml( currency.currencyList, null );
-                    MainTools.writeToFile(SiteUtils.getTempDir()+File.separatorChar+"debug-custom-currency-type.xml", originByte);
+        if (log.isDebugEnabled()) {
+            synchronized (syncDebug) {
+                try {
+                    byte[] originByte = XmlTools.getXml(currency.currencyList, null);
+                    MainTools.writeToFile(SiteUtils.getTempDir() + File.separatorChar + "debug-custom-currency-type.xml", originByte);
                 }
-                catch(Exception e)
-                {
-                    log.error("error write debug information",e);
+                catch (Throwable e) {
+                    log.error("error write debug information", e);
                 }
             }
         }
 
-        if (log.isInfoEnabled())
-        {
-            log.info("init currency list for "+(System.currentTimeMillis()-mills)+" milliseconds");
+        if (log.isInfoEnabled()) {
+            log.info("init currency list for " + (System.currentTimeMillis() - mills) + " milliseconds");
         }
         return currency;
     }
 
-    public void reinit()
-    {
+    public void reinit() {
     }
 
-    public void terminate(java.lang.Long id_)
-    {
+    public void terminate(java.lang.Long id_) {
     }
 
 }

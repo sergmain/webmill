@@ -66,13 +66,10 @@
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
 
-        <pathelement location="${lib.dir}/${myfaces.lib}"/>
-
-<!--
+        <!--<pathelement location="${lib.dir}/${myfaces.lib}"/>-->
         <pathelement location="${lib.dir}/${myfaces-api.lib}"/>
         <pathelement location="${lib.dir}/${myfaces-core.lib}"/>
         <pathelement location="${lib.dir}/${myfaces-tomahawk.lib}"/>
--->
 
     </path>
 
@@ -204,12 +201,10 @@
         <include name="${taglibs-request.lib}"/>
         <include name="${taglibs-session.lib}"/>
 
-        <include name="${myfaces.lib}"/>
-<!--
+        <!--<include name="${myfaces.lib}"/>-->
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>
         <include name="${myfaces-tomahawk.lib}"/>
--->
 
     </patternset>
 

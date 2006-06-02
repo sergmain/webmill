@@ -137,6 +137,15 @@ public class DataProvider implements Serializable {
         if (css==null) {
             css = siteService.getCss(cssId);
         }
+
+        if (css==null || css.getCssId()==null) {
+            log.error("Error get CSS, id: " + cssId);
+            if (css!=null){
+                log.error("Error get CSS, css.getCssId(): " + css.getCssId());
+            }
+            throw new IllegalStateException("CSS not found");
+        }
+
         if (!css.getCssId().equals(cssId)) {
             log.warn("Mismatch cssId");
             css = siteService.getCss(cssId);
