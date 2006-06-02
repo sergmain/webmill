@@ -60,48 +60,44 @@ import org.riverock.common.xml.EntityResolverImpl;
 
 /**
  * Makes a web application Deploy-ready for Webmill.
- * 
+ *
  * @author <a href="mailto:taylor@apache.org">Dain Sundstrom </a>
  * @author <a href="mailto:dsundstrom@gluecode.com">David Sean Taylor </a>
  * @version $Id$
  */
-public class WebmillDeploy
-{
-    public static void main(String[] args) throws Exception
-    {
-        if (args.length < 2 || args.length > 3 || args.length == 3 && !(args[0].equalsIgnoreCase("-s")))
-        {
+public class WebmillDeploy {
+    public static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
+    public static final String WEB_INF_PORTLET_XML = "WEB-INF/portlet.xml";
+    public static final String META_INF_CONTEXT_XML = "META-INF/context.xml";
+
+    public static void main(String[] args) throws Exception {
+        if (args.length < 2 || args.length > 3 || args.length == 3 && !(args[0].equalsIgnoreCase("-s"))) {
             System.out.println("Usage: java WebmillDeploy [-s] INPUT OUTPUT");
             System.out.println("Options:");
             System.out
-                            .println("  -s: stripLoggers - remove commons-logging[version].jar and/or log4j[version].jar from war");
+                .println("  -s: stripLoggers - remove commons-logging[version].jar and/or log4j[version].jar from war");
             System.out.println("                     (required when targetting application servers like JBoss)");
 
             System.exit(1);
             return;
         }
-        if ( args.length == 3 )
-        {
+        if (args.length == 3) {
             new WebmillDeploy(args[1], args[2], true);
-        }
-        else
-        {
+        } else {
             new WebmillDeploy(args[0], args[1], false);
         }
     }
 
     private final byte[] buffer = new byte[4096];
 
-    public WebmillDeploy(String inputName, String outputName, boolean stripLoggers) throws Exception
-    {
+    public WebmillDeploy(String inputName, String outputName, boolean stripLoggers) throws Exception {
         File tempFile = null;
         JarFile jin = null;
         JarOutputStream jout = null;
         FileChannel srcChannel = null;
         FileChannel dstChannel = null;
 
-        try
-        {
+        try {
             String portletApplicationName = getPortletApplicationName(outputName);
             System.out.println("portletApplicationName = " + portletApplicationName);
             tempFile = File.createTempFile("webmill-delpoy-", "");
@@ -118,86 +114,102 @@ public class WebmillDeploy
             Document contextXml = null;
             ZipEntry src;
             InputStream source;
+            // init source files - web.xml, portlet.xml and context.xml
             Enumeration zipEntries = jin.entries();
-            while (zipEntries.hasMoreElements())
-            {
+            while (zipEntries.hasMoreElements()) {
                 src = (ZipEntry) zipEntries.nextElement();
                 source = jin.getInputStream(src);
-                try
-                {
+                try {
                     String target = src.getName();
-                    if ("WEB-INF/web.xml".equals(target))
-                    {
+                    if (WEB_INF_WEB_XML.equals(target)) {
                         System.out.println("Found web.xml");
                         webXml = parseXml(source);
-                    }
-                    else if ("WEB-INF/portlet.xml".equals(target))
-                    {
+                    } else if (WEB_INF_PORTLET_XML.equals(target)) {
                         System.out.println("Found WEB-INF/portlet.xml");
                         portletXml = parseXml(source);
-                    }
-                    else if ("META-INF/context.xml".equals(target))
-                    {
+                    } else if (META_INF_CONTEXT_XML.equals(target)) {
                         System.out.println("Found META-INF/context.xml");
                         contextXml = parseXml(source);
                     }
-                    else
-                    {
-                        if ( stripLoggers && target.endsWith(".jar") &&
-                             (target.startsWith("WEB-INF/lib/commons-logging") || target.startsWith("WEB-INF/lib/log4j")))
-                        {
-                            System.out.println("Stripping logger "+target);
-                            continue;
-                        }
-                        addFile(target, source, jout);
-                    }
                 }
-                finally
-                {
+                finally {
                     source.close();
                 }
             }
 
-            if (webXml == null)
-            {
-                throw new IllegalArgumentException("WEB-INF/web.xml");
+            if (webXml == null) {
+                throw new IllegalArgumentException("WEB-INF/web.xml not found");
             }
-            if (portletXml == null)
-            {
-                throw new IllegalArgumentException("WEB-INF/portlet.xml");
+            if (portletXml == null) {
+                throw new IllegalArgumentException("WEB-INF/portlet.xml not found");
             }
 
-            WebmillWebApplicationRewriter webRewriter = new WebmillWebApplicationRewriter(webXml,
-                                                                                            portletApplicationName);
+
+            WebmillWebApplicationRewriter webRewriter = new WebmillWebApplicationRewriter(webXml);
             webRewriter.processWebXML();
+
             WebmillContextRewriter contextRewriter = new WebmillContextRewriter(contextXml, portletApplicationName);
             contextRewriter.processContextXML();
 
-            // write the web.xml, portlet.xml, and context.xml files
-            addFile("WEB-INF/web.xml", webXml, jout);
-            addFile("WEB-INF/portlet.xml", portletXml, jout);
-            addFile("META-INF/context.xml", contextXml, jout);
-
-            if (webRewriter.isPortletTaglibAdded())
-            {
-                System.out.println("Attempting to add portlet.tld to war...");
-                InputStream is = this.getClass().getResourceAsStream( "/org/riverock/webmill/container/tags/portlet.tld" );
-                if (is == null)
-                {
-                    System.out.println("Failed to find portlet.tld in classpath");
+            jin = new JarFile(inputName);
+            zipEntries = jin.entries();
+            while (zipEntries.hasMoreElements()) {
+                src = (ZipEntry) zipEntries.nextElement();
+                source = jin.getInputStream(src);
+                try {
+                    String target = src.getName();
+                    String fullTarget = '/' + target;
+                    if (stripLoggers && target.endsWith(".jar") && (target.startsWith("WEB-INF/lib/commons-logging") || target.startsWith("WEB-INF/lib/log4j"))) {
+                        System.out.println("Skip logger " + target);
+                        continue;
+                    }
+                    else {
+                        if (webRewriter.getRealPortletTldFile()!=null && fullTarget.equals(webRewriter.getRealPortletTldFile())){
+                            System.out.println("Skip portlet tld file " + fullTarget);
+                            continue;
+                        }
+                        else if (target.equals(WEB_INF_WEB_XML)) {
+                            System.out.println("Skip web.xml file " + target);
+                            continue;
+                        }
+                        else if (target.equals(WEB_INF_PORTLET_XML)) {
+                            System.out.println("Skip portlet.xml file " + target);
+                            continue;
+                        }
+                        else if (target.equals(META_INF_CONTEXT_XML)) {
+                            System.out.println("Skip context.xml file " + target);
+                            continue;
+                        }
+                        System.out.println("Add file " + target);
+                    }
+                    addFile(target, source, jout);
                 }
-                else
-                {
-                    System.out.println("Adding portlet.tld to war...");
+                finally {
+                    source.close();
+                }
+            }
 
-                    try
-                    {
-                        addFile("WEB-INF/tld/portlet.tld", is, jout);
-                    }
-                    finally
-                    {
-                        is.close();
-                    }
+            // write the web.xml, portlet.xml, and context.xml files
+            addFile(WEB_INF_WEB_XML, webXml, jout);
+            addFile(WEB_INF_PORTLET_XML, portletXml, jout);
+            addFile(META_INF_CONTEXT_XML, contextXml, jout);
+
+            System.out.println("Attempting to add portlet.tld to war...");
+            InputStream is = this.getClass().getResourceAsStream("/org/riverock/webmill/container/tags/portlet.tld");
+            if (is == null) {
+                System.out.println("Failed to find portlet.tld in classpath");
+            } else {
+
+                String portletTldFile = webRewriter.getRealPortletTldFile();
+                if (portletTldFile.charAt(0)=='/') {
+                    portletTldFile=portletTldFile.substring(1);
+                }
+                System.out.println("Adding file "+portletTldFile);
+                try {
+                    addFile(portletTldFile, is, jout);
+                }
+                finally {
+                    is.close();
                 }
             }
 
@@ -221,114 +233,90 @@ public class WebmillDeploy
             System.out.println("War " + outputName + " created");
             System.out.flush();
         }
-        finally
-        {
-            if (srcChannel != null && srcChannel.isOpen())
-            {
-                try
-                {
+        finally {
+            if (srcChannel != null && srcChannel.isOpen()) {
+                try {
                     srcChannel.close();
                 }
-                catch (IOException e1)
-                {
+                catch (IOException e1) {
                     // ignore
                 }
             }
-            if (dstChannel != null && dstChannel.isOpen())
-            {
-                try
-                {
+            if (dstChannel != null && dstChannel.isOpen()) {
+                try {
                     dstChannel.close();
                 }
-                catch (IOException e1)
-                {
+                catch (IOException e1) {
                     // ignore
                 }
             }
-            if (jin != null)
-            {
-                try
-                {
+            if (jin != null) {
+                try {
                     jin.close();
                     jin = null;
                 }
-                catch (IOException e1)
-                {
+                catch (IOException e1) {
                     // ignore
                 }
             }
-            if (jout != null)
-            {
-                try
-                {
+            if (jout != null) {
+                try {
                     jout.close();
                     jout = null;
                 }
-                catch (IOException e1)
-                {
+                catch (IOException e1) {
                     // ignore
                 }
             }
-            if (tempFile != null && tempFile.exists())
-            {
+            if (tempFile != null && tempFile.exists()) {
                 tempFile.delete();
             }
         }
     }
 
-    protected Document parseXml(InputStream source) throws Exception
-    {
+    protected Document parseXml(InputStream source) throws Exception {
         // Parse using the local dtds instead of remote dtds. This
         // allows to deploy the application offline
         SAXBuilder saxBuilder = new SAXBuilder();
-        saxBuilder.setEntityResolver( new EntityResolverImpl() );
+        saxBuilder.setEntityResolver(new EntityResolverImpl());
         Document document = saxBuilder.build(source);
         return document;
     }
 
-    protected void addFile(String path, InputStream source, JarOutputStream jos) throws IOException
-    {
+    protected void addFile(String path, InputStream source, JarOutputStream jos) throws IOException {
         jos.putNextEntry(new ZipEntry(path));
-        try
-        {
+        try {
             int count;
-            while ((count = source.read(buffer)) > 0)
-            {
+            while ((count = source.read(buffer)) > 0) {
                 jos.write(buffer, 0, count);
             }
         }
-        finally
-        {
+        finally {
             jos.closeEntry();
         }
     }
 
-    protected void addFile(String path, Document source, JarOutputStream jos) throws IOException
-    {
-        if (source != null)
-        {
+    protected void addFile(String path, Document source, JarOutputStream jos) throws IOException {
+        System.out.println("Add file "+path);
+        if (source != null) {
             jos.putNextEntry(new ZipEntry(path));
             XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat());
-            try
-            {
+            try {
                 xmlOutputter.output(source, jos);
             }
-            finally
-            {
+            finally {
                 jos.closeEntry();
             }
         }
     }
 
-    protected String getPortletApplicationName(String path)
-    {
+    protected String getPortletApplicationName(String path) {
         File file = new File(path);
         String name = file.getName();
         String portletApplicationName = name;
 
         int index = name.lastIndexOf(".");
-        if (index > -1)
-        {
+        if (index > -1) {
             portletApplicationName = name.substring(0, index);
         }
         return portletApplicationName;
