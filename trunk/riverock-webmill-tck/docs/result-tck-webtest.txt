@@ -9,6 +9,7 @@ ActionRequest
 - GetRemoteUserNullTest Test PASSED.  webtest-ok
 - RemoveAttributeTest Test PASSED. webtest-ok
 - SetAttributeTest Test PASSED. webtest-ok
+- GetAuthTypeWithoutProtectionTest Test PASSED.	webtest-ok
 
 
 
@@ -30,6 +31,11 @@ ActionRequest
 - CheckIsWindowStateAllowedTest Test FAILED. Every Portlet should allow the NORMAL window state 
 
 - GetWindowStateTest Test PASSED. 
+
+
+- GetPortletModeTest Test FAILED.
+    Expected result = edit
+    Actual result = view
 
 
 Total: 41.  Passed: 18
@@ -188,7 +194,6 @@ RenderRequest
 - GetLocalesTest Test PASSED. 			webtest-ok
 - GetParameterIllegalArgumentExceptionTest Test PASSED	webtest-ok
 - GetParameterValuesIllegalArgumentExceptionTest Test PASSED.	webtest-ok
-- GetPortletModeTest Test PASSED. 		webtest-ok
 - GetPortalContextTest Test PASSED. 		webtest-ok
 - GetPreferencesTest Test PASSED.		webtest-ok
 - GetPortletSessionTest Test PASSED. 		webtest-ok
@@ -205,6 +210,11 @@ RenderRequest
 
 
 #broken test
+- GetPortletModeTest Test FAILED.
+    Expected result = edit
+    Actual result = view
+
+
 - GetPortletSessionParamTest Test FAILED. 
   Session is created even when getPortletSession is invoked with a false parameter 
 Недочет теста. не учитывается ситуация когда потал автоматически содает сессию.

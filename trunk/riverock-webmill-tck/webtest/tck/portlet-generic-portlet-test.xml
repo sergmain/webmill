@@ -47,6 +47,10 @@
 -->
 
 <!-- broken test
+	<test_with_click portlet="DoHelpTestPortlet"
+			result="DoHelpTest Test PASSED."/>
+	<test_with_click portlet="DoEditTestPortlet"
+			result="DoEditTest Test PASSED."/>
 -->
 
 
@@ -94,9 +98,5 @@
 			result="GenericPortletTest Test PASSED."/>
 	<test_wo_click portlet="DoViewTestPortlet"
 			result="DoViewTest Test PASSED."/>
-	<test_with_click portlet="DoHelpTestPortlet"
-			result="DoHelpTest Test PASSED."/>
-	<test_with_click portlet="DoEditTestPortlet"
-			result="DoEditTest Test PASSED."/>
     </target>
 </project>
