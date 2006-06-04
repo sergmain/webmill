@@ -222,6 +222,9 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public String getAuthType() {
+        if ( auth == null )
+            return null;
+
         return HttpServletRequest.FORM_AUTH;
     }
 
