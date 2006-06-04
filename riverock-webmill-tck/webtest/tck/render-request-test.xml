@@ -84,6 +84,8 @@
 		       result="CheckIsPortletModeAllowedTest Test PASSED."/>
 	<test_wo_click portlet="CheckIsWindowStateAllowedTestPortlet"
 		       result="CheckIsWindowStateAllowedTest Test PASSED."/>
+	<test_with_click portlet="GetPortletModeTestPortlet"
+		       result="GetPortletModeTest Test PASSED."/>
 -->
 
 	<test_wo_click portlet="SetAttributeTestPortlet"
@@ -112,8 +114,6 @@
 		       result="GetPreferencesTest Test PASSED."/>
 	<test_wo_click portlet="GetPortalContextTestPortlet"
 		       result="GetPortalContextTest Test PASSED."/>
-	<test_with_click portlet="GetPortletModeTestPortlet"
-		       result="GetPortletModeTest Test PASSED."/>
 	<test_wo_click portlet="GetParameterValuesIllegalArgumentExceptionTestPortlet"
 		       result="GetParameterValuesIllegalArgumentExceptionTest Test PASSED."/>
 	<test_wo_click portlet="GetParameterIllegalArgumentExceptionTestPortlet"

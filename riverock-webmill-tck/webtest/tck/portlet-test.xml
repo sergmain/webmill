@@ -52,16 +52,16 @@
 			helper ="PermanentlyUnavailableTest_1_Portlet"
 			result ="PermanentlyUnavailableTest Test PASSED."/>
 
+	<testWithoutClick_2_invoke_with_helper 
+			portlet="ProcessActionFinishBeforeRenderTestPortlet"
+			helper ="ProcessActionFinishBeforeRenderTest_1_Portlet"
+			result ="ProcessActionFinishBeforeRenderTest Test PASSED."/>
+
 -->
 
 
 
 
-
-	<testWithoutClick_2_invoke_with_helper 
-			portlet="ProcessActionFinishBeforeRenderTestPortlet"
-			helper ="ProcessActionFinishBeforeRenderTest_1_Portlet"
-			result ="ProcessActionFinishBeforeRenderTest Test PASSED."/>
 
 	<test_wo_click portlet="RenderTestPortlet"
 			result="RenderTest Test PASSED."/>
