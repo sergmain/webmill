@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: May 9, 2003
- * Time: 10:49:57 AM
- *
- * $Id$
- */
 package org.riverock.portlet.shop;
 
 import junit.framework.TestCase;
@@ -47,6 +39,13 @@ import org.riverock.portlet.test.cases.TestCaseInterface;
 import org.riverock.portlet.test.cases.TestCaseSiteAbstract;
 import org.riverock.portlet.test.cases.TestSite;
 
+/**
+ * User: Admin
+ * Date: May 9, 2003
+ * Time: 10:49:57 AM
+ *
+ * $Id$
+ */
 public class TestCaseShop extends TestCase implements TestCaseInterface {
 
     private TestCaseSiteAbstract testAbstract = null;

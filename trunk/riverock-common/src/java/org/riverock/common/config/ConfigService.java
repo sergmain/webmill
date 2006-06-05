@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: serg_main
- * Date: 28.11.2003
- * Time: 19:54:54
- * @author Serge Maslyukov
- * $Id$
- */
-
 package org.riverock.common.config;
 
 import java.io.UnsupportedEncodingException;
@@ -42,6 +33,13 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.StringLocaleManager;
 
+/**
+ * User: serg_main
+ * Date: 28.11.2003
+ * Time: 19:54:54
+ * @author Serge Maslyukov
+ * $Id$
+ */
 public final class ConfigService {
     private final static Logger log = Logger.getLogger( ConfigService.class );
 

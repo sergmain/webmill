@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Sep 3, 2003
- * Time: 9:07:51 PM
- *
- * $Id$
- */
 package org.riverock.generic.test.independent;
 
 import java.sql.Connection;
@@ -46,6 +38,13 @@ import java.util.TimeZone;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+/**
+ * User: Admin
+ * Date: Sep 3, 2003
+ * Time: 9:07:51 PM
+ *
+ * $Id$
+ */
 public class TestCaseTimestamp extends TestCase
 {
     Connection conn = null;

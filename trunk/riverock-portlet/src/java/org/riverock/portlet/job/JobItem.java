@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.portlet.job;
 
 import java.sql.PreparedStatement;
@@ -46,6 +42,9 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.webmill.container.tools.PortletService;
 
+/**
+ * $Id$
+ */
 public class JobItem {
     private static Logger log = Logger.getLogger( JobItem.class );
 

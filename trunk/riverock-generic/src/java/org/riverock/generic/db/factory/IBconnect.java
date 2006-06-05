@@ -55,7 +55,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
 import org.riverock.generic.tools.CurrentTimeZone;
 
 /**
- * Microsoft database connect from sourceforge.net
+ * InterBase database connect 
  * $Author$
  *
  * $Id$

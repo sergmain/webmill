@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Dec 19, 2002
- * Time: 11:41:42 AM
- *
- * $Id$
- */
 package org.riverock.generic.test.cases;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -46,6 +38,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
+/**
+ * User: Admin
+ * Date: Dec 19, 2002
+ * Time: 11:41:42 AM
+ *
+ * $Id$
+ */
 public class TestMarshal extends TestCase
 {
     public TestMarshal(String testName)

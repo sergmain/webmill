@@ -22,6 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.test.db;
+
+import org.riverock.generic.db.definition.DefinitionService;
+import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * User: Admin
@@ -30,11 +34,6 @@
  *
  * $Id$
  */
-package org.riverock.generic.test.db;
-
-import org.riverock.generic.db.definition.DefinitionService;
-import org.riverock.generic.db.DatabaseAdapter;
-
 public class TestDefinitionProcessing
 {
     public static void main(String[] s)

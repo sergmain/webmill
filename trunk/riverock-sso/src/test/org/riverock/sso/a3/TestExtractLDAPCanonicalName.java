@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sso.a3;
+
+import junit.framework.TestCase;
 
 /**
  * User: Admin
@@ -30,10 +33,6 @@
  *
  * $Id$
  */
-package org.riverock.sso.a3;
-
-import junit.framework.TestCase;
-
 public class TestExtractLDAPCanonicalName extends TestCase
 {
 

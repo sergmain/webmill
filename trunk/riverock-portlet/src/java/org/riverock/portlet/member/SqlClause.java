@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.member;
 
 /**
@@ -30,7 +29,6 @@ package org.riverock.portlet.member;
  *  $Id$
  *
  */
-
 public class SqlClause
 {
     public String select = "";

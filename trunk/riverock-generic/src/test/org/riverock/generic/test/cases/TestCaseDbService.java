@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Mar 3, 2003
- * Time: 6:43:34 PM
- *
- * $Id$
- */
 package org.riverock.generic.test.cases;
 
 import junit.framework.TestCase;
@@ -41,6 +33,13 @@ import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.generic.config.GenericConfig;
 
+/**
+ * User: Admin
+ * Date: Mar 3, 2003
+ * Time: 6:43:34 PM
+ *
+ * $Id$
+ */
 public class TestCaseDbService extends TestCase
 {
     public TestCaseDbService(String testName)

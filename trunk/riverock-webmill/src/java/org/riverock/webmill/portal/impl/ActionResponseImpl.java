@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Sep 20, 2003
- * Time: 1:02:30 AM
- *
- * $Id$
- */
 package org.riverock.webmill.portal.impl;
 
 import java.util.List;
@@ -44,6 +36,13 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
 
+/**
+ * User: Admin
+ * Date: Sep 20, 2003
+ * Time: 1:02:30 AM
+ *
+ * $Id$
+ */
 public final class ActionResponseImpl implements ActionResponse {
     private final static Logger log = Logger.getLogger( ActionResponseImpl.class );
 

@@ -22,6 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sso.test;
+
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+
+import org.apache.log4j.Logger;
 
 /**
  * Author: mill
@@ -30,14 +36,6 @@
  *
  * $Id$
  */
-
-package org.riverock.sso.test;
-
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-
-import org.apache.log4j.Logger;
-
 public class TestAuthenticator extends Authenticator
 {
     private static Logger cat = Logger.getLogger( "org.riverock.test.TestAuthenticator" );

@@ -22,17 +22,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.main;
+
+import java.io.File;
+import java.io.FileFilter;
 
 /**
  *
  *  $Id$
  *
  */
-package org.riverock.generic.main;
-
-import java.io.File;
-import java.io.FileFilter;
-
 public class ExtensionFileFilter implements FileFilter
 {
 

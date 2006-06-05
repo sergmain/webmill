@@ -23,6 +23,10 @@
  *
  */
 
+package org.riverock.common.html;
+
+import junit.framework.TestCase;
+
 /**
  * User: Admin
  * Date: Mar 20, 2003
@@ -30,10 +34,6 @@
  *
  * $Id$
  */
-package org.riverock.common.html;
-
-import junit.framework.TestCase;
-
 public class TestTypeBrowser extends TestCase
 {
     public TestTypeBrowser(){}

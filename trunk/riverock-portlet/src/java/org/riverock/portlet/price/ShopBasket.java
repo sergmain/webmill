@@ -36,7 +36,6 @@ import org.riverock.portlet.invoice.InvoicePortlet;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 
-
 /**
  *
  * $Author$

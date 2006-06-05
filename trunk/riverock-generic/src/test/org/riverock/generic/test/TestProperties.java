@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Jan 24, 2003
- * Time: 10:29:07 AM
- *
- * $Id$
- */
-
 package org.riverock.generic.test;
 
 import org.riverock.common.tools.DateTools;
@@ -41,6 +32,13 @@ import java.sql.Timestamp;
 import java.util.Enumeration;
 import java.util.Properties;
 
+/**
+ * Author: mill
+ * Date: Jan 24, 2003
+ * Time: 10:29:07 AM
+ *
+ * $Id$
+ */
 public class TestProperties
 {
     private static Logger cat = Logger.getLogger("org.riverock.test.TestProperties");

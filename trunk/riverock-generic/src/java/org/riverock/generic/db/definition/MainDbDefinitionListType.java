@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/*
- * This class was automatically generated with 
- * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
- * Schema.
- * $Id$
- */
-
 package org.riverock.generic.db.definition;
 
   //---------------------------------/
@@ -38,6 +30,12 @@ package org.riverock.generic.db.definition;
 
 import java.util.Vector;
 
+/*
+ * This class was automatically generated with
+ * <a href="http://www.castor.org">Castor 0.9.4.3</a>, using an XML
+ * Schema.
+ * $Id$
+ */
 /**
  * Class MainDbDefinitionListType.
  * 

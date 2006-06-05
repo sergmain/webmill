@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.member;
 
 import java.util.List;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
  *  $Id$
  *
  */
-
 public class StoredSql
 {
 

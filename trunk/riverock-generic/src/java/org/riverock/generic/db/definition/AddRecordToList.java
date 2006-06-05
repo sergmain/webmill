@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: May 20, 2003
- * Time: 9:49:58 PM
- *
- * $Id$
- */
 package org.riverock.generic.db.definition;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -39,6 +31,13 @@ import org.apache.log4j.Logger;
 
 import java.sql.PreparedStatement;
 
+/**
+ * User: Admin
+ * Date: May 20, 2003
+ * Time: 9:49:58 PM
+ *
+ * $Id$
+ */
 public class AddRecordToList implements DefinitionProcessingInterface
 {
     private static Logger log = Logger.getLogger( "org.riverock.generic.db.definition.AddRecordToList" );

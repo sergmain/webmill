@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Nov 24, 2002
- * Time: 3:06:57 PM
- *
- * $Id$
- */
 package org.riverock.portlet.member;
 
 import java.util.List;
@@ -39,6 +31,13 @@ import javax.portlet.PortletRequest;
 
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
+/**
+ * User: Admin
+ * Date: Nov 24, 2002
+ * Time: 3:06:57 PM
+ *
+ * $Id$
+ */
 public abstract class BaseClassQuery {
 /**
  * Return current value for output on web page

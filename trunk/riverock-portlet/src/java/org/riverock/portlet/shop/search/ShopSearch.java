@@ -52,7 +52,6 @@ import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.tools.PortletService;
 
-
 /**
  * Author: mill
  * Date: Dec 3, 2002

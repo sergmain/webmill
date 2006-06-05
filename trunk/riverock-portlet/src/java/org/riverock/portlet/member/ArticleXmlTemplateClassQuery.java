@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Jan 10, 2003
- * Time: 2:20:21 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.member;
 
 import java.util.ArrayList;
@@ -41,6 +32,13 @@ import javax.portlet.PortletRequest;
 
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 
+/**
+ * Author: mill
+ * Date: Jan 10, 2003
+ * Time: 2:20:21 PM
+ *
+ * $Id$
+ */
 public class ArticleXmlTemplateClassQuery extends BaseClassQuery {
 //    private static Logger cat = Logger.getLogger(ArticleXmlTemplateClassQuery.class);
 

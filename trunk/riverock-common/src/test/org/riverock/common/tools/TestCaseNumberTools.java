@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.common.tools;
+
+import junit.framework.TestCase;
 
 /**
  * User: Admin
@@ -30,10 +33,6 @@
  *
  * $Id$
  */
-package org.riverock.common.tools;
-
-import junit.framework.TestCase;
-
 public class TestCaseNumberTools extends TestCase
 {
     public TestCaseNumberTools(String testName)

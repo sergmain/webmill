@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.webmill.site;
+
+import org.riverock.common.config.JsmithyNamespases;
 
 /**
  * User: Admin
@@ -30,10 +33,6 @@
  *
  * $Id$
  */
-package org.riverock.webmill.site;
-
-import org.riverock.common.config.JsmithyNamespases;
-
 public class WebmillNamespace extends JsmithyNamespases
 {
     public static String[][] getWebmillNamespace()

@@ -22,12 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
- *
- * $Id$
- */
 package org.riverock.generic.db.factory;
 
 import java.sql.PreparedStatement;
@@ -41,6 +35,11 @@ import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.DateTools;
 import org.riverock.generic.tools.CurrentTimeZone;
 
+/**
+ * Класс ORAconnect прденазначен для коннекта к оракловской базе данных.
+ *
+ * $Id$
+ */
 public class ORA80connect extends ORAconnect {
     private static Logger log = Logger.getLogger("org.riverock.generic.db.ORA80connect");
 

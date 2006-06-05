@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Nov 28, 2002
- * Time: 3:10:19 PM
- *
- * $Id$
- */
 package org.riverock.generic.system;
 
 import java.io.File;
@@ -48,6 +40,13 @@ import org.riverock.generic.startup.StartupApplication;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
+/**
+ * Author: mill
+ * Date: Nov 28, 2002
+ * Time: 3:10:19 PM
+ *
+ * $Id$
+ */
 /**
  * Upload data from XML file to DB
  */
