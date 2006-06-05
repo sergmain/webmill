@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Mar 31, 2003
- * Time: 10:41:57 AM
- *
- * $Id$
- */
-
 package org.riverock.generic.test;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -45,7 +36,13 @@ import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
+/**
+ * Author: mill
+ * Date: Mar 31, 2003
+ * Time: 10:41:57 AM
+ *
+ * $Id$
+ */
 public class TestDatabaseTimestamp
 {
 //    private static Logger cat = Logger.getLogger( "org.riverock.test.TimestampTest" );

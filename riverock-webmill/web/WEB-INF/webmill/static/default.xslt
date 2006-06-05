@@ -5,7 +5,7 @@
 	<xsl:template match="/">
 		<xsl:apply-templates select="node()"/>
 	</xsl:template>
-	
+
 	<xsl:template match="Separator">
 		<xsl:text disable-output-escaping="yes">&lt;/td&gt;&lt;td valign="top"&gt;
 		</xsl:text>
@@ -18,7 +18,7 @@
 	<xsl:template match="SeparatorDynImage">
 		<xsl:text disable-output-escaping="yes">&lt;/td&gt;&lt;td valign="top"&gt;</xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="SeparatorDynEnd">
 		<xsl:text disable-output-escaping="yes">&lt;/tr&gt;&lt;/td&gt;&lt;/table&gt;</xsl:text>
 	</xsl:template>
@@ -122,7 +122,7 @@
 		<div>A: <xsl:value-of select="FaqItemAnswer"/>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template match="NewsGroupName"/>
 	<xsl:template match="NewsItem">
 		<div class="news">

@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Apr 9, 2003
- * Time: 10:05:38 AM
- *
- * $Id$
- */
-
 package org.riverock.generic.test;
 
 import java.io.BufferedInputStream;
@@ -49,6 +40,13 @@ import org.apache.bcel.classfile.JavaClass;
 
 import org.riverock.generic.main.ExtensionFileFilter;
 
+/**
+ * Author: mill
+ * Date: Apr 9, 2003
+ * Time: 10:05:38 AM
+ *
+ * $Id$
+ */
 public class TestClassVersion
 {
     public TestClassVersion()

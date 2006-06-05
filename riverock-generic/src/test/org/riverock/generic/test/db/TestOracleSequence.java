@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Feb 22, 2003
- * Time: 7:28:46 PM
- *
- * $Id$
- */
 package org.riverock.generic.test.db;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -41,6 +33,13 @@ import org.riverock.generic.tools.XmlTools;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 
+/**
+ * User: Admin
+ * Date: Feb 22, 2003
+ * Time: 7:28:46 PM
+ *
+ * $Id$
+ */
 public class TestOracleSequence
 {
     private static void doTest( String nameConnection )

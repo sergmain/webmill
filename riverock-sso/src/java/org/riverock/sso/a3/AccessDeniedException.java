@@ -22,19 +22,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sso.a3;
 
+/**
+ * Exception for authenticate of user
+ */
 /**
  * Author: mill
  * Date: Mar 12, 2003
  * Time: 3:26:06 PM
  *
  * $Id$
- */
-
-package org.riverock.sso.a3;
-
-/**
- * Exception for authenticate of user
  */
 public class AccessDeniedException extends Exception
 {

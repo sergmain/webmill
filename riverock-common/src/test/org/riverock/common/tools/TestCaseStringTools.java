@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Feb 17, 2003
- * Time: 12:17:51 PM
- *
- * $Id$
- */
-
 package org.riverock.common.tools;
 
 import java.util.Locale;
@@ -39,6 +30,13 @@ import org.apache.log4j.Logger;
 
 import junit.framework.TestCase;
 
+/**
+ * Author: mill
+ * Date: Feb 17, 2003
+ * Time: 12:17:51 PM
+ *
+ * $Id$
+ */
 public class TestCaseStringTools extends TestCase
 {
     private static Logger cat = Logger.getLogger( TestCaseStringTools.class );

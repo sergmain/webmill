@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.exception;
 
 /**
  * User: serg_main
@@ -30,10 +31,6 @@
  * @author Serge Maslyukov
  * $Id$
  */
-
-package org.riverock.generic.exception;
-
-
 public class GenericException extends Exception{
     public GenericException(){
         super();

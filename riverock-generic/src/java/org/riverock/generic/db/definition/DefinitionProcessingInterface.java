@@ -22,6 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.db.definition;
+
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
 
 /**
  * User: Admin
@@ -30,11 +34,6 @@
  *
  * $Id$
  */
-package org.riverock.generic.db.definition;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
-
 public interface DefinitionProcessingInterface
 {
     public void processAction(DatabaseAdapter db_, DataDefinitionActionDataListType parameters) throws Exception;

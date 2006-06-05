@@ -22,6 +22,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sql.parser;
+
+import org.riverock.schema.sql.TableType;
+import org.riverock.schema.sql.TableFilterType;
+import org.riverock.schema.sql.ExpressionType;
 
 /**
  * User: Admin
@@ -30,12 +35,6 @@
  *
  * $Id$
  */
-package org.riverock.sql.parser;
-
-import org.riverock.schema.sql.TableType;
-import org.riverock.schema.sql.TableFilterType;
-import org.riverock.schema.sql.ExpressionType;
-
 public class TableService
 {
     /**

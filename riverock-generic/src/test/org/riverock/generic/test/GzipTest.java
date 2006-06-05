@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Feb 13, 2003
- * Time: 4:43:06 PM
- *
- * $Id$
- */
-
 package org.riverock.generic.test;
 
 import java.io.File;
@@ -46,6 +37,13 @@ import org.apache.log4j.Logger;
 
 import org.riverock.generic.config.GenericConfig;
 
+/**
+ * Author: mill
+ * Date: Feb 13, 2003
+ * Time: 4:43:06 PM
+ *
+ * $Id$
+ */
 public class GzipTest
 {
     private static Logger cat = Logger.getLogger("org.riverock.test.GzipTest");

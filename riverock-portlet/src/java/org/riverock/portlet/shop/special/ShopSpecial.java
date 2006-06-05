@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
 package org.riverock.portlet.shop.special;
 
 import java.io.IOException;
@@ -45,7 +44,6 @@ import org.riverock.portlet.price.Shop;
 import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.portlet.schema.price.OrderType;
-
 
 /**
  * Author: mill

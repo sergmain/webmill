@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Dec 14, 2002
- * Time: 2:22:59 PM
- *
- * $Id$
- */
 package org.riverock.generic.test.cases;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -38,6 +30,13 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.structure.*;
 import junit.framework.TestCase;
 
+/**
+ * User: Admin
+ * Date: Dec 14, 2002
+ * Time: 2:22:59 PM
+ *
+ * $Id$
+ */
 public class TestCaseDbStructure extends TestCase
 {
     private static boolean isUseAssertion = true;

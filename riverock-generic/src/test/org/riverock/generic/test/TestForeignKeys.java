@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Nov 28, 2002
- * Time: 3:10:19 PM
- *
- * $Id$
- */
 package org.riverock.generic.test;
 
 import org.apache.log4j.Logger;
@@ -43,6 +35,13 @@ import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
 
+/**
+ * Author: mill
+ * Date: Nov 28, 2002
+ * Time: 3:10:19 PM
+ *
+ * $Id$
+ */
 public class TestForeignKeys
 {
     private static Logger cat = Logger.getLogger("org.riverock.test.TestForeignKeys");

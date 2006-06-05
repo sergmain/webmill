@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Feb 15, 2003
- * Time: 5:18:08 PM
- *
- * $Id$
- */
 package org.riverock.generic.test;
 
 import org.riverock.generic.db.DatabaseAdapter;
@@ -42,6 +34,13 @@ import org.riverock.common.tools.RsetTools;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * User: Admin
+ * Date: Feb 15, 2003
+ * Time: 5:18:08 PM
+ *
+ * $Id$
+ */
 public class RsetTest
 {
     public static void main(String s[])

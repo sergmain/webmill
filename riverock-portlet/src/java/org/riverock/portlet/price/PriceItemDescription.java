@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Dec 19, 2002
- * Time: 2:35:54 PM
- *
- * $Id$
- */
 package org.riverock.portlet.price;
 
 import java.sql.PreparedStatement;
@@ -46,7 +38,13 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.sql.cache.SqlStatement;
 
-
+/**
+ * User: Admin
+ * Date: Dec 19, 2002
+ * Time: 2:35:54 PM
+ *
+ * $Id$
+ */
 public class PriceItemDescription {
     private static Logger log = Logger.getLogger( PriceItemDescription.class );
 

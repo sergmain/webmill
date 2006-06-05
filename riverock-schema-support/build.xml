@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /*
- * org.riverock - 
+ * org.riverock.schema-support - helper module for create persistence layer
  * 
  * Copyright (C) 2004, Riverock Software, All Rights Reserved.
  * 

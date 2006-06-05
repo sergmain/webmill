@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Dec 12, 2002
- * Time: 11:07:46 AM
- *
- * $Id$
- */
 package org.riverock.generic.test;
 
 import org.riverock.common.tools.DateTools;
@@ -41,6 +33,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+/**
+ * User: Admin
+ * Date: Dec 12, 2002
+ * Time: 11:07:46 AM
+ *
+ * $Id$
+ */
 public class TestDate
 {
     public static void main(String args[])

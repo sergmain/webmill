@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Mar 20, 2003
- * Time: 9:28:58 PM
- *
- * $Id$
- */
 package org.riverock.sso.test;
 
 import java.io.BufferedReader;
@@ -43,6 +35,13 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+/**
+ * User: Admin
+ * Date: Mar 20, 2003
+ * Time: 9:28:58 PM
+ *
+ * $Id$
+ */
 public class TestAuthProxy extends TestCase
 {
     public TestAuthProxy(){}

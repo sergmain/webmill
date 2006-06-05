@@ -22,12 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * $Id$
- *
- */
 package org.riverock.generic.tools;
 
 import java.util.TimeZone;
@@ -35,6 +29,11 @@ import java.util.TimeZone;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.common.config.ConfigException;
 
+/**
+ *
+ * $Id$
+ *
+ */
 public final class CurrentTimeZone
 {
     public static TimeZone getTZ()

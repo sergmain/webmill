@@ -22,18 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- *
- * Author: Serg Malyukov
- * Date: Aug 21, 2002
- * Time: 10:49:04 PM
- *
- * origin source - www.bouncycastle.org
- *
- * $Id$
- */
-
 package org.riverock.generic.security;
 
 import java.io.ByteArrayInputStream;
@@ -50,6 +38,16 @@ import java.security.cert.X509Certificate;
 
 import org.apache.log4j.Logger;
 
+/**
+ *
+ * Author: Serg Malyukov
+ * Date: Aug 21, 2002
+ * Time: 10:49:04 PM
+ *
+ * origin source - www.bouncycastle.org
+ *
+ * $Id$
+ */
 public class EncryptFileSignature
 {
     private static Logger cat = Logger.getLogger("org.riverock.security.EncryptFileSignature" );

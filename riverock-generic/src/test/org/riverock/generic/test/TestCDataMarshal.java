@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Apr 9, 2003
- * Time: 2:08:35 PM
- *
- * $Id$
- */
-
 package org.riverock.generic.test;
 
 import java.io.FileInputStream;
@@ -42,6 +33,13 @@ import org.exolab.castor.xml.Marshaller;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
+/**
+ * Author: mill
+ * Date: Apr 9, 2003
+ * Time: 2:08:35 PM
+ *
+ * $Id$
+ */
 public class TestCDataMarshal
 {
     public String text = "";

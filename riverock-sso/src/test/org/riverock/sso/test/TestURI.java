@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sso.test;
+
+import java.net.URL;
 
 /**
  * User: Admin
@@ -30,10 +33,6 @@
  *
  * $Id$
  */
-package org.riverock.test;
-
-import java.net.URL;
-
 public class TestURI
 {
     private static String addr = "file:/d:\\";

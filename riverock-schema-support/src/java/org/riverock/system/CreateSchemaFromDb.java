@@ -1,7 +1,7 @@
 /*
  * org.riverock - 
  * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * org.riverock.schema-support - helper module for create persistence layer
  * 
  * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
@@ -55,7 +55,6 @@ import org.exolab.castor.xml.schema.util.DatatypeHandler;
 import org.exolab.castor.xml.schema.writer.SchemaWriter;
 import org.exolab.castor.util.Version;
 import org.xml.sax.InputSource;
-
 
 /**
  * User: Admin

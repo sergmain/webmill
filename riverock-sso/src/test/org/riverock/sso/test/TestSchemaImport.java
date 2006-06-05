@@ -22,6 +22,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.sso.test;
+
+import org.apache.log4j.Logger;
 
 /**
  * Author: mill
@@ -30,11 +33,6 @@
  *
  * $Id$
  */
-
-package org.riverock.test;
-
-import org.apache.log4j.Logger;
-
 public class TestSchemaImport
 {
     private static Logger cat = Logger.getLogger( "org.riverock.test.TestSchemaImport" );

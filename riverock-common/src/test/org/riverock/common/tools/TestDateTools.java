@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: serg_main
- * Date: 30.10.2003
- * Time: 12:52:36
- * @author Serge Maslyukov
- * $Id$
- */
-
 package org.riverock.common.tools;
 
 import java.sql.Timestamp;
@@ -40,6 +31,13 @@ import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
+/**
+ * User: serg_main
+ * Date: 30.10.2003
+ * Time: 12:52:36
+ * @author Serge Maslyukov
+ * $Id$
+ */
 public class TestDateTools extends TestCase {
 
     public TestDateTools(String msg) {

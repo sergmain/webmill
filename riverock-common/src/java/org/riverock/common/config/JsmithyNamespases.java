@@ -22,33 +22,30 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.common.config;
 
 /**
  * User: serg_main
  * Date: 10.02.2004
  * Time: 17:52:58
+ *
  * @author Serge Maslyukov
- * $Id$
+ *         $Id$
  */
+public class JsmithyNamespases {
+    public final static String[][] namespace = new String[][] {
+        {"mill-core", "http://webmill.askmore.info/mill/xsd/mill-core.xsd"},
+        {"mill-auth", "http://webmill.askmore.info/mill/xsd/mill-auth.xsd"},
+        {"mill-db-stuct", "http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd"},
 
-package org.riverock.common.config;
+        {"jsmithy-", "http://generic.jsmithy.com/xsd/jsmithy-database-structure.xsd"},
+        {"jsmithy-sso", "http://sso.jsmithy.com/xsd/jsmithy-sso.xsd"},
+        {"jsmithy-sso-core", "http://sso.jsmithy.com/xsd/jsmithy-sso-core.xsd"},
 
-public class JsmithyNamespases
-{
-    public final static String[][] namespace = new String[][]
-    {
-        { "mill-core",     "http://webmill.askmore.info/mill/xsd/mill-core.xsd" },
-        { "mill-auth",     "http://webmill.askmore.info/mill/xsd/mill-auth.xsd" },
-        { "mill-db-stuct", "http://webmill.askmore.info/mill/xsd/mill-database-structure.xsd" },
+        {"riverock-db-stuct", "http://generic.riverock.org/xsd/riverock-database-structure.xsd"},
+        {"riverock-sso", "http://sso.riverock.org/xsd/riverock-sso.xsd"},
+        {"riverock-sso-core", "http://sso.riverock.org/xsd/riverock-sso-core.xsd"},
 
-        { "jsmithy-",         "http://generic.jsmithy.com/xsd/jsmithy-database-structure.xsd" },
-        { "jsmithy-sso",      "http://sso.jsmithy.com/xsd/jsmithy-sso.xsd" },
-        { "jsmithy-sso-core", "http://sso.jsmithy.com/xsd/jsmithy-sso-core.xsd" },
-
-        { "riverock-db-stuct", "http://generic.riverock.org/xsd/riverock-database-structure.xsd" },
-        { "riverock-sso",      "http://sso.riverock.org/xsd/riverock-sso.xsd" },
-        { "riverock-sso-core", "http://sso.riverock.org/xsd/riverock-sso-core.xsd" },
-
-        { "portlet",       "http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" }
+        {"portlet", "http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"}
     };
 }

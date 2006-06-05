@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.generic.db.definition;
 
 import java.io.File;
@@ -41,9 +37,12 @@ import org.riverock.generic.main.CacheFile;
 import org.riverock.generic.schema.db.DataDefinitionListType;
 import org.riverock.generic.config.GenericConfig;
 
+/**
+ * $Id$
+ */
 public class DataDefinitionFile extends CacheFile
 {
-    private static Logger log = Logger.getLogger("org.riverock.generic.db.definition.DataDefinitionFile");
+    private static Logger log = Logger.getLogger(DataDefinitionFile.class);
 
     public DataDefinitionListType definitionList = null;
 //    private Hashtable definitionHash = null;

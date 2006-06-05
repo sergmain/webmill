@@ -22,6 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.common.html;
+
+import java.util.Locale;
+
+import org.riverock.common.tools.StringTools;
+import org.apache.log4j.Logger;
 
 /**
  * Author: mill
@@ -30,17 +36,9 @@
  *
  * $Id$
  */
-
-package org.riverock.common.html;
-
-import java.util.Locale;
-
-import org.riverock.common.tools.StringTools;
-import org.apache.log4j.Logger;
-
 public class AcceptLanguageWithLevel
 {
-    private static Logger log = Logger.getLogger( "org.riverock.common.html.AcceptLanguageWithLevel" );
+    private static Logger log = Logger.getLogger( AcceptLanguageWithLevel.class );
 
     public Locale locale = null;
     public float level=1;

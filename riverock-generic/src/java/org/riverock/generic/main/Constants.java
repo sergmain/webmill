@@ -22,14 +22,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.main;
 
 /**
  *
  * $Id$
  *
  */
-package org.riverock.generic.main;
-
 public class Constants
 {
     public static final String MILL_MEMBER_DIR    = "xml";

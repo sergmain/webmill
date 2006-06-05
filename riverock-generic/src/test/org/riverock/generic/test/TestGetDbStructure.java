@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Feb 27, 2003
- * Time: 12:06:35 AM
- *
- * $Id$
- */
 package org.riverock.generic.test;
 
 import java.io.FileOutputStream;
@@ -43,6 +35,13 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.config.GenericConfig;
 
+/**
+ * User: Admin
+ * Date: Feb 27, 2003
+ * Time: 12:06:35 AM
+ *
+ * $Id$
+ */
 public class TestGetDbStructure
 {
 

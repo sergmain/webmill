@@ -22,6 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.common.html;
+
+import java.util.Locale;
+
+import junit.framework.TestCase;
+import org.riverock.common.tools.StringTools;
 
 /**
  * Author: mill
@@ -30,14 +36,6 @@
  *
  * $Id$
  */
-
-package org.riverock.common.html;
-
-import java.util.Locale;
-
-import junit.framework.TestCase;
-import org.riverock.common.tools.StringTools;
-
 public class TestAcceptLanguage extends TestCase
 {
     public static class ITAL //InternalTestAcceptLanguage

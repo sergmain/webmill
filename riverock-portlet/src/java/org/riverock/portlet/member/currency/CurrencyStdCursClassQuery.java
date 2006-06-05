@@ -22,14 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * User: Admin
- * Date: Jan 5, 2003
- * Time: 2:50:24 PM
- *
- * $Id$
- */
 package org.riverock.portlet.member.currency;
 
 import java.util.List;
@@ -48,6 +40,13 @@ import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.portlet.schema.price.StandardCurrencyItemType;
 import org.riverock.webmill.container.ContainerConstants;
 
+/**
+ * User: Admin
+ * Date: Jan 5, 2003
+ * Time: 2:50:24 PM
+ *
+ * $Id$
+ */
 public class CurrencyStdCursClassQuery extends BaseClassQuery {
     private static Logger log = Logger.getLogger( CurrencyStdCursClassQuery.class );
 

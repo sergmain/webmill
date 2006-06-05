@@ -22,6 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.common.tools;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * User: Admin
@@ -30,11 +34,6 @@
  *
  * $Id$
  */
-package org.riverock.common.tools;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 public class NumberTools
 {
     /**

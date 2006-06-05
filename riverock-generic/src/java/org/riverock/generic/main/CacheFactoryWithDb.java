@@ -22,10 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * $Id$
- */
 package org.riverock.generic.main;
 
 import java.lang.reflect.Constructor;
@@ -39,6 +35,9 @@ import org.riverock.common.tools.MainTools;
 
 import org.apache.log4j.Logger;
 
+/**
+ * $Id$
+ */
 public class CacheFactoryWithDb
 {
     private static Logger log = Logger.getLogger( CacheFactoryWithDb.class );

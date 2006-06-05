@@ -22,15 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-
-/**
- * Author: mill
- * Date: Dec 3, 2002
- * Time: 12:31:38 PM
- *
- * $Id$
- */
-
 package org.riverock.portlet.image;
 
 import java.io.IOException;
@@ -52,10 +43,13 @@ import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 
-
-
-
-
+/**
+ * Author: mill
+ * Date: Dec 3, 2002
+ * Time: 12:31:38 PM
+ *
+ * $Id$
+ */
 public class ImageDescription extends HttpServlet
 {
     private static Logger cat = Logger.getLogger(ImageDescription.class);

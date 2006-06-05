@@ -42,7 +42,6 @@ import org.riverock.generic.startup.StartupApplication;
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
-
 /**
  * Author: mill
  * Date: Nov 28, 2002

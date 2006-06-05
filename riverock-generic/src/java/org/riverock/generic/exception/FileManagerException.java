@@ -22,6 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+package org.riverock.generic.exception;
 
 /**
  * User: serg_main
@@ -29,11 +30,6 @@
  * Time: 20:45:56
  * @author Serge Maslyukov
  * $Id$
- */
-
-package org.riverock.generic.exception;
-
-/**
  */
 public class FileManagerException extends Exception {
     public FileManagerException()
