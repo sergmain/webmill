@@ -126,7 +126,7 @@ public final class PriceListItemList {
             rs = ps.executeQuery();
 
             PortletSession session = renderRequest.getPortletSession();
-            ShopOrder order = (ShopOrder) session.getAttribute(ShopPortlet.ORDER_SESSION);
+            ShopOrder order = (ShopOrder) session.getAttribute(ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE);
             Shop shop = Shop.getInstance(shopParam.id_shop);
             while (rs.next()) {
                 Long idPk = RsetTools.getLong(rs, "ID_ITEM");

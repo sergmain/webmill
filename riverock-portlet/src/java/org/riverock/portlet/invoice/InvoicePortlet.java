@@ -71,6 +71,7 @@ import org.riverock.webmill.container.tools.PortletService;
  * $Id$
  */
 
+@SuppressWarnings({"UnusedAssignment"})
 public final class InvoicePortlet implements Portlet {
     private final static Logger log = Logger.getLogger( InvoicePortlet.class );
 
@@ -104,17 +105,16 @@ public final class InvoicePortlet implements Portlet {
             out = renderResponse.getWriter();
 
             PortletSession session = renderRequest.getPortletSession();
-            ShopOrder order = (ShopOrder)session.getAttribute( ShopPortlet.ORDER_SESSION );
+            ShopOrder order = (ShopOrder)session.getAttribute( ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE );
 
             if ( order == null )
                 return;
 
-            Shop shop = (Shop)session.getAttribute( ShopPortlet.CURRENT_SHOP );
+            Shop shop = (Shop)session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
 
             AuthSession authSession = (AuthSession)renderRequest.getUserPrincipal();
 
 
-            boolean isRegisterAllowed = false;
             boolean isActivateEmailOrder = false;
             String orderEmail = null;
 
@@ -434,7 +434,7 @@ public final class InvoicePortlet implements Portlet {
 
                 args1 = null;
                 out.write( str );
-                session.removeAttribute( ShopPortlet.ORDER_SESSION );
+                session.removeAttribute( ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE );
                 return;
             }
 /*

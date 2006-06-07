@@ -184,7 +184,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     public PortletSession getPortletSession( boolean b ) {
         if ( !httpRequest.isRequestedSessionIdValid() ) {
             this.session = null;
-            this.session = new PortletSessionImpl( httpRequest.getSession(true), portletContext );
+            this.session = new PortletSessionImpl( httpRequest.getSession(true), portletContext, namespace );
         }
         return session;
     }
@@ -697,7 +697,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.portalContext = portalContext;
         this.contextPath = contextPath;
         this.parameters = Collections.unmodifiableMap( parameters );
-        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext);
+        this.session = new PortletSessionImpl(portalRequestInstance.getHttpRequest().getSession(true), portletContext, namespace);
         this.httpRequest = portalRequestInstance.getHttpRequest();
         this.auth = portalRequestInstance.getAuth();
         this.locale = portalRequestInstance.getLocale();
@@ -718,7 +718,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_INFO_ATTRIBUTE, portalRequestInstance.getPortalInfo() );
         this.setAttribute( ContainerConstants.PORTAL_COOKIES_ATTRIBUTE, cookies );
 
-        // PORTAL_QUERY_STRING_ATTRIBUTE constants can be deleted 
+        // PORTAL_QUERY_STRING_ATTRIBUTE constants can be deleted
         // after rewrite invoke method in member module with 'lookup' type
         this.setAttribute( ContainerConstants.PORTAL_QUERY_STRING_ATTRIBUTE, httpRequest.getQueryString() );
         this.setAttribute( ContainerConstants.PORTAL_QUERY_METHOD_ATTRIBUTE, httpRequest.getMethod() );

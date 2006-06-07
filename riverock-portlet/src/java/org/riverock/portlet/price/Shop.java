@@ -27,7 +27,7 @@ package org.riverock.portlet.price;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
-
+import java.io.Serializable;
 
 
 import org.apache.log4j.Logger;
@@ -42,10 +42,11 @@ import org.riverock.sql.cache.SqlStatement;
 /**
  * $Id$
  */
-public final class Shop {
+@SuppressWarnings({"UnusedAssignment"})
+public class Shop implements Serializable {
     private final static Logger log = Logger.getLogger( Shop.class );
 
-    private static CacheFactory cache = new CacheFactory( Shop.class.getName() );
+    private transient static CacheFactory cache = new CacheFactory( Shop.class.getName() );
 
     public Long id_shop = null;
     public int is_close;
@@ -69,7 +70,6 @@ public final class Shop {
     public boolean isProcessInvoice = false; //  Нужен ли интерфейс для выписки счетов
     public boolean isNeedRecalc = false;//  Нужен ли интерфейс для пересчета из одной валюты в другую
 
-//    public Vector precision = null;
     public CurrencyPrecisionList precisionList = new CurrencyPrecisionList();
 
     public double discount = 0;
@@ -87,70 +87,13 @@ public final class Shop {
         header = null;
         code_shop = null;
         name_shop_for_price_list = null;
-//        order_email = null;
         dateUpload = null;
         dateCalcQuantity = null;
 
         super.finalize();
     }
 
-    public Shop() {
-    };
-
-/*
-    public static Long getShopID( DatabaseAdapter ora_, String codeShop )
-        throws SQLException, DatabaseException {
-        if( codeShop == null )
-            return null;
-
-        String sql_ = "select ID_SHOP from WM_PRICE_SHOP_LIST where CODE_SHOP = ?";
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = ora_.prepareStatement( sql_ );
-            ps.setString( 1, codeShop.toUpperCase() );
-            rs = ps.executeQuery();
-
-            if( rs.next() )
-                return RsetTools.getLong( rs, "ID_SHOP" );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-        return null;
-    }
-
-    public static Long getShopID( DatabaseAdapter db_, PortletRequest portletRequest )
-        throws Exception {
-
-        if( portletRequest == null )
-            return null;
-
-        Long siteId = new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
-
-        String sql_ = "select ID_SHOP from WM_PRICE_SHOP_LIST where ID_SITE=?";
-
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = db_.prepareStatement( sql_ );
-            RsetTools.setLong( ps, 1, siteId );
-            rs = ps.executeQuery();
-
-            if( rs.next() )
-                return RsetTools.getLong( rs, "ID_SHOP" );
-        }
-        finally {
-            DatabaseManager.close( rs, ps );
-            rs = null;
-            ps = null;
-        }
-        return null;
-    }
-*/
+    public Shop() {}
 
     public static Shop getInstance( Long id ) throws PriceException {
         try {

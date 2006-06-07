@@ -24,18 +24,17 @@
  */
 package org.riverock.portlet.price;
 
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.apache.log4j.Logger;
+
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.schema.price.CurrencyPrecisionListType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-
-
-import org.apache.log4j.Logger;
 
 /**
  * User: Admin
@@ -44,7 +43,8 @@ import org.apache.log4j.Logger;
  *
  * $Id$
  */
-public class CurrencyPrecisionList extends CurrencyPrecisionListType
+@SuppressWarnings({"UnusedAssignment"})
+public class CurrencyPrecisionList extends CurrencyPrecisionListType implements Serializable
 {
     private static Logger log = Logger.getLogger( CurrencyPrecisionList.class );
 
@@ -78,7 +78,6 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType
         catch (Exception e)
         {
             log.error("Error get precision currency list", e);
-//            throw new PriceException(e.toString());
         }
         finally
         {

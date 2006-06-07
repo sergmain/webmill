@@ -22,150 +22,304 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
+/*
+ * Copyright 2003,2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.riverock.webmill.portal.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.portlet.PortletContext;
 import javax.portlet.PortletSession;
+import javax.portlet.PortletSessionUtil;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import org.apache.log4j.Logger;
 
-/**
- * User: serg_main
- * Date: 12.05.2004
- * Time: 18:50:27
- * @author Serge Maslyukov
- * $Id$
- */
-public final class PortletSessionImpl implements PortletSession, HttpSession {
-    private final static Logger log = Logger.getLogger( PortletSessionImpl.class );
+import org.riverock.webmill.portal.namespace.Namespace;
 
-    private HttpSession session = null;
+/**
+ * Implementation of the <code>javax.portlet.PortletSession</code> interface.
+ *
+ * @author <a href="mailto:ddewolf@apache.org">David H. DeWolf</a>
+ * @author <a href="mailto:zheng@apache.org">ZHENG Zhong</a>
+ */
+public class PortletSessionImpl implements PortletSession, HttpSession {
+    private static final Logger log = Logger.getLogger(PortletSessionImpl.class);
+
+    /**
+     * The default scope (<code>PORTLET_SCOPE</code>) for storing objects.
+     */
+    private static final int DEFAULT_SCOPE = PortletSession.PORTLET_SCOPE;
+
+    /**
+     * The portlet scope namespace as defined in PLT. 15.3.
+     */
+    private static final String PORTLET_SCOPE_NAMESPACE = "javax.portlet.p.";
+
+    /**
+     * The portlet window ID / attribute name separator as defined in PLT. 15.3.
+     */
+    private static final char ID_NAME_SEPARATOR = '?';
+
+    // Private Member Variables ------------------------------------------------
+
+    /**
+     * The wrapped HttpSession object.
+     */
+    private HttpSession httpSession = null;
+
+    /**
+     * The portlet context.
+     */
     private PortletContext portletContext = null;
-    public PortletSessionImpl(HttpSession session, PortletContext portletContext){
-        if (session==null) {
+
+    /**
+     * The internal portlet window.
+     */
+    private Namespace namespace = null;
+
+    // Constructor -------------------------------------------------------------
+
+    /**
+     * Constructs an instance.
+     */
+    public PortletSessionImpl(HttpSession httpSession, PortletContext portletContext, Namespace namespace) {
+        if (httpSession == null) {
             throw new NullPointerException("session object is null");
         }
-        this.session = session;
         this.portletContext = portletContext;
-//        creationTime = System.currentTimeMillis();
+        this.namespace = namespace;
+        this.httpSession = httpSession;
     }
 
-    private long creationTime;
-    public long getCreationTime(){
-        return session.getCreationTime();
+    // PortletSession Impl: Attributes -----------------------------------------
+
+    public Object getAttribute(String name) {
+        return getAttribute(name, DEFAULT_SCOPE);
     }
 
-    public String getId(){
-        accessTime = System.currentTimeMillis();
-        return session.getId();
+    /**
+     * Returns the attribute of the specified name under the given scope.
+     *
+     * @param name  the attribute name.
+     * @param scope the scope under which the attribute object is stored.
+     * @return the attribute object.
+     */
+    public Object getAttribute(String name, int scope) {
+        validateNotNull("attributeName", name);
+        String key = (scope == PortletSession.APPLICATION_SCOPE)
+            ? name : createPortletScopedId(name);
+        return httpSession.getAttribute(key);
     }
 
-    private long accessTime;
-    public long getLastAccessedTime(){
-        return session.getLastAccessedTime();
+    public Enumeration getAttributeNames() {
+        return getAttributeNames(DEFAULT_SCOPE);
     }
 
-    public void setMaxInactiveInterval(int i){
-        accessTime = System.currentTimeMillis();
-        session.setMaxInactiveInterval(i);
+    public Enumeration getAttributeNames(int scope) {
+        // Return all attribute names in the nested HttpSession object.
+        if (scope == PortletSession.APPLICATION_SCOPE) {
+            return httpSession.getAttributeNames();
+        }
+        // Return attribute names with the portlet-scoped prefix.
+        else {
+            List<String> portletScopedNames = new ArrayList<String>();
+            for (Enumeration en = httpSession.getAttributeNames(); en.hasMoreElements();) {
+                String name = (String) en.nextElement();
+                if (isInCurrentPortletScope(name)) {
+                    portletScopedNames.add(
+                        PortletSessionUtil.decodeAttributeName(name));
+                }
+            }
+            return Collections.enumeration(portletScopedNames);
+        }
     }
 
-    public PortletContext getPortletContext(){
-        accessTime = System.currentTimeMillis();
+    public void removeAttribute(String name) {
+        removeAttribute(name, DEFAULT_SCOPE);
+    }
+
+    public void removeAttribute(String name, int scope) {
+        validateNotNull("attributeName", name);
+        if (scope == PortletSession.APPLICATION_SCOPE) {
+            httpSession.removeAttribute(name);
+        } else {
+            httpSession.removeAttribute(createPortletScopedId(name));
+        }
+    }
+
+    public void setAttribute(String name, Object value) {
+        setAttribute(name, value, DEFAULT_SCOPE);
+    }
+
+    public void setAttribute(String name, Object value, int scope) {
+        validateNotNull("attributeName", name);
+        if (scope == PortletSession.APPLICATION_SCOPE) {
+            httpSession.setAttribute(name, value);
+        } else {
+            httpSession.setAttribute(createPortletScopedId(name), value);
+        }
+    }
+
+    // PortletSession Impl: Other Methods --------------------------------------
+
+    public PortletContext getPortletContext() {
         return portletContext;
     }
 
-    public int getMaxInactiveInterval(){
-        accessTime = System.currentTimeMillis();
-        return session.getMaxInactiveInterval();
+    public long getCreationTime() {
+        return httpSession.getCreationTime();
     }
 
-    public Object getAttribute(String s){
-        accessTime = System.currentTimeMillis();
-        return session.getAttribute( s );
+    public String getId() {
+        return httpSession.getId();
     }
 
-    public Object getAttribute(String s, int i){
-        accessTime = System.currentTimeMillis();
-        return session.getAttribute(s);
+    public long getLastAccessedTime() {
+        return httpSession.getLastAccessedTime();
     }
 
-    public Enumeration getAttributeNames(){
-        accessTime = System.currentTimeMillis();
-        return session.getAttributeNames();
+    public int getMaxInactiveInterval() {
+        return httpSession.getMaxInactiveInterval();
     }
 
-    public Enumeration getAttributeNames(int i){
-        accessTime = System.currentTimeMillis();
-        return session.getAttributeNames();
+    public void invalidate() throws IllegalStateException {
+        httpSession.invalidate();
     }
 
-    public void setAttribute(String s, Object o){
-        accessTime = System.currentTimeMillis();
-        session.setAttribute( s,  o);
+    public boolean isNew() throws IllegalStateException {
+        return httpSession.isNew();
     }
 
-    public void setAttribute(String s, Object o, int i){
-        accessTime = System.currentTimeMillis();
-        session.setAttribute( s,  o);
-    }
-
-    public void removeAttribute(String s){
-        accessTime = System.currentTimeMillis();
-        session.removeAttribute( s);
-    }
-
-    public void removeAttribute(String s, int i){
-        accessTime = System.currentTimeMillis();
-        try
-        {
-            session.removeAttribute( s );
-        }
-        catch (IllegalStateException e)
-        {
-            log.error("session.removeAttribute() ", e);
-            throw e;
+    /**
+     * Specifies the time, in seconds, between client requests, before the
+     * portlet container invalidates this session. A negative time indicates
+     * the session should never timeout.
+     * <p/>
+     * [Portlet Spec. PLT. 15.4.] If the PortletSession object is invalidated
+     * by a portlet, the portlet container must invalidate the associated
+     * HttpSession object.
+     * </p>
+     *
+     * @param interval an integer specifying the number of seconds.
+     */
+    public void setMaxInactiveInterval(int interval) {
+        httpSession.setMaxInactiveInterval(interval);
+        if (log.isDebugEnabled()) {
+            log.debug("Session timeout set to: " + interval);
         }
     }
 
-    public void invalidate(){
-        accessTime = System.currentTimeMillis();
-        session.invalidate();
+    // Private Methods ---------------------------------------------------------
+
+    /**
+     * Creates portlet-scoped ID for the specified attribute name.
+     * Portlet-scoped ID for a given attribute name has the following form:
+     * <code>javax.portlet.p.&lt;ID&gt;?&lt;name&gt;</code>
+     * where <code>ID</code> is a unique identification for the portlet window
+     * (assigned by the portal/portlet-container) that must not contain a '?'
+     * character. <code>name</code> is the attribute name.
+     * <p/>
+     * Refer to Portlet Specification PLT. 15.3 for more details.
+     * </p>
+     *
+     * @param name the attribute name.
+     * @return portlet-scoped ID for the attribute name.
+     */
+    private String createPortletScopedId(String name) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(PORTLET_SCOPE_NAMESPACE);
+        buffer.append(namespace.getNamespace());
+        buffer.append(ID_NAME_SEPARATOR);
+        buffer.append(name);
+        return buffer.toString();
     }
 
-    public boolean isNew(){
-        accessTime = System.currentTimeMillis();
-        return session.isNew();
+    /**
+     * Checks if the attribute name in APPLICATION_SCOPE is in the current
+     * portlet scope.
+     *
+     * @param name the attribute name to check.
+     * @return true if the attribute name is in the current portlet scope.
+     * @see #createPortletScopedId(String)
+     */
+    private boolean isInCurrentPortletScope(String name) {
+        // Portlet-scoped attribute names MUST start with "javax.portlet.p.",
+        //   and contain the ID-name separator '?'.
+        if (name.startsWith(PORTLET_SCOPE_NAMESPACE)
+            && name.indexOf(ID_NAME_SEPARATOR) > -1) {
+            String id = name.substring(PORTLET_SCOPE_NAMESPACE.length(),
+                name.indexOf(ID_NAME_SEPARATOR));
+            return (id.equals(namespace.getNamespace()));
+        }
+        // Application-scoped attribute names are not in portlet scope.
+        else {
+            return false;
+        }
     }
 
-    // HttpSession methods implementation
+    private void validateNotNull(String argumentName, Object argument) throws IllegalArgumentException {
+        if (argument == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Validation failed for argument: " + argumentName + ": argument should not be null.");
+            }
+            throw new IllegalArgumentException("Illegal Argument: " + argumentName+ " (argument should not be null)");
+        }
+    }
+
+    // HttpSession Impl --------------------------------------------------------
 
     public ServletContext getServletContext() {
-        return session.getServletContext();
+        return httpSession.getServletContext();
     }
 
-    public HttpSessionContext getSessionContext() {
-        return session.getSessionContext();
+    /**
+     * DEPRECATED: implemented for backwards compatability with HttpSession.
+     *
+     * @deprecated
+     */
+    @SuppressWarnings({"deprecation"})
+    public javax.servlet.http.HttpSessionContext getSessionContext() {
+        return httpSession.getSessionContext();
     }
 
-    public Object getValue(String s) {
-        return session.getValue( s );
+    public Object getValue(String name) {
+        return this.getAttribute(name, DEFAULT_SCOPE);
     }
 
+    /**
+     * DEPRECATED: Implemented for backwards compatibility with HttpSession.
+     *
+     * @deprecated
+     */
+    @SuppressWarnings({"deprecation"})
     public String[] getValueNames() {
-        return session.getValueNames();
+        return httpSession.getValueNames();
     }
 
-    public void putValue(String s, Object o) {
-        session.putValue( s, o );
+    public void putValue(String name, Object value) {
+        this.setAttribute(name, value, DEFAULT_SCOPE);
     }
 
-    public void removeValue(String s) {
-        session.removeValue( s );
+    public void removeValue(String name) {
+        this.removeAttribute(name, DEFAULT_SCOPE);
     }
+
 }
