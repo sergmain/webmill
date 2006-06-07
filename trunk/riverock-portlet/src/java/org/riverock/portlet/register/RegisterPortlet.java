@@ -47,7 +47,6 @@ import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.web.response.PortletModuleResponseImpl;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.url.WebmillPortletUrlProviderImpl;
-import org.riverock.portlet.main.Constants;
 import org.riverock.portlet.register.bean.GenericBean;
 import org.riverock.webmill.container.tools.PortletMetadataService;
 import org.riverock.webmill.container.tools.PortletService;

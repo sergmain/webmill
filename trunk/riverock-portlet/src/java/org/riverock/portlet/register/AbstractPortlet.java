@@ -48,7 +48,6 @@ import org.riverock.module.web.request.ModuleRequest;
 import org.riverock.module.web.request.WebmillPortletModuleRequestImpl;
 import org.riverock.module.web.response.ModuleResponse;
 import org.riverock.module.web.response.PortletModuleResponseImpl;
-import org.riverock.portlet.main.Constants;
 
 /**
  * @author SMaslyukov
