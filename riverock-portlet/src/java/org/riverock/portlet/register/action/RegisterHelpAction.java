@@ -27,7 +27,7 @@ package org.riverock.portlet.register.action;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
-import org.riverock.portlet.main.Constants;
+import org.riverock.portlet.register.Constants;
 
 /**
  * @author SergeMaslyukov

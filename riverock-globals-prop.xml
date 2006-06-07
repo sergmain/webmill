@@ -56,7 +56,7 @@
 
     <property name="myfaces-api.lib" value="myfaces-api-1.1.3.jar"/>
     <property name="myfaces-core.lib" value="myfaces-impl-1.1.3.jar"/>
-    <property name="myfaces-tomahawk.lib" value="tomahawk-1.1.2.jar"/>
+    <property name="myfaces-tomahawk.lib" value="tomahawk-1.1.4-SNAPSHOT-hacked.jar"/>
     <property name="myfaces-sandbox.lib" value="sandbox.jar"/>
 
     <property name="myfaces.lib" value="myfaces-all-1.1.1.jar"/>

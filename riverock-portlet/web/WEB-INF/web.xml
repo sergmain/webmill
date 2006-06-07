@@ -116,7 +116,7 @@
             Default: "false"
         </description>
 		<param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
 
     <filter>

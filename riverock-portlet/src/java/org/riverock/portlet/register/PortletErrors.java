@@ -31,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.riverock.module.action.ActionMessage;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.web.request.ModuleRequest;
-import org.riverock.portlet.main.Constants;
 
 
 /**
