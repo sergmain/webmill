@@ -71,6 +71,9 @@ public final class PageRequestContextProcessor implements RequestContextProcesso
             log.debug("ctxId: " + ctxId);
         }
 
+        if (ctxId==null) {
+            return null;
+        }
         return RequestContextUtils.getRequestContextBean(factoryParameter, ctxId);
     }
 
