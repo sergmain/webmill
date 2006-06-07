@@ -27,10 +27,13 @@ package org.riverock.webmill.portal;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -44,7 +47,6 @@ import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.exception.PortalException;
 
 /**
  * User: SergeMaslyukov
@@ -261,16 +263,27 @@ public final class PortalRequestProcessor {
 
                 // transform and output previous page elements
                 if (outputStream!=null) {
-                    processTransforming( outputStream, portalRequestInstance );
+                    try {
+                        ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
+                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes );
+                        portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
+                    } catch (Exception e) {
+                        log.warn("Error transform page element", e);
+                        portalRequestInstance.byteArrayOutputStream.write("Error transform page element".getBytes());
+                    }
                     outputStream = null;
                 }
 
                 if ( log.isDebugEnabled() ) {
                     synchronized(syncCtxDebug) {
-                        MainTools.writeToFile( 
-                          WebmillConfig.getWebmillDebugDir() + File.separatorChar +
-                              System.currentTimeMillis()+
-                              "ctx-from-url-"+i+".xml", item.getData() );
+                        try {
+                            MainTools.writeToFile(
+                              WebmillConfig.getWebmillDebugDir() + File.separatorChar +
+                                  System.currentTimeMillis()+
+                                  "ctx-from-url-"+i+".xml", item.getData() );
+                        } catch (Throwable e) {
+                            log.debug("Error marshal debug", e);
+                        }
                     }
                 }
 
@@ -279,7 +292,7 @@ public final class PortalRequestProcessor {
             else {
                 // 1st xml element
                 if ( outputStream==null ) {
-                    outputStream = new ByteArrayOutputStream();
+                    outputStream = new ByteArrayOutputStream(2000);
 
                     // format for controll of expiration of content
                     //<META HTTP-EQUIV="Expires" CONTENT="Wed, 01 Jan 1986 00:00:01 GMT">
@@ -312,7 +325,14 @@ public final class PortalRequestProcessor {
                         }
                     }
 
-                    processTransforming( outputStream, portalRequestInstance );
+                    try {
+                        ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
+                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes );
+                        portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
+                    } catch (Exception e) {
+                        log.warn("Error transform page element", e);
+                        portalRequestInstance.byteArrayOutputStream.write("Error transform page element".getBytes());
+                    }
                     outputStream = null;
                 }
             }
@@ -330,8 +350,8 @@ public final class PortalRequestProcessor {
     }
 
     private static final Object syncObj = new Object();
-    private static void processTransforming( final ByteArrayOutputStream xml, final PortalRequestInstance portalRequestInstance )
-        throws Exception {
+    private static void processTransforming( final ByteArrayOutputStream xml, Transformer transformer, ByteArrayOutputStream arrayOutputStream ) throws IOException, TransformerException {
+
         xml.write( "</SiteTemplate>".getBytes() );
 
         if ( log.isDebugEnabled() )
@@ -347,14 +367,14 @@ public final class PortalRequestProcessor {
         byte[] bytes = xml.toByteArray();
         if (log.isDebugEnabled()) {
             synchronized( syncObj) {
-		try {
-                	String fileName = WebmillConfig.getWebmillTempDir() + "portlet-data.xml";
-                	log.debug( "write portlet result to file "+fileName );
-                	MainTools.writeToFile( fileName, bytes );
-		}
-		catch(Throwable th) {
-			log.warn("Error write debug info", th);
-		}
+                try {
+                    String fileName = WebmillConfig.getWebmillTempDir() + "portlet-data.xml";
+                    log.debug( "write portlet result to file "+fileName );
+                    MainTools.writeToFile( fileName, bytes );
+                }
+                catch(Throwable th) {
+                    log.warn("Error write debug info", th);
+                }
             }
         }
 
@@ -365,14 +385,7 @@ public final class PortalRequestProcessor {
             log.debug("#40.2");
         }
 
-        try {
-            portalRequestInstance.xslt.getTransformer().transform( xmlSource, new StreamResult( portalRequestInstance.byteArrayOutputStream ) );
-        }
-        catch(javax.xml.transform.TransformerException e) {
-            final String es = "TransformerException";
-            log.error(es, e);
-            throw new PortalException( es, e );
-        }
+        transformer.transform( xmlSource, new StreamResult( arrayOutputStream ) );
     }
 
     static SitePortletData setData(String data, boolean isError, boolean isXml) {
