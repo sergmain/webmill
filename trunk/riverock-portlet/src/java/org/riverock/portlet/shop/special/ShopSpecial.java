@@ -88,7 +88,7 @@ public class ShopSpecial extends HttpServlet
 
             PortletSession session = renderRequest.getPortletSession();
 
-            OrderType b = (OrderType) session.getAttribute(ShopPortlet.ORDER_SESSION);
+            OrderType b = (OrderType) session.getAttribute(ShopPortlet.ORDER_SESSION, PortletSession.APPLICATION_SCOPE);
             if (cat.isDebugEnabled())
                 cat.debug("BasketShopSession - " + b);
 

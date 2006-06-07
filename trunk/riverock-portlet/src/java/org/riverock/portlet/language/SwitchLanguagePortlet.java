@@ -116,8 +116,6 @@ public final class SwitchLanguagePortlet implements Portlet {
 
         try {
 
-            PortletSession session = actionRequest.getPortletSession();
-
             if ( log.isDebugEnabled() ) {
                 for ( Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
                     String s = (String)e.nextElement();
@@ -149,6 +147,7 @@ public final class SwitchLanguagePortlet implements Portlet {
                 log.debug("List current attribute in session:");
                 log.debug("New url - " + newUrl);
 
+                PortletSession session = actionRequest.getPortletSession();
                 for (Enumeration e = session.getAttributeNames(); e.hasMoreElements();) {
                     String nameParam = (String) e.nextElement();
                     log.debug("#Attribute -  " + nameParam);

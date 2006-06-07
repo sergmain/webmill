@@ -85,6 +85,7 @@ public class CurrencyList {
             log.error("Exception in ", exception);
         }
     }
+
     public CurrencyList(Long idSite) throws Exception {
         DatabaseAdapter db_ = null;
         try {

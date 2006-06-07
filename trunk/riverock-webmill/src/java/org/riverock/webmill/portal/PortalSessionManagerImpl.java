@@ -85,11 +85,11 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
                         " is " + checkAccess + ", auth: " + auth_ );
             }
             if (checkAccess) {
-                session.setAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, auth_);
+                session.setAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, auth_, PortletSession.APPLICATION_SCOPE);
                 return true;
             }
             else {
-                session.removeAttribute( org.riverock.sso.main.Constants.AUTH_SESSION );
+                session.removeAttribute( org.riverock.sso.main.Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE );
                 return false;
             }
         }

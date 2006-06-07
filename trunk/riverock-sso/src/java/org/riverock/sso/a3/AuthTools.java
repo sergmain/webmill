@@ -27,6 +27,9 @@ package org.riverock.sso.a3;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
+
+import org.apache.log4j.Logger;
 
 import org.riverock.sso.main.Constants;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -36,6 +39,7 @@ import org.riverock.interfaces.sso.a3.AuthInfo;
  * $Id$
  */
 public final class AuthTools {
+    private final static Logger log = Logger.getLogger( AuthTools.class );
 
     public static AuthInfo getAuthInfo(PortletRequest request) {
 
@@ -47,14 +51,20 @@ public final class AuthTools {
     }
 
     public static AuthSession getAuthSession(HttpSession session){
-        return (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
+        if (session instanceof PortletSession) {
+            return (AuthSession) ((PortletSession)session).getAttribute(Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE);
+        }
+        else {
+            log.warn("Search auth session object in HttpSession");
+            return (AuthSession) session.getAttribute(Constants.AUTH_SESSION);
+        }
     }
 
     public static AuthSession getAuthSession(PortletRequest request){
-        return (AuthSession) request.getPortletSession(true).getAttribute(Constants.AUTH_SESSION);
+        return (AuthSession) request.getPortletSession(true).getAttribute(Constants.AUTH_SESSION, PortletSession.APPLICATION_SCOPE);
     }
 
     public static AuthSession getAuthSession(HttpServletRequest request){
-        return (AuthSession) request.getSession(true).getAttribute(Constants.AUTH_SESSION);
+        return getAuthSession(request.getSession(true));
     }
 }

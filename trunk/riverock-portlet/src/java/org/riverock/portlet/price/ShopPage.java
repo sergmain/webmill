@@ -35,8 +35,6 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-
-
 import org.apache.log4j.Logger;
 import org.exolab.castor.xml.Marshaller;
 
@@ -46,13 +44,13 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.shop.ShopPageType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
+import org.riverock.portlet.shop.bean.ShopOrder;
 import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
-import org.riverock.portlet.shop.bean.ShopOrder;
+import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
 import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.tools.PortletService;
-import org.riverock.webmill.container.ContainerConstants;
 
 /**
  *
@@ -64,7 +62,7 @@ import org.riverock.webmill.container.ContainerConstants;
 public final class ShopPage implements PortletResultObject, PortletResultContent {
     private final static Logger log = Logger.getLogger( ShopPage.class );
 
-    private ShopPageType shopPage = new ShopPageType();;
+    private ShopPageType shopPage = new ShopPageType();
     private Shop shop = null;
     private String itemDirect = "ASC";
     private String priceDirect = "ASC";
@@ -89,21 +87,25 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         return getXml( "ShopPage" );
     }
 
-    private static Object syncDebug = new Object();
+    private final static Object syncDebug = new Object();
     public byte[] getXml( String rootElement ) throws Exception {
         if ( log.isDebugEnabled() ) {
             synchronized(syncDebug) {
-                log.debug( "Unmarshal ShopPage object" );
-                FileWriter w = new FileWriter( SiteUtils.getTempDir()+File.separatorChar+"portlet-shop.xml" );
-                Marshaller marsh = new Marshaller( w );
-                marsh.setMarshalAsDocument( true );
-                marsh.setEncoding( "utf-8" );
-                marsh.setRootElement( rootElement );
-                marsh.marshal( shopPage );
-                marsh = null;
-                w.flush();
-                w.close();
-                w = null;
+                try {
+                    log.debug( "Unmarshal ShopPage object" );
+                    FileWriter w = new FileWriter( SiteUtils.getTempDir()+File.separatorChar+"portlet-shop.xml" );
+                    Marshaller marsh = new Marshaller( w );
+                    marsh.setMarshalAsDocument( true );
+                    marsh.setEncoding( "utf-8" );
+                    marsh.setRootElement( rootElement );
+                    marsh.marshal( shopPage );
+                    marsh = null;
+                    w.flush();
+                    w.close();
+                    w = null;
+                } catch (Throwable e) {
+                    log.debug("Error marshal debug", e);
+                }
             }
         }
         return XmlTools.getXml( shopPage, rootElement );
@@ -122,9 +124,9 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
         try {
             db_ = DatabaseAdapter.getInstance();
             PortletSession session = renderRequest.getPortletSession();
-            ShopOrder order = (ShopOrder) session.getAttribute( ShopPortlet.ORDER_SESSION );
+            ShopOrder order = (ShopOrder) session.getAttribute( ShopPortlet.ORDER_SESSION , PortletSession.APPLICATION_SCOPE);
 
-            shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP );
+            shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
 
             if (shop == null)
             {

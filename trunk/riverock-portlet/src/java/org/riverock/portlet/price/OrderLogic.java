@@ -62,6 +62,7 @@ import org.riverock.webmill.container.tools.PortletService;
  * <p/>
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class OrderLogic {
     private final static Logger log = Logger.getLogger( OrderLogic.class );
 
@@ -86,7 +87,14 @@ public final class OrderLogic {
             }
 
             // get current shop from session
-            Shop tempShop = ( Shop ) session.getAttribute( ShopPortlet.CURRENT_SHOP );
+            Object fromSession = getFromSession(session, ShopPortlet.CURRENT_SHOP);
+            if (log.isDebugEnabled()) {
+                log.debug("fromSession: " + fromSession);
+                if (fromSession!=null) {
+                    log.debug("fromSession class name: " + fromSession.getClass().getName());
+                }
+            }
+            Shop tempShop = ( Shop ) fromSession;
 
             if( log.isDebugEnabled() ) {
                 log.debug( "tempShop " + tempShop );
@@ -102,7 +110,7 @@ public final class OrderLogic {
                     log.debug( "tempShop is null and idShop is not null " );
 
                 shop = Shop.getInstance( idShop );
-                session.setAttribute( ShopPortlet.CURRENT_SHOP, shop );
+                setInSession(session, ShopPortlet.CURRENT_SHOP, shop);
             }
             // если в сессии есть текущий магазин и
             // код вызванного магазина совпадает с кодом мкгаза в сессии,
@@ -127,8 +135,8 @@ public final class OrderLogic {
                 if( log.isDebugEnabled() )
                     log.debug( "idShop of created shop - " + shop.id_shop );
 
-                session.removeAttribute( ShopPortlet.CURRENT_SHOP );
-                session.setAttribute( ShopPortlet.CURRENT_SHOP, shop );
+                removeFromSession(session, ShopPortlet.CURRENT_SHOP);
+                setInSession(session, ShopPortlet.CURRENT_SHOP, shop);
             }
 // теперь в shop находится текущий магаз ( тот который в сессии )
 // если его создание прошло успешно - магаз с вызываемым кодом действительно есть,
@@ -144,7 +152,7 @@ public final class OrderLogic {
 // если текущий магаз определен, то ищем в сессии заказ, связанный с этим магазом.
 // если заказа в сессии нет, то создаем
             if( shop != null && shop.id_shop != null ) {
-                order = ( ShopOrder ) session.getAttribute( ShopPortlet.ORDER_SESSION );
+                order = ( ShopOrder ) getFromSession(session, ShopPortlet.ORDER_SESSION);
 
                 if( log.isDebugEnabled() )
                     log.debug( "order object - " + order );
@@ -193,8 +201,8 @@ public final class OrderLogic {
 
                     addItem( dbDyn, order, id_item, count, siteId );
                 }
-                session.removeAttribute( ShopPortlet.ORDER_SESSION );
-                session.setAttribute( ShopPortlet.ORDER_SESSION, order );
+                removeFromSession(session, ShopPortlet.ORDER_SESSION);
+                setInSession(session, ShopPortlet.ORDER_SESSION, order );
             }
 
             dbDyn.commit();
@@ -202,9 +210,12 @@ public final class OrderLogic {
         }
         catch( Exception e ) {
             try {
-                dbDyn.rollback();
+                if (dbDyn!=null) {
+                    dbDyn.rollback();
+                }
             }
             catch( Exception e1 ) {
+                // catch rollback error
             }
 
             final String es = "Error processing OrderLogic";
@@ -215,6 +226,18 @@ public final class OrderLogic {
             DatabaseManager.close( dbDyn );
             dbDyn = null;
         }
+    }
+
+    private static void removeFromSession(PortletSession session, String key) {
+        session.removeAttribute( key, PortletSession.APPLICATION_SCOPE );
+    }
+
+    private static void setInSession(PortletSession session, String key, Object value) {
+        session.setAttribute( key, value, PortletSession.APPLICATION_SCOPE );
+    }
+
+    private static Object getFromSession(PortletSession session, String key) {
+        return session.getAttribute( key, PortletSession.APPLICATION_SCOPE );
     }
 
     public static void initAuthSession( final DatabaseAdapter dbDyn, final OrderType order, final AuthSession authSession )
@@ -272,7 +295,7 @@ public final class OrderLogic {
         PreparedStatement ps = null;
         try {
             if( authSession != null ) {
-		// Todo remove usage of WM_AUTH_USER table
+		        // Todo remove usage of WM_AUTH_USER table
                 switch( dbDyn.getFamaly() ) {
                     case DatabaseManager.MYSQL_FAMALY:
                         Long userId = DatabaseManager.getLongValue( dbDyn, "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ", new Object[]{authSession.getUserLogin()} );
@@ -286,6 +309,9 @@ public final class OrderLogic {
 
                             RsetTools.setLong( ps, 1, userId );
                             RsetTools.setLong( ps, 2, order.getIdOrder() );
+                        }
+                        else {
+                            throw new IllegalStateException("userId not found for user login: " +authSession.getUserLogin());
                         }
                         break;
                     default:
@@ -667,7 +693,7 @@ public final class OrderLogic {
         }
     }
 
-    private static Object syncInitItemObj = new Object();
+    private final static Object syncInitItemObj = new Object();
 
     public static OrderItemType initItem( DatabaseAdapter db_, Long idItem, long siteId )
         throws Exception {
