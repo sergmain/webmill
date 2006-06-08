@@ -38,5 +38,11 @@
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 
+    <managed-bean>
+        <managed-bean-name>isUserInRole</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.main.UserInRoleChecker</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
 
 </faces-config>

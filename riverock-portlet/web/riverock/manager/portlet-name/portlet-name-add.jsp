@@ -22,9 +22,11 @@
 
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.PortletName" var="msg"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
 <f:view>
-    <h:form id="add-portlet-name-form">
+    <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
+    <h:form id="add-portlet-name-form" rendered="#{isUserInRole['webmill.portal-manager']}">
 
         <h:panelGrid columns="1" rendered="#{!empty portletNameSessionBean.portletName}">
 

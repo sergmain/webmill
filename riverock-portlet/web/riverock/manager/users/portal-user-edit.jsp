@@ -5,6 +5,7 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.PortalUser" var="msg"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
 <style type="text/css">
     td {
@@ -22,7 +23,8 @@
     }
 </style>
 <f:view>
-    <h:form id="edit-portal-user-form">
+    <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
+    <h:form id="edit-portal-user-form" rendered="#{isUserInRole['webmill.portal-manager']}">
 
         <h:panelGrid columns="1" rendered="#{!empty portalUserSessionBean.portalUser}">
 

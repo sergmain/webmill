@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
+
 <style type="text/css">
     TD {
         vertical-align: top;
@@ -26,7 +28,8 @@
 </style>
 
 <f:view>
-    <h:form>
+    <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
+    <h:form rendered="#{isUserInRole['webmill.site-manager']}">
 
         <f:subview id="site-top-actions-subview">
             <jsp:include page="site-top-actions.jsp"/>
