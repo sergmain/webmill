@@ -28,45 +28,45 @@
 <portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
-        	<description>Webmill shop manager</description>
-        	<portlet-name>riverock.shop-manager</portlet-name>
-        	<display-name>Webmill shop manager</display-name>
-            <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
-            <init-param>
-                <name>default-view</name>
-                <value>/riverock/shop/manager/index.jsp</value>
-            </init-param>
+        <description>Webmill shop manager</description>
+        <portlet-name>webmill.shop-manager</portlet-name>
+        <display-name>Webmill shop manager</display-name>
+        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+        <init-param>
+            <name>default-view</name>
+            <value>/riverock/shop/manager/index.jsp</value>
+        </init-param>
 
-        	<expiration-cache>-1</expiration-cache>
-        	<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>VIEW</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Webmill shop manager</title>
-			<short-title>Webmil shop manager</short-title>
-			<keywords>webmill, shop, manager</keywords>
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Webmill shop manager</title>
+            <short-title>Webmil shop manager</short-title>
+            <keywords>webmill, shop, manager</keywords>
 		</portlet-info>
 	</portlet>
 	<portlet>
-        	<description>Webmill portal manager</description>
-        	<portlet-name>riverock.webmill-manager</portlet-name>
-        	<display-name>Webmill manager</display-name>
-            <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
-            <init-param>
-                <name>default-view</name>
-                <value>/riverock/manager/index.jsp</value>
-            </init-param>
+        <description>Webmill portal manager</description>
+        <portlet-name>webmill.portal-manager</portlet-name>
+        <display-name>Webmill portal manager</display-name>
+        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+        <init-param>
+            <name>default-view</name>
+            <value>/riverock/manager/index.jsp</value>
+        </init-param>
 
-        	<expiration-cache>-1</expiration-cache>
-        	<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>VIEW</portlet-mode>
-		</supports>
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
 		<portlet-info>
-			<title>Webmill manager</title>
-			<short-title>Webmil manager</short-title>
-			<keywords>webmill, manager</keywords>
+			<title>Webmill portal manager</title>
+			<short-title>Webmil portal manager</short-title>
+			<keywords>webmill, portal, manager</keywords>
 		</portlet-info>
 	</portlet>
 	<portlet>
@@ -216,9 +216,9 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<name>class-name-get-list</name>
 			<value>org.riverock.portlet.job.FaqItem</value>
 		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
+        <supports>
+            <mime-type>text/html</mime-type>
+        </supports>
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>

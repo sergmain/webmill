@@ -71,6 +71,10 @@ public class FacesTools {
         return defValue;
     }
 
+    public static boolean isUserInRole(String role) {
+        return getFacesContext().getExternalContext().isUserInRole(role);
+    }
+
     public static FacesContext getFacesContext() {
         return FacesContext.getCurrentInstance();
     }

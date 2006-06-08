@@ -6,12 +6,12 @@
 
 
 <f:view>
-<h:form id="foo">
+<h:form id="foo" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <f:subview id="select-index-subview" >
+        <f:subview id="select-index-subview">
             <jsp:include page="index-inc.jsp"/>
         </f:subview>
 
 </h:form>
+<h:outputText value="not logged" style="font-size:10px" rendered="#{!isUserInRole['webmill.authentic']}"/>
 </f:view>
-

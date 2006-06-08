@@ -21,9 +21,11 @@
 </style>
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Holding" var="msg"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
 <f:view>
-    <h:form id="foo" rendered="#{holdingSessionBean.delete}">
+    <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
+    <h:form id="foo" rendered="#{holdingSessionBean.delete and isUserInRole['webmill.portal-manager']}">
 
         <h:panelGrid columns="2">
 

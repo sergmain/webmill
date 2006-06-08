@@ -26,7 +26,6 @@ package org.riverock.webmill.container.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.ListResourceBundle;
 import java.util.Map;
 import java.util.Properties;
@@ -46,43 +45,42 @@ public abstract class XmlResourceBundle extends ListResourceBundle {
         if (resource!=null) {
             return resource;
         }
-
-        Properties properties = null;
-        try {
-            properties = loadFromXml();
-        }
-        catch (Exception e) {
-            String es = "Error load properties from xml file " +getFileName();
-            logError(es, e);
-            throw new IllegalStateException(es, e);
-        }
-        resource = new Object[properties.size()][2];
-        Iterator<Map.Entry<Object, Object>> iterator = properties.entrySet().iterator();
-        int i=0;
-        while (iterator.hasNext()) {
-            Map.Entry<Object, Object> entry = iterator.next();
-            resource[i][0] = entry.getKey();
-            resource[i][1] = entry.getValue();
-            i++;
-        }
-
+        prepareProperties(this);
         return resource;
     }
 
-    public String getFileName() {
-        String name = this.getClass().getName();
+    private static void prepareProperties(XmlResourceBundle xmlResourceBundle) {
+        Properties properties;
+        try {
+            properties = loadFromXml(xmlResourceBundle);
+        }
+        catch (Exception e) {
+            String es = "Error load properties from xml file " +getFileName(xmlResourceBundle);
+            xmlResourceBundle.logError(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        xmlResourceBundle.resource = new Object[properties.size()][2];
+        int i=0;
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            xmlResourceBundle.resource[i][0] = entry.getKey();
+            xmlResourceBundle.resource[i][1] = entry.getValue();
+            i++;
+        }
+    }
+
+    private static String getFileName(XmlResourceBundle xmlResourceBundle) {
+        String name = xmlResourceBundle.getClass().getName();
         name = "/" + name.replace( '.', '/');
 
         return name + ".xml";
     }
 
-    private Properties loadFromXml() throws IOException {
+    private static Properties loadFromXml(XmlResourceBundle xmlResourceBundle) throws IOException {
 
-        InputStream stream = this.getClass().getResourceAsStream( getFileName() );
+        InputStream stream = xmlResourceBundle.getClass().getResourceAsStream( getFileName(xmlResourceBundle) );
         Properties properties = new Properties();
         properties.loadFromXML( stream );
         stream.close();
-        stream = null;
 
         return properties;
     }
