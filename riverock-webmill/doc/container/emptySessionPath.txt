@@ -1,0 +1,17 @@
+In summary, you need to modify Tomcat's server.xml (located in the conf
+directory) to add the attribute emptySessionPath="true" to the 
+non-SSL HTTP/1.1 <Connector> descriptor:
+
+    <!-- Define a non-SSL HTTP/1.1 Connector on port 8080 -->
+    <Connector port="8080"
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" redirectPort="8443" acceptCount="100"
+               connectionTimeout="20000" disableUploadTimeout="true" 
+               emptySessionPath="true" /> 
+
+
+
+Note that server.xml can sometimes be picky about tabs and spaces in the 
+<Connector/> definition.  If you have made the above modification and still
+can't get download to work, put emptySessionPath on the same line as 
+disableUploadTimeout

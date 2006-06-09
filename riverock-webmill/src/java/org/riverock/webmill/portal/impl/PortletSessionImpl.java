@@ -101,6 +101,11 @@ public class PortletSessionImpl implements PortletSession, HttpSession {
      * Constructs an instance.
      */
     public PortletSessionImpl(HttpSession httpSession, PortletContext portletContext, Namespace namespace) {
+        if (log.isDebugEnabled()) {
+            log.debug("Create new portlet session. HttpSession: " + httpSession);
+            log.debug("http session ID: "+httpSession.getId());
+            log.debug("http session context path: "+httpSession.getServletContext().getRealPath("/"));
+        }
         if (httpSession == null) {
             throw new NullPointerException("session object is null");
         }

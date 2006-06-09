@@ -54,7 +54,10 @@ public class TestHashtable
             System.out.println( e.nextElement() );
          }
 */
-
+        while (iterator.hasNext()) {
+            Object o =  iterator.next();
+            
+        }
         System.out.println("count element - "+hash.size());
         hash.put( "5", "Object 5");
         System.out.println("count element - "+hash.size());
