@@ -17,12 +17,14 @@
         </f:facet>
         <f:facet name="site-list">
             <h:panelGroup id="site-tree-site-list-group">
-                <t:graphicImage id="site-tree-sile-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage id="site-tree-sile-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="site-tree-site-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="site-tree-site-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText id="site-tree-site-list-name" value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText id="site-tree-site-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-action-id" action="#{siteAction.addSiteAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}">
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_button_alt}"
+rendered="#{isUserInRole['webmill.portal-manager']}"		
+>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteType}"/>
@@ -30,13 +32,15 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-language-list">
-            <h:panelGroup id="site-tree-site-language-list-group">
-                <t:graphicImage id="site-tree-sile-language-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
-                <t:graphicImage id="site-tree-sile-language-list-image-open" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
+            <h:panelGroup id="site-tree-site-language-list-group" rendered="#{isUserInRole['webmill.site-manager,webmill.site,webmill.template,webmill.xslt']}">
+                <t:graphicImage id="site-tree-site-language-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
+                <t:graphicImage id="site-tree-site-language-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText id="site-tree-site-language-list-name" value="#{node.description}" styleClass="nodeFolder"/>
                 <h:outputText id="site-tree-site-language-list-counter" value=" (#{node.childCount})" styleClass="childCount" rendered="#{!empty node.children}"/>
                 <h:commandButton id="add-site-language-action-id" action="#{siteLanguageAction.addSiteLanguageAction}"
-                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}">
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_site_langage_button_alt}"
+rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"		
+>
 
                     <t:updateActionListener property="#{siteSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{siteSessionBean.objectType}" value="#{siteSessionBean.siteLanguageType}"/>
@@ -44,7 +48,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="template-list">
-            <h:panelGroup id="site-tree-template-group">
+            <h:panelGroup id="site-tree-template-group" rendered="#{isUserInRole['webmill.site-manager,webmill.template']}">
                 <t:graphicImage id="site-tree-template-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                 <t:graphicImage id="site-tree-template-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText id="site-tree-template-list-name" value="#{node.description}" styleClass="nodeFolder"/>
@@ -58,7 +62,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="xslt-list">
-            <h:panelGroup id="site-tree-xslt-group">
+            <h:panelGroup id="site-tree-xslt-group" rendered="#{isUserInRole['webmill.site-manager,webmill.xslt']}">
                 <t:graphicImage id="site-tree-xslt-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                 <t:graphicImage id="site-tree-xslt-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText id="site-tree-xslt-list-name" value="#{node.description}" styleClass="nodeFolder"/>
@@ -72,7 +76,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="css-list">
-            <h:panelGroup id="site-tree-css-group">
+            <h:panelGroup id="site-tree-css-group" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
                 <t:graphicImage id="site-tree-css-list-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
                 <t:graphicImage id="site-tree-css-list-image-close" value="/images/company-closed.png" rendered="#{!t.nodeExpanded}" border="0"/>
                 <h:outputText id="site-tree-css-list-name" value="#{node.description}" styleClass="nodeFolder"/>
@@ -102,7 +106,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="site-language">
-            <h:panelGroup id="site-tree-site-language-group">
+            <h:panelGroup id="site-tree-site-language-group" rendered="#{isUserInRole['webmill.site-manager,webmill.site,webmill.template,webmill.xslt']}">
                 <h:commandLink id="select-site-language-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
                                actionListener="#{siteLanguageAction.selectSiteLanguage}"
                     >
@@ -116,7 +120,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="template">
-            <h:panelGroup id="site-tree-template-group">
+            <h:panelGroup id="site-tree-template-group" rendered="#{isUserInRole['webmill.site-manager,webmill.template']}">
                 <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}" action="site"
                                actionListener="#{templateAction.selectTemplate}"
                     >
@@ -130,7 +134,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="xslt">
-            <h:panelGroup id="site-tree-xslt-group">
+            <h:panelGroup id="site-tree-xslt-group" rendered="#{isUserInRole['webmill.site-manager,webmill.xslt']}">
                 <h:commandLink id="select-xslt-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
                                actionListener="#{xsltAction.selectXslt}"
                     >
@@ -144,7 +148,7 @@
             </h:panelGroup>
         </f:facet>
         <f:facet name="css">
-            <h:panelGroup id="site-tree-css-group">
+            <h:panelGroup id="site-tree-css-group" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
                 <h:commandLink id="select-css-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
                                actionListener="#{cssAction.selectCss}"
                     >

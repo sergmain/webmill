@@ -39,13 +39,12 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.VirtualHost;
-import org.riverock.webmill.core.GetWmPortalListSiteFullList;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.core.GetWmPortalListSiteItem;
 import org.riverock.webmill.core.UpdateWmPortalListSiteItem;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.bean.VirtualHostBean;
 import org.riverock.webmill.schema.core.WmPortalListSiteItemType;
-import org.riverock.webmill.schema.core.WmPortalListSiteListType;
 
 /**
  * @author Sergei Maslyukov
@@ -56,15 +55,42 @@ import org.riverock.webmill.schema.core.WmPortalListSiteListType;
 public class InternalSiteDaoImpl implements InternalSiteDao {
     private final static Logger log = Logger.getLogger(InternalSiteDaoImpl.class);
 
-    public List<Site> getSites() {
-        DatabaseAdapter adapter = null;
+    public List<Site> getSites(AuthSession authSession) {
         List<Site> list = new ArrayList<Site>();
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            WmPortalListSiteListType sites = GetWmPortalListSiteFullList.getInstance(adapter, 0).item;
 
-            for (Object o : sites.getWmPortalListSiteAsReference()) {
-                WmPortalListSiteItemType item = (WmPortalListSiteItemType) o;
+            String sql =
+                "select * from WM_PORTAL_LIST_SITE where ID_FIRM in ";
+
+            switch( adapter.getFamaly() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    String idList = authSession.getGrantedCompanyId();
+
+                    sql += " (" + idList + ") ";
+
+                    break;
+                default:
+                    sql +=
+                        "(select z1.ID_FIRM from v$_read_list_firm z1 where z1.user_login = ?)";
+                    break;
+            }
+            ps = adapter.prepareStatement( sql );
+            int idx = 1;
+            switch( adapter.getFamaly() ) {
+                case DatabaseManager.MYSQL_FAMALY:
+                    break;
+                default:
+                    ps.setString( idx++, authSession.getUserLogin() );
+                    break;
+            }
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                WmPortalListSiteItemType item = GetWmPortalListSiteItem.fillBean(rs);
                 list.add( initSite(item) );
             }
         }

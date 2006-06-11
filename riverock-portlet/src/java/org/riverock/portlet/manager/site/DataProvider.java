@@ -97,6 +97,9 @@ public class DataProvider implements Serializable {
         if (siteLanguage==null) {
             siteLanguage = siteService.getSiteLanguage(siteLangaugeId);
         }
+	if (siteLanguage.getSiteLanguageId()==null) {
+		return siteLanguage;
+	}
         if (!siteLanguage.getSiteLanguageId().equals(siteLangaugeId)) {
             log.warn("Mismatch siteLangaugeId");
             siteLanguage = siteService.getSiteLanguage(siteLangaugeId);
@@ -117,6 +120,10 @@ public class DataProvider implements Serializable {
         if (template==null) {
             template = siteService.getTemplate(templateId);
         }
+	if (template.getTemplateId()==null) {
+		return template;
+	}
+
         if (!template.getTemplateId().equals(templateId)) {
             log.warn("Mismatch templateId");
             template = siteService.getTemplate(templateId);
@@ -137,6 +144,9 @@ public class DataProvider implements Serializable {
         if (xslt==null) {
             xslt = siteService.getXslt(xsltId);
         }
+	if (xslt.getId()==null) {
+		return xslt;
+	}
         if (!xslt.getId().equals(xsltId)) {
             log.warn("Mismatch xsltId");
             xslt = siteService.getXslt(xsltId);
@@ -158,13 +168,9 @@ public class DataProvider implements Serializable {
             css = siteService.getCss(cssId);
         }
 
-        if (css==null || css.getCssId()==null) {
-            log.error("Error get CSS, id: " + cssId);
-            if (css!=null){
-                log.error("Error get CSS, css.getCssId(): " + css.getCssId());
-            }
-            throw new IllegalStateException("CSS not found");
-        }
+	if (css.getCssId()==null) {
+		return css;
+	}
 
         if (!css.getCssId().equals(cssId)) {
             log.warn("Mismatch cssId");

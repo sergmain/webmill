@@ -11,7 +11,9 @@
     <jsp:include page="site-description.jsp"/>
 </f:subview>
 
-<h:panelGroup id="operation-site-panel">
+<h:panelGroup id="operation-site-panel"
+rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager']}"
+>
     <h:commandButton id="edit-site-action" action="site-edit"
                      value="#{msg['edit_site_action']}"
                      styleClass="site-button-action"

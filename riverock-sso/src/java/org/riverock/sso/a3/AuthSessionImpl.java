@@ -169,7 +169,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
         boolean status = false;
         for (AuthProvider authProvider : getAuthProviderList()) {
             if (log.isInfoEnabled())
-                log.info("Check role with provider named '" + authProvider + "'");
+                log.info("Check access with provider named '" + authProvider + "'");
 
             status = authProvider.checkAccess(this, serverName);
             if (status) {

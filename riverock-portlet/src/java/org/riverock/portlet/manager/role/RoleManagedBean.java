@@ -25,6 +25,8 @@
 package org.riverock.portlet.manager.role;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.riverock.portlet.main.AuthSessionBean;
@@ -60,7 +62,20 @@ public class RoleManagedBean implements Serializable {
 	}
 	
 	public List<RoleBean> getRoleList() {
-		return authSessionBean.getAuthSession().getRoleList();
+		List<RoleBean> list = authSessionBean.getAuthSession().getRoleList();
+
+        	if (list==null) {
+            		return null;
+        	}
+
+        	Iterator<RoleBean> iterator = list.iterator();
+        	List<RoleBean> roles = new ArrayList<RoleBean>();
+        	while(iterator.hasNext()) {
+            		RoleBean role = iterator.next();
+            		roles.add( new RoleBeanImpl(role) );
+        	}
+        	return roles;
+
 	}
 
 }

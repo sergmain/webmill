@@ -68,7 +68,7 @@ public final class LoginUtils {
             log.debug( "URL #3: " + url );
         }
 
-        if ( StringUtils.isBlank( login ) && StringUtils.isBlank( password )) {
+        if ( StringUtils.isBlank( login ) || StringUtils.isBlank( password )) {
             return;
         }
 

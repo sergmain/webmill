@@ -11,7 +11,9 @@
     <jsp:include page="site-language-description.jsp"/>
 </f:subview>
 
-<h:panelGroup id="operation-site-language-panel">
+<h:panelGroup id="operation-site-language-panel"
+	rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager']}"
+>
     <h:commandButton id="edit-site-language-action" action="site-language-edit"
                      value="#{msg['edit_site_language_action']}"
                      styleClass="site-button-action"

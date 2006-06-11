@@ -44,6 +44,7 @@ import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
 import org.riverock.portlet.tools.FacesTools;
+import org.apache.log4j.Logger;
 
 /**
  * @author Sergei Maslyukov
@@ -53,6 +54,7 @@ import org.riverock.portlet.tools.FacesTools;
  *
  */
 public class SiteService implements Serializable {
+    private final static Logger log = Logger.getLogger(SiteService.class);
     private static final long serialVersionUID = 2058005507L;
 
     public SiteService() {
@@ -69,6 +71,7 @@ public class SiteService implements Serializable {
             }
 
             // create new String - work around with different classloader issue
+	    // Todo my be this wrong :)
             list.add(new SelectItem(new String(company.getId().toString()), new String(company.getName())));
         }
         return list;
@@ -119,38 +122,54 @@ public class SiteService implements Serializable {
             hosts.add(host.getHost().toLowerCase());
         }
         siteExtended.setVirtualHosts(hosts);
-        siteExtended.setCompany(
-            FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(siteExtended.getSite().getCompanyId())
-        );
+	Long companyId = siteExtended.getSite().getCompanyId();
+	Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(companyId);
+	if (log.isDebugEnabled()) {
+		log.debug("companyId: " + companyId);
+		log.debug("company: " + company);
+	}
+        siteExtended.setCompany(company);
         return siteExtended;
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
-        SiteLanguage siteLanguage = new SiteLanguageBean(
-            FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId)
-        );
-        return siteLanguage;
+        SiteLanguage siteLanguage = FacesTools.getPortalDaoProvider().getPortalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+	if (siteLanguage!=null) {
+		return new SiteLanguageBean(siteLanguage);
+	}
+	else {
+        	return new SiteLanguageBean();
+	}
     }
 
     public Template getTemplate(Long templateId) {
-        Template template = new TemplateBean(
-            FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(templateId)
-        );
-        return template;
+	Template bean = FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(templateId);
+	if (bean!=null) {
+        	return new TemplateBean(bean);
+	}
+	else {
+        	return new TemplateBean();
+	}
     }
 
     public Xslt getXslt(Long xsltId) {
-        Xslt xslt = new XsltBean(
-            FacesTools.getPortalDaoProvider().getPortalXsltDao().getXslt(xsltId)
-        );
-        return xslt;
+	Xslt bean = FacesTools.getPortalDaoProvider().getPortalXsltDao().getXslt(xsltId);
+	if (bean!=null) {
+        	return new XsltBean(bean);
+	}
+	else {
+        	return new XsltBean();
+	}
     }
 
     public Css getCss(Long cssId) {
-        Css css = new CssBean(
-            FacesTools.getPortalDaoProvider().getPortalCssDao().getCss(cssId)
-        );
-        return css;
+	Css css = FacesTools.getPortalDaoProvider().getPortalCssDao().getCss(cssId);
+	if (css!=null) {
+        	return new CssBean(css);
+	}
+	else {
+		return new CssBean();
+	}
     }
 
     public List<? extends Css> getCssList(Long siteId) {

@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.dao;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Site;
+import org.riverock.interfaces.sso.a3.AuthSession;
 
 /**
  * @author SergeMaslyukov
@@ -35,7 +36,7 @@ import org.riverock.interfaces.portal.bean.Site;
  *         $Id$
  */
 public interface InternalSiteDao {
-    public List<Site> getSites();
+    public List<Site> getSites(AuthSession authSession);
     public Site getSite( Long siteId );
     public Site getSite( String siteName );
     public Long createSite(Site site);
