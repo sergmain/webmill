@@ -25,9 +25,13 @@
 
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="delete-portal-name-form" rendered="#{isUserInRole['webmill.portal-manager']}">
+    <h:form id="delete-portal-name-form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="1" rendered="#{!empty portalUserSessionBean.portalUser}">
+                <f:subview id="portal-user-top-actions-subview">
+                    <jsp:include page="_portal-user-top-action.jsp"/>
+                </f:subview>
+
+        <h:panelGrid columns="1" rendered="#{!empty portalUserSessionBean.portalUser and isUserInRole['webmill.user-manager']}">
 
             <f:subview id="subviewPortalUserInfo">
                 <jsp:include page="portal-user-info.jsp"/>

@@ -41,12 +41,13 @@
         <h:commandButton id="portlet-name-list-action" action="portlet-name" value="#{manager.portlet_name_button}"
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
         <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.site-manager']}"/>
+                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.user-manager']}"/>
         <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager']}"/>
+                         styleClass="top-button-action"
+ rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.site,webmill.template,webmill.css,webmill.xslt']}"/>
 
 
-        <h:panelGrid columns="1" id="main-grid">
+        <h:panelGrid columns="1" id="main-grid" rendered="#{isUserInRole['webmill.portal-manager,webmill.auth']}">
             <h:commandButton id="add-user-action" action="#{authUserAction.addUserAction}"
                              value="#{msg['add_user_action']}"
                              styleClass="auth-button-action">

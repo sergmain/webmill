@@ -7,7 +7,8 @@
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
 
-<h:panelGrid columns="2">
+<h:panelGrid columns="2" 
+>
 
     <h:outputText value="#{msg.site_name}"/>
     <h:outputText value="#{siteSessionBean.siteExtended.site.siteName}"/>

@@ -29,7 +29,7 @@
 </style>
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form rendered="#{!siteDataProvider.xslt.current and isUserInRole['webmill.site-manager']}">
+    <h:form rendered="#{!siteDataProvider.xslt.current and isUserInRole['webmill.authentic']}">
 
         <f:subview id="site-top-actions-subview">
             <jsp:include page="site-top-actions.jsp"/>
@@ -41,7 +41,7 @@
                 <jsp:include page="site-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="operation-xslt-delete-panel">
+            <h:panelGroup id="operation-xslt-delete-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.xslt']}">
 
                 <f:subview id="delete-xslt-subview">
                     <jsp:include page="xslt-description.jsp"/>

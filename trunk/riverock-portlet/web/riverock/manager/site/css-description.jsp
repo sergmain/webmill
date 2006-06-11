@@ -7,7 +7,7 @@
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
 
-<h:panelGrid columns="2">
+<h:panelGrid columns="2" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
 
     <h:outputText value="Name:"/>
     <h:outputText value="#{siteDataProvider.css.cssComment}"/>

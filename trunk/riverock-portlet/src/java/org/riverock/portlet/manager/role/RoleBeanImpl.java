@@ -40,6 +40,14 @@ public class RoleBeanImpl implements Serializable, RoleBean {
     private Long roleId = null;
     private String name = null;
 
+    public RoleBeanImpl() {
+    }
+
+    public RoleBeanImpl(RoleBean roleBean){
+	this.roleId = roleBean.getRoleId();
+ 	this.name = roleBean.getName();
+    }
+
     public String getName() {
         return name;
     }

@@ -30,9 +30,9 @@
 
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="foo" rendered="#{userSessionBean.delete and isUserInRole['webmill.auth']}">
+    <h:form id="foo" rendered="#{userSessionBean.delete and isUserInRole['webmill.authentic']}">
 
-        <h:panelGrid columns="2">
+        <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager,webmill.auth']}">
 
             <f:subview id="select-user-subview">
                 <jsp:include page="auth-tree.jsp"/>

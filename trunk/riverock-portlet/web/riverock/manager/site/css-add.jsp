@@ -29,7 +29,7 @@
 </style>
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form rendered="#{isUserInRole['webmill.site-manager']}">
+    <h:form rendered="#{isUserInRole['webmill.authentic']}">
 
         <f:subview id="site-top-actions-subview">
             <jsp:include page="site-top-actions.jsp"/>
@@ -41,7 +41,7 @@
                 <jsp:include page="site-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="css-add-panel">
+            <h:panelGroup id="css-add-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
 
                 <h:panelGrid columns="1">
 

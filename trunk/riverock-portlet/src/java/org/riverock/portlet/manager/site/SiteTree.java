@@ -46,6 +46,8 @@ import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.bean.Xslt;
 
+import org.riverock.portlet.tools.FacesTools;
+
 /**
  * @author SergeMaslyukov
  *         Date: 16.05.2006
@@ -80,9 +82,8 @@ public class SiteTree implements Serializable {
         for (Site site : siteService.getSites()) {
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
 
-            TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", site.getSiteId().toString(), false);
-            siteNode.getChildren().add( siteLanguageListNode );
-
+	if (FacesTools.isUserInRole("webmill.css") || FacesTools.isUserInRole("webmill.site-manager") ||
+		FacesTools.isUserInRole("webmill.portal-manager")) {	
             TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", site.getSiteId().toString(), false);
             siteNode.getChildren().add( cssListNode );
 
@@ -94,6 +95,16 @@ public class SiteTree implements Serializable {
                 cssListNode.getChildren().add(cssNode);
             }
 
+	}
+
+	if (FacesTools.isUserInRole("webmill.template") || 
+		FacesTools.isUserInRole("webmill.xslt") ||
+		FacesTools.isUserInRole("webmill.site-manager") ||
+		FacesTools.isUserInRole("webmill.portal-manager")) {	
+
+            TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", site.getSiteId().toString(), false);
+            siteNode.getChildren().add( siteLanguageListNode );
+
             for (SiteLanguage siteLanguage : siteService.getSiteLanguageList(site.getSiteId())) {
                 TreeNodeBase siteLanguageNode = new TreeNodeBase(
                     "site-language",
@@ -101,6 +112,9 @@ public class SiteTree implements Serializable {
                     siteLanguage.getSiteLanguageId().toString(),
                     false);
                 siteLanguageListNode.getChildren().add(siteLanguageNode);
+
+	if (FacesTools.isUserInRole("webmill.template") || FacesTools.isUserInRole("webmill.site-manager") ||
+		FacesTools.isUserInRole("webmill.portal-manager")) {	
 
                 TreeNodeBase templateListNode = new TreeNodeBase("template-list", "Templates", siteLanguage.getSiteLanguageId().toString(), false);
                 for (Template template : siteService.getTemplateList(siteLanguage.getSiteLanguageId())) {
@@ -110,6 +124,11 @@ public class SiteTree implements Serializable {
                 }
                 siteLanguageNode.getChildren().add(templateListNode);
 
+	}
+
+	if (FacesTools.isUserInRole("webmill.xslt") || FacesTools.isUserInRole("webmill.site-manager") ||
+		FacesTools.isUserInRole("webmill.portal-manager")) {	
+
                 TreeNodeBase xsltListNode = new TreeNodeBase("xslt-list", "Xslt list", siteLanguage.getSiteLanguageId().toString(), false);
                 for (Xslt xslt : siteService.getXsltList(siteLanguage.getSiteLanguageId())) {
                     xsltListNode.getChildren().add(
@@ -117,6 +136,8 @@ public class SiteTree implements Serializable {
                     );
                 }
                 siteLanguageNode.getChildren().add(xsltListNode);
+	}
+	}
             }
 
             treeData.getChildren().add(siteNode);

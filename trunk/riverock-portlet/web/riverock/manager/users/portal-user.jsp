@@ -25,29 +25,17 @@
 
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="portal-user-form" rendered="#{isUserInRole['webmill.webmill.portal-manager,']}">
+    <h:form id="portal-user-form" rendered="#{isUserInRole['webmill.authentic']}">
 
-        <h:commandButton id="auth-list-action" action="auth" value="#{manager.auth_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.auth']}"/>
-        <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
-        <h:commandButton id="holding-list-action" action="holding" value="#{manager.holding_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
-        <h:commandButton id="portlet-name-list-action" action="portlet-name" value="#{manager.portlet_name_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
-        <h:commandButton id="role-list-action" action="role" value="#{manager.role_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
-        <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
-                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager']}"/>
+                <f:subview id="portal-user-top-actions-subview">
+                    <jsp:include page="_portal-user-top-action.jsp"/>
+                </f:subview>
 
-        <h:panelGrid columns="2">
+        <h:panelGrid columns="2" rendered="#{isUserInRole['webmill.user-manager']}">
 
-            <h:panelGroup>
                 <f:subview id="subviewPortalUserList">
                     <jsp:include page="portal-user-list.jsp"/>
                 </f:subview>
-            </h:panelGroup>
-
 
             <h:panelGroup>
                 <h:panelGrid columns="1" rendered="#{!empty portalUserSessionBean.portalUser}">

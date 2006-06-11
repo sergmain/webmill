@@ -134,6 +134,9 @@ public class UserAction implements Serializable {
     public String processAddUserAction() {
         log.info( "Procss add user action." );
         if( userSessionBean.getUserBean() != null ) {
+	    userSessionBean.getUserBean().getAuthInfo().setUserPassword( 
+		userSessionBean.getUserBean().getUserPassword()
+	    );
             authSessionBean.getAuthSession().addUser( userSessionBean.getUserBean() );
             userSessionBean.setUserBean( null );
 

@@ -107,6 +107,6 @@ public class PortalUserAction implements Serializable {
             return;
         }
         User user = FacesTools.getPortalDaoProvider().getPortalUserDao().getUser(portalUserSessionBean.getCurrentPortalUserId());
-        portalUserSessionBean.setPortalUser(user);
+        portalUserSessionBean.setPortalUser( new PortalUserBeanImpl(user) );
     }
 }

@@ -100,6 +100,6 @@ public class PortletNameAction implements Serializable {
 
     private void loadCurrentPortletName() {
         PortletName bean = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletName( portletNameSessionBean.getCurrentPortletNameId() );
-        portletNameSessionBean.setPortletName( bean );
+        portletNameSessionBean.setPortletName( new PortletNameBean(bean) );
     }
 }

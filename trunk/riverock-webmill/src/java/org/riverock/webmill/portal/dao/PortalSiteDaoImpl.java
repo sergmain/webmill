@@ -43,7 +43,7 @@ public class PortalSiteDaoImpl implements PortalSiteDao {
     }
 
     public List<Site> getSites() {
-        return InternalDaoFactory.getInternalSiteDao().getSites();
+        return InternalDaoFactory.getInternalSiteDao().getSites(authSession);
     }
 
     public Site getSite(Long siteId) {

@@ -96,7 +96,7 @@ public class RoleAction implements Serializable {
 	}
 
 	private void loadCurrentRole() {
-        RoleBean bean = authSessionBean.getAuthSession().getRole( roleSessionBean.getCurrentRoleId() );
-		roleSessionBean.setRole( bean );
+        	RoleBean bean = authSessionBean.getAuthSession().getRole( roleSessionBean.getCurrentRoleId() );
+		roleSessionBean.setRole( new RoleBeanImpl(bean) );
 	}
 }

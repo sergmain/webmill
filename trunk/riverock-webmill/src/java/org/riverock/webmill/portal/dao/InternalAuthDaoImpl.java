@@ -854,7 +854,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                 "where   a01.is_use_current_firm = 1 and a01.ID_FIRM = f01.ID_FIRM and f01.ID_SITE=? and " +
                 "        a01.user_login=? " +
                 "union " +
-                "select  d02.id_firm, a02.user_login, a02.id_user, a02.id_auth_user " +
+                "select  d02.ID_COMPANY, a02.user_login, a02.id_user, a02.id_auth_user " +
                 "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02, WM_PORTAL_LIST_SITE f02 " +
                 "where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING and " +
                 "        d02.ID_COMPANY = f02.ID_FIRM and f02.ID_SITE=? and a02.user_login=? " +
@@ -1466,6 +1466,21 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
     }
 
     public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+	if (authSession==null) {
+		throw new IllegalStateException("Error add new user, authSession is null");
+	}
+	if (infoAuth==null) {
+		throw new IllegalStateException("Error add new user, infoAuth is null");
+	}
+	if (infoAuth.getAuthInfo()==null) {
+		throw new IllegalStateException("Error add new user, infoAuth.getAuthInfo() is null");
+	}
+	if (StringUtils.isBlank(infoAuth.getAuthInfo().getUserLogin())) {
+		throw new IllegalStateException("Error add new user, username is null or blank");
+	}
+	if (StringUtils.isBlank(infoAuth.getAuthInfo().getUserPassword())) {
+		throw new IllegalStateException("Error add new user, password is null or blank");
+	}
         DatabaseAdapter db = null;
         PreparedStatement ps = null;
         try {
