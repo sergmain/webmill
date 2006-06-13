@@ -173,7 +173,7 @@ public class PortalUserDaoImpl implements PortalUserDao {
             return list;
         }
         catch (Exception e) {
-            String es = "Error load list of portlet names";
+            String es = "Error load list of portal users";
             throw new IllegalStateException(es, e);
         }
         finally {
@@ -200,9 +200,9 @@ public class PortalUserDaoImpl implements PortalUserDao {
             Long sequenceValue;
             if (portalUserBean.getUserId() == null) {
                 CustomSequenceType seq = new CustomSequenceType();
-                seq.setSequenceName("seq_WM_PORTAL_PORTLET_NAME");
-                seq.setTableName("WM_PORTAL_PORTLET_NAME");
-                seq.setColumnName("ID_SITE_CTX_TYPE");
+                seq.setSequenceName("seq_WM_LIST_USER");
+                seq.setTableName("WM_LIST_USER");
+                seq.setColumnName("ID_USER");
                 sequenceValue = dbDyn.getSequenceNextValue(seq);
             } else {
                 sequenceValue = portalUserBean.getUserId();
@@ -249,7 +249,7 @@ public class PortalUserDaoImpl implements PortalUserDao {
             catch (Exception e001) {
                 // catch rollback exception
             }
-            String es = "Error add new portlet name ";
+            String es = "Error add new portal user";
             log.error(es, e);
             throw new IllegalStateException(es, e);
 
@@ -318,7 +318,7 @@ public class PortalUserDaoImpl implements PortalUserDao {
                 // catch rollback exception
             }
 
-            String es = "Error save portlet name";
+            String es = "Error update of portal user";
             log.error(es, e);
             throw new IllegalStateException(es, e);
         }
@@ -382,7 +382,7 @@ public class PortalUserDaoImpl implements PortalUserDao {
                 //catch rollback exception
             }
 
-            String es = "Error delete portlet name";
+            String es = "Error delete of portal user";
             log.error(es, e);
             throw new IllegalStateException(es, e);
         }
