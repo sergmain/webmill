@@ -27,6 +27,7 @@ package org.riverock.portlet.manager.role;
 import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -44,8 +45,8 @@ public class RoleBeanImpl implements Serializable, RoleBean {
     }
 
     public RoleBeanImpl(RoleBean roleBean){
-	this.roleId = roleBean.getRoleId();
- 	this.name = roleBean.getName();
+        this.roleId = roleBean.getRoleId();
+        this.name = roleBean.getName();
     }
 
     public String getName() {
@@ -53,7 +54,7 @@ public class RoleBeanImpl implements Serializable, RoleBean {
     }
 
     public void setName( String name ) {
-        this.name = name;
+        this.name = FacesTools.convertParameter(name);
     }
 
     public Long getRoleId() {

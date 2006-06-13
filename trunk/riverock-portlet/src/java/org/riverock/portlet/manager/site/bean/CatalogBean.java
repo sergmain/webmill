@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -165,7 +166,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setStorage(String storage) {
-        this.storage = storage;
+        this.storage = FacesTools.convertParameter(storage);
     }
 
     public String getKeyMessage() {
@@ -173,7 +174,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setKeyMessage(String keyMessage) {
-        this.keyMessage = keyMessage;
+        this.keyMessage = FacesTools.convertParameter(keyMessage);
     }
 
     public String getUrl() {
@@ -181,7 +182,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = FacesTools.convertParameter(url);
     }
 
     public String getTitle() {
@@ -189,7 +190,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = FacesTools.convertParameter(title);
     }
 
     public String getAuthor() {
@@ -197,7 +198,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        this.author = FacesTools.convertParameter(author);
     }
 
     public String getKeyword() {
@@ -205,7 +206,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setKeyword(String keyword) {
-        this.keyword = keyword;
+        this.keyword = FacesTools.convertParameter(keyword);
     }
 
     public String getMetadata() {
@@ -213,7 +214,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setMetadata(String metadata) {
-        this.metadata = metadata;
+        this.metadata = FacesTools.convertParameter(metadata);
     }
 
     public String getPortletRole() {
@@ -221,7 +222,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setPortletRole(String portletRole) {
-        this.portletRole = portletRole;
+        this.portletRole = FacesTools.convertParameter(portletRole);
     }
 }
 

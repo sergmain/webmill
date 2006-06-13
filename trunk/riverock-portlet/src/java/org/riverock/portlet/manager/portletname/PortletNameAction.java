@@ -25,9 +25,12 @@
 package org.riverock.portlet.manager.portletname;
 
 import java.io.Serializable;
+
+import org.apache.log4j.Logger;
+
+import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.interfaces.portal.bean.PortletName;
 
 /**
  * @author SergeMaslyukov
@@ -36,6 +39,8 @@ import org.riverock.interfaces.portal.bean.PortletName;
  *         $Id$
  */
 public class PortletNameAction implements Serializable {
+    private final static Logger log = Logger.getLogger(PortletNameAction.class);
+
     private static final long serialVersionUID = 2057005501L;
 
     private PortletNameSessionBean portletNameSessionBean = null;
@@ -69,6 +74,7 @@ public class PortletNameAction implements Serializable {
     public String processAddPortletName() {
         Long id = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().createPortletName( portletNameSessionBean.getPortletName() );
         portletNameSessionBean.setCurrentPortletNameId( id );
+        loadCurrentPortletName();
         return "portlet-name";
     }
 

@@ -27,6 +27,7 @@ package org.riverock.portlet.manager.company;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -35,28 +36,28 @@ import org.riverock.interfaces.portal.bean.Company;
 public class CompanyBean implements Serializable, Company {
     private static final long serialVersionUID = 2055005502L;
 
-	private String name = null;
-	private Long id = null;
-	private String shortName = null;
-	private String address = null;
-	private String ceo = null;
-	private String cfo = null;
-	private String website = null;
-	private String info = null;
+    private String name = null;
+    private Long id = null;
+    private String shortName = null;
+    private String address = null;
+    private String ceo = null;
+    private String cfo = null;
+    private String website = null;
+    private String info = null;
     private boolean isDeleted = false;
 
     public CompanyBean() {
-	}
+    }
 
-	public CompanyBean(Company company) {
-		this.name = company.getName();
-		this.id = company.getId();
-		this.shortName = company.getShortName();
-		this.address = company.getAddress();
-		this.ceo = company.getCeo();
-		this.cfo = company.getCfo();
-		this.website = company.getWebsite();
-		this.info = company.getInfo();
+    public CompanyBean(Company company) {
+        this.name = company.getName();
+        this.id = company.getId();
+        this.shortName = company.getShortName();
+        this.address = company.getAddress();
+        this.ceo = company.getCeo();
+        this.cfo = company.getCfo();
+        this.website = company.getWebsite();
+        this.info = company.getInfo();
         this.isDeleted = company.isDeleted();
     }
 
@@ -69,66 +70,66 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = FacesTools.convertParameter(name);
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getShortName() {
-		return shortName;
-	}
+    public String getShortName() {
+        return shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = FacesTools.convertParameter(shortName);
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setAddress(String address) {
+        this.address = FacesTools.convertParameter(address);
+    }
 
-	public String getCeo() {
-		return ceo;
-	}
+    public String getCeo() {
+        return ceo;
+    }
 
-	public void setCeo(String ceo) {
-		this.ceo = ceo;
-	}
+    public void setCeo(String ceo) {
+        this.ceo = FacesTools.convertParameter(ceo);
+    }
 
-	public String getCfo() {
-		return cfo;
-	}
+    public String getCfo() {
+        return cfo;
+    }
 
-	public void setCfo(String cfo) {
-		this.cfo = cfo;
-	}
+    public void setCfo(String cfo) {
+        this.cfo = FacesTools.convertParameter(cfo);
+    }
 
-	public String getWebsite() {
-		return website;
-	}
+    public String getWebsite() {
+        return website;
+    }
 
-	public void setWebsite(String website) {
-		this.website = website;
-	}
+    public void setWebsite(String website) {
+        this.website = FacesTools.convertParameter(website);
+    }
 
-	public String getInfo() {
-		return info;
-	}
+    public String getInfo() {
+        return info;
+    }
 
     public void setInfo(String info) {
-        this.info = info;
+        this.info = FacesTools.convertParameter(info);
     }
 }

@@ -31,6 +31,7 @@ import org.riverock.portlet.manager.site.bean.SiteExtended;
 import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -65,6 +66,7 @@ public class SiteSessionBean implements Serializable {
     }
 
     public void setCurrentVirtualHost(String currentVirtualHost) {
+//        this.currentVirtualHost = FacesTools.convertParameter(currentVirtualHost);
         this.currentVirtualHost = currentVirtualHost;
     }
 
@@ -73,7 +75,7 @@ public class SiteSessionBean implements Serializable {
     }
 
     public void setNewVirtualHost(String newVirtualHost) {
-        this.newVirtualHost = newVirtualHost;
+        this.newVirtualHost = FacesTools.convertParameter(newVirtualHost);
     }
 
     public SiteExtended getSiteExtended() {

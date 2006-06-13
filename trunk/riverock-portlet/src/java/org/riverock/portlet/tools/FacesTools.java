@@ -26,6 +26,7 @@ package org.riverock.portlet.tools;
 
 import java.security.Principal;
 import java.util.List;
+import java.io.UnsupportedEncodingException;
 
 import javax.faces.application.Application;
 import javax.faces.component.UIComponent;
@@ -36,8 +37,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.portlet.manager.portletname.PortletNameBean;
 
 /**
  * @author SergeMaslyukov
@@ -46,6 +51,7 @@ import org.riverock.webmill.container.ContainerConstants;
  *         $Id$
  */
 public class FacesTools {
+    private final static Logger log = Logger.getLogger(PortletNameBean.class);
 
     public static PortalDaoProvider getPortalDaoProvider() {
         return (PortalDaoProvider)FacesTools.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
@@ -121,4 +127,21 @@ public class FacesTools {
         return getFacesContext().getExternalContext().getUserPrincipal();
     }
 
+    public static String convertParameter(String parameter) {
+        String s;
+        try {
+            s = PortletService.convertString(parameter, ContentTypeTools.CONTENT_TYPE_8859_1, ContentTypeTools.CONTENT_TYPE_UTF8);
+        }
+        catch (UnsupportedEncodingException e) {
+            String es = "error convert string";
+            log.error(es,e);
+            throw new IllegalStateException(es, e);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("old parameter: " + s);
+            log.debug("new parameter: " + s);
+        }
+        return s;
+    }
 }

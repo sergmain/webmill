@@ -27,6 +27,7 @@ package org.riverock.portlet.manager.site.bean;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Xslt;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -82,7 +83,7 @@ public class XsltBean implements Serializable, Xslt {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = FacesTools.convertParameter(name);
     }
 
     public String getXsltData() {
@@ -90,6 +91,6 @@ public class XsltBean implements Serializable, Xslt {
     }
 
     public void setXsltData(String xsltData) {
-        this.xsltData = xsltData;
+        this.xsltData = FacesTools.convertParameter(xsltData);
     }
 }

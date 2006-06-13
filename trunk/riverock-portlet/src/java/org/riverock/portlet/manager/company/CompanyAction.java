@@ -83,8 +83,7 @@ public class CompanyAction implements Serializable {
 	}
 
 	public String processEditCompany() {
-		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processSaveCompany(
-			sessionBean.getCompany() );
+		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processSaveCompany(sessionBean.getCompany() );
 		
 		return "company";
 	}
@@ -95,8 +94,7 @@ public class CompanyAction implements Serializable {
 	}
 
 	public String processDeleteCompany() {
-		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processDeleteCompany(
-			sessionBean.getCompany() );
+		FacesTools.getPortalDaoProvider().getPortalCompanyDao().processDeleteCompany(sessionBean.getCompany());
 		sessionBean.setCompany( null );
 		return "company";
 	}

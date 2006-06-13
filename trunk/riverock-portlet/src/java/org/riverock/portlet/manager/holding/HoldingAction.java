@@ -131,16 +131,15 @@ public class HoldingAction implements Serializable {
     public String processAddHoldingAction() {
         log.info( "Procss add holding action." );
         if( holdingSessionBean.getHoldingBean() != null ) {
-		FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding( 
-			holdingSessionBean.getHoldingBean() 
-		);
+            FacesTools.getPortalDaoProvider().getPortalHoldingDao().processAddHolding(
+                holdingSessionBean.getHoldingBean()
+            );
             holdingSessionBean.setHoldingBean( null );
-
             holdingDataProvider.reinitHoldingBeans();
         }
 
-	holdingSessionBean.resetStatus();
-	return "holding";
+        holdingSessionBean.resetStatus();
+        return "holding";
     }
 
     public String cancelAddHoldingAction() {
@@ -169,30 +168,30 @@ public class HoldingAction implements Serializable {
             holdingDataProvider.reinitHoldingBeans();
         }
 
-	holdingSessionBean.resetStatus();
-	return "holding";
+        holdingSessionBean.resetStatus();
+        return "holding";
     }
 
     public String cancelEditHoldingAction() {
         log.info( "Cancel edit holding action." );
 
-	holdingSessionBean.resetStatus();
-	return "holding";
+        holdingSessionBean.resetStatus();
+        return "holding";
     }
 
 // Delete actions
     public String deleteHoldingAction() {
         log.info( "delete holding action." );
 
-	holdingSessionBean.setDelete( true );
-	return "holding-delete";
+        holdingSessionBean.setDelete( true );
+        return "holding-delete";
     }
 
     public String cancelDeleteHoldingAction() {
         log.info( "Cancel delete holding action." );
 
-	holdingSessionBean.resetStatus();
-	return "holding";
+        holdingSessionBean.resetStatus();
+        return "holding";
     }
 
     public String processDeleteHoldingAction() {
@@ -206,8 +205,8 @@ public class HoldingAction implements Serializable {
             holdingDataProvider.reinitHoldingBeans();
         }
 
-	holdingSessionBean.resetStatus();
-	return "holding";
+        holdingSessionBean.resetStatus();
+        return "holding";
     }
 
     private void loadCurrentHolding() {

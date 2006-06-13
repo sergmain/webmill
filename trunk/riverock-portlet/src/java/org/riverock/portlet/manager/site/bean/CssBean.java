@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.riverock.interfaces.portal.bean.Css;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -61,7 +62,7 @@ public class CssBean implements Serializable, Css {
     }
 
     public void setCssComment(String cssComment) {
-        this.cssComment = cssComment;
+        this.cssComment = FacesTools.convertParameter(cssComment);
     }
 
     public Long getCssId() {
@@ -93,7 +94,7 @@ public class CssBean implements Serializable, Css {
     }
 
     public void setCss(String css) {
-        this.css = css;
+        this.css = FacesTools.convertParameter(css);
     }
 
     public Date getDate() {
