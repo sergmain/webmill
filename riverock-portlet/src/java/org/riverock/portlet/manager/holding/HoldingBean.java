@@ -27,9 +27,9 @@ package org.riverock.portlet.manager.holding;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 import org.riverock.interfaces.portal.bean.Holding;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -49,20 +49,20 @@ public class HoldingBean implements Serializable, Holding {
     }
 
     public HoldingBean( Holding holding ) {
-	this.holdingName = holding.getName();
-	this.holdingShortName = holding.getShortName();
-	this.holdingId = holding.getId();
+    this.holdingName = holding.getName();
+    this.holdingShortName = holding.getShortName();
+    this.holdingId = holding.getId();
     }
 
-	private Long newCompanyId = null;
+    private Long newCompanyId = null;
 
-	public Long getNewCompanyId() {
-		return newCompanyId;
-	}
+    public Long getNewCompanyId() {
+        return newCompanyId;
+    }
 
-	public void setNewCompanyId( Long newCompanyId ) {
-		this.newCompanyId = newCompanyId;
-	}
+    public void setNewCompanyId( Long newCompanyId ) {
+        this.newCompanyId = newCompanyId;
+    }
 
     public Long getId() {
         return holdingId;
@@ -77,7 +77,7 @@ public class HoldingBean implements Serializable, Holding {
     }
 
     public void setName( String holdingName ) {
-        this.holdingName = holdingName;
+        this.holdingName = FacesTools.convertParameter(holdingName);
     }
 
     public String getShortName() {
@@ -85,7 +85,7 @@ public class HoldingBean implements Serializable, Holding {
     }
 
     public void setShortName( String holdingShortName) {
-        this.holdingShortName = holdingShortName;
+        this.holdingShortName = FacesTools.convertParameter(holdingShortName);
     }
 
     public List<CompanyBean> getCompanies() {
@@ -100,17 +100,15 @@ public class HoldingBean implements Serializable, Holding {
         companies.add( company );
     }
 
-	public List<Long> getCompanyIdList() {
-		List<Long> list = new ArrayList<Long>();
-		if (companies==null) {
-			return list;
-		}
+    public List<Long> getCompanyIdList() {
+        List<Long> list = new ArrayList<Long>();
+        if (companies==null) {
+            return list;
+        }
 
-		Iterator<CompanyBean> iterator = companies.iterator();
-		while (iterator.hasNext()) {
-			CompanyBean company = iterator.next();
-			list.add( company.getId() );
-		}
-		return list;
-	}
+        for (CompanyBean company : companies) {
+            list.add(company.getId());
+        }
+        return list;
+    }
 }

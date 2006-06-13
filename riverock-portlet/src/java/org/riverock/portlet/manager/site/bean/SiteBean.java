@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.common.tools.StringTools;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -84,10 +85,10 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setSiteDefaultLocale(String localeString) {
-        Locale locale = StringTools.getLocale(localeString);
-        setDefLanguage(locale.getLanguage());
-        setDefCountry(locale.getCountry());
-        setDefVariant(locale.getVariant());
+        Locale locale = StringTools.getLocale(FacesTools.convertParameter(localeString));
+        defLanguage = locale.getLanguage();
+        defCountry = locale.getCountry();
+        defVariant = locale.getVariant();
     }
 
     public Long getSiteId() {
@@ -111,7 +112,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setSiteName(String siteName) {
-        this.siteName = siteName;
+        this.siteName = FacesTools.convertParameter(siteName);
     }
 
     public boolean getCssDynamic() {
@@ -127,7 +128,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setCssFile(String cssFile) {
-        this.cssFile = cssFile;
+        this.cssFile = FacesTools.convertParameter(cssFile);
     }
 
     public boolean getRegisterAllowed() {
@@ -143,7 +144,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setDefLanguage(String defLanguage) {
-        this.defLanguage = defLanguage;
+        this.defLanguage = FacesTools.convertParameter(defLanguage);
     }
 
     public String getDefCountry() {
@@ -151,7 +152,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setDefCountry(String defCountry) {
-        this.defCountry = defCountry;
+        this.defCountry = FacesTools.convertParameter(defCountry);
     }
 
     public String getDefVariant() {
@@ -159,7 +160,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setDefVariant(String defVariant) {
-        this.defVariant = defVariant;
+        this.defVariant = FacesTools.convertParameter(defVariant);
     }
 
     public String getAdminEmail() {
@@ -167,6 +168,6 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setAdminEmail(String adminEmail) {
-        this.adminEmail = adminEmail;
+        this.adminEmail = FacesTools.convertParameter(adminEmail);
     }
 }

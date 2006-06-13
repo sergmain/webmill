@@ -32,6 +32,7 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SMaslyukov
@@ -55,15 +56,15 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
 
     private List<RoleEditableBeanImpl> roles = new ArrayList<RoleEditableBeanImpl>();
 
-	private Long newRoleId = null;
+    private Long newRoleId = null;
 
-	public Long getNewRoleId() {
-		return newRoleId;
-	}
+    public Long getNewRoleId() {
+        return newRoleId;
+    }
 
-	public void setNewRoleId( Long newRoleId ) {
-		this.newRoleId = newRoleId;
-	}
+    public void setNewRoleId( Long newRoleId ) {
+        this.newRoleId = newRoleId;
+    }
 
     public AuthInfoImpl getAuthInfo() {
         return authInfo;
@@ -96,6 +97,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
         return resultRoles;
     }
 
+    @SuppressWarnings({"unchecked", "RedundantCast"})
     public List<RoleEditableBean> getRoles() {
         return (List)roles;
     }
@@ -117,11 +119,11 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
     }
 
     public void setUserName( String userName ) {
-        this.userName = userName;
+        this.userName = FacesTools.convertParameter(userName);
     }
 
     public void setUserPassword( String userPassword ) {
-        this.userPassword = userPassword;
+        this.userPassword = FacesTools.convertParameter(userPassword);
     }
 
     public String getUserPassword() {
@@ -129,7 +131,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
     }
 
     public void setUserPassword2( String userPassword2 ) {
-        this.userPassword2 = userPassword2;
+        this.userPassword2 = FacesTools.convertParameter(userPassword2);
     }
 
     public String getUserPassword2() {
@@ -141,7 +143,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
     }
 
     public void setCompanyName( String companyName ) {
-        this.companyName = companyName;
+        this.companyName = FacesTools.convertParameter(companyName);
     }
 
     public String getHoldingName() {
@@ -149,7 +151,7 @@ public class AuthUserExtendedInfoImpl implements AuthUserExtendedInfo, Serializa
     }
 
     public void setHoldingName( String holdingName ) {
-        this.holdingName = holdingName;
+        this.holdingName = FacesTools.convertParameter(holdingName);
     }
 
 }

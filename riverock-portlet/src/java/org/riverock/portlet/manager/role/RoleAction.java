@@ -66,6 +66,7 @@ public class RoleAction implements Serializable {
 	public String processAddRole() {
         Long roleId = authSessionBean.getAuthSession().addRole( roleSessionBean.getRole() );
         roleSessionBean.setCurrentRoleId( roleId );
+        loadCurrentRole();
 		return "role";
 	}
 

@@ -27,6 +27,7 @@ package org.riverock.portlet.manager.site.bean;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -74,7 +75,7 @@ public class CompanyBean implements Serializable, Company {
         }
 
         public void setName(String name) {
-            this.name = name;
+            this.name = FacesTools.convertParameter(name);
         }
 
         public Long getId() {
@@ -90,7 +91,7 @@ public class CompanyBean implements Serializable, Company {
         }
 
         public void setShortName(String shortName) {
-            this.shortName = shortName;
+            this.shortName = FacesTools.convertParameter(shortName);
         }
 
         public String getAddress() {
@@ -98,7 +99,7 @@ public class CompanyBean implements Serializable, Company {
         }
 
         public void setAddress(String address) {
-            this.address = address;
+            this.address = FacesTools.convertParameter(address);
         }
 
         public String getCeo() {
@@ -106,7 +107,7 @@ public class CompanyBean implements Serializable, Company {
         }
 
         public void setCeo(String ceo) {
-            this.ceo = ceo;
+            this.ceo = FacesTools.convertParameter(ceo);
         }
 
         public String getCfo() {
@@ -114,7 +115,7 @@ public class CompanyBean implements Serializable, Company {
         }
 
         public void setCfo(String cfo) {
-            this.cfo = cfo;
+            this.cfo = FacesTools.convertParameter(cfo);
         }
 
         public String getWebsite() {
@@ -122,7 +123,7 @@ public class CompanyBean implements Serializable, Company {
         }
 
         public void setWebsite(String website) {
-            this.website = website;
+            this.website = FacesTools.convertParameter(website);
         }
 
         public String getInfo() {
@@ -130,6 +131,6 @@ public class CompanyBean implements Serializable, Company {
         }
 
         public void setInfo(String info) {
-            this.info = info;
+            this.info = FacesTools.convertParameter(info);
         }
     }
