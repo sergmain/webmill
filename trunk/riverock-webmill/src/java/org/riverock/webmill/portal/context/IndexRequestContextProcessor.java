@@ -43,21 +43,22 @@ public class IndexRequestContextProcessor implements RequestContextProcessor {
         MenuLanguage menu = factoryParameter.getPortalInfo().getMenu(factoryParameter.getPredictedLocale().toString());
         if (menu==null){
             log.error( "Menu for locale: "+factoryParameter.getPredictedLocale().toString() +" not defined" );
-            return null;
+            return new RequestContext();
         }
 
         if (menu.getIndexMenuItem() == null) {
             log.warn("menu: " + menu);
             log.warn("locale: " + factoryParameter.getPredictedLocale().toString());
             log.warn("Menu item pointed to 'index' portlet not defined");
-            return null;
+            return new RequestContext();
         }
 
         Long ctxId = menu.getIndexMenuItem().getId();
         if (ctxId==null) {
             String es = "Menu item with 'index' portlet not found";
             log.error(es);
-            throw new IllegalStateException(es);
+            return new RequestContext();
+//            throw new IllegalStateException(es);
         }
 
         return RequestContextUtils.getRequestContextBean(factoryParameter, ctxId);
