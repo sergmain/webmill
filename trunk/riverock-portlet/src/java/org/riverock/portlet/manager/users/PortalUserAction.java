@@ -26,9 +26,10 @@ package org.riverock.portlet.manager.users;
 
 import java.io.Serializable;
 
+import org.riverock.interfaces.portal.bean.User;
+import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.interfaces.portal.bean.User;
 
 /**
  * @author SergeMaslyukov
@@ -107,6 +108,12 @@ public class PortalUserAction implements Serializable {
             return;
         }
         User user = FacesTools.getPortalDaoProvider().getPortalUserDao().getUser(portalUserSessionBean.getCurrentPortalUserId());
-        portalUserSessionBean.setPortalUser( new PortalUserBeanImpl(user) );
+        PortalUserBeanImpl portalUser = new PortalUserBeanImpl(user);
+        Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(
+            portalUser.getCompanyId()
+        );
+        portalUser.setCompanyName(company.getName());
+
+        portalUserSessionBean.setPortalUser( portalUser );
     }
 }
