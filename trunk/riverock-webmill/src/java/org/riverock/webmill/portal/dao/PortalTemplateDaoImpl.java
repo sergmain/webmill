@@ -50,6 +50,10 @@ public class PortalTemplateDaoImpl implements PortalTemplateDao {
         return InternalDaoFactory.getInternalTemplateDao().getTemplate(siteLanguageId);
     }
 
+    public Template getDefaultDynamicTemplate(Long siteLanguageId) {
+        return InternalDaoFactory.getInternalTemplateDao().getDefaultDynamicTemplate(siteLanguageId);
+    }
+
     public List<Template> getTemplateLanguageList(Long siteLanguageId) {
         return InternalDaoFactory.getInternalTemplateDao().getTemplateLanguageList(siteLanguageId);
     }

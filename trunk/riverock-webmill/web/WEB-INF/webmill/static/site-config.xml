@@ -47,7 +47,7 @@
             <Template name="index">
                 <TemplateFile>index-template.xml</TemplateFile>
             </Template>
-            <Template name="dynamic">
+            <Template name="dynamic" isDefaultDynamic="true">
                 <TemplateFile>dynamic-template.xml</TemplateFile>
             </Template>
             <Xslt name="default xslt">
@@ -90,7 +90,7 @@
             <Template name="index">
                 <TemplateFile>index-template.xml</TemplateFile>
             </Template>
-            <Template name="dynamic">
+            <Template name="dynamic" isDefaultDynamic="true">
                 <TemplateFile>dynamic-template.xml</TemplateFile>
             </Template>
             <Xslt name="default xslt">
@@ -150,7 +150,7 @@
             <Template name="index">
                 <TemplateFile>index-template.xml</TemplateFile>
             </Template>
-            <Template name="dynamic">
+            <Template name="dynamic" isDefaultDynamic="true">
                 <TemplateFile>dynamic-template.xml</TemplateFile>
             </Template>
             <Xslt name="default xslt">
@@ -193,7 +193,7 @@
             <Template name="index">
                 <TemplateFile>index-template.xml</TemplateFile>
             </Template>
-            <Template name="dynamic">
+            <Template name="dynamic" isDefaultDynamic="true">
                 <TemplateFile>dynamic-template.xml</TemplateFile>
             </Template>
             <Xslt name="default xslt">

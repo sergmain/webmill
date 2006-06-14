@@ -42,6 +42,7 @@ public class TemplateBean implements Serializable, Template {
     private String templateName;
     private String templateData;
     private String templateLanguage = null;
+    private boolean isDefaultDynamic = false;
 
     public TemplateBean(){
     }
@@ -52,6 +53,7 @@ public class TemplateBean implements Serializable, Template {
         this.templateName=template.getTemplateName();
         this.templateData=template.getTemplateData();
         this.templateLanguage=template.getTemplateLanguage();
+        this.isDefaultDynamic=template.isDefaultDynamic();
     }
 
     public String getTemplateLanguage() {
@@ -92,5 +94,13 @@ public class TemplateBean implements Serializable, Template {
 
     public void setTemplateData(String templateData) {
         this.templateData = FacesTools.convertParameter(templateData);
+    }
+
+    public boolean isDefaultDynamic() {
+        return isDefaultDynamic;
+    }
+
+    public void setDefaultDynamic(boolean defaultDynamic) {
+        isDefaultDynamic = defaultDynamic;
     }
 }

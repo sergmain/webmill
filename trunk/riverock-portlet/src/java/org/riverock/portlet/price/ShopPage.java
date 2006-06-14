@@ -128,16 +128,11 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
 
             shop = (Shop) session.getAttribute( ShopPortlet.CURRENT_SHOP, PortletSession.APPLICATION_SCOPE );
 
-            if (shop == null)
-            {
-                if (log.isDebugEnabled())
-                    log.debug("Shop session not initialized");
-
-                throw new PortletException("shop session not iitialized. Add mill.order_logic portlet to template");
+            if (shop == null) {
+                throw new PortletException("shop session not initialized");
             }
 
-            if (shop.currencyID == null)
-            {
+            if (shop.currencyID == null) {
                 throw new PortletException("Default currency not defined.<br>Login and configure shop.");
             }
 

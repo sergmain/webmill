@@ -12,4 +12,7 @@
     <h:outputText value="Template name:"/>
     <h:outputText value="#{siteDataProvider.template.templateName}"/>
 
+    <h:outputText value="#{msg.template_default_dynamic}:"/>
+    <h:outputText value="#{siteDataProvider.template.defaultDynamic}"/>
+
 </h:panelGrid>

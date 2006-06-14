@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -192,7 +193,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
             if (field.getDefaultValue() != null) {
                 String val = field.getDefaultValue().trim();
 
-                if (!StringTools.isEmpty(val)) {
+                if (StringUtils.isNotBlank(val)) {
                     switch (field.getJavaType().intValue()) {
                         case Types.VARCHAR:
                             break;

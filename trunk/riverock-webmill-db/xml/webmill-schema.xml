@@ -983,6 +983,7 @@
 		<Fields name="NAME_SITE_TEMPLATE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="0"/>
 		<Fields name="TEMPLATE_DATA" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="2000" nullable="0"/>
 		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
+		<Fields name="IS_DEFAULT_DYNAMIC" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="0"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_TEMPLATE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SUPPORT_LANG_ST_FK" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
 			<DeleteRule ruleType="1" ruleName="java.sql.DatabaseMetaData.importedKeyRestrict"/>
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>

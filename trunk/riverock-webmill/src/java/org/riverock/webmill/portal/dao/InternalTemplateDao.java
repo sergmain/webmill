@@ -48,4 +48,6 @@ public interface InternalTemplateDao {
     public void updateTemplate(Template template);
 
     public void deleteTemplate(Long templateId);
+
+    public Template getDefaultDynamicTemplate(Long siteLanguageId);
 }

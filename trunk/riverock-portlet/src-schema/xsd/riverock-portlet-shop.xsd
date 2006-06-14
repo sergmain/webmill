@@ -25,7 +25,7 @@
  *
  */
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
 	</xs:annotation>
@@ -45,8 +45,8 @@
 			<xs:element name="SortPriceUrl" type="xs:string"/>
 			<xs:element name="ItemDirect" type="xs:string" default="ASC"/>
 			<xs:element name="PriceDirect" type="xs:string" default="ASC"/>
-			<xs:element name="DateUploadPrice" type="xs:string"/>
-			<xs:element name="TimeUploadPrice" type="xs:string"/>
+			<xs:element name="DateUploadPrice" type="xs:string" minOccurs="0"/>
+			<xs:element name="TimeUploadPrice" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="isProcessInvoice" type="xs:string" use="required"/>
 	</xs:complexType>
@@ -114,9 +114,9 @@
 			<xs:element name="ItemDescription" type="xs:string" minOccurs="0"/>
 			<xs:element name="ItemImageFileName" type="xs:string" minOccurs="0"/>
 			<xs:element name="ItemName" type="xs:string"/>
-			<xs:element name="ItemToInvoice" type="xs:string"/>
-			<xs:element name="ItemToInvoiceCountParam" type="xs:string"/>
-			<xs:element name="HiddenParam" type="HiddenParamType" maxOccurs="unbounded"/>
+			<xs:element name="ItemToInvoice" type="xs:string" minOccurs="0"/>
+			<xs:element name="ItemToInvoiceCountParam" type="xs:string" minOccurs="0"/>
+			<xs:element name="HiddenParam" type="HiddenParamType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GroupListType">

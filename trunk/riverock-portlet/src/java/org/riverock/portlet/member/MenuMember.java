@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletConfig;
@@ -45,9 +44,11 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.interfaces.portlet.member.PortletGetList;
+import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.Template;
+import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
-import org.riverock.interfaces.portal.template.PortalTemplate;
+import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberApplicationType;
 import org.riverock.portlet.schema.portlet.menu_member.MenuMemberModuleType;
@@ -83,7 +84,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
     public MenuMember() {
     }
 
-    SiteTemplateMember memberTemplates = null;
+    private String dynamicTemplate=null;
 
     public PortletResultContent getInstance() throws PortletException {
         PreparedStatement ps = null;
@@ -113,9 +114,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             if( log.isDebugEnabled() ) {
                 log.debug( "siteId: " + siteIdString );
             }
-            Long siteId = new Long( siteIdString );
-            memberTemplates = SiteTemplateMember.getInstance( siteId );
-
+            dynamicTemplate = getDynamicTemplate();
 
             String sql_ =
                 "select a.user_login, f.code_arm, f.order_field, f.id_arm, f.name_arm " +
@@ -293,11 +292,6 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
             return null;
 
         MenuMemberModuleType mod = new MenuMemberModuleType();
-        PortalTemplate portalTemplate = getMemberTemplate();
-        String templateName = null;
-        if (portalTemplate!=null) {
-            templateName = portalTemplate.getTemplateName();
-        }
         try {
             mod.setModuleName( RsetTools.getString( rs, "NAME_OBJECT_ARM" ) );
             mod.setOrderField( RsetTools.getInt( rs, "ORDER_FIELD" ) );
@@ -307,13 +301,11 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
 
                 int idx = mod.getModuleUrl().indexOf('?');
                 String moduleUrl =
-                    PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, templateName ) + '&' +
+                    PortletService.url( MemberConstants.CTX_TYPE_MEMBER, renderRequest, renderResponse, dynamicTemplate ) + '&' +
                         (idx!=-1?mod.getModuleUrl().substring(idx + 1):mod.getModuleUrl());
 
                 if( log.isDebugEnabled() ) {
-                    log.debug( "PortletParam  getMemberTemplate - " + getMemberTemplate() );
-                    log.debug( "PortletParam  nameTemplate - " + templateName );
-
+                    log.debug( "PortletParam  nameTemplate - " + dynamicTemplate );
                     log.debug( "Module url - " + moduleUrl );
                 }
                 mod.setModuleUrl( moduleUrl );
@@ -331,26 +323,28 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private PortalTemplate getMemberTemplate() {
+    private String getDynamicTemplate() {
 
         if( log.isDebugEnabled() ) {
             log.debug( "Looking template for locale " + renderRequest.getLocale().toString() );
         }
-
-        PortalTemplate st = getMemberTemplate( renderRequest.getLocale() );
-        if( st != null )
-            return st;
-
-        log.warn( "memberTemplate for Locale " + renderRequest.getLocale().toString() + " not initialized" );
-
-        return null;
-    }
-
-    private PortalTemplate getMemberTemplate( Locale locale ) {
-        if( memberTemplates == null || memberTemplates.memberTemplate == null )
+        PortalDaoProvider daoProvider = (PortalDaoProvider)renderRequest.getAttribute( ContainerConstants.PORTAL_PORTAL_DAO_PROVIDER );
+        Long siteId = new Long(renderRequest.getPortalContext().getProperty(ContainerConstants.PORTAL_PROP_SITE_ID));
+        SiteLanguage siteLanguage = daoProvider.getPortalSiteLanguageDao().getSiteLanguage(
+            siteId,
+            renderRequest.getLocale().toString()
+        );
+        if (siteLanguage==null) {
+            log.warn( "default dynamic template for Locale " + renderRequest.getLocale().toString() + " and siteId " +siteId+" not found" );
             return null;
+        }
+        Template template = daoProvider.getPortalTemplateDao().getDefaultDynamicTemplate(siteLanguage.getSiteLanguageId());
 
-        return memberTemplates.memberTemplate.get( locale.toString() );
+        if( template==null ) {
+            log.warn( "default dynamic template for Locale " + renderRequest.getLocale().toString() + " and siteId " +siteId+" not found" );
+            return null;
+        }
+        return template.getTemplateName();
     }
 
     private final static class MenuMemberApplicationComparator implements Comparator<MenuMemberApplicationType> {

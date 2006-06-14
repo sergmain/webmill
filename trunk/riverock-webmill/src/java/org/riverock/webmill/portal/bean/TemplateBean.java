@@ -42,6 +42,7 @@ public class TemplateBean implements Serializable, Template {
     private String templateName; 
     private String templateData;
     private String templateLanguage = null;
+    private boolean isDefaultDynamic = false;
 
     public String getTemplateLanguage() {
         return templateLanguage;
@@ -81,5 +82,13 @@ public class TemplateBean implements Serializable, Template {
 
     public void setTemplateData(String templateData) {
         this.templateData = templateData;
+    }
+
+    public boolean isDefaultDynamic() {
+        return isDefaultDynamic;
+    }
+
+    public void setDefaultDynamic(boolean defaultDynamic) {
+        isDefaultDynamic = defaultDynamic;
     }
 }
