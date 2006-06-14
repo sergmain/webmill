@@ -182,6 +182,12 @@ public class TemplateAction implements Serializable {
     }
 
     private TemplateBean getSessionObject() {
+        if (log.isDebugEnabled()) {
+            log.debug("siteSessionBean.getTemplate(): " + siteSessionBean.getTemplate());
+            if (siteSessionBean.getTemplate()!=null) {
+                log.debug("template.isDefaultDynamic: " + siteSessionBean.getTemplate().isDefaultDynamic());
+            }
+        }
         return siteSessionBean.getTemplate();
     }
 }

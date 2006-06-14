@@ -37,7 +37,6 @@ import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -59,6 +58,7 @@ import org.riverock.webmill.container.ContainerConstants;
  * $Id$
  *
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class PriceListItemList {
     private final static Logger log = Logger.getLogger( PriceListItemList.class );
 
@@ -71,14 +71,15 @@ public final class PriceListItemList {
         return hidden;
     }
 
-    private static Object syncObj  = new Object();
+    private final static Object syncObj  = new Object();
     public static ItemListType getInstance(
         DatabaseAdapter db_, ShopPageParam shopParam,
         RenderRequest renderRequest, RenderResponse renderResponse, ResourceBundle bundle )
         throws PriceException {
 
-        if (shopParam.id_currency==null)
+        if (shopParam.id_currency==null) {
             throw new PriceException("currency for this shop not defined");
+        }
 
         String sql_ = null;
         PreparedStatement ps = null;
@@ -197,8 +198,8 @@ public final class PriceListItemList {
                             try {
                                 XmlTools.writeToFile(targetCurrency, SiteUtils.getTempDir()+File.separatorChar+"schema-currency-default.xml");
                             }
-                            catch(Exception e) {
-                                log.error("Exception write targetCurrency to file", e);
+                            catch(Throwable e) {
+                                log.error("Error write targetCurrency to debug file", e);
                             }
 
                             log.debug("default curs - " + targetCurrency.getRealCurs());
@@ -246,8 +247,8 @@ public final class PriceListItemList {
                         try {
                             XmlTools.writeToFile(item, SiteUtils.getTempDir()+File.separatorChar+"schema-currency-item.xml");
                         }
-                        catch(Exception e) {
-                            log.error("Exception write item to file", e);
+                        catch(Throwable e) {
+                            log.error("Exception write item to debug file", e);
                         }
                     }
                 }
@@ -258,11 +259,6 @@ public final class PriceListItemList {
             String es = "Error  execute sql ";
             log.error(es, e);
             throw new PriceException(es+e.getMessage());
-        }
-        catch (ConfigException e) {
-            String es = "Error get configuration ";
-            log.error(es, e);
-            throw new PriceException(es, e);
         }
         catch (UnsupportedEncodingException e) {
             String es = "Error get localized string ";

@@ -7,6 +7,8 @@
 
 <h:outputText value="#{msg.template_info}"/>
 <h:panelGrid columns="2">
+    <h:outputText value="#{msg.template_default_dynamic}"/>
+    <h:selectBooleanCheckbox id="select_template_checkbox" value="#{siteSessionBean.template.defaultDynamic}"/>
 
     <h:outputText value="#{msg.template_name}"/>
     <h:inputText id="template-name-field" value="#{siteSessionBean.template.templateName}"/>

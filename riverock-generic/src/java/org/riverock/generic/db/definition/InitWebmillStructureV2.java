@@ -27,17 +27,16 @@ package org.riverock.generic.db.definition;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.riverock.generic.config.GenericConfig;
+import org.apache.log4j.Logger;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
+
+import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.Constants;
 import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
-import org.riverock.common.config.PropertiesProvider;
-
-import org.apache.log4j.Logger;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 
 /**
  * User: Admin

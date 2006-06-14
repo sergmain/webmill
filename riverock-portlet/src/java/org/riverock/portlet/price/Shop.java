@@ -78,6 +78,9 @@ public class Shop implements Serializable {
     public Long id_type_shop_2 = null;
 
     public static void reinit() {
+        if (log.isDebugEnabled()) {
+            log.debug("call reinit() shop cache");
+        }
         cache.reinit();
     }
 

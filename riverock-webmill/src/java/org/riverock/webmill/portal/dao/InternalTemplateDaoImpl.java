@@ -60,16 +60,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            WmPortalTemplateItemType template = GetWmPortalTemplateItem.getInstance(adapter, templateId).item;
-            TemplateBean bean = null;
-            if (template != null) {
-                bean = new TemplateBean();
-                bean.setSiteLanguageId(template.getIdSiteSupportLanguage());
-                bean.setTemplateData(template.getTemplateData());
-                bean.setTemplateId(template.getIdSiteTemplate());
-                bean.setTemplateName(template.getNameSiteTemplate());
-            }
-            return bean;
+            return getTemplate(adapter, templateId);
         }
         catch (Exception e) {
             String es = "Error get getSiteBean()";
@@ -79,6 +70,27 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         finally {
             DatabaseManager.close(adapter);
             adapter = null;
+        }
+    }
+
+    public Template getTemplate(DatabaseAdapter adapter, Long templateId) {
+        try {
+            WmPortalTemplateItemType template = GetWmPortalTemplateItem.getInstance(adapter, templateId).item;
+            TemplateBean bean = null;
+            if (template != null) {
+                bean = new TemplateBean();
+                bean.setSiteLanguageId(template.getIdSiteSupportLanguage());
+                bean.setTemplateData(template.getTemplateData());
+                bean.setTemplateId(template.getIdSiteTemplate());
+                bean.setTemplateName(template.getNameSiteTemplate());
+                bean.setDefaultDynamic(template.getIsDefaultDynamic());
+            }
+            return bean;
+        }
+        catch (Exception e) {
+            String es = "Error get getSiteBean()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
         }
     }
 
@@ -105,6 +117,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
                 bean.setSiteLanguageId(item.getIdSiteSupportLanguage());
                 bean.setTemplateName(item.getNameSiteTemplate());
                 bean.setTemplateData(item.getTemplateData());
+                bean.setDefaultDynamic(item.getIsDefaultDynamic());
             }
             return bean;
         }
@@ -123,7 +136,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
 
     static String templateLanguageSql =
         "select a.ID_SITE_TEMPLATE, b.CUSTOM_LANGUAGE, a.NAME_SITE_TEMPLATE, " +
-            "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE " +
+            "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE, a.IS_DEFAULT_DYNAMIC " +
             "from   WM_PORTAL_TEMPLATE a, WM_PORTAL_SITE_LANGUAGE b " +
             "where  b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
@@ -158,6 +171,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
                 bean.setTemplateId(RsetTools.getLong(rs, "ID_SITE_TEMPLATE"));
                 bean.setTemplateName(RsetTools.getString(rs, "NAME_SITE_TEMPLATE"));
                 bean.setTemplateLanguage(RsetTools.getString(rs, "CUSTOM_LANGUAGE"));
+                bean.setDefaultDynamic(RsetTools.getInt(rs, "IS_DEFAULT_DYNAMIC",0)==1);
 
                 beans.add(bean);
             }
@@ -178,7 +192,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
 
     static String templateSql =
         "select a.ID_SITE_TEMPLATE, b.CUSTOM_LANGUAGE, a.NAME_SITE_TEMPLATE, " +
-            "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE " +
+            "       a.TEMPLATE_DATA, a.ID_SITE_SUPPORT_LANGUAGE, a.IS_DEFAULT_DYNAMIC " +
             "from   WM_PORTAL_TEMPLATE a, WM_PORTAL_SITE_LANGUAGE b " +
             "where  b.ID_SITE=? and a.ID_SITE_SUPPORT_LANGUAGE=b.ID_SITE_SUPPORT_LANGUAGE ";
 
@@ -216,6 +230,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
                 bean.setTemplateId(RsetTools.getLong(rs, "ID_SITE_TEMPLATE"));
                 bean.setTemplateName(RsetTools.getString(rs, "NAME_SITE_TEMPLATE"));
                 bean.setTemplateLanguage(RsetTools.getString(rs, "CUSTOM_LANGUAGE"));
+                bean.setDefaultDynamic(RsetTools.getInt(rs, "IS_DEFAULT_DYNAMIC",0)==1);
 
                 beans.add(bean);
             }
@@ -239,6 +254,8 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
+            clearDefaultDynamicFlag(template, adapter);
+
             CustomSequenceType seq = new CustomSequenceType();
             seq.setSequenceName( "seq_WM_PORTAL_TEMPLATE" );
             seq.setTableName( "WM_PORTAL_TEMPLATE" );
@@ -250,6 +267,7 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
             item.setIdSiteSupportLanguage(template.getSiteLanguageId());
             item.setNameSiteTemplate(template.getTemplateName());
             item.setTemplateData(template.getTemplateData());
+            item.setIsDefaultDynamic(template.isDefaultDynamic());
 
             InsertWmPortalTemplateItem.process(adapter, item);
 
@@ -309,11 +327,14 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
+            clearDefaultDynamicFlag(template, adapter);
+
             WmPortalTemplateItemType item = new WmPortalTemplateItemType();
             item.setIdSiteSupportLanguage(template.getSiteLanguageId());
             item.setIdSiteTemplate(template.getTemplateId());
             item.setNameSiteTemplate(template.getTemplateName());
             item.setTemplateData(template.getTemplateData());
+            item.setIsDefaultDynamic(template.isDefaultDynamic());
 
             UpdateWmPortalTemplateItem.process(adapter, item);
 
@@ -365,4 +386,40 @@ public class InternalTemplateDaoImpl implements InternalTemplateDao {
         }
     }
 
+    public Template getDefaultDynamicTemplate(Long siteLanguageId) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            Long templateId = DatabaseManager.getLongValue(
+                adapter,
+                "select a.ID_SITE_TEMPLATE " +
+                    "from   WM_PORTAL_TEMPLATE a " +
+                    "where  a.IS_DEFAULT_DYNAMIC=1 and a.ID_SITE_SUPPORT_LANGUAGE=?",
+                new Object[]{siteLanguageId}
+            );
+            if (templateId==null) {
+                return null;
+            }
+            return getTemplate(adapter, templateId);
+
+        } catch (Throwable e) {
+            String es = "Error delete template";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    private void clearDefaultDynamicFlag(Template template, DatabaseAdapter adapter) throws SQLException {
+        if (template.isDefaultDynamic()) {
+            DatabaseManager.runSQL(
+                adapter,
+                "update WM_PORTAL_TEMPLATE set IS_DEFAULT_DYNAMIC=0 where ID_SITE_SUPPORT_LANGUAGE=? and IS_DEFAULT_DYNAMIC!=0",
+                new Object[] {template.getSiteLanguageId()},
+                new int[]{Types.NUMERIC}
+            );
+        }
+    }
 }

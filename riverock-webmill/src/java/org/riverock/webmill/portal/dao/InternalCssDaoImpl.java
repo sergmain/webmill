@@ -129,13 +129,13 @@ public class InternalCssDaoImpl implements InternalCssDao {
         try {
             adapter = DatabaseAdapter.getInstance();
 
+            clearCurrentFlag(css, adapter);
+
             CustomSequenceType seq = new CustomSequenceType();
             seq.setSequenceName( "seq_WM_PORTAL_CSS" );
             seq.setTableName( "WM_PORTAL_CSS" );
             seq.setColumnName( "ID_SITE_CONTENT_CSS" );
             Long id = adapter.getSequenceNextValue( seq );
-
-            clearCurrentFlag(css, adapter);
 
             WmPortalCssItemType item = new WmPortalCssItemType();
             item.setIdSiteContentCss(id);
@@ -403,7 +403,7 @@ public class InternalCssDaoImpl implements InternalCssDao {
         if (css.isCurrent()) {
             DatabaseManager.runSQL(
                 adapter,
-                "update WM_PORTAL_CSS set IS_CURRENT=0 where ID_SITE=?",
+                "update WM_PORTAL_CSS set IS_CURRENT=0 where ID_SITE=? and IS_CURRENT!=0",
                 new Object[] {css.getSiteId()},
                 new int[]{Types.NUMERIC}
             );

@@ -36,4 +36,5 @@ public interface Template {
     public Long getSiteLanguageId();
     public String getTemplateName();
     public String getTemplateData();
+    public boolean isDefaultDynamic();
 }

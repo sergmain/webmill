@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Serg (Home) -->
+<!--
+/*
+ * org.riverock.webmill - Portal framework implementation
+ * 
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * 
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ * 
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
 <xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:webmill-core="http://webmill.riverock.org/xsd/riverock-webmill-core.xsd">
 	<xs:element name="Sites">
 		<xs:annotation>
@@ -58,6 +83,7 @@
 			<xs:element name="TemplateFile" type="xs:string"/>
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="isDefaultDynamic" type="xs:boolean" default="false"/>
 	</xs:complexType>
 	<xs:complexType name="MenuGroupType">
 		<xs:sequence>
