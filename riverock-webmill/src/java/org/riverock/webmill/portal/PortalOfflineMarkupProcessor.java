@@ -219,12 +219,14 @@ public class PortalOfflineMarkupProcessor {
                         );
                         templateBean.setSiteLanguageId(siteLanguage.getSiteLanguageId());
                         templateBean.setTemplateName(templateItem.getName());
+                        templateBean.setDefaultDynamic(templateItem.getIsDefaultDynamic());
                         if (log.isDebugEnabled()) {
                             log.debug("template");
                             log.debug("    name: " +templateBean.getTemplateName());
                             log.debug("    id: " +templateBean.getTemplateId());
                             log.debug("    lang: " +templateBean.getTemplateLanguage());
                             log.debug("    siteLangId: " +templateBean.getSiteLanguageId());
+                            log.debug("    isDefaultDynamic: " +templateBean.isDefaultDynamic());
                         }
                         InternalDaoFactory.getInternalTemplateDao().createTemplate(templateBean);
                     }
