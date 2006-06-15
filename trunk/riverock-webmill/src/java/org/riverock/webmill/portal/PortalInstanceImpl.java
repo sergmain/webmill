@@ -374,6 +374,9 @@ public class PortalInstanceImpl implements PortalInstance  {
                     response_.setLocale( portalRequestInstance.getLocale() );
                 }
                 setCookie( portalRequestInstance, response_ );
+                response_.setHeader("X-Powered-By", PORTAL_INFO);
+                response_.setHeader("Server", PORTAL_INFO);
+
                 PortalService.setContentType( response_ );
                 response_.setHeader( "Cache-Control", "no-cache" );
                 response_.setHeader( "Pragma", "no-cache" );
