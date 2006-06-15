@@ -79,8 +79,6 @@ public class InitWebmillStructureV2 implements DefinitionProcessingInterface
         finally
         {
             db_.commit();
-//            DatabaseAdapter.close(db_);
-//            db_ = null;
         }
     }
 }

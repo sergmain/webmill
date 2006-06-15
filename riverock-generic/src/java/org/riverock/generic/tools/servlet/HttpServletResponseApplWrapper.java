@@ -33,6 +33,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.ServletOutputStream;
 
 /**
+ * @deprecated
+ *
  * Author: mill
  * Date: Feb 19, 2003
  * Time: 1:45:08 PM
