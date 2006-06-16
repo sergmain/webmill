@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ *
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+ -->
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+    "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+<faces-config>
+    <managed-bean>
+        <managed-bean-name>menuSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.menu.MenuSessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>menuTree</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.menu.MenuTree</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>menuService</property-name>
+            <property-class>org.riverock.portlet.manager.menu.MenuService</property-class>
+            <value>#{menuService}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>menuDataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.menu.MenuDataProvider</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>menuService</property-name>
+            <property-class>org.riverock.portlet.manager.menu.MenuService</property-class>
+            <value>#{menuService}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>menuSessionBean</property-name>
+            <value>#{menuSessionBean}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>menuService</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.menu.MenuService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <!-- Actions -->
+    <managed-bean>
+        <managed-bean-name>menuAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.menu.action.MenuAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>menuSessionBean</property-name>
+            <value>#{menuSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>authSessionBean</property-name>
+            <value>#{authSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{menuDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>menuCatalogAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.menu.action.MenuCatalogAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>menuSessionBean</property-name>
+            <value>#{menuSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>authSessionBean</property-name>
+            <value>#{authSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{menuDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>menuSiteAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.manager.menu.action.MenuSiteAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>menuSessionBean</property-name>
+            <value>#{menuSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>authSessionBean</property-name>
+            <value>#{authSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{menuDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu-add</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu-edit</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu-edit.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu-delete</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu-delete.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu-catalog-add</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu-catalog-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu-catalog-edit</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu-catalog-edit.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>menu-catalog-delete</from-outcome>
+            <to-view-id>/riverock/manager/menu/menu-catalog-delete.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>ru</supported-locale>
+        </locale-config>
+        <message-bundle>org.riverock.portlet.manager.resource.Menu</message-bundle>
+    </application>
+</faces-config>

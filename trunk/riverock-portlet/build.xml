@@ -172,6 +172,9 @@
         <copy_resources res-path="/org/riverock/portlet/shop/resource" file-mask="*.properties"
             src="${src.java.dir}" dest="${build.dest}"/>
 
+        <copy_resources res-path="/org/riverock/portlet/shop/resource" file-mask="*.xml"
+            src="${src.java.dir}" dest="${build.dest}"/>
+
         <copy_resources res-path="/org/riverock/portlet/register/i18n" file-mask="*.xml"
             src="${src.java.dir}" dest="${build.dest}"/>
 

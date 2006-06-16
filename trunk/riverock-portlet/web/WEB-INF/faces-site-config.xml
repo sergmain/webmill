@@ -271,6 +271,6 @@
             <supported-locale>en</supported-locale>
             <supported-locale>ru</supported-locale>
         </locale-config>
-        <message-bundle>org.riverock.portlet.manager.resource.Site_en</message-bundle>
+        <message-bundle>org.riverock.portlet.manager.resource.Site</message-bundle>
     </application>
 </faces-config>

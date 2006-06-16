@@ -33,7 +33,7 @@
 
     <managed-bean>
         <managed-bean-name>priceUploadForm</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.shop.upload.PriceUploadForm</managed-bean-class>
+        <managed-bean-class>org.riverock.portlet.shop.manager.PriceUploadForm</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 

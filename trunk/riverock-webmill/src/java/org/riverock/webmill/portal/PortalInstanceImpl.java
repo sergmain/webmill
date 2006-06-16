@@ -60,6 +60,7 @@ import org.riverock.interfaces.portal.CookieManager;
  *         Time: 18:00:18
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class PortalInstanceImpl implements PortalInstance  {
     private final static Logger log = Logger.getLogger(PortalInstanceImpl.class);
 
@@ -328,100 +329,101 @@ public class PortalInstanceImpl implements PortalInstance  {
             portalRequestInstance.byteArrayOutputStream.write(
                 ( es + "<br>" + ExceptionTools.getStackTrace(e, NUM_LINES, "<br>") ).getBytes()
             );
+            return;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Start finally block");
+        }
+
+        try {
+            // work around with redirect
+            if (portalRequestInstance.getRedirectUrl() != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("redirect to new url: " + portalRequestInstance.getRedirectUrl());
+                }
+                response_.isOk = true;
+
+                setCookie(portalRequestInstance, response_);
+
+                portalRequestInstance.byteArrayOutputStream.close();
+                portalRequestInstance.byteArrayOutputStream = null;
+
+                response_.sendRedirect(portalRequestInstance.getRedirectUrl());
+                return;
+            }
+
+            if (portalRequestInstance.byteArrayOutputStream == null) {
+                String es = "byteArrayOutputStream is null";
+                log.error(es);
+                throw new PortalException(es);
+            }
+
+            portalRequestInstance.byteArrayOutputStream.close();
+            StringBuilder timeString = getTimeString(counter, portalRequestInstance.startMills);
+            final byte[] bytesCopyright = getCopyright().getBytes();
+            final byte[] bytes = portalRequestInstance.byteArrayOutputStream.toByteArray();
+            final byte[] bytesTimeString = timeString.toString().getBytes();
+
+            final String pageContent = new String(bytes, WebmillConfig.getHtmlCharset());
+
+            if (log.isDebugEnabled()) {
+                log.debug("ContentLength: " + bytes.length);
+                log.debug("pageContent:\n" + pageContent);
+            }
+
+            response_.isOk = true;
+            if (portalRequestInstance.getLocale() != null) {
+                response_.setLocale(portalRequestInstance.getLocale());
+            }
+            setCookie(portalRequestInstance, response_);
+            response_.setHeader("X-Powered-By", PORTAL_INFO);
+            response_.setHeader("Server", PORTAL_INFO);
+
+            PortalService.setContentType(response_);
+            response_.setHeader("Cache-Control", "no-cache");
+            response_.setHeader("Pragma", "no-cache");
+            response_.setContentLength(bytesCopyright.length + bytes.length + bytesTimeString.length);
+
+            portalRequestInstance.destroy();
+            portalRequestInstance = null;
+
+            OutputStream out = response_.getOutputStream();
+            // output copyright
+            out.write(bytesCopyright);
+            out.write(bytes);
+            out.write(bytesTimeString);
+            out.flush();
+            out.close();
+            out = null;
+
+            if (log.isInfoEnabled())
+                log.info(timeString.toString());
+
+            log.warn(
+                "free memory " + Runtime.getRuntime().freeMemory() +
+                    " total memory " + Runtime.getRuntime().totalMemory() +
+                    " max memory " + Runtime.getRuntime().maxMemory()
+            );
+        }
+        catch (Throwable th) {
+            final String es = "Error last step of build page";
+            log.error(es, th);
+            throw new ServletException(es, th);
         }
         finally {
             if (log.isDebugEnabled()) {
-                log.debug("Start finally block");
+                log.debug("Start finally-finally block");
             }
             try {
-                // work around with redirect
-                if ( portalRequestInstance.getRedirectUrl()!=null ) {
-                    if ( log.isDebugEnabled() ) {
-                        log.debug( "redirect to new url: "+ portalRequestInstance.getRedirectUrl());
-                    }
-                    response_.isOk = true;
-
-                    setCookie( portalRequestInstance, response_ );
-
-                    portalRequestInstance.byteArrayOutputStream.close();
-                    portalRequestInstance.byteArrayOutputStream = null;
-
-                    response_.sendRedirect( portalRequestInstance.getRedirectUrl() );
-                    return;
+                if (portalRequestInstance != null) {
+                    portalRequestInstance.destroy();
                 }
-
-                if (portalRequestInstance.byteArrayOutputStream == null) {
-                    String es = "byteArrayOutputStream is null";
-                    log.error(es);
-                    throw new PortalException(es);
-                }
-
-                portalRequestInstance.byteArrayOutputStream.close();
-                StringBuilder timeString = getTimeString( counter, portalRequestInstance.startMills );
-                final byte[] bytesCopyright = getCopyright().getBytes();
-                final byte[] bytes = portalRequestInstance.byteArrayOutputStream.toByteArray();
-                final byte[] bytesTimeString = timeString.toString().getBytes();
-
-                final String pageContent = new String( bytes, WebmillConfig.getHtmlCharset() );
-
-                if ( log.isDebugEnabled() ) {
-                    log.debug( "ContentLength: " + bytes.length );
-                    log.debug( "pageContent:\n" + pageContent );
-                }
-
-                response_.isOk = true;
-                if (portalRequestInstance.getLocale()!=null) {
-                    response_.setLocale( portalRequestInstance.getLocale() );
-                }
-                setCookie( portalRequestInstance, response_ );
-                response_.setHeader("X-Powered-By", PORTAL_INFO);
-                response_.setHeader("Server", PORTAL_INFO);
-
-                PortalService.setContentType( response_ );
-                response_.setHeader( "Cache-Control", "no-cache" );
-                response_.setHeader( "Pragma", "no-cache" );
-                response_.setContentLength( bytesCopyright.length + bytes.length + bytesTimeString.length );
-
-                portalRequestInstance.destroy();
-                portalRequestInstance = null;
-
-                OutputStream out = response_.getOutputStream();
-                // output copyright
-                out.write( bytesCopyright );
-                out.write( bytes );
-                out.write( bytesTimeString );
-                out.flush();
-                out.close();
-                out = null;
-
-                if (log.isInfoEnabled())
-                    log.info( timeString.toString() );
-
-                log.warn(
-                    "free memory " + Runtime.getRuntime().freeMemory() +
-                    " total memory " + Runtime.getRuntime().totalMemory() +
-                    " max memory " + Runtime.getRuntime().maxMemory()
-                );
             }
-            catch (Throwable th) {
-                final String es = "Error last step of build page";
-                log.error(es, th);
-                throw new ServletException( es, th );
+            catch (Throwable e) {
+                log.error("Error destroy portalRequestInstance object", e);
             }
-            finally{
-                if (log.isDebugEnabled()) {
-                    log.debug("Start finally-finally block");
-                }
-                try {
-                    if ( portalRequestInstance!=null ) {
-                        portalRequestInstance.destroy();
-                    }
-                }
-                catch( Throwable e ) {
-                    log.error("Error destroy portalRequestInstance object", e);
-                }
-                NDC.pop();
-            }
+            NDC.pop();
         }
     }
 
