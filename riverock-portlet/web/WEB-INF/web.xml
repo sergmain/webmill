@@ -121,10 +121,6 @@
 
     <filter>
         <filter-name>MyFacesExtensionsFilter</filter-name>
-        <!-- for MyFaces v1.1 -->
-        <!--<filter-class>org.apache.myfaces.component.html.util.ExtensionsFilter</filter-class>-->
-
-        <!-- for MyFaces post v1.1 -->
         <filter-class>org.apache.myfaces.webapp.filter.ExtensionsFilter</filter-class>
 
         <init-param>

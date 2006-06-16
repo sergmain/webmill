@@ -62,7 +62,7 @@ public class SiteTree implements Serializable {
     private String _nodePath;
 
     private TreeNode treeNode = null;
-    private SiteService siteService=null;
+    private SiteService siteService = null;
 
     public SiteTree() {
     }
@@ -72,7 +72,7 @@ public class SiteTree implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-	public TreeNode getSiteTree() {
+    public TreeNode getSiteTree() {
 
         log.info("Invoke getSiteTree()");
 
@@ -82,62 +82,62 @@ public class SiteTree implements Serializable {
         for (Site site : siteService.getSites()) {
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
 
-	if (FacesTools.isUserInRole("webmill.css") || FacesTools.isUserInRole("webmill.site-manager") ||
-		FacesTools.isUserInRole("webmill.portal-manager")) {	
-            TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", site.getSiteId().toString(), false);
-            siteNode.getChildren().add( cssListNode );
+            if (FacesTools.isUserInRole("webmill.css") || FacesTools.isUserInRole("webmill.site-manager") ||
+                FacesTools.isUserInRole("webmill.portal-manager")) {
+                TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", site.getSiteId().toString(), false);
+                siteNode.getChildren().add(cssListNode);
 
-            for (Css css : siteService.getCssList(site.getSiteId())) {
-                TreeNodeBase cssNode =
-                    new TreeNodeBase("css", StringUtils.isNotBlank(css.getCssComment()) ? css.getCssComment() : "CSS",
-                        css.getCssId().toString(), true);
+                for (Css css : siteService.getCssList(site.getSiteId())) {
+                    TreeNodeBase cssNode =
+                        new TreeNodeBase("css", StringUtils.isNotBlank(css.getCssComment()) ? css.getCssComment() : "CSS",
+                            css.getCssId().toString(), true);
 
-                cssListNode.getChildren().add(cssNode);
+                    cssListNode.getChildren().add(cssNode);
+                }
+
             }
 
-	}
+            if (FacesTools.isUserInRole("webmill.template") ||
+                FacesTools.isUserInRole("webmill.xslt") ||
+                FacesTools.isUserInRole("webmill.site-manager") ||
+                FacesTools.isUserInRole("webmill.portal-manager")) {
 
-	if (FacesTools.isUserInRole("webmill.template") || 
-		FacesTools.isUserInRole("webmill.xslt") ||
-		FacesTools.isUserInRole("webmill.site-manager") ||
-		FacesTools.isUserInRole("webmill.portal-manager")) {	
+                TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", site.getSiteId().toString(), false);
+                siteNode.getChildren().add(siteLanguageListNode);
 
-            TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", site.getSiteId().toString(), false);
-            siteNode.getChildren().add( siteLanguageListNode );
+                for (SiteLanguage siteLanguage : siteService.getSiteLanguageList(site.getSiteId())) {
+                    TreeNodeBase siteLanguageNode = new TreeNodeBase(
+                        "site-language",
+                        siteLanguage.getNameCustomLanguage() + " (" + siteLanguage.getCustomLanguage() + ")",
+                        siteLanguage.getSiteLanguageId().toString(),
+                        false);
+                    siteLanguageListNode.getChildren().add(siteLanguageNode);
 
-            for (SiteLanguage siteLanguage : siteService.getSiteLanguageList(site.getSiteId())) {
-                TreeNodeBase siteLanguageNode = new TreeNodeBase(
-                    "site-language",
-                    siteLanguage.getNameCustomLanguage() + " (" + siteLanguage.getCustomLanguage() + ")",
-                    siteLanguage.getSiteLanguageId().toString(),
-                    false);
-                siteLanguageListNode.getChildren().add(siteLanguageNode);
+                    if (FacesTools.isUserInRole("webmill.template") || FacesTools.isUserInRole("webmill.site-manager") ||
+                        FacesTools.isUserInRole("webmill.portal-manager")) {
 
-	if (FacesTools.isUserInRole("webmill.template") || FacesTools.isUserInRole("webmill.site-manager") ||
-		FacesTools.isUserInRole("webmill.portal-manager")) {	
+                        TreeNodeBase templateListNode = new TreeNodeBase("template-list", "Templates", siteLanguage.getSiteLanguageId().toString(), false);
+                        for (Template template : siteService.getTemplateList(siteLanguage.getSiteLanguageId())) {
+                            templateListNode.getChildren().add(
+                                new TreeNodeBase("template", template.getTemplateName(), template.getTemplateId().toString(), true)
+                            );
+                        }
+                        siteLanguageNode.getChildren().add(templateListNode);
 
-                TreeNodeBase templateListNode = new TreeNodeBase("template-list", "Templates", siteLanguage.getSiteLanguageId().toString(), false);
-                for (Template template : siteService.getTemplateList(siteLanguage.getSiteLanguageId())) {
-                    templateListNode.getChildren().add(
-                        new TreeNodeBase("template",template.getTemplateName(),template.getTemplateId().toString(),true)
-                    );
+                    }
+
+                    if (FacesTools.isUserInRole("webmill.xslt") || FacesTools.isUserInRole("webmill.site-manager") ||
+                        FacesTools.isUserInRole("webmill.portal-manager")) {
+
+                        TreeNodeBase xsltListNode = new TreeNodeBase("xslt-list", "Xslt list", siteLanguage.getSiteLanguageId().toString(), false);
+                        for (Xslt xslt : siteService.getXsltList(siteLanguage.getSiteLanguageId())) {
+                            xsltListNode.getChildren().add(
+                                new TreeNodeBase("xslt", xslt.getName(), xslt.getId().toString(), true)
+                            );
+                        }
+                        siteLanguageNode.getChildren().add(xsltListNode);
+                    }
                 }
-                siteLanguageNode.getChildren().add(templateListNode);
-
-	}
-
-	if (FacesTools.isUserInRole("webmill.xslt") || FacesTools.isUserInRole("webmill.site-manager") ||
-		FacesTools.isUserInRole("webmill.portal-manager")) {	
-
-                TreeNodeBase xsltListNode = new TreeNodeBase("xslt-list", "Xslt list", siteLanguage.getSiteLanguageId().toString(), false);
-                for (Xslt xslt : siteService.getXsltList(siteLanguage.getSiteLanguageId())) {
-                    xsltListNode.getChildren().add(
-                        new TreeNodeBase("xslt",xslt.getName(),xslt.getId().toString(),true)
-                    );
-                }
-                siteLanguageNode.getChildren().add(xsltListNode);
-	}
-	}
             }
 
             treeData.getChildren().add(siteNode);
