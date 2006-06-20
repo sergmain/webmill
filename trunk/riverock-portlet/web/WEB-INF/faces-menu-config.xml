@@ -128,21 +128,21 @@
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>menu-add</from-outcome>
-            <to-view-id>/riverock/manager/menu/menu-add.jsp</to-view-id>
+            <to-view-id>/riverock/manager/menu/menu-item-add.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>menu-edit</from-outcome>
-            <to-view-id>/riverock/manager/menu/menu-edit.jsp</to-view-id>
+            <to-view-id>/riverock/manager/menu/menu-item-edit.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>menu-delete</from-outcome>
-            <to-view-id>/riverock/manager/menu/menu-delete.jsp</to-view-id>
+            <to-view-id>/riverock/manager/menu/menu-item-delete.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>

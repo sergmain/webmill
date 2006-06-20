@@ -177,10 +177,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
     void initMenuSimple(Menu menu, Long currentCtxId) throws PortletException {
         if (menu != null) {
-            Iterator<MenuItem> it = menu.getMenuItem().iterator();
             int treeId = 0;
-            while (it.hasNext()) {
-                MenuItem ci = it.next();
+            for (MenuItem ci : menu.getMenuItem()) {
                 MenuModuleType tempMenu = getMenuModule(ci, 1, currentCtxId, treeId, ++treeId);
                 menuSimple.addMenuModule(tempMenu);
             }
@@ -205,7 +203,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     log.debug("Write menu to " + fileName);
                     XmlTools.writeToFile(menuSimple, fileName);
                 }
-                catch (Exception e) {
+                catch (Throwable e) {
                     // catch debug exception
                 }
             }

@@ -7,7 +7,7 @@
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Menu" var="msg"/>
 
-<f:subview id="site-site-extend-desc-subview" rendered="#{menuSessionBean.objectType == menuSessionBean.siteType}">
+<f:subview id="menu-site-extend-desc-subview" rendered="#{menuSessionBean.objectType == menuSessionBean.siteType}">
 
     <h:panelGrid columns="2">
 

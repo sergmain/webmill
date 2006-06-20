@@ -80,8 +80,24 @@ public class PortalCatalogDaoImpl implements PortalCatalogDao {
         return InternalDaoFactory.getInternalCatalogDao().createCatalogItem(catalogItem);
     }
 
+    public void updateCatalogItem(CatalogItem catalogItem) {
+        InternalDaoFactory.getInternalCatalogDao().updateCatalogItem(catalogItem);
+    }
+
+    public void deleteCatalogItem(Long catalogId) {
+        InternalDaoFactory.getInternalCatalogDao().deleteCatalogItem(catalogId);
+    }
+
     public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem) {
         return InternalDaoFactory.getInternalCatalogDao().createCatalogLanguageItem(catalogLanguageItem);
+    }
+
+    public void updateCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem) {
+        InternalDaoFactory.getInternalCatalogDao().updateCatalogLanguageItem(catalogLanguageItem);
+    }
+
+    public void deleteCatalogLanguageItem(Long catalogLanguageId) {
+        InternalDaoFactory.getInternalCatalogDao().deleteCatalogLanguageItem(catalogLanguageId);
     }
 
     public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId) {

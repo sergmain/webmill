@@ -21,7 +21,7 @@ public class MenuSiteAction implements Serializable {
     private final static Logger log = Logger.getLogger( MenuSiteAction.class );
     private static final long serialVersionUID = 2057005511L;
 
-    private MenuSessionBean siteSessionBean = null;
+    private MenuSessionBean menuSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private MenuDataProvider dataProvider = null;
 
@@ -33,7 +33,7 @@ public class MenuSiteAction implements Serializable {
     }
 
     public void setMenuSessionBean( MenuSessionBean siteSessionBean) {
-        this.siteSessionBean = siteSessionBean;
+        this.menuSessionBean = siteSessionBean;
     }
 
     public AuthSessionBean getAuthSessionBean() {
@@ -45,14 +45,9 @@ public class MenuSiteAction implements Serializable {
     }
 
     public String selectSite(ActionEvent event) {
-        log.debug( "Select site action." );
-        loadCurrentSite();
+        log.info( "Select site action." );
+        menuSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
 
         return "menu";
-    }
-
-// private methods
-    private void loadCurrentSite() {
-//        siteSessionBean.setSite( dataProvider.getSite() );
     }
 }

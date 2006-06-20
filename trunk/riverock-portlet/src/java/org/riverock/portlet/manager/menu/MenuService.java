@@ -7,15 +7,20 @@ import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.collections.TreeUtils;
+import org.riverock.interfaces.common.TreeItem;
+import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.portlet.manager.menu.bean.MenuCatalogBean;
+import org.riverock.portlet.manager.menu.bean.MenuItemBean;
+import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.manager.menu.bean.SiteBean;
 import org.riverock.portlet.manager.menu.bean.SiteExtended;
 import org.riverock.portlet.manager.menu.bean.SiteLanguageBean;
-import org.riverock.portlet.manager.menu.bean.MenuItemBean;
 import org.riverock.portlet.tools.FacesTools;
 
 /**
@@ -29,16 +34,16 @@ public class MenuService {
     public MenuService() {
     }
 
-    public List<SelectItem> getCompanyList() {
+    public List<SelectItem> getPortletList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<Company> companies = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompanyList();
+        List<PortletName> portletNames = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletNameList();
 
-        for (Company company : companies) {
-            if (company.getId() == null) {
-                throw new IllegalStateException("id is null, name: " + company.getName());
+        for (PortletName portletName : portletNames) {
+            if (portletName.getPortletId() == null) {
+                throw new IllegalStateException("id is null, name: " + portletName.getPortletName());
             }
 
-            list.add(new SelectItem(company.getId(), company.getName()));
+            list.add(new SelectItem(portletName.getPortletId(), portletName.getPortletName()));
         }
         return list;
     }
@@ -52,7 +57,7 @@ public class MenuService {
         return list;
     }
 
-    public List<CatalogLanguageItem> getMenuCatalog(Long siteLanguageId) {
+    public List<CatalogLanguageItem> getMenuCatalogList(Long siteLanguageId) {
         List<CatalogLanguageItem> list = new ArrayList<CatalogLanguageItem>();
         List<CatalogLanguageItem> items = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItemList(siteLanguageId);
         for (CatalogLanguageItem item : items) {
@@ -92,7 +97,31 @@ public class MenuService {
         }
     }
 
-    public MenuItemBean getMenuItem(Long cssId) {
-        return null;  //To change body of created methods use File | Settings | File Templates.
+    public MenuItemExtended getMenuItem(Long catalogId) {
+        MenuItemExtended menuExtended = new MenuItemExtended();
+        menuExtended.setMenuItem(FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItem(catalogId));
+        menuExtended.setPortletName(FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletName(menuExtended.getMenuItem().getPortletId()));
+        menuExtended.setTemplate(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(menuExtended.getMenuItem().getTemplateId()));
+        return menuExtended;
+    }
+
+    public List<CatalogItem> getMenuItemList(Long menuCatalogId) {
+        List<CatalogItem> list = new ArrayList<CatalogItem>();
+        List<CatalogItem> items = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItemList(menuCatalogId);
+        items = (List<CatalogItem>)(List) TreeUtils.rebuildTree((List<TreeItem>)((List)items));
+
+        for (CatalogItem item : items) {
+            list.add(new MenuItemBean(item));
+        }
+        return list;
+    }
+
+    public MenuCatalogBean getMenuCatalog(Long menuCatalogId) {
+        CatalogLanguageItem bean = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId);
+        if (bean != null) {
+            return new MenuCatalogBean(bean);
+        } else {
+            return new MenuCatalogBean();
+        }
     }
 }

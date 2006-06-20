@@ -1,6 +1,7 @@
 package org.riverock.portlet.manager.menu;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -15,14 +16,17 @@ import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
+import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
+import org.riverock.interfaces.portal.bean.CatalogItem;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 14.06.2006
  *         Time: 21:44:21
  */
+@SuppressWarnings({"unchecked"})
 public class MenuTree implements Serializable {
     private final static Logger log = Logger.getLogger(MenuTree.class);
     private static final long serialVersionUID = 2057005500L;
@@ -30,17 +34,17 @@ public class MenuTree implements Serializable {
     private HtmlTree _tree;
     private String _nodePath;
 
+    @SuppressWarnings({"FieldCanBeLocal"})
     private TreeNode treeNode = null;
     private MenuService menuService = null;
 
     public MenuTree() {
     }
 
-    public void setSiteTree(TreeNode treeNode) {
+    public void setMenuTree(TreeNode treeNode) {
         this.treeNode = treeNode;
     }
 
-    @SuppressWarnings("unchecked")
     public TreeNode getMenuTree() {
 
         log.info("Invoke getMenuTree()");
@@ -57,11 +61,39 @@ public class MenuTree implements Serializable {
                     false);
                 siteNode.getChildren().add(siteLanguageNode);
 
+                TreeNodeBase menuCatalogListNode = new TreeNodeBase("menu-catalog-list", "Menu catalog list", siteLanguage.getSiteLanguageId().toString(), false);
+                siteLanguageNode.getChildren().add(menuCatalogListNode);
+
+                for (CatalogLanguageItem catalogLanguageItem : menuService.getMenuCatalogList(siteLanguage.getSiteLanguageId())) {
+                    TreeNodeBase menuCatalogNode = new TreeNodeBase(
+                        "menu-catalog",
+                        catalogLanguageItem.getCatalogCode(),
+                        catalogLanguageItem.getCatalogLanguageId().toString(),
+                        false);
+                    menuCatalogListNode.getChildren().add(menuCatalogNode);
+
+                    processMenuItem(menuCatalogNode, menuService.getMenuItemList(catalogLanguageItem.getCatalogLanguageId()));
+                }
+
             }
             treeRoot.getChildren().add(siteNode);
         }
         treeNode = treeRoot;
         return treeNode;
+    }
+
+    private void processMenuItem(TreeNodeBase node, List<CatalogItem> menuItemList) {
+        for (CatalogItem catalogItem : menuItemList) {
+            TreeNodeBase menuItemNode = new TreeNodeBase(
+                "menu-item",
+                catalogItem.getKeyMessage()+", "+catalogItem.getUrl(),
+                catalogItem.getCatalogId().toString(),
+                false);
+            node.getChildren().add(menuItemNode);
+            if (catalogItem.getSubCatalogItemList()!=null) {
+                processMenuItem(menuItemNode, catalogItem.getSubCatalogItemList());
+            }
+        }
     }
 
     public TreeModel getExpandedTreeData() {

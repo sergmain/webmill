@@ -2,14 +2,16 @@
 
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
-<%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
-
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Menu" var="msg"/>
 
-<h:panelGrid columns="2" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
+<h:outputText value="#{msg.menu_catalog_info}"/>
+<h:panelGrid columns="2">
+    <h:outputText value="#{msg.menu_catalog_code}"/>
+    <h:inputText id="select_menu_catalog_input_field" value="#{menuSessionBean.menuCatalog.catalogCode}"/>
 
-    <h:outputText value="Code:"/>
-    <h:outputText value="#{menuDataProvider.menuCatalog.catalogCode}"/>
 </h:panelGrid>
+
+
+
 
