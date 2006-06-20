@@ -69,6 +69,7 @@ import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.parser.Parser;
 
+@SuppressWarnings({"deprecation"})
 public class TestCaseMember extends TestCase
 {
     private static boolean isUseAssertion = true;
@@ -411,7 +412,7 @@ public class TestCaseMember extends TestCase
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
                             String sql = MemberServiceClass.buildUpdateSQL( db_, content, null, mod, true, map, "remote-user", "server-name", null, null );
-                            Parser parser = SqlStatement.parseSql(sql);
+                            SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
                         {
@@ -452,7 +453,7 @@ public class TestCaseMember extends TestCase
 //                            PortletRequest portletRequest = new RenderRequestImpl();
                             Map map = new HashMap();
                             String sql = MemberServiceClass.buildDeleteSQL( db_, mod, content, null, map, "remote-user", "server-name", null, null );
-                            Parser parser = SqlStatement.parseSql(sql);
+                            SqlStatement.parseSql(sql);
                         }
                         catch(Exception exc)
                         {

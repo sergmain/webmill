@@ -1,9 +1,11 @@
 package org.riverock.portlet.manager.menu;
 
 import java.io.Serializable;
+import java.util.List;
 
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.portlet.manager.menu.bean.MenuCatalogBean;
-import org.riverock.portlet.manager.menu.bean.MenuItemBean;
+import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.manager.menu.bean.SiteExtended;
 import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 
@@ -27,7 +29,24 @@ public class MenuSessionBean  implements Serializable {
     private SiteExtended siteExtended = null;
     private SiteLanguageBean siteLanguage = null;
     private MenuCatalogBean menuCatalog = null;
-    private MenuItemBean menuItem = null;
+    private MenuItemExtended menuItem = null;
+    private List<Template> templates=null;
+
+    public List<Template> getTemplates() {
+        return templates;
+    }
+
+    public void setTemplates(List<Template> templates) {
+        this.templates = templates;
+    }
+
+    public MenuItemExtended getMenuItem() {
+        return menuItem;
+    }
+
+    public void setMenuItem(MenuItemExtended menuItem) {
+        this.menuItem = menuItem;
+    }
 
     public SiteExtended getSiteExtended() {
         return siteExtended;
@@ -51,14 +70,6 @@ public class MenuSessionBean  implements Serializable {
 
     public void setMenuCatalog(MenuCatalogBean menuCatalog) {
         this.menuCatalog = menuCatalog;
-    }
-
-    public MenuItemBean getMenuItem() {
-        return menuItem;
-    }
-
-    public void setMenuItem(MenuItemBean menuItem) {
-        this.menuItem = menuItem;
     }
 
     public int getSiteType() {

@@ -26,12 +26,14 @@ package org.riverock.interfaces.portal.bean;
 
 import java.util.List;
 
+import org.riverock.interfaces.common.TreeItem;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 05.05.2006
  *         Time: 20:56:29
  */
-public interface CatalogItem {
+public interface CatalogItem extends TreeItem {
     public Long getCatalogId();
 
     public Long getTopCatalogId();

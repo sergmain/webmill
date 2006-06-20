@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Menu" var="msg"/>
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
 <style type="text/css">
@@ -17,12 +17,12 @@
         height: 20px;
     }
 
-    .site-button-action {
+    .menu-button-action {
         width: 150px;
         height: 22px;
     }
 
-    .site-sub-button-action {
+    .menu-sub-button-action {
         width: 80px;
         height: 22px;
     }
@@ -32,7 +32,7 @@
     <h:form rendered="#{!siteDataProvider.css.current and isUserInRole['webmill.authentic']}">
 
         <f:subview id="site-top-actions-subview">
-            <jsp:include page="site-top-actions.jsp"/>
+            <jsp:include page="menu-top-actions.jsp"/>
         </f:subview>
 
         <h:panelGrid columns="2">
@@ -41,25 +41,25 @@
                 <jsp:include page="menu-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="css-delete-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
+            <h:panelGroup id="menu-item-delete-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
 
-                <f:subview id="delete-css-subview">
-                    <jsp:include page="menu-description.jsp"/>
+                <f:subview id="delete-menu-item-subview">
+                    <jsp:include page="menu-item-description.jsp"/>
                 </f:subview>
 
-                <h:outputText value="#{msg['confirm_delete_css_action']}"/>
+                <h:outputText value="#{msg['confirm_delete_menu_item_action']}"/>
                 <f:verbatim><br/></f:verbatim>
 
-                <h:panelGroup id="operation-css-delete-panel">
-                    <h:commandButton id="css-delete-process-action" action="#{cssAction.processDeleteCssAction}"
-                                     value="#{msg['process_delete_css_action']}"
-                                     styleClass="site-button-action"
+                <h:panelGroup id="operation-menu-item-delete-panel">
+                    <h:commandButton id="menu-item-delete-process-action" action="#{menuAction.processDeleteMenuItemAction}"
+                                     value="#{msg['process_delete_menu_item_action']}"
+                                     styleClass="menu-button-action"
                         >
                     </h:commandButton>
                     <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-                    <h:commandButton id="css-delete-cancel-action" action="#{cssAction.cancelDeleteCssAction}"
-                                     value="#{msg['cancel_delete_css_action']}"
-                                     styleClass="site-button-action"
+                    <h:commandButton id="menu-item-delete-cancel-action" action="#{menuAction.cancelDeleteMenuItemAction}"
+                                     value="#{msg['cancel_delete_menu_item_action']}"
+                                     styleClass="menu-button-action"
                         >
                     </h:commandButton>
                 </h:panelGroup>
@@ -69,5 +69,4 @@
         </h:panelGrid>
 
     </h:form>
-    <h:outputText value="#{msg.can_not_delete_current_css}" rendered="#{siteDataProvider.css.current}"/>
 </f:view>

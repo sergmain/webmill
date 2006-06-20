@@ -1,13 +1,18 @@
 package org.riverock.portlet.manager.menu;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.portlet.manager.menu.bean.MenuItemBean;
-import org.riverock.portlet.manager.menu.bean.SiteExtended;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.portlet.manager.menu.bean.MenuCatalogBean;
+import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
+import org.riverock.portlet.manager.menu.bean.SiteExtended;
 
 /**
  * @author Sergei Maslyukov
@@ -18,40 +23,54 @@ public class MenuDataProvider implements Serializable {
     private final static Logger log = Logger.getLogger(MenuDataProvider.class);
     private static final long serialVersionUID = 2057005500L;
 
-    private MenuService siteService=null;
-    private MenuSessionBean siteSessionBean = null;
+    private MenuService menuService =null;
+    private MenuSessionBean menuSessionBean = null;
 
     private SiteExtended siteExtended = null;
     private SiteLanguage siteLanguage = null;
-    private MenuItemBean menuItem = null;
+    private MenuItemExtended menuItem = null;
     private MenuCatalogBean menuCatalog = null;
 
     public MenuDataProvider() {
     }
 
-    public MenuSessionBean getSiteSessionBean() {
-        return siteSessionBean;
+    public MenuSessionBean getMenuSessionBean() {
+        return menuSessionBean;
     }
 
-    public void setSiteSessionBean(MenuSessionBean siteSessionBean) {
-        this.siteSessionBean = siteSessionBean;
+    public void setMenuSessionBean(MenuSessionBean menuSessionBean) {
+        this.menuSessionBean = menuSessionBean;
     }
 
-    public void setSiteService(MenuService siteService) {
-        this.siteService = siteService;
+    public void setMenuService(MenuService menuService) {
+        this.menuService = menuService;
+    }
+
+    public List<SelectItem> getTemplateList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<Template> portletNames = menuSessionBean.getTemplates();
+
+        for (Template portletName : portletNames) {
+            if (portletName.getTemplateId() == null) {
+                throw new IllegalStateException("id is null, name: " + portletName.getTemplateName());
+            }
+
+            list.add(new SelectItem(portletName.getTemplateId(), portletName.getTemplateName()));
+        }
+        return list;
     }
 
     public SiteExtended getSiteExtended() {
-        if (siteSessionBean.getObjectType()!=siteSessionBean.getSiteType()) {
-            throw new IllegalStateException("Query site info with not site type, current type: " + siteSessionBean.getObjectType());
+        if (menuSessionBean.getObjectType()!=menuSessionBean.getSiteType()) {
+            throw new IllegalStateException("Query site info with not site type, current type: " + menuSessionBean.getObjectType());
         }
-        Long siteId = siteSessionBean.getId();
+        Long siteId = menuSessionBean.getId();
         if (siteExtended==null) {
-            siteExtended= siteService.getSiteExtended(siteId);
+            siteExtended= menuService.getSiteExtended(siteId);
         }
         if (!siteExtended.getSite().equals(siteId)) {
             log.warn("Mismatch siteId");
-            siteExtended= siteService.getSiteExtended(siteId);
+            siteExtended= menuService.getSiteExtended(siteId);
         }
 
         return siteExtended;
@@ -62,19 +81,19 @@ public class MenuDataProvider implements Serializable {
     }
 
     public SiteLanguage getSiteLanguage() {
-        if (siteSessionBean.getObjectType()!=siteSessionBean.getSiteLanguageType()) {
-            throw new IllegalStateException("Query site language info with not site language type, current type: " + siteSessionBean.getObjectType());
+        if (menuSessionBean.getObjectType()!=menuSessionBean.getSiteLanguageType()) {
+            throw new IllegalStateException("Query site language info with not site language type, current type: " + menuSessionBean.getObjectType());
         }
-        Long siteLangaugeId = siteSessionBean.getId();
+        Long siteLangaugeId = menuSessionBean.getId();
         if (siteLanguage==null) {
-            siteLanguage = siteService.getSiteLanguage(siteLangaugeId);
+            siteLanguage = menuService.getSiteLanguage(siteLangaugeId);
         }
     if (siteLanguage.getSiteLanguageId()==null) {
         return siteLanguage;
     }
         if (!siteLanguage.getSiteLanguageId().equals(siteLangaugeId)) {
             log.warn("Mismatch siteLangaugeId");
-            siteLanguage = siteService.getSiteLanguage(siteLangaugeId);
+            siteLanguage = menuService.getSiteLanguage(siteLangaugeId);
         }
 
         return siteLanguage;
@@ -86,12 +105,12 @@ public class MenuDataProvider implements Serializable {
 
 /*
     public Css getCss() {
-        if (siteSessionBean.getObjectType()!=siteSessionBean.getCssType()) {
-            throw new IllegalStateException("Query CSS info with not CSS type, current type: " + siteSessionBean.getObjectType());
+        if (menuSessionBean.getObjectType()!=menuSessionBean.getCssType()) {
+            throw new IllegalStateException("Query CSS info with not CSS type, current type: " + menuSessionBean.getObjectType());
         }
-        Long cssId = siteSessionBean.getId();
+        Long cssId = menuSessionBean.getId();
         if (css==null) {
-            css = siteService.getCss(cssId);
+            css = menuService.getCss(cssId);
         }
 
     if (css.getCssId()==null) {
@@ -100,7 +119,7 @@ public class MenuDataProvider implements Serializable {
 
         if (!css.getCssId().equals(cssId)) {
             log.warn("Mismatch cssId");
-            css = siteService.getCss(cssId);
+            css = menuService.getCss(cssId);
         }
 
         return css;
@@ -111,30 +130,54 @@ public class MenuDataProvider implements Serializable {
     }
 */
 
-    public void clearMenuItem() {
-        this.menuItem=null;
-    }
-
     public void clearMenuCatalog() {
         this.menuCatalog=null;
     }
 
-    public MenuItemBean getMenuItem() {
-        if (siteSessionBean.getObjectType()!=siteSessionBean.getMenuItemType()) {
-            throw new IllegalStateException("Query menu item info with not menu item type, current type: " + siteSessionBean.getObjectType());
+    public MenuCatalogBean getMenuCatalog() {
+        if (menuSessionBean.getObjectType()!=menuSessionBean.getMenuCatalogType()) {
+            throw new IllegalStateException("Query menu catalog info with not menu catalog type, current type: " + menuSessionBean.getObjectType());
         }
-        Long menuItemId = siteSessionBean.getId();
-        if (menuItem==null) {
-            menuItem = siteService.getMenuItem(menuItemId);
+        Long menuCatalogId = menuSessionBean.getId();
+        if (menuCatalog==null) {
+            menuCatalog = menuService.getMenuCatalog(menuCatalogId);
         }
 
-        if (menuItem.getCatalogId()==null) {
+        if (menuCatalog.getCatalogLanguageId()==null) {
+            return menuCatalog;
+        }
+
+        if (!menuCatalog.getCatalogLanguageId().equals(menuCatalogId)) {
+            log.warn("Mismatch menuCatalogId");
+            menuCatalog = menuService.getMenuCatalog(menuCatalogId);
+        }
+
+        return menuCatalog;
+    }
+
+    public void clearMenuItem() {
+        this.menuItem=null;
+    }
+
+    public MenuItemExtended getMenuItem() {
+        if (menuSessionBean.getObjectType()!=menuSessionBean.getMenuItemType()) {
+            throw new IllegalStateException("Query menu item info with not menu item type, current type: " + menuSessionBean.getObjectType());
+        }
+        Long menuItemId = menuSessionBean.getId();
+        if (log.isDebugEnabled()) {
+            log.debug("menuItemId: " + menuSessionBean.getId());
+        }
+        if (menuItem==null) {
+            menuItem = menuService.getMenuItem(menuItemId);
+        }
+
+        if (menuItem.getMenuItem().getCatalogId()==null) {
             return menuItem;
         }
 
-        if (!menuItem.getCatalogId().equals(menuItemId)) {
+        if (!menuItem.getMenuItem().getCatalogId().equals(menuItemId)) {
             log.warn("Mismatch menuItemId");
-            menuItem = siteService.getMenuItem(menuItemId);
+            menuItem = menuService.getMenuItem(menuItemId);
         }
 
         return menuItem;

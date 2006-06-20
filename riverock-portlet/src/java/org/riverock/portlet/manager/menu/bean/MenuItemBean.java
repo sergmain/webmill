@@ -2,15 +2,17 @@ package org.riverock.portlet.manager.menu.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.common.TreeItem;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 16.06.2006
  *         Time: 21:07:37
  */
-public class MenuItemBean implements Serializable, CatalogItem {
+public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     private static final long serialVersionUID = 1057005506L;
 
     private Long catalogId;
@@ -30,6 +32,33 @@ public class MenuItemBean implements Serializable, CatalogItem {
     private String metadata;
     private String portletRole;
     private List<CatalogItem> subCatalogItemList = null;
+
+    public MenuItemBean(){}
+
+    public MenuItemBean(CatalogItem item) {
+        this.catalogId=item.getCatalogId();
+        this.topCatalogId=item.getTopCatalogId();
+        this.portletId=item.getPortletId();
+        this.contextId=item.getContextId();
+        this.isUseProperties=item.getUseProperties();
+        this.templateId=item.getTemplateId();
+        this.catalogLanguageId=item.getCatalogLanguageId();
+        this.orderField=item.getOrderField();
+        this.storage=item.getStorage();
+        this.keyMessage=item.getKeyMessage();
+        this.url=item.getUrl();
+        this.title=item.getTitle();
+        this.author=item.getAuthor();
+        this.keyword=item.getKeyword();
+        this.metadata=item.getMetadata();
+        this.portletRole=item.getPortletRole();
+        if (item.getSubCatalogItemList()!=null) {
+            this.subCatalogItemList = new ArrayList<CatalogItem>();
+            for (CatalogItem catalogItem : item.getSubCatalogItemList()) {
+                this.subCatalogItemList.add(new MenuItemBean(catalogItem));
+            }
+        }
+    }
 
     public List<CatalogItem> getSubCatalogItemList() {
         return subCatalogItemList;
@@ -165,5 +194,21 @@ public class MenuItemBean implements Serializable, CatalogItem {
 
     public void setPortletRole(String portletRole) {
         this.portletRole = portletRole;
+    }
+
+    public Long getTopId() {
+        return this.topCatalogId;
+    }
+
+    public Long getId() {
+        return this.catalogId;
+    }
+
+    public List<TreeItem> getSubTree() {
+        return (List)this.subCatalogItemList;
+    }
+
+    public void setSubTree(List<TreeItem> list) {
+        this.subCatalogItemList=(List)list;
     }
 }

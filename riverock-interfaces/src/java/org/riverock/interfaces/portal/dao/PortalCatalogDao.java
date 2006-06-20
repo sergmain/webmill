@@ -46,9 +46,15 @@ public interface PortalCatalogDao {
 
     public CatalogLanguageItem getCatalogLanguageItem(Long catalogLanguageId );
     public List<CatalogLanguageItem> getCatalogLanguageItemList(Long siteLanguageId);
+    public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId);
 
     public Long createCatalogItem(CatalogItem catalogItem);
-    public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem);
+    public void updateCatalogItem(CatalogItem catalogItem);
+    public void deleteCatalogItem(Long catalogId);
 
-    public CatalogLanguageItem getCatalogLanguageItem(String catalogLanguageCode, Long siteLanguageId);
+    public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem);
+    public void updateCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem);
+    public void deleteCatalogLanguageItem(Long catalogLanguageId);
+
+
 }

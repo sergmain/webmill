@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.portlet.manager.resource.Site" var="msg"/>
+<f:loadBundle basename="org.riverock.portlet.manager.resource.Menu" var="msg"/>
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Manager" var="manager"/>
 
 <style type="text/css">
@@ -17,12 +17,12 @@
         height: 20px;
     }
 
-    .site-button-action {
+    .menu-button-action {
         width: 150px;
         height: 22px;
     }
 
-    .site-sub-button-action {
+    .menu-sub-button-action {
         width: 80px;
         height: 22px;
     }
@@ -32,32 +32,32 @@
     <h:form rendered="#{isUserInRole['webmill.authentic']}">
 
         <f:subview id="site-top-actions-subview">
-            <jsp:include page="site-top-actions.jsp"/>
+            <jsp:include page="menu-top-actions.jsp"/>
         </f:subview>
 
         <h:panelGrid columns="2">
 
-            <f:subview id="site-tree-subview">
+            <f:subview id="menu-tree-subview">
                 <jsp:include page="menu-tree.jsp"/>
             </f:subview>
 
 
-            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
+            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
 
-                <f:subview id="subview-site-info">
-                    <jsp:include page="menu-add-edit.jsp"/>
+                <f:subview id="subview-menu-info">
+                    <jsp:include page="menu-item-edit-concrete.jsp"/>
                 </f:subview>
 
-                <h:panelGroup id="operation-css-edit-panel">
-                    <h:commandButton id="css-edit-process-action" action="#{cssAction.processEditCssAction}"
-                                     value="#{msg['process_edit_css_action']}"
-                                     styleClass="site-button-action"
+                <h:panelGroup id="operation-menu-item-edit-panel">
+                    <h:commandButton id="menu-item-edit-process-action" action="#{menuAction.processEditMenuItemAction}"
+                                     value="#{msg['process_edit_menu_item_action']}"
+                                     styleClass="menu-button-action"
                         >
                     </h:commandButton>
                     <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-                    <h:commandButton id="css-edit-cancel-action" action="#{cssAction.cancelEditCssAction}"
-                                     value="#{msg['cancel_edit_css_action']}"
-                                     styleClass="site-button-action"
+                    <h:commandButton id="menu-item-edit-cancel-action" action="#{menuAction.cancelEditMenuItemAction}"
+                                     value="#{msg['cancel_edit_menu_item_action']}"
+                                     styleClass="menu-button-action"
                         >
                     </h:commandButton>
                 </h:panelGroup>

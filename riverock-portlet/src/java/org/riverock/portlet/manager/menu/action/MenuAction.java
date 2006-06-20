@@ -10,6 +10,8 @@ import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.manager.menu.MenuDataProvider;
 import org.riverock.portlet.manager.menu.MenuSessionBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemBean;
+import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -22,7 +24,7 @@ public class MenuAction implements Serializable {
     private final static Logger log = Logger.getLogger( MenuAction.class );
     private static final long serialVersionUID = 2057005511L;
 
-    private MenuSessionBean siteSessionBean = null;
+    private MenuSessionBean menuSessionBean = null;
     private AuthSessionBean authSessionBean = null;
     private MenuDataProvider dataProvider = null;
 
@@ -35,7 +37,7 @@ public class MenuAction implements Serializable {
 
     // getter/setter methods
     public void setMenuSessionBean( MenuSessionBean siteSessionBean) {
-        this.siteSessionBean = siteSessionBean;
+        this.menuSessionBean = siteSessionBean;
     }
 
     public AuthSessionBean getAuthSessionBean() {
@@ -48,117 +50,122 @@ public class MenuAction implements Serializable {
 
 // main select action
     public String selectMenuItem(ActionEvent event) {
-        MenuAction.log.info( "Select menu item action." );
+        log.info( "Select menu item action." );
         loadCurrentObject();
 
         return "menu";
     }
-/*
+
 // Add actions
-    public String addCssAction() {
-        MenuAction.log.info( "Add menu item action." );
+    public String addMenuAction() {
+        log.info( "Add menu item action." );
 
         MenuItemBean menuItemBean = new MenuItemBean();
-        menuItemBean.setCatalogId(siteSessionBean.getId());
-        setSessionObject(menuItemBean);
+        menuItemBean.setCatalogId(menuSessionBean.getId());
+        setSessionObject(new MenuItemExtended(menuItemBean, null, null));
 
-        return "css-add";
+        return "menu-add";
     }
 
-    public String processAddCssAction() {
-        MenuAction.log.info( "Procss add CSS action." );
+    public String processAddMenuItemAction() {
+        log.info( "Procss add menu item action." );
 
         if( getSessionObject() !=null ) {
-            Long cssId = FacesTools.getPortalDaoProvider().getPortalCssDao().createCss(
-                getSessionObject()
+            Long cssId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogItem(
+                getSessionObject().getMenuItem()
             );
             setSessionObject(null);
-            siteSessionBean.setId(cssId);
+            menuSessionBean.setId(cssId);
             cleadDataProviderObject();
             loadCurrentObject();
         }
 
-        return "site";
+        return "menu";
     }
 
-    public String cancelAddCssAction() {
-        MenuAction.log.info( "Cancel add CSS action." );
+    public String cancelAddMenuItemAction() {
+        log.info( "Cancel add menu item action." );
 
         setSessionObject(null);
         cleadDataProviderObject();
 
-        return "site";
+        return "menu";
     }
 
 // Edit actions
-    public String editCssAction() {
-        MenuAction.log.info( "Edit CSS action." );
+    public String editMenuItemAction() {
+        log.info( "Edit menu item action." );
 
-        return "css-edit";
+        Long menuCatalogId=getSessionObject().getMenuItem().getCatalogLanguageId();
+        Long siteLanguageId=FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
+        menuSessionBean.setTemplates( FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
+
+        return "menu-edit";
     }
 
-    public String processEditCssAction() {
-        MenuAction.log.info( "Save changes CSS action." );
+    public String processEditMenuItemAction() {
+        log.info( "Save changes menu item action." );
 
-        if( getSessionObject() !=null ) {
-            FacesTools.getPortalDaoProvider().getPortalCssDao().updateCss(getSessionObject());
+        if( getSessionObject()!=null ) {
+            FacesTools.getPortalDaoProvider().getPortalCatalogDao().updateCatalogItem(getSessionObject().getMenuItem());
             cleadDataProviderObject();
             loadCurrentObject();
         }
 
-        return "site";
+        return "menu";
     }
 
-    public String cancelEditCssAction() {
-        MenuAction.log.info( "Cancel edit CSS action." );
+    public String cancelEditMenuItemAction() {
+        log.info( "Cancel edit menu item action." );
 
-        return "site";
+        return "menu";
     }
 
 // Delete actions
-    public String deleteCssAction() {
-        MenuAction.log.info( "delete CSS action." );
+    public String deleteMenuItemAction() {
+        log.info( "delete menu item action." );
 
-        setSessionObject( new CssBean(dataProvider.getCss()) );
+        setSessionObject( dataProvider.getMenuItem() );
 
-        return "css-delete";
+        return "menu-delete";
     }
 
-    public String cancelDeleteCssAction() {
-        MenuAction.log.info( "Cancel delete CSS action." );
+    public String cancelDeleteMenuItemAction() {
+        log.info( "Cancel delete menu item action." );
 
-        return "site";
+        return "menu";
     }
 
-    public String processDeleteCssAction() {
-        MenuAction.log.info( "Process delete CSS action." );
+    public String processDeleteMenuItemAction() {
+        log.info( "Process delete menu item action." );
 
         if( getSessionObject() != null ) {
-            FacesTools.getPortalDaoProvider().getPortalCssDao().deleteCss(getSessionObject().getCssId());
+            FacesTools.getPortalDaoProvider().getPortalCatalogDao().deleteCatalogItem(getSessionObject().getMenuItem().getCatalogId());
             setSessionObject(null);
-            siteSessionBean.setId(null);
-            siteSessionBean.setObjectType(MenuSessionBean.UNKNOWN_TYPE);
+            menuSessionBean.setId(null);
+            menuSessionBean.setObjectType(MenuSessionBean.UNKNOWN_TYPE);
             cleadDataProviderObject();
         }
 
-        return "site";
+        return "menu";
     }
 
-    private void setSessionObject(MenuItemBean bean) {
-        siteSessionBean.setMenuItem( bean );
+    private void setSessionObject(MenuItemExtended bean) {
+        menuSessionBean.setMenuItem( bean );
     }
 
-*/
     private void loadCurrentObject() {
-//        siteSessionBean.setMenuItem( new MenuItemBean(dataProvider.getMenuItem()) );
+        log.debug("start loadCurrentObject()");
+
+        menuSessionBean.setMenuItem( dataProvider.getMenuItem() );
     }
 
     private void cleadDataProviderObject() {
         dataProvider.clearMenuItem();
     }
 
-    private MenuItemBean getSessionObject() {
-        return siteSessionBean.getMenuItem();
+    private MenuItemExtended getSessionObject() {
+        return menuSessionBean.getMenuItem();
     }
 
 }

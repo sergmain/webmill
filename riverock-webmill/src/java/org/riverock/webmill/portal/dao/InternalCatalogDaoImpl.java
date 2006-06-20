@@ -26,6 +26,7 @@ package org.riverock.webmill.portal.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,19 +41,21 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.core.GetWmPortalCatalogItem;
 import org.riverock.webmill.core.GetWmPortalCatalogLanguageItem;
 import org.riverock.webmill.core.GetWmPortalCatalogLanguageWithIdSiteSupportLanguageList;
 import org.riverock.webmill.core.GetWmPortalCatalogWithIdSiteCtxLangCatalogList;
 import org.riverock.webmill.core.InsertWmPortalCatalogItem;
 import org.riverock.webmill.core.InsertWmPortalCatalogLanguageItem;
+import org.riverock.webmill.core.UpdateWmPortalCatalogItem;
+import org.riverock.webmill.core.UpdateWmPortalCatalogLanguageItem;
 import org.riverock.webmill.portal.bean.CatalogBean;
 import org.riverock.webmill.portal.bean.CatalogLanguageBean;
 import org.riverock.webmill.schema.core.WmPortalCatalogItemType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageItemType;
 import org.riverock.webmill.schema.core.WmPortalCatalogLanguageListType;
 import org.riverock.webmill.schema.core.WmPortalCatalogListType;
-import org.riverock.webmill.container.portlet.PortletContainer;
 
 /**
  * @author Sergei Maslyukov
@@ -383,6 +386,81 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         }
     }
 
+    public void updateCatalogItem(CatalogItem catalogItem) {
+        if (catalogItem==null) {
+            return;
+        }
+
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            WmPortalCatalogItemType item = new WmPortalCatalogItemType();
+            item.setCtxPageAuthor(catalogItem.getAuthor());
+            item.setCtxPageKeyword(catalogItem.getKeyword());
+            item.setCtxPageTitle(catalogItem.getTitle());
+            item.setCtxPageUrl(catalogItem.getUrl());
+            item.setIdContext(catalogItem.getContextId());
+            item.setIdSiteCtxCatalog(catalogItem.getCatalogId());
+            item.setIdSiteCtxLangCatalog(catalogItem.getCatalogLanguageId());
+            item.setIdSiteCtxType(catalogItem.getPortletId());
+            item.setIdSiteTemplate(catalogItem.getTemplateId());
+            item.setIdTopCtxCatalog(catalogItem.getTopCatalogId());
+            item.setIsUseProperties(catalogItem.getUseProperties());
+            item.setKeyMessage(catalogItem.getKeyMessage());
+            item.setMetadata(catalogItem.getMetadata());
+            item.setOrderField(catalogItem.getOrderField());
+            item.setPortletRole(catalogItem.getPortletRole());
+            item.setStorage(catalogItem.getStorage());
+
+            UpdateWmPortalCatalogItem.process(adapter, item);
+            
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error get getSiteBean()";
+            log.error(es, e);
+            throw new IllegalStateException(es,e );
+        }
+        finally{
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public void deleteCatalogItem(Long catalogId) {
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTAL_CATALOG where ID_SITE_CTX_CATALOG=?",
+                new Object[]{catalogId}, new int[]{Types.DECIMAL}
+            );
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error delete catalog item";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
     public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem) {
         if (log.isDebugEnabled()) {
             log.debug("Item getIdSiteCtxLangCatalog(), value - "+catalogLanguageItem.getCatalogLanguageId());
@@ -419,6 +497,75 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
                 // catch rollback error
             }
             String es = "Error create site language";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public void updateCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem) {
+        if (log.isDebugEnabled()) {
+            log.debug("catalogLanguageItem: " + catalogLanguageItem);
+        }
+        if (catalogLanguageItem==null) {
+            return;
+        }
+
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            WmPortalCatalogLanguageItemType item = new WmPortalCatalogLanguageItemType();
+            item.setCatalogCode(catalogLanguageItem.getCatalogCode());
+            item.setIdSiteCtxLangCatalog(catalogLanguageItem.getCatalogLanguageId());
+            item.setIdSiteSupportLanguage(catalogLanguageItem.getSiteLanguageId());
+            item.setIsDefault(catalogLanguageItem.getDefault());
+
+            UpdateWmPortalCatalogLanguageItem.process(adapter, item);
+
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error get getSiteBean()";
+            log.error(es, e);
+            throw new IllegalStateException(es,e );
+        }
+        finally{
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public void deleteCatalogLanguageItem(Long catalogLanguageId) {
+        if (log.isDebugEnabled()) {
+           log.debug("catalogLanguageId: " +catalogLanguageId);
+        }
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from WM_PORTAL_CATALOG_LANGUAGE where ID_SITE_CTX_LANG_CATALOG=?",
+                new Object[]{catalogLanguageId}, new int[]{Types.DECIMAL}
+            );
+            adapter.commit();
+        } catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error delete catalog language";
             log.error(es, e);
             throw new IllegalStateException( es, e);
         } finally {

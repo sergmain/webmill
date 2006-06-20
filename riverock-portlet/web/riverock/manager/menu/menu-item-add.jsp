@@ -17,12 +17,12 @@
         height: 20px;
     }
 
-    .site-button-action {
+    .menu-button-action {
         width: 150px;
         height: 22px;
     }
 
-    .site-sub-button-action {
+    .menu-sub-button-action {
         width: 80px;
         height: 22px;
     }
@@ -32,33 +32,34 @@
     <h:form rendered="#{isUserInRole['webmill.authentic']}">
 
         <f:subview id="site-top-actions-subview">
-            <jsp:include page="site-top-actions.jsp"/>
+            <jsp:include page="menu-top-actions.jsp"/>
         </f:subview>
 
         <h:panelGrid columns="2">
 
-            <f:subview id="site-tree-subview">
+            <f:subview id="menu-tree-subview">
                 <jsp:include page="menu-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="css-add-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
+            <h:panelGroup id="menu-item-add-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
 
                 <h:panelGrid columns="1">
 
-                    <f:subview id="subview-css-info">
-                        <jsp:include page="menu-add-edit.jsp"/>
+                    <f:subview id="subview-menu-item-info">
+                        <h:outputText value="#{msg.menu_item_info}"/>
+                        <jsp:include page="menu-item-add-concrete.jsp"/>
                     </f:subview>
 
-                    <h:panelGroup id="operation-css-add-panel">
-                        <h:commandButton id="css-add-process-action" action="#{cssAction.processAddCssAction}"
-                                         value="#{msg.process_add_css_action}"
-                                         styleClass="site-button-action"
+                    <h:panelGroup id="operation-menu-item-add-panel">
+                        <h:commandButton id="menu-item-add-process-action" action="#{menuAction.processAddMenuItemAction}"
+                                         value="#{msg.process_add_menu_item_action}"
+                                         styleClass="menu-button-action"
                             >
                         </h:commandButton>
                         <f:verbatim>&nbsp;&nbsp;&nbsp;&nbsp;</f:verbatim>
-                        <h:commandButton id="css-add-cancel-action" action="#{cssAction.cancelAddCssAction}"
-                                         value="#{msg.cancel_add_css_action}"
-                                         styleClass="site-button-action"
+                        <h:commandButton id="menu-item-add-cancel-action" action="#{menuAction.cancelAddMenuItemAction}"
+                                         value="#{msg.cancel_add_menu_item_action}"
+                                         styleClass="menu-button-action"
                             >
                         </h:commandButton>
                     </h:panelGroup>

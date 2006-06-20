@@ -30,6 +30,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Css;
 import org.riverock.interfaces.portal.bean.Site;
@@ -44,7 +46,6 @@ import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
 import org.riverock.portlet.manager.site.bean.TemplateBean;
 import org.riverock.portlet.manager.site.bean.XsltBean;
 import org.riverock.portlet.tools.FacesTools;
-import org.apache.log4j.Logger;
 
 /**
  * @author Sergei Maslyukov
@@ -71,7 +72,7 @@ public class SiteService implements Serializable {
             }
 
             // create new String - work around with different classloader issue
-	    // Todo my be this wrong :)
+            // Todo my be this wrong :)
             list.add(new SelectItem(new String(company.getId().toString()), new String(company.getName())));
         }
         return list;
@@ -115,19 +116,19 @@ public class SiteService implements Serializable {
 
     public SiteExtended getSiteExtended(Long siteId) {
         SiteExtended siteExtended = new SiteExtended();
-        siteExtended.setSite( FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId) );
+        siteExtended.setSite(FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId));
         List<VirtualHost> virtualHosts = FacesTools.getPortalDaoProvider().getPortalVirtualHostDao().getVirtualHosts(siteExtended.getSite().getSiteId());
         List<String> hosts = new ArrayList<String>();
         for (VirtualHost host : virtualHosts) {
             hosts.add(host.getHost().toLowerCase());
         }
         siteExtended.setVirtualHosts(hosts);
-	Long companyId = siteExtended.getSite().getCompanyId();
-	Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(companyId);
-	if (log.isDebugEnabled()) {
-		log.debug("companyId: " + companyId);
-		log.debug("company: " + company);
-	}
+        Long companyId = siteExtended.getSite().getCompanyId();
+        Company company = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompany(companyId);
+        if (log.isDebugEnabled()) {
+            log.debug("companyId: " + companyId);
+            log.debug("company: " + company);
+        }
         siteExtended.setCompany(company);
         return siteExtended;
     }

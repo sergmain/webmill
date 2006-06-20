@@ -28,6 +28,7 @@ import java.util.List;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.common.TreeItem;
 
 /**
  * @author SergeMaslyukov
@@ -38,20 +39,20 @@ import org.riverock.interfaces.portal.bean.CatalogItem;
 public class CatalogBean implements Serializable, CatalogItem {
     private static final long serialVersionUID = 1057005506L;
 
-    private Long catalogId; // idSiteCtxCatalog
-    private Long topCatalogId = 0l; //idTopCtxCatalog
-    private Long portletId; //idSiteCtxType
+    private Long catalogId;
+    private Long topCatalogId = 0L;
+    private Long portletId;
     private Long contextId;
     private Boolean isUseProperties = false;
-    private Long templateId; //idSiteTemplate
-    private Long catalogLanguageId; // idSiteCtxLangCatalog;
+    private Long templateId;
+    private Long catalogLanguageId;
     private Integer orderField;
     private String storage;
     private String keyMessage;
-    private String url; //ctxPageUrl;
-    private String title; //ctxPageTitle;
-    private String author; //ctxPageAuthor;
-    private String keyword; //ctxPageKeyword;
+    private String url;
+    private String title;
+    private String author;
+    private String keyword;
     private String metadata;
     private String portletRole;
     private List<CatalogItem> subCatalogItemList = null;
@@ -190,5 +191,21 @@ public class CatalogBean implements Serializable, CatalogItem {
 
     public void setPortletRole(String portletRole) {
         this.portletRole = portletRole;
+    }
+
+    public Long getTopId() {
+        return this.getTopCatalogId();
+    }
+
+    public Long getId() {
+        return this.getCatalogId();
+    }
+
+    public List<TreeItem> getSubTree() {
+        return (List)this.getSubCatalogItemList();
+    }
+
+    public void setSubTree(List<TreeItem> list) {
+        this.setSubCatalogItemList((List)list);
     }
 }

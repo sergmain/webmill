@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
+import org.riverock.interfaces.common.TreeItem;
 import org.riverock.portlet.tools.FacesTools;
 
 /**
@@ -223,6 +224,22 @@ public class CatalogBean implements Serializable, CatalogItem {
 
     public void setPortletRole(String portletRole) {
         this.portletRole = FacesTools.convertParameter(portletRole);
+    }
+
+    public Long getTopId() {
+        return this.topCatalogId;
+    }
+
+    public Long getId() {
+        return this.catalogId;
+    }
+
+    public List<TreeItem> getSubTree() {
+        return (List)this.subCatalogItemList;
+    }
+
+    public void setSubTree(List<TreeItem> list) {
+        this.subCatalogItemList=(List)list;
     }
 }
 

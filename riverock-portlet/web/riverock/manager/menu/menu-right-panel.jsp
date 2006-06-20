@@ -6,9 +6,10 @@
 
 
 <f:subview id="menu-menu-item-view-action-subview"
- rendered="#{menuSessionBean.objectType == menuSessionBean.menuItemType and !empty menuSessionBean.menuItem">
+ rendered="#{menuSessionBean.objectType == menuSessionBean.menuItemType and !empty menuSessionBean.menuItem and
+	isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
 
-    <jsp:include page="menu-view-action.jsp"/>
+    <jsp:include page="menu-item-view-action.jsp"/>
 </f:subview>
 
 <f:subview id="menu-menu-catalog-view-action-subview"
@@ -20,7 +21,7 @@
 
 <f:subview id="menu-site-view-action-subview"
  rendered="#{menuSessionBean.objectType == menuSessionBean.siteType and !empty menuSessionBean.siteExtended and
-	isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.site,webmill.css,webmill.template,webmill.xslt']}">
+	isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
 
     <jsp:include page="site-view-action.jsp"/>
 </f:subview>
