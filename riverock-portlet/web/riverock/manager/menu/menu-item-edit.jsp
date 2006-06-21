@@ -42,7 +42,7 @@
             </f:subview>
 
 
-            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
+            <h:panelGrid columns="1" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
 
                 <f:subview id="subview-menu-info">
                     <jsp:include page="menu-item-edit-concrete.jsp"/>

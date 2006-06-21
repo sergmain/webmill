@@ -63,6 +63,13 @@
                     <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuCatalogType}"/>
                 </h:commandLink>
+                <h:commandButton id="add-menu-item-action-id" action="#{menuAction.addMenuItemAction}"
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_menu_item_button_alt}">
+
+                    <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}" />
+                    <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuItemType}"/>
+                    <t:updateActionListener property="#{menuSessionBean.currentMenuCatalogId}" value="#{node.identifier}" />
+                </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="menu-item">
@@ -78,6 +85,13 @@
                     <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}"/>
                     <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuItemType}"/>
                 </h:commandLink>
+                <h:commandButton id="add-menu-item-action-id" action="#{menuAction.addMenuItemAction}"
+                    image="/images/add.gif" style="border : 0" alt="#{msg.add_new_menu_item_button_alt}">
+
+                    <t:updateActionListener property="#{menuSessionBean.id}" value="#{node.identifier}" />
+                    <t:updateActionListener property="#{menuSessionBean.objectType}" value="#{menuSessionBean.menuItemType}"/>
+                    <t:updateActionListener property="#{menuSessionBean.currentMenuItemId}" value="#{node.identifier}" />
+                </h:commandButton>
             </h:panelGroup>
         </f:facet>
 

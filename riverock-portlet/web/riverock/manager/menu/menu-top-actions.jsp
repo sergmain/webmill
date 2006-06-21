@@ -18,3 +18,6 @@
                  styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
 <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
                  styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.user-manager']}"/>
+<h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
+                 styleClass="top-button-action"
+                 rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.site,webmill.template,webmill.css,webmill.xslt']}"/>

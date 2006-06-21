@@ -7,7 +7,7 @@
 
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Menu" var="msg"/>
 
-<h:panelGrid columns="2" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
+<h:panelGrid columns="2" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
 
     <h:outputText value="#{msg.menu_item_portlet_name}"/>
     <h:outputText value="#{menuSessionBean.menuItem.portletName.portletName}"/>
