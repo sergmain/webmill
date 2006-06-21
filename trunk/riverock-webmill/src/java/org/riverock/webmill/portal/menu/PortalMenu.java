@@ -171,6 +171,10 @@ public final class PortalMenu implements Menu {
 
         List<CatalogItem> list = InternalDaoFactory.getInternalCatalogDao().getCatalogItemList( bean.getCatalogLanguageId() );
         for (CatalogItem catalogBean : list) {
+            // Dont include menuitem with id_template==null to menu
+            if (catalogBean.getTemplateId()==null) {
+                continue;
+            }
             menuItem.add(new PortalMenuItem(catalogBean));
         }
 

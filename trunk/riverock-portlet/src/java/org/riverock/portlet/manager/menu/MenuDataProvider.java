@@ -103,33 +103,6 @@ public class MenuDataProvider implements Serializable {
         this.siteLanguage=null;
     }
 
-/*
-    public Css getCss() {
-        if (menuSessionBean.getObjectType()!=menuSessionBean.getCssType()) {
-            throw new IllegalStateException("Query CSS info with not CSS type, current type: " + menuSessionBean.getObjectType());
-        }
-        Long cssId = menuSessionBean.getId();
-        if (css==null) {
-            css = menuService.getCss(cssId);
-        }
-
-    if (css.getCssId()==null) {
-        return css;
-    }
-
-        if (!css.getCssId().equals(cssId)) {
-            log.warn("Mismatch cssId");
-            css = menuService.getCss(cssId);
-        }
-
-        return css;
-    }
-
-    public void clearCss() {
-        this.css=null;
-    }
-*/
-
     public void clearMenuCatalog() {
         this.menuCatalog=null;
     }

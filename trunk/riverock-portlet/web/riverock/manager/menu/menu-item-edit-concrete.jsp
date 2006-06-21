@@ -42,6 +42,6 @@
 <h:panelGrid columns="1">
     <h:outputText value="#{msg.menu_item_metadata}"/>
     <h:inputTextarea id="menu-metadata-field" value="#{menuSessionBean.menuItem.menuItem.metadata}"
-                     rows="20" cols="70"
+                     rows="10" cols="70"
         />
 </h:panelGrid>

@@ -41,7 +41,7 @@
                 <jsp:include page="menu-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="menu-catalog-delete-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
+            <h:panelGroup id="menu-catalog-delete-panel" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
 
                 <f:subview id="delete-menu-catalog-subview">
                     <jsp:include page="menu-catalog-description.jsp"/>

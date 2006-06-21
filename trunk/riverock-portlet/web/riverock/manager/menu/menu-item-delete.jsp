@@ -29,19 +29,19 @@
 </style>
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form rendered="#{!siteDataProvider.css.current and isUserInRole['webmill.authentic']}">
+    <h:form rendered="#{isUserInRole['webmill.authentic']}">
 
-        <f:subview id="site-top-actions-subview">
+        <f:subview id="menu-top-actions-subview">
             <jsp:include page="menu-top-actions.jsp"/>
         </f:subview>
 
         <h:panelGrid columns="2">
 
-            <f:subview id="site-tree-subview">
+            <f:subview id="menu-tree-subview">
                 <jsp:include page="menu-tree.jsp"/>
             </f:subview>
 
-            <h:panelGroup id="menu-item-delete-panel" rendered="#{isUserInRole['webmill.site-manager,webmill.menu']}">
+            <h:panelGroup id="menu-item-delete-panel" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}">
 
                 <f:subview id="delete-menu-item-subview">
                     <jsp:include page="menu-item-description.jsp"/>

@@ -193,6 +193,13 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
     }
 
     public CatalogItem getCatalogItem(Long catalogId) {
+        if (log.isDebugEnabled()) {
+            log.debug("Start getCatalogItem(), catalogId: "+catalogId);
+        }
+        if (catalogId==null) {
+            return null;
+        }
+
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
@@ -218,26 +225,24 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
 
     private static CatalogItem initCatalogItem(WmPortalCatalogItemType item) {
         CatalogBean bean = null;
-        // Dont include menuitem with id_template==null to menu
-        if (item.getIdSiteTemplate()!=null) {
-            bean = new CatalogBean();
-            bean.setAuthor( item.getCtxPageAuthor() );
-            bean.setCatalogId( item.getIdSiteCtxCatalog() );
-            bean.setCatalogLanguageId( item.getIdSiteCtxLangCatalog() );
-            bean.setContextId( item.getIdContext() );
-            bean.setPortletId( item.getIdSiteCtxType() );
-            bean.setKeyMessage( item.getKeyMessage() );
-            bean.setKeyword( item.getCtxPageKeyword() );
-            bean.setMetadata( item.getMetadata() );
-            bean.setOrderField( item.getOrderField() );
-            bean.setPortletRole( item.getPortletRole() );
-            bean.setStorage( item.getStorage() );
-            bean.setTemplateId( item.getIdSiteTemplate() );
-            bean.setTitle( item.getCtxPageTitle() );
-            bean.setTopCatalogId( item.getIdTopCtxCatalog() );
-            bean.setUrl( item.getCtxPageUrl() );
-            bean.setUseProperties( item.getIsUseProperties() );
-        }
+        bean = new CatalogBean();
+        bean.setAuthor( item.getCtxPageAuthor() );
+        bean.setCatalogId( item.getIdSiteCtxCatalog() );
+        bean.setCatalogLanguageId( item.getIdSiteCtxLangCatalog() );
+        bean.setContextId( item.getIdContext() );
+        bean.setPortletId( item.getIdSiteCtxType() );
+        bean.setKeyMessage( item.getKeyMessage() );
+        bean.setKeyword( item.getCtxPageKeyword() );
+        bean.setMetadata( item.getMetadata() );
+        bean.setOrderField( item.getOrderField() );
+        bean.setPortletRole( item.getPortletRole() );
+        bean.setStorage( item.getStorage() );
+        bean.setTemplateId( item.getIdSiteTemplate() );
+        bean.setTitle( item.getCtxPageTitle() );
+        bean.setTopCatalogId( item.getIdTopCtxCatalog() );
+        bean.setUrl( item.getCtxPageUrl() );
+        bean.setUseProperties( item.getIsUseProperties() );
+
         return bean;
     }
 
@@ -255,10 +260,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
 
             List<CatalogItem> beans = new ArrayList<CatalogItem>();
             for (WmPortalCatalogItemType item : list) {
-                // Dont include menuitem with id_template==null to menu
-                if (item.getIdSiteTemplate() != null) {
-                    beans.add(initCatalogItem(item));
-                }
+                beans.add(initCatalogItem(item));
             }
             return beans;
         }

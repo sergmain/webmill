@@ -12,16 +12,15 @@ import org.riverock.portlet.manager.menu.MenuSessionBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.tools.FacesTools;
+import org.riverock.interfaces.portal.bean.CatalogItem;
 
 /**
  * @author Sergei Maslyukov
- * 16.05.2006
- * 20:14:59
- *
- *
+ *         16.05.2006
+ *         20:14:59
  */
 public class MenuAction implements Serializable {
-    private final static Logger log = Logger.getLogger( MenuAction.class );
+    private final static Logger log = Logger.getLogger(MenuAction.class);
     private static final long serialVersionUID = 2057005511L;
 
     private MenuSessionBean menuSessionBean = null;
@@ -36,7 +35,7 @@ public class MenuAction implements Serializable {
     }
 
     // getter/setter methods
-    public void setMenuSessionBean( MenuSessionBean siteSessionBean) {
+    public void setMenuSessionBean(MenuSessionBean siteSessionBean) {
         this.menuSessionBean = siteSessionBean;
     }
 
@@ -44,21 +43,23 @@ public class MenuAction implements Serializable {
         return authSessionBean;
     }
 
-    public void setAuthSessionBean( AuthSessionBean authSessionBean) {
+    public void setAuthSessionBean(AuthSessionBean authSessionBean) {
         this.authSessionBean = authSessionBean;
     }
 
 // main select action
+
     public String selectMenuItem(ActionEvent event) {
-        log.info( "Select menu item action." );
+        log.info("Select menu item action.");
         loadCurrentObject();
 
         return "menu";
     }
 
 // Add actions
-    public String addMenuAction() {
-        log.info( "Add menu item action." );
+
+    public String addMenuItemAction() {
+        log.info("Add menu item action.");
 
         MenuItemBean menuItemBean = new MenuItemBean();
         menuItemBean.setCatalogId(menuSessionBean.getId());
@@ -68,14 +69,32 @@ public class MenuAction implements Serializable {
     }
 
     public String processAddMenuItemAction() {
-        log.info( "Procss add menu item action." );
+        log.info("Procss add menu item action.");
+        if (getSessionObject() != null) {
 
-        if( getSessionObject() !=null ) {
-            Long cssId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogItem(
-                getSessionObject().getMenuItem()
-            );
+            if (menuSessionBean.getCurrentMenuItemId() == null && menuSessionBean.getCurrentMenuCatalogId() == null) {
+                throw new IllegalStateException("Both currentMenuItemId and currentMenuCatalogId are null");
+            }
+
+            if (menuSessionBean.getCurrentMenuItemId() != null && menuSessionBean.getCurrentMenuCatalogId() != null) {
+                throw new IllegalStateException("Both currentMenuItemId and currentMenuCatalogId are not null");
+            }
+
+            MenuItemBean menuItem = getSessionObject().getMenuItem();
+            if (menuSessionBean.getCurrentMenuCatalogId() != null) {
+                menuItem.setCatalogLanguageId( menuSessionBean.getCurrentMenuCatalogId() );
+                menuItem.setTopCatalogId(0L);
+            } else {
+                CatalogItem catalogItem = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItem(
+                    menuSessionBean.getCurrentMenuItemId()
+                );
+                menuItem.setCatalogLanguageId( catalogItem.getCatalogLanguageId() );
+                menuItem.setTopCatalogId( catalogItem.getCatalogId() );
+            }
+
+            Long menuItemId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().createCatalogItem(menuItem);
             setSessionObject(null);
-            menuSessionBean.setId(cssId);
+            menuSessionBean.setId(menuItemId);
             cleadDataProviderObject();
             loadCurrentObject();
         }
@@ -84,7 +103,7 @@ public class MenuAction implements Serializable {
     }
 
     public String cancelAddMenuItemAction() {
-        log.info( "Cancel add menu item action." );
+        log.info("Cancel add menu item action.");
 
         setSessionObject(null);
         cleadDataProviderObject();
@@ -93,20 +112,21 @@ public class MenuAction implements Serializable {
     }
 
 // Edit actions
-    public String editMenuItemAction() {
-        log.info( "Edit menu item action." );
 
-        Long menuCatalogId=getSessionObject().getMenuItem().getCatalogLanguageId();
-        Long siteLanguageId=FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
-        menuSessionBean.setTemplates( FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
+    public String editMenuItemAction() {
+        log.info("Edit menu item action.");
+
+        Long menuCatalogId = getSessionObject().getMenuItem().getCatalogLanguageId();
+        Long siteLanguageId = FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogLanguageItem(menuCatalogId).getSiteLanguageId();
+        menuSessionBean.setTemplates(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplateLanguageList(siteLanguageId));
 
         return "menu-edit";
     }
 
     public String processEditMenuItemAction() {
-        log.info( "Save changes menu item action." );
+        log.info("Save changes menu item action.");
 
-        if( getSessionObject()!=null ) {
+        if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().updateCatalogItem(getSessionObject().getMenuItem());
             cleadDataProviderObject();
             loadCurrentObject();
@@ -116,30 +136,31 @@ public class MenuAction implements Serializable {
     }
 
     public String cancelEditMenuItemAction() {
-        log.info( "Cancel edit menu item action." );
+        log.info("Cancel edit menu item action.");
 
         return "menu";
     }
 
 // Delete actions
-    public String deleteMenuItemAction() {
-        log.info( "delete menu item action." );
 
-        setSessionObject( dataProvider.getMenuItem() );
+    public String deleteMenuItemAction() {
+        log.info("delete menu item action.");
+
+        setSessionObject(dataProvider.getMenuItem());
 
         return "menu-delete";
     }
 
     public String cancelDeleteMenuItemAction() {
-        log.info( "Cancel delete menu item action." );
+        log.info("Cancel delete menu item action.");
 
         return "menu";
     }
 
     public String processDeleteMenuItemAction() {
-        log.info( "Process delete menu item action." );
+        log.info("Process delete menu item action.");
 
-        if( getSessionObject() != null ) {
+        if (getSessionObject() != null) {
             FacesTools.getPortalDaoProvider().getPortalCatalogDao().deleteCatalogItem(getSessionObject().getMenuItem().getCatalogId());
             setSessionObject(null);
             menuSessionBean.setId(null);
@@ -151,13 +172,13 @@ public class MenuAction implements Serializable {
     }
 
     private void setSessionObject(MenuItemExtended bean) {
-        menuSessionBean.setMenuItem( bean );
+        menuSessionBean.setMenuItem(bean);
     }
 
     private void loadCurrentObject() {
         log.debug("start loadCurrentObject()");
 
-        menuSessionBean.setMenuItem( dataProvider.getMenuItem() );
+        menuSessionBean.setMenuItem(dataProvider.getMenuItem());
     }
 
     private void cleadDataProviderObject() {

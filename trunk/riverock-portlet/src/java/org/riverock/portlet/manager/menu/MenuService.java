@@ -101,7 +101,9 @@ public class MenuService {
         MenuItemExtended menuExtended = new MenuItemExtended();
         menuExtended.setMenuItem(FacesTools.getPortalDaoProvider().getPortalCatalogDao().getCatalogItem(catalogId));
         menuExtended.setPortletName(FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletName(menuExtended.getMenuItem().getPortletId()));
-        menuExtended.setTemplate(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(menuExtended.getMenuItem().getTemplateId()));
+        if (menuExtended.getMenuItem().getTemplateId()!=null) {
+            menuExtended.setTemplate(FacesTools.getPortalDaoProvider().getPortalTemplateDao().getTemplate(menuExtended.getMenuItem().getTemplateId()));
+        }
         return menuExtended;
     }
 
