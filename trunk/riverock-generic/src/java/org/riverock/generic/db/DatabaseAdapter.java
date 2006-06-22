@@ -267,10 +267,20 @@ public abstract class DatabaseAdapter {
                                     log.debug("Start create connection pooling with JNDI");
                                 try {
                                     Context initCtx = new InitialContext();
-                                    Context envCtx = (Context) initCtx.lookup("java:comp/env");
+                                    Context envCtx=null;
+                                    try {
+                                        envCtx = (Context) initCtx.lookup("java:comp/env");
+                                    } catch (NamingException e) {
+                                        log.info("JNDI context java:comp/env not found, will try search in root context");
+                                    }
 
                                     // Look up our data source
-                                    dataSource = (DataSource) envCtx.lookup(dc.getDataSourceName());
+                                    if (envCtx==null) {
+                                        dataSource=(DataSource) initCtx.lookup(dc.getDataSourceName());
+                                    }
+                                    else {
+                                        dataSource = (DataSource) envCtx.lookup(dc.getDataSourceName());
+                                    }
 
                                 }
                                 catch (NamingException e) {
