@@ -266,22 +266,32 @@ public abstract class DatabaseAdapter {
                                 if (log.isDebugEnabled())
                                     log.debug("Start create connection pooling with JNDI");
                                 try {
-                                    Context initCtx = new InitialContext();
-                                    Context envCtx=null;
+                                    Context envCtx = null;
                                     try {
+                                        Context initCtx = new InitialContext();
                                         envCtx = (Context) initCtx.lookup("java:comp/env");
-                                    } catch (NamingException e) {
+                                    } catch (Throwable e) {
                                         log.info("JNDI context java:comp/env not found, will try search in root context");
                                     }
 
-                                    // Look up our data source
+                                    // Look up our datasource
                                     if (envCtx==null) {
-                                        dataSource=(DataSource) initCtx.lookup(dc.getDataSourceName());
+                                        envCtx = new InitialContext();
+                                        dataSource=(DataSource) envCtx.lookup(dc.getDataSourceName());
                                     }
                                     else {
-                                        dataSource = (DataSource) envCtx.lookup(dc.getDataSourceName());
+                                        boolean isError=false;
+                                        try {
+                                            dataSource=(DataSource) envCtx.lookup(dc.getDataSourceName());
+                                        }
+                                        catch (NamingException e) {
+                                            isError=true;
+                                        }
+                                        if (isError) {
+                                            envCtx = new InitialContext();
+                                            dataSource=(DataSource) envCtx.lookup(dc.getDataSourceName());
+                                        }
                                     }
-
                                 }
                                 catch (NamingException e) {
                                     final String es = "Error get value from JDNI context";
