@@ -118,27 +118,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    private void set(ResultSet rs, UserInfoImpl userInfo) throws SQLException {
-        userInfo.setUserId(RsetTools.getLong(rs, "ID_USER"));
-        userInfo.setCompanyId(RsetTools.getLong(rs, "ID_FIRM"));
-        userInfo.setFirstName(RsetTools.getString(rs, "FIRST_NAME"));
-        userInfo.setMiddleName(RsetTools.getString(rs, "MIDDLE_NAME"));
-        userInfo.setLastName(RsetTools.getString(rs, "LAST_NAME"));
-
-        userInfo.setDateStartWork(RsetTools.getTimestamp(rs, "DATE_START_WORK"));
-
-        userInfo.setDateFire(RsetTools.getTimestamp(rs, "DATE_FIRE"));
-
-        userInfo.setAddress(RsetTools.getString(rs, "ADDRESS"));
-        userInfo.setTelephone(RsetTools.getString(rs, "TELEPHONE"));
-
-        userInfo.setDateBindProff(RsetTools.getTimestamp(rs, "DATE_BIND_PROFF"));
-
-        userInfo.setHomeTelephone(RsetTools.getString(rs, "HOME_TELEPHONE"));
-        userInfo.setEmail(RsetTools.getString(rs, "EMAIL"));
-        userInfo.setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
-    }
-
     /**
      * retrun list of users, which current user can operate
      * 
@@ -761,6 +740,101 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
+    public List<AuthInfo> getAuthInfo(DatabaseAdapter db_, Long userId, Long siteId) {
+        switch( db_.getFamaly() ) {
+            case DatabaseManager.MYSQL_FAMALY:
+                return getAuthInfoMySql( db_, userId, siteId );
+            default:
+                return getAuthInfoDefault( db_, userId, siteId );
+        }
+    }
+
+    private List<AuthInfo> getAuthInfoDefault(DatabaseAdapter db_, Long userId, Long siteId) {
+        List<AuthInfo> list = new ArrayList<AuthInfo>();
+
+        if (userId==null || siteId==null) {
+            return list;
+        }
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            String sql =
+                "select a.* " +
+                    "from  WM_AUTH_USER a, V$_READ_LIST_FIRM z1, WM_PORTAL_LIST_SITE x1 " +
+                    "where x1.ID_SITE=? and z1.ID_FIRM = x1.ID_FIRM and " +
+                    "      a.ID_AUTH_USER=z1.ID_AUTH_USER and a.ID_USER=?";
+
+            ps = db_.prepareStatement(sql);
+            ps.setLong(1, siteId);
+            ps.setLong(1, userId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(setAuthInfo(rs));
+            }
+            return list;
+        }
+        catch (Throwable e){
+            String es = "AuthInfo.getInstance() exception";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally{
+            DatabaseManager.close(rs, ps);
+            rs = null;
+            ps = null;
+        }
+    }
+
+    private List<AuthInfo> getAuthInfoMySql(DatabaseAdapter db_, Long userId, Long siteId) {
+        List<AuthInfo> list = new ArrayList<AuthInfo>();
+
+        if (userId==null || siteId==null) {
+            return list;
+        }
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try{
+            String sql =
+                "select  a01.id_auth_user " +
+                "from    WM_AUTH_USER a01, WM_PORTAL_LIST_SITE f01 " +
+                "where   a01.is_use_current_firm = 1 and a01.ID_FIRM = f01.ID_FIRM and f01.ID_SITE=? and " +
+                "        a01.id_user=? " +
+                "union " +
+                "select  a02.id_auth_user " +
+                "from    WM_AUTH_USER a02, WM_LIST_R_HOLDING_COMPANY d02, WM_PORTAL_LIST_SITE f02 " +
+                "where   a02.IS_HOLDING = 1 and a02.ID_HOLDING = d02.ID_HOLDING and " +
+                "        d02.ID_COMPANY = f02.ID_FIRM and f02.ID_SITE=? and a02.id_user=? " +
+                "union " +
+                "select  a04.id_auth_user " +
+                "from    WM_AUTH_USER a04, WM_LIST_COMPANY b04, WM_PORTAL_LIST_SITE f04 " +
+                "where   a04.is_root = 1 and b04.ID_FIRM = f04.ID_FIRM and f04.ID_SITE=? and " +
+                "        a04.id_user=? ";
+
+            ps = db_.prepareStatement(sql);
+            ps.setLong(1, siteId);
+            ps.setLong(1, userId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add( getAuthInfo(db_, RsetTools.getLong(rs, "id_auth_user")));
+            }
+            return list;
+        }
+        catch (Throwable e){
+            String es = "AuthInfo.getInstance() exception";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally{
+            DatabaseManager.close(rs, ps);
+            rs = null;
+            ps = null;
+        }
+    }
+
     boolean checkAccess( final DatabaseAdapter adapter, final String userLogin, String userPassword, final String serverName ) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -779,7 +853,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
         try {
 
-            Long idSite = SiteList.getIdSite( serverName );
+            Long idSite = SiteList.getSiteId( serverName );
             if ( log.isDebugEnabled() ) {
                 log.debug( "serverName " + serverName + ", idSite " + idSite );
             }
@@ -825,7 +899,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
         try {
 
-            Long idSite = SiteList.getIdSite( serverName );
+            Long idSite = SiteList.getSiteId( serverName );
             if ( log.isDebugEnabled() ) {
                 log.debug( "serverName " + serverName + ", idSite " + idSite );
             }
@@ -1466,30 +1540,60 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
     }
 
     public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
-	if (authSession==null) {
-		throw new IllegalStateException("Error add new user, authSession is null");
-	}
-	if (infoAuth==null) {
-		throw new IllegalStateException("Error add new user, infoAuth is null");
-	}
-	if (infoAuth.getAuthInfo()==null) {
-		throw new IllegalStateException("Error add new user, infoAuth.getAuthInfo() is null");
-	}
-	if (StringUtils.isBlank(infoAuth.getAuthInfo().getUserLogin())) {
-		throw new IllegalStateException("Error add new user, username is null or blank");
-	}
-	if (StringUtils.isBlank(infoAuth.getAuthInfo().getUserPassword())) {
-		throw new IllegalStateException("Error add new user, password is null or blank");
-	}
+        if (infoAuth==null) {
+            throw new IllegalStateException("Error add new user, infoAuth is null");
+        }
+        return addUser(authSession, infoAuth.getAuthInfo(), infoAuth.getRoles());
+    }
+
+    public Long addUser(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles) {
         DatabaseAdapter db = null;
-        PreparedStatement ps = null;
         try {
             db = DatabaseAdapter.getInstance();
+            Long companyId = authSession.checkCompanyId( authInfo.getCompanyId() );
+            Long holdingId = authSession.checkHoldingId( authInfo.getHoldingId() );
 
-            Long id_user = infoAuth.getAuthInfo().getUserId();
-            if( id_user == null )
-                throw new IllegalArgumentException( "id_user not initialized" );
+            Long id = addUser(db, authInfo, roles, companyId, holdingId);
 
+            db.commit();
+            return id;
+        }
+        catch( Throwable e ) {
+            try {
+                if( db != null )
+                    db.rollback();
+            }
+            catch( Exception e001 ) {
+                // catch rollback error
+            }
+            final String es = "Error add user auth";
+            log.error( es, e );
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db );
+            db = null;
+        }
+    }
+
+    public Long addUser(DatabaseAdapter db, AuthInfo authInfo, List<RoleEditableBean> roles, Long companyId, Long holdingId) {
+        if (authInfo==null) {
+            throw new IllegalStateException("Error add new auth of user, infoAuth.getAuthInfo() is null");
+        }
+        if (StringUtils.isBlank(authInfo.getUserLogin())) {
+            throw new IllegalStateException("Error add new auth of user, username is null or blank");
+        }
+        if (StringUtils.isBlank(authInfo.getUserPassword())) {
+            throw new IllegalStateException("Error add new auth of user, password is null or blank");
+        }
+        if (StringUtils.isBlank(authInfo.getUserPassword())) {
+            throw new IllegalStateException("Error add new auth of user, password is null or blank");
+        }
+        if( authInfo.getUserId() == null ) {
+            throw new IllegalArgumentException( "Error add new auth of user, userId is null" );
+        }
+        PreparedStatement ps = null;
+        try {
             CustomSequenceType seq = new CustomSequenceType();
             seq.setSequenceName( "seq_WM_AUTH_USER" );
             seq.setTableName( "WM_AUTH_USER" );
@@ -1508,12 +1612,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                 "? " +
                 ")" );
 
-            Long companyId = null;
-            Long holdingId = null;
-
-            companyId = authSession.checkCompanyId( infoAuth.getAuthInfo().getCompanyId() );
-            holdingId = authSession.checkHoldingId( infoAuth.getAuthInfo().getHoldingId() );
-
             if( log.isDebugEnabled() ) {
                 log.debug( "companyId " + companyId );
                 log.debug( "holdingId " + holdingId );
@@ -1531,40 +1629,30 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                 ps.setNull( 3, Types.INTEGER );
 
 
-            RsetTools.setLong( ps, 4, id_user );
-            ps.setString( 5, infoAuth.getAuthInfo().getUserLogin() );
-            ps.setString( 6, infoAuth.getAuthInfo().getUserPassword() );
+            RsetTools.setLong( ps, 4, authInfo.getUserId() );
+            ps.setString( 5, authInfo.getUserLogin() );
+            ps.setString( 6, authInfo.getUserPassword() );
 
-            ps.setInt( 7, infoAuth.getAuthInfo().isCompany()?1:0 );
-            ps.setInt( 8, infoAuth.getAuthInfo().isHolding() ? 1 : 0 );
+            ps.setInt( 7, authInfo.isCompany()?1:0 );
+            ps.setInt( 8, authInfo.isHolding() ? 1 : 0 );
             int i1 = ps.executeUpdate();
 
             if( log.isDebugEnabled() )
                 log.debug( "Count of inserted records - " + i1 );
 
-//            processDeletedRoles( db, infoAuth );
-            processNewRoles( db, infoAuth.getRoles(), id );
+//            processDeletedRoles( db, roles );
+            processNewRoles( db, roles, id );
 
-            db.commit();
             return id;
         }
         catch( Throwable e ) {
-            try {
-                if( db != null )
-                    db.rollback();
-            }
-            catch( Exception e001 ) {
-                // catch rollback error
-            }
-
             final String es = "Error add user auth";
             log.error( es, e );
             throw new IllegalStateException( es, e );
         }
         finally {
-            DatabaseManager.close( db, ps );
+            DatabaseManager.close( ps );
             ps = null;
-            db = null;
         }
     }
 
@@ -1611,10 +1699,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
     }
 
     private void processNewRoles( DatabaseAdapter db, List<RoleEditableBean> roles, Long authUserId ) throws Exception {
-        log.info( 
-	   "Start insert new roles for authUserId: " + authUserId +
-           ", roles list: " + roles
-	);
+        log.info("Start insert new roles for authUserId: " + authUserId +", roles list: " + roles);
 
         PreparedStatement ps = null;
         try {
@@ -1653,7 +1738,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             DatabaseManager.close( ps );
             ps = null;
 
-	    log.info( "End add roles");
+            log.info( "End add roles");
         }
     }
 
@@ -1666,33 +1751,33 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             db = DatabaseAdapter.getInstance();
             String sql =
                 "update WM_AUTH_USER " +
-                "set "+   
-		"ID_FIRM=?, IS_USE_CURRENT_FIRM=?, "+
-		"ID_HOLDING=?, IS_HOLDING=? "+
-                "WHERE  ID_AUTH_USER=? ";
+                    "set "+
+                    "ID_FIRM=?, IS_USE_CURRENT_FIRM=?, "+
+                    "ID_HOLDING=?, IS_HOLDING=? "+
+                    "WHERE  ID_AUTH_USER=? ";
 
             ps = db.prepareStatement( sql );
 
-	    if (infoAuth.getAuthInfo().getCompanyId()==null) {
-	    	 ps.setNull( 1, Types.INTEGER );
-		 ps.setInt( 2, 0 );
-	    }
-	    else {
-	    	 ps.setLong( 1, infoAuth.getAuthInfo().getCompanyId() );
-		 ps.setInt( 2, infoAuth.getAuthInfo().isCompany()?1:0 );
-	    }
+            if (infoAuth.getAuthInfo().getCompanyId()==null) {
+                ps.setNull( 1, Types.INTEGER );
+                ps.setInt( 2, 0 );
+            }
+            else {
+                ps.setLong( 1, infoAuth.getAuthInfo().getCompanyId() );
+                ps.setInt( 2, infoAuth.getAuthInfo().isCompany()?1:0 );
+            }
 	
-	    if (infoAuth.getAuthInfo().getHoldingId()==null) {
-	    	 ps.setNull( 3, Types.INTEGER );
-		 ps.setInt( 4, 0 );
-	    }
-	    else {
-	    	 ps.setLong( 3, infoAuth.getAuthInfo().getHoldingId() );
-		 ps.setInt( 4, infoAuth.getAuthInfo().isHolding()?1:0 );
-	    }
+            if (infoAuth.getAuthInfo().getHoldingId()==null) {
+                ps.setNull( 3, Types.INTEGER );
+                ps.setInt( 4, 0 );
+            }
+            else {
+                ps.setLong( 3, infoAuth.getAuthInfo().getHoldingId() );
+                ps.setInt( 4, infoAuth.getAuthInfo().isHolding()?1:0 );
+            }
 	
             ps.setLong( 5, infoAuth.getAuthInfo().getAuthUserId() );
-		ps.executeUpdate();
+            ps.executeUpdate();
 
             processDeletedRoles( db, infoAuth );
             processNewRoles( db, infoAuth.getRoles(), infoAuth.getAuthInfo().getAuthUserId() );
@@ -1832,7 +1917,6 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-
     private RoleBean loadRoleFromResultSet( ResultSet rs ) throws Exception {
 
         RoleBeanImpl role = new RoleBeanImpl();
@@ -1841,4 +1925,26 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
         return role;
     }
+
+    private void set(ResultSet rs, UserInfoImpl userInfo) throws SQLException {
+        userInfo.setUserId(RsetTools.getLong(rs, "ID_USER"));
+        userInfo.setCompanyId(RsetTools.getLong(rs, "ID_FIRM"));
+        userInfo.setFirstName(RsetTools.getString(rs, "FIRST_NAME"));
+        userInfo.setMiddleName(RsetTools.getString(rs, "MIDDLE_NAME"));
+        userInfo.setLastName(RsetTools.getString(rs, "LAST_NAME"));
+
+        userInfo.setDateStartWork(RsetTools.getTimestamp(rs, "DATE_START_WORK"));
+
+        userInfo.setDateFire(RsetTools.getTimestamp(rs, "DATE_FIRE"));
+
+        userInfo.setAddress(RsetTools.getString(rs, "ADDRESS"));
+        userInfo.setTelephone(RsetTools.getString(rs, "TELEPHONE"));
+
+        userInfo.setDateBindProff(RsetTools.getTimestamp(rs, "DATE_BIND_PROFF"));
+
+        userInfo.setHomeTelephone(RsetTools.getString(rs, "HOME_TELEPHONE"));
+        userInfo.setEmail(RsetTools.getString(rs, "EMAIL"));
+        userInfo.setDiscount(RsetTools.getDouble(rs, "DISCOUNT"));
+    }
+
 }

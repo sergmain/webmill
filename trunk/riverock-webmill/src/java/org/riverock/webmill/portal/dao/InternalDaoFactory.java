@@ -45,6 +45,11 @@ public class InternalDaoFactory {
     public static InternalCssDao internalCssDao = new InternalCssDaoImpl();
     public static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
     public static InternalUserMetadataDao internalUserMetadataDao = new InternalUserMetadataDaoImpl();
+    public static InternalUserDao internalUserDao = new InternalUserDaoImpl();
+
+    public static InternalUserDao getInternalUserDao() {
+        return internalUserDao;
+    }
 
     public static InternalUserMetadataDao getInternalUserMetadataDao() {
         return internalUserMetadataDao;

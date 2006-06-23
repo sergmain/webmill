@@ -40,8 +40,6 @@ import org.riverock.module.exception.ActionException;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.RegisterError;
 import org.riverock.portlet.register.bean.CreateAccountBean;
-import org.riverock.portlet.register.dao.CreateAccountDAO;
-import org.riverock.portlet.register.dao.RegisterDAOFactory;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletMetadataService;
 import org.riverock.webmill.container.tools.PortletService;
@@ -113,8 +111,6 @@ public class CreateAccountAction implements Action {
                 return sendStatus( bean, moduleActionRequest, status );
             }
 
-            RegisterDAOFactory daof = RegisterDAOFactory.getDAOFactory();
-            CreateAccountDAO createAccountDAO = daof.getCreateAccountDAO();
             status = createAccountDAO.execute( moduleActionRequest, bean );
 
             return sendStatus( bean, moduleActionRequest, status );
@@ -124,7 +120,6 @@ public class CreateAccountAction implements Action {
             log.error( "System error create account", e );
             return RegisterError.systemError( moduleActionRequest );
         }
-
     }
 
     private String sendStatus( CreateAccountBean bean, ModuleActionRequest moduleActionRequest, int status ) throws MessagingException {

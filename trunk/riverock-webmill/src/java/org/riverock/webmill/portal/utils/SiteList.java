@@ -41,22 +41,15 @@ public class SiteList {
     private final static Logger log = Logger.getLogger(SiteList.class);
 
     private Map<String, Long> hashListSite = new HashMap<String, Long>();
+    
+    private static long lastReadData = 0;
+    private final static long LENGTH_TIME_PERIOD = 10000;
+    private static SiteList backupObject = null;
 
-    public Long getLongIdSite(final String serverName) {
-        if (serverName == null) return null;
-        Long siteId = hashListSite.get(serverName.toLowerCase());
-        if (siteId == null) {
-            log.warn("site with serverName '" + serverName + "' not found");
-            log.warn("Dump map with current serverNames");
-            for (String s : hashListSite.keySet()) {
-                log.warn("Value in map: " + s + ", value: " + hashListSite.get(s));
-            }
-        }
-        return siteId;
-    }
+    private final static Object syncObject = new Object();
 
-    public static Long getIdSite(String serverName) {
-        return SiteList.getInstance().getLongIdSite(serverName);
+    public static Long getSiteId(String serverName) {
+        return SiteList.getInstance().searchSiteId(serverName);
     }
 
     public SiteList() {
@@ -70,15 +63,11 @@ public class SiteList {
         lastReadData = 0;
     }
 
+    @SuppressWarnings({"FinalizeDoesntCallSuperFinalize"})
     public void finalize() {
         if (hashListSite != null) hashListSite.clear();
         hashListSite = null;
     }
-
-    private static long lastReadData = 0;
-    private final static long LENGTH_TIME_PERIOD = 10000;
-    private static SiteList backupObject = null;
-    private static Object syncObject = new Object();
 
     public static SiteList getInstance() {
         if (log.isDebugEnabled()) {
@@ -115,6 +104,19 @@ public class SiteList {
             }
         }
         return backupObject;
+    }
+
+    private Long searchSiteId(final String serverName) {
+        if (serverName == null) return null;
+        Long siteId = hashListSite.get(serverName.toLowerCase());
+        if (siteId == null) {
+            log.warn("site with serverName '" + serverName + "' not found");
+            log.warn("Dump map with current serverNames");
+            for (String s : hashListSite.keySet()) {
+                log.warn("Value in map: " + s + ", value: " + hashListSite.get(s));
+            }
+        }
+        return siteId;
     }
 
 }

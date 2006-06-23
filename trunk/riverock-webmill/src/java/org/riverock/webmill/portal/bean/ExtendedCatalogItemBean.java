@@ -167,7 +167,7 @@ public final class ExtendedCatalogItemBean {
                 log.debug("portalInfo.getSiteId(): " + factoryParameter.getPortalInfo().getSiteId());
             }
             log.debug("siteLanguage: " + siteLanguage);
-            log.debug("siteLanguage.getIdSite(): " + siteLanguage.getSiteId());
+            log.debug("siteLanguage.getSiteId(): " + siteLanguage.getSiteId());
         }
 
         if (!factoryParameter.getPortalInfo().getSiteId().equals(siteLanguage.getSiteId())) {

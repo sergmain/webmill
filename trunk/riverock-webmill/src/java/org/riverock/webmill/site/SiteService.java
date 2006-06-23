@@ -224,7 +224,7 @@ public final class SiteService {
         throws Exception
     {
         PortalInfo p = PortalInfo.getInstance(db_, host);
-        Long idSite = p.sites.getIdSite();
+        Long idSite = p.sites.getSiteId();
         if (idSite==null)
         {
             System.out.println("Host '"+host+"' not found, idSite - "+idSite);

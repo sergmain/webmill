@@ -92,7 +92,7 @@ public final class ContextNavigator extends HttpServlet {
             }
         }
 
-        Long siteId = SiteList.getIdSite(httpRequest.getServerName());
+        Long siteId = SiteList.getSiteId(httpRequest.getServerName());
         if (siteId==null) {
             throw new ServletException("Site for host "+ httpRequest.getServerName()+" not configured. For configuration use admin section.");
         }

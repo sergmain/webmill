@@ -61,6 +61,7 @@ public class ContainerConstants {
     public static final String PORTAL_CURRENT_CONTAINER = "org.riverock.webmill.PORTAL_CURRENT_CONTAINER";
     public static final String PORTAL_PORTAL_DAO_PROVIDER = "org.riverock.webmill.PORTAL_PORTAL_DAO_PROVIDER";
     public static final String PORTAL_PORTAL_MAIL_SERVICE_PROVIDER = "org.riverock.webmill.mail.PORTAL_PORTAL_MAIL_SERVICE_PROVIDER";
+    public static final String PORTAL_PORTAL_USER_MANAGER = "org.riverock.webmill.mail.PORTAL_PORTAL_USER_MANAGER";
     public static final String PORTAL_PORTAL_SESSION_MANAGER = "org.riverock.webmill.PORTAL_PORTAL_SESSION_MANAGER";
     public static final String PORTAL_PORTLET_NAMESPACE_ATTRIBUTE = "org.riverock.webmill.PORTAL_PORTLET_NAMESPACE_ATTRIBUTE";
 

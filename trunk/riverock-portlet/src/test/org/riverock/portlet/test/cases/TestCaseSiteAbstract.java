@@ -42,6 +42,7 @@ import org.riverock.webmill.container.ContainerConstants;
  *
  * $Id$
  */
+@SuppressWarnings({"deprecation"})
 public class TestCaseSiteAbstract {
     public DatabaseAdapter db_ = null;
     public HttpServletRequestApplWrapper request = null;

@@ -47,7 +47,7 @@ public class ActionMessage implements Serializable {
             this.value = bundle.getString(key);
         }
         catch (Exception e) {
-            this.value = "[" + key + ":null]";
+            this.value = key;
         }
     }
 

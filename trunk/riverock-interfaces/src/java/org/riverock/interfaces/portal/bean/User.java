@@ -42,4 +42,5 @@ public interface User {
     public String getAddress();
     public String getPhone();
     public String getEmail();
+    public boolean isDeleted();
 }

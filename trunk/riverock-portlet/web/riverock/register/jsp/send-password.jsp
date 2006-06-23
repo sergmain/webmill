@@ -18,7 +18,7 @@
     <form method="POST" action="">
         <input type="hidden" name="action" value="send-password">
         <tr>
-            <td witdh="25%"><fmt:message key="reg.member_email"/>: </td>
+            <td witdh="25%"><fmt:message key="reg.email"/>: </td>
             <td><input type="text" name="email" size="12"></td>
         </tr>
         <tr>

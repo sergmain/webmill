@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CharsetMapping>
+    <Mapping java="cp1251" mail="windows-1251" locale="ru"/>
+    <Mapping java="KOI8-R" mail="KOI8-R" locale="ru"/>
+</CharsetMapping>
