@@ -140,7 +140,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
                 ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD));
         }
 
-        Long id = SiteList.getIdSite(serverName);
+        Long id = SiteList.getSiteId(serverName);
         if (log.isDebugEnabled())
             log.debug("ServerName:" + serverName + ", siteId: " + id);
 

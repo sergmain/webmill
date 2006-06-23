@@ -49,6 +49,7 @@ import org.riverock.common.tools.DateTools;
 
 
 
+@SuppressWarnings({"deprecation"})
 public class TestDatabaseTimestamp
 {
     private static Logger cat = Logger.getLogger( "org.riverock.portlet.test.TestTimestamp" );

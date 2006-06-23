@@ -73,6 +73,7 @@ import org.riverock.sql.parser.Parser;
  * @author Serge Maslyukov
  *         $Id$
  */
+@SuppressWarnings({"deprecation"})
 public class TestMemberServiceClass extends TestCase {
     private static Logger log = Logger.getLogger( TestMemberServiceClass.class );
 

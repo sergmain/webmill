@@ -37,22 +37,21 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 import org.riverock.common.tools.ExceptionTools;
+import org.riverock.interfaces.portal.CookieManager;
 import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.utils.ServletUtils;
-import org.riverock.interfaces.portal.CookieManager;
 
 /**
  * @author smaslyukov
@@ -316,7 +315,7 @@ public class PortalInstanceImpl implements PortalInstance  {
                 for (Enumeration en = request_.getParameterNames(); en.hasMoreElements();) {
                     String s = (String) en.nextElement();
                     try {
-                        log.error("CN debug. Request attr - " + s + ", value - " + ServletUtils.getString(request_, s));
+                        log.error("CN debug. Request attr - " + s + ", value - " + request_.getParameter(s));
                     } catch (Throwable exc) {
                         // debug. nothing doing
                     }

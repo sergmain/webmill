@@ -31,6 +31,7 @@ import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
+import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
 import org.riverock.generic.db.DatabaseAdapter;
 
 /**
@@ -75,9 +76,15 @@ public interface InternalAuthDao {
     public void deleteRole( AuthSession authSession, RoleBean roleBean );
 
     public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth);
+    public Long addUser(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles);
+    public Long addUser(DatabaseAdapter db_, AuthInfo authInfo, List<RoleEditableBean> roles,
+                        Long companyId, Long holdingId);
+
     public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth);
     public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth);
     public List<UserInfo> getUserList(AuthSession authSession);
 
     public UserInfo getUserInfo(DatabaseAdapter db_, String userLogin);
+
+    public List<AuthInfo> getAuthInfo(DatabaseAdapter db_, Long userId, Long siteId);
 }

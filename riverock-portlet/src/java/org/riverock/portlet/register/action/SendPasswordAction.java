@@ -24,25 +24,21 @@
  */
 package org.riverock.portlet.register.action;
 
-import java.util.ResourceBundle;
-
-import javax.mail.MessagingException;
-import javax.portlet.PortletRequest;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.mail.MailMessage;
-import org.riverock.generic.config.GenericConfig;
+import org.riverock.interfaces.portal.bean.UserOperationStatus;
+import org.riverock.interfaces.portal.user.PortalUserManager;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
+import org.riverock.portlet.register.Constants;
+import org.riverock.portlet.register.PortletErrors;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.RegisterError;
-import org.riverock.portlet.register.Constants;
-import org.riverock.portlet.register.bean.RegisterPasswordInfoBean;
-import org.riverock.portlet.register.dao.RegisterDAOFactory;
-import org.riverock.portlet.register.dao.RegisterPasswordInfoDAO;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -56,45 +52,31 @@ public class SendPasswordAction implements Action {
 
     public String execute( ModuleActionRequest moduleActionRequest ) throws ActionException {
 
-        PortletRequest portletRequet = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
         String email = moduleActionRequest.getRequest().getString( RegisterConstants.NAME_EMAIL );
 
         if( StringUtils.isBlank( email ) ) {
             return RegisterError.emailIsEmpty( moduleActionRequest );
         }
 
-        RegisterDAOFactory daof = RegisterDAOFactory.getDAOFactory();
-        RegisterPasswordInfoDAO passwordInfoDAO = daof.getSendPasswordDAO();
-        try {
-            RegisterPasswordInfoBean bean = passwordInfoDAO.execute( moduleActionRequest.getRequest().getSiteId(), email );
-            if( bean == null ) {
-                return RegisterError.noSuchEmail( moduleActionRequest );
+        PortalUserManager portalUserManager = (PortalUserManager)
+            moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_PORTAL_USER_MANAGER);
+
+        Map<String, String> messages = new HashMap<String, String>();
+
+        UserOperationStatus status = portalUserManager.sendPassword(email, messages);
+        if (status.getOperationCode()==PortalUserManager.OK_OPERATION) {
+            return Constants.OK_EXECUTE_STATUS;
+        }
+        else if (status.getOperationCode()==PortalUserManager.NO_SUCH_EMAIL) {
+            return RegisterError.noSuchEmail( moduleActionRequest );
+        }
+        else {
+            if (status.getInternalErrorMessage()!=null) {
+                return PortletErrors.error(moduleActionRequest, status.getInternalErrorMessage() );
             }
-
-            // Todo rewrite with portal property
-            bean.setAdminEmail( portletRequet.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL ) );
-
-            return sendPassword( bean, moduleActionRequest.getResourceBundle() );
-
+            else {
+                return PortletErrors.error(moduleActionRequest, "unknown error" );
+            }
         }
-        catch( Exception e ) {
-            log.error( "System error send password", e);
-            return RegisterError.systemError( moduleActionRequest );
-        }
-
-    }
-
-    private String sendPassword( RegisterPasswordInfoBean bean, ResourceBundle bundle ) throws MessagingException {
-
-        String message = bundle.getString( "reg.send-password.your-password" );
-        String subj = bundle.getString( "reg.send-password.info" );
-
-        MailMessage.sendMessage( message,
-            bean.getEmail(),
-            bean.getAdminEmail(),
-            subj,
-            GenericConfig.getMailSMTPHost() );
-
-        return Constants.OK_EXECUTE_STATUS;
     }
 }

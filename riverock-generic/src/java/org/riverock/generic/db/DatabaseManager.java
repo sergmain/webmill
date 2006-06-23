@@ -51,6 +51,7 @@ import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
  * <p/>
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class DatabaseManager {
     private static Logger log = Logger.getLogger(DatabaseManager.class);
 
@@ -83,6 +84,7 @@ public final class DatabaseManager {
                 rs.close();
             }
             catch (Exception e01) {
+                // catch SQLException
             }
         }
         if (st != null) {
@@ -90,6 +92,7 @@ public final class DatabaseManager {
                 st.close();
             }
             catch (Exception e02) {
+                // catch SQLException
             }
         }
     }
@@ -100,6 +103,7 @@ public final class DatabaseManager {
                 st.close();
             }
             catch (SQLException e201) {
+                // catch SQLException
             }
         }
     }
@@ -139,7 +143,7 @@ public final class DatabaseManager {
         final DatabaseAdapter db_, final DbTableType fieldsList, final String sourceTable, final String targetTableName
     )
         throws Exception {
-        if (fieldsList == null || fieldsList == null || targetTableName == null) {
+        if (fieldsList == null || sourceTable == null || targetTableName == null) {
             if (log.isInfoEnabled())
                 log.info("copy data failed, some objects is null");
 

@@ -230,7 +230,7 @@ public class InternalDaoImpl implements InternalDao {
             stat.setIsReferTooBig( bean.isReferTooBig() );
             stat.setRefer( bean.getRefer() );
             stat.setAccessDate( bean.getAccessDate() );
-            Long idSite = SiteList.getIdSite(bean.getServerName());
+            Long idSite = SiteList.getSiteId(bean.getServerName());
 
             if (idSite == null) {
                 stat.setServerName( bean.getServerName() );

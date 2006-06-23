@@ -63,6 +63,7 @@ import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.portlet.bean.Supports;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalRequestInstance;
+import org.riverock.webmill.portal.user.PortalUserManagerImpl;
 import org.riverock.webmill.portal.mail.PortalMailServiceProviderImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
@@ -281,11 +282,10 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             return false;
         }
 
-	Boolean access = userRoles.get(role);
-	if (access!=null) {
-		return access;
-	}
-
+        Boolean access = userRoles.get(role);
+        if (access!=null) {
+            return access;
+        }
 
         if (role.equals(PortalConstants.WEBMILL_GUEST_ROLE)) {
             return true;
@@ -741,11 +741,21 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE, httpRequest.getRemoteAddr() );
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
 
+        PortalMailServiceProviderImpl mailServiceProvider = new PortalMailServiceProviderImpl(
+            GenericConfig.getMailSMTPHost(),
+            portalRequestInstance.getPortalInfo().getSite().getAdminEmail()
+        );
         this.setAttribute(
             ContainerConstants.PORTAL_PORTAL_MAIL_SERVICE_PROVIDER,
-            new PortalMailServiceProviderImpl(
-                GenericConfig.getMailSMTPHost(),
-                portalRequestInstance.getPortalInfo().getSite().getAdminEmail()
+            mailServiceProvider
+        );
+        this.setAttribute(
+            ContainerConstants.PORTAL_PORTAL_USER_MANAGER,
+            new PortalUserManagerImpl(
+                portalRequestInstance.getPortalInfo().getSite().getSiteId(),
+                new Long(portalContext.getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID )),
+                mailServiceProvider,
+                (Map<String, String>)getAttribute( ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE )
             )
         );
     }
