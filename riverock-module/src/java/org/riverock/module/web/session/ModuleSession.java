@@ -32,5 +32,6 @@ package org.riverock.module.web.session;
  */
 public interface ModuleSession {
     public Object getAttribute(String key);
+    public String getId();
     public void setAttribute(String key, Object value);
 }

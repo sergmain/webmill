@@ -37,7 +37,6 @@ import org.riverock.portlet.register.Constants;
  */
 public class RegisterHelpAction implements Action {
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {
-
         return Constants.OK_EXECUTE_STATUS;
     }
 }

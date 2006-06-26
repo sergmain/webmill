@@ -27,7 +27,9 @@ package org.riverock.portlet.register.action;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
+import org.riverock.portlet.captcha.CaptchaServiceSingleton;
 import org.riverock.portlet.register.Constants;
+import org.riverock.portlet.register.RegisterConstants;
 
 /**
  * @author SergeMaslyukov
@@ -38,6 +40,9 @@ import org.riverock.portlet.register.Constants;
 public class RegisterHomeAction implements Action {
     public String execute(ModuleActionRequest moduleActionRequest) throws ActionException {
 
+        String captchId = CaptchaServiceSingleton.createCaptchaId();
+        moduleActionRequest.getRequest().setAttribute(RegisterConstants.CAPTCHA_ID, captchId);
         return Constants.OK_EXECUTE_STATUS;
     }
+
 }

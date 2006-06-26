@@ -42,6 +42,10 @@ public class PortletModuleSessionImpl implements ModuleSession {
         return portletSession.getAttribute(key);
     }
 
+    public String getId() {
+        return portletSession.getId();
+    }
+
     public void setAttribute(String key, Object value) {
         portletSession.setAttribute(key, value);
     }

@@ -40,21 +40,21 @@
         <td colspan="2"><fmt:message key="reg.need_register"/></td>
     </tr>
 
-
     <form name="FormPost" method="POST" action="<c:out value='${registerBean.baseModuleUrl}'/>">
         <input type="hidden" name="action" value="create-account">
+        <input type="hidden" name="captchaId" value="<c:out value='${captchaId}'/>">
         <tr>
-            <td><fmt:message key="reg.login"/></td>
+            <td><span style="color:red">*</span><fmt:message key="reg.login"/></td>
             <td><input type="text" name="username" size="20" maxlength="20"></td>
         </tr>
         <tr>
-            <td><fmt:message key="reg.password"/></td>
+            <td><span style="color:red">*</span><fmt:message key="reg.password"/></td>
             <td>
                 <input type="password" name="password1" size="20" maxlength="20">
             </td>
         </tr>
         <tr>
-            <td><fmt:message key="reg.password_repeat"/></td>
+            <td><span style="color:red">*</span><fmt:message key="reg.password_repeat"/></td>
             <td><input type="password" name="password2" size="20" maxlength="20"></td>
         </tr>
         <tr>
@@ -74,8 +74,15 @@
             <td><input type="text" name="addr" size="50" maxlength="50"></td>
         </tr>
         <tr>
-            <td><fmt:message key="reg.email"/></td>
+            <td><span style="color:red">*</span><fmt:message key="reg.email"/></td>
             <td><input type="text" name="email" size="30" maxlength="30"></td>
+        </tr>
+        <tr>
+            <td><span style="color:red">*</span><fmt:message key="reg.captcha"/></td>
+            <td>
+                <img src="<%= request.getContextPath() %>/jcaptcha?id=<c:out value='${captchaId}'/>" alt="captcha"><br/>
+                <input type="text" name="j_captcha_response" value="">
+            </td>
         </tr>
         <tr>
             <td colspan="2"><input type="submit" value="<fmt:message key='reg.register'/>"></td>

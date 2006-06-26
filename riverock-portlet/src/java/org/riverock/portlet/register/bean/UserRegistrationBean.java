@@ -28,6 +28,15 @@ public class UserRegistrationBean implements UserRegistration {
 
     private String userLogin=null;
     private String userPassword=null;
+    private String userPassword1=null;
+
+    public String getUserPassword1() {
+        return userPassword1;
+    }
+
+    public void setUserPassword1(String userPassword1) {
+        this.userPassword1 = userPassword1;
+    }
 
     public Date getDeletedDate() {
         return deletedDate;

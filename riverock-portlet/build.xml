@@ -71,6 +71,9 @@
         <pathelement location="${lib.dir}/${myfaces-core.lib}"/>
         <pathelement location="${lib.dir}/${myfaces-tomahawk.lib}"/>
 
+        <pathelement location="${lib.dir}/${jcaptcha.lib}"/>
+        <pathelement location="${lib.dir}/${ehcache.lib}"/>
+
     </path>
 
     <property name="build_context" value="${build.dir}/mill_context"/>
@@ -208,6 +211,9 @@
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>
         <include name="${myfaces-tomahawk.lib}"/>
+
+        <include name="${jcaptcha.lib}"/>
+        <include name="${ehcache.lib}"/>
 
     </patternset>
 
