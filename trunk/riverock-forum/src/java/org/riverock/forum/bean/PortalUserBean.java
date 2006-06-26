@@ -47,10 +47,11 @@ public class PortalUserBean implements org.riverock.interfaces.portal.bean.User,
     private String lastName = null;
 
     private Date createdDate = null;
-    private Date closedDate = null;
+    private Date deletedDate = null;
     private String address = null;
     private String phone = null;
     private String email = null;
+    private boolean isDeleted = false;
 
     public PortalUserBean() {
     }
@@ -62,10 +63,19 @@ public class PortalUserBean implements org.riverock.interfaces.portal.bean.User,
         this.middleName = beanPortal.getMiddleName();
         this.lastName = beanPortal.getLastName();
         this.createdDate = beanPortal.getCreatedDate();
-        this.closedDate = beanPortal.getDeletedDate();
+        this.deletedDate = beanPortal.getDeletedDate();
         this.address = beanPortal.getAddress();
         this.phone = beanPortal.getPhone();
         this.email = beanPortal.getEmail();
+        this.isDeleted = beanPortal.isDeleted();
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public String getCompanyName() {
@@ -117,11 +127,11 @@ public class PortalUserBean implements org.riverock.interfaces.portal.bean.User,
     }
 
     public Date getDeletedDate() {
-        return closedDate;
+        return deletedDate;
     }
 
     public void setDeletedDate( Date closedDate ) {
-        this.closedDate = closedDate;
+        this.deletedDate = closedDate;
     }
 
     public String getAddress() {
