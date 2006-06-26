@@ -24,11 +24,10 @@
  */
 package org.riverock.portlet.register.action;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.bean.UserOperationStatus;
 import org.riverock.interfaces.portal.user.PortalUserManager;
@@ -48,7 +47,6 @@ import org.riverock.webmill.container.ContainerConstants;
  *         $Id$
  */
 public class SendPasswordAction implements Action {
-    private final static Logger log = Logger.getLogger( SendPasswordAction.class );
 
     public String execute( ModuleActionRequest moduleActionRequest ) throws ActionException {
 
@@ -62,12 +60,17 @@ public class SendPasswordAction implements Action {
             moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_PORTAL_USER_MANAGER);
 
         Map<String, String> messages = new HashMap<String, String>();
+        messages.put(PortalUserManager.SEND_PASSWORD_SUBJECT_MESSAGE, "Requested info");
+        messages.put(
+            PortalUserManager.SEND_PASSWORD_BODY_ONE_PASSWORD_MESSAGE,
+            moduleActionRequest.getResourceBundle().getString( "reg.send-password.your-password" )
+        );
 
         UserOperationStatus status = portalUserManager.sendPassword(email, messages);
-        if (status.getOperationCode()==PortalUserManager.OK_OPERATION) {
+        if (status.getOperationCode()==PortalUserManager.STATUS_OK_OPERATION) {
             return Constants.OK_EXECUTE_STATUS;
         }
-        else if (status.getOperationCode()==PortalUserManager.NO_SUCH_EMAIL) {
+        else if (status.getOperationCode()==PortalUserManager.STATUS_NO_SUCH_EMAIL) {
             return RegisterError.noSuchEmail( moduleActionRequest );
         }
         else {

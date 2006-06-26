@@ -77,12 +77,13 @@ public final class ActionRequestImpl extends WebmillPortletRequest implements Ac
         final PortalContext portalContext,
         final PortletContext portletContext,
         final PortletDefinition portletDefinition,
-        final Namespace namespace) {
+        final Namespace namespace,
+        final Map<String, String> portletMetadata) {
 
         super(
             servletContext, portalRequestInstance.getHttpRequest(), portletPreferences,
             portletProperties, new HashMap<String, List<String>>(),
-            portletContext, portletDefinition, namespace
+            portletContext, portletDefinition, namespace, portletMetadata
         );
 
         prepareRequest(parameters, portalRequestInstance, contextPath, portalContext);

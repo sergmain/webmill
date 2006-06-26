@@ -57,7 +57,9 @@ public interface InternalAuthDao {
 
     public boolean isUserInRole( String userLogin, String userPassword, final String role_ );
 
-    public RoleBean getRole( AuthSession authSession , Long roleId);
+    public RoleBean getRole(Long roleId);
+    public RoleBean getRole(DatabaseAdapter db, Long roleId);
+    public RoleBean getRole(DatabaseAdapter db, String roleName);
     public List<RoleBean> getUserRoleList( AuthSession authSession );
 
     public AuthInfo getAuthInfo(String userLogin, String userPassword);
@@ -75,14 +77,14 @@ public interface InternalAuthDao {
     public void updateRole( AuthSession authSession, RoleBean roleBean );
     public void deleteRole( AuthSession authSession, RoleBean roleBean );
 
-    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth);
-    public Long addUser(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles);
-    public Long addUser(DatabaseAdapter db_, AuthInfo authInfo, List<RoleEditableBean> roles,
-                        Long companyId, Long holdingId);
+    public Long addUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
+    public Long addUserInfo(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles);
+    public Long addUserInfo(DatabaseAdapter db_, AuthInfo authInfo, List<RoleEditableBean> roles,
+                            Long companyId, Long holdingId);
 
-    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth);
-    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth);
-    public List<UserInfo> getUserList(AuthSession authSession);
+    public void updateUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
+    public void deleteUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth);
+    public List<UserInfo> getUserInfoList(AuthSession authSession);
 
     public UserInfo getUserInfo(DatabaseAdapter db_, String userLogin);
 

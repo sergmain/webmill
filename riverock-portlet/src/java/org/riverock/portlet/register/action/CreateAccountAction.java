@@ -25,23 +25,22 @@
 package org.riverock.portlet.register.action;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
-
-import javax.mail.MessagingException;
-import javax.portlet.PortletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.portal.mail.PortalMailServiceProvider;
+import org.riverock.interfaces.portal.bean.UserOperationStatus;
+import org.riverock.interfaces.portal.user.PortalUserManager;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
 import org.riverock.portlet.register.RegisterConstants;
 import org.riverock.portlet.register.RegisterError;
 import org.riverock.portlet.register.bean.CreateAccountBean;
+import org.riverock.portlet.register.bean.UserRegistrationBean;
 import org.riverock.webmill.container.ContainerConstants;
-import org.riverock.webmill.container.tools.PortletMetadataService;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -57,12 +56,13 @@ public class CreateAccountAction implements Action {
 
         log.debug("Start createAccountAction");
 
-        PortletRequest portletRequest = ( PortletRequest ) moduleActionRequest.getRequest().getOriginRequest();
+        String password1 = moduleActionRequest.getRequest().getString(RegisterConstants.PASSWORD1_PARAM);
+        String password2 = moduleActionRequest.getRequest().getString(RegisterConstants.PASSWORD2_PARAM);
 
-        CreateAccountBean bean = new CreateAccountBean();
-        bean.setUsername( moduleActionRequest.getRequest().getString( RegisterConstants.USERNAME_PARAM ) );
-        bean.setPassword1( moduleActionRequest.getRequest().getString( RegisterConstants.PASSWORD1_PARAM ) );
-        bean.setPassword2( moduleActionRequest.getRequest().getString( RegisterConstants.PASSWORD2_PARAM ) );
+        UserRegistrationBean bean = new UserRegistrationBean();
+        bean.setUserLogin( moduleActionRequest.getRequest().getString( RegisterConstants.USERNAME_PARAM ) );
+
+        bean.setUserPassword( password1 );
         bean.setFirstName( moduleActionRequest.getRequest().getString( RegisterConstants.FIRST_NAME_PARAM ) );
         bean.setLastName( moduleActionRequest.getRequest().getString( RegisterConstants.LAST_NAME_PARAM ) );
         bean.setMiddleName( moduleActionRequest.getRequest().getString( RegisterConstants.MIDDLE_NAME_PARAM ) );
@@ -73,84 +73,38 @@ public class CreateAccountAction implements Action {
             return RegisterError.emailIsEmpty( moduleActionRequest );
         }
 
-/*
-        Map<String, String> p = (Map<String, String>) portletRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE);
-        if (p == null) {
-            out.println("portlet metadata is null");
-        } else {
-            for (Map.Entry<String, String> entry : p.entrySet()) {
-                out.println("key: " + entry.getKey() + ", value: " + entry.getValue() + "<BR>");
-            }
-        }
+        PortalUserManager portalUserManager = (PortalUserManager)
+            moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_PORTAL_USER_MANAGER);
 
-*/
+        Map<String, String> messages = new HashMap<String, String>();
+        String remodeAddr = (String)moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE);
 
-        // register-default-role
-        String role = PortletMetadataService.getMetadata( portletRequest, RegisterConstants.DEFAULT_ROLE_METADATA );
-        if (log.isDebugEnabled()) {
-            log.debug("register role: " + role);
-            log.debug("portletRequest: " + portletRequest);
-            Map<String, String> p = (Map<String, String>) portletRequest.getAttribute(ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE);
-            log.debug("metadata map: "+p );
-            if (p == null) {
-                log.debug("portlet metadata is null");
-            } else {
-                log.debug("portlet metadata:");
-                for (Map.Entry<String, String> entry : p.entrySet()) {
-                    log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
-                }
-            }
-        }
-        bean.setRole( role );
-        bean.setCompanyId( new Long( portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID ) ) );
+        String s = moduleActionRequest.getResourceBundle().getString( "reg.mail_body" );
+        String mailMessage = MessageFormat.format( s, new Object[]{bean.getUserLogin(), bean.getUserPassword() } );
+        messages.put(PortalUserManager.CREATE_ACCOUNT_BODY_MESSAGE, mailMessage + "\n\nProcess of registration was made from IP " + remodeAddr);
+        messages.put(PortalUserManager.CREATE_ACCOUNT_SUBJECT_MESSAGE, "Confirm registration");
 
-        try {
-            int status = checkRegisterData( bean );
-            if( status != RegisterConstants.OK_STATUS ) {
-                log.warn( "checking status is not OK, value: " + status );
-                return sendStatus( bean, moduleActionRequest, status );
-            }
+        UserOperationStatus status = portalUserManager.registerNewUser(bean, messages);
 
-            status = createAccountDAO.execute( moduleActionRequest, bean );
-
-            return sendStatus( bean, moduleActionRequest, status );
-
-        }
-        catch( Exception e ) {
-            log.error( "System error create account", e );
-            return RegisterError.systemError( moduleActionRequest );
-        }
+        return sendStatus( bean, moduleActionRequest, status );
     }
 
-    private String sendStatus( CreateAccountBean bean, ModuleActionRequest moduleActionRequest, int status ) throws MessagingException {
+    private String sendStatus( UserRegistrationBean bean, ModuleActionRequest moduleActionRequest, UserOperationStatus status ) {
 
-        switch( status ) {
-            case RegisterConstants.ROLE_IS_NULL_STATUS:
+        switch( status.getOperationCode() ) {
+            case PortalUserManager.STATUS_ROLE_NOT_DEFINED:
                 // "Can not add new user because default role not specified in metadata"
                 log.error("default role is null");
                 return RegisterError.roleIsNull( moduleActionRequest );
 
-            case RegisterConstants.USERNAME_ALREADY_EXISTS_STATUS:
-                String args2[] = {bean.getUsername()};
+            case PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED:
+                String args2[] = {bean.getUserLogin()};
                 String aaa = PortletService.getString( moduleActionRequest.getResourceBundle(), "reg.login_exists", args2 );
                 args2 = null;
 
                 return RegisterError.roleIsNull( moduleActionRequest );
 
-            case RegisterConstants.OK_STATUS:
-
-                PortalMailServiceProvider mailServiceProvider = (PortalMailServiceProvider)
-                    moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_PORTAL_MAIL_SERVICE_PROVIDER);
-                String remodeAddr = (String)moduleActionRequest.getRequest().getAttribute(ContainerConstants.PORTAL_REMOTE_ADDRESS_ATTRIBUTE);
-
-                String s = moduleActionRequest.getResourceBundle().getString( "reg.mail_body" );
-                String mailMessage = MessageFormat.format( s, new Object[]{bean.getUsername(), bean.getPassword1() } );
-
-                mailServiceProvider.getPortalMailService().sendMessageInUTF8(
-                    bean.getUsername()+" <"+bean.getEmail()+'>', "Confirm registration",
-                    mailMessage + "\n\nProcess of registration was made from IP " + remodeAddr
-                );
-
+            case PortalUserManager.STATUS_OK_OPERATION:
                 return RegisterConstants.OK_EXECUTE_STATUS;
 
             default:

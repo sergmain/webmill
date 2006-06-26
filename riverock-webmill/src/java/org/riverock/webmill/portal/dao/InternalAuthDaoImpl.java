@@ -815,7 +815,11 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
 
             ps = db_.prepareStatement(sql);
             ps.setLong(1, siteId);
-            ps.setLong(1, userId);
+            ps.setLong(2, userId);
+            ps.setLong(3, siteId);
+            ps.setLong(4, userId);
+            ps.setLong(5, siteId);
+            ps.setLong(6, userId);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -1539,21 +1543,21 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public Long addUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+    public Long addUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
         if (infoAuth==null) {
             throw new IllegalStateException("Error add new user, infoAuth is null");
         }
-        return addUser(authSession, infoAuth.getAuthInfo(), infoAuth.getRoles());
+        return addUserInfo(authSession, infoAuth.getAuthInfo(), infoAuth.getRoles());
     }
 
-    public Long addUser(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles) {
+    public Long addUserInfo(AuthSession authSession, AuthInfo authInfo, List<RoleEditableBean> roles) {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
             Long companyId = authSession.checkCompanyId( authInfo.getCompanyId() );
             Long holdingId = authSession.checkHoldingId( authInfo.getHoldingId() );
 
-            Long id = addUser(db, authInfo, roles, companyId, holdingId);
+            Long id = addUserInfo(db, authInfo, roles, companyId, holdingId);
 
             db.commit();
             return id;
@@ -1576,7 +1580,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public Long addUser(DatabaseAdapter db, AuthInfo authInfo, List<RoleEditableBean> roles, Long companyId, Long holdingId) {
+    public Long addUserInfo(DatabaseAdapter db, AuthInfo authInfo, List<RoleEditableBean> roles, Long companyId, Long holdingId) {
         if (authInfo==null) {
             throw new IllegalStateException("Error add new auth of user, infoAuth.getAuthInfo() is null");
         }
@@ -1708,10 +1712,11 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                 return;
             }
 
-            for (RoleEditableBean roleBeanImpl : roles) {
-                log.info("Role, new: " + roleBeanImpl.isNew() + ", delete: " + roleBeanImpl.isDelete());
+            for (RoleEditableBean role : roles) {
+                log.info("Role: "+role.getName()+", id: "+role.getRoleId()+", new: " + role.isNew() + ", delete: " + role.isDelete());
 
-                if (!roleBeanImpl.isNew() || roleBeanImpl.isDelete()) {
+                if (!role.isNew() || role.isDelete()) {
+                    log.info("Skip this role");
                     continue;
                 }
 
@@ -1727,7 +1732,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
                     "(?, ?, ? ) ");
 
                 ps.setLong(1, id);
-                ps.setLong(2, roleBeanImpl.getRoleId());
+                ps.setLong(2, role.getRoleId());
                 ps.setLong(3, authUserId);
                 ps.executeUpdate();
                 ps.close();
@@ -1742,7 +1747,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public void updateUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+    public void updateUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
         log.info("Start update auth");
 
         PreparedStatement ps = null;
@@ -1806,7 +1811,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public void deleteUser(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
+    public void deleteUserInfo(AuthSession authSession, AuthUserExtendedInfo infoAuth) {
         log.info("Start delete auth");
 
         DatabaseAdapter db = null;
@@ -1838,7 +1843,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public List<UserInfo> getUserList(AuthSession authSession) {
+    public List<UserInfo> getUserInfoList(AuthSession authSession) {
             List<UserInfo> users = new ArrayList<UserInfo>();
 
         if( authSession==null ) {
@@ -1879,15 +1884,29 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         }
     }
 
-    public RoleBean getRole( AuthSession authSession , Long roleId) {
+    public RoleBean getRole(Long roleId) {
+        DatabaseAdapter db = null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            return getRole(db, roleId);
+        }
+        catch( Exception e ) {
+            String es = "Error load role for id: " + roleId;
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( db );
+            db = null;
+        }
+    }
+
+    public RoleBean getRole(DatabaseAdapter db, Long roleId) {
         if( roleId == null ) {
             return null;
         }
-        DatabaseAdapter db = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-            db = DatabaseAdapter.getInstance();
 
             String sql =
                 "select ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
@@ -1910,8 +1929,42 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
             throw new IllegalStateException( es, e );
         }
         finally {
-            DatabaseManager.close( db, rs, ps );
-            db = null;
+            DatabaseManager.close( rs, ps );
+            rs = null;
+            ps = null;
+        }
+    }
+
+    public RoleBean getRole(DatabaseAdapter db, String roleName) {
+        if( roleName == null ) {
+            return null;
+        }
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+
+            String sql =
+                "select ID_ACCESS_GROUP, NAME_ACCESS_GROUP " +
+                "from 	WM_AUTH_ACCESS_GROUP " +
+                "where  NAME_ACCESS_GROUP=? ";
+
+            ps = db.prepareStatement( sql );
+            ps.setString( 1, roleName);
+
+            rs = ps.executeQuery();
+
+            RoleBean role = null;
+            if( rs.next() ) {
+                role = loadRoleFromResultSet( rs );
+            }
+            return role;
+        }
+        catch( Exception e ) {
+            String es = "Error load role for name: " + roleName;
+            throw new IllegalStateException( es, e );
+        }
+        finally {
+            DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }

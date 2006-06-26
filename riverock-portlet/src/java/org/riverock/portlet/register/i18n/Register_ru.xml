@@ -2,7 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>Resource for register portlet</comment>
-    <entry key="reg.succes_send_password">Пароль был успешно отослан на ваш почтовый адрес</entry>
+    <entry key="reg.succes_send_password">Пароль был отослан на ваш почтовый адрес</entry>
     <entry key="reg.succes_register">Регистрация прошла успешно.
         Для подтверждения регистрации, пожалуйста перейдите по ссылке, которая находится в письме, отосланном на ваш почтовый адрес.</entry>
     <entry key="reg.role_is_null">Новый пользователь не может быть добавлен, так как в мета-данных не указана роль по умолчанию для регистрации</entry>
@@ -10,21 +10,44 @@
     <entry key="reg.already_logged">Вы уже залогированы</entry>
     <entry key="reg.login_exists">Логин {0} уже существует.</entry>
     <entry key="reg.continue">Продолжить</entry>
-    <entry key="reg.forgot_password">Забыли пароль? Введите адрес своего почтового ящика и мы вышлем на него пароль.</entry>
-    <entry key="reg.send_password">Отослать</entry>
+    <entry key="reg.forgot_password">Забыли пароль? Введите свой почтовый адрес и мы вышлем на него пароль.</entry>
+    <entry key="reg.send_password">Выслать пароль</entry>
     <entry key="reg.need_register">Еще не зарегестрировались?</entry>
     <entry key="reg.login">Логин:</entry>
     <entry key="reg.password">Пароль:</entry>
-    <entry key="reg.password_repeat">Посторить пароль:</entry>
+    <entry key="reg.password_repeat">Повторить пароль:</entry>
     <entry key="reg.first_name">Имя:</entry>
     <entry key="reg.last_name">Фамилия:</entry>
     <entry key="reg.telephone">Контактный телефон:</entry>
     <entry key="reg.address">Адрес:</entry>
     <entry key="reg.email">E-Mail:</entry>
     <entry key="reg.register">Регистрация</entry>
-    <entry key="reg.send-password.your-password">\nВаш пароль {0}</entry>
+    <entry key="reg.send-password.your-password">
+        Ваш пароль {0}
+    </entry>
     <entry key="reg.send-password.info">Запрошенная информация</entry>
-    <entry key="reg.mail_body">Вы успешно прошли регистрацию.\nВаш логин и пароль:\n\n\nUserame: {0}\nPassword: {1}\n</entry>
+    <entry key="reg.mail_body">Вы успешно прошли регистрацию.
+        Ваш логин и пароль:
+
+        Userame: {0}
+        Password: {1}
+    </entry>
+    <entry key="reg.temp">
+<!--
+
+Registration Requirements
+Username:
+Display Name:
+E-mail Address:
+Password:
+Retype Password:
+
+I agree to be bound by this website's Terms of Use and Privacy Policy.
+
+-->    </entry>
+
+
+
 </properties>
 
 

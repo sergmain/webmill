@@ -63,7 +63,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
 
             String sql =
                 "select a.ID_USER,a.ID_FIRM,a.FIRST_NAME,a.MIDDLE_NAME,a.LAST_NAME, " +
-                    "       a.DATE_START_WORK,a.DATE_FIRE,a.ADDRESS,a.TELEPHONE,a.EMAIL " +
+                    "       a.DATE_START_WORK,a.DATE_FIRE,a.ADDRESS,a.TELEPHONE,a.EMAIL, a.IS_DELETED " +
                     "from   WM_LIST_USER a " +
                     "where  a.ID_USER=? and a.IS_DELETED=0 and a.ID_FIRM in ";
 
@@ -260,7 +260,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
     }
 
     public Long addUser(DatabaseAdapter dbDyn, User portalUserBean) {
-        log.debug("Start addUser");
+        log.debug("Start addUserInfo");
 
         if (portalUserBean == null) {
             throw new IllegalStateException("portalUserBean is null");

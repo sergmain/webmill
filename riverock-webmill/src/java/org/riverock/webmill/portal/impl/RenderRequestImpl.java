@@ -67,13 +67,14 @@ public final class RenderRequestImpl extends WebmillPortletRequest implements Re
         final PortalContext portalContext,
         final PortletContext portletContext,
         final PortletDefinition portletDefinition,
-        final Namespace namespace
+        final Namespace namespace,
+        final Map<String, String> portletMetadata
     ) {
 
         super(
             servletContext, portalRequestInstance.getHttpRequest(), portletPreferences,
             portletProperties, renderParameters, portletContext,
-            portletDefinition, namespace
+            portletDefinition, namespace, portletMetadata
         );
 
         prepareRequest( parameters, portalRequestInstance, contextPath, portalContext);

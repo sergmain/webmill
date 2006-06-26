@@ -21,6 +21,7 @@ import org.riverock.interfaces.portal.mail.PortalMailServiceProvider;
 import org.riverock.interfaces.portal.user.PortalUserManager;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.bean.RoleEditableBean;
+import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.sso.a3.AuthInfoImpl;
 import org.riverock.webmill.portal.bean.RoleEditableBeanImpl;
 import org.riverock.webmill.portal.bean.UserBean;
@@ -57,15 +58,15 @@ public class PortalUserManagerImpl implements PortalUserManager {
             User user = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, eMail);
 
             if (user==null) {
-                return new UserOperationStatusBean(PortalUserManager.NO_SUCH_EMAIL);
+                return new UserOperationStatusBean(PortalUserManager.STATUS_NO_SUCH_EMAIL);
             }
             if (user.isDeleted()) {
-                return new UserOperationStatusBean(PortalUserManager.USER_DELETED);
+                return new UserOperationStatusBean(PortalUserManager.STATUS_USER_DELETED);
             }
 
             List<AuthInfo> authInfos = InternalDaoFactory.getInternalAuthDao().getAuthInfo(db, user.getUserId(), siteId);
             if (authInfos==null || authInfos.isEmpty()) {
-                return new UserOperationStatusBean(PortalUserManager.NOT_REGISTERED);
+                return new UserOperationStatusBean(PortalUserManager.STATUS_NOT_REGISTERED);
             }
 
             String subject = messages.get(PortalUserManager.SEND_PASSWORD_SUBJECT_MESSAGE);
@@ -86,7 +87,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                     user.getLastName())+" <"+eMail+'>', subject, body
             );
 
-            return new UserOperationStatusBean(PortalUserManager.OK_OPERATION);
+            return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
         }
         catch (Exception e) {
             String es = "Error search user for e-mail: " + eMail;
@@ -117,7 +118,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 log.debug( "Login "+userRegistration.getUserLogin()+" exists: " + (countRecord>0) );
             }
             if (countRecord>0) {
-                return new UserOperationStatusBean(PortalUserManager.LOGIN_ALREADY_REGISTERED);
+                return new UserOperationStatusBean(PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED);
             }
 
             User checkUser = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, userRegistration.getEmail());
@@ -125,7 +126,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 log.debug( "Account for e-mail "+userRegistration.getEmail()+" already registered: " + (checkUser!=null) );
             }
             if (checkUser!=null) {
-                return new UserOperationStatusBean(PortalUserManager.EMAIL_ALREADY_REGISTERED);
+                return new UserOperationStatusBean(PortalUserManager.STATUS_EMAIL_ALREADY_REGISTERED);
             }
 
             UserBean user = new UserBean();
@@ -138,10 +139,14 @@ public class PortalUserManagerImpl implements PortalUserManager {
             user.setLastName(userRegistration.getLastName());
             user.setMiddleName(userRegistration.getMiddleName());
             user.setPhone(userRegistration.getPhone());
+            user.setCompanyId(companyId);
             Long userId = InternalDaoFactory.getInternalUserDao().addUser(db, user);
 
             // register-default-role
-            String roles = portletMetadata.get( USER_DEFAULT_ROLE_METADATA );
+            String roles=null;
+            if (portletMetadata!=null) {
+                roles = portletMetadata.get( USER_DEFAULT_ROLE_METADATA );
+            }
             if (log.isDebugEnabled()) {
                 log.debug("register roles: " + roles);
                 log.debug("metadata map: "+portletMetadata );
@@ -154,15 +159,25 @@ public class PortalUserManagerImpl implements PortalUserManager {
                     }
                 }
             }
+            if (StringUtils.isBlank(roles)) {
+                return new UserOperationStatusBean(PortalUserManager.STATUS_ROLE_NOT_DEFINED);
+            }
 
             List<RoleEditableBean> roleList = new ArrayList<RoleEditableBean>();
             StringTokenizer st = new StringTokenizer( roles, "," );
             while( st.hasMoreTokens() ) {
                 String role = st.nextToken();
-                RoleEditableBeanImpl roleBean = new RoleEditableBeanImpl();
-                roleBean.setName(role);
+                RoleBean bean = InternalDaoFactory.getInternalAuthDao().getRole(db, role);
+                if (bean==null) {
+                    log.warn("role specified in metadata for register portlet not exist. role: " + role);
+                    continue;
+                }
+
+                RoleEditableBeanImpl roleBean = new RoleEditableBeanImpl(bean);
                 roleBean.setNew(true);
-                roleList.add( new RoleEditableBeanImpl(roleBean));
+                roleBean.setDelete(false);
+
+                roleList.add(roleBean );
             }
 
             AuthInfoImpl authInfo = new AuthInfoImpl();
@@ -172,7 +187,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
             authInfo.setHolding(false);
             authInfo.setUserId(userId);
 
-            InternalDaoFactory.getInternalAuthDao().addUser( db, authInfo, roleList, companyId, null);
+            InternalDaoFactory.getInternalAuthDao().addUserInfo( db, authInfo, roleList, companyId, null);
 
             String subject = messages.get(PortalUserManager.CREATE_ACCOUNT_SUBJECT_MESSAGE);
             String body = messages.get(PortalUserManager.CREATE_ACCOUNT_BODY_MESSAGE);
@@ -183,7 +198,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
 
 
             db.commit();
-            return new UserOperationStatusBean(PortalUserManager.OK_OPERATION);
+            return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
         }
         catch (Exception e) {
             try {
