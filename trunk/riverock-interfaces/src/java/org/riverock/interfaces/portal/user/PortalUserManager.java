@@ -11,12 +11,13 @@ import org.riverock.interfaces.portal.bean.UserOperationStatus;
  *         Time: 20:09:12
  */
 public interface PortalUserManager {
-    public static final int OK_OPERATION = 0;
-    public static final int NO_SUCH_EMAIL = 1;
-    public static final int USER_DELETED = 2;
-    public static final int NOT_REGISTERED = 3;
-    public static final int LOGIN_ALREADY_REGISTERED = 4;
-    public static final int EMAIL_ALREADY_REGISTERED = 5;
+    public static final int STATUS_OK_OPERATION = 0;
+    public static final int STATUS_NO_SUCH_EMAIL = 1;
+    public static final int STATUS_USER_DELETED = 2;
+    public static final int STATUS_NOT_REGISTERED = 3;
+    public static final int STATUS_LOGIN_ALREADY_REGISTERED = 4;
+    public static final int STATUS_EMAIL_ALREADY_REGISTERED = 5;
+    public static final int STATUS_ROLE_NOT_DEFINED = 6;
 
     public static final String SEND_PASSWORD_SUBJECT_MESSAGE = "SEND_PASSWORD_SUBJECT_MESSAGE";
     public static final String SEND_PASSWORD_BODY_ONE_PASSWORD_MESSAGE = "SEND_PASSWORD_BODY_ONE_PASSWORD_MESSAGE";

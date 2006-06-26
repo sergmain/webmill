@@ -53,6 +53,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     private String address = null;
     private String phone = null;
     private String email = null;
+    private boolean isDeleted = false;
 
     public PortalUserBeanImpl() {
     }
@@ -68,6 +69,15 @@ public class PortalUserBeanImpl implements Serializable, User {
         this.address = beanPortal.getAddress();
         this.phone = beanPortal.getPhone();
         this.email = beanPortal.getEmail();
+        this.isDeleted = beanPortal.isDeleted();
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     public String getCompanyName() {

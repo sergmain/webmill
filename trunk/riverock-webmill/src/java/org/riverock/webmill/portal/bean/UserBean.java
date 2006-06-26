@@ -47,7 +47,7 @@ public class UserBean implements User, Serializable {
     private String lastName = null;
 
     private Date createdDate = null;
-    private Date closedDate = null;
+    private Date deletedDate = null;
     private String address = null;
     private String phone = null;
     private String email = null;
@@ -63,7 +63,7 @@ public class UserBean implements User, Serializable {
         this.middleName = beanPortal.getMiddleName();
         this.lastName = beanPortal.getLastName();
         this.createdDate = beanPortal.getCreatedDate();
-        this.closedDate = beanPortal.getDeletedDate();
+        this.deletedDate = beanPortal.getDeletedDate();
         this.address = beanPortal.getAddress();
         this.phone = beanPortal.getPhone();
         this.email = beanPortal.getEmail();
@@ -127,11 +127,11 @@ public class UserBean implements User, Serializable {
     }
 
     public Date getDeletedDate() {
-        return closedDate;
+        return deletedDate;
     }
 
     public void setDeletedDate( Date closedDate ) {
-        this.closedDate = closedDate;
+        this.deletedDate = closedDate;
     }
 
     public String getAddress() {

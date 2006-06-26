@@ -341,7 +341,8 @@ public final class PageElement {
                 portalRequestInstance.getPortalContext(),
                 portletEntry.getPortletConfig().getPortletContext(),
                 portletEntry.getPortletDefinition(),
-                namespace
+                namespace,
+                portletMetadata
             );
 
             // portlet metadata
@@ -405,7 +406,8 @@ public final class PageElement {
                     portalRequestInstance.getPortalContext(),
                     portletEntry.getPortletConfig().getPortletContext(),
                     portletEntry.getPortletDefinition(),
-                    namespace
+                    namespace,
+                    portletMetadata
                 );
                 actionRequest.setAttribute(
                     ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,

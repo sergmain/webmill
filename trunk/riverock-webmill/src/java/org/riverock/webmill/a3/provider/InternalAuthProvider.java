@@ -249,7 +249,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.getRole( authSession, roleId );
+            return authDao.getRole(roleId );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -326,7 +326,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.addUser( authSession, infoAuth );
+            return authDao.addUserInfo( authSession, infoAuth );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -337,7 +337,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            authDao.updateUser( authSession, infoAuth );
+            authDao.updateUserInfo( authSession, infoAuth );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -348,7 +348,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            authDao.deleteUser( authSession, infoAuth );
+            authDao.deleteUserInfo( authSession, infoAuth );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
@@ -359,7 +359,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( classLoader );
-            return authDao.getUserList( authSession );
+            return authDao.getUserInfoList( authSession );
         }
         finally {
             Thread.currentThread().setContextClassLoader( oldLoader );
