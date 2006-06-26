@@ -53,6 +53,7 @@ public class PortletErrors {
     }
 
     public static String error(ModuleRequest request, ResourceBundle resourceBundle, String errorCode) {
+/*
         // hack to output where exception is created
         try {
             getException();
@@ -60,6 +61,7 @@ public class PortletErrors {
         catch (Exception e) {
             log.error("error", e);
         }
+*/
         request.setAttribute(
             Constants.ACTION_MESSAGE,
             new ActionMessage(resourceBundle, errorCode)

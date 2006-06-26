@@ -2,16 +2,17 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>Resource for register portlet</comment>
-    <entry key="reg.succes_send_password">Password successfully sended to you</entry>
-    <entry key="reg.succes_register">Registration was successfull. Please reply to letter, which was sended to you, for confirm registration.</entry>
+    <entry key="reg.succes_send_password">The password has been successfully sent on your address.</entry>
+    <entry key="reg.succes_register">Registration was successfull.
+        For confirm registration, please follow by the link, which you can find in confirmation letter.</entry>
     <entry key="reg.role_is_null">Can not add new user because default role not specified in metadata</entry>
     <entry key="reg.error_register_portlet">Error execute register portlet</entry>
     <entry key="reg.already_logged">You already logged in</entry>
     <entry key="reg.login_exists">Login {0} already exist.</entry>
     <entry key="reg.continue">Continue</entry>
-    <entry key="reg.forgot_password">Forgot password? Input your e-mail address and we will send it in short time.</entry>
+    <entry key="reg.forgot_password">Forgot password? Enter your e-mail address and we shall send on it your password.</entry>
     <entry key="reg.send_password">Send</entry>
-    <entry key="reg.need_register">You not member?</entry>
+    <entry key="reg.need_register">You not registered?</entry>
     <entry key="reg.login">Login:</entry>
     <entry key="reg.password">Password:</entry>
     <entry key="reg.password_repeat">Repeat password:</entry>
@@ -21,9 +22,27 @@
     <entry key="reg.address">Address:</entry>
     <entry key="reg.email">E-Mail:</entry>
     <entry key="reg.register">Register</entry>
-    <entry key="reg.send-password.your-password">Your password is {0}</entry>
+    <entry key="reg.captcha">Verification word (Captcha)</entry>
+    <entry key="reg.go-back">Go back</entry>
+
+    <entry key="reg.error-login-already-registered">Entered login already used. Please choose other login.</entry>
+    <entry key="reg.error-user-login-is-null">User login isn't entered.</entry>
+    <entry key="reg.error-user-password-is-null">User password isn't entered.</entry>
+    <entry key="reg.error-user-password-is-mismatch">Entered passwords is mismatch.</entry>
+    <entry key="reg.error-user-email-is-null">User e-mail isn't entered.</entry>
+    <entry key="reg.error-captcha-wrong">Verification word isn't correct.</entry>
+
+
+    <entry key="reg.send-password.your-password">
+        Your password is {0}
+    </entry>
     <entry key="reg.send-password.info">Requested info</entry>
-    <entry key="reg.mail_body">You succesfully registered.\nUse your username and password for process invoice:\n\n\nUserame: {0}\nPassword: {1}\n</entry>
+    <entry key="reg.mail_body">You succesfully registered.
+        Your login and password:
+
+        Login: {0}
+        Password: {1}
+    </entry>
 </properties>
 
 

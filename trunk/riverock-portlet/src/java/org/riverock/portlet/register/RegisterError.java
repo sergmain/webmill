@@ -52,4 +52,28 @@ public class RegisterError {
     public static String roleIsNull( ModuleActionRequest actionBean ) {
         return PortletErrors.error(actionBean, RegisterConstants.ROLE_IS_NULL);
     }
+
+    public static String loginAlreadyRegistered(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.LOGIN_ALREADY_REGISTERED);
+    }
+
+    public static String userLoginIsNull(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.USER_LOGIN_IS_NULL);
+    }
+
+    public static String userPasswordIsNull(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.USER_PASSWORD_IS_NULL);
+    }
+
+    public static String userPasswordIsMismatch(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.USER_PASSWORD_IS_MISMATCH);
+    }
+
+    public static String userEmailIsNull(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.USER_EMAIL_IS_NULL);
+    }
+
+    public static String captchaWrong(ModuleActionRequest moduleActionRequest) {
+        return PortletErrors.error(moduleActionRequest, RegisterConstants.CAPTCHA_WRONG);
+    }
 }

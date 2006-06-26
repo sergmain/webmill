@@ -210,7 +210,18 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<!-- Set the default session timeout (in minutes) -->
+    <servlet>
+        <servlet-name>jcaptcha</servlet-name>
+        <servlet-class>org.riverock.portlet.captcha.ImageCaptchaServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jcaptcha</servlet-name>
+        <url-pattern>/jcaptcha</url-pattern>
+    </servlet-mapping>
+
+    <!-- Set the default session timeout (in minutes) -->
 	<session-config>
 		<session-timeout>15</session-timeout>
 	</session-config>

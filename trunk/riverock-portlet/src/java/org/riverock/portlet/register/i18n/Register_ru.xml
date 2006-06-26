@@ -22,6 +22,16 @@
     <entry key="reg.address">Адрес:</entry>
     <entry key="reg.email">E-Mail:</entry>
     <entry key="reg.register">Регистрация</entry>
+    <entry key="reg.captcha">Проверочное слово</entry>
+    <entry key="reg.go-back">Вернуться назад</entry>
+
+    <entry key="reg.error-login-already-registered">Введенный вами логин уже используется. Выберите другой.</entry>
+    <entry key="reg.error-user-login-is-null">Логин не введен.</entry>
+    <entry key="reg.error-user-password-is-null">Пароль не введен.</entry>
+    <entry key="reg.error-user-password-is-mismatch">Введеные пароли не совпадают.</entry>
+    <entry key="reg.error-user-email-is-null">Адрес электронной почты не введен.</entry>
+    <entry key="reg.error-captcha-wrong">Проверочное слово введено не верно.</entry>
+
     <entry key="reg.send-password.your-password">
         Ваш пароль {0}
     </entry>
