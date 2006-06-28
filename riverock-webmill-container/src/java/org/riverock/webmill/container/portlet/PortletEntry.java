@@ -51,6 +51,7 @@ public final class PortletEntry {
     private ServletConfig servletConfig = null;
     private ClassLoader classLoader = null;
     private String uniqueName = null;
+    private String portalPath = null;
     private Map<String, List<String>> portletProperties = new HashMap<String, List<String>>();
     private String exceptionMessage = null;
 
@@ -102,7 +103,7 @@ public final class PortletEntry {
         this.servletConfig = servletConfig;
     }
 
-    PortletEntry(PortletDefinition portletDefinition, PortletConfig portletConfig, Portlet portlet,ServletConfig servletConfig, ClassLoader classLoader, String uniqueName ) {
+    PortletEntry(PortletDefinition portletDefinition, PortletConfig portletConfig, Portlet portlet,ServletConfig servletConfig, ClassLoader classLoader, String uniqueName, String portalPath ) {
         if (portletDefinition==null) {
             throw new IllegalArgumentException("Portlet definition is null");
         } 
@@ -112,6 +113,7 @@ public final class PortletEntry {
         this.servletConfig = servletConfig;
         this.classLoader = classLoader;
         this.uniqueName = uniqueName;
+        this.portalPath = portalPath;
     }
 
     PortletEntry(PortletDefinition portletDefinition, UnavailableException e) {
@@ -132,10 +134,11 @@ public final class PortletEntry {
         if (getIsPermanent())
             return true;
 
-        if (getInterval() > (System.currentTimeMillis() - getLastInitTime()) / 1000)
-            return true;
+        return getInterval() > (System.currentTimeMillis() - getLastInitTime()) / 1000;
+    }
 
-        return false;
+    public String getPortalPath() {
+        return portalPath;
     }
 
     public PortletDefinition getPortletDefinition() {

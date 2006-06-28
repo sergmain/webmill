@@ -37,40 +37,98 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalTemplateDaoImpl implements PortalTemplateDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalTemplateDaoImpl(AuthSession authSession) {
+    PortalTemplateDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public Template getTemplate(Long templateId) {
-        return InternalDaoFactory.getInternalTemplateDao().getTemplate(templateId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalTemplateDao().getTemplate(templateId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Template getTemplate(String templateName, Long siteLanguageId) {
-        return InternalDaoFactory.getInternalTemplateDao().getTemplate(siteLanguageId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalTemplateDao().getTemplate(siteLanguageId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Template getDefaultDynamicTemplate(Long siteLanguageId) {
-        return InternalDaoFactory.getInternalTemplateDao().getDefaultDynamicTemplate(siteLanguageId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalTemplateDao().getDefaultDynamicTemplate(siteLanguageId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Template> getTemplateLanguageList(Long siteLanguageId) {
-        return InternalDaoFactory.getInternalTemplateDao().getTemplateLanguageList(siteLanguageId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalTemplateDao().getTemplateLanguageList(siteLanguageId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Template> getTemplateList(Long siteId) {
-        return InternalDaoFactory.getInternalTemplateDao().getTemplateList(siteId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalTemplateDao().getTemplateList(siteId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long createTemplate(Template template) {
-        return InternalDaoFactory.getInternalTemplateDao().createTemplate(template);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalTemplateDao().createTemplate(template);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateTemplate(Template template) {
-        InternalDaoFactory.getInternalTemplateDao().updateTemplate(template);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalTemplateDao().updateTemplate(template);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deleteTemplate(Long templateId) {
-        InternalDaoFactory.getInternalTemplateDao().deleteTemplate(templateId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalTemplateDao().deleteTemplate(templateId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

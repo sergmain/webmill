@@ -37,21 +37,44 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalUserMetadataDaoImpl implements PortalUserMetadataDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalUserMetadataDaoImpl(AuthSession authSession) {
+    PortalUserMetadataDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public UserMetadataItem getMetadata(String userLogin, Long siteId, String metadataName) {
-        return InternalDaoFactory.getInternalUserMetadataDao().getMetadata(userLogin, siteId, metadataName);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalUserMetadataDao().getMetadata(userLogin, siteId, metadataName);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void setMetadataIntValue(String userLogin, Long siteId, String metadataName, Long intValue) {
-        InternalDaoFactory.getInternalUserMetadataDao().setMetadataIntValue(userLogin, siteId, metadataName, intValue);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalUserMetadataDao().setMetadataIntValue(userLogin, siteId, metadataName, intValue);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void setMetadataStringValue(String userLogin, Long siteId, String metadataName, String stringValue) {
-        InternalDaoFactory.getInternalUserMetadataDao().setMetadataStringValue(userLogin, siteId, metadataName, stringValue);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalUserMetadataDao().setMetadataStringValue(userLogin, siteId, metadataName, stringValue);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void setMetadataDateValue(String userLogin, Long siteId, String metadataName, Date dateValue) {

@@ -184,13 +184,13 @@ public final class PortalRequestInstance {
             }
 
             this.auth = AuthTools.getAuthSession(httpRequest);
-            this.portalDaoProvider = new PortalDaoProviderImpl( auth );
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            this.portalDaoProvider = new PortalDaoProviderImpl( auth, classLoader);
             if (log.isDebugEnabled()) {
                 log.debug("auth: " + this.auth);
-                ClassLoader cl = Thread.currentThread().getContextClassLoader();
-                log.debug("portal requet instance class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
-                cl = portletContainer.getClass().getClassLoader();
-                log.debug("portlet container class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
+                log.debug("portal requet instance class loader:\n" + classLoader +"\nhash: "+ classLoader.hashCode() );
+                ClassLoader cl = portletContainer.getClass().getClassLoader();
+                log.debug("portlet container class loader:\n" + classLoader +"\nhash: "+ cl.hashCode() );
             }
             this.portalInfo = PortalInfoImpl.getInstance( httpRequest.getServerName());
             this.portalContext = new PortalContextImpl(portalInfoName, httpRequest.getContextPath(), portalInfo);

@@ -49,21 +49,21 @@ public class PortalDaoProviderImpl implements PortalDaoProvider {
     private PortalUserMetadataDao portalUserMetadataDao = null;
     private PortalUserDao portalUserDao = null;
 
-    public PortalDaoProviderImpl(AuthSession authSession) {
-        this.portalCompanyDao = new PortalCompanyDaoImpl(authSession);
-        this.portalHoldingDao = new PortalHoldingDaoImpl(authSession);
-        this.portalAuthDao = new PortalAuthDaoImpl(authSession);
+    public PortalDaoProviderImpl(AuthSession authSession, ClassLoader classLoader) {
+        this.portalCompanyDao = new PortalCompanyDaoImpl(authSession, classLoader);
+        this.portalHoldingDao = new PortalHoldingDaoImpl(authSession, classLoader);
+        this.portalAuthDao = new PortalAuthDaoImpl(authSession, classLoader);
 
-        this.portalCatalogDao = new PortalCatalogDaoImpl(authSession);
-        this.portalPortletNameDao = new PortalPortletNameDaoImpl(authSession);
-        this.portalSiteDao = new PortalSiteDaoImpl(authSession);
-        this.portalSiteLanguageDao = new PortalSiteLanguageDaoImpl(authSession);
-        this.portalTemplateDao = new PortalTemplateDaoImpl(authSession);
-        this.portalVirtualHostDao = new PortalVirtualHostDaoImpl(authSession);
-        this.portalXsltDao = new PortalXsltDaoImpl(authSession);
-        this.portalCssDao = new PortalCssDaoImpl(authSession);
-        this.portalUserMetadataDao = new PortalUserMetadataDaoImpl(authSession);
-        this.portalUserDao = new PortalUserDaoImpl(authSession);
+        this.portalCatalogDao = new PortalCatalogDaoImpl(authSession, classLoader);
+        this.portalPortletNameDao = new PortalPortletNameDaoImpl(authSession, classLoader);
+        this.portalSiteDao = new PortalSiteDaoImpl(authSession, classLoader);
+        this.portalSiteLanguageDao = new PortalSiteLanguageDaoImpl(authSession, classLoader);
+        this.portalTemplateDao = new PortalTemplateDaoImpl(authSession, classLoader);
+        this.portalVirtualHostDao = new PortalVirtualHostDaoImpl(authSession, classLoader);
+        this.portalXsltDao = new PortalXsltDaoImpl(authSession, classLoader);
+        this.portalCssDao = new PortalCssDaoImpl(authSession, classLoader);
+        this.portalUserMetadataDao = new PortalUserMetadataDaoImpl(authSession, classLoader);
+        this.portalUserDao = new PortalUserDaoImpl(authSession, classLoader);
     }
 
     public PortalUserDao getPortalUserDao() {

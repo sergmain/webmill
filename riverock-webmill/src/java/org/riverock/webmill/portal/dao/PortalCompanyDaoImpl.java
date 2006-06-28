@@ -38,28 +38,65 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalCompanyDaoImpl implements PortalCompanyDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalCompanyDaoImpl(AuthSession authSession) {
+    PortalCompanyDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public Company getCompany(Long id) {
-        return InternalDaoFactory.getInternalCompanyDao().getCompany( id, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCompanyDao().getCompany( id, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Company> getCompanyList() {
-        return InternalDaoFactory.getInternalCompanyDao().getCompanyList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCompanyDao().getCompanyList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long processAddCompany(Company companyBean, String userLogin, Long holdingId) {
-        return InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, userLogin, holdingId, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCompanyDao().processAddCompany( companyBean, userLogin, holdingId, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void processSaveCompany(Company companyBean) {
-        InternalDaoFactory.getInternalCompanyDao().processSaveCompany( companyBean, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalCompanyDao().processSaveCompany( companyBean, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void processDeleteCompany(Company companyBean) {
-        InternalDaoFactory.getInternalCompanyDao().processDeleteCompany( companyBean, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalCompanyDao().processDeleteCompany( companyBean, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

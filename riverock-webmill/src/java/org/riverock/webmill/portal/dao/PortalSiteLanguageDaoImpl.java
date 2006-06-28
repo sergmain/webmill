@@ -37,32 +37,76 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalSiteLanguageDaoImpl implements PortalSiteLanguageDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalSiteLanguageDaoImpl(AuthSession authSession) {
+    PortalSiteLanguageDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public List<SiteLanguage> getSiteLanguageList(Long siteId) {
-        return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguageList(siteId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public SiteLanguage getSiteLanguage(Long siteLanguageId) {
-        return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteLanguageId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public SiteLanguage getSiteLanguage(Long siteId, String languageLocale) {
-        return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, languageLocale);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteLanguageDao().getSiteLanguage(siteId, languageLocale);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long createSiteLanguage(SiteLanguage siteLanguage) {
-        return InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguage);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteLanguageDao().createSiteLanguage(siteLanguage);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateSiteLanguage(SiteLanguage siteLanguage) {
-        InternalDaoFactory.getInternalSiteLanguageDao().updateSiteLanguage(siteLanguage);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalSiteLanguageDao().updateSiteLanguage(siteLanguage);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deleteSiteLanguage(Long siteLanguageId) {
-        InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguage(siteLanguageId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguage(siteLanguageId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }
