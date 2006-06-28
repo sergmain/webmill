@@ -134,7 +134,13 @@ public final class LoginXmlPortlet implements Portlet {
             }
 
             byte[] bytes = XmlTools.getXml( login, xmlRoot, null, "utf-8");
-            writeDebug(bytes);
+            if (log.isDebugEnabled()) {
+                try {
+                    writeDebug(bytes);
+                } catch (Throwable e) {
+                    // catch Throwable
+                }
+            }
             out.write( bytes );
         }
         catch( Throwable e ) {
@@ -150,7 +156,7 @@ public final class LoginXmlPortlet implements Portlet {
         }
     }
 
-    protected void writeDebug(final byte bytes[]) throws IOException {
+    protected synchronized void writeDebug(final byte bytes[]) throws IOException {
 
         File file = File.createTempFile("xml-dump-", ".xml", new File("\\opt1"));
         System.out.println("Write xml data to file: " + file.getAbsolutePath());

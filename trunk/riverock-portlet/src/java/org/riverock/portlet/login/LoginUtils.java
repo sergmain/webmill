@@ -82,6 +82,9 @@ public final class LoginUtils {
         }
 
         boolean checkAccess = sessionManager.createSession( login, password );
+        if (log.isDebugEnabled()) {
+            log.debug("checkAccess: " + checkAccess);
+        }
 
         if( checkAccess ) {
             if( url != null ) {

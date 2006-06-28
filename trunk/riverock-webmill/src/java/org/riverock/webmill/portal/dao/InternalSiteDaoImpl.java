@@ -197,6 +197,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             InternalDaoFactory.getInternalVirtualHostDao().deleteVirtualHost(dbDyn, siteId);
             InternalDaoFactory.getInternalSiteLanguageDao().deleteSiteLanguageForSite(dbDyn, siteId);
 
+
             DatabaseManager.runSQL(
                 dbDyn,
                 "delete from WM_PORTAL_LIST_SITE where ID_SITE=?",

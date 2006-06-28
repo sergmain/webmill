@@ -26,15 +26,16 @@ package org.riverock.cache.impl;
 
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
+
 import org.riverock.cache.config.CacheConfig;
 import org.riverock.cache.schema.config.CacheClassItemType;
 import org.riverock.common.tools.MainTools;
 
-import org.apache.log4j.Logger;
-
 /**
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class SimpleCacheFactory implements Cache {
     private final static Logger log = Logger.getLogger( SimpleCacheFactory.class );
 
@@ -128,7 +129,7 @@ public final class SimpleCacheFactory implements Cache {
             if (((currentTime - accessTime[idx]) > maxTimePeriod())
                 || (cache[idx] == null) || isReplace)
             {
-                cache[idx] = null;;
+                cache[idx] = null;
                 accessTime[idx] = currentTime;
                 accessCount[idx] = 0;
                 indexValue[idx] = id__;
@@ -208,7 +209,7 @@ public final class SimpleCacheFactory implements Cache {
 
                 cache[idx] = null;
 
-                cache[idx] = value;;
+                cache[idx] = value;
                 accessTime[idx] = currentTime;
                 accessCount[idx] = 0;
                 indexValue[idx] = id__;
@@ -365,20 +366,8 @@ public final class SimpleCacheFactory implements Cache {
                 return;
 
             cache[itemIdx] = null;
-//            terminate(id);
         }
     }
-
-/*
-    public synchronized void terminate(long id) {
-
-        int itemIdx = getIndexOfItem(id);
-        if (itemIdx==-1)
-            return;
-
-        cache[itemIdx] = null;
-    }
-*/
 
     private synchronized void destroyCache() {
         accessTime = null;

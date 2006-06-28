@@ -56,10 +56,10 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     private static final long serialVersionUID = 20434672384237876L;
     private final static Logger log = Logger.getLogger(AuthSessionImpl.class);
 
-    private transient static List<AuthProvider> authProviderList = null;
-    private transient AuthProvider activeProvider = null;
-    private transient boolean isAccessChecked = false;
-    private transient boolean isAccessDenied = true;
+    private static List<AuthProvider> authProviderList = null;
+    private AuthProvider activeProvider = null;
+    private boolean isAccessChecked = false;
+    private boolean isAccessDenied = true;
 
     private String userLogin;
 
@@ -100,8 +100,11 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
                         for (Object o : auth.getAuthProviderAsReference()){
                             AuthProviderType provider = (AuthProviderType) o;
                             if (Boolean.TRUE.equals( provider.getIsUse() ) ){
-                                if (log.isInfoEnabled())
+                                if (log.isInfoEnabled()) {
                                     log.info("Add new auth provider "+provider.getProviderName());
+                                    ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                                    log.debug("    class loader:\n" + cl +"\nhash: "+ cl.hashCode() );
+                                }
 
                                 try{
                                     AuthProvider obj = (AuthProvider)MainTools.createCustomObject( provider.getProviderClass() );
