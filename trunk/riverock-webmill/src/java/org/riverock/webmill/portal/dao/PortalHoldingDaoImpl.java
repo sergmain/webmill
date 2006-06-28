@@ -38,28 +38,65 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalHoldingDaoImpl implements PortalHoldingDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalHoldingDaoImpl(AuthSession authSession) {
+    PortalHoldingDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public Holding loadHolding(Long id) {
-        return InternalDaoFactory.getInternalHoldingDao().loadHolding( id, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalHoldingDao().loadHolding( id, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Holding> getHoldingList() {
-        return InternalDaoFactory.getInternalHoldingDao().getHoldingList( authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalHoldingDao().getHoldingList( authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long processAddHolding(Holding holdingBean ) {
-        return InternalDaoFactory.getInternalHoldingDao().processAddHolding( holdingBean, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalHoldingDao().processAddHolding( holdingBean, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void processSaveHolding(Holding holdingBean) {
-        InternalDaoFactory.getInternalHoldingDao().processSaveHolding( holdingBean, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalHoldingDao().processSaveHolding( holdingBean, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void processDeleteHolding(Holding holdingBean) {
-        InternalDaoFactory.getInternalHoldingDao().processDeleteHolding( holdingBean, authSession );
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalHoldingDao().processDeleteHolding( holdingBean, authSession );
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

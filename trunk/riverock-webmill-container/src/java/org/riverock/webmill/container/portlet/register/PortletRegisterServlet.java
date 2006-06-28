@@ -41,10 +41,11 @@ import org.riverock.webmill.container.portlet.PortletContainerException;
  */
 public class PortletRegisterServlet extends HttpServlet {
     private static final long serialVersionUID = 50434672384237876L;
+    private ServletConfig servletConfig=null;
 
     private String uniqueName = null;
     public void init(ServletConfig servletConfig) throws ServletException {
-
+        this.servletConfig=servletConfig;
         uniqueName = "context-"+System.currentTimeMillis()+"-"+((int)(Math.random()*10000));
         String portletFileName =
             servletConfig.getServletContext().getRealPath("/") + File.separatorChar +
@@ -63,8 +64,8 @@ public class PortletRegisterServlet extends HttpServlet {
             try {
                 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 System.out.println("PortletRegisterServlet classLoader\n" + classLoader + "\nhashCode: " + classLoader.hashCode() );
-
-                PortletContainer.registerPortletFile( uniqueName, portletFile, servletConfig, classLoader );
+                 String portalPath = new File(servletConfig.getServletContext().getRealPath("/")).getParent();
+                PortletContainer.registerPortletFile( uniqueName, portletFile, servletConfig, classLoader, portalPath );
             }
             catch (PortletContainerException e) {
                 String es = "Error register portlet";
@@ -76,7 +77,7 @@ public class PortletRegisterServlet extends HttpServlet {
     public final void destroy() {
         System.out.println("#1. Undeploy uniqueName: " + uniqueName);
         try {
-            PortletContainer.destroy( uniqueName );
+            PortletContainer.destroy( uniqueName, new File(servletConfig.getServletContext().getRealPath("/")).getParent() );
         }
         catch(Throwable th) {
             th.printStackTrace( System.out );

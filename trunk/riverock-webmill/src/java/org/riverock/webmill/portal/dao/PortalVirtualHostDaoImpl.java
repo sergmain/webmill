@@ -37,20 +37,43 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalVirtualHostDaoImpl implements PortalVirtualHostDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalVirtualHostDaoImpl(AuthSession authSession) {
+    PortalVirtualHostDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public List<VirtualHost> getVirtualHostsFullList() {
-        return InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalVirtualHostDao().getVirtualHostsFullList();
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<VirtualHost> getVirtualHosts(Long siteId) {
-        return InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(siteId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalVirtualHostDao().getVirtualHosts(siteId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long createVirtualHost(VirtualHost virtualHost) {
-        return InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalVirtualHostDao().createVirtualHost(virtualHost);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

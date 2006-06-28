@@ -37,32 +37,76 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalCssDaoImpl implements PortalCssDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalCssDaoImpl(AuthSession authSession) {
+    PortalCssDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public Css getCssCurrent(Long siteId) {
-        return InternalDaoFactory.getInternalCssDao().getCssCurrent(siteId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCssDao().getCssCurrent(siteId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Css getCss(Long cssId) {
-        return InternalDaoFactory.getInternalCssDao().getCss(cssId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCssDao().getCss(cssId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long createCss(Css css) {
-        return InternalDaoFactory.getInternalCssDao().createCss(css);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCssDao().createCss(css);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateCss(Css css) {
-        InternalDaoFactory.getInternalCssDao().updateCss(css);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalCssDao().updateCss(css);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deleteCss(Long cssId) {
-        InternalDaoFactory.getInternalCssDao().deleteCss(cssId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalCssDao().deleteCss(cssId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<Css> getCssList(Long siteId) {
-        return InternalDaoFactory.getInternalCssDao().getCssList(siteId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalCssDao().getCssList(siteId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

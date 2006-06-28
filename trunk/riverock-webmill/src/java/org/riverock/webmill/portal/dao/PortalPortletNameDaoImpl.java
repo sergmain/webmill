@@ -38,32 +38,76 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalPortletNameDaoImpl implements PortalPortletNameDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalPortletNameDaoImpl(AuthSession authSession) {
+    PortalPortletNameDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public PortletName getPortletName(Long portletId) {
-        return InternalDaoFactory.getInternalPortletNameDao().getPortletName(portletId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalPortletNameDao().getPortletName(portletId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public PortletName getPortletName(String portletName) {
-        return InternalDaoFactory.getInternalPortletNameDao().getPortletName(portletName);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalPortletNameDao().getPortletName(portletName);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public List<PortletName> getPortletNameList() {
-        return InternalDaoFactory.getInternalPortletNameDao().getPortletNameList();
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalPortletNameDao().getPortletNameList();
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long createPortletName(PortletName portletName) {
-        return InternalDaoFactory.getInternalPortletNameDao().createPortletName(portletName);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalPortletNameDao().createPortletName(portletName);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updatePortletName(PortletName portletNameBean) {
-        InternalDaoFactory.getInternalPortletNameDao().updatePortletName(portletNameBean);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalPortletNameDao().updatePortletName(portletNameBean);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deletePortletName(PortletName portletNameBean) {
-        InternalDaoFactory.getInternalPortletNameDao().deletePortletName(portletNameBean);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalPortletNameDao().deletePortletName(portletNameBean);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

@@ -37,40 +37,98 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  */
 public class PortalSiteDaoImpl implements PortalSiteDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalSiteDaoImpl(AuthSession authSession) {
+    PortalSiteDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public List<Site> getSites() {
-        return InternalDaoFactory.getInternalSiteDao().getSites(authSession);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteDao().getSites(authSession);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Site getSite(Long siteId) {
-        return InternalDaoFactory.getInternalSiteDao().getSite(siteId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteDao().getSite(siteId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Site getSite(String siteName) {
-        return InternalDaoFactory.getInternalSiteDao().getSite(siteName);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteDao().getSite(siteName);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long createSite(Site site) {
-        return InternalDaoFactory.getInternalSiteDao().createSite(site);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteDao().createSite(site);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long createSiteWithVirtualHost(Site site, List<String> hosts) {
-        return InternalDaoFactory.getInternalSiteDao().createSite(site, hosts);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalSiteDao().createSite(site, hosts);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateSite(Site site) {
-        InternalDaoFactory.getInternalSiteDao().updateSite(site);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalSiteDao().updateSite(site);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateSiteWithVirtualHost(Site site, List<String> hosts) {
-        InternalDaoFactory.getInternalSiteDao().updateSite(site, hosts);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalSiteDao().updateSite(site, hosts);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deleteSite(Long siteId) {
-        InternalDaoFactory.getInternalSiteDao().deleteSite(siteId);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalSiteDao().deleteSite(siteId);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

@@ -35,9 +35,11 @@ import org.riverock.interfaces.portal.dao.PortalAuthDao;
  */
 public class PortalAuthDaoImpl implements PortalAuthDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalAuthDaoImpl(AuthSession authSession) {
+    PortalAuthDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
 }

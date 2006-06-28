@@ -243,7 +243,7 @@ public final class PageElement {
             portletContainer.getContentCache().setContent( portletEntry.getPortletDefinition(), data, renderRequest );
         }
         catch( javax.portlet.UnavailableException ue ) {
-            PortletContainer.destroy( portletEntry.getPortletDefinition().getPortletName() );
+            PortletContainer.destroy( portletEntry.getPortletDefinition().getPortletName(), portletEntry.getPortalPath() );
             errorString = portletUnavailable(portletEntry.getPortletDefinition().getPortletName());
             log.error( errorString, ue );
         }

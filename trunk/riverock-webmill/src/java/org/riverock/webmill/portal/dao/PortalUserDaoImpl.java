@@ -38,28 +38,65 @@ import org.riverock.interfaces.sso.a3.AuthSession;
 @SuppressWarnings({"UnusedAssignment"})
 public class PortalUserDaoImpl implements PortalUserDao {
     private AuthSession authSession = null;
+    private ClassLoader classLoader = null;
 
-    PortalUserDaoImpl(AuthSession authSession) {
+    PortalUserDaoImpl(AuthSession authSession, ClassLoader classLoader) {
         this.authSession = authSession;
+        this.classLoader = classLoader;
     }
 
     public List<User> getUserList() {
-        return InternalDaoFactory.getInternalUserDao().getUserList(authSession);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalUserDao().getUserList(authSession);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public Long addUser(User user) {
-        return InternalDaoFactory.getInternalUserDao().addUser(user);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalUserDao().addUser(user);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void updateUser(User user) {
-        InternalDaoFactory.getInternalUserDao().updateUser(user, authSession);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalUserDao().updateUser(user, authSession);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public void deleteUser(User user) {
-        InternalDaoFactory.getInternalUserDao().deleteUser(user, authSession);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            InternalDaoFactory.getInternalUserDao().deleteUser(user, authSession);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 
     public User getUser(Long userId) {
-        return InternalDaoFactory.getInternalUserDao().getUser(userId, authSession);
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( classLoader );
+            return InternalDaoFactory.getInternalUserDao().getUser(userId, authSession);
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader( oldLoader );
+        }
     }
 }

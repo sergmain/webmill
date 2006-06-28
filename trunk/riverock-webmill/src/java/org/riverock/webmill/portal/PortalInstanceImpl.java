@@ -27,6 +27,7 @@ package org.riverock.webmill.portal;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.File;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
@@ -262,7 +263,7 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     private PortalInstanceImpl( ServletConfig servletConfig ) {
         this.portalServletConfig = servletConfig;
-        this.portletContainer = PortletContainer.getInstance( this );
+        this.portletContainer = PortletContainer.getInstance( this, new File(servletConfig.getServletContext().getRealPath("/")).getParent() );
         this.supportedList = InternalDaoFactory.getInternalDao().getSupportedLocales();
     }
 
@@ -273,8 +274,9 @@ public class PortalInstanceImpl implements PortalInstance  {
         throws IOException, ServletException {
 
         int counter;
-//        HttpServletRequest request_ = new InternalServletRequestWrapper( httpServletRequest );
-        HttpServletRequest request_ = httpServletRequest;
+        HttpServletRequest request_;
+//        request_ = new InternalServletRequestWrapper( httpServletRequest );
+        request_ = httpServletRequest;
         InternalServletResponseWrapper response_ = new InternalServletResponseWrapper( httpResponse );
 
         // Prepare Nested D... Context
