@@ -36,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class MainTools {
     private final static Log log = LogFactory.getLog(MainTools.class);
 
@@ -149,8 +150,11 @@ public final class MainTools {
         throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Object obj = null;
         try {
-            if (log.isDebugEnabled())
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            if (log.isDebugEnabled()) {
                 log.debug("Starting create class object for name '" + s + "'");
+                log.debug("    class loader:\n" + classLoader +"\nhash: "+ classLoader.hashCode() );
+            }
 
             if (s == null)
                 return null;
@@ -160,8 +164,8 @@ public final class MainTools {
             if (log.isDebugEnabled())
                 log.debug("Create class for name '" + s + "'");
 
-            className = Class.forName(s);
-
+            className = Class.forName(s, true, classLoader);
+            
             if (log.isDebugEnabled())
                 log.debug("Class for name '" + s + "' is " + className);
 

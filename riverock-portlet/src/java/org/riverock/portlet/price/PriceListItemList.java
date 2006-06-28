@@ -163,69 +163,74 @@ public final class PriceListItemList {
                 if (log.isDebugEnabled())
                     log.debug("currencyItem "+currencyItem);
 
-                currencyItem.fillRealCurrencyData(
-                    currencyManager.getCurrencyList().getStandardCurrencyList()
-                );
-
                 double resultPrice = 0;
-                double rsetPrice = RsetTools.getDouble(rs,"PRICE", 0.0);
+                if (currencyItem!=null) {
 
-                if (log.isDebugEnabled())
-                    log.debug("currencyItem.getIdCurrency()"+currencyItem.getIdCurrency()+", shopParam.id_currency "+ shopParam.id_currency);
-                int precisionValue = 0;
-                if (currencyItem.getIdCurrency().equals(shopParam.id_currency) ||  shopParam.id_currency==0 ) {
-                    item.setItemCurrencyID( currencyItem.getIdCurrency() );
-                    item.setItemNameCurrency( currencyItem.getCurrencyName() );
+                    currencyItem.fillRealCurrencyData(
+                        currencyManager.getCurrencyList().getStandardCurrencyList()
+                    );
 
-                    precisionValue = getPrecisionValue( shop, currencyItem.getIdCurrency() );
-                    resultPrice = NumberTools.truncate(rsetPrice, precisionValue);
-                }
-                else {
-                    precisionValue = getPrecisionValue( shop, shopParam.id_currency );
+                    double rsetPrice = RsetTools.getDouble(rs, "PRICE", 0.0);
 
-                    CustomCurrencyItemType targetCurrency =
-                        CurrencyService.getCurrencyItem(currencyManager.getCurrencyList(), shopParam.id_currency);
+                    if (log.isDebugEnabled())
+                        log.debug("currencyItem.getIdCurrency()" + currencyItem.getIdCurrency() + ", shopParam.id_currency " + shopParam.id_currency);
+                    int precisionValue = 0;
+                    if (currencyItem.getIdCurrency().equals(shopParam.id_currency) || shopParam.id_currency == 0) {
+                        item.setItemCurrencyID(currencyItem.getIdCurrency());
+                        item.setItemNameCurrency(currencyItem.getCurrencyName());
 
-                    if (log.isDebugEnabled()) {
-                        log.debug("targetCurrency "+targetCurrency);
-                        log.debug("item "+item);
-                    }
-                    item.setItemCurrencyID( targetCurrency.getIdCurrency() );
-                    item.setItemNameCurrency( targetCurrency.getCurrencyName() );
+                        precisionValue = getPrecisionValue(shop, currencyItem.getIdCurrency());
+                        resultPrice = NumberTools.truncate(rsetPrice, precisionValue);
+                    } else {
+                        precisionValue = getPrecisionValue(shop, shopParam.id_currency);
 
-                    if (log.isDebugEnabled()) {
-                        synchronized(syncObj) {
-                            try {
-                                XmlTools.writeToFile(targetCurrency, SiteUtils.getTempDir()+File.separatorChar+"schema-currency-default.xml");
+                        CustomCurrencyItemType targetCurrency =
+                            CurrencyService.getCurrencyItem(currencyManager.getCurrencyList(), shopParam.id_currency);
+
+                        if (log.isDebugEnabled()) {
+                            log.debug("targetCurrency " + targetCurrency);
+                            log.debug("item " + item);
+                        }
+                        item.setItemCurrencyID(targetCurrency.getIdCurrency());
+                        item.setItemNameCurrency(targetCurrency.getCurrencyName());
+
+                        if (log.isDebugEnabled()) {
+                            synchronized (syncObj) {
+                                try {
+                                    XmlTools.writeToFile(targetCurrency, SiteUtils.getTempDir() + File.separatorChar + "schema-currency-default.xml");
+                                }
+                                catch (Throwable e) {
+                                    log.error("Error write targetCurrency to debug file", e);
+                                }
+
+                                log.debug("default curs - " + targetCurrency.getRealCurs());
                             }
-                            catch(Throwable e) {
-                                log.error("Error write targetCurrency to debug file", e);
-                            }
+                        }
 
-                            log.debug("default curs - " + targetCurrency.getRealCurs());
+                        double crossCurs =
+                            currencyItem.getRealCurs() / targetCurrency.getRealCurs();
+
+                        resultPrice =
+                            NumberTools.truncate(rsetPrice, precisionValue) *
+                                crossCurs;
+
+                        if (log.isDebugEnabled()) {
+                            log.debug("crossCurs - " + crossCurs + " price - " +
+                                NumberTools.truncate(rsetPrice, precisionValue) +
+                                " result price - " + resultPrice);
                         }
                     }
-
-                    double crossCurs =
-                        currencyItem.getRealCurs() / targetCurrency.getRealCurs();
-
-                    resultPrice =
-                        NumberTools.truncate(rsetPrice, precisionValue) *
-                        crossCurs;
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("crossCurs - " + crossCurs + " price - " +
-                            NumberTools.truncate(rsetPrice, precisionValue) +
-                            " result price - " + resultPrice);
-                    }
+                    item.setItemPrice(
+                        NumberTools.toString(
+                            NumberTools.truncate(resultPrice, precisionValue),
+                            precisionValue
+                        )
+                    );
                 }
-                item.setItemPrice(
-                    NumberTools.toString(
-                        NumberTools.truncate(resultPrice, precisionValue),
-                        precisionValue
-                    )
-                );
-
+                else {
+                    item.setItemPrice("unknown");
+                }
+                
                 item.setItemDescription(null);
 
                 PriceItemImage image = PriceItemImage.getInstance(shopParam.idSite);

@@ -101,7 +101,7 @@ public final class LoginPlainPortlet implements Portlet {
 
             out.write( "<form method=\"POST\" action=\"" + portletUrl + "\" >\n" );
 
-            String srcURL = null;
+            String srcURL;
             if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
                 srcURL = RequestTools.getString( renderRequest, LoginUtils.NAME_TOURL_PARAM );
             } else {
