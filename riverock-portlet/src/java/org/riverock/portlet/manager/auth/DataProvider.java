@@ -31,6 +31,7 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.Company;
@@ -85,9 +86,7 @@ public class DataProvider implements Serializable {
 
         if (log.isDebugEnabled()) {
             log.debug("authSessionBean: " +authSessionBean);
-            if (authSessionBean!=null) {
-                   log.debug("authSessionBean.getAuthSession(: " + authSessionBean.getAuthSession());
-            }
+            log.debug("authSessionBean.getAuthSession(: " + authSessionBean.getAuthSession());
         }
         List<UserInfo> userList = authSessionBean.getAuthSession().getUserList();
         for (UserInfo userInfo : userList) {
@@ -133,7 +132,11 @@ public class DataProvider implements Serializable {
             if (company.getId() == null) {
                 throw new IllegalStateException("id is null, name: " + company.getName());
             }
-            list.add(new SelectItem(company.getId(), company.getName()));
+            String companyName = company.getName();
+            if (StringUtils.isBlank(companyName)) {
+                companyName = "<empty company name>";
+            }
+            list.add(new SelectItem(company.getId(), companyName));
         }
         return list;
     }

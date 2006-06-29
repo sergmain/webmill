@@ -31,6 +31,7 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Css;
@@ -70,10 +71,11 @@ public class SiteService implements Serializable {
             if (company.getId() == null) {
                 throw new IllegalStateException("id is null, name: " + company.getName());
             }
-
-            // create new String - work around with different classloader issue
-            // Todo my be this wrong :)
-            list.add(new SelectItem(new String(company.getId().toString()), new String(company.getName())));
+            String companyName = company.getName();
+            if (StringUtils.isBlank(companyName)) {
+                companyName = "<empty company name>";
+            }
+            list.add(new SelectItem(company.getId().toString(), companyName));
         }
         return list;
     }

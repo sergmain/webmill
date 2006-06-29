@@ -30,6 +30,8 @@ import java.util.List;
 
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -78,7 +80,11 @@ public class HoldingDataProvider implements Serializable {
         List<Company> companies = FacesTools.getPortalDaoProvider().getPortalCompanyDao().getCompanyList();
         for (Company companyBean : companies) {
             if (!isAlreadyBinded(companyBean)) {
-                list.add(new SelectItem(companyBean.getId(), companyBean.getName()));
+                String companyName = companyBean.getName();
+                if (StringUtils.isBlank(companyName)) {
+                    companyName = "<empty company name>";
+                }
+                list.add(new SelectItem(companyBean.getId(), companyName));
             }
         }
         return list;
