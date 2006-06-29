@@ -38,6 +38,7 @@ import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author SergeMaslyukov
@@ -74,7 +75,11 @@ public class UserTreeBean implements Serializable {
 
         TreeNode treeData = new TreeNodeBase("foo-folder", "Company list", false);
         for (CompanyBean companyBean : dataProvider.getCompanyBeans()) {
-            TreeNodeBase companyNode = new TreeNodeBase("company", companyBean.getCompanyName(), companyBean.getCompanyId().toString(), false);
+            String companyName = companyBean.getCompanyName();
+            if (StringUtils.isBlank(companyName)) {
+                companyName = "<empty company name>";
+            }
+            TreeNodeBase companyNode = new TreeNodeBase("company", companyName, companyBean.getCompanyId().toString(), false);
             for (AuthUserExtendedInfoImpl authUserExtendedInfoImpl : companyBean.getUserBeans()) {
                 companyNode.getChildren().add(
                     new TreeNodeBase(

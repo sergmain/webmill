@@ -25,13 +25,14 @@
 package org.riverock.portlet.manager.company;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.portlet.main.AuthSessionBean;
 
 /**
  * @author SergeMaslyukov
@@ -53,7 +54,11 @@ public class CompanyService implements Serializable {
 		List<Company> companies = new ArrayList<Company>();
 		while(iterator.hasNext()) {
 			Company company = iterator.next();
-			companies.add( new CompanyBean(company) );
+            CompanyBean bean = new CompanyBean(company);
+            if (StringUtils.isBlank(bean.getName())) {
+                bean.setName("<empty company name>");
+            }
+            companies.add( bean );
 		}
 		return companies;
 	}
