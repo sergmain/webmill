@@ -24,16 +24,6 @@
  */
 package org.riverock.cache.config;
 
-import java.io.File;
-import java.util.HashMap;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.cache.schema.config.CacheClassItemType;
-import org.riverock.cache.schema.config.CacheConfigType;
-import org.riverock.common.config.ConfigException;
-import org.riverock.common.config.ConfigObject;
-
 /**
  * User: serg_main
  * Date: 28.11.2003
@@ -43,6 +33,7 @@ import org.riverock.common.config.ConfigObject;
  *         $Id$
  */
 public final class CacheConfig {
+/*
     private final static Logger log = Logger.getLogger(CacheConfig.class);
 
     // used in web.xml file
@@ -61,7 +52,7 @@ public final class CacheConfig {
         return (CacheConfigType) configObject.getConfigObject();
     }
 
-    private static Object syncReadConfig = new Object();
+    private final static Object syncReadConfig = new Object();
 
     private static void readConfig()
         throws ConfigException {
@@ -92,81 +83,14 @@ public final class CacheConfig {
 // PUBLIC SECTION
 //-----------------------------------------------------
 
-    private static Object syncTempDir = new Object();
-
-    public static String getCacheTempDir()
-        throws ConfigException {
-        if (log.isDebugEnabled())
-            log.debug("#15.937");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.938");
-
-        synchronized (syncTempDir) {
-            if (Boolean.FALSE.equals(getConfig().getIsTempDirInit())) {
-                String dir = getConfig().getCacheTempDir();
-		dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
-
-                if (!dir.endsWith(File.separator))
-                    dir += File.separator;
-
-                File dirTest = new File(dir);
-                if (!dirTest.exists()) {
-                    log.error("Specified temp directory '" + dir + "' not exists. Set to default java input/output temp directory");
-                    dir = System.getProperty("java.io.tmpdir");
-                }
-                getConfig().setCacheTempDir(dir);
-                getConfig().setIsTempDirInit(Boolean.TRUE);
-            }
-            return getConfig().getCacheTempDir();
-        }
-    }
-
-    private static Object syncDebug = new Object();
-
-    public static String getMillDebugDir()
-        throws ConfigException {
-        if (log.isDebugEnabled())
-            log.debug("#15.937.1");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.938.1");
-
-        if (getConfig().getIsDebugDirInit())
-            return getConfig().getCacheDebugDir();
-
-        synchronized (syncDebug) {
-            if (getConfig().getIsDebugDirInit())
-                return getConfig().getCacheDebugDir();
-
-            String dir = getConfig().getCacheDebugDir();
-	    dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
-
-            if (!dir.endsWith(File.separator))
-                dir += File.separator;
-
-            File dirTest = new File(dir);
-            if (!dirTest.exists()) {
-                log.warn("Specified debug directory '" + dir + "' not exists. Set to default java input/output temp directory");
-                dir = System.getProperty("java.io.tmpdir");
-            }
-            getConfig().setCacheDebugDir(dir);
-            getConfig().setIsDebugDirInit(Boolean.TRUE);
-
-            return getConfig().getCacheDebugDir();
-        }
-    }
-
     public static CacheClassItemType getClassDefinition(String className) {
+        if (!isConfigProcessed)
+            readConfig();
+
         if (className == null)
             return null;
 
-        return (CacheClassItemType) classMap.get(className);
+        return classMap.get(className);
     }
+*/
 }

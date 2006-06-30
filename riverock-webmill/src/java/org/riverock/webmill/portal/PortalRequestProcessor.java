@@ -32,8 +32,8 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -44,7 +44,6 @@ import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.MainTools;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
-import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -265,7 +264,7 @@ public final class PortalRequestProcessor {
                 if (outputStream!=null) {
                     try {
                         ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
-                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes );
+                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath());
                         portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
                     } catch (Exception e) {
                         log.warn("Error transform page element", e);
@@ -278,11 +277,12 @@ public final class PortalRequestProcessor {
                     synchronized(syncCtxDebug) {
                         try {
                             MainTools.writeToFile(
-                              WebmillConfig.getWebmillDebugDir() + File.separatorChar +
-                                  System.currentTimeMillis()+
-                                  "ctx-from-url-"+i+".xml", item.getData() );
+                                portalRequestInstance.getTempPath().getAbsolutePath() +
+                                    File.separatorChar + System.currentTimeMillis()+ "ctx-from-url-"+i+".xml",
+                                item.getData()
+                            );
                         } catch (Throwable e) {
-                            log.debug("Error marshal debug", e);
+                            // catch debug
                         }
                     }
                 }
@@ -327,7 +327,7 @@ public final class PortalRequestProcessor {
 
                     try {
                         ByteArrayOutputStream tempBytes = new ByteArrayOutputStream(500);
-                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes );
+                        processTransforming( outputStream, portalRequestInstance.xslt.getTransformer(), tempBytes, portalRequestInstance.getTempPath());
                         portalRequestInstance.byteArrayOutputStream.write(tempBytes.toByteArray());
                     } catch (Exception e) {
                         log.warn("Error transform page element", e);
@@ -350,7 +350,7 @@ public final class PortalRequestProcessor {
     }
 
     private static final Object syncObj = new Object();
-    private static void processTransforming( final ByteArrayOutputStream xml, Transformer transformer, ByteArrayOutputStream arrayOutputStream ) throws IOException, TransformerException {
+    private static void processTransforming(final ByteArrayOutputStream xml, Transformer transformer, ByteArrayOutputStream arrayOutputStream, File tempPath) throws IOException, TransformerException {
 
         xml.write( "</SiteTemplate>".getBytes() );
 
@@ -368,12 +368,13 @@ public final class PortalRequestProcessor {
         if (log.isDebugEnabled()) {
             synchronized( syncObj) {
                 try {
-                    String fileName = WebmillConfig.getWebmillTempDir() + "portlet-data.xml";
+                    String fileName =
+                        tempPath.getAbsolutePath() + File.separatorChar + System.currentTimeMillis() + "portlet-data.xml";
                     log.debug( "write portlet result to file "+fileName );
                     MainTools.writeToFile( fileName, bytes );
                 }
                 catch(Throwable th) {
-                    log.warn("Error write debug info", th);
+                    //catch debug;
                 }
             }
         }

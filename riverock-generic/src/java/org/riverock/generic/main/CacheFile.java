@@ -49,10 +49,7 @@ public class CacheFile {
     }
 
     public boolean isNeedReload() {
-        if (lastModified == file.lastModified())
-            return false;
-        else
-            return true;
+        return lastModified != file.lastModified();
     }
 
     public boolean isUseCache() {

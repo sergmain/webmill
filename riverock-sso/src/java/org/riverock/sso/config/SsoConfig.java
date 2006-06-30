@@ -24,8 +24,6 @@
  */
 package org.riverock.sso.config;
 
-import java.io.File;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
@@ -78,86 +76,6 @@ public class SsoConfig {
                 log.debug("#15.006");
 
             isConfigProcessed = true;
-        }
-    }
-
-//-----------------------------------------------------
-// PUBLIC SECTION
-//-----------------------------------------------------
-
-    private final static Object syncTempDir = new Object();
-    public static String getCacheTempDir()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.937");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.938");
-
-        synchronized(syncTempDir)
-        {
-            if (Boolean.FALSE.equals( getConfig().getIsTempDirInit() ) )
-            {
-                String dir = getConfig().getSsoTempDir();
-	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
-
-                if (!dir.endsWith( File.separator ))
-                    dir += File.separator;
-
-                File dirTest = new File(dir);
-                if ( !dirTest.exists() )
-                {
-                    log.error("Specified temp directory '"+dir+"' not exists. Set to default java input/output temp directory");
-                    dir = System.getProperty("java.io.tmpdir");
-                }
-                getConfig().setSsoTempDir( dir );
-                getConfig().setIsTempDirInit( Boolean.TRUE );
-            }
-            return getConfig().getSsoTempDir();
-        }
-    }
-
-    private final static Object syncDebug = new Object();
-    public static String getSsoDebugDir()
-        throws ConfigException
-    {
-        if (log.isDebugEnabled())
-            log.debug("#15.937.1");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.938.1");
-
-        if (getConfig().getIsDebugDirInit() )
-            return getConfig().getSsoDebugDir();
-
-        synchronized(syncDebug)
-        {
-            if (getConfig().getIsDebugDirInit())
-                return getConfig().getSsoDebugDir();
-
-            String dir = getConfig().getSsoDebugDir();
-	    	dir = dir.replace( File.separatorChar == '/'?'\\':'/', File.separatorChar );
-
-            if (!dir.endsWith( File.separator ))
-                dir += File.separator;
-
-            File dirTest = new File(dir);
-            if ( !dirTest.exists() )
-            {
-                log.warn("Specified debug directory '"+dir+"' not exists. Set to default java input/output temp directory");
-                dir = System.getProperty("java.io.tmpdir");
-            }
-            getConfig().setSsoDebugDir( dir );
-            getConfig().setIsDebugDirInit( Boolean.TRUE );
-
-            return getConfig().getSsoDebugDir();
         }
     }
 

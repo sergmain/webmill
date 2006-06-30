@@ -66,7 +66,7 @@ public abstract class DatabaseAdapter {
     protected Map<String, String> tables = new HashMap<String, String>();
 
     protected boolean isDriverLoaded = false;
-    public DatabaseConnectionType dc = null;
+    protected DatabaseConnectionType dc = null;
     protected DataSource dataSource = null;
 
     public DatabaseAdapter() {

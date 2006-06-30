@@ -69,7 +69,7 @@
 	</xs:complexType>
 	<xs:complexType name="GenericConfigType">
 		<xs:sequence>
-			<xs:element name="GenericTempDir" type="xs:string" default="\\temp"/>
+			<xs:element name="GenericTempDir" type="xs:string" default="\\temp" minOccurs="0"/>
 			<xs:element name="GenericDebugDir" type="xs:string" minOccurs="0"/>
 			<xs:element name="Property" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="DTS" type="DateTimeSavingType" minOccurs="0"/>

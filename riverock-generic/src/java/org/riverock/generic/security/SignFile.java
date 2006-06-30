@@ -174,7 +174,7 @@ public class SignFile
 
             bytesToEncrypt = byteStream.toByteArray();
 
-            String tempDir = GenericConfig.getGenericTempDir() + File.separatorChar;
+            String tempDir = GenericConfig.getGenericDebugDir() + File.separatorChar;
 
 //            log.debug("write plain data in file " + tempDir + "file.gzip.1");
 //            log.debug( writeToFile(tempDir + "file.gzip.1", bytes) );
@@ -200,11 +200,17 @@ public class SignFile
 
         EncryptFileSignature encFile = new EncryptFileSignature();
 
+        String keystoreFile=null;
+//        keystoreFile = GenericConfig.getConfig().getSecurityKeyStorage().getPath();
+        if (keystoreFile==null) {
+            throw new IllegalStateException("need implement");
+        }
+
         encFile.initParam(
                 bytesToEncrypt,
                 tempFile,
                 tfc.getCertificateFile(),
-                GenericConfig.getConfig().getSecurityKeyStorage().getPath(),
+                keystoreFile,
                 tfc.getPasswordKS(),
                 tfc.getAliasKS()
         );

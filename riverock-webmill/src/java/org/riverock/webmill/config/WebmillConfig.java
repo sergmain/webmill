@@ -24,17 +24,6 @@
  */
 package org.riverock.webmill.config;
 
-import java.io.File;
-import java.nio.charset.Charset;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.common.config.ConfigObject;
-import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.schema.config.CustomDirsType;
-import org.riverock.webmill.schema.config.WebmillConfigType;
-
-
 /**
  * User: serg_main
  * Date: 28.11.2003
@@ -44,6 +33,7 @@ import org.riverock.webmill.schema.config.WebmillConfigType;
  *         $Id$
  */
 public class WebmillConfig {
+/*
     private static Logger log = Logger.getLogger(WebmillConfig.class);
     private static final String CONFIG_FILE_PARAM_NAME = "webmill-config-file";
     private static final String NAME_CONFIG_PARAM = "jsmithy-webmill.xml";
@@ -52,6 +42,9 @@ public class WebmillConfig {
     private static ConfigObject configObject = null;
 
     private static boolean isConfigProcessed = false;
+
+    private final static Object syncDebug = new Object();
+
 
     public static WebmillConfigType getConfig() {
         return (WebmillConfigType) configObject.getConfigObject();
@@ -121,8 +114,6 @@ public class WebmillConfig {
         }
     }
 
-    private final static Object syncDebug = new Object();
-
     public static String getWebmillDebugDir() {
         if (log.isDebugEnabled()) {
             log.debug("#15.937.1");
@@ -164,73 +155,6 @@ public class WebmillConfig {
         }
     }
 
-    public static String getMainLanguage() {
-        if (log.isDebugEnabled()) log.debug("#15.903");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled()) {
-            log.debug("#15.904 Main language: " +
-                StringTools.getLocale(getConfig().getMainLanguage()).toString()
-            );
-        }
-
-        return StringTools.getLocale(getConfig().getMainLanguage()).toString();
-    }
-
-    public static String getServerCharset() {
-        if (log.isDebugEnabled()) log.debug("#15.905");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled()) log.debug("#15.906");
-
-        return getConfig().getServerCharset();
-    }
-
-
-    public static String getHtmlCharset() {
-        if (log.isDebugEnabled())
-            log.debug("#15.923");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.924");
-
-        return getConfig().getHtmlCharset();
-    }
-
-    public static Charset getCharset() {
-        if (log.isDebugEnabled())
-            log.debug("#15.923");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#15.924");
-
-        return Charset.forName(getConfig().getHtmlCharset());
-    }
-
-    public static boolean getIsSafePage() {
-        if (log.isDebugEnabled())
-            log.debug("#Get isSafePage");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#Done get isSafePage");
-
-
-        return getConfig().getIsSafePage() != null && getConfig().getIsSafePage();
-    }
-
     public static String getMailSMTPHost() {
         if (log.isDebugEnabled())
             log.debug("#15.927");
@@ -243,56 +167,5 @@ public class WebmillConfig {
 
         return getConfig().getMailHost();
     }
-
-    public static String getCustomPortletDir() {
-        if (log.isDebugEnabled())
-            log.debug("#16.927");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#16.928");
-
-        CustomDirsType dirs = getConfig().getCustomDirs();
-        if (dirs == null)
-            return null;
-
-        return dirs.getCustomPortletDir();
-    }
-
-    public static String getCustomMemberDir() {
-        if (log.isDebugEnabled())
-            log.debug("#16.901");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#16.902");
-
-        CustomDirsType dirs = getConfig().getCustomDirs();
-        if (dirs == null)
-            return null;
-
-        return dirs.getCustomMemberDir();
-    }
-
-    public static String getCustomApplDir() {
-        if (log.isDebugEnabled())
-            log.debug("#16.910");
-
-        if (!isConfigProcessed)
-            readConfig();
-
-        if (log.isDebugEnabled())
-            log.debug("#16.911");
-
-        CustomDirsType dirs = getConfig().getCustomDirs();
-        if (dirs == null)
-            return null;
-
-        return dirs.getCustomApplicationDir();
-    }
-
+*/
 }

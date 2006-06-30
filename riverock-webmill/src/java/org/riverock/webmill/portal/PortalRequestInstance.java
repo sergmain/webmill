@@ -110,6 +110,8 @@ public final class PortalRequestInstance {
 
     private PortalDaoProvider portalDaoProvider = null;
 
+    private File tempPath = null;
+
     public void destroy() {
         for (PageElement pageElement : getPageElementList()) {
             pageElement.destroy();
@@ -174,6 +176,8 @@ public final class PortalRequestInstance {
         this.httpResponse = response_;
         this.portalServletConfig = portalServletConfig;
         try {
+            initTempPath();
+
             org.apache.commons.fileupload.RequestContext uploadRequestContext = new ServletRequestContext( httpRequest );
             this.isMultiPartRequest = FileUpload.isMultipartContent( uploadRequestContext );
             if (log.isDebugEnabled()) {
@@ -380,4 +384,25 @@ public final class PortalRequestInstance {
     public RequestContext getRequestContext() {
         return requestContext;
     }
+
+    public File getTempPath() {
+        return tempPath;
+    }
+
+    private void initTempPath() {
+        // init temp path for current request
+        try {
+            tempPath=(File)httpRequest.getAttribute("javax.servlet.context.tempdir");
+        } catch (Throwable e) {
+            log.error("error get temp path from request attributes, set to java.io.temp", e);
+        }
+        if (tempPath==null ){
+            tempPath = new File(System.getProperty("java.io.tmpdir"));
+        }
+        if (!tempPath.exists()) {
+            log.error("Specified temp directory '" + tempPath + "' not exists. Set to default java input/output temp directory");
+            tempPath = new File(System.getProperty("java.io.tmpdir"));
+        }
+    }
+
 }
