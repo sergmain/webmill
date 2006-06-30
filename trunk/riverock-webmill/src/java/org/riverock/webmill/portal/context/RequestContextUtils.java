@@ -50,7 +50,6 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.utils.PortletUtils;
-import org.riverock.webmill.utils.ServletUtils;
 
 /**
  * $Id$
@@ -65,7 +64,7 @@ public final class RequestContextUtils {
         if (tempLocale==null)
             tempLocale = factoryParameter.getPortalInfo().getDefaultLocale();
 
-        Locale realLocale = StringTools.getLocale( ServletUtils.getString(factoryParameter.getRequest(), ContainerConstants.NAME_LANG_PARAM, tempLocale.toString()) );
+        Locale realLocale = StringTools.getLocale( PortletUtils.getString(factoryParameter.getRequest(), ContainerConstants.NAME_LANG_PARAM, tempLocale.toString()) );
         if ( log.isDebugEnabled() ) log.debug( "internalInitTypeContext().locale: "+realLocale.toString() );
 
         if (realLocale==null){

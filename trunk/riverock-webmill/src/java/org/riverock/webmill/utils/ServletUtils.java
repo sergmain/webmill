@@ -24,15 +24,9 @@
  */
 package org.riverock.webmill.utils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.webmill.config.WebmillConfig;
-
-
 /**
+ * @deprecated 
+ *
  * User: serg_main
  * Date: 21.11.2003
  * Time: 19:50:58
@@ -41,33 +35,4 @@ import org.riverock.webmill.config.WebmillConfig;
  *
  */
 public final class ServletUtils {
-    private final static Logger log = Logger.getLogger( ServletUtils.class );
-
-    public static String getString( final HttpServletRequest request, final String f) {
-        return org.riverock.common.tools.ServletTools.getString(request, f, "", WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset());
-    }
-
-    public static String getString( final HttpServletRequest request, final String f, final String def) {
-        return org.riverock.common.tools.ServletTools.getString( request, f, def, WebmillConfig.getServerCharset(), WebmillConfig.getHtmlCharset() );
-    }
-
-    public static void setContentType( final HttpServletResponse response, final String charset )
-        throws Exception {
-        if (log.isDebugEnabled())
-            log.debug("set new charset - "+charset);
-
-        try {
-            response.setContentType("text/html; charset=" + charset);
-        }
-        catch(Exception e) {
-            log.error("Error set new content type to "+charset);
-            throw e;
-        }
-    }
-
-    public static void setContentType( final HttpServletResponse response)
-        throws Exception {
-        setContentType(response, WebmillConfig.getHtmlCharset());
-    }
-
 }

@@ -24,41 +24,13 @@
  */
 package org.riverock.webmill.portal;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-
-import org.riverock.webmill.exception.PortalException;
-import org.riverock.webmill.config.WebmillConfig;
-
 /**
+ * @deprecated 
+ *
  * @author smaslyukov
  *         Date: 29.07.2005
  *         Time: 18:52:55
  *         $Id$
  */
 public class PortalService {
-    private final static Logger log = Logger.getLogger(PortalService.class);
-
-    public static void setContentType(HttpServletResponse response) throws PortalException {
-        setContentType(response, WebmillConfig.getHtmlCharset());
-    }
-
-    public static void setContentType(HttpServletResponse response, String charset) throws PortalException {
-
-        final String type = "text/html; charset=" + charset;
-
-        if (log.isDebugEnabled()) {
-            log.debug("set new charset: " + type);
-            log.debug("response: " + response);
-        }
-
-        try {
-            response.setContentType(type);
-        } catch (Exception e) {
-            final String es = "Error set new content type to " + charset;
-            log.error(es, e);
-            throw new PortalException(es, e);
-        }
-    }
 }

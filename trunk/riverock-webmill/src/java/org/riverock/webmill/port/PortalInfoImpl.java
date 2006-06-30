@@ -36,14 +36,12 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
 import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
-import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.portal.bean.SiteBean;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
@@ -171,22 +169,21 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
         long mills; // System.currentTimeMillis();
         siteBean = InternalDaoFactory.getInternalSiteDao().getSite( siteId );
 
-        if (StringUtils.isNotBlank(siteBean.getDefLanguage()) &&
-            StringUtils.isNotBlank(siteBean.getDefCountry())) {
+        if (StringUtils.isNotBlank(siteBean.getDefLanguage())) {
 
             defaultLocale = new Locale(siteBean.getDefLanguage().toLowerCase(),
-                siteBean.getDefCountry(),
-                (siteBean.getDefVariant() == null ? "" : siteBean.getDefVariant()).toLowerCase());
+                siteBean.getDefCountry() == null ? "" : siteBean.getDefCountry().toLowerCase(),
+                siteBean.getDefVariant() == null ? "" : siteBean.getDefVariant().toLowerCase()
+            );
 
             if (log.isDebugEnabled())
                 log.debug("Main language 1.1: " + getDefaultLocale().toString());
 
         }
         else {
-            defaultLocale = StringTools.getLocale(WebmillConfig.getMainLanguage());
+            defaultLocale = Locale.ENGLISH;
             if (log.isDebugEnabled()) {
-                log.debug("Language, WebmillConfig.getMainLanguage(): " + WebmillConfig.getMainLanguage());
-                log.debug("Language, default locale: " + getDefaultLocale().toString());
+                log.debug("PortalInfoImpl, set default locale to Locale.ENGLISH(en)");
             }
         }
         initPortalProperties();

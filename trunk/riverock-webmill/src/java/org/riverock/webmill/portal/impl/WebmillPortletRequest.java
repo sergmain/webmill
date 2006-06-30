@@ -54,7 +54,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.tools.servlet.RequestDispatcherImpl;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
@@ -63,11 +62,11 @@ import org.riverock.webmill.container.portlet.bean.SecurityRoleRef;
 import org.riverock.webmill.container.portlet.bean.Supports;
 import org.riverock.webmill.portal.PortalConstants;
 import org.riverock.webmill.portal.PortalRequestInstance;
-import org.riverock.webmill.portal.user.PortalUserManagerImpl;
 import org.riverock.webmill.portal.mail.PortalMailServiceProviderImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceMapper;
 import org.riverock.webmill.portal.namespace.NamespaceMapperImpl;
+import org.riverock.webmill.portal.user.PortalUserManagerImpl;
 
 /**
  *
@@ -745,7 +744,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
 
         PortalMailServiceProviderImpl mailServiceProvider = new PortalMailServiceProviderImpl(
-            GenericConfig.getMailSMTPHost(),
+            portalContext.getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID ),
             portalRequestInstance.getPortalInfo().getSite().getAdminEmail()
         );
         this.setAttribute(

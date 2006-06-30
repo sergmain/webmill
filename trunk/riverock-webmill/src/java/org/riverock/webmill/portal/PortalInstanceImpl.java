@@ -23,10 +23,10 @@
  */
 package org.riverock.webmill.portal;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.File;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
@@ -47,11 +47,11 @@ import org.apache.log4j.NDC;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
-import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.utils.PortletUtils;
 
 /**
  * @author smaslyukov
@@ -223,7 +223,7 @@ public class PortalInstanceImpl implements PortalInstance  {
 
             return super.getWriter();
         }
-                        
+
         public ServletOutputStream getOutputStream() throws IOException {
             if ( !isOk )
                 log.warn( "!!! Requested getOutputStream() from http response" );
@@ -365,7 +365,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             final byte[] bytes = portalRequestInstance.byteArrayOutputStream.toByteArray();
             final byte[] bytesTimeString = timeString.toString().getBytes();
 
-            final String pageContent = new String(bytes, WebmillConfig.getHtmlCharset());
+            final String pageContent = new String(bytes, PortletUtils.CHARSET_UTF_8);
 
             if (log.isDebugEnabled()) {
                 log.debug("ContentLength: " + bytes.length);
@@ -380,7 +380,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             response_.setHeader("X-Powered-By", PORTAL_INFO);
             response_.setHeader("Server", PORTAL_INFO);
 
-            PortalService.setContentType(response_);
+            PortletUtils.setContentType(response_);
             response_.setHeader("Cache-Control", "no-cache");
             response_.setHeader("Pragma", "no-cache");
             response_.setContentLength(bytesCopyright.length + bytes.length + bytesTimeString.length);

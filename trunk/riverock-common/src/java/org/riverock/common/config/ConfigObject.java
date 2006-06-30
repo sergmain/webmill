@@ -39,8 +39,7 @@ import org.xml.sax.InputSource;
 /**
  * $Id$
  */
-public class ConfigObject
-{
+public class ConfigObject {
     private static Logger log = Logger.getLogger(ConfigObject.class);
     public static final String LOCAL_CONFIG_PARAM_NAME = "is-local-config";
 
@@ -48,62 +47,58 @@ public class ConfigObject
 
     private Object configObject = null;
 
-    public ConfigObject()
-    {
+    public ConfigObject() {
     }
 
-    public Object getConfigObject()
-    {
+    public Object getConfigObject() {
         return configObject;
     }
 
-    public static ConfigObject load(String nameJndiCtx, String nameConfigParam, String nameConfigFile_, Class configClass)
-    {
+    public static ConfigObject load(String nameJndiCtx, String nameConfigParam, String nameConfigFile_, Class configClass) {
         ConfigObject config = new ConfigObject();
         File configFile = null;
         if (PropertiesProvider.getIsServletEnv()) {
-            boolean isLocal = "true".equalsIgnoreCase( (String)PropertiesProvider.getParameter(LOCAL_CONFIG_PARAM_NAME) );
+            boolean isLocal = "true".equalsIgnoreCase((String) PropertiesProvider.getParameter(LOCAL_CONFIG_PARAM_NAME));
             if (isLocal) {
                 config.nameConfigFile =
-                    PropertiesProvider.getApplicationPath()+
-                    File.separatorChar+
-                    "WEB-INF" +
-                    File.separatorChar+
-                    PropertiesProvider.getParameter(nameConfigParam);
-            }
-            else {
+                    PropertiesProvider.getApplicationPath() +
+                        File.separatorChar +
+                        "WEB-INF" +
+                        File.separatorChar +
+                        PropertiesProvider.getParameter(nameConfigParam);
+            } else {
                 if (log.isDebugEnabled()) {
                     ClassLoader cl = Thread.currentThread().getContextClassLoader();
-                    log.debug("classLoader: "+cl+"\nhash: "+cl.hashCode() );
+                    log.debug("classLoader: " + cl + "\nhash: " + cl.hashCode());
                 }
                 String name = "java:comp/env/" + nameJndiCtx;
                 try {
                     InitialContext ic = new InitialContext();
-                    config.nameConfigFile = (String)ic.lookup(name);
+                    config.nameConfigFile = (String) ic.lookup(name);
                 }
                 catch (NamingException e) {
-                    String es = "Error get value from JDNI context. Name: "+ name;
-			try {
-                InitialContext ic = new InitialContext();
-                Map map = ic.getEnvironment();
-                Iterator<Map.Entry> iterator = map.entrySet().iterator();
-                while(iterator.hasNext()) {
-                    Map.Entry entry = iterator.next();
-					log.error("key: "+entry.getKey()+", value: "+ entry.getValue());
-				}
-			}
-			catch(Throwable th){
-				log.error("erorr",th);
-			}
+                    String es = "Error get value from JDNI context. Name: " + name;
+                    try {
+                        InitialContext ic = new InitialContext();
+                        Map map = ic.getEnvironment();
+                        Iterator<Map.Entry> iterator = map.entrySet().iterator();
+                        while (iterator.hasNext()) {
+                            Map.Entry entry = iterator.next();
+                            log.error("key: " + entry.getKey() + ", value: " + entry.getValue());
+                        }
+                    }
+                    catch (Throwable th) {
+                        log.error("erorr", th);
+                    }
                     log.error(es, e);
-                    throw new ConfigException( es, e );
+                    return config;
+//                    throw new ConfigException(es, e);
                 }
             }
-            if (config.nameConfigFile==null) {
+            if (config.nameConfigFile == null) {
                 log.warn("Config file not defined. isLocal: " + isLocal);
             }
-        }
-        else {
+        } else {
             String defURL = null;
             if (PropertiesProvider.getConfigPath() == null) {
                 String es = "Config path not resolved";
@@ -123,24 +118,23 @@ public class ConfigObject
             config.nameConfigFile = defURL;
         }
 
-        if (config.nameConfigFile==null) {
+        if (config.nameConfigFile == null) {
             String errorString = "name of config file not determinated";
             log.error(errorString);
             throw new IllegalArgumentException(errorString);
         }
 
-	    config.nameConfigFile = config.nameConfigFile.replace(
-		File.separatorChar == '/'?'\\':'/', File.separatorChar
-	    );
+        config.nameConfigFile = config.nameConfigFile.replace(
+            File.separatorChar == '/' ? '\\' : '/', File.separatorChar
+        );
 
         if (log.isInfoEnabled()) {
-            log.info( "nameConfigFile: " + config.nameConfigFile );
+            log.info("nameConfigFile: " + config.nameConfigFile);
         }
 
-        configFile = new File( config.nameConfigFile );
+        configFile = new File(config.nameConfigFile);
 
-        if (!configFile.exists())
-        {
+        if (!configFile.exists()) {
             String errorString = "Config file '" + configFile.getName() + "' not found";
             log.error(errorString);
             throw new IllegalArgumentException(errorString);
@@ -150,8 +144,7 @@ public class ConfigObject
         if (log.isDebugEnabled())
             log.debug("Start unmarshalling file " + nameConfigFile_);
 
-        try
-        {
+        try {
 
             InputSource inSrc = new InputSource(new FileInputStream(configFile));
             config.configObject = Unmarshaller.unmarshal(configClass, inSrc);
@@ -159,7 +152,7 @@ public class ConfigObject
         catch (Throwable e) {
             String es = "Error while unmarshalling config file ";
             log.fatal(es, e);
-            throw new ConfigException( es, e );
+            throw new ConfigException(es, e);
         }
 
         return config;

@@ -446,6 +446,12 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
         }
     }
 
+    /**
+     *
+     * @param adapter DatabaseAdapter
+     * @param siteId  siteId
+     * @return Map<String, Xslt> - String site locale, Xslt - xslt template
+     */
     public Map<String, Xslt> getCurrentXsltForSiteMap(DatabaseAdapter adapter, Long siteId) {
         PreparedStatement ps = null;
         ResultSet rset = null;

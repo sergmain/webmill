@@ -29,109 +29,57 @@ import java.io.FileFilter;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.config.PropertiesProvider;
 import org.riverock.generic.main.CacheDirectory;
 import org.riverock.generic.main.CacheFile;
 import org.riverock.generic.main.Constants;
 import org.riverock.generic.main.ExtensionFileFilter;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.common.config.ConfigException;
-import org.riverock.common.config.PropertiesProvider;
 
 /**
  * $Id$
  */
 public final class DataDefinitionManager {
-    private final static Logger log = Logger.getLogger( DataDefinitionManager.class );
+    private final static Logger log = Logger.getLogger(DataDefinitionManager.class);
 
     private static FileFilter definitionFilter = new ExtensionFileFilter(".xml");
 
     private static CacheDirectory mainDir = null;
-    private static CacheDirectory userDir = null;
 
     private static DataDefinitionFile mainDefinitionFile[] = null;
-    private static DataDefinitionFile userDefinitionFile[] = null;
 
-    private static boolean isUserDirectoryExists = true;
-
-    public static boolean isNeedReload()
-        throws Exception
-    {
-        try {
-        if (mainDir!=null && mainDir.isNeedReload())
-            return true;
-
-        if (userDir!=null && userDir.isNeedReload())
-            return true;
-
-        return false;
-        }
-        catch(Exception e) {
-            log.error("Exception in isNeedReload()", e);
-            throw e;
-        }
-        catch(Error e) {
-            log.error("Error in isNeedReload()", e);
-            throw e;
-        }
+    public static boolean isNeedReload() {
+        return mainDir != null && mainDir.isNeedReload();
     }
 
-    public static DataDefinitionFile[] getDefinitionFileArray()
-    {
+    public static DataDefinitionFile[] getDefinitionFileArray() {
         DataDefinitionFile[] temp = new DataDefinitionFile[getCountFile()];
 
         int idx = 0;
-        if (mainDefinitionFile!=null)
-        {
-            for (int i=0; i<mainDefinitionFile.length; i++)
-            {
-                if (mainDefinitionFile[i]!=null)
-                    temp[idx++] = mainDefinitionFile[i];
-            }
-        }
-        if (userDefinitionFile!=null)
-        {
-            for (int i=0; i<userDefinitionFile.length; i++)
-            {
-                if (userDefinitionFile[i]!=null)
-                    temp[idx++] = userDefinitionFile[i];
+        if (mainDefinitionFile != null) {
+            for (DataDefinitionFile aMainDefinitionFile : mainDefinitionFile) {
+                if (aMainDefinitionFile != null)
+                    temp[idx++] = aMainDefinitionFile;
             }
         }
 
         return temp;
     }
 
-    public static int getCountFile()
-    {
-        return
-            (mainDefinitionFile==null?0:mainDefinitionFile.length)+
-            (userDefinitionFile==null?0:userDefinitionFile.length);
+    public static int getCountFile() {
+        return (mainDefinitionFile == null ? 0 : mainDefinitionFile.length);
     }
 
-    private static String getCustomDir()
-        throws ConfigException
-    {
-        String dir = null;
-        dir = GenericConfig.getCustomDefinitionDir();
-        return dir;
-    }
-
-    public static void init()
-            throws Exception
-    {
-        try
-        {
+    public static void init() {
             File dir = new File(PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_DEFINITION_DIR);
-            if (!dir.exists())
-            {
-                log.warn("Directory '"+dir+"' not exists");
+            if (!dir.exists()) {
+                log.warn("Directory '" + dir + "' not exists");
                 return;
             }
 
-            if (mainDir==null)
+            if (mainDir == null)
                 mainDir = new CacheDirectory(dir, definitionFilter);
 
-            if (mainDefinitionFile == null || !mainDir.isUseCache())
-            {
+            if (mainDefinitionFile == null || !mainDir.isUseCache()) {
                 if (mainDir.isNeedReload())
                     mainDir = new CacheDirectory(
                         PropertiesProvider.getConfigPath() + File.separator + Constants.MILL_DEFINITION_DIR,
@@ -148,88 +96,14 @@ public final class DataDefinitionManager {
 
                 CacheFile cacheFile[] = mainDir.getFileArray();
 
-                if (log.isDebugEnabled())
-                {
+                if (log.isDebugEnabled()) {
                     log.debug("CacheFile - " + cacheFile);
-                    if ( cacheFile!=null )
-                        log.debug( "cacheFile.length - "+cacheFile.length);
+                    log.debug("cacheFile.length - " + cacheFile.length);
                 }
 
                 mainDefinitionFile = null;
                 mainDefinitionFile = new DataDefinitionFile[cacheFile.length];
-                for (int i=0; i<mainDir.getFileArray().length; i++)
-                {
-                    if (log.isDebugEnabled())
-                        log.debug("CacheFile[i] - " + cacheFile[i]);
-
-                    mainDefinitionFile[i] = new DataDefinitionFile( cacheFile[i].getFile());
-                }
+                System.arraycopy(cacheFile, 0, mainDefinitionFile, 0, cacheFile.length);
             }
-
-            // init Custom portlet list
-            if (isUserDirectoryExists)
-            {
-                if (userDir==null)
-                {
-                    String customDefinitionDir = getCustomDir();
-                    if (customDefinitionDir!=null && customDefinitionDir.length()!=0)
-                    {
-//                        try
-                        {
-                            userDir = new CacheDirectory(
-                                customDefinitionDir,
-                                definitionFilter,
-                                1000*30 // сканировать директорий каждые 30 секунд
-                            );
-                        }
-//                        catch( FileNotFoundException e )
-//                        {
-//                            isUserDirectoryExists = false;
-//                            return;
-//                        }
-                    }
-                    else
-                        return;
-                }
-
-                if (userDefinitionFile == null || !userDir.isUseCache())
-                {
-                    if (userDir.isNeedReload())
-                    {
-                        String customDefinitionDir = null;
-                        customDefinitionDir = getCustomDir();
-                        if (customDefinitionDir!=null && customDefinitionDir.length()!=0)
-                        {
-                            userDir = new CacheDirectory(
-                                customDefinitionDir,
-                                definitionFilter,
-                                1000*30 // сканировать директорий каждые 30 секунд
-                            );
-                        }
-                    }
-
-                    if (log.isDebugEnabled())
-                        log.debug("#2.001 read list file");
-
-                    userDir.processDirectory();
-
-                    if (log.isDebugEnabled())
-                        log.debug("#2.003 array of files - " + userDir.getFileArray());
-
-                    CacheFile cacheFile[] = userDir.getFileArray();
-                    userDefinitionFile = null;
-                    userDefinitionFile = new DataDefinitionFile[cacheFile.length];
-                    for (int i=0; i<userDir.getFileArray().length; i++)
-                    {
-                        userDefinitionFile[i] = new DataDefinitionFile( cacheFile[i].getFile());
-                    }
-                }
-            }
-        }
-        catch( Exception e)
-        {
-            log.error("error get application module", e);
-            throw e;
-        }
     }
 }

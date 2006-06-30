@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.cache.config.CacheConfig;
 import org.riverock.cache.schema.config.CacheClassItemType;
 import org.riverock.common.tools.MainTools;
 
@@ -61,8 +60,8 @@ public final class SimpleCacheFactory implements Cache {
 
     private void initClassDefinition()
     {
-        if (classDefinition==null)
-            classDefinition = CacheConfig.getClassDefinition( cacheClass );
+//        if (classDefinition==null)
+//            classDefinition = CacheConfig.getClassDefinition( cacheClass );
 
         if (classDefinition==null)
         {
@@ -307,14 +306,14 @@ public final class SimpleCacheFactory implements Cache {
 
             if (isFullReinit)
             {
-                Method method1 = obj.getClass().getMethod("reinit", (Class[])null);
+                Method method1 = obj.getClass().getMethod("reinit", null);
 
                 if (log.isDebugEnabled())
                     log.debug("#12.12.009  method1 is " + method1);
 
                 if (method1 != null)
                 {
-                    method1.invoke(obj, (Object[])null);
+                    method1.invoke(obj, null);
 
                     if (log.isDebugEnabled())
                         log.debug("#12.12.010 ");

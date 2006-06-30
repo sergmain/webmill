@@ -24,8 +24,6 @@
  */
 package org.riverock.webmill.port;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.StringReader;
 
 import javax.xml.transform.Source;
@@ -41,8 +39,8 @@ import org.apache.log4j.Logger;
 import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
-import org.riverock.webmill.config.WebmillConfig;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.utils.PortletUtils;
 
 /**
  * $Id$
@@ -84,7 +82,7 @@ public class PortalXslt implements XsltTransformer {
     }
 
     public PortalXslt(Xslt xslt) {
-        if (xslt == null || StringUtils.isEmpty(xslt.getXsltData())) {
+        if (StringUtils.isBlank(xslt.getXsltData())) {
             return;
         }
 
@@ -99,8 +97,6 @@ public class PortalXslt implements XsltTransformer {
         }
     }
 
-    private final static Object syncObj = new Object();
-
     private void createTransformer() throws Exception {
         Source xslSource = new StreamSource(new StringReader(xslt.getXsltData()));
 
@@ -110,12 +106,7 @@ public class PortalXslt implements XsltTransformer {
             translet = tFactory.newTemplates(xslSource);
         }
         catch (TransformerConfigurationException e) {
-            synchronized (syncObj) {
-                FileOutputStream out = new FileOutputStream(WebmillConfig.getWebmillTempDir() + File.separatorChar+"xslt-with-error.xsl");
-                out.write(xslt.getXsltData().getBytes(WebmillConfig.getHtmlCharset()));
-                out.flush();
-                out.close();
-            }
+            log.error("xslt with error\n"+xslt.getXsltData().getBytes(PortletUtils.CHARSET_UTF_8));
             try {
                 log.error("Xalan version - " + org.apache.xalan.Version.getVersion());
             }
