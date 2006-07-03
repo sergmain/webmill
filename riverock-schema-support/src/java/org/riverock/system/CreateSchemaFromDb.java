@@ -3646,7 +3646,7 @@ public final class CreateSchemaFromDb {
             }
 
             XmlTools.writeToFile(
-                dbSchema, GenericConfig.getGenericTempDir()+"db-schema.xml", "utf-8", null,
+                dbSchema, GenericConfig.getGenericDebugDir()+"db-schema.xml", "utf-8", null,
                 JsmithyNamespases.namespace
             );
         }
