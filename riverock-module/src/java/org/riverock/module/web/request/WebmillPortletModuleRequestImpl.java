@@ -52,7 +52,7 @@ public class WebmillPortletModuleRequestImpl extends PortletModuleRequestImpl {
     }
 
     public Long getSiteId() {
-        return (Long)portletRequest.getAttribute( ContainerConstants.PORTAL_PROP_SITE_ID );
+        return new Long(portletRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ));
     }
 
     public Object getAttribute(String key) {
