@@ -96,8 +96,6 @@ public class ForumListManagerPortlet extends AbstractForumPortlet {
             log.error(es, e);
             throw new PortletException(es, e);
         }
-        finally {
-        }
 
         if (forwardPage == null) {
             forwardPage = "";

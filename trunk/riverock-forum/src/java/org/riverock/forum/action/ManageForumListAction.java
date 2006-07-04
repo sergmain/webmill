@@ -56,13 +56,19 @@ public class ManageForumListAction implements Action {
             log.error(es, e);
             throw new IllegalStateException(es,e);
         }
+        if (log.isDebugEnabled()) {
+            log.debug("Looking for forums for siteId " + siteId);
+        }
         ForumListManagerDAO adminForumDAO = daof.getForumListManagerDAO();
         adminForumDAO.execute( auth_, moduleActionRequest, moduleActionRequest.getUrlProvider() );
 
         TopLevelForumDAO homeDAO = daof.getTopLevelForumDAO();
         ForumTopLevelBean homeBean = homeDAO.execute( siteId );
 
-        log.debug("before leave execute()");
+        if (log.isDebugEnabled()) {
+            log.debug("before leave execute()");
+            log.debug("homeBean " + homeBean);
+        }
 
         if (homeBean != null) {
             moduleActionRequest.getRequest().setAttribute("forums", homeBean);
