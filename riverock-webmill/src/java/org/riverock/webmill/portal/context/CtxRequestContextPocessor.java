@@ -198,6 +198,10 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
             log.debug("     default ns: " + bean.getDefaultNamespace() );
         }
 
+        if (bean.getDefaultPortletName()==null) {
+            return null;
+        }
+
         Long ctxId = InternalDaoFactory.getInternalCatalogDao().getCatalogItemId(factoryParameter.getPortalInfo().getSiteId(), bean.getLocale(), bean.getDefaultPortletName(), bean.getTemplateName());
         if (log.isDebugEnabled()) {
             log.debug("ctxId: " + ctxId );
