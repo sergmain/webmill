@@ -1,13 +1,13 @@
 /*
- * org.riverock.webmill -- Portal framework implementation
+ * org.riverock.webmill - Portal framework implementation
  *
  * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
- * This program is free software; you can redistribute it and/or             
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
@@ -329,6 +329,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             portalRequestInstance.byteArrayOutputStream.write(
                 ( es + "<br>" + ExceptionTools.getStackTrace(e, NUM_LINES, "<br>") ).getBytes()
             );
+            NDC.pop();
             return;
         }
 
