@@ -123,6 +123,9 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
     }
 
     public Long getCatalogItemId(Long siteId, Locale locale, String portletName, String templateName) {
+        if (portletName==null) {
+            return null;
+        }
 
         String resultPortletName = portletName;
         if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {

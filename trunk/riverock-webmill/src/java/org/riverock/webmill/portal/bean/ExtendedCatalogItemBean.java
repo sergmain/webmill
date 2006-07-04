@@ -203,6 +203,10 @@ public final class ExtendedCatalogItemBean {
     }
 
     public static ExtendedCatalogItemBean getInstance(RequestContextParameter factoryParameter, String templateName, String portletName, Locale locale) {
+        if (portletName==null) {
+            return null;
+        }
+        
         PortalTemplate template = factoryParameter.getPortalInfo().getPortalTemplateManager().getTemplate( templateName, locale.toString());
         if (template==null) {
             return null;
