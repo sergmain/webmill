@@ -3,7 +3,7 @@
 /*
  * org.riverock.generic - Database connectivity classes
  * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  * 
  * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
@@ -39,6 +39,7 @@
 			<xs:element name="Password" type="xs:string" minOccurs="0"/>
 			<xs:element name="ConnectString" type="xs:string" minOccurs="0"/>
 			<xs:element name="ConnectionClass" type="xs:string"/>
+			<xs:element name="Family" type="xs:string" minOccurs="0"/>
 			<xs:element name="DatabaseCharset" type="xs:string" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>

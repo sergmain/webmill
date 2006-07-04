@@ -43,6 +43,22 @@
 	<servlet>
 		<servlet-name>WebMill engine startup servlet</servlet-name>
 		<servlet-class>org.riverock.generic.startup.StartupServlet</servlet-class>
+        <init-param>
+            <param-name>is-local-config</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>log-path</param-name>
+            <param-value>log4j</param-value>
+        </init-param>
+        <init-param>
+            <param-name>log-config-file</param-name>
+            <param-value>config\log4j.properties</param-value>
+        </init-param>
+        <init-param>
+            <param-name>generic-config-file</param-name>
+            <param-value>config\config-generic.xml</param-value>
+        </init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>

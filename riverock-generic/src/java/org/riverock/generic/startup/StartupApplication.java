@@ -26,13 +26,13 @@ package org.riverock.generic.startup;
 
 import java.io.File;
 
-import org.riverock.common.config.PropertiesProvider;
-import org.riverock.common.config.ConfigService;
-import org.riverock.common.config.ConfigException;
-import org.riverock.generic.config.GenericConfig;
-
-import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
+import org.riverock.common.config.ConfigException;
+import org.riverock.common.config.ConfigService;
+import org.riverock.common.config.PropertiesProvider;
+import org.riverock.generic.config.GenericConfig;
 
 /**
  * $Id$

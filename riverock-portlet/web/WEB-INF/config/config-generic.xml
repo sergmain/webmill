@@ -33,7 +33,7 @@
 	<DefaultConnectionName>MYSQL_JNDI</DefaultConnectionName>
 	<DatabaseConnection name="MYSQL_JNDI">
         <ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>
-                <DataSourceType>JNDI</DataSourceType>
-                <DataSourceName>jdbc/webmill</DataSourceName>
-	</DatabaseConnection>
+        <DataSourceType>JNDI</DataSourceType>
+        <DataSourceName>jdbc/webmill</DataSourceName>
+    </DatabaseConnection>
 </WebmillConfig>

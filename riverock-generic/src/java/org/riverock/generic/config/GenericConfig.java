@@ -31,8 +31,6 @@ import java.util.Map;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import javax.naming.InitialContext;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
@@ -42,7 +40,6 @@ import org.riverock.generic.schema.config.DateTimeSavingType;
 import org.riverock.generic.schema.config.DateTimeSavingTypeSequence;
 import org.riverock.generic.schema.config.GenericConfigType;
 import org.riverock.generic.schema.config.PropertyType;
-import org.riverock.generic.schema.config.types.DataSourceTypeType;
 
 /**
  * $Id$
@@ -81,7 +78,7 @@ public final class GenericConfig {
 
     private final static Object syncReadConfig = new Object();
 
-    private static void readConfig() throws ConfigException {
+    private static void readConfig() {
 
         if (isConfigProcessed) return;
 
@@ -98,11 +95,9 @@ public final class GenericConfig {
                 dbConfig = null;
             }
 
-            // config not found not as init parameter in web.xml file, not as JDNI reference
+            // config not found as init parameter in web.xml file or as JDNI reference
             if (getConfig()==null) {
-                initFromJNDI();
-                isConfigProcessed = true;
-                return;
+                throw new ConfigException("generic config object is null");
             }
 
             if (log.isDebugEnabled()) {
@@ -123,12 +118,7 @@ public final class GenericConfig {
         }
     }
 
-    private static Map<String, String> famalyMap = new HashMap<String, String>();
-    static {
-        famalyMap.put("mysql", "org.riverock.generic.db.factory.ORAconnect");
-        famalyMap.put("oracle", "org.riverock.generic.db.factory.MYSQLconnect");
-    }
-
+/*  // comment out because in hust time we not support init config file from JDNI
     private static void initFromJNDI() {
         Map<String, DatabaseConnectionType> map = new HashMap<String, DatabaseConnectionType>();
         try {
@@ -155,6 +145,7 @@ public final class GenericConfig {
             throw new IllegalStateException(es, e);
         }
     }
+*/
 
 //-----------------------------------------------------
 // PUBLIC SECTION

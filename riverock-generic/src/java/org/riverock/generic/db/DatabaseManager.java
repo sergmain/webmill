@@ -1205,7 +1205,7 @@ public final class DatabaseManager {
             pstm = null;
         }
 
-    }
+    }                                   
 
     public static List<Long> getIdByList(final DatabaseAdapter adapter, final String sql, final Object[] param)
         throws GenericException {
