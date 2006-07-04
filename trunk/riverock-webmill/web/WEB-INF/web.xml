@@ -59,6 +59,10 @@
             <param-name>generic-config-file</param-name>
             <param-value>config\config-generic.xml</param-value>
         </init-param>
+        <init-param>
+            <param-name>sso-config-file</param-name>
+            <param-value>config\config-sso.xml</param-value>
+        </init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>

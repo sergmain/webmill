@@ -25,7 +25,7 @@
  *
  */
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
 		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
 	</xs:annotation>
@@ -35,7 +35,7 @@
 	<xs:element name="SsoConfig" type="SsoConfigType"/>
 	<xs:complexType name="SsoConfigType">
 		<xs:sequence>
-			<xs:element name="SsoTempDir" type="xs:string" default="\\tmp"/>
+			<xs:element name="SsoTempDir" type="xs:string" default="\\tmp" minOccurs="0"/>
 			<xs:element name="SsoDebugDir" type="xs:string" default="c:\\opt1" minOccurs="0"/>
 			<xs:element name="Auth" type="AuthType"/>
 		</xs:sequence>
