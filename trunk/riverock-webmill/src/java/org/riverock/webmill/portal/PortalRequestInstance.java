@@ -28,9 +28,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.HashMap;
 
 import javax.portlet.PortalContext;
 import javax.servlet.ServletConfig;
@@ -55,13 +55,14 @@ import org.riverock.sso.a3.AuthTools;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.port.PortalInfoImpl;
+import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
+import org.riverock.webmill.portal.context.RequestContext;
+import org.riverock.webmill.portal.context.RequestContextFactory;
+import org.riverock.webmill.portal.context.RequestContextParameter;
+import org.riverock.webmill.portal.context.RequestState;
 import org.riverock.webmill.portal.dao.PortalDaoProviderImpl;
 import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
-import org.riverock.webmill.portal.context.RequestContext;
-import org.riverock.webmill.portal.context.RequestContextParameter;
-import org.riverock.webmill.portal.context.RequestContextFactory;
-import org.riverock.webmill.portal.bean.ExtendedCatalogItemBean;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
 import org.riverock.webmill.utils.PortletUtils;
@@ -224,19 +225,20 @@ public final class PortalRequestInstance {
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
                     if (portletParameters==null) {
-                        throw new IllegalStateException(
-                            "portletParameters object is null, " +
-                                "namespace: " + namespace.getNamespace() +", " +
-                                "portletName: " + portletName
-                        );
+                        portletParameters = new PortletParameters(namespace.getNamespace(), new RequestState(), new HashMap<String, List<String>>());
                     }
                 } else if (templateItem.getTypeObject().getType() == PortalTemplateItemType.DYNAMIC_TYPE) {
                     portletName = requestContext.getDefaultPortletName();
                     namespace = NamespaceFactory.getNamespace(portletName, requestContext.getTemplateName(), i++);
 
                     portletParameters = requestContext.getParameters().get(namespace.getNamespace());
+
                     if (portletParameters==null) {
-                        throw new IllegalStateException("portletParameters object is null");
+                        throw new IllegalStateException(
+                            "portletParameters object is null, " +
+                                "namespace: " + namespace.getNamespace() +", " +
+                                "portletName: " + portletName
+                        );
                     }
                 }
 
