@@ -88,12 +88,12 @@ public class ForumPortlet extends AbstractForumPortlet {
             );
 
             WmForumItemType forum = CommonUtils.checkForumId(adapter, forumId, actionRequest.getServerName() );
-            initGenericBean( moduleActionRequest, forum );
-
             if (forum==null){
+                log.error("Forum not found for forumId: " + forumId+", serverName: " +actionRequest.getServerName());
                 forwardPage = ForumError.noSuchForumError(moduleActionRequest);
             }
             else {
+                initGenericBean( moduleActionRequest, forum );
                 try {
                     forwardPage = actionFactory.doAction(moduleActionRequest);
                 } catch (ActionException ex) {
