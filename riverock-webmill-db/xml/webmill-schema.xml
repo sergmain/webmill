@@ -900,7 +900,7 @@
 		<Fields name="ID_SITE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="0"/>
 		<Fields name="ID_FIRM" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="22" nullable="1"/>
 		<Fields name="DEF_LANGUAGE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="0"/>
-		<Fields name="DEF_COUNTRY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="0"/>
+		<Fields name="DEF_COUNTRY" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="1"/>
 		<Fields name="DEF_VARIANT" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="6" nullable="1"/>
 		<Fields name="NAME_SITE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="0"/>
 		<Fields name="ADMIN_EMAIL" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="30" nullable="1"/>
