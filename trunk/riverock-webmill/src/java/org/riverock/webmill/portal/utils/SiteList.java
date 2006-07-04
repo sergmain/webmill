@@ -1,9 +1,9 @@
 /*
- * org.riverock.webmill -- Portal framework implementation
+ * org.riverock.webmill - Portal framework implementation
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.webmill.portal.utils;
 
@@ -109,11 +108,11 @@ public class SiteList {
     private Long searchSiteId(final String serverName) {
         if (serverName == null) return null;
         Long siteId = hashListSite.get(serverName.toLowerCase());
-        if (siteId == null) {
-            log.warn("site with serverName '" + serverName + "' not found");
-            log.warn("Dump map with current serverNames");
+        if (siteId == null && log.isInfoEnabled()) {
+            log.info("site with serverName '" + serverName + "' not found");
+            log.info("Dump map with current serverNames");
             for (String s : hashListSite.keySet()) {
-                log.warn("Value in map: " + s + ", value: " + hashListSite.get(s));
+                log.info("Value in map: " + s + ", value: " + hashListSite.get(s));
             }
         }
         return siteId;
