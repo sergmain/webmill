@@ -125,15 +125,19 @@ public final class ExtendedCatalogItemBean {
 
         ExtendedCatalogItemBean catalogItem = new ExtendedCatalogItemBean();
         CatalogItem ctx = InternalDaoFactory.getInternalCatalogDao().getCatalogItem(ctxId);
-        // Dont include menuItem with not defined template
-        if (ctx.getTemplateId()==null) {
-            ctx=null;
-        }
 
-        if (ctx == null) {
-            log.warn("Catalog record for id " + ctxId + " not found. process as 'index' page");
+        if (ctx==null) {
+            if (log.isInfoEnabled()) {
+                log.info("Catalog record for id " + ctxId + " not found. process as 'index' page");
+            }
             return null;
         }
+
+        // Dont include menuItem with not defined template
+        if (ctx.getTemplateId()==null) {
+            return null;
+        }
+
         catalogItem.concretePortletIdValue = ctx.getContextId();
         catalogItem.templateId = ctx.getTemplateId();
         catalogItem.portletMetadata = initMetadata(ctx);
