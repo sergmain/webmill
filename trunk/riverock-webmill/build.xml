@@ -79,9 +79,6 @@
         <pathelement location="${lib.dir}/ojdbc14.jar"/>
     </path>
 
-    <property name="www.dir" value="c:\opt2\_www"/>
-    <property name="context.war.name" value="webmill-portal.war"/>
-
     <fileset dir="${lib.dir}/" id="web-inf-lib" >
         <include name="${riverock-sso.lib}"/>
         <include name="${riverock-sql-parser.lib}"/>
@@ -93,40 +90,7 @@
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
         <include name="${portlet.lib}"/>
-
     </fileset>
-
-<!--
-    <target name="run_all_new_jar">
-        <antcall target="stop.apache"/>
-        <antcall target="jar"/>
-        <antcall target="copy_new_jars"/>
-        <antcall target="start.apache"/>
-    </target>
-
-    <target name="copy_to_mill">
-        <copy_jars_to_context webmill-context="C:\opt2\_www\mill"/>
-    </target>
-
-    <target name="copy_new_jars">
-        <antcall target="copy_to_mill"/>
-    </target>
-
-    <target name="run_tomcat_with_new_jar">
-        <antcall target="stop.apache"/>
-        <antcall target="jar"/>
-        <antcall target="copy_new_jars"/>
-        <antcall target="start.apache"/>
-    </target>
-
-    <target name="run_new_mill_war">
-        <antcall target="stop.apache"/>
-        <antcall target="war"/>
-        <copy file="${build.dir}\${context.war.name}" todir="c:/opt2/_www" overwrite="true" />
-        <delete dir="${tomcat-home}/webapps/ROOT" />
-        <antcall target="start.apache"/>
-    </target>
-    -->
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
@@ -396,6 +360,8 @@
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
     </patternset>
+
+    <property name="context.war.name" value="ROOT.war"/>
 
     <target name="war" depends="jar" >
         <property name="war-file-name" value="${build.dir}/${context.war.name}"/>

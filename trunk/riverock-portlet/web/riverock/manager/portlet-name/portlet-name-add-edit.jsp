@@ -8,6 +8,6 @@
  <h:outputText value="Portlet name info"/>
  <h:panelGrid columns="2">
  		<h:outputText value="#{msg.portlet_name_name}"/>
- 		<h:inputText id="portlet--name-name-field" value="#{portletNameSessionBean.portletName.portletName}"/>
+ 		<h:inputText id="portlet--name-name-field" value="#{portletNameSessionBean.portletName.portletName}" size="30"/>
  </h:panelGrid>
  	

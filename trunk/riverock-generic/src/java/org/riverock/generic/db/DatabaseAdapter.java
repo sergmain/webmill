@@ -43,7 +43,6 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.MainTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.schema.config.DatabaseConnectionType;
@@ -59,7 +58,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
 /**
  * $Revision$ $Date$
  */
-public abstract class DatabaseAdapter {
+public abstract class DatabaseAdapter implements DbConnection {
     private final static Logger log = Logger.getLogger(DatabaseAdapter.class);
 
     protected Connection conn = null;
@@ -194,21 +193,21 @@ public abstract class DatabaseAdapter {
         throws SQLException;
 
     /**
-     * Проверяет является ли ошибка результатом ображения к не существующей в базе таблице.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      *
      * @param e - Exception
-     * @return boolean. true - если ошибка возникла в результате обращения к не существующей
-     *         таблице. Иначе false.
+     * @return boolean. true - пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+     *         пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ false.
      */
     public abstract boolean testExceptionTableNotFound(Exception e);
 
     /**
-     * Проверяет является ли ошибка результатом попытки вставки дулирующих данных в уникальный ключ
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
      *
      * @param e     - Exception
-     * @param index - String. имя уникального ключа для проверки что ошибка возникла именно в нем.
-     * @return boolean. true - если ошибка была результатом попытки вставки дулирующих данных
-     *         в уникальный ключ. Иначе false.
+     * @param index - String. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ.
+     * @return boolean. true - пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+     *         пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ false.
      */
     public abstract boolean testExceptionIndexUniqueKey(Exception e, String index);
 
@@ -223,11 +222,11 @@ public abstract class DatabaseAdapter {
     public abstract boolean testExceptionConstraintExists(Exception e);
 
     /**
-     * Возвращает значение сиквенса(последовательности) для данного имени последовательности.
-     * Для разных коннектов к разным базам данных может быть решена по разному.
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+     * пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
      *
-     * @param sequence - String. Имя последовательноти для получения следующего значения.
-     * @return long - следующее значение для ключа из последовательности
+     * @param sequence - String. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+     * @return long - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      * @throws SQLException
      */
     public abstract long getSequenceNextValue(final CustomSequenceType sequence) throws SQLException;
@@ -342,49 +341,6 @@ public abstract class DatabaseAdapter {
         }
     }
 
-    protected static DatabaseAdapter openConnect(final DatabaseConnectionType dc)
-        throws DatabaseException {
-        if (dc == null) {
-            String es = "DatabaseConnection is null.";
-            log.fatal(es);
-            throw new DatabaseException(es);
-        }
-
-        DatabaseAdapter db_ = null;
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Call for create dynamic object " + dc.getConnectionClass());
-            }
-
-            db_ = (DatabaseAdapter) MainTools.createCustomObject(dc.getConnectionClass());
-            db_.init(dc);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Success create dynamic object " + dc.getConnectionClass());
-            }
-        }
-        catch (Exception e) {
-            if (db_ != null && db_.conn != null) {
-                try {
-                    db_.conn.close();
-                    db_.conn = null;
-                }
-                catch (Exception e02) {
-                    // catch close connection error
-                }
-            }
-
-            log.fatal("Error create instance for class " + dc.getConnectionClass());
-            log.fatal("ConnectionName - " + dc.getName());
-            log.fatal("Error:", e);
-
-            final String es = "Error create instance for class " + dc.getConnectionClass() + ". See log for details";
-            System.out.println(es);
-            throw new DatabaseException(es, e);
-        }
-        return db_;
-    }
-
     public static DatabaseAdapter getInstance() throws DatabaseException {
         return getInstance(GenericConfig.getDefaultConnectionName());
     }
@@ -408,7 +364,7 @@ public abstract class DatabaseAdapter {
             throw new DatabaseException(es);
         }
 
-        DatabaseAdapter adapater = openConnect(dc);
+        DatabaseAdapter adapater = DbConnectionProvider.openConnect(dc);
         DatabaseStructureManager.checkDatabaseStructure(adapater, dc);
 
         return adapater;

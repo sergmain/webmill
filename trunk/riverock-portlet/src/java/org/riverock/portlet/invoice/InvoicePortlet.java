@@ -41,11 +41,9 @@ import javax.portlet.RenderResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.mail.MailMessage;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.NumberTools;
 import org.riverock.common.tools.ServletTools;
-import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -402,6 +400,10 @@ public final class InvoicePortlet implements Portlet {
                         log.debug( "send admin order: your order N" + order.getIdOrder() + "\n" + orderAdminString );
                 }
 
+                if (true) {
+                    throw new IllegalStateException("Need switch to user Poral mail service");
+                }
+/*
                 MailMessage.sendMessage( orderCustomString,
                     order.getAuthSession().getUserInfo().getEmail(),
                     orderEmail,
@@ -416,7 +418,7 @@ public final class InvoicePortlet implements Portlet {
                         "Order N" + order.getIdOrder(),
                         GenericConfig.getMailSMTPHost() );
                 }
-
+*/
                 String shopUrl = "<a href=\"" +
                     PortletService.url( ShopPortlet.CTX_TYPE_SHOP, renderRequest, renderResponse ) + '&' +
                     addUrl + "\">";

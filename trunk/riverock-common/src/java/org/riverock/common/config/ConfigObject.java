@@ -91,8 +91,8 @@ public class ConfigObject {
                         log.error("erorr", th);
                     }
                     log.error(es, e);
-                    return config;
-//                    throw new ConfigException(es, e);
+//                    return config;
+                    throw new ConfigException(es, e);
                 }
             }
             if (config.nameConfigFile == null) {

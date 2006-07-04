@@ -278,7 +278,7 @@ public class PortalInstanceImpl implements PortalInstance  {
         request_ = httpServletRequest;
         InternalServletResponseWrapper response_ = new InternalServletResponseWrapper( httpResponse );
 
-        // Prepare Nested D... Context
+        // Prepare Nested Diagnostic Contexts
         synchronized (syncCounter) {
             counter = counterNDC;
             ++counterNDC;
