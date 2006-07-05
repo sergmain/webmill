@@ -39,7 +39,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.cache.impl.CacheException;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
@@ -68,7 +67,7 @@ import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 public final class ArticlePlain implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger( ArticlePlain.class );
 
-    private final static CacheFactory cache = new CacheFactory( ArticlePlain.class.getName() );
+    private final static CacheFactory cache = new CacheFactory( ArticlePlain.class);
 
     public Calendar datePost = null;
     public String nameArticle = "";
@@ -91,7 +90,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         cache.reinit();
     }
 
-    public synchronized void terminate( Long id ) throws CacheException {
+    public synchronized void terminate( Long id ) {
         cache.terminate( id );
     }
 

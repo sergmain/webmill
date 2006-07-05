@@ -40,7 +40,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
 public final class ContentCSS {
     private Css css=null;
 
-    private static CacheFactory cache = new CacheFactory(ContentCSS.class.getName());
+    private static CacheFactory cache = new CacheFactory(ContentCSS.class);
 
     protected void finalize() throws Throwable {
         css = null;

@@ -52,7 +52,6 @@
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
 
@@ -348,7 +347,7 @@
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
-        <include name="${riverock-cache.lib}"/>
+        <!--<include name="${riverock-cache.lib}"/>-->
         <include name="${riverock-webmill.lib}"/>
 
         <include name="${commons-lang.lib}"/>
@@ -359,6 +358,7 @@
         <include name="${commons-beanutils.lib}"/>
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
+        <include name="${ehcache.lib}"/>
     </patternset>
 
     <property name="context.war.name" value="ROOT.war"/>

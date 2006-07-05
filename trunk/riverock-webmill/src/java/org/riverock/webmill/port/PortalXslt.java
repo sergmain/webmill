@@ -48,7 +48,7 @@ import org.riverock.webmill.utils.PortletUtils;
 public class PortalXslt implements XsltTransformer {
     private static Logger log = Logger.getLogger(PortalXslt.class);
 
-    private static CacheFactory cache = new CacheFactory(PortalXslt.class.getName());
+    private static CacheFactory cache = new CacheFactory(PortalXslt.class);
 
     private Xslt xslt = null;
     private Transformer transformer = null;

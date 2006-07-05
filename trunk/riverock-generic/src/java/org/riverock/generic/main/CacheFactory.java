@@ -27,12 +27,13 @@ package org.riverock.generic.main;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import org.riverock.cache.impl.SimpleCacheFactory;
-import org.riverock.cache.impl.CacheException;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import org.apache.log4j.Logger;
+
 import org.riverock.generic.exception.GenericException;
 import org.riverock.common.tools.MainTools;
-
-import org.apache.log4j.Logger;
 
 /**
  * $Id$
@@ -40,15 +41,31 @@ import org.apache.log4j.Logger;
 public class CacheFactory {
     private static Logger log = Logger.getLogger( CacheFactory.class );
 
-    protected static Integer CountClassInCache = 20;
+//    protected static Integer CountClassInCache = 20;
 
-    private SimpleCacheFactory cache = null;
+//    private SimpleCacheFactory cache = null;
+    private Cache cache = null;
+    private Class clazz=null;
 
+/*
     public CacheFactory(String className) {
         log.info("create constructor: "+className);
         cache = new SimpleCacheFactory(className);
     }
+*/
+    public CacheFactory(Class clazz) {
+        if (log.isInfoEnabled()) {
+            log.info("create constructor with class: " + clazz.getName());
+        }
+        this.clazz=clazz;
+        CacheManager singletonManager = CacheManager.create();
+        singletonManager.addCache(clazz.getName());
+        cache = singletonManager.getCache(clazz.getName());
 
+//        cache = new SimpleCacheFactory(className);
+    }
+
+/*
     public void reinit() {
         cache.reinit();
     }
@@ -56,15 +73,23 @@ public class CacheFactory {
     public synchronized void terminate(Long id) throws CacheException {
         cache.terminate(id);
     }
+*/
+    public void reinit() {
+//        cache.reinit();
+        cache.removeAll();
+    }
 
-    private static synchronized Object createObject(Long id__, String className)
+    public void terminate(Long id) {
+//        cache.terminate(id);
+        cache.remove(id);
+    }
+
+    private static Object createObject(Long idLong, String className)
         throws GenericException {
 
         Class p[] = new Class[1];
-        Object obj = null;
-
+        Object obj;
         try {
-            Long idLong = id__;
             p[0] = Long.class;
 
             if (log.isDebugEnabled()) {
@@ -109,23 +134,23 @@ public class CacheFactory {
 
     public synchronized Object getInstanceNew(Long id__) throws GenericException {
         try {
-            Object obj = cache.get( id__ );
+            Element obj = cache.get( id__ );
 
-            if (log.isDebugEnabled()) log.debug("Get object from cache, class "+cache.getClassName()+", result object "+obj);
+            if (log.isDebugEnabled()) log.debug("Get object from cache, class "+clazz.getName()+", result object "+obj);
 
             if (obj!=null)
-                return obj;
+                return obj.getObjectValue();
 
             if (log.isDebugEnabled()) log.debug("Result object is null, create new object "+id__);
 
-            Object cacheItem = createObject(id__, cache.getClassName());
+            Object cacheItem = createObject(id__, clazz.getName());
 
             if (log.isDebugEnabled())log.debug("Result new object is "+cacheItem);
 
             if (cacheItem==null)
                 return null;
 
-            cache.put(id__, cacheItem );
+            cache.put(new Element(id__, cacheItem));
             return cacheItem;
         }
         catch (Throwable e) {
@@ -175,7 +200,6 @@ public class CacheFactory {
 
                 Object objArgs1[] = { id };
                 method1.invoke(obj, objArgs1);
-                objArgs1 = null;
 
                 if (log.isDebugEnabled())
                     log.debug("#12.12.017 ");

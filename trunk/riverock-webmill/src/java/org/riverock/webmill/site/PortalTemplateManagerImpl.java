@@ -52,7 +52,7 @@ import org.riverock.webmill.portal.dao.InternalDaoFactory;
  */
 public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     private final static Logger log = Logger.getLogger( PortalTemplateManagerImpl.class );
-    private final static CacheFactory cache = new CacheFactory( PortalTemplateManagerImpl.class.getName() );
+    private final static CacheFactory cache = new CacheFactory( PortalTemplateManagerImpl.class);
 
     private static Digester digester = null;
     static {

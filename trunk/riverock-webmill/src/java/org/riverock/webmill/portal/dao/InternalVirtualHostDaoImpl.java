@@ -57,7 +57,7 @@ public class InternalVirtualHostDaoImpl implements InternalVirtualHostDao {
         List<VirtualHost> virtualHosts = new ArrayList<VirtualHost>();
         try {
             adapter = DatabaseAdapter.getInstance();
-            WmPortalVirtualHostListType hosts = GetWmPortalVirtualHostFullList.getInstance(adapter, 0).item;
+            WmPortalVirtualHostListType hosts = GetWmPortalVirtualHostFullList.getInstance(adapter, 0L).item;
             for (Object o : hosts.getWmPortalVirtualHostAsReference()) {
                 WmPortalVirtualHostItemType host = (WmPortalVirtualHostItemType) o;
                 virtualHosts.add(

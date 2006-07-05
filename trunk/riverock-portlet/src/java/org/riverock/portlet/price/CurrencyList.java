@@ -45,7 +45,7 @@ import org.riverock.sql.cache.SqlStatement;
 public class CurrencyList {
     private static Logger log = Logger.getLogger( CurrencyList.class );
 
-    private static CacheFactory cache = new CacheFactory( CurrencyList.class.getName() );
+    private static CacheFactory cache = new CacheFactory( CurrencyList.class);
 
     public CustomCurrencyType list = new CustomCurrencyType();
 

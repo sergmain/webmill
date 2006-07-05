@@ -39,7 +39,6 @@ import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.sql.cache.SqlStatement;
 import org.riverock.sql.cache.SqlStatementRegisterException;
-import org.riverock.cache.impl.CacheException;
 
 /**
  * Author: Serg Malyukov
@@ -51,7 +50,7 @@ import org.riverock.cache.impl.CacheException;
 public class FaqGroup implements PortletGetList {
     private static Logger log = Logger.getLogger(FaqGroup.class);
 
-    private static CacheFactory cache = new CacheFactory(FaqGroup.class.getName());
+    private static CacheFactory cache = new CacheFactory(FaqGroup.class);
 
     static String sql_ = null;
     static {
@@ -105,7 +104,7 @@ public class FaqGroup implements PortletGetList {
         cache.reinit();
     }
 
-    public synchronized void terminate(Long id) throws CacheException {
+    public synchronized void terminate(Long id) {
         cache.terminate(id);
     }
 

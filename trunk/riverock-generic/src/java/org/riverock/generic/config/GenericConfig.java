@@ -118,35 +118,6 @@ public final class GenericConfig {
         }
     }
 
-/*  // comment out because in hust time we not support init config file from JDNI
-    private static void initFromJNDI() {
-        Map<String, DatabaseConnectionType> map = new HashMap<String, DatabaseConnectionType>();
-        try {
-            InitialContext ic = new InitialContext();
-            String dataSourceName = (String) ic.lookup("java:comp/env/" + JNDI_DB_NAME);
-
-            DatabaseConnectionType bean = new DatabaseConnectionType();
-            bean.setDataSourceName(dataSourceName);
-            bean.setDataSourceType(DataSourceTypeType.JNDI);
-
-            String dbFamaly = (String) ic.lookup("java:comp/env/" + JNDI_DB_FAMALY);
-            String className = famalyMap.get(dbFamaly);
-            if (className==null) {
-                throw new IllegalStateException("famaly for name "+ dbFamaly +"  not found");
-            }
-            bean.setConnectionClass(className);
-            map.put(dataSourceName, bean);
-            dbConfig = map;
-            defaultConnectionName = dataSourceName;
-        }
-        catch(Exception e) {
-            String es = "Error";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
-        }
-    }
-*/
-
 //-----------------------------------------------------
 // PUBLIC SECTION
 //-----------------------------------------------------

@@ -25,7 +25,9 @@
 package org.riverock.generic.tools.servlet;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -38,6 +40,7 @@ import javax.servlet.http.HttpSessionContext;
  *
  * $Id$
 */
+@SuppressWarnings({"deprecation"})
 public class HttpSessionApplWrapper implements HttpSession {
 
     public HttpSessionApplWrapper()
@@ -80,9 +83,6 @@ public class HttpSessionApplWrapper implements HttpSession {
         return 0;
     }
 
-    /**
-     * @deprecated
-     */
     public HttpSessionContext getSessionContext()
     {
         accessTime = System.currentTimeMillis();
@@ -107,7 +107,7 @@ public class HttpSessionApplWrapper implements HttpSession {
     public Enumeration getAttributeNames()
     {
         accessTime = System.currentTimeMillis();
-        return hash.keys();
+        return Collections.enumeration(hash.keySet());
     }
 
     /**
@@ -120,7 +120,7 @@ public class HttpSessionApplWrapper implements HttpSession {
     }
 
 
-    private Hashtable hash = new Hashtable();
+    private Map<String, Object> hash = new HashMap<String, Object>();
     public void setAttribute(String s, Object o)
     {
         accessTime = System.currentTimeMillis();
@@ -149,10 +149,8 @@ public class HttpSessionApplWrapper implements HttpSession {
         accessTime = System.currentTimeMillis();
     }
 
-    private boolean isValid = true;
     public void invalidate()
     {
-        isValid = false;
         accessTime = System.currentTimeMillis();
     }
 
