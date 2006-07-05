@@ -239,12 +239,10 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         bean.setMetadata( item.getMetadata() );
         bean.setOrderField( item.getOrderField() );
         bean.setPortletRole( item.getPortletRole() );
-        bean.setStorage( item.getStorage() );
         bean.setTemplateId( item.getIdSiteTemplate() );
         bean.setTitle( item.getCtxPageTitle() );
         bean.setTopCatalogId( item.getIdTopCtxCatalog() );
         bean.setUrl( item.getCtxPageUrl() );
-        bean.setUseProperties( item.getIsUseProperties() );
 
         return bean;
     }
@@ -363,12 +361,10 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
             if (catalogItem.getTopCatalogId()==null)
                 item.setIdTopCtxCatalog(0L);
 
-            item.setIsUseProperties( catalogItem.getUseProperties());
             item.setKeyMessage( catalogItem.getKeyMessage());
             item.setMetadata( catalogItem.getMetadata());
             item.setOrderField( catalogItem.getOrderField());
             item.setPortletRole( catalogItem.getPortletRole());
-            item.setStorage( catalogItem.getStorage());
 
             InsertWmPortalCatalogItem.process(adapter, item);
 
@@ -410,12 +406,10 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
             item.setIdSiteCtxType(catalogItem.getPortletId());
             item.setIdSiteTemplate(catalogItem.getTemplateId());
             item.setIdTopCtxCatalog(catalogItem.getTopCatalogId());
-            item.setIsUseProperties(catalogItem.getUseProperties());
             item.setKeyMessage(catalogItem.getKeyMessage());
             item.setMetadata(catalogItem.getMetadata());
             item.setOrderField(catalogItem.getOrderField());
             item.setPortletRole(catalogItem.getPortletRole());
-            item.setStorage(catalogItem.getStorage());
 
             UpdateWmPortalCatalogItem.process(adapter, item);
             

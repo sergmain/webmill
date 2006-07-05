@@ -18,15 +18,16 @@ public class SiteBean implements Serializable, Site {
     private static final long serialVersionUID = 2057005502L;
 
     private Long siteId=null;
-    private Long companyId;
-    private String siteName;
+    private Long companyId=null;
+    private String siteName=null;
     private boolean cssDynamic;
-    private String cssFile;
+    private String cssFile=null;
     private boolean registerAllowed;
-    private String defLanguage;
-    private String defCountry;
-    private String defVariant;
-    private String adminEmail;
+    private String defLanguage=null;
+    private String defCountry=null;
+    private String defVariant=null;
+    private String adminEmail=null;
+    private String properties=null;
 
     public SiteBean(){
     }
@@ -42,6 +43,7 @@ public class SiteBean implements Serializable, Site {
         this.defCountry = site.getDefCountry();
         this.defVariant = site.getDefVariant();
         this.adminEmail = site.getAdminEmail();
+        this.properties = site.getProperties();
     }
 
     public String getSiteDefaultLocale() {
@@ -65,6 +67,14 @@ public class SiteBean implements Serializable, Site {
         defLanguage = locale.getLanguage();
         defCountry = locale.getCountry();
         defVariant = locale.getVariant();
+    }
+
+    public String getProperties() {
+        return properties;
+    }
+
+    public void setProperties(String properties) {
+        this.properties = properties;
     }
 
     public Long getSiteId() {

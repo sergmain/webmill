@@ -19,11 +19,9 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     private Long topCatalogId = 0L;
     private Long portletId;
     private Long contextId;
-    private Boolean isUseProperties = false;
     private Long templateId;
     private Long catalogLanguageId;
     private Integer orderField;
-    private String storage;
     private String keyMessage;
     private String url;
     private String title;
@@ -40,11 +38,9 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
         this.topCatalogId=item.getTopCatalogId();
         this.portletId=item.getPortletId();
         this.contextId=item.getContextId();
-        this.isUseProperties=item.getUseProperties();
         this.templateId=item.getTemplateId();
         this.catalogLanguageId=item.getCatalogLanguageId();
         this.orderField=item.getOrderField();
-        this.storage=item.getStorage();
         this.keyMessage=item.getKeyMessage();
         this.url=item.getUrl();
         this.title=item.getTitle();
@@ -100,14 +96,6 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
         this.contextId = contextId;
     }
 
-    public Boolean getUseProperties() {
-        return isUseProperties;
-    }
-
-    public void setUseProperties(Boolean useProperties) {
-        isUseProperties = useProperties;
-    }
-
     public Long getTemplateId() {
         return templateId;
     }
@@ -130,14 +118,6 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
 
     public void setOrderField(Integer orderField) {
         this.orderField = orderField;
-    }
-
-    public String getStorage() {
-        return storage;
-    }
-
-    public void setStorage(String storage) {
-        this.storage = storage;
     }
 
     public String getKeyMessage() {

@@ -36,6 +36,13 @@
 
 </h:panelGrid>
 
+<h:panelGrid columns="1">
+    <h:outputText value="#{msg.site_properties}"/>
+    <h:inputTextarea id="site-properties-field" value="#{siteSessionBean.siteExtended.site.properties}"
+                     rows="10" cols="50"
+        />
+</h:panelGrid>
+
 <f:subview id="site-virtual-host-edit-subview">
     <jsp:include page="site-virtual-host-edit-list.jsp"/>
 </f:subview>

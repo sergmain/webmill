@@ -44,7 +44,7 @@ public interface PortalInfo {
     public Long getSupportLanguageId( Locale locale );
     public MenuLanguage getMenu(String locale);
     public XsltTransformerManager getXsltTransformerManager();
-    public Map<String, String> getMetadata();
+    public Map<String, String> getPortalProperties();
     public Locale getDefaultLocale();
     public PortalTemplateManager getPortalTemplateManager();
     public Site getSite();

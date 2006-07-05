@@ -340,7 +340,6 @@ public class PortalOfflineMarkupProcessor {
                 catalogBean.setTopCatalogId(topCatalogItemId);
                 catalogBean.setTemplateId(template.getTemplateId());
                 catalogBean.setKeyMessage(menuItem.getMenuName());
-                catalogBean.setUseProperties(false);
                 catalogBean.setUrl(menuItem.getUrl());
                 catalogBean.setOrderField(orderFiled++);
 

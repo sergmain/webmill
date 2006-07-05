@@ -39,182 +39,199 @@ public class PortalUserManagerImpl implements PortalUserManager {
 
     public static final String USER_DEFAULT_ROLE_METADATA = "register-default-role";
 
-    private PortalMailServiceProvider mailServiceProvider=null;
-    private Long siteId=null;
-    private Long companyId=null;
-    private Map<String, String> portletMetadata=null;
+    private PortalMailServiceProvider mailServiceProvider = null;
+    private Long siteId = null;
+    private Long companyId = null;
+    private Map<String, String> portletMetadata = null;
+    private ClassLoader classLoader = null;
 
-    public PortalUserManagerImpl(Long siteId, Long companyId, PortalMailServiceProvider mailServiceProvider, Map<String, String> portletMetadata){
-        this.siteId=siteId;
-        this.companyId=companyId;
-        this.mailServiceProvider=mailServiceProvider;
-        this.portletMetadata=portletMetadata;
+    public PortalUserManagerImpl(Long siteId, Long companyId, PortalMailServiceProvider mailServiceProvider, Map<String, String> portletMetadata, ClassLoader classLoader) {
+        this.siteId = siteId;
+        this.companyId = companyId;
+        this.mailServiceProvider = mailServiceProvider;
+        this.portletMetadata = portletMetadata;
+        this.classLoader = classLoader;
     }
 
     public UserOperationStatus sendPassword(String eMail, Map<String, String> messages) {
-        DatabaseAdapter db = null;
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
-            db = DatabaseAdapter.getInstance();
-            User user = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, eMail);
+            Thread.currentThread().setContextClassLoader(classLoader);
 
-            if (user==null) {
-                return new UserOperationStatusBean(PortalUserManager.STATUS_NO_SUCH_EMAIL);
-            }
-            if (user.isDeleted()) {
-                return new UserOperationStatusBean(PortalUserManager.STATUS_USER_DELETED);
-            }
+            DatabaseAdapter db = null;
+            try {
+                db = DatabaseAdapter.getInstance();
+                User user = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, eMail);
 
-            List<AuthInfo> authInfos = InternalDaoFactory.getInternalAuthDao().getAuthInfo(db, user.getUserId(), siteId);
-            if (authInfos==null || authInfos.isEmpty()) {
-                return new UserOperationStatusBean(PortalUserManager.STATUS_NOT_REGISTERED);
-            }
+                if (user == null) {
+                    return new UserOperationStatusBean(PortalUserManager.STATUS_NO_SUCH_EMAIL);
+                }
+                if (user.isDeleted()) {
+                    return new UserOperationStatusBean(PortalUserManager.STATUS_USER_DELETED);
+                }
 
-            String subject = messages.get(PortalUserManager.SEND_PASSWORD_SUBJECT_MESSAGE);
-            if (StringUtils.isBlank(subject)) {
-                subject="Recovery lost info";
-            }
+                List<AuthInfo> authInfos = InternalDaoFactory.getInternalAuthDao().getAuthInfo(db, user.getUserId(), siteId);
+                if (authInfos == null || authInfos.isEmpty()) {
+                    return new UserOperationStatusBean(PortalUserManager.STATUS_NOT_REGISTERED);
+                }
 
-            String body;
-            if (authInfos.size()==1) {
-                body=buildBobyForOnePassword(messages, authInfos);
-            }
-            else {
-                body=buildBobyForManyPasswords(messages, authInfos);
-            }
+                String subject = messages.get(PortalUserManager.SEND_PASSWORD_SUBJECT_MESSAGE);
+                if (StringUtils.isBlank(subject)) {
+                    subject = "Recovery lost info";
+                }
 
-            mailServiceProvider.getPortalMailService().sendMessageInUTF8(
-                StringTools.getUserName(user.getFirstName(), user.getMiddleName(),
-                    user.getLastName())+" <"+eMail+'>', subject, body
-            );
+                String body;
+                if (authInfos.size() == 1) {
+                    body = buildBobyForOnePassword(messages, authInfos);
+                } else {
+                    body = buildBobyForManyPasswords(messages, authInfos);
+                }
 
-            return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
-        }
-        catch (Exception e) {
-            String es = "Error search user for e-mail: " + eMail;
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
+                mailServiceProvider.getPortalMailService().sendMessageInUTF8(
+                    StringTools.getUserName(user.getFirstName(), user.getMiddleName(),
+                        user.getLastName()) + " <" + eMail + '>', subject, body
+                );
+
+                return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
+            }
+            catch (Exception e) {
+                String es = "Error search user for e-mail: " + eMail;
+                log.error(es, e);
+                throw new IllegalStateException(es, e);
+            }
+            finally {
+                DatabaseManager.close(db);
+                db = null;
+            }
         }
         finally {
-            DatabaseManager.close(db);
-            db = null;
+            Thread.currentThread().setContextClassLoader(oldLoader);
         }
 
     }
 
     public UserOperationStatus registerNewUser(UserRegistration userRegistration, Map<String, String> messages) {
-        DatabaseAdapter db = null;
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
-            db = DatabaseAdapter.getInstance();
+            Thread.currentThread().setContextClassLoader(classLoader);
 
-            if( log.isDebugEnabled() ) {
-                log.debug( "Register user with e-mail: " + userRegistration.getEmail());
-            }
-            Long countRecord = DatabaseManager.getLongValue(
-                db,
-                "select count(*) COUNT_RECORDS from WM_AUTH_USER where USER_LOGIN=?",
-                new Object[]{ userRegistration.getUserLogin() }
-            );
-            if( log.isDebugEnabled() ) {
-                log.debug( "Login "+userRegistration.getUserLogin()+" exists: " + (countRecord>0) );
-            }
-            if (countRecord>0) {
-                return new UserOperationStatusBean(PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED);
-            }
+            DatabaseAdapter db = null;
+            try {
+                db = DatabaseAdapter.getInstance();
 
-            User checkUser = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, userRegistration.getEmail());
-            if( log.isDebugEnabled() ) {
-                log.debug( "Account for e-mail "+userRegistration.getEmail()+" already registered: " + (checkUser!=null) );
-            }
-            if (checkUser!=null) {
-                return new UserOperationStatusBean(PortalUserManager.STATUS_EMAIL_ALREADY_REGISTERED);
-            }
+                if (log.isDebugEnabled()) {
+                    log.debug("Register user with e-mail: " + userRegistration.getEmail());
+                }
+                Long countRecord = DatabaseManager.getLongValue(
+                    db,
+                    "select count(*) COUNT_RECORDS from WM_AUTH_USER where USER_LOGIN=?",
+                    new Object[]{userRegistration.getUserLogin()}
+                );
+                if (log.isDebugEnabled()) {
+                    log.debug("Login " + userRegistration.getUserLogin() + " exists: " + (countRecord > 0));
+                }
+                if (countRecord > 0) {
+                    return new UserOperationStatusBean(PortalUserManager.STATUS_LOGIN_ALREADY_REGISTERED);
+                }
 
-            UserBean user = new UserBean();
-            user.setAddress(userRegistration.getAddress());
-            user.setCreatedDate(new Date(System.currentTimeMillis()));
-            user.setDeleted(false);
-            user.setDeletedDate(null);
-            user.setEmail(userRegistration.getEmail());
-            user.setFirstName(userRegistration.getFirstName());
-            user.setLastName(userRegistration.getLastName());
-            user.setMiddleName(userRegistration.getMiddleName());
-            user.setPhone(userRegistration.getPhone());
-            user.setCompanyId(companyId);
-            Long userId = InternalDaoFactory.getInternalUserDao().addUser(db, user);
+                User checkUser = InternalDaoFactory.getInternalUserDao().getUserByEMail(db, userRegistration.getEmail());
+                if (log.isDebugEnabled()) {
+                    log.debug("Account for e-mail " + userRegistration.getEmail() + " already registered: " + (checkUser != null));
+                }
+                if (checkUser != null) {
+                    return new UserOperationStatusBean(PortalUserManager.STATUS_EMAIL_ALREADY_REGISTERED);
+                }
 
-            // register-default-role
-            String roles=null;
-            if (portletMetadata!=null) {
-                roles = portletMetadata.get( USER_DEFAULT_ROLE_METADATA );
-            }
-            if (log.isDebugEnabled()) {
-                log.debug("register roles: " + roles);
-                log.debug("metadata map: "+portletMetadata );
-                if (portletMetadata == null) {
-                    log.debug("portlet metadata is null");
-                } else {
-                    log.debug("portlet metadata:");
-                    for (Map.Entry<String, String> entry : portletMetadata.entrySet()) {
-                        log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
+                UserBean user = new UserBean();
+                user.setAddress(userRegistration.getAddress());
+                user.setCreatedDate(new Date(System.currentTimeMillis()));
+                user.setDeleted(false);
+                user.setDeletedDate(null);
+                user.setEmail(userRegistration.getEmail());
+                user.setFirstName(userRegistration.getFirstName());
+                user.setLastName(userRegistration.getLastName());
+                user.setMiddleName(userRegistration.getMiddleName());
+                user.setPhone(userRegistration.getPhone());
+                user.setCompanyId(companyId);
+                Long userId = InternalDaoFactory.getInternalUserDao().addUser(db, user);
+
+                // register-default-role
+                String roles = null;
+                if (portletMetadata != null) {
+                    roles = portletMetadata.get(USER_DEFAULT_ROLE_METADATA);
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("register roles: " + roles);
+                    log.debug("metadata map: " + portletMetadata);
+                    if (portletMetadata == null) {
+                        log.debug("portlet metadata is null");
+                    } else {
+                        log.debug("portlet metadata:");
+                        for (Map.Entry<String, String> entry : portletMetadata.entrySet()) {
+                            log.debug("    key: " + entry.getKey() + ", value: " + entry.getValue());
+                        }
                     }
                 }
-            }
-            if (StringUtils.isBlank(roles)) {
-                return new UserOperationStatusBean(PortalUserManager.STATUS_ROLE_NOT_DEFINED);
-            }
-
-            List<RoleEditableBean> roleList = new ArrayList<RoleEditableBean>();
-            StringTokenizer st = new StringTokenizer( roles, "," );
-            while( st.hasMoreTokens() ) {
-                String role = st.nextToken();
-                RoleBean bean = InternalDaoFactory.getInternalAuthDao().getRole(db, role);
-                if (bean==null) {
-                    log.warn("role specified in metadata for register portlet not exist. role: " + role);
-                    continue;
+                if (StringUtils.isBlank(roles)) {
+                    return new UserOperationStatusBean(PortalUserManager.STATUS_ROLE_NOT_DEFINED);
                 }
 
-                RoleEditableBeanImpl roleBean = new RoleEditableBeanImpl(bean);
-                roleBean.setNew(true);
-                roleBean.setDelete(false);
+                List<RoleEditableBean> roleList = new ArrayList<RoleEditableBean>();
+                StringTokenizer st = new StringTokenizer(roles, ",");
+                while (st.hasMoreTokens()) {
+                    String role = st.nextToken();
+                    RoleBean bean = InternalDaoFactory.getInternalAuthDao().getRole(db, role);
+                    if (bean == null) {
+                        log.warn("role specified in metadata for register portlet not exist. role: " + role);
+                        continue;
+                    }
 
-                roleList.add(roleBean );
+                    RoleEditableBeanImpl roleBean = new RoleEditableBeanImpl(bean);
+                    roleBean.setNew(true);
+                    roleBean.setDelete(false);
+
+                    roleList.add(roleBean);
+                }
+
+                AuthInfoImpl authInfo = new AuthInfoImpl();
+                authInfo.setUserLogin(userRegistration.getUserLogin());
+                authInfo.setUserPassword(userRegistration.getUserPassword());
+                authInfo.setCompany(true);
+                authInfo.setHolding(false);
+                authInfo.setUserId(userId);
+
+                InternalDaoFactory.getInternalAuthDao().addUserInfo(db, authInfo, roleList, companyId, null);
+
+                String subject = messages.get(PortalUserManager.CREATE_ACCOUNT_SUBJECT_MESSAGE);
+                String body = messages.get(PortalUserManager.CREATE_ACCOUNT_BODY_MESSAGE);
+                mailServiceProvider.getPortalMailService().sendMessageInUTF8(
+                    StringTools.getUserName(user.getFirstName(), user.getMiddleName(), user.getLastName()) +
+                        " <" + userRegistration.getEmail() + '>', subject, body
+                );
+
+
+                db.commit();
+                return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
             }
-
-            AuthInfoImpl authInfo = new AuthInfoImpl();
-            authInfo.setUserLogin(userRegistration.getUserLogin());
-            authInfo.setUserPassword(userRegistration.getUserPassword());
-            authInfo.setCompany(true);
-            authInfo.setHolding(false);
-            authInfo.setUserId(userId);
-
-            InternalDaoFactory.getInternalAuthDao().addUserInfo( db, authInfo, roleList, companyId, null);
-
-            String subject = messages.get(PortalUserManager.CREATE_ACCOUNT_SUBJECT_MESSAGE);
-            String body = messages.get(PortalUserManager.CREATE_ACCOUNT_BODY_MESSAGE);
-            mailServiceProvider.getPortalMailService().sendMessageInUTF8(
-                StringTools.getUserName(user.getFirstName(), user.getMiddleName(), user.getLastName())+
-                    " <"+userRegistration.getEmail()+'>', subject, body
-            );
-
-
-            db.commit();
-            return new UserOperationStatusBean(PortalUserManager.STATUS_OK_OPERATION);
-        }
-        catch (Exception e) {
-            try {
-                if (db!=null)
-                    db.rollback();
+            catch (Exception e) {
+                try {
+                    if (db != null)
+                        db.rollback();
+                }
+                catch (SQLException e1) {
+                    // catch rollback exception
+                }
+                String es = "Error register new user";
+                log.error(es, e);
+                throw new IllegalStateException(es, e);
             }
-            catch( SQLException e1 ) {
-                // catch rollback exception
+            finally {
+                DatabaseManager.close(db);
+                db = null;
             }
-            String es = "Error register new user";
-            log.error(es, e);
-            throw new IllegalStateException(es, e);
         }
         finally {
-            DatabaseManager.close(db);
-            db = null;
+            Thread.currentThread().setContextClassLoader(oldLoader);
         }
     }
 
@@ -222,9 +239,9 @@ public class PortalUserManagerImpl implements PortalUserManager {
         String bodyStart = messages.get(PortalUserManager.SEND_PASSWORD_START_BODY_MANY_PASSWORDS_MESSAGE);
         String bodyEnd = messages.get(PortalUserManager.SEND_PASSWORD_END_BODY_MANY_PASSWORDS_MESSAGE);
 
-        String body="";
+        String body = "";
         for (AuthInfo authInfo : authInfos) {
-            body+=("\nlogin: "+authInfo.getUserLogin()+", password: "+authInfo.getUserPassword()+"\n");
+            body += ("\nlogin: " + authInfo.getUserLogin() + ", password: " + authInfo.getUserPassword() + "\n");
         }
 
         return bodyStart + body + bodyEnd;
@@ -233,7 +250,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
     private String buildBobyForOnePassword(Map<String, String> messages, List<AuthInfo> authInfos) {
         AuthInfo authInfo = authInfos.get(0);
         String message = messages.get(PortalUserManager.SEND_PASSWORD_BODY_ONE_PASSWORD_MESSAGE);
-        return MessageFormat.format( message, new Object[]{authInfo.getUserLogin(), authInfo.getUserPassword() } );
+        return MessageFormat.format(message, new Object[]{authInfo.getUserLogin(), authInfo.getUserPassword()});
     }
 
 }

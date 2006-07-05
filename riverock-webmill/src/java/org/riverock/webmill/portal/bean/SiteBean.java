@@ -47,6 +47,15 @@ public class SiteBean implements Serializable, Site {
     private String siteName;
     private String adminEmail=null;
     private String cssFile = "/front_styles.css";
+    private String properties=null;
+
+    public String getProperties() {
+        return properties;
+    }
+
+    public void setProperties(String properties) {
+        this.properties = properties;
+    }
 
     public Long getSiteId() {
         return siteId;

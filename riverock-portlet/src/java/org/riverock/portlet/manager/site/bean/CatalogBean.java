@@ -44,11 +44,9 @@ public class CatalogBean implements Serializable, CatalogItem {
     private Long topCatalogId = 0L;
     private Long portletId;
     private Long contextId;
-    private Boolean isUseProperties = false;
     private Long templateId;
     private Long catalogLanguageId;
     private Integer orderField;
-    private String storage;
     private String keyMessage;
     private String url;
     private String title;
@@ -63,11 +61,9 @@ public class CatalogBean implements Serializable, CatalogItem {
         this.topCatalogId=catalogItem.getTopCatalogId();
         this.portletId=catalogItem.getPortletId();
         this.contextId=catalogItem.getContextId();
-        this.isUseProperties=catalogItem.getUseProperties();
         this.templateId=catalogItem.getTemplateId();
         this.catalogLanguageId=catalogItem.getCatalogLanguageId();
         this.orderField=catalogItem.getOrderField();
-        this.storage=catalogItem.getStorage();
         this.keyMessage=catalogItem.getKeyMessage();
         this.url=catalogItem.getUrl();
         this.title=catalogItem.getTitle();
@@ -130,14 +126,6 @@ public class CatalogBean implements Serializable, CatalogItem {
         this.contextId = contextId;
     }
 
-    public Boolean getUseProperties() {
-        return isUseProperties;
-    }
-
-    public void setUseProperties(Boolean useProperties) {
-        isUseProperties = useProperties;
-    }
-
     public Long getTemplateId() {
         return templateId;
     }
@@ -160,14 +148,6 @@ public class CatalogBean implements Serializable, CatalogItem {
 
     public void setOrderField(Integer orderField) {
         this.orderField = orderField;
-    }
-
-    public String getStorage() {
-        return storage;
-    }
-
-    public void setStorage(String storage) {
-        this.storage = FacesTools.convertParameter(storage);
     }
 
     public String getKeyMessage() {

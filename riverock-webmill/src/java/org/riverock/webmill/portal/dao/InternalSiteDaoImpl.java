@@ -140,9 +140,11 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
         bean.setRegisterAllowed( site.getIsRegisterAllowed() );
         bean.setSiteId( site.getIdSite() );
         bean.setSiteName( site.getNameSite() );
+        bean.setProperties( site.getProperties() );
 
-        if (bean.getDefLanguage() == null)
+        if (bean.getDefLanguage() == null) {
             bean.setDefLanguage("");
+        }
         return bean;
     }
 
@@ -244,6 +246,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             item.setIsCssDynamic(site.getCssDynamic());
             item.setIsRegisterAllowed(site.getRegisterAllowed());
             item.setNameSite(site.getSiteName());
+            item.setProperties(site.getProperties());
 
             UpdateWmPortalListSiteItem.process(dbDyn, item);
 
@@ -344,9 +347,10 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             ps = dbDyn.prepareStatement( "insert into WM_PORTAL_LIST_SITE (" +
                 "ID_SITE, ID_FIRM, DEF_LANGUAGE, DEF_COUNTRY, DEF_VARIANT, " +
                 "NAME_SITE, ADMIN_EMAIL, IS_CSS_DYNAMIC, CSS_FILE, " +
-                "IS_REGISTER_ALLOWED " +
+                "IS_REGISTER_ALLOWED, PROPERTIES " +
                 ")values " +
                 ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" ) +
+                "	?," +
                 "	?," +
                 "	?," +
                 "	?," +
@@ -370,6 +374,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             ps.setInt( num++, site.getCssDynamic()?1:0 );
             ps.setString( num++, site.getCssFile() );
             ps.setInt( num++, site.getRegisterAllowed()?1:0 );
+            ps.setString( num++, site.getProperties() );
 
             int i1 = ps.executeUpdate();
 

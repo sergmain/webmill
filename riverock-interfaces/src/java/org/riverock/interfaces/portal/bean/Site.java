@@ -49,4 +49,6 @@ public interface Site {
     public String getDefVariant();
 
     public String getAdminEmail();
+
+    public String getProperties();
 }
