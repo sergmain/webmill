@@ -34,6 +34,20 @@ public class MenuService {
     public MenuService() {
     }
 
+    public List<SelectItem> getSiteList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+
+        for (Site site : sites) {
+            if (site.getSiteId() == null) {
+                throw new IllegalStateException("siteIdd is null, name: " + site.getSiteName());
+            }
+
+            list.add(new SelectItem(site.getSiteId(), site.getSiteName()));
+        }
+        return list;
+    }
+
     public List<SelectItem> getPortletList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
         List<PortletName> portletNames = FacesTools.getPortalDaoProvider().getPortalPortletNameDao().getPortletNameList();
@@ -55,6 +69,11 @@ public class MenuService {
             list.add(new SiteBean(site));
         }
         return list;
+    }
+
+    public Site getSite(Long siteId) {
+        Site site = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId);
+        return new SiteBean(site);
     }
 
     public List<CatalogLanguageItem> getMenuCatalogList(Long siteLanguageId) {

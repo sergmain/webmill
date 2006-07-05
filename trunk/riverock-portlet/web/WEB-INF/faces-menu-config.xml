@@ -42,6 +42,10 @@
             <property-class>org.riverock.portlet.manager.menu.MenuService</property-class>
             <value>#{menuService}</value>
         </managed-property>
+        <managed-property>
+            <property-name>menuSessionBean</property-name>
+            <value>#{menuSessionBean}</value>
+        </managed-property>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>menuDataProvider</managed-bean-name>
