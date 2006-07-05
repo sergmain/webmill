@@ -38,7 +38,17 @@ public class MenuTree implements Serializable {
     private TreeNode treeNode = null;
     private MenuService menuService = null;
 
+    private MenuSessionBean menuSessionBean = null;
+
     public MenuTree() {
+    }
+
+    public MenuSessionBean getMenuSessionBean() {
+        return menuSessionBean;
+    }
+
+    public void setMenuSessionBean(MenuSessionBean menuSessionBean) {
+        this.menuSessionBean = menuSessionBean;
     }
 
     public void setMenuTree(TreeNode treeNode) {
@@ -50,16 +60,20 @@ public class MenuTree implements Serializable {
         log.info("Invoke getMenuTree()");
 
         TreeNode treeRoot = new TreeNodeBase("tree-root", "tree-root", false);
-        for (Site site : menuService.getSites()) {
-            TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
+        if (menuSessionBean.getCurrentSiteId()!=null) {
 
+            Site site = menuService.getSite(menuSessionBean.getCurrentSiteId());
+
+            TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
+            treeRoot.getChildren().add(siteNode);
+            
             for (SiteLanguage siteLanguage : menuService.getSiteLanguageList(site.getSiteId())) {
                 TreeNodeBase siteLanguageNode = new TreeNodeBase(
                     "site-language",
                     siteLanguage.getNameCustomLanguage() + " (" + siteLanguage.getCustomLanguage() + ")",
                     siteLanguage.getSiteLanguageId().toString(),
                     false);
-                siteNode.getChildren().add(siteLanguageNode);
+                treeRoot.getChildren().add(siteLanguageNode);
 
                 TreeNodeBase menuCatalogListNode = new TreeNodeBase("menu-catalog-list", "Menu catalog list", siteLanguage.getSiteLanguageId().toString(), false);
                 siteLanguageNode.getChildren().add(menuCatalogListNode);
@@ -76,7 +90,7 @@ public class MenuTree implements Serializable {
                 }
 
             }
-            treeRoot.getChildren().add(siteNode);
+//            treeRoot.getChildren().add(siteNode);
         }
         treeNode = treeRoot;
         return treeNode;

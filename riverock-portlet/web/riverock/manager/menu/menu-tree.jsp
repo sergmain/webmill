@@ -8,6 +8,17 @@
 
 <h:panelGroup id="menu-tree-group">
 
+    <h:panelGroup id="menu-tree-site-group">
+        <h:selectOneMenu id="select-one-site" value="#{menuSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
+            <f:selectItems value="#{menuService.siteList}"/>
+        </h:selectOneMenu>
+        <h:commandButton id="menu-catalog-edit-cancel-action" action="#{menuSiteAction.changeSite}"
+                         value="Ok"
+                         styleClass="menu-button-action"
+            >
+        </h:commandButton>
+    </h:panelGroup>
+
     <t:tree2 id="serverTree" value="#{menuTree.menuTree}" var="node"
    			varNodeToggler="t" clientSideToggle="false"
             showRootNode="false" binding="#{menuTree.tree}">

@@ -50,4 +50,9 @@ public class MenuSiteAction implements Serializable {
 
         return "menu";
     }
+
+    public String changeSite() {
+        log.info( "Change site action." );
+        return "menu";
+    }
 }

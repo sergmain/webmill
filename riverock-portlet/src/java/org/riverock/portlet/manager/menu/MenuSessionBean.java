@@ -28,12 +28,21 @@ public class MenuSessionBean  implements Serializable {
 
     private Long currentMenuItemId=null;
     private Long currentMenuCatalogId=null;
+    private Long currentSiteId=null;
 
     private SiteExtended siteExtended = null;
     private SiteLanguageBean siteLanguage = null;
     private MenuCatalogBean menuCatalog = null;
     private MenuItemExtended menuItem = null;
     private List<Template> templates=null;
+
+    public Long getCurrentSiteId() {
+        return currentSiteId;
+    }
+
+    public void setCurrentSiteId(Long currentSiteId) {
+        this.currentSiteId = currentSiteId;
+    }
 
     public Long getCurrentMenuCatalogId() {
         return currentMenuCatalogId;
