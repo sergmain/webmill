@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.common.TreeItem;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -125,7 +126,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     }
 
     public void setKeyMessage(String keyMessage) {
-        this.keyMessage = keyMessage;
+        this.keyMessage = FacesTools.convertParameter(keyMessage);
     }
 
     public String getUrl() {
@@ -141,7 +142,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = FacesTools.convertParameter(title);
     }
 
     public String getAuthor() {
@@ -149,7 +150,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     }
 
     public void setAuthor(String author) {
-        this.author = author;
+        this.author = FacesTools.convertParameter(author);
     }
 
     public String getKeyword() {
@@ -157,7 +158,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     }
 
     public void setKeyword(String keyword) {
-        this.keyword = keyword;
+        this.keyword = FacesTools.convertParameter(keyword);
     }
 
     public String getMetadata() {
@@ -165,7 +166,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     }
 
     public void setMetadata(String metadata) {
-        this.metadata = metadata;
+        this.metadata = FacesTools.convertParameter(metadata);
     }
 
     public String getPortletRole() {
@@ -173,7 +174,7 @@ public class MenuItemBean implements Serializable, CatalogItem, TreeItem {
     }
 
     public void setPortletRole(String portletRole) {
-        this.portletRole = portletRole;
+        this.portletRole = FacesTools.convertParameter(portletRole);
     }
 
     public Long getTopId() {

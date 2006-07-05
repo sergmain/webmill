@@ -3,6 +3,7 @@ package org.riverock.portlet.manager.menu.bean;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -55,6 +56,6 @@ public class MenuCatalogBean implements Serializable, CatalogLanguageItem {
     }
 
     public void setCatalogCode(String catalogCode) {
-        this.catalogCode = catalogCode;
+        this.catalogCode = FacesTools.convertParameter(catalogCode);
     }
 }

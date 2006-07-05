@@ -42,7 +42,6 @@
 
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
@@ -187,7 +186,7 @@
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
-        <include name="${riverock-cache.lib}"/>
+        <!--<include name="${riverock-cache.lib}"/>-->
         <include name="${riverock-portlet.lib}"/>
         <include name="${riverock-module.lib}"/>
 

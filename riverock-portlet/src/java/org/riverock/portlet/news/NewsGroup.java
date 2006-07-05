@@ -47,7 +47,7 @@ public final class NewsGroup {
 
     public NewsGroupType newsGroup = new NewsGroupType();
 
-    private static CacheFactory cache = new CacheFactory( NewsGroup.class.getName() );
+    private static CacheFactory cache = new CacheFactory( NewsGroup.class);
 
     protected void finalize() throws Throwable {
         newsGroup = null;

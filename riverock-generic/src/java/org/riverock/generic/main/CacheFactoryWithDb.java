@@ -25,71 +25,100 @@
 package org.riverock.generic.main;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 
-import org.riverock.cache.impl.SimpleCacheFactory;
-import org.riverock.cache.impl.CacheException;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+import org.apache.log4j.Logger;
+
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.exception.GenericException;
-import org.riverock.common.tools.MainTools;
-
-import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
-public class CacheFactoryWithDb
-{
-    private static Logger log = Logger.getLogger( CacheFactoryWithDb.class );
+public class CacheFactoryWithDb {
+    private static Logger log = Logger.getLogger(CacheFactoryWithDb.class);
 
-    protected static Integer CountClassInCache = 20;
+//    protected static Integer CountClassInCache = 20;
 
-    private SimpleCacheFactory cache = null;
+    private Cache cache = null;
+    private Class clazz=null;
 
-    public CacheFactoryWithDb(String className)
-    {
-        log.info("create constructor: "+className);
-        cache = new SimpleCacheFactory(className);
+    public CacheFactoryWithDb(Class clazz) {
+        if (log.isInfoEnabled()) {
+            log.info("create constructor with class: " + clazz.getName());
+        }
+        this.clazz=clazz;
+        CacheManager singletonManager = CacheManager.create();
+        singletonManager.addCache(clazz.getName());
+        cache = singletonManager.getCache(clazz.getName());
+
+//        cache = new SimpleCacheFactory(className);
     }
 
-    public void reinit()
-    {
-        cache.reinit();
+    public void reinit() {
+//        cache.reinit();
+        cache.removeAll();
     }
 
-    public synchronized void terminate(Long id) throws CacheException {
-        cache.terminate(id);
+    public void terminate(Long id) {
+//        cache.terminate(id);
+        cache.remove(id);
     }
 
-    private static synchronized Object createObject(DatabaseAdapter db_, Long id__, String className)
+    public synchronized Object getInstanceNew(DatabaseAdapter db__, Long id__) throws GenericException {
+        try {
+            Element obj = cache.get(id__);
+
+            if (log.isDebugEnabled()) log.debug("Get object from cache, class " + clazz.getName() + ", result object " + obj);
+
+            if (obj != null)
+                return obj.getObjectValue();
+
+            if (log.isDebugEnabled()) log.debug("Result object is null, create new object " + id__);
+
+            Object cacheItem = createObject(db__, id__, clazz.getName());
+
+            if (log.isDebugEnabled()) log.debug("Result new object is " + cacheItem);
+
+            if (cacheItem == null)
+                return null;
+
+            cache.put(new Element(id__, cacheItem));
+            return cacheItem;
+        }
+        catch (Throwable e) {
+            log.error("Error in CacheFactory.getInstanceNew(DatabaseAdapter db__, Long id__)", e);
+            throw new GenericException(e.getMessage(), e);
+        }
+    }
+
+    private static Object createObject(DatabaseAdapter db_, Long idLong, String className)
         throws GenericException {
 
         Class p[] = new Class[2];
-        Object obj = null;
-
+        Object obj;
         try {
-            Long idLong = id__;
             p[0] = DatabaseAdapter.class;
             p[1] = Long.class;
 
-            if (log.isDebugEnabled())
-            {
+            if (log.isDebugEnabled()) {
                 log.debug("Class DB: " + p[0]);
                 log.debug("Class Long: " + p[1]);
             }
 
             if (log.isDebugEnabled())
-                log.debug("Name class " + className );
+                log.debug("Name class " + className);
 
-            Class cl = Class.forName( className );
+            Class cl = Class.forName(className);
 
             if (log.isDebugEnabled())
                 log.debug("Class instance: " + cl);
 
             Constructor cn[] = cl.getConstructors();
 
-            if (log.isDebugEnabled())
-            {
+            if (log.isDebugEnabled()) {
                 log.debug("Constructor count " + cn.length);
 
                 for (int i = 0; i < cn.length; i++)
@@ -111,46 +140,13 @@ public class CacheFactoryWithDb
 
             return obj;
         }
-        catch(Throwable e)
-        {
+        catch (Throwable e) {
             log.error("Error create object", e);
             throw new GenericException(e.toString(), e);
         }
     }
 
-//    public synchronized Object getInstanceNew(DatabaseAdapter db__, long id__)
-//            throws GenericException
-//    {
-//        return getInstanceNew(db__, new Long(id__));
-//    }
-
-    public synchronized Object getInstanceNew(DatabaseAdapter db__, Long id__) throws GenericException {
-        try {
-            Object obj = cache.get( id__ );
-
-            if (log.isDebugEnabled()) log.debug("Get object from cache, class "+cache.getClassName()+", result object "+obj);
-
-            if (obj!=null)
-                return obj;
-
-            if (log.isDebugEnabled()) log.debug("Result object is null, create new object "+id__);
-
-            Object cacheItem = createObject(db__, id__, cache.getClassName());
-
-            if (log.isDebugEnabled())log.debug("Result new object is "+cacheItem);
-
-            if (cacheItem==null)
-                return null;
-
-            cache.put(id__, cacheItem );
-            return cacheItem;
-        }
-        catch (Throwable e) {
-            log.error("Error in CacheFactory.getInstanceNew(DatabaseAdapter db__, Long id__)", e);
-            throw new GenericException(e.getMessage(), e);
-        }
-    }
-
+/*
     public synchronized static void terminate(String className, Long id, boolean isFullReinit)
     {
         if (className == null){
@@ -208,4 +204,5 @@ public class CacheFactoryWithDb
             log.error("Method invocation error . ClassName: " + className + ", id: " + id + ", isFull: " + isFullReinit, e);
         }
     }
+*/
 }

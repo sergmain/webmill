@@ -102,7 +102,7 @@ public class InternalDaoImpl implements InternalDao {
         try {
             adapter = DatabaseAdapter.getInstance();
             WmPortalAccessUseragentListType userAgentList =
-                GetWmPortalAccessUseragentFullList.getInstance(adapter, 0).item;
+                GetWmPortalAccessUseragentFullList.getInstance(adapter, 0L).item;
 
             ConcurrentMap<String, Long> userAgent = new ConcurrentHashMap<String, Long>(userAgentList.getWmPortalAccessUseragentCount() + 10);
 
@@ -128,7 +128,7 @@ public class InternalDaoImpl implements InternalDao {
         try {
             adapter = DatabaseAdapter.getInstance();
             WmPortalAccessUrlListType urlList =
-                GetWmPortalAccessUrlFullList.getInstance(adapter, 0).item;
+                GetWmPortalAccessUrlFullList.getInstance(adapter, 0L).item;
             ConcurrentMap<String, Long> url = new ConcurrentHashMap<String, Long>(urlList.getWmPortalAccessUrlCount() + 10);
             for (int i = 0; i < urlList.getWmPortalAccessUrlCount(); i++) {
                 WmPortalAccessUrlItemType urlItem = urlList.getWmPortalAccessUrl(i);

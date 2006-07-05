@@ -34,7 +34,6 @@ import javax.portlet.PortletException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.cache.impl.CacheException;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -49,12 +48,13 @@ import org.riverock.sql.cache.SqlStatementRegisterException;
 /**
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class NewsItem {
     private final static Logger log = Logger.getLogger( NewsItem.class );
 
     public NewsItemType newsItem = new NewsItemType();
 
-    private static CacheFactory cache = new CacheFactory( NewsItem.class.getName() );
+    private static CacheFactory cache = new CacheFactory( NewsItem.class);
 
     public NewsItem() {
     }
@@ -63,7 +63,7 @@ public final class NewsItem {
         cache.reinit();
     }
 
-    public void terminate(Long id) throws CacheException {
+    public void terminate(Long id) {
         cache.terminate(id);
     }
 

@@ -219,7 +219,7 @@ public final class CreateSchemaFromDb {
             "\n"+
             (config.getIsUseCache()
             ?
-            "    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb( "+className+".class.getName() );\n"+
+            "    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb("+className+".class);\n"+
             "\n"+
             "    public static void reinit()\n"+
             "    {\n"+
@@ -1076,7 +1076,7 @@ public final class CreateSchemaFromDb {
             "\n"+
             (config.getIsUseCache()
             ?
-            "    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb( "+className+".class.getName() );\n"+
+            "    private static org.riverock.generic.main.CacheFactoryWithDb cache = new org.riverock.generic.main.CacheFactoryWithDb("+className+".class);\n"+
             "\n"+
             "    public static void reinit()\n"+
             "    {\n"+

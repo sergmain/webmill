@@ -44,7 +44,7 @@ public final class SiteService {
     public static void main(String[] args) throws Exception{
         StartupApplication.init();
         DatabaseAdapter a = DatabaseAdapter.getInstance();
-        WmPortalListSiteListType siteList = GetWmPortalListSiteFullList.getInstance(a, 1).item;
+        WmPortalListSiteListType siteList = GetWmPortalListSiteFullList.getInstance(a, 1L).item;
 
         for (final WmPortalListSiteItemType site : siteList.getWmPortalListSite()) {
             if (site.getIdSite()!=16) {

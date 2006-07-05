@@ -46,7 +46,7 @@ import org.riverock.sql.cache.SqlStatement;
 public class Shop implements Serializable {
     private final static Logger log = Logger.getLogger( Shop.class );
 
-    private transient static CacheFactory cache = new CacheFactory( Shop.class.getName() );
+    private transient static CacheFactory cache = new CacheFactory( Shop.class);
 
     public Long id_shop = null;
     public int is_close;
