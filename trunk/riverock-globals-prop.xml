@@ -62,7 +62,7 @@
     <property name="myfaces.lib" value="myfaces-all-1.1.1.jar"/>
 
     <property name="jcaptcha.lib" value="jcaptcha-all-1.0-RC3.jar"/>
-    <property name="ehcache.lib" value="ehcache-1.2.1RC.jar"/>
+    <property name="ehcache.lib" value="ehcache-1.2.1.jar"/>
 
     <property name="portlet.lib" value="portlet-1.0.jar"/>
     <property name="secure.lib" value="bcprov-jdk14-122.jar"/>
