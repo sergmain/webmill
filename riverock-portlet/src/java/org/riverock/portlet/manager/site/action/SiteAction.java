@@ -194,6 +194,11 @@ public class SiteAction implements Serializable {
         return "site";
     }
 
+    public String changeSite() {
+        log.info( "Change site action." );
+        return "site";
+    }
+
 // virtual host actions
     public void deleteVirtualHostActionListener( ActionEvent event ) {
         log.debug( "Delete virtual host action." );

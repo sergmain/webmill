@@ -42,6 +42,10 @@
             <property-class>org.riverock.portlet.manager.site.SiteService</property-class>
             <value>#{siteService}</value>
         </managed-property>
+        <managed-property>
+            <property-name>siteSessionBean</property-name>
+            <value>#{siteSessionBean}</value>
+        </managed-property>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>siteDataProvider</managed-bean-name>

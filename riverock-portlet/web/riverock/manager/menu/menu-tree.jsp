@@ -8,11 +8,11 @@
 
 <h:panelGroup id="menu-tree-group">
 
-    <h:panelGroup id="menu-tree-site-group">
-        <h:selectOneMenu id="select-one-site" value="#{menuSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
+    <h:panelGroup id="menu-tree-site-change-group">
+        <h:selectOneMenu id="select-one-site" value="#{menuSessionBean.currentSiteId}" styleClass="selectOneSite" required="true">
             <f:selectItems value="#{menuService.siteList}"/>
         </h:selectOneMenu>
-        <h:commandButton id="menu-catalog-edit-cancel-action" action="#{menuSiteAction.changeSite}"
+        <h:commandButton id="menu-change-site-action" action="#{menuSiteAction.changeSite}"
                          value="Ok"
                          styleClass="menu-button-action"
             >

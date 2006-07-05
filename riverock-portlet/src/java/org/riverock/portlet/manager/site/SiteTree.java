@@ -61,10 +61,21 @@ public class SiteTree implements Serializable {
     private HtmlTree _tree;
     private String _nodePath;
 
+    @SuppressWarnings({"FieldCanBeLocal"})
     private TreeNode treeNode = null;
     private SiteService siteService = null;
 
+    private SiteSessionBean siteSessionBean = null;
+
     public SiteTree() {
+    }
+
+    public SiteSessionBean getSiteSessionBean() {
+        return siteSessionBean;
+    }
+
+    public void setSiteSessionBean(SiteSessionBean siteSessionBean) {
+        this.siteSessionBean = siteSessionBean;
     }
 
     public void setSiteTree(TreeNode treeNode) {
@@ -79,13 +90,16 @@ public class SiteTree implements Serializable {
         TreeNode treeRoot = new TreeNodeBase("tree-root", "tree-root", false);
         TreeNode treeData = new TreeNodeBase("site-list", "Webmill portal. Site list.", false);
         treeRoot.getChildren().add(treeData);
-        for (Site site : siteService.getSites()) {
+        if (siteSessionBean.getCurrentSiteId()!=null) {
+            Site site = siteService.getSite(siteSessionBean.getCurrentSiteId());
+
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
+            treeRoot.getChildren().add(siteNode);
 
             if (FacesTools.isUserInRole("webmill.css") || FacesTools.isUserInRole("webmill.site-manager") ||
                 FacesTools.isUserInRole("webmill.portal-manager")) {
                 TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", site.getSiteId().toString(), false);
-                siteNode.getChildren().add(cssListNode);
+                treeRoot.getChildren().add(cssListNode);
 
                 for (Css css : siteService.getCssList(site.getSiteId())) {
                     TreeNodeBase cssNode =
@@ -103,7 +117,7 @@ public class SiteTree implements Serializable {
                 FacesTools.isUserInRole("webmill.portal-manager")) {
 
                 TreeNodeBase siteLanguageListNode = new TreeNodeBase("site-language-list", "Site languages", site.getSiteId().toString(), false);
-                siteNode.getChildren().add(siteLanguageListNode);
+                treeRoot.getChildren().add(siteLanguageListNode);
 
                 for (SiteLanguage siteLanguage : siteService.getSiteLanguageList(site.getSiteId())) {
                     TreeNodeBase siteLanguageNode = new TreeNodeBase(
@@ -139,8 +153,6 @@ public class SiteTree implements Serializable {
                     }
                 }
             }
-
-            treeData.getChildren().add(siteNode);
         }
         treeNode = treeRoot;
         return treeNode;
