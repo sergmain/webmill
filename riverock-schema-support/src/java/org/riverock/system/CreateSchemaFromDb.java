@@ -31,30 +31,48 @@ import java.io.OutputStreamWriter;
 import java.sql.DatabaseMetaData;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
-import java.lang.reflect.Method;
+import java.util.List;
 
-import org.riverock.common.tools.MainTools;
-import org.riverock.common.tools.StringTools;
+import org.exolab.castor.util.Version;
+import org.exolab.castor.xml.Namespaces;
+import org.exolab.castor.xml.Unmarshaller;
+import org.exolab.castor.xml.schema.AttributeDecl;
+import org.exolab.castor.xml.schema.ComplexType;
+import org.exolab.castor.xml.schema.ElementDecl;
+import org.exolab.castor.xml.schema.Group;
+import org.exolab.castor.xml.schema.Order;
+import org.exolab.castor.xml.schema.Particle;
+import org.exolab.castor.xml.schema.Schema;
+import org.exolab.castor.xml.schema.SchemaNames;
+import org.exolab.castor.xml.schema.util.DatatypeHandler;
+import org.exolab.castor.xml.schema.writer.SchemaWriter;
+import org.xml.sax.InputSource;
+
 import org.riverock.common.config.JsmithyNamespases;
 import org.riverock.common.config.PropertiesProvider;
+import org.riverock.common.tools.MainTools;
+import org.riverock.common.tools.StringTools;
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.schema.db.structure.*;
+import org.riverock.generic.schema.db.structure.DbFieldType;
+import org.riverock.generic.schema.db.structure.DbImportedPKColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyColumnType;
+import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
+import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.startup.StartupApplication;
 import org.riverock.generic.tools.XmlTools;
-import org.riverock.schema.gen.*;
+import org.riverock.schema.gen.DatabaseType;
+import org.riverock.schema.gen.LoggerType;
+import org.riverock.schema.gen.NamespaceType;
+import org.riverock.schema.gen.OptionalFieldTableType;
+import org.riverock.schema.gen.SchemaGenAuthAccessType;
+import org.riverock.schema.gen.SchemaGenConfigType;
+import org.riverock.schema.gen.SchemaGenExtendClassType;
+import org.riverock.schema.gen.SchemaGenTableToItemType;
 import org.riverock.schema.gen.types.ExceptionDefinitionTypeExceptionTypeType;
-
-import org.exolab.castor.xml.Unmarshaller;
-import org.exolab.castor.xml.Namespaces;
-import org.exolab.castor.xml.schema.*;
-import org.exolab.castor.xml.schema.util.DatatypeHandler;
-import org.exolab.castor.xml.schema.writer.SchemaWriter;
-import org.exolab.castor.util.Version;
-import org.xml.sax.InputSource;
 
 /**
  * User: Admin
@@ -96,15 +114,15 @@ public final class CreateSchemaFromDb {
         throws Exception
     {
         String s =
-            "     public void copyItem("+classNameItem+" target)\n"+
-            "     {\n"+
-            "         copyItem(this.item, target);\n"+
-            "     }\n"+
+            "    public void copyItem("+classNameItem+" target)\n"+
+            "    {\n"+
+            "        copyItem(this.item, target);\n"+
+            "    }\n"+
             "\n"+
-            "     public static void copyItem("+classNameItem+" source, "+classNameItem+" target)\n"+
-            "     {\n"+
-            "         if (source==null || target==null)\n"+
-            "             return;\n"+
+            "    public static void copyItem("+classNameItem+" source, "+classNameItem+" target)\n"+
+            "    {\n"+
+            "        if (source==null || target==null)\n"+
+            "            return;\n"+
             "\n";
 
         for (int i=0; i<table.getFieldsCount(); i++)
@@ -113,14 +131,14 @@ public final class CreateSchemaFromDb {
             if (field.getName().toLowerCase().startsWith("is_"))
             {
                 s +=
-                    "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                    "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                     "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
             }
             else
             if (isKeyField( field ))
             {
                 s +=
-                    "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                    "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                     "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
             }
             else
@@ -135,16 +153,16 @@ public final class CreateSchemaFromDb {
                         {
                             if (field.getSize()<7)
                                 s +=
-                                    "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                                    "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                                     "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
                             else
                                 s +=
-                                    "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                                    "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                                     "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
                         }
                         else
                             s +=
-                                "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                                "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                                 "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
 
                         break;
@@ -152,17 +170,17 @@ public final class CreateSchemaFromDb {
                     case Types.INTEGER:
                         if (field.getSize()<7)
                             s +=
-                                "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                                "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                                 "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
                         else
                             s +=
-                                "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                                "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                                 "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
                         break;
 
                     case Types.DOUBLE:
                         s +=
-                            "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                            "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                             "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
                         break;
 
@@ -170,14 +188,14 @@ public final class CreateSchemaFromDb {
                     case Types.LONGVARCHAR:
                     case Types.LONGVARBINARY:
                         s +=
-                            "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                            "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                             "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
                         break;
 
                     case Types.DATE:
                     case Types.TIMESTAMP:
                         s +=
-                            "         target.set"+StringTools.capitalizeString(field.getName())+"( "+
+                            "        target.set"+StringTools.capitalizeString(field.getName())+"( "+
                             "source.get"+StringTools.capitalizeString(field.getName())+"() );\n";
                         break;
 
@@ -188,7 +206,7 @@ public final class CreateSchemaFromDb {
             }
         }
         s +=
-            "     }\n";
+            "    }\n";
 
         return s;
     }
@@ -209,27 +227,7 @@ public final class CreateSchemaFromDb {
             "    }\n"+
             "\n"
             :"")+
-
-            "    public static "+className+" getInstance("+db.getFactoryMethod()+" db__, long id__) "+
-            putExceptionDefinition()+
-            "    {\n"+
-            "        return getInstance(db__, new Long(id__) );\n"+
-            "    }\n"+
-            "\n"+
             putGetInstanceMethod(className, isResultCanBeNull)+
-            "    /**\n" +
-            "     * @deprecated use getInstance() method\n" +
-            "     */\n"+
-            "    public "+classNameItem+" getData("+db.getFactoryMethod()+" db_, long id) "+
-            putExceptionDefinition()+
-            "    {\n"+
-            "        "+className+" obj = "+className+".getInstance(db_, id);\n"+
-            "        if (obj!=null)\n"+
-            "            return obj.item;\n"+
-            "\n"+
-            "        return new "+classNameItem+"();\n"+
-            "    }\n"+
-            "\n"+
             "    public "+className+"("+db.getFactoryMethod()+" db_, long id) "+
             putExceptionDefinition()+
             "    {\n"+
@@ -298,9 +296,9 @@ public final class CreateSchemaFromDb {
     private static String putGetInstanceMethod(String className, boolean isResultCanBeNull)
     {
         String s =
-            "     public static "+className+" getInstance("+db.getFactoryMethod()+" db__, Long id__) "+
+            "    public static "+className+" getInstance("+db.getFactoryMethod()+" db__, Long id__) "+
             putExceptionDefinition()+
-            "     {\n";
+            "    {\n";
 
         if (config.getPersistenceExceptionName()!=null &&
             config.getPersistenceExceptionName().getExceptionType().getType()==
@@ -314,10 +312,10 @@ public final class CreateSchemaFromDb {
         }
 
         if (config.getIsUseCache())
-            s += "         return ("+className+") cache.getInstanceNew(db__, id__ );\n";
+            s += "        return ("+className+") cache.getInstanceNew(db__, id__ );\n";
         else
         {
-            s += "         return new "+className+"(db__, id__ );\n";
+            s += "        return new "+className+"(db__, id__ );\n";
 /*
 // Todo commented
 // Todo need investigation - what return null or empty bean
@@ -361,7 +359,7 @@ public final class CreateSchemaFromDb {
         }
 
         s +=
-            "     }\n"+
+            "    }\n"+
             "\n";
 
         return s;
@@ -1095,31 +1093,7 @@ public final class CreateSchemaFromDb {
             "\n"+
             "    public "+className+"(){}\n"+
             "\n"+
-//            (config.getIsUseCache()
-//            ?
-//            "    private static "+className+" dummy = new "+className+"();\n"+
-//            "\n"
-//            :"")+
-            "    public static "+className+" getInstance("+db.getFactoryMethod()+" db__, long id__) "+
-            putExceptionDefinition()+
-            "    {\n"+
-            "        return getInstance(db__, new Long(id__) );\n"+
-            "    }\n"+
-            "\n"+
             putGetInstanceMethod(className, true)+
-            "    /**\n" +
-            "     * @deprecated use getInstance() method\n" +
-            "     */\n"+
-            "    public "+classNameItem+" getData("+db.getFactoryMethod()+" db_, long id) "+
-            putExceptionDefinition()+
-            "    {\n"+
-            "         "+className+" obj = "+className+".getInstance(db_, id);\n"+
-            "        if (obj!=null)\n"+
-            "            return obj.item;\n"+
-            "\n"+
-            "        return new "+classNameItem+"();\n"+
-            "    }\n"+
-            "\n"+
             getCopyItemMethod(classNameItem, table)+
             "\n"+
             "    public "+className+"("+db.getFactoryMethod()+" db_, long id) "+
