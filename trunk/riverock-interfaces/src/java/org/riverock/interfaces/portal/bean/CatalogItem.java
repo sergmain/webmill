@@ -42,15 +42,11 @@ public interface CatalogItem extends TreeItem {
 
     public Long getContextId();
 
-    public Boolean getUseProperties();
-
     public Long getTemplateId();
 
     public Long getCatalogLanguageId();
 
     public Integer getOrderField();
-
-    public String getStorage();
 
     public String getKeyMessage();
 

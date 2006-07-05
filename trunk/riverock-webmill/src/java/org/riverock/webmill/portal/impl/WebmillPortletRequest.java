@@ -744,7 +744,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.setAttribute( ContainerConstants.PORTAL_USER_AGENT_ATTRIBUTE, Header.getUserAgent(httpRequest) );
 
         PortalMailServiceProviderImpl mailServiceProvider = new PortalMailServiceProviderImpl(
-            portalContext.getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID ),
+            portalContext.getProperty( ContainerConstants.PORTAL_PROP_SMTP_HOST ),
             portalRequestInstance.getPortalInfo().getSite().getAdminEmail()
         );
         this.setAttribute(
@@ -763,13 +763,15 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             }
         }
 
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         this.setAttribute(
             ContainerConstants.PORTAL_PORTAL_USER_MANAGER,
             new PortalUserManagerImpl(
                 portalRequestInstance.getPortalInfo().getSite().getSiteId(),
                 new Long(portalContext.getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID )),
                 mailServiceProvider,
-                portletMetadata
+                portletMetadata,
+                classLoader
             )
         );
     }

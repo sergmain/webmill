@@ -51,6 +51,7 @@ public class SiteBean implements Serializable, Site {
     private String defCountry;
     private String defVariant;
     private String adminEmail;
+    private String properties=null;
 
     public SiteBean(){
     }
@@ -66,6 +67,7 @@ public class SiteBean implements Serializable, Site {
         this.defCountry = site.getDefCountry();
         this.defVariant = site.getDefVariant();
         this.adminEmail = site.getAdminEmail();
+        this.properties = site.getProperties();
     }
 
     public String getSiteDefaultLocale() {
@@ -89,6 +91,14 @@ public class SiteBean implements Serializable, Site {
         defLanguage = locale.getLanguage();
         defCountry = locale.getCountry();
         defVariant = locale.getVariant();
+    }
+
+    public String getProperties() {
+        return properties;
+    }
+
+    public void setProperties(String properties) {
+        this.properties = properties;
     }
 
     public Long getSiteId() {

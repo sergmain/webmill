@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -57,7 +58,7 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     private transient final static Logger log = Logger.getLogger(PortalInfoImpl.class);
 
-    private transient static Map<Long, PortalInfoImpl> portatInfoMap = new HashMap<Long, PortalInfoImpl>();
+    private transient static Map<Long, PortalInfoImpl> portatInfoMap = new ConcurrentHashMap<Long, PortalInfoImpl>();
 
     private transient Site siteBean = new SiteBean();
     private transient List<SiteLanguage> siteLanguageList = null;
@@ -71,10 +72,10 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     private transient Map<String, MenuLanguage> languageMenuMap = null;
 
     private transient Long siteId = null;
-    private transient Map<String, String> meta = null;
+    private transient Map<String, String> portalProperties = null;
 
-    public Map<String, String> getMetadata() {
-        return meta;
+    public Map<String, String> getPortalProperties() {
+        return portalProperties;
     }
 
     public boolean isCurrentSite(Long siteLanguageId) {
@@ -132,12 +133,6 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
 
     // Todo replace synchronized with synchronized(syncObject)
     public synchronized static PortalInfoImpl getInstance(String serverName) {
-        if (log.isDebugEnabled()) {
-            log.debug("#15.01.01 lastReadData: " + lastReadData + ", current " + System.currentTimeMillis());
-            log.debug("#15.01.02 LENGTH_TIME_PERIOD " + LENGTH_TIME_PERIOD + ", status " +
-                ((System.currentTimeMillis() - lastReadData) > LENGTH_TIME_PERIOD));
-        }
-
         Long id = SiteList.getSiteId(serverName);
         if (log.isDebugEnabled())
             log.debug("ServerName:" + serverName + ", siteId: " + id);
@@ -206,21 +201,22 @@ public final class PortalInfoImpl implements Serializable, PortalInfo {
     }
 
     private void initPortalProperties() {
-        meta = new HashMap<String, String>();
-        Properties properties = new Properties();
-        try {
-            // Todo decide, what value must be passed to ByteArrayInputStream
-            properties.load( new ByteArrayInputStream( "".getBytes() ) );
+        portalProperties = new HashMap<String, String>();
+        if (StringUtils.isNotBlank(siteBean.getProperties())) {
+            Properties properties = new Properties();
+            try {
+                properties.load( new ByteArrayInputStream(siteBean.getProperties().getBytes()) );
+            }
+            catch (IOException e) {
+                String es = "Error load properties from stream";
+                log.error(es, e);
+                throw new IllegalStateException( es, e);
+            }
+            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+                portalProperties.put(entry.getKey().toString(), entry.getValue().toString());
+            }
         }
-        catch (IOException e) {
-            String es = "Error load properties from stream";
-            log.error(es, e);
-            throw new IllegalStateException( es, e);
-        }
-        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            meta.put(entry.getKey().toString(), entry.getValue().toString());
-        }
-        meta.put( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL, siteBean.getAdminEmail() );
+        portalProperties.put( ContainerConstants.PORTAL_PROP_ADMIN_EMAIL, siteBean.getAdminEmail() );
     }
 
     public PortalInfoImpl() {

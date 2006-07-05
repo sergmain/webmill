@@ -49,7 +49,7 @@ public class PortalContextImpl implements PortalContext {
     private final static Logger log = Logger.getLogger( PortalContextImpl.class );
 
     private String portalInfo = null;
-    private Map<String, String> map = null;
+    private Map<String, String> properties = null;
 
     public PortalContextImpl(String portalInfoName, String contextPath, PortalInfo portalInfo) {
         this.portalInfo = portalInfoName;
@@ -61,20 +61,20 @@ public class PortalContextImpl implements PortalContext {
         map.put( ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH, contextPath );
         if (log.isDebugEnabled()) {
             log.debug("portal context path: '" + contextPath +"'" );
-            log.debug("portal context path in map: '" +
+            log.debug("portal context path in properties: '" +
                 map.get(ContainerConstants.PORTAL_PORTAL_CONTEXT_PATH) +"'" );
         }
-        map.putAll( portalInfo.getMetadata() );
+        map.putAll( portalInfo.getPortalProperties() );
 
-        this.map = map;
+        this.properties = map;
     }
 
     public String getProperty(String key) {
-        return map.get( key );
+        return properties.get( key );
     }
 
     public Enumeration getPropertyNames() {
-        return Collections.enumeration( map.keySet() );
+        return Collections.enumeration( properties.keySet() );
     }
 
     public Enumeration getSupportedPortletModes() {
