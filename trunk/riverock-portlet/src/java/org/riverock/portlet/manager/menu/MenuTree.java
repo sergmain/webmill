@@ -66,7 +66,7 @@ public class MenuTree implements Serializable {
 
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
             treeRoot.getChildren().add(siteNode);
-            
+
             for (SiteLanguage siteLanguage : menuService.getSiteLanguageList(site.getSiteId())) {
                 TreeNodeBase siteLanguageNode = new TreeNodeBase(
                     "site-language",
@@ -100,7 +100,7 @@ public class MenuTree implements Serializable {
         for (CatalogItem catalogItem : menuItemList) {
             TreeNodeBase menuItemNode = new TreeNodeBase(
                 "menu-item",
-                catalogItem.getKeyMessage()+", "+catalogItem.getUrl(),
+                catalogItem.getKeyMessage()+", ["+(catalogItem.getUrl()!=null?catalogItem.getUrl():"")+']',
                 catalogItem.getCatalogId().toString(),
                 false);
             node.getChildren().add(menuItemNode);

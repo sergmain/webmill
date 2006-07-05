@@ -60,6 +60,15 @@ public class SiteSessionBean implements Serializable {
 
     private String currentVirtualHost = null;
     private String newVirtualHost = null;
+    private Long currentSiteId=null;
+
+    public Long getCurrentSiteId() {
+        return currentSiteId;
+    }
+
+    public void setCurrentSiteId(Long currentSiteId) {
+        this.currentSiteId = currentSiteId;
+    }
 
     public String getCurrentVirtualHost() {
         return currentVirtualHost;

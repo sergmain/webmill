@@ -62,6 +62,20 @@ public class SiteService implements Serializable {
     public SiteService() {
     }
 
+    public List<SelectItem> getSiteList() {
+        List<SelectItem> list = new ArrayList<SelectItem>();
+        List<Site> sites = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSites();
+
+        for (Site site : sites) {
+            if (site.getSiteId() == null) {
+                throw new IllegalStateException("siteIdd is null, name: " + site.getSiteName());
+            }
+
+            list.add(new SelectItem(site.getSiteId(), site.getSiteName()));
+        }
+        return list;
+    }
+
     @SuppressWarnings({"RedundantStringConstructorCall"})
     public List<SelectItem> getCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
@@ -78,6 +92,11 @@ public class SiteService implements Serializable {
             list.add(new SelectItem(company.getId().toString(), companyName));
         }
         return list;
+    }
+
+    public Site getSite(Long siteId) {
+        Site site = FacesTools.getPortalDaoProvider().getPortalSiteDao().getSite(siteId);
+        return new SiteBean(site);
     }
 
     public List<Site> getSites() {
