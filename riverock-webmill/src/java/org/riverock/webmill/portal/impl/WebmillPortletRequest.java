@@ -299,12 +299,12 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
         boolean status = auth.checkAccess( httpRequest.getServerName() );
         if ( !status ) {
-		userRoles.put(role, false);
+            userRoles.put(role, false);
             return false;
         }
 
         if (role.equals(PortalConstants.WEBMILL_AUTHENTIC_ROLE)) {
-		userRoles.put(PortalConstants.WEBMILL_AUTHENTIC_ROLE, true);
+            userRoles.put(PortalConstants.WEBMILL_AUTHENTIC_ROLE, true);
             return true;
         }
 
@@ -326,9 +326,9 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         }
 
         boolean roleRefAccess = auth.isUserInRole( link );
-	userRoles.put(role, roleRefAccess);
+        userRoles.put(role, roleRefAccess);
 
-	return roleRefAccess;
+        return roleRefAccess;
     }
 
     public HttpServletRequest getHttpServletRequest() {
@@ -336,9 +336,11 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public Object getAttribute( String key ) {
+/*
         if (log.isDebugEnabled()) {
             log.debug("getAttribute(), key: " + key + ", this: " + this);
         }
+*/
         if (key==null) {
             throw new IllegalArgumentException("Call getAttribute() with key==null");
         }
@@ -363,9 +365,11 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
             String portletAttribute = mapper.decode(namespace, attribute);
 
+/*
             if (log.isDebugEnabled()) {
                 log.debug("getAttributeNames(), attr names: "+attribute);
             }
+*/
             if (portletAttribute != null) { // it is in the portlet's namespace
                 portletAttributes.add(portletAttribute);
             }
@@ -382,9 +386,11 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         String encodedName = isNameReserved(key) ?
                 key : mapper.encode(namespace, key);
 
+/*
         if (log.isDebugEnabled()) {
             log.debug("setAttribute(), key: " + key+", value: " +value+", isReserved: "+ isNameReserved(key)+", encodedName: " +encodedName );
         }
+*/
 
         if (value == null) {
             removeAttribute(key);

@@ -468,7 +468,7 @@ public final class PageElement {
 
             if (portletEntry.getPortletDefinition() != null) {
                 if (log.isDebugEnabled()) {
-                    log.debug("portlet: " + portletEntry.getPortletDefinition().getPortletName());
+                    log.debug("check security for portlet: " + portletEntry.getPortletDefinition().getPortletName());
                 }
                 if (!portletEntry.getPortletDefinition().getSecurityRoleRefList().isEmpty()) {
                     isAccessPermit = false;
@@ -479,11 +479,16 @@ public final class PageElement {
                             log.debug("SecurityRoleRef.roleName: " + roleRef.getRoleName() + ", SecurityRoleRef.roleLink: " + roleRef.getRoleLink());
                         }
 
-                        if (renderRequest.isUserInRole(roleRef.getRoleLink()!=null ? roleRef.getRoleLink() : roleRef.getRoleName())) {
+                        boolean userInRole = isUserInRole(roleRef.getRoleLink() != null ? roleRef.getRoleLink() : roleRef.getRoleName());
+                        if (log.isDebugEnabled()) {
+                            log.debug("isUserInRole: " + userInRole);
+                        }
+                        if (userInRole) {
                             isAccessPermit = true;
                             errorString = null;
                             break;
                         }
+
                     }
                 }
             }
@@ -497,7 +502,7 @@ public final class PageElement {
                         if (log.isDebugEnabled()) {
                             log.debug("Check access for role: " + role);
                         }
-                        if (renderRequest.isUserInRole(role)) {
+                        if (isUserInRole(role)) {
                             isAccessPermit = true;
                             errorString= null;
                             break;
@@ -510,6 +515,31 @@ public final class PageElement {
             errorString = portletUnavailable(portletName);
             log.error(errorString, e);
         }
+    }
+
+    private boolean isUserInRole( String role ) {
+        if (role==null) {
+            return false;
+        }
+
+        if (role.equals(PortalConstants.WEBMILL_GUEST_ROLE)) {
+            return true;
+        }
+
+        if (portalRequestInstance.getHttpRequest().getServerName()==null || portalRequestInstance.getAuth()==null) {
+            return role.equals(PortalConstants.WEBMILL_ANONYMOUS_ROLE);
+        }
+
+        boolean status = portalRequestInstance.getAuth().checkAccess( portalRequestInstance.getHttpRequest().getServerName() );
+        if ( !status ) {
+            return false;
+        }
+
+        if (role.equals(PortalConstants.WEBMILL_AUTHENTIC_ROLE)) {
+            return true;
+        }
+
+        return portalRequestInstance.getAuth().isUserInRole( role );
     }
 
     private static String portletUnavailable(final String portletName) {

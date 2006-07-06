@@ -26,9 +26,9 @@ package org.riverock.common.collections;
 
 import java.util.Map;
 
-import org.riverock.common.tools.ServletTools;
-
 import org.apache.log4j.Logger;
+
+import org.riverock.common.tools.ServletTools;
 
 /**
  * User: SergeMaslyukov

@@ -181,12 +181,16 @@ public final class PortalRequestInstance {
 
             org.apache.commons.fileupload.RequestContext uploadRequestContext = new ServletRequestContext( httpRequest );
             this.isMultiPartRequest = FileUpload.isMultipartContent( uploadRequestContext );
-            if (log.isDebugEnabled()) {
-                log.debug( "isMultiPartRequest: " + isMultiPartRequest );
-            }
             if (isMultiPartRequest) {
                 requestBodyFile = PortletUtils.storeBodyRequest( httpRequest, MAX_REQUEST_BODY_SIZE );
             }
+            if (log.isDebugEnabled()) {
+                log.debug( "isMultiPartRequest: " + isMultiPartRequest );
+                log.debug( "requestBodyFile: " + requestBodyFile );
+                if (isMultiPartRequest && requestBodyFile!=null)
+                    log.debug( "requestBodyFile: " + requestBodyFile.getAbsolutePath() );
+            }
+
 
             this.auth = AuthTools.getAuthSession(httpRequest);
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

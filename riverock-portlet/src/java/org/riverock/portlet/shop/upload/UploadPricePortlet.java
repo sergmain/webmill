@@ -117,7 +117,7 @@ public final class UploadPricePortlet implements Portlet {
                         prices = (PricesType) Unmarshaller.unmarshal(PricesType.class, inSrc);
 
                         uploadedStream.close();
-
+                        item.delete();
                     }
                 }
 
