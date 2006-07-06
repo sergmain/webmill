@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community                    
+ * Riverock -- The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -68,7 +68,6 @@ public final class PageElement {
 
     private PortletEntry portletEntry = null;
     private PortalTemplateItem portalTemplateItem = null;
-//    private boolean isUrl = false;
     private boolean isXml = false;
     private PortletParameters parameters = null;
     private boolean isRedirected = false;
@@ -76,6 +75,10 @@ public final class PageElement {
     private boolean isAccessPermit = true;
     private Namespace namespace = null;
     private String fullPortletName=null;
+    private Map<String, List<String>> renderRequestParamMap = new HashMap<String, List<String>>();
+    private String contextPath=null;
+    private Map<String, String> portletMetadata=null;
+    private PortalRequestInstance portalRequestInstance=null;
 
     /**
      * renderParameter used for set parameters in action
@@ -129,11 +132,10 @@ public final class PageElement {
     }
 
     void processActionPortlet() {
+        initAction();
 
-//        if (isUrl || exception!=null || errorString!=null) {
         if (exception!=null || errorString!=null) {
             if ( log.isDebugEnabled() ) {
-//                log.debug("isUrl" + isUrl + ", exception: " + exception + ", errorString: "+ errorString );
                 log.debug("exception: " + exception + ", errorString: "+ errorString +", isAccessPermit: " + isAccessPermit );
             }
             return;
@@ -165,6 +167,7 @@ public final class PageElement {
     }
 
     void renderPortlet() {
+        initRender();
 
         if (exception!=null || errorString!=null) {
             if ( log.isDebugEnabled() ) {
@@ -257,66 +260,60 @@ public final class PageElement {
         }
     }
 
-    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, Map<String, String> portletMetadata, List<String> roleList ) {
-        fullPortletName = portletName;
+    void initAction() {
+        if ( parameters!=null && parameters.getRequestState().isActionRequest() ) {
+            Map<String, List<String>> actionRequestParamMap = new HashMap<String, List<String>>();
+            // The portlet-container must not propagate parameters received
+            // in an action request to subsequent render requests of the portlet.
+            if (parameters.getParameters()!=null) {
+                actionRequestParamMap.putAll(parameters.getParameters());
+            }
+
+            actionRequest = new ActionRequestImpl(
+                actionRequestParamMap,
+                portalRequestInstance,
+                portletEntry.getServletConfig().getServletContext(),
+                contextPath,
+                portletEntry.getPortletDefinition().getPortletPreferences(),
+                portletEntry.getPortletProperties(),
+                portalRequestInstance.getPortalContext(),
+                portletEntry.getPortletConfig().getPortletContext(),
+                portletEntry.getPortletDefinition(),
+                namespace,
+                portletMetadata
+            );
+            actionRequest.setAttribute(
+                ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
+                new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
+            );
+
+            actionResponse = new ActionResponseImpl(
+                portalRequestInstance.getHttpResponse(),
+                renderParameters,
+                portletEntry.getPortletProperties()
+            );
+
+            if (log.isDebugEnabled()) {
+
+                Enumeration e = actionRequest.getParameterNames();
+                if (e.hasMoreElements()) {
+                    for (; e.hasMoreElements();) {
+                        String s = (String) e.nextElement();
+                        log.debug("actionRequest attr - " + s + ", value - " + actionRequest.getParameter(s));
+                    }
+                }
+                else {
+                    log.debug("actionRequest map is empty");
+                }
+            }
+        }
+    }
+
+    void initRender() {
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
-                log.debug("Start init page element. Portlet name: '" + portletName + "'");
+            if (portletEntry==null) {
+                throw new IllegalStateException("portletEntry is null");
             }
-
-            portletEntry = portletContainer.getPortletInstance(portletName);
-
-            if (portletEntry == null) {
-                errorString = portletUnavailable(portletName);
-                return;
-            }
-
-            if ( portletEntry.getIsPermanent() ) {
-                log.error( "portlet permanent unavailable, message: " + portletEntry.getExceptionMessage() );
-                errorString = portletUnavailable(portletName);
-                return;
-            }
-
-            if ( portletEntry.getIsWait() ) {
-                log.error( "portlet permanent unavailable for "+portletEntry.getInterval()+" seconds");
-                errorString = portletUnavailable(portletName);
-                return;
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("portletDefinition: " + portletEntry.getPortletDefinition());
-            }
-
-            if (portletEntry.getPortletDefinition() == null) {
-                errorString = "Definition for portlet '" + portletName + "' not found.";
-                return;
-            }
-
-            isXml = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_xml, Boolean.FALSE);
-
-            if (log.isDebugEnabled())
-                log.debug("Start create instance of portlet '" + portletName + "'");
-
-            portletEntry = portletContainer.getPortletInstance(portletName);
-
-            if (portletEntry.getIsPermanent()) {
-                errorString = "Portlet '" + portletName + "' permanently unavailable.";
-            }
-            else if (portletEntry.getInterval() > 0) {
-                errorString = "Portlet '" + portletName + "' unavailable for " + portletEntry.getInterval() + " seconds.";
-            }
-            if (portletEntry.getPortlet() == null) {
-                errorString = "Portlet '" + portletName + "' not created for unknown reason.";
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Error message of create portlet instance: " + errorString);
-            }
-
-            String contextPath = getContextPath(portalRequestInstance);
-
-            Map<String, List<String>> renderRequestParamMap = new HashMap<String, List<String>>();
 
             if (parameters != null && parameters.getParameters() != null) {
                 // The portlet-container must not propagate parameters received
@@ -387,53 +384,6 @@ public final class PageElement {
             renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_REQUEST, renderRequest );
             renderRequest.setAttribute( ContainerConstants.jAVAX_PORTLET_RESPONSE, renderResponse );
 
-            Map<String, List<String>> actionRequestParamMap = new HashMap<String, List<String>>( renderRequestParamMap );
-
-            if ( parameters.getRequestState().isActionRequest() ) {
-                if (parameters.getParameters()!=null) {
-                    // The portlet-container must not propagate parameters received
-                    // in an action request to subsequent render requests of the portlet.
-                    actionRequestParamMap.putAll(parameters.getParameters());
-                }
-                actionRequest = new ActionRequestImpl(
-                    actionRequestParamMap,
-                    portalRequestInstance,
-                    portletEntry.getServletConfig().getServletContext(),
-                    contextPath,
-                    portletEntry.getPortletDefinition().getPortletPreferences(),
-                    portletEntry.getPortletProperties(),
-                    portalRequestInstance.getPortalContext(),
-                    portletEntry.getPortletConfig().getPortletContext(),
-                    portletEntry.getPortletDefinition(),
-                    namespace,
-                    portletMetadata
-                );
-                actionRequest.setAttribute(
-                    ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
-                    new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
-                );
-
-                actionResponse = new ActionResponseImpl(
-                    portalRequestInstance.getHttpResponse(),
-                    renderParameters,
-                    portletEntry.getPortletProperties()
-                );
-
-                if (log.isDebugEnabled()) {
-
-                    Enumeration e = actionRequest.getParameterNames();
-                    if (e.hasMoreElements()) {
-                        for (; e.hasMoreElements();) {
-                            String s = (String) e.nextElement();
-                            log.debug("actionRequest attr - " + s + ", value - " + actionRequest.getParameter(s));
-                        }
-                    }
-                    else {
-                        log.debug("actionRequest map is empty");
-                    }
-                }
-            }
-
             if (log.isDebugEnabled()) {
                 Enumeration e = renderRequest.getParameterNames();
                 if (e.hasMoreElements()) {
@@ -448,6 +398,73 @@ public final class PageElement {
 
                 log.debug("Done init page element ");
             }
+        }
+        catch (Throwable e) {
+            errorString = portletUnavailable(fullPortletName);
+            log.error(errorString, e);
+        }
+    }
+
+    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, Map<String, String> portletMetadata, List<String> roleList ) {
+        this.fullPortletName = portletName;
+        this.portletMetadata = portletMetadata;
+        this.portalRequestInstance = portalRequestInstance;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
+                log.debug("Start init page element. Portlet name: '" + portletName + "'");
+            }
+
+            portletEntry = portletContainer.getPortletInstance(portletName);
+
+            if (portletEntry == null) {
+                errorString = portletUnavailable(portletName);
+                return;
+            }
+
+            if ( portletEntry.getIsPermanent() ) {
+                log.error( "portlet permanent unavailable, message: " + portletEntry.getExceptionMessage() );
+                errorString = portletUnavailable(portletName);
+                return;
+            }
+
+            if ( portletEntry.getIsWait() ) {
+                log.error( "portlet permanent unavailable for "+portletEntry.getInterval()+" seconds");
+                errorString = portletUnavailable(portletName);
+                return;
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("portletDefinition: " + portletEntry.getPortletDefinition());
+            }
+
+            if (portletEntry.getPortletDefinition() == null) {
+                errorString = "Definition for portlet '" + portletName + "' not found.";
+                return;
+            }
+
+            isXml = PortletService.getBooleanParam(portletEntry.getPortletDefinition(), ContainerConstants.is_xml, Boolean.FALSE);
+
+            if (log.isDebugEnabled())
+                log.debug("Start create instance of portlet '" + portletName + "'");
+
+            portletEntry = portletContainer.getPortletInstance(portletName);
+
+            if (portletEntry.getIsPermanent()) {
+                errorString = "Portlet '" + portletName + "' permanently unavailable.";
+            }
+            else if (portletEntry.getInterval() > 0) {
+                errorString = "Portlet '" + portletName + "' unavailable for " + portletEntry.getInterval() + " seconds.";
+            }
+            if (portletEntry.getPortlet() == null) {
+                errorString = "Portlet '" + portletName + "' not created for unknown reason.";
+            }
+
+            if (log.isDebugEnabled()) {
+                log.debug("Error message of create portlet instance: " + errorString);
+            }
+
+            contextPath = getContextPath(portalRequestInstance);
 
             if (portletEntry.getPortletDefinition() != null) {
                 if (log.isDebugEnabled()) {
