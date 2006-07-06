@@ -32,7 +32,6 @@
         <ant antfile="riverock-interfaces/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-common/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-sql-parser/build.xml" target="full_build_module"  inheritall="false" />
-        <ant antfile="riverock-cache/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-generic/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-schema-support/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-sso/build.xml" target="full_build_module"  inheritall="false" />
@@ -47,7 +46,6 @@
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-interfaces" />
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-common" />
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-sql-parser" />
-        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-cache" />
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-generic" />
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-schema-support" />
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-sso" />
