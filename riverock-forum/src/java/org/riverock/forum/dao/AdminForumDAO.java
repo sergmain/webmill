@@ -45,7 +45,6 @@ import org.riverock.forum.schema.core.WmForumConcreteItemType;
 import org.riverock.forum.util.CommonUtils;
 import org.riverock.forum.util.Constants;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.module.exception.ActionException;
 import org.riverock.module.web.url.UrlProvider;
 import org.riverock.module.web.user.ModuleUser;
@@ -56,6 +55,7 @@ import org.riverock.module.web.user.ModuleUser;
  *         Time: 11:25:39
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class AdminForumDAO {
     private final static Logger log = Logger.getLogger(AdminForumDAO.class);
 
@@ -116,15 +116,10 @@ public class AdminForumDAO {
             log.error(es, e);
             throw new ActionException(es, e);
         }
-        catch (DatabaseException e) {
-            String es = "Error process admin action, sub action: "+subAction;
-            log.error(es, e);
-            throw new ActionException(es, e);
-        }
         log.debug("out execute()");
     }
 
-    private void restoreForumConcrete(ForumActionBean forumActionBean, Long forumId) throws SQLException, DatabaseException {
+    private void restoreForumConcrete(ForumActionBean forumActionBean, Long forumId) throws SQLException {
         log.debug("in restoreForumConcrete()");
 
         Integer forumConcreteId = forumActionBean.getRequest().getInt( "forumConcreteId" );
@@ -152,10 +147,10 @@ public class AdminForumDAO {
 
     }
 
-    private void deleteForumConcrete(ForumActionBean forumActionBean, Long forumId, boolean isPermanent) throws SQLException, DatabaseException {
+    private void deleteForumConcrete(ForumActionBean forumActionBean, Long forumId, boolean isPermanent) throws SQLException {
         log.debug("in deleteForumConcrete()");
 
-        int checkBox = forumActionBean.getRequest().getInt( "confirm-delete", new Integer(0) ).intValue();
+        int checkBox = forumActionBean.getRequest().getInt("confirm-delete", 0);
         Integer forumConcreteId = forumActionBean.getRequest().getInt( "forumConcreteId" );
         if (log.isDebugEnabled()) {
             log.debug("checkBox: "+checkBox);
@@ -203,12 +198,12 @@ public class AdminForumDAO {
         WmForumConcreteItemType item = new WmForumConcreteItemType();
         item.setFName( forumActionBean.getRequest().getString( "forum-name" ) );
         item.setFInfo( forumActionBean.getRequest().getString( "forum-info" ) );
-        item.setFId( new Integer(CommonDAO.getForumConcreteID( forumActionBean.getAdapter() )) );
+        item.setFId(CommonDAO.getForumConcreteID(forumActionBean.getAdapter()) );
         item.setForumCategoryId( forumCategoryId );
 
         // hack - set moderator and last poster to admin userID
-        item.setFUId( new Integer(auth_.getId().intValue()) );
-        item.setFUId2( new Integer(auth_.getId().intValue()) );
+        item.setFUId(auth_.getId().intValue() );
+        item.setFUId2(auth_.getId().intValue() );
 
         InsertWmForumConcreteItem.process( forumActionBean.getAdapter(), item );
 
@@ -220,8 +215,8 @@ public class AdminForumDAO {
 
         WmForumCategoryItemType item = new WmForumCategoryItemType();
         item.setForumCategoryName( forumActionBean.getRequest().getString( "forum-category-name" ));
-        item.setForumId( new Integer(forumId.intValue()) );
-        item.setForumCategoryId( new Integer(CommonDAO.getForumCategoryID( forumActionBean.getAdapter() )) );
+        item.setForumId(forumId.intValue() );
+        item.setForumCategoryId(CommonDAO.getForumCategoryID(forumActionBean.getAdapter()) );
         item.setIsUseLocale( Boolean.FALSE );
         InsertWmForumCategoryItem.process( forumActionBean.getAdapter(), item );
 
@@ -230,7 +225,7 @@ public class AdminForumDAO {
 
     ///////////
 
-    private void restoreForumCategory(ForumActionBean forumActionBean, Long forumId) throws SQLException, DatabaseException {
+    private void restoreForumCategory(ForumActionBean forumActionBean, Long forumId) throws SQLException {
         log.debug("in restoreForumCategory()");
 
         Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
@@ -250,7 +245,7 @@ public class AdminForumDAO {
 
     }
 
-    private void deleteForumCategory(ForumActionBean forumActionBean, boolean isPermanent, Long forumId) throws SQLException, DatabaseException {
+    private void deleteForumCategory(ForumActionBean forumActionBean, boolean isPermanent, Long forumId) throws SQLException {
         log.debug("in deleteForumCategory()");
 
         Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
@@ -258,7 +253,7 @@ public class AdminForumDAO {
             return;
         }
 
-        int checkBox = forumActionBean.getRequest().getInt( "confirm-delete", new Integer(0) ).intValue();
+        int checkBox = forumActionBean.getRequest().getInt("confirm-delete", 0);
         if (log.isDebugEnabled()) {
             log.debug("checkBox: "+checkBox);
         }
@@ -275,7 +270,7 @@ public class AdminForumDAO {
                     "from   WM_FORUM_CONCRETE a " +
                     "where  a.FORUM_CATEGORY_ID=?"
                 );
-                ps.setInt(1, forumCategoryId.intValue());
+                ps.setInt(1, forumCategoryId);
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
@@ -316,7 +311,7 @@ public class AdminForumDAO {
             return;
         }
 
-        WmForumCategoryItemType forumCategory = GetWmForumCategoryItem.getInstance(forumActionBean.getAdapter(), forumCategoryId.intValue() ).item;
+        WmForumCategoryItemType forumCategory = GetWmForumCategoryItem.getInstance(forumActionBean.getAdapter(), (long)forumCategoryId.intValue() ).item;
         forumCategory.setForumCategoryName( forumActionBean.getRequest().getString( "forum-category-name" ));
         UpdateWmForumCategoryItem.process( forumActionBean.getAdapter(), forumCategory );
 
@@ -330,7 +325,7 @@ public class AdminForumDAO {
         if (!CommonUtils.checkForumConcreteId(forumActionBean.getAdapter(), forumId, forumConcreteId)){
             return;
         }
-        WmForumConcreteItemType forumConcrete = GetWmForumConcreteItem.getInstance( forumActionBean.getAdapter(), forumConcreteId.intValue()).item;
+        WmForumConcreteItemType forumConcrete = GetWmForumConcreteItem.getInstance( forumActionBean.getAdapter(), (long)forumConcreteId.intValue()).item;
         forumConcrete.setFName( forumActionBean.getRequest().getString( "forum-name" ));
         forumConcrete.setFInfo( forumActionBean.getRequest().getString( "forum-desc" ));
         UpdateWmForumConcreteItem.process( forumActionBean.getAdapter(), forumConcrete );
