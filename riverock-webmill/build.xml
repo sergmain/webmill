@@ -31,8 +31,8 @@
     <property name="Name" value="riverock-webmill"/>
     <property name="portlet-context-name" value=""/>
 
-    <property name="release-version" value="5.5.0"/>
-    <property name="portal-release-version" value="5.5"/>
+    <property name="release-version" value="5.5.1"/>
+    <property name="portal-release-version" value="5.5.1"/>
     <property name="name-portal-release-version" value="webmill-portal-${portal-release-version}"/>
 
     <property name="build-release-name" value="webmill-${release-version}"/>
