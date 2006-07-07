@@ -88,7 +88,7 @@ public abstract class AbstractForumPortlet implements Portlet {
         moduleConfig = null;
     }
 
-public abstract void process(PortletRequest request, PortletResponse response) throws PortletException, IOException;
+    public abstract void process(PortletRequest request, PortletResponse response) throws PortletException, IOException;
 
     public void render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
 
