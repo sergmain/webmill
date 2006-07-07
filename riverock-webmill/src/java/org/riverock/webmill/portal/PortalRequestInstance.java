@@ -187,8 +187,11 @@ public final class PortalRequestInstance {
             if (log.isDebugEnabled()) {
                 log.debug( "isMultiPartRequest: " + isMultiPartRequest );
                 log.debug( "requestBodyFile: " + requestBodyFile );
-                if (isMultiPartRequest && requestBodyFile!=null)
+                if (isMultiPartRequest && requestBodyFile!=null) {
                     log.debug( "requestBodyFile: " + requestBodyFile.getAbsolutePath() );
+                    log.debug( "requestBodyFile length: " + requestBodyFile.length() );
+                    log.debug( "content length: " + httpRequest.getContentLength() );
+                }
             }
 
 

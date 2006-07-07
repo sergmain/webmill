@@ -19,6 +19,15 @@
         </h:selectOneMenu>
     </h:panelGroup>
 
+    <h:outputText value="#{msg.menu_item_context_name}" rendered="#{! empty menuDataProvider.contextList}"/>
+    <h:panelGroup id="select-context-group" rendered="#{! empty menuDataProvider.contextList}">
+        <h:selectOneMenu id="select-one-context" value="#{menuSessionBean.menuItem.menuItem.contextId}"
+                         styleClass="selectOneMenu" required="true"
+            >
+            <f:selectItems value="#{menuDataProvider.contextList}"/>
+        </h:selectOneMenu>
+    </h:panelGroup>
+
     <h:outputText value="#{msg.menu_item_order_field}"/>
     <h:inputText id="menu-item-order-field" value="#{menuSessionBean.menuItem.menuItem.orderField}"/>
 

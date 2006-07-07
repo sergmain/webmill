@@ -13,7 +13,7 @@
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
     <tr>
         <td valign="middle">
-            <b><img src="<%= application.getRealPath("/") %>/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16"
+            <b><img src="<%= request.getContextPath() %>/riverock/forum/img/lb_icon.gif" WIDTH="16" HEIGHT="16"
                     BORDER="0" alt="banner">&nbsp;
                 <a href="<c:out value='${genericBean.forumHomeUrl}'/>"><c:out value="${genericBean.forumName}"/></A>
                 &nbsp;&gt;&nbsp;<c:out value="${forumBean.f_name}"/></b>
@@ -30,7 +30,7 @@
         </td>
         <td align="right">
             <A HREF="<c:out value="${forumBean.urlToPostThread}"/>">
-                <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/post.gif" WIDTH="110" HEIGHT="26"
+                <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/post.gif" WIDTH="110" HEIGHT="26"
                      BORDER=0 ALT="post">
             </A>
         </td>
@@ -54,23 +54,23 @@
             <td class="forum-td">
                 <c:choose>
                     <c:when test="${topic.t_order > 0 && topic.t_locked > 0}">
-                        <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lockedSticky.gif" WIDTH="16"
+                        <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/lockedSticky.gif" WIDTH="16"
                              HEIGHT="16" BORDER="0" alt="lockedSticky"/>
                     </c:when>
                     <c:when test="${topic.t_order > 0}">
-                        <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/sticky.gif" WIDTH="16"
+                        <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/sticky.gif" WIDTH="16"
                              HEIGHT="16" BORDER="0" alt="sticky"/>
                     </c:when>
                     <c:when test="${topic.t_locked > 0}">
-                        <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/locked.gif" WIDTH="16"
+                        <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/locked.gif" WIDTH="16"
                              HEIGHT="16" BORDER="0" alt="locked"/>
                     </c:when>
                     <c:when test="${topic.t_replies > 20}">
-                        <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/hotTopic.gif" WIDTH="16"
+                        <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/hotTopic.gif" WIDTH="16"
                              HEIGHT="16" BORDER="0" alt="hotTopic"/>
                     </c:when>
                     <c:otherwise>
-                        <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/topic.gif" WIDTH="16"
+                        <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/topic.gif" WIDTH="16"
                              HEIGHT="16" BORDER="0" alt="topic"/>
                     </c:otherwise>
                 </c:choose>
@@ -78,14 +78,14 @@
 
             <td class="forum-td" width="70%">
                 <c:if test="${topic.t_iconid > 0}">
-                    <img src="<%= application.getRealPath("/") %>/riverock/forum/img/icons/<c:out value='${topic.t_iconid}'/>.gif"
+                    <img src="<%= request.getContextPath() %>/riverock/forum/img/icons/<c:out value='${topic.t_iconid}'/>.gif"
                          width="15" height="15" border="0" alt="icon">
                 </c:if>
                 <A HREF="<c:out value='${genericBean.forumHomeUrl}'/>&action=topic&t_id=<c:out value='${topic.t_id}'/>">
                     <c:out value="${topic.t_name}"/></A>
                 <c:if test="${topic.countPages > 1}">
                     <br>
-                    [ <img SRC="<%= application.getRealPath("/") %>/riverock/forum/img/multipage.gif" WIDTH="10"
+                    [ <img SRC="<%= request.getContextPath() %>/riverock/forum/img/multipage.gif" WIDTH="10"
                            HEIGHT="12" BORDER="0" alt="multipage topic">
                     <fmt:message key="to_page"/>
                     <c:forEach begin="1" end="${topic.countPages}" var="index" varStatus="varStatus">
@@ -123,7 +123,7 @@
                     <TD width="20%" ALIGN="right">
                         <c:if test="${forumBean.countPages > 1}">
                             <br>
-                            [ <img SRC="<%= application.getRealPath("/") %>/riverock/forum/img/multipage.gif" WIDTH="10"
+                            [ <img SRC="<%= request.getContextPath() %>/riverock/forum/img/multipage.gif" WIDTH="10"
                                    HEIGHT="12" BORDER="0" alt="pager">
                             <fmt:message var="msg" key="to_page"/>
                             <c:forEach begin="1" end="${forumBean.countPages}" var="index" varStatus="varStatus">
@@ -173,15 +173,15 @@
 <table width="95%" align="center" border="0" cellspacing="1" cellpadding="5">
     <tr>
         <td>
-            <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/topic.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="topic">&nbsp;
+            <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/topic.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="topic">&nbsp;
             <fmt:message key="topic_image"/>&nbsp;&nbsp;
-            <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/hotTopic.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="hotTopic">&nbsp;
+            <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/hotTopic.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="hotTopic">&nbsp;
             <fmt:message key="hot_topic_image"/><BR>
-            <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/sticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="sticky">&nbsp;
+            <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/sticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="sticky">&nbsp;
             <fmt:message key="sticky_image"/>&nbsp;&nbsp;
-            <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/locked.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="locked">&nbsp;
+            <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/locked.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="locked">&nbsp;
             <fmt:message key="locked_image"/><BR>
-            <IMG SRC="<%= application.getRealPath("/") %>/riverock/forum/img/lockedSticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="lockedSticky">&nbsp;
+            <IMG SRC="<%= request.getContextPath() %>/riverock/forum/img/lockedSticky.gif" WIDTH="16" HEIGHT="16" BORDER=0 alt="lockedSticky">&nbsp;
             <fmt:message key="locked_sticky_image"/>
         </td>
     </tr>

@@ -82,36 +82,39 @@ public final class PortletUtils {
             log.info("start storeBodyRequest()" );
         }
 
-        if (isMultiPart(request)) {
-            int length = request.getContentLength();
-            if (length>maxLength) {
-                throw new IllegalStateException("Can not process body request because content length exceed max length. " +
-                    "max length: "+maxLength + ", request content length: " + length);
-            }
-            File file;
-            try {
-                file = File.createTempFile("request", ".dat") ;
-                if (log.isDebugEnabled()) {
-                    log.debug("Temporary file with multipart request: " + file);
-                }
-                OutputStream outputStream = new FileOutputStream( file );
-                InputStream inputStream = request.getInputStream();
-                copyData(inputStream, outputStream);
-                outputStream.flush();
-                outputStream.close();
-                outputStream = null;
-                inputStream.close();
-                inputStream = null;
-            }
-            catch (IOException e) {
-                String es = "Error store body of request";
-                log.error(es, e);
-                throw new IllegalStateException( es, e );
-            }
-
-            return file;
+        if (!isMultiPart(request)) {
+            return null;
         }
-        return null;
+        int length = request.getContentLength();
+        if (log.isDebugEnabled()) {
+            log.debug("Content length: " + length);
+        }
+        if (length>maxLength) {
+            throw new IllegalStateException("Can not process body request because content length exceed max length. " +
+                "max length: "+maxLength + ", request content length: " + length);
+        }
+        File file;
+        try {
+            file = File.createTempFile("request", ".dat") ;
+            if (log.isDebugEnabled()) {
+                log.debug("Temporary file with multipart request: " + file);
+            }
+            OutputStream outputStream = new FileOutputStream( file );
+            InputStream inputStream = request.getInputStream();
+            copyData(inputStream, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            outputStream = null;
+            inputStream.close();
+            inputStream = null;
+        }
+        catch (IOException e) {
+            String es = "Error store body of request";
+            log.error(es, e);
+            throw new IllegalStateException( es, e );
+        }
+
+        return file;
     }
 
     public static final int BUFFER_SIZE = 512;
@@ -121,10 +124,12 @@ public final class PortletUtils {
 
         while ((count = inputStream.read(buffer))==BUFFER_SIZE) {
             outputStream.write(buffer);
+            outputStream.flush();
         }
 
         if (count!=-1) {
             outputStream.write(buffer, 0, count);
+            outputStream.flush();
         }
     }
 
