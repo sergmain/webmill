@@ -44,7 +44,7 @@
     <property name="xerces.lib" value="xercesImpl-2.6.2.jar"/>
     <property name="xml-api.lib" value="xmlParserAPIs-2.6.2.jar"/>
     <property name="xalan.lib" value="xalan-2.4.1.jar"/>
-    <property name="log4j.lib" value="log4j-1.2.8.jar"/>
+    <property name="log4j.lib" value="log4j-1.2.13.jar"/>
     <property name="junit.lib" value="junit-3.8.1.jar"/>
     <property name="servlet.lib" value="servlet-2.4.jar"/>
     <property name="jsp-api.lib" value="jsp-api-2.0.jar"/>

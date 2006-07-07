@@ -286,6 +286,7 @@ public final class PageElement {
                 ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
                 new PortalSessionManagerImpl( Thread.currentThread().getContextClassLoader(), actionRequest )
             );
+            actionRequest.setAttribute(ContainerConstants.PORTAL_CURRENT_CONTAINER, portletContainer );
 
             actionResponse = new ActionResponseImpl(
                 portalRequestInstance.getHttpResponse(),

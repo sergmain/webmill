@@ -51,9 +51,9 @@ public class ForumListPerSite implements PortletGetList {
 
     public List<ClassQueryItem> getList(Long idSiteCtxLangCatalog, Long idContext)
     {
-        if (log.isDebugEnabled())
-            log.debug("Get list of ForumInstance. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog);
-
+        if (log.isDebugEnabled()) {
+            log.debug("Get list of ForumInstance. idSiteCtxLangCatalog - " + idSiteCtxLangCatalog+", idContext: "+idContext);
+        }
 
         PreparedStatement ps = null;
         ResultSet rs = null;

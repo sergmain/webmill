@@ -50,9 +50,11 @@ public class PortletDefinitionProcessorTest {
 
         PortletDefinition definition = application.getPortlet(0);
         PortletPreferences portletPreferences = definition.getPortletPreferences();
-        String[] values = portletPreferences.getValues("url", null);
+        if (portletPreferences!=null) {
+            String[] values = portletPreferences.getValues("url", null);
 
-        System.out.println("url pref: " + StringTools.arrayToString(values));
+            System.out.println("url pref: " + StringTools.arrayToString(values));
+        }
         int i = 0;
 
     }
