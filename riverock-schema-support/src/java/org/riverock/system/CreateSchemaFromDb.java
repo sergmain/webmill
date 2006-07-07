@@ -2007,7 +2007,7 @@ public final class CreateSchemaFromDb {
             "             ps = db_.prepareStatement(sql_);\n"+
             "\n"+
             (config.getIsUseObjectWrapper()
-            ?"             ps.setObject(1, item.get"+StringTools.capitalizeString(column.getColumnName())+"() );\n"
+            ?"             ps.setLong(1, item.get"+StringTools.capitalizeString(column.getColumnName())+"() );\n"
             :"             ps.setLong(1, item.get"+StringTools.capitalizeString(column.getColumnName())+"() );\n"
             )+
             "\n" +
@@ -2819,7 +2819,7 @@ public final class CreateSchemaFromDb {
             else
                 return
                     "             if (item.get"+capitalizeName+" != null )\n"+
-                    "                 ps.setObject("+i+", item.get"+capitalizeName+" );\n" +
+                    "                 ps.setLong("+i+", item.get"+capitalizeName+" );\n" +
                     "             else\n" +
                     "                 ps.setNull("+i+", Types.INTEGER);\n\n";
         }
@@ -2827,7 +2827,7 @@ public final class CreateSchemaFromDb {
         {
             if (config.getIsUseObjectWrapper())
                 return
-                    "             ps.setObject("+i+", item.get"+capitalizeName+" );\n";
+                    "             ps.setLong("+i+", item.get"+capitalizeName+" );\n";
             else
                 return
                     "             ps.setLong("+i+", item.get"+capitalizeName+" );\n";

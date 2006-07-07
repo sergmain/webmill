@@ -61,16 +61,16 @@ import org.riverock.webmill.container.tools.PortletService;
 public class ForumPortlet extends AbstractForumPortlet {
     private final static Logger log = Logger.getLogger(ForumPortlet.class);
 
-    public void process(PortletRequest actionRequest, PortletResponse actionResponse) throws PortletException, IOException {
+    public void process(PortletRequest portletRequest, PortletResponse actionResponse) throws PortletException, IOException {
         long timeStart = System.currentTimeMillis();
 
-        Long forumId = PortletService.getLong(actionRequest, Constants.NAME_FORUM_ID);
+        Long forumId = PortletService.getLong(portletRequest, Constants.NAME_FORUM_ID);
         if (log.isDebugEnabled()) {
             log.debug("forumId: "+forumId);
-            Enumeration en = actionRequest.getParameterNames();
+            Enumeration en = portletRequest.getParameterNames();
             while(en.hasMoreElements()){
                 String key = (String)en.nextElement();
-                log.debug("key: "+key+", value: "+actionRequest.getParameter(key));
+                log.debug("key: "+key+", value: "+portletRequest.getParameter(key));
             }
         }
         String forwardPage = null;
@@ -78,7 +78,7 @@ public class ForumPortlet extends AbstractForumPortlet {
         try {
             adapter = DatabaseAdapter.getInstance();
 
-            ModuleRequest request = new WebmillPortletModuleRequestImpl(actionRequest);
+            ModuleRequest request = new WebmillPortletModuleRequestImpl(portletRequest);
             ModuleResponse response = new PortletModuleResponseImpl(actionResponse);
             UrlProvider urlProvider = new WebmillPortletUrlProviderImpl(request, response);
             ActionNameProvider actionNameProvider = new WebmillPortletActionNameProviderImpl(request);
@@ -87,9 +87,9 @@ public class ForumPortlet extends AbstractForumPortlet {
                 request, response, moduleConfig, urlProvider, forumId, adapter, actionNameProvider
             );
 
-            WmForumItemType forum = CommonUtils.checkForumId(adapter, forumId, actionRequest.getServerName() );
+            WmForumItemType forum = CommonUtils.checkForumId(adapter, forumId, portletRequest.getServerName() );
             if (forum==null){
-                log.error("Forum not found for forumId: " + forumId+", serverName: " +actionRequest.getServerName());
+                log.error("Forum not found for forumId: " + forumId+", serverName: " +portletRequest.getServerName());
                 forwardPage = ForumError.noSuchForumError(moduleActionRequest);
             }
             else {
@@ -119,10 +119,10 @@ public class ForumPortlet extends AbstractForumPortlet {
             forwardPage = "";
         }
 
-        actionRequest.setAttribute(Constants.FORWARD_PAGE_ACTION, forwardPage);
+        portletRequest.setAttribute(Constants.FORWARD_PAGE_ACTION, forwardPage);
 
         Long processTime = System.currentTimeMillis() - timeStart;
-        actionRequest.setAttribute(Constants.PAGE_PROCESS_TIME_ATTRIBUTE, processTime);
+        portletRequest.setAttribute(Constants.PAGE_PROCESS_TIME_ATTRIBUTE, processTime);
     }
 
     private GenericBean initGenericBean(ModuleActionRequest forumActionBean, WmForumItemType forum) {

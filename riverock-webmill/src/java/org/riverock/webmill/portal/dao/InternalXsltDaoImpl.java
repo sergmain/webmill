@@ -222,6 +222,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             item.setIdSiteSupportLanguage(xslt.getSiteLanguageId());
             item.setIsCurrent(xslt.isCurrent());
             item.setTextComment(xslt.getName());
+            item.setXslt(null);
 
             InsertWmPortalXsltItem.process(adapter, item);
 
@@ -353,7 +354,7 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             item.setIdSiteXslt(xslt.getId());
             item.setIsCurrent(xslt.isCurrent());
             item.setTextComment(xslt.getName());
-            item.setXslt(xslt.getXsltData());
+            item.setXslt(null);
 
             UpdateWmPortalXsltItem.process(adapter, item);
             DatabaseManager.insertBigText(
