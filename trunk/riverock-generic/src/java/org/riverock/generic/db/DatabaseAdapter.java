@@ -313,6 +313,7 @@ public abstract class DatabaseAdapter implements DbConnection {
             }
 
             if (log.isDebugEnabled()) {
+                log.debug("Family - " + dc.getFamily());
                 log.debug("ConnectString - " + dc.getConnectString());
                 log.debug("username - " + dc.getUsername());
                 log.debug("password - " + dc.getPassword());

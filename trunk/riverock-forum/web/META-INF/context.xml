@@ -1,3 +1,4 @@
 <Context path="/riverock-forum" docBase="riverock-forum" debug="9999" reloadable="true" useNaming="true" unpack="true">
     <ResourceLink name="jdbc/webmill" global="jdbc/webmill" type="javax.sql.DataSource" />
+    <ResourceLink name="dbFamily" global="dbFamily" type="java.lang.String" />
 </Context>
