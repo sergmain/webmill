@@ -27,10 +27,10 @@
 -->
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:annotation>
-		<xs:documentation>Copyright 2002-2003, jSmithy.com, http://www.jSmithy.com</xs:documentation>
+		<xs:documentation>Copyright 2002-2006, riverock.org, http://www.riverock.org</xs:documentation>
 	</xs:annotation>
 	<xs:annotation>
-		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
+		<xs:documentation>WebMill XML/XSLT, JSR168 portal</xs:documentation>
 	</xs:annotation>
 	<xs:element name="WebmillConfig" type="GenericConfigType"/>
 	<xs:complexType name="DatabaseConnectionType">
@@ -38,7 +38,7 @@
 			<xs:element name="Username" type="xs:string" minOccurs="0"/>
 			<xs:element name="Password" type="xs:string" minOccurs="0"/>
 			<xs:element name="ConnectString" type="xs:string" minOccurs="0"/>
-			<xs:element name="ConnectionClass" type="xs:string"/>
+			<xs:element name="ConnectionClass" type="xs:string" minOccurs="0"/>
 			<xs:element name="Family" type="xs:string" minOccurs="0"/>
 			<xs:element name="DatabaseCharset" type="xs:string" minOccurs="0">
 				<xs:annotation>

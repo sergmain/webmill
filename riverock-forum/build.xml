@@ -41,8 +41,6 @@
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-module.lib}"/>
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-cache.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
@@ -148,11 +146,9 @@
     </target>
 
     <patternset id="war.lib">
-        <include name="${riverock-sso.lib}"/>
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
-        <include name="${riverock-cache.lib}"/>
         <include name="${riverock-forum.lib}"/>
         <include name="${riverock-module.lib}"/>
         <include name="${commons-lang.lib}"/>
@@ -163,6 +159,7 @@
         <include name="${castor.lib}"/>
         <include name="${taglibs-request.lib}"/>
         <include name="${taglibs-session.lib}"/>
+        <include name="${ehcache.lib}"/>
     </patternset>
 
     <target name="war" depends="jar" >

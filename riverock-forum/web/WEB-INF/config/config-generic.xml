@@ -30,10 +30,11 @@
 		<TimeZoneName>Europe/Moscow</TimeZoneName>
 	</DTS>
 	<MailHost>localhost</MailHost>
-	<DefaultConnectionName>MYSQL_JNDI</DefaultConnectionName>
-    <DatabaseConnection name="MYSQL_JNDI">
-        <ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>
-                <DataSourceType>JNDI</DataSourceType>
-                <DataSourceName>jdbc/webmill</DataSourceName>
-    </DatabaseConnection>
+	<DefaultConnectionName>JNDI</DefaultConnectionName>
+	<DatabaseConnection name="JNDI">
+            <Family>dbFamily</Family>
+<!--	    <ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass> -->
+            <DataSourceType>JNDI</DataSourceType>
+            <DataSourceName>jdbc/webmill</DataSourceName>
+	</DatabaseConnection>
 </WebmillConfig>
