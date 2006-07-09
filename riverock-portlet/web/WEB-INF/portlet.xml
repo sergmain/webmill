@@ -28,6 +28,48 @@
 <portlet-app version="webmill portlet's deployment descriptor" xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
+		<portlet-name>webmill.rss</portlet-name>
+		<portlet-class>org.riverock.portlet.RssPortlet</portlet-class>
+		<!-- a xsl file for the rss version 1.0 -->
+		<init-param>
+			<name>RSS10_XSL</name>
+			<value>/WEB-INF/xsl/Rss10.xsl</value>
+		</init-param>
+		<!-- yet another xsl file for the rss version 2.0 -->
+		<init-param>
+			<name>RSS20_XSL</name>
+			<value>/WEB-INF/xsl/Rss20.xsl</value>
+		</init-param>
+		<!-- starting url for reading rss  -->
+		<init-param>
+			<name>url</name>
+			<value>http://slashdot.org/rss/index.rss</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+			<portlet-mode>edit</portlet-mode>
+			<portlet-mode>help</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>Rss portlet</title>
+			<short-title>RSS</short-title>
+			<keywords>RSS</keywords>
+		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>RssXml</name>
+				<value>http://www.theserverside.com/rss/theserverside-rss2.xml</value>
+				<value>http://www.theserverside.com/rss/theserverside-generalj2ee-rss2.xml</value>
+				<value>http://slashdot.org/rss/index.rss</value>
+				<value>http://rss.news.yahoo.com/rss/tech</value>
+			</preference>
+		</portlet-preferences>
+	</portlet>
+
+	<portlet>
         <description>Webmill shop manager</description>
         <portlet-name>webmill.shop-manager</portlet-name>
         <display-name>Webmill shop manager</display-name>
