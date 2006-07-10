@@ -78,7 +78,7 @@
             <arg value="-binding-file"/>
             <arg value="${src-schema.xml.dir}/binding.xml"/>
             <classpath>
-                <pathelement location="${local-lib.dir}/castor" />
+                <pathelement location="${src.main.xsd.dir}" />
                 <path refid="classpath-schema"/>
             </classpath>
         </java>
