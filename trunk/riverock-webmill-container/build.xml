@@ -99,15 +99,12 @@
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
-        <property name="tld-path" value="/org/riverock/webmill/container/tags"/>
-        <patternset id="tld.resources">
-            <include name="*.tld"/>
-        </patternset>
-        <copy todir="${build.dest}${tld-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${tld-path}">
-                <patternset refid="tld.resources"/>
+        <copy todir="${build.dest}" overwrite="true">
+            <fileset dir="${src.main.res.dir}">
+                <patternset>
+                    <include name="**/*.*"/>
+                </patternset>
             </fileset>
         </copy>
-
     </target>
 </project>
