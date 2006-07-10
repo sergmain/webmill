@@ -65,6 +65,7 @@ import org.riverock.common.xml.EntityResolverImpl;
  * @author <a href="mailto:dsundstrom@gluecode.com">David Sean Taylor </a>
  * @version $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class WebmillDeploy {
     public static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
     public static final String WEB_INF_PORTLET_XML = "WEB-INF/portlet.xml";
