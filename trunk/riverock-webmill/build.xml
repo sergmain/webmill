@@ -84,7 +84,6 @@
         <include name="${riverock-interfaces.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
-        <include name="${riverock-cache.lib}"/>
 
         <include name="${log4j.lib}"/>
         <include name="${castor.lib}"/>
@@ -95,7 +94,6 @@
         <antcall target="full_clean"/>
         <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
         <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
-<!--        <antcall target="jar"/> -->
         <antcall target="war"/>
     </target>
 
@@ -182,7 +180,7 @@
             <include name="**/**"/>
         </patternset>
         <copy todir="${build-release-dir}${webmill-static-path}" overwrite="true">
-            <fileset dir="${web.dir}/${webmill-static-path}">
+            <fileset dir="${src.main.webapps.dir}/${webmill-static-path}">
                 <patternset refid="webmill-static.resources"/>
             </fileset>
         </copy>
@@ -197,7 +195,7 @@
         <copy file="${src.dir}/release/config-webmill.xml" todir="${build-release-dir}/WEB-INF/config" overwrite="true" failonerror="true"/>
         <copy file="${src.dir}/release/config-sso.xml" todir="${build-release-dir}/WEB-INF/config" overwrite="true" failonerror="true"/>
 
-        <copy file="${web.dir}/default.css" todir="${build-release-dir}" overwrite="true" failonerror="true"/>
+        <copy file="${src.main.webapps.dir}/default.css" todir="${build-release-dir}" overwrite="true" failonerror="true"/>
 
 
         <property name="war-file-name" value="${build.dir}/${name-portal-release-version}.war"/>
@@ -365,10 +363,10 @@
     <target name="war" depends="jar" >
         <property name="war-file-name" value="${build.dir}/${context.war.name}"/>
         <delete file="${war-file-name}"/>
-        <war webxml="${web.dir}/WEB-INF/web.xml"
+        <war webxml="${src.main.webapps.dir}/WEB-INF/web.xml"
             warfile="${war-file-name}"
             update="false" duplicate="preserve">
-            <fileset dir="${web.dir}">
+            <fileset dir="${src.main.webapps.dir}">
                 <exclude name="WEB-INF/classes/**/*.*"/>
                 <exclude name="WEB-INF/lib/*.*"/>
                 <exclude name="WEB-INF/web.xml"/>

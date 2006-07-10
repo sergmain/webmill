@@ -103,7 +103,7 @@
             <arg value="j2"/>
             <arg value="-f"/>
             <classpath>
-                <pathelement location="${local-lib.dir}/castor"/>
+                <pathelement location="${src.main.xsd.dir}" />
                 <path refid="classpath-core"/>
             </classpath>
         </java>
