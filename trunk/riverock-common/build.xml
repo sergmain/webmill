@@ -46,21 +46,6 @@
         <pathelement location="${lib.dir}/${castor.lib}"/>
     </path>
 
-    <patternset id="jar.resources">
-        <exclude name="**/*.*-*"/>
-        <exclude name="**/*.java"/>
-        <exclude name="**/*.jrxml"/>
-    </patternset>
-
-    <target name="run_tomcat_with_new jar">
-        <antcall target="stop.apache"/>
-        <antcall target="jar"/>
-
-        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <copy file="${build.dir}/${main.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <antcall target="start.apache"/>
-    </target>
-
     <target name="full_clean">
         <antcall target="clean"/>
     </target>
