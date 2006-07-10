@@ -165,20 +165,13 @@
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
-        <copy_resources res-path="/org/riverock/portlet/resource" file-mask="*.xml"
-            src="${src.java.dir}" dest="${build.dest}"/>
-
-        <copy_resources res-path="/org/riverock/portlet/manager/resource" file-mask="*.properties"
-            src="${src.java.dir}" dest="${build.dest}"/>
-
-        <copy_resources res-path="/org/riverock/portlet/shop/resource" file-mask="*.properties"
-            src="${src.java.dir}" dest="${build.dest}"/>
-
-        <copy_resources res-path="/org/riverock/portlet/shop/resource" file-mask="*.xml"
-            src="${src.java.dir}" dest="${build.dest}"/>
-
-        <copy_resources res-path="/org/riverock/portlet/register/i18n" file-mask="*.xml"
-            src="${src.java.dir}" dest="${build.dest}"/>
+        <copy todir="${build.dest}" overwrite="true">
+            <fileset dir="${src.main.res.dir}">
+                <patternset>
+                    <include name="**/*.*"/>
+                </patternset>
+            </fileset>
+        </copy>
 
     </target>
 
@@ -186,7 +179,6 @@
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
-        <!--<include name="${riverock-cache.lib}"/>-->
         <include name="${riverock-portlet.lib}"/>
         <include name="${riverock-module.lib}"/>
 
@@ -206,7 +198,6 @@
         <include name="${taglibs-request.lib}"/>
         <include name="${taglibs-session.lib}"/>
 
-        <!--<include name="${myfaces.lib}"/>-->
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>
         <include name="${myfaces-tomahawk.lib}"/>
