@@ -347,7 +347,6 @@
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
-        <!--<include name="${riverock-cache.lib}"/>-->
         <include name="${riverock-webmill.lib}"/>
 
         <include name="${commons-lang.lib}"/>
