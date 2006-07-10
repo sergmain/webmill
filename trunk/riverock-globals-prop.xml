@@ -124,25 +124,27 @@
     </path>
 
 
-    <property name="src-schema.dir" value="src-schema"/>
-    <property name="src-schema.java.dir" value="${src-schema.dir}/java"/>
-    <property name="src-schema.xsd.dir" value="${src-schema.dir}/xsd"/>
-    <property name="src-schema.xml.dir" value="${src-schema.dir}/xml"/>
-
-    <property name="src-core.dir" value="src-core"/>
-    <property name="src-core.java.dir" value="${src-core.dir}/java"/>
-    <property name="src-core.xsd.dir" value="${src-core.dir}/xsd"/>
-    <property name="src-core.xml.dir" value="${src-core.dir}/xml"/>
-
     <property name="src.dir" value="src"/>
     <property name="src.tomcat-xml.dir" value="${src.dir}/tomcat-xml"/>
     <property name="src.java.dir" value="${src.dir}/main/java"/>
     <property name="src.main.res.dir" value="${src.dir}/main/resources"/>
+    <property name="src.main.xsd.dir" value="${src.dir}/main/xsd"/>
+
     <property name="src.java-test.dir" value="${src.dir}/test/java"/>
     <property name="src.test.res.dir" value="${src.dir}/test/resources"/>
     <property name="src.jsp.dir" value="${src.dir}/jsp"/>
     <property name="src.xsd.dir" value="${src.dir}/xsd"/>
     <property name="src.xml.dir" value="${src.dir}/xml"/>
+
+    <property name="src-schema.dir" value="src-schema"/>
+    <property name="src-schema.java.dir" value="${src-schema.dir}/java"/>
+    <property name="src-schema.xsd.dir" value="${src.main.xsd.dir}"/>
+    <property name="src-schema.xml.dir" value="${src.main.xsd.dir}"/>
+
+    <property name="src-core.dir" value="src-core"/>
+    <property name="src-core.java.dir" value="${src-core.dir}/java"/>
+    <property name="src-core.xsd.dir" value="${src-core.dir}/xsd"/>
+    <property name="src-core.xml.dir" value="${src-core.dir}/xml"/>
 
     <property name="build.dir" value="build"/>
     <property name="build.dest" value="${build.dir}/classes"/>
