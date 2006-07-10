@@ -82,31 +82,13 @@
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
-        <patternset id="locale.resources">
-            <include name="*.properties"/>
-        </patternset>
-        <property name="locale-path" value="/org/riverock/common/locale"/>
-        <copy todir="${build.dest}${locale-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${locale-path}">
-                <patternset refid="locale.resources"/>
+        <copy todir="${build.dest}" overwrite="true">
+            <fileset dir="${src.main.res.dir}">
+                <patternset id="dtd.resources">
+                    <include name="**/*.*"/>
+                </patternset>
             </fileset>
         </copy>
-
-        <property name="dtd-path" value="/org/riverock/common/xml/dtd"/>
-        <patternset id="dtd.resources">
-            <include name="*.dtd"/>
-        </patternset>
-        <copy todir="${build.dest}${dtd-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${dtd-path}">
-                <patternset refid="dtd.resources"/>
-            </fileset>
-        </copy>
-
-        <property name="contenttype-path" value="/org/riverock/common/contenttype"/>
-        <copy todir="${build.dest}${contenttype-path}">
-            <fileset file="${src.java.dir}${contenttype-path}/**.properties"/>
-        </copy>
-
     </target>
 
     <target name="full_build_module">
