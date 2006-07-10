@@ -129,6 +129,7 @@
     <property name="src.java.dir" value="${src.dir}/main/java"/>
     <property name="src.main.res.dir" value="${src.dir}/main/resources"/>
     <property name="src.main.xsd.dir" value="${src.dir}/main/xsd"/>
+    <property name="src.main.webapps.dir" value="${src.dir}/main/webapp"/>
 
     <property name="src.java-test.dir" value="${src.dir}/test/java"/>
     <property name="src.test.res.dir" value="${src.dir}/test/resources"/>
@@ -152,8 +153,6 @@
     <property name="build.tests" value="${build.dir}/tests"/>
     <property name="build.src.java" value="${src.java.dir}"/>
     <property name="build.src.jsp" value="${src.jsp.dir}"/>
-
-    <property name="web.dir" value="web"/>
 
     <property name="docs.dir" value="doc"/>
 

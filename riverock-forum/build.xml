@@ -45,8 +45,6 @@
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
-        <pathelement location="${lib.dir}/${secure.lib}"/>
-        <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
@@ -55,29 +53,12 @@
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
-
-        <pathelement location="${lib.dir}/ojdbc14.jar"/>
     </path>
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
         <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
         <antcall target="war"/>
-    </target>
-
-    <target name="run_tomcat_with_new jar">
-        <antcall target="stop.apache"/>
-        <antcall target="jar"/>
-        <antcall target="copy_new_jars"/>
-        <antcall target="start.apache"/>
-    </target>
-
-    <target name="copy_to_mill">
-        <copy_jars_to_context webmill-context="C:\opt2\_www\mill"/>
-    </target>
-
-    <target name="copy_new_jars">
-        <antcall target="copy_to_mill"/>
     </target>
 
     <target name="full_clean">
@@ -133,16 +114,13 @@
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
 
-        <property name="forum-path" value="/org/riverock/forum/i18n"/>
-        <patternset id="forum.properties">
-            <include name="*.properties"/>
-        </patternset>
-        <copy todir="${build.dest}${forum-path}" overwrite="true">
-            <fileset dir="${src.java.dir}${forum-path}">
-                <patternset refid="forum.properties"/>
+        <copy todir="${build.dest}" overwrite="true">
+            <fileset dir="${src.main.res.dir}">
+                <patternset>
+                    <include name="**/*.*"/>
+                </patternset>
             </fileset>
         </copy>
-
     </target>
 
     <patternset id="war.lib">
@@ -165,10 +143,10 @@
     <target name="war" depends="jar" >
         <property name="war-file-name" value="${build.dir}/${portlet-context-name}.war"/>
         <delete file="${war-file-name}"/>
-        <war webxml="${web.dir}/WEB-INF/web.xml"
+        <war webxml="${src.main.webapps.dir}/WEB-INF/web.xml"
             warfile="${war-file-name}"
             update="false" duplicate="preserve">
-            <fileset dir="${web.dir}">
+            <fileset dir="${src.main.webapps.dir}">
                 <exclude name="WEB-INF/classes/**/*.*"/>
                 <exclude name="WEB-INF/lib/*.*"/>
                 <exclude name="WEB-INF/web.xml"/>
