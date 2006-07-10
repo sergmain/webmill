@@ -58,15 +58,6 @@
         <antcall target="jar"/>
     </target>
 
-    <target name="run_tomcat_with_new jar">
-        <antcall target="stop.apache"/>
-        <antcall target="jar"/>
-
-        <property name="webmill.context" value="C:\opt2\_www\_me.askmore.info\mill"/>
-        <copy file="${build.dir}/${main.lib}" todir="${webmill.context}/WEB-INF/lib"/>
-        <antcall target="start.apache"/>
-    </target>
-
     <target name="full_clean">
         <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
