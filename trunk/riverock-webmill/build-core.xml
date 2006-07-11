@@ -58,7 +58,7 @@
         <property name="schema-file" value="${src-core.xsd.dir}/riverock-webmill-core.xsd"/>
         <property name="schema-package-java" value="org.riverock.webmill.schema.core"/>
         <antcall target="gen_schema_from_core"/>
-        <copy file="${schema-file}" todir="${src-schema.xsd.dir}"/>
+<!--        <copy file="${schema-file}" todir="${src-schema.xsd.dir}"/> -->
     </target>
 
 </project>
