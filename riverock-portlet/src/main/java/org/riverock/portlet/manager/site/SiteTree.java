@@ -88,9 +88,10 @@ public class SiteTree implements Serializable {
         log.info("Invoke getSiteTree()");
 
         TreeNode treeRoot = new TreeNodeBase("tree-root", "tree-root", false);
-        TreeNode treeData = new TreeNodeBase("site-list", "Webmill portal. Site list.", false);
-        treeRoot.getChildren().add(treeData);
         if (siteSessionBean.getCurrentSiteId()!=null) {
+            TreeNode treeData = new TreeNodeBase("site-list", "Webmill portal. List of sites.", false);
+            treeRoot.getChildren().add(treeData);
+
             Site site = siteService.getSite(siteSessionBean.getCurrentSiteId());
 
             TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);

@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import oracle.jdbc.driver.OracleResultSet;
+import oracle.jdbc.OracleResultSet;
 import oracle.jdbc.pool.OracleConnectionCacheImpl;
 import oracle.jdbc.pool.OracleConnectionPoolDataSource;
 import oracle.sql.BLOB;
@@ -61,6 +61,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
  * <p/>
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class ORAconnect extends DatabaseAdapter {
     private final static Logger log = Logger.getLogger(ORAconnect.class);
 
@@ -705,54 +706,44 @@ DEFERRABLE INITIALLY DEFERRED
         if (e == null)
             return false;
 
-        if ((e instanceof SQLException) && ((e.toString().indexOf("ORA-00001") != -1)))
-            return true;
+        return (e instanceof SQLException) && ((e.toString().indexOf("ORA-00001") != -1));
 
-        return false;
     }
 
     public boolean testExceptionTableExists(Exception e) {
         if (e == null)
             return false;
 
-        if ((e instanceof SQLException) &&
-            (e.toString().indexOf("ORA-00955") != -1))
-            return true;
+        return (e instanceof SQLException) &&
+            (e.toString().indexOf("ORA-00955") != -1);
 
-        return false;
     }
 
     public boolean testExceptionViewExists(Exception e) {
         if (e == null)
             return false;
 
-        if ((e instanceof SQLException) &&
-            (e.toString().indexOf("ORA-00955") != -1))
-            return true;
+        return (e instanceof SQLException) &&
+            (e.toString().indexOf("ORA-00955") != -1);
 
-        return false;
     }
 
     public boolean testExceptionSequenceExists(Exception e) {
         if (e == null)
             return false;
 
-        if ((e instanceof SQLException) &&
-            (e.toString().indexOf("ORA-00955") != -1))
-            return true;
+        return (e instanceof SQLException) &&
+            (e.toString().indexOf("ORA-00955") != -1);
 
-        return false;
     }
 
     public boolean testExceptionConstraintExists(Exception e) {
         if (e == null)
             return false;
 
-        if ((e instanceof SQLException) &&
-            (e.toString().indexOf("ORA-02275") != -1))
-            return true;
+        return (e instanceof SQLException) &&
+            (e.toString().indexOf("ORA-02275") != -1);
 
-        return false;
     }
 
     protected DataSource createDataSource() throws SQLException {
@@ -781,7 +772,7 @@ DEFERRABLE INITIALLY DEFERRED
     }
 
     public String getDriverClass() {
-        return "oracle.jdbc.driver.OracleDriver";
+        return "oracle.jdbc.OracleDriver";
     }
 
     public int getFamaly() {

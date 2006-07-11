@@ -25,6 +25,7 @@
 package org.riverock.interfaces.portlet.menu;
 
 import java.util.List;
+import java.util.Map;
 
 import org.riverock.interfaces.common.TreeItem;
 
@@ -46,4 +47,5 @@ public interface MenuItem extends TreeItem {
     public String getMenuName();
     public List<MenuItem> getCatalogItems();
     public String getUrl();
+    public Map<String, String> getMetadata();
 }
