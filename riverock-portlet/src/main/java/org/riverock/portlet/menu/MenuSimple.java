@@ -462,15 +462,27 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         throws PortletException {
 
         try {
+	if (log.isDebugEnabled()) {
+		log.debug("metadata: "+item.getMetadata());
+	}
 
             if (item.getMetadata()!=null) {
                 String roles=item.getMetadata().get("webmill.role");
+
+		if (log.isDebugEnabled()) {
+			log.debug("roles: "+roles);
+		}
+
                 if (StringUtils.isNotEmpty(roles)) {
                     boolean isNotGranted=true;
                     StringTokenizer st = new StringTokenizer(roles, ", ");
                     for (StringTokenizer stringTokenizer = new StringTokenizer(roles); stringTokenizer.hasMoreTokens();) {
                         String role = stringTokenizer.nextToken();
-                        if (renderRequest.isUserInRole(role)) {
+			boolean check = renderRequest.isUserInRole(role);
+			if (log.isDebugEnabled()) {
+				log.debug("grant role '"+role+"' - "+ check);
+			}
+                        if (check) {
                             isNotGranted=false;
                             break;
                         }
