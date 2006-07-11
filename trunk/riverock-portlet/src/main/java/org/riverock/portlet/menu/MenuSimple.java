@@ -26,8 +26,8 @@ package org.riverock.portlet.menu;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
@@ -35,6 +35,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.MainTools;
@@ -60,6 +61,7 @@ import org.riverock.webmill.container.tools.PortletService;
  * 
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class MenuSimple implements PortletResultObject, PortletGetList, PortletResultContent {
     private final static Logger log = Logger.getLogger(MenuSimple.class);
 
@@ -112,9 +114,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
                     log.debug("PortalInfo is null");
             }
             PortalInfo portalInfo = (PortalInfo) renderRequest.getAttribute(ContainerConstants.PORTAL_INFO_ATTRIBUTE);
-            Menu catalog =
-                portalInfo.getMenu(renderRequest.getLocale().toString()).
-                getCatalogByCode(portletCode_);
+            Menu catalog = portalInfo.getMenu(renderRequest.getLocale().toString()).getCatalogByCode(portletCode_);
 
 //            Long defaultCatalogId = (Long)renderRequest.getAttribute( ContainerConstants.PORTAL_CURRENT_CATALOG_ID_ATTRIBUTE );
             Long defaultCatalogId = null;
@@ -180,7 +180,9 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             int treeId = 0;
             for (MenuItem ci : menu.getMenuItem()) {
                 MenuModuleType tempMenu = getMenuModule(ci, 1, currentCtxId, treeId, ++treeId);
-                menuSimple.addMenuModule(tempMenu);
+                if (tempMenu!=null) {
+                    menuSimple.addMenuModule(tempMenu);
+                }
             }
         }
         else {
@@ -219,7 +221,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             log.debug("param.getParameters(): " + templateParameters);
         }
 
-        try {                 
+        try {
             String levelTemp = PortletService.getString(templateParameters, "level", null);
             if (levelTemp == null)
                 return;
@@ -461,6 +463,23 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
         try {
 
+            if (item.getMetadata()!=null) {
+                String roles=item.getMetadata().get("webmill.role");
+                if (StringUtils.isNotEmpty(roles)) {
+                    boolean isNotGranted=true;
+                    StringTokenizer st = new StringTokenizer(roles, ", ");
+                    for (StringTokenizer stringTokenizer = new StringTokenizer(roles); stringTokenizer.hasMoreTokens();) {
+                        String role = stringTokenizer.nextToken();
+                        if (renderRequest.isUserInRole(role)) {
+                            isNotGranted=false;
+                            break;
+                        }
+                    }
+                    if (isNotGranted) {
+                        return null;
+                    }
+                }
+            }
             MenuModuleType m = new MenuModuleType();
 
             m.setIncludeLevel(level);
@@ -507,18 +526,15 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
 
             ArrayList<MenuModuleType> vv = new ArrayList<MenuModuleType>(item.getCatalogItems().size());
             boolean isCurrentThread = false;
-            Iterator<MenuItem> it = item.getCatalogItems().iterator();
             int j = 0;
-            while (it.hasNext()) {
-                MenuItem menuItem = it.next();
-
+            for (MenuItem menuItem : item.getCatalogItems()) {
                 MenuModuleType menuModule = getMenuModule(menuItem, level + 1, currentCtxId, treeId, j++);
-
-                if (menuModule.getIsCurrent() == 1 || menuModule.getIsCurrentThread() == 1) {
-                    isCurrentThread = true;
+                if (menuModule!=null) {
+                    if (menuModule.getIsCurrent() == 1 || menuModule.getIsCurrentThread() == 1) {
+                        isCurrentThread = true;
+                    }
+                    vv.add(menuModule);
                 }
-
-                vv.add(menuModule);
             }
             if (isCurrentThread)
                 m.setIsCurrentThread(1);

@@ -26,8 +26,14 @@ package org.riverock.webmill.portal.menu;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Properties;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.PortletName;
@@ -60,6 +66,27 @@ public final class PortalMenuItem implements MenuItem{
         }
 
         super.finalize();
+    }
+
+    public Map<String, String> getMetadata() {
+        Map<String, String> map = new HashMap<String, String>();
+        if (StringUtils.isBlank(ctx.getMetadata())) {
+            return map;
+        }
+        Properties properties = new Properties();
+        try {
+            properties.load( new ByteArrayInputStream(ctx.getMetadata().getBytes()) );
+        }
+        catch (IOException e) {
+            String es = "Error load properties from stream";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        }
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue().toString());
+        }
+
+        return map;
     }
 
     public Long getTopId() { return ctx.getTopCatalogId(); }

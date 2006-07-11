@@ -121,13 +121,7 @@ public final class PortletUtils {
     public static void copyData(InputStream inputStream, OutputStream outputStream) throws IOException {
         int count;
         byte buffer[] = new byte[BUFFER_SIZE];
-
-        while ((count = inputStream.read(buffer))==BUFFER_SIZE) {
-            outputStream.write(buffer);
-            outputStream.flush();
-        }
-
-        if (count!=-1) {
+        while ((count = inputStream.read(buffer))>=0) {
             outputStream.write(buffer, 0, count);
             outputStream.flush();
         }
