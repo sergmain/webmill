@@ -280,6 +280,10 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     private Map<String, Boolean> userRoles = new HashMap<String, Boolean>();
 
     public boolean isUserInRole( String role ) {
+        if (log.isDebugEnabled()) {
+            log.debug("isUserInRole()");
+            log.debug("    role: " + role);
+        }
         if (role==null) {
             return false;
         }
@@ -293,8 +297,18 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             return true;
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug("    serverName: " + httpRequest.getServerName());
+            log.debug("    auth: " + auth);
+        }
+
         if (httpRequest.getServerName()==null || auth==null) {
             return role.equals(PortalConstants.WEBMILL_ANONYMOUS_ROLE);
+        }
+
+        // here auth always not null. return false for webmill.anonymous role
+        if (role.equals(PortalConstants.WEBMILL_ANONYMOUS_ROLE)) {
+            return false;
         }
 
         boolean status = auth.checkAccess( httpRequest.getServerName() );
