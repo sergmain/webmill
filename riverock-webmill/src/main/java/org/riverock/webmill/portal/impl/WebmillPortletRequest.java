@@ -181,13 +181,72 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     }
 
     public PortletSession getPortletSession() {
-        return session;
+        return getPortletSession(true);
     }
 
-    public PortletSession getPortletSession( boolean b ) {
+    public PortletSession getPortletSession( boolean create ) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Retreiving portlet session (create=" + create + ")");
+        }
+
+        //
+        // It is critical that we don't retrieve the portlet session until the
+        //   cross context dispatch has been completed.  If we do then we risk
+        //   having a cached version which is invalid for the context within
+        //   which it exists.
+        //
+        if (portletContext == null) {
+            throw new IllegalStateException("PortletContext is null");
+        }
+
         if ( !httpRequest.isRequestedSessionIdValid() ) {
             this.session = null;
             this.session = new PortletSessionImpl( httpRequest.getSession(true), portletContext, namespace );
+            return session;
+        }
+
+        //
+        // We must make sure that if the session has been invalidated (perhaps
+        //   through setMaxIntervalTimeout()) and the underlying request
+        //   returns null that we no longer use the cached version.
+        // We have to check (ourselves) if the session has exceeded its max
+        //   inactive interval. If so, we should invalidate the underlying
+        //   HttpSession and recreate a new one (if the create flag is set to
+        //   true) -- We just cannot depend on the implementation of
+        //   javax.servlet.http.HttpSession!
+        //
+        HttpSession httpSession = httpRequest.getSession(create);
+        if (httpSession != null) {
+            int maxInactiveInterval = httpSession.getMaxInactiveInterval();
+            if (maxInactiveInterval >= 0) {    // < 0 => Never expires.
+            	long maxInactiveTime = httpSession.getMaxInactiveInterval() * 1000L;
+            	long currentInactiveTime = System.currentTimeMillis() - httpSession.getLastAccessedTime();
+            	if (currentInactiveTime > maxInactiveTime) {
+            		if (log.isDebugEnabled()) {
+            			log.debug("The underlying HttpSession is expired and should be invalidated.");
+            		}
+            		httpSession.invalidate();
+            		httpSession = httpRequest.getSession(create);
+            	}
+            }
+        }
+        if (httpSession == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("The underlying HttpSession is not available: no session will be returned.");
+            }
+            return null;
+        }
+        //
+        // If we reach here, we are sure that the underlying HttpSession is
+        //   available. If we haven't created and cached a portlet session
+        //   instance, we will create and cache one now.
+        //
+        if (this.session == null) {
+        	if (log.isDebugEnabled()) {
+        		log.debug("Creating new portlet session...");
+        	}
+            this.session = new PortletSessionImpl( httpSession, portletContext, namespace );
         }
         return session;
     }

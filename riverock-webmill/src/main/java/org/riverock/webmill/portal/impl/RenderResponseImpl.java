@@ -172,6 +172,15 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         values.add( value );
     }
 
+    /**
+     * @deprecated As of version 2.1, use encodeURL(String url) instead
+     * @param url
+     * @return String
+     */
+    public String encodeUrl( String url ) {
+        return this.encodeURL( url );
+    }
+
     public String encodeURL( String url ) {
         return super.encodeURL( url );
     }
@@ -247,10 +256,6 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     public void setContentLength( int len ) {
 //        response.setContentLength( len );
-    }
-
-    public String encodeUrl( String url ) {
-        return this.encodeURL( url );
     }
 
     public void setLocale( Locale loc ) {
