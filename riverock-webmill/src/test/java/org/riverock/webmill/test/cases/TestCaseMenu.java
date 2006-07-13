@@ -1,12 +1,12 @@
 /*
- * org.riverock.portlet -- Portlet Library
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.webmill - Portal framework implementation
+ *
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
@@ -20,8 +20,15 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
+package org.riverock.webmill.test.cases;
+
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.tools.XmlTools;
+import org.riverock.generic.startup.StartupApplication;
+import org.riverock.webmill.core.GetWmPortalVirtualHostItem;
+import org.riverock.webmill.schema.core.WmPortalVirtualHostItemType;
 
 /**
  * User: Admin
@@ -30,14 +37,6 @@
  *
  * $Id$
  */
-package org.riverock.webmill.test.cases;
-
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.webmill.config.WebmillConfig;
-import org.riverock.webmill.core.GetWmPortalVirtualHostItem;
-import org.riverock.webmill.schema.core.WmPortalVirtualHostItemType;
-
 public class TestCaseMenu // extends TestCase implements TestCaseInterface
 {
 /*
@@ -83,7 +82,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
             menu.getInstance( testAbstract.db_ );
 
 
-            XmlTools.writeToFile(menu.menuSimple, WebmillConfig.getWebmillDebugDir()+"test-menu-full.xml");
+            XmlTools.writeToFile(menu.menuSimple, GenericConfig.getGenericDebugDir()+"test-menu-full.xml");
 
             assertFalse("Wrong count of top level element, count = "+menu.menuSimple.getMenuModuleCount(),
                     menu.menuSimple.getMenuModuleCount()!=TestSite.COUNT_TOP_LEVEL_MENU
@@ -124,7 +123,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
 
             menu.getInstance( testAbstract.db_ );
 
-            XmlTools.writeToFile(menu.menuSimple, WebmillConfig.getWebmillDebugDir()+"test-menu-great_or_equal.xml");
+            XmlTools.writeToFile(menu.menuSimple, GenericConfig.getGenericDebugDir()+"test-menu-great_or_equal.xml");
 
 
             assertFalse("Wrong count of top level element, count = "+menu.menuSimple.getMenuModuleCount(),
@@ -164,7 +163,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
 
             menu.getInstance( testAbstract.db_ );
 
-            XmlTools.writeToFile(menu.menuSimple, WebmillConfig.getWebmillDebugDir()+"test-menu-equal.xml");
+            XmlTools.writeToFile(menu.menuSimple, GenericConfig.getGenericDebugDir()+"test-menu-equal.xml");
 
             assertEquals(true, menu.menuSimple.getMenuModuleCount()==TestSite.COUNT_TOP_LEVEL_MENU);
 
@@ -230,7 +229,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
     public static void main(String args[])
         throws Exception
     {
-        org.riverock.generic.startup.StartupApplication.init();
+        StartupApplication.init();
 
         long id = 1;
         WmPortalVirtualHostItemType resultItem = GetWmPortalVirtualHostItem.getInstance( DatabaseAdapter.getInstance(), id ).item;
@@ -242,7 +241,7 @@ public class TestCaseMenu // extends TestCase implements TestCaseInterface
 
         XmlTools.writeToFile(
             resultItem,
-            WebmillConfig.getWebmillDebugDir()+"test-WM_PORTAL_VIRTUAL_HOST-item.xml",
+            GenericConfig.getGenericDebugDir()+"test-WM_PORTAL_VIRTUAL_HOST-item.xml",
             "utf-8",
             null,
             ns
