@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.webmill - Portal framework implementation
+ *
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<Sites xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-webmill\src-schema\xsd\riverock-webmill-site-config.xsd">
+    <SiteConfig name="test.askmore">
+        <Host>test.askmore</Host>
+        <SiteInstance>
+            <SiteName>test.askmore</SiteName>
+            <Company>
+                <Name>1st company</Name>
+                <ShortName>Short name</ShortName>
+                <Address>Address</Address>
+                <Ceo>Ceo</Ceo>
+                <Cfo>Cfo</Cfo>
+                <Website>http://localhost</Website>
+                <Info>Info string</Info>
+            </Company>
+            <CssFile>default.css</CssFile>
+            <DefaultLocale>ru_admin</DefaultLocale>
+        </SiteInstance>
+        <SiteLanguage name="Admin RU" locale="ru_admin">
+            <Template name="index">
+                <TemplateFile>index-template.xml</TemplateFile>
+            </Template>
+            <Template name="dynamic" isDefaultDynamic="true">
+                <TemplateFile>dynamic-template.xml</TemplateFile>
+            </Template>
+            <Xslt name="default xslt">
+                <XsltFile>default.xslt</XsltFile>
+            </Xslt>
+            <MenuGroup code="MAIN">
+                <Menu>
+                    <MenuName>Homepage</MenuName>
+                    <PortletName>mill.index</PortletName>
+                    <TemplateName>index</TemplateName>
+                    <Url>homepage</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Webmill manager</MenuName>
+                    <PortletName>webmill.manager</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>manager</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Загрузка прайсов</MenuName>
+                    <PortletName>mill.upload_price</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>price-upload</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Login</MenuName>
+                    <PortletName>mill.login</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>login</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Logout</MenuName>
+                    <PortletName>mill.logout</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>logout</Url>
+                </Menu>
+            </MenuGroup>
+        </SiteLanguage>
+        <SiteLanguage name="Admin EN" locale="en_admin">
+            <Template name="index">
+                <TemplateFile>index-template.xml</TemplateFile>
+            </Template>
+            <Template name="dynamic" isDefaultDynamic="true">
+                <TemplateFile>dynamic-template.xml</TemplateFile>
+            </Template>
+            <Xslt name="default xslt">
+                <XsltFile>default.xslt</XsltFile>
+            </Xslt>
+            <MenuGroup code="MAIN">
+                <Menu>
+                    <MenuName>String</MenuName>
+                    <PortletName>mill.index</PortletName>
+                    <TemplateName>index</TemplateName>
+                    <Url>homepage</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Webmill manager</MenuName>
+                    <PortletName>webmill.manager</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>manager</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Upload price-list</MenuName>
+                    <PortletName>mill.upload_price</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>price-upload</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Login</MenuName>
+                    <PortletName>mill.login</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>login</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Logout</MenuName>
+                    <PortletName>mill.logout</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>logout</Url>
+                </Menu>
+            </MenuGroup>
+        </SiteLanguage>
+    </SiteConfig>
+    <SiteConfig name="localhost">
+        <Host>localhost</Host>
+        <SiteInstance>
+            <SiteName>localhost</SiteName>
+            <Company>
+                <Name>1st company</Name>
+                <ShortName>Short name</ShortName>
+                <Address>Address</Address>
+                <Ceo>Ceo</Ceo>
+                <Cfo>Cfo</Cfo>
+                <Website>http://localhost</Website>
+                <Info>Info string</Info>
+            </Company>
+            <CssFile>default.css</CssFile>
+            <DefaultLocale>ru_admin</DefaultLocale>
+        </SiteInstance>
+        <SiteLanguage name="Admin RU" locale="ru_admin">
+            <Template name="index">
+                <TemplateFile>index-template.xml</TemplateFile>
+            </Template>
+            <Template name="dynamic" isDefaultDynamic="true">
+                <TemplateFile>dynamic-template.xml</TemplateFile>
+            </Template>
+            <Xslt name="default xslt">
+                <XsltFile>default.xslt</XsltFile>
+            </Xslt>
+            <MenuGroup code="MAIN">
+                <Menu>
+                    <MenuName>Homepage</MenuName>
+                    <PortletName>mill.index</PortletName>
+                    <TemplateName>index</TemplateName>
+                    <Url>homepage</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Webmill manager</MenuName>
+                    <PortletName>webmill.manager</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>manager</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Загрузка прайсов</MenuName>
+                    <PortletName>mill.upload_price</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>price-upload</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Login</MenuName>
+                    <PortletName>mill.login</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>login</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Logout</MenuName>
+                    <PortletName>mill.logout</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>logout</Url>
+                </Menu>
+            </MenuGroup>
+        </SiteLanguage>
+        <SiteLanguage name="Admin EN" locale="en_admin">
+            <Template name="index">
+                <TemplateFile>index-template.xml</TemplateFile>
+            </Template>
+            <Template name="dynamic" isDefaultDynamic="true">
+                <TemplateFile>dynamic-template.xml</TemplateFile>
+            </Template>
+            <Xslt name="default xslt">
+                <XsltFile>default.xslt</XsltFile>
+            </Xslt>
+            <MenuGroup code="MAIN">
+                <Menu>
+                    <MenuName>String</MenuName>
+                    <PortletName>mill.index</PortletName>
+                    <TemplateName>index</TemplateName>
+                    <Url>homepage</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Webmill manager</MenuName>
+                    <PortletName>webmill.manager</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>manager</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Upload price-list</MenuName>
+                    <PortletName>mill.upload_price</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>price-upload</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Login</MenuName>
+                    <PortletName>mill.login</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>login</Url>
+                </Menu>
+                <Menu>
+                    <MenuName>Logout</MenuName>
+                    <PortletName>mill.logout</PortletName>
+                    <TemplateName>dynamic</TemplateName>
+                    <Url>logout</Url>
+                </Menu>
+            </MenuGroup>
+        </SiteLanguage>
+    </SiteConfig>
+</Sites>
