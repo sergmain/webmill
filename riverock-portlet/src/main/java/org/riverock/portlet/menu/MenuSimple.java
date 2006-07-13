@@ -300,10 +300,10 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             }
         }
 
-        if (currentLevel == 0 && currentLevel == level && menuModuleArray != null)
+        if (currentLevel == 0 && currentLevel == level)
             return menuModuleArray;
 
-        if (currentLevel == level && menuModuleArray != null) {
+        if (currentLevel == level) {
             for (final MenuModuleType newVar : menuModuleArray) {
                 if (log1.isDebugEnabled())
                     log1.debug("menuModuleArray[k].getIncludeLevel() " + newVar.getIncludeLevel());
@@ -462,26 +462,25 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
         throws PortletException {
 
         try {
-	if (log.isDebugEnabled()) {
-		log.debug("metadata: "+item.getMetadata());
-	}
+            if (log.isDebugEnabled()) {
+                log.debug("metadata: "+item.getMetadata());
+            }
 
             if (item.getMetadata()!=null) {
                 String roles=item.getMetadata().get("webmill.role");
 
-		if (log.isDebugEnabled()) {
-			log.debug("roles: "+roles);
-		}
+                if (log.isDebugEnabled()) {
+                    log.debug("roles: "+roles);
+                }
 
                 if (StringUtils.isNotEmpty(roles)) {
                     boolean isNotGranted=true;
-                    StringTokenizer st = new StringTokenizer(roles, ", ");
                     for (StringTokenizer stringTokenizer = new StringTokenizer(roles); stringTokenizer.hasMoreTokens();) {
                         String role = stringTokenizer.nextToken();
-			boolean check = renderRequest.isUserInRole(role);
-			if (log.isDebugEnabled()) {
-				log.debug("grant role '"+role+"' - "+ check);
-			}
+                        boolean check = renderRequest.isUserInRole(role);
+                        if (log.isDebugEnabled()) {
+                            log.debug("grant role '"+role+"' - "+ check);
+                        }
                         if (check) {
                             isNotGranted=false;
                             break;
