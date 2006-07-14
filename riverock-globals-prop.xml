@@ -82,7 +82,7 @@
     <property name="commons-digester.lib" value="commons-digester-1.7.jar"/>
     <property name="commons-collections.lib" value="commons-collections-3.2.jar"/>
     <property name="commons-beanutils.lib" value="commons-beanutils-1.7.0.jar"/>
-    <property name="commons-fileupload.lib" value="commons-fileupload-1.1.jar"/>
+    <property name="commons-fileupload.lib" value="commons-fileupload-1.1.1.jar"/>
     <property name="commons-io.lib" value="commons-io-1.1.jar"/>
     <property name="commons-lang.lib" value="commons-lang-2.1.jar"/>
 
