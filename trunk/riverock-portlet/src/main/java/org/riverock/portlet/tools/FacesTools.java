@@ -139,7 +139,7 @@ public class FacesTools {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("old parameter: " + s);
+            log.debug("old parameter: " + parameter);
             log.debug("new parameter: " + s);
         }
         return s;
