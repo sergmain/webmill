@@ -1,34 +1,31 @@
 <?xml version="1.0"?>
 <!--
-/*
- * org.riverock.webmill - Portal framework implementation
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock - The Open-source Java Development Community
- * http://www.riverock.org
- * 
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
- */
--->
-<!--$Id: build.xml 795 2006-07-10 13:44:27Z serg_main $-->
-<project name="Webmill portal build script" default="jar_without_copy" basedir=".">
+  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ For more information about Webmill portal, please visit project site
+  ~ http://webmill.askmore.info
+  ~
+  ~ Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+  ~ Riverock - The Open-source Java Development Community,
+  ~ http://www.riverock.org
+  ~
+  ~
+  ~ This program is free software; you can redistribute it and/or
+  ~ modify it under the terms of the GNU General Public
+  ~ License as published by the Free Software Foundation; either
+  ~ version 2 of the License, or (at your option) any later version.
+  ~
+  ~ This library is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public
+  ~ License along with this library; if not, write to the Free Software
+  ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+  -->
+<project name="Webmill portal initializer" default="jar_without_copy" basedir=".">
 
-    <property name="Name" value="riverock-webmill"/>
+    <property name="Name" value="riverock-webmill-init"/>
     <property name="portlet-context-name" value=""/>
 
     <property name="release-version" value="5.5.1"/>
@@ -47,13 +44,9 @@
     <property name="webinf.jsp.dir" value="${src.site.dir}/WEB-INF"/>
 
     <path id="classpath-base">
-        <pathelement location="${lib.dir}/${junit.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
         <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sso.lib}"/>
         <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-webmill-container.lib}"/>
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
         <pathelement location="${lib.dir}/${secure.lib}"/>
@@ -66,22 +59,16 @@
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-digester.lib}"/>
         <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
-        <pathelement location="${lib.dir}/${commons-fileupload.lib}"/>
 
-        <pathelement location="${lib.dir}/${castor.lib}"/>
-        <pathelement location="${lib.dir}/${hypersonic.lib}"/>
-        <pathelement location="${lib.dir}/${xalan.lib}"/>
+        <pathelement location="${lib.dir}/${myfaces-api.lib}"/>
+        <pathelement location="${lib.dir}/${myfaces-tomahawk.lib}"/>
+
         <pathelement location="${lib.dir}/${xerces.lib}"/>
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
-        <pathelement location="${lib.dir}/${portlet.lib}"/>
-
-        <pathelement location="${lib.dir}/ojdbc14.jar"/>
     </path>
 
     <fileset dir="${lib.dir}/" id="web-inf-lib" >
-        <include name="${riverock-sso.lib}"/>
         <include name="${riverock-sql-parser.lib}"/>
-        <include name="${riverock-interfaces.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
 
@@ -92,150 +79,11 @@
 
     <target name="full_build_module">
         <antcall target="full_clean"/>
-        <ant antfile="build-core.xml" target="gen_core"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="gen_all_schema" inheritall="false" />
         <antcall target="war"/>
     </target>
 
     <target name="full_clean">
-        <ant antfile="build-core.xml" target="clean"  inheritall="false" />
-        <ant antfile="build-schema.xml" target="clean" inheritall="false" />
         <antcall target="clean"/>
-    </target>
-
-    <target name="test-full" depends="compile">
-        <junit printsummary="yes" haltonfailure="yes" haltonerror="yes" fork="yes" dir="${webinf.jsp.dir}">
-            <classpath>
-                <path refid="classpath-base"/>
-                <pathelement location="${build.dest}"/>
-            </classpath>
-            <formatter type="plain" usefile="false"/>
-            <test name="org.riverock.test.cases.SuiteMain"/>
-        </junit>
-    </target>
-
-    <target name="test-string">
-        <junit printsummary="yes" haltonfailure="yes" haltonerror="yes" fork="yes" dir="${webinf.jsp.dir}" >
-            <classpath>
-                <path refid="classpath"/>
-                <pathelement location="${build.dest}"/>
-            </classpath>
-            <formatter type="plain" usefile="false"/>
-            <test name="org.riverock.test.cases.SuiteString"/>
-        </junit>
-    </target>
-
-    <target name="build-release-properties">
-        <property name="build-release-dir" value="${build.dir}/${build-release-name}"/>
-        <property name="build-release-full-name" value="${build.dir}/${build-release-name}"/>
-
-        <property name="build-www-name" value="www"/>
-        <property name="build-www-dir" value="${build-release-dir}"/>
-        <property name="build-www-mill-dir" value="${build-www-dir}/mill"/>
-
-        <property name="build-lib-dir" value="${build-release-dir}/lib"/>
-
-
-        <property name="build-empty-file-name" value="empty.txt"/>
-        <property name="build-empty-file" value="${docs.dir}/${build-empty-file-name}"/>
-
-        <property name="build-log4j-config-file" value="mill.log4j.properties"/>
-        <property name="build-logs-name" value="logs"/>
-        <property name="build-log4j-name" value="log4j"/>
-        <property name="build-logs-dir" value="${build-release-dir}/${build-logs-name}"/>
-        <property name="build-logs-logs-dir" value="${build-logs-dir}/logs"/>
-        <property name="build-logs-log4j-dir" value="${build-logs-dir}/${build-log4j-name}"/>
-
-        <property name="build-temp-dir-name" value="temp"/>
-        <property name="build-temp-dir" value="${build-release-dir}/${build-temp-dir-name}"/>
-
-    </target>
-
-
-    <target name="build_release" depends="build-release-properties" >
-<!--        <ant antfile="../build.xml" target="full_build_module" inheritall="false"/>-->
-
-        <delete failonerror="false">
-            <fileset dir="${build-release-dir}">
-                <include name="**"/>
-            </fileset>
-        </delete>
-        <mkdir dir="${build-release-dir}"/>
-
-
-        <copy file="../riverock-portlet/build/riverock-portlets.war" todir="${build.dir}" overwrite="true" failonerror="true"/>
-        <unzip src="${build.dir}/riverock-portlets.war" dest="${build-release-dir}"/>
-
-
-        <copy file="${lib.dir}/${mysql-jdbc.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-interfaces.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-webmill-container.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-webmill.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${riverock-sso.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
-        <copy file="${lib.dir}/${portlet.lib}" todir="${build-release-dir}/WEB-INF/lib"/>
-
-
-        <property name="webmill-static-path" value="/WEB-INF/webmill"/>
-        <patternset id="webmill-static.resources">
-            <include name="**/**"/>
-        </patternset>
-        <copy todir="${build-release-dir}${webmill-static-path}" overwrite="true">
-            <fileset dir="${src.main.webapps.dir}/${webmill-static-path}">
-                <patternset refid="webmill-static.resources"/>
-            </fileset>
-        </copy>
-
-
-        <copy file="${src.dir}/release/context.xml" todir="${build-release-dir}/META-INF" overwrite="true" failonerror="true">
-            <filterset>
-              <filter token="@@WEBMILL_RELEASE@@" value="${name-portal-release-version}"/>
-            </filterset>
-        </copy>
-        <copy file="${src.dir}/release/web.xml" todir="${build-release-dir}/WEB-INF" overwrite="true" failonerror="true"/>
-        <copy file="${src.dir}/release/config-webmill.xml" todir="${build-release-dir}/WEB-INF/config" overwrite="true" failonerror="true"/>
-        <copy file="${src.dir}/release/config-sso.xml" todir="${build-release-dir}/WEB-INF/config" overwrite="true" failonerror="true"/>
-
-        <copy file="${src.main.webapps.dir}/default.css" todir="${build-release-dir}" overwrite="true" failonerror="true"/>
-
-
-        <property name="war-file-name" value="${build.dir}/${name-portal-release-version}.war"/>
-        <delete file="${war-file-name}"/>
-        <war webxml="${build-release-dir}/WEB-INF/web.xml" warfile="${war-file-name}" update="false" duplicate="preserve">
-            <fileset dir="${build-release-dir}">
-            </fileset>
-        </war>
-
-
-    </target>
-
-<!--
-    <target name="make-release-files" depends="build-release-properties">
-        <tar tarfile="${build-release-full-name}.tar" basedir="${build.dir}" longfile="gnu" includes="">
-            <exclude name="**/*.java"/>
-            <exclude name="${main.lib}"/>
-            <exclude name="classes/**"/>
-            <exclude name="java/**"/>
-        </tar>
-        <gzip zipfile="${build-release-full-name}.tar.gz" src="${build-release-full-name}.tar"/>
-        <delete file="${build-release-full-name}.tar"/>
-    </target>
-
--->
-
-    <target name="replace_properties">
-        <property name="path-to-ctx" value="org/riverock/webmill"/>
-        <copy file="${src.java.dir}/${path-to-ctx}/portal/PortalInstanceImpl.java"
-            todir="${build.java}/${path-to-ctx}/portlet">
-            <filterset>
-              <filter token="WEBMILL_RELEASE" value="${release-version}"/>
-              <filter token="WEBMILL_BUILD" value="${build.number}"/>
-            </filterset>
-        </copy>
-    </target>
-
-    <target name="delete_existing_files">
-        <property name="path-to-ctx" value="org/riverock/webmill/portal"/>
-        <delete file="${build.dest}/${path-to-ctx}/PortalInstanceImpl.class"/>
     </target>
 
     <target name="prepare_local">
@@ -247,81 +95,11 @@
         <mkdir dir="${build.java}" />
     </target>
 
-    <target name="compile" depends="set_build_number, prepare, prepare_local">
-
-        <antcall target="replace_properties" inheritall="true" />
+    <target name="compile" depends="prepare, prepare_local">
         <javac
             target="${java.class.target}"
             source="${java.class.source}"
             srcdir="${src.java.dir}"
-            destdir="${build.dest}"
-            includes="**/org/riverock/webmill/exception/*.java"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-            </classpath>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-core.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
-
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src-schema.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:-unchecked"/>
-        </javac>
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${src.java.dir}"
-            destdir="${build.dest}"
-            debug="${debug}"
-            deprecation="${deprecation}"
-            optimize="${optimize}"
-            failonerror="true"
-            >
-            <classpath>
-                <path refid="classpath-base"/>
-                <path location="${build.dest}"/>
-            </classpath>
-            <compilerarg value="-Xlint:unchecked"/>
-        </javac>
-
-        <antcall target="delete_existing_files"/>
-
-        <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
-            srcdir="${build.java}"
             destdir="${build.dest}"
             debug="${debug}"
             deprecation="${deprecation}"
@@ -341,24 +119,24 @@
     </patternset>
 
     <patternset id="war.lib">
-        <include name="${riverock-sso.lib}"/>
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
-        <include name="${riverock-webmill.lib}"/>
 
         <include name="${commons-lang.lib}"/>
-        <include name="${commons-fileupload.lib}"/>
         <include name="${commons-logging.lib}"/>
-        <include name="${commons-digester.lib}"/>
-        <include name="${commons-collections.lib}"/>
         <include name="${commons-beanutils.lib}"/>
+        <include name="${commons-fileupload.lib}"/>
+        <include name="${commons-codec.lib}"/>
+
         <include name="${log4j.lib}"/>
-        <include name="${castor.lib}"/>
-        <include name="${ehcache.lib}"/>
+
+        <include name="${myfaces-api.lib}"/>
+        <include name="${myfaces-core.lib}"/>
+        <include name="${myfaces-tomahawk.lib}"/>
     </patternset>
 
-    <property name="context.war.name" value="ROOT.war"/>
+    <property name="context.war.name" value="webmill-init.war"/>
 
     <target name="war" depends="jar" >
         <property name="war-file-name" value="${build.dir}/${context.war.name}"/>
@@ -367,6 +145,7 @@
             warfile="${war-file-name}"
             update="false" duplicate="preserve">
             <fileset dir="${src.main.webapps.dir}">
+                <exclude name="webapp.iml"/>
                 <exclude name="WEB-INF/classes/**/*.*"/>
                 <exclude name="WEB-INF/lib/*.*"/>
                 <exclude name="WEB-INF/web.xml"/>
