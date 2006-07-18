@@ -1,5 +1,5 @@
 /*
- * org.riverock.webmill.init - Webmill portal initializer web application
+ * org.riverock.webmill.admin - Webmill portal admin web application
  * For more information about Webmill portal, please visit project site
  * http://webmill.askmore.info
  *
@@ -22,7 +22,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.init.action;
+package org.riverock.webmill.admin.action;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.init.SiteSessionBean;
-import org.riverock.webmill.init.SiteDataProvider;
-import org.riverock.webmill.init.dao.DaoFactory;
-import org.riverock.webmill.init.bean.SiteExtended;
-import org.riverock.webmill.init.bean.SiteBean;
+import org.riverock.webmill.admin.SiteSessionBean;
+import org.riverock.webmill.admin.SiteDataProvider;
+import org.riverock.webmill.admin.dao.DaoFactory;
+import org.riverock.webmill.admin.bean.SiteExtended;
+import org.riverock.webmill.admin.bean.SiteBean;
 
 /**
  * @author SergeMaslyukov

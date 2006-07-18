@@ -1,5 +1,5 @@
 <%--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
   ~ For more information about Webmill portal, please visit project site
   ~ http://webmill.askmore.info
   ~
@@ -36,17 +36,19 @@
 
     .top-button-action {
         width: 120px;
-        height: 20px;
+        height: 24px;
     }
 </style>
 
-<f:loadBundle basename="org.riverock.webmill.init.resource.Manager" var="manager"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
 
 <f:view>
     <h:form id="foo">
 
-        <h:panelGrid columns="3">
+        <h:panelGrid columns="4">
 
+            <h:commandButton id="structure-list-action" action="structure" value="#{manager.structure_button}"
+                             styleClass="top-button-action"/>
             <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
                              styleClass="top-button-action"/>
             <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"

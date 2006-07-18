@@ -22,39 +22,25 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.admin;
+package org.riverock.webmill.admin.action;
 
 import java.io.Serializable;
-import org.riverock.webmill.admin.bean.CompanyBean;
 
 /**
- * @author SergeMaslyukov
- *         Date: 13.07.2006
- *         Time: 21:55:44
- *         $Id: PortalUserSessionBean.java 753 2006-07-10 07:53:57Z serg_main $
+ * @author Sergei Maslyukov
+ *         Date: 17.07.2006
+ *         Time: 20:31:13
  */
-public class CompanySessionBean implements Serializable {
-    private static final long serialVersionUID = 2055005504L;
+public class StructureAction implements Serializable {
+    private static final long serialVersionUID = 2055005501L;
 
-    private CompanyBean company = null;
-    private Long currentCompanyId = null;
-
-    public CompanySessionBean() {
+    public StructureAction() {
     }
 
-    public CompanyBean getCompany() {
-        return company;
-    }
+    public static String createDbStructure() {
+//        DatabaseStructureManager.checkDatabaseStructure(adapater, dc);
 
-    public void setCompany(CompanyBean company) {
-        this.company = company;
-    }
+        return "create-structure-result";
 
-    public Long getCurrentCompanyId() {
-        return currentCompanyId;
-    }
-
-    public void setCurrentCompanyId(Long currentCompanyId) {
-        this.currentCompanyId = currentCompanyId;
     }
 }

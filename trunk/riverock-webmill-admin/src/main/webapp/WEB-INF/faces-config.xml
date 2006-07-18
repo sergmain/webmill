@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
-  ~ For more information about Webmill portal, please visit project site http://webmill.askmore.info
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
+  ~ For more information about Webmill portal, please visit project site
+  ~ http://webmill.askmore.info
   ~
   ~ Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
-  ~ Riverock - The Open-source Java Development Community, http://www.riverock.org
+  ~ Riverock - The Open-source Java Development Community,
+  ~ http://www.riverock.org
   ~
   ~
   ~ This program is free software; you can redistribute it and/or
@@ -24,62 +26,215 @@
 <!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
     "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 <faces-config>
+    <!-- site section -->
     <managed-bean>
-        <managed-bean-name>authSessionBean</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.main.AuthSessionBean</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-
-    <managed-bean>
-        <managed-bean-name>isUserInRole</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.main.UserInRoleChecker</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
-    </managed-bean>
-
-    <managed-bean>
-        <managed-bean-name>portletNameService</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.manager.portletname.PortletNameService</managed-bean-class>
-        <managed-bean-scope>application</managed-bean-scope>
-    </managed-bean>
-    <managed-bean>
-        <managed-bean-name>portletNameSessionBean</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.manager.portletname.PortletNameSessionBean</managed-bean-class>
+        <managed-bean-name>siteSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.SiteSessionBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>portletNameAction</managed-bean-name>
-        <managed-bean-class>org.riverock.portlet.manager.portletname.PortletNameAction</managed-bean-class>
+        <managed-bean-name>siteTree</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.SiteTree</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
-            <property-name>portletNameSessionBean</property-name>
-            <value>#{portletNameSessionBean}</value>
+            <property-name>siteService</property-name>
+            <property-class>org.riverock.webmill.admin.service.SiteService</property-class>
+            <value>#{siteService}</value>
         </managed-property>
         <managed-property>
-            <property-name>authSessionBean</property-name>
-            <value>#{authSessionBean}</value>
+            <property-name>siteSessionBean</property-name>
+            <value>#{siteSessionBean}</value>
         </managed-property>
     </managed-bean>
-    <!-- navigation rules -->
+    <managed-bean>
+        <managed-bean-name>siteDataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.SiteDataProvider</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>siteService</property-name>
+            <property-class>org.riverock.webmill.admin.service.SiteService</property-class>
+            <value>#{siteService}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>siteSessionBean</property-name>
+            <value>#{siteSessionBean}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>siteService</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.service.SiteService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
+    <!-- Structure section -->
+    <managed-bean>
+        <managed-bean-name>structureAction</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.StructureAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+<!--
+        <managed-property>
+            <property-name>siteSessionBean</property-name>
+            <value>#{siteSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{siteDataProvider}</value>
+        </managed-property>
+-->
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>companyAction</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.CompanyAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>siteSessionBean</property-name>
+            <value>#{siteSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{siteDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>userAction</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.UserAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>siteSessionBean</property-name>
+            <value>#{siteSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{siteDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>siteAction</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.SiteAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>siteSessionBean</property-name>
+            <value>#{siteSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{siteDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <!-- Company section -->
+    <managed-bean>
+        <managed-bean-name>companyService</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.service.CompanyService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>companySessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.CompanySessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>action</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.CompanyAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>companySessionBean</property-name>
+            <value>#{companySessionBean}</value>
+        </managed-property>
+    </managed-bean>
+
+    <!-- User section -->
+    <managed-bean>
+        <managed-bean-name>portalUserSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.bean.PortalUserSessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>portalUserService</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.service.UserService</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>portalUserAction</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.UserAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>portalUserSessionBean</property-name>
+            <value>#{portalUserSessionBean}</value>
+        </managed-property>
+    </managed-bean>
+
+    <!-- structure navigation rules -->
     <navigation-rule>
-        <from-view-id>/riverock/manager/portlet-name/portlet-name.jsp</from-view-id>
+        <from-view-id>/riverock/admin/structure/structure.jsp</from-view-id>
         <navigation-case>
-            <from-outcome>portlet-name-add</from-outcome>
-            <to-view-id>/riverock/manager/portlet-name/portlet-name-add.jsp</to-view-id>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>portlet-name-edit</from-outcome>
-            <to-view-id>/riverock/manager/portlet-name/portlet-name-edit.jsp</to-view-id>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>portlet-name-delete</from-outcome>
-            <to-view-id>/riverock/manager/portlet-name/portlet-name-delete.jsp</to-view-id>
+            <from-outcome>create-structure-result</from-outcome>
+            <to-view-id>/riverock/admin/structure/create-structure-result.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
-            <from-outcome>portlet-name</from-outcome>
-            <to-view-id>/riverock/manager/portlet-name/portlet-name.jsp</to-view-id>
+            <from-outcome>structure</from-outcome>
+            <to-view-id>/riverock/admin/structure/structure.jsp</to-view-id>
         </navigation-case>
     </navigation-rule>
+
+    <!-- portal user navigation rules -->
+    <navigation-rule>
+        <from-view-id>/riverock/admin/users/portal-user.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>portal-user-add</from-outcome>
+            <to-view-id>/riverock/admin/users/portal-user-add.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>portal-user-edit</from-outcome>
+            <to-view-id>/riverock/admin/users/portal-user-edit.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>portal-user</from-outcome>
+            <to-view-id>/riverock/admin/users/portal-user.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <!-- company navigation rules -->
+    <navigation-rule>
+        <from-view-id>/riverock/admin/company/company.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>company-add</from-outcome>
+            <to-view-id>/riverock/admin/company/company-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>company</from-outcome>
+            <to-view-id>/riverock/admin/company/company.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <!-- site navigation rules -->
+    <navigation-rule>
+        <from-view-id>/riverock/admin/site/site.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>site-add</from-outcome>
+            <to-view-id>/riverock/admin/site/site-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>site</from-outcome>
+            <to-view-id>/riverock/admin/site/site.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
 </faces-config>
