@@ -54,7 +54,7 @@ public class SiteService implements Serializable {
 
     public List<SelectItem> getSiteList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<SiteBean> sites = DaoFactory.getWebmillInitDao().getSites();
+        List<SiteBean> sites = DaoFactory.getWebmillAdminDao().getSites();
 
         for (SiteBean site : sites) {
             if (site.getSiteId() == null) {
@@ -69,7 +69,7 @@ public class SiteService implements Serializable {
     @SuppressWarnings({"RedundantStringConstructorCall"})
     public List<SelectItem> getCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<CompanyBean> companies = DaoFactory.getWebmillInitDao().getCompanyList();
+        List<CompanyBean> companies = DaoFactory.getWebmillAdminDao().getCompanyList();
 
         for (CompanyBean company : companies) {
             if (company.getId() == null) {
@@ -85,13 +85,13 @@ public class SiteService implements Serializable {
     }
 
     public SiteBean getSite(Long siteId) {
-        SiteBean site = DaoFactory.getWebmillInitDao().getSite(siteId);
+        SiteBean site = DaoFactory.getWebmillAdminDao().getSite(siteId);
         return new SiteBean(site);
     }
 
     public List<SiteBean> getSites() {
         List<SiteBean> list = new ArrayList<SiteBean>();
-        List<SiteBean> sites = DaoFactory.getWebmillInitDao().getSites();
+        List<SiteBean> sites = DaoFactory.getWebmillAdminDao().getSites();
         for (SiteBean site: sites) {
             list.add( new SiteBean(site) );
         }
@@ -100,15 +100,15 @@ public class SiteService implements Serializable {
 
     public SiteExtended getSiteExtended(Long siteId) {
         SiteExtended siteExtended = new SiteExtended();
-        siteExtended.setSite(DaoFactory.getWebmillInitDao().getSite(siteId));
-        List<VirtualHostBean> virtualHosts = DaoFactory.getWebmillInitDao().getVirtualHosts(siteExtended.getSite().getSiteId());
+        siteExtended.setSite(DaoFactory.getWebmillAdminDao().getSite(siteId));
+        List<VirtualHostBean> virtualHosts = DaoFactory.getWebmillAdminDao().getVirtualHosts(siteExtended.getSite().getSiteId());
         List<String> hosts = new ArrayList<String>();
         for (VirtualHostBean host : virtualHosts) {
             hosts.add(host.getHost().toLowerCase());
         }
         siteExtended.setVirtualHosts(hosts);
         Long companyId = siteExtended.getSite().getCompanyId();
-        CompanyBean company = DaoFactory.getWebmillInitDao().getCompany(companyId);
+        CompanyBean company = DaoFactory.getWebmillAdminDao().getCompany(companyId);
         if (log.isDebugEnabled()) {
             log.debug("companyId: " + companyId);
             log.debug("company: " + company);

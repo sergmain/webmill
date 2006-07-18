@@ -25,6 +25,7 @@
 package org.riverock.webmill.admin;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -40,7 +41,7 @@ import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
 
 import org.riverock.webmill.admin.bean.SiteBean;
-import org.riverock.webmill.admin.utils.FacesTools;
+import org.riverock.webmill.admin.dao.DaoFactory;
 import org.riverock.webmill.admin.service.SiteService;
 
 /**
@@ -83,21 +84,13 @@ public class SiteTree implements Serializable {
         log.info("Invoke getSiteTree()");
 
         TreeNode treeRoot = new TreeNodeBase("tree-root", "tree-root", false);
-        if (siteSessionBean.getCurrentSiteId()!=null) {
-            TreeNode treeData = new TreeNodeBase("site-list", "Webmill portal. List of sites.", false);
-            treeRoot.getChildren().add(treeData);
+        TreeNode treeData = new TreeNodeBase("site-list", "Webmill portal. List of sites.", false);
+        treeRoot.getChildren().add(treeData);
 
-            SiteBean site = siteService.getSite(siteSessionBean.getCurrentSiteId());
-
-            TreeNodeBase siteNode = new TreeNodeBase("site", site.getSiteName(), site.getSiteId().toString(), false);
+        List<SiteBean> sites = DaoFactory.getWebmillAdminDao().getSites();
+        for (SiteBean siteBean : sites) {
+            TreeNodeBase siteNode = new TreeNodeBase("site", siteBean.getSiteName(), siteBean.getSiteId().toString(), false);
             treeRoot.getChildren().add(siteNode);
-
-            if (FacesTools.isUserInRole("webmill.css") || FacesTools.isUserInRole("webmill.site-manager") ||
-                FacesTools.isUserInRole("webmill.portal-manager")) {
-                TreeNodeBase cssListNode = new TreeNodeBase("css-list", "Css list", site.getSiteId().toString(), false);
-                treeRoot.getChildren().add(cssListNode);
-
-            }
         }
         treeNode = treeRoot;
         return treeNode;

@@ -61,18 +61,16 @@
         <h:panelGrid columns="1">
 
             <h:commandButton value="#{msg.action_add_company}"
-                             action="#{action.addCompany}"
+                             action="#{companyAction.addCompany}"
                              styleClass="company-button-action"
                 />
 
             <h:panelGrid columns="2">
-
                 <f:subview id="subviewCompanyList">
                     <jsp:include page="company-list.jsp"/>
                 </f:subview>
-
+                
                 <h:panelGrid columns="1" rendered="#{!empty companySessionBean.company}">
-
                     <f:subview id="subviewCompanyInfo">
                         <jsp:include page="company-info.jsp"/>
                     </f:subview>

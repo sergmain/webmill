@@ -32,17 +32,6 @@
 
 <h:panelGroup id="site-tree-group">
 
-    <h:panelGroup id="site-tree-site-change-group">
-        <h:selectOneMenu id="select-one-site" value="#{siteSessionBean.currentSiteId}" styleClass="selectOneMenu" required="true">
-            <f:selectItems value="#{siteService.siteList}"/>
-        </h:selectOneMenu>
-        <h:commandButton id="site-change-site-action" action="#{siteAction.changeSite}"
-                         value="Ok"
-                         styleClass="site-button-action"
-            >
-        </h:commandButton>
-    </h:panelGroup>
-
     <t:tree2 id="serverTree" value="#{siteTree.siteTree}" var="node"
    			varNodeToggler="t" clientSideToggle="false"
             showRootNode="false" binding="#{siteTree.tree}">

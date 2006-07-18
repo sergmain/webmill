@@ -24,7 +24,16 @@
  */
 package org.riverock.webmill.admin.action;
 
+import java.io.File;
 import java.io.Serializable;
+
+import org.apache.log4j.Logger;
+
+import org.riverock.common.config.PropertiesProvider;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.system.DbStructureImport;
+import org.riverock.webmill.admin.StructureSessionBean;
 
 /**
  * @author Sergei Maslyukov
@@ -32,13 +41,47 @@ import java.io.Serializable;
  *         Time: 20:31:13
  */
 public class StructureAction implements Serializable {
+    private static Logger log = Logger.getLogger(StructureAction.class);
     private static final long serialVersionUID = 2055005501L;
+
+    private StructureSessionBean structureSessionBean=null;
+
 
     public StructureAction() {
     }
 
-    public static String createDbStructure() {
-//        DatabaseStructureManager.checkDatabaseStructure(adapater, dc);
+    public StructureSessionBean getStructureSessionBean() {
+        return structureSessionBean;
+    }
+
+    public void setStructureSessionBean(StructureSessionBean structureSessionBean) {
+        this.structureSessionBean = structureSessionBean;
+    }
+
+    public String createDbStructure() {
+        String strucruteFileName =
+            PropertiesProvider.getApplicationPath()+ File.separatorChar+
+                "WEB-INF" + File.separatorChar+
+                "webmill" + File.separatorChar+
+                "structure" + File.separatorChar+
+                "webmill-schema.xml";
+
+        log.debug("structure file name: " +strucruteFileName);
+
+        DatabaseAdapter db=null;
+        try {
+            db = DatabaseAdapter.getInstance();
+            structureSessionBean.setErrorMessage(null);
+            DbStructureImport.importStructure(strucruteFileName, false, db);
+        }
+        catch (Throwable e) {
+            String es = "Error create db structure";
+            log.error(es, e);
+            structureSessionBean.setErrorMessage(e.toString());
+        }
+        finally {
+            DatabaseManager.close(db);
+        }
 
         return "create-structure-result";
 

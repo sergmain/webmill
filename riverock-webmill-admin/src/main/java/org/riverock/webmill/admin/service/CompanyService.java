@@ -47,7 +47,7 @@ public class CompanyService implements Serializable {
     }
 
     public List<CompanyBean> getCompanyList() {
-        List<CompanyBean> list = DaoFactory.getWebmillInitDao().getCompanyList();
+        List<CompanyBean> list = DaoFactory.getWebmillAdminDao().getCompanyList();
         if (list==null) {
             return null;
         }

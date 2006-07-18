@@ -38,7 +38,7 @@
         <f:facet name="header">
             <h:outputText value="#{msg.header_table_company_name}"/>
         </f:facet>
-        <t:commandLink action="#{action.selectCompany}" immediate="true">
+        <t:commandLink action="#{companyAction.selectCompany}" immediate="true">
             <h:outputText value="#{company.name}"/>
             <!-- for convenience: MyFaces extension. sets id of current row in countryForm -->
             <!-- you don't have to implement a custom action! -->

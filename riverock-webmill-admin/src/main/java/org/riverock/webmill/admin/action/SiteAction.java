@@ -49,13 +49,13 @@ public class SiteAction implements Serializable {
     private static final long serialVersionUID = 2057005511L;
 
     private SiteSessionBean siteSessionBean = null;
-    private SiteDataProvider dataProvider = null;
+    private SiteDataProvider siteDataProvider = null;
 
     public SiteAction() {
     }
 
     public void setSiteDataProvider(SiteDataProvider dataProvider) {
-        this.dataProvider = dataProvider;
+        this.siteDataProvider = dataProvider;
     }
 
     public void setSiteSessionBean( SiteSessionBean siteSessionBean) {
@@ -107,12 +107,12 @@ public class SiteAction implements Serializable {
         }
 
         if( siteSessionBean.getSiteExtended()!=null ) {
-            Long siteId = DaoFactory.getWebmillInitDao().createSiteWithVirtualHost(
+            Long siteId = DaoFactory.getWebmillAdminDao().createSiteWithVirtualHost(
                 siteSessionBean.getSiteExtended().getSite(), siteSessionBean.getSiteExtended().getVirtualHosts()
             );
             siteSessionBean.setSiteExtended(null);
             siteSessionBean.setId(siteId);
-            dataProvider.clearSite();
+            siteDataProvider.clearSite();
             loadCurrentSite();
         }
 
@@ -123,7 +123,7 @@ public class SiteAction implements Serializable {
         log.debug( "Cancel add site action." );
 
         siteSessionBean.setSiteExtended(null);
-        dataProvider.clearSite();
+        siteDataProvider.clearSite();
 
         return "site";
     }
@@ -139,10 +139,10 @@ public class SiteAction implements Serializable {
         log.debug( "Save changes site action." );
 
         if( siteSessionBean.getSiteExtended()!=null ) {
-            DaoFactory.getWebmillInitDao().updateSiteWithVirtualHost(
+            DaoFactory.getWebmillAdminDao().updateSiteWithVirtualHost(
                 siteSessionBean.getSiteExtended().getSite(), siteSessionBean.getSiteExtended().getVirtualHosts()
             );
-            dataProvider.clearSite();
+            siteDataProvider.clearSite();
             loadCurrentSite();
         }
 
@@ -159,7 +159,7 @@ public class SiteAction implements Serializable {
     public String deleteSiteAction() {
         log.debug( "delete site action." );
 
-        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
+        siteSessionBean.setSiteExtended( siteDataProvider.getSiteExtended() );
 
         return "site-delete";
     }
@@ -173,11 +173,11 @@ public class SiteAction implements Serializable {
     public String processDeleteSiteAction() {
         log.info( "Process delete site action." );
         if( siteSessionBean.getSiteExtended() != null ) {
-            DaoFactory.getWebmillInitDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
+            DaoFactory.getWebmillAdminDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
             siteSessionBean.setSiteExtended( null );
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);
-            dataProvider.clearSite();
+            siteDataProvider.clearSite();
         }
 
         return "site";
@@ -224,6 +224,6 @@ public class SiteAction implements Serializable {
 
 // private methods
     private void loadCurrentSite() {
-        siteSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
+        siteSessionBean.setSiteExtended( siteDataProvider.getSiteExtended() );
     }
 }

@@ -60,7 +60,8 @@
 
         <h:panelGrid columns="1">
 
-            <f:verbatim>Create stucture result here</f:verbatim>
+            <h:outputText id="create-structure-result-error" value="#{structureSessionBean.errorMessage}" styleClass="childCount" rendered="#{!empty structureSessionBean.errorMessage}"/>
+            <h:outputText id="create-structure-result-ok" value="DB structure was created without error" styleClass="childCount" rendered="#{empty structureSessionBean.errorMessage}"/>
 
             <h:commandButton value="#{msg.action_create_db_structure}"
                              action="#{structureAction.createDbStructure}"

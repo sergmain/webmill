@@ -65,52 +65,6 @@
         <managed-bean-class>org.riverock.webmill.admin.service.SiteService</managed-bean-class>
         <managed-bean-scope>application</managed-bean-scope>
     </managed-bean>
-
-    <!-- Structure section -->
-    <managed-bean>
-        <managed-bean-name>structureAction</managed-bean-name>
-        <managed-bean-class>org.riverock.webmill.admin.action.StructureAction</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-<!--
-        <managed-property>
-            <property-name>siteSessionBean</property-name>
-            <value>#{siteSessionBean}</value>
-        </managed-property>
-        <managed-property>
-            <property-name>dataProvider</property-name>
-            <value>#{siteDataProvider}</value>
-        </managed-property>
--->
-    </managed-bean>
-
-    <managed-bean>
-        <managed-bean-name>companyAction</managed-bean-name>
-        <managed-bean-class>org.riverock.webmill.admin.action.CompanyAction</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-        <managed-property>
-            <property-name>siteSessionBean</property-name>
-            <value>#{siteSessionBean}</value>
-        </managed-property>
-        <managed-property>
-            <property-name>dataProvider</property-name>
-            <value>#{siteDataProvider}</value>
-        </managed-property>
-    </managed-bean>
-
-    <managed-bean>
-        <managed-bean-name>userAction</managed-bean-name>
-        <managed-bean-class>org.riverock.webmill.admin.action.UserAction</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-        <managed-property>
-            <property-name>siteSessionBean</property-name>
-            <value>#{siteSessionBean}</value>
-        </managed-property>
-        <managed-property>
-            <property-name>dataProvider</property-name>
-            <value>#{siteDataProvider}</value>
-        </managed-property>
-    </managed-bean>
-
     <managed-bean>
         <managed-bean-name>siteAction</managed-bean-name>
         <managed-bean-class>org.riverock.webmill.admin.action.SiteAction</managed-bean-class>
@@ -120,9 +74,25 @@
             <value>#{siteSessionBean}</value>
         </managed-property>
         <managed-property>
-            <property-name>dataProvider</property-name>
+            <property-name>siteDataProvider</property-name>
             <value>#{siteDataProvider}</value>
         </managed-property>
+    </managed-bean>
+
+    <!-- Structure section -->
+    <managed-bean>
+        <managed-bean-name>structureAction</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.action.StructureAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>structureSessionBean</property-name>
+            <value>#{structureSessionBean}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>structureSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.webmill.admin.StructureSessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 
     <!-- Company section -->
@@ -139,7 +109,7 @@
     </managed-bean>
 
     <managed-bean>
-        <managed-bean-name>action</managed-bean-name>
+        <managed-bean-name>companyAction</managed-bean-name>
         <managed-bean-class>org.riverock.webmill.admin.action.CompanyAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>

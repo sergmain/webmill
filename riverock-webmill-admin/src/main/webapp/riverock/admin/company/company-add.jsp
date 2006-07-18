@@ -57,9 +57,9 @@
             </f:subview>
 
             <h:panelGroup id="editDeleteControls">
-                <h:commandButton value="#{msg.action_add_process}" action="#{action.processAddCompany}"
+                <h:commandButton value="#{msg.action_add_process}" action="#{companyAction.processAddCompany}"
                                  styleClass="company-button-action"/>
-                <h:commandButton value="#{msg.action_add_cancel}" action="#{action.cancelAddCompany}"
+                <h:commandButton value="#{msg.action_add_cancel}" action="#{companyAction.cancelAddCompany}"
                                  styleClass="company-button-action"/>
             </h:panelGroup>
 

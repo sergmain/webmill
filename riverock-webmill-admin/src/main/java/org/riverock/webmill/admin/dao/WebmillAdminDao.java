@@ -33,7 +33,7 @@ import org.riverock.webmill.admin.bean.*;
  *         Date: 13.07.2006
  *         Time: 17:26:33
  */
-public interface WebmillInitDao {
+public interface WebmillAdminDao {
     List<CompanyBean> getCompanyList();
 
     List<SiteBean> getSites();
