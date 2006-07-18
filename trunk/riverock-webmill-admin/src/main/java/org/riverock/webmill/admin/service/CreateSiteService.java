@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.admin.bean.*;
 import org.riverock.webmill.admin.dao.DaoFactory;
-import org.riverock.webmill.admin.dao.WebmillInitDao;
+import org.riverock.webmill.admin.dao.WebmillAdminDao;
 
 /**
  * @author SergeMaslyukov
@@ -66,7 +66,7 @@ public class CreateSiteService {
 
     public static void createSite(SiteExtended siteExtended) {
 
-        WebmillInitDao dao = DaoFactory.getWebmillInitDao();
+        WebmillAdminDao dao = DaoFactory.getWebmillAdminDao();
 
         List<VirtualHostBean> hostFullList = dao.getVirtualHostsFullList();
         if (log.isDebugEnabled()) {
@@ -156,7 +156,7 @@ public class CreateSiteService {
             }
             XsltBean xslt = siteLanguageConfig.getXslt();
             xslt.setCurrent(true);
-            DaoFactory.getWebmillInitDao().createXslt(xslt);
+            DaoFactory.getWebmillAdminDao().createXslt(xslt);
 
             for (CatalogLanguageBean catalogLanguage : siteLanguageConfig.getCatalogLanguages()) {
                 CatalogLanguageBean catalogLanguageItem =
@@ -209,17 +209,17 @@ public class CreateSiteService {
                 log.debug("    menuName: " + menuItem.getKeyMessage());
                 log.debug("    url: " + menuItem.getUrl());
             }
-            PortletNameBean portletName = DaoFactory.getWebmillInitDao().getPortletName(menuItem.getPortletId());
+            PortletNameBean portletName = DaoFactory.getWebmillAdminDao().getPortletName(menuItem.getPortletId());
             if (portletName==null) {
                 throw new IllegalStateException("Portlet name not found for ID "+menuItem.getPortletId());
             }
 
-            TemplateBean template = DaoFactory.getWebmillInitDao().getTemplate(menuItem.getTemplateId(), siteLanguage.getSiteLanguageId());
+            TemplateBean template = DaoFactory.getWebmillAdminDao().getTemplate(menuItem.getTemplateId(), siteLanguage.getSiteLanguageId());
             if (template==null) {
                 throw new IllegalStateException("Template not found for ID "+menuItem.getTemplateId());
             }
 
-            Long catalogItemId = DaoFactory.getWebmillInitDao().getCatalogItemId(
+            Long catalogItemId = DaoFactory.getWebmillAdminDao().getCatalogItemId(
                 siteLanguage.getSiteLanguageId(), portletName.getPortletId(), template.getTemplateId()
             );
 
@@ -240,7 +240,7 @@ public class CreateSiteService {
                 catalogBean.setUrl(menuItem.getUrl());
                 catalogBean.setOrderField(orderFiled++);
 
-                catalogItemId = DaoFactory.getWebmillInitDao().createCatalogItem(catalogBean);
+                catalogItemId = DaoFactory.getWebmillAdminDao().createCatalogItem(catalogBean);
             }
 
             processMenu(siteLanguage, catalogLanguageItem, menuItem.getSubCatalogItemList(), catalogItemId);

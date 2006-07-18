@@ -86,6 +86,15 @@
 
                     <h:outputText value="#{msg.portal_user_email}"/>
                     <h:inputText id="portal-user-email-field" value="#{portalUserSessionBean.portalUser.email}"/>
+
+                    <h:outputText value="#{msg.portal_user_login}"/>
+                    <h:inputText id="portal-user-login-field" value="#{portalUserSessionBean.portalUser.login}"/>
+
+                    <h:outputText value="#{msg.portal_user_password1}"/>
+                    <h:inputText id="portal-user-password1-field" value="#{portalUserSessionBean.portalUser.password1}"/>
+
+                    <h:outputText value="#{msg.portal_user_password2}"/>
+                    <h:inputText id="portal-user-password2-field" value="#{portalUserSessionBean.portalUser.password2}"/>
                 </h:panelGrid>
             </h:panelGroup>
 

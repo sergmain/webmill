@@ -48,7 +48,7 @@ public class UserService implements Serializable {
     }
     public List<SelectItem> getCompanyList() {
         List<SelectItem> list = new ArrayList<SelectItem>();
-        List<CompanyBean> companies = DaoFactory.getWebmillInitDao().getCompanyList();
+        List<CompanyBean> companies = DaoFactory.getWebmillAdminDao().getCompanyList();
 
         for (CompanyBean companyBean : companies) {
             list.add(new SelectItem(companyBean.getId(), companyBean.getName()));
@@ -57,7 +57,7 @@ public class UserService implements Serializable {
     }
 
     public List<UserBean> getPortalUserList() {
-        List<UserBean> list = DaoFactory.getWebmillInitDao().getUserList();
+        List<UserBean> list = DaoFactory.getWebmillAdminDao().getUserList();
         if (list==null) {
             return null;
         }

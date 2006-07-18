@@ -51,15 +51,19 @@
 
     <h:form id="portal-user-form">
 
-                <f:subview id="portal-user-top-actions-subview">
-                    <jsp:include page="_portal-user-top-action.jsp"/>
-                </f:subview>
+        <f:subview id="portal-user-top-actions-subview">
+            <jsp:include page="_portal-user-top-action.jsp"/>
+        </f:subview>
 
-        <h:panelGrid columns="2">
+        <h:panelGrid rendered="#{empty portalUserService.companyList}">
+            <h:outputText id="empty-company-list" value="Before of creating of user, you must create a company"/>
+        </h:panelGrid>
 
-                <f:subview id="subviewPortalUserList">
-                    <jsp:include page="portal-user-list.jsp"/>
-                </f:subview>
+        <h:panelGrid columns="2" rendered="#{!empty portalUserService.companyList}">
+
+            <f:subview id="subviewPortalUserList">
+                <jsp:include page="portal-user-list.jsp"/>
+            </f:subview>
 
             <h:panelGroup>
                 <h:panelGrid columns="1" rendered="#{!empty portalUserSessionBean.portalUser}">
@@ -75,7 +79,6 @@
             </h:panelGroup>
 
         </h:panelGrid>
-
-
     </h:form>
+
 </f:view>

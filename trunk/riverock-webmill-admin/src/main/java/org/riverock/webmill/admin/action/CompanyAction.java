@@ -59,7 +59,7 @@ public class CompanyAction implements Serializable {
     }
 
     public String processAddCompany() {
-        Long companyId = DaoFactory.getWebmillInitDao().processAddCompany( companySessionBean.getCompany() );
+        Long companyId = DaoFactory.getWebmillAdminDao().processAddCompany( companySessionBean.getCompany() );
         companySessionBean.setCurrentCompanyId( companyId );
         loadCurrentCompany();
 
@@ -72,7 +72,7 @@ public class CompanyAction implements Serializable {
     }
 
     public String processEditCompany() {
-        DaoFactory.getWebmillInitDao().processSaveCompany(companySessionBean.getCompany() );
+        DaoFactory.getWebmillAdminDao().processSaveCompany(companySessionBean.getCompany() );
 
         return "company";
     }
@@ -83,7 +83,7 @@ public class CompanyAction implements Serializable {
     }
 
     public String processDeleteCompany() {
-        DaoFactory.getWebmillInitDao().processDeleteCompany(companySessionBean.getCompany());
+        DaoFactory.getWebmillAdminDao().processDeleteCompany(companySessionBean.getCompany());
         companySessionBean.setCompany( null );
         return "company";
     }
@@ -94,7 +94,7 @@ public class CompanyAction implements Serializable {
     }
 
     private void loadCurrentCompany() {
-        CompanyBean bean = DaoFactory.getWebmillInitDao().getCompany( companySessionBean.getCurrentCompanyId() );
+        CompanyBean bean = DaoFactory.getWebmillAdminDao().getCompany( companySessionBean.getCurrentCompanyId() );
         companySessionBean.setCompany( bean );
     }
 }

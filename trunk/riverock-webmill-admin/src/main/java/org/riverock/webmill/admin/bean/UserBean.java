@@ -54,6 +54,10 @@ public class UserBean implements Serializable {
     private String email = null;
     private boolean isDeleted = false;
 
+    private String login=null;
+    private String password1=null;
+    private String password2=null;
+
     public UserBean() {
     }
 
@@ -69,6 +73,33 @@ public class UserBean implements Serializable {
         this.phone = beanPortal.getPhone();
         this.email = beanPortal.getEmail();
         this.isDeleted = beanPortal.isDeleted();
+        this.login = beanPortal.getLogin();
+        this.password1 = beanPortal.getPassword1();
+        this.password2 = beanPortal.getPassword2();
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword1() {
+        return password1;
+    }
+
+    public void setPassword1(String password1) {
+        this.password1 = password1;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String password2) {
+        this.password2 = password2;
     }
 
     public boolean isDeleted() {

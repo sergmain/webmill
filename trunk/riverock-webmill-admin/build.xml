@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
   ~ For more information about Webmill portal, please visit project site
   ~ http://webmill.askmore.info
   ~
   ~ Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
   ~ Riverock - The Open-source Java Development Community,
-  ~ http://www.riverock.org
+  ~ http://www.riverock.org                                
   ~
   ~
   ~ This program is free software; you can redistribute it and/or
@@ -137,6 +137,7 @@
         <include name="${commons-beanutils.lib}"/>
         <include name="${commons-fileupload.lib}"/>
         <include name="${commons-codec.lib}"/>
+        <include name="${commons-collections.lib}"/>
 
         <include name="${log4j.lib}"/>
 
@@ -148,6 +149,16 @@
     <property name="context.war.name" value="webmill-admin.war"/>
 
     <target name="war" depends="jar" >
+
+        <property name="webmill-structure-dir" value="${build.dir}/war/WEB-INF/webmill/structure"/>
+        <delete failonerror="false">
+            <fileset dir="${webmill-structure-dir}">
+                <include name="**"/>
+            </fileset>
+        </delete>
+
+        <copy todir="${webmill-structure-dir}" file="..\riverock-webmill-db\xml\webmill-schema.xml " overwrite="true"/>
+
         <property name="war-file-name" value="${build.dir}/${context.war.name}"/>
         <delete file="${war-file-name}"/>
         <war webxml="${src.main.webapps.dir}/WEB-INF/web.xml"
@@ -159,6 +170,8 @@
                 <exclude name="WEB-INF/lib/*.*"/>
                 <exclude name="WEB-INF/web.xml"/>
                 <exclude name="**/*.*-*"/>
+            </fileset>
+            <fileset dir="${build.dir}/war">
             </fileset>
             <lib dir="${lib.dir}">
                 <patternset refid="war.lib"/>

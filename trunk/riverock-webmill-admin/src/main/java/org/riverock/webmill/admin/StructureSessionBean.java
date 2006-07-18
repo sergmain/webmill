@@ -22,17 +22,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.admin.dao;
+package org.riverock.webmill.admin;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 13.07.2006
- *         Time: 17:26:04
+ *         Date: 18.07.2006
+ *         Time: 18:50:23
  */
-public class DaoFactory {
-    private static WebmillAdminDao webmillAdminDao = new WebmillAdminDaoImpl();
+public class StructureSessionBean {
+    private String errorMessage=null;
 
-    public static WebmillAdminDao getWebmillAdminDao() {
-        return webmillAdminDao;
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }

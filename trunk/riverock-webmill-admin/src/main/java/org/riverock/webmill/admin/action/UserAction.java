@@ -60,7 +60,7 @@ public class UserAction implements Serializable {
     }
 
     public String processAddPortalUser() {
-        Long id = DaoFactory.getWebmillInitDao().addUser(portalUserSessionBean.getPortalUser());
+        Long id = DaoFactory.getWebmillAdminDao().addUser(portalUserSessionBean.getPortalUser());
 
         portalUserSessionBean.setCurrentPortalUserId(id);
         loadCurrentPortalUser();
@@ -73,7 +73,7 @@ public class UserAction implements Serializable {
     }
 
     public String processEditPortalUser() {
-        DaoFactory.getWebmillInitDao().updateUser(portalUserSessionBean.getPortalUser());
+        DaoFactory.getWebmillAdminDao().updateUser(portalUserSessionBean.getPortalUser());
         return "portal-user";
     }
 
@@ -83,7 +83,7 @@ public class UserAction implements Serializable {
     }
 
     public String processDeletePortalUser() {
-        DaoFactory.getWebmillInitDao().deleteUser(portalUserSessionBean.getPortalUser());
+        DaoFactory.getWebmillAdminDao().deleteUser(portalUserSessionBean.getPortalUser());
         portalUserSessionBean.setPortalUser(null);
         return "portal-user";
     }
@@ -98,9 +98,9 @@ public class UserAction implements Serializable {
             portalUserSessionBean.setPortalUser(null);
             return;
         }
-        UserBean user = DaoFactory.getWebmillInitDao().getUser(portalUserSessionBean.getCurrentPortalUserId());
+        UserBean user = DaoFactory.getWebmillAdminDao().getUser(portalUserSessionBean.getCurrentPortalUserId());
         UserBean portalUser = new UserBean(user);
-        CompanyBean company = DaoFactory.getWebmillInitDao().getCompany(
+        CompanyBean company = DaoFactory.getWebmillAdminDao().getCompany(
             portalUser.getCompanyId()
         );
         portalUser.setCompanyName(company.getName());

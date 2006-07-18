@@ -46,25 +46,6 @@
     <h:outputText value="#{msg.site_locale}"/>
     <h:inputText id="site-locale-field" value="#{siteSessionBean.siteExtended.site.siteDefaultLocale}"/>
 
-    <h:outputText value="#{msg.site_admin_email}"/>
-    <h:inputText id="site-admin-email-field" value="#{siteSessionBean.siteExtended.site.adminEmail}"/>
-
-    <h:outputText value="#{msg.site_user_can_register}"/>
-    <h:selectBooleanCheckbox id="site-register-allowed-field" value="#{siteSessionBean.siteExtended.site.registerAllowed}"/>
-
-    <h:outputText value="#{msg.site_css_is_dynamic}"/>
-    <h:selectBooleanCheckbox id="site-css-dynamic-field" value="#{siteSessionBean.siteExtended.site.cssDynamic}"/>
-
-    <h:outputText value="#{msg.site_css_file}"/>
-    <h:inputText id="site-css-file-field" value="#{siteSessionBean.siteExtended.site.cssFile}"/>
-
-</h:panelGrid>
-
-<h:panelGrid columns="1">
-    <h:outputText value="#{msg.site_properties}"/>
-    <h:inputTextarea id="site-properties-field" value="#{siteSessionBean.siteExtended.site.properties}"
-                     rows="10" cols="50"
-        />
 </h:panelGrid>
 
 <f:subview id="site-virtual-host-edit-subview">
