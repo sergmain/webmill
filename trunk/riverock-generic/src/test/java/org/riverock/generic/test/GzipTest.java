@@ -1,12 +1,14 @@
 /*
- * org.riverock.generic -- Database connectivity classes
- * 
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
- * 
- * Riverock -- The Open-source Java Development Community
+ * org.riverock.generic - Database connectivity classes, part of Webmill portal
+ * For more information about Webmill portal, please visit project site
+ * http://webmill.askmore.info
+ *
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
- * 
- * 
+ *
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,22 +22,17 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.generic.test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.GZIPInputStream;
 
 import org.apache.log4j.Logger;
-
-import org.riverock.generic.config.GenericConfig;
 
 /**
  * Author: mill

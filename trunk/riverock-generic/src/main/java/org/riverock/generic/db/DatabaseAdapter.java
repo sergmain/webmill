@@ -1,9 +1,11 @@
 /*
- * org.riverock.generic -- Database connectivity classes
+ * org.riverock.generic - Database connectivity classes, part of Webmill portal
+ * For more information about Webmill portal, please visit project site
+ * http://webmill.askmore.info
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,7 +22,6 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 
 package org.riverock.generic.db;
@@ -365,10 +366,7 @@ public abstract class DatabaseAdapter implements DbConnection {
             throw new DatabaseException(es);
         }
 
-        DatabaseAdapter adapater = DbConnectionProvider.openConnect(dc);
-        DatabaseStructureManager.checkDatabaseStructure(adapater, dc);
-
-        return adapater;
+        return DbConnectionProvider.openConnect(dc);
     }
 
     /**
@@ -388,8 +386,10 @@ public abstract class DatabaseAdapter implements DbConnection {
         }
 
         try {
-            db_.conn.close();
-            db_.conn = null;
+            if (db_.conn!=null) {
+                db_.conn.close();
+                db_.conn = null;
+            }
         }
         catch (Exception e) {
             // catch close error
