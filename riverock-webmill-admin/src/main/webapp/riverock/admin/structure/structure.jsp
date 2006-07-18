@@ -28,6 +28,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Structure" var="msg"/>
 <f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
 
 <style type="text/css">
@@ -40,42 +41,31 @@
         height: 24px;
     }
 
-    .site-button-action {
+    .structure-button-action {
         width: 150px;
-        height: 22px;
-    }
-
-    .site-sub-button-action {
-        width: 80px;
         height: 22px;
     }
 </style>
 
 <f:view>
 
-    <h:form>
+    <h:form id="company-form">
 
-        <f:subview id="site-top-actions-subview">
-            <jsp:include page="site-top-actions.jsp"/>
-        </f:subview>
+        <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
+                         styleClass="top-button-action"/>
+        <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
+                         styleClass="top-button-action"/>
+        <h:commandButton id="site-list-action" action="site" value="#{manager.site_button}"
+                         styleClass="top-button-action"/>
 
         <h:panelGrid columns="1">
 
-            <h:panelGrid columns="2">
-
-                <f:subview id="site-tree-subview">
-                    <jsp:include page="site-tree.jsp"/>
-                </f:subview>
-
-                <f:subview id="site-right-subview">
-                    <jsp:include page="site-right-panel.jsp"/>
-                </f:subview>
-
-            </h:panelGrid>
-
+            <h:commandButton value="#{msg.action_create_db_structure}"
+                             action="#{structureAction.createDbStructure}"
+                             styleClass="structure-button-action"
+                />
 
         </h:panelGrid>
-
 
     </h:form>
 </f:view>

@@ -1,5 +1,5 @@
 <%--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
   ~ For more information about Webmill portal, please visit project site
   ~ http://webmill.askmore.info
   ~
@@ -35,7 +35,7 @@
 
     .top-button-action {
         width: 120px;
-        height: 20px;
+        height: 24px;
     }
 
     .portal-user-button-action {
@@ -44,11 +44,11 @@
     }
 </style>
 
-<f:loadBundle basename="org.riverock.webmill.init.resource.PortalUser" var="msg"/>
-<f:loadBundle basename="org.riverock.webmill.init.resource.Manager" var="manager"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.PortalUser" var="msg"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
 
 <f:view>
-    <h:outputText value="#{manager.not_logged}" style="font-size:12px"/>
+
     <h:form id="add-portlet-name-form">
 
                 <f:subview id="portal-user-top-actions-subview">

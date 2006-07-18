@@ -23,17 +23,17 @@
   ~ License along with this library; if not, write to the Free Software
   ~ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
   -->
-<project name="Webmill portal initializer" default="jar_without_copy" basedir=".">
+<project name="Webmill portal admin" default="jar_without_copy" basedir=".">
 
-    <property name="Name" value="riverock-webmill-init"/>
+    <property name="Name" value="riverock-webmill-admin"/>
     <property name="portlet-context-name" value=""/>
 
     <property name="release-version" value="5.5.1"/>
     <property name="portal-release-version" value="5.5.1"/>
     <property name="name-portal-release-version" value="webmill-portal-${portal-release-version}"/>
 
-    <property name="build-release-name" value="webmill-${release-version}"/>
-    <property name="manifest-title-name" value="WebMill engine"/>
+    <property name="build-release-name" value="webmill-admin-${release-version}"/>
+    <property name="manifest-title-name" value="WebMill admin"/>
     <property name="manifest-vendor-name" value="WebMill. http://webmill.askmore.info"/>
 
     <import file="../riverock-include.xml"/>
@@ -112,6 +112,14 @@
             </classpath>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
+
+        <copy todir="${build.dest}" overwrite="true">
+            <fileset dir="${src.main.res.dir}">
+                <patternset>
+                    <include name="**/*.*"/>
+                </patternset>
+            </fileset>
+        </copy>
     </target>
 
     <patternset id="war.classes">
@@ -122,6 +130,7 @@
         <include name="${riverock-sql-parser.lib}"/>
         <include name="${riverock-generic.lib}"/>
         <include name="${riverock-common.lib}"/>
+        <include name="${riverock-webmill-admin.lib}"/>
 
         <include name="${commons-lang.lib}"/>
         <include name="${commons-logging.lib}"/>
@@ -136,7 +145,7 @@
         <include name="${myfaces-tomahawk.lib}"/>
     </patternset>
 
-    <property name="context.war.name" value="webmill-init.war"/>
+    <property name="context.war.name" value="webmill-admin.war"/>
 
     <target name="war" depends="jar" >
         <property name="war-file-name" value="${build.dir}/${context.war.name}"/>

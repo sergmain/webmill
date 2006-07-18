@@ -1,5 +1,5 @@
 <%--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
   ~ For more information about Webmill portal, please visit project site
   ~ http://webmill.askmore.info
   ~
@@ -28,7 +28,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-    <f:loadBundle basename="org.riverock.webmill.init.resource.PortalUser" var="msg"/>
+    <f:loadBundle basename="org.riverock.webmill.admin.resource.PortalUser" var="msg"/>
 
     <h:commandButton value="#{msg.portal_user_add_portal_user_action}" action="#{portalUserAction.addPortalUser}" style=" width : 106px; height : 22px;"/>
 

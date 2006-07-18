@@ -1,5 +1,5 @@
 /*
- * org.riverock.webmill.init - Webmill portal initializer web application
+ * org.riverock.webmill.admin - Webmill portal admin web application
  * For more information about Webmill portal, please visit project site
  * http://webmill.askmore.info
  *
@@ -22,13 +22,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.init.bean;
+package org.riverock.webmill.admin.bean;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import org.riverock.common.tools.StringTools;
-import org.riverock.webmill.init.utils.FacesTools;
+import org.riverock.webmill.admin.utils.FacesTools;
 
 /**
  * @author SergeMaslyukov

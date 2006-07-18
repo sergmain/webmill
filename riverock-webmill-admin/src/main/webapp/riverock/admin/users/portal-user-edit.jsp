@@ -1,5 +1,5 @@
 <%--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
   ~ For more information about Webmill portal, please visit project site
   ~ http://webmill.askmore.info
   ~
@@ -28,8 +28,8 @@
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
-<f:loadBundle basename="org.riverock.webmill.init.resource.PortalUser" var="msg"/>
-<f:loadBundle basename="org.riverock.webmill.init.resource.Manager" var="manager"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.PortalUser" var="msg"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Manager" var="manager"/>
 
 <style type="text/css">
     td {
@@ -38,7 +38,7 @@
 
     .top-button-action {
         width: 120px;
-        height: 20px;
+        height: 24px;
     }
 
     .portal-user-button-action {
@@ -47,7 +47,7 @@
     }
 </style>
 <f:view>
-    <h:outputText value="#{manager.not_logged}" style="font-size:12px"/>
+
     <h:form id="edit-portal-user-form">
 
                 <f:subview id="portal-user-top-actions-subview">

@@ -1,5 +1,5 @@
 /*
- * org.riverock.webmill.init - Webmill portal initializer web application
+ * org.riverock.webmill.admin - Webmill portal admin web application
  * For more information about Webmill portal, please visit project site
  * http://webmill.askmore.info
  *
@@ -22,13 +22,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.init.action;
+package org.riverock.webmill.admin.action;
 
 import java.io.Serializable;
 
-import org.riverock.webmill.init.CompanySessionBean;
-import org.riverock.webmill.init.dao.DaoFactory;
-import org.riverock.webmill.init.bean.CompanyBean;
+import org.riverock.webmill.admin.CompanySessionBean;
+import org.riverock.webmill.admin.dao.DaoFactory;
+import org.riverock.webmill.admin.bean.CompanyBean;
 
 /**
  * @author SergeMaslyukov
@@ -39,28 +39,28 @@ import org.riverock.webmill.init.bean.CompanyBean;
 public class CompanyAction implements Serializable {
     private static final long serialVersionUID = 2055005501L;
 
-    private CompanySessionBean sessionBean = null;
+    private CompanySessionBean companySessionBean = null;
 
     public CompanyAction() {
     }
 
-    public CompanySessionBean getSessionBean() {
-        return sessionBean;
+    public CompanySessionBean getCompanySessionBean() {
+        return companySessionBean;
     }
 
-    public void setSessionBean(CompanySessionBean sessionBean) {
-        this.sessionBean = sessionBean;
+    public void setCompanySessionBean(CompanySessionBean companySessionBean) {
+        this.companySessionBean = companySessionBean;
     }
 
     public String addCompany() {
-        sessionBean.setCompany( new CompanyBean() );
+        companySessionBean.setCompany( new CompanyBean() );
 
         return "company-add";
     }
 
     public String processAddCompany() {
-        Long companyId = DaoFactory.getWebmillInitDao().processAddCompany( sessionBean.getCompany() );
-        sessionBean.setCurrentCompanyId( companyId );
+        Long companyId = DaoFactory.getWebmillInitDao().processAddCompany( companySessionBean.getCompany() );
+        companySessionBean.setCurrentCompanyId( companyId );
         loadCurrentCompany();
 
         return "company";
@@ -72,7 +72,7 @@ public class CompanyAction implements Serializable {
     }
 
     public String processEditCompany() {
-        DaoFactory.getWebmillInitDao().processSaveCompany(sessionBean.getCompany() );
+        DaoFactory.getWebmillInitDao().processSaveCompany(companySessionBean.getCompany() );
 
         return "company";
     }
@@ -83,8 +83,8 @@ public class CompanyAction implements Serializable {
     }
 
     public String processDeleteCompany() {
-        DaoFactory.getWebmillInitDao().processDeleteCompany(sessionBean.getCompany());
-        sessionBean.setCompany( null );
+        DaoFactory.getWebmillInitDao().processDeleteCompany(companySessionBean.getCompany());
+        companySessionBean.setCompany( null );
         return "company";
     }
 
@@ -94,7 +94,7 @@ public class CompanyAction implements Serializable {
     }
 
     private void loadCurrentCompany() {
-        CompanyBean bean = DaoFactory.getWebmillInitDao().getCompany( sessionBean.getCurrentCompanyId() );
-        sessionBean.setCompany( bean );
+        CompanyBean bean = DaoFactory.getWebmillInitDao().getCompany( companySessionBean.getCurrentCompanyId() );
+        companySessionBean.setCompany( bean );
     }
 }

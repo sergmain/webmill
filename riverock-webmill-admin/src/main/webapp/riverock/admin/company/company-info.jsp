@@ -1,5 +1,5 @@
 <%--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
   ~ For more information about Webmill portal, please visit project site
   ~ http://webmill.askmore.info
   ~
@@ -27,7 +27,7 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 
-<f:loadBundle basename="org.riverock.webmill.init.resource.Company" var="msg"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Company" var="msg"/>
 
  <h:outputText value="Company info"/>
  <h:panelGrid columns="2">

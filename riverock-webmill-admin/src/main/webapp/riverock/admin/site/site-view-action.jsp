@@ -1,5 +1,5 @@
 <%--
-  ~ org.riverock.webmill.init - Webmill portal initializer web application
+  ~ org.riverock.webmill.admin - Webmill portal admin web application
   ~ For more information about Webmill portal, please visit project site
   ~ http://webmill.askmore.info
   ~
@@ -29,7 +29,7 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 
-<f:loadBundle basename="org.riverock.webmill.init.resource.Site" var="msg"/>
+<f:loadBundle basename="org.riverock.webmill.admin.resource.Site" var="msg"/>
 
 <f:subview id="site-site-extend-desc-subview" rendered="#{siteSessionBean.objectType == siteSessionBean.siteType}">
     <jsp:include page="site-description.jsp"/>
