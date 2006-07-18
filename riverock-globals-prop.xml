@@ -88,6 +88,8 @@
 
     <!--#riverock libraries-->
     <property name="riverock-webmill.lib" value="riverock-webmill-5.5.1.jar"/>
+    <property name="riverock-webmill-admin.lib" value="riverock-webmill-admin-5.5.1.jar"/>
+
     <property name="riverock-generic.lib" value="riverock-generic-4.0.4.jar"/>
     <property name="riverock-interfaces.lib" value="riverock-interfaces-1.0.3.jar"/>
     <property name="riverock-common.lib" value="riverock-common-1.2.1.jar"/>
