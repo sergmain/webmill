@@ -11,15 +11,22 @@ import java.util.StringTokenizer;
 public class StringTokenizerTest {
     public static void main(String[] args) {
         String s = "role1, role2, role3";
+        System.out.println("#1");
         StringTokenizer st = new StringTokenizer(s, ", ", false);
         while (st.hasMoreTokens()) {
             System.out.println(">"+st.nextToken()+"<");
 
         }
+        System.out.println("#2");
         st = new StringTokenizer(s, ",");
         while (st.hasMoreElements()) {
             System.out.println(">"+st.nextElement()+"<");
 
+        }
+        System.out.println("#3");
+        st = new StringTokenizer(s);
+        while (st.hasMoreElements()) {
+            System.out.println(">"+st.nextElement()+"<");
         }
     }
 }

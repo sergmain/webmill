@@ -53,7 +53,6 @@
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
-<!--
 	<Tables schema="TEST" name="WM_AUTH_RELATE_RIGHT_ARM" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_AUTH_RELATE_RIGHT_ARM" columnName="ID_RELATE_RIGHT" keySeq="1" pkName="ID_REL_RI_ARRA_PK"/>
@@ -75,7 +74,6 @@
 			<Deferrability ruleType="7" ruleName="java.sql.DatabaseMetaData.importedKeyNotDeferrable"/>
 		</ImportedKeys>
 	</Tables>
--->
 	<Tables schema="TEST" name="WM_AUTH_USER" type="TABLE">
 		<PrimaryKey>
 			<columns schemaName="TEST" tableName="WM_AUTH_USER" columnName="ID_AUTH_USER" keySeq="1" pkName="ID_AUTH_USR_AUN_PK"/>
@@ -880,7 +878,7 @@
 			<columns schemaName="TEST" tableName="WM_PORTAL_CATALOG_LANGUAGE" columnName="ID_SITE_CTX_LANG_CATALOG" keySeq="1" pkName="ID_LNGCAT_ISCLC_PK"/>
 		</PrimaryKey>
 		<Fields name="ID_SITE_CTX_LANG_CATALOG" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
-		<Fields name="CATALOG_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1" defaultValue="'DEFAULT'"/>
+		<Fields name="CATALOG_CODE" dataType="VARCHAR2" javaType="12" javaStringType="java.sql.Types.VARCHAR" size="40" nullable="1" defaultValue="DEFAULT"/>
 		<Fields name="IS_DEFAULT" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="1" decimalDigit="0" nullable="0" defaultValue="1"/>
 		<Fields name="ID_SITE_SUPPORT_LANGUAGE" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="5" decimalDigit="0" nullable="0"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_PORTAL_SITE_LANGUAGE" pkColumnName="ID_SITE_SUPPORT_LANGUAGE" fkSchemaName="TEST" fkTableName="WM_PORTAL_CATALOG_LANGUAGE" fkColumnName="ID_SITE_SUPPORT_LANGUAGE" keySeq="1" fkName="ID_SITE_SUPPERT_LANG_FK_SCLC" pkName="ID_SITE_SUPPORT_LANG_SSL_PK">
@@ -1202,8 +1200,6 @@ where   a04.is_root = 1
 	<Sequences name="SEQ_WM_PRICE_SHOP_PRECISION" minValue="1" maxValue="99999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="94"/>
 	<Sequences name="SEQ_WM_PORTAL_TEMPLATE_MEMBER" minValue="1" maxValue="9999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="15"/>
 	<Sequences name="SEQ_WM_PORTAL_CATALOG_LANGUAGE" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="238"/>
-	<Sequences name="SEQ_WM_PORTAL_XSLT_DATA" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="514"/>
-	<Sequences name="SEQ_WM_PORTAL_XSLT" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="13"/>
 	<Sequences name="SEQ_WM_PORTAL_TEMPLATE_DATA" minValue="1" maxValue="9999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="24"/>
 	<Sequences name="SEQ_WM_PORTAL_TEMPLATE" minValue="1" maxValue="999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="382"/>
 	<Sequences name="SEQ_WM_CASH_LIST" minValue="100" maxValue="9999999999999999999999999" incrementBy="1" isCycle="false" isOrder="false" cacheSize="0" lastNumber="101"/>

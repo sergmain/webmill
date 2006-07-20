@@ -610,8 +610,8 @@ public final class DatabaseManager {
 //                  'now', 'today',
                 "current_timestamp", "current_time", "current_date"
             };
-        for (int i = 0; i < check.length; i++) {
-            if (check[i].equals(s))
+        for (String aCheck : check) {
+            if (aCheck.equals(s))
                 return true;
         }
         return false;

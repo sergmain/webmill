@@ -27,6 +27,7 @@ package org.riverock.webmill.admin.dao;
 import java.util.List;
 
 import org.riverock.webmill.admin.bean.*;
+import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov
@@ -70,7 +71,7 @@ public interface WebmillAdminDao {
 
     Long createSite(SiteBean siteBean);
 
-    void createXslt(XsltBean xsltBean);
+    Long createXslt(XsltBean xsltBean);
 
     SiteLanguageBean getSiteLanguage(Long siteId, String locale);
 
@@ -78,7 +79,7 @@ public interface WebmillAdminDao {
 
     TemplateBean getTemplate(String templateName, Long siteLanguageId);
 
-    void createTemplate(TemplateBean templateBean);
+    Long createTemplate(TemplateBean templateBean);
 
     Long createPortletName(PortletNameBean portletNameBean);
 
@@ -86,7 +87,9 @@ public interface WebmillAdminDao {
 
     Long createCatalogItem(CatalogBean catalogBean);
 
-    void createVirtualHost(VirtualHostBean virtualHost);
+    Long createVirtualHost(VirtualHostBean virtualHost);
+
+    Long createVirtualHost(DatabaseAdapter adapter, VirtualHostBean virtualHost);
 
     XsltBean getCurrentXslt(Long siteLanguageId);
 
@@ -101,4 +104,8 @@ public interface WebmillAdminDao {
     PortletNameBean getPortletName(Long portletId);
 
     TemplateBean getTemplate(Long templateId, Long siteLanguageId);
+
+    PortletNameBean getPortletName(String portletName);
+
+    PortletNameBean createPortletName(String portletNameBean);
 }

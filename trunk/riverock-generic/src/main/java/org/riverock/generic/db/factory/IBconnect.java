@@ -37,11 +37,11 @@ import java.util.Locale;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.config.ConfigException;
 import org.riverock.common.tools.DateTools;
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -542,7 +542,7 @@ ALTER TABLE table
 
         String sql_ =
             "CREATE VIEW " + view.getName() +
-            " AS " + StringTools.replaceString(view.getText(), "||", "+");
+            " AS " + StringUtils.replace(view.getText(), "||", "+");
 
         Statement ps = null;
         try {

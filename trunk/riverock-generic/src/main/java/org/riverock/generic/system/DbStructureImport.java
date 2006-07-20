@@ -115,10 +115,12 @@ public class DbStructureImport {
                         }
                         catch (Exception e1) {
                             log.error("Error create view - " + e1.toString());
+                            throw e;
                         }
                     }
                     else {
-                        log.debug("Error create view - " + e.toString());
+                        log.debug("Error create view",e);
+                        throw e;
                     }
                 }
             }

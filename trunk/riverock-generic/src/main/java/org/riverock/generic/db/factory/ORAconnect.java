@@ -111,7 +111,8 @@ public class ORAconnect extends DatabaseAdapter {
                 isFirst = !isFirst;
 
             sql += "\n\"" + field.getName() + "\"";
-            switch (field.getJavaType().intValue()) {
+            int fieldType = field.getJavaType();
+            switch (fieldType) {
                 case Types.DECIMAL:
                 case Types.DOUBLE:
                 case Types.NUMERIC:
@@ -156,12 +157,20 @@ public class ORAconnect extends DatabaseAdapter {
             if (field.getDefaultValue() != null) {
                 String val = field.getDefaultValue().trim();
 
-//                if (!val.equalsIgnoreCase("null"))
-//                    val = "'"+val+"'";
-
-                if (DatabaseManager.checkDefaultTimestamp(val))
-                    val = "SYSDATE";
-
+                switch (fieldType) {
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        if (!val.equalsIgnoreCase("null")) {
+                            val = "'"+val+"'";
+                        }
+                        break;
+                    case Types.DATE:
+                    case Types.TIMESTAMP:
+                        if (DatabaseManager.checkDefaultTimestamp(val)) {
+                            val = "SYSDATE";
+                        }
+                        break;
+                }
                 sql += (" DEFAULT " + val);
             }
 
@@ -302,7 +311,8 @@ DEFERRABLE INITIALLY DEFERRED
 
         String sql = "alter table " + table.getName() + " add ( " + field.getName() + " ";
 
-        switch (field.getJavaType().intValue()) {
+        int fieldType = field.getJavaType();
+        switch (fieldType) {
             case Types.DECIMAL:
             case Types.DOUBLE:
             case Types.NUMERIC:
@@ -347,10 +357,20 @@ DEFERRABLE INITIALLY DEFERRED
         if (field.getDefaultValue() != null) {
             String val = field.getDefaultValue().trim();
 
-//                if (!val.equalsIgnoreCase("null"))
-//                    val = "'"+val+"'";
-            if (DatabaseManager.checkDefaultTimestamp(val))
-                val = "current_timestamp";
+            switch (fieldType) {
+                case Types.CHAR:
+                case Types.VARCHAR:
+                    if (!val.equalsIgnoreCase("null")) {
+                        val = "'"+val+"'";
+                    }
+                    break;
+                case Types.DATE:
+                case Types.TIMESTAMP:
+                    if (DatabaseManager.checkDefaultTimestamp(val)) {
+                        val = "SYSDATE";
+                    }
+                    break;
+            }
 
             sql += (" DEFAULT " + val);
         }
@@ -360,8 +380,9 @@ DEFERRABLE INITIALLY DEFERRED
         }
         sql += ")";
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("Oracle addColumn sql - " + sql);
+        }
 
         Statement ps = null;
         try {

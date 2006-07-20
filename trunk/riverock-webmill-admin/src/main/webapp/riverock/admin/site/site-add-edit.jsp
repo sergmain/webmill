@@ -44,7 +44,7 @@
     </h:panelGroup>
 
     <h:outputText value="#{msg.site_locale}"/>
-    <h:inputText id="site-locale-field" value="#{siteSessionBean.siteExtended.site.siteDefaultLocale}"/>
+    <h:inputText id="site-locale-field" value="#{siteSessionBean.siteExtended.locales}"/>
 
 </h:panelGrid>
 
