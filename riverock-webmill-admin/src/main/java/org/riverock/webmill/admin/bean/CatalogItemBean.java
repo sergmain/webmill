@@ -51,6 +51,15 @@ public class CatalogItemBean implements Serializable {
     private String portletRole;
     private List<CatalogItemBean> subCatalogItemList = null;
 
+    public CatalogItemBean(Long portletId, Long templateId, Long catalogLanguageId, Integer orderField, String keyMessage, String url) {
+        this.portletId = portletId;
+        this.templateId = templateId;
+        this.catalogLanguageId = catalogLanguageId;
+        this.orderField = orderField;
+        this.keyMessage = keyMessage;
+        this.url = url;
+    }
+
     public CatalogItemBean(CatalogItemBean catalogItemBean) {
         this.catalogId = catalogItemBean.getCatalogId();
         this.topCatalogId = catalogItemBean.getTopCatalogId();

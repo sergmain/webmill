@@ -25,7 +25,7 @@
  *
  */
 -->
-<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\riverock-generic\src-schema\xsd\riverock-generic-config.xsd">
+<WebmillConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\sandbox\riverock\trunk\riverock-generic\src\main\xsd\riverock-generic-config.xsd">
 	<GenericTempDir>c:\opt1\mill\temp</GenericTempDir>
 	<DTS>
 		<TimeZoneName>Europe/Moscow</TimeZoneName>

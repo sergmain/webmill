@@ -25,7 +25,9 @@
 package org.riverock.webmill.admin.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * @author SergeMaslyukov
@@ -40,6 +42,7 @@ public class SiteExtended implements Serializable {
     private List<String> virtualHosts = null;
     private CompanyBean company = null;
     private List<SiteLanguageBean> siteLanguage = null;
+    private String locales = null;
 
     public SiteExtended(){
     }
@@ -48,6 +51,23 @@ public class SiteExtended implements Serializable {
         this.site=siteBean;
         this.virtualHosts=virtualHosts;
         this.company=company;
+    }
+
+    public String getLocales() {
+        return locales;
+    }
+
+    public void setLocales(String locales) {
+        this.locales = locales;
+    }
+
+    public List<String> getLocaleList() {
+        List<String> localeList = new ArrayList<String>();
+        for (StringTokenizer stringTokenizer = new StringTokenizer(locales, ", "); stringTokenizer.hasMoreTokens();) {
+            String localeName = stringTokenizer.nextToken().trim();
+            localeList.add(localeName);
+        }
+        return localeList;
     }
 
     public List<SiteLanguageBean> getSiteLanguage() {

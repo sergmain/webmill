@@ -31,7 +31,7 @@
 	<DatabaseConnection name="JNDI">
             <Family>dbFamily</Family>
             <DataSourceType>JNDI</DataSourceType>
-            <DataSourceName>jdbc/webmill1</DataSourceName>
+            <DataSourceName>jdbc/webmill</DataSourceName>
 	</DatabaseConnection>
 </WebmillConfig>
 

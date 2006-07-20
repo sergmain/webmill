@@ -388,7 +388,7 @@ public final class CreateSchemaFromDb {
                     "        {\n"+
                     "             String errorString = \"You haven't right to process request in "+className+" class\";\n"+
                     (config.getIsUseLogging()
-                    ?"             cat.error( errorString );\n"
+                    ?"             log.error( errorString );\n"
                     :"")+
                     "             throw new AccessDeniedException( errorString );\n"+
                     "        }\n";
@@ -409,7 +409,7 @@ public final class CreateSchemaFromDb {
             "        catch (Exception e)\n"+
             "        {\n"+
             (config.getIsUseLogging()
-            ?"            cat.error(\"Exception create object\", e);\n"
+            ?"            log.error(\"Exception create object\", e);\n"
             :"");
 
         if (config.getPersistenceExceptionName()!=null &&
@@ -432,7 +432,7 @@ public final class CreateSchemaFromDb {
             "        catch (Error err)\n"+
             "        {\n"+
             (config.getIsUseLogging()
-            ?"            cat.error(\"Error create object\", err);\n"
+            ?"            log.error(\"Error create object\", err);\n"
             :"")+
             "            throw err;\n"+
             "        }\n"+
@@ -479,8 +479,8 @@ public final class CreateSchemaFromDb {
                         "                 String stringParam = ApplicationTools.decodeParameter( param );\n"+
                         "\n"+
                         (config.getIsUseLogging()
-                        ?"                 if (cat.isDebugEnabled())\n"+
-                        "                     cat.debug(\"Parameter is \"+stringParam);\n"
+                        ?"                 if (log.isDebugEnabled())\n"+
+                        "                     log.debug(\"Parameter is \"+stringParam);\n"
                         :"")+
                         "\n"+
                         "                 id = new Long( stringParam );\n"+
@@ -507,14 +507,14 @@ public final class CreateSchemaFromDb {
                     "         catch(Exception e)\n"+
                     "         {\n"+
                     (config.getIsUseLogging()
-                    ?"             cat.error(\"Exception "+className+".getInstance()\", e);\n"
+                    ?"             log.error(\"Exception "+className+".getInstance()\", e);\n"
                     :"")+
                     "             throw e;\n"+
                     "         }\n"+
                     "         catch(Error e)\n"+
                     "         {\n"+
                     (config.getIsUseLogging()
-                    ?"             cat.error(\"Error "+className+".getInstance()\", e);\n"
+                    ?"             log.error(\"Error "+className+".getInstance()\", e);\n"
                     :"")+
                     "             throw e;\n"+
                     "         }\n"+
@@ -589,13 +589,13 @@ public final class CreateSchemaFromDb {
                 DbFieldType field = table.getFields(i);
                 String capitalizeName = StringTools.capitalizeString(field.getName())+"()";
                 s +=
-                    "             cat.error(\"Item get"+capitalizeName+", value - \"+item.get"+capitalizeName+");\n";
+                    "             log.error(\"Item get"+capitalizeName+", value - \"+item.get"+capitalizeName+");\n";
             }
         }
         if (config.getIsUseLogging())
             s +=
-                "             cat.error(\"SQL \"+"+sqlName+");\n"+
-                "             cat.error(\"Exception insert data in db\", e);\n";
+                "             log.error(\"SQL \"+"+sqlName+");\n"+
+                "             log.error(\"Exception insert data in db\", e);\n";
 
         if (config.getPersistenceExceptionName()!=null &&
             config.getPersistenceExceptionName().getExceptionType().getType()==
@@ -640,8 +640,8 @@ public final class CreateSchemaFromDb {
             "                  String stringParam = ApplicationTools.decodeParameter( param );\n"+
             "\n"+
             (config.getIsUseLogging()
-            ?"                  if (cat.isDebugEnabled())\n"+
-            "                      cat.debug(\"Parameter is \"+stringParam);\n"
+            ?"                  if (log.isDebugEnabled())\n"+
+            "                      log.debug(\"Parameter is \"+stringParam);\n"
             :"")+
             "\n"+
             "                  org.xml.sax.InputSource inSrc = new org.xml.sax.InputSource( new java.io.StringReader(stringParam) );\n"+
@@ -666,7 +666,7 @@ public final class CreateSchemaFromDb {
             "          catch(Exception e)\n"+
             "          {\n"+
             (config.getIsUseLogging()
-            ?"              cat.error(\"Exception "+className+"process\", e);\n"
+            ?"              log.error(\"Exception "+className+"process\", e);\n"
             :"")+
             "              db_.rollback();\n"+
             "              throw e;\n"+
@@ -674,7 +674,7 @@ public final class CreateSchemaFromDb {
             "          catch(Error e)\n"+
             "          {\n"+
             (config.getIsUseLogging()
-            ?"              cat.error(\"Error "+className+"process\", e);\n"
+            ?"              log.error(\"Error "+className+"process\", e);\n"
             :"")+
             "              db_.rollback();\n"+
             "              throw e;\n"+
@@ -751,14 +751,14 @@ public final class CreateSchemaFromDb {
             "        catch(Exception e)\n"+
             "        {\n"+
             (config.getIsUseLogging()
-            ?"            cat.error(\"Exception "+className+".process()\", e);\n"
+            ?"            log.error(\"Exception "+className+".process()\", e);\n"
             :"")+
             "            throw e;\n"+
             "        }\n"+
             "        catch(Error e)\n"+
             "        {\n"+
             (config.getIsUseLogging()
-            ?"            cat.error(\"Error "+className+".process()\", e);\n"
+            ?"            log.error(\"Error "+className+".process()\", e);\n"
             :"")+
             "            throw e;\n"+
             "        }\n"+
@@ -913,7 +913,7 @@ public final class CreateSchemaFromDb {
                 "         catch(Exception e)\n"+
                 "         {\n"+
                 (config.getIsUseLogging()
-                ?"             cat.error(\"Exception in registerRelateClass, sql\\n\"+sql_, e);\n"
+                ?"             log.error(\"Exception in registerRelateClass, sql\\n\"+sql_, e);\n"
                 :"")+
                 "         }\n\n"
                 :"\n")+
@@ -924,7 +924,7 @@ public final class CreateSchemaFromDb {
                 "         catch(Exception e)\n"+
                 "         {\n"+
                 (config.getIsUseLogging()
-                ?"             cat.error(\"Exception in registerSql, sql\\n\"+sql_, e);\n"
+                ?"             log.error(\"Exception in registerSql, sql\\n\"+sql_, e);\n"
                 :"")+
                 "         }\n"+
                 "    }\n"+
@@ -1148,9 +1148,7 @@ public final class CreateSchemaFromDb {
     private static String getBeanFiller(String classNameItem, DbTableType table)
     {
         String s1 =
-            "    public static "+classNameItem+" fillBean(ResultSet rs)\n"+
-            "        throws java.sql.SQLException\n"+
-            "    {\n"+
+            "    public static "+classNameItem+" fillBean(ResultSet rs) throws java.sql.SQLException {\n"+
             "        "+classNameItem+" item = new "+classNameItem+"();\n"+
             "\n";
 
@@ -1250,16 +1248,20 @@ public final class CreateSchemaFromDb {
             );
     }
 
-    private static String getLongField(int i, DbFieldType field)
-    {
-        if (!declareLongVars)
-        {
-            declareVars +=
-                "                 long tempLong;\n";
+    private static String getLongField(int i, DbFieldType field) {
+        if (!declareLongVars) {
+            declareVars += "                 long tempLong;\n";
             declareLongVars = true;
         }
+        String s = "                 tempLong = rs.getLong( \""+field.getName()+"\");\n";
+
+        if (field.getNullable()==DatabaseMetaData.columnNoNulls) {
+            return
+                s +
+                "                 item.set"+StringTools.capitalizeString(field.getName())+"( tempLong );\n";
+        }
         return
-            "                 tempLong = rs.getLong( \""+field.getName()+"\");\n"+
+            s +
             "                 if (!rs.wasNull())\n"+
             (config.getIsUseObjectWrapper()
             ?"                     item.set"+StringTools.capitalizeString(field.getName())+"( new Long(tempLong) );\n"
@@ -1267,16 +1269,22 @@ public final class CreateSchemaFromDb {
             );
     }
 
-    private static String getIntField(int i, DbFieldType field)
-    {
-        if (!declareIntVars)
-        {
-            declareVars +=
-                "                 int tempInt;\n";
+    private static String getIntField(int i, DbFieldType field) {
+        if (!declareIntVars) {
+            declareVars += "                 int tempInt;\n";
             declareIntVars = true;
         }
+
+        String s = "                 tempInt = rs.getInt( \""+field.getName()+"\");\n";
+        if (field.getNullable()==DatabaseMetaData.columnNoNulls) {
+            return
+                s +
+                    "                 item.set"+StringTools.capitalizeString(field.getName())+"( tempInt );\n";
+
+        }
+
         return
-            "                 tempInt = rs.getInt( \""+field.getName()+"\");\n"+
+            s +
             "                 if (!rs.wasNull())\n"+
             (config.getIsUseObjectWrapper()
             ?"                     item.set"+StringTools.capitalizeString(field.getName())+"( new Integer( tempInt ));\n"
@@ -1306,11 +1314,17 @@ public final class CreateSchemaFromDb {
         if (!declareStringVars)
         {
             declareVars +=
-                "                 String tempString = null;\n";
+                "                 String tempString;\n";
             declareStringVars = true;
         }
+        String s = "                 tempString = rs.getString( \""+field.getName()+"\" );\n";
+        if (field.getNullable()==DatabaseMetaData.columnNoNulls) {
+            return
+                s +
+                    "                 item.set"+StringTools.capitalizeString(field.getName())+"( tempString );\n";
+        }
         return
-            "                 tempString = rs.getString( \""+field.getName()+"\" );\n"+
+            s +
             "                 if (!rs.wasNull())\n"+
             "                     item.set"+StringTools.capitalizeString(field.getName())+"( tempString );\n";
     }
@@ -1334,7 +1348,7 @@ public final class CreateSchemaFromDb {
         if (config.getIsUseLogging())
         {
             return
-                "    private static "+logger.getLogObjectClassName()+" cat = "+
+                "    private static "+logger.getLogObjectClassName()+" log = "+
                 logger.getLogFactoryMethod()+"(\""+className+"\" );\n";
         }
 
@@ -1798,8 +1812,8 @@ public final class CreateSchemaFromDb {
                 "            int countInsertRecord = ps.executeUpdate();\n"+
                 "\n" +
                 (config.getIsUseLogging()
-                ?"            if (cat.isDebugEnabled())\n"+
-                "                 cat.debug(\"Count of deleted records - \"+countInsertRecord);\n"
+                ?"            if (log.isDebugEnabled())\n"+
+                "                 log.debug(\"Count of deleted records - \"+countInsertRecord);\n"
                 :"")+
                 "\n"+
                 "            return countInsertRecord;\n"+
@@ -1808,7 +1822,7 @@ public final class CreateSchemaFromDb {
                 "        catch (Exception e)\n"+
                 "        {\n"+
                 (config.getIsUseLogging()
-                ?"            cat.error(\"Error delete from db\", e);\n"
+                ?"            log.error(\"Error delete from db\", e);\n"
                 :"");
 
             if (config.getPersistenceExceptionName()!=null &&
@@ -1854,8 +1868,8 @@ public final class CreateSchemaFromDb {
                 "                  String stringParam = ApplicationTools.decodeParameter( param );\n"+
                 "\n"+
                 (config.getIsUseLogging()
-                ?"                  if (cat.isDebugEnabled())\n"+
-                "                      cat.debug(\"Parameter is \"+stringParam);\n"
+                ?"                  if (log.isDebugEnabled())\n"+
+                "                      log.debug(\"Parameter is \"+stringParam);\n"
                 :"")+
                 "\n"+
                 "                  item = new Long (stringParam );\n"+
@@ -1880,7 +1894,7 @@ public final class CreateSchemaFromDb {
                 "          {\n"+
                 "              db_.rollback();\n"+
                 (config.getIsUseLogging()
-                ?"              cat.error(\"Exception in "+className+".process\", e);\n"
+                ?"              log.error(\"Exception in "+className+".process\", e);\n"
                 :"")+
                 "              throw e;\n"+
                 "          }\n"+
@@ -1888,7 +1902,7 @@ public final class CreateSchemaFromDb {
                 "          {\n"+
                 "              db_.rollback();\n"+
                 (config.getIsUseLogging()
-                ?"              cat.error(\"Error in "+className+".process\", e);\n"
+                ?"              log.error(\"Error in "+className+".process\", e);\n"
                 :"")+
                 "              throw e;\n"+
                 "          }\n"+
@@ -2014,8 +2028,8 @@ public final class CreateSchemaFromDb {
             "             int countInsertRecord = ps.executeUpdate();\n"+
             "\n" +
             (config.getIsUseLogging()
-            ?"             if (cat.isDebugEnabled())\n"+
-            "                 cat.debug(\"Count of deleted records - \"+countInsertRecord);\n"
+            ?"             if (log.isDebugEnabled())\n"+
+            "                 log.debug(\"Count of deleted records - \"+countInsertRecord);\n"
             :"")+
             "\n"+
             "             return countInsertRecord;\n"+
@@ -2040,7 +2054,7 @@ public final class CreateSchemaFromDb {
             "        try {\n"+
             "            return process(db_, ("+classNameItem+")item);\n"+
             "        } catch (ClassCastException e) {\n"+
-            "            cat.error(\"Exception cast to '"+classNameItem+"' type\", e);\n"+
+            "            log.error(\"Exception cast to '"+classNameItem+"' type\", e);\n"+
             "            throw new "+config.getPersistenceExceptionName().getPersistenceExceptionName()+"(\"Exception cast to '"+classNameItem+"' type\",e);\n"+
             "        }\n"+
             "    }\n" +
@@ -2124,8 +2138,8 @@ public final class CreateSchemaFromDb {
             "            int countDeletedtRecord = ps.executeUpdate();\n"+
             "\n" +
             (config.getIsUseLogging()
-            ?"            if (cat.isDebugEnabled())\n"+
-            "                 cat.debug(\"Count of deleted records - \"+countDeletedtRecord);\n"
+            ?"            if (log.isDebugEnabled())\n"+
+            "                 log.debug(\"Count of deleted records - \"+countDeletedtRecord);\n"
             :"")+
             "\n"+
             "            return countDeletedtRecord;\n"+
@@ -2133,7 +2147,7 @@ public final class CreateSchemaFromDb {
             "        }\n"+
             "        catch (Exception e) {\n"+
             (config.getIsUseLogging()
-            ?"             cat.error(\"Error delete from db\", e);\n"
+            ?"             log.error(\"Error delete from db\", e);\n"
             :"");
 
         if (config.getPersistenceExceptionName()!=null &&
@@ -2179,8 +2193,8 @@ public final class CreateSchemaFromDb {
             "                  String stringParam = ApplicationTools.decodeParameter( param );\n"+
             "\n"+
             (config.getIsUseLogging()
-            ?"                  if (cat.isDebugEnabled())\n"+
-            "                      cat.debug(\"Parameter is \"+stringParam);\n"
+            ?"                  if (log.isDebugEnabled())\n"+
+            "                      log.debug(\"Parameter is \"+stringParam);\n"
             :"")+
             "\n"+
             "                  item = new Long (stringParam );\n"+
@@ -2205,7 +2219,7 @@ public final class CreateSchemaFromDb {
             "          {\n"+
             "              db_.rollback();\n"+
             (config.getIsUseLogging()
-            ?"              cat.error(\"Exception in "+className+".process()\", e);\n"
+            ?"              log.error(\"Exception in "+className+".process()\", e);\n"
             :"")+
             "              throw e;\n"+
             "          }\n"+
@@ -2213,7 +2227,7 @@ public final class CreateSchemaFromDb {
             "          {\n"+
             "              db_.rollback();\n"+
             (config.getIsUseLogging()
-            ?"              cat.error(\"Error in "+className+".process()\", e);\n"
+            ?"              log.error(\"Error in "+className+".process()\", e);\n"
             :"")+
             "              throw e;\n"+
             "          }\n"+
@@ -2525,8 +2539,8 @@ public final class CreateSchemaFromDb {
             "             int countInsertRecord = ps.executeUpdate();\n"+
             "\n" +
             (config.getIsUseLogging()
-            ?"             if (cat.isDebugEnabled())\n"+
-            "                 cat.debug(\"Count of inserted records - \"+countInsertRecord);\n"
+            ?"             if (log.isDebugEnabled())\n"+
+            "                 log.debug(\"Count of inserted records - \"+countInsertRecord);\n"
             :"")+
             "\n"+
             "             return countInsertRecord;\n"+
@@ -2767,8 +2781,8 @@ public final class CreateSchemaFromDb {
             "             int countInsertRecord = ps.executeUpdate();\n"+
             "\n" +
             (config.getIsUseLogging()
-            ?"             if (cat.isDebugEnabled())\n"+
-            "                 cat.debug(\"Count of inserted records - \"+countInsertRecord);\n"
+            ?"             if (log.isDebugEnabled())\n"+
+            "                 log.debug(\"Count of inserted records - \"+countInsertRecord);\n"
             :"")+
             "\n"+
             "             return countInsertRecord;\n"+

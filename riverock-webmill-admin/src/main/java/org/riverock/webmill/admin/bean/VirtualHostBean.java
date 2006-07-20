@@ -35,6 +35,15 @@ public class VirtualHostBean {
     private Long siteId=null;
     private String host=null;
 
+    public VirtualHostBean() {
+    }
+
+    public VirtualHostBean(Long id, Long siteId, String host) {
+        this.id = id;
+        this.siteId = siteId;
+        this.host = host;
+    }
+
     public Long getId() {
         return id;
     }

@@ -46,6 +46,13 @@ public class TemplateBean implements Serializable {
     public TemplateBean(){
     }
 
+    public TemplateBean(Long siteLanguageId, String templateName, String templateData, boolean defaultDynamic) {
+        this.siteLanguageId = siteLanguageId;
+        this.templateName = templateName;
+        this.templateData = templateData;
+        isDefaultDynamic = defaultDynamic;
+    }
+
     public TemplateBean(TemplateBean template){
         this.templateId=template.getTemplateId();
         this.siteLanguageId=template.getSiteLanguageId();

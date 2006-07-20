@@ -75,8 +75,15 @@ public class DbConnectionProvider {
         }
 
         String className=null;
+        if (log.isDebugEnabled()) {
+            log.debug("dc.getFamily(): " +dc.getFamily());
+        }
         if (dc.getFamily()!=null) {
             className = familyClassMap.get(dc.getFamily());
+            if (log.isDebugEnabled()) {
+                log.debug("className: " + className);
+            }
+
             if (className==null) {
                 synchronized(syncObject) {
                     className = familyClassMap.get(dc.getFamily());

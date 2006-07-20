@@ -28,11 +28,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import org.riverock.common.config.PropertiesProvider;
 import org.riverock.common.tools.StringTools;
 import org.riverock.webmill.admin.bean.*;
 import org.riverock.webmill.admin.dao.DaoFactory;
@@ -47,152 +52,192 @@ import org.riverock.webmill.admin.dao.WebmillAdminDao;
 public class CreateSiteService {
     private final static Logger log = Logger.getLogger(CreateSiteService.class);
 
-    public static final String SITE_CONFIG_FILE = "/WEB-INF/webmill/static/site-config.xml";
+    public static final String SITE_CONFIG_DIR = "/WEB-INF/webmill/admin";
     private static final int MAX_BINARY_FILE_SIZE = 0x4000;
 
-    private static class VirtualHostSiteExist {
-        private VirtualHostSiteExist(boolean isValid) {
-            this.isValid = isValid;
-        }
+    public static Long createSite(SiteExtended siteExtended) {
 
-        private VirtualHostSiteExist(boolean isValid, Long siteId) {
-            this.isValid = isValid;
-            this.siteId = siteId;
-        }
+        try {
 
-        private boolean isValid;
-        private Long siteId;
-    }
+            WebmillAdminDao dao = DaoFactory.getWebmillAdminDao();
 
-    public static void createSite(SiteExtended siteExtended) {
-
-        WebmillAdminDao dao = DaoFactory.getWebmillAdminDao();
-
-        List<VirtualHostBean> hostFullList = dao.getVirtualHostsFullList();
-        if (log.isDebugEnabled()) {
-            log.debug("process site: " + siteExtended.getSite().getSiteName());
-            if (hostFullList != null && !hostFullList.isEmpty()) {
-                for (VirtualHostBean virtualHost : hostFullList) {
-                    log.debug("   virtual host: " + virtualHost.getHost() + ", siteId: " + virtualHost.getSiteId());
-                }
-            } else {
-                log.debug("   no virtual host for this site");
-            }
-        }
-
-        VirtualHostSiteExist b = checkVirtualHost(hostFullList, siteExtended.getVirtualHosts());
-        if (!b.isValid) {
-            log.error("Error in list of virtual hosts, name site config: " + siteExtended.getSite().getSiteName());
-        }
-
-        if (b.siteId == null) {
-            // create new company
-            CompanyBean company = dao.getCompany(siteExtended.getCompany().getId());
-            if (company == null) {
-                CompanyBean companyBean = createCompanyBean(siteExtended.getCompany());
-                companyBean.setId(dao.processAddCompany(companyBean));
-                company = companyBean;
-            }
-            SiteBean site = dao.getSite(siteExtended.getSite().getSiteName());
-            if (site == null) {
-                //Create new site
-                SiteBean siteBean = new SiteBean();
-                siteBean.setSiteName(siteExtended.getSite().getSiteName());
-                siteBean.setCssDynamic(false);
-                siteBean.setCssFile(siteExtended.getSite().getCssFile());
-                Locale locale = StringTools.getLocale(siteExtended.getSite().getSiteDefaultLocale());
-                siteBean.setDefCountry(locale.getCountry());
-                siteBean.setDefLanguage(locale.getLanguage());
-                siteBean.setDefVariant(locale.getVariant());
-                siteBean.setCompanyId(company.getId());
-                b.siteId = dao.createSite(siteBean);
-            } else {
-                b.siteId = site.getSiteId();
-            }
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("    siteId: " + b.siteId);
-        }
-        List<VirtualHostBean> hosts = dao.getVirtualHosts(b.siteId);
-        for (String hostName : siteExtended.getVirtualHosts()) {
-            boolean isNotExists = true;
-            for (VirtualHostBean host : hosts) {
-                if (hostName.equalsIgnoreCase(host.getHost())) {
-                    isNotExists = false;
-                    break;
-                }
-            }
-            if (isNotExists) {
-                VirtualHostBean virtualHost = new VirtualHostBean();
-                virtualHost.setHost(hostName.toLowerCase());
-                virtualHost.setSiteId(b.siteId);
-                dao.createVirtualHost(virtualHost);
-            }
-        }
-
-        for (SiteLanguageBean siteLanguageConfig : siteExtended.getSiteLanguage()) {
-            SiteLanguageBean siteLanguage = dao.getSiteLanguage(b.siteId, siteLanguageConfig.getLocale());
-            if (siteLanguage == null) {
-                SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
-                siteLanguageBean.setSiteId(b.siteId);
-                siteLanguageBean.setLocale(siteLanguageConfig.getLocale());
-                siteLanguageBean.setNameCustomLanguage(siteLanguageConfig.getLocale());
-                siteLanguageBean.setSiteLanguageId( dao.createSiteLanguage(siteLanguageBean) );
-                siteLanguage = siteLanguageBean;
-            }
-            for (TemplateBean templateItem : siteLanguageConfig.getTemplates()) {
-                TemplateBean template = dao.getTemplate(templateItem.getTemplateName(), siteLanguage.getSiteLanguageId());
-                if (template == null) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("template");
-                        log.debug("    name: " + templateItem.getTemplateName());
-                        log.debug("    id: " + templateItem.getTemplateId());
-                        log.debug("    lang: " + templateItem.getTemplateLanguage());
-                        log.debug("    siteLangId: " + templateItem.getSiteLanguageId());
-                        log.debug("    isDefaultDynamic: " + templateItem.isDefaultDynamic());
+            List<VirtualHostBean> hostFullList = dao.getVirtualHostsFullList();
+            if (log.isDebugEnabled()) {
+                log.debug("process site: " + siteExtended.getSite().getSiteName());
+                if (hostFullList != null && !hostFullList.isEmpty()) {
+                    for (VirtualHostBean virtualHost : hostFullList) {
+                        log.debug("   virtual host: " + virtualHost.getHost() + ", siteId: " + virtualHost.getSiteId());
                     }
-                    dao.createTemplate(templateItem);
+                } else {
+                    log.debug("   no virtual host for this site");
                 }
             }
-            XsltBean xslt = siteLanguageConfig.getXslt();
-            xslt.setCurrent(true);
-            DaoFactory.getWebmillAdminDao().createXslt(xslt);
 
-            for (CatalogLanguageBean catalogLanguage : siteLanguageConfig.getCatalogLanguages()) {
-                CatalogLanguageBean catalogLanguageItem =
-                    dao.getCatalogLanguageItem(catalogLanguage.getCatalogCode(), siteLanguage.getSiteLanguageId());
+            //Create new site
+            SiteBean siteBean = new SiteBean();
+            siteBean.setSiteName(siteExtended.getSite().getSiteName());
+            siteBean.setCssDynamic(false);
+            siteBean.setCssFile("/default.css");
+            // default locale allways 'en'
+            Locale locale = Locale.ENGLISH;
+            siteBean.setDefCountry(locale.getCountry());
+            siteBean.setDefLanguage(locale.getLanguage());
+            siteBean.setDefVariant(locale.getVariant());
+            siteBean.setCompanyId(siteExtended.getSite().getCompanyId());
+            Long siteId = dao.createSite(siteBean);
 
-                if (catalogLanguageItem == null) {
-                    catalogLanguage.setSiteLanguageId(siteLanguage.getSiteLanguageId());
-                    catalogLanguage.setCatalogLanguageId( dao.createCatalogLanguageItem(catalogLanguage) );
-                }
-
-                processMenu(siteLanguage, catalogLanguage, catalogLanguage.getCatalogItems(), 0L);
+            if (log.isDebugEnabled()) {
+                log.debug("    siteId: " + siteId);
             }
+            List<VirtualHostBean> hosts = dao.getVirtualHosts(siteId);
+            for (String hostName : siteExtended.getVirtualHosts()) {
+                boolean isNotExists = true;
+                for (VirtualHostBean host : hosts) {
+                    if (hostName.equalsIgnoreCase(host.getHost())) {
+                        isNotExists = false;
+                        break;
+                    }
+                }
+                if (isNotExists) {
+                    VirtualHostBean virtualHost = new VirtualHostBean();
+                    virtualHost.setHost(hostName.toLowerCase());
+                    virtualHost.setSiteId(siteId);
+                    dao.createVirtualHost(virtualHost);
+                }
+            }
+
+            boolean isEnglishLocale=false;
+            for (String localeNameTemp : siteExtended.getLocaleList()) {
+                Locale localeTemp = StringTools.getLocale(localeNameTemp);
+                String localeName = localeTemp.toString();
+                if (localeName.equalsIgnoreCase(Locale.ENGLISH.toString())) {
+                    isEnglishLocale=true;
+                }
+                SiteLanguageBean siteLanguage = new SiteLanguageBean(localeName, localeName);
+                createSiteLanguage(dao, siteId, siteLanguage);
+            }
+            if (!isEnglishLocale) {
+                SiteLanguageBean siteLanguage = new SiteLanguageBean(Locale.ENGLISH.toString(), Locale.ENGLISH.toString());
+                createSiteLanguage(dao, siteId, siteLanguage);
+            }
+
+            return siteId;
+        }
+        catch (IOException e) {
+            String es = "Error create new site";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
         }
     }
 
-    private static VirtualHostSiteExist checkVirtualHost(List<VirtualHostBean> hostFullList, List hosts) {
-        if (hosts == null || hosts.isEmpty()) {
-            return new VirtualHostSiteExist(true);
+    private static void createSiteLanguage(WebmillAdminDao dao, Long siteId, SiteLanguageBean siteLanguageConfig) throws IOException {
+        SiteLanguageBean siteLanguage = dao.getSiteLanguage(siteId, siteLanguageConfig.getLocale());
+        if (siteLanguage == null) {
+            SiteLanguageBean siteLanguageBean = new SiteLanguageBean();
+            siteLanguageBean.setSiteId(siteId);
+            siteLanguageBean.setLocale(siteLanguageConfig.getLocale());
+            siteLanguageBean.setNameCustomLanguage(siteLanguageConfig.getLocale());
+            siteLanguageBean.setSiteLanguageId( dao.createSiteLanguage(siteLanguageBean) );
+            siteLanguage = siteLanguageBean;
         }
 
-        Long siteId = null;
-        for (Object objHost : hosts) {
-            String hostName = (String) objHost;
-            for (VirtualHostBean host : hostFullList) {
-                if (hostName.equalsIgnoreCase(host.getHost())) {
-                    if (siteId == null) {
-                        siteId = host.getSiteId();
-                    }
-                    if (!siteId.equals(host.getSiteId())) {
-                        return new VirtualHostSiteExist(false);
-                    }
-                    break;
+        List<TemplateBean> templates = new ArrayList<TemplateBean>();
+        siteLanguage.setTemplates(templates);
+        String indexTemplateFile =
+            PropertiesProvider.getApplicationPath()+
+                SITE_CONFIG_DIR+ File.separatorChar+
+                "index-template.xml";
+        String indexTemplate = readBinaryFile(indexTemplateFile);
+        TemplateBean indexTemplateBean = new TemplateBean(siteLanguage.getSiteLanguageId(), "index", indexTemplate, false);
+        templates.add( indexTemplateBean);
+
+        String dynamicTemplateFile =
+            PropertiesProvider.getApplicationPath()+
+                SITE_CONFIG_DIR+File.separatorChar+
+                "dynamic-template.xml";
+        String dynamicTemplate = readBinaryFile(dynamicTemplateFile);
+        TemplateBean dynamicTemplateBean = new TemplateBean(siteLanguage.getSiteLanguageId(), "dynamic", dynamicTemplate, true);
+        templates.add( dynamicTemplateBean);
+
+        for (TemplateBean templateItem : templates) {
+            TemplateBean template = dao.getTemplate(templateItem.getTemplateName(), siteLanguage.getSiteLanguageId());
+            if (template == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("template");
+                    log.debug("    name: " + templateItem.getTemplateName());
+                    log.debug("    id: " + templateItem.getTemplateId());
+                    log.debug("    lang: " + templateItem.getTemplateLanguage());
+                    log.debug("    siteLangId: " + templateItem.getSiteLanguageId());
+                    log.debug("    isDefaultDynamic: " + templateItem.isDefaultDynamic());
                 }
+                templateItem.setTemplateId(dao.createTemplate(templateItem));
             }
         }
-        return new VirtualHostSiteExist(true, siteId);
+        String xsltFile =
+            PropertiesProvider.getApplicationPath()+
+                SITE_CONFIG_DIR+File.separatorChar+
+                "default.xslt";
+        String xsltContent = readBinaryFile(xsltFile);
+
+        XsltBean xslt = new XsltBean();
+        xslt.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+        xslt.setCurrent(true);
+        xslt.setName("Default XSLT. "+new Date());
+        xslt.setXsltData(xsltContent);
+        DaoFactory.getWebmillAdminDao().createXslt(xslt);
+
+        String catalogCode = "MAIN";
+        CatalogLanguageBean catalogLanguageItem = dao.getCatalogLanguageItem(catalogCode, siteLanguage.getSiteLanguageId());
+        if (catalogLanguageItem == null) {
+            catalogLanguageItem = new CatalogLanguageBean();
+            catalogLanguageItem.setDefault(true);
+            catalogLanguageItem.setCatalogCode(catalogCode);
+            catalogLanguageItem.setSiteLanguageId(siteLanguage.getSiteLanguageId());
+            catalogLanguageItem.setCatalogLanguageId( dao.createCatalogLanguageItem(catalogLanguageItem) );
+        }
+
+        Map<String, Long> portlets = new HashMap<String, Long>();
+        String millIndexPortlet = "mill.index";
+        String webmillPortalManagerPortlet = "webmill.portal-manager";
+        String millLoginPortlet = "mill.login";
+        String millLogoutPortlet = "mill.logout";
+
+        initPortletName(dao, millIndexPortlet, portlets);
+        initPortletName(dao, webmillPortalManagerPortlet, portlets);
+        initPortletName(dao, millLoginPortlet, portlets);
+        initPortletName(dao, millLogoutPortlet, portlets);
+
+        List<CatalogItemBean> menuList = new ArrayList<CatalogItemBean>();
+        menuList.add(
+            new CatalogItemBean(
+                portlets.get(millIndexPortlet), indexTemplateBean.getTemplateId(), catalogLanguageItem.getCatalogLanguageId(), 10, "Homepage", "homepage"
+            )
+        );
+        menuList.add(
+            new CatalogItemBean(
+                portlets.get(webmillPortalManagerPortlet), dynamicTemplateBean.getTemplateId(), catalogLanguageItem.getCatalogLanguageId(), 210, "Webmill manager", "webmill-manager"
+            )
+        );
+        menuList.add(
+            new CatalogItemBean(
+                portlets.get(millLoginPortlet), dynamicTemplateBean.getTemplateId(), catalogLanguageItem.getCatalogLanguageId(), 30, "Login", "login"
+            )
+        );
+        menuList.add(
+            new CatalogItemBean(
+                portlets.get(millLogoutPortlet), dynamicTemplateBean.getTemplateId(), catalogLanguageItem.getCatalogLanguageId(), 40, "Logout", "logout"
+            )
+        );
+        processMenu(siteLanguage, catalogLanguageItem, menuList, 0L);
+    }
+
+    private static void initPortletName(WebmillAdminDao dao, String millIndexPortlet, Map<String, Long> portlets) {
+        PortletNameBean portletNameBean;
+        portletNameBean = dao.getPortletName(millIndexPortlet);
+        if (portletNameBean==null) {
+            portletNameBean = dao.createPortletName(millIndexPortlet);
+        }
+        portlets.put( millIndexPortlet,  portletNameBean.getPortletId());
     }
 
     private static void processMenu(SiteLanguageBean siteLanguage, CatalogLanguageBean catalogLanguageItem, List<CatalogItemBean> menuList, Long topCatalogItemId) {
@@ -238,7 +283,7 @@ public class CreateSiteService {
                 catalogBean.setTemplateId(template.getTemplateId());
                 catalogBean.setKeyMessage(menuItem.getKeyMessage());
                 catalogBean.setUrl(menuItem.getUrl());
-                catalogBean.setOrderField(orderFiled++);
+                catalogBean.setOrderField(menuItem.getOrderField());
 
                 catalogItemId = DaoFactory.getWebmillAdminDao().createCatalogItem(catalogBean);
             }

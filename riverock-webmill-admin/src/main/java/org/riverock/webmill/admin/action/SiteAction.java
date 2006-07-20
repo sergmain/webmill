@@ -32,11 +32,12 @@ import javax.faces.event.ActionEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.admin.SiteSessionBean;
 import org.riverock.webmill.admin.SiteDataProvider;
-import org.riverock.webmill.admin.dao.DaoFactory;
-import org.riverock.webmill.admin.bean.SiteExtended;
+import org.riverock.webmill.admin.SiteSessionBean;
 import org.riverock.webmill.admin.bean.SiteBean;
+import org.riverock.webmill.admin.bean.SiteExtended;
+import org.riverock.webmill.admin.dao.DaoFactory;
+import org.riverock.webmill.admin.service.CreateSiteService;
 
 /**
  * @author SergeMaslyukov
@@ -45,7 +46,7 @@ import org.riverock.webmill.admin.bean.SiteBean;
  *         $Id: PortalUserSessionBean.java 753 2006-07-10 07:53:57Z serg_main $
  */
 public class SiteAction implements Serializable {
-    private final static Logger log = Logger.getLogger( SiteAction.class );
+    private final static Logger log = Logger.getLogger(SiteAction.class);
     private static final long serialVersionUID = 2057005511L;
 
     private SiteSessionBean siteSessionBean = null;
@@ -58,26 +59,27 @@ public class SiteAction implements Serializable {
         this.siteDataProvider = dataProvider;
     }
 
-    public void setSiteSessionBean( SiteSessionBean siteSessionBean) {
+    public void setSiteSessionBean(SiteSessionBean siteSessionBean) {
         this.siteSessionBean = siteSessionBean;
     }
 
     public String selectSite(ActionEvent event) {
-        log.debug( "Select site action." );
+        log.debug("Select site action.");
         loadCurrentSite();
 
         return "site";
     }
 
 // Add actions
+
     public String addSiteAction() {
-        log.debug( "Add site action." );
+        log.debug("Add site action.");
 
         if (log.isDebugEnabled()) {
             log.debug("site: " + siteSessionBean.getSiteExtended());
             log.debug("    objectType: " + siteSessionBean.getObjectType());
             log.debug("    objectId: " + siteSessionBean.getId());
-            if (siteSessionBean.getSiteExtended()!=null) {
+            if (siteSessionBean.getSiteExtended() != null) {
                 log.debug("    language: " + siteSessionBean.getSiteExtended().getSite().getDefLanguage());
                 log.debug("    country: " + siteSessionBean.getSiteExtended().getSite().getDefCountry());
                 log.debug("    variant: " + siteSessionBean.getSiteExtended().getSite().getDefVariant());
@@ -85,31 +87,32 @@ public class SiteAction implements Serializable {
             }
         }
 
-        SiteExtended siteExtended = new SiteExtended( new SiteBean(), new ArrayList<String>(), null );
+        SiteExtended siteExtended = new SiteExtended(new SiteBean(), new ArrayList<String>(), null);
         siteSessionBean.setSiteExtended(siteExtended);
 
         return "site-add";
     }
 
     public String processAddSiteAction() {
-        log.debug( "Procss add site action." );
+        log.debug("Procss add site action.");
 
+        SiteExtended siteExtended = siteSessionBean.getSiteExtended();
         if (log.isDebugEnabled()) {
-            log.debug("site: " + siteSessionBean.getSiteExtended());
-            if (siteSessionBean.getSiteExtended()!=null) {
-                log.debug("    language: " + siteSessionBean.getSiteExtended().getSite().getDefLanguage());
-                log.debug("    country: " + siteSessionBean.getSiteExtended().getSite().getDefCountry());
-                log.debug("    variant: " + siteSessionBean.getSiteExtended().getSite().getDefVariant());
-                log.debug("    companyId: " + siteSessionBean.getSiteExtended().getSite().getCompanyId());
+            log.debug("site: " + siteExtended);
+            if (siteExtended != null) {
+                log.debug("    language: " + siteExtended.getSite().getDefLanguage());
+                log.debug("    country: " + siteExtended.getSite().getDefCountry());
+                log.debug("    variant: " + siteExtended.getSite().getDefVariant());
+                log.debug("    companyId: " + siteExtended.getSite().getCompanyId());
                 log.debug("    objectType: " + siteSessionBean.getObjectType());
                 log.debug("    objectId: " + siteSessionBean.getId());
             }
         }
 
-        if( siteSessionBean.getSiteExtended()!=null ) {
-            Long siteId = DaoFactory.getWebmillAdminDao().createSiteWithVirtualHost(
-                siteSessionBean.getSiteExtended().getSite(), siteSessionBean.getSiteExtended().getVirtualHosts()
-            );
+        if (siteExtended != null) {
+
+            Long siteId = CreateSiteService.createSite(siteExtended);
+
             siteSessionBean.setSiteExtended(null);
             siteSessionBean.setId(siteId);
             siteDataProvider.clearSite();
@@ -120,7 +123,7 @@ public class SiteAction implements Serializable {
     }
 
     public String cancelAddSiteAction() {
-        log.debug( "Cancel add site action." );
+        log.debug("Cancel add site action.");
 
         siteSessionBean.setSiteExtended(null);
         siteDataProvider.clearSite();
@@ -129,16 +132,17 @@ public class SiteAction implements Serializable {
     }
 
 // Edit actions
+
     public String editSiteAction() {
-        log.debug( "Edit site action." );
+        log.debug("Edit site action.");
 
         return "site-edit";
     }
 
     public String processEditSiteAction() {
-        log.debug( "Save changes site action." );
+        log.debug("Save changes site action.");
 
-        if( siteSessionBean.getSiteExtended()!=null ) {
+        if (siteSessionBean.getSiteExtended() != null) {
             DaoFactory.getWebmillAdminDao().updateSiteWithVirtualHost(
                 siteSessionBean.getSiteExtended().getSite(), siteSessionBean.getSiteExtended().getVirtualHosts()
             );
@@ -150,31 +154,32 @@ public class SiteAction implements Serializable {
     }
 
     public String cancelEditSiteAction() {
-        log.debug( "Cancel edit site action." );
+        log.debug("Cancel edit site action.");
 
         return "site";
     }
 
 // Delete actions
-    public String deleteSiteAction() {
-        log.debug( "delete site action." );
 
-        siteSessionBean.setSiteExtended( siteDataProvider.getSiteExtended() );
+    public String deleteSiteAction() {
+        log.debug("delete site action.");
+
+        siteSessionBean.setSiteExtended(siteDataProvider.getSiteExtended());
 
         return "site-delete";
     }
 
     public String cancelDeleteSiteAction() {
-        log.debug( "Cancel delete holding action." );
+        log.debug("Cancel delete holding action.");
 
         return "site";
     }
 
     public String processDeleteSiteAction() {
-        log.info( "Process delete site action." );
-        if( siteSessionBean.getSiteExtended() != null ) {
+        log.info("Process delete site action.");
+        if (siteSessionBean.getSiteExtended() != null) {
             DaoFactory.getWebmillAdminDao().deleteSite(siteSessionBean.getSiteExtended().getSite().getSiteId());
-            siteSessionBean.setSiteExtended( null );
+            siteSessionBean.setSiteExtended(null);
             siteSessionBean.setId(null);
             siteSessionBean.setObjectType(SiteSessionBean.UNKNOWN_TYPE);
             siteDataProvider.clearSite();
@@ -184,17 +189,18 @@ public class SiteAction implements Serializable {
     }
 
     public String changeSite() {
-        log.info( "Change site action." );
+        log.info("Change site action.");
         return "site";
     }
 
 // virtual host actions
-    public void deleteVirtualHostActionListener( ActionEvent event ) {
-        log.debug( "Delete virtual host action." );
+
+    public void deleteVirtualHostActionListener(ActionEvent event) {
+        log.debug("Delete virtual host action.");
 
         String host = siteSessionBean.getCurrentVirtualHost();
         if (log.isDebugEnabled()) {
-            log.debug( "delete virtual host: " + host );
+            log.debug("delete virtual host: " + host);
         }
 
         if (StringUtils.isBlank(host)) {
@@ -206,24 +212,25 @@ public class SiteAction implements Serializable {
     }
 
     public void addVirtualHostAction() {
-        log.debug( "Add virtual host action." );
+        log.debug("Add virtual host action.");
 
         String newHost = siteSessionBean.getNewVirtualHost();
 
         if (log.isDebugEnabled()) {
-            log.debug( "New virtual host: " + newHost );
+            log.debug("New virtual host: " + newHost);
         }
 
         if (StringUtils.isBlank(newHost)) {
             return;
         }
 
-        siteSessionBean.getSiteExtended().getVirtualHosts().add( newHost.toLowerCase() );
+        siteSessionBean.getSiteExtended().getVirtualHosts().add(newHost.toLowerCase());
         siteSessionBean.setNewVirtualHost(null);
     }
 
 // private methods
+
     private void loadCurrentSite() {
-        siteSessionBean.setSiteExtended( siteDataProvider.getSiteExtended() );
+        siteSessionBean.setSiteExtended(siteDataProvider.getSiteExtended());
     }
 }

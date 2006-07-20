@@ -36,10 +36,9 @@ import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
-import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
@@ -59,6 +58,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
  * <p/>
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class MYSQLconnect extends DatabaseAdapter {
     private final static Logger log = Logger.getLogger(MYSQLconnect.class);
 
@@ -90,7 +90,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
         return 1000000;
     }
 
-    protected DataSource createDataSource() throws SQLException {
+    protected DataSource createDataSource() {
         return null;
     }
 
@@ -110,8 +110,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
         return false;
     }
 
-    public String getClobField(ResultSet rs, String nameField)
-        throws SQLException {
+    public String getClobField(ResultSet rs, String nameField) {
         return getClobField(rs, nameField, 20000);
     }
 
@@ -136,11 +135,12 @@ public final class MYSQLconnect extends DatabaseAdapter {
                 isFirst = !isFirst;
 
             sql += "\n" + field.getName() + "";
-            switch (field.getJavaType().intValue()) {
+            int fieldType = field.getJavaType();
+            switch (fieldType) {
 
                 case Types.NUMERIC:
                 case Types.DECIMAL:
-                    if (field.getDecimalDigit() == null || field.getDecimalDigit().intValue() == 0)
+                    if (field.getDecimalDigit() == null || field.getDecimalDigit() == 0)
                         sql += " DECIMAL";
                     else
                         sql += " DECIMAL(" + field.getSize() + "," + field.getDecimalDigit() + ")";
@@ -152,7 +152,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
                 case Types.DOUBLE:
                     sql += " DOUBLE";
-                    if (field.getDecimalDigit().intValue() == 0)
+                    if (field.getDecimalDigit() == null || field.getDecimalDigit() == 0)
                         sql += " DOUBLE";
                     else
                         sql += " DOUBLE(" + field.getSize() + "," + field.getDecimalDigit() + ")";
@@ -163,7 +163,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
                     break;
 
                 case Types.VARCHAR:
-                    if (field.getSize().intValue() < 256)
+                    if (field.getSize() < 256)
                         sql += " VARCHAR(" + field.getSize() + ")";
                     else
                         sql += " TEXT";
@@ -195,30 +195,31 @@ public final class MYSQLconnect extends DatabaseAdapter {
                 String val = field.getDefaultValue().trim();
 
                 if (StringUtils.isNotBlank(val)) {
-                    switch (field.getJavaType().intValue()) {
+                    switch (fieldType) {
+                        case Types.CHAR:
                         case Types.VARCHAR:
+                            val = "'" + val + "'";
                             break;
                         case Types.TIMESTAMP:
                         case Types.DATE:
                             if (DatabaseManager.checkDefaultTimestamp(val))
-                                val = "CURRENT_TIMESTAMP";
+                                val = "'CURRENT_TIMESTAMP'";
 
                             break;
                         default:
                     }
-                    val = "'" + val + "'";
                     sql += (" DEFAULT " + val);
                 }
             }
 
-            if (field.getNullable().intValue() == DatabaseMetaData.columnNoNulls) {
+            if (field.getNullable() == DatabaseMetaData.columnNoNulls) {
                 sql += " NOT NULL ";
             }
         }
         if (table.getPrimaryKey() != null && table.getPrimaryKey().getColumnsCount() != 0) {
             DbPrimaryKeyType pk = table.getPrimaryKey();
 
-            String namePk = pk.getColumns(0).getPkName();
+//            String namePk = pk.getColumns(0).getPkName();
 
             // in MySQL all primary keys named as 'PRIMARY'
             sql += ",\n PRIMARY KEY (\n";
@@ -230,12 +231,12 @@ public final class MYSQLconnect extends DatabaseAdapter {
                 int seqTemp = Integer.MAX_VALUE;
                 for (int k = 0; k < pk.getColumnsCount(); k++) {
                     DbPrimaryKeyColumnType columnTemp = pk.getColumns(k);
-                    if (seq < columnTemp.getKeySeq().intValue() && columnTemp.getKeySeq().intValue() < seqTemp) {
-                        seqTemp = columnTemp.getKeySeq().intValue();
+                    if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp) {
+                        seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
                     }
                 }
-                seq = column.getKeySeq().intValue();
+                seq = column.getKeySeq();
 
                 if (!isFirst)
                     sql += ",";
@@ -263,7 +264,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
             throw e;
         }
         finally {
-            org.riverock.generic.db.DatabaseManager.close(ps);
+            DatabaseManager.close(ps);
             ps = null;
         }
 
@@ -329,7 +330,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
             throw e;
         }
         finally {
-            org.riverock.generic.db.DatabaseManager.close(ps);
+            DatabaseManager.close(ps);
             ps = null;
         }
     }
@@ -337,7 +338,8 @@ public final class MYSQLconnect extends DatabaseAdapter {
     public void addColumn(DbTableType table, DbFieldType field) throws Exception {
         String sql = "alter table " + table.getName() + " add " + field.getName() + " ";
 
-        switch (field.getJavaType().intValue()) {
+        int fieldType = field.getJavaType();
+        switch (fieldType) {
 
             case Types.NUMERIC:
             case Types.DECIMAL:
@@ -357,7 +359,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
                 break;
 
             case Types.VARCHAR:
-                if (field.getSize().intValue() < 256)
+                if (field.getSize() < 256)
                     sql += " VARCHAR(" + field.getSize() + ")";
                 else
                     sql += " TEXT";
@@ -386,15 +388,25 @@ public final class MYSQLconnect extends DatabaseAdapter {
         if (field.getDefaultValue() != null) {
             String val = field.getDefaultValue().trim();
 
-//                if (!val.equalsIgnoreCase("null"))
-//                    val = "'"+val+"'";
-            if (DatabaseManager.checkDefaultTimestamp(val))
-                val = "'CURRENT_TIMESTAMP'";
+            if (StringUtils.isNotBlank(val)) {
+                switch (fieldType) {
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        val = "'" + val + "'";
+                        break;
+                    case Types.TIMESTAMP:
+                    case Types.DATE:
+                        if (DatabaseManager.checkDefaultTimestamp(val))
+                            val = "'CURRENT_TIMESTAMP'";
 
-            sql += (" DEFAULT " + val);
+                        break;
+                    default:
+                }
+                sql += (" DEFAULT " + val);
+            }
         }
 
-        if (field.getNullable().intValue() == DatabaseMetaData.columnNoNulls) {
+        if (field.getNullable() == DatabaseMetaData.columnNoNulls) {
             sql += " NOT NULL ";
         }
 
@@ -405,13 +417,12 @@ public final class MYSQLconnect extends DatabaseAdapter {
         try {
             ps = this.conn.createStatement();
             ps.executeUpdate(sql);
-//            this.conn.commit();
         }
         catch (SQLException e) {
             throw e;
         }
         finally {
-            org.riverock.generic.db.DatabaseManager.close(ps);
+            DatabaseManager.close(ps);
             ps = null;
         }
     }
@@ -455,8 +466,9 @@ public final class MYSQLconnect extends DatabaseAdapter {
         return null;
     }
 
-    public void createView(DbViewType view)
-        throws Exception {
+    public void createView(DbViewType view) throws Exception {
+        // current version of MySql not supported view
+/*
         if (view == null ||
             view.getName() == null || view.getName().length() == 0 ||
             view.getText() == null || view.getText().length() == 0
@@ -465,7 +477,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 
         String sql_ =
             "CREATE VIEW " + view.getName() +
-            " AS " + StringTools.replaceString(view.getText(), "||", "+");
+            " AS " + StringUtils.replace(view.getText(), "||", "+");
 
         Statement ps = null;
         try {
@@ -482,6 +494,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
             org.riverock.generic.db.DatabaseManager.close(ps);
             ps = null;
         }
+*/
     }
 
     public void createSequence(DbSequenceType seq) throws Exception {
@@ -497,8 +510,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
         ps.setString(index, fieldData.getStringData());
     }
 
-    public String getClobField(ResultSet rs, String nameField, int maxLength)
-        throws SQLException {
+    public String getClobField(ResultSet rs, String nameField, int maxLength) {
         return null;
     }
 /*

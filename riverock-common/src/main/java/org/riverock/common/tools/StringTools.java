@@ -392,23 +392,6 @@ public class StringTools {
      */
     public static String replaceString( final String str_, final String search_, final String ins) {
         return StringUtils.replace( str_, search_, ins);
-/*
-        if ((str_ == null) || (search_ == null) || (ins == null))
-            return null;
-        
-        String s_ = str_, resultStr = "";
-
-        int pos;
-        while ((pos = s_.indexOf(search_)) != -1)
-        {
-            if (pos != s_.length())
-            {
-                resultStr += (s_.substring(0, pos) + ins);
-                s_ = s_.substring(pos + search_.length(), s_.length());
-            }
-        }
-        return resultStr + s_;
-*/
     }
 
     /**
@@ -433,7 +416,7 @@ public class StringTools {
     {
         String qqq = str_;
         for (final String[] newVar : repl) {
-            qqq = StringTools.replaceString(qqq, newVar[0], newVar[1]);
+            qqq = StringUtils.replace(qqq, newVar[0], newVar[1]);
         }
         return qqq;
 

@@ -28,6 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
+import org.riverock.generic.schema.db.types.PrimaryKeyTypeTypeType;
 import org.riverock.webmill.admin.bean.*;
 
 /**
@@ -49,6 +51,7 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
     private final static Logger log = Logger.getLogger(WebmillAdminDaoImpl.class);
 
     public List<CompanyBean> getCompanyList() {
+        List<CompanyBean> list = new ArrayList<CompanyBean>();
         DatabaseAdapter db = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
@@ -65,13 +68,15 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
             ps = db.prepareStatement(sql);
             rs = ps.executeQuery();
 
-            List<CompanyBean> list = new ArrayList<CompanyBean>();
             while (rs.next()) {
                 list.add(loadCompanyFromResultSet(rs));
             }
             return list;
         }
         catch (Exception e) {
+            if (db != null && db.testExceptionTableNotFound(e)) {
+                return list;
+            }
             String es = "Error load company list";
             log.error(es, e);
             throw new IllegalStateException(es, e);
@@ -214,6 +219,7 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
 
     public List<UserBean> getUserList() {
 
+        List<UserBean> list = new ArrayList<UserBean>();
         DatabaseAdapter db = null;
         ResultSet rs = null;
         PreparedStatement ps = null;
@@ -229,7 +235,6 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
             ps = db.prepareStatement(sql);
             rs = ps.executeQuery();
 
-            List<UserBean> list = new ArrayList<UserBean>();
             while (rs.next()) {
                 UserBean beanPortal = loadPortalUserFromResultSet(rs);
                 final CompanyBean company = getCompany(beanPortal.getCompanyId());
@@ -243,6 +248,9 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
             return list;
         }
         catch (Exception e) {
+            if (db != null && db.testExceptionTableNotFound(e)) {
+                return list;
+            }
             String es = "Error load list of portal users";
             throw new IllegalStateException(es, e);
         }
@@ -480,6 +488,9 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
             }
         }
         catch (Exception e) {
+            if (adapter != null && adapter.testExceptionTableNotFound(e)) {
+                return list;
+            }
             String es = "Error get list of sites";
             log.error(es, e);
             throw new IllegalStateException(es, e);
@@ -492,11 +503,81 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
     }
 
     public SiteBean getSite(Long siteId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String sql_ = "select * from WM_PORTAL_LIST_SITE where ID_SITE=?";
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(sql_);
+            ps.setLong(1, siteId);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return loadSiteFromResultSet(rs);
+            }
+            return null;
+        }
+        catch (Exception e) {
+            String es = "Error get getSiteBean()";
+            log.error(es, e);
+            throw new IllegalStateException(es,e );
+        }
+        finally{
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
     }
 
     public List<VirtualHostBean> getVirtualHosts(Long siteId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String sql_ =
+            "select * " +
+                "from  WM_PORTAL_VIRTUAL_HOST " +
+                "where ID_SITE=? " +
+                "order by ID_SITE_VIRTUAL_HOST ASC";
+
+        if (siteId == null) {
+            throw new IllegalStateException("getVirtualHost(), siteId is null");
+        }
+
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            List<VirtualHostBean> virtualHosts = new ArrayList<VirtualHostBean>();
+
+            ps = adapter.prepareStatement(sql_);
+            ps.setLong(1, siteId);
+
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                VirtualHostBean bean = new VirtualHostBean();
+                long tempLong;
+                String tempString;
+                tempLong = rs.getLong( "ID_SITE_VIRTUAL_HOST");
+                bean.setId( tempLong );
+                tempLong = rs.getLong( "ID_SITE");
+                bean.setSiteId( tempLong );
+                tempString = rs.getString( "NAME_VIRTUAL_HOST" );
+                bean.setHost( tempString );
+
+                virtualHosts.add(bean);
+            }
+            return virtualHosts;
+        }
+        catch (Exception e) {
+            String es = "Error get list of virtual host";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
     public void updateSiteWithVirtualHost(SiteBean site, List<String> virtualHosts) {
@@ -511,7 +592,7 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
 
         if (log.isDebugEnabled()) {
             log.debug("site: " + site);
-            if (site!=null) {
+            if (site != null) {
                 log.debug("    language: " + site.getDefLanguage());
                 log.debug("    country: " + site.getDefCountry());
                 log.debug("    variant: " + site.getDefVariant());
@@ -526,17 +607,17 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
             dbDyn = DatabaseAdapter.getInstance();
 
             CustomSequenceType seq = new CustomSequenceType();
-            seq.setSequenceName( "seq_WM_PORTAL_LIST_SITE" );
-            seq.setTableName( "WM_PORTAL_LIST_SITE" );
-            seq.setColumnName( "ID_SITE" );
-            Long siteId = dbDyn.getSequenceNextValue( seq );
+            seq.setSequenceName("seq_WM_PORTAL_LIST_SITE");
+            seq.setTableName("WM_PORTAL_LIST_SITE");
+            seq.setColumnName("ID_SITE");
+            Long siteId = dbDyn.getSequenceNextValue(seq);
 
-            ps = dbDyn.prepareStatement( "insert into WM_PORTAL_LIST_SITE (" +
+            ps = dbDyn.prepareStatement("insert into WM_PORTAL_LIST_SITE (" +
                 "ID_SITE, ID_FIRM, DEF_LANGUAGE, DEF_COUNTRY, DEF_VARIANT, " +
                 "NAME_SITE, ADMIN_EMAIL, IS_CSS_DYNAMIC, CSS_FILE, " +
                 "IS_REGISTER_ALLOWED, PROPERTIES " +
                 ")values " +
-                ( dbDyn.getIsNeedUpdateBracket() ? "(" : "" ) +
+                (dbDyn.getIsNeedUpdateBracket() ? "(" : "") +
                 "	?," +
                 "	?," +
                 "	?," +
@@ -548,29 +629,29 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
                 "	?," +
                 "	?," +
                 "	? " +
-                ( dbDyn.getIsNeedUpdateBracket() ? ")" : "" ) );
+                (dbDyn.getIsNeedUpdateBracket() ? ")" : ""));
 
             int num = 1;
-            RsetTools.setLong( ps, num++, siteId );
-            RsetTools.setLong( ps, num++, site.getCompanyId() );
-            ps.setString( num++, site.getDefLanguage() );
-            ps.setString( num++, site.getDefCountry() );
-            ps.setString( num++, site.getDefVariant() );
-            ps.setString( num++, site.getSiteName() );
-            ps.setString( num++, site.getAdminEmail() );
-            ps.setInt( num++, site.getCssDynamic()?1:0 );
-            ps.setString( num++, site.getCssFile() );
-            ps.setInt( num++, site.getRegisterAllowed()?1:0 );
-            ps.setString( num++, site.getProperties() );
+            RsetTools.setLong(ps, num++, siteId);
+            RsetTools.setLong(ps, num++, site.getCompanyId());
+            ps.setString(num++, site.getDefLanguage());
+            ps.setString(num++, site.getDefCountry());
+            ps.setString(num++, site.getDefVariant());
+            ps.setString(num++, site.getSiteName());
+            ps.setString(num++, site.getAdminEmail());
+            ps.setInt(num++, site.getCssDynamic() ? 1 : 0);
+            ps.setString(num++, site.getCssFile());
+            ps.setInt(num++, site.getRegisterAllowed() ? 1 : 0);
+            ps.setString(num++, site.getProperties());
 
             int i1 = ps.executeUpdate();
 
-            if( log.isDebugEnabled() )
-                log.debug( "Count of inserted records - " + i1 );
+            if (log.isDebugEnabled())
+                log.debug("Count of inserted records - " + i1);
 
-            if (virtualHosts!=null) {
+            if (virtualHosts != null) {
                 for (String s : virtualHosts) {
-                    VirtualHostBean host = new VirtualHostBean(null, siteId, s );
+                    VirtualHostBean host = new VirtualHostBean(null, siteId, s);
                     createVirtualHost(dbDyn, host);
                 }
             }
@@ -578,21 +659,21 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
             dbDyn.commit();
             return siteId;
         }
-        catch( Exception e ) {
+        catch (Exception e) {
             try {
-                if( dbDyn != null )
+                if (dbDyn != null)
                     dbDyn.rollback();
             }
-            catch( Exception e001 ) {
+            catch (Exception e001) {
                 //catch rollback error
             }
             String es = "Error add new site";
-            log.error( es, e );
-            throw new IllegalStateException( es, e );
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
 
         }
         finally {
-            DatabaseManager.close( dbDyn, ps );
+            DatabaseManager.close(dbDyn, ps);
             dbDyn = null;
             ps = null;
         }
@@ -603,11 +684,98 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
     }
 
     public Long createSite(SiteBean siteBean) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return createSiteWithVirtualHost(siteBean, null);
     }
 
-    public void createXslt(XsltBean xsltBean) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Long createXslt(XsltBean xslt) {
+        String sql_ =
+            "insert into WM_PORTAL_XSLT" +
+                "(ID_SITE_XSLT, IS_CURRENT, TEXT_COMMENT, ID_SITE_SUPPORT_LANGUAGE)" +
+                "values" +
+                "( ?,  ?,  ?,  ?)";
+
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_WM_PORTAL_XSLT");
+            seq.setTableName("WM_PORTAL_XSLT");
+            seq.setColumnName("ID_SITE_XSLT");
+            Long id = adapter.getSequenceNextValue(seq);
+
+            DatabaseManager.runSQL(
+                adapter,
+                "update WM_PORTAL_XSLT set IS_CURRENT=0 where ID_SITE_SUPPORT_LANGUAGE=?",
+                new Object[]{xslt.getSiteLanguageId()},
+                new int[]{Types.NUMERIC}
+            );
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps.setLong(1, id);
+            ps.setInt(2, xslt.isCurrent() ? 1 : 0);
+            ps.setString(3, xslt.getName());
+            ps.setLong(4, xslt.getSiteLanguageId());
+
+            int countInsertRecord = ps.executeUpdate();
+
+            if (log.isDebugEnabled()) {
+                log.debug("Count of inserted records - " + countInsertRecord);
+            }
+
+            /**
+             * @param idRec - value of PK in main table
+             * @param pkName - name PK in main table
+             * @param pkType - type of PK in main table
+             * @param nameTargetTable  - name of slave table
+             * @param namePkTargetTable - name of PK in slave table
+             * @param nameTargetField - name of filed with BigText data in slave table
+             * @param insertString - insert string
+             * @param isDelete - delete data from slave table before insert true/false
+             */
+            DatabaseManager.insertBigText(
+                adapter,
+                id,
+                "ID_SITE_XSLT",
+                PrimaryKeyTypeTypeType.NUMBER,
+                "WM_PORTAL_XSLT_DATA",
+                "ID_SITE_XSLT_DATA",
+                "XSLT",
+                xslt.getXsltData(),
+                false
+            );
+
+            adapter.commit();
+            return id;
+        }
+        catch (Throwable e) {
+            try {
+                if (adapter != null)
+                    adapter.rollback();
+            }
+            catch (Throwable th) {
+                // catch rollback error
+            }
+            log.error("Item getIdSiteXslt(), value - " + xslt.getId());
+            log.error("Item getIsCurrent(), value - " + xslt.isCurrent());
+            log.error("Item getTextComment(), value - " + xslt.getName());
+            log.error("Item getXslt(), value - " + xslt.getXsltData());
+            log.error("Item getIdSiteSupportLanguage(), value - " + xslt.getSiteLanguageId());
+            log.error("SQL " + sql_);
+            log.error("Exception insert data in db", e);
+            String es = "Error create site language";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
     public SiteLanguageBean getSiteLanguage(Long siteId, String locale) {
@@ -615,15 +783,163 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
     }
 
     public Long createSiteLanguage(SiteLanguageBean siteLanguageBean) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String sql_ =
+            "insert into WM_PORTAL_SITE_LANGUAGE" +
+                "(ID_SITE_SUPPORT_LANGUAGE, ID_SITE, CUSTOM_LANGUAGE, NAME_CUSTOM_LANGUAGE)" +
+                "values" +
+                "( ?,  ?,  ?,  ?)";
+
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_WM_PORTAL_SITE_LANGUAGE");
+            seq.setTableName("WM_PORTAL_SITE_LANGUAGE");
+            seq.setColumnName("ID_SITE_SUPPORT_LANGUAGE");
+            Long id = adapter.getSequenceNextValue(seq);
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps.setLong(1, id);
+            ps.setLong(2, siteLanguageBean.getSiteId());
+            ps.setString(3, siteLanguageBean.getLocale());
+            ps.setString(4, siteLanguageBean.getNameCustomLanguage());
+
+            int countInsertRecord = ps.executeUpdate();
+
+            if (log.isDebugEnabled())
+                log.debug("Count of inserted records - " + countInsertRecord);
+
+            adapter.commit();
+            return id;
+        }
+        catch (Throwable e) {
+            try {
+                if (adapter != null)
+                    adapter.rollback();
+            }
+            catch (Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error create site language";
+            log.error("Item getIdSiteSupportLanguage(), value - " + siteLanguageBean.getSiteLanguageId());
+            log.error("Item getIdSite(), value - " + siteLanguageBean.getSiteId());
+            log.error("Item getCustomLanguage(), value - " + siteLanguageBean.getLocale());
+            log.error("Item getNameCustomLanguage(), value - " + siteLanguageBean.getNameCustomLanguage());
+            log.error("SQL " + sql_);
+            log.error("Exception insert data in db", e);
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(rs, ps);
+            rs = null;
+            ps = null;
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
     }
 
     public TemplateBean getTemplate(String templateName, Long siteLanguageId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(
+                "select * from WM_PORTAL_TEMPLATE where NAME_SITE_TEMPLATE=? and ID_SITE_SUPPORT_LANGUAGE=?"
+            );
+            ps.setString(1, templateName);
+            ps.setLong(2, siteLanguageId);
+
+            rs = ps.executeQuery();
+
+            TemplateBean bean = null;
+            if (rs.next()) {
+                bean = new TemplateBean();
+
+                fillTemplateBean(rs, bean);
+            }
+            return bean;
+        }
+        catch (Exception e) {
+            String es = "Error get getPortletName()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
-    public void createTemplate(TemplateBean templateBean) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public Long createTemplate(TemplateBean template) {
+        String sql_ =
+            "insert into WM_PORTAL_TEMPLATE" +
+                "(ID_SITE_TEMPLATE, NAME_SITE_TEMPLATE, TEMPLATE_DATA, ID_SITE_SUPPORT_LANGUAGE, " +
+                "IS_DEFAULT_DYNAMIC)" +
+                "values" +
+                "( ?,  ?,  ?,  ?,  ?)";
+
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            clearDefaultDynamicFlag(template, adapter);
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_WM_PORTAL_TEMPLATE");
+            seq.setTableName("WM_PORTAL_TEMPLATE");
+            seq.setColumnName("ID_SITE_TEMPLATE");
+            Long id = adapter.getSequenceNextValue(seq);
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps.setLong(1, id);
+            ps.setString(2, template.getTemplateName());
+            ps.setString(3, template.getTemplateData());
+            ps.setLong(4, template.getSiteLanguageId());
+            ps.setInt(5, template.isDefaultDynamic() ? 1 : 0);
+
+            int countInsertRecord = ps.executeUpdate();
+
+            if (log.isDebugEnabled()) {
+                log.debug("Count of inserted records - " + countInsertRecord);
+            }
+
+            adapter.commit();
+            return id;
+        }
+        catch (Throwable e) {
+            try {
+                if (adapter != null)
+                    adapter.rollback();
+            }
+            catch (Throwable th) {
+                // catch rollback error
+            }
+            log.error("Item getIdSiteTemplate(), value - " + template.getTemplateId());
+            log.error("Item getNameSiteTemplate(), value - " + template.getTemplateName());
+            log.error("Item getTemplateData(), value - " + template.getTemplateData());
+            log.error("Item getIdSiteSupportLanguage(), value - " + template.getSiteLanguageId());
+            log.error("Item getIsDefaultDynamic(), value - " + template.isDefaultDynamic());
+            log.error("SQL " + sql_);
+            log.error("Exception insert data in db", e);
+            String es = "Error create template";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, ps);
+            adapter = null;
+            ps = null;
+        }
     }
 
     public Long createPortletName(PortletNameBean portletNameBean) {
@@ -631,30 +947,214 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
     }
 
     public Long getCatalogItemId(Long siteLanguageId, Long portletId, Long templateId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (log.isDebugEnabled()) {
+            log.debug("InternalDaoCatalogImpl.getCatalogItemId()");
+            log.debug("     siteLanguageId: " + siteLanguageId);
+            log.debug("     portletId: " + portletId);
+            log.debug("     templateId: " + templateId);
+        }
+
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            return DatabaseManager.getLongValue(adapter,
+                "select a.ID_SITE_CTX_CATALOG " +
+                    "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b " +
+                    "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
+                    "       b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_CTX_TYPE=? and a.ID_SITE_TEMPLATE=? ",
+                new Object[]{siteLanguageId, portletId, templateId}
+            );
+        }
+        catch (Exception e) {
+            String es = "Error get getCatalogItemId()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
     }
 
-    public Long createCatalogItem(CatalogBean catalogBean) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Long createCatalogItem(CatalogBean item) {
+        String sql_ =
+            "insert into WM_PORTAL_CATALOG" +
+                "(ID_SITE_CTX_CATALOG, ID_TOP_CTX_CATALOG, ORDER_FIELD, ID_SITE_CTX_TYPE, " +
+                "STORAGE, KEY_MESSAGE, ID_CONTEXT, IS_USE_PROPERTIES, ID_SITE_TEMPLATE, " +
+                "ID_SITE_CTX_LANG_CATALOG, CTX_PAGE_URL, CTX_PAGE_TITLE, CTX_PAGE_AUTHOR, " +
+                "CTX_PAGE_KEYWORD, URL_RESOURCE, METADATA, PORTLET_ROLE)" +
+                "values" +
+                "( ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?,  ?)";
+
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_WM_PORTAL_CATALOG");
+            seq.setTableName("WM_PORTAL_CATALOG");
+            seq.setColumnName("ID_SITE_CTX_CATALOG");
+            Long id = adapter.getSequenceNextValue(seq);
+
+            ps = adapter.prepareStatement(sql_);
+
+            if (item.getTopCatalogId() == null) {
+                item.setTopCatalogId(0L);
+            }
+
+            ps.setLong(1, id);
+            ps.setLong(2, item.getTopCatalogId());
+            if (item.getOrderField() != null)
+                ps.setInt(3, item.getOrderField());
+            else
+                ps.setNull(3, Types.INTEGER);
+
+            ps.setLong(4, item.getPortletId());
+            ps.setNull(5, Types.VARCHAR);
+
+            ps.setString(6, item.getKeyMessage());
+            if (item.getContextId() != null)
+                ps.setLong(7, item.getContextId());
+            else
+                ps.setNull(7, Types.INTEGER);
+
+            ps.setInt(8, 0);
+            if (item.getTemplateId() != null)
+                ps.setLong(9, item.getTemplateId());
+            else
+                ps.setNull(9, Types.INTEGER);
+
+            ps.setLong(10, item.getCatalogLanguageId());
+            if (item.getUrl() != null)
+                ps.setString(11, item.getUrl());
+            else
+                ps.setNull(11, Types.VARCHAR);
+
+            if (item.getTitle() != null)
+                ps.setString(12, item.getTitle());
+            else
+                ps.setNull(12, Types.VARCHAR);
+
+            if (item.getAuthor() != null)
+                ps.setString(13, item.getAuthor());
+            else
+                ps.setNull(13, Types.VARCHAR);
+
+            if (item.getKeyword() != null)
+                ps.setString(14, item.getKeyword());
+            else
+                ps.setNull(14, Types.VARCHAR);
+
+            ps.setNull(15, Types.VARCHAR);
+
+            if (item.getMetadata() != null)
+                ps.setString(16, item.getMetadata());
+            else
+                ps.setNull(16, Types.VARCHAR);
+
+            if (item.getPortletRole() != null)
+                ps.setString(17, item.getPortletRole());
+            else
+                ps.setNull(17, Types.VARCHAR);
+
+
+            int countInsertRecord = ps.executeUpdate();
+
+            if (log.isDebugEnabled()) {
+                log.debug("Count of inserted records - " + countInsertRecord);
+            }
+
+            adapter.commit();
+            return id;
+        }
+        catch (Throwable e) {
+            try {
+                if (adapter != null)
+                    adapter.rollback();
+            }
+            catch (Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error create site language";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
-    public void createVirtualHost(VirtualHostBean virtualHost) {
+    public Long createVirtualHost(VirtualHostBean virtualHost) {
+        DatabaseAdapter dbDyn = null;
+        try {
+            dbDyn = DatabaseAdapter.getInstance();
+            Long hostId = createVirtualHost(dbDyn, virtualHost);
+            dbDyn.commit();
+            return hostId;
+        }
+        catch (Exception e) {
+            try {
+                if (dbDyn != null)
+                    dbDyn.rollback();
+            }
+            catch (Exception e001) {
+                // catch rollback exception
+            }
+            String es = "Error add new virtual host";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+
+        }
+        finally {
+            DatabaseManager.close(dbDyn);
+            dbDyn = null;
+        }
+    }
+
+    public Long createVirtualHost(DatabaseAdapter adapter, VirtualHostBean virtualHost) {
 
         try {
             CustomSequenceType seq = new CustomSequenceType();
             seq.setSequenceName("seq_WM_PORTAL_VIRTUAL_HOST");
             seq.setTableName("WM_PORTAL_VIRTUAL_HOST");
             seq.setColumnName("ID_SITE_VIRTUAL_HOST");
-            Long siteId = adapter.getSequenceNextValue(seq);
+            Long hostId = adapter.getSequenceNextValue(seq);
 
-            WmPortalVirtualHostItemType item = new WmPortalVirtualHostItemType();
-            item.setIdSiteVirtualHost(siteId);
-            item.setIdSite(host.getSiteId());
-            item.setNameVirtualHost(host.getHost());
+            String sql_ =
+                "insert into WM_PORTAL_VIRTUAL_HOST" +
+                    "(ID_SITE_VIRTUAL_HOST, ID_SITE, NAME_VIRTUAL_HOST)" +
+                    "values" +
+                    "( ?,  ?,  ?)";
 
-            InsertWmPortalVirtualHostItem.process(adapter, item);
-            return siteId;
-        } catch (Throwable e) {
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            try {
+                ps = adapter.prepareStatement(sql_);
+
+                ps.setLong(1, hostId);
+                ps.setLong(2, virtualHost.getSiteId());
+                ps.setString(3, virtualHost.getHost());
+
+                int countInsertRecord = ps.executeUpdate();
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Count of inserted records - " + countInsertRecord);
+                }
+            }
+            finally {
+                DatabaseManager.close(rs, ps);
+                rs = null;
+                ps = null;
+            }
+
+            return hostId;
+        }
+        catch (Throwable e) {
             String es = "Error create virtual host";
             log.error(es, e);
             throw new IllegalStateException(es, e);
@@ -665,8 +1165,69 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Long createCatalogLanguageItem(CatalogLanguageBean bean) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Long createCatalogLanguageItem(CatalogLanguageBean catalogLanguageItem) {
+        if (log.isDebugEnabled()) {
+        }
+        String sql_ =
+            "insert into WM_PORTAL_CATALOG_LANGUAGE" +
+                "(ID_SITE_CTX_LANG_CATALOG, CATALOG_CODE, IS_DEFAULT, ID_SITE_SUPPORT_LANGUAGE)" +
+                "values" +
+                "( ?,  ?,  ?,  ?)";
+
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_WM_PORTAL_CATALOG_LANGUAGE");
+            seq.setTableName("WM_PORTAL_CATALOG_LANGUAGE");
+            seq.setColumnName("ID_SITE_CTX_LANG_CATALOG");
+            Long id = adapter.getSequenceNextValue(seq);
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps.setLong(1, id);
+            if (catalogLanguageItem.getCatalogCode() != null)
+                ps.setString(2, catalogLanguageItem.getCatalogCode());
+            else
+                ps.setNull(2, Types.VARCHAR);
+
+            ps.setInt(3, catalogLanguageItem.getDefault() ? 1 : 0);
+            ps.setLong(4, catalogLanguageItem.getSiteLanguageId());
+
+            int countInsertRecord = ps.executeUpdate();
+
+            if (log.isDebugEnabled()) {
+                log.debug("Count of inserted records - " + countInsertRecord);
+            }
+
+            adapter.commit();
+            return id;
+        }
+        catch (Throwable e) {
+            try {
+                if (adapter != null)
+                    adapter.rollback();
+            }
+            catch (Throwable th) {
+                // catch rollback error
+            }
+            log.error("Item getIdSiteCtxLangCatalog(), value - " + catalogLanguageItem.getCatalogLanguageId());
+            log.error("Item getCatalogCode(), value - " + catalogLanguageItem.getCatalogCode());
+            log.error("Item getIsDefault(), value - " + catalogLanguageItem.getDefault());
+            log.error("Item getIdSiteSupportLanguage(), value - " + catalogLanguageItem.getSiteLanguageId());
+            String es = "Error create site language";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
     public SiteBean getSite(String siteName) {
@@ -678,15 +1239,231 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
     }
 
     public CatalogLanguageBean getCatalogLanguageItem(String catalogCode, Long siteLanguageId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        String sql_ =
+            "select * from WM_PORTAL_CATALOG_LANGUAGE where CATALOG_CODE=? and id_site_support_language=?";
+
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            ps = adapter.prepareStatement(sql_);
+            RsetTools.setString(ps, 1, catalogCode);
+            RsetTools.setLong(ps, 2, siteLanguageId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                CatalogLanguageBean bean = new CatalogLanguageBean();
+
+                Long tempLong = rs.getLong("ID_SITE_CTX_LANG_CATALOG");
+                if (!rs.wasNull())
+                    bean.setCatalogLanguageId(tempLong);
+
+                String tempString = rs.getString("CATALOG_CODE");
+                if (!rs.wasNull())
+                    bean.setCatalogCode(tempString);
+
+                int tempBoolean = rs.getInt("IS_DEFAULT");
+                if (!rs.wasNull())
+                    bean.setDefault(tempBoolean == 1);
+                else
+                    bean.setDefault(false);
+
+                tempLong = rs.getLong("ID_SITE_SUPPORT_LANGUAGE");
+                if (!rs.wasNull())
+                    bean.setSiteLanguageId(tempLong);
+
+                return bean;
+            }
+            return null;
+        }
+        catch (Exception e) {
+            String es = "Error get getCatalogLanguageItem()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
     public PortletNameBean getPortletName(Long portletId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(
+                "select * from WM_PORTAL_PORTLET_NAME where ID_SITE_CTX_TYPE=?"
+            );
+            ps.setLong(1, portletId);
+
+            rs = ps.executeQuery();
+
+            PortletNameBean bean = null;
+            if (rs.next()) {
+                bean = new PortletNameBean();
+
+                long tempLong = rs.getLong("ID_SITE_CTX_TYPE");
+                if (!rs.wasNull())
+                    bean.setPortletId(tempLong);
+
+                String tempString = rs.getString("TYPE");
+                if (!rs.wasNull())
+                    bean.setPortletName(tempString);
+
+                bean.setActive(false);
+            }
+            return bean;
+        }
+        catch (Exception e) {
+            String es = "Error get getPortletName()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
     public TemplateBean getTemplate(Long templateId, Long siteLanguageId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(
+                "select * from WM_PORTAL_TEMPLATE where ID_SITE_TEMPLATE=? and ID_SITE_SUPPORT_LANGUAGE=?"
+            );
+            ps.setLong(1, templateId);
+            ps.setLong(2, siteLanguageId);
+
+            rs = ps.executeQuery();
+
+            TemplateBean bean = null;
+            if (rs.next()) {
+                bean = new TemplateBean();
+                fillTemplateBean(rs, bean);
+            }
+            return bean;
+        }
+        catch (Exception e) {
+            String es = "Error get getPortletName()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
+    }
+
+    public PortletNameBean getPortletName(String portletName) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+            ps = adapter.prepareStatement(
+                "select * from WM_PORTAL_PORTLET_NAME where TYPE=?"
+            );
+            ps.setString(1, portletName);
+
+            rs = ps.executeQuery();
+
+            PortletNameBean bean = null;
+            if (rs.next()) {
+                bean = new PortletNameBean();
+
+                long tempLong = rs.getLong("ID_SITE_CTX_TYPE");
+                if (!rs.wasNull())
+                    bean.setPortletId(tempLong);
+
+                String tempString = rs.getString("TYPE");
+                if (!rs.wasNull())
+                    bean.setPortletName(tempString);
+
+                bean.setActive(false);
+            }
+            return bean;
+        }
+        catch (Exception e) {
+            String es = "Error get getPortletName()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
+    }
+
+    public PortletNameBean createPortletName(String portletName) {
+        String sql_ =
+            "insert into WM_PORTAL_PORTLET_NAME" +
+                "(ID_SITE_CTX_TYPE, TYPE)" +
+                "values" +
+                "( ?,  ?)";
+
+        DatabaseAdapter adapter = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName("seq_WM_PORTAL_PORTLET_NAME");
+            seq.setTableName("WM_PORTAL_PORTLET_NAME");
+            seq.setColumnName("ID_SITE_CTX_TYPE");
+            Long id = adapter.getSequenceNextValue(seq);
+
+            PortletNameBean portletNameBean = new PortletNameBean();
+            portletNameBean.setActive(true);
+            portletNameBean.setPortletId(id);
+            portletNameBean.setPortletName(portletName);
+
+            ps = adapter.prepareStatement(sql_);
+
+            ps.setLong(1, portletNameBean.getPortletId());
+            ps.setString(2, portletNameBean.getPortletName());
+
+            int countInsertRecord = ps.executeUpdate();
+
+            if (log.isDebugEnabled()) {
+                log.debug("Count of inserted records - " + countInsertRecord);
+            }
+
+            adapter.commit();
+            return portletNameBean;
+        }
+        catch (Throwable e) {
+            try {
+                if (adapter != null)
+                    adapter.rollback();
+            }
+            catch (Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error create portlet name";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter, rs, ps);
+            adapter = null;
+            rs = null;
+            ps = null;
+        }
     }
 
     private CompanyBean loadCompanyFromResultSet(ResultSet rs) throws Exception {
@@ -780,4 +1557,39 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
             item.setProperties(tempString);
         return item;
     }
+
+    private void clearDefaultDynamicFlag(TemplateBean template, DatabaseAdapter adapter) throws SQLException {
+        if (template.isDefaultDynamic()) {
+            DatabaseManager.runSQL(
+                adapter,
+                "update WM_PORTAL_TEMPLATE set IS_DEFAULT_DYNAMIC=0 where ID_SITE_SUPPORT_LANGUAGE=? and IS_DEFAULT_DYNAMIC!=0",
+                new Object[]{template.getSiteLanguageId()},
+                new int[]{Types.NUMERIC}
+            );
+        }
+    }
+
+    private void fillTemplateBean(ResultSet rs, TemplateBean bean) throws SQLException {
+        long tempLong;
+        String tempString = null;
+        int tempBoolean;
+        tempLong = rs.getLong("ID_SITE_TEMPLATE");
+        if (!rs.wasNull())
+            bean.setTemplateId(tempLong);
+        tempString = rs.getString("NAME_SITE_TEMPLATE");
+        if (!rs.wasNull())
+            bean.setTemplateName(tempString);
+        tempString = rs.getString("TEMPLATE_DATA");
+        if (!rs.wasNull())
+            bean.setTemplateData(tempString);
+        tempLong = rs.getLong("ID_SITE_SUPPORT_LANGUAGE");
+        if (!rs.wasNull())
+            bean.setSiteLanguageId(tempLong);
+        tempBoolean = rs.getInt("IS_DEFAULT_DYNAMIC");
+        if (!rs.wasNull())
+            bean.setDefaultDynamic(tempBoolean == 1);
+        else
+            bean.setDefaultDynamic(false);
+    }
+
 }
