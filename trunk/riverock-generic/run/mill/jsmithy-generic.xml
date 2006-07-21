@@ -111,7 +111,7 @@
 		<Username>sa</Username>
 		<Password/>
 		<ConnectString>jdbc:hsqldb:hsql://localhost</ConnectString>
-		<ConnectionClass>org.riverock.generic.db.factory.HSQLconnect</ConnectionClass>
+		<ConnectionClass>org.riverock.generic.db.factory.HSQLDBconnect</ConnectionClass>
 		<DatabaseCharset>UTF8</DatabaseCharset>
 		<IsConvertDatabaseString>false</IsConvertDatabaseString>
 		<IsAutoCommit>true</IsAutoCommit>

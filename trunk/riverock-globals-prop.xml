@@ -72,7 +72,7 @@
     <property name="mail.lib" value="mail-1.4.jar"/>
     <property name="activation.lib" value="activation-1.1.jar"/>
 
-    <property name="hypersonic.lib" value="hsqldb.jar"/>
+    <property name="hypersonic.lib" value="hsqldb-1.8.0.4.jar"/>
     <property name="mysql-jdbc.lib" value="mysql-connector-java-3.0.14-production-bin.jar"/>
 
     <!--# apache's common library-->

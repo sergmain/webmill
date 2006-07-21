@@ -215,7 +215,7 @@ public class CreateSiteService {
         );
         menuList.add(
             new CatalogItemBean(
-                portlets.get(webmillPortalManagerPortlet), dynamicTemplateBean.getTemplateId(), catalogLanguageItem.getCatalogLanguageId(), 210, "Webmill manager", "webmill-manager"
+                portlets.get(webmillPortalManagerPortlet), dynamicTemplateBean.getTemplateId(), catalogLanguageItem.getCatalogLanguageId(), 20, "Webmill manager", "webmill-manager"
             )
         );
         menuList.add(
