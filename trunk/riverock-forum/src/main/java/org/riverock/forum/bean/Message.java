@@ -26,8 +26,7 @@ package org.riverock.forum.bean;
 
 import java.io.Serializable;
 
-import org.riverock.forum.util.StringUtils;
-import org.riverock.common.tools.StringTools;
+import org.riverock.forum.util.ForumStringUtils;
 
 public class Message implements Serializable {
     private String m_content;
@@ -53,7 +52,7 @@ public class Message implements Serializable {
     }
 
     public void setM_content(String m_content) {
-        this.m_content = StringUtils.displayHtml(m_content);
+        this.m_content = ForumStringUtils.displayHtml(m_content);
     }
 
     public String getM_content() {
@@ -77,7 +76,7 @@ public class Message implements Serializable {
     }
 
     public void setU_sign(String u_sign) {
-        this.u_sign = StringUtils.displayHtml(u_sign);
+        this.u_sign = ForumStringUtils.displayHtml(u_sign);
     }
 
     public String getU_sign() {

@@ -42,7 +42,7 @@ public class TopicBean implements Serializable {
     private int f_messages;
     private int f_topics;
     private int f_u_id;
-    private int t_id;
+    private Long t_id;
     private int start;
     private int range;
     private int count;
@@ -111,11 +111,11 @@ public class TopicBean implements Serializable {
         return moderatorName;
     }
 
-    public void setT_id(int t_id) {
+    public void setT_id(Long t_id) {
         this.t_id = t_id;
     }
 
-    public int getT_id() {
+    public Long getT_id() {
         return t_id;
     }
 

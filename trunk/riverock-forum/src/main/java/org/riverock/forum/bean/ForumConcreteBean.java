@@ -36,7 +36,7 @@ public class ForumConcreteBean implements Serializable {
     private String lastPosterName;   // u_name2
     private List forums;
     private int count;
-    private int f_id;
+    private Long f_id;
     private int f_messages;
     private int f_topics;
     private int moderatorId;   // f_u_id
@@ -94,11 +94,11 @@ public class ForumConcreteBean implements Serializable {
         return topics;
     }
 
-    public void setF_id(int f_id) {
+    public void setF_id(Long f_id) {
         this.f_id = f_id;
     }
 
-    public int getF_id() {
+    public Long getF_id() {
         return f_id;
     }
 

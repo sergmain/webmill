@@ -55,7 +55,7 @@ public class ForumDAO {
         "from   WM_FORUM_CONCRETE a, WM_LIST_USER b " +
         "where  a.F_U_ID=b.ID_USER and a.F_ID=?";
 
-    public ForumConcreteBean execute(int f_id, int messagesPerPage, int topicsPerPage, int start, String keyword, Long forumId, UrlProvider urlProvider)
+    public ForumConcreteBean execute(long f_id, int messagesPerPage, int topicsPerPage, int start, String keyword, Long forumId, UrlProvider urlProvider)
         throws ActionException {
         DatabaseAdapter adapter = null;
         PreparedStatement ps = null;

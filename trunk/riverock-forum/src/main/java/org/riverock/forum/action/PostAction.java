@@ -33,7 +33,7 @@ import org.riverock.forum.bean.PostBean;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.PostDAO;
 import org.riverock.forum.util.Constants;
-import org.riverock.forum.util.StringUtils;
+import org.riverock.forum.util.ForumStringUtils;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
@@ -47,7 +47,7 @@ public class PostAction implements Action {
         ForumActionBean forumActionBean = (ForumActionBean)moduleActionRequest;
         Integer f_id = forumActionBean.getRequest().getInt( Constants.NAME_FORUM_CONCRETE_ID );
         Integer t_id = forumActionBean.getRequest().getInt( Constants.NAME_FORUM_TOPIC_ID );
-        boolean reply = StringUtils.parseBoolean(forumActionBean.getRequest().getString(Constants.NAME_FORUM_REPLY));
+        boolean reply = ForumStringUtils.parseBoolean(forumActionBean.getRequest().getString(Constants.NAME_FORUM_REPLY));
         if (reply && t_id==null ) {
             return ForumError.noSuchForumError(forumActionBean);
         }

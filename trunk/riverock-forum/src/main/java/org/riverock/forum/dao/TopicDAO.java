@@ -51,7 +51,7 @@ import org.riverock.forum.util.Constants;
 public class TopicDAO {
     private final static Logger log = Logger.getLogger(TopicDAO.class);
 
-    public TopicBean execute(int t_id, int start, int messagesPerPage, UrlProvider urlProvider, Long forumId, ModuleUser moduleUser) throws ActionException {
+    public TopicBean execute(long t_id, int start, int messagesPerPage, UrlProvider urlProvider, Long forumId, ModuleUser moduleUser) throws ActionException {
         if (log.isDebugEnabled()) {
             log.debug("t_id: "+t_id);
             log.debug("start: "+start);
@@ -83,7 +83,7 @@ public class TopicDAO {
                 "from   WM_FORUM_CONCRETE a, WM_FORUM_TOPIC b, WM_LIST_USER c " +
                 "where  b.T_F_ID=a.F_ID and a.F_U_ID=c.ID_USER  and b.T_ID=? ";
             ps = adapter.prepareStatement(sql);
-            ps.setInt(1, t_id);
+            ps.setLong(1, t_id);
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -116,7 +116,7 @@ public class TopicDAO {
                     Constants.NAME_FORUM_TOPIC_ID+'='+topicBean.getT_id()
                 );
                 topicBean.setMessagesPerPage( messagesPerPage );
-                int countPages = (int)(topicBean.getT_replies()/messagesPerPage);
+                int countPages = (topicBean.getT_replies()/messagesPerPage);
                 if ((topicBean.getT_replies()%messagesPerPage)!=0) {
                     countPages++;
                 }
@@ -147,7 +147,7 @@ public class TopicDAO {
                 "order by a.M_TIME ASC";
 
             ps = adapter.prepareStatement(sql);
-            ps.setInt(1, t_id);
+            ps.setLong(1, t_id);
             rs = ps.executeQuery();
 
             int j = 0;
@@ -216,9 +216,11 @@ public class TopicDAO {
         }
         catch (Exception ex) {
             try {
-                adapter.rollback();
-            }
-            catch (SQLException e) {
+                if (adapter!=null) {
+                    adapter.rollback();
+                }
+            } catch (SQLException sqle) {
+                // catch rollback error
             }
             String es = "Error execute topicDAO";
             log.error(es, ex);

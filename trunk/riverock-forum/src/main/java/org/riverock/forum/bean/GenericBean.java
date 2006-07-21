@@ -41,7 +41,7 @@ public class GenericBean {
     private String helpUrl;
     private StringBuilder forumHomeUrl;
     private String forumName = null;
-    private Integer forumId;
+    private Long forumId;
     private String actionUrl;
 
     public String getActionUrl() {
@@ -132,11 +132,11 @@ public class GenericBean {
         this.helpUrl = helpUrl;
     }
 
-    public void setForumId(Integer forumId) {
+    public void setForumId(Long forumId) {
         this.forumId = forumId;
     }
 
-    public Integer getForumId() {
+    public Long getForumId() {
         return this.forumId;
     }
 }
