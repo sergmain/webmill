@@ -40,7 +40,7 @@
         <ant antfile="riverock-module/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-portlet/build.xml" target="full_build_module"  inheritall="false" />
         <ant antfile="riverock-forum/build.xml" target="full_build_module"  inheritall="false" />
-        <ant antfile="riverock-webmill-init/build.xml" target="full_build_module"  inheritall="false" />
+        <ant antfile="riverock-webmill-admin/build.xml" target="full_build_module"  inheritall="false" />
     </target>
 
     <target name="full_clean">
@@ -55,7 +55,7 @@
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-module" />
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-portlet" />
         <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-forum" />
-        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-webmill-init" />
+        <ant antfile="build.xml" target="full_clean"  inheritall="false" dir="riverock-webmill-admin" />
     </target>
 
 </project>
