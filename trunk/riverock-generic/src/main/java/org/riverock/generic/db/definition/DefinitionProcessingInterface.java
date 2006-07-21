@@ -26,7 +26,7 @@
 package org.riverock.generic.db.definition;
 
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
+import org.riverock.generic.schema.db.DefinitionActionDataListType;
 
 /**
  * User: Admin
@@ -37,5 +37,5 @@ import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
  */
 public interface DefinitionProcessingInterface
 {
-    public void processAction(DatabaseAdapter db_, DataDefinitionActionDataListType parameters) throws Exception;
+    public void processAction(DatabaseAdapter db_, DefinitionActionDataListType parameters) throws Exception;
 }

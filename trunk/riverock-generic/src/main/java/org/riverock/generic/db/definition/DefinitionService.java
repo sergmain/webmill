@@ -27,30 +27,24 @@ package org.riverock.generic.db.definition;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
-import org.riverock.common.tools.RsetTools;
-import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.generic.schema.db.DataDefinitionActionDataListType;
-import org.riverock.generic.schema.db.DataDefinitionActionDataType;
-import org.riverock.generic.schema.db.DataDefinitionActionListType;
-import org.riverock.generic.schema.db.DataDefinitionActionType;
-import org.riverock.generic.schema.db.DataDefinitionListType;
-import org.riverock.generic.schema.db.DataDefinitionTableListType;
-import org.riverock.generic.schema.db.DataDefinitionType;
-import org.riverock.generic.schema.db.DataDefinitionTypeChoice;
+import org.riverock.generic.schema.db.DefinitionActionDataListType;
+import org.riverock.generic.schema.db.DefinitionActionDataType;
+import org.riverock.generic.schema.db.DefinitionActionListType;
+import org.riverock.generic.schema.db.DefinitionActionType;
+import org.riverock.generic.schema.db.DefinitionListType;
+import org.riverock.generic.schema.db.DefinitionTableListType;
+import org.riverock.generic.schema.db.DefinitionType;
+import org.riverock.generic.schema.db.DefinitionTypeChoice;
 import org.riverock.generic.schema.db.structure.DbFieldType;
 import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
 import org.riverock.generic.schema.db.structure.DbPrimaryKeyType;
@@ -59,7 +53,6 @@ import org.riverock.generic.schema.db.structure.DbSequenceListType;
 import org.riverock.generic.schema.db.structure.DbSequenceType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.types.ActionTypeType;
-import org.riverock.generic.tools.XmlTools;
 
 /**
  * User: Admin
@@ -72,18 +65,21 @@ import org.riverock.generic.tools.XmlTools;
 public final class DefinitionService {
     private static Logger log = Logger.getLogger(DefinitionService.class);
 
-    private static boolean isDefinitionProcessed = false;
-    private static Map<String, Object> definitionRelateHash = null;
-    private static Map<String, DataDefinitionType> definitionHash = null;
-    private static Map<String, String> dbHash = null;
-    private static DataDefinitionListType definitionList = new DataDefinitionListType();
+//    private static boolean isDefinitionProcessed = false;
+//    private static Map<String, Object> definitionRelateHash = null;
+//    private static Map<String, DefinitionType> definitionHash = null;
+//    private static Map<String, String> dbHash = null;
+//    private static DefinitionListType definitionList = new DefinitionListType();
 
+/*
     public synchronized static void registerRelateDefinitionDown(String definitionMain, String definitionTarget) {
         MainTools.putKey(definitionRelateHash, definitionMain, definitionTarget);
     }
 
     private final static Object syncDebug = new Object();
+*/
 
+/*
     public synchronized static void validateDatabaseStructure(DatabaseAdapter db_) throws Exception {
 
         if (!isDefinitionProcessed || DataDefinitionManager.isNeedReload()) {
@@ -92,7 +88,7 @@ public final class DefinitionService {
             DataDefinitionManager.init();
 
             definitionRelateHash = new HashMap<String, Object>();
-            definitionHash = new HashMap<String, DataDefinitionType>();
+            definitionHash = new HashMap<String, DefinitionType>();
 
             // получаем из менеджера все файлы с определениями в виде массива
             DataDefinitionFile[] defFileArray = DataDefinitionManager.getDefinitionFileArray();
@@ -103,7 +99,7 @@ public final class DefinitionService {
                     continue;
                 }
                 for (int j = 0; j < defFile.definitionList.getDefinitionCount(); j++) {
-                    DataDefinitionType defItem = defFile.definitionList.getDefinition(j);
+                    DefinitionType defItem = defFile.definitionList.getDefinition(j);
                     Object defTemp = definitionHash.get(defItem.getNameDef());
                     if (defTemp == null) {
                         definitionHash.put(defItem.getNameDef(), defItem);
@@ -154,9 +150,9 @@ public final class DefinitionService {
             }
         }
     }
+*/
 
-    private synchronized static void processDefinitionList(DatabaseAdapter db_)
-        throws Exception {
+    public static void processDefinitionList(DatabaseAdapter db_, DefinitionListType definitionList) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("definitionList " + definitionList);
             if (definitionList != null)
@@ -164,7 +160,7 @@ public final class DefinitionService {
         }
 
         for (int i = 0; i < definitionList.getDefinitionCount(); i++) {
-            DataDefinitionType defItem = definitionList.getDefinition(i);
+            DefinitionType defItem = definitionList.getDefinition(i);
 
             try {
                 if (log.isInfoEnabled())
@@ -245,7 +241,7 @@ public final class DefinitionService {
         }
     }
 
-    public static String getString(DataDefinitionActionDataListType actionList, String nameParam, String defValue)
+    public static String getString(DefinitionActionDataListType actionList, String nameParam, String defValue)
         throws IllegalArgumentException {
         String value = getString(actionList, nameParam);
         if (value == null)
@@ -254,19 +250,19 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static String getString(DataDefinitionActionDataListType actionList, String nameParam) {
+    public synchronized static String getString(DefinitionActionDataListType actionList, String nameParam) {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
         for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DataDefinitionActionDataType action = actionList.getParameter(i);
+            DefinitionActionDataType action = actionList.getParameter(i);
             if (action.getName().equals(nameParam))
                 return action.getData();
         }
         return null;
     }
 
-    public static Double getDouble(DataDefinitionActionDataListType actionList, String nameParam, double defValue)
+    public static Double getDouble(DefinitionActionDataListType actionList, String nameParam, double defValue)
         throws IllegalArgumentException {
         Double value = getDouble(actionList, nameParam);
         if (value == null)
@@ -275,13 +271,13 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static Double getDouble(DataDefinitionActionDataListType actionList, String nameParam)
+    public synchronized static Double getDouble(DefinitionActionDataListType actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
         for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DataDefinitionActionDataType action = actionList.getParameter(i);
+            DefinitionActionDataType action = actionList.getParameter(i);
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 Double doubleValue = null;
@@ -299,7 +295,7 @@ public final class DefinitionService {
         return null;
     }
 
-    public static Long getLong(DataDefinitionActionDataListType actionList, String nameParam, long defValue)
+    public static Long getLong(DefinitionActionDataListType actionList, String nameParam, long defValue)
         throws IllegalArgumentException {
         Long value = getLong(actionList, nameParam);
         if (value == null)
@@ -308,13 +304,13 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static Long getLong(DataDefinitionActionDataListType actionList, String nameParam)
+    public synchronized static Long getLong(DefinitionActionDataListType actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
         for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DataDefinitionActionDataType action = actionList.getParameter(i);
+            DefinitionActionDataType action = actionList.getParameter(i);
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 Long longValue = null;
@@ -332,7 +328,7 @@ public final class DefinitionService {
         return null;
     }
 
-    public static Integer getInteger(DataDefinitionActionDataListType actionList, String nameParam, int defValue)
+    public static Integer getInteger(DefinitionActionDataListType actionList, String nameParam, int defValue)
         throws IllegalArgumentException {
         Integer value = getInteger(actionList, nameParam);
         if (value == null)
@@ -341,13 +337,13 @@ public final class DefinitionService {
         return value;
     }
 
-    public static Integer getInteger(DataDefinitionActionDataListType actionList, String nameParam)
+    public static Integer getInteger(DefinitionActionDataListType actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
         for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DataDefinitionActionDataType action = actionList.getParameter(i);
+            DefinitionActionDataType action = actionList.getParameter(i);
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 Integer intValue = null;
@@ -365,7 +361,7 @@ public final class DefinitionService {
         return null;
     }
 
-    public static Boolean getBoolean(DataDefinitionActionDataListType actionList, String nameParam, boolean defValue)
+    public static Boolean getBoolean(DefinitionActionDataListType actionList, String nameParam, boolean defValue)
         throws IllegalArgumentException {
         Boolean value = getBoolean(actionList, nameParam);
         if (value == null)
@@ -374,13 +370,13 @@ public final class DefinitionService {
         return value;
     }
 
-    public synchronized static Boolean getBoolean(DataDefinitionActionDataListType actionList, String nameParam)
+    public synchronized static Boolean getBoolean(DefinitionActionDataListType actionList, String nameParam)
         throws IllegalArgumentException {
         if (actionList == null || nameParam == null || nameParam.length() == 0)
             return null;
 
         for (int i = 0; i < actionList.getParameterCount(); i++) {
-            DataDefinitionActionDataType action = actionList.getParameter(i);
+            DefinitionActionDataType action = actionList.getParameter(i);
             if (action.getName().equals(nameParam)) {
                 String value = action.getData();
                 if (value == null)
@@ -406,17 +402,17 @@ public final class DefinitionService {
 
     ////////////////////////
 
-    private synchronized static void processTable(DatabaseAdapter db_, DataDefinitionType defItem)
+    private synchronized static void processTable(DatabaseAdapter db_, DefinitionType defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDataDefinitionTypeChoiceCount(); j++) {
-            DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
+        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
+            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
 
-            for (int k = 0; k < choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-                DataDefinitionTableListType tableList = choice.getDataDefinitionTypeChoiceItem(k).getTableList();
-//            DataDefinitionTableListType tableList = choice.getDataDefinitionTypeChoiceItem().getTableList();
+            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
+                DefinitionTableListType tableList = choice.getDefinitionTypeChoiceItem(k).getTableList();
+//            DefinitionTableListType tableList = choice.getDefinitionTypeChoiceItem().getTableList();
 
                 try {
                     if (tableList != null) {
@@ -435,17 +431,17 @@ public final class DefinitionService {
         }
     }
 
-    private synchronized static void processPrimaryKey(DatabaseAdapter db_, DataDefinitionType defItem)
+    private synchronized static void processPrimaryKey(DatabaseAdapter db_, DefinitionType defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDataDefinitionTypeChoiceCount(); j++) {
-            DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
+        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
+            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
 
-            for (int k = 0; k < choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-                DbPrimaryKeyType pk = choice.getDataDefinitionTypeChoiceItem(k).getPrimaryKey();
-//            DbPrimaryKeyType pk = choice.getDataDefinitionTypeChoiceItem().getPrimaryKey();
+            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
+                DbPrimaryKeyType pk = choice.getDefinitionTypeChoiceItem(k).getPrimaryKey();
+//            DbPrimaryKeyType pk = choice.getDefinitionTypeChoiceItem().getPrimaryKey();
 
                 try {
                     if (pk != null && pk.getColumnsCount() > 0) {
@@ -463,27 +459,28 @@ public final class DefinitionService {
         }
     }
 
-    private synchronized static void processImportedKeys(DatabaseAdapter db_, DataDefinitionType defItem)
+    private synchronized static void processImportedKeys(DatabaseAdapter db_, DefinitionType defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDataDefinitionTypeChoiceCount(); j++) {
-            DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
+        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
+            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
 
-            for (int k = 0; k < choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-                DbImportedKeyListType fkList = choice.getDataDefinitionTypeChoiceItem(k).getImportedKeys();
-//            DbImportedKeyListType fkList = choice.getDataDefinitionTypeChoiceItem().getImportedKeys();
+            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
+                DbImportedKeyListType fkList = choice.getDefinitionTypeChoiceItem(k).getImportedKeys();
                 try {
                     if (fkList != null && fkList.getKeysCount() > 0) {
-                        DbSchemaType schema = DatabaseManager.getDbStructure(db_);
                         // Todo: and what we do with this table?
+/*
+                        DbSchemaType schema = DatabaseManager.getDbStructure(db_);
                         DbTableType table =
                             DatabaseManager.getTableFromStructure(
                                 schema,
                                 fkList.getKeys(0).getPkTableName()
                             );
 
+*/
                         DatabaseStructureManager.createForeignKey(db_, fkList);
                     }
                 }
@@ -496,17 +493,17 @@ public final class DefinitionService {
         }
     }
 
-    private synchronized static void processSequences(DatabaseAdapter db_, DataDefinitionType defItem)
+    private synchronized static void processSequences(DatabaseAdapter db_, DefinitionType defItem)
         throws Exception {
         if (defItem == null)
             return;
 
-        for (int j = 0; j < defItem.getDataDefinitionTypeChoiceCount(); j++) {
-            DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
+        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
+            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
 
-            for (int k = 0; k < choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-                DbSequenceListType seqList = choice.getDataDefinitionTypeChoiceItem(k).getSequenceList();
-//            DbSequenceListType seqList = choice.getDataDefinitionTypeChoiceItem().getSequenceList();
+            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
+                DbSequenceListType seqList = choice.getDefinitionTypeChoiceItem(k).getSequenceList();
+//            DbSequenceListType seqList = choice.getDefinitionTypeChoiceItem().getSequenceList();
                 try {
                     if (seqList != null) {
                         for (int i = 0; i < seqList.getSequencesCount(); i++) {
@@ -524,27 +521,26 @@ public final class DefinitionService {
         }
     }
 
-    private synchronized static void processAction(DatabaseAdapter db_, DataDefinitionType defItem)
+    private synchronized static void processAction(DatabaseAdapter db_, DefinitionType defItem)
         throws Exception {
         if (defItem == null)
             return;
 
         if (log.isDebugEnabled())
-            log.debug("defItem.getDataDefinitionTypeChoiceCount() " + defItem.getDataDefinitionTypeChoiceCount());
+            log.debug("defItem.getDefinitionTypeChoiceCount() " + defItem.getDefinitionTypeChoiceCount());
 
-        for (int j = 0; j < defItem.getDataDefinitionTypeChoiceCount(); j++) {
-            DataDefinitionTypeChoice choice = defItem.getDataDefinitionTypeChoice(j);
+        for (int j = 0; j < defItem.getDefinitionTypeChoiceCount(); j++) {
+            DefinitionTypeChoice choice = defItem.getDefinitionTypeChoice(j);
 
-            for (int k = 0; k < choice.getDataDefinitionTypeChoiceItemCount(); k++) {
-                DataDefinitionActionListType actionList = choice.getDataDefinitionTypeChoiceItem(k).getActionList();
-//            DataDefinitionActionListType actionList = choice.getDataDefinitionTypeChoiceItem().getActionList();
+            for (int k = 0; k < choice.getDefinitionTypeChoiceItemCount(); k++) {
+                DefinitionActionListType actionList = choice.getDefinitionTypeChoiceItem(k).getActionList();
 
                 if (actionList != null) {
                     if (log.isDebugEnabled())
                         log.debug("actionList.getActionCount() " + actionList.getActionCount());
 
                     for (int i = 0; i < actionList.getActionCount(); i++) {
-                        DataDefinitionActionType action = actionList.getAction(i);
+                        DefinitionActionType action = actionList.getAction(i);
                         try {
 
                             switch (action.getActionType().getType()) {
@@ -705,6 +701,7 @@ public final class DefinitionService {
         }
     }
 
+/*
     private synchronized static void walk(String key) {
         Object obj = definitionRelateHash.get(key);
         if (obj != null) {
@@ -723,7 +720,9 @@ public final class DefinitionService {
         if (value == null && !flag)
             definitionList.addDefinition(definitionHash.get(key));
     }
+*/
 
+/*
     private synchronized static void walkList(List v) {
         for (Object obj : v) {
             if (obj==null) {
@@ -742,14 +741,16 @@ public final class DefinitionService {
 
     private synchronized static boolean isInQueue(String nameDef) {
         for (int i = 0; i < definitionList.getDefinitionCount(); i++) {
-            DataDefinitionType def = definitionList.getDefinition(i);
+            DefinitionType def = definitionList.getDefinition(i);
             if (def.getNameDef().equals(nameDef))
                 return true;
         }
 
         return false;
     }
+*/
 
+/*
     private synchronized static void getProcessedDefinition(DatabaseAdapter db_)
         throws Exception {
         if (dbHash != null) {
@@ -811,5 +812,6 @@ public final class DefinitionService {
             }
         }
     }
+*/
 
 }
