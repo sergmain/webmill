@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Comparator;
+import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
@@ -41,13 +43,44 @@ import org.riverock.interfaces.common.TreeItem;
 public final class TreeUtils {
 
     private final static Logger log = Logger.getLogger( TreeUtils.class );
+    private final static TreeItemComparator comparator = new TreeItemComparator();
+
+    private static class TreeItemComparator implements Comparator<TreeItem> {
+        public int compare(TreeItem item1, TreeItem item2) {
+
+            if (item1 ==null && item2 ==null)
+                return 0;
+
+            if (item1 ==null)
+                return 1;
+
+            if (item2 ==null)
+                return -1;
+
+            if ( item1.getTopId()==null && item2.getTopId()==null)
+                return 0;
+
+            if ( item1.getTopId()!=null && item2.getTopId()==null )
+                return -1;
+
+            if ( item1.getTopId()==null && item2.getTopId()!=null)
+                return 1;
+
+
+            if ( item1.getTopId().equals( item2.getTopId()))
+                return 1;
+
+            if ( item1.getTopId() > item2.getTopId())
+                return 1;
+            else
+                return -1;
+        }
+    }
 
     public static List<TreeItem> rebuildTree( final List<TreeItem> source) {
 
-        List<TreeItem> treeItems = new LinkedList<TreeItem>();
-        for (TreeItem treeItem : source)
-            treeItems.add(treeItem);
-
+        List<TreeItem> treeItems = new LinkedList<TreeItem>(source);
+        Collections.sort(treeItems, comparator);
         List<TreeItem> result = null;
         List<TreeItem> v = new ArrayList<TreeItem>();
         Long id = 0L;
