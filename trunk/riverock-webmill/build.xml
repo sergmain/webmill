@@ -26,17 +26,15 @@
 <project name="Webmill portal build script" default="jar_without_copy" basedir=".">
 
     <property name="Name" value="riverock-webmill"/>
-    <property name="portlet-context-name" value=""/>
 
-    <property name="release-version" value="5.5.1"/>
-    <property name="portal-release-version" value="5.5.1"/>
-    <property name="name-portal-release-version" value="webmill-portal-${portal-release-version}"/>
+    <import file="../riverock-include.xml"/>
+
+    <property name="release-version" value="${webmill-portal-release-version}"/>
+    <property name="name-portal-release-version" value="webmill-portal-${webmill-portal-release-version}"/>
 
     <property name="build-release-name" value="webmill-${release-version}"/>
     <property name="manifest-title-name" value="WebMill engine"/>
     <property name="manifest-vendor-name" value="WebMill. http://webmill.askmore.info"/>
-
-    <import file="../riverock-include.xml"/>
 
     <property name="site.name" value="_localhost"/>
     <property name="tomcat.dir" value="tomcat"/>
