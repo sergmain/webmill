@@ -25,7 +25,6 @@
  */
 package org.riverock.generic.db;
 
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -44,8 +43,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.generic.db.definition.DefinitionService;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.schema.db.structure.*;
@@ -56,6 +53,7 @@ import org.riverock.generic.schema.db.structure.*;
  *         Time: 1:07:54
  *         $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class DatabaseStructureManager {
     private final static Logger log = Logger.getLogger( DatabaseStructureManager.class );
 
@@ -1161,6 +1159,7 @@ public class DatabaseStructureManager {
         dropColumn(adapter, originTable, tempField);
     }
 
+/*
     private final static Object syncObj = new Object();
     public static void checkDatabaseStructure(DatabaseAdapter adapater, DatabaseConnectionType dc) throws DatabaseException {
         if (log.isDebugEnabled()) {
@@ -1189,5 +1188,6 @@ public class DatabaseStructureManager {
             }
         }
     }
+*/
 
 }

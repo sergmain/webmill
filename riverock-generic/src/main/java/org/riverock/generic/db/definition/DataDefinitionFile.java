@@ -35,7 +35,7 @@ import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
 import org.riverock.generic.main.CacheFile;
-import org.riverock.generic.schema.db.DataDefinitionListType;
+import org.riverock.generic.schema.db.DefinitionListType;
 import org.riverock.generic.config.GenericConfig;
 
 /**
@@ -44,7 +44,7 @@ import org.riverock.generic.config.GenericConfig;
 public class DataDefinitionFile extends CacheFile {
     private static Logger log = Logger.getLogger(DataDefinitionFile.class);
 
-    public DataDefinitionListType definitionList = null;
+    public DefinitionListType definitionList = null;
 
     public DataDefinitionFile(File tempFile) {
         super(tempFile, 1000 * 10);
@@ -60,7 +60,7 @@ public class DataDefinitionFile extends CacheFile {
     private void processFile() {
         try {
             InputSource inSrc = new InputSource(new FileInputStream(getFile()));
-            definitionList = (DataDefinitionListType) Unmarshaller.unmarshal(DataDefinitionListType.class, inSrc);
+            definitionList = (DefinitionListType) Unmarshaller.unmarshal(DefinitionListType.class, inSrc);
             definitionList.validate();
 
             if (log.isDebugEnabled()) {
