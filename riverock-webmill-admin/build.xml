@@ -28,9 +28,10 @@
     <property name="Name" value="riverock-webmill-admin"/>
     <property name="portlet-context-name" value=""/>
 
-    <property name="release-version" value="5.5.1"/>
-    <property name="portal-release-version" value="5.5.1"/>
-    <property name="name-portal-release-version" value="webmill-portal-${portal-release-version}"/>
+    <import file="..\riverock-globals-prop.xml"/>
+
+    <property name="release-version" value="${webmill-portal-release-version}"/>
+    <property name="name-portal-release-version" value="webmill-portal-${webmill-portal-release-version}"/>
 
     <property name="build-release-name" value="webmill-admin-${release-version}"/>
     <property name="manifest-title-name" value="WebMill admin"/>

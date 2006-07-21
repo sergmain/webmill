@@ -27,12 +27,15 @@
 
     <property name="Name" value="riverock-webmill"/>
 
-    <import file="../riverock-include.xml"/>
+    <import file="..\riverock-globals-prop.xml"/>
 
     <property name="release-version" value="${webmill-portal-release-version}"/>
+
+    <import file="../riverock-include.xml"/>
+
     <property name="name-portal-release-version" value="webmill-portal-${webmill-portal-release-version}"/>
 
-    <property name="build-release-name" value="webmill-${release-version}"/>
+    <property name="build-release-name" value="webmill-${webmill-portal-release-version}"/>
     <property name="manifest-title-name" value="WebMill engine"/>
     <property name="manifest-vendor-name" value="WebMill. http://webmill.askmore.info"/>
 
