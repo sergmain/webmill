@@ -80,7 +80,8 @@ public final class TreeUtils {
     public static List<TreeItem> rebuildTree( final List<TreeItem> source) {
 
         List<TreeItem> treeItems = new LinkedList<TreeItem>(source);
-        Collections.sort(treeItems, comparator);
+        List<TreeItem> sortedTreeItems = new LinkedList<TreeItem>(source);
+        Collections.sort(sortedTreeItems, comparator);
         List<TreeItem> result = null;
         List<TreeItem> v = new ArrayList<TreeItem>();
         Long id = 0L;
@@ -115,8 +116,14 @@ public final class TreeUtils {
             if (log.isDebugEnabled()) log.debug("#1.01.07 result.size() - " + result.size());
 
             treeItems.removeAll(v);
+            sortedTreeItems.removeAll(v);
+            if (treeItems.size()!=sortedTreeItems.size()) {
+                throw new RuntimeException("sizes of lists are miismatch");
+            }
 
-            if (log.isDebugEnabled()) log.debug("#1.01.09 treeItems.size() - " + treeItems.size());
+            if (log.isDebugEnabled()) {
+                log.debug("#1.01.09 treeItems.size() - " + treeItems.size());
+            }
 
             v.clear();
             if (log.isDebugEnabled()) {
@@ -124,8 +131,9 @@ public final class TreeUtils {
                 log.debug("#1.01.13 result.size() - " + result.size());
             }
 
-            if (treeItems.size() > 0)
-                id = treeItems.get(0).getTopId();
+            if (sortedTreeItems.size() > 0) {
+                id = ((TreeItem)sortedTreeItems.get(0)).getTopId();
+            }
         }
         treeItems.clear();
 
