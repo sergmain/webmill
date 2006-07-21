@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
@@ -57,8 +58,9 @@ import org.riverock.generic.schema.db.structure.DbViewType;
  * $Id$
  *
  */
-public class HSQLconnect extends DatabaseAdapter {
-    private static Logger log = Logger.getLogger( HSQLconnect.class );
+@SuppressWarnings({"UnusedAssignment"})
+public class HSQLDBconnect extends DatabaseAdapter {
+    private static Logger log = Logger.getLogger( HSQLDBconnect.class );
 
     public int getFamaly() {
         return DatabaseManager.HSQLDB_FAMALY;
@@ -72,7 +74,7 @@ public class HSQLconnect extends DatabaseAdapter {
         return 7;
     }
 
-    public HSQLconnect() {
+    public HSQLDBconnect() {
         super();
     }
 
@@ -106,7 +108,7 @@ public class HSQLconnect extends DatabaseAdapter {
     }
 
     public boolean getIsNeedUpdateBracket() {
-        return false;
+        return true;
     }
 
     public boolean getIsByteArrayInUtf8() {
@@ -139,7 +141,8 @@ public class HSQLconnect extends DatabaseAdapter {
                 isFirst = !isFirst;
 
             sql += "\n\"" + field.getName() + "\"";
-            switch (field.getJavaType().intValue()) {
+            int fieldType = field.getJavaType();
+            switch (fieldType) {
 
                 case Types.NUMERIC:
                 case Types.DECIMAL:
@@ -182,13 +185,25 @@ public class HSQLconnect extends DatabaseAdapter {
             if (field.getDefaultValue() != null) {
                 String val = field.getDefaultValue().trim();
 
-//                if (!val.equalsIgnoreCase("null"))
-//                    val = "'"+val+"'";
+                if (StringUtils.isNotBlank(val)) {
+                    switch (fieldType) {
+                        case Types.CHAR:
+                        case Types.VARCHAR:
+                            val = "'" + val + "'";
+                            break;
+                        case Types.TIMESTAMP:
+                        case Types.DATE:
+//                            if (DatabaseManager.checkDefaultTimestamp(val))
+//                                val = "'CURRENT_TIMESTAMP'";
 
-                sql += (" DEFAULT " + val);
+                            break;
+                        default:
+                    }
+                    sql += (" DEFAULT " + val);
+                }
             }
 
-            if (field.getNullable().intValue() == DatabaseMetaData.columnNoNulls) {
+            if (field.getNullable() == DatabaseMetaData.columnNoNulls) {
                 sql += " NOT NULL ";
             }
         }
@@ -211,12 +226,12 @@ public class HSQLconnect extends DatabaseAdapter {
                 int seqTemp = Integer.MAX_VALUE;
                 for (int k = 0; k < pk.getColumnsCount(); k++) {
                     DbPrimaryKeyColumnType columnTemp = pk.getColumns(k);
-                    if (seq < columnTemp.getKeySeq().intValue() && columnTemp.getKeySeq().intValue() < seqTemp) {
-                        seqTemp = columnTemp.getKeySeq().intValue();
+                    if (seq < columnTemp.getKeySeq() && columnTemp.getKeySeq() < seqTemp) {
+                        seqTemp = columnTemp.getKeySeq();
                         column = columnTemp;
                     }
                 }
-                seq = column.getKeySeq().intValue();
+                seq = column.getKeySeq();
 
                 if (!isFirst)
                     sql += ",";
@@ -318,7 +333,8 @@ public class HSQLconnect extends DatabaseAdapter {
     public void addColumn(DbTableType table, DbFieldType field) throws Exception {
         String sql = "alter table \"" + table.getName() + "\" add column " + field.getName() + " ";
 
-        switch (field.getJavaType().intValue()) {
+        int fieldType = field.getJavaType();
+        switch (fieldType) {
 
             case Types.NUMERIC:
             case Types.DECIMAL:
@@ -362,13 +378,25 @@ public class HSQLconnect extends DatabaseAdapter {
         if (field.getDefaultValue() != null) {
             String val = field.getDefaultValue().trim();
 
-//                if (!val.equalsIgnoreCase("null"))
-//                    val = "'"+val+"'";
+            if (StringUtils.isNotBlank(val)) {
+                switch (fieldType) {
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        val = "'" + val + "'";
+                        break;
+                    case Types.TIMESTAMP:
+                    case Types.DATE:
+//                            if (DatabaseManager.checkDefaultTimestamp(val))
+//                                val = "'CURRENT_TIMESTAMP'";
 
-            sql += (" DEFAULT " + val);
+                        break;
+                    default:
+                }
+                sql += (" DEFAULT " + val);
+            }
         }
 
-        if (field.getNullable().intValue() == DatabaseMetaData.columnNoNulls) {
+        if (field.getNullable() == DatabaseMetaData.columnNoNulls) {
             sql += " NOT NULL ";
         }
 
@@ -385,7 +413,7 @@ public class HSQLconnect extends DatabaseAdapter {
             throw e;
         }
         finally {
-            org.riverock.generic.db.DatabaseManager.close(ps);
+            DatabaseManager.close(ps);
             ps = null;
         }
     }
@@ -436,7 +464,7 @@ public class HSQLconnect extends DatabaseAdapter {
             ps.executeUpdate();
         }
         finally {
-            org.riverock.generic.db.DatabaseManager.close(ps);
+            DatabaseManager.close(ps);
             ps = null;
         }
     }
@@ -571,9 +599,5 @@ public class HSQLconnect extends DatabaseAdapter {
                 return true;
         }
         return false;
-    }
-
-    public void nop() {
-        int i = 0;
     }
 }

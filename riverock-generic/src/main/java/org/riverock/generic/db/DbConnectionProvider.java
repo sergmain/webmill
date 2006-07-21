@@ -37,7 +37,7 @@ import org.riverock.generic.schema.config.DatabaseConnectionType;
 import org.riverock.generic.exception.DatabaseException;
 import org.riverock.generic.db.factory.ORAconnect;
 import org.riverock.generic.db.factory.MYSQLconnect;
-import org.riverock.generic.db.factory.HSQLconnect;
+import org.riverock.generic.db.factory.HSQLDBconnect;
 import org.riverock.generic.db.factory.MSSQL_JTDS_connect;
 import org.riverock.generic.db.factory.PostgreeSQLconnect;
 import org.riverock.generic.db.factory.IBMDB2connect;
@@ -56,7 +56,7 @@ public class DbConnectionProvider {
     static {
         familyMap.put("oracle", ORAconnect.class.getName());
         familyMap.put("mysql", MYSQLconnect.class.getName());
-        familyMap.put("hsql", HSQLconnect.class.getName());
+        familyMap.put("hsqldb", HSQLDBconnect.class.getName());
         familyMap.put("mssql", MSSQL_JTDS_connect.class.getName());
         familyMap.put("postgrees", PostgreeSQLconnect.class.getName());
         familyMap.put("db2", IBMDB2connect.class.getName());
