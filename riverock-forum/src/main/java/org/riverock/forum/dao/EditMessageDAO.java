@@ -27,11 +27,9 @@ package org.riverock.forum.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.forum.bean.MessageBean;
-import org.riverock.forum.bean.PostBean;
 import org.riverock.forum.core.GetWmForumMessageItem;
 import org.riverock.forum.schema.core.WmForumMessageItemType;
 import org.riverock.forum.util.CommonUtils;
@@ -46,7 +44,7 @@ import org.riverock.module.exception.ActionException;
  *         $Id$
  */
 public class EditMessageDAO {
-    private static final Log log = LogFactory.getLog(EditMessageDAO.class);
+    private static final Logger log = Logger.getLogger(EditMessageDAO.class);
 
     public MessageBean get(Long forumId, Long topicId, Integer messageId) throws ActionException {
         DatabaseAdapter adapter = null;

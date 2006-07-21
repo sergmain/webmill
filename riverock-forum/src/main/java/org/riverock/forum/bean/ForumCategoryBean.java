@@ -37,7 +37,7 @@ public class ForumCategoryBean {
     private boolean isUseLocale = false;
     private String categoryName = null;
     private Collection forums = new LinkedList();
-    private Integer forumCategoryId = null;
+    private Long forumCategoryId = null;
     private boolean isDeleted = false;
 
     public boolean isUseLocale() {
@@ -64,11 +64,11 @@ public class ForumCategoryBean {
         this.forums = forums;
     }
 
-    public Integer getForumCategoryId() {
+    public Long getForumCategoryId() {
         return forumCategoryId;
     }
 
-    public void setForumCategoryId(Integer forumCategoryId) {
+    public void setForumCategoryId(Long forumCategoryId) {
         this.forumCategoryId = forumCategoryId;
     }
 

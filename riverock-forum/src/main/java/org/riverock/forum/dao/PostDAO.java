@@ -27,8 +27,7 @@ package org.riverock.forum.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.riverock.forum.bean.PostBean;
 import org.riverock.forum.core.GetWmForumConcreteItem;
@@ -42,13 +41,13 @@ import org.riverock.module.exception.ActionException;
  * PostDAO
  */
 public class PostDAO {
-    private static final Log log = LogFactory.getLog(PostDAO.class);
+    private static final Logger log = Logger.getLogger(PostDAO.class);
 
-    public PostBean post(Long forumId, int f_id) throws ActionException {
+    public PostBean post(Long forumId, long f_id) throws ActionException {
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            if (!CommonUtils.checkForumConcreteId( adapter, forumId, new Integer( f_id ) )){
+            if (!CommonUtils.checkForumConcreteId( adapter, forumId, f_id )){
                 return null;
             }
 
@@ -73,13 +72,13 @@ public class PostDAO {
         }
     }
 
-    public PostBean reply(Long forumId, int t_id) throws ActionException {
+    public PostBean reply(Long forumId, long t_id) throws ActionException {
         DatabaseAdapter adapter = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             adapter = DatabaseAdapter.getInstance();
-            if (!CommonUtils.checkForumTopicId( adapter, forumId, new Integer( t_id ) )){
+            if (!CommonUtils.checkForumTopicId( adapter, forumId, t_id )){
                 return null;
             }
 
@@ -88,7 +87,7 @@ public class PostDAO {
                 "from   WM_FORUM_CONCRETE, WM_FORUM_TOPIC " +
                 "where  t_f_id=f_id and t_id=? ";
             ps = adapter.prepareStatement(sql);
-            ps.setInt(1, t_id);
+            ps.setLong(1, t_id);
             rs = ps.executeQuery();
 
             if (!rs.next()) {
@@ -96,7 +95,7 @@ public class PostDAO {
             }
             else {
                 PostBean postBean = new PostBean();
-                postBean.setF_id(rs.getInt("t_f_id"));
+                postBean.setF_id(rs.getLong("t_f_id"));
                 postBean.setF_name(rs.getString("f_name"));
                 postBean.setT_id(t_id);
                 postBean.setT_name(rs.getString("t_name"));

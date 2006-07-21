@@ -122,7 +122,7 @@ public class AdminForumDAO {
     private void restoreForumConcrete(ForumActionBean forumActionBean, Long forumId) throws SQLException {
         log.debug("in restoreForumConcrete()");
 
-        Integer forumConcreteId = forumActionBean.getRequest().getInt( "forumConcreteId" );
+        Long forumConcreteId = forumActionBean.getRequest().getLong( "forumConcreteId" );
         if (log.isDebugEnabled()) {
             log.debug("forumConcreteId: "+forumConcreteId);
         }
@@ -151,7 +151,7 @@ public class AdminForumDAO {
         log.debug("in deleteForumConcrete()");
 
         int checkBox = forumActionBean.getRequest().getInt("confirm-delete", 0);
-        Integer forumConcreteId = forumActionBean.getRequest().getInt( "forumConcreteId" );
+        Long forumConcreteId = forumActionBean.getRequest().getLong( "forumConcreteId" );
         if (log.isDebugEnabled()) {
             log.debug("checkBox: "+checkBox);
             log.debug("forumConcreteId: "+forumConcreteId);
@@ -187,7 +187,7 @@ public class AdminForumDAO {
     private void addNewForumConcrete(ModuleUser auth_, ForumActionBean forumActionBean, Long forumId) throws SQLException, PersistenceException  {
         log.debug("in addNewForumConcrete()");
 
-        Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
+        Long forumCategoryId = forumActionBean.getRequest().getLong( "forumCategoryId" );
         if (forumCategoryId==null) {
             return;
         }
@@ -202,8 +202,8 @@ public class AdminForumDAO {
         item.setForumCategoryId( forumCategoryId );
 
         // hack - set moderator and last poster to admin userID
-        item.setFUId(auth_.getId().intValue() );
-        item.setFUId2(auth_.getId().intValue() );
+        item.setFUId(auth_.getId() );
+        item.setFUId2(auth_.getId() );
 
         InsertWmForumConcreteItem.process( forumActionBean.getAdapter(), item );
 
@@ -215,7 +215,7 @@ public class AdminForumDAO {
 
         WmForumCategoryItemType item = new WmForumCategoryItemType();
         item.setForumCategoryName( forumActionBean.getRequest().getString( "forum-category-name" ));
-        item.setForumId(forumId.intValue() );
+        item.setForumId(forumId );
         item.setForumCategoryId(CommonDAO.getForumCategoryID(forumActionBean.getAdapter()) );
         item.setIsUseLocale( Boolean.FALSE );
         InsertWmForumCategoryItem.process( forumActionBean.getAdapter(), item );
@@ -228,7 +228,7 @@ public class AdminForumDAO {
     private void restoreForumCategory(ForumActionBean forumActionBean, Long forumId) throws SQLException {
         log.debug("in restoreForumCategory()");
 
-        Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
+        Long forumCategoryId = forumActionBean.getRequest().getLong( "forumCategoryId" );
         if (!CommonUtils.checkForumCategoryId(forumActionBean.getAdapter(), forumId, forumCategoryId)){
             return;
         }
@@ -248,7 +248,7 @@ public class AdminForumDAO {
     private void deleteForumCategory(ForumActionBean forumActionBean, boolean isPermanent, Long forumId) throws SQLException {
         log.debug("in deleteForumCategory()");
 
-        Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
+        Long forumCategoryId = forumActionBean.getRequest().getLong( "forumCategoryId" );
         if (!CommonUtils.checkForumCategoryId(forumActionBean.getAdapter(), forumId, forumCategoryId)){
             return;
         }
@@ -270,11 +270,11 @@ public class AdminForumDAO {
                     "from   WM_FORUM_CONCRETE a " +
                     "where  a.FORUM_CATEGORY_ID=?"
                 );
-                ps.setInt(1, forumCategoryId);
+                ps.setLong(1, forumCategoryId);
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-                    CommonDAO.deleteForumConcrete(forumActionBean.getAdapter(), RsetTools.getInt(rs, "F_ID"));
+                    CommonDAO.deleteForumConcrete(forumActionBean.getAdapter(), RsetTools.getLong(rs, "F_ID"));
                 }
                 DatabaseManager.runSQL(
                     forumActionBean.getAdapter(),
@@ -306,7 +306,7 @@ public class AdminForumDAO {
     private void updateForumCategory(ForumActionBean forumActionBean, Long forumId) throws PersistenceException {
         log.debug("in updateForumCategory()");
 
-        Integer forumCategoryId = forumActionBean.getRequest().getInt( "forumCategoryId" );
+        Long forumCategoryId = forumActionBean.getRequest().getLong( "forumCategoryId" );
         if (!CommonUtils.checkForumCategoryId(forumActionBean.getAdapter(), forumId, forumCategoryId)){
             return;
         }
@@ -321,7 +321,7 @@ public class AdminForumDAO {
     private void updateForumConcrete(ForumActionBean forumActionBean, Long forumId) throws PersistenceException {
         log.debug("in updateForumConcrete()");
 
-        Integer forumConcreteId = forumActionBean.getRequest().getInt( "forumConcreteId" );
+        Long forumConcreteId = forumActionBean.getRequest().getLong( "forumConcreteId" );
         if (!CommonUtils.checkForumConcreteId(forumActionBean.getAdapter(), forumId, forumConcreteId)){
             return;
         }

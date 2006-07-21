@@ -49,7 +49,7 @@ public class UserEditPAction implements Action {
         String u_address = forumActionBean.getRequest().getString("u_address");
         String u_sign = forumActionBean.getRequest().getString("u_sign");
         int u_avatar_id = 0;
-//        int u_avatar_id = StringUtils.parseInt(request.getParameter("u_avatar_id"));
+//        int u_avatar_id = ForumStringUtils.parseInt(request.getParameter("u_avatar_id"));
         String u_lastip = forumActionBean.getRequest().getRemoteAddr();
 
         DAOFactory daof = DAOFactory.getDAOFactory();

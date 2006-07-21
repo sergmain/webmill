@@ -56,7 +56,7 @@
                 </tr>
                 <tr>
                     <td width="50%" bgcolor="#F3F3F3">sign</td>
-                    <td bgcolor="#F3F3F3"><%=StringUtils.displayHtml(userBean.getU_sign())%></td>
+                    <td bgcolor="#F3F3F3"><%=ForumStringUtils.displayHtml(userBean.getU_sign())%></td>
                 </tr>
                 <tr>
                     <td width="50%" bgcolor="#F3F3F3">Post</td>

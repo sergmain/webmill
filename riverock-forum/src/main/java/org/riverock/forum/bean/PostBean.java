@@ -31,18 +31,18 @@ public class PostBean implements Serializable {
     private String t_name;
     private boolean reply;
     private int t_locked;
-    private int f_id;
-    private int t_id;
+    private Long f_id;
+    private Long t_id;
     private Long forumId = null;
 
     public void reset() {
     }
 
-    public void setF_id(int f_id) {
+    public void setF_id(Long f_id) {
         this.f_id = f_id;
     }
 
-    public int getF_id() {
+    public Long getF_id() {
         return f_id;
     }
 
@@ -54,11 +54,11 @@ public class PostBean implements Serializable {
         return f_name;
     }
 
-    public void setT_id(int t_id) {
+    public void setT_id(Long t_id) {
         this.t_id = t_id;
     }
 
-    public int getT_id() {
+    public Long getT_id() {
         return t_id;
     }
 

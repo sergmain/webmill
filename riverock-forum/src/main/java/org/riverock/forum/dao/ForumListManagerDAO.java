@@ -44,7 +44,6 @@ import org.riverock.forum.util.CommonUtils;
 import org.riverock.forum.util.Constants;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.interfaces.portal.PortalInfo;
 import org.riverock.interfaces.portal.dao.PortalDaoProvider;
 import org.riverock.module.action.ModuleActionRequest;
@@ -119,7 +118,7 @@ public class ForumListManagerDAO {
         return CommonUtils.checkForumId(adapter, forumId, moduleActionRequest.getRequest().getServerName());
     }
 
-    private void restoreForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException, DatabaseException {
+    private void restoreForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException {
         log.debug("in restoreForum()");
 
         if (forum == null) {
@@ -177,7 +176,7 @@ public class ForumListManagerDAO {
         log.debug("out createLostUser()");
     }
 
-    private void deleteForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, boolean isPermanent, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException, DatabaseException {
+    private void deleteForum(ModuleUser auth_, ModuleActionRequest moduleActionRequest, boolean isPermanent, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException {
         log.debug("in deleteForum()");
 
         if (forum == null) {
@@ -201,11 +200,11 @@ public class ForumListManagerDAO {
                         "from   WM_FORUM_CONCRETE a , WM_FORUM_CATEGORY b " +
                         "where  a.FORUM_CATEGORY_ID=b.FORUM_CATEGORY_ID and b.FORUM_ID=?"
                 );
-                ps.setInt(1, forum.getForumId());
+                ps.setLong(1, forum.getForumId());
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-                    CommonDAO.deleteForumConcrete(adapter, RsetTools.getInt(rs, "F_ID"));
+                    CommonDAO.deleteForumConcrete(adapter, RsetTools.getLong(rs, "F_ID"));
                 }
                 DatabaseManager.runSQL(
                     adapter,
@@ -245,16 +244,16 @@ public class ForumListManagerDAO {
         WmForumItemType forum = new WmForumItemType();
         forum.setForumName(moduleActionRequest.getRequest().getString("forum-name"));
         forum.setForumId(CommonDAO.getForumID(adapter));
-        forum.setSiteId(moduleActionRequest.getRequest().getSiteId().intValue());
-        forum.setIsDeleted(Boolean.FALSE);
-        forum.setIsUseLocale(Boolean.FALSE);
+        forum.setSiteId(moduleActionRequest.getRequest().getSiteId());
+        forum.setIsDeleted(false);
+        forum.setIsUseLocale(false);
 
         InsertWmForumItem.process(adapter, forum);
 
         log.debug("out addNewForum()");
     }
 
-    private void updateForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws SQLException, PersistenceException {
+    private void updateForum(ModuleUser auth_, ModuleActionRequest forumActionBean, DatabaseAdapter adapter, WmForumItemType forum) throws PersistenceException {
         log.debug("in updateForum()");
 
         if (forum == null) {

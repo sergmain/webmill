@@ -29,13 +29,11 @@ import java.sql.ResultSet;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.common.tools.RsetTools;
+import org.riverock.forum.core.GetWmForumItem;
+import org.riverock.forum.schema.core.WmForumItemType;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.forum.dao.CommonDAO;
-import org.riverock.forum.schema.core.WmForumItemType;
-import org.riverock.forum.core.GetWmForumItem;
 
 /**
  * @author SMaslyukov
@@ -46,7 +44,7 @@ import org.riverock.forum.core.GetWmForumItem;
 public final class CommonUtils {
     private final static Logger log = Logger.getLogger(CommonUtils.class);
 
-    public static boolean checkForumConcreteId(DatabaseAdapter adapter, Long forumId, Integer f_id) {
+    public static boolean checkForumConcreteId(DatabaseAdapter adapter, Long forumId, Long f_id) {
 
         if (f_id==null) {
             return false;
@@ -75,7 +73,7 @@ public final class CommonUtils {
         return true;
     }
 
-    public static boolean checkForumCategoryId(DatabaseAdapter adapter, Long forumId, Integer forumCategoryId) {
+    public static boolean checkForumCategoryId(DatabaseAdapter adapter, Long forumId, Long forumCategoryId) {
 
         if (forumCategoryId==null) {
             return false;
@@ -103,7 +101,7 @@ public final class CommonUtils {
         return true;
     }
 
-    public static boolean checkForumTopicId(DatabaseAdapter adapter, Long forumId, Integer t_id) {
+    public static boolean checkForumTopicId(DatabaseAdapter adapter, Long forumId, Long t_id) {
 
         if (t_id==null) {
             return false;
@@ -180,8 +178,7 @@ public final class CommonUtils {
 
             rs = ps.executeQuery();
             if (rs.next()) {
-                WmForumItemType forum = GetWmForumItem.fillBean(rs);
-                return forum;
+                return GetWmForumItem.fillBean(rs);
             }
             return null;
         }
@@ -189,6 +186,11 @@ public final class CommonUtils {
             String es = "error check forumId";
             log.error(es, e);
             return null;
+        }
+        finally {
+            DatabaseManager.close(rs, ps);
+            rs=null;
+            ps=null;
         }
     }
 }

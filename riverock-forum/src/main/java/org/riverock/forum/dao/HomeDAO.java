@@ -104,7 +104,7 @@ public class HomeDAO {
                 sql += sqlOrder;
 
                 ps = adapter.prepareStatement( sql );
-                ps.setInt(1, item.getForumCategoryId() );
+                ps.setLong(1, item.getForumCategoryId() );
                 rs = ps.executeQuery();
 
 
@@ -115,7 +115,7 @@ public class HomeDAO {
                     forums.add( forumConcrete );
 
                     forumConcrete.setDeleted( RsetTools.getInt(rs, "IS_DELETED", 0)==1 );
-                    forumConcrete.setF_id(rs.getInt("f_id"));
+                    forumConcrete.setF_id(rs.getLong("f_id"));
                     forumConcrete.setF_name(rs.getString("f_name"));
                     forumConcrete.setF_info(rs.getString("f_info"));
                     forumConcrete.setModeratorId(rs.getInt("f_u_id"));

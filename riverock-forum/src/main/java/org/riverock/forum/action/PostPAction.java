@@ -26,19 +26,18 @@ package org.riverock.forum.action;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Iterator;
 
 import javax.portlet.ActionRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import org.riverock.common.tools.StringTools;
 import org.riverock.forum.ForumActionBean;
 import org.riverock.forum.ForumError;
 import org.riverock.forum.dao.DAOFactory;
 import org.riverock.forum.dao.PostPDAO;
 import org.riverock.forum.util.Constants;
-import org.riverock.forum.util.StringUtils;
+import org.riverock.forum.util.ForumStringUtils;
 import org.riverock.module.action.Action;
 import org.riverock.module.action.ModuleActionRequest;
 import org.riverock.module.exception.ActionException;
@@ -56,8 +55,8 @@ public class PostPAction implements Action {
         }
 
         Long userId = auth_.getId();
-        boolean reply = StringUtils.parseBoolean(forumActionBean.getRequest().getString(Constants.NAME_FORUM_REPLY));
-        int tm_iconid = forumActionBean.getRequest().getInt( "tm_iconid", new Integer(0)).intValue();
+        boolean reply = ForumStringUtils.parseBoolean(forumActionBean.getRequest().getString(Constants.NAME_FORUM_REPLY));
+        int tm_iconid = forumActionBean.getRequest().getInt( "tm_iconid", 0);
 
         Integer f_id = forumActionBean.getRequest().getInt( Constants.NAME_FORUM_CONCRETE_ID );
         Integer t_id = forumActionBean.getRequest().getInt( Constants.NAME_FORUM_TOPIC_ID );
@@ -74,10 +73,9 @@ public class PostPAction implements Action {
 
         if ( log.isDebugEnabled() ) {
 
-            Iterator it  = ((ActionRequest)forumActionBean.getRequest().getOriginRequest()).getParameterMap().entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry entry = (Map.Entry) it.next();
-                log.debug( "key: " + entry.getKey()+", value: "+entry.getValue());
+            for (Object o : ((ActionRequest) forumActionBean.getRequest().getOriginRequest()).getParameterMap().entrySet()) {
+                Map.Entry entry = (Map.Entry) o;
+                log.debug("key: " + entry.getKey() + ", value: " + entry.getValue());
             }
             log.debug( "content #1: " + ((ActionRequest)forumActionBean.getRequest().getOriginRequest()).getParameter("content"));
             log.debug( "content #2: " + forumActionBean.getRequest().getParameter("content"));
@@ -87,7 +85,7 @@ public class PostPAction implements Action {
 
         String u_lastip = forumActionBean.getRequest().getRemoteAddr();
 
-        if (StringTools.isEmpty(content) || (!reply && StringTools.isEmpty(subject))) {
+        if (StringUtils.isEmpty(content) || (!reply && StringUtils.isEmpty(subject))) {
             return ForumError.blankError(forumActionBean);
         }
         DAOFactory daof = DAOFactory.getDAOFactory();
@@ -99,9 +97,9 @@ public class PostPAction implements Action {
             Constants.NAME_FORUM_TOPIC_ID + '=';
 
         if (reply) {
-            urlString = urlString + t_id + '&'+Constants.NAME_FORUM_MESSAGE_ID+'=' + postPDAO.reply(t_id.intValue(), userId, content, u_lastip, tm_iconid, forumActionBean.getForumId());
+            urlString = urlString + t_id + '&'+Constants.NAME_FORUM_MESSAGE_ID+'=' + postPDAO.reply(t_id, userId, content, u_lastip, tm_iconid, forumActionBean.getForumId());
         } else {
-            urlString = urlString + postPDAO.post(f_id.intValue(), userId, subject, content, u_lastip, tm_iconid, forumActionBean.getForumId());
+            urlString = urlString + postPDAO.post(f_id, userId, subject, content, u_lastip, tm_iconid, forumActionBean.getForumId());
         }
 
         if (log.isDebugEnabled()) {
