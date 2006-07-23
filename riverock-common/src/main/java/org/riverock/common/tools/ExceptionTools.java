@@ -28,6 +28,8 @@ package org.riverock.common.tools;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 
  * $Revision$
@@ -63,9 +65,9 @@ public final class ExceptionTools {
         }
         else {
             if (i >= bytes.length)
-                return StringTools.replaceString(new String(bytes), "\n", addAtEndLine + "\n");
+                return StringUtils.replace(new String(bytes), "\n", addAtEndLine + "\n");
             else
-                return StringTools.replaceString(new String(bytes, 0, i), "\n", addAtEndLine + "\n");
+                return StringUtils.replace(new String(bytes, 0, i), "\n", addAtEndLine + "\n");
         }
     }
 }
