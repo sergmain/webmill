@@ -30,15 +30,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * $Id$
  */
 @SuppressWarnings({"UnusedAssignment"})
 public final class MainTools {
-    private final static Log log = LogFactory.getLog(MainTools.class);
+    private final static Logger log = Logger.getLogger(MainTools.class);
 
     public static void putKey(final Map<String, Object> map, final String key, final Object value) {
         Object obj = map.get(key);

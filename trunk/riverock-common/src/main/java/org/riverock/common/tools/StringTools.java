@@ -29,8 +29,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Public tools for work with strings.
@@ -38,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * $Id$
  */
 public class StringTools {
-    private final static Log log = LogFactory.getLog(StringTools.class);
+    private final static Logger log = Logger.getLogger(StringTools.class);
 
     /**
      * Converts a string array to a string.
