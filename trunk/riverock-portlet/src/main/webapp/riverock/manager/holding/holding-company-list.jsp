@@ -26,7 +26,7 @@
              headerClass="standardTable_Header"
              rowClasses="standardTable_Row1,standardTable_Row2"
              columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
-             var="company"
+             var="companyBean"
              value="#{holdingDataProvider.currentHolding.companies}"
              preserveDataModel="true">
 
@@ -34,12 +34,12 @@
         <f:facet name="header">
             <h:outputText value="#{msg.company_name}"/>
         </f:facet>
-        <h:outputText id="company-name" value="#{company.name}"/>
+        <h:outputText id="company-name" value="#{companyBean.name}"/>
     </h:column>
 
     <h:column>
         <t:commandButton value="#{msg.delete_company_action}" actionListener="#{holdingAction.deleteCompanyActionListener}">
-            <t:updateActionListener property="#{holdingSessionBean.currentCompanyId}" value="#{company.id}"/>
+            <t:updateActionListener property="#{holdingSessionBean.currentCompanyId}" value="#{companyBean.id}"/>
         </t:commandButton>
     </h:column>
 </t:dataTable>

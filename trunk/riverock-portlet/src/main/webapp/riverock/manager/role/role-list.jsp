@@ -7,7 +7,7 @@
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Role" var="msg"/>
 
 <t:dataTable id="roleDataTable"
-             var="role"
+             var="roleBean"
              value="#{roleBean.roleList}"
              preserveDataModel="true">
 
@@ -16,8 +16,8 @@
             <h:outputText value="#{msg.header_table_role_name}"/>
         </f:facet>
         <t:commandLink action="#{roleAction.selectRole}" immediate="true">
-            <h:outputText value="#{role.name}"/>
-            <t:updateActionListener property="#{roleSessionBean.currentRoleId}" value="#{role.roleId}"/>
+            <h:outputText value="#{roleBean.name}"/>
+            <t:updateActionListener property="#{roleSessionBean.currentRoleId}" value="#{roleBean.roleId}"/>
         </t:commandLink>
     </h:column>
 

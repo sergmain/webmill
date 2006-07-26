@@ -5,7 +5,7 @@
 <%@ taglib uri="http://myfaces.apache.org/tomahawk" prefix="t" %>
 
 <f:view>
-<h:form id="role-form">
+<h:form id="role_form">
 
 	<f:subview id="subviewRoleList">
             <jsp:include page="role.jsp"/>

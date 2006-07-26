@@ -9,7 +9,7 @@
     <h:commandButton value="#{msg.add_portlet_name_action}" action="#{portletNameAction.addPortletName}" style=" width : 106px; height : 22px;"/>
 
                 <t:dataTable id="portletNameDataTable"
-                        var="portletName"
+                        var="portletNameBean"
                         value="#{portletNameService.portletNameList}"
                         preserveDataModel="true" >
                    <h:column>
@@ -17,8 +17,8 @@
                           <h:outputText value="#{msg.header_table_portlet_name_name}" />
                        </f:facet>
                        <t:commandLink action="#{portletNameAction.selectPortletName}" immediate="true" >
-                            <h:outputText value="#{portletName.portletName}" />
-                            <t:updateActionListener property="#{portletNameSessionBean.currentPortletNameId}" value="#{portletName.portletId}" />
+                            <h:outputText value="#{portletNameBean.portletName}" />
+                            <t:updateActionListener property="#{portletNameSessionBean.currentPortletNameId}" value="#{portletNameBean.portletId}" />
                        </t:commandLink>
                    </h:column>
 

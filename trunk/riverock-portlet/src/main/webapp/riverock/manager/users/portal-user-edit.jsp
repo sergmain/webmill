@@ -24,7 +24,7 @@
 </style>
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="edit-portal-user-form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="edit_portal_user_form" rendered="#{isUserInRole['webmill.authentic']}">
 
                 <f:subview id="portal-user-top-actions-subview">
                     <jsp:include page="_portal-user-top-action.jsp"/>

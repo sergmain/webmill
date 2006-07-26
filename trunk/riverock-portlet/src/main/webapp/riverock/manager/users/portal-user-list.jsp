@@ -9,7 +9,7 @@
     <h:commandButton value="#{msg.portal_user_add_portal_user_action}" action="#{portalUserAction.addPortalUser}" style=" width : 106px; height : 22px;"/>
 
                 <t:dataTable id="portalUserDataTable"
-                        var="portalUser"
+                        var="portalUserBean"
                         value="#{portalUserService.portalUserList}"
                         preserveDataModel="true" >
                    <h:column>
@@ -17,8 +17,8 @@
                           <h:outputText value="#{msg.header_table_portal_user_name}" />
                        </f:facet>
                        <t:commandLink action="#{portalUserAction.selectPortalUser}" immediate="true" >
-                            <h:outputText value="#{portalUser.name}" />
-                            <t:updateActionListener property="#{portalUserSessionBean.currentPortalUserId}" value="#{portalUser.userId}" />
+                            <h:outputText value="#{portalUserBean.name}" />
+                            <t:updateActionListener property="#{portalUserSessionBean.currentPortalUserId}" value="#{portalUserBean.userId}" />
                        </t:commandLink>
                    </h:column>
 

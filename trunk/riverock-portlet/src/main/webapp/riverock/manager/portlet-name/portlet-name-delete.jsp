@@ -26,7 +26,7 @@
 
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="delete-portlet-name-form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="delete_portlet_name_form" rendered="#{isUserInRole['webmill.authentic']}">
 
         <h:panelGrid columns="1" rendered="#{!empty portletNameSessionBean.portletName and isUserInRole['webmill.portal-manager']}">
 

@@ -25,7 +25,7 @@
 
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="edit-role-form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="edit_role_form" rendered="#{isUserInRole['webmill.authentic']}">
 
         <h:panelGrid columns="1" rendered="#{!empty roleSessionBean.role and isUserInRole['webmill.portal-manager']}">
 
