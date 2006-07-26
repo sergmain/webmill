@@ -49,7 +49,7 @@
 
 <f:view>
 
-    <h:form id="add-portlet-name-form">
+    <h:form id="add_portlet_name_form">
 
                 <f:subview id="portal-user-top-actions-subview">
                     <jsp:include page="_portal-user-top-action.jsp"/>

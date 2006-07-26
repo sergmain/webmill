@@ -49,7 +49,7 @@
 
 <f:view>
 
-    <h:form id="company-form">
+    <h:form id="company_form">
 
         <h:commandButton id="structure-list-action" action="structure" value="#{manager.structure_button}"
                          styleClass="top-button-action"/>
