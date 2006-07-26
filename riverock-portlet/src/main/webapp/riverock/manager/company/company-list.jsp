@@ -7,7 +7,7 @@
 <f:loadBundle basename="org.riverock.portlet.manager.resource.Company" var="msg"/>
 
 <t:dataTable id="companyDataTable"
-             var="company"
+             var="companyBean"
              value="#{companyService.companyList}"
              preserveDataModel="true">
     <h:column>
@@ -15,10 +15,8 @@
             <h:outputText value="#{msg.header_table_company_name}"/>
         </f:facet>
         <t:commandLink action="#{action.selectCompany}" immediate="true">
-            <h:outputText value="#{company.name}"/>
-            <!-- for convenience: MyFaces extension. sets id of current row in countryForm -->
-            <!-- you don't have to implement a custom action! -->
-            <t:updateActionListener property="#{companySessionBean.currentCompanyId}" value="#{company.id}"/>
+            <h:outputText value="#{companyBean.name}"/>
+            <t:updateActionListener property="#{companySessionBean.currentCompanyId}" value="#{companyBean.id}"/>
         </t:commandLink>
     </h:column>
 

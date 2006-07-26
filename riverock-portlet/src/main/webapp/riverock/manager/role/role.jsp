@@ -25,7 +25,7 @@
 
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="role-form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="role_form" rendered="#{isUserInRole['webmill.authentic']}">
 
         <h:commandButton id="auth-list-action" action="auth" value="#{manager.auth_button}"
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.auth']}"/>

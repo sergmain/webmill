@@ -25,7 +25,7 @@
 
 <f:view>
     <h:outputText value="#{manager.not_logged}" style="font-size:12px" rendered="#{!isUserInRole['webmill.authentic']}"/>
-    <h:form id="delete-company-form" rendered="#{isUserInRole['webmill.authentic']}">
+    <h:form id="delete_company_form" rendered="#{isUserInRole['webmill.authentic']}">
 
         <h:panelGrid columns="1" rendered="#{!empty companySessionBean.company and isUserInRole['webmill.portal-manager']}">
 

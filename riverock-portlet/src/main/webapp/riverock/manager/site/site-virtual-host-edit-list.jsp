@@ -23,7 +23,7 @@
              headerClass="standardTable_Header"
              rowClasses="standardTable_Row1,standardTable_Row2"
              columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
-             var="host"
+             var="hostBean"
              value="#{siteSessionBean.siteExtended.virtualHosts}"
              preserveDataModel="true">
 
@@ -31,7 +31,7 @@
         <f:facet name="header">
             <h:outputText value="#{msg.site_host_name}"/>
         </f:facet>
-        <h:outputText id="host-name" value="#{host}"/>
+        <h:outputText id="host-name" value="#{hostBean}"/>
     </h:column>
 
     <h:column>
@@ -39,7 +39,7 @@
         </f:facet>
         <t:commandButton value="#{msg.delete_virtual_host_action}" actionListener="#{siteAction.deleteVirtualHostActionListener}"
             styleClass="site-button-action">
-            <t:updateActionListener property="#{siteSessionBean.currentVirtualHost}" value="#{host}"/>
+            <t:updateActionListener property="#{siteSessionBean.currentVirtualHost}" value="#{hostBean}"/>
         </t:commandButton>
     </h:column>
 </t:dataTable>

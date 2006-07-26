@@ -29,7 +29,7 @@
              headerClass="standardTable_Header"
              rowClasses="standardTable_Row1,standardTable_Row2"
              columnClasses="standardTable_Column,standardTable_ColumnCentered,standardTable_Column"
-             var="role"
+             var="roleBean"
              value="#{dataProvider.currentUser.currentRoles}"
              preserveDataModel="true">
 
@@ -37,14 +37,14 @@
         <f:facet name="header">
             <h:outputText value="#{msg['role_name']}"/>
         </f:facet>
-        <h:outputText id="role-name" value="#{role.name}"/>
+        <h:outputText id="role-name" value="#{roleBean.name}"/>
     </h:column>
 
     <h:column>
         <t:commandButton value="#{msg['delete_role']}" actionListener="#{authUserAction.deleteRoleActionListener}"
                          styleClass="auth-sub-button-action"
             >
-            <t:updateActionListener property="#{userSessionBean.currentRoleId}" value="#{role.roleId}"/>
+            <t:updateActionListener property="#{userSessionBean.currentRoleId}" value="#{roleBean.roleId}"/>
         </t:commandButton>
     </h:column>
 </t:dataTable>

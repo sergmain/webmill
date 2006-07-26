@@ -17,7 +17,7 @@
     <h:panelGroup id="holding-list-group">
 	<h:outputText value="List of holding is empty" rendered="#{ empty holdingDataProvider.holdingBeans}"/>
 
-        <t:dataTable id="holdingDataTable" var="holding"
+        <t:dataTable id="holdingDataTable" var="holdingBean"
 		value="#{holdingDataProvider.holdingBeans}" preserveDataModel="true" 
 		rendered="#{ !empty holdingDataProvider.holdingBeans}">
 	     <h:column>
@@ -25,8 +25,8 @@
                           <h:outputText value="#{msg.header_table_holding_name}" />
                        </f:facet>
                        <t:commandLink action="#{holdingAction.selectHolding}" immediate="true" >
-                            <h:outputText value="#{holding.shortName}" />
-                            <t:updateActionListener property="#{holdingSessionBean.currentHoldingId}" value="#{holding.id}" />
+                            <h:outputText value="#{holdingBean.shortName}" />
+                            <t:updateActionListener property="#{holdingSessionBean.currentHoldingId}" value="#{holdingBean.id}" />
                        </t:commandLink>
              </h:column>
         </t:dataTable>
