@@ -49,7 +49,7 @@
 
 <f:view>
 
-    <h:form id="company-form">
+    <h:form id="company_form">
 
         <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
                          styleClass="top-button-action"/>

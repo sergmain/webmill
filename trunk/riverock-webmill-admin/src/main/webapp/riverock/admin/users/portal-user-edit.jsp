@@ -48,7 +48,7 @@
 </style>
 <f:view>
 
-    <h:form id="edit-portal-user-form">
+    <h:form id="edit_portal_user_form">
 
                 <f:subview id="portal-user-top-actions-subview">
                     <jsp:include page="_portal-user-top-action.jsp"/>

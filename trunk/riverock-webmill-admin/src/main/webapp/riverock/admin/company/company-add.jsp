@@ -48,7 +48,7 @@
 </style>
 
 <f:view>
-    <h:form id="add-company-form">
+    <h:form id="add_company_form">
 
         <h:panelGrid columns="1" rendered="#{!empty companySessionBean.company}">
 
