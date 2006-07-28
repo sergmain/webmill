@@ -33,8 +33,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
@@ -445,20 +446,17 @@ public final class DatabaseManager {
 
         ArrayList list = DatabaseStructureManager.getTableList(db_, db_.conn, dbSchema, "%");
         final int initialCapacity = list.size();
-        ArrayList target = new ArrayList(initialCapacity);
         for (int i = 0; i < initialCapacity; i++) {
             DbTableType table = (DbTableType) list.get(i);
             if (table.getName().startsWith("BIN$")) {
                 continue;
             }
-            target.add(table);
+            schema.addTables(table);
         }
-        schema.setTables(target);
 
-
-        ArrayList viewVector = db_.getViewList(dbSchema, "%");
+        List viewVector = db_.getViewList(dbSchema, "%");
         if (viewVector != null)
-            schema.setViews(viewVector);
+            schema.setViews( new ArrayList(viewVector));
 
         ArrayList seqVector = db_.getSequnceList(dbSchema);
         if (seqVector != null)
@@ -525,11 +523,11 @@ public final class DatabaseManager {
         }
     }
 
-    public static ArrayList getViewList(final Connection conn, final String schemaPattern, final String tablePattern) {
+    public static List<DbViewType> getViewList(final Connection conn, final String schemaPattern, final String tablePattern) {
         String[] types = {"VIEW"};
 
         ResultSet meta = null;
-        ArrayList v = new ArrayList();
+        List<DbViewType> v = new ArrayList<DbViewType>();
         try {
             DatabaseMetaData dbMeta = conn.getMetaData();
 
@@ -556,6 +554,8 @@ public final class DatabaseManager {
             }
         }
         catch (Exception e) {
+            String es = "Error get list of view";
+            log.error(es, e);
         }
         return v;
     }
@@ -837,8 +837,8 @@ public final class DatabaseManager {
             ;
     }
 
-    public static Hashtable getFkNames(final ArrayList keys) {
-        Hashtable hash = new Hashtable();
+    public static Map<String,DbImportedPKColumnType> getFkNames(final ArrayList keys) {
+        Map<String,DbImportedPKColumnType> hash = new HashMap<String,DbImportedPKColumnType>();
         for (int i = 0; i < keys.size(); i++) {
             DbImportedPKColumnType column = (DbImportedPKColumnType) keys.get(i);
             String search = getRelateString(column);
@@ -1167,7 +1167,18 @@ public final class DatabaseManager {
         return n;
     }
 
-    public static Long getLongValue(final DatabaseAdapter db, final String sql, final Object[] params)
+    /**
+     * @deprecated use getLongValue(final DatabaseAdapter db, final String sql, final Object[] params, final int[] types)
+     * @param db
+     * @param sql
+     * @param params
+     * @return Long
+     */
+    public static Long getLongValue(final DatabaseAdapter db, final String sql, final Object[] params) throws SQLException {
+        return getLongValue(db, sql, params, null);
+    }
+
+    public static Long getLongValue(final DatabaseAdapter db, final String sql, final Object[] params, final int[] types)
         throws SQLException {
         Statement stmt = null;
         PreparedStatement pstm;
@@ -1179,8 +1190,14 @@ public final class DatabaseManager {
                 rs = stmt.executeQuery(sql);
             } else {
                 pstm = db.prepareStatement(sql);
-                for (int i = 0; i < params.length; i++)
-                    pstm.setObject(i + 1, params[i]);
+                for (int i = 0; i < params.length; i++) {
+                    if (types==null) {
+                        pstm.setObject(i + 1, params[i]);
+                    }
+                    else {
+                        pstm.setObject(i + 1, params[i], types[i]);
+                    }
+                }
 
                 rs = pstm.executeQuery();
                 stmt = pstm;

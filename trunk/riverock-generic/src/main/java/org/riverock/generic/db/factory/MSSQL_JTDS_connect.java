@@ -34,6 +34,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -513,7 +514,7 @@ ALTER TABLE table
 
 */
 
-    public ArrayList getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 

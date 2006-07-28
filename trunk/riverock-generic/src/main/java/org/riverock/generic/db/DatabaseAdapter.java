@@ -36,6 +36,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -171,7 +172,7 @@ public abstract class DatabaseAdapter implements DbConnection {
 
     public abstract String getDefaultTimestampValue();
 
-    public abstract ArrayList getViewList(String schemaPattern, String tablePattern) throws Exception;
+    public abstract List getViewList(String schemaPattern, String tablePattern) throws Exception;
 
     public abstract ArrayList getSequnceList(String schemaPattern) throws Exception;
 
