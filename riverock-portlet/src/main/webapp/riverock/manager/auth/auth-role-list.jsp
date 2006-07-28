@@ -12,7 +12,7 @@
 <f:verbatim><br/><br/></f:verbatim>
 
 <h:selectOneMenu value="#{dataProvider.currentUser.newRoleId}"
-                 styleClass="selectOneMenu" required="true"
+                 styleClass="selectOneMenu" required="false"
     >
     <f:selectItems value="#{dataProvider.roleList}"/>
 </h:selectOneMenu>

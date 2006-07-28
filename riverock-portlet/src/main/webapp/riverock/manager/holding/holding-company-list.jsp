@@ -12,7 +12,7 @@
 <f:verbatim><br/><br/></f:verbatim>
 
 <h:selectOneMenu value="#{holdingDataProvider.currentHolding.newCompanyId}"
-                 styleClass="selectOneMenu" required="true"
+                 styleClass="selectOneMenu" required="false"
     >
     <f:selectItems value="#{holdingDataProvider.companyList}"/>
 </h:selectOneMenu>
