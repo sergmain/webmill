@@ -42,8 +42,10 @@ public final class CookieManagerImpl implements CookieManager {
     private List<Cookie> list = new ArrayList<Cookie>();
 
     protected void finalize() throws Throwable {
-        list.clear();
-        list = null;
+        if (list!=null) {
+            list.clear();
+            list = null;
+        }
         super.finalize();
     }
 

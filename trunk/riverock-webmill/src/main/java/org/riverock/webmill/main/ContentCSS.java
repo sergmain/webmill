@@ -42,9 +42,8 @@ public final class ContentCSS {
 
     private static CacheFactory cache = new CacheFactory(ContentCSS.class);
 
-    protected void finalize() throws Throwable {
-        css = null;
-        super.finalize();
+    public void destroy() {
+        this.css=null;
     }
 
     public ContentCSS() {

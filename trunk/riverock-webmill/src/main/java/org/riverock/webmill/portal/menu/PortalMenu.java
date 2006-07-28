@@ -94,18 +94,15 @@ public final class PortalMenu implements Menu {
         return menuItem;
     }
 
-    protected void finalize() throws Throwable
-    {
-        if (menuItem != null)
-        {
+    protected void finalize() throws Throwable {
+        if (menuItem != null) {
             menuItem.clear();
             menuItem = null;
         }
         super.finalize();
     }
 
-    public PortalMenu()
-    {
+    public PortalMenu() {
     }
 
     /**
