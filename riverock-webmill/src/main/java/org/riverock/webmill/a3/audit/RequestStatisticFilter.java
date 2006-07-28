@@ -53,10 +53,13 @@ public final class RequestStatisticFilter implements Filter {
     private final static Logger log = Logger.getLogger(RequestStatisticFilter.class);
 
     private FilterConfig filterConfig = null;
+    private static RequestStatisticService statisticService=null;
     public void init(FilterConfig filterConfig) {
         System.out.println("start init statictic filter");
         this.filterConfig = filterConfig;
+        statisticService = RequestStatisticService.getInstance();
         System.out.println("end init statictic filter");
+
     }
 
     /**
@@ -64,6 +67,7 @@ public final class RequestStatisticFilter implements Filter {
      */
     public void destroy() {
         this.filterConfig = null;
+        statisticService.destroy();
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -76,7 +80,7 @@ public final class RequestStatisticFilter implements Filter {
         }
 
         try {
-            RequestStatisticService.getInstance().process(
+            statisticService.process(
                 Header.getUserAgent(request),
                 ((HttpServletRequest)request).getRequestURI(),
                 Header.getReferer(request),

@@ -53,9 +53,12 @@ public class TestEncodeUrl
 
         System.out.println( "str: " + URIUtil.encodeQuery( "тест" ));
         System.out.println( "str: " + URLEncoder.encode( "тест", "utf8" ));
+        String testStr = "%D1%82%D0%B5%D1%81%D1%82";
+        System.out.println( "str: " + URLEncoder.encode( testStr, "utf8" ));
         System.out.println( "url: " + URLEncoder.encode( "http://me.askmore/mill/ctx", "utf-8" ));
         String ss = "http%3A%2F%2F10.3.16.240%2Fdiscoverer4i%2Fviewer";
         System.out.println( "url: " + URLDecoder.decode( ss, "utf-8" ));
+        System.out.println( "ss: " + URLDecoder.decode( testStr, "utf-8" ));
         System.out.println( URIUtil.decode( ss ) );
     }
 }

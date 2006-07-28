@@ -62,10 +62,12 @@ public class SiteList {
         lastReadData = 0;
     }
 
-    @SuppressWarnings({"FinalizeDoesntCallSuperFinalize"})
-    public void finalize() {
-        if (hashListSite != null) hashListSite.clear();
-        hashListSite = null;
+    protected void finalize() throws Throwable {
+        if (hashListSite != null) {
+            hashListSite.clear();
+            hashListSite = null;
+        }
+        super.finalize();
     }
 
     public static SiteList getInstance() {

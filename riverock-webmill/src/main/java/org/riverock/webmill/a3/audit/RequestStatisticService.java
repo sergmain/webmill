@@ -50,16 +50,10 @@ public class RequestStatisticService {
     private ConcurrentMap<String, Long> userAgent = null;
     private ConcurrentMap<String, Long> url = null;
 
-
     private RequestStatisticService() {
         InternalDao internalDao = InternalDaoFactory.getInternalDao();
         this.userAgent = internalDao.getUserAgentList();
         this.url = internalDao.getUrlList();
-    }
-
-    protected void finalize() throws Throwable {
-	destroy();
-        super.finalize();
     }
 
     public void destroy() {
@@ -75,15 +69,15 @@ public class RequestStatisticService {
 
     public static RequestStatisticService getInstance() {
         if (service!=null) {
-        	return service;
-	}
-	synchronized (RequestStatisticService.class) {
-		if (service!=null) {
-			return service;
-		}
-        service = new RequestStatisticService();
-	}
-	return service;
+            return service;
+        }
+        synchronized (RequestStatisticService.class) {
+            if (service!=null) {
+                return service;
+            }
+            service = new RequestStatisticService();
+        }
+        return service;
     }
 
     public void process(String userAgentString, String uri, String referer, String queryString, String serverName) {

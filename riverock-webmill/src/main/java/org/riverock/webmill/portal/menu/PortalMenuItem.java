@@ -60,8 +60,8 @@ public final class PortalMenuItem implements MenuItem{
         menuName = null;
         portletName = null;
         template = null;
-        if (getCatalogItems()!=null) {
-            getCatalogItems().clear();
+        if (catalogItems !=null) {
+            catalogItems.clear();
             catalogItems = null;
         }
 
