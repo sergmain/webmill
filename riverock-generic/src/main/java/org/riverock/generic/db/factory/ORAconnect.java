@@ -34,6 +34,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -430,7 +431,7 @@ DEFERRABLE INITIALLY DEFERRED
     public void setDefaultValue(DbTableType originTable, DbFieldType originField) {
     }
 
-    public ArrayList getViewList(String schemaPattern, String tablePattern) throws Exception {
+    public List getViewList(String schemaPattern, String tablePattern) throws Exception {
         return DatabaseManager.getViewList(conn, schemaPattern, tablePattern);
     }
 

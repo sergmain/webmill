@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.TreeSet;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -62,7 +63,7 @@ public class DatabaseStructureManager {
         if (fkList==null || fkList.getKeysCount()==0)
             return;
 
-        Hashtable hash= DatabaseManager.getFkNames( fkList.getKeysAsReference() );
+        Map<String,DbImportedPKColumnType> hash= DatabaseManager.getFkNames( fkList.getKeysAsReference() );
 
 //        System.out.println("key count: "+hash.size() );
 //        for (Enumeration e = hash.keys(); e.hasMoreElements();)
@@ -70,9 +71,9 @@ public class DatabaseStructureManager {
 
         int p=0;
 
-        for (Enumeration e = hash.elements(); e.hasMoreElements(); p++)
-        {
-            DbImportedPKColumnType fkColumn = (DbImportedPKColumnType)e.nextElement();
+        for (Map.Entry<String, DbImportedPKColumnType> entry : hash.entrySet()) {
+
+            DbImportedPKColumnType fkColumn = entry.getValue();
             String searchCurrent = DatabaseManager.getRelateString( fkColumn );
 //            System.out.println("#"+p+" fk name - "+ fkColumn.getFkName()+" ");
             String sql =
