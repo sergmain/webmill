@@ -65,7 +65,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
 public final class MYSQLconnect extends DatabaseAdapter {
     private final static Logger log = Logger.getLogger(MYSQLconnect.class);
 
-    public int getFamaly() {
+    public int getFamily() {
         return DatabaseManager.MYSQL_FAMALY;
     }
 

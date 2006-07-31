@@ -73,7 +73,7 @@ public abstract class DatabaseAdapter implements DbConnection {
     public DatabaseAdapter() {
     }
 
-    public abstract int getFamaly();
+    public abstract int getFamily();
 
     public abstract int getVersion();
 

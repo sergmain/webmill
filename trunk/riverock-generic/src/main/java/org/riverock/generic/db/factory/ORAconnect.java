@@ -789,7 +789,7 @@ DEFERRABLE INITIALLY DEFERRED
         return "oracle.jdbc.OracleDriver";
     }
 
-    public int getFamaly() {
+    public int getFamily() {
         return DatabaseManager.ORACLE_FAMALY;
     }
 

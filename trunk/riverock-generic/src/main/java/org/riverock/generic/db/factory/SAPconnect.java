@@ -284,7 +284,7 @@ public class SAPconnect extends DatabaseAdapter {
         return false;
     }
 
-    public int getFamaly() {
+    public int getFamily() {
         return DatabaseManager.SAPDB_FAMALY;
     }
 

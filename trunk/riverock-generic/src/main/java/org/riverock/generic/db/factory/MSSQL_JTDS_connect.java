@@ -68,7 +68,7 @@ import org.riverock.generic.tools.CurrentTimeZone;
 public class MSSQL_JTDS_connect extends DatabaseAdapter {
     private static Logger log = Logger.getLogger(MSSQL_JTDS_connect.class);
 
-    public int getFamaly() {
+    public int getFamily() {
         return DatabaseManager.MSSQL_FAMALY;
     }
 
