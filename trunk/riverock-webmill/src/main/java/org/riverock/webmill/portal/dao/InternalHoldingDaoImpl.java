@@ -69,7 +69,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
                 "from 	WM_LIST_HOLDING " +
                 "where  ID_HOLDING=? and ID_HOLDING in ";
 
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedHoldingId();
 
@@ -84,7 +84,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
             ps = db.prepareStatement( sql );
             int idx = 1;
             ps.setLong( idx++, holdingId );
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -129,7 +129,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
                 "from 	WM_LIST_HOLDING " +
                 "where  ID_HOLDING in ";
 
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedHoldingId();
 
@@ -143,7 +143,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
             }
 
             ps = db.prepareStatement( sql );
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -255,7 +255,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
                 "WHERE ID_HOLDING = ? and ID_HOLDING in ";
 
 
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedHoldingId();
 
@@ -275,7 +275,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
             ps.setString( num++, holdingBean.getShortName() );
             RsetTools.setLong( ps, num++, holdingBean.getId() );
 
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -333,7 +333,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
                 "delete from WM_LIST_HOLDING " +
                 "where  ID_HOLDING=? and ID_HOLDING in ";
 
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedHoldingId();
 
@@ -348,7 +348,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
             ps = dbDyn.prepareStatement( sql );
 
             RsetTools.setLong( ps, 1, holdingBean.getId() );
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -399,7 +399,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
                 "from 	WM_LIST_R_HOLDING_COMPANY " +
                 "where  ID_HOLDING=? and ID_HOLDING in ";
 
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedHoldingId();
 
@@ -414,7 +414,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
             ps = db.prepareStatement( sql );
             int idx = 1;
             ps.setLong( idx++, holdingId );
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -495,7 +495,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
                 "delete from wm_list_r_holding_company " +
                 "where  ID_HOLDING=? and ID_HOLDING in ";
 
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedHoldingId();
 
@@ -510,7 +510,7 @@ public class InternalHoldingDaoImpl implements InternalHoldingDao {
             ps = dbDyn.prepareStatement( sql );
 
             RsetTools.setLong( ps, 1, holdingBean.getId() );
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
