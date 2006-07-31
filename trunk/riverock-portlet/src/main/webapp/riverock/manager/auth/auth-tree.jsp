@@ -29,7 +29,7 @@
         <f:facet name="user">
             <h:panelGroup id="auth-tree-company-user">
                 <h:commandLink id="select-user-action" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{authUserAction.selectUserAction}">
+                               action="#{authUserAction.selectUserAction}">
 
                     <t:graphicImage id="auth-tree-user-image" value="/images/user.png" border="0"/>
                     <h:outputText id="auth-tree-company-name" value="#{node.description}"/>

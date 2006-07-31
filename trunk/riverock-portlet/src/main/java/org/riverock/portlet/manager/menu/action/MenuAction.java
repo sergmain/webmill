@@ -2,17 +2,15 @@ package org.riverock.portlet.manager.menu.action;
 
 import java.io.Serializable;
 
-import javax.faces.event.ActionEvent;
-
 import org.apache.log4j.Logger;
 
+import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.portlet.main.AuthSessionBean;
 import org.riverock.portlet.manager.menu.MenuDataProvider;
 import org.riverock.portlet.manager.menu.MenuSessionBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemBean;
 import org.riverock.portlet.manager.menu.bean.MenuItemExtended;
 import org.riverock.portlet.tools.FacesTools;
-import org.riverock.interfaces.portal.bean.CatalogItem;
 
 /**
  * @author Sergei Maslyukov
@@ -48,8 +46,7 @@ public class MenuAction implements Serializable {
     }
 
 // main select action
-
-    public String selectMenuItem(ActionEvent event) {
+    public String selectMenuItem() {
         log.info("Select menu item action.");
         loadCurrentObject();
 
@@ -57,7 +54,6 @@ public class MenuAction implements Serializable {
     }
 
 // Add actions
-
     public String addMenuItemAction() {
         log.info("Add menu item action.");
 
@@ -112,7 +108,6 @@ public class MenuAction implements Serializable {
     }
 
 // Edit actions
-
     public String editMenuItemAction() {
         log.info("Edit menu item action.");
 
@@ -142,7 +137,6 @@ public class MenuAction implements Serializable {
     }
 
 // Delete actions
-
     public String deleteMenuItemAction() {
         log.info("delete menu item action.");
 

@@ -49,6 +49,7 @@ public class MenuSessionBean  implements Serializable {
     }
 
     public void setCurrentMenuCatalogId(Long currentMenuCatalogId) {
+        this.currentMenuItemId = null;
         this.currentMenuCatalogId = currentMenuCatalogId;
     }
 
@@ -57,6 +58,7 @@ public class MenuSessionBean  implements Serializable {
     }
 
     public void setCurrentMenuItemId(Long currentMenuItemId) {
+        this.currentMenuCatalogId = null;
         this.currentMenuItemId = currentMenuItemId;
     }
 

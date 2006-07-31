@@ -26,8 +26,6 @@ package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
 
-import javax.faces.event.ActionEvent;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
@@ -77,7 +75,7 @@ public class UserAction implements Serializable {
     }
 
 // main tree action
-    public String selectUserAction( ActionEvent event ) {
+    public String selectUserAction() {
         log.info( "Select auth user action." );
         loadCurrentUser();
 
@@ -87,7 +85,7 @@ public class UserAction implements Serializable {
 
 
 // Role actions
-    public void deleteRoleActionListener( ActionEvent event ) {
+    public void deleteRoleAction() {
         log.info( "Delete role action." );
 
         Long roleId = userSessionBean.getCurrentRoleId();

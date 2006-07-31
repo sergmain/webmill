@@ -27,8 +27,6 @@ package org.riverock.portlet.manager.site.action;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javax.faces.event.ActionEvent;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -73,7 +71,7 @@ public class SiteAction implements Serializable {
         this.authSessionBean = authSessionBean;
     }
 
-    public String selectSite(ActionEvent event) {
+    public String selectSite() {
         log.debug( "Select site action." );
         loadCurrentSite();
 
@@ -200,7 +198,7 @@ public class SiteAction implements Serializable {
     }
 
 // virtual host actions
-    public void deleteVirtualHostActionListener( ActionEvent event ) {
+    public void deleteVirtualHostAction() {
         log.debug( "Delete virtual host action." );
 
         String host = siteSessionBean.getCurrentVirtualHost();
