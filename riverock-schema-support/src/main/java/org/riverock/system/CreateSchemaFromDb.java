@@ -2134,13 +2134,11 @@ public final class CreateSchemaFromDb {
         DbPrimaryKeyType pk = table.getPrimaryKey();
         if (pk.getColumnsCount() == 0) {
             return;
-//            throw new Exception("Table '"+table.getName()+"' not have primary key");
         }
 
         if (table.getFieldsCount() < 2) {
             System.out.println("Table '" + table.getName() + "' is skiped - count of fields < 2");
             return;
-//            throw new Exception("Table '"+table.getName()+"' not have primary key");
         }
 
         DbPrimaryKeyColumnType column = pk.getColumns(0);
@@ -2222,9 +2220,10 @@ public final class CreateSchemaFromDb {
         for (int i1 = 0; i1 < table.getFieldsCount(); i1++) {
             DbFieldType field = table.getFields(i1);
 
-            // skip oracle column type ROWID (1111)
-            if (field.getJavaType() == 1111)
+            // skip oracle column type ROWID (1111) and BLOB fields
+            if (field.getJavaType()==Types.BLOB||field.getJavaType()==Types.OTHER) {
                 continue;
+            }
 
             // PK field not bind
             if (field.getName().equals(column.getColumnName()))
@@ -2253,7 +2252,7 @@ public final class CreateSchemaFromDb {
                 );
             }
             else {
-                switch (field.getJavaType().intValue()) {
+                switch (field.getJavaType()) {
 
                     case Types.DECIMAL:
                         if (field.getDecimalDigit() == null || field.getDecimalDigit() == 0) {
@@ -2458,8 +2457,13 @@ public final class CreateSchemaFromDb {
 
         int numParam = 0;
         for (int i = 0; i < table.getFieldsCount(); i++) {
-            ++numParam;
+
             DbFieldType field = table.getFields(i);
+            if (field.getJavaType()==Types.BLOB||field.getJavaType()==Types.OTHER) {
+                continue;
+            }
+
+            ++numParam;
             String capitalizeName = StringTools.capitalizeString(field.getName()) + "()";
             if (isLogicField(field)) {
                 s += storeBooleanField(
@@ -2639,7 +2643,7 @@ public final class CreateSchemaFromDb {
             if (config.getIsUseObjectWrapper())
                 return
                     "             if (item.get" + capitalizeName + "!=null)\n" +
-                        "                 ps.setInt(" + i + ", item.get" + capitalizeName + ".booleanValue()?1:0 );\n" +
+                        "                 ps.setInt(" + i + ", item.get" + capitalizeName + "?1:0 );\n" +
                         "             else\n" +
                         ("1".equals(defValue) || "0".equals(defValue)
                             ? "                 ps.setInt(" + i + ", " + ("1".equals(defValue) ? 1 : 0) + " );\n"
@@ -2656,12 +2660,7 @@ public final class CreateSchemaFromDb {
                         );
         }
         else {
-            if (config.getIsUseObjectWrapper())
-                return
-                    "             ps.setInt(" + i + ", item.get" + capitalizeName + ".booleanValue()?1:0 );\n";
-            else
-                return
-                    "             ps.setInt(" + i + ", item.get" + capitalizeName + "?1:0 );\n";
+            return "             ps.setInt(" + i + ", item.get" + capitalizeName + "?1:0 );\n";
         }
     }
 
