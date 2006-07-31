@@ -58,6 +58,7 @@
                     <h:commandButton id="menu-item-edit-cancel-action" action="#{menuAction.cancelEditMenuItemAction}"
                                      value="#{msg['cancel_edit_menu_item_action']}"
                                      styleClass="menu-button-action"
+                                     immediate="true"
                         >
                     </h:commandButton>
                 </h:panelGroup>

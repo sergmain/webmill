@@ -37,7 +37,7 @@
     <h:column>
         <f:facet name="header">
         </f:facet>
-        <t:commandButton value="#{msg.delete_virtual_host_action}" actionListener="#{siteAction.deleteVirtualHostActionListener}"
+        <t:commandButton value="#{msg.delete_virtual_host_action}" action="#{siteAction.deleteVirtualHostAction}"
             styleClass="site-button-action">
             <t:updateActionListener property="#{siteSessionBean.currentVirtualHost}" value="#{hostBean}"/>
         </t:commandButton>

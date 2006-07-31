@@ -2,8 +2,6 @@ package org.riverock.portlet.manager.menu.action;
 
 import java.io.Serializable;
 
-import javax.faces.event.ActionEvent;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
@@ -48,7 +46,7 @@ public class MenuCatalogAction implements Serializable {
     }
 
 // main select action
-    public String selectMenuCatalog(ActionEvent event) {
+    public String selectMenuCatalog() {
         log.info( "Select menu catalog action." );
         loadCurrentObject();
 

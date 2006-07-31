@@ -355,9 +355,9 @@
 	</Tables>
 	<Tables schema="TEST" name="WM_LIST_R_HOLDING_COMPANY" type="TABLE">
 		<PrimaryKey>
-			<columns schemaName="TEST" tableName="WM_LIST_R_HOLDING_COMPANY" columnName="ID_REL_ROAD" keySeq="1" pkName="ID_RELHOLDING_LRHC_PK"/>
+			<columns schemaName="TEST" tableName="WM_LIST_R_HOLDING_COMPANY" columnName="ID_REL_HOLDING" keySeq="1" pkName="ID_RELHOLDING_LRHC_PK"/>
 		</PrimaryKey>
-		<Fields name="ID_REL_ROAD" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
+		<Fields name="ID_REL_HOLDING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_HOLDING" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<Fields name="ID_COMPANY" dataType="NUMBER" javaType="3" javaStringType="java.sql.Types.DECIMAL" size="10" decimalDigit="0" nullable="0"/>
 		<ImportedKeys pkSchemaName="TEST" pkTableName="WM_LIST_HOLDING" pkColumnName="ID_HOLDING" fkSchemaName="TEST" fkTableName="WM_LIST_R_HOLDING_COMPANY" fkColumnName="ID_HOLDING" keySeq="1" fkName="ID_HOLDING_LRHC_FK" pkName="ID_HOLDING_LH_PK">

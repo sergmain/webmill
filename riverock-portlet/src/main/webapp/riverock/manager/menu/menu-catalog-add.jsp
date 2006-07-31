@@ -59,6 +59,7 @@
                         <h:commandButton id="menu-catalog-add-cancel-action" action="#{menuCatalogAction.cancelAddMenuCatalogAction}"
                                          value="#{msg.cancel_add_menu_catalog_action}"
                                          styleClass="menu-button-action"
+                                         immediate="true"
                             >
                         </h:commandButton>
                     </h:panelGroup>

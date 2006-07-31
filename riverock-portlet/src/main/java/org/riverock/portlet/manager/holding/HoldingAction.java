@@ -27,12 +27,10 @@ package org.riverock.portlet.manager.holding;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import javax.faces.event.ActionEvent;
-
 import org.apache.log4j.Logger;
 
-import org.riverock.portlet.tools.FacesTools;
 import org.riverock.portlet.main.AuthSessionBean;
+import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -83,7 +81,7 @@ public class HoldingAction implements Serializable {
 
 
 // Company actions
-    public void deleteCompanyActionListener( ActionEvent event ) {
+    public void deleteCompanyAction() {
         log.info( "Delete company action." );
 
         Long companyId = holdingSessionBean.getCurrentCompanyId();

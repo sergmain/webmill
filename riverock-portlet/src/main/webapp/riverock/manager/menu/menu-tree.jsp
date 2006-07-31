@@ -43,7 +43,7 @@
         <f:facet name="site">
             <h:panelGroup id="menu-tree-site-group">
                 <h:commandLink id="select-site-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{menuSiteAction.selectSite}"
+                               action="#{menuSiteAction.selectSite}"
                     >
 
                     <t:graphicImage id="menu-tree-sile-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
@@ -65,7 +65,7 @@
         <f:facet name="menu-catalog">
             <h:panelGroup id="menu-tree-menu-catalog-group">
                 <h:commandLink id="select-menu-catalog-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{menuCatalogAction.selectMenuCatalog}"
+                               action="#{menuCatalogAction.selectMenuCatalog}"
                     >
 
                     <t:graphicImage id="menu-tree-menu-catalog-image" value="/images/user.png" border="0"/>
@@ -86,7 +86,7 @@
         <f:facet name="menu-item">
             <h:panelGroup id="menu-tree-menu-item-group">
                 <h:commandLink id="select-menu-item-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{menuAction.selectMenuItem}"
+                               action="#{menuAction.selectMenuItem}"
                     >
 
                     <t:graphicImage id="menu-tree-menu-item-image" value="/images/user.png" border="0"/>

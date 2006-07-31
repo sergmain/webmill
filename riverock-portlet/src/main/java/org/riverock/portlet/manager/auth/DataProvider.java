@@ -117,7 +117,7 @@ public class DataProvider implements Serializable {
 
     private boolean isAlreadyBinded( RoleBean roleBean ) {
         for (RoleEditableBean roleImpl : userSessionBean.getUserBean().getRoles()) {
-            if (roleImpl.getRoleId().equals(roleBean.getRoleId())) {
+            if (roleImpl.getRoleId().equals(roleBean.getRoleId()) && !roleImpl.isDelete()) {
                 return true;
             }
         }

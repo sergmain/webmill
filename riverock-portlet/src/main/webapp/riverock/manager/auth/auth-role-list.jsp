@@ -41,7 +41,7 @@
     </h:column>
 
     <h:column>
-        <t:commandButton value="#{msg['delete_role']}" actionListener="#{authUserAction.deleteRoleActionListener}"
+        <t:commandButton value="#{msg['delete_role']}" action="#{authUserAction.deleteRoleAction}"
                          styleClass="auth-sub-button-action"
             >
             <t:updateActionListener property="#{userSessionBean.currentRoleId}" value="#{roleBean.roleId}"/>

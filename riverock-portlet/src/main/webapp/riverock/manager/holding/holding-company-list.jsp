@@ -38,7 +38,7 @@
     </h:column>
 
     <h:column>
-        <t:commandButton value="#{msg.delete_company_action}" actionListener="#{holdingAction.deleteCompanyActionListener}">
+        <t:commandButton value="#{msg.delete_company_action}" action="#{holdingAction.deleteCompanyAction}">
             <t:updateActionListener property="#{holdingSessionBean.currentCompanyId}" value="#{companyBean.id}"/>
         </t:commandButton>
     </h:column>

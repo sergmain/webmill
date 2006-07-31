@@ -2,8 +2,6 @@ package org.riverock.portlet.manager.menu.action;
 
 import java.io.Serializable;
 
-import javax.faces.event.ActionEvent;
-
 import org.apache.log4j.Logger;
 
 import org.riverock.portlet.main.AuthSessionBean;
@@ -44,10 +42,12 @@ public class MenuSiteAction implements Serializable {
         this.authSessionBean = authSessionBean;
     }
 
-    public String selectSite(ActionEvent event) {
-        log.info( "Select site action." );
+    public String selectSite() {
+        if (log.isDebugEnabled()) {
+            log.debug( "Select site action." );
+            log.debug( "menuSessionBean type: " +menuSessionBean.getObjectType() );
+        }
         menuSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
-
         return "menu";
     }
 

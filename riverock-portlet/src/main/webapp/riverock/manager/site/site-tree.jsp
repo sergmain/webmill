@@ -103,7 +103,7 @@ rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"
         <f:facet name="site">
             <h:panelGroup id="site-tree-site-group">
                 <h:commandLink id="select-site-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{siteAction.selectSite}"
+                               action="#{siteAction.selectSite}"
                     >
 
                     <t:graphicImage id="site-tree-sile-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>
@@ -119,7 +119,7 @@ rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"
         <f:facet name="site-language">
             <h:panelGroup id="site-tree-site-language-group" rendered="#{isUserInRole['webmill.site-manager,webmill.site,webmill.template,webmill.xslt']}">
                 <h:commandLink id="select-site-language-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{siteLanguageAction.selectSiteLanguage}"
+                               action="#{siteLanguageAction.selectSiteLanguage}"
                     >
 
                     <t:graphicImage id="site-tree-sile-language-image" value="/images/user.png" border="0"/>
@@ -132,8 +132,8 @@ rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"
         </f:facet>
         <f:facet name="template">
             <h:panelGroup id="site-tree-template-group" rendered="#{isUserInRole['webmill.site-manager,webmill.template']}">
-                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}" action="site"
-                               actionListener="#{templateAction.selectTemplate}"
+                <h:commandLink id="select-template-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
+                               action="#{templateAction.selectTemplate}"
                     >
 
                     <t:graphicImage id="site-tree-template-image" value="/images/user.png" border="0"/>
@@ -147,7 +147,7 @@ rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"
         <f:facet name="xslt">
             <h:panelGroup id="site-tree-xslt-group" rendered="#{isUserInRole['webmill.site-manager,webmill.xslt']}">
                 <h:commandLink id="select-xslt-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{xsltAction.selectXslt}"
+                               action="#{xsltAction.selectXslt}"
                     >
 
                     <t:graphicImage id="site-tree-xslt-image" value="/images/user.png" border="0"/>
@@ -161,7 +161,7 @@ rendered="#{isUserInRole['webmill.site-manager,webmill.site']}"
         <f:facet name="css">
             <h:panelGroup id="site-tree-css-group" rendered="#{isUserInRole['webmill.site-manager,webmill.css']}">
                 <h:commandLink id="select-css-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               actionListener="#{cssAction.selectCss}"
+                               action="#{cssAction.selectCss}"
                     >
 
                     <t:graphicImage id="site-tree-css-image" value="/images/user.png" border="0"/>
