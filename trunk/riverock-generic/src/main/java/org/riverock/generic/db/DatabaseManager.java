@@ -1222,8 +1222,53 @@ public final class DatabaseManager {
             stmt = null;
             pstm = null;
         }
+    }
 
-    }                                   
+    public static List<Long> getLongValueList(final DatabaseAdapter db, final String sql, final Object[] params, final int[] types)
+        throws SQLException {
+
+        Statement stmt = null;
+        PreparedStatement pstm;
+        ResultSet rs = null;
+        List<Long> list = new ArrayList<Long>();
+        try {
+            if (params == null) {
+                stmt = db.createStatement();
+                rs = stmt.executeQuery(sql);
+            } else {
+                pstm = db.prepareStatement(sql);
+                for (int i = 0; i < params.length; i++) {
+                    if (types==null) {
+                        pstm.setObject(i + 1, params[i]);
+                    }
+                    else {
+                        pstm.setObject(i + 1, params[i], types[i]);
+                    }
+                }
+                rs = pstm.executeQuery();
+                stmt = pstm;
+            }
+
+            while (rs.next()) {
+                long tempLong = rs.getLong(1);
+                if (rs.wasNull())
+                    continue;
+
+                list.add(tempLong);
+            }
+            return list;
+        }
+        catch (SQLException e) {
+            log.error("error getting long value fron sql '" + sql + "'", e);
+            throw e;
+        }
+        finally {
+            close(rs, stmt);
+            rs = null;
+            stmt = null;
+            pstm = null;
+        }
+    }
 
     public static List<Long> getIdByList(final DatabaseAdapter adapter, final String sql, final Object[] param)
         throws GenericException {
