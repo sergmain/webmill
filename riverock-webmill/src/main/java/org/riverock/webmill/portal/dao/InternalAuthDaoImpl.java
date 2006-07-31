@@ -366,7 +366,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
-            switch (db.getFamaly()) {
+            switch (db.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     ps = db.prepareStatement(
                         "select ID_FIRM from WM_LIST_COMPANY " +
@@ -410,7 +410,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
-            switch (db.getFamaly())
+            switch (db.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     ps = db.prepareStatement(
@@ -454,7 +454,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         DatabaseAdapter db = null;
         try {
             db = DatabaseAdapter.getInstance();
-            switch (db.getFamaly()) {
+            switch (db.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     WmAuthUserItemType auth = GetWmAuthUserItem.getInstance(db, id_auth_user_owner).item;
                     if (auth==null)
@@ -670,7 +670,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            switch (db.getFamaly()) {
+            switch (db.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
 
                     ps = db.prepareStatement(
@@ -741,7 +741,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
     }
 
     public List<AuthInfo> getAuthInfo(DatabaseAdapter db_, Long userId, Long siteId) {
-        switch( db_.getFamaly() ) {
+        switch( db_.getFamily() ) {
             case DatabaseManager.MYSQL_FAMALY:
                 return getAuthInfoMySql( db_, userId, siteId );
             default:
@@ -978,7 +978,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            switch( db_.getFamaly() ) {
+            switch( db_.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     return checkAccessMySql( db_, userLogin, userPassword, serverName );
                 default:

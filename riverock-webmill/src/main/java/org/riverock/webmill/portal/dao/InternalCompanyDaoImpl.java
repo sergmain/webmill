@@ -110,7 +110,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
                 "from 	WM_LIST_COMPANY " +
                 "where  is_deleted=0 and ID_FIRM=? and ID_FIRM in ";
 
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -125,7 +125,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             ps = db.prepareStatement( sql );
             int idx = 1;
             ps.setLong( idx++, companyId );
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -171,7 +171,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
                 "from 	WM_LIST_COMPANY " +
                 "where  is_deleted=0 and ID_FIRM in ";
 
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -183,7 +183,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             }
 
             ps = db.prepareStatement( sql );
-            switch( db.getFamaly() ) {
+            switch( db.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -428,7 +428,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
                 "WHERE ID_FIRM = ? and ID_FIRM in ";
 
 
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -459,7 +459,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             ps.setString( num++, companyBean.getInfo() );
             RsetTools.setLong( ps, num++, companyBean.getId() );
 
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -512,7 +512,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
                 "update WM_LIST_COMPANY set is_deleted = 1 " +
                 "where  ID_FIRM = ? and ID_FIRM in ";
 
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -527,7 +527,7 @@ public class InternalCompanyDaoImpl implements InternalCompanyDao {
             ps = dbDyn.prepareStatement( sql );
 
             RsetTools.setLong( ps, 1, companyBean.getId() );
-            switch( dbDyn.getFamaly() ) {
+            switch( dbDyn.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:

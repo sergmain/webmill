@@ -67,7 +67,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
                     "from   WM_LIST_USER a " +
                     "where  a.ID_USER=? and a.IS_DELETED=0 and a.ID_FIRM in ";
 
-            switch (db.getFamaly()) {
+            switch (db.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -82,7 +82,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
             ps = db.prepareStatement(sql);
             int num = 1;
             ps.setLong(num++, portalUserId);
-            switch (db.getFamaly()) {
+            switch (db.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -183,7 +183,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
                     "from   WM_LIST_USER a " +
                     "where  a.IS_DELETED=0  and a.ID_FIRM in ";
 
-            switch (db.getFamaly()) {
+            switch (db.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -198,7 +198,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
             ps = db.prepareStatement(sql);
 
             int num = 1;
-            switch (db.getFamaly()) {
+            switch (db.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -299,7 +299,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
             ps.setString(num++, portalUserBean.getAddress());
             ps.setString(num++, portalUserBean.getPhone());
             ps.setString(num++, portalUserBean.getEmail());
-            switch (dbDyn.getFamaly()) {
+            switch (dbDyn.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -335,7 +335,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
                     "       ADDRESS=?,TELEPHONE=?,EMAIL=? " +
                     "where  ID_USER=? and is_deleted=0 and  ID_FIRM in ";
 
-            switch (dbDyn.getFamaly()) {
+            switch (dbDyn.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
                     sql += " (" + idList + ") ";
@@ -354,7 +354,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
             ps.setString(num++, portalUserBean.getPhone());
             ps.setString(num++, portalUserBean.getEmail());
             ps.setLong(num++, portalUserBean.getUserId());
-            switch (dbDyn.getFamaly()) {
+            switch (dbDyn.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -405,7 +405,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
                     "set    is_deleted=1 " +
                     "where  ID_USER=? and is_deleted = 0 and ID_FIRM in ";
 
-            switch (dbDyn.getFamaly()) {
+            switch (dbDyn.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
                     sql += " (" + idList + ") ";
@@ -418,7 +418,7 @@ public class InternalUserDaoImpl implements InternalUserDao {
             ps = dbDyn.prepareStatement(sql);
             int num = 1;
             ps.setLong(num++, portalUserBean.getUserId());
-            switch (dbDyn.getFamaly()) {
+            switch (dbDyn.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:

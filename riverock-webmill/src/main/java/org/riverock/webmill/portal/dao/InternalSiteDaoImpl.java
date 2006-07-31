@@ -66,7 +66,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             String sql =
                 "select * from WM_PORTAL_LIST_SITE where ID_FIRM in ";
 
-            switch( adapter.getFamaly() ) {
+            switch( adapter.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -80,7 +80,7 @@ public class InternalSiteDaoImpl implements InternalSiteDao {
             }
             ps = adapter.prepareStatement( sql );
             int idx = 1;
-            switch( adapter.getFamaly() ) {
+            switch( adapter.getFamily() ) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
