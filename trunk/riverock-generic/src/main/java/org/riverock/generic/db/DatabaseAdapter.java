@@ -134,7 +134,7 @@ public abstract class DatabaseAdapter implements DbConnection {
 
     public abstract String getClobField(ResultSet rs, String nameFeld) throws SQLException;
 
-    public abstract String getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception;
+    public abstract byte[] getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception;
 
     public abstract void createTable(DbTableType table) throws Exception;
 

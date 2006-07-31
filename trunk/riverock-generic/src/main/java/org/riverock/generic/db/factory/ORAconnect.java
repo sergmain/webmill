@@ -25,7 +25,9 @@
  */
 package org.riverock.generic.db.factory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,7 +43,6 @@ import javax.sql.DataSource;
 import oracle.jdbc.OracleResultSet;
 import oracle.jdbc.pool.OracleConnectionCacheImpl;
 import oracle.jdbc.pool.OracleConnectionPoolDataSource;
-import oracle.sql.BLOB;
 import oracle.sql.CLOB;
 import org.apache.log4j.Logger;
 
@@ -148,6 +149,11 @@ public class ORAconnect extends DatabaseAdapter {
                 case Types.LONGVARBINARY:
                     // Oracle 'long raw' fields type
                     sql += " LONGVARBINARY";
+                    break;
+
+                case Types.BLOB:
+                    // Oracle 'long raw' fields type
+                    sql += " BLOB";
                     break;
 
                 default:
@@ -581,34 +587,19 @@ DEFERRABLE INITIALLY DEFERRED
         ps.setNull(index, Types.LONGVARCHAR);
     }
 
-    public String getBlobField(ResultSet rs, String nameField, int maxLength)
-        throws Exception {
-        BLOB blob = ((OracleResultSet) rs).getBLOB(nameField);
+    public byte[] getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception {
+        Blob blob = rs.getBlob(nameField);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        int count;
+        byte buffer[] = new byte[1024];
 
-        // Get binary output stream to retrieve blob data
-        InputStream instream = blob.getBinaryStream();
-
-        // Create temporary buffer for read
-        byte[] buffer = new byte[10];
-
-        // length of bytes read
-        int length = 0;
-
-        String ret = "";
-        boolean flag = false;
-        // Fetch data
-        while ((length = instream.read(buffer)) != -1) {
-            flag = true;
-            ret += new String(buffer);
+        InputStream inputStream = blob.getBinaryStream();
+        while ((count = inputStream.read(buffer)) >= 0) {
+            outputStream.write(buffer, 0, count);
+            outputStream.flush();
         }
-
-        // Close input stream
-        instream.close();
-
-        if (flag)
-            return ret;
-        else
-            return null;
+        outputStream.close();
+        return outputStream.toByteArray();
     }
 
     public String getClobField(ResultSet rs, String nameField, int maxLength)

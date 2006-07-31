@@ -25,7 +25,6 @@
  */
 package org.riverock.generic.test.db;
 
-import org.riverock.generic.db.definition.DefinitionService;
 import org.riverock.generic.db.DatabaseAdapter;
 
 /**
@@ -47,7 +46,7 @@ public class TestDefinitionProcessing
 //        String nameConnection = "MSSQL-JTDS";
         DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
 
-        DefinitionService.validateDatabaseStructure( db_ );
+//        DefinitionService.validateDatabaseStructure( db_ );
         db_.commit();
         DatabaseAdapter.close(db_);
         db_ = null;
