@@ -32,8 +32,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 import javax.sql.DataSource;
 
@@ -114,8 +117,19 @@ public class IBMDB2connect extends DatabaseAdapter {
         return getClobField(rs, nameField, 20000);
     }
 
-    public String getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception {
-        return null;
+    public byte[] getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception {
+        Blob blob = rs.getBlob(nameField);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        int count;
+        byte buffer[] = new byte[1024];
+
+        InputStream inputStream = blob.getBinaryStream();
+        while ((count = inputStream.read(buffer)) >= 0) {
+            outputStream.write(buffer, 0, count);
+            outputStream.flush();
+        }
+        outputStream.close();
+        return outputStream.toByteArray();
     }
 
     public void createTable(DbTableType table) throws Exception {

@@ -118,7 +118,7 @@ public class IBconnect extends DatabaseAdapter {
         return getClobField(rs, nameField, 20000);
     }
 
-    public String getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception {
+    public byte[] getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception {
         return null;
     }
 

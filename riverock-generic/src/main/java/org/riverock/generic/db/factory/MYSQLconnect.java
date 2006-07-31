@@ -32,7 +32,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.sql.Blob;
 import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 
 import javax.sql.DataSource;
 
@@ -114,8 +117,19 @@ public final class MYSQLconnect extends DatabaseAdapter {
         return getClobField(rs, nameField, 20000);
     }
 
-    public String getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception {
-        return null;
+    public byte[] getBlobField(ResultSet rs, String nameField, int maxLength) throws Exception {
+        Blob blob = rs.getBlob(nameField);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        int count;
+        byte buffer[] = new byte[1024];
+
+        InputStream inputStream = blob.getBinaryStream();
+        while ((count = inputStream.read(buffer)) >= 0) {
+            outputStream.write(buffer, 0, count);
+            outputStream.flush();
+        }
+        outputStream.close();
+        return outputStream.toByteArray();
     }
 
     public void createTable(DbTableType table) throws Exception {
@@ -178,14 +192,16 @@ public final class MYSQLconnect extends DatabaseAdapter {
                     sql += " text ";
                     break;
 
-                case Types.LONGVARBINARY:
-                    sql += " LONGVARBINARY";
+                case Types.BLOB:
+                    sql += " BLOB";
                     break;
 
-                case 1111:
+                case Types.OTHER:
                     sql += " TEXT";
                     break;
 
+                // clob not supported by mysql
+                case Types.CLOB:
                 default:
                     field.setJavaStringType("unknown field type field - " + field.getName() + " javaType - " + field.getJavaType());
                     System.out.println("unknown field type field - " + field.getName() + " javaType - " + field.getJavaType());

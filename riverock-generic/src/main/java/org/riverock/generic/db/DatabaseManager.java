@@ -466,7 +466,7 @@ public final class DatabaseManager {
             DbTableType table = schema.getTables(i);
 //            System.out.println( "Table - " + table.getName() );
 
-            table.setFields(DatabaseStructureManager.getFieldsList(db_, db_.conn, table.getSchema(), table.getName()));
+            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(db_, db_.conn, table.getSchema(), table.getName()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName()));
             table.setImportedKeys(DatabaseStructureManager.getImportedKeys(db_.conn, table.getSchema(), table.getName()));
         }

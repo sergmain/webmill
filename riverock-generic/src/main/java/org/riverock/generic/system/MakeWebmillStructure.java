@@ -25,15 +25,9 @@
  */
 package org.riverock.generic.system;
 
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-
-import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.config.GenericConfig;
-
-import org.exolab.castor.xml.Marshaller;
+import org.riverock.generic.schema.db.structure.DbSchemaType;
 
 /**
  * User: SergeMaslyukov
@@ -55,6 +49,7 @@ public class MakeWebmillStructure {
             db_ = DatabaseAdapter.getInstance( nameConnection );
             DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
 
+/*
             String encoding = "UTF-8";
             String nameFile = nameOutputFiel;
             String outputSchemaFile = GenericConfig.getGenericDebugDir()+nameFile;
@@ -65,6 +60,7 @@ public class MakeWebmillStructure {
             marsh.setMarshalAsDocument( true );
             marsh.setEncoding( encoding );
             marsh.marshal( schema );
+*/
 
             return schema;
         }
@@ -79,7 +75,7 @@ public class MakeWebmillStructure {
     {
         org.riverock.generic.startup.StartupApplication.init();
 
-        makeSchema("ORACLE", "webmill-schema.xml");
+        makeSchema("MYSQL", "webmill-schema.xml");
 //        makeSchema("MSSQL-JTDS", "webmill-schema-mssql.xml");
 
     }

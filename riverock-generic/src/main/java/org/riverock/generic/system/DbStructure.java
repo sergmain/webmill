@@ -29,6 +29,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.Unmarshaller;
+import org.xml.sax.InputSource;
 
 import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
@@ -37,10 +42,6 @@ import org.riverock.generic.db.DatabaseStructureManager;
 import org.riverock.generic.schema.db.structure.DbSchemaType;
 import org.riverock.generic.schema.db.structure.DbTableType;
 import org.riverock.generic.schema.db.structure.DbViewType;
-
-import org.exolab.castor.xml.Marshaller;
-import org.exolab.castor.xml.Unmarshaller;
-import org.xml.sax.InputSource;
 
 /**
  * Author: mill
@@ -112,7 +113,7 @@ public class DbStructure
             DbTableType table = schema.getTables(i);
             System.out.println( "Table - " + table.getName() );
 
-            table.setFields(DatabaseStructureManager.getFieldsList(dbOra, dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra, dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table));
