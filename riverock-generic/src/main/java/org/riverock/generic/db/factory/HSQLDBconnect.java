@@ -66,7 +66,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
 public class HSQLDBconnect extends DatabaseAdapter {
     private static Logger log = Logger.getLogger( HSQLDBconnect.class );
 
-    public int getFamaly() {
+    public int getFamily() {
         return DatabaseManager.HSQLDB_FAMALY;
     }
 

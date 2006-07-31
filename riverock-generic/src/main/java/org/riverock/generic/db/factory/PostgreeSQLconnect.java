@@ -824,7 +824,7 @@ DEFERRABLE INITIALLY DEFERRED
         return false;
     }
 
-    public int getFamaly()
+    public int getFamily()
     {
         return DatabaseManager.ORACLE_FAMALY;
     }

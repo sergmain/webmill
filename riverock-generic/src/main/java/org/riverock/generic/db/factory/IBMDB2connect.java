@@ -65,7 +65,7 @@ import org.riverock.generic.schema.db.structure.DbViewType;
 public class IBMDB2connect extends DatabaseAdapter {
     private static Logger log = Logger.getLogger(IBMDB2connect.class);
 
-    public int getFamaly() {
+    public int getFamily() {
         return DatabaseManager.DB2_FAMALY;
     }
 

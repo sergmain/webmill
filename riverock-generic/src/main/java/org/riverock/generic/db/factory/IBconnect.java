@@ -66,7 +66,7 @@ import org.riverock.generic.tools.CurrentTimeZone;
 public class IBconnect extends DatabaseAdapter {
     private static Logger log = Logger.getLogger( IBconnect.class );
 
-    public int getFamaly() {
+    public int getFamily() {
         return DatabaseManager.INTERBASE_FAMALY;
     }
 
