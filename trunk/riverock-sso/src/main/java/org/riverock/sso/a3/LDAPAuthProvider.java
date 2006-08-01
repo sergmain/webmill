@@ -27,7 +27,6 @@ package org.riverock.sso.a3;
 import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Iterator;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -37,16 +36,15 @@ import javax.naming.directory.InitialDirContext;
 
 import org.apache.log4j.Logger;
 
-import org.riverock.interfaces.sso.a3.UserInfo;
-import org.riverock.interfaces.sso.a3.AuthSession;
+import org.riverock.interfaces.portal.bean.Company;
+import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.AuthProvider;
+import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.AuthUserExtendedInfo;
+import org.riverock.interfaces.sso.a3.UserInfo;
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
-import org.riverock.interfaces.portal.bean.Company;
-//import org.riverock.interfaces.portal.bean.GroupCompany;
-import org.riverock.interfaces.portal.bean.Holding;
 
 /**
  * User: Admin
@@ -62,9 +60,10 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
     private static final String CANONICAL_NAME_MEMBEROF = "memberOf";
 
     private String providerUrl = null;
-    private DirContext ctx = null;
+    private transient DirContext ctx = null;
     public static final String PROVIDER_URL_CONST = "provider-url";
 
+/*
     protected void finalize() throws Throwable {
         if (ctx != null) {
             try {
@@ -72,11 +71,12 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
                 ctx = null;
             }
             catch (Exception e) {
+                // catch close error
             }
         }
         super.finalize();
     }
-
+*/
 
     public boolean isUserInRole(final AuthSession authSession, final String role) {
         if (ctx == null || role == null || role.trim().length() == 0)
@@ -95,8 +95,7 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
             Attributes result =
                 ctx.getAttributes("CN=" + authSession.getUserLogin() + ",CN=Users", attrs);
 
-            javax.naming.directory.Attribute attr =
-                result.get(CANONICAL_NAME_MEMBEROF);
+            javax.naming.directory.Attribute attr = result.get(CANONICAL_NAME_MEMBEROF);
 
             if (attr != null) {
                 NamingEnumeration vals = attr.getAll();
@@ -174,12 +173,8 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         if (params == null)
             return;
 
-        Iterator<List<AuthParameterBean>> iteratorMain = params.iterator();
-        while (iteratorMain.hasNext()) {
-            List<AuthParameterBean> authParameterBeans = iteratorMain.next();
-            Iterator<AuthParameterBean> iterator = authParameterBeans.iterator();
-            while (iterator.hasNext()) {
-                AuthParameterBean bean = iterator.next();
+        for (List<AuthParameterBean> authParameterBeans : params) {
+            for (AuthParameterBean bean : authParameterBeans) {
                 if (PROVIDER_URL_CONST.equals(bean.getName())) {
                     providerUrl = bean.getValue();
                 }
@@ -208,14 +203,6 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-//    public String getGrantedGroupCompanyId(AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
-
-//    public List<Long> getGrantedGroupCompanyIdList(AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
-
     public String getGrantedHoldingId(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -227,10 +214,6 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
     public Long checkCompanyId(Long companyId, AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
-//    public Long checkGroupCompanyId(Long groupCompanyId, AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
 
     public Long checkHoldingId(Long holdingId, AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -304,10 +287,6 @@ public final class LDAPAuthProvider implements AuthProvider, Serializable {
     public List<Company> getCompanyList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
-
-//    public List<GroupCompany> getGroupCompanyList(AuthSession authSession) {
-//        return null;  //To change body of implemented methods use File | Settings | File Templates.
-//    }
 
     public List<Holding> getHoldingList(AuthSession authSession) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.

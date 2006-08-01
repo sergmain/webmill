@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Holding;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -36,7 +37,7 @@ import org.riverock.generic.db.DatabaseAdapter;
  *         Time: 1:24:19
  *         $Id$
  */
-public interface InternalHoldingDao {
+public interface InternalHoldingDao extends Serializable {
     
     public Holding loadHolding( Long id, AuthSession authSession );
     public Long processAddHolding( Holding holdingBean, AuthSession authSession );

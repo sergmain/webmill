@@ -31,21 +31,21 @@ package org.riverock.webmill.portal.dao;
  *         $Id$
  */
 public class InternalDaoFactory {
-    public static InternalDao internalDao = new InternalDaoImpl();
-    public static InternalCompanyDao internalCompanyDao = new InternalCompanyDaoImpl();
-    public static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
-    public static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
-    public static InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
-    public static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
-    public static InternalVirtualHostDao internalVirtualHostDao = new InternalVirtualHostDaoImpl();
-    public static InternalSiteLanguageDao internalSiteLanguageDao = new InternalSiteLanguageDaoImpl();
-    public static InternalTemplateDao internalTemplateDao = new InternalTemplateDaoImpl();
-    public static InternalPortletNameDao internalPortletNameDao = new InternalPortletNameDaoImpl();
-    public static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
-    public static InternalCssDao internalCssDao = new InternalCssDaoImpl();
-    public static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
-    public static InternalUserMetadataDao internalUserMetadataDao = new InternalUserMetadataDaoImpl();
-    public static InternalUserDao internalUserDao = new InternalUserDaoImpl();
+    public final static InternalDao internalDao = new InternalDaoImpl();
+    public final static InternalCompanyDao internalCompanyDao = new InternalCompanyDaoImpl();
+    public final static InternalHoldingDao internalHoldingDao = new InternalHoldingDaoImpl();
+    public final static InternalAuthDao internalAuthDao = new InternalAuthDaoImpl();
+    public final static InternalSiteDao internalSiteDao = new InternalSiteDaoImpl();
+    public final static InternalXsltDao internalXsltDao = new InternalXsltDaoImpl();
+    public final static InternalVirtualHostDao internalVirtualHostDao = new InternalVirtualHostDaoImpl();
+    public final static InternalSiteLanguageDao internalSiteLanguageDao = new InternalSiteLanguageDaoImpl();
+    public final static InternalTemplateDao internalTemplateDao = new InternalTemplateDaoImpl();
+    public final static InternalPortletNameDao internalPortletNameDao = new InternalPortletNameDaoImpl();
+    public final static InternalCatalogDao internalCatalogDao = new InternalCatalogDaoImpl();
+    public final static InternalCssDao internalCssDao = new InternalCssDaoImpl();
+    public final static InternalCmsDao internalCmsDao = new InternalCmsDaoImpl();
+    public final static InternalUserMetadataDao internalUserMetadataDao = new InternalUserMetadataDaoImpl();
+    public final static InternalUserDao internalUserDao = new InternalUserDaoImpl();
 
     public static InternalUserDao getInternalUserDao() {
         return internalUserDao;

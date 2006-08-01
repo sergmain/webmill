@@ -83,11 +83,18 @@ public class UserMetadataItemBean implements UserMetadataItem {
     }
 
     public Date getDateValue() {
-        return dateValue;
+        if (dateValue==null) {
+            return null;
+        }
+        return new Date(dateValue.getTime());
     }
 
     public void setDateValue(Date dateValue) {
-        this.dateValue = dateValue;
+        if (dateValue==null) {
+            this.dateValue=null;
+            return;
+        }
+        this.dateValue = new Date(dateValue.getTime());
     }
 
     public String getStringValue() {

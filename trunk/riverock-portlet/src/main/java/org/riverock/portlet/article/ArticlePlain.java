@@ -26,8 +26,9 @@ package org.riverock.portlet.article;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.PortletConfig;
@@ -42,6 +43,7 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.DateTools;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
+import org.riverock.generic.config.GenericConfig;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.main.CacheFactory;
@@ -69,7 +71,7 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
     private final static CacheFactory cache = new CacheFactory( ArticlePlain.class);
 
-    public Calendar datePost = null;
+    public Date datePost = null;
     public String nameArticle = "";
     public String text = "";
     public Long id = null;
@@ -135,11 +137,11 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
     }
 
     public String getArticleDate() {
-        return DateTools.getStringDate( datePost, "dd.MMM.yyyy", renderRequest.getLocale() );
+        return DateTools.getStringDate( datePost, "dd.MMM.yyyy", renderRequest.getLocale(), GenericConfig.getTZ() );
     }
 
     public String getArticleTime() {
-        return DateTools.getStringDate( datePost, "HH:mm", renderRequest.getLocale() );
+        return DateTools.getStringDate( datePost, "HH:mm", renderRequest.getLocale(), GenericConfig.getTZ() );
     }
 
     public String getArticleName() {
@@ -271,7 +273,11 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
 
             rs = ps.executeQuery();
             if( rs.next() ) {
-                datePost = RsetTools.getCalendar( rs, "DATE_POST" );
+                Timestamp timestamp = RsetTools.getTimestamp(rs, "DATE_POST");
+                if (timestamp!=null)
+                    datePost = new Date(timestamp.getTime() );
+                else
+                    datePost=new Date();
                 nameArticle = RsetTools.getString( rs, "NAME_ARTICLE" );
                 isTranslateCR = ( RsetTools.getInt( rs, "IS_TRANSLATE_CR", 0 ) == 1 );
                 isPlainHTML = ( RsetTools.getInt( rs, "IS_PLAIN_HTML", 0 ) == 1 );

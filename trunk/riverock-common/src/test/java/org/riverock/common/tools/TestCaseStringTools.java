@@ -26,52 +26,41 @@ package org.riverock.common.tools;
 
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
-
 import junit.framework.TestCase;
 
 /**
  * Author: mill
  * Date: Feb 17, 2003
  * Time: 12:17:51 PM
- *
+ * <p/>
  * $Id$
  */
-public class TestCaseStringTools extends TestCase
-{
-    private static Logger cat = Logger.getLogger( TestCaseStringTools.class );
-
-    public TestCaseStringTools(String testName)
-    {
+public class TestCaseStringTools extends TestCase {
+    public TestCaseStringTools(String testName) {
         super(testName);
     }
 
     private void testLocale(TestLocale tl)
-        throws Exception
-    {
-        Locale l = StringTools.getLocale( tl.s );
+        throws Exception {
+        Locale l = StringTools.getLocale(tl.s);
         String locale = tl.s;
-        if (tl.isVariant)
-        {
-            assertFalse(tl.s +", "+l+", "+locale+" Locale variant is null", l.getVariant()==null );
-            assertFalse(tl.s +", "+l+", "+locale+" Locale variant not valid", (!l.getVariant().equals( tl.v )));
+        if (tl.isVariant) {
+            assertFalse(tl.s + ", " + l + ", " + locale + " Locale variant is null", l.getVariant() == null);
+            assertFalse(tl.s + ", " + l + ", " + locale + " Locale variant not valid", (!l.getVariant().equals(tl.v)));
         }
 
-        if (tl.isCountry)
-        {
-            assertFalse(tl.s +", "+l+", "+locale+" Locale country is null", l.getCountry()==null );
-            assertFalse(tl.s +", "+l+", "+locale+" Locale country not valid", (!l.getCountry().equals( tl.c )));
+        if (tl.isCountry) {
+            assertFalse(tl.s + ", " + l + ", " + locale + " Locale country is null", l.getCountry() == null);
+            assertFalse(tl.s + ", " + l + ", " + locale + " Locale country not valid", (!l.getCountry().equals(tl.c)));
         }
 
-        if (tl.isLang)
-        {
-            assertFalse(tl.s +", "+l+", "+locale+" Locale language is null", l.getLanguage()==null );
-            assertFalse(tl.s +", "+l+", "+locale+" Locale language not valid", (!l.getLanguage().equals( tl.l )));
+        if (tl.isLang) {
+            assertFalse(tl.s + ", " + l + ", " + locale + " Locale language is null", l.getLanguage() == null);
+            assertFalse(tl.s + ", " + l + ", " + locale + " Locale language not valid", (!l.getLanguage().equals(tl.l)));
         }
     }
 
-    class TestLocale
-    {
+    class TestLocale {
         String s;
         String l;
         String c;
@@ -80,10 +69,9 @@ public class TestCaseStringTools extends TestCase
         boolean isCountry;
         boolean isVariant;
 
-        public TestLocale( String s,
-            String  l,String  c,String  v,
-            boolean isLang, boolean isCountry, boolean isVariant)
-        {
+        public TestLocale(String s,
+                          String l, String c, String v,
+                          boolean isLang, boolean isCountry, boolean isVariant) {
             this.s = s;
             this.l = l;
             this.c = c;
@@ -94,9 +82,7 @@ public class TestCaseStringTools extends TestCase
         }
     }
 
-    public void testGetLocaleFromString()
-        throws Exception
-    {
+    public void testGetLocaleFromString() throws Exception {
         TestLocale[] localeToTest =
             {
                 new TestLocale("ru_RU_TEST", "ru", "RU", "test", true, true, true),
@@ -110,35 +96,31 @@ public class TestCaseStringTools extends TestCase
                 new TestLocale("en_US-TEST", "en", "US", "test", true, true, true)
             };
 
-        for (int i=0; i<localeToTest.length; i++)
-            testLocale( localeToTest[i] );
+        for (TestLocale aLocaleToTest : localeToTest)
+            testLocale(aLocaleToTest);
     }
 
-    class TestCapitalizeString
-    {
+    class TestCapitalizeString {
         String s;
         String t;
 
-        public TestCapitalizeString( String s, String t)
-        {
+        public TestCapitalizeString(String s, String t) {
             this.s = s;
             this.t = t;
         }
     }
 
     private void testCapitalizeInternal(TestCapitalizeString tl)
-        throws Exception
-    {
+        throws Exception {
         assertTrue(
-            "\nError capitalize string '"+tl.s+"'\n" +
-            "Expected '"+tl.t+"', but result is '"+StringTools.capitalizeString(tl.s)+"'",
+            "\nError capitalize string '" + tl.s + "'\n" +
+                "Expected '" + tl.t + "', but result is '" + StringTools.capitalizeString(tl.s) + "'",
             tl.t.equals(StringTools.capitalizeString(tl.s))
         );
     }
 
     public void testCapitalizeString()
-        throws Exception
-    {
+        throws Exception {
         TestCapitalizeString[] capitalize =
             {
                 new TestCapitalizeString("TEST", "Test"),
@@ -151,17 +133,26 @@ public class TestCaseStringTools extends TestCase
                 new TestCapitalizeString("TEST__T", "TestT")
             };
 
-        for (int i=0; i<capitalize.length; i++)
-        {
-            System.out.println("s '"+capitalize[i].s+"', t '"+capitalize[i].t+"'");
-            testCapitalizeInternal( capitalize[i] );
+        for (TestCapitalizeString aCapitalize : capitalize) {
+            System.out.println("s '" + aCapitalize.s + "', t '" + aCapitalize.t + "'");
+            testCapitalizeInternal(aCapitalize);
         }
     }
 
+    public void testAppendString() throws Exception {
+        assertNull(StringTools.appendString(null, ' ', 0, true));
+        assertEquals("aaaBBB", StringTools.appendString("aaa", 'B', 6, false));
+        assertEquals("BBBaaa", StringTools.appendString("aaa", 'B', 6, true));
+    }
 
-    public static void main(String[] s)
-    {
-        Locale l = StringTools.getLocale( "en" );
+    public void testAddString() throws Exception {
+        assertNull(StringTools.addString(null, ' ', 0, true));
+        assertEquals("aaaBBB", StringTools.addString("aaa", 'B', 3, false));
+        assertEquals("BBBaaa", StringTools.addString("aaa", 'B', 3, true));
+    }
+
+    public static void main(String[] s) {
+        Locale l = StringTools.getLocale("en");
 
         String loc = l.toString();
         System.out.println(loc);

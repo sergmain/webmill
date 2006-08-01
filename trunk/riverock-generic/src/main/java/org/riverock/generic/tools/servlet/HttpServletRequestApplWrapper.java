@@ -25,20 +25,21 @@
  */
 package org.riverock.generic.tools.servlet;
 
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Locale;
-import java.util.Hashtable;
-import java.security.Principal;
-import java.io.UnsupportedEncodingException;
-import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
-import javax.servlet.ServletInputStream;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Author: mill
@@ -62,10 +63,10 @@ public class HttpServletRequestApplWrapper implements HttpServletRequest {
     private Enumeration headerNames = null;
     private int intHeader;
     private String method = null;
-    private Hashtable parameterNames = new Hashtable();
+    private Map<String, String> parameterNames = new HashMap<String, String>();
 
     public String getParameter( String s ) {
-        return (String)parameterNames.get( s );
+        return parameterNames.get( s );
     }
 
     public void setParameter( String key, String obj ) {
@@ -73,7 +74,7 @@ public class HttpServletRequestApplWrapper implements HttpServletRequest {
     }
 
     public Enumeration getParameterNames() {
-        return parameterNames.keys();
+        return Collections.enumeration(parameterNames.keySet());
     }
 
     public String[] getParameterValues( String s ) {
@@ -249,7 +250,9 @@ public class HttpServletRequestApplWrapper implements HttpServletRequest {
     }
 
     public Cookie[] getCookies() {
-        return cookies;
+        Cookie[] c = new Cookie[cookies.length];
+        System.arraycopy(cookies, 0, c, 0, cookies.length);
+        return c;
     }
 
     public long getDateHeader( String s ) {
@@ -265,7 +268,9 @@ public class HttpServletRequestApplWrapper implements HttpServletRequest {
     }
 
     public void setCookies( Cookie[] cookies ) {
-        this.cookies = cookies;
+        Cookie[] c = new Cookie[cookies.length];
+        System.arraycopy(cookies, 0, c, 0, cookies.length);
+        this.cookies = c;
     }
 
     public long getDateHeader() {

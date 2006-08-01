@@ -58,7 +58,7 @@ public class SiteTree implements Serializable {
     private final static Logger log = Logger.getLogger(SiteTree.class);
     private static final long serialVersionUID = 2057005500L;
 
-    private HtmlTree _tree;
+    private transient HtmlTree _tree;
     private String _nodePath;
 
     @SuppressWarnings({"FieldCanBeLocal"})

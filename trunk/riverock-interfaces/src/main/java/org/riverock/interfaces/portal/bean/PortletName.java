@@ -24,12 +24,14 @@
  */
 package org.riverock.interfaces.portal.bean;
 
+import java.io.Serializable;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 05.05.2006
  *         Time: 14:56:57
  */
-public interface PortletName {
+public interface PortletName extends Serializable {
     public Long getPortletId();
     public String getPortletName();
     public boolean isActive();

@@ -25,6 +25,7 @@
 package org.riverock.interfaces.common;
 
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * User: serg_main
@@ -33,7 +34,7 @@ import java.util.List;
  * @author Serge Maslyukov
  * $Id$
  */
-public interface TreeItem {
+public interface TreeItem extends Serializable {
     public Long getTopId();
     public Long getId();
     public List<TreeItem> getSubTree();

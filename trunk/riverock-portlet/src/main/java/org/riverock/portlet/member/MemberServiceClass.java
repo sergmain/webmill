@@ -66,18 +66,15 @@ import org.riverock.interfaces.sso.a3.AuthSession;
 public final class MemberServiceClass {
     private final static Logger log = Logger.getLogger( MemberServiceClass.class );
 
-    private static class RestrictDescription
-    {
+    private static class RestrictDescription {
         int type;
         String nameField = null;
 
-        RestrictDescription(int type_, String nameField_)
-        {
+        RestrictDescription(int type_, String nameField_) {
             this.type = type_;
             this.nameField = nameField_;
         }
     }
-
 
     private final static Object syncDebug = new Object();
 
@@ -407,7 +404,7 @@ public final class MemberServiceClass {
 
                 if (! Boolean.TRUE.equals(content1.getQueryArea().getSqlCache().getIsInit()) )
                 {
-                    switch (dbDyn.getFamaly())
+                    switch (dbDyn.getFamily())
                     {
                         case DatabaseManager.MYSQL_FAMALY:
                             break;
@@ -532,14 +529,15 @@ public final class MemberServiceClass {
             }
         }
 
+/*
         // проверка на наличие 'self lookup' записи
         if (mod1.getSelfLookup() != null &&
             mod1.getSelfLookup().getCurrentField() != null &&
             mod1.getSelfLookup().getTopField() != null)
         {
-
 //            flag = true;
         }
+*/
 
         sql_ = "values ("+sql_+")";
 
@@ -673,7 +671,7 @@ public final class MemberServiceClass {
             if (sc.where.length() != 0)
                 sc.where += " and ";
 
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
@@ -739,7 +737,7 @@ public final class MemberServiceClass {
             if (sc.where.length() != 0)
                 sc.where += " and ";
 
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
 
@@ -1162,7 +1160,7 @@ public final class MemberServiceClass {
             if (where_.length() > 0)
                 where_ += " and ";
 
-            switch (dbDyn.getFamaly())
+            switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
@@ -1191,7 +1189,7 @@ public final class MemberServiceClass {
             if (where_.length() > 0)
                 where_ += " and ";
 
-            switch (dbDyn.getFamaly())
+            switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     if (log.isDebugEnabled())
@@ -1227,7 +1225,7 @@ public final class MemberServiceClass {
             if (where_.length() > 0)
                 where_ += " and ";
 
-            switch (dbDyn.getFamaly())
+            switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idUser = authSession.getGrantedUserId();
@@ -1264,7 +1262,7 @@ public final class MemberServiceClass {
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        switch (adapter.getFamaly())
+        switch (adapter.getFamily())
         {
             case DatabaseManager.MYSQL_FAMALY:
                 try {
@@ -1453,7 +1451,7 @@ public final class MemberServiceClass {
             RestrictTypeTypeType.FIRM_TYPE)
         {
 
-            switch (dbDyn.getFamaly())
+            switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
@@ -1476,7 +1474,7 @@ public final class MemberServiceClass {
             content.getQueryArea().getRestrict().getType().getType() ==
             RestrictTypeTypeType.SITE_TYPE)
         {
-            switch (dbDyn.getFamaly())
+            switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idSite = MemberTools.getGrantedSiteId(dbDyn, serverName );
@@ -1499,7 +1497,7 @@ public final class MemberServiceClass {
         if (content.getQueryArea().getRestrict() != null &&
             content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
         {
-            switch (dbDyn.getFamaly())
+            switch (dbDyn.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idUser = authSession.getGrantedUserId();
@@ -1569,7 +1567,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
-                        switch (dbDyn.getFamaly())
+                        switch (dbDyn.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -1584,7 +1582,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-                        switch (dbDyn.getFamaly())
+                        switch (dbDyn.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -1599,7 +1597,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-                        switch (dbDyn.getFamaly())
+                        switch (dbDyn.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;

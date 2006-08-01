@@ -24,17 +24,19 @@
  */
 package org.riverock.portlet.manager.holding;
 
+import java.io.Serializable;
+
 /**
  * @author SergeMaslyukov
  *         Date: 06.01.2006
  *         Time: 11:26:35
  *         $Id$
  */
-public class HoldingSessionBean {
+public class HoldingSessionBean implements Serializable {
 
-	private HoldingBean holdingBean = null;
-	private Long currentCompanyId = null;
-	private Long currentHoldingId = null;
+    private HoldingBean holdingBean = null;
+    private Long currentCompanyId = null;
+    private Long currentHoldingId = null;
 
     private boolean isAdd = false;
     private boolean isEdit = false;
@@ -85,27 +87,27 @@ public class HoldingSessionBean {
         return isDelete;
     }
 
-	public void setHoldingBean(HoldingBean bean) {
-		this.holdingBean = bean;
-	}
+    public void setHoldingBean(HoldingBean bean) {
+        this.holdingBean = bean;
+    }
 
-	public HoldingBean getHoldingBean() {
-		return holdingBean;
-	}
+    public HoldingBean getHoldingBean() {
+        return holdingBean;
+    }
 
-	public Long getCurrentHoldingId() {
-		return currentHoldingId;
-	}
+    public Long getCurrentHoldingId() {
+        return currentHoldingId;
+    }
 
-	public void setCurrentHoldingId( Long id ) {
-		this.currentHoldingId = id;
-	}
+    public void setCurrentHoldingId( Long id ) {
+        this.currentHoldingId = id;
+    }
 
-	public Long getCurrentCompanyId() {
-		return currentCompanyId;
-	}
+    public Long getCurrentCompanyId() {
+        return currentCompanyId;
+    }
 
-	public void setCurrentCompanyId( Long id ) {
-		this.currentCompanyId = id;
-	}
+    public void setCurrentCompanyId( Long id ) {
+        this.currentCompanyId = id;
+    }
 }

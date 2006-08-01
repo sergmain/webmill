@@ -29,13 +29,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 
 import org.riverock.schema.sql.*;
 import org.riverock.schema.sql.types.UnionTypeType;
 
 public class Parser {
-    private static Category cat = Category.getInstance("org.riverock.sql.parser.Parser");
+    private static Logger cat = Logger.getLogger(Parser.class);
 
     private Tokenizer tTokenizer;
     private String sTable;
@@ -162,7 +162,7 @@ public class Parser {
                     break;
                 }
 
-                Integer command = (Integer) hCommands.get(sToken);
+                Integer command = hCommands.get(sToken);
 
                 if (command == null) {
                     String errorString = "UNEXPECTED_TOKEN " + sToken;
@@ -170,7 +170,7 @@ public class Parser {
                     throw new Exception(errorString);
                 }
 
-                typeStatement = command.intValue();
+                typeStatement = command;
 
                 switch (typeStatement) {
 
@@ -224,7 +224,6 @@ public class Parser {
 
         tTokenizer.getThis("SET");
 
-        ArrayList vColumn = new ArrayList();
         ArrayList<ExpressionType> eColumn = new ArrayList<ExpressionType>();
 
         token = null;
@@ -348,7 +347,8 @@ public class Parser {
             tTokenizer.getThis("(");
 
             Object row[] = new Object[t.getColumnCount()];
-            boolean check[] = (vcolumns == null) ? null
+            boolean check[] = (vcolumns == null)
+                ? null
                 : new boolean[row.length];
             boolean enclosed = false;
             int i = 0;
@@ -485,13 +485,13 @@ public class Parser {
             String limEnd = tTokenizer.getString();
 
             try {
-                selectResult.setLimitStart(new Integer(limStart).intValue());
-                selectResult.setLimitCount(new Integer(limEnd).intValue());
+                selectResult.setLimitStart(Integer.parseInt(limStart));
+                selectResult.setLimitCount(Integer.parseInt(limEnd));
 
                 LimitType limit = new LimitType();
 
-                limit.setStart(new Integer(limStart).intValue());
-                limit.setCount(new Integer(limEnd).intValue());
+                limit.setStart(Integer.parseInt(limStart));
+                limit.setCount(Integer.parseInt(limEnd));
             }
             catch (NumberFormatException ex) {
 
@@ -507,12 +507,12 @@ public class Parser {
 
             try {
                 selectResult.setLimitStart(0);
-                selectResult.setLimitCount(new Integer(limEnd).intValue());
+                selectResult.setLimitCount(Integer.parseInt(limEnd));
 
                 LimitType limit = new LimitType();
 
                 limit.setStart(0);
-                limit.setCount(new Integer(limEnd).intValue());
+                limit.setCount(Integer.parseInt(limEnd));
             }
             catch (NumberFormatException ex) {
                 String errorString = "WRONG_DATA_TYPE TOP m";
@@ -623,16 +623,14 @@ public class Parser {
         len = vcolumn.size();
 
         for (int i = 0; i < len; i++) {
-            ExpressionType e = (ExpressionType) (vcolumn.get(i));
+            ExpressionType e = vcolumn.get(i);
 
             if (e.getType() == ExpressionService.ASTERIX) {
                 int current = i;
                 TableType table = null;
                 String n = ExpressionService.getTableName(e);
 
-                for (int t = 0; t < filter.length; t++) {
-                    TableFilterType f = filter[t];
-
+                for (TableFilterType f : filter) {
                     ExpressionService.resolve(e, f);
 
                     if (n != null && !n.equals(f.getAlias())) {
@@ -663,9 +661,8 @@ public class Parser {
             }
             else if (e.getType() == ExpressionService.COLUMN) {
                 if (ExpressionService.getTableName(e) == null) {
-                    for (int filterIndex = 0; filterIndex < filter.length;
-                         filterIndex++) {
-                        ExpressionService.resolve(e, filter[filterIndex]);
+                    for (TableFilterType aFilter : filter) {
+                        ExpressionService.resolve(e, aFilter);
                     }
                 }
             }
@@ -828,7 +825,7 @@ public class Parser {
 
             // order by 1,2,3
             if (e.getDataType() == Types.INTEGER) {
-                int i = (new Integer(e.getObjectData())).intValue();
+                int i = Integer.parseInt(e.getObjectData());
 
                 e = (ExpressionType) vcolumn.get(i - 1);
             }
@@ -907,7 +904,7 @@ public class Parser {
      *
      * @param e1
      * @param e2
-     * @return
+     * @return ExpressionType
      */
     private ExpressionType addCondition(ExpressionType e1, ExpressionType e2) {
 

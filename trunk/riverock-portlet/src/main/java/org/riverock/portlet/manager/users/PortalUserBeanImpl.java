@@ -121,19 +121,33 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public Date getCreatedDate() {
-        return createdDate;
+        if (createdDate==null) {
+            return null;
+        }
+        return new Date(createdDate.getTime());
     }
 
     public void setCreatedDate( Date createdDate ) {
-        this.createdDate = createdDate;
+        if (createdDate==null) {
+            this.createdDate=null;
+            return;
+        }
+        this.createdDate = new Date(createdDate.getTime());
     }
 
     public Date getDeletedDate() {
-        return closedDate;
+        if (closedDate==null) {
+            return null;
+        }
+        return new Date(closedDate.getTime());
     }
 
     public void setDeletedDate( Date closedDate ) {
-        this.closedDate = closedDate;
+        if (closedDate==null) {
+            this.closedDate=null;
+            return;
+        }
+        this.closedDate = new Date(closedDate.getTime());
     }
 
     public String getAddress() {

@@ -1,9 +1,10 @@
 /*
- * org.riverock.webmill -- Portal framework implementation
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,7 +21,6 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.webmill.portal.dao;
 
@@ -222,7 +222,7 @@ public class InternalDaoImpl implements InternalDao {
                 WmPortalAccessUrlItemType item = new WmPortalAccessUrlItemType();
                 item.setIdSiteAccessUrl(urlId);
                 item.setUrl(bean.getUrl());
-                InsertWmPortalAccessUrlItem.processData(adapter, item);
+                InsertWmPortalAccessUrlItem.process(adapter, item);
             }
 
             stat.setIdSiteAccessUserAgent(userAgentId);
@@ -249,7 +249,7 @@ public class InternalDaoImpl implements InternalDao {
             stat.setParameters( bean.getParameters() );
             stat.setRefer( bean.getRefer() );
 
-            InsertWmPortalAccessStatItem.processData(adapter, stat);
+            InsertWmPortalAccessStatItem.process(adapter, stat);
 
             userAgentList.putIfAbsent(bean.getUserAgent(), userAgentId);
             urlList.putIfAbsent(bean.getUrl(), urlId);

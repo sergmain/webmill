@@ -24,12 +24,14 @@
  */
 package org.riverock.interfaces.portal.bean;
 
+import java.io.Serializable;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 06.05.2006
  *         Time: 15:26:45
  */
-public interface CatalogLanguageItem {
+public interface CatalogLanguageItem extends Serializable {
     public Long getCatalogLanguageId();
 
     public Boolean getDefault();

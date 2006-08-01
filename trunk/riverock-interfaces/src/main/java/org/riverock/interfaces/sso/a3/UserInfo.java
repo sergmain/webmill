@@ -24,13 +24,15 @@
  */
 package org.riverock.interfaces.sso.a3;
 
+import java.io.Serializable;
+
 /**
  * @author SergeMaslyukov
  *         Date: 05.11.2005
  *         Time: 15:49:28
  *         $Id$
  */
-public interface UserInfo {
+public interface UserInfo extends Serializable {
     public String getFirstName();
     public String getMiddleName();
     public String getLastName();

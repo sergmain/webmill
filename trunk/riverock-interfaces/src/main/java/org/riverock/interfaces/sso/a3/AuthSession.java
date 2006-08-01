@@ -26,6 +26,7 @@ package org.riverock.interfaces.sso.a3;
 
 import java.security.Principal;
 import java.util.List;
+import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
 import org.riverock.interfaces.portal.bean.Company;
@@ -38,7 +39,7 @@ import org.riverock.interfaces.portal.bean.Holding;
  *         Time: 1:50:28
  *         $Id$
  */
-public interface AuthSession extends Principal {
+public interface AuthSession extends Principal, Serializable {
     public boolean isUserInRole( String roleName );
     public String getUserLogin();
     public String getUserPassword();

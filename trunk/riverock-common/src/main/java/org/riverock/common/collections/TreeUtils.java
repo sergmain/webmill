@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Comparator;
 import java.util.Collections;
+import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 
@@ -45,7 +46,7 @@ public final class TreeUtils {
     private final static Logger log = Logger.getLogger( TreeUtils.class );
     private final static TreeItemComparator comparator = new TreeItemComparator();
 
-    private static class TreeItemComparator implements Comparator<TreeItem> {
+    private static class TreeItemComparator implements Comparator<TreeItem>, Serializable {
         public int compare(TreeItem item1, TreeItem item2) {
 
             if (item1 ==null && item2 ==null)

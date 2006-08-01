@@ -78,7 +78,8 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
                 "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
                 "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
                 "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and a.ID_SITE_CTX_CATALOG=?",
-                    new Object[]{ siteId, locale.toString().toLowerCase(), catalogItemId }
+                new Object[]{ siteId, locale.toString().toLowerCase(), catalogItemId },
+                new int[] {Types.DECIMAL, Types.VARCHAR, Types.DECIMAL}
             );
         }
         catch (Exception e) {
@@ -108,7 +109,8 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
                 "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b " +
                 "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
                 "       b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_CTX_TYPE=? and a.ID_SITE_TEMPLATE=? ",
-                new Object[]{siteLanguageId, portletNameId, templateId}
+                new Object[]{siteLanguageId, portletNameId, templateId},
+                new int[] {Types.DECIMAL, Types.DECIMAL, Types.DECIMAL}
             );
         }
         catch (Exception e) {
@@ -154,7 +156,8 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
                 "       a.ID_SITE_CTX_TYPE=d.ID_SITE_CTX_TYPE and " +
                 "       a.ID_SITE_TEMPLATE=e.ID_SITE_TEMPLATE and " +
                 "       d.TYPE=? and e.NAME_SITE_TEMPLATE=? ",
-                new Object[]{siteId, locale.toString().toLowerCase(), resultPortletName, templateName}
+                new Object[]{siteId, locale.toString().toLowerCase(), resultPortletName, templateName},
+                new int[] {Types.DECIMAL, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR}
             );
         }
         catch (Exception e) {
@@ -181,7 +184,8 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
                     "       b.ID_SITE_SUPPORT_LANGUAGE=c.ID_SITE_SUPPORT_LANGUAGE and " +
                     "       c.ID_SITE=? and lower(c.CUSTOM_LANGUAGE)=? and " +
                     "       a.CTX_PAGE_URL=?",
-                    new Object[]{ siteId, locale.toString().toLowerCase(), pageName }
+                new Object[]{ siteId, locale.toString().toLowerCase(), pageName },
+                new int[] {Types.DECIMAL, Types.VARCHAR, Types.VARCHAR}
             );
         }
         catch (Exception e) {
@@ -611,7 +615,7 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         }
     }
 
-    private class MenuItemComparator implements Comparator<WmPortalCatalogItemType> {
+    private final static class MenuItemComparator implements Comparator<WmPortalCatalogItemType> {
         public int compare(WmPortalCatalogItemType o1, WmPortalCatalogItemType o2) {
 
             if (o1==null && o2==null)

@@ -194,7 +194,7 @@ public class ImportPriceProcess
         {
             // Удаляем дерево ненужных групп
             // сначала помечаем все явные наименования и группы
-            if (dbDyn.getFamaly()!=DatabaseManager.MYSQL_FAMALY)
+            if (dbDyn.getFamily()!=DatabaseManager.MYSQL_FAMALY)
             {
                 sql_ =
                     "update WM_PRICE_IMPORT_TABLE set FOR_DELETE=1 "+
@@ -289,7 +289,7 @@ public class ImportPriceProcess
 
             while (rs.next())
             {
-                if (dbDyn.getFamaly()!=DatabaseManager.MYSQL_FAMALY)
+                if (dbDyn.getFamily()!=DatabaseManager.MYSQL_FAMALY)
                 {
 
                     PreparedStatement ps1 = null;

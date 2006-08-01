@@ -70,10 +70,7 @@ public final class MainTools {
         if (array1 == null && array2 == null)
             return true;
 
-        if (array1 == null && array2 != null)
-            return false;
-
-        if (array1 != null && array2 == null)
+        if (array1 == null || array2 == null)
             return false;
 
         if (array1.length != array2.length) {

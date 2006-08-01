@@ -79,7 +79,7 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
     private UserInfo userInfo;
 
 
-    private transient final static Object syncObj = new Object();
+    private final static Object syncObj = new Object();
     public static List<AuthProvider> getAuthProviderList() {
         if (authProviderList==null){
             synchronized(syncObj){
@@ -140,16 +140,6 @@ public final class AuthSessionImpl implements AuthSession, Serializable {
             }
         }
         return authProviderList;
-    }
-
-    protected void finalize() throws Throwable
-    {
-        userLogin = null;
-        userPassword = null;
-        userInfo = null;
-        sessionId = null;
-
-        super.finalize();
     }
 
     public AuthSessionImpl( UserInfo userInfo ) {

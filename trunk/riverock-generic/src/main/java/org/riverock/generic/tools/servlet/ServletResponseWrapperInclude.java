@@ -78,11 +78,6 @@ public class ServletResponseWrapperInclude implements ServletResponse {
         contentTypeManager.setCharacterEncoding( charset );
     }
 
-
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
-
     public ServletResponseWrapperInclude( Locale locale) {
         this.locale = locale;
         this.contentTypeManager = ContentTypeManager.getInstance( locale );
@@ -126,13 +121,16 @@ public class ServletResponseWrapperInclude implements ServletResponse {
             throw new IllegalStateException( "getOutputStream() already invoked" );
         }
 
+        if (contentTypeManager==null) {
+            contentTypeManager = ContentTypeManager.getInstance( locale );
+        }
+
         if ( log.isDebugEnabled() ) {
             log.debug( "getWriter(), outputStream: " +
                 (outputStream==null?"is null":outputStream.getClass().getName())
             );
             log.debug( "contentType: " + contentTypeManager );
-            if (contentTypeManager!=null)
-                log.debug( "charset: " + contentTypeManager.getCharacterEncoding() );
+            log.debug( "charset: " + contentTypeManager.getCharacterEncoding() );
         }
 
         realWriter = new PrintWriterLogger(

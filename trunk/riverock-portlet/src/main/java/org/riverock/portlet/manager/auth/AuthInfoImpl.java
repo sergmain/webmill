@@ -24,6 +24,8 @@
  */
 package org.riverock.portlet.manager.auth;
 
+import java.io.Serializable;
+
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.portlet.tools.FacesTools;
 
@@ -33,7 +35,7 @@ import org.riverock.portlet.tools.FacesTools;
  *         Time: 17:12:12
  *         $Id$
  */
-public class AuthInfoImpl implements AuthInfo {
+public class AuthInfoImpl implements AuthInfo, Serializable {
 
     private Long authUserId;
     private Long userId;

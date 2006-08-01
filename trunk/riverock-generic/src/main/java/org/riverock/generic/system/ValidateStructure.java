@@ -25,154 +25,126 @@
  */
 package org.riverock.generic.system;
 
-import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.db.DatabaseStructureManager;
-import org.riverock.generic.config.GenericConfig;
-import org.riverock.generic.tools.XmlTools;
-import org.riverock.generic.schema.db.structure.*;
+import java.io.FileInputStream;
+import java.sql.SQLException;
+
 import org.exolab.castor.xml.Unmarshaller;
 import org.xml.sax.InputSource;
 
-import java.io.FileInputStream;
-import java.sql.SQLException;
+import org.riverock.generic.config.GenericConfig;
+import org.riverock.generic.db.DatabaseAdapter;
+import org.riverock.generic.db.DatabaseManager;
+import org.riverock.generic.db.DatabaseStructureManager;
+import org.riverock.generic.schema.db.structure.DbFieldType;
+import org.riverock.generic.schema.db.structure.DbImportedKeyListType;
+import org.riverock.generic.schema.db.structure.DbSchemaType;
+import org.riverock.generic.schema.db.structure.DbTableType;
+import org.riverock.generic.schema.db.structure.DbViewType;
+import org.riverock.generic.tools.XmlTools;
 
 /**
  * Author: mill
  * Date: Nov 28, 2002
  * Time: 3:10:19 PM
- *
+ * <p/>
  * $Id$
  */
-public class ValidateStructure
-{
-//    private static Logger cat = Logger.getLogger("org.riverock.system.MakeWebmillStructure");
+public class ValidateStructure {
 
-    public ValidateStructure(){}
+    public ValidateStructure() {
+    }
 
-    public static DbSchemaType schema = new DbSchemaType();
-
-    private static void processAllView(DatabaseAdapter db_, DbSchemaType millSchema)
-        throws Exception
-    {
-        for (int i=0; i < millSchema.getViewsCount(); i++)
-        {
+    private static void processAllView(DatabaseAdapter db_, DbSchemaType millSchema) throws Exception {
+        for (int i = 0; i < millSchema.getViewsCount(); i++) {
             DatabaseManager.createWithReplaceAllView(db_, millSchema);
             DbViewType view = millSchema.getViews(i);
-            try
-            {
+            try {
                 System.out.println("create view " + view.getName());
-                db_.createView( view );
+                db_.createView(view);
             }
-            catch (Exception e)
-            {
-                if (db_.testExceptionViewExists(e))
-                {
+            catch (Exception e) {
+                if (db_.testExceptionViewExists(e)) {
                     System.out.println("view " + view.getName() + " already exists");
                     System.out.println("drop view " + view.getName());
                     DatabaseStructureManager.dropView(db_, view);
                     System.out.println("create view " + view.getName());
-                    try
-                    {
+                    try {
                         db_.createView(view);
                     }
-                    catch(Exception e1)
-                    {
-                        System.out.println("Error create view - "+e1.toString());
+                    catch (Exception e1) {
+                        System.out.println("Error create view - " + e1.toString());
                     }
                 }
-                else
-                {
-                    System.out.println("Error create view - "+e.toString());
-//                        throw e;
+                else {
+                    System.out.println("Error create view - " + e.toString());
                 }
             }
         }
         DatabaseManager.createWithReplaceAllView(db_, millSchema);
     }
 
-    private static void processForeignKey(DatabaseAdapter db_, DbSchemaType millSchema)
-        throws Exception
-    {
-        for (int i=0; i < millSchema.getTablesCount(); i++)
-        {
+    private static void processForeignKey(DatabaseAdapter db_, DbSchemaType millSchema) throws Exception {
+        for (int i = 0; i < millSchema.getTablesCount(); i++) {
             DbTableType table = millSchema.getTables(i);
-            if (!DatabaseManager.isSkipTable(table.getName()))
-            {
-                    try
-                    {
-                        System.out.println("Create foreign key for table " + table.getName());
-                        DbImportedKeyListType fk = new DbImportedKeyListType();
-                        fk.setKeys( table.getImportedKeysAsReference() );
-                        DatabaseStructureManager.createForeignKey(db_, fk );
-                    }
-                    catch (SQLException e)
-                    {
-                        System.out.println("Error code "+e.getErrorCode());
-                        System.out.println("Error create foreign key "+e.getMessage());
-                    }
+            if (!DatabaseManager.isSkipTable(table.getName())) {
+                try {
+                    System.out.println("Create foreign key for table " + table.getName());
+                    DbImportedKeyListType fk = new DbImportedKeyListType();
+                    fk.setKeys(table.getImportedKeysAsReference());
+                    DatabaseStructureManager.createForeignKey(db_, fk);
+                }
+                catch (SQLException e) {
+                    System.out.println("Error code " + e.getErrorCode());
+                    System.out.println("Error create foreign key " + e.getMessage());
+                }
             }
             else
                 System.out.println("skip table " + table.getName());
         }
     }
 
-    private static void validateStructure( DbSchemaType millSchema, String nameConnection )
-        throws Exception
-    {
-        System.out.println("Connection - "+nameConnection);
+    private static void validateStructure(DbSchemaType millSchema, String nameConnection) throws Exception {
+        System.out.println("Connection - " + nameConnection);
 
-        DatabaseAdapter db_ = DatabaseAdapter.getInstance( nameConnection );
-        DbSchemaType schema = DatabaseManager.getDbStructure(db_ );
+        DatabaseAdapter db_ = DatabaseAdapter.getInstance(nameConnection);
+        DbSchemaType schema = DatabaseManager.getDbStructure(db_);
 
-//        String encoding = "UTF-8";
         String nameFile = "test-schema.xml";
-        String outputSchemaFile = GenericConfig.getGenericDebugDir()+nameFile;
+        String outputSchemaFile = GenericConfig.getGenericDebugDir() + nameFile;
         System.out.println("Marshal data to file " + nameFile);
 
-        XmlTools.writeToFile( schema, outputSchemaFile );
+        XmlTools.writeToFile(schema, outputSchemaFile);
 
-        for (int i=0; i < millSchema.getTablesCount(); i++)
-        {
+        for (int i = 0; i < millSchema.getTablesCount(); i++) {
             DbTableType table = millSchema.getTables(i);
-            if (!DatabaseManager.isSkipTable(table.getName()))
-            {
+            if (!DatabaseManager.isSkipTable(table.getName())) {
                 DbTableType originTable = DatabaseManager.getTableFromStructure(schema, table.getName());
-                if (!DatabaseManager.isTableExists(schema, table))
-                {
-                    try
-                    {
+                if (!DatabaseManager.isTableExists(schema, table)) {
+                    try {
                         System.out.println("Create new table " + table.getName());
-                        db_.createTable( table );
+                        db_.createTable(table);
                     }
-                    catch (SQLException e)
-                    {
-                        System.out.println("Error code "+e.getErrorCode());
-                        System.out.println("Error create table "+e.getMessage());
-//                        throw e;
+                    catch (SQLException e) {
+                        System.out.println("Error code " + e.getErrorCode());
+                        System.out.println("Error create table " + e.getMessage());
                     }
                 }
-                else
-                {
+                else {
                     // check valid structure of fields
-                    for (int j=0; j<table.getFieldsCount(); j++)
-                    {
+                    for (int j = 0; j < table.getFieldsCount(); j++) {
                         DbFieldType field = table.getFields(j);
-                        if (!DatabaseManager.isFieldExists(schema, table, field))
-                        {
-                            System.out.println("Add field '"+field.getName()+"' to table '" + table.getName()+"'");
-                            db_.addColumn(table, field );
+                        if (!DatabaseManager.isFieldExists(schema, table, field)) {
+                            System.out.println("Add field '" + field.getName() + "' to table '" + table.getName() + "'");
+                            db_.addColumn(table, field);
                         }
 
                         DbFieldType originField =
                             DatabaseManager.getFieldFromStructure(schema, table.getName(), field.getName());
 
-                        if (originField!=null && (originField.getDefaultValue()==null && field.getDefaultValue()!=null))
-                        {
-                            System.out.println("Default value of field "+table.getName()+'.'+originField.getName()+
-                                " not set to "+field.getDefaultValue());
-                            if (DatabaseManager.checkDefaultTimestamp(field.getDefaultValue()))
-                            {
+                        if (originField != null && (originField.getDefaultValue() == null && field.getDefaultValue() != null)) {
+                            System.out.println("Default value of field " + table.getName() + '.' + originField.getName() +
+                                " not set to " + field.getDefaultValue());
+                            if (DatabaseManager.checkDefaultTimestamp(field.getDefaultValue())) {
                                 System.out.println("Field recognized as default date field");
                                 DatabaseStructureManager.setDefaultValueTimestamp(db_, originTable,
                                     field
@@ -219,21 +191,19 @@ public class ValidateStructure
         processForeignKey(db_, millSchema);
 
         db_.commit();
-        DbSchemaType schemaResult = DatabaseManager.getDbStructure(db_ );
+        DbSchemaType schemaResult = DatabaseManager.getDbStructure(db_);
         System.out.println("Marshal data to file");
-        XmlTools.writeToFile(schemaResult, GenericConfig.getGenericDebugDir()+"schema-result-"+nameConnection+".xml" );
-        DatabaseAdapter.close( db_ );
+        XmlTools.writeToFile(schemaResult, GenericConfig.getGenericDebugDir() + "schema-result-" + nameConnection + ".xml");
+        DatabaseAdapter.close(db_);
     }
 
-    public static void main(String args[])
-        throws Exception
-    {
+    public static void main(String args[]) throws Exception {
         long mills = System.currentTimeMillis();
         org.riverock.generic.startup.StartupApplication.init();
 
         System.out.println("Unmarshal data from file");
         InputSource inSrc = new InputSource(
-            new FileInputStream( GenericConfig.getGenericDebugDir()+"webmill-schema.xml" )
+            new FileInputStream(GenericConfig.getGenericDebugDir() + "webmill-schema.xml")
         );
         DbSchemaType millSchema =
             (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);
@@ -245,7 +215,7 @@ public class ValidateStructure
 
 //        validateStructure(millSchema, "IBM-DB2");
 
-        System.out.println("Done validate structure in "+(System.currentTimeMillis() - mills )+" milliseconds");
+        System.out.println("Done validate structure in " + (System.currentTimeMillis() - mills) + " milliseconds");
 
     }
 }

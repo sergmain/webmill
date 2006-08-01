@@ -41,12 +41,6 @@ public class PropertiesProvider {
     private static String configPath = null;
     private static Map<String, String> parameters = new HashMap<String, String>();
 
-    private final static String lang[] = {"ru"};
-
-    public static String[] getLocaleLanguage() {
-        return lang;
-    }
-
     public static String getConfigPath() {
         return configPath;
     }

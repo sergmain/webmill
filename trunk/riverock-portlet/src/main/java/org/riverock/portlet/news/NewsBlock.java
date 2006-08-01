@@ -61,10 +61,6 @@ public final class NewsBlock implements PortletResultContent {
     public NewsBlock(){
     }
 
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
-
     public byte[] getPlainHTML() throws Exception {
         StringBuilder s =
                 new StringBuilder( "\n<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n");
@@ -81,19 +77,14 @@ public final class NewsBlock implements PortletResultContent {
 
                 Date currentDate = null;
                 boolean isFirst = true;
-                for (int i_news = 0; i_news < newsGroup.getNewsItemCount(); i_news++)
-                {
+                for (int i_news = 0; i_news < newsGroup.getNewsItemCount(); i_news++) {
                     NewsItemType newsItem = newsGroup.getNewsItem(i_news);
-                    if (currentDate==null || currentDate.getTime()!= newsItem.getNewsDateTime().getTime())
-                    {
+                    if (currentDate==null || currentDate.getTime()!= newsItem.getNewsDateTime().getTime()) {
                         currentDate = newsItem.getNewsDateTime();
                         isFirst = true;
                     }
-                    if (isFirst)
-                    {
-
-                            s.append( "<tr><td class=\"newsdate\" valign=\"top\">" ).append( newsItem.getNewsDate() ).append( "</td><td>&nbsp;</td></tr>\n" );
-
+                    if (isFirst) {
+                        s.append( "<tr><td class=\"newsdate\" valign=\"top\">" ).append( newsItem.getNewsDate() ).append( "</td><td>&nbsp;</td></tr>\n" );
                         isFirst = false;
                     }
                     s.

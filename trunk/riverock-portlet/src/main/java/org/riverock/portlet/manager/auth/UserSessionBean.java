@@ -24,34 +24,36 @@
  */
 package org.riverock.portlet.manager.auth;
 
+import java.io.Serializable;
+
 /**
  * @author SergeMaslyukov
  *         Date: 06.01.2006
  *         Time: 11:26:35
  *         $Id$
  */
-public class UserSessionBean {
+public class UserSessionBean implements Serializable {
 
-	private AuthUserExtendedInfoImpl userBean = null;
-	private Long currentAuthUserId = null;
-	private Long currentRoleId = null;
+    private AuthUserExtendedInfoImpl userBean = null;
+    private Long currentAuthUserId = null;
+    private Long currentRoleId = null;
 
     private boolean isAdd = false;
     private boolean isEdit = false;
     private boolean isDelete = false;
 
     public void resetStatus() {
-	isAdd = false;
-	isEdit = false;
-	isDelete = false;
+    isAdd = false;
+    isEdit = false;
+    isDelete = false;
     }
 
     public void setAdd(boolean isAdd) {
         this.isAdd = isAdd;
-	if (isAdd) {
-		isEdit = false;
-		isDelete = false;
-	}
+    if (isAdd) {
+        isEdit = false;
+        isDelete = false;
+    }
     }
 
     public boolean getAdd() {
@@ -82,27 +84,27 @@ public class UserSessionBean {
         return isDelete;
     }
 
-	public void setUserBean(AuthUserExtendedInfoImpl userBean) {
-		this.userBean = userBean;
-	}
+    public void setUserBean(AuthUserExtendedInfoImpl userBean) {
+        this.userBean = userBean;
+    }
 
-	public AuthUserExtendedInfoImpl getUserBean() {
-		return userBean;
-	}
+    public AuthUserExtendedInfoImpl getUserBean() {
+        return userBean;
+    }
 
-	public Long getCurrentAuthUserId() {
-		return currentAuthUserId;
-	}
+    public Long getCurrentAuthUserId() {
+        return currentAuthUserId;
+    }
 
-	public void setCurrentAuthUserId( Long id ) {
-		this.currentAuthUserId = id;
-	}
+    public void setCurrentAuthUserId( Long id ) {
+        this.currentAuthUserId = id;
+    }
 
-	public Long getCurrentRoleId() {
-		return currentRoleId;
-	}
+    public Long getCurrentRoleId() {
+        return currentRoleId;
+    }
 
-	public void setCurrentRoleId( Long id ) {
-		this.currentRoleId = id;
-	}
+    public void setCurrentRoleId( Long id ) {
+        this.currentRoleId = id;
+    }
 }

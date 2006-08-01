@@ -77,7 +77,7 @@ public class DataProvider implements Serializable {
         if (siteExtended==null) {
             siteExtended = siteService.getSiteExtended(siteId);
         }
-        if (!siteExtended.getSite().equals(siteId)) {
+        if (!siteExtended.getSite().getSiteId().equals(siteId)) {
             log.warn("Mismatch siteId");
             siteExtended = siteService.getSiteExtended(siteId);
         }

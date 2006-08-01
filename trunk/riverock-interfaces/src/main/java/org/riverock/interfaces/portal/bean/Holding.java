@@ -25,6 +25,7 @@
 package org.riverock.interfaces.portal.bean;
 
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author SergeMaslyukov
@@ -32,10 +33,10 @@ import java.util.List;
  *         Time: 15:02:39
  *         $Id$
  */
-public interface Holding {
-	public String getName();
-	public String getShortName();
-	public Long getId();
+public interface Holding extends Serializable {
+    public String getName();
+    public String getShortName();
+    public Long getId();
 
-	public List<Long> getCompanyIdList();
+    public List<Long> getCompanyIdList();
 }

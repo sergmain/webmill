@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-
+import java.util.Date;
 
 
 import org.apache.log4j.Logger;
@@ -54,6 +54,7 @@ import org.riverock.portlet.schema.price.StandardCurrencyType;
  * <p/>
  * $Id$
  */
+@SuppressWarnings({"UnusedAssignment"})
 public final class CurrencyService {
     private final static Logger log = Logger.getLogger( CurrencyService.class );
 
@@ -127,7 +128,11 @@ public final class CurrencyService {
                 CurrencyCurrentCursType curs = new CurrencyCurrentCursType();
 
                 curs.setCurs( RsetTools.getDouble( rs, "CURS" ) );
-                curs.setDateChange( RsetTools.getCalendar( rs, "DATE_CHANGE" ).getTime() );
+                Timestamp timestamp = RsetTools.getTimestamp(rs, "DATE_CHANGE");
+                if (timestamp!=null)
+                    curs.setDateChange( new Date(timestamp.getTime()) );
+                else
+                    curs.setDateChange(null);
                 curs.setIdCurrency( idCurrency );
 
                 return curs;
@@ -202,7 +207,11 @@ public final class CurrencyService {
                 CurrencyCurrentCursType curs = new CurrencyCurrentCursType();
 
                 curs.setCurs( RsetTools.getDouble( rs, "CURS" ) );
-                curs.setDateChange( RsetTools.getCalendar( rs, "DATE_CHANGE" ).getTime() );
+                Timestamp timestamp = RsetTools.getTimestamp(rs, "DATE_CHANGE");
+                if (timestamp!=null)
+                    curs.setDateChange( new Date(timestamp.getTime()) );
+                else
+                    curs.setDateChange(null);
                 curs.setIdCurrency( idStandardCurrency );
 
                 return curs;
@@ -221,8 +230,7 @@ public final class CurrencyService {
         }
     }
 
-    public static StandardCurrencyType getStandardCurrencyList( DatabaseAdapter db_ )
-        throws PriceException {
+    public static StandardCurrencyType getStandardCurrencyList( DatabaseAdapter db_ ) throws PriceException {
 
         String sql_ =
             "SELECT ID_STD_CURR, NAME_STD_CURR, CONVERT_CURRENCY, IS_DELETED " +

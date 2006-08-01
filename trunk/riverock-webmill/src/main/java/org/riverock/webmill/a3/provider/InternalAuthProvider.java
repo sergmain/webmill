@@ -56,7 +56,7 @@ public final class InternalAuthProvider implements AuthProvider, Serializable {
     private InternalCompanyDao companyDao = InternalDaoFactory.getInternalCompanyDao();
     private InternalHoldingDao internalHoldingDao = InternalDaoFactory.getInternalHoldingDao();
 
-    private ClassLoader classLoader = null;
+    private transient ClassLoader classLoader = null;
 
     public InternalAuthProvider() {
         // Todo remove hack with getting classLoader ref

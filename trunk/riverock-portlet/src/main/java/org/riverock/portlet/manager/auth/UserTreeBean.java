@@ -52,7 +52,7 @@ public class UserTreeBean implements Serializable {
 
     private DataProvider dataProvider = null;
 
-    private HtmlTree _tree;
+    private transient HtmlTree _tree;
     private String _nodePath;
 
     public UserTreeBean() {
@@ -95,7 +95,6 @@ public class UserTreeBean implements Serializable {
         }
         treeNode = treeData;
 
-//      }
         return treeNode;
     }
 

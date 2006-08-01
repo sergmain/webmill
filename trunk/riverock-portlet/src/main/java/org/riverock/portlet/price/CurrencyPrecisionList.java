@@ -44,16 +44,13 @@ import org.riverock.portlet.schema.price.CurrencyPrecisionType;
  * $Id$
  */
 @SuppressWarnings({"UnusedAssignment"})
-public class CurrencyPrecisionList extends CurrencyPrecisionListType implements Serializable
-{
+public class CurrencyPrecisionList extends CurrencyPrecisionListType implements Serializable {
     private static Logger log = Logger.getLogger( CurrencyPrecisionList.class );
 
-    public void initCurrencyPrecision(DatabaseAdapter db_, Long idShop)
-    {
+    public void initCurrencyPrecision(DatabaseAdapter db_, Long idShop) {
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             String sql_ =
                 "select ID_PRICE_SHOP_PRECISION,ID_CURRENCY,ID_SHOP, PRECISION_SHOP " +
                 "from   WM_PRICE_SHOP_PRECISION " +
@@ -63,8 +60,7 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType implements 
             RsetTools.setLong(ps, 1, idShop);
             rs = ps.executeQuery();
 
-            while (rs.next())
-            {
+            while (rs.next()) {
                 CurrencyPrecisionType prec = new CurrencyPrecisionType();
 
                 prec.setIdShopPrecision( RsetTools.getLong(rs, "ID_PRICE_SHOP_PRECISION"));
@@ -75,30 +71,27 @@ public class CurrencyPrecisionList extends CurrencyPrecisionListType implements 
                 this.addPrecisions( prec );
             }
         }
-        catch (Exception e)
-        {
-            log.error("Error get precision currency list", e);
+        catch (Exception e) {
+            String es = "Error get precision currency list";
+            log.error(es, e);
+            throw new IllegalStateException(e);
         }
-        finally
-        {
+        finally {
             DatabaseManager.close( rs, ps );
             rs = null;
             ps = null;
         }
     }
 
-    public CurrencyPrecisionType getCurrencyPrecision( Long idCurrency )
-    {
-        if (log.isDebugEnabled())
-        {
+    public CurrencyPrecisionType getCurrencyPrecision( Long idCurrency ) {
+        if (log.isDebugEnabled()) {
             log.debug("count defined precision - "+this.getPrecisionsCount());
             log.debug("id_currency - " + idCurrency);
         }
 
-        for(int i=0; i<this.getPrecisionsCount(); i++)
-        {
+        for(int i=0; i<this.getPrecisionsCount(); i++) {
             CurrencyPrecisionType prec = this.getPrecisions(i);
-            if (prec.getIdCurrency()==idCurrency)
+            if (prec.getIdCurrency().equals(idCurrency))
                 return prec;
         }
         return null;

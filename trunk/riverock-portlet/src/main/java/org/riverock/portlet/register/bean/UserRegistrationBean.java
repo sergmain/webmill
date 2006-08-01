@@ -39,11 +39,18 @@ public class UserRegistrationBean implements UserRegistration {
     }
 
     public Date getDeletedDate() {
-        return deletedDate;
+        if (deletedDate==null) {
+            return null;
+        }
+        return new Date(deletedDate.getTime());
     }
 
     public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
+        if (deletedDate==null) {
+            this.deletedDate=null;
+            return;
+        }
+        this.deletedDate = new Date(deletedDate.getTime());
     }
 
     public String getUserLogin() {
@@ -111,11 +118,18 @@ public class UserRegistrationBean implements UserRegistration {
     }
 
     public Date getCreatedDate() {
-        return createdDate;
+        if (createdDate==null) {
+            return null;
+        }
+        return new Date(createdDate.getTime());
     }
 
     public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+        if (createdDate==null) {
+            this.createdDate=null;
+            return;
+        }
+        this.createdDate = new Date(createdDate.getTime());
     }
 
     public String getAddress() {

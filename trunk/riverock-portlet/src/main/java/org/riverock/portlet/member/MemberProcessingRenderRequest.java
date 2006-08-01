@@ -320,7 +320,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             if (whereSQL.length() > 0)
                 whereSQL += " and ";
 
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
 
@@ -344,7 +344,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             if (whereSQL.length() > 0)
                 whereSQL += " and ";
 
-            switch (db_.getFamaly()){
+            switch (db_.getFamily()){
                 case DatabaseManager.MYSQL_FAMALY:
                     String idSite = MemberTools.getGrantedSiteId(db_, portletRequest.getServerName());
                     whereSQL +=
@@ -368,7 +368,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             if (whereSQL.length() > 0)
                 whereSQL += " and ";
 
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idUser = authSession.getGrantedUserId();
@@ -611,7 +611,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         String selfLookup;
-        if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null & mod.getSelfLookup().getTopField() != null)
+        if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null && mod.getSelfLookup().getTopField() != null)
         {
             selfLookup = prepareTableAlias(content.getQueryArea().getMainRefTable()) +
                 '.' + mod.getSelfLookup().getTopField().getName() + " = ? ";
@@ -678,7 +678,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                         if (log.isDebugEnabled()) {
                             log.debug("#3.001.04 param#"+numParam+": "+portletRequest.getRemoteUser() );
                         }
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -693,7 +693,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -707,7 +707,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 if (log.isDebugEnabled()) {
@@ -728,7 +728,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE) {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -741,7 +741,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE) {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -757,7 +757,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             if (log.isDebugEnabled()) {
                 log.debug("param#"+numParam+": "+portletRequest.getRemoteUser());
             }
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     ps.setString(numParam++, portletRequest.getRemoteUser());
                     break;
@@ -767,7 +767,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             }
         }
 
-        if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null & mod.getSelfLookup().getTopField() != null) {
+        if (mod.getSelfLookup() != null && mod.getSelfLookup().getCurrentField() != null && mod.getSelfLookup().getTopField() != null) {
             longTemp = PortletService.getLong(portletRequest,
                 mod.getName() + '.' + mod.getSelfLookup().getTopField().getName(), 0L );
             if (log.isDebugEnabled()) {
@@ -823,7 +823,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -837,7 +837,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -850,7 +850,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -867,7 +867,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE) {
             if (log.isDebugEnabled()) log.debug(" 7 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
 
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -879,7 +879,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE) {
             if (log.isDebugEnabled()) log.debug(" 8 Bind param #"+numParam+" " + portletRequest.getServerName());
 
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -892,7 +892,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         {
             if (log.isDebugEnabled()) log.debug(" 9 Bind param #"+numParam+" " + portletRequest.getRemoteUser());
 
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -973,7 +973,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -987,7 +987,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -1001,7 +1001,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                     if (cnt.getQueryArea().getRestrict() != null && cnt.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
                     {
-                        switch (db_.getFamaly())
+                        switch (db_.getFamily())
                         {
                             case DatabaseManager.MYSQL_FAMALY:
                                 break;
@@ -1018,7 +1018,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
         {
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1030,7 +1030,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
         {
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1042,7 +1042,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
         {
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1341,7 +1341,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
         int numParam = 1;
 
-        switch (db_.getFamaly())
+        switch (db_.getFamily())
         {
             case DatabaseManager.MYSQL_FAMALY:
                 break;
@@ -1374,7 +1374,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE) {
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1385,7 +1385,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE){
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1396,7 +1396,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE){
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1488,7 +1488,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             }
         }
 
-        switch (db_.getFamaly()) {
+        switch (db_.getFamily()) {
             case DatabaseManager.MYSQL_FAMALY:
                 break;
             default:
@@ -1525,7 +1525,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE) {
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1539,7 +1539,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE) {
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -1553,7 +1553,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE) {
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
@@ -2065,7 +2065,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             else
                 whereSQL += " and ";
 
-            switch (db_.getFamaly())
+            switch (db_.getFamily())
             {
                 case DatabaseManager.MYSQL_FAMALY:
                     String idList = authSession.getGrantedCompanyId();
@@ -2238,7 +2238,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             if (qa.getRestrict() != null &&
                 qa.getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
             {
-                switch (db_.getFamaly())
+                switch (db_.getFamily())
                 {
                     case DatabaseManager.MYSQL_FAMALY:
                         break;
@@ -2962,8 +2962,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
                         String editVal = null;
 
-                        if (ff.getJspType().getType() == FieldsTypeJspTypeType.LOOKUP_TYPE)
-                        {
+                        if (ff.getJspType().getType() == FieldsTypeJspTypeType.LOOKUP_TYPE) {
                             editVal = getRsetSelectValue(ff.getQueryArea(),
                                 RsetTools.getLong(rs, MemberServiceClass.getRealName(ff))
                             );
@@ -2972,16 +2971,13 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                             else
                                 s_ += editVal;
                         }
-                        else
-                        {
-                            if (log.isDebugEnabled())
-                            {
+                        else {
+                            if (log.isDebugEnabled()) {
                                 log.debug("BuildDeleteHTMLTable. jspType "+ff.getJspType().toString());
                             }
 
                             Object obj = null;
-                            switch (ff.getJspType().getType())
-                            {
+                            switch (ff.getJspType().getType()) {
                                 case FieldsTypeJspTypeType.FLOAT_TEXT_TYPE:
                                 case FieldsTypeJspTypeType.DOUBLE_TEXT_TYPE:
                                     obj = RsetTools.getDouble(rs, MemberServiceClass.getRealName(ff));
@@ -2996,32 +2992,24 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                                     break;
 
                                 case FieldsTypeJspTypeType.BIGTEXT_TYPE:
-
-                                    editVal = StringTools.truncateString(
-                                        getCellValue(rs, ff, false),
-                                        1000);
-
+                                    editVal = StringTools.truncateString( getCellValue(rs, ff, false), 1000);
                                     if (editVal == null)
                                         editVal = "";
                                     break;
 
                                 case FieldsTypeJspTypeType.DATE_TEXT_TYPE:
-
-                                    editVal = getDateTextCell(rs, ff, "");
+                                    obj = getDateTextCell(rs, ff, "");
                                     if (obj!=null)
                                         editVal = obj.toString();
                                     break;
 
                                 case FieldsTypeJspTypeType.YESNO_SWITCH_TYPE:
                                 case FieldsTypeJspTypeType.YES_1_NO_N_TYPE:
-
-                                    editVal = MemberTools.printYesNo(rs,
-                                        MemberServiceClass.getRealName(ff), false, bundle );
+                                    editVal = MemberTools.printYesNo(rs, MemberServiceClass.getRealName(ff), false, bundle );
                                     break;
 
                                 default:
-                                    editVal = RsetTools.getString(rs,
-                                        MemberServiceClass.getRealName(ff));
+                                    editVal = RsetTools.getString(rs, MemberServiceClass.getRealName(ff));
 
                             }
 
@@ -3038,14 +3026,12 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
             } // if (rs.next())
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             final String es = "Error processing buildDeleteHTMLTable.";
             log.error(es, e);
             throw new IllegalStateException( es, e );
         }
-        finally
-        {
+        finally {
             DatabaseManager.close(rs, ps);
         }
 
@@ -3058,14 +3044,11 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         String s_ = "<table>\n<tr>\n";
 
         // output header
-        for (int k = 0; k < qa.getFieldsCount(); k++)
-        {
+        for (int k = 0; k < qa.getFieldsCount(); k++) {
             FieldsType ff = qa.getFields(k);
-            if (Boolean.TRUE.equals(ff.getIsShow()))
-            {
+            if (Boolean.TRUE.equals(ff.getIsShow())) {
                 s_ += "<th class=\"memberArea\">\n";
-                if (ff.getNameColumn() != null)
-                {
+                if (ff.getNameColumn() != null) {
                     s_ += MemberServiceClass.getString(ff.getNameColumn(), portletRequest.getLocale());
                 }
                 s_ += "</th>\n";
@@ -3081,8 +3064,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+        try {
             ps = db_.prepareStatement(sql_);
 
             bindSelectSQL(ps);
@@ -3091,14 +3073,11 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
             int countRecord = 0;
 
             String idPK;
-            while (rs.next())
-            {
+            while (rs.next()) {
                 ++countRecord;
 
-                if (countRecord == 1)
-                {
-                    switch (content.getQueryArea().getPrimaryKeyType().getType())
-                    {
+                if (countRecord == 1) {
+                    switch (content.getQueryArea().getPrimaryKeyType().getType()) {
                         case PrimaryKeyTypeType.NUMBER_TYPE:
                             idPK = "" + RsetTools.getLong(rs, content.getQueryArea().getPrimaryKey());
                             break;
@@ -3126,11 +3105,9 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
 
 
                 s_ += "<tr>\n";
-                for (int k = 0; k < qa.getFieldsCount(); k++)
-                {
+                for (int k = 0; k < qa.getFieldsCount(); k++) {
                     FieldsType ff = qa.getFields(k);
-                    if (Boolean.TRUE.equals(ff.getIsShow()))
-                    {
+                    if (Boolean.TRUE.equals(ff.getIsShow())) {
                         s_ += "<td valign=\"top\" class=\"memberArea\">";
 
                         String editVal = StringTools.toPlainHTML(
