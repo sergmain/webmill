@@ -1,7 +1,8 @@
 /*
- * org.riverock.webmill - Portal framework implementation
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
- * Copyright (C) 2006, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
  * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
@@ -524,7 +525,6 @@ public class InternalXsltDaoImpl implements InternalXsltDao {
             rset = null;
             ps = null;
         }
-
     }
 
     static {

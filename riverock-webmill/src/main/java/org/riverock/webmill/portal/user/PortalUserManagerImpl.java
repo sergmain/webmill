@@ -1,6 +1,31 @@
+/*
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
+ *
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 package org.riverock.webmill.portal.user;
 
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -125,7 +150,8 @@ public class PortalUserManagerImpl implements PortalUserManager {
                 Long countRecord = DatabaseManager.getLongValue(
                     db,
                     "select count(*) COUNT_RECORDS from WM_AUTH_USER where USER_LOGIN=?",
-                    new Object[]{userRegistration.getUserLogin()}
+                    new Object[]{userRegistration.getUserLogin()},
+                    new int[] {Types.VARCHAR}
                 );
                 if (log.isDebugEnabled()) {
                     log.debug("Login " + userRegistration.getUserLogin() + " exists: " + (countRecord > 0));
@@ -250,7 +276,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
     private String buildBobyForOnePassword(Map<String, String> messages, List<AuthInfo> authInfos) {
         AuthInfo authInfo = authInfos.get(0);
         String message = messages.get(PortalUserManager.SEND_PASSWORD_BODY_ONE_PASSWORD_MESSAGE);
-        return MessageFormat.format(message, new Object[]{authInfo.getUserLogin(), authInfo.getUserPassword()});
+        return MessageFormat.format(message, authInfo.getUserLogin(), authInfo.getUserPassword());
     }
 
 }

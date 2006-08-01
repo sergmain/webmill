@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.sso.a3.AuthSession;
@@ -35,7 +36,7 @@ import org.riverock.interfaces.sso.a3.AuthSession;
  *         Time: 1:24:19
  *         $Id$
  */
-public interface InternalCompanyDao {
+public interface InternalCompanyDao extends Serializable {
     
     public Company getCompany( String companyName );
     public Company getCompany( Long id, AuthSession authSession );

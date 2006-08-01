@@ -28,14 +28,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-
 
 import org.apache.log4j.Logger;
 
@@ -46,8 +43,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.job.JobItemType;
-import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
+import org.riverock.webmill.container.portlet.extend.PortletResultObject;
 
 /**
  * $Id$
@@ -57,16 +54,11 @@ public final class JobItemSimple implements PortletResultObject, PortletResultCo
 
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
-    private ResourceBundle bundle = null;
+//    private ResourceBundle bundle = null;
 
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;
-        this.bundle = bundle;
-    }
-
-    protected void finalize() throws Throwable {
-        super.finalize();
     }
 
     public PortletResultContent getInstance(DatabaseAdapter db__) {

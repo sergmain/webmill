@@ -24,13 +24,15 @@
  */
 package org.riverock.interfaces.portal.bean;
 
+import java.io.Serializable;
+
 /**
  * @author SergeMaslyukov
  *         Date: 30.01.2006
  *         Time: 23:41:35
  *         $Id$
  */
-public interface Template {
+public interface Template extends Serializable {
     public String getTemplateLanguage();
     public Long getTemplateId();
     public Long getSiteLanguageId();

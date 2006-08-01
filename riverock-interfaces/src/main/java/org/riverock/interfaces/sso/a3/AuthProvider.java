@@ -25,6 +25,7 @@
 package org.riverock.interfaces.sso.a3;
 
 import java.util.List;
+import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.bean.AuthParameterBean;
 import org.riverock.interfaces.sso.a3.bean.RoleBean;
@@ -37,7 +38,7 @@ import org.riverock.interfaces.portal.bean.Holding;
  *         Time: 15:28:42
  *         $Id$
  */
-public interface AuthProvider {
+public interface AuthProvider extends Serializable {
     public boolean isUserInRole( AuthSession authSession, String role_ );
     public boolean checkAccess( AuthSession authSession, String serverName );
     public void setParameters( List<List<AuthParameterBean>> params );

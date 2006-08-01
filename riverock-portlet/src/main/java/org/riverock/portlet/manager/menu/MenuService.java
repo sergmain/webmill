@@ -2,6 +2,7 @@ package org.riverock.portlet.manager.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 import javax.faces.model.SelectItem;
 
@@ -28,7 +29,7 @@ import org.riverock.portlet.tools.FacesTools;
  *         Date: 14.06.2006
  *         Time: 21:44:02
  */
-public class MenuService {
+public class MenuService implements Serializable {
     private final static Logger log = Logger.getLogger(MenuService.class);
 
     public MenuService() {

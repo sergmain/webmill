@@ -82,14 +82,14 @@ public class AddRecordToList implements DefinitionProcessingInterface {
             long seqValue = db_.getSequenceNextValue(seqSite);
 
             String valueColumnName = DefinitionService.getString(parameters, "name_value_field", null);
-            if (columnName == null) {
+            if (valueColumnName == null) {
                 String errorString = "Name of valueColumnName not found";
                 log.error(errorString);
                 throw new Exception(errorString);
             }
 
             String insertValue = DefinitionService.getString(parameters, "insert_value", null);
-            if (columnName == null) {
+            if (insertValue == null) {
                 String errorString = "Name of insertValue not found";
                 log.error(errorString);
                 throw new Exception(errorString);

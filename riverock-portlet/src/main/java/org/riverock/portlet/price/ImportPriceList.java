@@ -85,7 +85,7 @@ public class ImportPriceList {
             }
             dbDyn.getConnection().setAutoCommit(false);
 
-            if (dbDyn.getFamaly()!=DatabaseManager.MYSQL_FAMALY)
+            if (dbDyn.getFamily()!=DatabaseManager.MYSQL_FAMALY)
             {
                 sql_ =
                     "delete from WM_PRICE_IMPORT_TABLE where shop_code in " +

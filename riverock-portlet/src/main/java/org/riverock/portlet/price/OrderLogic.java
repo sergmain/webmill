@@ -296,7 +296,7 @@ public final class OrderLogic {
         try {
             if( authSession != null ) {
 		        // Todo remove usage of WM_AUTH_USER table
-                switch( dbDyn.getFamaly() ) {
+                switch( dbDyn.getFamily() ) {
                     case DatabaseManager.MYSQL_FAMALY:
                         Long userId = DatabaseManager.getLongValue( dbDyn, "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ", new Object[]{authSession.getUserLogin()} );
                         if( userId != null ) {

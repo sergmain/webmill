@@ -1,9 +1,10 @@
 /*
- * org.riverock.webmill -- Portal framework implementation
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,7 +21,6 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
 package org.riverock.webmill.a3.bean;
 
@@ -93,19 +93,33 @@ public class UserInfoImpl implements UserInfo, Serializable {
     }
 
     public Date getDateStartWork() {
-        return dateStartWork;
+        if (dateStartWork==null) {
+            return null;
+        }
+        return new Date(dateStartWork.getTime());
     }
 
     public void setDateStartWork(Date dateStartWork) {
-        this.dateStartWork = dateStartWork;
+        if (dateStartWork==null) {
+            this.dateStartWork=null;
+            return;
+        }
+        this.dateStartWork = new Date(dateStartWork.getTime());
     }
 
     public Date getDateFire() {
-        return dateFire;
+        if (dateFire==null) {
+            return null;
+        }
+        return new Date(dateFire.getTime());
     }
 
     public void setDateFire(Date dateFire) {
-        this.dateFire = dateFire;
+        if (dateFire==null) {
+            this.dateFire=null;
+            return;
+        }
+        this.dateFire = new Date(dateFire.getTime());
     }
 
     public String getAddress() {
@@ -125,11 +139,18 @@ public class UserInfoImpl implements UserInfo, Serializable {
     }
 
     public Date getDateBindProff() {
-        return dateBindProff;
+        if (dateBindProff==null) {
+            return null;
+        }
+        return new Date(dateBindProff.getTime());
     }
 
     public void setDateBindProff(Date dateBindProff) {
-        this.dateBindProff = dateBindProff;
+        if (dateBindProff==null) {
+            this.dateBindProff=null;
+            return;
+        }
+        this.dateBindProff = new Date(dateBindProff.getTime());
     }
 
     public String getHomeTelephone() {

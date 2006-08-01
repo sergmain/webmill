@@ -25,6 +25,7 @@
 package org.riverock.webmill.portal.dao;
 
 import java.util.List;
+import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.AuthInfo;
 import org.riverock.interfaces.sso.a3.UserInfo;
@@ -40,7 +41,7 @@ import org.riverock.generic.db.DatabaseAdapter;
  *         Time: 19:33:27
  *         $Id$
  */
-public interface InternalAuthDao {
+public interface InternalAuthDao extends Serializable {
     public String getGrantedUserId(String userLogin);
     public String getGrantedCompanyId(String userLogin);
 

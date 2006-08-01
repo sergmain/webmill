@@ -40,7 +40,6 @@ import org.riverock.generic.main.CacheFactory;
 import org.riverock.interfaces.portal.bean.Xslt;
 import org.riverock.interfaces.portal.xslt.XsltTransformer;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
-import org.riverock.webmill.utils.PortletUtils;
 
 /**
  * $Id$
@@ -106,7 +105,7 @@ public class PortalXslt implements XsltTransformer {
             translet = tFactory.newTemplates(xslSource);
         }
         catch (TransformerConfigurationException e) {
-            log.error("xslt with error\n"+xslt.getXsltData().getBytes(PortletUtils.CHARSET_UTF_8));
+            log.error("xslt with error\n"+xslt.getXsltData());
             try {
                 log.error("Xalan version - " + org.apache.xalan.Version.getVersion());
             }
@@ -116,7 +115,7 @@ public class PortalXslt implements XsltTransformer {
             try {
                 log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion());
             }
-            catch (Exception e2) {
+            catch (Throwable e2) {
                 log.error("Error get version of xerces", e2);
             }
             log.error("Error create TransformerFactory of XSLT", e);
@@ -129,8 +128,10 @@ public class PortalXslt implements XsltTransformer {
         }
 
         synchronized (transformerSync) {
+            transformer=null;
             try {
-                transformer = translet.newTransformer();
+                Transformer transformerTemp = translet.newTransformer();
+                transformer = transformerTemp;
             }
             catch (javax.xml.transform.TransformerConfigurationException e) {
                 try {
@@ -142,17 +143,19 @@ public class PortalXslt implements XsltTransformer {
                 try {
                     log.error("Xerces version - " + org.apache.xerces.impl.Version.getVersion());
                 }
-                catch (Exception e2) {
+                catch (Throwable e2) {
                     log.error("Error get version of xerces", e2);
                 }
                 log.error("Error create transformer", e);
-                transformer = null;
                 throw e;
             }
         }
     }
 
     public Transformer getTransformer() {
+        if (transformer!=null) {
+            return transformer;
+        }
         synchronized (transformerSync) {
             return transformer;
         }

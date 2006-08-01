@@ -58,7 +58,10 @@ public final class CacheDirectory {
         if( files == null )
             return new CacheFile[]{};
 
-        return files;
+        CacheFile[] cacheFiles = new CacheFile[files.length];
+        System.arraycopy(files, 0, cacheFiles, 0, files.length);
+        
+        return cacheFiles;
     }
 
     public boolean isNeedReload() {

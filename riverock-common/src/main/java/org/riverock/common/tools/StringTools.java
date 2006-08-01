@@ -109,9 +109,7 @@ public class StringTools {
      * @return результирующая строка
      */
     public static String capitalizeString( final String f) {
-        String r = "";
-        if (f.indexOf('_')==-1)
-        {
+        if (f.indexOf('_')==-1) {
             if (f.length()==1)
                 return f.toUpperCase();
 
@@ -120,15 +118,15 @@ public class StringTools {
 
         String s_ = f;
 
+        StringBuilder r = new StringBuilder();
         int pos;
         while ((pos = s_.indexOf('_')) != -1) {
-            if (pos != s_.length())
-            {
-                r += StringTools.capitalizeFirstChar(s_.substring(0, pos));
+            if (pos != s_.length()) {
+                r.append(StringTools.capitalizeFirstChar(s_.substring(0, pos)));
                 s_ = s_.substring(pos + 1, s_.length());
             }
         }
-        return r + StringTools.capitalizeFirstChar(s_);
+        return r.append(StringTools.capitalizeFirstChar(s_)).toString();
     }
 
 
@@ -366,7 +364,7 @@ public class StringTools {
 
         for (int i = idx - 1; i > offset; i--)
         {
-            int j = (int) (b[i] < 0?0x100 + b[i]:b[i]);
+            int j = (b[i] < 0?0x100 + b[i]:b[i]);
             if (j < 0x80)
             {
                 return i + 1;
@@ -455,11 +453,16 @@ public class StringTools {
         if (countAddChar==0)
             return s;
 
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         for (int i=0; i<countAddChar; i++)
-            temp += ch;
+            temp.append(ch);
 
-        return isLeft?temp + s:s + temp;
+        if (isLeft)
+            temp.append(s);
+        else
+            temp.insert(0, s);
+
+        return temp.toString();
     }
 
 
@@ -479,11 +482,16 @@ public class StringTools {
         if (s.length() > countCharInString)
             return s.substring(0, countCharInString - 1);
 
-        String temp = "";
+        StringBuilder temp = new StringBuilder();
         for (int i = 0; i < (countCharInString - s.length()); i++)
-            temp += ch;
+            temp.append(ch);
 
-        return isLeft?temp + s:s + temp;
+        if (isLeft)
+            temp.append(s);
+        else
+            temp.insert(0, s);
+
+        return temp.toString();
     }
 
     /**
@@ -517,15 +525,16 @@ public class StringTools {
         if (s_ == null)
             return null;
 
-        String resultStr = "";
+        StringBuilder resultStr = new StringBuilder();
 
-//        int pos;
-        for (int i = 0; i < s_.length(); i++)
-            resultStr += "%" + convertByte(
-                    s_.substring(i, i + 1).getBytes()
-            ).toUpperCase();
+        for (int i = 0; i < s_.length(); i++) {
+            resultStr.append('%')
+                .append(
+                    convertByte(s_.substring(i, i + 1).getBytes()).toUpperCase()
+                );
+        }
 
-        return resultStr;
+        return resultStr.toString();
     }
 
     /**
@@ -538,8 +547,8 @@ public class StringTools {
 
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (final byte newVar : bytes) {
-            sb.append(convertDigit((int) (newVar >> 4)));
-            sb.append(convertDigit((int) (newVar & 0x0f)));
+            sb.append(convertDigit(newVar >> 4));
+            sb.append(convertDigit(newVar & 0x0f));
         }
         return (sb.toString());
     }
@@ -558,35 +567,34 @@ public class StringTools {
         if (str_ == null)
             return null;
 
-        String s_ = str_, resultStr = "";
+        StringBuilder resultStr = new StringBuilder();
         String rewriteStr = "'/\\%?&\"=";
 
-        String processStr = "";
-        for (int i = 0; i < s_.length(); i++)
-        {
-            processStr = s_.substring(i, i + 1);
+        String processStr;
+        for (int i = 0; i < str_.length(); i++) {
+            processStr = str_.substring(i, i + 1);
             if (rewriteStr.indexOf(processStr) != -1)
                 processStr = "%" + convertByte(processStr.getBytes()).toUpperCase();
 
-            resultStr += processStr;
+            resultStr.append(processStr);
         }
-        return resultStr;
+        return resultStr.toString();
     }
 
     public static String getIdByString( final List list, final String defaultForNull ) {
         if (list.size()==0)
             return defaultForNull;
 
-        String r = "";
+        StringBuilder r = new StringBuilder();
         boolean isFirst = true;
         for (Object aList : list) {
             if (isFirst)
                 isFirst = false;
             else
-                r += ',';
+                r.append(',');
 
-            r += aList.toString();
+            r.append(aList);
         }
-        return r;
+        return r.toString();
     }
 }

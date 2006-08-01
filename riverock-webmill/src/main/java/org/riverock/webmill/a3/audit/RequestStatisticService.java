@@ -75,7 +75,8 @@ public class RequestStatisticService {
             if (service!=null) {
                 return service;
             }
-            service = new RequestStatisticService();
+            RequestStatisticService requestStatisticService = new RequestStatisticService();
+            service = requestStatisticService;
         }
         return service;
     }

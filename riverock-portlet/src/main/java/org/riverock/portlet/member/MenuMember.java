@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.io.Serializable;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletConfig;
@@ -266,7 +267,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         throws SQLException {
 
         PreparedStatement ps;
-        switch( db_.getFamaly() ) {
+        switch( db_.getFamily() ) {
             case DatabaseManager.MYSQL_FAMALY:
                 ps = db_.prepareStatement( sql_mysql );
 
@@ -347,7 +348,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         return template.getTemplateName();
     }
 
-    private final static class MenuMemberApplicationComparator implements Comparator<MenuMemberApplicationType> {
+    private final static class MenuMemberApplicationComparator implements Comparator<MenuMemberApplicationType>, Serializable {
         public int compare( MenuMemberApplicationType o1, MenuMemberApplicationType o2 ) {
 
             if( o1 == null && o2 == null )
@@ -373,7 +374,7 @@ public final class MenuMember implements PortletResultObject, PortletGetList, Po
         }
     }
 
-    private final static class MenuMemberModuleComparator implements Comparator<MenuMemberModuleType> {
+    private final static class MenuMemberModuleComparator implements Comparator<MenuMemberModuleType>, Serializable {
         public int compare( final MenuMemberModuleType o1, final MenuMemberModuleType o2 ) {
 
             if( o1 == null && o2 == null )

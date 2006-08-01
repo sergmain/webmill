@@ -39,19 +39,11 @@
     <path id="classpath-base">
         <pathelement location="${lib.dir}/${riverock-interfaces.lib}"/>
         <pathelement location="${lib.dir}/${riverock-common.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-sql-parser.lib}"/>
-        <pathelement location="${lib.dir}/${riverock-generic.lib}"/>
         <pathelement location="${lib.dir}/${commons-lang.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
-        <pathelement location="${lib.dir}/${secure.lib}"/>
-        <pathelement location="${lib.dir}/mail.jar"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
-        <pathelement location="${lib.dir}/${junit.lib}"/>
         <pathelement location="${lib.dir}/${castor.lib}"/>
-        <pathelement location="${lib.dir}/${xerces.lib}"/>
-        <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
-        <pathelement location="${lib.dir}/ojdbc14.jar"/>
     </path>
 
     <target name="full_build_module">

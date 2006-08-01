@@ -199,7 +199,7 @@ public class MenuDataProvider implements Serializable {
         if (siteExtended==null) {
             siteExtended= menuService.getSiteExtended(siteId);
         }
-        if (!siteExtended.getSite().equals(siteId)) {
+        if (!siteExtended.getSite().getSiteId().equals(siteId)) {
             log.warn("Mismatch siteId");
             siteExtended= menuService.getSiteExtended(siteId);
         }

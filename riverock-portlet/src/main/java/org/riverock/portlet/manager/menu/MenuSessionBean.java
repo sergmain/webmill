@@ -14,7 +14,7 @@ import org.riverock.portlet.manager.site.bean.SiteLanguageBean;
  *         Date: 14.06.2006
  *         Time: 21:44:13
  */
-public class MenuSessionBean  implements Serializable {
+public class MenuSessionBean implements Serializable {
     private static final long serialVersionUID = 2058005508L;
 
     public static final int UNKNOWN_TYPE = 0;

@@ -171,7 +171,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
                     case SqlCheckParameterTypeTypeType.RESTRICT_FIRM_TYPE:
 
                         String nameFirmField = isFirmFieldExists(content.getQueryArea());
-                        switch (db_.getFamaly()) {
+                        switch (db_.getFamily()) {
                             case DatabaseManager.MYSQL_FAMALY:
                                 if (log.isDebugEnabled())
                                     log.debug("nameFirmField: " + nameFirmField);
@@ -526,7 +526,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
         int numParam = 1;
 
-        switch (db_.getFamaly()) {
+        switch (db_.getFamily()) {
             case DatabaseManager.MYSQL_FAMALY:
                 break;
             default:
@@ -555,7 +555,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
         {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -566,7 +566,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
         {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -577,7 +577,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
         {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -667,7 +667,7 @@ public final class MemberProcessingActionRequest extends MemberProcessingAbstrac
             }
         }
 
-        switch (db_.getFamaly()) {
+        switch (db_.getFamily()) {
             case DatabaseManager.MYSQL_FAMALY:
                 break;
             default:
@@ -715,7 +715,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.FIRM_TYPE)
         {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -729,7 +729,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.SITE_TYPE)
         {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:
@@ -743,7 +743,7 @@ content.getQueryArea().getPrimaryKeyMask(), "error", Locale.ENGLISH);
 
         if (content.getQueryArea().getRestrict() != null && content.getQueryArea().getRestrict().getType().getType() == RestrictTypeTypeType.USER_TYPE)
         {
-            switch (db_.getFamaly()) {
+            switch (db_.getFamily()) {
                 case DatabaseManager.MYSQL_FAMALY:
                     break;
                 default:

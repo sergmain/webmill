@@ -25,13 +25,14 @@
 package org.riverock.interfaces.portal.bean;
 
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * @author Sergei Maslyukov
  *         Date: 29.05.2006
  *         Time: 15:22:19
  */
-public interface User {
+public interface User extends Serializable {
     public Long getUserId();
     public Long getCompanyId();
     public String getFirstName();

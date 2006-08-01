@@ -43,8 +43,9 @@ import org.riverock.common.tools.StringLocaleManager;
 public final class ConfigService {
     private final static Logger log = Logger.getLogger( ConfigService.class );
 
+    private final static String localeLanguage[] = {"ru"};
+
     public static void initLocale() {
-        String[] localeLanguage = PropertiesProvider.getLocaleLanguage();
         for (String aLocaleLanguage : localeLanguage) {
             if (log.isDebugEnabled())
                 log.debug("#15.001  load resource for lang " + aLocaleLanguage);

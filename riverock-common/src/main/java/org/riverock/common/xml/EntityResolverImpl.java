@@ -26,6 +26,7 @@ package org.riverock.common.xml;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -49,13 +50,14 @@ public class EntityResolverImpl implements EntityResolver {
 
     public static Map<String, String> entityMap = null;
     static {
-        entityMap = new HashMap<String, String>();
-        entityMap.put( IBM_PORTLET_DTD_PUBLIC_ID, DTD_PACKAGE+PORTLET_DTD);
-        entityMap.put( SUN_WEBXML_23_DTD_PUBLIC_ID, DTD_PACKAGE+WEBXML_23_DTD);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put( IBM_PORTLET_DTD_PUBLIC_ID, DTD_PACKAGE+PORTLET_DTD);
+        map.put( SUN_WEBXML_23_DTD_PUBLIC_ID, DTD_PACKAGE+WEBXML_23_DTD);
+        entityMap = Collections.unmodifiableMap(map);
     }
 
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-        String url = (String)entityMap.get( publicId );
+        String url = entityMap.get( publicId );
         if (url==null) {
             return null;
         }

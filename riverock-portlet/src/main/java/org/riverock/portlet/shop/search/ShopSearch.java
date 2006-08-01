@@ -37,8 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.portlet.RenderRequest;
 
 
-
-
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.StringUtils;
 
@@ -56,46 +54,41 @@ import org.riverock.webmill.container.tools.PortletService;
  * Author: mill
  * Date: Dec 3, 2002
  * Time: 3:15:26 PM
- *
+ * <p/>
  * $Id$
  */
-public class ShopSearch extends HttpServlet
-{
+public class ShopSearch extends HttpServlet {
     private static Logger log = Logger.getLogger(ShopSearch.class);
 
-    class ParseException extends Exception
-    {
+    private static class ParseException extends Exception {
     }
 
-    private double to_digit(String s_)
-            throws Exception
-    {
+    private double to_digit(String s_) throws Exception {
         return to_digit(s_, false, 0, 0);
     }
 
-    private double to_digit
-            (String s_,
-             boolean is_comma, //,  -- нужна ли точка в числе
-             int precision, //in number default 0,      -- количество знаков после зап€той
-             double default_return// in number default 0
-             )
-            throws Exception
-    {
-        try
-        {
+    /**
+     * @param s_
+     * @param is_comma       is need dot in digital
+     * @param precision      count of digit after comma
+     * @param default_return default value
+     * @return double
+     * @throws Exception
+     */
+    private double to_digit(String s_, boolean is_comma, int precision, double default_return)
+        throws Exception {
+        try {
             if (StringUtils.isBlank(s_))
                 return default_return;
 
             double d = Double.parseDouble(StringUtils.replace(s_, ",", "."));
 
-            if (log.isDebugEnabled())
-            {
+            if (log.isDebugEnabled()) {
                 log.debug("" + d);
                 log.debug(s_);
             }
 
-            if (is_comma)
-            {
+            if (is_comma) {
                 if (log.isDebugEnabled())
                     log.debug("is comma");
 
@@ -110,15 +103,13 @@ public class ShopSearch extends HttpServlet
                 return NumberTools.truncate(d, 0);
 
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return default_return;
         }
     }
 
     private String decode_logic(String s_)
-            throws Exception
-    {
+        throws Exception {
         double v_i;
 
         v_i = to_digit(s_);
@@ -134,8 +125,7 @@ public class ShopSearch extends HttpServlet
 
     }
 
-    private int get_length(String s_)
-    {
+    private int get_length(String s_) {
         if (s_ == null)
             return 0;
 
@@ -143,16 +133,15 @@ public class ShopSearch extends HttpServlet
     }
 
     private String process_request(
-            String s, //       in string default '', -- строка поиска
-            String s1, //      in string default '', -- строка поиска
-            String s2, //      in string default '', -- строка поиска
-            String bool1, //   in string default '', -- строка поиска
-            String bool2, //   in string default '', -- строка поиска
-            String minp, //    in string default '',
-            String maxp //    in string default '',
-            )
-            throws Exception
-    {
+        String s, //       in string default '', -- строка поиска
+        String s1, //      in string default '', -- строка поиска
+        String s2, //      in string default '', -- строка поиска
+        String bool1, //   in string default '', -- строка поиска
+        String bool2, //   in string default '', -- строка поиска
+        String minp, //    in string default '',
+        String maxp //    in string default '',
+    )
+        throws Exception {
         String out_str; // out string
         String v_str = ""; //    varchar2(1000) := '';
         String v_result = ""; //     varchar2(1000)  := '';
@@ -164,8 +153,7 @@ public class ShopSearch extends HttpServlet
         String v_min = ""; //   varchar2(30);
         int v_min_symbol = 1; //     integer := 1;
 
-        try
-        {
+        try {
             if (minp == null)
                 minp = "";
 
@@ -173,36 +161,28 @@ public class ShopSearch extends HttpServlet
                 maxp = "";
 
 //        -- ѕроверка, что бы "мин" был меньше "макс"
-            if ((minp.length() != 0) && (maxp.length() != 0))
-            {
-                if (to_digit(minp) > to_digit(maxp))
-                {
+            if ((minp.length() != 0) && (maxp.length() != 0)) {
+                if (to_digit(minp) > to_digit(maxp)) {
                     v_min = maxp;
                     v_max = minp;
                 }
-                else
-                {
+                else {
                     v_min = minp;
                     v_max = maxp;
                 }
             }
 
-            if ((get_length(s) > v_min_symbol) || (get_length(s1) > v_min_symbol) || (get_length(s2) > v_min_symbol))
-            {
-                if (get_length(s) > v_min_symbol)
-                {
+            if ((get_length(s) > v_min_symbol) || (get_length(s1) > v_min_symbol) || (get_length(s2) > v_min_symbol)) {
+                if (get_length(s) > v_min_symbol) {
                     v_result = s;
                     v_str = " ( UPPER(a.item) like ''%' ||UPPER(s)||'%'' ) ";
                     v_flag = false;
                 }
-                if (to_digit(bool1) == 0)
-                {
+                if (to_digit(bool1) == 0) {
                     throw new ParseException();
                 }
-                if (get_length(s1) > v_min_symbol)
-                {
-                    if (!v_flag)
-                    {
+                if (get_length(s1) > v_min_symbol) {
+                    if (!v_flag) {
                         v_bool = decode_logic(bool1);
                         v_str += v_bool;
                         v_result += v_bool;
@@ -212,14 +192,11 @@ public class ShopSearch extends HttpServlet
                     v_result += s1;
                     v_str += " (UPPER(a.item) like ''%' ||UPPER(s1)||'%'') ";
                 }
-                if (to_digit(bool2) == 0)
-                {
+                if (to_digit(bool2) == 0) {
                     throw new ParseException();
                 }
-                if (get_length(s2) > v_min_symbol)
-                {
-                    if (!v_flag)
-                    {
+                if (get_length(s2) > v_min_symbol) {
+                    if (!v_flag) {
                         v_bool = decode_logic(bool2);
                         v_str += v_bool;
                         v_result += v_bool;
@@ -233,17 +210,13 @@ public class ShopSearch extends HttpServlet
             throw new ParseException();
 
         }
-        catch (ParseException e)
-        {
+        catch (ParseException e) {
             if (get_length(v_str) == 0)
                 return "";
 
-            if ((get_length(minp) != 0) || (get_length(maxp) != 0))
-            {
-                if (get_length(v_min) != 0)
-                {
-                    if (!v_flag)
-                    {
+            if ((get_length(minp) != 0) || (get_length(maxp) != 0)) {
+                if (get_length(v_min) != 0) {
+                    if (!v_flag) {
                         v_str += " and (";
                         v_result += " and (";
                     }
@@ -253,10 +226,8 @@ public class ShopSearch extends HttpServlet
                     v_str = v_str + " price >= " + to_digit(v_min) + " ";
                 }
 
-                if (get_length(v_max) != 0)
-                {
-                    if (!v_flag)
-                    {
+                if (get_length(v_max) != 0) {
+                    if (!v_flag) {
                         v_str += " and ";
                         v_result += " and ";
                     }
@@ -274,8 +245,7 @@ public class ShopSearch extends HttpServlet
 
             out_str = v_result;
 
-            if (v_multi)
-            {
+            if (v_multi) {
                 return " ('||v_str||') ";
             }
 
@@ -283,13 +253,11 @@ public class ShopSearch extends HttpServlet
         }
     }
 
-    public ShopSearch()
-    {
+    public ShopSearch() {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException
-    {
+        throws IOException, ServletException {
         if (log.isDebugEnabled())
             log.debug("method is POST");
 
@@ -297,12 +265,10 @@ public class ShopSearch extends HttpServlet
     }
 
     public void doGet(HttpServletRequest request_, HttpServletResponse response)
-            throws IOException, ServletException
-    {
+        throws IOException, ServletException {
         Writer out = null;
         DatabaseAdapter db_ = null;
-        try
-        {
+        try {
             RenderRequest renderRequest = null;
             ContentTypeTools.setContentType(response, ContentTypeTools.CONTENT_TYPE_UTF8);
 
@@ -379,8 +345,7 @@ public class ShopSearch extends HttpServlet
 
             db_ = DatabaseAdapter.getInstance();
 
-            if (RequestTools.getString(renderRequest, "action").toLowerCase().equals("search"))
-            {
+            if (RequestTools.getString(renderRequest, "action").toLowerCase().equals("search")) {
 
                 int v_count_search = 2147483647;
                 int v_display_item = 100; // constant of count diplay item
@@ -388,7 +353,7 @@ public class ShopSearch extends HttpServlet
                 String v_str_ip = ""; //request.getRemoteAddr();
 
                 CallableStatement call = db_.getConnection().prepareCall(
-                        "begin ? := tools.process_request(?, ?, ?, ?, ?, ?, ?, ?); end;");
+                    "begin ? := tools.process_request(?, ?, ?, ?, ?, ?, ?, ?); end;");
 
                 call.registerOutParameter(1, java.sql.Types.VARCHAR);
                 call.registerOutParameter(9, java.sql.Types.VARCHAR);
@@ -408,8 +373,7 @@ public class ShopSearch extends HttpServlet
                 call.close();
                 call = null;
 
-                if (log.isDebugEnabled())
-                {
+                if (log.isDebugEnabled()) {
                     log.debug(v_str);
                     log.debug(v_query);
                 }
@@ -422,12 +386,12 @@ public class ShopSearch extends HttpServlet
                 // Todo because sequence was used to simple getting of next id of file
                 CustomSequenceType seq = new CustomSequenceType();
                 seq.setSequenceName("SEQ_WM_PRICE_QUERY_TABLE");
-                seq.setTableName( "WM_PRICE_QUERY_TABLE");
-                seq.setColumnName( "ID_THREAD" );
-                Long v_id_query = db_.getSequenceNextValue( seq );
+                seq.setTableName("WM_PRICE_QUERY_TABLE");
+                seq.setColumnName("ID_THREAD");
+                Long v_id_query = db_.getSequenceNextValue(seq);
 
                 String sql_ =
-                        "insert into WM_PRICE_QUERY_TABLE " +
+                    "insert into WM_PRICE_QUERY_TABLE " +
                         "( id_query, id_type_query, query_text, client_ip_address, client_host_name, date_query, count_exist ) " +
                         "VALUES ( ?, ?, ?, ?, ?, SYSDATE, 0 ) ";
 
@@ -451,15 +415,13 @@ public class ShopSearch extends HttpServlet
                 out.write("<td>\r\n        ");
 
 
-                if (v_len < 3)
-                {
+                if (v_len < 3) {
                     out.write("\r\n");
                     out.write("<center>—трока поиска должна быть больше 2 символов");
                     out.write("</center>\r\n            ");
 
                 }
-                else
-                {
+                else {
 /*	in this version not implemented count result record
 int v_count_search := tools.calc_count_items(v_str);
 
@@ -469,11 +431,10 @@ WHERE id_query = v_id_query;
 */
                     int v_count_item = 0;
 
-
 //<!--p align="center">–езультат поиска: найдено '|| TO_CHAR(v_count_search)||'</p-->
 
                     sql_ =
-                            "select distinct b.ID_FIRM, b.full_name, b.is_work " +
+                        "select distinct b.ID_FIRM, b.full_name, b.is_work " +
                             "from   WM_LIST_COMPANY b, WM_PRICE_LIST a, WM_PRICE_SHOP_LIST c, " +
                             "       WM_PORTAL_LIST_SITE d " +
                             "where  b.ID_FIRM = d.ID_FIRM and c.id_shop = c.id_shop and " +
@@ -486,8 +447,7 @@ WHERE id_query = v_id_query;
                     if (log.isDebugEnabled())
                         log.debug("#1 " + sql_);
 
-                    while (rs.next())
-                    {
+                    while (rs.next()) {
 
                         Long sclient_rec_id_client = RsetTools.getLong(rs, "ID_FIRM");
                         String sclient_rec_full_name = RsetTools.getString(rs, "full_name");
@@ -501,7 +461,7 @@ WHERE id_query = v_id_query;
 //    shop s = new shop(ora_, sclient_rec_id_client);
 
                         String sql_item =
-                                "select	distinct c.id_shop, c.name_shop_for_price_list " +
+                            "select	distinct c.id_shop, c.name_shop_for_price_list " +
                                 "from   WM_PRICE_LIST a, WM_PRICE_SHOP_LIST c, WM_PORTAL_VIRTUAL_HOST e " +
                                 "where  a.id_shop = c.id_shop and c.ID_SITE=e.ID_SITE and " +
                                 "a.absolete=0 and c.is_close=0 and " +
@@ -516,8 +476,7 @@ WHERE id_query = v_id_query;
                         ResultSet rs_item = ps_item.executeQuery();
 
 
-                        while (rs_item.next())
-                        {
+                        while (rs_item.next()) {
 
                             sql_ = "insert into WM_PRICE_QUERY_LIST (id_shop, id_query) values ( ?, ?) ";
 
@@ -530,7 +489,7 @@ WHERE id_query = v_id_query;
 
                             int v_col_span = 4;
 
-                            if ( RsetTools.getInt(rs_item, "is_artikul")==1 )
+                            if (RsetTools.getInt(rs_item, "is_artikul") == 1)
                                 v_col_span++;
 
                             boolean v_flag_shop = true;
@@ -542,14 +501,14 @@ WHERE id_query = v_id_query;
 
                             String sql_detail =
                                 "select	is_group, id, id_main, item, TO_CHAR( price, '999,999,999,990.99' ) price, absolete, a.id_shop, \n" +
-                                "	currency, d.ID_FIRM, name_shop, " +
-                                "	is_close " +
-                                "from	WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b, WM_LIST_COMPANY d, 		\n" +
-                                "	WM_PORTAL_LIST_SITE e 						" +
-                                "where  a.id_shop = e.id_shop and a.id_shop = b.id_shop and 		" +
-                                "	e.ID_FIRM = d.ID_FIRM and a.absolete = 0 and b.is_close = 0 	" +
-                                "	and d.is_deleted = 0 				 		" +
-                                "	and e.ID_FIRM = ? and " + v_str + " order by a.id_shop asc, is_group desc, id asc";
+                                    "	currency, d.ID_FIRM, name_shop, " +
+                                    "	is_close " +
+                                    "from	WM_PRICE_LIST a, WM_PRICE_SHOP_LIST b, WM_LIST_COMPANY d, 		\n" +
+                                    "	WM_PORTAL_LIST_SITE e 						" +
+                                    "where  a.id_shop = e.id_shop and a.id_shop = b.id_shop and 		" +
+                                    "	e.ID_FIRM = d.ID_FIRM and a.absolete = 0 and b.is_close = 0 	" +
+                                    "	and d.is_deleted = 0 				 		" +
+                                    "	and e.ID_FIRM = ? and " + v_str + " order by a.id_shop asc, is_group desc, id asc";
 
                             if (log.isDebugEnabled())
                                 log.debug("#3 " + sql_detail);
@@ -563,56 +522,47 @@ WHERE id_query = v_id_query;
                             ResultSet rs_detail = ps_detail.executeQuery();
 
                             boolean is_exists;
-                            while ((is_exists = rs_detail.next()) == true)
-                            {
+                            while ((is_exists = rs_detail.next()) == true) {
 
                                 v_count_item++;
 
 // эту страницу надо выводить?
 
                                 if ((v_count_item > v_number_page * v_display_item)
-                                        && (v_count_item <= ((v_number_page + 1) * v_display_item))
-                                )
-                                {
-                                    if (v_flag_firm)
-                                    {
+                                    && (v_count_item <= ((v_number_page + 1) * v_display_item))
+                                    ) {
+                                    if (v_flag_firm) {
                                         out.write(v_str_firm);
                                         v_flag_firm = false;
                                     }
 
-                                    if (v_flag_shop)
-                                    {
+                                    if (v_flag_shop) {
                                         v_flag = true;
                                         out.write(v_str_shop);
                                         v_flag_shop = false;
                                     }
 
-                                    if (v_first_step_shop)
-                                    {
+                                    if (v_first_step_shop) {
                                         out.write("<table border=\"1\" width=\"100%\">");
-                                        if ( RsetTools.getInt(rs_item, "is_header_table")==1 )
-                                        {
+                                        if (RsetTools.getInt(rs_item, "is_header_table") == 1) {
                                             out.write("<tr align=\"center\"><td width=\"67%\">" + RsetTools.getString(rs_item, "name_items") + "</td>");
-                                            if ( RsetTools.getInt(rs_item, "is_artikul")==1 )
-                                            {
+                                            if (RsetTools.getInt(rs_item, "is_artikul") == 1) {
                                                 out.write("<td width=\"8%\">" + RsetTools.getString(rs_item, "name_artikul") + "</td>");
                                             }
                                             out.write("<td width=\"8%\">" + RsetTools.getString(rs_item, "name_price") + "</td>" +
-                                                    "<td width=\"7%\">" + RsetTools.getString(rs_item, "name_curr") + "</td></tr>");
+                                                "<td width=\"7%\">" + RsetTools.getString(rs_item, "name_curr") + "</td></tr>");
                                         }
                                         v_first_step_shop = false;
                                     }
 
                                     out.write("<tr>");
 
-                                    if ( RsetTools.getInt(rs_detail, "is_group")==1 )
-                                    {
+                                    if (RsetTools.getInt(rs_detail, "is_group") == 1) {
                                         out.write("<td colspan=\"" + v_col_span + "\"><a href=\"/price/price.jsp?i=" +
-                                                RsetTools.getLong(rs_detail, "id") + "&id=" + RsetTools.getString(rs_detail, "id_shop") +
-                                                "\" target=\"blank\">" + RsetTools.getString(rs_detail, "item") + "</a></TD>");
+                                            RsetTools.getLong(rs_detail, "id") + "&id=" + RsetTools.getString(rs_detail, "id_shop") +
+                                            "\" target=\"blank\">" + RsetTools.getString(rs_detail, "item") + "</a></TD>");
                                     }
-                                    else
-                                    {
+                                    else {
                                         out.write("<td width=\"85%\">" + RsetTools.getString(rs_detail, "item") + "</td>");
                                         out.write("<td width=\"10%\" align=\"right\">" + RsetTools.getString(rs_detail, "price", "&nbsp") + "</td>");
                                         out.write("<td  width=\"5%\" align=\"center\">" + RsetTools.getString(rs_detail, "currency", "&nbsp") + "</td>");
@@ -634,7 +584,7 @@ WHERE id_query = v_id_query;
                         ps_item.close();
                         ps_item = null;
 
-                    }	// end while()
+                    }    // end while()
 
 
                 }   // if (v_len <3)
@@ -646,32 +596,28 @@ WHERE id_query = v_id_query;
                 out.write("<tr>\r\n");
                 out.write("<td width=\"50%\" align=\"center\">");
 
-                if (v_number_page > 0)
-                {
+                if (v_number_page > 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
                     out.write(RequestTools.getString(renderRequest, "s") + "&p=" + (v_number_page - 1));
                     out.write("\">ѕредыдуща€ страница");
                     out.write("</a>\"");
 
                 }
-                else
-                {
+                else {
                     out.write("&nbsp;");
                 }
                 out.write("</td>\r\n");
                 out.write("<td width=\"50%\" align=\"center\">");
 
 
-                if ((v_count_search - ((v_number_page + 1) * v_display_item)) >= 0)
-                {
+                if ((v_count_search - ((v_number_page + 1) * v_display_item)) >= 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
                     out.write(RequestTools.getString(renderRequest, "s") + "&p=" + (v_number_page + 1));
                     out.write("\">—ледующа€ страница");
                     out.write("</a>");
 
                 }
-                else
-                {
+                else {
                     out.write("&nbsp;");
                 }
                 out.write("</td>\r\n");
@@ -685,13 +631,11 @@ WHERE id_query = v_id_query;
 
 
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             log.error(e);
             out.write(ExceptionTools.getStackTrace(e, 20, "<br>"));
         }
-        finally
-        {
+        finally {
             DatabaseAdapter.close(db_);
             db_ = null;
         }

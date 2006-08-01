@@ -24,13 +24,15 @@
  */
 package org.riverock.interfaces.sso.a3;
 
+import java.io.Serializable;
+
 /**
  * @author SergeMaslyukov
  *         Date: 24.01.2006
  *         Time: 12:57:00
  *         $Id$
  */
-public interface AuthInfo {
+public interface AuthInfo extends Serializable {
     public Long getAuthUserId();
     public Long getUserId();
     public Long getCompanyId();

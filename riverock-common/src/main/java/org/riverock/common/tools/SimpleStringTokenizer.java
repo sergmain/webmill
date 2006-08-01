@@ -32,8 +32,7 @@ package org.riverock.common.tools;
  * $RCSfile$
  *
  */
-public class SimpleStringTokenizer
-{
+public class SimpleStringTokenizer {
     public String token[];
     public int countToken;
     public String str;
@@ -41,8 +40,7 @@ public class SimpleStringTokenizer
     public int maxPosition;
     public boolean retTokens;
 
-    protected void finalize() throws Throwable
-    {
+    protected void finalize() throws Throwable {
         token = null;
         str = null;
 
@@ -51,52 +49,47 @@ public class SimpleStringTokenizer
 
     public SimpleStringTokenizer(){}
 
-    public SimpleStringTokenizer(String s)
-    {
+    public SimpleStringTokenizer(String s) {
         this(s, null);
     }
 
-    public SimpleStringTokenizer(String str_, String token_[])
-    {
-        str = str_;
-        currentPosition = 0;
-        maxPosition = str.length();
+    public SimpleStringTokenizer(String str_, String token_[]) {
+        this.str = str_;
+        this.currentPosition = 0;
+        this.maxPosition = str.length();
 
-        token = token_;
-        if (token == null)
-        {
-            token = new String[1];
-            token[0] = " ";
+        if (token_ == null) {
+            this.token = new String[]{" "};
         }
-        countToken = token.length;
+        else {
+            this.token = new String[token_.length];
+            System.arraycopy(token_, 0, this.token, 0, token_.length);
+        }
+        this.countToken = token.length;
     }
 
-    public String nextToken()
-    {
+    public String nextToken() {
         if ((currentPosition > maxPosition) || (currentPosition == -1))
             return "";
 
         int i = 0, pos = -1;
 
         int start = currentPosition;
-        while (countToken > i)
-        {
+        while (countToken > i) {
             pos = str.indexOf(token[i], currentPosition);
             if (pos != -1)
                 break;
             i++;
         }
         currentPosition = pos;
-        if (pos == -1)
-        {
+        if (pos == -1) {
             return str.substring(start);
         }
         currentPosition += token[i].length();
         return str.substring(start, pos);
     }
 
-    public boolean hasMoreTokens()
-    {
+    public boolean hasMoreTokens() {
         return !((currentPosition > maxPosition) || (currentPosition == -1));
     }
 

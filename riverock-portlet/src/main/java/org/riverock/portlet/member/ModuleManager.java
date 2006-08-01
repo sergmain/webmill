@@ -48,7 +48,7 @@ public final class ModuleManager {
     private final static FileFilter memberFilter = new ExtensionFileFilter( ".xml" );
 
     private static final int REREAD_DELAY = 1000 * 30;  // scan every 30 seconds
-    private final String MILL_MEMBER_DIR = "member";
+    private static final String MILL_MEMBER_DIR = "member";
 
     private CacheDirectory mainDir = null;
     private CacheDirectory userDir = null;
@@ -69,7 +69,7 @@ public final class ModuleManager {
     }
 
     private ModuleManager(String rootDir) {
-        this.rootDir = rootDir;
+        this.rootDir = rootDir;                                      
     }
 
     private void destroy() {

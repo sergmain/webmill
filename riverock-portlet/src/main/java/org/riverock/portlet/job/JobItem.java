@@ -50,10 +50,6 @@ public class JobItem {
 
     public Integer periodActivity;
 
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
-
     public JobItem() {
     }
 

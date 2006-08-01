@@ -1,5 +1,7 @@
 package org.riverock.portlet.manager.menu.bean;
 
+import java.io.Serializable;
+
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.PortletName;
 import org.riverock.interfaces.portal.bean.Template;
@@ -9,7 +11,7 @@ import org.riverock.interfaces.portal.bean.Template;
  *         Date: 20.06.2006
  *         Time: 12:57:19
  */
-public class MenuItemExtended {
+public class MenuItemExtended implements Serializable {
     private MenuItemBean menuItem=null;
     private PortletNameBean portletName=null;
     private TemplateBean template =null;

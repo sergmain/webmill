@@ -214,7 +214,7 @@ public class MemberPortletActionMethod {
                             boolean checkStatus = false;
                             // Todo check restrict commented for MYSQL DB -
                             // Todo this temporary solution - need full rewrite restriction method
-                            switch (dbDyn.getFamaly()) {
+                            switch (dbDyn.getFamily()) {
                                 case DatabaseManager.MYSQL_FAMALY:
                                     break;
                                 default:
@@ -369,7 +369,7 @@ public class MemberPortletActionMethod {
                             // 'cos mysql not support DELETE CASCADE reference integrity
                             // Todo switch from getFamaly() to metadata to
                             // Todo decide support or not DELETE CASCADE
-                            if (dbDyn.getFamaly() == DatabaseManager.MYSQL_FAMALY)
+                            if (dbDyn.getFamily() == DatabaseManager.MYSQL_FAMALY)
                                 mp.deleteBigtextData(dbDyn, idRec);
 
                             sql_ = MemberServiceClass.buildDeleteSQL(dbDyn, mp.mod, mp.content, mp.getFromParam(), actionRequest.getParameterMap(), actionRequest.getRemoteUser(), actionRequest.getServerName(), moduleManager, mp.authSession);
