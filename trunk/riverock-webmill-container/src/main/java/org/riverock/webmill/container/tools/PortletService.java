@@ -268,29 +268,22 @@ public final class PortletService {
         return getLong(request, namePortletID);
     }
 
-    public static String getString( final PortletRequest request, final String f, String serverCharset, String htmlCharset ) {
+    public static String getString( final PortletRequest request, final String f ) {
         if (f==null) {
             return null;
         }
-        return getString(request, f, null, serverCharset, htmlCharset);
+        return getString(request, f, null);
     }
 
-    public static String getString(final PortletRequest request, final String f, final String def, String serverCharset, String htmlCharset) {
+    public static String getString(final PortletRequest request, final String f, final String def) {
         if (f==null) {
             return def;
         }
-        String s_ = def;
         final String parameter = request.getParameter(f);
         if (parameter != null) {
-            try {
-
-                s_ = convertString(parameter, serverCharset, htmlCharset);
-            }
-            catch (Exception e) {
-                // not rethrow exception 'cos this method return def value in this case
-            }
+            return parameter;
         }
-        return s_;
+        return def;
     }
 
     public static Long getLong( final PortletRequest request, final String f ) {

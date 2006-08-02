@@ -47,7 +47,6 @@ import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.FieldsTypeJspTypeType;
 import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
 import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -71,9 +70,9 @@ public class MemberPortletActionMethod {
             ModuleManager moduleManager = ModuleManager.getInstance(PropertiesProvider.getConfigPath());
             mp = new MemberProcessingActionRequest(actionRequest, moduleManager);
 
-            String moduleName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_MODULE_PARAM);
-            String actionName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_ACTION_PARAM);
-            String subActionName = RequestTools.getString(actionRequest, MemberConstants.MEMBER_SUBACTION_PARAM).trim();
+            String moduleName = PortletService.getString(actionRequest, MemberConstants.MEMBER_MODULE_PARAM, null);
+            String actionName = PortletService.getString(actionRequest, MemberConstants.MEMBER_ACTION_PARAM, null);
+            String subActionName = PortletService.getString(actionRequest, MemberConstants.MEMBER_SUBACTION_PARAM, null).trim();
 
 
             if (log.isDebugEnabled()) {
@@ -293,7 +292,7 @@ public class MemberPortletActionMethod {
                                 case PrimaryKeyTypeType.STRING_TYPE:
                                     log.debug("PrimaryKeyType - 'string'");
 
-                                    idCurrRec = RequestTools.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                    idCurrRec = PortletService.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey(), null);
                                     break;
                                 default:
                                     throw new Exception("Change. Wrong type of primary key - " +
@@ -358,7 +357,7 @@ public class MemberPortletActionMethod {
                                 idRec = PortletService.getLong(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
                             } else if (mp.content.getQueryArea().getPrimaryKeyType().getType() ==
                                 PrimaryKeyTypeType.STRING_TYPE) {
-                                idRec = RequestTools.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey());
+                                idRec = PortletService.getString(actionRequest, mp.mod.getName() + '.' + mp.content.getQueryArea().getPrimaryKey(), null);
                             }
                             else {
                                 actionResponse.setRenderParameter(MemberConstants.ERROR_TEXT,  "Delete. Wrong type of primary key - " + mp.content.getQueryArea().getPrimaryKeyType());

@@ -295,10 +295,18 @@ public final class OrderLogic {
         PreparedStatement ps = null;
         try {
             if( authSession != null ) {
-		        // Todo remove usage of WM_AUTH_USER table
-                switch( dbDyn.getFamily() ) {
-                    case DatabaseManager.MYSQL_FAMALY:
-                        Long userId = DatabaseManager.getLongValue( dbDyn, "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ", new Object[]{authSession.getUserLogin()} );
+//                switch( dbDyn.getFamily() ) {
+//                    case DatabaseManager.MYSQL_FAMALY:
+/*
+		                // Todo remove usage of WM_AUTH_USER table
+                        Long userId = DatabaseManager.getLongValue(
+                            dbDyn,
+                            "select ID_USER from WM_AUTH_USER where USER_LOGIN=? ",
+                            new Object[]{authSession.getUserLogin()},
+                            new int[]{Types.VARCHAR}
+                        );
+*/
+                        Long userId = authSession.getUserInfo().getUserId();
                         if( userId != null ) {
                             sql_ =
                                 "update WM_PRICE_RELATE_USER_ORDER " +
@@ -313,6 +321,7 @@ public final class OrderLogic {
                         else {
                             throw new IllegalStateException("userId not found for user login: " +authSession.getUserLogin());
                         }
+/*
                         break;
                     default:
                         sql_ =
@@ -327,6 +336,7 @@ public final class OrderLogic {
                         RsetTools.setLong( ps, 2, order.getIdOrder() );
                         break;
                 }
+*/
 
                 int i = ps.executeUpdate();
 

@@ -26,6 +26,7 @@ package org.riverock.interfaces.portal;
 
 import java.util.Locale;
 import java.util.Map;
+import java.io.Serializable;
 
 import org.riverock.interfaces.portlet.menu.MenuLanguage;
 import org.riverock.interfaces.portal.xslt.XsltTransformerManager;
@@ -38,7 +39,7 @@ import org.riverock.interfaces.portal.bean.Site;
  *         Time: 21:04:22
  *         $Id$
  */
-public interface PortalInfo {
+public interface PortalInfo extends Serializable {
     public Long getSiteId();
     public Long getCompanyId();
     public Long getSupportLanguageId( Locale locale );

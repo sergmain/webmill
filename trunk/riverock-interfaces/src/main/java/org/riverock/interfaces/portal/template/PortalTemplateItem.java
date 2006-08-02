@@ -25,6 +25,7 @@
 package org.riverock.interfaces.portal.template;
 
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * @author SergeMaslyukov
@@ -32,7 +33,7 @@ import java.util.List;
  *         Time: 9:32:12
  *         $Id$
  */
-public interface PortalTemplateItem {
+public interface PortalTemplateItem extends Serializable {
     public String getType();
     public String getNamespace();
     public String getCode();

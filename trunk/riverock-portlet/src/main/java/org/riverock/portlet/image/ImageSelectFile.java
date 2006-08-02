@@ -42,7 +42,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -101,7 +100,7 @@ public class ImageSelectFile extends HttpServlet
                         return;
                     }
 
-                    sess.setAttribute("MILL.IMAGE.DESC_IMAGE", RequestTools.getString(renderRequest, "d", "none"));
+                    sess.setAttribute("MILL.IMAGE.DESC_IMAGE", PortletService.getString(renderRequest, "d", "none"));
 
                     out.write("\r\n            ");
                     out.write("" + ( ( Long ) sess.getAttribute( "MILL.IMAGE.ID_MAIN" ) ));

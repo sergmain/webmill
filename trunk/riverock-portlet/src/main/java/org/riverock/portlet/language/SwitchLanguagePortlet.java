@@ -38,14 +38,12 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
 
@@ -119,7 +117,7 @@ public final class SwitchLanguagePortlet implements Portlet {
             if ( log.isDebugEnabled() ) {
                 for ( Enumeration e = actionRequest.getParameterNames(); e.hasMoreElements(); ) {
                     String s = (String)e.nextElement();
-                    log.debug( "PortletRequest attr - "+s+", value - "+RequestTools.getString( actionRequest, s ) );
+                    log.debug( "PortletRequest attr - "+s+", value - "+PortletService.getString(actionRequest, s, null) );
                 }
             }
             Long id_lang = PortletService.getLong( actionRequest, NAME_ID_LANGUAGE );

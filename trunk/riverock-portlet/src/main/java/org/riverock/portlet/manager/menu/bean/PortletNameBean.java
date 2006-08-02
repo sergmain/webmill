@@ -3,7 +3,6 @@ package org.riverock.portlet.manager.menu.bean;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.PortletName;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -40,7 +39,7 @@ public class PortletNameBean implements Serializable, PortletName {
     }
 
     public void setPortletName(String portletName) {
-        this.portletName = FacesTools.convertParameter(portletName);
+        this.portletName = portletName;
     }
 
     public boolean isActive() {

@@ -25,6 +25,7 @@
 package org.riverock.interfaces.portlet.menu;
 
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * User: serg_main
@@ -33,7 +34,7 @@ import java.util.List;
  * @author Serge Maslyukov
  * $Id$
  */
-public interface Menu {
+public interface Menu extends Serializable {
     public MenuItem searchMenuItem(Long id_);
     public List<MenuItem> getMenuItem();
     public boolean getIsDefault();

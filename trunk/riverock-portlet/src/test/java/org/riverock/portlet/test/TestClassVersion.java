@@ -44,9 +44,6 @@ import java.util.jar.JarEntry;
 
 import org.riverock.generic.main.ExtensionFileFilter;
 
-import org.apache.bcel.classfile.ClassParser;
-import org.apache.bcel.classfile.JavaClass;
-
 public class TestClassVersion
 {
     public TestClassVersion()
@@ -102,6 +99,7 @@ public class TestClassVersion
                     new DataInputStream(
                         new BufferedInputStream(jar.getInputStream(entry),BUFSIZE)
                     );
+/*
                 ClassParser parser = new ClassParser( file, entry.getName());
                 try
                 {
@@ -114,6 +112,7 @@ public class TestClassVersion
                 catch(ClassFormatError e1)
                 {
                 }
+*/
             }
         }
         String foundVersion = "";

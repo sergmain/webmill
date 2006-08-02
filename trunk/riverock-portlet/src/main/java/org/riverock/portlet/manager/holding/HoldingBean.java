@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.riverock.interfaces.portal.bean.Holding;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -77,7 +76,7 @@ public class HoldingBean implements Serializable, Holding {
     }
 
     public void setName( String holdingName ) {
-        this.holdingName = FacesTools.convertParameter(holdingName);
+        this.holdingName = holdingName;
     }
 
     public String getShortName() {
@@ -85,7 +84,7 @@ public class HoldingBean implements Serializable, Holding {
     }
 
     public void setShortName( String holdingShortName) {
-        this.holdingShortName = FacesTools.convertParameter(holdingShortName);
+        this.holdingShortName = holdingShortName;
     }
 
     public List<CompanyBean> getCompanies() {

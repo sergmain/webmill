@@ -27,7 +27,6 @@ package org.riverock.portlet.manager.holding;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -62,6 +61,6 @@ public class CompanyBean implements Serializable {
     }
 
     public void setName( String name ) {
-        this.name = FacesTools.convertParameter(name);
+        this.name = name;
     }
 }

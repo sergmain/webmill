@@ -36,7 +36,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import org.riverock.portlet.member.MemberServiceClass;
 import org.riverock.portlet.schema.member.FieldsType;
-import org.riverock.portlet.tools.RequestTools;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * @author smaslyukov
@@ -46,7 +46,7 @@ import org.riverock.portlet.tools.RequestTools;
  */
 public class XmlValidator implements MemberValidator {
     public static String validate(PortletRequest renderRequest, String moduleName, FieldsType ff) {
-        String data = RequestTools.getString(renderRequest, moduleName + '.' + MemberServiceClass.getRealName(ff));
+        String data = PortletService.getString(renderRequest, moduleName + '.' + MemberServiceClass.getRealName(ff), null);
 
         try
         {

@@ -56,7 +56,6 @@ import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.ShopOrderType;
 import org.riverock.portlet.shop.bean.ShopOrder;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
@@ -176,7 +175,7 @@ public final class InvoicePortlet implements Portlet {
                 PortletService.getInt( renderRequest, ShopPortlet.NAME_ID_GROUP_SHOP, 0 ) + '&' +
                 ShopPortlet.NAME_ID_SHOP_PARAM + '=' + shop.id_shop;
 
-            String action = RequestTools.getString( renderRequest, "action" );
+            String action = PortletService.getString(renderRequest, "action", null);
 
             if ( log.isDebugEnabled() )
                 log.debug( "Action - " + action );

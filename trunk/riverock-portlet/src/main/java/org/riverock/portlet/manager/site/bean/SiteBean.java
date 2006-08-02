@@ -29,7 +29,6 @@ import java.util.Locale;
 
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.common.tools.StringTools;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -52,6 +51,7 @@ public class SiteBean implements Serializable, Site {
     private String defVariant;
     private String adminEmail;
     private String properties=null;
+    private String portalCharset =null;
 
     public SiteBean(){
     }
@@ -68,6 +68,15 @@ public class SiteBean implements Serializable, Site {
         this.defVariant = site.getDefVariant();
         this.adminEmail = site.getAdminEmail();
         this.properties = site.getProperties();
+        this.portalCharset = site.getPortalCharset();
+    }
+
+    public String getPortalCharset() {
+        return portalCharset;
+    }
+
+    public void setPortalCharset(String portalCharset) {
+        this.portalCharset = portalCharset;
     }
 
     public String getSiteDefaultLocale() {
@@ -87,7 +96,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setSiteDefaultLocale(String localeString) {
-        Locale locale = StringTools.getLocale(FacesTools.convertParameter(localeString));
+        Locale locale = StringTools.getLocale(localeString);
         defLanguage = locale.getLanguage();
         defCountry = locale.getCountry();
         defVariant = locale.getVariant();
@@ -122,7 +131,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setSiteName(String siteName) {
-        this.siteName = FacesTools.convertParameter(siteName);
+        this.siteName = siteName;
     }
 
     public boolean getCssDynamic() {
@@ -138,7 +147,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setCssFile(String cssFile) {
-        this.cssFile = FacesTools.convertParameter(cssFile);
+        this.cssFile = cssFile;
     }
 
     public boolean getRegisterAllowed() {
@@ -154,7 +163,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setDefLanguage(String defLanguage) {
-        this.defLanguage = FacesTools.convertParameter(defLanguage);
+        this.defLanguage = defLanguage;
     }
 
     public String getDefCountry() {
@@ -162,7 +171,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setDefCountry(String defCountry) {
-        this.defCountry = FacesTools.convertParameter(defCountry);
+        this.defCountry = defCountry;
     }
 
     public String getDefVariant() {
@@ -170,7 +179,7 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setDefVariant(String defVariant) {
-        this.defVariant = FacesTools.convertParameter(defVariant);
+        this.defVariant = defVariant;
     }
 
     public String getAdminEmail() {
@@ -178,6 +187,6 @@ public class SiteBean implements Serializable, Site {
     }
 
     public void setAdminEmail(String adminEmail) {
-        this.adminEmail = FacesTools.convertParameter(adminEmail);
+        this.adminEmail = adminEmail;
     }
 }
