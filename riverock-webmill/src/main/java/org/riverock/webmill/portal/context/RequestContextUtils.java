@@ -24,6 +24,9 @@
  */
 package org.riverock.webmill.portal.context;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +35,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.collections.MapWithParameters;
@@ -65,7 +69,8 @@ public final class RequestContextUtils {
             tempLocale = factoryParameter.getPortalInfo().getDefaultLocale();
 
         Locale realLocale = StringTools.getLocale( PortletUtils.getString(factoryParameter.getRequest(), ContainerConstants.NAME_LANG_PARAM, tempLocale.toString()) );
-        if ( log.isDebugEnabled() ) log.debug( "internalInitTypeContext().locale: "+realLocale.toString() );
+        if ( log.isDebugEnabled() )
+            log.debug( "internalInitTypeContext().locale: "+realLocale.toString() );
 
         if (realLocale==null){
             realLocale = Locale.ENGLISH;
@@ -330,7 +335,7 @@ public final class RequestContextUtils {
             portletParameters = new PortletParameters( bean.getDefaultNamespace(), bean.getDefaultRequestState(), factoryParameter.getRequestBodyFile() );
         }
         else {
-            Map<String, List<String>> httpRequestParameter = PortletUtils.getParameters(factoryParameter.getRequest());
+            Map<String, List<String>> httpRequestParameter = prepareParameters(factoryParameter.getRequest(), factoryParameter.getPortalInfo().getSite().getPortalCharset());
 
             // init id of concrete portlet instance with value
             if (bean.getConcretePortletIdValue()!=null) {
@@ -349,5 +354,42 @@ public final class RequestContextUtils {
         }
         bean.getParameters().put( bean.getDefaultNamespace(), portletParameters );
         return bean.getDefaultRequestState();
+    }
+
+    private static Map<String, List<String>> prepareParameters( final HttpServletRequest request, final String portalCharset ) {
+
+        boolean isMultiPartRequest = PortletUtils.isMultiPart(request);
+
+        if (isMultiPartRequest) {
+            throw new IllegalStateException("MultiPart request must processed via parseMultiPartRequest() method");
+        }
+
+        Map<String, List<String>> p = new HashMap<String, List<String>>();
+
+        Enumeration e = request.getParameterNames();
+        for (; e.hasMoreElements() ;) {
+            String key = (String)e.nextElement();
+
+            String value[] = request.getParameterValues( key );
+            if (value!=null) {
+                List<String> list = new ArrayList<String>();
+                for (String s : value) {
+                    if (s==null)
+                        continue;
+
+                    try {
+                        String convertedString = new String(s.getBytes(CharEncoding.ISO_8859_1), portalCharset);
+                        list.add(convertedString);
+                    }
+                    catch (UnsupportedEncodingException e1) {
+                        String es = "Error convert parameter from 'ISO-8859-1' to portalCharset '"+portalCharset+"'";
+                        log.error(es, e1);
+                        throw new IllegalArgumentException(es,e1);
+                    }
+                }
+                p.put(key, list);
+            }
+        }
+        return p;
     }
 }

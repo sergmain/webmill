@@ -26,6 +26,8 @@ package org.riverock.webmill.portal.bean;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.CharEncoding;
+
 import org.riverock.interfaces.portal.bean.Site;
 
 /**
@@ -48,6 +50,18 @@ public class SiteBean implements Serializable, Site {
     private String adminEmail=null;
     private String cssFile = "/front_styles.css";
     private String properties=null;
+    private String portalCharset = CharEncoding.UTF_8;
+
+    public String getPortalCharset() {
+        if (portalCharset==null)
+            portalCharset=CharEncoding.UTF_8;
+        
+        return portalCharset;
+    }
+
+    public void setPortalCharset(String portalCharset) {
+        this.portalCharset = portalCharset;
+    }
 
     public String getProperties() {
         return properties;

@@ -44,6 +44,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
+import org.apache.commons.lang.CharEncoding;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.interfaces.portal.CookieManager;
@@ -366,7 +367,7 @@ public class PortalInstanceImpl implements PortalInstance  {
             final byte[] bytes = portalRequestInstance.byteArrayOutputStream.toByteArray();
             final byte[] bytesTimeString = timeString.toString().getBytes();
 
-            final String pageContent = new String(bytes, PortletUtils.CHARSET_UTF_8);
+            final String pageContent = new String(bytes, CharEncoding.UTF_8);
 
             if (log.isDebugEnabled()) {
                 log.debug("ContentLength: " + bytes.length);
