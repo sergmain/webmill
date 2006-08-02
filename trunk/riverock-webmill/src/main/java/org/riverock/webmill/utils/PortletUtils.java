@@ -29,22 +29,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.log4j.Logger;
 
-import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.exception.PortalException;
 
 /**
@@ -54,27 +47,16 @@ import org.riverock.webmill.exception.PortalException;
 public final class PortletUtils {
     private final static Logger log = Logger.getLogger(PortletUtils.class);
 
-    public static final String CHARSET_8859_1 = "8859_1";
-    public static final String CHARSET_UTF_8 = "utf-8";
-
     public static final String MIME_TYPE_TEXT_XML = "text/xml";
     public static final String MIME_TYPE_TEXT_HTML = "text/html";
     public static final String MIME_TYPE_TEXT_WML = "text/wml";
-
-    public static String getString(final PortletRequest request, final String f, final String def) {
-        return PortletService.getString( request, f, def, CHARSET_8859_1, CHARSET_UTF_8);
-    }
 
     public static boolean isMultiPart( HttpServletRequest request ) {
         return FileUpload.isMultipartContent( new ServletRequestContext( request ) );
     }
 
-    public static String getString( final HttpServletRequest request, final String f) {
-        return org.riverock.common.tools.ServletTools.getString(request, f, "", CHARSET_8859_1, CHARSET_UTF_8);
-    }
-
     public static String getString( final HttpServletRequest request, final String f, final String def) {
-        return org.riverock.common.tools.ServletTools.getString( request, f, def, CHARSET_8859_1, CHARSET_UTF_8);
+        return org.riverock.common.tools.ServletTools.getString( request, f, def, CharEncoding.ISO_8859_1, CharEncoding.UTF_8);
     }
 
     public static File storeBodyRequest( final HttpServletRequest request, int maxLength ) {
@@ -127,30 +109,8 @@ public final class PortletUtils {
         }
     }
 
-    public static Map<String, List<String>> getParameters( final HttpServletRequest request ) {
-
-        boolean isMultiPartRequest = isMultiPart(request);
-
-        if (isMultiPartRequest) {
-            throw new IllegalStateException("MultiPart request must processed via parseMultiPartRequest() method");
-        }
-
-        Map<String, List<String>> p = new HashMap<String, List<String>>();
-
-        Enumeration e = request.getParameterNames();
-        for (; e.hasMoreElements() ;) {
-            String key = (String)e.nextElement();
-
-            String value[] = request.getParameterValues( key );
-            if (value!=null) {
-                p.put(key, new ArrayList<String>(Arrays.asList(value)));
-            }
-        }
-        return p;
-    }
-
     public static void setContentType(HttpServletResponse response) throws PortalException {
-        setContentType(response, CHARSET_UTF_8);
+        setContentType(response, CharEncoding.UTF_8);
     }
 
     public static void setContentType(HttpServletResponse response, String charset) throws PortalException {
