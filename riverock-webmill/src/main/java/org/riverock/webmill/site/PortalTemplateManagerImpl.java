@@ -160,7 +160,7 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
     }
 
     public static PortalTemplate digestSiteTemplate(String templateData, String templateName, Long templateId) {
-        if (StringUtils.isEmpty(templateData) ) {
+        if (StringUtils.isBlank(templateData) ) {
             final PortalTemplateImpl portalTemplate = new PortalTemplateImpl();
             portalTemplate.setTemplateName( templateName );
             return portalTemplate;

@@ -183,7 +183,7 @@ public final class CtxRequestContextPocessor implements RequestContextProcessor 
         // set namespace of current(active) portlet
         if (st.hasMoreElements() ) {
             String ns = st.nextToken();
-            if (!StringUtils.isEmpty(ns)) {
+            if (StringUtils.isNotBlank(ns)) {
                 bean.setDefaultNamespace( ns );
             }
         }
