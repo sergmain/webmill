@@ -27,7 +27,6 @@ package org.riverock.portlet.manager.auth;
 import java.io.Serializable;
 
 import org.riverock.interfaces.sso.a3.AuthInfo;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -117,11 +116,11 @@ public class AuthInfoImpl implements AuthInfo, Serializable {
     }
 
     public void setUserLogin(String userLogin) {
-        this.userLogin = FacesTools.convertParameter(userLogin);
+        this.userLogin = userLogin;
     }
 
     public void setUserPassword(String userPassword) {
-        this.userPassword = FacesTools.convertParameter(userPassword);
+        this.userPassword = userPassword;
     }
 
     public void setCompany(boolean isCompany) {

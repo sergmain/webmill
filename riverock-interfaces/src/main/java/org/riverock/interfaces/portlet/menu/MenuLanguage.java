@@ -24,6 +24,8 @@
  */
 package org.riverock.interfaces.portlet.menu;
 
+import java.io.Serializable;
+
 /**
  * User: serg_main
  * Date: 07.10.2004
@@ -31,7 +33,7 @@ package org.riverock.interfaces.portlet.menu;
  * @author Serge Maslyukov
  * $Id$
  */
-public interface MenuLanguage{
+public interface MenuLanguage extends Serializable {
     public String getIndexTemplate();
     public MenuItem getIndexMenuItem();
     public Menu getDefault();

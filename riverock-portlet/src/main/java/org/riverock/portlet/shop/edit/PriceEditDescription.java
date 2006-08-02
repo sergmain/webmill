@@ -46,7 +46,6 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.price.ShopPortlet;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -117,7 +116,7 @@ public class PriceEditDescription extends HttpServlet {
                 if( id_item == null )
                     throw new IllegalArgumentException( "id_item not initialized" );
 
-                if( RequestTools.getString( renderRequest, "action" ).equals( "update" ) ) {
+                if( PortletService.getString(renderRequest, "action", null).equals( "update" ) ) {
                     dbDyn.getConnection().setAutoCommit( false );
                     String sql_ =
                         "delete from WM_PRICE_ITEM_DESCRIPTION a " +
@@ -155,7 +154,7 @@ public class PriceEditDescription extends HttpServlet {
                         int offset = 0;
                         int j = 0;
 
-                        byte[] b = StringTools.getBytesUTF( RequestTools.getString( renderRequest, "n" ) );
+                        byte[] b = StringTools.getBytesUTF( PortletService.getString(renderRequest, "n", null) );
                         st = dbDyn.prepareStatement( sql_ );
                         while( ( idx = StringTools.getStartUTF( b, 2000, offset ) ) != -1 ) {
                             st.setString( 1, new String( b, offset, idx - offset, "utf-8" ) );
@@ -189,7 +188,7 @@ public class PriceEditDescription extends HttpServlet {
                     }
                 }
 
-                if( RequestTools.getString( renderRequest, "action" ).equals( "new_image" ) &&
+                if( PortletService.getString(renderRequest, "action", null).equals( "new_image" ) &&
                     renderRequest.getParameter( "id_image" ) != null
                 ) {
                     Long id_image = PortletService.getLong( renderRequest, "id_image" );

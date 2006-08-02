@@ -43,7 +43,6 @@ import org.apache.log4j.Logger;
 import org.riverock.common.tools.ServletTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -103,7 +102,7 @@ public final class LoginPlainPortlet implements Portlet {
 
             String srcURL;
             if ( renderRequest.getParameter( LoginUtils.NAME_TOURL_PARAM ) != null ) {
-                srcURL = RequestTools.getString( renderRequest, LoginUtils.NAME_TOURL_PARAM );
+                srcURL = PortletService.getString(renderRequest, LoginUtils.NAME_TOURL_PARAM, null);
             } else {
                 srcURL = PortletService.url( ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse );
             }

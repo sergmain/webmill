@@ -40,8 +40,11 @@ public class MapTools {
 
     private final static Logger log = Logger.getLogger( ServletTools.class );
 
+    public static String getString( final Map map, final String f ) {
+        return getString( map, f, null );
+    }
+
     public static String getString( final Map map, final String f, final String def ) {
-        String i_ = def;
         Object obj = map.get( f );
         if ( obj != null ) {
             try {
@@ -60,7 +63,7 @@ public class MapTools {
                 log.warn( "Exception in getInt(), def value will be return", exc );
             }
         }
-        return i_;
+        return def;
     }
 
     public static Integer getInt( final Map map, final String f ) {

@@ -45,7 +45,6 @@ import org.riverock.generic.tools.XmlTools;
 import org.riverock.portlet.schema.portlet.shop.ShopPageType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.shop.bean.ShopOrder;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.extend.PortletResultContent;
@@ -180,7 +179,7 @@ public final class ShopPage implements PortletResultObject, PortletResultContent
             // установка параметров для сортировки
             // sort_direct == 0 означает сортировки по возрастанию,
             // иначе сортировка по убыванию
-            shopParam.sortBy = RequestTools.getString( renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
+            shopParam.sortBy = PortletService.getString(renderRequest, ShopPortlet.NAME_SHOP_SORT_BY, "item");
             shopParam.sortDirect = PortletService.getInt( renderRequest, ShopPortlet.NAME_SHOP_SORT_DIRECT, 1);
 
             PortletURL itemPortletURL = renderResponse.createRenderURL();

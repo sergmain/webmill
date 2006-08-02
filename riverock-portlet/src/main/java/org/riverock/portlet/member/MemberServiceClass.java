@@ -52,7 +52,6 @@ import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
 import org.riverock.portlet.schema.member.types.SqlCheckParameterTypeTypeType;
 import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 import org.riverock.portlet.schema.member.types.TypeFieldType;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.SiteUtils;
 import org.riverock.interfaces.sso.a3.AuthSession;
 
@@ -1542,7 +1541,7 @@ public final class MemberServiceClass {
                         RsetTools.setLong(ps, numParam++, longParam );
                     }
                     else if (cnt.getQueryArea().getPrimaryKeyType().getType()==PrimaryKeyTypeType.STRING_TYPE) {
-                        final String stringParam = RequestTools.getString( map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                        final String stringParam = MapTools.getString( map, modName + '.' + cnt.getQueryArea().getPrimaryKey());
 
                         if (log.isDebugEnabled())
                             log.debug( "Param  #" + numParam + ", value: " + stringParam );

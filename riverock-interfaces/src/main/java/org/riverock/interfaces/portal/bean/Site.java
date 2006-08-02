@@ -24,12 +24,14 @@
  */
 package org.riverock.interfaces.portal.bean;
 
+import java.io.Serializable;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 02.05.2006
  *         Time: 17:24:08
  */
-public interface Site {
+public interface Site extends Serializable {
     public Long getSiteId();
 
     public Long getCompanyId();
@@ -51,4 +53,6 @@ public interface Site {
     public String getAdminEmail();
 
     public String getProperties();
+
+    public String getPortalCharset();
 }

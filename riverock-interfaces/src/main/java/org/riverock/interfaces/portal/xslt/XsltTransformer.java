@@ -24,6 +24,8 @@
  */
 package org.riverock.interfaces.portal.xslt;
 
+import java.io.Serializable;
+
 import javax.xml.transform.Transformer;
 
 /**
@@ -32,9 +34,6 @@ import javax.xml.transform.Transformer;
  *         Time: 15:47:12
  *         $Id$
  */
-public interface XsltTransformer {
-//    public void terminate(Long id_);
-//    public void reinit();
-//    public void reinitTransformer();
+public interface XsltTransformer extends Serializable {
     public Transformer getTransformer();
 }

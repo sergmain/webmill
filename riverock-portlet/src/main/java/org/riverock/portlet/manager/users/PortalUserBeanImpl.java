@@ -29,7 +29,6 @@ import java.util.Date;
 
 import org.riverock.common.tools.StringTools;
 import org.riverock.interfaces.portal.bean.User;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -85,7 +84,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public void setCompanyName( String companyName ) {
-        this.companyName = FacesTools.convertParameter(companyName);
+        this.companyName = companyName;
     }
 
     public Long getCompanyId() {
@@ -101,7 +100,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public void setFirstName( String firstName ) {
-        this.firstName = FacesTools.convertParameter(firstName);
+        this.firstName = firstName;
     }
 
     public String getMiddleName() {
@@ -109,7 +108,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public void setMiddleName( String middleName ) {
-        this.middleName = FacesTools.convertParameter(middleName);
+        this.middleName = middleName;
     }
 
     public String getLastName() {
@@ -117,7 +116,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public void setLastName( String lastName ) {
-        this.lastName = FacesTools.convertParameter(lastName);
+        this.lastName = lastName;
     }
 
     public Date getCreatedDate() {
@@ -155,7 +154,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public void setAddress( String address ) {
-        this.address = FacesTools.convertParameter(address);
+        this.address = address;
     }
 
     public String getPhone() {
@@ -163,7 +162,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public void setPhone( String phone ) {
-        this.phone = FacesTools.convertParameter(phone);
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -171,7 +170,7 @@ public class PortalUserBeanImpl implements Serializable, User {
     }
 
     public void setEmail( String email ) {
-        this.email = FacesTools.convertParameter(email);
+        this.email = email;
     }
 
     public String getName() {

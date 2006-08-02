@@ -30,7 +30,6 @@ import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.common.TreeItem;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -155,7 +154,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setKeyMessage(String keyMessage) {
-        this.keyMessage = FacesTools.convertParameter(keyMessage);
+        this.keyMessage = keyMessage;
     }
 
     public String getUrl() {
@@ -163,7 +162,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setUrl(String url) {
-        this.url = FacesTools.convertParameter(url);
+        this.url = url;
     }
 
     public String getTitle() {
@@ -171,7 +170,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setTitle(String title) {
-        this.title = FacesTools.convertParameter(title);
+        this.title = title;
     }
 
     public String getAuthor() {
@@ -179,7 +178,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setAuthor(String author) {
-        this.author = FacesTools.convertParameter(author);
+        this.author = author;
     }
 
     public String getKeyword() {
@@ -187,7 +186,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setKeyword(String keyword) {
-        this.keyword = FacesTools.convertParameter(keyword);
+        this.keyword = keyword;
     }
 
     public String getMetadata() {
@@ -195,7 +194,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setMetadata(String metadata) {
-        this.metadata = FacesTools.convertParameter(metadata);
+        this.metadata = metadata;
     }
 
     public String getPortletRole() {
@@ -203,7 +202,7 @@ public class CatalogBean implements Serializable, CatalogItem {
     }
 
     public void setPortletRole(String portletRole) {
-        this.portletRole = FacesTools.convertParameter(portletRole);
+        this.portletRole = portletRole;
     }
 
     public Long getTopId() {

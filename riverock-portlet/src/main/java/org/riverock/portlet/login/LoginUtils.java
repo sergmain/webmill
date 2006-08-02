@@ -33,8 +33,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.interfaces.portal.PortalSessionManager;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * Author: mill
@@ -58,7 +58,7 @@ public final class LoginUtils {
 
         String login = actionRequest.getParameter( NAME_USERNAME_PARAM );
         String password = actionRequest.getParameter( NAME_PASSWORD_PARAM );
-        String url = RequestTools.getString( actionRequest, NAME_TOURL_PARAM );
+        String url = PortletService.getString(actionRequest, NAME_TOURL_PARAM, null);
         if( url != null ) {
             url = actionResponse.encodeURL( url );
         }

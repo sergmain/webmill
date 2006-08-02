@@ -41,7 +41,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 
-
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.RsetTools;
@@ -52,7 +51,6 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.utils.DateUtils;
 
 import org.riverock.portlet.shop.upload.UploadFileException;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
@@ -132,7 +130,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
                 throw new IllegalArgumentException( "id_firm not initialized" );
 
 
-            String desc = RequestTools.getString( renderRequest, "d" );
+            String desc = PortletService.getString(renderRequest, "d", null);
 
 
             // Todo этот сиквенс просто заглушка, сейчас не работает.

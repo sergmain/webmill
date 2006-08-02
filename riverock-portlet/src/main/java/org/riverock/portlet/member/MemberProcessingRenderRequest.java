@@ -60,7 +60,6 @@ import org.riverock.portlet.schema.member.types.PrimaryKeyTypeType;
 import org.riverock.portlet.schema.member.types.RestrictTypeTypeType;
 import org.riverock.portlet.schema.member.types.TargetModuleTypeActionType;
 import org.riverock.portlet.schema.member.types.TypeFieldType;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -664,7 +663,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                     }
                     else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
                     {
-                        stringTemp = RequestTools.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                        stringTemp = PortletService.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey(), null);
                         if (log.isDebugEnabled()) {
                             log.debug("param#"+numParam+": "+stringTemp);
                         }
@@ -810,12 +809,10 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                     else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
                     {
                         if (log.isDebugEnabled())
-                            log.debug(" 2 Bind param #"+numParam+" " + RequestTools.getString(portletRequest,
-                            modName + '.' + cnt.getQueryArea().getPrimaryKey())
+                            log.debug(" 2 Bind param #"+numParam+" " + PortletService.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey(), null)
                             );
 
-                        ps.setString(numParam++, RequestTools.getString(portletRequest,
-                            modName + '.' + cnt.getQueryArea().getPrimaryKey()));
+                        ps.setString(numParam++, PortletService.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey(), null));
                     }
                     else
                         throw new Exception("Wrong type of primary key");
@@ -915,12 +912,10 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
         {
             if (log.isDebugEnabled())
-                log.debug("11 Bind param #"+numParam+" " + RequestTools.getString(portletRequest,
-                mod.getName() + '.' + content.getQueryArea().getPrimaryKey())
+                log.debug("11 Bind param #"+numParam+" " + PortletService.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), null)
                 );
 
-            ps.setString(numParam++, RequestTools.getString(portletRequest,
-                mod.getName() + '.' + content.getQueryArea().getPrimaryKey()));
+            ps.setString(numParam++, PortletService.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), null));
         }
         else
             throw new Exception("Wrong type of primary key");
@@ -939,8 +934,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
         else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
         {
-            ps.setString(numParam++, RequestTools.getString(portletRequest,
-                mod.getName() + '.' + content.getQueryArea().getPrimaryKey()));
+            ps.setString(numParam++, PortletService.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), null));
         }
         else
             throw new Exception("Wrong type of primary key");
@@ -965,8 +959,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                     }
                     else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
                     {
-                        ps.setString(numParam++, RequestTools.getString(portletRequest,
-                            modName + '.' + cnt.getQueryArea().getPrimaryKey()));
+                        ps.setString(numParam++, PortletService.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey(), null));
                     }
                     else
                         throw new Exception("Wrong type of primary key");
@@ -1107,12 +1100,10 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         {
             FieldsType ff = content.getQueryArea().getFields(k);
             if (Boolean.TRUE.equals(ff.getIsShow()) && (ff.getJspType().getType() != FieldsTypeJspTypeType.BIGTEXT_TYPE)) {
-                if (log.isDebugEnabled()) log.debug("#4.05.01 bind "+ff.getJspType().toString()+" param #" + numParam + " " + RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff)));
+                if (log.isDebugEnabled()) log.debug("#4.05.01 bind "+ff.getJspType().toString()+" param #" + numParam + " " + PortletService.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null));
 
                 String stringParam =
-                    RequestTools.getString(
-                        portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null
-                    );
+                    PortletService.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null);
 
                 switch (ff.getJspType().getType())
                 {
@@ -1176,7 +1167,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                 if (log.isDebugEnabled())
                     log.debug("#4.09.03.1 bind '" + cnt.getQueryArea().getPrimaryKeyType().toString() +
                         "' param #" + numParam + " " + modName + '.' + cnt.getQueryArea().getPrimaryKey()+' '+
-                            RequestTools.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey())
+                            PortletService.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey(), null)
                     );
 
                 switch( cnt.getQueryArea().getPrimaryKeyType().getType() )
@@ -1187,8 +1178,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                         break;
 
                     case PrimaryKeyTypeType.STRING_TYPE:
-                            ps.setString(numParam++, RequestTools.getString(portletRequest,
-                        modName + '.' + cnt.getQueryArea().getPrimaryKey()));
+                        ps.setString(numParam++, PortletService.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey(), null));
                         break;
 
                     case PrimaryKeyTypeType.DATE_TYPE:
@@ -1278,9 +1268,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                 if (log.isDebugEnabled()) log.debug("BigText field - " + ff.getName());
 
                 String insertString =
-                    RequestTools.getString(
-                        portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff)
-                    );
+                    PortletService.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null);
 
                 String nameTargetField = null;
                 for (int j = 0; j < ff.getQueryArea().getFieldsCount(); j++){
@@ -1357,8 +1345,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
         else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
         {
-            ps.setString(numParam++, RequestTools.getString(portletRequest,
-                mod.getName() + '.' + content.getQueryArea().getPrimaryKey()));
+            ps.setString(numParam++, PortletService.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), null));
         }
         else
             throw new Exception("Wrong type of primary key");
@@ -1429,7 +1416,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                         case FieldsTypeJspTypeType.TEXT_AREA_TYPE:
 
                             stringParam =
-                                RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                                PortletService.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null);
                             if (log.isDebugEnabled())
                                 log.debug("Param  #" + numParam + ", value: " + stringParam);
 
@@ -1439,7 +1426,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                         case FieldsTypeJspTypeType.DATE_TEXT_TYPE:
 
                             stringParam =
-                                RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                                PortletService.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null);
 
                             if (log.isDebugEnabled())
                                 log.debug("Param  #" + numParam + ", value: " + stringParam);
@@ -1477,7 +1464,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                             break;
 
                         default:
-                            stringParam = RequestTools.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff));
+                            stringParam = PortletService.getString(portletRequest, mod.getName() + '.' + MemberServiceClass.getRealName(ff), null);
 
                             if (log.isDebugEnabled())
                                 log.debug("Param  #" + numParam + ", value: " + stringParam);
@@ -1610,7 +1597,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
                 }
                 else if (cnt.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
                 {
-                    pkValue = RequestTools.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey());
+                    pkValue = PortletService.getString(portletRequest, modName + '.' + cnt.getQueryArea().getPrimaryKey(), null);
                 }
                 else
                     throw new IllegalArgumentException("Wrong type of primary key");
@@ -1906,7 +1893,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
         else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
         {
-            pkValue = RequestTools.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
+            pkValue = PortletService.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), null);
         }
         else
             throw new IllegalArgumentException("Wrong type of primary key");
@@ -1948,7 +1935,7 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         }
         else if (content.getQueryArea().getPrimaryKeyType().getType() == PrimaryKeyTypeType.STRING_TYPE)
         {
-            pkValue = RequestTools.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey());
+            pkValue = PortletService.getString(portletRequest, mod.getName() + '.' + content.getQueryArea().getPrimaryKey(), null);
         }
         else
             throw new IllegalArgumentException("Wrong type of primary key");
@@ -3165,18 +3152,18 @@ public final class MemberProcessingRenderRequest extends MemberProcessingAbstrac
         this.firmId = authSession.getUserInfo().getCompanyId();
         this.userId = authSession.getUserInfo().getUserId();
 
-        fromParam = RequestTools.getString(this.portletRequest, MemberConstants.MEMBER_FROM_PARAM, "").trim();
+        fromParam = PortletService.getString(this.portletRequest, MemberConstants.MEMBER_FROM_PARAM, "").trim();
         try
         {
             db_ = DatabaseAdapter.getInstance();
-            String moduleName = RequestTools.getString( this.portletRequest, MemberConstants.MEMBER_MODULE_PARAM );
+            String moduleName = PortletService.getString(this.portletRequest, MemberConstants.MEMBER_MODULE_PARAM, null);
             if (log.isDebugEnabled())
             {
                 log.debug("moduleName: "+moduleName);
                 for (Enumeration e = this.portletRequest.getParameterNames(); e.hasMoreElements();)
                 {
                     String s = (String) e.nextElement();
-                    log.debug("Request parameter: " + s + ", value: " + RequestTools.getString(this.portletRequest, s) );
+                    log.debug("Request parameter: " + s + ", value: " + PortletService.getString(this.portletRequest, s, null) );
                 }
             }
 

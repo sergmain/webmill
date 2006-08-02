@@ -3,7 +3,6 @@ package org.riverock.portlet.manager.menu.bean;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -49,7 +48,7 @@ public class SiteLanguageBean implements Serializable, SiteLanguage {
     }
 
     public void setCustomLanguage(String customLanguage) {
-        this.customLanguage = FacesTools.convertParameter(customLanguage);
+        this.customLanguage = customLanguage;
     }
 
     public String getNameCustomLanguage() {
@@ -57,6 +56,6 @@ public class SiteLanguageBean implements Serializable, SiteLanguage {
     }
 
     public void setNameCustomLanguage(String nameCustomLanguage) {
-        this.nameCustomLanguage = FacesTools.convertParameter(nameCustomLanguage);
+        this.nameCustomLanguage = nameCustomLanguage;
     }
 }

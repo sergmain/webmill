@@ -26,6 +26,7 @@ package org.riverock.interfaces.portlet.menu;
 
 import java.util.List;
 import java.util.Map;
+import java.io.Serializable;
 
 import org.riverock.interfaces.common.TreeItem;
 
@@ -36,7 +37,7 @@ import org.riverock.interfaces.common.TreeItem;
  * @author Serge Maslyukov
  * $Id$
  */
-public interface MenuItem extends TreeItem {
+public interface MenuItem extends TreeItem, Serializable {
     public Long getId();
     public Long getIdTop();
     public Long getIdPortlet();

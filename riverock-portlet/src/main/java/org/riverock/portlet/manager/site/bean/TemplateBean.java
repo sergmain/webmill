@@ -27,7 +27,6 @@ package org.riverock.portlet.manager.site.bean;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Template;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author Sergei Maslyukov
@@ -61,7 +60,7 @@ public class TemplateBean implements Serializable, Template {
     }
 
     public void setTemplateLanguage(String templateLanguage) {
-        this.templateLanguage = FacesTools.convertParameter(templateLanguage);
+        this.templateLanguage = templateLanguage;
     }
 
     public Long getTemplateId() {
@@ -85,7 +84,7 @@ public class TemplateBean implements Serializable, Template {
     }
 
     public void setTemplateName(String templateName) {
-        this.templateName = FacesTools.convertParameter(templateName);
+        this.templateName = templateName;
     }
 
     public String getTemplateData() {
@@ -93,7 +92,7 @@ public class TemplateBean implements Serializable, Template {
     }
 
     public void setTemplateData(String templateData) {
-        this.templateData = FacesTools.convertParameter(templateData);
+        this.templateData = templateData;
     }
 
     public boolean isDefaultDynamic() {

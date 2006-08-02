@@ -27,7 +27,6 @@ package org.riverock.portlet.manager.company;
 import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Company;
-import org.riverock.portlet.tools.FacesTools;
 
 /**
  * @author SergeMaslyukov
@@ -74,7 +73,7 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public void setName(String name) {
-        this.name = FacesTools.convertParameter(name);
+        this.name = name;
     }
 
     public Long getId() {
@@ -90,7 +89,7 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public void setShortName(String shortName) {
-        this.shortName = FacesTools.convertParameter(shortName);
+        this.shortName = shortName;
     }
 
     public String getAddress() {
@@ -98,7 +97,7 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public void setAddress(String address) {
-        this.address = FacesTools.convertParameter(address);
+        this.address = address;
     }
 
     public String getCeo() {
@@ -106,7 +105,7 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public void setCeo(String ceo) {
-        this.ceo = FacesTools.convertParameter(ceo);
+        this.ceo = ceo;
     }
 
     public String getCfo() {
@@ -114,7 +113,7 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public void setCfo(String cfo) {
-        this.cfo = FacesTools.convertParameter(cfo);
+        this.cfo = cfo;
     }
 
     public String getWebsite() {
@@ -122,7 +121,7 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public void setWebsite(String website) {
-        this.website = FacesTools.convertParameter(website);
+        this.website = website;
     }
 
     public String getInfo() {
@@ -130,6 +129,6 @@ public class CompanyBean implements Serializable, Company {
     }
 
     public void setInfo(String info) {
-        this.info = FacesTools.convertParameter(info);
+        this.info = info;
     }
 }

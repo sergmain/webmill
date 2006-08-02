@@ -283,13 +283,12 @@ public class PortalInstanceImpl implements PortalInstance  {
         synchronized (syncCounter) {
             counter = counterNDC;
             ++counterNDC;
-            NDC.push("" + counter);
         }
+        NDC.push("" + counter);
 
         if (log.isDebugEnabled()) {
             putMainRequestDebug(counter, request_, response_);
         }
-
 
         PortalRequestInstance portalRequestInstance = null;
         try {

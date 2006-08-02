@@ -38,8 +38,8 @@ import org.apache.log4j.Logger;
 import org.riverock.common.config.PropertiesProvider;
 import org.riverock.portlet.schema.member.types.ContentTypeActionType;
 import org.riverock.portlet.schema.member.types.ModuleTypeTypeType;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.ContainerConstants;
+import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * @author Sergei Maslyukov
@@ -103,9 +103,9 @@ public class MemberPortletRenderMethod {
                     log.debug("Point #1.2 object is null");
                 }
             }
-            String moduleName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_MODULE_PARAM);
-            String actionName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_ACTION_PARAM);
-            String subActionName = RequestTools.getString(renderRequest, MemberConstants.MEMBER_SUBACTION_PARAM, "").trim();
+            String moduleName = PortletService.getString(renderRequest, MemberConstants.MEMBER_MODULE_PARAM, null);
+            String actionName = PortletService.getString(renderRequest, MemberConstants.MEMBER_ACTION_PARAM, null);
+            String subActionName = PortletService.getString(renderRequest, MemberConstants.MEMBER_SUBACTION_PARAM, "").trim();
 
             if (log.isDebugEnabled()) {
                 log.debug("Point #2.1 module '" + moduleName + "'");

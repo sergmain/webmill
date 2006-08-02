@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 
 import org.riverock.module.web.session.ModuleSession;
 import org.riverock.module.web.session.PortletModuleSessionImpl;
-import org.riverock.module.tools.RequestTools;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -68,13 +67,13 @@ public abstract class PortletModuleRequestImpl implements ModuleRequest {
 
     public String getString(String key) {
         if (log.isDebugEnabled()){
-            log.debug("key: "+key + ", value: "+RequestTools.getString(portletRequest, key, null));
+            log.debug("key: "+key + ", value: "+PortletService.getString(portletRequest, key, null));
         }
-        return RequestTools.getString(portletRequest, key, null);
+        return PortletService.getString(portletRequest, key, null);
     }
 
     public String getString(String key, String defValue) {
-        return RequestTools.getString(portletRequest, key, defValue);
+        return PortletService.getString(portletRequest, key, defValue);
     }
 
     public Long getLong(String key) {

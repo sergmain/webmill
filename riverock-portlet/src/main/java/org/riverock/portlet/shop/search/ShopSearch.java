@@ -47,7 +47,6 @@ import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.portlet.tools.ContentTypeTools;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -345,7 +344,7 @@ public class ShopSearch extends HttpServlet {
 
             db_ = DatabaseAdapter.getInstance();
 
-            if (RequestTools.getString(renderRequest, "action").toLowerCase().equals("search")) {
+            if (PortletService.getString(renderRequest, "action", null).toLowerCase().equals("search")) {
 
                 int v_count_search = 2147483647;
                 int v_display_item = 100; // constant of count diplay item
@@ -358,13 +357,13 @@ public class ShopSearch extends HttpServlet {
                 call.registerOutParameter(1, java.sql.Types.VARCHAR);
                 call.registerOutParameter(9, java.sql.Types.VARCHAR);
 
-                call.setString(2, RequestTools.getString(renderRequest, "s"));
-                call.setString(3, RequestTools.getString(renderRequest, "s1"));
-                call.setString(4, RequestTools.getString(renderRequest, "s2"));
-                call.setString(5, RequestTools.getString(renderRequest, "bool1"));
-                call.setString(6, RequestTools.getString(renderRequest, "bool2"));
-                call.setString(7, RequestTools.getString(renderRequest, "minPrice"));
-                call.setString(8, RequestTools.getString(renderRequest, "maxPrice"));
+                call.setString(2, PortletService.getString(renderRequest, "s", null));
+                call.setString(3, PortletService.getString(renderRequest, "s1", null));
+                call.setString(4, PortletService.getString(renderRequest, "s2", null));
+                call.setString(5, PortletService.getString(renderRequest, "bool1", null));
+                call.setString(6, PortletService.getString(renderRequest, "bool2", null));
+                call.setString(7, PortletService.getString(renderRequest, "minPrice", null));
+                call.setString(8, PortletService.getString(renderRequest, "maxPrice", null));
 
                 call.execute();
                 String v_str = StringTools.truncateString(call.getString(1), 400);
@@ -598,7 +597,7 @@ WHERE id_query = v_id_query;
 
                 if (v_number_page > 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
-                    out.write(RequestTools.getString(renderRequest, "s") + "&p=" + (v_number_page - 1));
+                    out.write(PortletService.getString(renderRequest, "s", null) + "&p=" + (v_number_page - 1));
                     out.write("\">Предыдущая страница");
                     out.write("</a>\"");
 
@@ -612,7 +611,7 @@ WHERE id_query = v_id_query;
 
                 if ((v_count_search - ((v_number_page + 1) * v_display_item)) >= 0) {
                     out.write("<a href=\"search_in_shop.jsp?s=");
-                    out.write(RequestTools.getString(renderRequest, "s") + "&p=" + (v_number_page + 1));
+                    out.write(PortletService.getString(renderRequest, "s", null) + "&p=" + (v_number_page + 1));
                     out.write("\">Следующая страница");
                     out.write("</a>");
 

@@ -48,7 +48,6 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.portlet.price.ShopPageParam;
 import org.riverock.portlet.price.ShopPortlet;
-import org.riverock.portlet.tools.RequestTools;
 import org.riverock.portlet.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
@@ -131,7 +130,7 @@ public class PriceEditShop extends HttpServlet
 
                     shopParam.id_group = PortletService.getLong(renderRequest, "i");
 
-                    if (RequestTools.getString(renderRequest, "action").equals("update"))
+                    if (PortletService.getString(renderRequest, "action", null).equals("update"))
                     {
                         int countItem = PortletService.getInt(renderRequest, "count_item", 0);
 
@@ -150,9 +149,9 @@ public class PriceEditShop extends HttpServlet
 
                                 Long idCode = PortletService.getLong(renderRequest, "id_code_" + i);
 
-                                st.setString(1, RequestTools.getString(renderRequest, "name_" + i + "_" + idCode));
+                                st.setString(1, PortletService.getString(renderRequest, "name_" + i + "_" + idCode, null));
                                 RsetTools.setDouble(st, 2, PortletService.getDouble(renderRequest, "price_" + i + "_" + idCode));
-                                st.setString(3, RequestTools.getString(renderRequest, "curr_" + i + "_" + idCode));
+                                st.setString(3, PortletService.getString(renderRequest, "curr_" + i + "_" + idCode, null));
                                 RsetTools.setInt(st, 4, PortletService.getInt(renderRequest, "cb_" + i + "_" + idCode, 0 ));
                                 RsetTools.setLong(st, 5, idCode);
                                 RsetTools.setLong(st, 6, shopParam.id_shop);

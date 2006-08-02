@@ -24,13 +24,15 @@
  */
 package org.riverock.interfaces.portal.template;
 
+import java.io.Serializable;
+
 /**
  * @author SergeMaslyukov
  *         Date: 01.01.2006
  *         Time: 9:45:11
  *         $Id$
  */
-public interface PortalTemplateItemType {
+public interface PortalTemplateItemType extends Serializable {
     /**
      * The custom type
      */

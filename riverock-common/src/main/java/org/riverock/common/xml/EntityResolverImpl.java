@@ -48,7 +48,7 @@ public class EntityResolverImpl implements EntityResolver {
     public static final String PORTLET_DTD = "portlet_1.1.dtd";
     public static final String WEBXML_23_DTD = "web-app_2_3.dtd";
 
-    public static Map<String, String> entityMap = null;
+    private static Map<String, String> entityMap = null;
     static {
         Map<String, String> map = new HashMap<String, String>();
         map.put( IBM_PORTLET_DTD_PUBLIC_ID, DTD_PACKAGE+PORTLET_DTD);
@@ -63,5 +63,9 @@ public class EntityResolverImpl implements EntityResolver {
         }
         InputStream stream = EntityResolverImpl.class.getResourceAsStream(url);
         return new InputSource( stream );
+    }
+
+    public static Map<String, String> getEntityMap() {
+        return entityMap;
     }
 }
