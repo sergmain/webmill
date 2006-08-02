@@ -67,6 +67,12 @@ public class RequestStatisticService {
         }
     }
 
+    public static void destroyService() {
+        if (service!=null) {
+            service.destroy();
+        }
+    }
+
     public static RequestStatisticService getInstance() {
         if (service!=null) {
             return service;
