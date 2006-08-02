@@ -117,7 +117,7 @@ public final class PortalRequestProcessor {
 
     private static boolean checkTemplateRole(PortalRequestInstance portalRequestInstance) {
         if (portalRequestInstance.template==null ||
-            StringUtils.isEmpty( portalRequestInstance.template.getRole() ) ) {
+            StringUtils.isBlank( portalRequestInstance.template.getRole() ) ) {
             return true;
         }
 

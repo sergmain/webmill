@@ -501,10 +501,7 @@ public class InternalAuthDaoImpl implements InternalAuthDao {
         if ( log.isDebugEnabled() )
             log.debug( "role '" + role_ + "', user login '" + userLogin + "'  " );
 
-        if ( StringUtils.isEmpty(userLogin) ||
-            userPassword == null ||
-            StringUtils.isEmpty(role_)
-        )
+        if ( StringUtils.isBlank(userLogin) || userPassword == null || StringUtils.isBlank(role_))
             return false;
 
         long startMills = 0;

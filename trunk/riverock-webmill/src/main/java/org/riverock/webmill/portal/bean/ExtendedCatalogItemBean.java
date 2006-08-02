@@ -142,7 +142,7 @@ public final class ExtendedCatalogItemBean {
         catalogItem.templateId = ctx.getTemplateId();
         catalogItem.portletMetadata = initMetadata(ctx);
         List<String> roles = new ArrayList<String>();
-        if (!StringUtils.isEmpty(ctx.getPortletRole())) {
+        if (StringUtils.isNotBlank(ctx.getPortletRole())) {
             StringTokenizer st = new StringTokenizer(ctx.getPortletRole());
             while (st.hasMoreElements()) {
                 roles.add( st.nextToken() );
