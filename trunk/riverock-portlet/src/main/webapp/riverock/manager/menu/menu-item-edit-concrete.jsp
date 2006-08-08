@@ -49,6 +49,10 @@
 </h:panelGrid>
 
 <h:panelGrid columns="1">
+    <h:outputText value="#{msg.menu_item_role}"/>
+    <h:inputText id="menu-role-field" value="#{menuSessionBean.menuItem.menuItem.portletRole}"
+        size="70"/>
+
     <h:outputText value="#{msg.menu_item_metadata}"/>
     <h:inputTextarea id="menu-metadata-field" value="#{menuSessionBean.menuItem.menuItem.metadata}"
                      rows="10" cols="70"

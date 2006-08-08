@@ -48,5 +48,6 @@ public interface MenuItem extends TreeItem, Serializable {
     public String getMenuName();
     public List<MenuItem> getCatalogItems();
     public String getUrl();
+    public String getPortletRole();
     public Map<String, String> getMetadata();
 }
