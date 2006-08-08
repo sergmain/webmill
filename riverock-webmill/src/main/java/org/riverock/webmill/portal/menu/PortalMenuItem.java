@@ -121,6 +121,10 @@ public final class PortalMenuItem implements MenuItem{
         this.portletName = InternalDaoFactory.getInternalPortletNameDao().getPortletName( ctx.getPortletId() );
     }
 
+    public String getPortletRole() {
+        return ctx.getPortletRole();
+    }
+
     public Long getIdTop(){
         return ctx.getTopCatalogId();
     }

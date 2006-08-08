@@ -215,7 +215,7 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
     private void processPortletParameters() throws PortletException {
 
         List<PortalTemplateParameter> templateParameters =
-            (List) renderRequest.getAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE);
+            (List<PortalTemplateParameter>) renderRequest.getAttribute(ContainerConstants.PORTAL_TEMPLATE_PARAMETERS_ATTRIBUTE);
 
         if (log.isDebugEnabled()) {
             log.debug("param.getParameters(): " + templateParameters);
@@ -467,7 +467,8 @@ public final class MenuSimple implements PortletResultObject, PortletGetList, Po
             }
 
             if (item.getMetadata()!=null) {
-                String roles=item.getMetadata().get("webmill.role");
+//                String roles=item.getMetadata().get("webmill.role");
+                String roles=item.getPortletRole();
 
                 if (log.isDebugEnabled()) {
                     log.debug("roles: "+roles);
