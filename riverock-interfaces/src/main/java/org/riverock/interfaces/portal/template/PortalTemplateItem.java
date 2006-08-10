@@ -42,4 +42,5 @@ public interface PortalTemplateItem extends Serializable {
     public String getXmlRoot();
     public PortalTemplateItemType getTypeObject();
     public List<PortalTemplateParameter> getParameters();
+    public String getRole();
 }

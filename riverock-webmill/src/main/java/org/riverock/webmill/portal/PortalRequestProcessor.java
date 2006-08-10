@@ -128,7 +128,7 @@ public final class PortalRequestProcessor {
         StringTokenizer st = new StringTokenizer( portalRequestInstance.template.getRole(), ", ", false);
         while (st.hasMoreTokens()) {
             String role = st.nextToken();
-            if (portalRequestInstance.getAuth().isUserInRole(role)) {
+            if (portalRequestInstance.isUserInRole(role)) {
                 return true;
             }
         }

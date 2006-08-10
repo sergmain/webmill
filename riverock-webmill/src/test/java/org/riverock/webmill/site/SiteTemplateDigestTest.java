@@ -41,7 +41,7 @@ public class SiteTemplateDigestTest {
         "<SiteTemplateItem type=\"custom\"  value=\"HeaderText\"/>\n" +
         "<SiteTemplateItem  type=\"custom\"  value=\"HeaderEnd\"/>\n" +
         "\n" +
-        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu\" code=\"TOP_MENU\" xmlRoot=\"TopMenu\"/>\n" +
+        "<SiteTemplateItem  type=\"portlet\"  value=\"mill.menu\" code=\"TOP_MENU\" xmlRoot=\"TopMenu\" role=\"webmill.authentic\"/>\n" +
         "\n" +
         "<SiteTemplateItem  type=\"portlet\"  value=\"mill.login_xml\" xmlRoot=\"LoginOnIndexPage\"/>\n" +
         "\n" +

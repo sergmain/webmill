@@ -71,6 +71,11 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
     private String namespace;
 
     /**
+     * Field role
+     */
+    private String role;
+
+    /**
      * Field parameters
      */
     private List<PortalTemplateParameter> parameters;
@@ -253,5 +258,13 @@ public class PortalTemplateItemImpl implements PortalTemplateItem {
      */
     public void setXmlRoot(String xmlRoot) {
         this.xmlRoot = xmlRoot;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
