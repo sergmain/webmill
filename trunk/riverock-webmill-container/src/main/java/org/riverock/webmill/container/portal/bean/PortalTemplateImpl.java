@@ -144,6 +144,9 @@ public class PortalTemplateImpl implements PortalTemplate {
             if (portalTemplateItem.getXmlRoot() != null) {
                 s += " xmlRoot=\"" + portalTemplateItem.getXmlRoot() + "\"";
             }
+            if (portalTemplateItem.getRole() != null) {
+                s += " role=\"" + portalTemplateItem.getRole() + "\"";
+            }
 
             s += ">\n";
 

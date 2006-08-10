@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.portlet.PortalContext;
 import javax.servlet.ServletConfig;
@@ -39,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import org.riverock.common.html.Header;
@@ -222,6 +225,7 @@ public final class PortalRequestInstance {
             // init page element list
             int i = 0;
             for (PortalTemplateItem templateItem : template.getPortalTemplateItems()) {
+
                 String portletName;
                 Namespace namespace = null;
                 PortletParameters portletParameters = null;
@@ -247,6 +251,12 @@ public final class PortalRequestInstance {
                                 "portletName: " + portletName
                         );
                     }
+                }
+
+                // chech for template item is not restricted after create namespace
+                // restriction of template item must be processed after
+                if (!checkTemplateItemRole(templateItem)) {
+                    continue;
                 }
 
                 PageElement element = new PageElement(
@@ -291,6 +301,25 @@ public final class PortalRequestInstance {
         }
     }
 
+    private boolean checkTemplateItemRole(PortalTemplateItem templateItem) {
+        if (templateItem==null || StringUtils.isBlank( templateItem.getRole() ) ) {
+            return true;
+        }
+
+        if (auth==null) {
+            return false;
+        }
+
+        StringTokenizer st = new StringTokenizer( templateItem.getRole(), ", ", false);
+        while (st.hasMoreTokens()) {
+            String role = st.nextToken();
+            if (isUserInRole(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public PortalContext getPortalContext() {
         return portalContext;
     }
@@ -317,6 +346,57 @@ public final class PortalRequestInstance {
 
     public AuthSession getAuth() {
         return auth;
+    }
+
+    private Map<String, Boolean> userRoles = new HashMap<String, Boolean>();
+
+    public boolean isUserInRole(String role) {
+        if (log.isDebugEnabled()) {
+            log.debug("PortalRequestInstance.isUserInRole()");
+            log.debug("    role: " + role);
+        }
+        if (role==null) {
+            return false;
+        }
+
+        Boolean access = userRoles.get(role);
+        if (access!=null) {
+            return access;
+        }
+
+        if (role.equals(PortalConstants.WEBMILL_GUEST_ROLE)) {
+            return true;
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("    serverName: " + httpRequest.getServerName());
+            log.debug("    auth: " + auth);
+        }
+
+        if (httpRequest.getServerName()==null || auth==null) {
+            return role.equals(PortalConstants.WEBMILL_ANONYMOUS_ROLE);
+        }
+
+        // here auth always not null. return false for webmill.anonymous role
+        if (role.equals(PortalConstants.WEBMILL_ANONYMOUS_ROLE)) {
+            return false;
+        }
+
+        boolean status = auth.checkAccess( httpRequest.getServerName() );
+        if ( !status ) {
+            userRoles.put(role, false);
+            return false;
+        }
+
+        if (role.equals(PortalConstants.WEBMILL_AUTHENTIC_ROLE)) {
+            userRoles.put(PortalConstants.WEBMILL_AUTHENTIC_ROLE, true);
+            return true;
+        }
+
+        boolean roleRefAccess = auth.isUserInRole( role );
+        userRoles.put(role, roleRefAccess);
+
+        return roleRefAccess;
     }
 
     public Locale getLocale() {
