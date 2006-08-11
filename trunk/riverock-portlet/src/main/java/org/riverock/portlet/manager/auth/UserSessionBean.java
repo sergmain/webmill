@@ -26,6 +26,9 @@ package org.riverock.portlet.manager.auth;
 
 import java.io.Serializable;
 
+import org.apache.myfaces.custom.tree2.TreeState;
+import org.apache.myfaces.custom.tree2.TreeStateBase;
+
 /**
  * @author SergeMaslyukov
  *         Date: 06.01.2006
@@ -41,19 +44,29 @@ public class UserSessionBean implements Serializable {
     private boolean isAdd = false;
     private boolean isEdit = false;
     private boolean isDelete = false;
+    private TreeState treeState = null;
+
+    public UserSessionBean() {
+        treeState = new TreeStateBase();
+        treeState.setTransient(true);
+    }
+
+    public TreeState getTreeState() {
+        return treeState;
+    }
 
     public void resetStatus() {
-    isAdd = false;
-    isEdit = false;
-    isDelete = false;
+        isAdd = false;
+        isEdit = false;
+        isDelete = false;
     }
 
     public void setAdd(boolean isAdd) {
         this.isAdd = isAdd;
-    if (isAdd) {
-        isEdit = false;
-        isDelete = false;
-    }
+        if (isAdd) {
+            isEdit = false;
+            isDelete = false;
+        }
     }
 
     public boolean getAdd() {
@@ -96,7 +109,7 @@ public class UserSessionBean implements Serializable {
         return currentAuthUserId;
     }
 
-    public void setCurrentAuthUserId( Long id ) {
+    public void setCurrentAuthUserId(Long id) {
         this.currentAuthUserId = id;
     }
 
@@ -104,7 +117,7 @@ public class UserSessionBean implements Serializable {
         return currentRoleId;
     }
 
-    public void setCurrentRoleId( Long id ) {
+    public void setCurrentRoleId(Long id) {
         this.currentRoleId = id;
     }
 }

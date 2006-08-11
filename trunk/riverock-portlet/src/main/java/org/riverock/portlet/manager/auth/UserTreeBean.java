@@ -32,8 +32,6 @@ import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
-import org.apache.myfaces.custom.tree2.TreeState;
-import org.apache.myfaces.custom.tree2.TreeStateBase;
 
 /**
  * @author SergeMaslyukov
@@ -47,11 +45,17 @@ public class UserTreeBean implements Serializable {
     private static final long serialVersionUID = 2043005500L;
 
     private DataProvider dataProvider = null;
-    private TreeState treeState=null;
+    private UserSessionBean userSessionBean = null;
 
     public UserTreeBean() {
-        treeState = new TreeStateBase();
-        treeState.setTransient(true);
+    }
+
+    public UserSessionBean getUserSessionBean() {
+        return userSessionBean;
+    }
+
+    public void setUserSessionBean(UserSessionBean userSessionBean) {
+        this.userSessionBean = userSessionBean;
     }
 
     public DataProvider getDataProvider() {
@@ -67,7 +71,7 @@ public class UserTreeBean implements Serializable {
 
         TreeNode rootNode = getPrepareUserTree();
         TreeModel treeModel = new TreeModelBase(rootNode);
-        treeModel.setTreeState(treeState);
+        treeModel.setTreeState(userSessionBean.getTreeState());
 
         return treeModel;
     }
