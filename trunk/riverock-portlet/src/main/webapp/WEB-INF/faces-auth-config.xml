@@ -37,7 +37,7 @@
     <managed-bean>
         <managed-bean-name>userTree</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.auth.UserTreeBean</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
         <managed-property>
             <property-name>dataProvider</property-name>
             <value>#{dataProvider}</value>

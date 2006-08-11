@@ -19,9 +19,8 @@
         </h:commandButton>
     </h:panelGroup>
 
-    <t:tree2 id="serverTree" value="#{siteTree.siteTree}" var="node"
-   			varNodeToggler="t" clientSideToggle="false"
-            showRootNode="false" binding="#{siteTree.tree}">
+    <t:tree2 id="serverTree" value="#{siteTree.siteTree}" var="node" varNodeToggler="t" clientSideToggle="false"
+            showRootNode="false">
         <f:facet name="tree-root">
             <h:panelGroup id="site-tree-tree-root-group">
             </h:panelGroup>
