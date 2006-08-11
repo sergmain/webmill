@@ -10,7 +10,7 @@
 <h:panelGroup id="user-tree-group">
 
     <t:tree2 id="serverTree" value="#{userTree.userTree}" var="node" varNodeToggler="t" clientSideToggle="false"
-             showRootNode="false" binding="#{userTree.tree}">
+             showRootNode="false">
         <f:facet name="company">
             <h:panelGroup id="auth-tree-company-group">
                 <t:graphicImage id="auth-tree-company-image-open" value="/images/company-open.png" rendered="#{t.nodeExpanded}" border="0"/>

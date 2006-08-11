@@ -21,7 +21,7 @@
 
     <t:tree2 id="serverTree" value="#{menuTree.menuTree}" var="node"
    			varNodeToggler="t" clientSideToggle="false"
-            showRootNode="false" binding="#{menuTree.tree}">
+            showRootNode="false">
         <f:facet name="tree-root">
             <h:panelGroup id="menu-tree-tree-root-group">
             </h:panelGroup>

@@ -3,23 +3,18 @@ package org.riverock.portlet.manager.menu;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.validator.ValidatorException;
-
 import org.apache.log4j.Logger;
-import org.apache.myfaces.custom.tree2.HtmlTree;
 import org.apache.myfaces.custom.tree2.TreeModel;
 import org.apache.myfaces.custom.tree2.TreeModelBase;
 import org.apache.myfaces.custom.tree2.TreeNode;
 import org.apache.myfaces.custom.tree2.TreeNodeBase;
+import org.apache.myfaces.custom.tree2.TreeState;
+import org.apache.myfaces.custom.tree2.TreeStateBase;
 
+import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
 import org.riverock.interfaces.portal.bean.Site;
 import org.riverock.interfaces.portal.bean.SiteLanguage;
-import org.riverock.interfaces.portal.bean.CatalogItem;
 
 /**
  * @author Sergei Maslyukov
@@ -31,16 +26,22 @@ public class MenuTree implements Serializable {
     private final static Logger log = Logger.getLogger(MenuTree.class);
     private static final long serialVersionUID = 2057005500L;
 
-    private transient HtmlTree _tree;
-    private String _nodePath;
-
-    @SuppressWarnings({"FieldCanBeLocal"})
-    private TreeNode treeNode = null;
     private MenuService menuService = null;
+    private TreeState treeState=null;
 
     private MenuSessionBean menuSessionBean = null;
 
     public MenuTree() {
+        treeState = new TreeStateBase();
+        treeState.setTransient(true);
+    }
+
+    public MenuService getMenuService() {
+        return menuService;
+    }
+
+    public void setMenuService(MenuService menuService) {
+        this.menuService = menuService;
     }
 
     public MenuSessionBean getMenuSessionBean() {
@@ -51,11 +52,17 @@ public class MenuTree implements Serializable {
         this.menuSessionBean = menuSessionBean;
     }
 
-    public void setMenuTree(TreeNode treeNode) {
-        this.treeNode = treeNode;
+    public TreeModel getMenuTree() {
+        log.info("Invoke getMenuTree()");
+
+        TreeNode rootNode = getPrepareMenuTree();
+        TreeModel treeModel = new TreeModelBase(rootNode);
+        treeModel.setTreeState(treeState);
+
+        return treeModel;
     }
 
-    public TreeNode getMenuTree() {
+    private TreeNode getPrepareMenuTree() {
 
         log.info("Invoke getMenuTree()");
 
@@ -90,10 +97,8 @@ public class MenuTree implements Serializable {
                 }
 
             }
-//            treeRoot.getChildren().add(siteNode);
         }
-        treeNode = treeRoot;
-        return treeNode;
+        return treeRoot;
     }
 
     private void processMenuItem(TreeNodeBase node, List<CatalogItem> menuItemList) {
@@ -109,76 +114,4 @@ public class MenuTree implements Serializable {
             }
         }
     }
-
-    public TreeModel getExpandedTreeData() {
-        log.info("Invoke getExpandedTreeData()");
-
-        return new TreeModelBase(getMenuTree());
-    }
-
-    public void setTree(HtmlTree tree) {
-        log.info("Invoke setTree( tree )");
-
-        _tree = tree;
-    }
-
-    public HtmlTree getTree() {
-        log.info("Invoke getTree()");
-
-        return _tree;
-    }
-
-    public String expandAll() {
-        log.info("Invoke expandAll()");
-
-        _tree.expandAll();
-        return null;
-    }
-
-    public void setNodePath(String nodePath) {
-        log.info("Invoke setNodePath( nodePath )");
-
-        _nodePath = nodePath;
-    }
-
-    public String getNodePath() {
-        log.info("Invoke getNodePath()");
-
-        return _nodePath;
-    }
-
-    public void checkPath(FacesContext context, UIComponent component, Object value) {
-        log.info("Invoke checkPath()");
-
-        FacesMessage message = null;
-        String path[] = _tree.getPathInformation(value.toString());
-        for (String nodeId : path) {
-            try {
-                _tree.setNodeId(nodeId);
-            }
-            catch (Exception e) {
-                throw new ValidatorException(message, e);
-            }
-            if (_tree.getNode().isLeaf()) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid node path (cannot expand a leaf): " + nodeId, "Invalid node path (cannot expand a leaf): " + nodeId);
-                throw new ValidatorException(message);
-            }
-        }
-
-    }
-
-    public void expandPath(ActionEvent event) {
-        log.info("Invoke expandPath( event )");
-
-        _tree.expandPath(_tree.getPathInformation(_nodePath));
-    }
-
-    public MenuService getMenuService() {
-        return menuService;
-    }
-
-    public void setMenuService(MenuService menuService) {
-        this.menuService = menuService;
-    }
-
 }

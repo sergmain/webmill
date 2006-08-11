@@ -36,7 +36,7 @@
     <managed-bean>
         <managed-bean-name>menuTree</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.menu.MenuTree</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
+        <managed-bean-scope>session</managed-bean-scope>
         <managed-property>
             <property-name>menuService</property-name>
             <property-class>org.riverock.portlet.manager.menu.MenuService</property-class>
