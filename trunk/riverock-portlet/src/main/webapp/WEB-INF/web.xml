@@ -32,17 +32,19 @@
 
 	<context-param>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>
-			/WEB-INF/faces-common-config.xml, 
-			/WEB-INF/faces-manager-config.xml, 
-			/WEB-INF/faces-auth-config.xml, 
-			/WEB-INF/faces-holding-config.xml, 
-			/WEB-INF/faces-company-config.xml,
-			/WEB-INF/faces-portlet-name-config.xml,
-			/WEB-INF/faces-users-config.xml,
-			/WEB-INF/faces-shop-manager-config.xm,
+		<param-value>/WEB-INF/faces-common-config.xml,
+            /WEB-INF/faces-manager-config.xml,
+            /WEB-INF/faces-auth-config.xml,
+            /WEB-INF/faces-holding-config.xml,
+            /WEB-INF/faces-company-config.xml,
+            /WEB-INF/faces-portlet-name-config.xml,
+            /WEB-INF/faces-users-config.xml,
+            /WEB-INF/faces-shop-manager-config.xm,
             /WEB-INF/faces-site-config.xml,
-            /WEB-INF/faces-menu-config.xml
+            /WEB-INF/faces-menu-config.xml,/WEB-INF/faces-common-config.xml, faces-manager-config.xml,
+            faces-auth-config.xml, faces-holding-config.xml, faces-company-config.xml,
+            faces-portlet-name-config.xml,faces-users-config.xml, faces-shop-manager-config.xm, faces-site-config.xml,
+            faces-menu-config.xml
         </param-value>
 	</context-param>
 	<context-param>
@@ -219,6 +221,10 @@
     <servlet-mapping>
         <servlet-name>jcaptcha</servlet-name>
         <url-pattern>/jcaptcha</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
 
     <!-- Set the default session timeout (in minutes) -->
