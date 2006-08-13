@@ -34,6 +34,7 @@
         <managed-bean-class>org.riverock.portlet.manager.holding.HoldingSessionBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+<!--
     <managed-bean>
         <managed-bean-name>holdingTree</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.holding.HoldingTreeBean</managed-bean-class>
@@ -43,6 +44,7 @@
             <value>#{holdingDataProvider}</value>
         </managed-property>
     </managed-bean>
+-->
     <managed-bean>
         <managed-bean-name>holdingAction</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.manager.holding.HoldingAction</managed-bean-class>
