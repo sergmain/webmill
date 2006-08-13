@@ -113,7 +113,7 @@ public class DbStructure
             DbTableType table = schema.getTables(i);
             System.out.println( "Table - " + table.getName() );
 
-            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra, dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra.getConnection(), table.getSchema(), table.getName(), dbOra.getFamily()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setData(DatabaseStructureManager.getDataTable(dbOra.getConnection(), table));

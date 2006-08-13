@@ -54,17 +54,17 @@ public class DbStructureExportWithData
 {
 //    private static Logger cat = Logger.getLogger("org.riverock.system.DbStructure");
 
-    public static void main(String args[])
-        throws Exception
-    {
+    public static void main(String args[]) throws Exception {
 
         StartupApplication.init();
-//            table.setData(dbOra.getDataTable(table));
-        String fileName =
-            PropertiesProvider.getConfigPath()+
+        String fileName;
+        fileName = "test.xml";
+/*
+        fileName = PropertiesProvider.getConfigPath()+
             File.separatorChar+"data-definition" +
-            File.separatorChar+"data" +
-            File.separatorChar+"webmill-def-v2.xml";
+        File.separatorChar+"data" +
+        File.separatorChar+"webmill-def-v2.xml";
+*/
 
         DbStructureExport.export(fileName, true);
     }

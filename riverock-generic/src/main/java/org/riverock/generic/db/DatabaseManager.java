@@ -444,7 +444,7 @@ public final class DatabaseManager {
         DatabaseMetaData db = db_.getConnection().getMetaData();
         String dbSchema = db.getUserName();
 
-        ArrayList list = DatabaseStructureManager.getTableList(db_, db_.conn, dbSchema, "%");
+        ArrayList list = DatabaseStructureManager.getTableList(db_.conn, dbSchema, "%");
         final int initialCapacity = list.size();
         for (int i = 0; i < initialCapacity; i++) {
             DbTableType table = (DbTableType) list.get(i);
@@ -464,16 +464,14 @@ public final class DatabaseManager {
 
         for (int i = 0; i < schema.getTablesCount(); i++) {
             DbTableType table = schema.getTables(i);
-//            System.out.println( "Table - " + table.getName() );
 
-            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(db_, db_.conn, table.getSchema(), table.getName()));
+            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(db_.conn, table.getSchema(), table.getName(), db_.getFamily()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(db_.conn, table.getSchema(), table.getName()));
             table.setImportedKeys(DatabaseStructureManager.getImportedKeys(db_.conn, table.getSchema(), table.getName()));
         }
 
         for (int i = 0; i < schema.getViewsCount(); i++) {
             DbViewType view = schema.getViews(i);
-//            System.out.println("View - " + view.getName());
             view.setText(db_.getViewText(view));
         }
 
@@ -483,11 +481,12 @@ public final class DatabaseManager {
     public static void createWithReplaceAllView(final DatabaseAdapter db_, final DbSchemaType millSchema)
         throws Exception {
         boolean[] idx = new boolean[millSchema.getViewsCount()];
-        for (int i = 0; i < idx.length; i++)
+        for (int i = 0; i < idx.length; i++) {
             idx[i] = false;
+        }
 
-        for (int j = 0; j < idx.length; j++) {
-            if (idx[j])
+        for (boolean anIdx : idx) {
+            if (anIdx)
                 continue;
 
             for (int i = 0; i < idx.length; i++) {
