@@ -84,9 +84,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
 //    public boolean isNeedUpdateBracket = false;
 
     public boolean getIsClosed() throws SQLException {
-        if (conn == null)
-            return true;
-        return conn.isClosed();
+        return conn == null || conn.isClosed();
     }
 
     public int getMaxLengthStringField() {
@@ -219,7 +217,7 @@ public final class MYSQLconnect extends DatabaseAdapter {
                         case Types.TIMESTAMP:
                         case Types.DATE:
                             if (DatabaseManager.checkDefaultTimestamp(val))
-                                val = "'CURRENT_TIMESTAMP'";
+                                val = "CURRENT_TIMESTAMP";
 
                             break;
                         default:

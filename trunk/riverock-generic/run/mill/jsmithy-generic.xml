@@ -155,7 +155,7 @@
 	<DatabaseConnection name="MYSQL">
 		<Username>sa</Username>
 		<Password/>
-		<ConnectString>jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf8</ConnectString>
+		<ConnectString>jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull</ConnectString>
 		<ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>
 		<DatabaseCharset>UTF-8</DatabaseCharset>
 		<IsConvertDatabaseString>false</IsConvertDatabaseString>

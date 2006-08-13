@@ -115,7 +115,7 @@ public class DbStructureExport {
             }
             System.out.println( "Table - " + table.getName() );
 
-            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra, dbOra.getConnection(), table.getSchema(), table.getName()));
+            table.setFields((ArrayList)DatabaseStructureManager.getFieldsList(dbOra.getConnection(), table.getSchema(), table.getName(), dbOra.getFamily()));
             table.setPrimaryKey(DatabaseStructureManager.getPrimaryKey(dbOra.getConnection(), table.getSchema(), table.getName()));
             table.setImportedKeys(DatabaseStructureManager.getImportedKeys(dbOra.getConnection(), table.getSchema(), table.getName()));
 
@@ -138,7 +138,7 @@ public class DbStructureExport {
             File.separatorChar+"big-text-table-def.xml";
         
         fileNameBigText =
-            "\\sandbox\\riverock\\riverock-webmill-db\\xml\\webmill-schema.xml";
+            "\\sandbox\\riverock\\trunk\\riverock-webmill-db\\xml\\webmill-schema.xml";
 
         InputSource inSrc = new InputSource(new FileInputStream( fileNameBigText ));
         DbSchemaType schemaBigTable = (DbSchemaType) Unmarshaller.unmarshal(DbSchemaType.class, inSrc);

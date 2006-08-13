@@ -158,7 +158,7 @@ public class DatabaseStructureManager {
                 sql += column.getPkColumnName();
             }
             sql += ") ";
-            switch (fkColumn.getDeleteRule().getRuleType().intValue()) {
+            switch (fkColumn.getDeleteRule().getRuleType()) {
                 case DatabaseMetaData.importedKeyRestrict:
                     sql += adapter.getOnDeleteSetNull();
                     break;
@@ -170,7 +170,7 @@ public class DatabaseStructureManager {
                     throw new IllegalArgumentException(" imported keys delete rule '" +
                         fkColumn.getDeleteRule().getRuleName() + "' not supported");
             }
-            switch (fkColumn.getDeferrability().getRuleType().intValue()) {
+            switch (fkColumn.getDeferrability().getRuleType()) {
                 case DatabaseMetaData.importedKeyNotDeferrable:
                     break;
                 case DatabaseMetaData.importedKeyInitiallyDeferred:
@@ -181,7 +181,6 @@ public class DatabaseStructureManager {
                     throw new IllegalArgumentException(" imported keys deferred rule '" +
                         fkColumn.getDeferrability().getRuleName() + "' not supported");
             }
-//            System.out.println( sql );
 
             PreparedStatement ps = null;
             try {
@@ -342,7 +341,7 @@ public class DatabaseStructureManager {
                             if (isDebug)
                                 System.out.println("param #" + (k + 1) + ", type " + fieldData.getJavaTypeField());
 
-                            switch (fieldData.getJavaTypeField().intValue()) {
+                            switch (fieldData.getJavaTypeField()) {
                                 case Types.DECIMAL:
                                 case Types.DOUBLE:
                                 case Types.NUMERIC:
@@ -452,7 +451,7 @@ public class DatabaseStructureManager {
                 System.out.println("fk idx " + idxFk);
                 System.out.println("storage idx " + idx);
             }
-            Hashtable hashFk = new Hashtable(tableData.getRecordsCount());
+            Hashtable<Long, Object> hashFk = new Hashtable<Long, Object>(tableData.getRecordsCount());
             // получаем хеш вторичных ключей. Т.к. используется Hashtable
             // все значения в хеше уникальны
             for (int i = 0; i < tableData.getRecordsCount(); i++) {
@@ -491,7 +490,6 @@ public class DatabaseStructureManager {
                 String tempData = "";
                 // двигаясь по списку первичных ключей создаем результирующий строковый объект
                 for (Long aSetPk : setPk) {
-                    long pk = ((Long) aSetPk);
 
                     for (int i = 0; i < tableData.getRecordsCount(); i++) {
                         DbDataRecordType record = tableData.getRecords(i);
@@ -499,7 +497,7 @@ public class DatabaseStructureManager {
                         DbDataFieldDataType fieldPk = record.getFieldsData(idxPk);
                         long pkTemp = fieldPk.getNumberData().longValue();
 
-                        if (pkTemp == pk) {
+                        if (pkTemp == aSetPk) {
                             DbDataFieldDataType fieldData = record.getFieldsData(idx);
                             if (fieldData.getStringData() != null)
                                 tempData += fieldData.getStringData();
@@ -637,7 +635,7 @@ public class DatabaseStructureManager {
                     else {
                         fieldData.setIsNull(Boolean.FALSE);
 
-                        switch (field.getJavaType().intValue()) {
+                        switch (field.getJavaType()) {
 
                             case Types.DECIMAL:
                             case Types.INTEGER:
@@ -690,23 +688,17 @@ public class DatabaseStructureManager {
      *
      * @return java.lang.ArrayList of DbTableType
      */
-    public static ArrayList getTableList(DatabaseAdapter adapter, Connection conn1, String schemaPattern, String tablePattern) {
+    public static ArrayList<DbTableType> getTableList(Connection conn1, String schemaPattern, String tablePattern) {
         String[] types = {"TABLE"};
 
         ResultSet meta = null;
-        ArrayList v = new ArrayList();
+        ArrayList<DbTableType> v = new ArrayList<DbTableType>();
         try {
             DatabaseMetaData db = conn1.getMetaData();
 
-            meta = db.getTables(
-                null,
-                schemaPattern,
-                tablePattern,
-                types
-            );
+            meta = db.getTables(null, schemaPattern, tablePattern, types );
 
             while (meta.next()) {
-
                 DbTableType table = new DbTableType();
 
                 table.setSchema(meta.getString("TABLE_SCHEM"));
@@ -728,9 +720,13 @@ public class DatabaseStructureManager {
     }
 
     /**
+     * @param conn1 Connection
+     * @param schemaPattern String
+     * @param tablePattern String
+     * @param dbFamily db family
      * @return ArrayList
      */
-    public static List<DbFieldType> getFieldsList(DatabaseAdapter adapter, Connection conn1, String schemaPattern, String tablePattern) {
+    public static List<DbFieldType> getFieldsList(Connection conn1, String schemaPattern, String tablePattern, int dbFamily) {
         List<DbFieldType> v = new ArrayList<DbFieldType>();
         DatabaseMetaData db = null;
         ResultSet metaField = null;
@@ -747,7 +743,17 @@ public class DatabaseStructureManager {
                 field.setDecimalDigit(RsetTools.getInt(metaField, "DECIMAL_DIGITS"));
                 field.setNullable(RsetTools.getInt(metaField, "NULLABLE"));
                 String defValue = metaField.getString("COLUMN_DEF");
+
                 field.setDefaultValue(defValue == null ? null : defValue.trim());
+
+                if (field.getDefaultValue()!=null) {
+                    // fix issue with null value for concrete of BD
+                    if (dbFamily==DatabaseManager.MYSQL_FAMALY) {
+                        if (field.getJavaType()==Types.TIMESTAMP && field.getDefaultValue().equals("0000-00-00 00:00:00")) {
+                            field.setDefaultValue(null);
+                        }
+                    }
+                }
 
                 if (field.getDataType().equalsIgnoreCase("BLOB")) {
                     field.setJavaType(Types.BLOB);
@@ -758,7 +764,7 @@ public class DatabaseStructureManager {
                     field.setJavaStringType("java.sql.Types.CLOB");
                 }
                 else {
-                    switch (field.getJavaType().intValue()) {
+                    switch (field.getJavaType()) {
 
                         case Types.DECIMAL:
                             field.setJavaStringType("java.sql.Types.DECIMAL");
@@ -800,7 +806,7 @@ public class DatabaseStructureManager {
 
                         case Types.TIMESTAMP:
                             field.setJavaStringType("java.sql.Types.TIMESTAMP");
-//                        System.out.println( "table - "+tablePattern+" field - "+field.getName()+" javaType - " + field.getJavaStringType() );
+                            
                             break;
 
                         default:
@@ -821,9 +827,6 @@ public class DatabaseStructureManager {
                         log.debug("Table " + tablePattern + " field - " + field.getName() + " with unknown nullable status");
 
                 }
-
-//                field.setDefaultValue(metaField.getString("COLUMN_DEF"));
-
                 v.add(field);
             }
         }
@@ -854,7 +857,7 @@ public class DatabaseStructureManager {
      * @return ArrayList
      */
     public static ArrayList getImportedKeys(Connection connection, String schemaName, String tableName) {
-        ArrayList v = new ArrayList();
+        ArrayList<DbImportedPKColumnType> v = new ArrayList<DbImportedPKColumnType>();
         try {
             DatabaseMetaData db = connection.getMetaData();
             ResultSet columnNames = null;
@@ -977,7 +980,7 @@ public class DatabaseStructureManager {
     public static DbPrimaryKeyType getPrimaryKey(Connection connection, String schemaPattern, String tablePattern) {
 
         DbPrimaryKeyType pk = new DbPrimaryKeyType();
-        ArrayList v = new ArrayList();
+        ArrayList<DbPrimaryKeyColumnType> v = new ArrayList<DbPrimaryKeyColumnType>();
 
         if (log.isDebugEnabled())
             log.debug("Get data from getPrimaryKeys");
@@ -1025,18 +1028,17 @@ public class DatabaseStructureManager {
             if (v.size() > 1) {
                 log.debug("Table with multicolumn PK.");
 
-                for (int i = 0; i < v.size(); i++) {
-                    DbPrimaryKeyColumnType pkColumn = (DbPrimaryKeyColumnType) v.get(i);
+                for (DbPrimaryKeyColumnType pkColumn : v) {
                     log.debug(
-                        pkColumn.getCatalogName() + "." +
-                            pkColumn.getSchemaName() + "." +
-                            pkColumn.getTableName() +
-                            " - " +
-                            pkColumn.getColumnName() +
-                            " " +
-                            pkColumn.getKeySeq() + " " +
-                            pkColumn.getPkName() + " " +
-                            ""
+                            pkColumn.getCatalogName() + "." +
+                                    pkColumn.getSchemaName() + "." +
+                                    pkColumn.getTableName() +
+                                    " - " +
+                                    pkColumn.getColumnName() +
+                                    " " +
+                                    pkColumn.getKeySeq() + " " +
+                                    pkColumn.getPkName() + " " +
+                                    ""
                     );
                 }
             }
@@ -1052,13 +1054,12 @@ public class DatabaseStructureManager {
      * можно получить типа dc.username.toUpperCase()
      * tablePattern == "%" обозначает что выбрать все таблицы
      *
-     * @param adapter
      * @param conn
      * @param dc1
      * @return java.lang.Vector of DbTableType
      */
-    public static ArrayList getTableList(DatabaseAdapter adapter, Connection conn, DatabaseConnectionType dc1) {
-        return getTableList(adapter, conn, dc1.getUsername().toUpperCase(), "%");
+    public static ArrayList getTableList(Connection conn, DatabaseConnectionType dc1) {
+        return getTableList(conn, dc1.getUsername().toUpperCase(), "%");
     }
 
     public static void setDefaultValueTimestamp(DatabaseAdapter adapter, DbTableType originTable, DbFieldType originField)
