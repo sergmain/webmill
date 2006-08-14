@@ -22,38 +22,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.template;
 
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
-import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
+import org.riverock.webmill.portal.template.bean.types.PortalTemplateItemTypeImpl;
+import org.riverock.webmill.portal.PageElement;
 
 import org.apache.log4j.Logger;
 
 /**
  * User: SergeMaslyukov
  * Date: 25.11.2004
- * Time: 1:48:01
+ * Time: 1:47:43
  * $Id$
  */
-public final class TemplateItemAsCustom extends TemplateItemBaseClass {
-    private final static Logger log = Logger.getLogger(TemplateItemAsCustom.class);
+public final class TemplateItemAsDynamic extends TemplateItemBaseClass{
+    private final static Logger log = Logger.getLogger( TemplateItemAsDynamic.class );
 
     void getData( PageElement pageElement ) {
-        if ( log.isDebugEnabled() )
-            log.debug( "Template item  type - "+pageElement.getPortalTemplateItem().getType()+"  value "+pageElement.getPortalTemplateItem().getValue() );
-
-        pageElement.setData(
-            PortalRequestProcessor.setData(
-                new StringBuilder("<").append( pageElement.getPortalTemplateItem().getValue() ).append( "/>" ).toString().getBytes(),
-                false, true
-            )
-        );
+        if ( log.isDebugEnabled() ) {
+            log.debug( "renderPortlet()");
+        }
+        pageElement.renderPortlet();
     }
 
-    void processAction( PageElement item ) {
+    void processAction( PageElement pageElement ) {
+        pageElement.processActionPortlet();
     }
 
     PortalTemplateItemType getType() {
-        return PortalTemplateItemTypeImpl.CUSTOM;
+        return PortalTemplateItemTypeImpl.DYNAMIC;
     }
 }

@@ -44,7 +44,7 @@ import org.riverock.webmill.container.impl.PortletConfigImpl;
 import org.riverock.webmill.container.impl.PortletContextImpl;
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
-import org.riverock.webmill.container.portlet.bean.PortletPreferencesImpl;
+import org.riverock.webmill.container.portlet.bean.Preferences;
 import org.riverock.webmill.container.resource.PortletResourceBundle;
 import org.riverock.webmill.container.tools.PortletService;
 
@@ -231,8 +231,8 @@ public final class PortletContainer implements Serializable {
                     portletDefinition.setApplicationName(
                         PortletService.isEmpty( portletApp.getId() )?"":portletApp.getId() 
                     );
-                    if (portletDefinition.getPortletPreferences()==null) {
-                        portletDefinition.setPortletPreferences( new PortletPreferencesImpl() );
+                    if (portletDefinition.getPreferences()==null) {
+                        portletDefinition.setPreferences( new Preferences() );
                     }
 
                     System.out.println("Add new portlet: " + portletDefinition.getFullPortletName());
@@ -353,7 +353,7 @@ public final class PortletContainer implements Serializable {
             Constructor constructor;
             try {
                 final Class<?> aClass = classLoader.loadClass( portletDefinition.getPortletClass());
-                constructor = aClass.getConstructor(new Class[]{});
+                constructor = aClass.getConstructor();
             }
             catch (ClassNotFoundException e) {
                 throw e;

@@ -37,15 +37,13 @@ import org.xml.sax.SAXException;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.exception.GenericException;
 import org.riverock.generic.main.CacheFactory;
+import org.riverock.interfaces.portal.bean.Template;
 import org.riverock.interfaces.portal.template.PortalTemplate;
 import org.riverock.interfaces.portal.template.PortalTemplateManager;
-import org.riverock.interfaces.portal.bean.Template;
-import org.riverock.webmill.container.portal.bean.PortalTemplateImpl;
-import org.riverock.webmill.container.portal.bean.PortalTemplateItemImpl;
-import org.riverock.webmill.container.portal.bean.PortalTemplateParameterImpl;
-import org.riverock.webmill.container.schema.site.SiteTemplateDescListType;
-import org.riverock.webmill.container.schema.site.SiteTemplateDescriptionType;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.template.bean.PortalTemplateImpl;
+import org.riverock.webmill.portal.template.bean.PortalTemplateItemImpl;
+import org.riverock.webmill.portal.template.bean.PortalTemplateParameterImpl;
 
 /**
  * $Id$
@@ -79,8 +77,6 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
 
     public Map<String, PortalTemplate> hash = new HashMap<String, PortalTemplate>(10);
     public Map<Long, PortalTemplate> hashId = new HashMap<Long, PortalTemplate>(10);
-
-    public SiteTemplateDescListType templateList = new SiteTemplateDescListType();
 
     public void reinit(){
         cache.reinit();
@@ -142,13 +138,6 @@ public final class PortalTemplateManagerImpl implements PortalTemplateManager {
                     String lang = StringTools.getLocale(template.getTemplateLanguage()).toString();
                     hash.put(st.getTemplateName() + '_' + lang, st);
                     hashId.put(template.getTemplateId(), st);
-
-                    SiteTemplateDescriptionType desc = new SiteTemplateDescriptionType();
-                    desc.setIdTemplate(template.getTemplateId());
-                    desc.setIdTemplateLanguage(template.getSiteLanguageId());
-                    desc.setNameLanguage(lang);
-                    desc.setTemplate(st);
-                    templateList.addTemplateDescription(desc);
                 }
             }
             catch (Exception e) {

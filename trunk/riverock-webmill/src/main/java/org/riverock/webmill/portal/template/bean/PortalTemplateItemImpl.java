@@ -1,9 +1,10 @@
 /*
- * org.riverock.webmill.container -- Webmill portlet container implementation
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,15 +21,14 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
-package org.riverock.webmill.container.portal.bean;
+package org.riverock.webmill.portal.template.bean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
 import org.riverock.webmill.container.portlet.PortletContainer;
+import org.riverock.webmill.portal.template.bean.types.PortalTemplateItemTypeImpl;
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.interfaces.portal.template.PortalTemplateItem;

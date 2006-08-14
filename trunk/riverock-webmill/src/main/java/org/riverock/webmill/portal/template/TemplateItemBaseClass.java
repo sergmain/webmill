@@ -22,9 +22,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.template;
 
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
+import org.riverock.webmill.portal.PageElement;
 
 /**
  * User: SergeMaslyukov
@@ -32,15 +33,15 @@ import org.riverock.interfaces.portal.template.PortalTemplateItemType;
  * Time: 1:52:37
  * $Id$
  */
-abstract class TemplateItemBaseClass {
+public abstract class TemplateItemBaseClass {
 
     abstract void getData( PageElement pageElement );
     abstract void processAction( PageElement item );
     abstract PortalTemplateItemType getType();
 
-    static void renderTemplateItem( PageElement pageElement ) {
+    public static void renderTemplateItem( PageElement pageElement ) {
 
-        TemplateItemBaseClass templateItem = null;
+        TemplateItemBaseClass templateItem;
         switch (pageElement.getPortalTemplateItem().getTypeObject().getType()) {
             case PortalTemplateItemType.PORTLET_TYPE:
                 templateItem = new TemplateItemAsPortlet();
@@ -60,9 +61,9 @@ abstract class TemplateItemBaseClass {
         templateItem.getData( pageElement );
     }
 
-    static void processActionTemplateItem( PageElement pageElement ) {
+    public static void processActionTemplateItem( PageElement pageElement ) {
 
-        TemplateItemBaseClass templateItem = null;
+        TemplateItemBaseClass templateItem;
         switch (pageElement.getPortalTemplateItem().getTypeObject().getType()) {
             case PortalTemplateItemType.PORTLET_TYPE:
                 templateItem = new TemplateItemAsPortlet();

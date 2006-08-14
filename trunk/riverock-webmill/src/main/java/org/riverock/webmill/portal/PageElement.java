@@ -131,7 +131,7 @@ public final class PageElement {
         }
     }
 
-    void processActionPortlet() {
+    public void processActionPortlet() {
         initAction();
 
         if (exception!=null || errorString!=null) {
@@ -166,7 +166,7 @@ public final class PageElement {
         }
     }
 
-    void renderPortlet() {
+    public void renderPortlet() {
         initRender();
 
         if (exception!=null || errorString!=null) {
