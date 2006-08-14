@@ -1,9 +1,10 @@
 /*
- * org.riverock.webmill.container -- Webmill portlet container implementation
+ * org.riverock.webmill - Webmill portal with support jsr-168, xml/xslt and others things.
+ * For more information, please visit project site http://webmill.riverock.org
  *
- * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ * Copyright (C) 2000-2006, Riverock Software, All Rights Reserved.
  *
- * Riverock -- The Open-source Java Development Community
+ * Riverock - The Open-source Java Development Community
  * http://www.riverock.org
  *
  *
@@ -20,9 +21,8 @@
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- *
  */
-package org.riverock.webmill.container.portlet.bean;
+package org.riverock.webmill.portal.preference;
 
 import java.util.*;
 import java.io.Serializable;
@@ -31,6 +31,8 @@ import java.io.IOException;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ValidatorException;
 import javax.portlet.PortletPreferences;
+
+import org.riverock.webmill.container.portlet.bean.Preference;
 
 /**
  * @author Serge Maslyukov
@@ -42,163 +44,11 @@ import javax.portlet.PortletPreferences;
 public class PortletPreferencesImpl implements PortletPreferences, Serializable {
     private static final long serialVersionUID = 30434672384237160L;
 
+    private Map<String, String> portletMetadata = null;
 
-    /**
-     * Field _id
-     */
-    private java.lang.String _id;
+    private PortletPreferencePersistencer persistencer = null;
 
-    /**
-     * Field _preferenceList
-     */
-    private List<Preference> _preferenceList;
-
-    private Map<String, String[]> userPreferences = new HashMap<String, String[]>();
-
-    /**
-     * Field _preferencesValidator
-     */
-    private java.lang.String _preferencesValidator;
-
-
-    public PortletPreferencesImpl() {
-        super();
-        _preferenceList = new ArrayList<Preference>();
-    }
-
-
-    /**
-     * Method addPreference
-     *
-     * @param vPreference
-     */
-    public void addPreference(Preference vPreference) {
-        _preferenceList.add(vPreference);
-    }
-
-    /**
-     * Method addPreference
-     *
-     * @param index
-     * @param vPreference
-     */
-    public void addPreference(int index, Preference vPreference) {
-        _preferenceList.add(index, vPreference);
-    }
-
-    /**
-     * Method clearPreference
-     */
-    public void clearPreference() {
-        _preferenceList.clear();
-    }
-
-    /**
-     * Returns the value of field 'id'.
-     *
-     * @return the value of field 'id'.
-     */
-    public java.lang.String getId() {
-        return this._id;
-    }
-
-    /**
-     * Method getPreference
-     *
-     * @param index
-     */
-    public Preference getPreference(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _preferenceList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return (Preference) _preferenceList.get(index);
-    }
-
-    /**
-     * Method getPreference
-     */
-    public Preference[] getPreference() {
-        int size = _preferenceList.size();
-        Preference[] mArray = new Preference[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (Preference) _preferenceList.get(index);
-        }
-        return mArray;
-    }
-
-    /**
-     * Method getPreferenceCount
-     */
-    public int getPreferenceCount() {
-        return _preferenceList.size();
-    }
-
-    /**
-     * Returns the value of field 'preferencesValidator'.
-     *
-     * @return the value of field 'preferencesValidator'.
-     */
-    public java.lang.String getPreferencesValidator() {
-        return this._preferencesValidator;
-    }
-
-    /**
-     * Method removePreference
-     *
-     * @param vPreference
-     */
-    public boolean removePreference(Preference vPreference) {
-        boolean removed = _preferenceList.remove(vPreference);
-        return removed;
-    }
-
-    /**
-     * Sets the value of field 'id'.
-     *
-     * @param id the value of field 'id'.
-     */
-    public void setId(java.lang.String id) {
-        this._id = id;
-    }
-
-    /**
-     * Method setPreference
-     *
-     * @param index
-     * @param vPreference
-     */
-    public void setPreference(int index, Preference vPreference) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _preferenceList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        _preferenceList.set(index, vPreference);
-    }
-
-    /**
-     * Method setPreference
-     *
-     * @param preferenceArray
-     */
-    public void setPreference(Preference[] preferenceArray) {
-        //-- copy array
-        _preferenceList.clear();
-        for (final Preference newVar : preferenceArray) {
-            _preferenceList.add(newVar);
-        }
-    }
-
-    /**
-     * Sets the value of field 'preferencesValidator'.
-     *
-     * @param preferencesValidator the value of field
-     *                             'preferencesValidator'.
-     */
-    public void setPreferencesValidator(java.lang.String preferencesValidator) {
-        this._preferencesValidator = preferencesValidator;
-    }
+    private List<Preference> preferences;
 
     public boolean isReadOnly(String key) {
         if (key==null) {

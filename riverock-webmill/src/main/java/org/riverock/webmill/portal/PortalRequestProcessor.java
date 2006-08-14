@@ -46,6 +46,7 @@ import org.riverock.interfaces.portal.template.PortalTemplateItem;
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
 import org.riverock.webmill.container.bean.SitePortletData;
 import org.riverock.webmill.container.tools.PortletService;
+import org.riverock.webmill.portal.template.TemplateItemBaseClass;
 
 /**
  * User: SergeMaslyukov
@@ -255,8 +256,8 @@ public final class PortalRequestProcessor {
             if (pageElement!=null && pageElement.getPortalTemplateItem()!=null && pageElement.getPortalTemplateItem().getParameters()!=null) {
                 String isXmlString = PortletService.getString(pageElement.getPortalTemplateItem().getParameters(), "is-xml", "false");
                 isXml = Boolean.parseBoolean( isXmlString );
-            } 
-            boolean isElementXml = Boolean.TRUE.equals(item.getIsXml()) || isXml; 
+            }
+            boolean isElementXml = Boolean.TRUE.equals(item.getIsXml()) || isXml;
 
             if ( Boolean.TRUE.equals(item.getIsError()) || !isElementXml ) {
 
@@ -313,8 +314,8 @@ public final class PortalRequestProcessor {
                         String isXmlString = PortletService.getString(pageElementNext.getPortalTemplateItem().getParameters(), "is-xml", "false");
                         isNextXml = Boolean.parseBoolean( isXmlString );
                     }
-                    isNextElementXml = pageElementNext.getIsXml() || isNextXml; 
-                } 
+                    isNextElementXml = pageElementNext.getIsXml() || isNextXml;
+                }
 
                 // if next portlet not xml's portlet, then transform current part and continue
                 if ( pageElementNext==null || !isNextElementXml ) {
@@ -393,7 +394,7 @@ public final class PortalRequestProcessor {
         return setData(data.getBytes(), isError, isXml);
     }
 
-    static SitePortletData setData(byte[] bytes, boolean isError, boolean isXml) {
+    public static SitePortletData setData(byte[] bytes, boolean isError, boolean isXml) {
         SitePortletData data = new SitePortletData();
 
         data.setData( bytes );

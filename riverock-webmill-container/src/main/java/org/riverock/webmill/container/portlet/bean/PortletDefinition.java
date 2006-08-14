@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
-import javax.portlet.PortletPreferences;
-
 import org.riverock.webmill.container.portlet.PortletContainer;
 
 /**
@@ -92,7 +90,7 @@ public class PortletDefinition implements Serializable {
     /**
      * Field portletPreferences
      */
-    private PortletPreferences portletPreferences;
+    private Preferences preferences;
 
     /**
      * Field securityRoleRefList
@@ -133,6 +131,14 @@ public class PortletDefinition implements Serializable {
             securityRoleRefList.clear();
         }
         applicationName = null;
+    }
+
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Preferences preferences) {
+        this.preferences = preferences;
     }
 
     public String getResourceBundle() {
@@ -296,7 +302,7 @@ public class PortletDefinition implements Serializable {
             throw new IndexOutOfBoundsException();
         }
 
-        return (Description) descriptionList.get(index);
+        return descriptionList.get(index);
     }
 
     /**
@@ -306,7 +312,7 @@ public class PortletDefinition implements Serializable {
         int size = descriptionList.size();
         Description[] mArray = new Description[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (Description) descriptionList.get(index);
+            mArray[index] = descriptionList.get(index);
         }
         return mArray;
     }
@@ -329,7 +335,7 @@ public class PortletDefinition implements Serializable {
             throw new IndexOutOfBoundsException();
         }
 
-        return (DisplayName) displayNameList.get(index);
+        return displayNameList.get(index);
     }
 
     /**
@@ -339,7 +345,7 @@ public class PortletDefinition implements Serializable {
         int size = displayNameList.size();
         DisplayName[] mArray = new DisplayName[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (DisplayName) displayNameList.get(index);
+            mArray[index] = displayNameList.get(index);
         }
         return mArray;
     }
@@ -375,7 +381,7 @@ public class PortletDefinition implements Serializable {
             throw new IndexOutOfBoundsException();
         }
 
-        return (InitParam) initParamList.get(index);
+        return initParamList.get(index);
     }
 
     /**
@@ -385,7 +391,7 @@ public class PortletDefinition implements Serializable {
         int size = initParamList.size();
         InitParam[] mArray = new InitParam[size];
         for (int index = 0; index < size; index++) {
-            mArray[index] = (InitParam) initParamList.get(index);
+            mArray[index] = initParamList.get(index);
         }
         return mArray;
     }
@@ -425,73 +431,12 @@ public class PortletDefinition implements Serializable {
         return this.portletName;
     }
 
-    /**
-     * Returns the value of field 'portletPreferences'.
-     *
-     * @return the value of field 'portletPreferences'.
-     */
-    public PortletPreferences getPortletPreferences() {
-        return this.portletPreferences;
-    }
-
-    /**
-     * Method getSecurityRoleRef
-     *
-     * @param index
-     */
-//    public SecurityRoleRef getSecurityRoleRef(int index) {
-//        //-- check bounds for index
-//        if ((index < 0) || (index > securityRoleRefList.size())) {
-//            throw new IndexOutOfBoundsException();
-//        }
-//
-//        return (SecurityRoleRef) securityRoleRefList.get(index);
-//    }
-
-    /**
-     * Method getSecurityRoleRef
-     */
-//    public SecurityRoleRef[] getSecurityRoleRef() {
-//        int size = securityRoleRefList.size();
-//        SecurityRoleRef[] mArray = new SecurityRoleRef[size];
-//        for (int index = 0; index < size; index++) {
-//            mArray[index] = (SecurityRoleRef) securityRoleRefList.get(index);
-//        }
-//        return mArray;
-//    }
-
     public List<SecurityRoleRef> getSecurityRoleRefList() {
         if (securityRoleRefList==null)
             return new ArrayList<SecurityRoleRef>();
 
         return securityRoleRefList;
     }
-
-    /**
-     * Method getSupportedLocale
-     *
-     * @param index
-     */
-//    public String getSupportedLocale(int index) {
-//        //-- check bounds for index
-//        if ((index < 0) || (index > supportedLocaleList.size())) {
-//            throw new IndexOutOfBoundsException();
-//        }
-//
-//        return supportedLocaleList.get(index);
-//    }
-
-    /**
-     * Method getSupportedLocale
-     */
-//    public String[] getSupportedLocale() {
-//        int size = supportedLocaleList.size();
-//        String[] mArray = new String[size];
-//        for (int index = 0; index < size; index++) {
-//            mArray[index] = supportedLocaleList.get(index);
-//        }
-//        return mArray;
-//    }
 
     /**
      * Method getSupportedLocaleCount
@@ -503,48 +448,12 @@ public class PortletDefinition implements Serializable {
         return supportedLocaleList;
     }
 
-    /**
-     * Method getSupports
-     *
-     * @param index
-     */
-/*
-    public Supports getSupports(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > supportsList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return (Supports) supportsList.get(index);
-    }
-*/
-
-    /**
-     * Method getSupports
-     */
-/*
-    public Supports[] getSupports() {
-        int size = supportsList.size();
-        Supports[] mArray = new Supports[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = (Supports) supportsList.get(index);
-        }
-        return mArray;
-    }
-*/
     public List<Supports> getSupports() {
         if (supportsList ==null)
             return new ArrayList<Supports>();
 
         return supportsList;
     }
-
-    /**
-     * Method getSupportsCount
-     */
-//    public int getSupportsCount() {
-//        return supportsList.size();
-//    }
 
     /**
      * Method removeDescription
@@ -723,16 +632,6 @@ public class PortletDefinition implements Serializable {
     public void setPortletName(String portletName) {
         this.portletName = portletName;
         initFullPortletName();
-    }
-
-    /**
-     * Sets the value of field 'portletPreferences'.
-     *
-     * @param portletPreferences the value of field
-     *                           'portletPreferences'.
-     */
-    public void setPortletPreferences(PortletPreferences portletPreferences) {
-        this.portletPreferences = portletPreferences;
     }
 
     /**

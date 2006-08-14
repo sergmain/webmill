@@ -533,25 +533,24 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
 
     public Enumeration getParameterNames() {
         if ( parameters == null && renderParameters==null && includedParameters==null) {
-            // Todo may be exists better solution?
-            return new Hashtable().elements();
+            return new Hashtable(0).elements();
         }
 
-        List<String> set = new ArrayList<String>();
+        List<String> list = new ArrayList<String>();
         if (parameters!=null) {
-            set.addAll( parameters.keySet() );
+            list.addAll( parameters.keySet() );
         }
 
         if (renderParameters!=null) {
-            set.addAll( renderParameters.keySet() );
+            list.addAll( renderParameters.keySet() );
         }
 
         if (includedParameters!=null) {
-            set.addAll( includedParameters.keySet() );
+            list.addAll( includedParameters.keySet() );
         }
 
 //        dumpMap(renderParameters, "getParameterNames(), renderParameters");
-        return Collections.enumeration( set );
+        return Collections.enumeration( Collections.unmodifiableList(list) );
     }
 
     public String[] getParameterValues( String key ) {

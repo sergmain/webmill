@@ -19,7 +19,7 @@ http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
 		<!-- starting url for reading rss  -->
 		<init-param>
 			<name>url</name>
-			<value>http://jboss.org/jbossBlog/blog/?flavor=rss2</value>value>
+			<value>http://jboss.org/jbossBlog/blog/?flavor=rss2</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -37,12 +37,12 @@ http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
 		<portlet-preferences>
 			<preference>
 				<name>RssXml</name>
-				<value>http://jboss.org/jbossBlog/blog/?flavor=rss2</value>value>
+				<value>http://jboss.org/jbossBlog/blog/?flavor=rss2</value>
 				<value>http://www.theserverside.com/rss/theserverside-rss2.xml</value>
 				<value>http://www.theserverside.com/rss/theserverside-generalj2ee-rss2.xml</value>	
 				<value>http://slashdot.org/rss/index.rss</value>
-				<value>http://rss.news.yahoo.com/rss/tech</value>value>
-        <modifiable>0</modifiable>
+				<value>http://rss.news.yahoo.com/rss/tech</value>
+                <read-only>false</read-only>
 			</preference>
 		</portlet-preferences>
 	</portlet>

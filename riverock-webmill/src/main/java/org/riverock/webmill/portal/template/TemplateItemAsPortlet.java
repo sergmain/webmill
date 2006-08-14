@@ -22,26 +22,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  */
-package org.riverock.webmill.portal;
+package org.riverock.webmill.portal.template;
 
 import org.riverock.interfaces.portal.template.PortalTemplateItemType;
-import org.riverock.webmill.container.portal.bean.types.PortalTemplateItemTypeImpl;
-
-import org.apache.log4j.Logger;
+import org.riverock.webmill.portal.template.bean.types.PortalTemplateItemTypeImpl;
+import org.riverock.webmill.portal.PageElement;
 
 /**
  * User: SergeMaslyukov
  * Date: 25.11.2004
- * Time: 1:47:43
+ * Time: 1:47:25
  * $Id$
  */
-public final class TemplateItemAsDynamic extends TemplateItemBaseClass{
-    private final static Logger log = Logger.getLogger( TemplateItemAsDynamic.class );
+public final class TemplateItemAsPortlet extends TemplateItemBaseClass {
 
     void getData( PageElement pageElement ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug( "renderPortlet()");
-        }
         pageElement.renderPortlet();
     }
 
@@ -50,6 +45,6 @@ public final class TemplateItemAsDynamic extends TemplateItemBaseClass{
     }
 
     PortalTemplateItemType getType() {
-        return PortalTemplateItemTypeImpl.DYNAMIC;
+        return PortalTemplateItemTypeImpl.PORTLET;
     }
 }
