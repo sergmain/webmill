@@ -44,7 +44,12 @@ import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
+import org.riverock.webmill.portal.preference.PortletPreferencePersistencerImpl;
+import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
+import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
 import org.riverock.webmill.utils.PortletUtils;
+
+import javax.portlet.PortletPreferences;
 
 /**
  * User: SergeMaslyukov
@@ -274,7 +279,7 @@ public final class PageElement {
                 portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
                 contextPath,
-                portletEntry.getPortletDefinition().getPortletPreferences(),
+                portletEntry.getPortletDefinition().getPreferences(),
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext(),
                 portletEntry.getPortletConfig().getPortletContext(),
@@ -327,13 +332,16 @@ public final class PageElement {
                 }
             }
 
-            renderRequest = new RenderRequestImpl(
+            PortletPreferencePersistencer persistencer = new PortletPreferencePersistencerImpl(portletEntry.);
+            PortletPreferences portletPreferences = new PortletPreferencesImpl(portletMetadata, persistencer, portletEntry.getPortletDefinition().getPreferences());
+
+                    renderRequest = new RenderRequestImpl(
                 renderRequestParamMap,
                 portalRequestInstance,
                 renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
                 contextPath,
-                portletEntry.getPortletDefinition().getPortletPreferences(),
+                ,
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext(),
                 portletEntry.getPortletConfig().getPortletContext(),

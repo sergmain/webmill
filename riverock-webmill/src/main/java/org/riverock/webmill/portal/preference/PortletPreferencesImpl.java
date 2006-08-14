@@ -33,6 +33,7 @@ import javax.portlet.ValidatorException;
 import javax.portlet.PortletPreferences;
 
 import org.riverock.webmill.container.portlet.bean.Preference;
+import org.riverock.webmill.container.portlet.bean.Preferences;
 
 /**
  * @author Serge Maslyukov
@@ -48,22 +49,28 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
 
     private PortletPreferencePersistencer persistencer = null;
 
-    private List<Preference> preferences;
+    private Preferences preferences;
+
+    public PortletPreferencesImpl(Map<String, String> portletMetadata, PortletPreferencePersistencer persistencer, Preferences preferences) {
+        this.portletMetadata = portletMetadata;
+        this.persistencer = persistencer;
+        this.preferences = preferences;
+    }
 
     public boolean isReadOnly(String key) {
         if (key==null) {
            throw new IllegalArgumentException("Can't get value of preference. Key is null");
         }
 
-        Iterator<Preference> iterator = _preferenceList.iterator();
-        while (iterator.hasNext()) {
-            Preference preference = iterator.next();
-            if ( preference.getName().equals(key) ) {
-                if ( preference.getReadOnly()!=null && Boolean.TRUE.equals(preference.getReadOnly()) ) {
-                    return true;
-                }
-                else {
-                    return false;
+        if (preferences!=null) {
+            for (Preference preference : preferences.getPreferenceList()) {
+                if ( preference.getName().equals(key) ) {
+                    if ( preference.getReadOnly()!=null && Boolean.TRUE.equals(preference.getReadOnly()) ) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
                 }
             }
         }
@@ -84,10 +91,8 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
                 return def;
             }
         }
-        if (_preferenceList!=null && !_preferenceList.isEmpty() ) {
-            Iterator<Preference> iterator = _preferenceList.iterator();
-            while (iterator.hasNext()) {
-                Preference preference = iterator.next();
+        if (preferences!=null) {
+            for (Preference preference : preferences.getPreferenceList()) {
                 if (preference.getName().equals( key )) {
                     Collection<String> coll = preference.getValueAsRef();
                     if (coll.size()>0) {
@@ -111,10 +116,8 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
         if (values!=null) {
             return values;
         }
-        if (_preferenceList!=null && !_preferenceList.isEmpty() ) {
-            Iterator<Preference> iterator = _preferenceList.iterator();
-            while (iterator.hasNext()) {
-                Preference preference = iterator.next();
+        if (preferences!=null) {
+            for (Preference preference : preferences.getPreferenceList()) {
                 if (preference.getName().equals( key )) {
                     Collection<String> coll = preference.getValueAsRef();
                     values = new String[coll.size()];
@@ -145,10 +148,8 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
 
     public Enumeration getNames() {
         Set<String> set = new HashSet<String>();
-        if (_preferenceList!=null && !_preferenceList.isEmpty() ) {
-            Iterator<Preference> iterator = _preferenceList.iterator();
-            while (iterator.hasNext()) {
-                Preference preference = iterator.next();
+        if (preferences!=null && !preferences.getPreferenceList().isEmpty() ) {
+            for (Preference preference : preferences.getPreferenceList()) {
                 set.add( preference.getName() );
             }
         }
@@ -165,14 +166,12 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
             Map.Entry<String, String[]> entry = mapIterator.next();
 
             String[] values = new String[entry.getValue().length];
-            System.arraycopy( entry.getValue(), 0, values, 0, entry.getValue().length);;
+            System.arraycopy( entry.getValue(), 0, values, 0, entry.getValue().length);
             maps.put( entry.getKey(), values );
         }
 
-        if (_preferenceList!=null && !_preferenceList.isEmpty() ) {
-            Iterator<Preference> iterator = _preferenceList.iterator();
-            while (iterator.hasNext()) {
-                Preference preference = iterator.next();
+        if (preferences!=null) {
+            for (Preference preference : preferences.getPreferenceList()) {
                 if (!maps.containsKey( preference.getName() )) {
                     Collection<String> coll = preference.getValueAsRef();
 
