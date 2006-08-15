@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.portlet.PortletPreferences;
+import javax.portlet.PortletMode;
+
 import org.apache.log4j.Logger;
 
 import org.riverock.common.tools.MainTools;
@@ -44,12 +47,9 @@ import org.riverock.webmill.portal.impl.ActionResponseImpl;
 import org.riverock.webmill.portal.impl.RenderRequestImpl;
 import org.riverock.webmill.portal.impl.RenderResponseImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
-import org.riverock.webmill.portal.preference.PortletPreferencePersistencerImpl;
 import org.riverock.webmill.portal.preference.PortletPreferencePersistencer;
 import org.riverock.webmill.portal.preference.PortletPreferencesImpl;
 import org.riverock.webmill.utils.PortletUtils;
-
-import javax.portlet.PortletPreferences;
 
 /**
  * User: SergeMaslyukov
@@ -82,8 +82,10 @@ public final class PageElement {
     private String fullPortletName=null;
     private Map<String, List<String>> renderRequestParamMap = new HashMap<String, List<String>>();
     private String contextPath=null;
-    private Map<String, String> portletMetadata=null;
     private PortalRequestInstance portalRequestInstance=null;
+    private PortletPreferences portletPreferences=null;
+    private PortletPreferencePersistencer persistencer=null;
+    private Map<String, List<String>> portletMetadata=null;
 
     /**
      * renderParameter used for set parameters in action
@@ -98,7 +100,6 @@ public final class PageElement {
         this.namespace = namespace;
         this.portalTemplateItem = portalTemplateItem;
         this.parameters = portletParameters;
-
     }
 
     public void destroy() {
@@ -274,18 +275,25 @@ public final class PageElement {
                 actionRequestParamMap.putAll(parameters.getParameters());
             }
 
+            this.portletPreferences = new PortletPreferencesImpl(
+                new HashMap<String, List<String>>(portletMetadata),
+                persistencer,
+                portletEntry.getPortletDefinition().getPreferences(),
+                isStandardPortletMode(parameters.getRequestState().getPortletMode()),
+                false
+            );
+
             actionRequest = new ActionRequestImpl(
                 actionRequestParamMap,
                 portalRequestInstance,
                 portletEntry.getServletConfig().getServletContext(),
                 contextPath,
-                portletEntry.getPortletDefinition().getPreferences(),
+                portletPreferences,
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext(),
                 portletEntry.getPortletConfig().getPortletContext(),
                 portletEntry.getPortletDefinition(),
-                namespace,
-                portletMetadata
+                namespace
             );
             actionRequest.setAttribute(
                 ContainerConstants.PORTAL_PORTAL_SESSION_MANAGER,
@@ -332,26 +340,41 @@ public final class PageElement {
                 }
             }
 
-            PortletPreferencePersistencer persistencer = new PortletPreferencePersistencerImpl(portletEntry.);
-            PortletPreferences portletPreferences = new PortletPreferencesImpl(portletMetadata, persistencer, portletEntry.getPortletDefinition().getPreferences());
+            this.portletPreferences = new PortletPreferencesImpl(
+                new HashMap<String, List<String>>(portletMetadata),
+                persistencer,
+                portletEntry.getPortletDefinition().getPreferences(),
+                isStandardPortletMode(parameters.getRequestState().getPortletMode()),
+                true
+            );
 
-                    renderRequest = new RenderRequestImpl(
+            if (log.isDebugEnabled()) {
+                log.debug("    portalRequestInstance: "+portalRequestInstance);
+                log.debug("    portletEntry: "+portletEntry);
+                log.debug("    parameters: "+parameters);
+                log.debug("    renderRequestParamMap: "+renderRequestParamMap);
+                log.debug("    namespace: "+namespace);
+                if (portletEntry!=null) {
+                    log.debug("    portletEntry.getServletConfig(): "+portletEntry.getServletConfig());
+                    log.debug("    portletEntry.getPortletConfig(): "+portletEntry.getPortletConfig());
+                    log.debug("    portletEntry.getPortletDefinition(): "+portletEntry.getPortletDefinition());
+                }
+            }
+
+            renderRequest = new RenderRequestImpl(
                 renderRequestParamMap,
                 portalRequestInstance,
                 renderParameters,
                 portletEntry.getServletConfig().getServletContext(),
                 contextPath,
-                ,
+                portletPreferences,
                 portletEntry.getPortletProperties(),
                 portalRequestInstance.getPortalContext(),
                 portletEntry.getPortletConfig().getPortletContext(),
                 portletEntry.getPortletDefinition(),
-                namespace,
-                portletMetadata
+                namespace
             );
 
-            // portlet metadata
-            renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_METADATA_ATTRIBUTE, portletMetadata);
             // set portlet specific attribute
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_CODE_ATTRIBUTE, portalTemplateItem.getCode());
             renderRequest.setAttribute(ContainerConstants.PORTAL_PORTLET_XML_ROOT_ATTRIBUTE, portalTemplateItem.getXmlRoot());
@@ -365,19 +388,6 @@ public final class PageElement {
             // Todo after rewrite(delete) member portlet, you can delete next line
             renderRequest.setAttribute(ContainerConstants.PORTAL_RESOURCE_BUNDLE_ATTRIBUTE, portletEntry.getPortletConfig().getResourceBundle(renderRequest.getLocale()) );
 
-            if (log.isDebugEnabled()) {
-                log.debug("    portalRequestInstance: "+portalRequestInstance);
-                log.debug("    portletEntry: "+portletEntry);
-                log.debug("    parameters: "+parameters);
-                if (portletMetadata == null) {
-                    log.debug("    portlet metadata is null");
-                } else {
-                    log.debug("    portlet metadata:");
-                    for (Map.Entry<String, String> entry : portletMetadata.entrySet()) {
-                        log.debug("        key: " + entry.getKey() + ", value: " + entry.getValue());
-                    }
-                }
-            }
             renderResponse = new RenderResponseImpl(
                 portalRequestInstance,
                 renderRequest,
@@ -414,10 +424,16 @@ public final class PageElement {
         }
     }
 
-    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, Map<String, String> portletMetadata, List<String> roleList ) {
-        this.fullPortletName = portletName;
-        this.portletMetadata = portletMetadata;
+    private boolean isStandardPortletMode(PortletMode portletMode) {
+        return portletMode==PortletMode.VIEW ||portletMode==PortletMode.EDIT ||portletMode==PortletMode.HELP; 
+    }
+
+    void initPortlet( final String portletName,  final PortalRequestInstance portalRequestInstance, Map<String, List<String>> portletMetadata, List<String> roleList, PortletPreferencePersistencer persistencer ) {
         this.portalRequestInstance = portalRequestInstance;
+        this.fullPortletName = portletName;
+        this.persistencer = persistencer;
+        this.portletMetadata = portletMetadata;
+
         try {
             if (log.isDebugEnabled()) {
                 log.debug("portalContext: " + portalRequestInstance.getPortalContext() );
@@ -519,6 +535,7 @@ public final class PageElement {
                     }
                 }
             }
+
         }
         catch (Throwable e) {
             errorString = portletUnavailable(portletName);

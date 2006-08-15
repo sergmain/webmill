@@ -109,7 +109,6 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
     protected boolean included = false;
     protected String includedQueryString = null;
     protected Map<String, List<String>> includedParameters = null;
-    protected Map<String, String> portletMetadata = null;
 
     public void destroy() {
         httpRequest = null;
@@ -131,8 +130,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         final Map<String, List<String>> renderParameters,
         final PortletContext portletContext,
         final PortletDefinition portletDefinition,
-        final Namespace namespace,
-        final Map<String, String> portletMetadata) {
+        final Namespace namespace
+    ) {
 
         super( httpServletRequest );
 
@@ -143,16 +142,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         this.portletPreferences = portletPreferences;
         this.portletProperties = portletProperties;
         this.renderParameters = renderParameters;
-        this.portletMetadata = portletMetadata;
     }
-
-//    public ServletRequest getRequest() {
-//        return wrapper;
-//    }
-
-//    public void setRequest(ServletRequest servletRequest) {
-//        wrapper = servletRequest;
-//    }
 
     public boolean isWindowStateAllowed( WindowState windowState ) {
         for (Enumeration en = portalContext.getSupportedWindowStates();
@@ -829,6 +819,8 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
             ContainerConstants.PORTAL_PORTAL_MAIL_SERVICE_PROVIDER,
             mailServiceProvider
         );
+
+/*
         if (log.isDebugEnabled()) {
             log.debug("metadata map: "+portletMetadata );
             if (portletMetadata == null) {
@@ -840,6 +832,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
                 }
             }
         }
+*/
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         this.setAttribute(
@@ -848,7 +841,7 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
                 portalRequestInstance.getPortalInfo().getSite().getSiteId(),
                 new Long(portalContext.getProperty( ContainerConstants.PORTAL_PROP_COMPANY_ID )),
                 mailServiceProvider,
-                portletMetadata,
+                portletPreferences,
                 classLoader
             )
         );

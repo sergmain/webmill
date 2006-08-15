@@ -24,10 +24,14 @@
  */
 package org.riverock.webmill.portal.preference;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Sergei Maslyukov
  *         Date: 14.08.2006
  *         Time: 20:43:00
  */
 public interface PortletPreferencePersistencer {
+    void store(Map<String, List<String>> preferences);
 }

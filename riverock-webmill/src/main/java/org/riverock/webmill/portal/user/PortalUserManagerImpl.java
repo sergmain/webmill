@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.portlet.PortletPreferences;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -67,14 +69,14 @@ public class PortalUserManagerImpl implements PortalUserManager {
     private PortalMailServiceProvider mailServiceProvider = null;
     private Long siteId = null;
     private Long companyId = null;
-    private Map<String, String> portletMetadata = null;
+    private PortletPreferences portletPreferences = null;
     private ClassLoader classLoader = null;
 
-    public PortalUserManagerImpl(Long siteId, Long companyId, PortalMailServiceProvider mailServiceProvider, Map<String, String> portletMetadata, ClassLoader classLoader) {
+    public PortalUserManagerImpl(Long siteId, Long companyId, PortalMailServiceProvider mailServiceProvider, PortletPreferences portletPreferences, ClassLoader classLoader) {
         this.siteId = siteId;
         this.companyId = companyId;
         this.mailServiceProvider = mailServiceProvider;
-        this.portletMetadata = portletMetadata;
+        this.portletPreferences = portletPreferences;
         this.classLoader = classLoader;
     }
 
@@ -183,9 +185,10 @@ public class PortalUserManagerImpl implements PortalUserManager {
 
                 // register-default-role
                 String roles = null;
-                if (portletMetadata != null) {
-                    roles = portletMetadata.get(USER_DEFAULT_ROLE_METADATA);
+                if (portletPreferences != null) {
+                    roles = portletPreferences.getValue(USER_DEFAULT_ROLE_METADATA, null);
                 }
+/*
                 if (log.isDebugEnabled()) {
                     log.debug("register roles: " + roles);
                     log.debug("metadata map: " + portletMetadata);
@@ -198,6 +201,7 @@ public class PortalUserManagerImpl implements PortalUserManager {
                         }
                     }
                 }
+*/
                 if (StringUtils.isBlank(roles)) {
                     return new UserOperationStatusBean(PortalUserManager.STATUS_ROLE_NOT_DEFINED);
                 }

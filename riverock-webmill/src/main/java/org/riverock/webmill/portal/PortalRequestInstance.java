@@ -68,6 +68,7 @@ import org.riverock.webmill.portal.impl.ActionRequestImpl;
 import org.riverock.webmill.portal.impl.PortalContextImpl;
 import org.riverock.webmill.portal.namespace.Namespace;
 import org.riverock.webmill.portal.namespace.NamespaceFactory;
+import org.riverock.webmill.portal.preference.PortletPreferencePersistencerImpl;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -276,10 +277,17 @@ public final class PortalRequestInstance {
 
                 switch (templateItem.getTypeObject().getType()) {
                     case PortalTemplateItemType.PORTLET_TYPE:
-                        element.initPortlet(templateItem.getValueAsPortletName(), this, new HashMap<String, String>(), new ArrayList<String>());
+                        element.initPortlet(templateItem.getValueAsPortletName(), this, new HashMap<String, List<String>>(), new ArrayList<String>(), null);
                         break;
+
                     case PortalTemplateItemType.DYNAMIC_TYPE:
-                        element.initPortlet(requestContext.getDefaultPortletName(), this, requestContext.getExtendedCatalogItem().getPortletMetadata(), requestContext.getExtendedCatalogItem().getRoleList());
+                        element.initPortlet(
+                            requestContext.getDefaultPortletName(),
+                            this,
+                            requestContext.getExtendedCatalogItem().getPortletMetadata(),
+                            requestContext.getExtendedCatalogItem().getRoleList(),
+                            new PortletPreferencePersistencerImpl(requestContext.getExtendedCatalogItem().getCatalogId())
+                        );
                         break;
                     case PortalTemplateItemType.FILE_TYPE:
                     case PortalTemplateItemType.CUSTOM_TYPE:

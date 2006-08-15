@@ -22,25 +22,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package org.riverock.webmill.portal.preference;
+package org.riverock.webmill.test;
 
-import java.util.Map;
-
-import javax.portlet.PortletPreferences;
+import java.util.Properties;
 
 /**
  * @author Sergei Maslyukov
- *         Date: 14.08.2006
- *         Time: 20:39:03
+ *         Date: 15.08.2006
+ *         Time: 20:59:02
  */
-public class PortletPreferenceProviderImpl implements PortletPreferenceProvider {
-    private PortletPreferences portletPreferences=null;
+public class PropertiesTest {
+    public static void main(String[] args) {
+        Properties p = new Properties();
 
-    public PortletPreferenceProviderImpl(PortletPreferences portletPreferences, Map<String, String> portletMetadata, PortletPreferencePersistencer persistencer) {
-        this.portletPreferences = portletPreferences;
-        this.portletMetadata = portletMetadata;
-        this.persistencer = persistencer;
+        p.put("a", 1);
+        p.put("a", 2);
+
+        p.put("a", 3);
     }
-
-
 }

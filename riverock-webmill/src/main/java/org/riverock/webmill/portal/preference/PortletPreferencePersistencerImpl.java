@@ -25,6 +25,8 @@
 package org.riverock.webmill.portal.preference;
 
 import java.util.Map;
+import java.util.List;
+import java.io.StringWriter;
 
 /**
  * @author Sergei Maslyukov
@@ -39,8 +41,14 @@ public class PortletPreferencePersistencerImpl implements PortletPreferencePersi
         this.contextId = contextId;
     }
 
-    public void store(Map<String, String> preferences) {
+    public void store(Map<String, List<String>> preferences) {
+        StringWriter out = new StringWriter();
 
+        for (Map.Entry<String, List<String>> entry : preferences.entrySet()) {
+            out.write(entry.getKey()+'='+entry.getValue()+'\n');
+        }
+
+        out.toString();
     }
 }
 

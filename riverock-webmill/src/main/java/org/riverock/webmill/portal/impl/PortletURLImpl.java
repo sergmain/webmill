@@ -87,6 +87,26 @@ public final class PortletURLImpl implements PortletURL {
         this.portletName = portletName;
     }
 
+    /**
+     * Indicates the window state the portlet should be in, if this
+     * portlet URL triggers a request.
+     * <p>
+     * A URL can not have more than one window state attached to it.
+     * If more than one window state is set only the last one set
+     * is attached to the URL.
+     *
+     * @param windowState
+     *               the portlet window state
+     *
+     * @exception WindowStateException
+     *                   if the portlet cannot switch to this state,
+     *                   because the portal does not support this state, the portlet has not
+     *                   declared in its deployment descriptor that it supports this state, or the current
+     *                   user is not allowed to switch to this state.
+     *                   The <code>PortletRequest.isWindowStateAllowed()</code> method can be used
+     *                   to check if the portlet can set a given window state.
+     * @see javax.portlet.PortletRequest#isWindowStateAllowed
+     */
     public void setWindowState( WindowState windowState ) throws WindowStateException {
         PortalContext portalContext = portalRequestInstance.getPortalContext();
         Enumeration supportedWindowStates = portalContext.getSupportedWindowStates();
@@ -105,6 +125,26 @@ public final class PortletURLImpl implements PortletURL {
         throw new WindowStateException( "unsupported Window State used: " + windowState, windowState );
     }
 
+    /**
+     * Indicates the portlet mode the portlet must be in, if this
+     * portlet URL triggers a request.
+     * <p>
+     * A URL can not have more than one portlet mode attached to it.
+     * If more than one portlet mode is set only the last one set
+     * is attached to the URL.
+     *
+     * @param portletMode
+     *               the portlet mode
+     *
+     * @exception PortletModeException
+     *                   if the portlet cannot switch to this mode,
+     *                   because the portal does not support this mode, the portlet has not
+     *                   declared in its deployment descriptor that it supports this mode for the current markup,
+     *                   or the current user is not allowed to switch to this mode.
+     *                   The <code>PortletRequest.isPortletModeAllowed()</code> method can be used
+     *                   to check if the portlet can set a given portlet mode.
+     * @see javax.portlet.PortletRequest#isPortletModeAllowed
+     */
     public void setPortletMode( PortletMode portletMode ) throws PortletModeException {
         if ( isPortletModeSupported( portletMode ) ) {
             mode = portletMode;
@@ -117,6 +157,25 @@ public final class PortletURLImpl implements PortletURL {
         setParameter(name, value);
     }
 
+    /**
+     * Sets the given String parameter to this URL.
+     * <p>
+     * This method replaces all parameters with the given key.
+     * <p>
+     * The <code>PortletURL</code> implementation 'x-www-form-urlencoded' encodes
+     * all  parameter names and values. Developers should not encode them.
+     * <p>
+     * A portlet container may prefix the attribute names internally
+     * in order to preserve a unique namespace for the portlet.
+     *
+     * @param   name
+     *          the parameter name
+     * @param   value
+     *          the parameter value
+     *
+     * @exception  java.lang.IllegalArgumentException
+     *                            if name or value are <code>null</code>.
+     */
     public void setParameter( String name, String value ) {
         if ( name == null || value == null ) {
             throw new IllegalArgumentException( "name and value must not be null" );
@@ -124,6 +183,25 @@ public final class PortletURLImpl implements PortletURL {
         MapWithParameters.putInStringList( parameters, name, value );
     }
 
+    /**
+     * Sets the given String array parameter to this URL.
+     * <p>
+     * This method replaces all parameters with the given key.
+     * <p>
+     * The <code>PortletURL</code> implementation 'x-www-form-urlencoded' encodes
+     * all  parameter names and values. Developers should not encode them.
+     * <p>
+     * A portlet container may prefix the attribute names internally
+     * in order to preserve a unique namespace for the portlet.
+     *
+     * @param   name
+     *          the parameter name
+     * @param   values
+     *          the parameter values
+     *
+     * @exception  java.lang.IllegalArgumentException
+     *                            if name or values are <code>null</code>.
+     */
     public void setParameter( String name, String[] values ) {
         if ( name == null || values == null || values.length == 0 ) {
             throw new IllegalArgumentException( "name and values must not be null or values be an empty array" );
@@ -131,16 +209,38 @@ public final class PortletURLImpl implements PortletURL {
         MapWithParameters.putInStringList(parameters, name, values);
     }
 
-    /* (non-Javadoc)
-     * @see javax.portlet.PortletURL#setParameters(Map)
+    /**
+     * Sets a parameter parameters for this URL.
+     * <p>
+     * All previously set parameters are cleared.
+     * <p>
+     * The <code>PortletURL</code> implementation 'x-www-form-urlencoded' encodes
+     * all  parameter names and values. Developers should not encode them.
+     * <p>
+     * A portlet container may prefix the attribute names internally,
+     * in order to preserve a unique namespace for the portlet.
+     *
+     * @param  parameters   Map containing parameter names for
+     *                      the render phase as
+     *                      keys and parameter values as parameters
+     *                      values. The keys in the parameter
+     *                      parameters must be of type String. The values
+     *                      in the parameter parameters must be of type
+     *                      String array (<code>String[]</code>).
+     *
+     * @exception	java.lang.IllegalArgumentException
+     *                      if parameters is <code>null</code>, if
+     *                      any of the key/values in the Map are <code>null</code>,
+     *                      if any of the keys is not a String, or if any of
+     *                      the values is not a String array.
      */
-    public void setParameters( Map map ) {
-        if ( map == null ) {
+    public void setParameters( Map parameters) {
+        if ( parameters == null ) {
             throw new IllegalArgumentException( "Parameters must not be null." );
         }
 
-        Map<String, List<String>> temp = new HashMap<String, List<String>>( 2*map.size() );
-        for (Object o : map.entrySet()) {
+        Map<String, List<String>> temp = new HashMap<String, List<String>>( 2* parameters.size() );
+        for (Object o : parameters.entrySet()) {
             Map.Entry<String, List<String>> entry = (Map.Entry<String, List<String>>) o;
 
             Object obj = entry.getValue();
@@ -169,6 +269,22 @@ public final class PortletURLImpl implements PortletURL {
         this.parameters.putAll( temp );
     }
 
+    /**
+     * Indicated the security setting for this URL.
+     * <p>
+     * Secure set to <code>true</code> indicates that the portlet requests
+     * a secure connection between the client and the portlet window for
+     * this URL. Secure set to <code>false</code> indicates that the portlet
+     * does not need a secure connection for this URL. If the security is not
+     * set for a URL, it will stay the same as the current request.
+     *
+     * @param  secure  true, if portlet requests to have a secure connection
+     *                 between its portlet window and the client; false, if
+     *                 the portlet does not require a secure connection.
+     *
+     * @throws PortletSecurityException  if the run-time environment does
+     *                                   not support the indicated setting
+     */
     public void setSecure( boolean secure ) throws PortletSecurityException {
         // This implementation does assume not having a supporting security environment installed!
         if (secure ) {
@@ -178,6 +294,15 @@ public final class PortletURLImpl implements PortletURL {
         this.secure = secure;
     }
 
+    /**
+     * Returns the portlet URL string representation to be embedded in the
+     * markup.<br>
+     * Note that the returned String may not be a valid URL, as it may
+     * be rewritten by the portal/portlet-container before returning the
+     * markup to the client.
+     *
+     * @return   the encoded URL as a string
+     */
     public String toString() {
         StringBuilder url = new StringBuilder( 70 );
 
