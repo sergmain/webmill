@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import org.riverock.interfaces.portal.bean.CatalogItem;
 import org.riverock.interfaces.portal.bean.CatalogLanguageItem;
+import org.riverock.generic.db.DatabaseAdapter;
 
 /**
  * @author Sergei Maslyukov
@@ -56,4 +57,6 @@ public interface InternalCatalogDao {
     public Long createCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem);
     public void updateCatalogLanguageItem(CatalogLanguageItem catalogLanguageItem);
     public void deleteCatalogLanguageItem(Long catalogLanguageId);
+
+    void deleteCatalogLanguageForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId);
 }

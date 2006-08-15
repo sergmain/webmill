@@ -27,6 +27,7 @@ package org.riverock.webmill.portal.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -574,6 +575,30 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
         } finally {
             DatabaseManager.close(adapter);
             adapter = null;
+        }
+    }
+
+    public void deleteCatalogLanguageForSiteLanguage(DatabaseAdapter adapter, Long siteLanguageId) {
+        try {
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from wm_portal_catalog " +
+                    "where ID_SITE_CTX_CATALOG in " +
+                    "(select a.ID_SITE_CTX_CATALOG from wm_portal_catalog_language a " +
+                    "where a.ID_SITE_SUPPORT_LANGUAGE=?)",
+
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+
+            DatabaseManager.runSQL(
+                adapter,
+                "delete from wm_portal_catalog_language where ID_SITE_SUPPORT_LANGUAGE=?",
+                new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}
+            );
+        } catch (SQLException e) {
+            String es = "Error delete catalog menu for site language";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
         }
     }
 
