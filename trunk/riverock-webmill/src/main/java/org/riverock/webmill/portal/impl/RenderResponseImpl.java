@@ -313,8 +313,30 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         return renderRequest.getLocale();
     }
 
-    public void setBufferSize( int i ) {
-        throw new IllegalStateException( "portlet container does not support buffering" );
+    /**
+     * Sets the preferred buffer size for the body of the response.
+     * The portlet container will use a buffer at least as large as
+     * the size requested.
+     * <p>
+     * This method must be called before any response body content is
+     * written; if content has been written, or the portlet container
+     * does not support buffering, this method may throw an
+     * <code>IllegalStateException</code>.
+     *
+     * @param size 	the preferred buffer size
+     *
+     * @exception  java.lang.IllegalStateException
+     *                    if this method is called after
+     *			content has been written, or the
+     *                    portlet container does not support buffering
+     *
+     * @see 		#getBufferSize
+     * @see 		#flushBuffer
+     * @see 		#isCommitted
+     * @see 		#reset
+     */
+    public void setBufferSize( int size ) {
+        throw new IllegalStateException( "Current version of Webmill portal does not support buffering" );
     }
 
     public int getBufferSize() {
