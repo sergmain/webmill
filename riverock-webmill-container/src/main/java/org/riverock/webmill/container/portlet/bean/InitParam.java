@@ -24,6 +24,8 @@
  */
 package org.riverock.webmill.container.portlet.bean;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
@@ -208,10 +210,14 @@ public class InitParam implements Serializable {
 
     /**
      * Sets the value of field 'value'.
+     * 
+     * According to the final portlet 1.0 spec, page 81,
+     * "Portlet containers should ignore all leading whitespace characters before the first non-whitespace character,
+     * and all trailing whitespace characters after the last nonwhitespace character for PCDATA within text nodes of a deployment descriptor."
      *
      * @param value the value of field 'value'.
      */
     public void setValue(String value) {
-        this._value = value;
+        this._value = StringUtils.strip(value);
     }
 }
