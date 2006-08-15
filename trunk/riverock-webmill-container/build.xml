@@ -51,6 +51,7 @@
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
         <pathelement location="${lib.dir}/${commons-digester.lib}"/>
         <pathelement location="${lib.dir}/${commons-beanutils.lib}"/>
+        <pathelement location="${lib.dir}/${commons-lang.lib}"/>
 
         <pathelement location="${lib.dir}/${jsp-api.lib}"/>
         <pathelement location="${lib.dir}/${servlet.lib}"/>
