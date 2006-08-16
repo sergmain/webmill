@@ -24,15 +24,13 @@
  */
 package org.riverock.webmill.container.portlet.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.io.Serializable;
 
 /**
  * Persistent preference values that may be used for customization
  * and personalization by the portlet.
- * Used in: portlet-preferences
  *
  * @version $Revision$ $Date$
  */
@@ -53,7 +51,7 @@ public class Preference implements Serializable {
     /**
      * Field _valueList
      */
-    private Collection<String> _valueList;
+    private Collection<String> _valueList = null;
 
     /**
      * Field _readOnly
@@ -62,8 +60,6 @@ public class Preference implements Serializable {
 
 
     public Preference() {
-        super();
-        _valueList = new ArrayList<String>();
     }
 
     public void setModifiable(String value) {
@@ -79,6 +75,7 @@ public class Preference implements Serializable {
         this._valueList = values;
     }
 
+/*
     public Iterator<String> getValue() {
         if (_valueList == null) {
             setValue(new ArrayList<String>());
@@ -86,12 +83,9 @@ public class Preference implements Serializable {
 
         return _valueList.iterator();
     }
+*/
 
-    public Collection<String> getValueAsRef() {
-        if (_valueList == null) {
-            setValue(new ArrayList<String>());
-        }
-
+    public Collection<String> getValue() {
         return _valueList;
     }
 
@@ -106,23 +100,6 @@ public class Preference implements Serializable {
         }
 
         _valueList.add(vValue);
-    }
-
-    /**
-     * Method addValue
-     *
-     * @param index
-     * @param vValue
-     */
-//    public void addValue(int index, String vValue) {
-//        _valueList.add(index, vValue);
-//    }
-
-    /**
-     * Method clearValue
-     */
-    public void clearValue() {
-        _valueList.clear();
     }
 
     /**
@@ -153,53 +130,6 @@ public class Preference implements Serializable {
     }
 
     /**
-     * Method getValue
-     *
-     * @param index
-     */
-/*
-    public String getValue(int index) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _valueList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        return _valueList.get(index);
-    }
-*/
-
-    /**
-     * Method getValue
-     */
-/*
-    public String[] getValue() {
-        int size = _valueList.size();
-        String[] mArray = new String[size];
-        for (int index = 0; index < size; index++) {
-            mArray[index] = _valueList.get(index);
-        }
-        return mArray;
-    }
-*/
-
-    /**
-     * Method getValueCount
-     */
-    public int getValueCount() {
-        return _valueList.size();
-    }
-
-    /**
-     * Method removeValue
-     *
-     * @param vValue
-     */
-    public boolean removeValue(String vValue) {
-        boolean removed = _valueList.remove(vValue);
-        return removed;
-    }
-
-    /**
      * Sets the value of field 'id'.
      *
      * @param id the value of field 'id'.
@@ -224,34 +154,5 @@ public class Preference implements Serializable {
      */
     public void setReadOnly(Boolean readOnly) {
         this._readOnly = readOnly;
-    }
-
-    /**
-     * Method setValue
-     *
-     * @param index
-     * @param vValue
-     */
-/*
-    public void setValue(int index, String vValue) {
-        //-- check bounds for index
-        if ((index < 0) || (index > _valueList.size())) {
-            throw new IndexOutOfBoundsException();
-        }
-        _valueList.set(index, vValue);
-    }
-*/
-
-    /**
-     * Method setValue
-     *
-     * @param valueArray
-     */
-    public void setValue(String[] valueArray) {
-        //-- copy array
-        _valueList.clear();
-        for (final String newVar : valueArray) {
-            _valueList.add(newVar);
-        }
     }
 }

@@ -26,12 +26,9 @@ package org.riverock.webmill.container.portlet;
 
 import java.io.File;
 
-import javax.portlet.PortletPreferences;
-
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Preferences;
-import org.riverock.common.tools.StringTools;
 
 /**
  * @author smaslyukov

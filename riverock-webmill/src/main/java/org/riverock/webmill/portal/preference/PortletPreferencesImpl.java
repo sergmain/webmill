@@ -34,7 +34,7 @@ import javax.portlet.PortletPreferences;
 
 import org.riverock.webmill.container.portlet.bean.Preference;
 import org.riverock.webmill.container.portlet.bean.Preferences;
-import org.riverock.common.collections.MapWithParameters;
+import org.apache.log4j.Logger;
 
 /**
  * The <CODE>PortletPreferences</CODE> interface allows the portlet to store
@@ -66,6 +66,7 @@ import org.riverock.common.collections.MapWithParameters;
  */
 public class PortletPreferencesImpl implements PortletPreferences, Serializable {
     private static final long serialVersionUID = 30434672384237160L;
+    private final static Logger log = Logger.getLogger( PortletPreferencesImpl.class );
 
     private Map<String, List<String>> portletMetadata = null;
     private Map<String, List<String>> defaultPortletMetadata = null;
@@ -75,6 +76,7 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
     private Preferences preferences;
     private boolean isStandardPortletMode;
     private boolean isRenderRequest;
+    private boolean isStoreProcessed=false;
 
     /**
      *
@@ -162,19 +164,32 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
            throw new IllegalArgumentException("Can't get value of preference. Key is null");
         }
 
-        String[] values = portletMetadata.get( key ).toArray(new String[0]);
-        if (values!=null) {
-            if (values.length>0) {
-                return values[0];
+        List<String> valuesList = portletMetadata.get(key);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Get preference.");
+            log.debug("    key: " + key);
+            log.debug("    valuesList: " + valuesList);
+            if (valuesList!=null) {
+                log.debug("    result isEmpty: " + valuesList.isEmpty());
+                if (!valuesList.isEmpty()) {
+                    log.debug("    result: " + valuesList.get(0));
+                }
+            }
+        }
+
+        if (valuesList!=null) {
+            if (valuesList.isEmpty()) {
+                return def;
             }
             else {
-                return def;
+                return valuesList.get(0);
             }
         }
         if (preferences!=null) {
             for (Preference preference : preferences.getPreferenceList()) {
                 if (preference.getName().equals( key )) {
-                    Collection<String> coll = preference.getValueAsRef();
+                    Collection<String> coll = preference.getValue();
                     if (coll.size()>0) {
                         return coll.iterator().next();
                     }
@@ -218,14 +233,14 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
            throw new IllegalArgumentException("Can't get value of preference. Key is null");
         }
 
-        String[] values = portletMetadata.get( key ).toArray(new String[0]);
-        if (values!=null) {
-            return values;
+        List<String> valuesList = portletMetadata.get(key);
+        if (valuesList!=null) {
+            return valuesList.toArray(new String[0]);
         }
         if (preferences!=null) {
             for (Preference preference : preferences.getPreferenceList()) {
                 if (preference.getName().equals( key )) {
-                    Collection<String> coll = preference.getValueAsRef();
+                    Collection<String> coll = preference.getValue();
                     return coll.toArray(new String[0]);
                 }
             }
@@ -261,7 +276,20 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
             throw new ReadOnlyException("Preference '"+key+"' is read only" );
         }
 
-        MapWithParameters.putInStringList(portletMetadata, key, value);
+        if (value==null) {
+            portletMetadata.remove(key);
+            return;
+        }
+
+        ArrayList<String> list = new ArrayList<String>();
+        list.add(value);
+        portletMetadata.put(key, list);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Set new preference. ");
+            log.debug("    key: " + key+", value: " + value);
+            log.debug("    result: " + portletMetadata.get(key));
+        }
     }
 
     /**
@@ -291,7 +319,24 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
             throw new ReadOnlyException("Preference '"+key+"' is read only" );
         }
 
-        MapWithParameters.putInStringList(portletMetadata, key, values);
+        if (values==null) {
+            return;
+        }
+
+        List<String> list = new ArrayList<String>(values.length);
+        for (String value : values) {
+            if (value==null) {
+                continue;
+            }
+            list.add(value);
+        }
+
+        if (list.isEmpty()) {
+            portletMetadata.remove(key);
+            return;
+        }
+
+        portletMetadata.put(key, list);
     }
 
     /**
@@ -340,10 +385,10 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
                 String key = preference.getName();
                 List<String> list = map.get(key);
                 if (list!=null) {
-                    list.addAll(preference.getValueAsRef());
+                    list.addAll(preference.getValue());
                 }
                 else {
-                    list = new ArrayList<String>(preference.getValueAsRef());
+                    list = new ArrayList<String>(preference.getValue());
                 }
                 map.put(key, list);
             }
@@ -418,15 +463,37 @@ public class PortletPreferencesImpl implements PortletPreferences, Serializable 
      * @exception  java.lang.IllegalStateException
      *                 if this method is called inside a render call
      *
+     *
+     * PLT.14.4 Validating Preferences Values
+     * [This section supplements section PLT.14.4 on page 60 in the Portlet 1.0
+     * specification, add the text to line 26]
+     *
+     * Portlet preferences cannot be modified when they are being validated by a
+     * PreferencesValidator object. If the store method is invoked within
+     * the scope of the PreferenceValidator's validate method invocation,
+     * an IllegalStateException must be thrown.
+     *
      * @see  javax.portlet.PreferencesValidator
      */
     public void store() throws IOException, ValidatorException {
         if (isRenderRequest) {
-            throw new IllegalArgumentException("Can't store preference inside render request.");
+            throw new IllegalStateException("Can't store preference inside render request.");
         }
 
-        if (preferences!=null) {
-            persistencer.store(portletMetadata);
+        if (isStoreProcessed) {
+            throw new IllegalStateException(
+                "Portlet preferences cannot be modified when they are being validated by a PreferencesValidator"
+            ); 
         }
+
+        if (preferences.getPreferencesValidator()!=null) {
+            isStoreProcessed=true;
+            try {
+                preferences.getPreferencesValidator().validate(this);
+            } finally {
+                isStoreProcessed=false;
+            }
+        }
+        persistencer.store(portletMetadata);
     }
 }

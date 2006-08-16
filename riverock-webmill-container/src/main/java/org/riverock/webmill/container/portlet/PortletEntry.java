@@ -24,16 +24,15 @@
  */
 package org.riverock.webmill.container.portlet;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.UnavailableException;
 import javax.servlet.ServletConfig;
-
-import org.riverock.webmill.container.portlet.bean.PortletDefinition;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author smaslyukov
@@ -55,7 +54,7 @@ public final class PortletEntry {
     private Map<String, List<String>> portletProperties = new HashMap<String, List<String>>();
     private String exceptionMessage = null;
 
-	public String getExceptionMessage() {
+    public String getExceptionMessage() {
 		return exceptionMessage;
 	}
 
@@ -99,7 +98,7 @@ public final class PortletEntry {
         this.servletConfig = servletConfig;
     }
 
-    PortletEntry(PortletDefinition portletDefinition, PortletConfig portletConfig, Portlet portlet,ServletConfig servletConfig, ClassLoader classLoader, String uniqueName, String portalPath ) {
+    PortletEntry(PortletDefinition portletDefinition, PortletConfig portletConfig, Portlet portlet,ServletConfig servletConfig, ClassLoader classLoader, String uniqueName, String portalPath) {
         if (portletDefinition==null) {
             throw new IllegalArgumentException("Portlet definition is null");
         } 
@@ -128,11 +127,7 @@ public final class PortletEntry {
     }
 
     public boolean getIsWait() {
-        if (getIsPermanent()) {
-            return true;
-        }
-
-        return getInterval() > (System.currentTimeMillis() - getLastInitTime()) / 1000;
+        return getIsPermanent() || (getInterval() > (System.currentTimeMillis() - getLastInitTime()) / 1000);
     }
 
     public String getPortalPath() {

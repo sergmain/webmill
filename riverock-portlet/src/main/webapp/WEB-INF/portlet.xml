@@ -29,7 +29,7 @@
 c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	<portlet>
 		<portlet-name>webmill.rss</portlet-name>
-		<portlet-class>org.riverock.portlet.RssPortlet</portlet-class>
+		<portlet-class>org.riverock.portlet.rss.RssPortlet</portlet-class>
 		<!-- a xsl file for the rss version 1.0 -->
 		<init-param>
 			<name>RSS10_XSL</name>
