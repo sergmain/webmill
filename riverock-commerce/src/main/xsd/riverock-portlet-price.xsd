@@ -32,7 +32,7 @@
 	<xs:annotation>
 		<xs:documentation>WebMill XML/XSLT web portlet engine</xs:documentation>
 	</xs:annotation>
-	<xs:import namespace="http://portlet.riverock.org/xsd/riverock-portlet-schema-core.xsd" schemaLocation="../../../../riverock-portlet/src/main/xsd/riverock-portlet-schema-core.xsd"/>
+	<xs:import namespace="http://portlet.riverock.org/xsd/riverock-portlet-schema-core.xsd" schemaLocation="riverock-portlet-schema-core.xsd"/>
 	<xs:complexType name="OrderType">
 		<xs:annotation>
 			<xs:documentation>Заказ, объединяющий все наименования из разных магазов</xs:documentation>

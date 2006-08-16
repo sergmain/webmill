@@ -68,28 +68,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			</preference>
 		</portlet-preferences>
 	</portlet>
-
-	<portlet>
-        <description>Webmill shop manager</description>
-        <portlet-name>webmill.shop-manager</portlet-name>
-        <display-name>Webmill shop manager</display-name>
-        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
-        <init-param>
-            <name>default-view</name>
-            <value>/riverock/shop/manager/index.jsp</value>
-        </init-param>
-
-        <expiration-cache>-1</expiration-cache>
-        <supports>
-            <mime-type>text/html</mime-type>
-            <portlet-mode>VIEW</portlet-mode>
-        </supports>
-        <portlet-info>
-            <title>Webmill shop manager</title>
-            <short-title>Webmil shop manager</short-title>
-            <keywords>webmill, shop, manager</keywords>
-		</portlet-info>
-	</portlet>
 	<portlet>
         <description>Webmill portal manager</description>
         <portlet-name>webmill.portal-manager</portlet-name>
@@ -288,37 +266,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</portlet-info>
 	</portlet>
 	<portlet>
-		<portlet-name>mill.shop</portlet-name>
-		<portlet-class>org.riverock.portlet.price.ShopPortlet</portlet-class>
-		<init-param>
-			<name>is-xml</name>
-			<value>true</value>
-		</init-param>
-		<init-param>
-			<name>name-portlet-id</name>
-			<value>mill.id_shop</value>
-		</init-param>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale._price_list</value>
-		</init-param>
-		<init-param>
-			<name>name-portlet-code-string</name>
-			<value>mill.shop_code</value>
-		</init-param>
-		<init-param>
-			<name>class-name-get-list</name>
-			<value>org.riverock.portlet.price.ShopListProvider</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
 		<portlet-name>mill.news_block</portlet-name>
 		<portlet-class>org.riverock.portlet.news.NewsPortlet</portlet-class>
 		<init-param>
@@ -385,17 +332,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<role-name>webmill.root</role-name>
 		</security-role-ref>
 	</portlet>
-	<portlet>
-		<portlet-name>mill.upload_price</portlet-name>
-		<portlet-class>org.riverock.portlet.shop.upload.UploadPricePortlet</portlet-class>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-        <security-role-ref><role-name>webmill.upload_price_list</role-name></security-role-ref>
-    </portlet>
 	<portlet>
 		<portlet-name>mill.menu_member</portlet-name>
 		<portlet-class>org.riverock.portlet.member.MenuMemberPortlet</portlet-class>
@@ -542,21 +478,6 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</portlet-info>
 	</portlet>
 	<portlet>
-		<portlet-name>mill.invoice</portlet-name>
-		<portlet-class>org.riverock.portlet.invoice.InvoicePortlet</portlet-class>
-		<init-param>
-			<name>locale-name-package</name>
-			<value>mill.locale._price_list</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
-	<portlet>
 		<portlet-name>mill.image.upload_image</portlet-name>
 		<portlet-class>org.riverock.portlet.image.ImageUploadPortlet</portlet-class>
 		<supports>
@@ -576,148 +497,4 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
-<!--
-	<portlet>
-		<portlet-name>mill.image.step_file</portlet-name>
-		<portlet-class>/mill.image_select_file</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.image.select_url</portlet-name>
-		<portlet-class>/mill.image_select_url</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.image.desc</portlet-name>
-		<portlet-class>/mill.image_description</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.image.list</portlet-name>
-		<portlet-class>/mill.image_list</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.image.index</portlet-name>
-		<portlet-class>/mill.image_index</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.price.index</portlet-name>
-		<portlet-class>/mill.price_edit_index</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.price.description</portlet-name>
-		<portlet-class>/mill.price_edit_description</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.price.shop</portlet-name>
-		<portlet-class>/mill.price_edit_shop</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
-<!--
-	<portlet>
-		<portlet-name>mill.price.image</portlet-name>
-		<portlet-class>/mill.price_edit_image</portlet-class>
-		<init-param>
-			<name>is-url</name>
-			<value>true</value>
-		</init-param>
-		<supports>
-			<mime-type>text/html</mime-type>
-		</supports>
-		<portlet-info>
-			<title>Portlet title</title>
-		</portlet-info>
-	</portlet>
--->
 </portlet-app>

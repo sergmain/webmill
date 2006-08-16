@@ -38,8 +38,8 @@ import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
-import org.riverock.portlet.member.ClassQueryItemImpl;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
+import org.riverock.commerce.bean.ClassQueryItemImpl;
 
 /**
  * User: SergeMaslyukov
@@ -49,6 +49,7 @@ import org.riverock.interfaces.portlet.member.ClassQueryItem;
  * <p/>
  * This class used for select shop and bind it to menu item
  */
+@SuppressWarnings({"UnusedAssignment"})
 public class ShopListProvider implements PortletGetList {
 
     private static Logger log = Logger.getLogger( ShopPage.class );

@@ -84,6 +84,35 @@
         </java>
     </target>
 
+    <target name="gen_schema_from_schema_nomarshall">
+        <delete includeEmptyDirs="false" failonerror="false">
+            <fileset dir="${schema-dir}">
+                <include name="*.java"/>
+                <exclude name="**/CVS/**"/>
+            </fileset>
+        </delete>
+        <echo message="XSD - ${schema-file}"/>
+        <java fork="true" classname="org.exolab.castor.builder.SourceGenerator">
+            <arg value="-nomarshall"/>
+            <arg value="-nodesc"/>
+            <arg value="-i"/>
+            <arg value="${schema-file}"/>
+            <arg value="-package"/>
+            <arg value="${schema-package-java}"/>
+            <arg value="-dest"/>
+            <arg value="${src-schema.java.dir}"/>
+            <arg value="-types"/>
+            <arg value="j2"/>
+            <arg value="-f"/>
+            <arg value="-binding-file"/>
+            <arg value="${src-schema.xml.dir}/binding.xml"/>
+            <classpath>
+                <pathelement location="${src.main.xsd.dir}" />
+                <path refid="classpath-schema"/>
+            </classpath>
+        </java>
+    </target>
+
     <target name="gen_schema_from_core">
         <delete includeEmptyDirs="true" failonerror="false">
             <fileset dir="${schema-dir}">
@@ -102,6 +131,33 @@
             <arg value="-types"/>
             <arg value="j2"/>
             <arg value="-f"/>
+            <classpath>
+                <pathelement location="${src.main.xsd.dir}" />
+                <path refid="classpath-core"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="gen_schema_from_core_nomarshall">
+        <delete includeEmptyDirs="true" failonerror="false">
+            <fileset dir="${schema-dir}">
+                <include name="**/*.java"/>
+                <exclude name="**/CVS"/>
+            </fileset>
+        </delete>
+        <echo message="XSD - ${schema-file}"/>
+        <java fork="true" classname="org.exolab.castor.builder.SourceGenerator">
+            <arg value="-i"/>
+            <arg value="${schema-file}"/>
+            <arg value="-package"/>
+            <arg value="${schema-package-java}"/>
+            <arg value="-dest"/>
+            <arg value="${src-core.java.dir}"/>
+            <arg value="-types"/>
+            <arg value="j2"/>
+            <arg value="-f"/>
+            <arg value="nomarshall"/>
+            <arg value="nodesc"/>
             <classpath>
                 <pathelement location="${src.main.xsd.dir}" />
                 <path refid="classpath-core"/>
