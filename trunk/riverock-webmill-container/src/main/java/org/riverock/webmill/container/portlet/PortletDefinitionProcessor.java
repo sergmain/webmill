@@ -25,7 +25,6 @@
 package org.riverock.webmill.container.portlet;
 
 import java.io.File;
-import java.io.Serializable;
 
 import org.riverock.webmill.container.portlet.bean.PortletApplication;
 

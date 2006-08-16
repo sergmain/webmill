@@ -1,8 +1,10 @@
 package org.riverock.webmill.container.portlet.bean;
 
+import javax.portlet.PreferencesValidator;
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Sergei Maslyukov
@@ -16,10 +18,15 @@ public class Preferences implements Serializable {
 
     private List<Preference> preferenceList=new ArrayList<Preference>();
 
-    private java.lang.String preferencesValidator;
+    private java.lang.String preferencesValidatorClass =null;
+    private PreferencesValidator preferencesValidator =null;
 
-    public void addPreference(Preference vPreference) {
-        preferenceList.add(vPreference);
+    public void addPreference(Preference preference) {
+        Collection<String> values = preference.getValue();
+        if (values==null || values.isEmpty()) {
+            return;
+        }
+        preferenceList.add(preference);
     }
 
     public String getId() {
@@ -35,14 +42,53 @@ public class Preferences implements Serializable {
     }
 
     public void setPreferenceList(List<Preference> preferenceList) {
-        this.preferenceList = preferenceList;
+        List<Preference> list = new ArrayList<Preference>(preferenceList.size());
+        for (Preference preference : list) {
+            Collection<String> values = preference.getValue();
+            if (values==null || values.isEmpty()) {
+                continue;
+            }
+            list.add(preference);
+        }
+        this.preferenceList = list;
     }
 
-    public String getPreferencesValidator() {
+    public String getPreferencesValidatorClass() {
+        return preferencesValidatorClass;
+    }
+
+    public void setPreferencesValidatorClass(String preferencesValidatorClass) {
+        this.preferencesValidatorClass = preferencesValidatorClass;
+    }
+
+
+    public PreferencesValidator getPreferencesValidator() {
+        if (preferencesValidator!=null) {
+            return preferencesValidator;
+        }
+
+        if (preferencesValidatorClass==null) {
+            return null;
+        }
+        else {
+            synchronized(this) {
+                if (preferencesValidator!=null) {
+                    return preferencesValidator;
+                }
+
+                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                try {
+                    Class clazz = loader.loadClass(preferencesValidatorClass);
+                    PreferencesValidator validator = (PreferencesValidator) clazz.newInstance();
+                    preferencesValidator = validator;
+                }
+                catch (Throwable th) {
+                    String es = "Error create validator for class " + preferencesValidatorClass+".";
+                    th.printStackTrace();
+                    throw new IllegalStateException(es, th);
+                }
+            }
+        }
         return preferencesValidator;
-    }
-
-    public void setPreferencesValidator(String preferencesValidator) {
-        this.preferencesValidator = preferencesValidator;
     }
 }

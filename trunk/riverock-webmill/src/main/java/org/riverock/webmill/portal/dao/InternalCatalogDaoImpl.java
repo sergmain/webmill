@@ -583,8 +583,8 @@ public class InternalCatalogDaoImpl implements InternalCatalogDao {
             DatabaseManager.runSQL(
                 adapter,
                 "delete from wm_portal_catalog " +
-                    "where ID_SITE_CTX_CATALOG in " +
-                    "(select a.ID_SITE_CTX_CATALOG from wm_portal_catalog_language a " +
+                    "where ID_SITE_CTX_LANG_CATALOG in " +
+                    "(select a.ID_SITE_CTX_LANG_CATALOG from wm_portal_catalog_language a " +
                     "where a.ID_SITE_SUPPORT_LANGUAGE=?)",
 
                 new Object[]{siteLanguageId}, new int[]{Types.DECIMAL}

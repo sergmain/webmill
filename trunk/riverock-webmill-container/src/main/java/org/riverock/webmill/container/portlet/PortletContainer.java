@@ -33,10 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.Portlet;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
-import javax.portlet.UnavailableException;
+import javax.portlet.*;
 import javax.servlet.ServletConfig;
 
 import org.riverock.webmill.container.bean.PortletWebApplication;
@@ -337,7 +334,10 @@ public final class PortletContainer implements Serializable {
         PortletEntry portletEntry = portletInstanceMap.get( portletName );
 
         if (portletEntry!=null) {
-            throw new IllegalStateException("Portlet '"+portletDefinition.getPortletName()+"' for context unique name '"+portletWebApplication.getUniqueName()+"' already created.");
+            throw new IllegalStateException(
+                "Portlet '"+portletDefinition.getPortletName()+"' " +
+                "for context unique name '"+portletWebApplication.getUniqueName()+"' already created."
+            );
         }
 
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
@@ -348,6 +348,10 @@ public final class PortletContainer implements Serializable {
             PortletContext portletContext = getPortletContext( portletWebApplication, portalInstance.getPortalName() );
             PortletResourceBundle resourceBundle = PortletResourceBundle.getInstance( portletDefinition, classLoader );
             PortletConfig portletConfig = new PortletConfigImpl(portletContext, portletDefinition, resourceBundle);
+            // forcce init preference validator
+            if (portletDefinition.getPreferences()!=null) {
+                portletDefinition.getPreferences().getPreferencesValidator();
+            }
 
             Portlet object;
             Constructor constructor;

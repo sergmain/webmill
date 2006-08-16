@@ -44,6 +44,9 @@ http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
 				<value>http://rss.news.yahoo.com/rss/tech</value>
                 <read-only>false</read-only>
 			</preference>
+			<preference>
+				<name>EmptyPref</name>
+			</preference>
 		</portlet-preferences>
 	</portlet>
 </portlet-app>

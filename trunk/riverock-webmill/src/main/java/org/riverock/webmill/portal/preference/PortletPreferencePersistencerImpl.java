@@ -24,9 +24,11 @@
  */
 package org.riverock.webmill.portal.preference;
 
-import java.util.Map;
+import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.apache.log4j.Logger;
+
 import java.util.List;
-import java.io.StringWriter;
+import java.util.Map;
 
 /**
  * @author Sergei Maslyukov
@@ -34,6 +36,7 @@ import java.io.StringWriter;
  *         Time: 20:43:07
  */
 public class PortletPreferencePersistencerImpl implements PortletPreferencePersistencer {
+    private final static Logger log = Logger.getLogger( PortletPreferencePersistencerImpl.class );
 
     private Long contextId=null;
 
@@ -42,13 +45,9 @@ public class PortletPreferencePersistencerImpl implements PortletPreferencePersi
     }
 
     public void store(Map<String, List<String>> preferences) {
-        StringWriter out = new StringWriter();
-
-        for (Map.Entry<String, List<String>> entry : preferences.entrySet()) {
-            out.write(entry.getKey()+'='+entry.getValue()+'\n');
+        if (contextId!=null) {
+            InternalDaoFactory.getInternalPreferencesDao().store(preferences, contextId);
         }
-
-        out.toString();
     }
 }
 

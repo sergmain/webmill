@@ -109,7 +109,7 @@ public class PortletDefinitionProcessorImpl implements PortletDefinitionProcesso
 
             digester.addObjectCreate("portlet-app/portlet/portlet-preferences", Preferences.class);
             digester.addSetProperties("portlet-app/portlet/portlet-preferences", "id", "id");
-            digester.addBeanPropertySetter("portlet-app/portlet/portlet-preferences/preferences-validator", "preferencesValidator");
+            digester.addBeanPropertySetter("portlet-app/portlet/portlet-preferences/preferences-validator", "preferencesValidatorClass");
             digester.addSetNext("portlet-app/portlet/portlet-preferences", "setPreferences");
 
             digester.addObjectCreate("portlet-app/portlet/portlet-preferences/preference", Preference.class);
