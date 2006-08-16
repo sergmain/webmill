@@ -50,7 +50,6 @@ import org.riverock.generic.db.DatabaseManager;
 import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.generic.utils.DateUtils;
 
-import org.riverock.portlet.shop.upload.UploadFileException;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.tools.PortletService;
 import org.riverock.webmill.container.ContainerConstants;
@@ -119,7 +118,7 @@ public final class ImageUploadFromUrlPortlet implements Portlet {
                     break;
             }
             if ( i == ext.length )
-                throw new UploadFileException( "Unsupported file extension. Error #20.03" );
+                throw new Exception( "Unsupported file extension. Error #20.03" );
 
 
             if ( log.isDebugEnabled() )

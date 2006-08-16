@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<!--
+/*
+ * org.riverock.commerce - Commerce portlet
+ *
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+-->
+<!--$Id: build-schema.xml 411 2006-01-08 12:54:29Z serg_main $-->
+<project name="Portlet schema classes gen" default="gen_all_schema" basedir=".">
+
+    <import file="../riverock-globals-prop.xml"/>
+    <import file="../riverock-globals-target.xml"/>
+
+    <property name="main-package" value="org.riverock.portlet"/>
+    <property name="main-package.dir" value="org/riverock/portlet"/>
+
+    <target name="clean">
+        <antcall target="delete_all_schema"/>
+    </target>
+
+    <target name="gen_all_schema">
+        <antcall target="delete_all_schema"/>
+        <antcall target="gen_price_schema"/>
+        <antcall target="gen_import_price_schema"/>
+
+        <antcall target="gen_core_schema"/>
+        <antcall target="gen_portlet_schema"/>
+    </target>
+    <target name="gen_shop_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/shop/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-shop.xsd"/>
+        <property name="schema-package-java" value="${main-package}.schema.shop"/>
+        <antcall target="gen_schema_from_schema"/>
+    </target>
+    <target name="gen_price_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/price/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-price.xsd"/>
+        <property name="schema-package-java" value="${main-package}.schema.price"/>
+        <antcall target="gen_schema_from_schema"/>
+    </target>
+    <target name="gen_import_price_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/import_price/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-import-price.xsd"/>
+        <property name="schema-package-java" value="${main-package}.schema.import_price"/>
+        <antcall target="gen_schema_from_schema"/>
+    </target>
+    <target name="gen_core_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/core/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-schema-core.xsd"/>
+        <property name="schema-package-java" value="${main-package}.schema.core"/>
+        <antcall target="gen_schema_from_schema"/>
+    </target>
+
+    <target name="gen_portlet_schema">
+        <antcall target="gen_portlet_shop_schema"/>
+    </target>
+    <target name="gen_portlet_shop_schema">
+        <property name="schema-dir" value="${src-schema.java.dir}/${main-package.dir}/schema/portlet/shop/"/>
+        <property name="schema-file" value="${src-schema.xsd.dir}/riverock-portlet-shop.xsd"/>
+        <property name="schema-package-java" value="${main-package}.schema.portlet.shop"/>
+        <antcall target="gen_schema_from_schema"/>
+    </target>
+</project>

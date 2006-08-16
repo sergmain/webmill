@@ -34,10 +34,6 @@ import org.apache.log4j.Logger;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.MemberQueryParameter;
-import org.riverock.portlet.price.CurrencyManager;
-import org.riverock.portlet.price.CurrencyService;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.schema.price.StandardCurrencyItemType;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -66,6 +62,7 @@ public class CurrencyStdCursClassQuery extends BaseClassQuery {
      * @return String
      */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+/*
         Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );
         CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
@@ -77,6 +74,8 @@ public class CurrencyStdCursClassQuery extends BaseClassQuery {
             return "";
 
         return "" + stdItem.getCurrentCurs().getCurs();
+*/
+        return null;
     }
 
     /**

@@ -24,23 +24,14 @@
  */
 package org.riverock.portlet.member.currency;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javax.portlet.PortletRequest;
-
 import org.apache.log4j.Logger;
-
-import org.riverock.generic.utils.DateUtils;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.MemberQueryParameter;
-import org.riverock.portlet.price.CurrencyManager;
-import org.riverock.portlet.price.CurrencyService;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.schema.price.StandardCurrencyItemType;
-import org.riverock.webmill.container.ContainerConstants;
+
+import javax.portlet.PortletRequest;
+import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * User: Admin
@@ -62,12 +53,8 @@ public class CurrencyStdDateChangeClassQuery extends BaseClassQuery {
             log.debug( "idCurrency - " + idCurrency );
     }
 
-    /**
-     * ¬озвращает текущее значение дл€ отображени€ на веб-странице
-     *
-     * @return String
-     */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+/*
         Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         final CurrencyManager currencyManager = CurrencyManager.getInstance( siteId );
         CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
@@ -79,13 +66,10 @@ public class CurrencyStdDateChangeClassQuery extends BaseClassQuery {
             return "";
 
         return "" + DateUtils.getStringDate( stdItem.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH );
+*/
+        return null;
     }
 
-    /**
-     * ¬озвращает список возможных значений дл€ построени€ <select> элемента
-     *
-     * @return Vector of org.riverock.member.ClassQueryItem
-     */
     public List<ClassQueryItem> getSelectList( PortletRequest renderRequest, ResourceBundle bundle )
         throws Exception {
         throw new Exception( "Not implemented" );

@@ -49,11 +49,12 @@
         <pathelement location="${lib.dir}/${riverock-module.lib}"/>
 
         <pathelement location="${lib.dir}/${servlet.lib}"/>
-        <pathelement location="${lib.dir}/${secure.lib}"/>
         <pathelement location="${lib.dir}/${mail.lib}"/>
         <pathelement location="${lib.dir}/${log4j.lib}"/>
         <pathelement location="${lib.dir}/${junit.lib}"/>
+
         <pathelement location="${lib.dir}/${castor.lib}"/>
+        
         <pathelement location="${lib.dir}/${commons-logging.lib}"/>
         <pathelement location="${lib.dir}/${commons-codec.lib}"/>
         <pathelement location="${lib.dir}/${commons-httpclient.lib}"/>
@@ -65,7 +66,6 @@
         <pathelement location="${lib.dir}/${xml-api.lib}"/>
         <pathelement location="${lib.dir}/${portlet.lib}"/>
 
-        <!--<pathelement location="${lib.dir}/${myfaces.lib}"/>-->
         <pathelement location="${lib.dir}/${myfaces-api.lib}"/>
         <pathelement location="${lib.dir}/${myfaces-core.lib}"/>
         <pathelement location="${lib.dir}/${myfaces-tomahawk.lib}"/>

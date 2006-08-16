@@ -52,12 +52,4 @@
         <antcall target="del_core_files"/>
     </target>
 
-    <target name="gen-core-schema">
-        <property name="schema-dir" value="${src-core.java.dir}/org/riverock/portlet/schema/core/"/>
-        <property name="schema-file" value="${src-core.xsd.dir}/riverock-portlet-schema-core.xsd"/>
-        <property name="schema-package-java" value="org.riverock.portlet.schema.core"/>
-        <antcall target="gen_schema_from_core"/>
-        <copy file="${schema-file}" todir="${src-schema.xsd.dir}"/>
-    </target>
-
 </project>

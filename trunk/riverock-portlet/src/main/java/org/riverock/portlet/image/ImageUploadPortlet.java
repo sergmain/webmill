@@ -52,7 +52,6 @@ import org.riverock.generic.schema.db.CustomSequenceType;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.interfaces.sso.a3.UserInfo;
 
-import org.riverock.portlet.shop.upload.UploadFileException;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**
@@ -140,12 +139,12 @@ public final class ImageUploadPortlet implements Portlet {
             String supportExtension[] = {".jpg", ".jpeg", ".gif", ".png"};
             try {
                 // Todo need fix
-                if ( true ) throw new UploadFileException( "Todo need fix" );
+                if ( true ) throw new Exception( "Todo need fix" );
 //                    newFileName =
 //                            UploadFile.save(request, 1024 * 128, fileName, true,
 //                                    supportExtension);
             }
-            catch( UploadFileException e ) {
+            catch( Exception e ) {
                 log.error( "Error save image to disk", e );
                 out.write( "<html><head></head<body>" +
                     "Error while processing this page:<br>" +

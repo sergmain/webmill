@@ -36,9 +36,6 @@ import org.riverock.generic.utils.DateUtils;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.portlet.member.BaseClassQuery;
 import org.riverock.portlet.member.MemberQueryParameter;
-import org.riverock.portlet.price.CurrencyManager;
-import org.riverock.portlet.price.CurrencyService;
-import org.riverock.portlet.schema.price.CustomCurrencyItemType;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -67,6 +64,8 @@ public class CurrencyDateChangeClassQuery extends BaseClassQuery {
      * @return String
      */
     public String getCurrentValue( PortletRequest renderRequest, ResourceBundle bundle ) throws Exception {
+
+/*
         Long siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         CustomCurrencyItemType item = CurrencyService.getCurrencyItem(
             CurrencyManager.getInstance( siteId ).getCurrencyList(), idCurrency );
@@ -75,6 +74,8 @@ public class CurrencyDateChangeClassQuery extends BaseClassQuery {
             return "";
 
         return "" + DateUtils.getStringDate( item.getCurrentCurs().getDateChange(), "dd.MM.yyyy HH:mm:ss", Locale.ENGLISH );
+*/
+        return null;
     }
 
     /**
