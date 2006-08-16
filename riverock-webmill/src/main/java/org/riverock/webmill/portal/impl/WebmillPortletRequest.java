@@ -25,15 +25,7 @@
 package org.riverock.webmill.portal.impl;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.portlet.PortalContext;
 import javax.portlet.PortletContext;
@@ -241,6 +233,35 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         return session;
     }
 
+    /**
+     * Returns the value of the specified request property
+     * as a <code>String</code>. If the request did not include a property
+     * of the specified name, this method returns <code>null</code>.
+     * <p>
+     * A portlet can access portal/portlet-container specific properties
+     * through this method and, if available, the
+     * headers of the HTTP client request.
+     * <p>
+     * This method should only be used if the
+     * property has only one value. If the property might have
+     * more than one value, use {@link #getProperties}.
+     * <p>
+     * If this method is used with a multivalued
+     * parameter, the value returned is equal to the first value
+     * in the Enumeration returned by <code>getProperties</code>.
+     *
+     * @param key		a <code>String</code> specifying the
+     *				property name
+     *
+     * @return			a <code>String</code> containing the
+     *				value of the requested
+     *				property, or <code>null</code>
+     *				if the request does not
+     *				have a property of that name.
+     *
+     * @exception  java.lang.IllegalArgumentException
+     *                            if name is <code>null</code>.
+     */
     public String getProperty( String key ) {
         if (key==null) {
             throw new IllegalArgumentException("key can't be null");
@@ -254,25 +275,76 @@ public class WebmillPortletRequest extends ServletRequestWrapper implements Http
         }
     }
 
+    /**
+     * Returns all the values of the specified request property
+     * as a <code>Enumeration</code> of <code>String</code> objects.
+     * <p>
+     * If the request did not include any propertys
+     * of the specified name, this method returns an empty
+     * <code>Enumeration</code>.
+     * The property name is case insensitive. You can use
+     * this method with any request property.
+     *
+     * @param key		a <code>String</code> specifying the
+     *				property name
+     *
+     * @return		a <code>Enumeration</code> containing
+     *                  	the values of the requested property. If
+     *                  	the request does not have any properties of
+     *                  	that name return an empty <code>Enumeration</code>.
+     *
+     * @exception  java.lang.IllegalArgumentException
+     *                            if name is <code>null</code>.
+     */
     public Enumeration getProperties( String key ) {
         if (key==null) {
             throw new IllegalArgumentException("key can't be null");
         }
         List<String> values = portletProperties.get( key.toLowerCase() );
         if (values==null) {
-            values = new ArrayList<String>();
+            values = Collections.emptyList();
         }
         return Collections.enumeration( values );
     }
 
+    /**
+     *
+     * Returns a <code>Enumeration</code> of all the property names
+     * this request contains. If the request has no
+     * properties, this method returns an empty <code>Enumeration</code>.
+     *
+     *
+     * @return			an <code>Enumeration</code> of all the
+     *				property names sent with this
+     *				request; if the request has
+     *				no properties, an empty <code>Enumeration</code>.
+     */
     public Enumeration getPropertyNames() {
-        return Collections.enumeration( portletProperties.keySet() );
+        Set<String> names = portletProperties.keySet();
+        if (names==null) {
+            names = Collections.emptySet();
+        }
+        return Collections.enumeration(names);
     }
 
     public PortalContext getPortalContext() {
         return portalContext;
     }
 
+    /**
+     * Returns the name of the authentication scheme used for the
+     * connection between client and portal,
+     * for example, <code>BASIC_AUTH</code>, <code>CLIENT_CERT_AUTH</code>,
+     * a custom one or <code>null</code> if there was no authentication.
+     *
+     * @return		one of the static members <code>BASIC_AUTH</code>,
+     *			<code>FORM_AUTH</code>, <code>CLIENT_CERT_AUTH</code>,
+     *                    <code>DIGEST_AUTH</code> (suitable for == comparison)
+     *			indicating the authentication scheme,
+     *                    a custom one, or
+     *			<code>null</code> if the request was
+     *			not authenticated.
+     */
     public String getAuthType() {
         if ( auth == null )
             return null;

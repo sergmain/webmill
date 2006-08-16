@@ -53,36 +53,6 @@ public class ServletResponseWrapperInclude implements ServletResponse {
     private Locale locale = null;
     private ByteArrayOutputStream outputStream = new ByteArrayOutputStream( BUFFER_INITIAL_SIZE );
 
-    public byte[] getBytes() {
-        return outputStream.toByteArray();
-    }
-
-    public void setContentType(String contentTypeString ) {
-        if ( log.isDebugEnabled() ) {
-            log.debug( "set new contentType: " + contentTypeString );
-        }
-
-        // if writer or stream returned, dont change contentType
-        if ( realWriter != null || realOutputStream != null || contentTypeString == null ) {
-            return;
-        }
-
-        contentTypeManager.setContentType( contentTypeString );
-    }
-
-    public void setCharacterEncoding( String charset ) {
-        // if writer or stream returned, dont change contentType
-        if (realWriter!=null || realOutputStream!=null )
-            return;
-
-        contentTypeManager.setCharacterEncoding( charset );
-    }
-
-    public ServletResponseWrapperInclude( Locale locale) {
-        this.locale = locale;
-        this.contentTypeManager = ContentTypeManager.getInstance( locale );
-    }
-
     private static class PrintWriterLogger extends PrintWriter {
 
         public PrintWriterLogger( Writer out ) {
@@ -114,6 +84,36 @@ public class ServletResponseWrapperInclude implements ServletResponse {
             }
             super.write(s);
         }
+    }
+
+    public ServletResponseWrapperInclude( Locale locale) {
+        this.locale = locale;
+        this.contentTypeManager = ContentTypeManager.getInstance( locale );
+    }
+
+    public byte[] getBytes() {
+        return outputStream.toByteArray();
+    }
+
+    public void setContentType(String contentTypeString ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug( "set new contentType: " + contentTypeString );
+        }
+
+        // if writer or stream returned, dont change contentType
+        if ( realWriter != null || realOutputStream != null || contentTypeString == null ) {
+            return;
+        }
+
+        contentTypeManager.setContentType( contentTypeString );
+    }
+
+    public void setCharacterEncoding( String charset ) {
+        // if writer or stream returned, dont change contentType
+        if (realWriter!=null || realOutputStream!=null )
+            return;
+
+        contentTypeManager.setCharacterEncoding( charset );
     }
 
     public PrintWriter getWriter() throws IOException {
@@ -190,14 +190,59 @@ public class ServletResponseWrapperInclude implements ServletResponse {
         isCommited = true;
     }
 
+    /**
+     * Clears the content of the underlying buffer in the response without
+     * clearing headers or status code. If the
+     * response has been committed, this method throws an
+     * <code>IllegalStateException</code>.
+     *
+     * @see 		#setBufferSize
+     * @see 		#getBufferSize
+     * @see 		#isCommitted
+     * @see 		#reset
+     *
+     * @since 2.3
+     */
     public void resetBuffer() {
         if (isCommited)
-            throw new IllegalStateException("response already commited");
+            throw new IllegalStateException("Response already commited.");
+
+        try {
+            if (realWriter!=null) {
+                realWriter.close();
+                realWriter = new PrintWriterLogger(
+                    new OutputStreamWriter( outputStream, contentTypeManager.getCharacterEncoding() ), true
+                );
+
+            }
+            else if (realOutputStream!=null) {
+                realOutputStream.close();
+                realOutputStream = new ServletOutputStreamWithOutputStream( outputStream );
+            }
+        } catch (IOException e) {
+            String es = "Error invoke resetBuffer().";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
     }
 
+    /**
+     * Clears any data that exists in the buffer as well as the status code and
+     * headers.  If the response has been committed, this method throws an
+     * <code>IllegalStateException</code>.
+     *
+     * @exception IllegalStateException  if the response has already been
+     *                                   committed
+     *
+     * @see 		#setBufferSize
+     * @see 		#getBufferSize
+     * @see 		#flushBuffer
+     * @see 		#isCommitted
+     *
+     */
     public void reset() {
-        if (isCommited)
-            throw new IllegalStateException("response already commited");
+        // reset of status code and headers not supported
+        resetBuffer();
     }
 
     public void setLocale( final Locale locale ) {
@@ -220,7 +265,6 @@ public class ServletResponseWrapperInclude implements ServletResponse {
     }
 
     public void setBufferSize( int i ) {
-        throw new IllegalStateException("response already commited");
     }
 
 }

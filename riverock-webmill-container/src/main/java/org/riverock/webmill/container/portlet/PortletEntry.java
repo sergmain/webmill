@@ -63,10 +63,6 @@ public final class PortletEntry {
         return portletProperties;
     }
 
-//    public void setPortletProperties(Map<String, List<String>> portletProperties) {
-//        this.portletProperties = portletProperties;
-//    }
-
     public void destroy() {
         if (portlet!=null) {
             portlet.destroy();
@@ -80,7 +76,7 @@ public final class PortletEntry {
         servletConfig = null;
         classLoader = null;
         uniqueName = null;
-	exceptionMessage = null;
+        exceptionMessage = null;
     }
 
     public ClassLoader getClassLoader() {
@@ -125,14 +121,16 @@ public final class PortletEntry {
         this.lastInitTime = System.currentTimeMillis();
         this.interval = e.getUnavailableSeconds();
         this.isPermanent = e.isPermanent();
-        if (interval <= 0)
+        if (interval <= 0) {
             this.isPermanent = true;
-	exceptionMessage = e.toString();
+        }
+        exceptionMessage = e.toString();
     }
 
     public boolean getIsWait() {
-        if (getIsPermanent())
+        if (getIsPermanent()) {
             return true;
+        }
 
         return getInterval() > (System.currentTimeMillis() - getLastInitTime()) / 1000;
     }

@@ -76,7 +76,10 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
 
     private ServletResponseWrapper servletResponse = null;
 
-    protected String title = null;
+    /**
+     * Portlet title
+     */
+    private String title = null;
 
     // current request state
     private RequestState requestState = null;
@@ -129,6 +132,9 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         this.servletResponse = new ServletResponseWrapper( new ServletResponseWrapperInclude( portalRequestInstance.getLocale() ) );
     }
 
+    /**
+    * Return the wrapped ServletResponse object.
+    */
     public ServletResponse getResponse() {
         return servletResponse.getResponse();
     }
@@ -145,9 +151,23 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         return redirectUrl;
     }
 
+    /**
+     * Adds a String property to an existing key to be returned to the portal.
+     * <p>
+     * This method allows response properties to have multiple values.
+     * <p>
+     * Properties can be used by portlets to provide vendor specific
+     * information to the portal.
+     *
+     * @param  key    the key of the property to be returned to the portal
+     * @param  value  the value of the property to be returned to the portal
+     *
+     * @exception  java.lang.IllegalArgumentException
+     *                            if key is <code>null</code>.
+     */
     public void addProperty( String key, String value ) {
         if (key==null) {
-            throw new IllegalArgumentException("key can't be null");
+            throw new IllegalArgumentException("Property key can't be null");
         }
         List<String> values = portletProperties.get( key.toLowerCase() );
         if (values==null) {
@@ -157,9 +177,23 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         values.add( value );
     }
 
+    /**
+     * Sets a String property to be returned to the portal.
+     * <p>
+     * Properties can be used by portlets to provide vendor specific
+     * information to the portal.
+     * <p>
+     * This method resets all properties previously added with the same key.
+     *
+     * @param  key    the key of the property to be returned to the portal
+     * @param  value  the value of the property to be returned to the portal
+     *
+     * @exception  java.lang.IllegalArgumentException
+     *                            if key is <code>null</code>.
+     */
     public void setProperty( String key, String value ) {
         if (key==null) {
-            throw new IllegalArgumentException("key can't be null");
+            throw new IllegalArgumentException("Property key can't be null");
         }
         List<String> values = portletProperties.get( key.toLowerCase() );
         if (values==null) {
@@ -266,20 +300,10 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         return null;
     }
 
-    public OutputStream getPortletOutputStream() throws IOException {
-        if (isUsingWriter) {
-            throw new IllegalStateException( "getPortletOutputStream can't be used after getWriter was invoked" );
-        }
-
-        if (wrappedWriter == null) {
-            wrappedWriter = servletResponse.getOutputStream();
-        }
-
-        isUsingStream = true;
-
-        return wrappedWriter;
-    }
-
+    /**
+   * The default behavior of this method is to return getOutputStream()
+   * on the wrapped response object.
+   */
     public ServletOutputStream getOutputStream() throws IOException {
         if (isUsingWriter) {
             throw new IllegalStateException( "getOutputStream can't be used after getWriter was invoked" );
@@ -294,6 +318,62 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         return wrappedWriter;
     }
 
+    // RenderResponse methods
+
+    /**
+     * Returns a <code>OutputStream</code> suitable for writing binary
+     * data in the response. The portlet container does not encode the
+     * binary data.
+     * <p>
+     * Before calling this method the content type of the
+     * render response must be set using the {@link #setContentType}
+     * method.
+     * <p>
+     * Calling <code>flush()</code> on the OutputStream commits the response.
+     * <p>
+     * Either this method or {@link #getWriter} may be called to write the body, not both.
+     *
+     * @return	a <code>OutputStream</code> for writing binary data
+     *
+     * @exception java.lang.IllegalStateException   if the <code>getWriter</code> method
+     * 					has been called on this response, or
+     *                                    if no content type was set using the
+     *                                    <code>setContentType</code> method.
+     *
+     * @exception java.io.IOException 	if an input or output exception occurred
+     *
+     * @see #setContentType
+     * @see #getWriter
+     */
+    public OutputStream getPortletOutputStream() throws IOException {
+        return getOutputStream();
+    }
+
+    /**
+     * Returns a PrintWriter object that can send character
+     * text to the portal.
+     * <p>
+     * Before calling this method the content type of the
+     * render response must be set using the {@link #setContentType}
+     * method.
+     * <p>
+     * Either this method or {@link #getPortletOutputStream} may be
+     * called to write the body, not both.
+     *
+     * @return    a <code>PrintWriter</code> object that
+     *		can return character data to the portal
+     *
+     * @exception  java.io.IOException
+     *                 if an input or output exception occurred
+     * @exception  java.lang.IllegalStateException
+     *                 if the <code>getPortletOutputStream</code> method
+     * 		     has been called on this response,
+     *                 or if no content type was set using the
+     *                 <code>setContentType</code> method.
+     *
+     * @see #setContentType
+     * @see #getPortletOutputStream
+     */
     public PrintWriter getWriter() throws IOException {
 
         if ( log.isDebugEnabled() ) {
@@ -309,11 +389,18 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
         return servletResponse.getWriter();
     }
 
+    /**
+     * Returns the locale assigned to the response.
+     *
+     * @return  Locale of this response
+     */
     public Locale getLocale() {
         return renderRequest.getLocale();
     }
 
     /**
+     * Current version of Webmill portal does not support buffering
+     *
      * Sets the preferred buffer size for the body of the response.
      * The portlet container will use a buffer at least as large as
      * the size requested.
@@ -336,49 +423,181 @@ public final class RenderResponseImpl extends HttpServletResponseWrapper impleme
      * @see 		#reset
      */
     public void setBufferSize( int size ) {
-        throw new IllegalStateException( "Current version of Webmill portal does not support buffering" );
+        servletResponse.setBufferSize(size);
     }
 
+    /**
+     * Returns the actual buffer size used for the response.  If no buffering
+     * is used, this method returns 0.
+     *
+     * @return	 	the actual buffer size used
+     *
+     * @see 		#setBufferSize
+     * @see 		#flushBuffer
+     * @see 		#isCommitted
+     * @see 		#reset
+     */
     public int getBufferSize() {
         return servletResponse.getBufferSize();
     }
 
+    /**
+     * Forces any content in the buffer to be written to the client.  A call
+     * to this method automatically commits the response.
+     *
+     * @exception  java.io.IOException  if an error occured when writing the output
+     *
+     * @see 		#setBufferSize
+     * @see 		#getBufferSize
+     * @see 		#isCommitted
+     * @see 		#reset
+     */
     public void flushBuffer() throws IOException {
         servletResponse.flushBuffer();
     }
 
+    /**
+     * Clears the content of the underlying buffer in the response without
+     * clearing properties set. If the response has been committed,
+     * this method throws an <code>IllegalStateException</code>.
+     *
+     * @exception  IllegalStateException 	if this method is called after
+     *					response is comitted
+     *
+     * @see 		#setBufferSize
+     * @see 		#getBufferSize
+     * @see 		#isCommitted
+     * @see 		#reset
+     */
     public void resetBuffer() {
         servletResponse.resetBuffer();
     }
 
+    /**
+     * Clears any data that exists in the buffer as well as the properties set.
+     * If the response has been committed, this method throws an
+     * <code>IllegalStateException</code>.
+     *
+     * @exception java.lang.IllegalStateException  if the response has already been
+     *                                   committed
+     *
+     * @see 		#setBufferSize
+     * @see 		#getBufferSize
+     * @see 		#flushBuffer
+     * @see 		#isCommitted
+     */
+    public void reset() {
+        servletResponse.reset();
+        portletProperties.clear();
+    }
+
+    /**
+     * Returns a boolean indicating if the response has been
+     * committed.
+     *
+     * @return		a boolean indicating if the response has been
+     *  		committed
+     *
+     * @see 		#setBufferSize
+     * @see 		#getBufferSize
+     * @see 		#flushBuffer
+     * @see 		#reset
+     */
     public boolean isCommitted() {
         return servletResponse.isCommitted();
     }
 
-    public void reset() {
-        servletResponse.reset();
-    }
-
+    /**
+     * Creates a portlet URL targeting the portlet. If no portlet mode,
+     * window state or security modifier is set in the PortletURL the
+     * current values are preserved. If a request is triggered by the
+     * PortletURL, it results in a render request.
+     * <p>
+     * The returned URL can be further extended by adding
+     * portlet-specific parameters and portlet modes and window states.
+     * <p>
+     * The created URL will per default not contain any parameters
+     * of the current render request.
+     *
+     * @return a portlet render URL
+     */
     public PortletURL createRenderURL() {
         return new PortletURLImpl( portalRequestInstance, renderRequest, false, namespace, requestState, portletName );
     }
 
+    /**
+     * Creates a portlet URL targeting the portlet. If no portlet mode,
+     * window state or security modifier is set in the PortletURL the
+     * current values are preserved. If a request is triggered by the
+     * PortletURL, it results in an action request.
+     * <p>
+     * The returned URL can be further extended by adding
+     * portlet-specific parameters and portlet modes and window states.
+     * <p>
+     * The created URL will per default not contain any parameters
+     * of the current render request.
+     *
+     * @return a portlet action URL
+     */
     public PortletURL createActionURL() {
         return new PortletURLImpl( portalRequestInstance, renderRequest, true, namespace, requestState, portletName );
     }
 
+    /**
+     * The value returned by this method should be prefixed or appended to
+     * elements, such as JavaScript variables or function names, to ensure
+     * they are unique in the context of the portal page.
+     *
+     * @return   the namespace
+     */
     public String getNamespace() {
         return namespace.getNamespace();
     }
 
+    /**
+     * This method sets the title of the portlet.
+     * <p>
+     * The value can be a text String
+     *
+     * @param  title    portlet title as text String or resource URI
+     */
     public void setTitle( String title ) {
         this.title = title;
     }
 
-    public void setContentType( String contentType ) {
-        servletResponse.setContentType( contentType );
+    /**
+     * Sets the MIME type for the render response. The portlet must
+     * set the content type before calling {@link #getWriter} or
+     * {@link #getPortletOutputStream}.
+     * <p>
+     * Calling <code>setContentType</code> after <code>getWriter</code>
+     * or <code>getOutputStream</code> does not change the content type.
+     *
+     * @param   type  the content MIME type
+     *
+     * @throws  java.lang.IllegalArgumentException
+     *              if the given type is not in the list returned
+     *              by <code>PortletRequest.getResponseContentTypes</code>
+     *
+     * @see  RenderRequest#getResponseContentTypes
+     * @see  #getContentType
+     */
+    public void setContentType( String type ) {
+        servletResponse.setContentType( type );
     }
 
+    /**
+     * Returns the name of the charset used for
+     * the MIME body sent in this response.
+     *
+     * <p>See <a href="http://ds.internic.net/rfc/rfc2045.txt">RFC 2047</a>
+     * for more information about character encoding and MIME.
+     *
+     * @return		a <code>String</code> specifying the
+     *			name of the charset, for
+     *			example, <code>ISO-8859-1</code>
+     *
+     */
     public String getCharacterEncoding() {
         return servletResponse.getCharacterEncoding();
     }
