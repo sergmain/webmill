@@ -39,6 +39,10 @@ public class InternalPreferencesDaoImpl implements InternalPreferencesDao {
 
             DatabaseAdapter adapter = null;
 
+            if (log.isDebugEnabled()) {
+                log.debug(" result metadata: " + s);
+                log.debug(" contextId: " + contextId);
+            }
 
             try {
                 adapter = DatabaseAdapter.getInstance();

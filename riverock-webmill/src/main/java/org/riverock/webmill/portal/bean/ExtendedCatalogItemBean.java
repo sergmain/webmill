@@ -290,15 +290,21 @@ public final class ExtendedCatalogItemBean {
         try {
             String s;
             while ((s=reader.readLine())!=null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Line int metadata: " + s);
+                }
                 int idx = s.indexOf('=');
                 if (idx==-1) {
                     continue;
                 }
                 String key = s.substring(0, idx).trim();
                 String value = s.substring(idx+1).trim();
+                if (log.isDebugEnabled()) {
+                    log.debug("    key: " + key +", " +value);
+                }
 
                 if (StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)) {
-                    MapWithParameters.put((Map)map, key, value);
+                    MapWithParameters.putInStringList(map, key, value);
                 }
             }
             return map;
