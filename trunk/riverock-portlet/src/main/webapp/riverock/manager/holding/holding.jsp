@@ -33,6 +33,8 @@
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
         <h:commandButton id="company-list-action" action="company" value="#{manager.company_button}"
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
+        <h:commandButton id="menu-list-action" action="menu" value="#{manager.menu_button}"
+                         styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager,webmill.site-manager,webmill.menu']}"/>
         <h:commandButton id="portlet-name-list-action" action="portlet-name" value="#{manager.portlet_name_button}"
                          styleClass="top-button-action" rendered="#{isUserInRole['webmill.portal-manager']}"/>
         <h:commandButton id="portal-user-list-action" action="portal-user" value="#{manager.portal_user_button}"
