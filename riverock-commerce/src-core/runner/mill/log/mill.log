@@ -1,11 +1,11 @@
-0    INFO  org.riverock.generic.startup.StartupApplication  - Application path: C:\sandbox\riverock\trunk\riverock-commerce\src-core\runner
-0    DEBUG org.riverock.common.config.ConfigService  - #15.001  load resource for lang ru
-31   DEBUG org.riverock.generic.config.GenericConfig  - GenericConfig.getTZ() #1
-47   DEBUG org.riverock.common.config.ConfigObject  - #15.100
-47   DEBUG org.riverock.common.config.ConfigObject  - #15.101C:\sandbox\riverock\trunk\riverock-commerce\src-core\runner\mill\jsmithy-generic.xml
-47   INFO  org.riverock.common.config.ConfigObject  - nameConfigFile: C:\sandbox\riverock\trunk\riverock-commerce\src-core\runner\mill\jsmithy-generic.xml
-47   DEBUG org.riverock.common.config.ConfigObject  - Start unmarshalling file jsmithy-generic.xml
-437  DEBUG org.riverock.generic.config.GenericConfig  - #15.006
-437  INFO  org.riverock.generic.config.GenericConfig  - Name default DB connect ORACLE_CIH
-437  DEBUG org.riverock.generic.config.GenericConfig  - GenericConfig.getTZ() #3 Set new TimeZone
-437  DEBUG org.riverock.generic.config.GenericConfig  - GenericConfig.getTZ(). Set TimeZone to Europe/Moscow
+16   INFO  org.riverock.generic.startup.StartupApplication  - Application path: C:\sandbox\riverock\trunk\riverock-commerce\src-core\runner
+16   DEBUG org.riverock.common.config.ConfigService  - #15.001  load resource for lang ru
+47   DEBUG org.riverock.generic.config.GenericConfig  - GenericConfig.getTZ() #1
+63   DEBUG org.riverock.common.config.ConfigObject  - #15.100
+63   DEBUG org.riverock.common.config.ConfigObject  - #15.101C:\sandbox\riverock\trunk\riverock-commerce\src-core\runner\mill\jsmithy-generic.xml
+63   INFO  org.riverock.common.config.ConfigObject  - nameConfigFile: C:\sandbox\riverock\trunk\riverock-commerce\src-core\runner\mill\jsmithy-generic.xml
+79   DEBUG org.riverock.common.config.ConfigObject  - Start unmarshalling file jsmithy-generic.xml
+766  DEBUG org.riverock.generic.config.GenericConfig  - #15.006
+766  INFO  org.riverock.generic.config.GenericConfig  - Name default DB connect ORACLE_CIH
+766  DEBUG org.riverock.generic.config.GenericConfig  - GenericConfig.getTZ() #3 Set new TimeZone
+766  DEBUG org.riverock.generic.config.GenericConfig  - GenericConfig.getTZ(). Set TimeZone to Europe/Moscow
