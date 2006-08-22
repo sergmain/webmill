@@ -27,6 +27,7 @@ package org.riverock.common.collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 
@@ -68,9 +69,35 @@ public class TestTreeUtils extends TestCase {
         }
     }
 
-    public void testRebuildTree()
-        throws Exception
-    {
+    class IntegerTreeItem implements TreeItem {
+        Integer id;
+        Integer topId;
+        List<TreeItem> subTree;
+
+        public IntegerTreeItem(Integer id, Integer topId, List<TreeItem> tree) {
+            this.id=id;
+            this.topId=topId;
+            this.subTree=tree;
+        }
+
+        public Long getTopId() {
+            return (long)topId.intValue();
+        }
+
+        public Long getId() {
+            return (long) id.intValue();
+        }
+
+        public List<TreeItem> getSubTree() {
+            return subTree;
+        }
+
+        public void setSubTree(List<TreeItem> list) {
+            this.subTree = list;
+        }
+    }
+
+    public void testRebuildTree() throws Exception {
         LinkedList<TreeItem> list = new LinkedList<TreeItem>();
         list.add( new SimpleTreeItem(1L, 0L, null) );
         list.add( new SimpleTreeItem(2L, 0L, null) );
@@ -129,5 +156,92 @@ public class TestTreeUtils extends TestCase {
         subTree = ((SimpleTreeItem) subTree.get(0)).getSubTree();
         assertNotNull(subTree);
         assertTrue(subTree.size()==3 );
+    }
+/*
+    REPORT_TREE_ID TOP_REPORT_TREE_ID
+    -------------- ------------------
+                66                 58
+                68                 35
+                71                 34
+                72                  0
+                30                  0
+
+                34                 79
+                35                 79
+                33                  0
+
+                38                 35
+                39                 35
+                40                 35
+                57                 35
+                56                 35
+                58                 33
+
+                59                 58
+                60                 58
+                61                 58
+
+                63                 35
+                64                 35
+                79                  0
+                78                 34
+*/
+    public void testRebuildUnsorderTree() throws Exception {
+        List<TreeItem> list = new ArrayList<TreeItem>();
+        list.add( new IntegerTreeItem(66, 58, null) );
+        list.add( new IntegerTreeItem(68, 35, null) );
+        list.add( new IntegerTreeItem(71, 34, null) );
+        list.add( new IntegerTreeItem(72, 0, null) );
+        list.add( new IntegerTreeItem(30, 0, null) );
+        list.add( new IntegerTreeItem(34, 79, null) );
+        list.add( new IntegerTreeItem(35, 79, null) );
+        list.add( new IntegerTreeItem(33, 0, null) );
+
+        list.add( new IntegerTreeItem(38, 35, null) );
+        list.add( new IntegerTreeItem(39, 35, null) );
+        list.add( new IntegerTreeItem(40, 35, null) );
+        list.add( new IntegerTreeItem(57, 35, null) );
+        list.add( new IntegerTreeItem(56, 35, null) );
+        list.add( new IntegerTreeItem(58, 33, null) );
+
+        list.add( new IntegerTreeItem(59, 58, null) );
+        list.add( new IntegerTreeItem(60, 58, null) );
+        list.add( new IntegerTreeItem(61, 58, null) );
+
+        list.add( new IntegerTreeItem(63, 35, null) );
+        list.add( new IntegerTreeItem(64, 35, null) );
+        list.add( new IntegerTreeItem(79, 0, null) );
+        list.add( new IntegerTreeItem(78, 34, null) );
+
+
+
+        List<IntegerTreeItem> result = (List<IntegerTreeItem>)(List)TreeUtils.rebuildTree(list);
+
+        System.out.println("result.size() = " + result.size());
+        assertTrue(result.size()==4 );
+
+        for (IntegerTreeItem item : result) {
+            if (item.id==72) {
+                assertNull(item.getSubTree());
+            }
+            if (item.id==30) {
+                assertNull(item.getSubTree());
+            }
+            if (item.id==33) {
+                assertTrue(item.getSubTree().size()==1);
+            }
+            if (item.id==79) {
+                assertTrue(item.getSubTree().size()==2);
+                for (IntegerTreeItem treeItem : (List<IntegerTreeItem>)(List)item.getSubTree()) {
+                    if (treeItem.id==34) {
+                        assertTrue(treeItem.getSubTree().size()==2);
+                    }
+
+                    if (treeItem.id==35) {
+                        assertTrue(treeItem.getSubTree().size()==8);
+                    }
+                }
+            }
+        }
     }
 }

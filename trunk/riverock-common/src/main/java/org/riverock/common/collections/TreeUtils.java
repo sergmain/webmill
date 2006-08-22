@@ -58,23 +58,35 @@ public final class TreeUtils {
             if (item2 ==null)
                 return -1;
 
-            if ( item1.getTopId()==null && item2.getTopId()==null)
-                return 0;
-
-            if ( item1.getTopId()!=null && item2.getTopId()==null )
+            if ( item1.getId() > item2.getId())
+                return 1;
+            else if ( item1.getId() < item2.getId())
                 return -1;
 
-            if ( item1.getTopId()==null && item2.getTopId()!=null)
-                return 1;
+            if ( item1.getId().equals(item2.getId()) ) {
+
+                if ( item1.getTopId()!=null && item2.getTopId()==null )
+                    return -1;
+
+                if ( item1.getTopId()==null && item2.getTopId()==null)
+                    return 0;
+
+                if ( item1.getTopId()!=null && item2.getTopId()==null )
+                    return -1;
+
+                if ( item1.getTopId()==null && item2.getTopId()!=null)
+                    return 1;
 
 
-            if ( item1.getTopId().equals( item2.getTopId()))
-                return 1;
+                if ( item1.getTopId().equals( item2.getTopId()))
+                    return 1;
 
-            if ( item1.getTopId() > item2.getTopId())
-                return 1;
-            else
-                return -1;
+                if ( item1.getTopId() > item2.getTopId())
+                    return 1;
+                else
+                    return -1;
+            }
+            return 0;
         }
     }
 
@@ -133,7 +145,7 @@ public final class TreeUtils {
             }
 
             if (sortedTreeItems.size() > 0) {
-                id = ((TreeItem)sortedTreeItems.get(0)).getTopId();
+                id = sortedTreeItems.get(0).getTopId();
             }
         }
         treeItems.clear();
