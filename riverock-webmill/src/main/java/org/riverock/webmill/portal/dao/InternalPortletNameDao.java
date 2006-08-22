@@ -40,4 +40,6 @@ public interface InternalPortletNameDao {
     public void updatePortletName( PortletName portletNameBean );
     public void deletePortletName( PortletName portletNameBean );
     public List<PortletName> getPortletNameList();
+
+    void registerPortletName(String portletName);
 }

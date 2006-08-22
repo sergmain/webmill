@@ -39,6 +39,7 @@ import org.riverock.webmill.core.GetWmPortalPortletNameItem;
 import org.riverock.webmill.core.InsertWmPortalPortletNameItem;
 import org.riverock.webmill.portal.bean.PortletNameBean;
 import org.riverock.webmill.schema.core.WmPortalPortletNameItemType;
+import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.common.tools.RsetTools;
 
 /**
@@ -74,11 +75,26 @@ public class InternalPortletNameDaoImpl implements InternalPortletNameDao {
     }
 
     public PortletName getPortletName(String portletName) {
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         DatabaseAdapter adapter = null;
         try {
             adapter = DatabaseAdapter.getInstance();
+            return getPortletName(adapter, portletName);
+        }
+        catch (Exception e) {
+            String es = "Error get getPortletName()";
+            log.error(es, e);
+            throw new IllegalStateException(es, e);
+        }
+        finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
+        }
+    }
+
+    public PortletName getPortletName(DatabaseAdapter adapter, String portletName) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
             ps = adapter.prepareStatement(
                 "select * from WM_PORTAL_PORTLET_NAME where TYPE=?"
             );
@@ -103,8 +119,7 @@ public class InternalPortletNameDaoImpl implements InternalPortletNameDao {
             throw new IllegalStateException(es, e);
         }
         finally {
-            DatabaseManager.close(adapter, rs, ps);
-            adapter = null;
+            DatabaseManager.close(rs, ps);
             rs = null;
             ps = null;
         }
@@ -140,6 +155,73 @@ public class InternalPortletNameDaoImpl implements InternalPortletNameDao {
             db = null;
             rs = null;
             ps = null;
+        }
+    }
+
+    public void registerPortletName(String portletName) {
+        if (portletName==null) {
+            return;
+        }
+        String resultPortletName = portletName;
+        if ( portletName.startsWith( PortletContainer.PORTLET_ID_NAME_SEPARATOR ) ) {
+            resultPortletName = portletName.substring(PortletContainer.PORTLET_ID_NAME_SEPARATOR .length());
+        }
+
+        DatabaseAdapter adapter = null;
+        try {
+            adapter = DatabaseAdapter.getInstance();
+
+            PortletName bean = getPortletName(adapter, resultPortletName);
+            // check portletName is registered
+            if (bean!=null) {
+                return;
+            }
+
+            CustomSequenceType seq = new CustomSequenceType();
+            seq.setSequenceName( "seq_WM_PORTAL_PORTLET_NAME" );
+            seq.setTableName( "WM_PORTAL_PORTLET_NAME" );
+            seq.setColumnName( "ID_SITE_CTX_TYPE" );
+            Long id = adapter.getSequenceNextValue( seq );
+
+            WmPortalPortletNameItemType item = new WmPortalPortletNameItemType();
+            item.setIdSiteCtxType(id);
+            item.setType(resultPortletName);
+
+            InsertWmPortalPortletNameItem.process(adapter, item);
+
+            adapter.commit();
+        }
+        catch (Exception e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+
+            // check exception is unique key violation, if so, exit w/o error
+            if (adapter!=null && adapter.testExceptionIndexUniqueKey(e) ) {
+                return;
+            }
+            String es = "Error create portlet name";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        }
+        catch (Throwable e) {
+            try {
+                if (adapter!=null)
+                    adapter.rollback();
+            }
+            catch(Throwable th) {
+                // catch rollback error
+            }
+            String es = "Error register portlet name";
+            log.error(es, e);
+            throw new IllegalStateException( es, e);
+        } finally {
+            DatabaseManager.close(adapter);
+            adapter = null;
         }
     }
 

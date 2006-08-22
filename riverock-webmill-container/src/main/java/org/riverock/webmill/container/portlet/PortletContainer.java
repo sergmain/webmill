@@ -36,6 +36,8 @@ import java.util.Map;
 import javax.portlet.*;
 import javax.servlet.ServletConfig;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.webmill.container.bean.PortletWebApplication;
 import org.riverock.webmill.container.impl.PortletConfigImpl;
 import org.riverock.webmill.container.impl.PortletContextImpl;
@@ -43,7 +45,6 @@ import org.riverock.webmill.container.portlet.bean.PortletApplication;
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.Preferences;
 import org.riverock.webmill.container.resource.PortletResourceBundle;
-import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: serg_main
@@ -51,7 +52,7 @@ import org.riverock.webmill.container.tools.PortletService;
  * Time: 17:49:32
  *
  * @author Serge Maslyukov
- *         $Id$
+ *         $Id: PortletContainer.java 901 2006-08-16 14:21:42Z serg_main $
  */
 public final class PortletContainer implements Serializable {
     private static final long serialVersionUID = 50434672384237805L;
@@ -84,6 +85,7 @@ public final class PortletContainer implements Serializable {
     private PortalInstance portalInstance = null;
     private PortletContentCache contentCache = null;
     private String portalPath = null;
+    private boolean isNewPortlet = false;
 
     private final static Object syncObect = new Object();
 
@@ -208,6 +210,7 @@ public final class PortletContainer implements Serializable {
                     portletWebApplication.setUniqueName(waitDigestFile.uniqueName);
 
                     container.portletItems.put(portletType.getFullPortletName(), portletWebApplication);
+                    container.isNewPortlet=true;
                 }
                 iterator.remove();
             }
@@ -226,7 +229,7 @@ public final class PortletContainer implements Serializable {
                 for (int i = 0; i < portletApp.getPortletCount(); i++) {
                     PortletDefinition portletDefinition = portletApp.getPortlet(i);
                     portletDefinition.setApplicationName(
-                        PortletService.isEmpty( portletApp.getId() )?"":portletApp.getId() 
+                        StringUtils.isBlank(portletApp.getId()) ?"":portletApp.getId()
                     );
                     if (portletDefinition.getPreferences()==null) {
                         portletDefinition.setPreferences( new Preferences() );
@@ -274,6 +277,9 @@ public final class PortletContainer implements Serializable {
     // instance methods
 
     public PortletEntry getPortletInstance(final String queryPortletName) throws PortletContainerException {
+        if (isNewPortlet) {
+            registerNewPortlet();
+        }
         if (queryPortletName==null) {
             String es = "Parameter 'portletName' cant be null.";
             System.out.println( es );
@@ -313,6 +319,18 @@ public final class PortletContainer implements Serializable {
             addPortletEntry( portletInstanceUniqueNameMap, newPortlet.getUniqueName(), newPortlet );
             portletInstanceMap.put( portletName, newPortlet );
             return newPortlet;
+        }
+    }
+
+    private void registerNewPortlet() {
+        synchronized(syncObect) {
+            for (PortletWebApplication portletWebApplication : portletItems.values()) {
+                if (!portletWebApplication.isRegistered()) {
+                    portalInstance.registerPortlet(portletWebApplication.getPortletDefinition().getFullPortletName());
+                    portletWebApplication.setRegistered(true);
+                }
+            }
+            isNewPortlet=false;
         }
     }
 

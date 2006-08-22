@@ -43,6 +43,10 @@ public class PortletWebApplication implements Serializable {
     private ServletConfig servletConfig = null;
     private PortletDefinition portletDefinition = null;
     private String uniqueName = null;
+    /**
+     * boolean flag indicated, what portal already register this portlet
+     */
+    private boolean isRegistered=false;
 
     public String getUniqueName() {
         return uniqueName;
@@ -74,5 +78,13 @@ public class PortletWebApplication implements Serializable {
 
     public void setClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;
+    }
+
+    public boolean isRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(boolean registered) {
+        isRegistered = registered;
     }
 }

@@ -962,7 +962,8 @@ public class WebmillAdminDaoImpl implements WebmillAdminDao {
                     "from   WM_PORTAL_CATALOG a, WM_PORTAL_CATALOG_LANGUAGE b " +
                     "where  a.ID_SITE_CTX_LANG_CATALOG=b.ID_SITE_CTX_LANG_CATALOG and " +
                     "       b.ID_SITE_SUPPORT_LANGUAGE=? and a.ID_SITE_CTX_TYPE=? and a.ID_SITE_TEMPLATE=? ",
-                new Object[]{siteLanguageId, portletId, templateId}
+                new Object[]{siteLanguageId, portletId, templateId},
+                new int[]{Types.DECIMAL, Types.DECIMAL, Types.DECIMAL}
             );
         }
         catch (Exception e) {

@@ -37,4 +37,6 @@ public interface PortalInstance {
     public int getPortalMajorVersion();
     public int getPortalMinorVersion();
     public Collection<String> getSupportedLocales();
+
+    void registerPortlet(String fullPortletName);
 }
