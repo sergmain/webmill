@@ -51,7 +51,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 	</portlet>
 	<portlet>
 		<portlet-name>mill.shop</portlet-name>
-		<portlet-class>org.riverock.portlet.price.ShopPortlet</portlet-class>
+		<portlet-class>org.riverock.commerce.price.ShopPortlet</portlet-class>
 		<init-param>
 			<name>is-xml</name>
 			<value>true</value>
@@ -70,7 +70,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</init-param>
 		<init-param>
 			<name>class-name-get-list</name>
-			<value>org.riverock.portlet.price.ShopListProvider</value>
+			<value>org.riverock.commerce.price.ShopListProvider</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>
@@ -93,7 +93,7 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
     </portlet>
 	<portlet>
 		<portlet-name>mill.invoice</portlet-name>
-		<portlet-class>org.riverock.portlet.invoice.InvoicePortlet</portlet-class>
+		<portlet-class>org.riverock.commerce.invoice.InvoicePortlet</portlet-class>
 		<init-param>
 			<name>locale-name-package</name>
 			<value>mill.locale._price_list</value>

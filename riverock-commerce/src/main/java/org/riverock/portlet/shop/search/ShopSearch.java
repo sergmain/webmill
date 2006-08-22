@@ -46,7 +46,7 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.schema.db.CustomSequenceType;
-import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.webmill.container.tools.PortletService;
 
 /**

@@ -49,10 +49,10 @@ import org.xml.sax.InputSource;
 
 import org.riverock.common.tools.ExceptionTools;
 import org.riverock.generic.db.DatabaseAdapter;
-import org.riverock.portlet.price.ImportPriceList;
-import org.riverock.portlet.price.Shop;
+import org.riverock.commerce.price.ImportPriceList;
+import org.riverock.commerce.price.Shop;
 import org.riverock.portlet.schema.import_price.PricesType;
-import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
