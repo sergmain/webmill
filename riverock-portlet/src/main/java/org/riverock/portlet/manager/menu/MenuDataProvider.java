@@ -107,9 +107,9 @@ public class MenuDataProvider implements Serializable {
         try {
             Thread.currentThread().setContextClassLoader( portletWebApplication.getClassLoader() );
 
-            Constructor constructor = null;
+            Constructor constructor;
             try {
-                constructor = Class.forName(classNameTemp, false, portletWebApplication.getClassLoader()).getConstructor(new Class[]{});
+                constructor = Class.forName(classNameTemp, false, portletWebApplication.getClassLoader()).getConstructor();
             }
             catch (Exception e) {
                 String es = "Error getConstructor()";
@@ -122,10 +122,10 @@ public class MenuDataProvider implements Serializable {
             }
 
             if (constructor != null) {
-                PortletGetList obj = null;
+                PortletGetList obj;
                 Object o = null;
                 try {
-                    o = constructor.newInstance(new Object[]{});
+                    o = constructor.newInstance();
                     obj = (PortletGetList)o;
                 }
                 catch (ClassCastException e) {
