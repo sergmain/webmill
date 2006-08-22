@@ -28,6 +28,8 @@ import java.util.Map;
 
 import javax.portlet.PortletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.webmill.container.ContainerConstants;
 
 /**
@@ -61,7 +63,7 @@ public class PortletMetadataService {
         }
 
         String value = p.get( key );
-        if ( PortletService.isEmpty( value ) ) {
+        if ( StringUtils.isBlank(value) ) {
             return defValue;
         }
 

@@ -64,7 +64,7 @@ public class PortletRegisterServlet extends HttpServlet {
             try {
                 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 System.out.println("PortletRegisterServlet classLoader\n" + classLoader + "\nhashCode: " + classLoader.hashCode() );
-                 String portalPath = new File(servletConfig.getServletContext().getRealPath("/")).getParent();
+                String portalPath = new File(servletConfig.getServletContext().getRealPath("/")).getParent();
                 PortletContainer.registerPortletFile( uniqueName, portletFile, servletConfig, classLoader, portalPath );
             }
             catch (PortletContainerException e) {

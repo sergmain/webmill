@@ -141,6 +141,7 @@
         <include name="${commons-collections.lib}"/>
 
         <include name="${log4j.lib}"/>
+        <include name="${castor.lib}"/>
 
         <include name="${myfaces-api.lib}"/>
         <include name="${myfaces-core.lib}"/>

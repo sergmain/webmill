@@ -52,6 +52,7 @@ import org.riverock.webmill.container.portlet.PortalInstance;
 import org.riverock.webmill.container.portlet.PortletContainer;
 import org.riverock.webmill.exception.PortalException;
 import org.riverock.webmill.portal.dao.InternalDaoFactory;
+import org.riverock.webmill.portal.utils.PortalUtils;
 import org.riverock.webmill.utils.PortletUtils;
 
 /**
@@ -526,6 +527,10 @@ public class PortalInstanceImpl implements PortalInstance  {
 
     public Collection<String> getSupportedLocales(){
         return supportedList;
+    }
+
+    public void registerPortlet(String fullPortletName) {
+        PortalUtils.registerPortletName(fullPortletName);
     }
 
 }

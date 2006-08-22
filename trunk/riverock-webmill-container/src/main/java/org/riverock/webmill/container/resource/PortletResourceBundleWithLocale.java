@@ -26,9 +26,10 @@ package org.riverock.webmill.container.resource;
 
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.webmill.container.portlet.bean.PortletDefinition;
 import org.riverock.webmill.container.portlet.bean.PortletInfo;
-import org.riverock.webmill.container.tools.PortletService;
 
 /**
  * User: SergeMaslyukov
@@ -76,7 +77,7 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
     }
 
     private void initPropertiesFromResourceBundle( final String resourceBundleClass, final ClassLoader classLoader ) {
-        if (PortletService.isEmpty(resourceBundleClass)) {
+        if (StringUtils.isBlank(resourceBundleClass)) {
             return;
         }
         try {
@@ -94,27 +95,27 @@ public final class PortletResourceBundleWithLocale extends ResourceBundle {
 
         String name = "/" + resourceBundleClass.replace( '.', '/');
 
-	java.net.URL url;
-	url = classLoader.getResource(name);
-	System.out.println("resource: " + name+", url: "+url);
+    java.net.URL url;
+    url = classLoader.getResource(name);
+    System.out.println("resource: " + name+", url: "+url);
 
-	String n = name+".properties";
-	url = classLoader.getResource(n);
-	System.out.println("resource: " + n+", url: "+url);
+    String n = name+".properties";
+    url = classLoader.getResource(n);
+    System.out.println("resource: " + n+", url: "+url);
 
-	if (locale!=null) {
-		if (locale.getCountry()!=null) {
-			n = name + '_' + locale.toString() + ".properties";
-			url = classLoader.getResource(n);
-			System.out.println("resource: " + n+", url: "+url);
-		}
-		n = name + '_' + locale.getLanguage() + ".properties";
-		url = classLoader.getResource(n);
-		System.out.println("resource: " + n + ", url: "+url);
-	}
-	else {
-		System.out.println("Locale is null");
-	}	
+    if (locale!=null) {
+        if (locale.getCountry()!=null) {
+            n = name + '_' + locale.toString() + ".properties";
+            url = classLoader.getResource(n);
+            System.out.println("resource: " + n+", url: "+url);
+        }
+        n = name + '_' + locale.getLanguage() + ".properties";
+        url = classLoader.getResource(n);
+        System.out.println("resource: " + n + ", url: "+url);
+    }
+    else {
+        System.out.println("Locale is null");
+    }
         }
     }
 

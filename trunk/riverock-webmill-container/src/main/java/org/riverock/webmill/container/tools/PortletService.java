@@ -36,6 +36,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.riverock.interfaces.portal.template.PortalTemplateParameter;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.portlet.bean.InitParam;
@@ -52,7 +54,7 @@ public final class PortletService {
     }
 
     public synchronized static String getString( final List<PortalTemplateParameter> templateParameters, final String nameParam, final String defValue ) {
-        if ( templateParameters == null || isEmpty(nameParam) )
+        if ( templateParameters == null || StringUtils.isBlank(nameParam) )
             return defValue;
 
         for (PortalTemplateParameter portalTemplateParameter : templateParameters) {
@@ -60,10 +62,6 @@ public final class PortletService {
                 return portalTemplateParameter.getValue();
         }
         return defValue;
-    }
-
-    public static boolean isEmpty( final String s) {
-        return s == null || s.trim().length() == 0;
     }
 
     public static String convertString( final String s, final String fromCharset, final String toCharset)
@@ -252,10 +250,10 @@ public final class PortletService {
         try {
 
             Class cl = obj.getClass();
-            Method m = cl.getMethod("destroy", new Class[]{});
+            Method m = cl.getMethod("destroy");
 
             if (m != null)
-                m.invoke(obj, new Object[]{});
+                m.invoke(obj);
 
         }
         catch (Exception e) {
