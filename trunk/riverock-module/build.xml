@@ -73,8 +73,8 @@
         <mkdir dir="${build.java}" />
 
         <javac
-            target="${java.class.target}"
-            source="${java.class.source}"
+            target="1.4"
+            source="1.4"
             srcdir="${src-schema.java.dir}"
             destdir="${build.dest}"
             debug="${debug}"
