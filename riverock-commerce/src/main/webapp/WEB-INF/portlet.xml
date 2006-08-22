@@ -75,14 +75,14 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
-		<resource-bundle>org.riverock.portlet.resource.PriceList</resource-bundle>
+		<resource-bundle>org.riverock.commerce.resource.PriceList</resource-bundle>
 		<portlet-info>
 			<title>Portlet title</title>
 		</portlet-info>
 	</portlet>
 	<portlet>
 		<portlet-name>mill.upload_price</portlet-name>
-		<portlet-class>org.riverock.portlet.shop.upload.UploadPricePortlet</portlet-class>
+		<portlet-class>org.riverock.commerce.shop.upload.UploadPricePortlet</portlet-class>
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
