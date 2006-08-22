@@ -47,7 +47,7 @@ import org.riverock.portlet.schema.portlet.shop.PriceFieldNameType;
 import org.riverock.portlet.schema.portlet.shop.PriceItemType;
 import org.riverock.portlet.schema.price.CurrencyPrecisionType;
 import org.riverock.portlet.schema.price.CustomCurrencyItemType;
-import org.riverock.portlet.shop.bean.ShopOrder;
+import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
 

@@ -54,7 +54,7 @@ import org.riverock.commerce.price.Shop;
 import org.riverock.commerce.price.ShopPortlet;
 import org.riverock.portlet.schema.price.OrderItemType;
 import org.riverock.portlet.schema.price.ShopOrderType;
-import org.riverock.portlet.shop.bean.ShopOrder;
+import org.riverock.commerce.shop.bean.ShopOrder;
 import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.commerce.tools.SiteUtils;
 import org.riverock.webmill.container.ContainerConstants;
