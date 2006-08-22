@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>Resource for commerce portlet</comment>
+    <entry key="reg.xml_format_warning">Внимание! Файл импорта прайс-листа должен быть в корректном XML формате</entry>
+    <entry key="success_upload">Загрузка прайс-листа прошла успешно</entry>
+    <entry key="error_upload">Произошла ошибка загрузки данных</entry>
+    <entry key="upload_action">Загрузить</entry>
+</properties>
+
+
+
