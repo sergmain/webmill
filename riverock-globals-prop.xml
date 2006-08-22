@@ -102,6 +102,7 @@
     <property name="riverock-module.lib" value="riverock-module-1.0.0.jar"/>
     <property name="riverock-forum.lib" value="riverock-forum-1.0.0.jar"/>
     <property name="riverock-webmill-container.lib" value="riverock-webmill-container-1.0.0.jar"/>
+    <property name="riverock-commerce.lib" value="riverock-commerce-1.0.0.jar"/>
 
 
     <path id="classpath-core">
