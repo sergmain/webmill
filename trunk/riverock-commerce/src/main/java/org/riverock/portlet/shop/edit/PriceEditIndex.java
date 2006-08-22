@@ -46,8 +46,8 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
 
-import org.riverock.portlet.price.ShopPortlet;
-import org.riverock.portlet.tools.ContentTypeTools;
+import org.riverock.commerce.price.ShopPortlet;
+import org.riverock.commerce.tools.ContentTypeTools;
 import org.riverock.interfaces.sso.a3.AuthSession;
 import org.riverock.webmill.container.ContainerConstants;
 import org.riverock.webmill.container.tools.PortletService;
