@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * org.riverock.portlet - Portlet Library
+ *
+ * Copyright (C) 2004, Riverock Software, All Rights Reserved.
+ *
+ * Riverock - The Open-source Java Development Community
+ * http://www.riverock.org
+ *
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ */
+ -->
+<!DOCTYPE faces-config PUBLIC "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
+    "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
+<faces-config>
+    <managed-bean>
+        <managed-bean-name>newsSessionBean</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.cms.news.NewsSessionBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>newsTree</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.cms.news.NewsTree</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+        <managed-property>
+            <property-name>newsService</property-name>
+            <property-class>org.riverock.portlet.cms.news.NewsService</property-class>
+            <value>#{newsService}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>newsSessionBean</property-name>
+            <value>#{newsSessionBean}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>newsDataProvider</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.cms.news.NewsDataProvider</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>newsService</property-name>
+            <property-class>org.riverock.portlet.cms.news.NewsService</property-class>
+            <value>#{newsService}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>newsSessionBean</property-name>
+            <value>#{newsSessionBean}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>newsService</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.cms.news.NewsService</managed-bean-class>
+        <managed-bean-scope>application</managed-bean-scope>
+    </managed-bean>
+    <!-- Actions -->
+    <managed-bean>
+        <managed-bean-name>newsAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.cms.news.action.NewsAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>newsSessionBean</property-name>
+            <value>#{menuSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>authSessionBean</property-name>
+            <value>#{authSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>menuDataProvider</property-name>
+            <value>#{newsDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>newsGroupAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.cms.news.action.NewsGroupAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>newsSessionBean</property-name>
+            <value>#{newsSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>authSessionBean</property-name>
+            <value>#{authSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>newsDataProvider</property-name>
+            <value>#{newsDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <managed-bean>
+        <managed-bean-name>menuSiteAction</managed-bean-name>
+        <managed-bean-class>org.riverock.portlet.cms.news.action.NewsSiteAction</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>menuSessionBean</property-name>
+            <value>#{menuSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>authSessionBean</property-name>
+            <value>#{authSessionBean}</value>
+        </managed-property>
+        <managed-property>
+            <property-name>dataProvider</property-name>
+            <value>#{menuDataProvider}</value>
+        </managed-property>
+    </managed-bean>
+
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>news</from-outcome>
+            <to-view-id>/riverock/cms/news/news.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>news-add</from-outcome>
+            <to-view-id>/riverock/cms/news/news-item-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>news-edit</from-outcome>
+            <to-view-id>/riverock/cms/news/news-item-edit.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>news-delete</from-outcome>
+            <to-view-id>/riverock/cms/news/news-item-delete.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>news-group-add</from-outcome>
+            <to-view-id>/riverock/cms/news/news-group-add.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>news-group-edit</from-outcome>
+            <to-view-id>/riverock/cms/news/news-group-edit.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>news-group-delete</from-outcome>
+            <to-view-id>/riverock/cms/news/news-group-delete.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>

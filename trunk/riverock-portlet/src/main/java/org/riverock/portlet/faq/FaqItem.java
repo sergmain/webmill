@@ -61,14 +61,6 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
     public void terminate( Long id_ ) {
     }
 
-    protected void finalize() throws Throwable {
-        question = null;
-        answer = null;
-        datePost = null;
-
-        super.finalize();
-    }
-
     public FaqItem( String q, String a ) {
         question = q;
         answer = a;
@@ -105,7 +97,11 @@ public final class FaqItem implements PortletResultObject, PortletGetList, Portl
         try {
             db_ = DatabaseAdapter.getInstance();
             return new FaqItem( db_, id );
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
+            String es = "Error getInstance()";
+            log.error(es, e);
+//            throw new RuntimeException(es, e);
         }
         finally {
             DatabaseManager.close(db_);

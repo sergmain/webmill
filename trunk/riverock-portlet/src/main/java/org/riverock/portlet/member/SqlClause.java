@@ -36,15 +36,5 @@ public class SqlClause
     public String where = "";
     public String order = "";
 
-    protected void finalize() throws Throwable
-    {
-        select = null;
-        from = null;
-        where = null;
-        order = null;
-
-        super.finalize();
-    }
-
     public SqlClause(){}
 }

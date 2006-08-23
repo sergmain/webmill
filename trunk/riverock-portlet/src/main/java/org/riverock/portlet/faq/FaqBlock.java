@@ -69,17 +69,6 @@ public final class FaqBlock implements PortletResultObject, PortletGetList, Port
 //        this.bundle = bundle;
     }
 
-    protected void finalize() throws Throwable {
-        if( v != null ) {
-            v.clear();
-            v = null;
-        }
-        renderRequest = null;
-//        renderResponse = null;
-//        bundle = null;
-        super.finalize();
-    }
-
     public PortletResultContent getInstance( final Long id ) throws PortletException {
         return getInstance();
     }

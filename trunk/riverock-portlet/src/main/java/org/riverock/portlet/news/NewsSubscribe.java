@@ -136,8 +136,6 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
             db_ = DatabaseAdapter.getInstance();
 
-//            String indexPage1 = PortletService.url(ContainerConstants.CTX_TYPE_INDEX, renderRequest, renderResponse, "" );
-
             AuthSession auth_ = (AuthSession)renderRequest.getUserPrincipal();
 
             if ( userNotLogged(auth_, out ) ) {
@@ -151,7 +149,6 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
 
             boolean isSubscribed = getSubscribeStatus( auth_ );
             printSubscribeForm( out, isSubscribed );
-//            printToIndexPage( out, indexPage );
 
             return prepareReturn( out );
         }
@@ -175,13 +172,6 @@ public class NewsSubscribe implements PortletResultObject, PortletResultContent 
         }
 
         return true;
-    }
-
-    private void printToIndexPage(StringBuilder out, String indexPage) {
-        out
-            .append("<p class\"webmill.to-homepage\">\n<a href=\"")
-            .append(indexPage)
-            .append("\" >To homepage.</a>\n</p>\n");
     }
 
     private void printSubscribeForm(StringBuilder out, boolean isSubscribed) {

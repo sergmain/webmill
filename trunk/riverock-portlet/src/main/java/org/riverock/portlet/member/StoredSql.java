@@ -47,26 +47,5 @@ public class StoredSql
 
     public List param = new ArrayList(10);
 
-    protected void finalize() throws Throwable
-    {
-        fromPath = null;
-
-        selectSQL = null;
-        insertSQL = null;
-        changeSQL = null;
-        deleteSQL = null;
-        insertCommitSQL = null;
-        changeCommitSQL = null;
-        deleteCommitSQL = null;
-
-        if (param != null )
-        {
-            param.clear();
-            param = null;
-        }
-
-        super.finalize();
-    }
-
     public StoredSql(){}
 }

@@ -153,7 +153,7 @@
 		<IsAutoCommit>true</IsAutoCommit>
 	</DatabaseConnection>
 	<DatabaseConnection name="MYSQL">
-		<Username>sa</Username>
+		<Username>root</Username>
 		<Password/>
 		<ConnectString>jdbc:mysql://localhost/test?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull</ConnectString>
 		<ConnectionClass>org.riverock.generic.db.factory.MYSQLconnect</ConnectionClass>

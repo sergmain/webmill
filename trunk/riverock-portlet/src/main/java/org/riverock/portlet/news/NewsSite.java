@@ -46,7 +46,6 @@ import org.riverock.common.tools.RsetTools;
 import org.riverock.common.tools.StringTools;
 import org.riverock.generic.db.DatabaseAdapter;
 import org.riverock.generic.db.DatabaseManager;
-import org.riverock.generic.exception.DatabaseException;
 import org.riverock.interfaces.portlet.member.ClassQueryItem;
 import org.riverock.interfaces.portlet.member.PortletGetList;
 import org.riverock.portlet.schema.portlet.news_block.NewsBlockType;
@@ -95,11 +94,6 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         this.portletConfig = portletConfig;
     }
 
-    protected void finalize() throws Throwable {
-        siteId = null;
-        super.finalize();
-    }
-
     public NewsSite() {
     }
 
@@ -121,7 +115,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
     private final static long LENGTH_TIME_PERIOD = 10000;
     private final static Object syncObject = new Object();
 
-    private NewsSiteType checkInit( DatabaseAdapter db_, PortletRequest portletRequest ) throws PortletException {
+    private NewsSiteType checkInit( PortletRequest portletRequest ) throws PortletException {
 
         siteId = new Long( renderRequest.getPortalContext().getProperty( ContainerConstants.PORTAL_PROP_SITE_ID ) );
         if( log.isDebugEnabled() ) {
@@ -135,7 +129,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         synchronized( syncObject ) {
             if( ( ( System.currentTimeMillis() - lastReadData ) > LENGTH_TIME_PERIOD )
                 || news == null ) {
-                news = initNews( db_ );
+                news = initNews();
                 newsMap.put( siteId, news );
             }
             else if( log.isDebugEnabled() ) log.debug( "Get from cache" );
@@ -205,11 +199,6 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
                     NewsItemType item = newsGroupType.getNewsItem( i );
                     item.setToFullItem( nextNews );
 
-//                    String url = PortletService.urlStringBuilder(portletConfig.getPortletName(), renderRequest, this.renderResponse).
-//                        append(NAME_ID_NEWS_PARAM).append('=').append(item.getNewsItemId()).append('&').
-//                        append(NEWS_TYPE).append("=item").
-//                        toString();
-
                     PortletURL portletUrl = renderResponse.createRenderURL();
                     portletUrl.setParameter(NEWS_TYPE, NewsSite.NEWS_TYPE_ITEM);
                     portletUrl.setParameter(NAME_ID_NEWS_PARAM, ""+item.getNewsItemId());
@@ -244,7 +233,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         }
     }
 
-    private NewsSiteType initNews( DatabaseAdapter db_ ) throws PortletException {
+    private NewsSiteType initNews() throws PortletException {
 
         if( log.isDebugEnabled() )
             log.debug( "start create object" );
@@ -253,7 +242,9 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
         ResultSet rs = null;
         NewsSiteType newsSite = new NewsSiteType();
 
+        DatabaseAdapter db_ = null;
         try {
+            db_ = DatabaseAdapter.getInstance();
 
             ps = db_.prepareStatement( sql_ );
             RsetTools.setLong( ps, 1, siteId );
@@ -319,9 +310,10 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
             throw new PortletException( es, e );
         }
         finally {
-            DatabaseManager.close( rs, ps );
+            DatabaseManager.close( db_, rs, ps );
             rs = null;
             ps = null;
+            db_ = null;
         }
     }
 
@@ -337,21 +329,7 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
             log.debug( "param.renderRequest.getLocale().toString() - " + renderRequest.getLocale().toString() );
         }
 
-        NewsSiteType newsSite = null;
-        DatabaseAdapter db_ = null;
-        try {
-            db_ = DatabaseAdapter.getInstance();
-            newsSite = checkInit( db_, renderRequest );
-        }
-        catch( DatabaseException e ) {
-            String es = "Error";
-            log.error(es, e);
-            throw new PortletException( es, e );
-        }
-        finally {
-            DatabaseManager.close( db_ );
-            db_ = null;
-        }
+        NewsSiteType newsSite = checkInit( renderRequest );
 
         if( log.isDebugEnabled() ) log.debug( "newsSite.newsBlockCount() - " + newsSite.getNewsBlockCount() );
 
@@ -390,44 +368,31 @@ public final class NewsSite implements PortletGetList, PortletResultObject {
 
         NewsBlockType newsBlock = new NewsBlockType();
         if( portletCode_ != null ) {
-            DatabaseAdapter db_ = null;
-            try {
-                db_ = DatabaseAdapter.getInstance();
-                log.debug( "Start checkInit()" );
-                NewsSiteType newsSite = checkInit( db_, renderRequest );
+            log.debug( "Start checkInit()" );
+            NewsSiteType newsSite = checkInit(renderRequest );
 
-                if( log.isDebugEnabled() ) log.debug( "newsSite.newsBlockCount() - " + newsSite.getNewsBlockCount() );
+            if( log.isDebugEnabled() ) log.debug( "newsSite.newsBlockCount() - " + newsSite.getNewsBlockCount() );
 
-                for( int i = 0; i < newsSite.getNewsBlockCount(); i++ ) {
-                    NewsBlockType nb = newsSite.getNewsBlock( i );
+            for( int i = 0; i < newsSite.getNewsBlockCount(); i++ ) {
+                NewsBlockType nb = newsSite.getNewsBlock( i );
 
-                    if( log.isDebugEnabled() ) log.debug( "NewsBlockType.getCodeLanguage() - " + nb.getCodeLanguage() );
+                if( log.isDebugEnabled() ) log.debug( "NewsBlockType.getCodeLanguage() - " + nb.getCodeLanguage() );
 
-                    if( nb.getCodeLanguage().equals( renderRequest.getLocale().toString() ) ) {
+                if( nb.getCodeLanguage().equals( renderRequest.getLocale().toString() ) ) {
 
-                        if( log.isDebugEnabled() ) log.debug( "nb.getNewsGroupCount() - " + nb.getNewsGroupCount() );
+                    if( log.isDebugEnabled() ) log.debug( "nb.getNewsGroupCount() - " + nb.getNewsGroupCount() );
 
-                        for( int j = 0; j < nb.getNewsGroupCount(); j++ ) {
-                            NewsGroupType newsGroupType = nb.getNewsGroup( j );
+                    for( int j = 0; j < nb.getNewsGroupCount(); j++ ) {
+                        NewsGroupType newsGroupType = nb.getNewsGroup( j );
 
-                            if( log.isDebugEnabled() ) log.debug( "newsGroupType.getNewsGroupCode() - " + newsGroupType.getNewsGroupCode() );
+                        if( log.isDebugEnabled() ) log.debug( "newsGroupType.getNewsGroupCode() - " + newsGroupType.getNewsGroupCode() );
 
-                            if( portletCode_.equals( newsGroupType.getNewsGroupCode() ) ) {
-                                newsBlock.addNewsGroup( newsGroupType );
-                                break;
-                            }
+                        if( portletCode_.equals( newsGroupType.getNewsGroupCode() ) ) {
+                            newsBlock.addNewsGroup( newsGroupType );
+                            break;
                         }
                     }
                 }
-            }
-            catch( DatabaseException e ) {
-                String es = "Error";
-                log.error(es, e);
-                throw new PortletException( es, e );
-            }
-            finally {
-                DatabaseManager.close( db_ );
-                db_ = null;
             }
         }
 
