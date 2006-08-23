@@ -132,23 +132,4 @@ public class Test
         prn_ = null;
 
     }
-
-
-    protected void finalize() throws java.lang.Throwable
-    {
-        String file_name = SiteUtils.getTempDir()+"Test.finalize.log";
-
-        OutputStreamWriter prn_ = new OutputStreamWriter(
-            new FileOutputStream(file_name, true)
-            , "Cp1251");
-
-        String ss = "Instance is: " + this + "\n";
-        prn_.write(ss, 0, ss.length());
-        prn_.flush();
-        prn_.close();
-        prn_ = null;
-
-        super.finalize();
-    }
-
 }

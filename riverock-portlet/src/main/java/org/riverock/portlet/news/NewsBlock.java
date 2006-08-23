@@ -30,8 +30,6 @@ import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-
-
 import org.apache.log4j.Logger;
 
 import org.riverock.generic.tools.XmlTools;

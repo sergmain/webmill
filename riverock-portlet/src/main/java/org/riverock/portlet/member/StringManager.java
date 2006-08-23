@@ -59,14 +59,6 @@ public final class StringManager {
         return isInit;
     }
 
-    protected void finalize() throws Throwable {
-        storage = null;
-        currentLocaleString = null;
-        currentLocaleBase = null;
-
-        super.finalize();
-    }
-
     public synchronized void reinit() {
         if ( log.isDebugEnabled() ) {
             log.debug( "Start reinit hashtable " );

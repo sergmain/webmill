@@ -65,14 +65,6 @@ public class JobBlock implements PortletResultObject, PortletGetList, PortletRes
     private RenderRequest renderRequest = null;
     private RenderResponse renderResponse = null;
 
-    protected void finalize() throws Throwable {
-        if( v != null ) {
-            v.clear();
-            v = null;
-        }
-        super.finalize();
-    }
-
     public void setParameters( RenderRequest renderRequest, RenderResponse renderResponse, PortletConfig portletConfig ) {
         this.renderRequest = renderRequest;
         this.renderResponse = renderResponse;

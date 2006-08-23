@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import org.riverock.interfaces.portal.bean.Company;
 import org.riverock.interfaces.portal.bean.Site;
-import org.riverock.portlet.manager.site.bean.CompanyBean;
-import org.riverock.portlet.manager.site.bean.SiteBean;
 
 /**
  * @author Sergei Maslyukov

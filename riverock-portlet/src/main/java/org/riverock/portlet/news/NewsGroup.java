@@ -49,11 +49,6 @@ public final class NewsGroup {
 
     private static CacheFactory cache = new CacheFactory( NewsGroup.class);
 
-    protected void finalize() throws Throwable {
-        newsGroup = null;
-        super.finalize();
-    }
-
     public void reinit() {
         cache.reinit();
     }
@@ -83,16 +78,20 @@ public final class NewsGroup {
         if (log.isDebugEnabled())
             log.debug("start create object of NewsGroup");
 
+        getNewsGroup(id_);
+    }
+
+    private void getNewsGroup(Long newsGroupId) throws PortletException {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         DatabaseAdapter db_ = null;
         try {
             db_ = DatabaseAdapter.getInstance();
-            newsGroup.setNewsGroupId( id_ );
+            newsGroup.setNewsGroupId( newsGroupId );
 
             if (log.isDebugEnabled())
-                log.debug("ID_NEWS - "+id_+" newsGroupId - "+ newsGroup.getNewsGroupId() );
+                log.debug("ID_NEWS - "+newsGroupId +" newsGroupId - "+ newsGroup.getNewsGroupId() );
 
             ps = db_.prepareStatement(sql_);
             RsetTools.setLong(ps, 1, newsGroup.getNewsGroupId() );

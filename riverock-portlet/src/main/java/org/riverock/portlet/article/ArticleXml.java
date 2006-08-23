@@ -94,14 +94,6 @@ public final class ArticleXml implements PortletResultObject, PortletGetList, Po
         cache.terminate(id);
     }
 
-    protected void finalize() throws Throwable {
-        datePost = null;
-        nameArticle = null;
-        text = null;
-
-        super.finalize();
-    }
-
     public byte[] getXml(String rootName) throws Exception {
         if(log.isDebugEnabled()) {
             log.debug( "ArticleXml. method is 'Xml'. Root: "+rootName );

@@ -56,13 +56,7 @@ public final class NewsItemSimple implements PortletResultObject, PortletResultC
         this.renderRequest = renderRequest;
     }
 
-    protected void finalize() throws Throwable {
-        newsItem = null;
-        super.finalize();
-    }
-
-    public NewsItemSimple()
-    {
+    public NewsItemSimple() {
     }
 
     public PortletResultContent getInstance() throws PortletException

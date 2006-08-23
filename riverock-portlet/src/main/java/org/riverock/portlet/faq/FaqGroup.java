@@ -88,18 +88,6 @@ public class FaqGroup implements PortletGetList {
     public String faqCode = "";
     public List<FaqItem> v = new ArrayList<FaqItem>(); 
 
-    protected void finalize() throws Throwable {
-        faqGroupName = null;
-        faqCode = null;
-
-        if (v != null) {
-            v.clear();
-            v = null;
-        }
-
-        super.finalize();
-    }
-
     public void reinit() {
         cache.reinit();
     }

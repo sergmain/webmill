@@ -50,14 +50,6 @@ public final class MemberFile extends CacheFile {
 
     private Map<String, ModuleType> memberHash = null;
 
-    protected void finalize() throws Throwable {
-        if( memberHash != null ) {
-            memberHash.clear();
-            memberHash = null;
-        }
-        super.finalize();
-    }
-
     /**
      * @deprecated use Iterator
      * @return Enumeration

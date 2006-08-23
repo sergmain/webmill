@@ -272,7 +272,7 @@ public class DatabaseStructureManager {
             throw new Exception("Table has zero count of fields");
 
 
-        boolean isDebug = true;
+        boolean isDebug = false;
         if (table.getName().equalsIgnoreCase("WM_NEWS_ITEM_TEXT"))
             isDebug = true;
 
@@ -310,7 +310,7 @@ public class DatabaseStructureManager {
         DbDataTableType tableData = table.getData();
 
         System.out.println(
-            "table " + table.getName() + ", " +
+            "\nTable " + table.getName() + ", " +
                 "fields " + table.getFieldsCount() + ", " +
                 "records " + tableData.getRecordsCount() + ", sql:\n" + sql_
         );
@@ -322,13 +322,15 @@ public class DatabaseStructureManager {
                 DbDataRecordType record = tableData.getRecords(i);
                 PreparedStatement ps = null;
                 ResultSet rs = null;
+                DbDataFieldDataType fieldData=null;
+                DbFieldType field=null;
                 try {
                     ps = adapter.conn.prepareStatement(sql_);
 
                     int fieldPtr = 0;
                     for (int k = 0; k < record.getFieldsDataCount(); k++) {
-                        DbFieldType field = table.getFields(fieldPtr++);
-                        DbDataFieldDataType fieldData = record.getFieldsData(k);
+                        field = table.getFields(fieldPtr++);
+                        fieldData = record.getFieldsData(k);
 
                         if (fieldData.getIsNull()) {
                             int type = fieldData.getJavaTypeField();
@@ -351,19 +353,20 @@ public class DatabaseStructureManager {
                                             System.out.println("Types.NUMERIC as Types.INTEGER param #" + (k + 1) + ", " +
                                                 "value " + fieldData.getNumberData().doubleValue() + ", long value " + ((long) fieldData.getNumberData().doubleValue())
                                             );
-                                        ps.setLong(k + 1, (long) fieldData.getNumberData().doubleValue());
+                                        ps.setLong(k + 1, fieldData.getNumberData().longValueExact());
                                     }
                                     else {
                                         if (isDebug)
                                             System.out.println("Types.NUMERIC param #" + (k + 1) + ", value " + fieldData.getNumberData().doubleValue());
-                                        ps.setDouble(k + 1, fieldData.getNumberData().doubleValue());
+//                                        ps.setDouble(k + 1, fieldData.getNumberData().doubleValue());
+                                        ps.setBigDecimal(k + 1, fieldData.getNumberData());
                                     }
                                     break;
 
                                 case Types.INTEGER:
                                     if (isDebug)
                                         System.out.println("Types.INTEGER param #" + (k + 1) + ", value " + fieldData.getNumberData().doubleValue());
-                                    ps.setLong(k + 1, (long) fieldData.getNumberData().doubleValue());
+                                    ps.setLong(k + 1, fieldData.getNumberData().longValueExact());
                                     break;
 
                                 case Types.CHAR:
@@ -410,6 +413,16 @@ public class DatabaseStructureManager {
                 }
                 catch (Exception e) {
                     log.error("Error get data for table " + table.getName(), e);
+                    for (int k = 0; k < record.getFieldsDataCount(); k++) {
+                        DbDataFieldDataType data = record.getFieldsData(k);
+                        log.error("date: " + data.getDateData());
+                        log.error("decimal digit: " + data.getDecimalDigit());
+                        log.error("is null: " + data.getIsNull());
+                        log.error("java type: " + data.getJavaTypeField());
+                        log.error("number: " + data.getNumberData());
+                        log.error("size: " + data.getSize());
+                        log.error("string: " + data.getStringData());
+                    }
                     throw e;
                 }
                 finally {

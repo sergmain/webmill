@@ -96,15 +96,6 @@ public final class ArticlePlain implements PortletResultObject, PortletGetList, 
         cache.terminate( id );
     }
 
-    protected void finalize() throws Throwable {
-        datePost = null;
-        nameArticle = null;
-        text = null;
-        articleCode = null;
-
-        super.finalize();
-    }
-
     public PortletResultContent getInstance( DatabaseAdapter db__ ) {
         return null;
     }
