@@ -65,7 +65,7 @@
         <f:facet name="news-group">
             <h:panelGroup id="news-tree-news-group-group">
                 <h:commandLink id="select-news-group-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               action="#{newsGroupAction.selectMenuCatalog}"
+                               action="#{newsGroupAction.selectNewsGroup}"
                     >
 
                     <t:graphicImage id="news-tree-news-group-image" value="/images/user.png" border="0"/>
@@ -79,14 +79,14 @@
 
                     <t:updateActionListener property="#{newsSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{newsSessionBean.objectType}" value="#{newsSessionBean.newsType}"/>
-                    <t:updateActionListener property="#{newsSessionBean.currentMenuCatalogId}" value="#{node.identifier}" />
+                    <t:updateActionListener property="#{newsSessionBean.currentNewsGroupId}" value="#{node.identifier}" />
                 </h:commandButton>
             </h:panelGroup>
         </f:facet>
         <f:facet name="news">
             <h:panelGroup id="news-tree-news-group">
                 <h:commandLink id="select-news-action-id" styleClass="#{t.nodeSelected ? 'documentSelected':''}"
-                               action="#{newsAction.selectMenuItem}"
+                               action="#{newsAction.selectNews}"
                     >
 
                     <t:graphicImage id="news-tree-news-image" value="/images/user.png" border="0"/>
@@ -101,7 +101,7 @@
 
                     <t:updateActionListener property="#{newsSessionBean.id}" value="#{node.identifier}" />
                     <t:updateActionListener property="#{newsSessionBean.objectType}" value="#{newsSessionBean.newsType}"/>
-                    <t:updateActionListener property="#{newsSessionBean.currentMenuItemId}" value="#{node.identifier}" />
+                    <t:updateActionListener property="#{newsSessionBean.currentNewsId}" value="#{node.identifier}" />
                 </h:commandButton>
             </h:panelGroup>
         </f:facet>

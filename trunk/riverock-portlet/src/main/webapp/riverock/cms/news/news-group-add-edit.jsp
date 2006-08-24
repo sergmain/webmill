@@ -8,16 +8,16 @@
 <h:outputText value="#{msg.news_group_info}"/>
 <h:panelGrid columns="2">
     <h:outputText value="#{msg.news_group_name}"/>
-    <h:inputText id="select_news_group_input_field" value="#{newsSessionBean.newsGroup.newsGroupName}"/>
+    <h:inputText id="news_group_name_field" value="#{newsSessionBean.newsGroup.newsGroupName}"/>
 
     <h:outputText value="#{msg.news_group_code}"/>
-    <h:inputText id="select_news_group_input_field" value="#{newsSessionBean.newsGroup.newsGroupCode}"/>
+    <h:inputText id="news_group_code_field" value="#{newsSessionBean.newsGroup.newsGroupCode}"/>
 
     <h:outputText value="#{msg.news_group_max_news}"/>
-    <h:inputText id="select_news_group_input_field" value="#{newsSessionBean.newsGroup.maxNews}"/>
+    <h:inputText id="news_group_max_news_field" value="#{newsSessionBean.newsGroup.maxNews}"/>
 
     <h:outputText value="#{msg.news_group_order_value}"/>
-    <h:inputText id="select_news_group_input_field" value="#{newsSessionBean.newsGroup.orderValue}"/>
+    <h:inputText id="news_group_order_field" value="#{newsSessionBean.newsGroup.orderValue}"/>
 
 </h:panelGrid>
 

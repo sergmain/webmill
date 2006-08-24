@@ -114,7 +114,7 @@ public class NewsDataProvider implements Serializable {
         return newsGroup;
     }
 
-    public void clearMenuItem() {
+    public void clearNews() {
         this.news =null;
     }
 

@@ -19,13 +19,13 @@ public class NewsSiteAction implements Serializable {
 
     private NewsSessionBean newsSessionBean = null;
     private AuthSessionBean authSessionBean = null;
-    private NewsDataProvider dataProvider = null;
+    private NewsDataProvider newsDataProvider = null;
 
     public NewsSiteAction() {
     }
 
-    public void setDataProvider(NewsDataProvider dataProvider) {
-        this.dataProvider = dataProvider;
+    public void setNewsDataProvider(NewsDataProvider newsDataProvider) {
+        this.newsDataProvider = newsDataProvider;
     }
 
     public void setNewsSessionBean( NewsSessionBean siteSessionBean) {
@@ -45,8 +45,8 @@ public class NewsSiteAction implements Serializable {
             log.debug( "Select site action." );
             log.debug( "newsSessionBean type: " +newsSessionBean.getObjectType() );
         }
-        newsSessionBean.setSiteExtended( dataProvider.getSiteExtended() );
-        return "menu";
+        newsSessionBean.setSiteExtended( newsDataProvider.getSiteExtended() );
+        return "news";
     }
 
     public String changeSite() {

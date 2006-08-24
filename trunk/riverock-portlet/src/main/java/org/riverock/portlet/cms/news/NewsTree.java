@@ -93,7 +93,7 @@ public class NewsTree implements Serializable {
 
                     for (NewsBean news : newsService.getNewsList(newsGroupBean.getNewsGroupId())) {
                         TreeNodeBase newsNode = new TreeNodeBase(
-                            "news-item",
+                            "news",
                             news.getNewsHeader(),
                             news.getNewsId().toString(),
                             false);

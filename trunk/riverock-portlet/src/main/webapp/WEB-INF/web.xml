@@ -41,10 +41,9 @@
             /WEB-INF/faces-users-config.xml,
             /WEB-INF/faces-shop-manager-config.xm,
             /WEB-INF/faces-site-config.xml,
-            /WEB-INF/faces-menu-config.xml,/WEB-INF/faces-common-config.xml, faces-manager-config.xml,
-            faces-auth-config.xml, faces-holding-config.xml, faces-company-config.xml,
-            faces-portlet-name-config.xml,faces-users-config.xml, faces-shop-manager-config.xm, faces-site-config.xml,
-            faces-menu-config.xml
+            /WEB-INF/faces-menu-config.xml,
+            /WEB-INF/faces-common-config.xml,
+            /WEB-INF/faces-news-config.xml 
         </param-value>
 	</context-param>
 	<context-param>

@@ -90,6 +90,27 @@ c:\sandbox\riverock\riverock-portlet\src-schema\xsd\portlet.xsd">
 		</portlet-info>
 	</portlet>
 	<portlet>
+        <description>Webmill CMS manager</description>
+        <portlet-name>webmill.cms-manager</portlet-name>
+        <display-name>Webmill CMS manager</display-name>
+        <portlet-class>org.apache.myfaces.portlet.MyFacesGenericPortlet</portlet-class>
+        <init-param>
+            <name>default-view</name>
+            <value>/riverock/cms/index.jsp</value>
+        </init-param>
+
+        <expiration-cache>-1</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+		<portlet-info>
+			<title>Webmill CMS manager</title>
+			<short-title>Webmil CMS manager</short-title>
+			<keywords>webmill, CMS, manager</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
 		<portlet-name>mill.index</portlet-name>
 		<portlet-class>org.riverock.portlet.index.IndexPageStubPortlet</portlet-class>
 		<supports>

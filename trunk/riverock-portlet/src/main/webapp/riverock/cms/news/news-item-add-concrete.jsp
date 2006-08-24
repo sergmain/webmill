@@ -5,19 +5,19 @@
 
 <f:loadBundle basename="org.riverock.portlet.cms.resource.News" var="msg"/>
 
-<h:panelGrid columns="2">
+<h:panelGrid columns="1">
 
     <h:outputText value="#{msg.news_header}"/>
-    <h:inputText id="news-header-field" value="#{newsSessionBean.news.newsHeader}"/>
+    <h:inputText id="news-header-field" value="#{newsSessionBean.news.newsHeader}" size="50"/>
 
     <h:outputText value="#{msg.news_anons}"/>
     <h:inputTextarea id="news-anons-field" value="#{newsSessionBean.news.newsAnons}"
-                     rows="10" cols="70"
+                     rows="8" cols="70"
         />
 
     <h:outputText value="#{msg.news_text}"/>
     <h:inputTextarea id="news-text-field" value="#{newsSessionBean.news.newsText}"
-                     rows="10" cols="70"
+                     rows="12" cols="70"
         />
 
 </h:panelGrid>
