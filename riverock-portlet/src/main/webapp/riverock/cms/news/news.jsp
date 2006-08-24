@@ -39,7 +39,7 @@
 
             <h:panelGrid columns="2">
 
-                <f:subview id="site-tree-subview">                                        l
+                <f:subview id="site-tree-subview">                                        
                     <jsp:include page="news-tree.jsp"/>
                 </f:subview>
 

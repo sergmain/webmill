@@ -73,14 +73,14 @@
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
             <property-name>newsSessionBean</property-name>
-            <value>#{menuSessionBean}</value>
+            <value>#{newsSessionBean}</value>
         </managed-property>
         <managed-property>
             <property-name>authSessionBean</property-name>
             <value>#{authSessionBean}</value>
         </managed-property>
         <managed-property>
-            <property-name>menuDataProvider</property-name>
+            <property-name>newsDataProvider</property-name>
             <value>#{newsDataProvider}</value>
         </managed-property>
     </managed-bean>
@@ -104,20 +104,20 @@
     </managed-bean>
 
     <managed-bean>
-        <managed-bean-name>menuSiteAction</managed-bean-name>
+        <managed-bean-name>newsSiteAction</managed-bean-name>
         <managed-bean-class>org.riverock.portlet.cms.news.action.NewsSiteAction</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
         <managed-property>
-            <property-name>menuSessionBean</property-name>
-            <value>#{menuSessionBean}</value>
+            <property-name>newsSessionBean</property-name>
+            <value>#{newsSessionBean}</value>
         </managed-property>
         <managed-property>
             <property-name>authSessionBean</property-name>
             <value>#{authSessionBean}</value>
         </managed-property>
         <managed-property>
-            <property-name>dataProvider</property-name>
-            <value>#{menuDataProvider}</value>
+            <property-name>newsDataProvider</property-name>
+            <value>#{newsDataProvider}</value>
         </managed-property>
     </managed-bean>
 

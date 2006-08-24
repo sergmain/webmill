@@ -45,7 +45,7 @@ public class NewsAction  implements Serializable {
     }
 
 // main select action
-    public String selectMenuItem() {
+    public String selectNews() {
         log.info("Select news item action.");
         loadCurrentObject();
 
@@ -53,7 +53,7 @@ public class NewsAction  implements Serializable {
     }
 
 // Add actions
-    public String addMenuItemAction() {
+    public String addNewsAction() {
         log.info("Add news item action.");
 
         NewsBean news = new NewsBean();
@@ -63,16 +63,16 @@ public class NewsAction  implements Serializable {
         return "news-add";
     }
 
-    public String processAddMenuItemAction() {
+    public String processAddNewsAction() {
         log.info("Procss add news item action.");
         if (getSessionObject() != null) {
 
             if (newsSessionBean.getCurrentNewsId() == null && newsSessionBean.getCurrentNewsGroupId() == null) {
-                throw new IllegalStateException("Both currentMenuItemId and currentMenuCatalogId are null");
+                throw new IllegalStateException("Both currentNewsId and currentNewsGroupId are null");
             }
 
             if (newsSessionBean.getCurrentNewsId() != null && newsSessionBean.getCurrentNewsGroupId() != null) {
-                throw new IllegalStateException("Both currentMenuItemId and currentMenuCatalogId are not null");
+                throw new IllegalStateException("Both currentNewsId and currentNewsGroupId are not null");
             }
 
             NewsBean news = getSessionObject();
@@ -93,7 +93,7 @@ public class NewsAction  implements Serializable {
         return "news";
     }
 
-    public String cancelAddMenuItemAction() {
+    public String cancelAddNewsAction() {
         log.info("Cancel add news item action.");
 
         setSessionObject(null);
@@ -111,7 +111,7 @@ public class NewsAction  implements Serializable {
         return "news-edit";
     }
 
-    public String processEditMenuItemAction() {
+    public String processEditNewsAction() {
         log.info("Save changes news item action.");
 
         if (getSessionObject() != null) {
@@ -130,7 +130,7 @@ public class NewsAction  implements Serializable {
     }
 
 // Delete actions
-    public String deleteMenuItemAction() {
+    public String deleteNewsAction() {
         log.info("delete news item action.");
 
         setSessionObject(newsDataProvider.getNews());
@@ -138,13 +138,13 @@ public class NewsAction  implements Serializable {
         return "news-delete";
     }
 
-    public String cancelDeleteMenuItemAction() {
+    public String cancelDeleteNewsAction() {
         log.info("Cancel delete news item action.");
 
         return "news";
     }
 
-    public String processDeleteMenuItemAction() {
+    public String processDeleteNewsAction() {
         log.info("Process delete news item action.");
 
         if (getSessionObject() != null) {
@@ -169,7 +169,7 @@ public class NewsAction  implements Serializable {
     }
 
     private void cleadDataProviderObject() {
-        newsDataProvider.clearMenuItem();
+        newsDataProvider.clearNews();
     }
 
     private NewsBean getSessionObject() {
